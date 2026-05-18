@@ -99,12 +99,12 @@ export default function UsageNudgeBanner({ planTier }: { planTier?: string | nul
         <AlertTriangle size={16} className="text-amber-500" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-xs font-semibold text-foreground">
+        <p className="text-xs font-semibold text-text-primary">
           You&apos;re approaching your plan limits
         </p>
-        <p className="text-[11px] text-muted mt-0.5 leading-relaxed">
+        <p className="text-[11px] text-text-muted mt-0.5 leading-relaxed">
           You&apos;ve used <span className="text-amber-500 font-semibold">{pctRounded}%</span> of
-          your monthly <span className="font-medium text-foreground">{resourceLabel}</span> allowance
+          your monthly <span className="font-medium text-text-primary">{resourceLabel}</span> allowance
           on Starter. Upgrade for higher limits and unlock premium features.
         </p>
       </div>
@@ -124,7 +124,7 @@ export default function UsageNudgeBanner({ planTier }: { planTier?: string | nul
       </Link>
       <button
         onClick={handleDismiss}
-        className="shrink-0 p-1.5 rounded-md text-muted hover:text-foreground hover:bg-surface-light transition-colors"
+        className="shrink-0 p-1.5 rounded-md text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors"
         aria-label="Dismiss"
       >
         <X size={14} />

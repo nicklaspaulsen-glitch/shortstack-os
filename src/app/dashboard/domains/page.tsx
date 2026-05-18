@@ -136,10 +136,10 @@ export default function DomainsPage() {
           (t) => (
             <div className="flex items-start gap-2">
               <div className="flex-1 text-[12px]">
-                <p className="font-semibold text-foreground">
+                <p className="font-semibold text-text-primary">
                   Next: set up email sending for {domain}
                 </p>
-                <p className="text-muted mt-0.5">
+                <p className="text-text-muted mt-0.5">
                   One click to write Resend DKIM/SPF to GoDaddy — then your client can
                   send from anything@{domain}.
                 </p>
@@ -155,7 +155,7 @@ export default function DomainsPage() {
                   </button>
                   <button
                     onClick={() => toast.dismiss(t.id)}
-                    className="px-3 py-1 rounded-md border border-border text-muted text-[11px]"
+                    className="px-3 py-1 rounded-md border border-border-subtle text-text-muted text-[11px]"
                   >
                     Later
                   </button>
@@ -395,7 +395,7 @@ export default function DomainsPage() {
   const domainsOwned = domains.length;
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Domains command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Domains command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">DOMAINS</p>
@@ -404,7 +404,7 @@ export default function DomainsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <div className="flex items-center gap-2">
                   {usage && (
-                    <div className="flex items-center gap-1.5 text-[10px] text-foreground bg-black/5 border border-border px-2.5 py-1.5 rounded-lg">
+                    <div className="flex items-center gap-1.5 text-[10px] text-text-primary bg-black/5 border border-border-subtle px-2.5 py-1.5 rounded-lg">
                       <Globe size={11} />
                       <span>
                         <span className="font-semibold">{domainsOwned}</span>
@@ -413,7 +413,7 @@ export default function DomainsPage() {
                       </span>
                     </div>
                   )}
-                  <div className="flex items-center gap-1.5 text-[10px] text-foreground bg-black/5 border border-border px-2 py-1 rounded-lg">
+                  <div className="flex items-center gap-1.5 text-[10px] text-text-primary bg-black/5 border border-border-subtle px-2 py-1 rounded-lg">
                     <GoDaddyIcon size={12} /> GoDaddy
                     <span className="opacity-40">·</span>
                     <VercelIcon size={12} /> Vercel
@@ -445,14 +445,14 @@ export default function DomainsPage() {
                 <Sparkles size={18} className="text-brand-accent shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold">One-click brand launch</p>
-                  <p className="text-[10px] text-muted mt-0.5">
+                  <p className="text-[10px] text-text-muted mt-0.5">
                     Provision email, phone, website, portal, and chat widget on your domain in one flow.
                   </p>
                 </div>
                 <ArrowUpRight size={14} className="text-brand-accent shrink-0" />
               </div>
             </a>{/* ── Domain search ────────────────────────────────────────────── */}<div className="glass rounded-xl p-4">
-              <h2 className="section-header flex items-center gap-2">
+              <h2 className="flex items-center gap-2">
                 <Search size={13} className="text-brand-accent" /> Find & buy a domain
               </h2>
               <div className="flex gap-2">
@@ -487,11 +487,11 @@ export default function DomainsPage() {
                             {r.available === true
                               ? <CheckCircle size={14} className="text-success shrink-0" />
                               : r.available === false
-                                ? <XCircle size={14} className="text-muted shrink-0" />
+                                ? <XCircle size={14} className="text-text-muted shrink-0" />
                                 : <AlertCircle size={14} className="text-amber-400 shrink-0" />}
                             <div className="min-w-0">
                               <p className="text-xs font-semibold truncate">{r.domain}</p>
-                              <p className="text-[10px] text-muted">
+                              <p className="text-[10px] text-text-muted">
                                 {r.available === true
                                   ? (r.price ? `${r.currency} $${r.price.toFixed(2)} wholesale/yr` : "Available")
                                   : r.available === false
@@ -506,24 +506,24 @@ export default function DomainsPage() {
                             {/* Clear pricing breakdown BEFORE commit — shows wholesale
                                 vs what-user-pays so there are no surprises at Stripe
                                 checkout. */}
-                            <div className="mb-2 px-2 py-1.5 rounded-md bg-background/40 text-[9px] text-muted leading-relaxed">
+                            <div className="mb-2 px-2 py-1.5 rounded-md bg-background/40 text-[9px] text-text-muted leading-relaxed">
                               Wholesale: ${base.toFixed(2)}/yr · Your price:{" "}
-                              <span className="text-foreground font-semibold">${monthly}/mo</span> or{" "}
-                              <span className="text-foreground font-semibold">${yearly}/yr</span> ·
+                              <span className="text-text-primary font-semibold">${monthly}/mo</span> or{" "}
+                              <span className="text-text-primary font-semibold">${yearly}/yr</span> ·
                               Includes registration, SSL, DNS, hosting. Renews automatically.
                             </div>
                             <div className="grid grid-cols-2 gap-1.5">
                               <button
                                 onClick={() => purchaseDomain(r.domain, "monthly", r.price || undefined)}
                                 disabled={anyRowLoading}
-                                className="text-[10px] px-2 py-2 rounded-lg border border-border text-foreground hover:border-[rgba(59,130,246,0.4)] hover:bg-black/5 flex flex-col items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="text-[10px] px-2 py-2 rounded-lg border border-border-subtle text-text-primary hover:border-[rgba(59,130,246,0.4)] hover:bg-black/5 flex flex-col items-center disabled:opacity-50 disabled:cursor-not-allowed"
                               >
                                 {rowMonthlyLoading ? (
                                   <Loader size={12} className="animate-spin my-1" />
                                 ) : (
                                   <>
                                     <span className="font-bold">${monthly}/mo</span>
-                                    <span className="text-[9px] text-muted">Monthly</span>
+                                    <span className="text-[9px] text-text-muted">Monthly</span>
                                   </>
                                 )}
                               </button>
@@ -552,7 +552,7 @@ export default function DomainsPage() {
               )}
             </div>{/* ── Owned domains ────────────────────────────────────────────── */}<div className="glass rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="section-header flex items-center gap-2 mb-0">
+                <h2 className="flex items-center gap-2 mb-0">
                   <Globe size={13} className="text-brand-accent" /> Your domains ({domains.length})
                 </h2>
                 <button onClick={loadData} className="btn-ghost text-[10px] flex items-center gap-1">
@@ -561,11 +561,11 @@ export default function DomainsPage() {
               </div>
 
               {loading ? (
-                <div className="py-8 text-center text-muted text-xs">Loading...</div>
+                <div className="py-8 text-center text-text-muted text-xs">Loading...</div>
               ) : domains.length === 0 ? (
                 <div className="py-10 text-center">
-                  <Globe size={24} className="mx-auto mb-2 text-muted/30" />
-                  <p className="text-xs text-muted">No domains yet. Search above to buy one.</p>
+                  <Globe size={24} className="mx-auto mb-2 text-text-muted/30" />
+                  <p className="text-xs text-text-muted">No domains yet. Search above to buy one.</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -599,7 +599,7 @@ export default function DomainsPage() {
                                 </span>
                               )}
                             </div>
-                            <p className="text-[10px] text-muted mt-0.5">
+                            <p className="text-[10px] text-text-muted mt-0.5">
                               {d.purchase_price ? `$${d.purchase_price.toFixed(2)} / year` : "—"}
                               {d.expires_at && ` · expires ${new Date(d.expires_at).toLocaleDateString()}`}
                             </p>
@@ -639,12 +639,12 @@ export default function DomainsPage() {
                               <RefreshCw size={10} /> Retry mail
                             </button>
                           )}
-                          <button onClick={() => openDns(d)} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
+                          <button onClick={() => openDns(d)} className="text-[10px] px-2.5 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary flex items-center gap-1">
                             <Edit3 size={10} /> DNS
                           </button>
                           <button
                             onClick={() => { navigator.clipboard.writeText(d.domain); toast.success("Copied"); }}
-                            className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1"
+                            className="text-[10px] px-2.5 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary flex items-center gap-1"
                           >
                             <Copy size={10} />
                           </button>
@@ -652,7 +652,7 @@ export default function DomainsPage() {
                             href={`https://${d.domain}`}
                             target="_blank"
                             rel="noopener"
-                            className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1"
+                            className="text-[10px] px-2.5 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary flex items-center gap-1"
                           >
                             <ExternalLink size={10} />
                           </a>
@@ -660,12 +660,12 @@ export default function DomainsPage() {
                       </div>
 
                       {/* Connect to website */}
-                      <div className="mt-3 pt-3 border-t border-border/60 flex items-center gap-2 flex-wrap">
-                        <span className="text-[10px] text-muted">Link to website:</span>
+                      <div className="mt-3 pt-3 border-t border-border-subtle/60 flex items-center gap-2 flex-wrap">
+                        <span className="text-[10px] text-text-muted">Link to website:</span>
                         <select
                           value={d.website_id || ""}
                           onChange={e => connectToWebsite(d.id, e.target.value)}
-                          className="text-[10px] py-1 px-2 rounded-lg bg-surface border border-border text-foreground"
+                          className="text-[10px] py-1 px-2 rounded-lg bg-surface border border-border-subtle text-text-primary"
                         >
                           <option value="">Not linked</option>
                           {projects.map(p => (
@@ -738,7 +738,7 @@ export default function DomainsPage() {
 
                       {/* DNS editor */}
                       {dnsOpen === d.id && (
-                        <div className="mt-3 pt-3 border-t border-border/60 space-y-2">
+                        <div className="mt-3 pt-3 border-t border-border-subtle/60 space-y-2">
                           <div className="flex items-center justify-between flex-wrap gap-2">
                             <h3 className="text-[11px] font-semibold flex items-center gap-1.5">
                               <ShieldCheck size={12} className="text-brand-accent" /> DNS Records
@@ -747,16 +747,16 @@ export default function DomainsPage() {
                               <button onClick={pointToVercel} className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-1">
                                 <VercelIcon size={10} /> Point to Vercel
                               </button>
-                              <button onClick={addDnsRecord} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
+                              <button onClick={addDnsRecord} className="text-[10px] px-2.5 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary flex items-center gap-1">
                                 <Plus size={10} /> Record
                               </button>
                             </div>
                           </div>
 
                           {dnsLoading ? (
-                            <div className="py-4 text-center text-[10px] text-muted">Loading DNS...</div>
+                            <div className="py-4 text-center text-[10px] text-text-muted">Loading DNS...</div>
                           ) : dnsRecords.length === 0 ? (
-                            <p className="text-[10px] text-muted py-2">No records. Click &ldquo;Point to Vercel&rdquo; for a one-click setup.</p>
+                            <p className="text-[10px] text-text-muted py-2">No records. Click &ldquo;Point to Vercel&rdquo; for a one-click setup.</p>
                           ) : (
                             <div className="space-y-1.5">
                               {dnsRecords.map((r, i) => (
@@ -786,7 +786,7 @@ export default function DomainsPage() {
                                     onChange={e => updateDnsRecord(i, { ttl: Number(e.target.value) })}
                                     className="col-span-1 input text-[10px] py-1"
                                   />
-                                  <button onClick={() => removeDnsRecord(i)} className="col-span-1 p-1 rounded hover:bg-red-500/10 text-muted hover:text-red-400">
+                                  <button onClick={() => removeDnsRecord(i)} className="col-span-1 p-1 rounded hover:bg-red-500/10 text-text-muted hover:text-red-400">
                                     <Trash2 size={10} />
                                   </button>
                                 </div>
@@ -794,7 +794,7 @@ export default function DomainsPage() {
                             </div>
                           )}
                           <div className="flex items-center justify-between">
-                            <button onClick={() => setDnsOpen(null)} className="text-[10px] text-muted hover:text-foreground">Close</button>
+                            <button onClick={() => setDnsOpen(null)} className="text-[10px] text-text-muted hover:text-text-primary">Close</button>
                             <button onClick={() => saveDns(d.domain)} disabled={dnsLoading} className="btn-primary text-[10px] disabled:opacity-50">
                               Save DNS
                             </button>
@@ -809,7 +809,7 @@ export default function DomainsPage() {
               <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
                 <AlertTriangle size={11} className="text-brand-accent" /> How domain ownership works
               </h3>
-              <ul className="text-[10px] text-muted space-y-1 list-disc list-inside">
+              <ul className="text-[10px] text-text-muted space-y-1 list-disc list-inside">
                 <li>Domains are registered under your ShortStack GoDaddy customer account.</li>
                 <li>You (the agency) own the registration until you transfer it to the client.</li>
                 <li>Use DNS records above to point your domain to Vercel (A: 76.76.21.21, CNAME: cname.vercel-dns.com).</li>

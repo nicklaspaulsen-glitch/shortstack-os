@@ -615,7 +615,7 @@ export default function IntegrationsHubPage() {
   // -- Render -----------------------------------------------------------
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Integrations Hub command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Integrations Hub command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">All your integrations</p>
@@ -630,7 +630,7 @@ export default function IntegrationsHubPage() {
                     void fetchHealthStatuses();
                   }}
                   disabled={loadingConnections}
-                  className="flex items-center gap-1.5 text-[10px] bg-black/5 border border-border text-foreground px-2.5 py-1 rounded-md hover:bg-black/10 transition-all disabled:opacity-50"
+                  className="flex items-center gap-1.5 text-[10px] bg-black/5 border border-border-subtle text-text-primary px-2.5 py-1 rounded-md hover:bg-black/10 transition-all disabled:opacity-50"
                 >
                   <RefreshCw
                     size={10}
@@ -706,12 +706,12 @@ export default function IntegrationsHubPage() {
               </div>
             </motion.div>{/* Integration grid */}<div>
               <div className="flex items-center justify-between mb-3">
-                <h2 className="section-header mb-0">
+                <h2 className="mb-0">
                   {activeFilter === "All"
                     ? "All integrations"
                     : `${activeFilter} integrations`}
                 </h2>
-                <span className="text-[10px] text-muted">
+                <span className="text-[10px] text-text-muted">
                   {filteredIntegrations.length} shown
                 </span>
               </div>

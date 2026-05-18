@@ -65,7 +65,7 @@ export default function DowntimeBanner() {
   const count = activeServices.length;
 
   return (
-    <div className={`fade-in rounded-xl border overflow-hidden ${
+    <div className={`rounded-xl border overflow-hidden ${
       isDown
         ? "bg-red-500/[0.06] border-red-500/30"
         : "bg-amber-500/[0.06] border-amber-500/30"
@@ -90,15 +90,15 @@ export default function DowntimeBanner() {
             {count > 1 && (
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="text-[9px] text-muted hover:text-foreground flex items-center gap-0.5"
+                className="text-[9px] text-text-muted hover:text-text-primary flex items-center gap-0.5"
               >
                 {expanded ? "Hide" : "Show all"}
                 {expanded ? <ChevronUp size={9} /> : <ChevronDown size={9} />}
               </button>
             )}
           </div>
-          <p className="text-[10px] text-muted truncate">
-            <span className="font-medium text-foreground">{primaryService.label}</span>
+          <p className="text-[10px] text-text-muted truncate">
+            <span className="font-medium text-text-primary">{primaryService.label}</span>
             {primaryService.message ? ` — ${primaryService.message}` : ""}
           </p>
         </div>
@@ -107,14 +107,14 @@ export default function DowntimeBanner() {
           <button
             onClick={fetchHealth}
             disabled={checking}
-            className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-black/5 transition-colors"
+            className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-black/5 transition-colors"
             title="Re-check"
           >
             <RefreshCw size={12} className={checking ? "animate-spin" : ""} />
           </button>
           <button
             onClick={() => dismiss(primaryService.key)}
-            className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-black/5 transition-colors"
+            className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-black/5 transition-colors"
             title="Dismiss"
           >
             <X size={12} />
@@ -123,24 +123,24 @@ export default function DowntimeBanner() {
       </div>
 
       {expanded && count > 1 && (
-        <div className="border-t border-border divide-y divide-white/5">
+        <div className="border-t border-border-subtle divide-y divide-white/5">
           {activeServices.slice(1).map(service => (
             <div key={service.key} className="flex items-center gap-3 px-3 py-2">
               <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
                 service.status === "down" ? "bg-red-400" : "bg-amber-400"
               }`} />
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] font-medium text-foreground">{service.label}</p>
+                <p className="text-[11px] font-medium text-text-primary">{service.label}</p>
                 {service.message && (
-                  <p className="text-[9px] text-muted truncate">{service.message}</p>
+                  <p className="text-[9px] text-text-muted truncate">{service.message}</p>
                 )}
               </div>
-              <span className="text-[9px] text-muted whitespace-nowrap">
+              <span className="text-[9px] text-text-muted whitespace-nowrap">
                 {service.last_check ? new Date(service.last_check).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ""}
               </span>
               <button
                 onClick={() => dismiss(service.key)}
-                className="p-1 rounded text-muted hover:text-foreground opacity-60 hover:opacity-100"
+                className="p-1 rounded text-text-muted hover:text-text-primary opacity-60 hover:opacity-100"
               >
                 <X size={10} />
               </button>

@@ -475,7 +475,7 @@ export default function ProjectsPage() {
   const activeBoard = boards.find((b) => b.id === activeBoardId) ?? null;
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Projects command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Projects command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">PROJECTS</p>
@@ -484,7 +484,7 @@ export default function ProjectsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={() => setShowNewBoard(true)}
-                  className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5"
                 >
                   <Plus size={12} /> New Board
                 </button>
@@ -531,7 +531,7 @@ export default function ProjectsPage() {
                       className={`px-4 py-2 text-xs rounded-lg border flex items-center gap-2 transition-all whitespace-nowrap ${
                         activeBoardId === b.id
                           ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]"
-                          : "bg-surface text-muted border-border hover:text-foreground hover:border-[rgba(59,130,246,0.15)]"
+                          : "bg-surface text-text-muted border-border-subtle hover:text-text-primary hover:border-[rgba(59,130,246,0.15)]"
                       }`}
                     >
                       <span
@@ -555,7 +555,7 @@ export default function ProjectsPage() {
             )}{/* ── Kanban columns ───────────────────────────────── */}{!loadingBoards && activeBoard && (
               <>
                 {loadingTasks && (
-                  <div className="flex items-center justify-center py-12 gap-2 text-muted">
+                  <div className="flex items-center justify-center py-12 gap-2 text-text-muted">
                     <Loader2 size={16} className="animate-spin" /> Loading tasks...
                   </div>
                 )}
@@ -655,7 +655,7 @@ export default function ProjectsPage() {
                                         className={`text-[9px] px-1.5 py-0.5 rounded flex items-center gap-1 ${
                                           overdue
                                             ? "bg-red-400/15 text-red-400"
-                                            : "bg-surface text-muted"
+                                            : "bg-surface text-text-muted"
                                         }`}
                                       >
                                         <Calendar size={8} /> {formatDue(task.due_date)}
@@ -675,8 +675,8 @@ export default function ProjectsPage() {
                             })}
 
                             {columnTasks.length === 0 && !isDragTarget && (
-                              <div className="text-center py-6 border border-dashed border-border rounded-lg">
-                                <p className="text-[9px] text-muted">Drop tasks here</p>
+                              <div className="text-center py-6 border border-dashed border-border-subtle rounded-lg">
+                                <p className="text-[9px] text-text-muted">Drop tasks here</p>
                               </div>
                             )}
 
@@ -696,7 +696,7 @@ export default function ProjectsPage() {
                                     }
                                   }}
                                   placeholder="Task title..."
-                                  className="w-full text-[11px] bg-transparent outline-none text-foreground placeholder-muted"
+                                  className="w-full text-[11px] bg-transparent outline-none text-text-primary placeholder-muted"
                                 />
                               </div>
                             ) : (
@@ -705,7 +705,7 @@ export default function ProjectsPage() {
                                   setAddingTaskColumn(col.key);
                                   setNewTaskTitle("");
                                 }}
-                                className="w-full mt-1 py-1.5 rounded-lg text-[10px] text-muted hover:text-brand-accent hover:bg-[rgba(59,130,246,0.05)] transition-colors flex items-center justify-center gap-1"
+                                className="w-full mt-1 py-1.5 rounded-lg text-[10px] text-text-muted hover:text-brand-accent hover:bg-[rgba(59,130,246,0.05)] transition-colors flex items-center justify-center gap-1"
                               >
                                 <Plus size={10} /> New task
                               </button>
@@ -717,8 +717,8 @@ export default function ProjectsPage() {
                   </div>
                 )}
 
-                <p className="text-[9px] text-muted">
-                  Tip: Press <kbd className="px-1.5 py-0.5 rounded bg-surface-light border border-border">Cmd/Ctrl+Shift+K</kbd> to quickly add a task.
+                <p className="text-[9px] text-text-muted">
+                  Tip: Press <kbd className="px-1.5 py-0.5 rounded bg-surface-light border border-border-subtle">Cmd/Ctrl+Shift+K</kbd> to quickly add a task.
                 </p>
               </>
             )}{/* ── New board modal ───────────────────────────────── */}{showNewBoard && (
@@ -735,7 +735,7 @@ export default function ProjectsPage() {
                 >
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-semibold">Create new board</h3>
-                    <button onClick={() => setShowNewBoard(false)} className="text-muted hover:text-foreground">
+                    <button onClick={() => setShowNewBoard(false)} className="text-text-muted hover:text-text-primary">
                       <X size={14} />
                     </button>
                   </div>
@@ -750,7 +750,7 @@ export default function ProjectsPage() {
                   <div className="flex justify-end gap-2">
                     <button
                       onClick={() => setShowNewBoard(false)}
-                      className="px-3 py-1.5 text-xs rounded-lg border border-border text-muted hover:text-foreground"
+                      className="px-3 py-1.5 text-xs rounded-lg border border-border-subtle text-text-muted hover:text-text-primary"
                     >
                       Cancel
                     </button>
@@ -781,7 +781,7 @@ export default function ProjectsPage() {
                     <h3 className="text-sm font-semibold flex items-center gap-2">
                       <Plus size={14} className="text-brand-accent" /> Quick task
                     </h3>
-                    <kbd className="text-[9px] px-1.5 py-0.5 rounded bg-surface-light border border-border text-muted">
+                    <kbd className="text-[9px] px-1.5 py-0.5 rounded bg-surface-light border border-border-subtle text-text-muted">
                       Esc
                     </kbd>
                   </div>
@@ -794,7 +794,7 @@ export default function ProjectsPage() {
                     className="input w-full text-sm"
                   />
                   <div className="flex items-center gap-2">
-                    <label className="text-[10px] text-muted">Column:</label>
+                    <label className="text-[10px] text-text-muted">Column:</label>
                     <select
                       value={quickTaskStatus}
                       onChange={(e) => setQuickTaskStatus(e.target.value as Status)}
@@ -824,11 +824,11 @@ export default function ProjectsPage() {
                   initial={{ x: 40, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ duration: 0.3 }}
-                  className="w-full max-w-md h-full bg-surface border-l border-border overflow-y-auto shadow-2xl"
+                  className="w-full max-w-md h-full bg-surface border-l border-border-subtle overflow-y-auto shadow-2xl"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <div className="sticky top-0 bg-surface border-b border-border px-4 py-3 flex items-center justify-between z-10">
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted">
+                  <div className="sticky top-0 bg-surface border-b border-border-subtle px-4 py-3 flex items-center justify-between z-10">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-text-muted">
                       Task details
                     </h3>
                     <div className="flex items-center gap-1">
@@ -841,7 +841,7 @@ export default function ProjectsPage() {
                       </button>
                       <button
                         onClick={() => setSelectedTask(null)}
-                        className="p-1.5 rounded-lg hover:bg-surface-light text-muted transition-colors"
+                        className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted transition-colors"
                       >
                         <X size={14} />
                       </button>
@@ -851,7 +851,7 @@ export default function ProjectsPage() {
                   <div className="p-4 space-y-4">
                     {/* Title */}
                     <div>
-                      <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Title</label>
+                      <label className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">Title</label>
                       <input
                         value={editingTask.title ?? ""}
                         onChange={(e) =>
@@ -864,7 +864,7 @@ export default function ProjectsPage() {
                     {/* Status + Priority */}
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Status</label>
+                        <label className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">Status</label>
                         <select
                           value={editingTask.status ?? "backlog"}
                           onChange={(e) =>
@@ -878,7 +878,7 @@ export default function ProjectsPage() {
                         </select>
                       </div>
                       <div>
-                        <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Priority</label>
+                        <label className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">Priority</label>
                         <select
                           value={editingTask.priority ?? "medium"}
                           onChange={(e) =>
@@ -895,7 +895,7 @@ export default function ProjectsPage() {
 
                     {/* Due date */}
                     <div>
-                      <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Due date</label>
+                      <label className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">Due date</label>
                       <input
                         type="date"
                         value={editingTask.due_date ?? ""}
@@ -911,7 +911,7 @@ export default function ProjectsPage() {
 
                     {/* Description */}
                     <div>
-                      <label className="text-[10px] font-semibold text-muted uppercase tracking-wider">Description</label>
+                      <label className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">Description</label>
                       <textarea
                         value={editingTask.description ?? ""}
                         onChange={(e) =>
@@ -926,7 +926,7 @@ export default function ProjectsPage() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => setSelectedTask(null)}
-                        className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-border text-muted hover:text-foreground"
+                        className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-border-subtle text-text-muted hover:text-text-primary"
                       >
                         Cancel
                       </button>
@@ -939,23 +939,23 @@ export default function ProjectsPage() {
                     </div>
 
                     {/* Comments */}
-                    <div className="pt-3 border-t border-border space-y-2">
-                      <h4 className="text-[10px] font-semibold text-muted uppercase tracking-wider flex items-center gap-1.5">
+                    <div className="pt-3 border-t border-border-subtle space-y-2">
+                      <h4 className="text-[10px] font-semibold text-text-muted uppercase tracking-wider flex items-center gap-1.5">
                         <MessageSquare size={10} /> Comments
                       </h4>
                       {loadingComments ? (
-                        <div className="flex items-center gap-2 text-muted text-[10px]">
+                        <div className="flex items-center gap-2 text-text-muted text-[10px]">
                           <Loader2 size={10} className="animate-spin" /> Loading...
                         </div>
                       ) : taskComments.length === 0 ? (
-                        <p className="text-[10px] text-muted">No comments yet.</p>
+                        <p className="text-[10px] text-text-muted">No comments yet.</p>
                       ) : (
                         <div className="space-y-2">
                           {taskComments.map((c) => (
                             <div key={c.id} className="glass-md rounded-lg p-2.5">
                               <div className="flex items-center gap-1.5 mb-1">
-                                <User size={10} className="text-muted" />
-                                <span className="text-[9px] text-muted">
+                                <User size={10} className="text-text-muted" />
+                                <span className="text-[9px] text-text-muted">
                                   {new Date(c.created_at).toLocaleString(undefined, {
                                     month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
                                   })}

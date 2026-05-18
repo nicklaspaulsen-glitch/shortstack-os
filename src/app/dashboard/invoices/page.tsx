@@ -133,7 +133,7 @@ export default function InvoicesPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* Hero Header */}{/* -- Invoices command strip -- */}
+    <MotionPage className="space-y-5">{/* Hero Header */}{/* -- Invoices command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">INVOICING</p>
@@ -160,7 +160,7 @@ export default function InvoicesPage() {
                 </div>
       </div>
     </div>{/* Loading note */}{loading && (
-              <p className="text-[11px] text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices�</p>
+              <p className="text-[11px] text-text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices�</p>
             )}{/* Stats */}<div className="space-y-3 mb-4">
   <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3">
     <motion.div
@@ -228,11 +228,11 @@ export default function InvoicesPage() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="relative flex-1 min-w-[200px]">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                     <input
                       value={search}
                       onChange={e => setSearch(e.target.value)}
-                      className="glass rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-border-subtle focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-muted/50" 
+                      className="glass rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-border-subtle focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-text-muted/50" 
                       placeholder="Search invoices..."
                       aria-label="Search invoices"
  />
@@ -283,23 +283,23 @@ export default function InvoicesPage() {
                                 }`}>
                                   {inv.status === "paid" ? <CheckCircle size={16} className="text-emerald-400" /> :
                                    isOverdue ? <AlertTriangle size={16} className="text-rose-400" /> :
-                                   inv.status === "draft" ? <FileText size={16} className="text-muted" /> :
+                                   inv.status === "draft" ? <FileText size={16} className="text-text-muted" /> :
                                    <Clock size={16} className="text-amber-400" />}
                                 </div>
                                 <div>
                                   <div className="flex items-center gap-2">
                                     <p className="text-sm font-semibold">{inv.client}</p>
-                                    <span className="text-[8px] font-mono text-muted">{inv.id}</span>
+                                    <span className="text-[8px] font-mono text-text-muted">{inv.id}</span>
                                     {inv.recurring && <RefreshCw size={8} className="text-brand-accent" />}
                                     {inv.currency !== "USD" && <Globe size={8} className="text-blue-400" />}
                                   </div>
-                                  <p className="text-[10px] text-muted">{inv.description}</p>
+                                  <p className="text-[10px] text-text-muted">{inv.description}</p>
                                 </div>
                               </div>
                               <div className="flex items-center gap-4">
                                 <div className="text-right">
                                   <p className="text-lg font-bold">{formatCurrency(inv.amount, inv.currency)}</p>
-                                  <p className="text-[9px] text-muted">Due: {inv.dueDate}</p>
+                                  <p className="text-[9px] text-text-muted">Due: {inv.dueDate}</p>
                                 </div>
                                 <span className={`text-[9px] px-2 py-0.5 rounded-full ${
                                   inv.status === "paid" ? "bg-emerald-400/10 text-emerald-400 border border-emerald-400/20" :
@@ -308,16 +308,16 @@ export default function InvoicesPage() {
                                   inv.status === "sent" ? "bg-blue-400/10 text-blue-400 border border-blue-400/20" :
                                   "bg-amber-400/10 text-amber-400 border border-amber-400/20"
                                 }`}>{isOverdue ? "overdue" : inv.status}</span>
-                                <ChevronRight size={14} className="text-muted" />
+                                <ChevronRight size={14} className="text-text-muted" />
                               </div>
                             </motion.div>
                             {expandedInvoice === inv.id && (
-                              <div className="ml-4 mb-3 p-3 rounded-lg bg-surface border border-border space-y-2 mx-4">
+                              <div className="ml-4 mb-3 p-3 rounded-lg bg-surface border border-border-subtle space-y-2 mx-4">
                                 <div className="grid grid-cols-4 gap-3 text-[10px]">
-                                  <div><span className="text-muted">Sent:</span> <span>{inv.sentDate || "Not sent"}</span></div>
-                                  <div><span className="text-muted">Due:</span> <span>{inv.dueDate}</span></div>
-                                  <div><span className="text-muted">Tax:</span> <span>{inv.tax> 0 ? formatCurrency(inv.tax) : "None"}</span></div>
-                                  <div><span className="text-muted">Currency:</span> <span>{inv.currency}</span></div>
+                                  <div><span className="text-text-muted">Sent:</span> <span>{inv.sentDate || "Not sent"}</span></div>
+                                  <div><span className="text-text-muted">Due:</span> <span>{inv.dueDate}</span></div>
+                                  <div><span className="text-text-muted">Tax:</span> <span>{inv.tax> 0 ? formatCurrency(inv.tax) : "None"}</span></div>
+                                  <div><span className="text-text-muted">Currency:</span> <span>{inv.currency}</span></div>
                                 </div>
                                 <div className="flex gap-2 pt-2 items-center">
                                   <Link href="/dashboard/billing" className="btn-ghost text-[9px] flex items-center gap-1">
@@ -352,7 +352,7 @@ export default function InvoicesPage() {
                       <h3 className="text-sm font-semibold">Invoice Builder</h3>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Client</label>
+                          <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Client</label>
                           <select className="input w-full text-xs">
                             <option value="">Select client...</option>
                             {Array.from(new Set(invoicesData.map(i => i.client))).map(c => (
@@ -361,7 +361,7 @@ export default function InvoicesPage() {
                           </select>
                         </div>
                         <div>
-                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Currency</label>
+                          <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Currency</label>
                           <select value={selectedCurrency} onChange={e => setSelectedCurrency(e.target.value)} className="input w-full text-xs">
                             <option value="USD">USD ($)</option>
                             <option value="EUR">EUR (�)</option>
@@ -371,15 +371,15 @@ export default function InvoicesPage() {
                         </div>
                       </div>
                       <div>
-                        <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Description</label>
+                        <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Description</label>
                         <input className="input w-full text-xs" placeholder="e.g., Growth Package - April 2026" />
                       </div>
 
                       {/* Line Items */}
                       <div>
-                        <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Line Items</label>
+                        <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Line Items</label>
                         <div className="space-y-1.5">
-                          <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-1 px-2">
+                          <div className="grid grid-cols-12 text-[9px] text-text-muted uppercase tracking-wider font-semibold py-1 px-2">
                             <span className="col-span-5">Description</span>
                             <span className="col-span-2 text-center">Qty</span>
                             <span className="col-span-2 text-center">Rate</span>
@@ -397,7 +397,7 @@ export default function InvoicesPage() {
                               <span className="col-span-2 text-right font-bold">{formatCurrency(item.qty * item.rate, selectedCurrency)}</span>
                               <button
                                 onClick={() => toast("The in-app invoice builder is being replaced with Stripe's hosted invoices. Use /dashboard/billing ? Stripe portal to create real invoices today.", { icon: "??", duration: 6000 })}
-                                className="col-span-1 text-right text-muted hover:text-rose-400"><X size={10} /></button>
+                                className="col-span-1 text-right text-text-muted hover:text-rose-400"><X size={10} /></button>
                             </div>
                           ))}
                           <button
@@ -409,11 +409,11 @@ export default function InvoicesPage() {
                       {/* Tax Calculator */}
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Tax Rate (%)</label>
+                          <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Tax Rate (%)</label>
                           <input type="number" value={taxRate} onChange={e => setTaxRate(Number(e.target.value))} className="input w-full text-xs" placeholder="0" />
                         </div>
                         <div>
-                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Due In</label>
+                          <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Due In</label>
                           <select className="input w-full text-xs">
                             <option value="7">7 days</option>
                             <option value="14">14 days</option>
@@ -430,8 +430,8 @@ export default function InvoicesPage() {
                     <PrismPanel padding="p-4">
                       <h4 className="text-xs font-semibold mb-3">Invoice Summary</h4>
                       <div className="space-y-2 text-[10px]">
-                        <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{formatCurrency(2497, selectedCurrency)}</span></div>
-                        <div className="flex justify-between"><span className="text-muted">Tax ({taxRate}%)</span><span>{formatCurrency(Math.round(2497 * taxRate / 100), selectedCurrency)}</span></div>
+                        <div className="flex justify-between"><span className="text-text-muted">Subtotal</span><span>{formatCurrency(2497, selectedCurrency)}</span></div>
+                        <div className="flex justify-between"><span className="text-text-muted">Tax ({taxRate}%)</span><span>{formatCurrency(Math.round(2497 * taxRate / 100), selectedCurrency)}</span></div>
                         <div className="border-t border-border-subtle pt-2 flex justify-between font-bold">
                           <span>Total</span><span className="text-brand-accent font-bold">{formatCurrency(Math.round(2497 * (1 + taxRate / 100)), selectedCurrency)}</span>
                         </div>
@@ -451,7 +451,7 @@ export default function InvoicesPage() {
                       <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
                         <Zap size={12} className="text-brand-accent" /> Quick Invoice
                       </h4>
-                      <p className="text-[9px] text-muted mb-3">Generate invoice from an accepted proposal</p>
+                      <p className="text-[9px] text-text-muted mb-3">Generate invoice from an accepted proposal</p>
                       <select className="input w-full text-xs mb-2">
                         <option value="">Select proposal...</option>
                       </select>
@@ -467,7 +467,7 @@ export default function InvoicesPage() {
                       <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
                         <CreditCard size={12} className="text-brand-accent" /> Payment Links
                       </h4>
-                      <p className="text-[9px] text-muted mb-2">Stripe-powered payment links for quick collection</p>
+                      <p className="text-[9px] text-text-muted mb-2">Stripe-powered payment links for quick collection</p>
                       <Link href="/dashboard/clients" className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
                         <CreditCard size={12} /> Open client ? Subscribe
                       </Link>
@@ -488,8 +488,8 @@ export default function InvoicesPage() {
                 <div className="space-y-2">
                   {invoicesData.filter(i => i.recurring).length === 0 ? (
                     <PrismPanel padding="py-8 px-4" className="text-center">
-                      <RefreshCw size={20} className="mx-auto mb-2 text-muted/30" />
-                      <p className="text-xs text-muted">No recurring invoices yet</p>
+                      <RefreshCw size={20} className="mx-auto mb-2 text-text-muted/30" />
+                      <p className="text-xs text-text-muted">No recurring invoices yet</p>
                     </PrismPanel>
                   ) : invoicesData.filter(i => i.recurring).map((inv, index) => (
                     <motion.div
@@ -503,29 +503,29 @@ export default function InvoicesPage() {
                         <RefreshCw size={14} className="text-brand-accent" />
                         <div>
                           <p className="text-xs font-semibold">{inv.client}</p>
-                          <p className="text-[10px] text-muted">{inv.description}</p>
+                          <p className="text-[10px] text-text-muted">{inv.description}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-4 text-[10px]">
                         <div className="text-center">
                           <p className="font-bold text-brand-accent">{formatCurrency(inv.amount)}</p>
-                          <p className="text-[8px] text-muted">Monthly</p>
+                          <p className="text-[8px] text-text-muted">Monthly</p>
                         </div>
                         <div className="text-center">
                           <p className="font-medium">1st of month</p>
-                          <p className="text-[8px] text-muted">Next invoice</p>
+                          <p className="text-[8px] text-text-muted">Next invoice</p>
                         </div>
                         <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">Active</span>
                         <button
                           onClick={() => toast("Pause recurring from the Stripe customer portal � use Billing ? Manage subscription.", { icon: "??", duration: 6000 })}
-                          className="text-[9px] text-muted hover:text-rose-400">Pause</button>
+                          className="text-[9px] text-text-muted hover:text-rose-400">Pause</button>
                       </div>
                     </motion.div>
                   ))}
                 </div>
                 <PrismPanel padding="p-4" className="text-center">
                   <p className="text-sm font-bold text-brand-accent">{formatCurrency(recurringTotal)}/mo</p>
-                  <p className="text-[10px] text-muted">Total monthly recurring revenue from invoices</p>
+                  <p className="text-[10px] text-text-muted">Total monthly recurring revenue from invoices</p>
                 </PrismPanel>
               </div>
             )}{/* ===== LATE PAYMENT REMINDERS ===== */}{activeTab === "reminders" && (
@@ -554,7 +554,7 @@ export default function InvoicesPage() {
                         </div>
                         <div>
                           <p className="text-xs font-semibold">{reminder.delay}</p>
-                          <p className="text-[10px] text-muted">{reminder.message}</p>
+                          <p className="text-[10px] text-text-muted">{reminder.message}</p>
                         </div>
                       </div>
                       <div className={`w-8 h-4 rounded-full ${reminder.enabled ? "bg-brand-accent" : "bg-surface-light"}`}>
@@ -570,12 +570,12 @@ export default function InvoicesPage() {
                   </h4>
                   <div className="space-y-1.5">
                     {invoicesData.filter(i => i.status === "overdue").length === 0 ? (
-                      <p className="text-[10px] text-muted text-center py-4">No overdue invoices</p>
+                      <p className="text-[10px] text-text-muted text-center py-4">No overdue invoices</p>
                     ) : invoicesData.filter(i => i.status === "overdue").map(inv => (
                       <div key={inv.id} className="flex items-center justify-between p-2.5 rounded bg-rose-400/10 border border-rose-400/20 text-[10px]">
                         <div>
                           <p className="font-semibold">{inv.client} - {inv.id}</p>
-                          <p className="text-[9px] text-muted">Due: {inv.dueDate}</p>
+                          <p className="text-[9px] text-text-muted">Due: {inv.dueDate}</p>
                         </div>
                         <div className="flex items-center gap-3">
                           <p className="font-bold text-rose-400">{formatCurrency(inv.amount)}</p>
@@ -593,8 +593,8 @@ export default function InvoicesPage() {
                 <h3 className="text-sm font-semibold">Invoice Templates</h3>
                 {INVOICE_TEMPLATES.length === 0 && (
                   <PrismPanel padding="py-8 px-4" className="text-center">
-                    <FileText size={20} className="mx-auto mb-2 text-muted/30" />
-                    <p className="text-xs text-muted">No invoice templates yet</p>
+                    <FileText size={20} className="mx-auto mb-2 text-text-muted/30" />
+                    <p className="text-xs text-text-muted">No invoice templates yet</p>
                   </PrismPanel>
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -618,7 +618,7 @@ export default function InvoicesPage() {
                         </div>
                         <div>
                           <p className="text-xs font-semibold">{t.name}</p>
-                          <p className="text-[10px] text-muted">{t.description}</p>
+                          <p className="text-[10px] text-text-muted">{t.description}</p>
                         </div>
                       </div>
                       <div className="flex gap-1.5 mt-2">
@@ -660,9 +660,9 @@ export default function InvoicesPage() {
                       }}
 >
                       <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
-                      <p className="text-[9px] text-muted uppercase mb-1">{bucket.range}</p>
+                      <p className="text-[9px] text-text-muted uppercase mb-1">{bucket.range}</p>
                       <p className={`text-lg font-bold ${bucket.color}`}>{formatCurrency(bucket.amount)}</p>
-                      <p className="text-[8px] text-muted">{bucket.count} invoice{bucket.count !== 1 ? "s" : ""}</p>
+                      <p className="text-[8px] text-text-muted">{bucket.count} invoice{bucket.count !== 1 ? "s" : ""}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -671,12 +671,12 @@ export default function InvoicesPage() {
                     <h4 className="text-xs font-semibold">Invoice History</h4>
                   </div>
                   <div className="divide-y divide-border-subtle">
-                    <div className="grid grid-cols-6 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-3">
+                    <div className="grid grid-cols-6 text-[9px] text-text-muted uppercase tracking-wider font-semibold py-1.5 px-3">
                       <span>Invoice</span><span>Client</span><span>Amount</span><span>Due Date</span><span>Status</span><span>Age</span>
                     </div>
                     {invoicesData.length === 0 ? (
                       <div className="text-center py-6">
-                        <p className="text-[10px] text-muted">No invoice history yet</p>
+                        <p className="text-[10px] text-text-muted">No invoice history yet</p>
                       </div>
                     ) : invoicesData.map((inv, index) => {
                       const dueDate = new Date(inv.dueDate);
@@ -689,16 +689,16 @@ export default function InvoicesPage() {
                           transition={{ duration: 0.18, delay: index * 0.03 }}
                           className="grid grid-cols-6 text-[10px] py-2 px-3 hover:bg-indigo-500/5 transition-colors items-center"
 >
-                          <span className="font-mono text-muted">{inv.id}</span>
+                          <span className="font-mono text-text-muted">{inv.id}</span>
                           <span className="font-medium">{inv.client}</span>
                           <span className="font-bold">{formatCurrency(inv.amount, inv.currency)}</span>
-                          <span className="text-muted">{inv.dueDate}</span>
+                          <span className="text-text-muted">{inv.dueDate}</span>
                           <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
                             inv.status === "paid" ? "bg-emerald-400/10 text-emerald-400 border border-emerald-400/20" :
                             inv.status === "overdue" ? "bg-rose-400/10 text-rose-400 border border-rose-400/20" :
                             "bg-amber-400/10 text-amber-400 border border-amber-400/20"
                           }`}>{inv.status}</span>
-                          <span className={ageDays> 7 ? "text-rose-400" : "text-muted"}>{ageDays}d</span>
+                          <span className={ageDays> 7 ? "text-rose-400" : "text-text-muted"}>{ageDays}d</span>
                         </motion.div>
                       );
                     })}
@@ -730,9 +730,9 @@ export default function InvoicesPage() {
                       }}
 >
                       <div className="absolute top-0 left-0 right-0" style={RAINBOW_BAR} />
-                      <p className="text-[10px] text-muted uppercase mb-1">{card.label}</p>
+                      <p className="text-[10px] text-text-muted uppercase mb-1">{card.label}</p>
                       <p className={`text-2xl font-bold ${card.color}`}>{card.value}</p>
-                      <p className="text-[9px] text-muted mt-1">{card.sub}</p>
+                      <p className="text-[9px] text-text-muted mt-1">{card.sub}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -742,7 +742,7 @@ export default function InvoicesPage() {
                   <div className="flex items-end gap-3 h-40">
                     {invoicesData.length === 0 ? (
                       <div className="flex-1 flex items-center justify-center">
-                        <p className="text-[10px] text-muted">No revenue data yet</p>
+                        <p className="text-[10px] text-text-muted">No revenue data yet</p>
                       </div>
                     ) : [
                       { month: "Jan", amount: 0 },
@@ -753,7 +753,7 @@ export default function InvoicesPage() {
                       <div key={i} className="flex-1 flex flex-col items-center gap-1">
                         <p className="text-[9px] font-bold">{formatCurrency(m.amount)}</p>
                         <div className="w-full bg-brand-accent rounded-t" style={{ height: `${m.amount> 0 ? Math.max((m.amount / 20000) * 100, 4) : 0}%`, minHeight: m.amount> 0 ? 8 : 2 }} />
-                        <span className="text-[8px] text-muted">{m.month}</span>
+                        <span className="text-[8px] text-text-muted">{m.month}</span>
                       </div>
                     ))}
                   </div>
@@ -764,15 +764,15 @@ export default function InvoicesPage() {
                   <div className="grid grid-cols-3 gap-3">
                     <div className="bg-surface-light rounded-lg p-3 text-center">
                       <p className="text-xl font-bold text-emerald-400">--</p>
-                      <p className="text-[9px] text-muted">Collection Rate</p>
+                      <p className="text-[9px] text-text-muted">Collection Rate</p>
                     </div>
                     <div className="bg-surface-light rounded-lg p-3 text-center">
                       <p className="text-xl font-bold">--</p>
-                      <p className="text-[9px] text-muted">Avg Days to Pay</p>
+                      <p className="text-[9px] text-text-muted">Avg Days to Pay</p>
                     </div>
                     <div className="bg-surface-light rounded-lg p-3 text-center">
                       <p className="text-xl font-bold text-brand-accent">{formatCurrency(recurringTotal)}</p>
-                      <p className="text-[9px] text-muted">Monthly Recurring</p>
+                      <p className="text-[9px] text-text-muted">Monthly Recurring</p>
                     </div>
                   </div>
                 </PrismPanel>

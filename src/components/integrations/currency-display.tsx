@@ -88,7 +88,7 @@ export default function CurrencyDisplay({
     <span className={className}>
       <span>{formatAmount(amount, currency)}</span>
       {convertedAmount !== null && displayIn && (
-        <span className="text-muted text-[10px] ml-1">
+        <span className="text-text-muted text-[10px] ml-1">
           (≈ {formatAmount(convertedAmount, displayIn)})
           {showRateSource && rateSource && (
             <span className="ml-0.5 text-[9px] opacity-60">via {rateSource}</span>

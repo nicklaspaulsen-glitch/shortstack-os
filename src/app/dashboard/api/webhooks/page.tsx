@@ -154,7 +154,7 @@ export default function WebhooksPage() {
   }
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Webhooks command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Webhooks command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">WEBHOOKS</p>
@@ -163,25 +163,25 @@ export default function WebhooksPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={() => setShowCreate((v) => !v)}
-                  className="text-[11px] px-3 py-1.5 rounded-lg bg-black/10 text-foreground border border-border hover:bg-black/15 transition-all flex items-center gap-1.5"
+                  className="text-[11px] px-3 py-1.5 rounded-lg bg-black/10 text-text-primary border border-border-subtle hover:bg-black/15 transition-all flex items-center gap-1.5"
                 >
                   <Plus size={11} />
                   New Webhook
                 </button>
       </div>
     </div>{error && (
-              <div className="card p-3 border-red-500/30 bg-red-500/5 text-[11px] text-red-400 flex items-center gap-2">
+              <div className="glass rounded-xl p-3 border-red-500/30 bg-red-500/5 text-[11px] text-red-400 flex items-center gap-2">
                 <AlertTriangle size={13} />
                 <span>{error}</span>
               </div>
             )}{showCreate && (
-              <div className="card p-4 space-y-3 border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)]">
+              <div className="glass rounded-xl p-4 space-y-3 border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)]">
                 <div className="flex items-center gap-2">
                   <Webhook size={13} className="text-brand-accent" />
                   <h2 className="text-xs font-semibold text-brand-accent">New Webhook</h2>
                 </div>
                 <div>
-                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                  <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
                     Endpoint URL
                   </label>
                   <input
@@ -192,7 +192,7 @@ export default function WebhooksPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                  <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
                     Events ({newEvents.length} selected)
                   </label>
                   <div className="grid grid-cols-3 md:grid-cols-4 gap-1.5">
@@ -203,7 +203,7 @@ export default function WebhooksPage() {
                         className={`text-[10px] px-2 py-1.5 rounded border font-mono transition-all text-left ${
                           newEvents.includes(e)
                             ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.35)] text-brand-accent"
-                            : "border-border text-muted hover:text-foreground"
+                            : "border-border-subtle text-text-muted hover:text-text-primary"
                         }`}
                       >
                         {e}
@@ -214,7 +214,7 @@ export default function WebhooksPage() {
                 <div className="flex justify-end gap-2 pt-1">
                   <button
                     onClick={() => setShowCreate(false)}
-                    className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground"
+                    className="text-[10px] px-3 py-1.5 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary"
                   >
                     Cancel
                   </button>
@@ -229,15 +229,15 @@ export default function WebhooksPage() {
               </div>
             )}<div className="space-y-3">
               {loading ? (
-                <div className="card p-8 text-center text-[11px] text-muted">Loading…</div>
+                <div className="glass rounded-xl p-8 text-center text-[11px] text-text-muted">Loading…</div>
               ) : webhooks.length === 0 ? (
-                <div className="card p-10 text-center">
-                  <Webhook size={22} className="mx-auto mb-2 text-muted opacity-40" />
-                  <p className="text-[11px] text-muted">No webhooks yet. Add one to start receiving events.</p>
+                <div className="glass rounded-xl p-10 text-center">
+                  <Webhook size={22} className="mx-auto mb-2 text-text-muted opacity-40" />
+                  <p className="text-[11px] text-text-muted">No webhooks yet. Add one to start receiving events.</p>
                 </div>
               ) : (
                 webhooks.map((w) => (
-                  <div key={w.id} className="card p-4 space-y-3">
+                  <div key={w.id} className="glass rounded-xl p-4 space-y-3">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
@@ -249,11 +249,11 @@ export default function WebhooksPage() {
                           <span className="text-xs font-medium">
                             {w.active ? "Active" : "Paused"}
                           </span>
-                          <span className="text-[9px] text-muted">
+                          <span className="text-[9px] text-text-muted">
                             Created {new Date(w.created_at).toISOString().split("T")[0]}
                           </span>
                         </div>
-                        <code className="text-[11px] text-foreground font-mono break-all block">
+                        <code className="text-[11px] text-text-primary font-mono break-all block">
                           {w.url}
                         </code>
                       </div>
@@ -288,7 +288,7 @@ export default function WebhooksPage() {
                     </div>
 
                     <div>
-                      <p className="text-[9px] text-muted uppercase tracking-wider mb-1">
+                      <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">
                         Events ({w.events.length})
                       </p>
                       <div className="flex flex-wrap gap-1">
@@ -304,7 +304,7 @@ export default function WebhooksPage() {
                     </div>
 
                     <div>
-                      <p className="text-[9px] text-muted uppercase tracking-wider mb-1">
+                      <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">
                         Signing secret
                       </p>
                       <div className="flex items-center gap-2 bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)] rounded-lg px-3 py-2 font-mono text-[10px]">
@@ -317,13 +317,13 @@ export default function WebhooksPage() {
                           onClick={() =>
                             setRevealedSecrets((p) => ({ ...p, [w.id]: !p[w.id] }))
                           }
-                          className="text-muted hover:text-foreground"
+                          className="text-text-muted hover:text-text-primary"
                         >
                           {revealedSecrets[w.id] ? <EyeOff size={10} /> : <Eye size={10} />}
                         </button>
                         <button
                           onClick={() => copySecret(w.secret, w.id)}
-                          className="text-muted hover:text-brand-accent"
+                          className="text-text-muted hover:text-brand-accent"
                         >
                           {copiedId === w.id ? (
                             <CheckCircle size={10} className="text-green-400" />
@@ -336,9 +336,9 @@ export default function WebhooksPage() {
                   </div>
                 ))
               )}
-            </div><div className="card p-4">
+            </div><div className="glass rounded-xl p-4">
               <h3 className="text-xs font-semibold mb-2">Verifying signatures</h3>
-              <p className="text-[10px] text-muted mb-2">
+              <p className="text-[10px] text-text-muted mb-2">
                 Every delivery includes <code className="text-brand-accent">x-shortstack-signature</code> — HMAC-SHA256 of
                 the raw body using your subscription secret.
               </p>

@@ -195,15 +195,15 @@ export default function AiRecommender() {
       {/* ─── Modal ─── */}
       {open && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 fade-in"
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3"
           onClick={() => setOpen(false)}
         >
           <div
-            className="bg-surface border border-border  shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden"
+            className="bg-surface border border-border-subtle  shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="relative px-6 py-4 border-b border-border bg-gradient-to-br from-[rgba(59,130,246,0.08)] via-transparent to-[rgba(59,130,246,0.04)] overflow-hidden">
+            <div className="relative px-6 py-4 border-b border-border-subtle bg-gradient-to-br from-[rgba(59,130,246,0.08)] via-transparent to-[rgba(59,130,246,0.04)] overflow-hidden">
               <div className="absolute inset-0 opacity-30">
                 <div className="absolute top-0 left-1/4 w-32 h-32 rounded-full bg-[rgba(59,130,246,0.18)] blur-3xl" />
                 <div className="absolute bottom-0 right-1/3 w-40 h-40 rounded-full bg-amber-500/20 blur-3xl" />
@@ -214,13 +214,13 @@ export default function AiRecommender() {
                     <Sparkles size={22} className="text-black" />
                   </div>
                   <div>
-                    <h2 className="text-base font-semibold text-foreground">AI Task Commander</h2>
-                    <p className="text-[11px] text-muted">
+                    <h2 className="text-base font-semibold text-text-primary">AI Task Commander</h2>
+                    <p className="text-[11px] text-text-muted">
                       Your personal AI strategist. Picks the highest-leverage content & outreach for your business.
                     </p>
                   </div>
                 </div>
-                <button onClick={() => setOpen(false)} className="p-2 rounded-lg hover:bg-surface-light text-muted hover:text-foreground transition-colors">
+                <button onClick={() => setOpen(false)} className="p-2 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors">
                   <X size={16} />
                 </button>
               </div>
@@ -231,13 +231,13 @@ export default function AiRecommender() {
               <div className="mx-6 mt-4 p-3 rounded-xl bg-gradient-to-r from-[rgba(59,130,246,0.05)] to-[rgba(59,130,246,0.03)] border border-[rgba(59,130,246,0.2)] flex items-start gap-3">
                 <TrendingUp size={14} className="text-[#2563EB] shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <p className="text-[11px] font-semibold text-foreground">{theme}</p>
-                  {priorityFocus && <p className="text-[10px] text-muted mt-0.5">💡 {priorityFocus}</p>}
+                  <p className="text-[11px] font-semibold text-text-primary">{theme}</p>
+                  {priorityFocus && <p className="text-[10px] text-text-muted mt-0.5">💡 {priorityFocus}</p>}
                 </div>
                 <button
                   onClick={() => generate(true)}
                   disabled={loading}
-                  className="shrink-0 text-[10px] text-muted hover:text-[#2563EB] flex items-center gap-1 transition-colors"
+                  className="shrink-0 text-[10px] text-text-muted hover:text-[#2563EB] flex items-center gap-1 transition-colors"
                 >
                   <RefreshCw size={10} className={loading ? "animate-spin" : ""} /> Different ideas
                 </button>
@@ -249,8 +249,8 @@ export default function AiRecommender() {
               {loading && recommendations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-3">
                   <Loader2 size={32} className="animate-spin text-[#2563EB]" />
-                  <p className="text-xs text-muted">AI is analyzing your business...</p>
-                  <p className="text-[10px] text-muted/70 max-w-md text-center">
+                  <p className="text-xs text-text-muted">AI is analyzing your business...</p>
+                  <p className="text-[10px] text-text-muted/70 max-w-md text-center">
                     Checking your recent activity, business type, goals, and what would move the needle most.
                   </p>
                 </div>
@@ -261,7 +261,7 @@ export default function AiRecommender() {
                   </div>
                   <div className="text-center">
                     <p className="text-sm font-semibold mb-1">Ready when you are</p>
-                    <p className="text-[11px] text-muted max-w-sm">
+                    <p className="text-[11px] text-text-muted max-w-sm">
                       AI will generate 6-8 personalized tasks based on your business, recent activity, and what will grow revenue.
                     </p>
                   </div>
@@ -279,10 +279,10 @@ export default function AiRecommender() {
             </div>
 
             {/* Footer — schedule + close */}
-            <div className="px-6 py-4 border-t border-border bg-surface-light/30 flex items-center justify-between flex-wrap gap-2">
+            <div className="px-6 py-4 border-t border-border-subtle bg-surface-light/30 flex items-center justify-between flex-wrap gap-2">
               <button
                 onClick={() => setShowSchedule(!showSchedule)}
-                className="flex items-center gap-1.5 text-[11px] text-muted hover:text-foreground transition-colors"
+                className="flex items-center gap-1.5 text-[11px] text-text-muted hover:text-text-primary transition-colors"
               >
                 <Calendar size={12} />
                 {schedule.enabled
@@ -308,12 +308,12 @@ export default function AiRecommender() {
 
             {/* Schedule panel */}
             {showSchedule && (
-              <div className="px-6 py-4 border-t border-border bg-[rgba(59,130,246,0.03)]">
+              <div className="px-6 py-4 border-t border-border-subtle bg-[rgba(59,130,246,0.03)]">
                 <div className="flex items-start gap-3 mb-3">
                   <Clock size={14} className="text-[#2563EB] shrink-0 mt-0.5" />
                   <div className="flex-1">
                     <p className="text-xs font-semibold">Auto-run recommendations</p>
-                    <p className="text-[10px] text-muted">AI regenerates fresh ideas on a schedule so you always have what to do next.</p>
+                    <p className="text-[10px] text-text-muted">AI regenerates fresh ideas on a schedule so you always have what to do next.</p>
                   </div>
                   <label className="flex items-center gap-1.5 cursor-pointer">
                     <input
@@ -328,7 +328,7 @@ export default function AiRecommender() {
                 {schedule.enabled && (
                   <div className="space-y-2.5">
                     <div>
-                      <label className="text-[10px] text-muted uppercase tracking-wider">Frequency</label>
+                      <label className="text-[10px] text-text-muted uppercase tracking-wider">Frequency</label>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {(["daily", "every_other_day", "weekdays", "weekly", "monthly"] as const).map(f => (
                           <button
@@ -337,7 +337,7 @@ export default function AiRecommender() {
                             className={`text-[10px] px-2.5 py-1 rounded-full border ${
                               schedule.frequency === f
                                 ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-[#2563EB]"
-                                : "bg-surface-light border-border text-muted"
+                                : "bg-surface-light border-border-subtle text-text-muted"
                             }`}
                           >
                             {f.replace(/_/g, " ")}
@@ -346,14 +346,14 @@ export default function AiRecommender() {
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <label className="text-[10px] text-muted">Time</label>
+                      <label className="text-[10px] text-text-muted">Time</label>
                       <input
                         type="time"
                         value={schedule.time_of_day}
                         onChange={e => saveSchedule({ ...schedule, time_of_day: e.target.value })}
                         className="input text-xs py-1 px-2"
                       />
-                      <label className="flex items-center gap-1.5 text-[10px] text-muted">
+                      <label className="flex items-center gap-1.5 text-[10px] text-text-muted">
                         <input
                           type="checkbox"
                           checked={schedule.auto_execute_top_pick}
@@ -363,7 +363,7 @@ export default function AiRecommender() {
                         Auto-execute top pick
                       </label>
                     </div>
-                    <p className="text-[9px] text-muted flex items-center gap-1">
+                    <p className="text-[9px] text-text-muted flex items-center gap-1">
                       <Info size={9} />
                       {savingSchedule ? "Saving..." : `Next run: ${formatScheduleLabel(schedule)}`}
                     </p>
@@ -386,13 +386,13 @@ function RecommendationCard({ rec, index }: { rec: Recommendation; index: number
 
   const impactColor = rec.impact === "high" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
     rec.impact === "medium" ? "text-amber-400 bg-amber-500/10 border-amber-500/20" :
-    "text-muted bg-black/5 border-border";
+    "text-text-muted bg-black/5 border-border-subtle";
 
   const effortColor = rec.effort === "quick" ? "text-blue-400" : rec.effort === "medium" ? "text-purple-400" : "text-pink-400";
 
   return (
     <div
-      className="relative group rounded-xl border border-border bg-surface-light/30 hover:border-[rgba(59,130,246,0.25)] hover:bg-surface-light/60 transition-all overflow-hidden"
+      className="relative group rounded-xl border border-border-subtle bg-surface-light/30 hover:border-[rgba(59,130,246,0.25)] hover:bg-surface-light/60 transition-all overflow-hidden"
       style={{ animationDelay: `${index * 40}ms` }}
     >
       <div className="p-4 space-y-2.5">
@@ -403,7 +403,7 @@ function RecommendationCard({ rec, index }: { rec: Recommendation; index: number
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5">
-                <span className="text-[9px] uppercase tracking-wider text-muted">{typeInfo.emoji} {typeInfo.label}</span>
+                <span className="text-[9px] uppercase tracking-wider text-text-muted">{typeInfo.emoji} {typeInfo.label}</span>
                 <span className={`text-[9px] px-1.5 py-0.5 rounded-full border capitalize ${impactColor}`}>
                   {rec.impact}
                 </span>
@@ -413,18 +413,18 @@ function RecommendationCard({ rec, index }: { rec: Recommendation; index: number
           </div>
           <button
             onClick={() => setShowInfo(!showInfo)}
-            className="p-1 rounded hover:bg-black/5 text-muted hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+            className="p-1 rounded hover:bg-black/5 text-text-muted hover:text-text-primary opacity-0 group-hover:opacity-100 transition-opacity"
             title="What is this?"
           >
             <Info size={11} />
           </button>
         </div>
 
-        <p className="text-[11px] text-muted leading-relaxed">{rec.description}</p>
+        <p className="text-[11px] text-text-muted leading-relaxed">{rec.description}</p>
 
         {showInfo && (
-          <div className="p-2 rounded-lg bg-surface-light/80 border border-border">
-            <p className="text-[10px] text-muted leading-relaxed">{typeInfo.description}</p>
+          <div className="p-2 rounded-lg bg-surface-light/80 border border-border-subtle">
+            <p className="text-[10px] text-text-muted leading-relaxed">{typeInfo.description}</p>
           </div>
         )}
 
@@ -433,7 +433,7 @@ function RecommendationCard({ rec, index }: { rec: Recommendation; index: number
           <p className="text-[10px] text-[rgba(59,130,246,0.8)] leading-relaxed italic">{rec.reason}</p>
         </div>
 
-        <div className="flex items-center justify-between pt-2 border-t border-border/50">
+        <div className="flex items-center justify-between pt-2 border-t border-border-subtle/50">
           <span className={`text-[10px] capitalize ${effortColor}`}>
             ⏱ {rec.effort === "quick" ? "5 min" : rec.effort === "medium" ? "~30 min" : "2+ hrs"}
           </span>

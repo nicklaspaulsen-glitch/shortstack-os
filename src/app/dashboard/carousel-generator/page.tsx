@@ -645,14 +645,14 @@ export default function CarouselGeneratorPage() {
                     <>
                       <button
                         onClick={handleCopyAll}
-                        className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-border bg-black/5 text-foreground hover:bg-black/10 transition-all"
+                        className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-border-subtle bg-black/5 text-text-primary hover:bg-black/10 transition-all"
                       >
                         {copied ? <Check size={13} /> : <Copy size={13} />}
                         {copied ? "Copied!" : "Copy Text"}
                       </button>
                       <button
                         onClick={handleDownload}
-                        className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground hover:bg-black/15 transition-all"
+                        className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary hover:bg-black/15 transition-all"
                       >
                         <Download size={13} />
                         Download All
@@ -678,17 +678,17 @@ export default function CarouselGeneratorPage() {
                           value={topic}
                           onChange={e => setTopic(e.target.value)}
                           placeholder="e.g., 5 mistakes new founders make in their first year"
-                          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
+                          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
                           autoFocus
                         />
                         <div>
-                          <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Starter templates</p>
+                          <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">Starter templates</p>
                           <div className="flex flex-wrap gap-1.5">
                             {TEMPLATES.slice(0, 5).map(t => (
                               <button
                                 key={t.id}
                                 onClick={() => { setTopic(t.example); setTemplate(t.id); }}
-                                className="text-[10px] text-muted hover:text-foreground bg-surface-light hover:bg-[rgba(59,130,246,0.08)] hover:border-[rgba(59,130,246,0.25)] px-2.5 py-1 rounded-full border border-border/50 transition-all"
+                                className="text-[10px] text-text-muted hover:text-text-primary bg-surface-light hover:bg-[rgba(59,130,246,0.08)] hover:border-[rgba(59,130,246,0.25)] px-2.5 py-1 rounded-full border border-border-subtle/50 transition-all"
                               >
                                 {t.name}: {t.example.slice(0, 30)}�
                               </button>
@@ -712,7 +712,7 @@ export default function CarouselGeneratorPage() {
                               key={s.id}
                               onClick={() => setStyle(s.id)}
                               className={`text-left rounded-xl border overflow-hidden transition-all ${
-                                selected ? "border-brand-accent ring-2 ring-[rgba(59,130,246,0.25)]" : "border-border hover:border-[rgba(59,130,246,0.25)]"
+                                selected ? "border-brand-accent ring-2 ring-[rgba(59,130,246,0.25)]" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
                               }`}
                             >
                               <div className="h-16" style={{ background: s.preview }}>
@@ -722,7 +722,7 @@ export default function CarouselGeneratorPage() {
                               </div>
                               <div className="p-2.5 bg-surface-light">
                                 <p className="text-xs font-semibold">{s.name}</p>
-                                <p className="text-[10px] text-muted">{s.desc}</p>
+                                <p className="text-[10px] text-text-muted">{s.desc}</p>
                               </div>
                             </button>
                           );
@@ -744,11 +744,11 @@ export default function CarouselGeneratorPage() {
                             className={`p-4 rounded-xl border text-center transition-all ${
                               slideCount === n
                                 ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.08)]"
-                                : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                                : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
                             }`}
                           >
                             <p className="text-2xl font-bold">{n}</p>
-                            <p className="text-[10px] text-muted">slides</p>
+                            <p className="text-[10px] text-text-muted">slides</p>
                           </button>
                         ))}
                       </div>
@@ -760,24 +760,24 @@ export default function CarouselGeneratorPage() {
                     description: "We'll draft all your slides now. You can tweak individual cards in Advanced mode.",
                     icon: <Wand2 size={18} />,
                     component: (
-                      <div className="card bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.2)] space-y-2">
+                      <div className="glass rounded-xl p-4 bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.2)] space-y-2">
                         <div className="grid grid-cols-3 gap-3">
                           <div>
-                            <p className="text-[9px] uppercase tracking-wider text-muted">Style</p>
+                            <p className="text-[9px] uppercase tracking-wider text-text-muted">Style</p>
                             <p className="text-xs font-semibold capitalize">{style}</p>
                           </div>
                           <div>
-                            <p className="text-[9px] uppercase tracking-wider text-muted">Slides</p>
+                            <p className="text-[9px] uppercase tracking-wider text-text-muted">Slides</p>
                             <p className="text-xs font-semibold">{slideCount}</p>
                           </div>
                           <div>
-                            <p className="text-[9px] uppercase tracking-wider text-muted">Template</p>
+                            <p className="text-[9px] uppercase tracking-wider text-text-muted">Template</p>
                             <p className="text-xs font-semibold">{TEMPLATES.find(t => t.id === template)?.name || "Custom"}</p>
                           </div>
                         </div>
-                        <div className="pt-2 border-t border-border/50">
-                          <p className="text-[9px] uppercase tracking-wider text-muted">Topic</p>
-                          <p className="text-sm font-semibold">{topic || <span className="text-muted italic">(none)</span>}</p>
+                        <div className="pt-2 border-t border-border-subtle/50">
+                          <p className="text-[9px] uppercase tracking-wider text-text-muted">Topic</p>
+                          <p className="text-sm font-semibold">{topic || <span className="text-text-muted italic">(none)</span>}</p>
                         </div>
                       </div>
                     ),
@@ -792,9 +792,9 @@ export default function CarouselGeneratorPage() {
                 cancelLabel="Advanced mode"
               />
             )}{/* Slide preview in guided mode (after generation) */}{!advancedMode && slides.length > 0 && (
-              <div className="card mb-6 space-y-3">
+              <div className="glass rounded-xl p-4 mb-6 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h2 className="section-header flex items-center gap-2">
+                  <h2 className="flex items-center gap-2">
                     <LayoutGrid size={14} className="text-brand-accent" /> Your carousel ({slides.length} slides)
                   </h2>
                   <button
@@ -814,22 +814,22 @@ export default function CarouselGeneratorPage() {
                     <motion.div
                       key={s.slideNumber}
                       variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } } }}
-                      className="rounded-xl border border-border bg-surface-light p-3 aspect-square flex flex-col"
+                      className="rounded-xl border border-border-subtle bg-surface-light p-3 aspect-square flex flex-col"
                     >
-                      <span className="text-[9px] uppercase tracking-wider text-muted">Slide {s.slideNumber}</span>
+                      <span className="text-[9px] uppercase tracking-wider text-text-muted">Slide {s.slideNumber}</span>
                       <p className="text-sm font-bold leading-tight mt-1 line-clamp-3">{s.headline}</p>
-                      <p className="text-[10px] text-muted line-clamp-4 mt-2">{s.body}</p>
+                      <p className="text-[10px] text-text-muted line-clamp-4 mt-2">{s.body}</p>
                     </motion.div>
                   ))}
                 </motion.div>
-                <p className="text-[11px] text-muted text-center pt-2">
+                <p className="text-[11px] text-text-muted text-center pt-2">
                   Need to edit slides or change brand colors? Flip to <span className="text-brand-accent font-semibold">Advanced mode</span>.
                 </p>
               </div>
             )}{advancedMode && (
             <>
             {/* Rolling preview of example carousels � 1:1 Instagram-native aspect */}
-            <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-6 mb-5">
+            <div className="relative  overflow-hidden border border-border-subtle bg-surface-light/30 py-6 mb-5">
               <div className="absolute inset-0 pointer-events-none">
                 <RollingPreview
                   items={CAROUSEL_PREVIEW_FALLBACK}
@@ -845,10 +845,10 @@ export default function CarouselGeneratorPage() {
                 <p className="text-[11px] uppercase tracking-widest text-[rgba(59,130,246,0.8)] font-semibold">
                   Example carousel library
                 </p>
-                <h3 className="text-lg font-bold text-foreground mt-1">
+                <h3 className="text-lg font-bold text-text-primary mt-1">
                   Scroll-stopping carousels in every niche
                 </h3>
-                <p className="text-xs text-muted max-w-md mx-auto mt-1">
+                <p className="text-xs text-text-muted max-w-md mx-auto mt-1">
                   How-tos, listicles, myths-vs-facts � pick a template and we
                   generate all slides, headlines, and body copy in one pass.
                 </p>
@@ -868,7 +868,7 @@ export default function CarouselGeneratorPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: 0 }}
                 >
-                  <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
+                  <label className="text-xs font-semibold text-text-primary flex items-center gap-1.5 mb-2">
                     <Type size={13} className="text-brand-accent" />
                     Topic
                   </label>
@@ -888,8 +888,8 @@ export default function CarouselGeneratorPage() {
                   {/* Slide count */}
                   <div className="mt-3">
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-xs font-medium text-muted">Slides</span>
-                      <span className="text-xs font-bold text-foreground">{slideCount}</span>
+                      <span className="text-xs font-medium text-text-muted">Slides</span>
+                      <span className="text-xs font-bold text-text-primary">{slideCount}</span>
                     </div>
                     <input
                       type="range"
@@ -903,8 +903,8 @@ export default function CarouselGeneratorPage() {
                       }}
                     />
                     <div className="flex justify-between mt-1">
-                      <span className="text-[10px] text-muted">3</span>
-                      <span className="text-[10px] text-muted">10</span>
+                      <span className="text-[10px] text-text-muted">3</span>
+                      <span className="text-[10px] text-text-muted">10</span>
                     </div>
                   </div>
                 </motion.div>
@@ -916,7 +916,7 @@ export default function CarouselGeneratorPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: 0.06 }}
                 >
-                  <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
+                  <label className="text-xs font-semibold text-text-primary flex items-center gap-1.5 mb-3">
                     <Palette size={13} className="text-brand-accent" />
                     Style
                   </label>
@@ -935,8 +935,8 @@ export default function CarouselGeneratorPage() {
                           className="w-full h-8 rounded-lg mb-1.5"
                           style={{ background: s.preview }}
                         />
-                        <div className="text-[10px] font-semibold text-foreground">{s.name}</div>
-                        <div className="text-[9px] text-muted">{s.desc}</div>
+                        <div className="text-[10px] font-semibold text-text-primary">{s.name}</div>
+                        <div className="text-[9px] text-text-muted">{s.desc}</div>
                         {style === s.id && (
                           <div
                             className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full flex items-center justify-center"
@@ -957,7 +957,7 @@ export default function CarouselGeneratorPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: 0.12 }}
                 >
-                  <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
+                  <label className="text-xs font-semibold text-text-primary flex items-center gap-1.5 mb-3">
                     <Palette size={13} className="text-brand-accent" />
                     Brand Colors
                   </label>
@@ -988,7 +988,7 @@ export default function CarouselGeneratorPage() {
                   {/* Custom color pickers */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <span className="text-[10px] text-muted block mb-1">Primary</span>
+                      <span className="text-[10px] text-text-muted block mb-1">Primary</span>
                       <div
                         className="flex items-center gap-2 rounded-lg px-2 py-1.5"
                         style={{
@@ -1002,11 +1002,11 @@ export default function CarouselGeneratorPage() {
                           onChange={(e) => setBrandColors((c) => ({ ...c, primary: e.target.value }))}
                           className="w-5 h-5 rounded cursor-pointer border-0 p-0"
                         />
-                        <span className="text-[10px] font-mono text-muted">{brandColors.primary}</span>
+                        <span className="text-[10px] font-mono text-text-muted">{brandColors.primary}</span>
                       </div>
                     </div>
                     <div>
-                      <span className="text-[10px] text-muted block mb-1">Secondary</span>
+                      <span className="text-[10px] text-text-muted block mb-1">Secondary</span>
                       <div
                         className="flex items-center gap-2 rounded-lg px-2 py-1.5"
                         style={{
@@ -1020,7 +1020,7 @@ export default function CarouselGeneratorPage() {
                           onChange={(e) => setBrandColors((c) => ({ ...c, secondary: e.target.value }))}
                           className="w-5 h-5 rounded cursor-pointer border-0 p-0"
                         />
-                        <span className="text-[10px] font-mono text-muted">{brandColors.secondary}</span>
+                        <span className="text-[10px] font-mono text-text-muted">{brandColors.secondary}</span>
                       </div>
                     </div>
                   </div>
@@ -1033,10 +1033,10 @@ export default function CarouselGeneratorPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: 0.18 }}
                 >
-                  <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
+                  <label className="text-xs font-semibold text-text-primary flex items-center gap-1.5 mb-3">
                     <LayoutGrid size={13} className="text-brand-accent" />
                     Template
-                    <span className="text-[9px] text-muted font-normal ml-1">(optional)</span>
+                    <span className="text-[9px] text-text-muted font-normal ml-1">(optional)</span>
                   </label>
                   <div className="space-y-1.5">
                     {TEMPLATES.map((t) => {
@@ -1065,8 +1065,8 @@ export default function CarouselGeneratorPage() {
                             <Icon size={13} style={{ color: active ? "var(--color-accent)" : "var(--color-muted)" }} />
                           </div>
                           <div className="min-w-0">
-                            <div className="text-[11px] font-semibold text-foreground">{t.name}</div>
-                            <div className="text-[9px] text-muted">{t.desc}</div>
+                            <div className="text-[11px] font-semibold text-text-primary">{t.name}</div>
+                            <div className="text-[9px] text-text-muted">{t.desc}</div>
                             <div
                               className="text-[9px] mt-0.5 italic truncate"
                               style={{ color: "var(--color-muted)" }}
@@ -1136,7 +1136,7 @@ export default function CarouselGeneratorPage() {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <ImageIcon size={14} className="text-brand-accent" />
-                      <span className="text-xs font-semibold text-foreground">Preview</span>
+                      <span className="text-xs font-semibold text-text-primary">Preview</span>
                       {slides.length > 0 && (
                         <span
                           className="text-[9px] font-medium px-2 py-0.5 rounded-full"
@@ -1156,7 +1156,7 @@ export default function CarouselGeneratorPage() {
                             setSlides([]);
                             setEditingSlide(null);
                           }}
-                          className="flex items-center gap-1 text-[10px] text-muted px-2 py-1 rounded-lg transition-colors"
+                          className="flex items-center gap-1 text-[10px] text-text-muted px-2 py-1 rounded-lg transition-colors"
                           style={{ background: "var(--color-surface-light)" }}
                         >
                           <RotateCcw size={10} /> Reset
@@ -1188,8 +1188,8 @@ export default function CarouselGeneratorPage() {
                       >
                         <Layers size={28} style={{ color: "var(--color-accent)" }} />
                       </div>
-                      <h3 className="text-sm font-semibold text-foreground mb-1">No carousel yet</h3>
-                      <p className="text-xs text-muted max-w-xs">
+                      <h3 className="text-sm font-semibold text-text-primary mb-1">No carousel yet</h3>
+                      <p className="text-xs text-text-muted max-w-xs">
                         Enter a topic, pick your style, and hit Generate to create a stunning carousel in seconds.
                       </p>
                     </div>
@@ -1380,7 +1380,7 @@ export default function CarouselGeneratorPage() {
                       <div className="mt-5 space-y-2">
                         <div className="flex items-center gap-2 mb-2">
                           <Wand2 size={13} className="text-brand-accent" />
-                          <span className="text-xs font-semibold text-foreground">Slide Content</span>
+                          <span className="text-xs font-semibold text-text-primary">Slide Content</span>
                         </div>
                         {slides.map((slide, idx) => (
                           <motion.div
@@ -1409,10 +1409,10 @@ export default function CarouselGeneratorPage() {
                               {slide.slideNumber}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="text-xs font-semibold text-foreground truncate">
+                              <div className="text-xs font-semibold text-text-primary truncate">
                                 {slide.headline}
                               </div>
-                              <div className="text-[10px] text-muted mt-0.5 line-clamp-2">
+                              <div className="text-[10px] text-text-muted mt-0.5 line-clamp-2">
                                 {slide.body}
                               </div>
                             </div>
@@ -1436,7 +1436,7 @@ export default function CarouselGeneratorPage() {
                       <div className="mt-4 flex items-center justify-between pt-4" style={{ borderTop: "1px solid var(--color-border)" }}>
                         <div className="flex items-center gap-1.5">
                           <Zap size={12} style={{ color: "var(--color-accent)" }} />
-                          <span className="text-[10px] text-muted">
+                          <span className="text-[10px] text-text-muted">
                             {slides.length} slides generated for &ldquo;{topic.slice(0, 40)}{topic.length > 40 ? "..." : ""}&rdquo;
                           </span>
                         </div>

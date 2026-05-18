@@ -177,7 +177,7 @@ Be direct, specific, and action-oriented. No fluff.`;
                   whileTap={{ scale: 0.97 }}
                   onClick={handleGenerateBriefing}
                   disabled={generating || loading}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/10 hover:bg-black/10 disabled:opacity-40 text-foreground text-sm font-medium transition-colors border border-border"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/10 hover:bg-black/10 disabled:opacity-40 text-text-primary text-sm font-medium transition-colors border border-border-subtle"
                 >
                   {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                   {generating ? "Generating…" : "Generate AI briefing"}
@@ -199,7 +199,7 @@ Be direct, specific, and action-oriented. No fluff.`;
                   <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT }} className="absolute top-0 inset-x-0" />
                   <div className="flex items-center gap-2 mb-2 mt-1">
                     <Icon className={`w-4 h-4 ${color}`} />
-                    <span className="text-xs text-muted">{label}</span>
+                    <span className="text-xs text-text-muted">{label}</span>
                   </div>
                   {loading ? (
                     <div className="h-8 w-12 bg-[rgba(0,0,0,0.06)] rounded animate-pulse" />
@@ -221,21 +221,21 @@ Be direct, specific, and action-oriented. No fluff.`;
                 </h2>
                 <div className="grid sm:grid-cols-2 gap-4 text-sm">
                   <div className="space-y-2">
-                    <p className="text-muted">
+                    <p className="text-text-muted">
                       <span className="text-[#111827] font-medium">{stats.newLeads}</span> new lead{stats.newLeads !== 1 ? "s" : ""} captured in the last 24 hours.
                     </p>
-                    <p className="text-muted">
+                    <p className="text-text-muted">
                       <span className="text-[#111827] font-medium">{stats.messagesReceived}</span> inbound message{stats.messagesReceived !== 1 ? "s" : ""} across all channels.
                     </p>
-                    <p className="text-muted">
+                    <p className="text-text-muted">
                       <span className="text-[#111827] font-medium">{stats.appointmentsToday}</span> appointment{stats.appointmentsToday !== 1 ? "s" : ""} scheduled for today.
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-muted">
+                    <p className="text-text-muted">
                       <span className={`font-medium ${stats.invoicesDue > 0 ? "text-brand-accent" : "text-[#111827]"}`}>{stats.invoicesDue}</span> invoice{stats.invoicesDue !== 1 ? "s" : ""} due or overdue.
                     </p>
-                    <p className="text-muted">
+                    <p className="text-text-muted">
                       <span className="text-[#111827] font-medium">{stats.contentScheduled}</span> content piece{stats.contentScheduled !== 1 ? "s" : ""} queued to publish today.
                     </p>
                   </div>
@@ -251,7 +251,7 @@ Be direct, specific, and action-oriented. No fluff.`;
                 <h2 className="text-base font-semibold text-[#111827] mb-4 flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-brand-accent" />
                   AI Briefing
-                  {generating && <Loader2 className="w-3.5 h-3.5 animate-spin text-muted ml-1" />}
+                  {generating && <Loader2 className="w-3.5 h-3.5 animate-spin text-text-muted ml-1" />}
                 </h2>
                 <div className="text-sm text-[#374151] leading-relaxed whitespace-pre-wrap font-serif">
                   {aiText}

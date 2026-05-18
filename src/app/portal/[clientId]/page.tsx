@@ -409,7 +409,7 @@ export default function ClientPortalDashboard({
       return "bg-success/10 text-success border-success/20";
     if (s === "failed" || s === "past_due" || s === "uncollectible")
       return "bg-danger/10 text-danger border-danger/20";
-    return "bg-muted/10 text-muted border-muted/20";
+    return "bg-muted/10 text-text-muted border-muted/20";
   }
 
   function getProgressColor(progress: number) {
@@ -428,13 +428,13 @@ export default function ClientPortalDashboard({
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       {/* ═══════════════ Live Data banner ═══════════════ */}
-      <div className="card fade-in flex items-center gap-3 border-success/20 bg-success/[0.03]">
+      <div className="glass rounded-xl p-4 flex items-center gap-3 border-success/20 bg-success/[0.03]">
         <div className="h-8 w-8 rounded-xl bg-success/10 border border-success/20 flex items-center justify-center">
           <Sparkles size={14} className="text-success" />
         </div>
         <div className="flex-1">
-          <p className="text-xs font-semibold text-foreground">Live data</p>
-          <p className="text-[10px] text-muted">
+          <p className="text-xs font-semibold text-text-primary">Live data</p>
+          <p className="text-[10px] text-text-muted">
             Everything on this page is pulled in real time from your account.
           </p>
         </div>
@@ -445,7 +445,7 @@ export default function ClientPortalDashboard({
             loadContent();
             loadInvoices();
           }}
-          className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-surface-light transition-colors"
+          className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors"
           aria-label="Refresh"
         >
           <RefreshCw size={14} />
@@ -453,14 +453,14 @@ export default function ClientPortalDashboard({
       </div>
 
       {/* ═══════════════ HEADER ═══════════════ */}
-      <div className="flex items-start justify-between gap-4 fade-in">
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground tracking-tight">
+          <h1 className="text-2xl font-bold text-text-primary tracking-tight">
             {overviewLoading ? "Loading…" : `Welcome back, ${contactFirstName}`}
           </h1>
-          <p className="text-sm text-muted mt-1">
+          <p className="text-sm text-text-muted mt-1">
             Here&apos;s what&apos;s happening with{" "}
-            <span className="text-foreground font-medium">
+            <span className="text-text-primary font-medium">
               {client?.businessName || "your account"}
             </span>{" "}
             today.
@@ -472,9 +472,9 @@ export default function ClientPortalDashboard({
           <button
             onClick={() => setNotificationsOpen(!notificationsOpen)}
             aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ""}`}
-            className="relative p-2.5 rounded-xl bg-surface border border-border hover:border-[rgba(59,130,246,0.25)] transition-all"
+            className="relative p-2.5 rounded-xl bg-surface border border-border-subtle hover:border-[rgba(59,130,246,0.25)] transition-all"
           >
-            <Bell size={18} className="text-muted" />
+            <Bell size={18} className="text-text-muted" />
             {unreadCount > 0 && (
               <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-[#2563EB] text-[10px] font-bold text-white px-1">
                 {unreadCount}
@@ -483,9 +483,9 @@ export default function ClientPortalDashboard({
           </button>
 
           {notificationsOpen && (
-            <div className="absolute right-0 top-12 w-80  bg-surface border border-border shadow-elevated z-50 scale-in overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-                <p className="text-sm font-semibold text-foreground">Notifications</p>
+            <div className="absolute right-0 top-12 w-80  bg-surface border border-border-subtle shadow-elevated z-50 scale-in overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
+                <p className="text-sm font-semibold text-text-primary">Notifications</p>
                 <button
                   onClick={() => {
                     setChatOpen(true);
@@ -499,7 +499,7 @@ export default function ClientPortalDashboard({
               <div className="max-h-72 overflow-y-auto">
                 {unreadCount === 0 ? (
                   <div className="px-4 py-8 text-center">
-                    <p className="text-xs text-muted">You&apos;re all caught up.</p>
+                    <p className="text-xs text-text-muted">You&apos;re all caught up.</p>
                   </div>
                 ) : (
                   messages
@@ -508,14 +508,14 @@ export default function ClientPortalDashboard({
                     .map((m) => (
                       <div
                         key={m.id}
-                        className="flex items-start gap-3 px-4 py-3 border-b border-border/50 last:border-0 bg-[rgba(59,130,246,0.05)]"
+                        className="flex items-start gap-3 px-4 py-3 border-b border-border-subtle/50 last:border-0 bg-[rgba(59,130,246,0.05)]"
                       >
                         <div className="mt-1 w-2 h-2 rounded-full bg-[#2563EB] shrink-0" />
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs text-foreground leading-snug line-clamp-2">
+                          <p className="text-xs text-text-primary leading-snug line-clamp-2">
                             {m.body}
                           </p>
-                          <p className="text-[10px] text-muted mt-0.5">
+                          <p className="text-[10px] text-text-muted mt-0.5">
                             {formatDate(m.created_at)}
                           </p>
                         </div>
@@ -530,7 +530,7 @@ export default function ClientPortalDashboard({
 
       {/* ═══════════════ WELCOME BANNER ═══════════════ */}
       <div
-        className="card fade-in stagger-1 relative overflow-hidden"
+        className="glass rounded-xl p-4 stagger-1 relative overflow-hidden"
         style={{
           background:
             "linear-gradient(135deg, var(--color-surface) 0%, color-mix(in srgb, var(--color-surface) 92%, var(--color-accent)) 100%)",
@@ -546,26 +546,26 @@ export default function ClientPortalDashboard({
                 <Sparkles size={18} className="text-[#2563EB]" />
               </div>
               <div>
-                <p className="text-lg font-semibold text-foreground">
+                <p className="text-lg font-semibold text-text-primary">
                   {client?.businessName || "—"}
                 </p>
-                <p className="text-xs text-muted">
+                <p className="text-xs text-text-muted">
                   {client?.plan ? `${client.plan} Plan` : "Plan"}
                 </p>
               </div>
             </div>
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-text-muted">
               {client?.contactName && (
                 <span className="flex items-center gap-1.5">
                   <User size={13} className="text-[rgba(59,130,246,0.7)]" />
                   Contact:{" "}
-                  <span className="text-foreground font-medium">{client.contactName}</span>
+                  <span className="text-text-primary font-medium">{client.contactName}</span>
                 </span>
               )}
               {client?.email && (
                 <span className="flex items-center gap-1.5">
                   <MessageSquare size={13} className="text-[rgba(59,130,246,0.7)]" />
-                  <span className="text-foreground font-medium">{client.email}</span>
+                  <span className="text-text-primary font-medium">{client.email}</span>
                 </span>
               )}
             </div>
@@ -581,7 +581,7 @@ export default function ClientPortalDashboard({
       </div>
 
       {/* ═══════════════ QUICK STATS ═══════════════ */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 fade-in stagger-2">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 stagger-2">
         <QuickStat
           label="Active Projects"
           value={overview?.projects.length ?? 0}
@@ -614,14 +614,14 @@ export default function ClientPortalDashboard({
       </div>
 
       {/* ═══════════════ PROJECTS ═══════════════ */}
-      <div className="space-y-3 fade-in stagger-3">
+      <div className="space-y-3 stagger-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">
+          <h2 className="text-sm font-semibold text-text-primary uppercase tracking-wider">
             Active Projects
           </h2>
         </div>
         {overviewLoading ? (
-          <div className="card flex items-center gap-3 text-muted text-xs">
+          <div className="glass rounded-xl p-4 flex items-center gap-3 text-text-muted text-xs">
             <Loader2 size={14} className="animate-spin" /> Loading projects…
           </div>
         ) : overviewError ? (
@@ -629,13 +629,13 @@ export default function ClientPortalDashboard({
         ) : overview && overview.projects.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
             {overview.projects.map((project) => (
-              <div key={project.id} className="card group cursor-pointer">
+              <div key={project.id} className="glass rounded-xl p-4 group cursor-pointer">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-foreground truncate group-hover:text-[#2563EB] transition-colors">
+                    <p className="text-sm font-semibold text-text-primary truncate group-hover:text-[#2563EB] transition-colors">
                       {project.name}
                     </p>
-                    <p className="text-[11px] text-muted mt-0.5">
+                    <p className="text-[11px] text-text-muted mt-0.5">
                       {project.doneCount} / {project.taskCount} tasks complete
                     </p>
                   </div>
@@ -645,8 +645,8 @@ export default function ClientPortalDashboard({
                 </div>
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between text-[10px]">
-                    <span className="text-muted">Progress</span>
-                    <span className="text-foreground font-medium">{project.progress}%</span>
+                    <span className="text-text-muted">Progress</span>
+                    <span className="text-text-primary font-medium">{project.progress}%</span>
                   </div>
                   <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
                     <div
@@ -658,8 +658,8 @@ export default function ClientPortalDashboard({
                   </div>
                 </div>
                 {project.nextDueDate && (
-                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/50">
-                    <span className="text-[10px] text-muted flex items-center gap-1">
+                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-border-subtle/50">
+                    <span className="text-[10px] text-text-muted flex items-center gap-1">
                       <Clock size={10} />
                       Next due: {formatDate(project.nextDueDate)}
                     </span>
@@ -678,19 +678,19 @@ export default function ClientPortalDashboard({
       </div>
 
       {/* ═══════════════ TWO-COLUMN: TASKS + MILESTONES ═══════════════ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 fade-in stagger-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 stagger-4">
         {/* ── Tasks ── */}
-        <div className="card space-y-4">
+        <div className="glass rounded-xl p-4 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">
+            <h2 className="text-sm font-semibold text-text-primary uppercase tracking-wider">
               Your Tasks
             </h2>
-            <span className="text-[10px] text-muted bg-surface-light px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-text-muted bg-surface-light px-2 py-0.5 rounded-full">
               {openTasks} open
             </span>
           </div>
           {tasksLoading ? (
-            <div className="flex items-center gap-3 text-muted text-xs">
+            <div className="flex items-center gap-3 text-text-muted text-xs">
               <Loader2 size={14} className="animate-spin" /> Loading…
             </div>
           ) : tasks.length === 0 ? (
@@ -706,12 +706,12 @@ export default function ClientPortalDashboard({
                 <div
                   key={t.id}
                   className={`flex items-start gap-3 py-2.5 ${
-                    idx < tasks.length - 1 ? "border-b border-border/40" : ""
+                    idx < tasks.length - 1 ? "border-b border-border-subtle/40" : ""
                   }`}
                 >
                   <button
                     onClick={() => toggleTask(t)}
-                    className="mt-0.5 p-0.5 rounded-md text-muted hover:text-[#2563EB] transition-colors"
+                    className="mt-0.5 p-0.5 rounded-md text-text-muted hover:text-[#2563EB] transition-colors"
                     aria-label={t.is_completed ? "Mark incomplete" : "Mark complete"}
                   >
                     {t.is_completed ? (
@@ -723,16 +723,16 @@ export default function ClientPortalDashboard({
                   <div className="flex-1 min-w-0">
                     <p
                       className={`text-xs font-medium leading-snug ${
-                        t.is_completed ? "text-muted line-through" : "text-foreground"
+                        t.is_completed ? "text-text-muted line-through" : "text-text-primary"
                       }`}
                     >
                       {t.title}
                     </p>
                     {t.description && (
-                      <p className="text-[11px] text-muted mt-0.5 line-clamp-2">{t.description}</p>
+                      <p className="text-[11px] text-text-muted mt-0.5 line-clamp-2">{t.description}</p>
                     )}
                     {t.due_date && (
-                      <p className="text-[10px] text-muted mt-1 flex items-center gap-1">
+                      <p className="text-[10px] text-text-muted mt-1 flex items-center gap-1">
                         <CalendarDays size={10} />
                         Due: {formatDate(t.due_date)}
                       </p>
@@ -745,17 +745,17 @@ export default function ClientPortalDashboard({
         </div>
 
         {/* ── Upcoming Milestones ── */}
-        <div className="card space-y-4">
+        <div className="glass rounded-xl p-4 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">
+            <h2 className="text-sm font-semibold text-text-primary uppercase tracking-wider">
               Upcoming Milestones
             </h2>
-            <span className="text-[10px] text-muted bg-surface-light px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-text-muted bg-surface-light px-2 py-0.5 rounded-full">
               Next 30 days
             </span>
           </div>
           {overviewLoading ? (
-            <div className="flex items-center gap-3 text-muted text-xs">
+            <div className="flex items-center gap-3 text-text-muted text-xs">
               <Loader2 size={14} className="animate-spin" /> Loading…
             </div>
           ) : !overview?.milestones.length ? (
@@ -771,7 +771,7 @@ export default function ClientPortalDashboard({
                 <div
                   key={m.id}
                   className={`flex items-start gap-3 py-3 ${
-                    idx < overview.milestones.length - 1 ? "border-b border-border/40" : ""
+                    idx < overview.milestones.length - 1 ? "border-b border-border-subtle/40" : ""
                   }`}
                 >
                   <div className="flex flex-col items-center shrink-0">
@@ -788,10 +788,10 @@ export default function ClientPortalDashboard({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <p className="text-xs font-medium text-foreground leading-snug">
+                        <p className="text-xs font-medium text-text-primary leading-snug">
                           {m.title}
                         </p>
-                        <p className="text-[10px] text-muted mt-0.5">
+                        <p className="text-[10px] text-text-muted mt-0.5">
                           {m.boardName || "Project"}
                         </p>
                       </div>
@@ -802,7 +802,7 @@ export default function ClientPortalDashboard({
                       </span>
                     </div>
                     {m.dueDate && (
-                      <p className="text-[10px] text-muted mt-1 flex items-center gap-1">
+                      <p className="text-[10px] text-text-muted mt-1 flex items-center gap-1">
                         <CalendarDays size={10} />
                         Due: {formatDate(m.dueDate)}
                       </p>
@@ -816,17 +816,17 @@ export default function ClientPortalDashboard({
       </div>
 
       {/* ═══════════════ CONTENT APPROVALS ═══════════════ */}
-      <div className="space-y-3 fade-in">
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">
+          <h2 className="text-sm font-semibold text-text-primary uppercase tracking-wider">
             Content Approvals
           </h2>
-          <span className="text-[10px] text-muted bg-surface-light px-2 py-0.5 rounded-full">
+          <span className="text-[10px] text-text-muted bg-surface-light px-2 py-0.5 rounded-full">
             {pendingApprovals} pending
           </span>
         </div>
         {contentLoading ? (
-          <div className="card flex items-center gap-3 text-muted text-xs">
+          <div className="glass rounded-xl p-4 flex items-center gap-3 text-text-muted text-xs">
             <Loader2 size={14} className="animate-spin" /> Loading…
           </div>
         ) : contentItems.length === 0 ? (
@@ -843,16 +843,16 @@ export default function ClientPortalDashboard({
                 item.status === "scripted" ||
                 item.status === "editing";
               return (
-                <div key={item.id} className="card space-y-3">
+                <div key={item.id} className="glass rounded-xl p-4 space-y-3">
                   <div className="flex items-start gap-3">
                     <div className="p-2 rounded-xl bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.1)] shrink-0">
                       <Rocket size={14} className="text-[#2563EB]" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-semibold text-foreground leading-snug">
+                      <p className="text-xs font-semibold text-text-primary leading-snug">
                         {item.title}
                       </p>
-                      <p className="text-[10px] text-muted mt-0.5">
+                      <p className="text-[10px] text-text-muted mt-0.5">
                         {item.platform} · {prettyStatus(item.status)}
                       </p>
                     </div>
@@ -861,13 +861,13 @@ export default function ClientPortalDashboard({
                     </span>
                   </div>
                   {item.scheduled_at && (
-                    <p className="text-[10px] text-muted flex items-center gap-1">
+                    <p className="text-[10px] text-text-muted flex items-center gap-1">
                       <CalendarDays size={10} />
                       Scheduled: {formatDate(item.scheduled_at)}
                     </p>
                   )}
                   {actionable && (
-                    <div className="flex items-center gap-2 pt-2 border-t border-border/40">
+                    <div className="flex items-center gap-2 pt-2 border-t border-border-subtle/40">
                       <button
                         onClick={() => decideContent(item.id, "approve")}
                         className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-medium text-success bg-success/10 hover:bg-success/20 rounded-lg py-2 transition-colors"
@@ -877,7 +877,7 @@ export default function ClientPortalDashboard({
                       </button>
                       <button
                         onClick={() => decideContent(item.id, "reject")}
-                        className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-medium text-muted bg-surface-light hover:bg-border/50 rounded-lg py-2 transition-colors"
+                        className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-medium text-text-muted bg-surface-light hover:bg-border-subtle/50 rounded-lg py-2 transition-colors"
                       >
                         <ThumbsDown size={12} />
                         Request Edits
@@ -892,19 +892,19 @@ export default function ClientPortalDashboard({
       </div>
 
       {/* ═══════════════ INVOICES ═══════════════ */}
-      <div className="space-y-3 fade-in">
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">
+          <h2 className="text-sm font-semibold text-text-primary uppercase tracking-wider">
             Invoices
           </h2>
           {overview?.latestInvoice && (
-            <span className="text-[10px] text-muted bg-surface-light px-2 py-0.5 rounded-full">
+            <span className="text-[10px] text-text-muted bg-surface-light px-2 py-0.5 rounded-full">
               Most recent: {prettyStatus(overview.latestInvoice.status)}
             </span>
           )}
         </div>
         {invoicesLoading ? (
-          <div className="card flex items-center gap-3 text-muted text-xs">
+          <div className="glass rounded-xl p-4 flex items-center gap-3 text-text-muted text-xs">
             <Loader2 size={14} className="animate-spin" /> Loading…
           </div>
         ) : invoices.length === 0 ? (
@@ -914,22 +914,22 @@ export default function ClientPortalDashboard({
             description="You'll see invoices here as soon as your agency sends one."
           />
         ) : (
-          <div className="card space-y-0">
+          <div className="glass rounded-xl p-4 space-y-0">
             {invoices.slice(0, 6).map((inv, idx) => (
               <div
                 key={inv.id}
                 className={`flex items-center gap-3 py-3 ${
-                  idx < invoices.length - 1 ? "border-b border-border/40" : ""
+                  idx < invoices.length - 1 ? "border-b border-border-subtle/40" : ""
                 }`}
               >
                 <div className="p-2 rounded-xl bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.1)] shrink-0">
                   <Receipt size={14} className="text-[#2563EB]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-foreground">
+                  <p className="text-xs font-semibold text-text-primary">
                     {formatCurrency(inv.amount, inv.currency)}
                   </p>
-                  <p className="text-[10px] text-muted mt-0.5">
+                  <p className="text-[10px] text-text-muted mt-0.5">
                     {inv.dueDate
                       ? `Due ${formatDate(inv.dueDate)}`
                       : inv.createdAt
@@ -957,8 +957,8 @@ export default function ClientPortalDashboard({
       </div>
 
       {/* ═══════════════ QUICK ACTIONS ═══════════════ */}
-      <div className="space-y-3 fade-in">
-        <h2 className="text-sm font-semibold text-foreground uppercase tracking-wider">
+      <div className="space-y-3">
+        <h2 className="text-sm font-semibold text-text-primary uppercase tracking-wider">
           Quick Actions
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -995,7 +995,7 @@ export default function ClientPortalDashboard({
         aria-label={chatOpen ? "Close assistant" : "Open assistant"}
         className={`fixed bottom-6 right-6 z-40 p-3.5  shadow-elevated transition-all duration-300 ${
           chatOpen
-            ? "bg-surface border border-border text-muted hover:text-foreground scale-90"
+            ? "bg-surface border border-border-subtle text-text-muted hover:text-text-primary scale-90"
             : "bg-[#2563EB] text-white hover:bg-[#1D4ED8] scale-100"
         }`}
         style={
@@ -1016,9 +1016,9 @@ export default function ClientPortalDashboard({
       </button>
 
       {chatOpen && (
-        <div className="fixed bottom-20 right-6 z-40 w-[380px] max-h-[520px]  bg-surface border border-border shadow-elevated flex flex-col scale-in overflow-hidden">
+        <div className="fixed bottom-20 right-6 z-40 w-[380px] max-h-[520px]  bg-surface border border-border-subtle shadow-elevated flex flex-col scale-in overflow-hidden">
           <div
-            className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0"
+            className="flex items-center gap-3 px-4 py-3 border-b border-border-subtle shrink-0"
             style={{
               background:
                 "linear-gradient(135deg, var(--color-surface) 0%, color-mix(in srgb, var(--color-surface) 94%, var(--color-accent)) 100%)",
@@ -1031,7 +1031,7 @@ export default function ClientPortalDashboard({
               <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-success rounded-full border-2 border-surface" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-semibold text-foreground">Your Agency</p>
+              <p className="text-sm font-semibold text-text-primary">Your Agency</p>
               <p className="text-[10px] text-success flex items-center gap-1">
                 <span className="w-1 h-1 rounded-full bg-success" />
                 Connected
@@ -1040,7 +1040,7 @@ export default function ClientPortalDashboard({
             <button
               onClick={() => setChatOpen(false)}
               aria-label="Close"
-              className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-surface-light transition-colors"
+              className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors"
             >
               <X size={14} />
             </button>
@@ -1048,13 +1048,13 @@ export default function ClientPortalDashboard({
 
           <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[280px]">
             {messagesLoading && messages.length === 0 ? (
-              <div className="flex items-center gap-2 text-muted text-xs">
+              <div className="flex items-center gap-2 text-text-muted text-xs">
                 <Loader2 size={12} className="animate-spin" /> Loading messages…
               </div>
             ) : messages.length === 0 ? (
               <div className="text-center py-6">
-                <Bot size={24} className="text-muted/40 mx-auto mb-2" />
-                <p className="text-xs text-muted">
+                <Bot size={24} className="text-text-muted/40 mx-auto mb-2" />
+                <p className="text-xs text-text-muted">
                   Start the conversation — your agency will reply here.
                 </p>
               </div>
@@ -1070,7 +1070,7 @@ export default function ClientPortalDashboard({
                       className={`max-w-[85%]  px-3.5 py-2.5 text-xs leading-relaxed ${
                         isMe
                           ? "bg-[#2563EB] text-white rounded-br-md"
-                          : "bg-surface-light text-foreground rounded-bl-md border border-border/50"
+                          : "bg-surface-light text-text-primary rounded-bl-md border border-border-subtle/50"
                       }`}
                     >
                       {msg.body}
@@ -1089,7 +1089,7 @@ export default function ClientPortalDashboard({
             <div ref={chatEndRef} />
           </div>
 
-          <div className="border-t border-border p-3 shrink-0">
+          <div className="border-t border-border-subtle p-3 shrink-0">
             <div className="flex items-center gap-2">
               <input
                 ref={chatInputRef}
@@ -1107,7 +1107,7 @@ export default function ClientPortalDashboard({
                 className={`p-2.5 rounded-xl transition-all ${
                   chatInput.trim() && !chatSending
                     ? "bg-[#2563EB] text-white hover:bg-[#1D4ED8]"
-                    : "bg-surface-light text-muted cursor-not-allowed"
+                    : "bg-surface-light text-text-muted cursor-not-allowed"
                 }`}
               >
                 <Send size={14} />
@@ -1164,14 +1164,14 @@ function QuickStat({
         {icon}
       </div>
       <div>
-        <p className="text-xl font-bold text-foreground tracking-tight tabular-nums">
+        <p className="text-xl font-bold text-text-primary tracking-tight tabular-nums">
           {loading ? (
-            <Loader2 size={16} className="animate-spin text-muted" />
+            <Loader2 size={16} className="animate-spin text-text-muted" />
           ) : (
             value
           )}
         </p>
-        <p className="text-[10px] text-muted font-medium uppercase tracking-wider">
+        <p className="text-[10px] text-text-muted font-medium uppercase tracking-wider">
           {label}
         </p>
       </div>
@@ -1193,15 +1193,15 @@ function QuickActionButton({
   return (
     <button
       onClick={onClick}
-      className="card text-left group cursor-pointer hover:border-[rgba(59,130,246,0.25)]"
+      className="glass rounded-xl p-4 text-left group cursor-pointer hover:border-[rgba(59,130,246,0.25)]"
     >
       <div className="flex items-center gap-2.5 mb-2">
         <div className="p-2 rounded-xl bg-[rgba(59,130,246,0.08)] text-[#2563EB] border border-[rgba(59,130,246,0.1)] group-hover:bg-[rgba(59,130,246,0.12)] transition-colors">
           {icon}
         </div>
-        <p className="text-xs font-semibold text-foreground">{label}</p>
+        <p className="text-xs font-semibold text-text-primary">{label}</p>
       </div>
-      <p className="text-[10px] text-muted leading-relaxed">{description}</p>
+      <p className="text-[10px] text-text-muted leading-relaxed">{description}</p>
     </button>
   );
 }
@@ -1223,24 +1223,24 @@ function EmptyBlock({
         compact ? "py-5" : "py-10"
       }`}
     >
-      <div className="h-10 w-10 rounded-xl bg-muted/10 border border-muted/20 flex items-center justify-center mb-2 text-muted">
+      <div className="h-10 w-10 rounded-xl bg-muted/10 border border-muted/20 flex items-center justify-center mb-2 text-text-muted">
         {icon}
       </div>
-      <p className="text-sm font-semibold text-foreground">{title}</p>
-      <p className="text-[11px] text-muted mt-1 max-w-xs">{description}</p>
+      <p className="text-sm font-semibold text-text-primary">{title}</p>
+      <p className="text-[11px] text-text-muted mt-1 max-w-xs">{description}</p>
     </div>
   );
 }
 
 function ErrorBlock({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div className="card flex items-start gap-3 border-danger/20 bg-danger/[0.03]">
+    <div className="glass rounded-xl p-4 flex items-start gap-3 border-danger/20 bg-danger/[0.03]">
       <div className="h-9 w-9 rounded-xl bg-danger/10 border border-danger/20 flex items-center justify-center shrink-0">
         <AlertCircle size={16} className="text-danger" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-semibold text-foreground">Couldn&apos;t load</p>
-        <p className="text-[11px] text-muted mt-0.5">{message}</p>
+        <p className="text-xs font-semibold text-text-primary">Couldn&apos;t load</p>
+        <p className="text-[11px] text-text-muted mt-0.5">{message}</p>
       </div>
       <button
         onClick={onRetry}

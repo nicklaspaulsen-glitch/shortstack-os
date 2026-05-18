@@ -399,7 +399,7 @@ function WorkflowNode({ id, data, selected }: NodeProps) {
     <div
       className={`
         relative group rounded-xl border-l-[3px] ${colors.border}
-        bg-surface border border-border min-w-[200px] max-w-[240px]
+        bg-surface border border-border-subtle min-w-[200px] max-w-[240px]
         transition-all duration-200
         ${selected ? "ring-1 ring-[rgba(59,130,246,0.4)] border-[rgba(59,130,246,0.25)]" : ""}
         ${isSimulating ? "ring-2 ring-[rgba(59,130,246,0.7)] shadow-[0_0_20px_rgba(59,130,246,0.25)]" : ""}
@@ -418,8 +418,8 @@ function WorkflowNode({ id, data, selected }: NodeProps) {
             {def.icon}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-semibold text-foreground truncate">{def.label}</div>
-            <div className="text-[10px] text-muted truncate">{def.description}</div>
+            <div className="text-xs font-semibold text-text-primary truncate">{def.label}</div>
+            <div className="text-[10px] text-text-muted truncate">{def.description}</div>
           </div>
           {/* Status dot */}
           <div className={`shrink-0 w-2 h-2 rounded-full ${isSimulating ? "bg-brand-accent animate-pulse" : colors.dot} opacity-60`} />
@@ -427,11 +427,11 @@ function WorkflowNode({ id, data, selected }: NodeProps) {
 
         {/* Config preview */}
         {nodeData.config && Object.keys(nodeData.config).length > 0 && (
-          <div className="mt-2 pt-2 border-t border-border/50">
+          <div className="mt-2 pt-2 border-t border-border-subtle/50">
             {Object.entries(nodeData.config).slice(0, 2).map(([k, v]) =>
               v ? (
-                <div key={k} className="text-[10px] text-muted truncate">
-                  <span className="text-muted/60">{k}:</span> {String(v)}
+                <div key={k} className="text-[10px] text-text-muted truncate">
+                  <span className="text-text-muted/60">{k}:</span> {String(v)}
                 </div>
               ) : null
             )}
@@ -796,7 +796,7 @@ function WorkflowBuilderInner() {
   /* ================================================================ */
 
   return (
-    <div className="fade-in flex flex-col">
+    <div className="flex flex-col">
       {/* -- Workflow Builder command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -806,7 +806,7 @@ function WorkflowBuilderInner() {
       </div>
     <div className="flex flex-col h-[calc(100vh-14rem)]">
       {/* -- Top Toolbar -- */}
-      <div className="shrink-0 h-11 border-b border-border glass flex items-center px-3 gap-2">
+      <div className="shrink-0 h-11 border-b border-border-subtle glass flex items-center px-3 gap-2">
         <Zap size={16} className="text-brand-accent" />
         {editingName ? (
           <input
@@ -815,20 +815,20 @@ function WorkflowBuilderInner() {
             onChange={e => setWorkflowName(e.target.value)}
             onBlur={() => setEditingName(false)}
             onKeyDown={e => e.key === "Enter" && setEditingName(false)}
-            className="bg-surface-light border border-border rounded px-2 py-0.5 text-sm font-semibold text-foreground outline-none focus:border-brand-accent w-52"
+            className="bg-surface-light border border-border-subtle rounded px-2 py-0.5 text-sm font-semibold text-text-primary outline-none focus:border-brand-accent w-52"
           />
         ) : (
-          <button onClick={() => setEditingName(true)} className="text-sm font-semibold text-foreground hover:text-brand-accent transition-colors truncate max-w-[200px]">
+          <button onClick={() => setEditingName(true)} className="text-sm font-semibold text-text-primary hover:text-brand-accent transition-colors truncate max-w-[200px]">
             {workflowName}
           </button>
         )}
 
-        <div className="w-px h-5 bg-border mx-1" />
+        <div className="w-px h-5 bg-border-subtle mx-1" />
 
         <button
           onClick={saveWorkflow}
           disabled={saving}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium text-muted hover:text-foreground hover:bg-surface-light transition-colors disabled:opacity-50"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors disabled:opacity-50"
           title="Save (Ctrl+S)"
         >
           <Save size={13} /> {saving ? "Saving..." : "Save"}
@@ -844,18 +844,18 @@ function WorkflowBuilderInner() {
           </button>
         )}
 
-        <div className="w-px h-5 bg-border mx-1" />
+        <div className="w-px h-5 bg-border-subtle mx-1" />
 
-        <button onClick={undo} disabled={!canUndo} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-surface-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Undo (Ctrl+Z)" aria-label="Undo (Ctrl+Z)">
+        <button onClick={undo} disabled={!canUndo} className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Undo (Ctrl+Z)" aria-label="Undo (Ctrl+Z)">
           <Undo2 size={14} />
         </button>
-        <button onClick={redo} disabled={!canRedo} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-surface-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Redo (Ctrl+Shift+Z)" aria-label="Redo (Ctrl+Shift+Z)">
+        <button onClick={redo} disabled={!canRedo} className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Redo (Ctrl+Shift+Z)" aria-label="Redo (Ctrl+Shift+Z)">
           <Redo2 size={14} />
         </button>
 
-        <div className="w-px h-5 bg-border mx-1" />
+        <div className="w-px h-5 bg-border-subtle mx-1" />
 
-        <button onClick={autoLayout} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium text-muted hover:text-foreground hover:bg-surface-light transition-colors" title="Auto Layout">
+        <button onClick={autoLayout} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors" title="Auto Layout">
           <LayoutGrid size={13} /> Layout
         </button>
 
@@ -869,15 +869,15 @@ function WorkflowBuilderInner() {
       {/* -- Main Area -- */}
       <div className="flex flex-1 min-h-0">
         {/* -- Left Sidebar: Node Palette -- */}
-        <div className="shrink-0 w-[250px] border-r border-border glass overflow-y-auto">
+        <div className="shrink-0 w-[250px] border-r border-border-subtle glass overflow-y-auto">
           <div className="p-3">
             <div className="relative mb-3">
-              <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
+              <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
               <input
                 value={paletteSearch}
                 onChange={e => setPaletteSearch(e.target.value)}
                 placeholder="Search nodes..."
-                className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-surface-light border border-border text-xs text-foreground placeholder:text-muted/50 outline-none focus:border-brand-accent transition-colors"
+                className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-surface-light border border-border-subtle text-xs text-text-primary placeholder:text-text-muted/50 outline-none focus:border-brand-accent transition-colors"
               />
             </div>
 
@@ -890,12 +890,12 @@ function WorkflowBuilderInner() {
                 <div key={cat} className="mb-3">
                   <button
                     onClick={() => setCollapsedCategories(p => ({ ...p, [cat]: !p[cat] }))}
-                    className="flex items-center gap-1.5 w-full text-[10px] font-semibold uppercase tracking-wider text-muted hover:text-foreground mb-1.5 transition-colors"
+                    className="flex items-center gap-1.5 w-full text-[10px] font-semibold uppercase tracking-wider text-text-muted hover:text-text-primary mb-1.5 transition-colors"
                   >
                     {collapsed ? <ChevronRight size={11} /> : <ChevronDown size={11} />}
                     <span className={`w-2 h-2 rounded-full ${colors.dot}`} />
                     {CATEGORY_LABELS[cat]}
-                    <span className="ml-auto text-muted/50 font-normal normal-case">{items.length}</span>
+                    <span className="ml-auto text-text-muted/50 font-normal normal-case">{items.length}</span>
                   </button>
                   {!collapsed && (
                     <div className="space-y-1">
@@ -909,16 +909,16 @@ function WorkflowBuilderInner() {
                           }}
                           className={`
                             flex items-center gap-2 px-2.5 py-2 rounded-lg border border-transparent cursor-grab active:cursor-grabbing
-                            hover:bg-surface-light hover:border-border transition-all text-left group
+                            hover:bg-surface-light hover:border-border-subtle transition-all text-left group
                           `}
                         >
-                          <GripVertical size={10} className="text-muted/30 group-hover:text-muted/60 shrink-0" />
+                          <GripVertical size={10} className="text-text-muted/30 group-hover:text-text-muted/60 shrink-0" />
                           <div className={`shrink-0 w-6 h-6 rounded-md flex items-center justify-center ${colors.bg} ${colors.text}`}>
                             {def.icon}
                           </div>
                           <div className="min-w-0">
-                            <div className="text-[11px] font-medium text-foreground truncate">{def.label}</div>
-                            <div className="text-[10px] text-muted/60 truncate">{def.description}</div>
+                            <div className="text-[11px] font-medium text-text-primary truncate">{def.label}</div>
+                            <div className="text-[10px] text-text-muted/60 truncate">{def.description}</div>
                           </div>
                         </div>
                       ))}
@@ -957,12 +957,12 @@ function WorkflowBuilderInner() {
             <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="var(--color-border, #1e1e2e)" />
             <Controls
               showInteractive={false}
-              className="!bg-surface !border-border !rounded-xl !shadow-lg [&>button]:!bg-surface [&>button]:!border-border [&>button]:!text-muted [&>button:hover]:!text-foreground [&>button:hover]:!bg-surface-light"
+              className="!bg-surface ! border-border-subtle !rounded-xl !shadow-lg [&>button]:!bg-surface [&>button]:! border-border-subtle [&>button]:! text-text-muted [&>button:hover]:! text-text-primary [&>button:hover]:!bg-surface-light"
             />
             <MiniMap
               nodeColor={() => "#2563EB"}
               maskColor="rgba(0,0,0,0.3)"
-              className="!bg-surface !border-border !rounded-xl"
+              className="!bg-surface ! border-border-subtle !rounded-xl"
               pannable
               zoomable
             />
@@ -974,8 +974,8 @@ function WorkflowBuilderInner() {
                   <div className="w-14 h-14  bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] flex items-center justify-center mx-auto mb-4">
                     <Zap size={24} className="text-brand-accent" />
                   </div>
-                  <h3 className="text-sm font-semibold text-foreground mb-1">Build your workflow</h3>
-                  <p className="text-[11px] text-muted max-w-[240px] mx-auto mb-4">Drag nodes from the left panel onto the canvas, or start with a template.</p>
+                  <h3 className="text-sm font-semibold text-text-primary mb-1">Build your workflow</h3>
+                  <p className="text-[11px] text-text-muted max-w-[240px] mx-auto mb-4">Drag nodes from the left panel onto the canvas, or start with a template.</p>
                   <button
                     onClick={() => setShowTemplates(true)}
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.12)] transition-colors"
@@ -992,14 +992,14 @@ function WorkflowBuilderInner() {
             <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 rounded-xl bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] backdrop-blur-sm z-10">
               <div className="w-2 h-2 rounded-full bg-brand-accent animate-pulse" />
               <span className="text-[11px] font-medium text-brand-accent">Simulating workflow...</span>
-              <button onClick={stopSimulation} className="text-[10px] text-muted hover:text-foreground ml-2">Stop</button>
+              <button onClick={stopSimulation} className="text-[10px] text-text-muted hover:text-text-primary ml-2">Stop</button>
             </div>
           )}
         </div>
 
         {/* -- Right Panel: Node Config -- */}
         {selectedNode && selectedDef && (
-          <div className="hidden lg:block shrink-0 w-[300px] border-l border-border glass overflow-y-auto">
+          <div className="hidden lg:block shrink-0 w-[300px] border-l border-border-subtle glass overflow-y-auto">
             <div className="p-4">
               {/* Header */}
               <div className="flex items-center justify-between mb-4">
@@ -1008,40 +1008,40 @@ function WorkflowBuilderInner() {
                     {selectedDef.icon}
                   </div>
                   <div>
-                    <div className="text-xs font-semibold text-foreground">{selectedDef.label}</div>
-                    <div className="text-[10px] text-muted capitalize">{selectedDef.category} node</div>
+                    <div className="text-xs font-semibold text-text-primary">{selectedDef.label}</div>
+                    <div className="text-[10px] text-text-muted capitalize">{selectedDef.category} node</div>
                   </div>
                 </div>
-                <button onClick={() => setSelectedNodeId(null)} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-surface-light transition-colors">
+                <button onClick={() => setSelectedNodeId(null)} className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors">
                   <X size={14} />
                 </button>
               </div>
 
               {/* Description */}
-              <p className="text-[11px] text-muted mb-4 leading-relaxed">{selectedDef.description}</p>
+              <p className="text-[11px] text-text-muted mb-4 leading-relaxed">{selectedDef.description}</p>
 
               {/* Config fields */}
               {configFields.length > 0 ? (
                 <div className="space-y-3">
-                  <div className="text-[10px] font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
+                  <div className="text-[10px] font-semibold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
                     <Settings size={10} /> Configuration
                   </div>
                   {configFields.map(field => (
                     <div key={field.key}>
-                      <label className="block text-[11px] font-medium text-foreground mb-1">{field.label}</label>
+                      <label className="block text-[11px] font-medium text-text-primary mb-1">{field.label}</label>
                       {field.type === "textarea" ? (
                         <textarea
                           value={(selectedNode.data.config as Record<string, string>)[field.key] || ""}
                           onChange={e => updateNodeConfig(field.key, e.target.value)}
                           placeholder={field.placeholder}
                           rows={3}
-                          className="w-full px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs text-foreground placeholder:text-muted/40 outline-none focus:border-brand-accent transition-colors resize-none"
+                          className="w-full px-2.5 py-1.5 rounded-lg bg-surface-light border border-border-subtle text-xs text-text-primary placeholder:text-text-muted/40 outline-none focus:border-brand-accent transition-colors resize-none"
                         />
                       ) : field.type === "select" ? (
                         <select
                           value={(selectedNode.data.config as Record<string, string>)[field.key] || ""}
                           onChange={e => updateNodeConfig(field.key, e.target.value)}
-                          className="w-full px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs text-foreground outline-none focus:border-brand-accent transition-colors"
+                          className="w-full px-2.5 py-1.5 rounded-lg bg-surface-light border border-border-subtle text-xs text-text-primary outline-none focus:border-brand-accent transition-colors"
                         >
                           <option value="">Select...</option>
                           {field.options?.map(o => <option key={o} value={o}>{o}</option>)}
@@ -1052,18 +1052,18 @@ function WorkflowBuilderInner() {
                           value={(selectedNode.data.config as Record<string, string>)[field.key] || ""}
                           onChange={e => updateNodeConfig(field.key, e.target.value)}
                           placeholder={field.placeholder}
-                          className="w-full px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs text-foreground placeholder:text-muted/40 outline-none focus:border-brand-accent transition-colors"
+                          className="w-full px-2.5 py-1.5 rounded-lg bg-surface-light border border-border-subtle text-xs text-text-primary placeholder:text-text-muted/40 outline-none focus:border-brand-accent transition-colors"
                         />
                       )}
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-[11px] text-muted/60 italic">No configuration needed for this node.</div>
+                <div className="text-[11px] text-text-muted/60 italic">No configuration needed for this node.</div>
               )}
 
               {/* Node actions */}
-              <div className="mt-6 pt-4 border-t border-border space-y-2">
+              <div className="mt-6 pt-4 border-t border-border-subtle space-y-2">
                 <button
                   onClick={() => {
                     pushHistory();
@@ -1076,7 +1076,7 @@ function WorkflowBuilderInner() {
                     setNodes(ns => [...ns, cloned]);
                     toast.success("Node duplicated");
                   }}
-                  className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-[11px] text-muted hover:text-foreground hover:bg-surface-light transition-colors"
+                  className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-[11px] text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors"
                 >
                   <Copy size={12} /> Duplicate Node
                 </button>
@@ -1095,8 +1095,8 @@ function WorkflowBuilderInner() {
               </div>
 
               {/* Node ID */}
-              <div className="mt-4 pt-3 border-t border-border">
-                <div className="text-[10px] text-muted/40 font-mono">ID: {selectedNode.id}</div>
+              <div className="mt-4 pt-3 border-t border-border-subtle">
+                <div className="text-[10px] text-text-muted/40 font-mono">ID: {selectedNode.id}</div>
               </div>
             </div>
           </div>
@@ -1104,29 +1104,29 @@ function WorkflowBuilderInner() {
       </div>
 
       {/* -- Bottom Stats Bar -- */}
-      <div className="shrink-0 h-8 border-t border-border glass flex items-center px-4 gap-4 text-[10px] text-muted">
+      <div className="shrink-0 h-8 border-t border-border-subtle glass flex items-center px-4 gap-4 text-[10px] text-text-muted">
         <span className="flex items-center gap-1"><Zap size={10} className="text-brand-accent" /> {stats.total} nodes</span>
         <span className="flex items-center gap-1"><Link2 size={10} /> {stats.connections} connections</span>
         <span className="flex items-center gap-1"><ArrowRight size={10} /> {stats.triggers} trigger{stats.triggers !== 1 ? "s" : ""}</span>
         <span className="flex items-center gap-1"><Clock size={10} /> Est. {stats.estTime}</span>
         <div className="flex-1" />
-        <span className="text-muted/40">Snap: 20px</span>
+        <span className="text-text-muted/40">Snap: 20px</span>
       </div>
 
       {/* -- Template Gallery Modal -- */}
       {showTemplates && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-[rgba(0,0,0,0.40)] backdrop-blur-sm" onClick={() => setShowTemplates(false)} />
-          <div className="relative w-full max-w-3xl mx-4 glass-md border border-border  shadow-2xl overflow-hidden">
+          <div className="relative w-full max-w-3xl mx-4 glass-md border border-border-subtle  shadow-2xl overflow-hidden">
             {/* Modal header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle">
               <div>
-                <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <h2 className="text-sm font-bold text-text-primary flex items-center gap-2">
                   <LayoutTemplate size={16} className="text-brand-accent" /> Workflow Templates
                 </h2>
-                <p className="text-[11px] text-muted mt-0.5">Start with a pre-built workflow and customize it to your needs.</p>
+                <p className="text-[11px] text-text-muted mt-0.5">Start with a pre-built workflow and customize it to your needs.</p>
               </div>
-              <button onClick={() => setShowTemplates(false)} className="p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface-light transition-colors">
+              <button onClick={() => setShowTemplates(false)} className="p-2 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors">
                 <X size={16} />
               </button>
             </div>
@@ -1148,10 +1148,10 @@ function WorkflowBuilderInner() {
                     <div className="w-9 h-9 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] flex items-center justify-center">
                       <Zap size={16} className="text-brand-accent" />
                     </div>
-                    <span className="text-[10px] text-muted bg-surface px-2 py-0.5 rounded-full border border-border">{tpl.nodeCount} nodes</span>
+                    <span className="text-[10px] text-text-muted bg-surface px-2 py-0.5 rounded-full border border-border-subtle">{tpl.nodeCount} nodes</span>
                   </div>
-                  <h3 className="text-xs font-semibold text-foreground mb-1">{tpl.name}</h3>
-                  <p className="text-[10px] text-muted leading-relaxed mb-3">{tpl.description}</p>
+                  <h3 className="text-xs font-semibold text-text-primary mb-1">{tpl.name}</h3>
+                  <p className="text-[10px] text-text-muted leading-relaxed mb-3">{tpl.description}</p>
 
                   {/* Node type pills */}
                   <div className="flex flex-wrap gap-1 mb-3">
@@ -1166,7 +1166,7 @@ function WorkflowBuilderInner() {
                       );
                     })}
                     {tpl.nodes.length > 4 && (
-                      <span className="text-[9px] text-muted/50 px-1 py-0.5">+{tpl.nodes.length - 4} more</span>
+                      <span className="text-[9px] text-text-muted/50 px-1 py-0.5">+{tpl.nodes.length - 4} more</span>
                     )}
                   </div>
 

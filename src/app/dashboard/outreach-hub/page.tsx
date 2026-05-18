@@ -138,33 +138,33 @@ function TemplateCard({ template, onChange, onDelete, context }: {
   }
 
   return (
-    <div className={`rounded-xl border transition-all ${template.enabled ? "border-border bg-surface-light" : "border-border/50 bg-surface-light/50 opacity-60"}`}>
+    <div className={`rounded-xl border transition-all ${template.enabled ? "border-border-subtle bg-surface-light" : "border-border-subtle/50 bg-surface-light/50 opacity-60"}`}>
       <div className="flex items-center gap-3 p-3 cursor-pointer" onClick={() => setExpanded(!expanded)}>
         <button onClick={e => { e.stopPropagation(); onChange({ ...template, enabled: !template.enabled }); }}
-          className={`flex-shrink-0 ${template.enabled ? "text-brand-accent" : "text-muted"}`}>
+          className={`flex-shrink-0 ${template.enabled ? "text-brand-accent" : "text-text-muted"}`}>
           {template.enabled ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
         </button>
         <div className="flex-1 min-w-0">
           <input value={template.name} onClick={e => e.stopPropagation()}
             onChange={e => onChange({ ...template, name: e.target.value })}
             className="text-xs font-semibold bg-transparent border-none outline-none w-full" />
-          <p className="text-[9px] text-muted truncate mt-0.5">{template.content.substring(0, 80)}...</p>
+          <p className="text-[9px] text-text-muted truncate mt-0.5">{template.content.substring(0, 80)}...</p>
         </div>
         <div className="flex items-center gap-1 flex-shrink-0">
           {template.variables.length > 0 && (
             <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">{template.variables.length} vars</span>
           )}
           <button onClick={e => { e.stopPropagation(); copyContent(); }} className="p-1 hover:bg-white/[0.06] rounded" aria-label="Copy template">
-            {copied ? <Check size={10} className="text-green-400" /> : <Copy size={10} className="text-muted" />}
+            {copied ? <Check size={10} className="text-green-400" /> : <Copy size={10} className="text-text-muted" />}
           </button>
           <button onClick={e => { e.stopPropagation(); onDelete(); }} className="p-1 hover:bg-red-500/10 rounded" aria-label="Delete template">
-            <Trash2 size={10} className="text-muted hover:text-red-400" />
+            <Trash2 size={10} className="text-text-muted hover:text-red-400" />
           </button>
-          {expanded ? <ChevronUp size={12} className="text-muted" /> : <ChevronDown size={12} className="text-muted" />}
+          {expanded ? <ChevronUp size={12} className="text-text-muted" /> : <ChevronDown size={12} className="text-text-muted" />}
         </div>
       </div>
       {expanded && (
-        <div className="px-3 pb-3 space-y-2 border-t border-border/50 pt-3">
+        <div className="px-3 pb-3 space-y-2 border-t border-border-subtle/50 pt-3">
           <textarea value={template.content}
             onChange={e => onChange({ ...template, content: e.target.value })}
             rows={6}
@@ -468,7 +468,7 @@ function channelColor(ch: string) {
     case "sms": return "text-green-400";
     case "call": return "text-emerald-400";
     case "dm": return "text-blue-400";
-    default: return "text-muted";
+    default: return "text-text-muted";
   }
 }
 
@@ -758,7 +758,7 @@ export default function OutreachHubPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-4"><ErrorBoundary section="Outreach Hub">
+    <MotionPage className="space-y-4"><ErrorBoundary section="Outreach Hub">
             {/* -- Outreach Hub command strip (slim editorial header, no PageHero) -- */}
             <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
               <div className="min-w-0">
@@ -782,7 +782,7 @@ export default function OutreachHubPage() {
             </div>
 
             {/* -- How Outreach Works (collapsible explainer) -- */}
-            <div className="card border-blue-400/20 bg-gradient-to-br from-blue-500/5 via-surface to-surface">
+            <div className="glass rounded-xl p-4 border-blue-400/20 bg-gradient-to-br from-blue-500/5 via-surface to-surface">
               <button
                 onClick={toggleExplainer}
                 className="w-full flex items-center justify-between text-left"
@@ -793,13 +793,13 @@ export default function OutreachHubPage() {
                     <Target size={14} />
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-foreground">How Outreach Works</h3>
-                    <p className="text-[10px] text-muted">Campaign-first workflow � from creation to replies, in 4 steps.</p>
+                    <h3 className="text-sm font-semibold text-text-primary">How Outreach Works</h3>
+                    <p className="text-[10px] text-text-muted">Campaign-first workflow � from creation to replies, in 4 steps.</p>
                   </div>
                 </div>
                 {explainerOpen
-                  ? <ChevronUp size={14} className="text-muted" />
-                  : <ChevronDown size={14} className="text-muted" />}
+                  ? <ChevronUp size={14} className="text-text-muted" />
+                  : <ChevronDown size={14} className="text-text-muted" />}
               </button>
 
               {explainerOpen && (
@@ -845,7 +845,7 @@ export default function OutreachHubPage() {
                     },
                   ].map((step, idx, arr) => (
                     <div key={step.n} className="relative">
-                      <div className="p-3 rounded-xl border border-border bg-surface-light/50 h-full flex flex-col">
+                      <div className="p-3 rounded-xl border border-border-subtle bg-surface-light/50 h-full flex flex-col">
                         <div className="flex items-center gap-2 mb-2">
                           <div className={`w-7 h-7 rounded-full border flex items-center justify-center text-[11px] font-bold ${step.color}`}>
                             {step.n}
@@ -854,8 +854,8 @@ export default function OutreachHubPage() {
                             {step.icon}
                           </div>
                         </div>
-                        <p className="text-[12px] font-semibold text-foreground mb-1">{step.title}</p>
-                        <p className="text-[10px] text-muted flex-1 leading-relaxed mb-2">{step.desc}</p>
+                        <p className="text-[12px] font-semibold text-text-primary mb-1">{step.title}</p>
+                        <p className="text-[10px] text-text-muted flex-1 leading-relaxed mb-2">{step.desc}</p>
                         {step.ctaOnClick ? (
                           <button
                             type="button"
@@ -875,7 +875,7 @@ export default function OutreachHubPage() {
                       </div>
                       {/* Arrow between steps (desktop) */}
                       {idx < arr.length - 1 && (
-                        <div className="hidden md:flex absolute top-1/2 -right-2 -translate-y-1/2 w-4 h-4 rounded-full bg-surface border border-border items-center justify-center z-10 text-muted">
+                        <div className="hidden md:flex absolute top-1/2 -right-2 -translate-y-1/2 w-4 h-4 rounded-full bg-surface border border-border-subtle items-center justify-center z-10 text-text-muted">
                           <ChevronDown size={10} className="rotate-[-90deg]" />
                         </div>
                       )}
@@ -935,7 +935,7 @@ export default function OutreachHubPage() {
 
                     {/* Presets */}
                     <div>
-                      <label className="text-[10px] text-muted block mb-2">Quick Start Presets</label>
+                      <label className="text-[10px] text-text-muted block mb-2">Quick Start Presets</label>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                         {CAMPAIGN_PRESETS.map(preset => (
                           <button key={preset.name} onClick={() => {
@@ -949,10 +949,10 @@ export default function OutreachHubPage() {
                             }));
                             toast.success(`Loaded: ${preset.name}`);
                           }}
-                            className="text-left p-2.5 rounded-xl border border-border/50 hover:border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.05)] transition-all group">
+                            className="text-left p-2.5 rounded-xl border border-border-subtle/50 hover:border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.05)] transition-all group">
                             <p className="text-[10px] font-semibold group-hover:text-brand-accent">{preset.name}</p>
-                            <p className="text-[9px] text-muted mt-0.5">{preset.description}</p>
-                            <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-surface-light text-muted mt-1 inline-block">{preset.targetMode.toUpperCase()}</span>
+                            <p className="text-[9px] text-text-muted mt-0.5">{preset.description}</p>
+                            <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-surface-light text-text-muted mt-1 inline-block">{preset.targetMode.toUpperCase()}</span>
                           </button>
                         ))}
                       </div>
@@ -960,7 +960,7 @@ export default function OutreachHubPage() {
 
                     {/* Name */}
                     <div>
-                      <label className="text-[10px] text-muted block mb-1">Campaign Name</label>
+                      <label className="text-[10px] text-text-muted block mb-1">Campaign Name</label>
                       <input value={newCampaign.name} onChange={e => setNewCampaign(p => ({ ...p, name: e.target.value }))}
                         placeholder="e.g., Q2 Restaurant Push"
                         className="input w-full text-xs" />
@@ -968,12 +968,12 @@ export default function OutreachHubPage() {
 
                     {/* B2B / B2C toggle */}
                     <div>
-                      <label className="text-[10px] text-muted block mb-2">Target Mode</label>
+                      <label className="text-[10px] text-text-muted block mb-2">Target Mode</label>
                       <div className="flex gap-2">
                         {(["b2b", "b2c"] as TargetMode[]).map(m => (
                           <button key={m} onClick={() => setNewCampaign(p => ({ ...p, targetMode: m }))}
                             className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-all ${
-                              newCampaign.targetMode === m ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-muted border-border/50 hover:border-border"
+                              newCampaign.targetMode === m ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle/50 hover:border-border-subtle"
                             }`}>{m.toUpperCase()}</button>
                         ))}
                       </div>
@@ -981,7 +981,7 @@ export default function OutreachHubPage() {
 
                     {/* Industry multi-select */}
                     <div>
-                      <label className="text-[10px] text-muted block mb-2">Target Industries</label>
+                      <label className="text-[10px] text-text-muted block mb-2">Target Industries</label>
                       <div className="grid grid-cols-3 md:grid-cols-5 gap-1.5">
                         {B2B_INDUSTRIES.map(ind => {
                           const Icon = ind.icon;
@@ -989,7 +989,7 @@ export default function OutreachHubPage() {
                           return (
                             <button key={ind.id} onClick={() => setNewCampaign(p => ({ ...p, industries: toggleArray(p.industries, ind.id) }))}
                               className={`flex items-center gap-1.5 p-2 rounded-lg text-[10px] border transition-all ${
-                                selected ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-muted border-border/30 hover:border-border"
+                                selected ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle/30 hover:border-border-subtle"
                               }`}>
                               <Icon size={12} /> {ind.label}
                             </button>
@@ -1000,7 +1000,7 @@ export default function OutreachHubPage() {
 
                     {/* Channels */}
                     <div>
-                      <label className="text-[10px] text-muted block mb-2">Channels</label>
+                      <label className="text-[10px] text-text-muted block mb-2">Channels</label>
                       <div className="flex gap-3">
                         {([
                           { key: "email" as const, label: "Email", icon: <Mail size={14} /> },
@@ -1010,7 +1010,7 @@ export default function OutreachHubPage() {
                         ]).map(ch => (
                           <button key={ch.key} onClick={() => setNewCampaign(p => ({ ...p, channels: { ...p.channels, [ch.key]: !p.channels[ch.key] } }))}
                             className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs border transition-all ${
-                              newCampaign.channels[ch.key] ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-muted border-border/50"
+                              newCampaign.channels[ch.key] ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle/50"
                             }`}>
                             {ch.icon} {ch.label}
                           </button>
@@ -1020,11 +1020,11 @@ export default function OutreachHubPage() {
 
                     {/* Daily targets per channel */}
                     <div>
-                      <label className="text-[10px] text-muted block mb-2">Daily Targets per Channel</label>
+                      <label className="text-[10px] text-text-muted block mb-2">Daily Targets per Channel</label>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                         {(["email", "sms", "calls", "dms"] as const).map(ch => (
                           <div key={ch} className={`space-y-1 ${!newCampaign.channels[ch] ? "opacity-30 pointer-events-none" : ""}`}>
-                            <label className="text-[9px] text-muted capitalize">{ch}</label>
+                            <label className="text-[9px] text-text-muted capitalize">{ch}</label>
                             <input type="number" min={0} max={100}
                               value={newCampaign.dailyTargets[ch]}
                               onChange={e => setNewCampaign(p => ({ ...p, dailyTargets: { ...p.dailyTargets, [ch]: Number(e.target.value) } }))}
@@ -1036,15 +1036,15 @@ export default function OutreachHubPage() {
 
                     {/* Sequence picker */}
                     <div>
-                      <label className="text-[10px] text-muted block mb-2">Outreach Sequence</label>
+                      <label className="text-[10px] text-text-muted block mb-2">Outreach Sequence</label>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                         {sequences.map(seq => (
                           <button key={seq.id} onClick={() => setNewCampaign(p => ({ ...p, sequenceId: seq.id }))}
                             className={`text-left p-2.5 rounded-xl border transition-all ${
-                              newCampaign.sequenceId === seq.id ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)]" : "border-border/50 hover:border-border"
+                              newCampaign.sequenceId === seq.id ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)]" : "border-border-subtle/50 hover:border-border-subtle"
                             }`}>
                             <p className={`text-[10px] font-semibold ${newCampaign.sequenceId === seq.id ? "text-brand-accent" : ""}`}>{seq.name}</p>
-                            <p className="text-[9px] text-muted mt-0.5">{seq.steps.length} steps</p>
+                            <p className="text-[9px] text-text-muted mt-0.5">{seq.steps.length} steps</p>
                           </button>
                         ))}
                       </div>
@@ -1061,7 +1061,7 @@ export default function OutreachHubPage() {
 
                 {/* -- Campaign List -- */}
                 {campaigns.length === 0 && !showCampaignBuilder && (
-                  <div className="card">
+                  <div className="glass rounded-xl p-4">
                     <EmptyState
                       type="no-campaigns"
                       title="No campaigns yet"
@@ -1092,18 +1092,18 @@ export default function OutreachHubPage() {
                           campaign.status === "active" ? "bg-green-500/10" : campaign.status === "paused" ? "bg-yellow-500/10" : "bg-surface-light"
                         }`}>
                           <Megaphone size={14} className={
-                            campaign.status === "active" ? "text-green-400" : campaign.status === "paused" ? "text-yellow-400" : "text-muted"
+                            campaign.status === "active" ? "text-green-400" : campaign.status === "paused" ? "text-yellow-400" : "text-text-muted"
                           } />
                         </div>
                         <div>
                           <h3 className="text-xs font-semibold">{campaign.name}</h3>
                           <div className="flex items-center gap-2 mt-0.5">
                             <span className={`text-[9px] px-2 py-0.5 rounded-full ${
-                              campaign.status === "active" ? "bg-green-500/10 text-green-400" : campaign.status === "paused" ? "bg-yellow-500/10 text-yellow-400" : "bg-surface-light text-muted"
+                              campaign.status === "active" ? "bg-green-500/10 text-green-400" : campaign.status === "paused" ? "bg-yellow-500/10 text-yellow-400" : "bg-surface-light text-text-muted"
                             }`}>{campaign.status}</span>
-                            <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light text-muted">{campaign.targetMode.toUpperCase()}</span>
+                            <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light text-text-muted">{campaign.targetMode.toUpperCase()}</span>
                             {campaign.industries.map(ind => (
-                              <span key={ind} className="text-[8px] text-muted">{B2B_INDUSTRIES.find(i => i.id === ind)?.label || ind}</span>
+                              <span key={ind} className="text-[8px] text-text-muted">{B2B_INDUSTRIES.find(i => i.id === ind)?.label || ind}</span>
                             ))}
                           </div>
                         </div>
@@ -1133,7 +1133,7 @@ export default function OutreachHubPage() {
                         return (
                           <div key={ch} className="space-y-1">
                             <div className="flex items-center justify-between">
-                              <span className="text-[9px] text-muted capitalize flex items-center gap-1">{channelIcon(ch === "calls" ? "call" : ch, 10)} {ch}</span>
+                              <span className="text-[9px] text-text-muted capitalize flex items-center gap-1">{channelIcon(ch === "calls" ? "call" : ch, 10)} {ch}</span>
                               <span className="text-[9px] font-mono">{campaign.todayProgress[ch]}/{campaign.dailyTargets[ch]}</span>
                             </div>
                             <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
@@ -1145,7 +1145,7 @@ export default function OutreachHubPage() {
                     </div>
 
                     {/* Stats row */}
-                    <div className="flex gap-4 pt-2 border-t border-border/20">
+                    <div className="flex gap-4 pt-2 border-t border-border-subtle/20">
                       {([
                         { label: "Leads", value: campaign.stats.leads },
                         { label: "Contacted", value: campaign.stats.contacted },
@@ -1155,7 +1155,7 @@ export default function OutreachHubPage() {
                       ]).map(s => (
                         <div key={s.label} className="text-center">
                           <p className="text-sm font-semibold">{s.value}</p>
-                          <p className="text-[9px] text-muted">{s.label}</p>
+                          <p className="text-[9px] text-text-muted">{s.label}</p>
                         </div>
                       ))}
                     </div>
@@ -1190,7 +1190,7 @@ export default function OutreachHubPage() {
                       transition={{ duration: 0.2, delay: index * 0.05 }}
                       whileHover={{ scale: 1.01, y: -2 }}
                       className={`text-left p-4 rounded-xl border transition-all spotlight-card ${
-                        activeSequence === seq.id ? "bg-white/[0.10] backdrop-blur-[20px] border-border" : "bg-white/[0.04] backdrop-blur-[16px] border-border-subtle hover:border-border"
+                        activeSequence === seq.id ? "bg-white/[0.10] backdrop-blur-[20px] border-border-subtle" : "bg-white/[0.04] backdrop-blur-[16px] border-border-subtle hover:border-border-subtle"
                       }`}
                       onMouseMove={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
@@ -1201,10 +1201,10 @@ export default function OutreachHubPage() {
                         <h3 className={`text-xs font-semibold ${activeSequence === seq.id ? "text-brand-accent" : ""}`}>{seq.name}</h3>
                         {activeSequence === seq.id && <CircleDot size={12} className="text-brand-accent" />}
                       </div>
-                      <p className="text-[9px] text-muted mb-2">{seq.description}</p>
+                      <p className="text-[9px] text-text-muted mb-2">{seq.description}</p>
                       <div className="flex items-center gap-2">
-                        <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-surface-light text-muted">{seq.targetMode === "both" ? "B2B & B2C" : seq.targetMode.toUpperCase()}</span>
-                        <span className="text-[8px] text-muted">{seq.steps.length} steps</span>
+                        <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-surface-light text-text-muted">{seq.targetMode === "both" ? "B2B & B2C" : seq.targetMode.toUpperCase()}</span>
+                        <span className="text-[8px] text-text-muted">{seq.steps.length} steps</span>
                         <div className="flex items-center gap-0.5 ml-auto">
                           {Array.from(new Set(seq.steps.map(s => s.channel))).map(ch => (
                             <span key={ch} className={channelColor(ch)}>{channelIcon(ch, 10)}</span>
@@ -1223,7 +1223,7 @@ export default function OutreachHubPage() {
                     </h3>
                     <div className="relative pl-6">
                       {/* Vertical line */}
-                      <div className="absolute left-[11px] top-2 bottom-2 w-px bg-border/50" />
+                      <div className="absolute left-[11px] top-2 bottom-2 w-px bg-border-subtle/50" />
                       {sequences.find(s => s.id === activeSequence)?.steps.map((step, idx) => (
                         <motion.div
                           key={step.id}
@@ -1234,19 +1234,19 @@ export default function OutreachHubPage() {
                         >
                           {/* Dot */}
                           <div className={`absolute left-[-17px] top-1 w-5 h-5 rounded-full border-2 flex items-center justify-center bg-surface ${
-                            idx === 0 ? "border-indigo-500" : "border-border/50"
+                            idx === 0 ? "border-indigo-500" : "border-border-subtle/50"
                           }`}>
-                            <span className={`text-[8px] font-bold ${idx === 0 ? "text-brand-accent" : "text-muted"}`}>{step.day}</span>
+                            <span className={`text-[8px] font-bold ${idx === 0 ? "text-brand-accent" : "text-text-muted"}`}>{step.day}</span>
                           </div>
                           {/* Content */}
                           <div className="flex-1 rounded-lg p-3 border border-border-subtle" style={{ background: "rgba(255,255,255,0.04)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}>
                             <div className="flex items-center gap-2 mb-1">
                               <span className={`${channelColor(step.channel)}`}>{channelIcon(step.channel, 12)}</span>
                               <span className="text-[10px] font-semibold capitalize">{step.channel}</span>
-                              <span className="text-[8px] px-1.5 py-0.5 rounded bg-surface-light text-muted">Day {step.day}</span>
+                              <span className="text-[8px] px-1.5 py-0.5 rounded bg-surface-light text-text-muted">Day {step.day}</span>
                               <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent ml-auto">{conditionLabel(step.condition)}</span>
                             </div>
-                            <p className="text-[10px] text-muted">{step.action}</p>
+                            <p className="text-[10px] text-text-muted">{step.action}</p>
                           </div>
                         </motion.div>
                       ))}
@@ -1256,28 +1256,28 @@ export default function OutreachHubPage() {
 
                 {/* Custom Sequence Builder */}
                 {showCustomBuilder && (
-                  <div className="card space-y-4">
+                  <div className="glass rounded-xl p-4 space-y-4">
                     <h3 className="text-xs font-semibold flex items-center gap-2">
                       <Zap size={12} className="text-brand-accent" /> Build Custom Sequence
                     </h3>
                     <div>
-                      <label className="text-[10px] text-muted block mb-1">Sequence Name</label>
+                      <label className="text-[10px] text-text-muted block mb-1">Sequence Name</label>
                       <input value={customSeqName} onChange={e => setCustomSeqName(e.target.value)}
                         placeholder="e.g., My Custom Flow" className="input w-full text-xs" />
                     </div>
 
                     {/* Steps */}
                     {customSteps.map((step, idx) => (
-                      <div key={step.id} className="flex items-center gap-2 bg-surface-light/50 rounded-lg p-3 border border-border/20">
+                      <div key={step.id} className="flex items-center gap-2 bg-surface-light/50 rounded-lg p-3 border border-border-subtle/20">
                         <span className="text-[10px] font-bold text-brand-accent w-6">#{idx + 1}</span>
                         <div>
-                          <label className="text-[9px] text-muted">Day</label>
+                          <label className="text-[9px] text-text-muted">Day</label>
                           <input type="number" min={1} max={30} value={step.day}
                             onChange={e => setCustomSteps(prev => prev.map((s, i) => i === idx ? { ...s, day: Number(e.target.value) } : s))}
                             className="input text-xs w-14" />
                         </div>
                         <div>
-                          <label className="text-[9px] text-muted">Channel</label>
+                          <label className="text-[9px] text-text-muted">Channel</label>
                           <select value={step.channel}
                             onChange={e => setCustomSteps(prev => prev.map((s, i) => i === idx ? { ...s, channel: e.target.value as SequenceStep["channel"] } : s))}
                             className="input text-xs">
@@ -1288,13 +1288,13 @@ export default function OutreachHubPage() {
                           </select>
                         </div>
                         <div className="flex-1">
-                          <label className="text-[9px] text-muted">Action</label>
+                          <label className="text-[9px] text-text-muted">Action</label>
                           <input value={step.action} placeholder="Describe the action..."
                             onChange={e => setCustomSteps(prev => prev.map((s, i) => i === idx ? { ...s, action: e.target.value } : s))}
                             className="input w-full text-xs" />
                         </div>
                         <div>
-                          <label className="text-[9px] text-muted">Condition</label>
+                          <label className="text-[9px] text-text-muted">Condition</label>
                           <select value={step.condition}
                             onChange={e => setCustomSteps(prev => prev.map((s, i) => i === idx ? { ...s, condition: e.target.value as SequenceStep["condition"] } : s))}
                             className="input text-xs">
@@ -1307,7 +1307,7 @@ export default function OutreachHubPage() {
                         <button onClick={() => setCustomSteps(prev => prev.filter((_, i) => i !== idx))}
                           aria-label="Remove this step"
                           className="p-1 hover:bg-red-500/10 rounded mt-3">
-                          <Trash2 size={12} className="text-muted hover:text-red-400" />
+                          <Trash2 size={12} className="text-text-muted hover:text-red-400" />
                         </button>
                       </div>
                     ))}
@@ -1359,7 +1359,7 @@ export default function OutreachHubPage() {
                     {(["all", "b2b", "b2c"] as const).map(f => (
                       <button key={f} onClick={() => setTemplateFilter(f)}
                         className={`text-[9px] px-2.5 py-1 rounded-lg border transition-all uppercase ${
-                          templateFilter === f ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-muted border-border/30"
+                          templateFilter === f ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle/30"
                         }`}>{f}</button>
                     ))}
                   </div>
@@ -1373,11 +1373,11 @@ export default function OutreachHubPage() {
                         <h2 className="text-sm font-semibold flex items-center gap-2">
                           <PhoneCall size={14} className="text-emerald-400" /> Call Scripts &amp; Prompts
                         </h2>
-                        <button onClick={() => addTemplate("calls")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] flex items-center gap-1">
+                        <button onClick={() => addTemplate("calls")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] flex items-center gap-1">
                           <Plus size={10} /> Add Script
                         </button>
                       </div>
-                      <p className="text-[10px] text-muted">These scripts are sent as system prompts to the ElevenLabs AI agent. Edit them to change how the AI speaks on calls.</p>
+                      <p className="text-[10px] text-text-muted">These scripts are sent as system prompts to the ElevenLabs AI agent. Edit them to change how the AI speaks on calls.</p>
                       {callTemplates.map(t => (
                         <TemplateCard key={t.id} template={t} context="AI cold call script"
                           onChange={u => updateTemplate("calls", t.id, u)}
@@ -1386,16 +1386,16 @@ export default function OutreachHubPage() {
                     </div>
                     <div className="space-y-3">
                       <h2 className="text-sm font-semibold flex items-center gap-2">
-                        <Settings size={14} className="text-muted" /> Call Settings
+                        <Settings size={14} className="text-text-muted" /> Call Settings
                       </h2>
                       <PrismPanel padding="p-4" className="space-y-4">
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Agent Name</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Agent Name</label>
                           <input value={callSettings.agentName} onChange={e => setCallSettings(p => ({ ...p, agentName: e.target.value }))}
                             className="input w-full text-xs" />
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">First Message</label>
+                          <label className="text-[10px] text-text-muted block mb-1">First Message</label>
                           <textarea value={callSettings.firstMessage} onChange={e => setCallSettings(p => ({ ...p, firstMessage: e.target.value }))}
                             rows={3} className="input w-full text-xs resize-y" />
                           <div className="flex justify-end mt-1">
@@ -1404,7 +1404,7 @@ export default function OutreachHubPage() {
                           </div>
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Max Call Duration</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Max Call Duration</label>
                           <div className="flex items-center gap-2">
                             <input type="range" min={30} max={300} step={30} value={callSettings.maxDuration}
                               onChange={e => setCallSettings(p => ({ ...p, maxDuration: Number(e.target.value) }))}
@@ -1415,14 +1415,14 @@ export default function OutreachHubPage() {
                         <div className="flex items-center justify-between">
                           <span className="text-xs">Voicemail Detection</span>
                           <button onClick={() => setCallSettings(p => ({ ...p, voicemailDetection: !p.voicemailDetection }))}
-                            className={`${callSettings.voicemailDetection ? "text-brand-accent" : "text-muted"}`}>
+                            className={`${callSettings.voicemailDetection ? "text-brand-accent" : "text-text-muted"}`}>
                             {callSettings.voicemailDetection ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
                           </button>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-xs">Leave Voicemail</span>
                           <button onClick={() => setCallSettings(p => ({ ...p, enableVoicemail: !p.enableVoicemail }))}
-                            className={`${callSettings.enableVoicemail ? "text-brand-accent" : "text-muted"}`}>
+                            className={`${callSettings.enableVoicemail ? "text-brand-accent" : "text-text-muted"}`}>
                             {callSettings.enableVoicemail ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
                           </button>
                         </div>
@@ -1456,11 +1456,11 @@ export default function OutreachHubPage() {
                         <h2 className="text-sm font-semibold flex items-center gap-2">
                           <Smartphone size={14} className="text-green-400" /> SMS Templates
                         </h2>
-                        <button onClick={() => addTemplate("sms")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] flex items-center gap-1">
+                        <button onClick={() => addTemplate("sms")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] flex items-center gap-1">
                           <Plus size={10} /> Add Template
                         </button>
                       </div>
-                      <p className="text-[10px] text-muted">Templates are auto-sent based on triggers. Variables like {`{{name}}`} are replaced with lead data. AI personalization rewrites each message to feel unique.</p>
+                      <p className="text-[10px] text-text-muted">Templates are auto-sent based on triggers. Variables like {`{{name}}`} are replaced with lead data. AI personalization rewrites each message to feel unique.</p>
                       {smsTemplates.map(t => (
                         <TemplateCard key={t.id} template={t} context="SMS outreach message"
                           onChange={u => updateTemplate("sms", t.id, u)}
@@ -1469,49 +1469,49 @@ export default function OutreachHubPage() {
                     </div>
                     <div className="space-y-3">
                       <h2 className="text-sm font-semibold flex items-center gap-2">
-                        <Settings size={14} className="text-muted" /> SMS Settings
+                        <Settings size={14} className="text-text-muted" /> SMS Settings
                       </h2>
                       <PrismPanel padding="p-4" className="space-y-4">
                         <div className="flex items-center justify-between">
                           <span className="text-xs">AI Personalization</span>
                           <button onClick={() => setSmsSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
-                            className={`${smsSettings.aiPersonalize ? "text-brand-accent" : "text-muted"}`}>
+                            className={`${smsSettings.aiPersonalize ? "text-brand-accent" : "text-text-muted"}`}>
                             {smsSettings.aiPersonalize ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
                           </button>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-xs">Auto-Reply on Response</span>
                           <button onClick={() => setSmsSettings(p => ({ ...p, autoReply: !p.autoReply }))}
-                            className={`${smsSettings.autoReply ? "text-brand-accent" : "text-muted"}`}>
+                            className={`${smsSettings.autoReply ? "text-brand-accent" : "text-text-muted"}`}>
                             {smsSettings.autoReply ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
                           </button>
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Max Characters</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Max Characters</label>
                           <input type="number" value={smsSettings.maxLength} min={50} max={320}
                             onChange={e => setSmsSettings(p => ({ ...p, maxLength: Number(e.target.value) }))}
                             className="input w-full text-xs" />
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Send Window</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Send Window</label>
                           <div className="flex items-center gap-2">
                             <input type="time" value={smsSettings.sendWindow.start}
                               onChange={e => setSmsSettings(p => ({ ...p, sendWindow: { ...p.sendWindow, start: e.target.value } }))}
                               className="input text-xs flex-1" />
-                            <span className="text-[10px] text-muted">to</span>
+                            <span className="text-[10px] text-text-muted">to</span>
                             <input type="time" value={smsSettings.sendWindow.end}
                               onChange={e => setSmsSettings(p => ({ ...p, sendWindow: { ...p.sendWindow, end: e.target.value } }))}
                               className="input text-xs flex-1" />
                           </div>
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Max Follow-ups</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Max Follow-ups</label>
                           <input type="number" value={smsSettings.maxFollowups} min={0} max={10}
                             onChange={e => setSmsSettings(p => ({ ...p, maxFollowups: Number(e.target.value) }))}
                             className="input w-full text-xs" />
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Follow-up Days</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Follow-up Days</label>
                           <div className="flex gap-1">
                             {[1, 2, 3, 5, 7, 14].map(d => (
                               <button key={d} onClick={() => {
@@ -1522,7 +1522,7 @@ export default function OutreachHubPage() {
                                     : [...p.followupDays, d].sort((a, b) => a - b),
                                 }));
                               }} className={`text-[9px] px-2 py-1 rounded-lg border ${
-                                smsSettings.followupDays.includes(d) ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-muted border-border-subtle"
+                                smsSettings.followupDays.includes(d) ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle"
                               }`}>Day {d}</button>
                             ))}
                           </div>
@@ -1540,11 +1540,11 @@ export default function OutreachHubPage() {
                         <h2 className="text-sm font-semibold flex items-center gap-2">
                           <Mail size={14} className="text-brand-accent" /> Email Templates
                         </h2>
-                        <button onClick={() => addTemplate("email")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] flex items-center gap-1">
+                        <button onClick={() => addTemplate("email")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] flex items-center gap-1">
                           <Plus size={10} /> Add Template
                         </button>
                       </div>
-                      <p className="text-[10px] text-muted">Email templates support AI personalization. Claude generates unique emails for each lead based on these templates. Include the Subject: line at the top.</p>
+                      <p className="text-[10px] text-text-muted">Email templates support AI personalization. Claude generates unique emails for each lead based on these templates. Include the Subject: line at the top.</p>
                       {emailTemplates.map(t => (
                         <TemplateCard key={t.id} template={t} context="cold outreach email"
                           onChange={u => updateTemplate("email", t.id, u)}
@@ -1553,23 +1553,23 @@ export default function OutreachHubPage() {
                     </div>
                     <div className="space-y-3">
                       <h2 className="text-sm font-semibold flex items-center gap-2">
-                        <Settings size={14} className="text-muted" /> Email Settings
+                        <Settings size={14} className="text-text-muted" /> Email Settings
                       </h2>
                       <PrismPanel padding="p-4" className="space-y-4">
                         <div className="flex items-center justify-between">
                           <span className="text-xs">AI Personalization</span>
                           <button onClick={() => setEmailSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
-                            className={`${emailSettings.aiPersonalize ? "text-brand-accent" : "text-muted"}`}>
+                            className={`${emailSettings.aiPersonalize ? "text-brand-accent" : "text-text-muted"}`}>
                             {emailSettings.aiPersonalize ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
                           </button>
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">From Name</label>
+                          <label className="text-[10px] text-text-muted block mb-1">From Name</label>
                           <input value={emailSettings.fromName} onChange={e => setEmailSettings(p => ({ ...p, fromName: e.target.value }))}
                             className="input w-full text-xs" />
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Email Signature</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Email Signature</label>
                           <textarea value={emailSettings.signature} onChange={e => setEmailSettings(p => ({ ...p, signature: e.target.value }))}
                             rows={3} className="input w-full text-xs resize-y" />
                           <div className="flex justify-end mt-1">
@@ -1580,18 +1580,18 @@ export default function OutreachHubPage() {
                         <div className="flex items-center justify-between">
                           <span className="text-xs">Track Opens</span>
                           <button onClick={() => setEmailSettings(p => ({ ...p, trackOpens: !p.trackOpens }))}
-                            className={`${emailSettings.trackOpens ? "text-brand-accent" : "text-muted"}`}>
+                            className={`${emailSettings.trackOpens ? "text-brand-accent" : "text-text-muted"}`}>
                             {emailSettings.trackOpens ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
                           </button>
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Max Emails / Day</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Max Emails / Day</label>
                           <input type="number" value={emailSettings.maxPerDay} min={1} max={500}
                             onChange={e => setEmailSettings(p => ({ ...p, maxPerDay: Number(e.target.value) }))}
                             className="input w-full text-xs" />
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Delay Between Sends</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Delay Between Sends</label>
                           <div className="flex items-center gap-2">
                             <input type="range" min={0} max={600} step={30} value={emailSettings.sendDelay}
                               onChange={e => setEmailSettings(p => ({ ...p, sendDelay: Number(e.target.value) }))}
@@ -1612,11 +1612,11 @@ export default function OutreachHubPage() {
                         <h2 className="text-sm font-semibold flex items-center gap-2">
                           <MessageSquare size={14} className="text-blue-400" /> Social DM Templates
                         </h2>
-                        <button onClick={() => addTemplate("dms")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] flex items-center gap-1">
+                        <button onClick={() => addTemplate("dms")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] flex items-center gap-1">
                           <Plus size={10} /> Add Template
                         </button>
                       </div>
-                      <p className="text-[10px] text-muted">DM templates per platform. Each template can be toggled on/off and customized. AI will personalize based on the lead&apos;s profile.</p>
+                      <p className="text-[10px] text-text-muted">DM templates per platform. Each template can be toggled on/off and customized. AI will personalize based on the lead&apos;s profile.</p>
                       <div className="flex gap-1">
                         {[
                           { id: "all", label: "All", icon: <Globe size={11} /> },
@@ -1625,7 +1625,7 @@ export default function OutreachHubPage() {
                           { id: "linkedin", label: "LinkedIn", icon: <LinkedInIcon size={12} /> },
                           { id: "tiktok", label: "TikTok", icon: <TikTokIcon size={12} /> },
                         ].map(p => (
-                          <button key={p.id} className="text-[10px] px-2.5 py-1.5 rounded-lg flex items-center gap-1 text-muted border border-border-subtle hover:border-border">
+                          <button key={p.id} className="text-[10px] px-2.5 py-1.5 rounded-lg flex items-center gap-1 text-text-muted border border-border-subtle hover:border-border-subtle">
                             {p.icon} {p.label}
                           </button>
                         ))}
@@ -1638,25 +1638,25 @@ export default function OutreachHubPage() {
                     </div>
                     <div className="space-y-3">
                       <h2 className="text-sm font-semibold flex items-center gap-2">
-                        <Settings size={14} className="text-muted" /> DM Settings
+                        <Settings size={14} className="text-text-muted" /> DM Settings
                       </h2>
                       <PrismPanel padding="p-4" className="space-y-4">
                         <div className="flex items-center justify-between">
                           <span className="text-xs">AI Personalization</span>
                           <button onClick={() => setDmSettings(p => ({ ...p, aiPersonalize: !p.aiPersonalize }))}
-                            className={`${dmSettings.aiPersonalize ? "text-brand-accent" : "text-muted"}`}>
+                            className={`${dmSettings.aiPersonalize ? "text-brand-accent" : "text-text-muted"}`}>
                             {dmSettings.aiPersonalize ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
                           </button>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-xs">Auto Follow-up</span>
                           <button onClick={() => setDmSettings(p => ({ ...p, autoFollowup: !p.autoFollowup }))}
-                            className={`${dmSettings.autoFollowup ? "text-brand-accent" : "text-muted"}`}>
+                            className={`${dmSettings.autoFollowup ? "text-brand-accent" : "text-text-muted"}`}>
                             {dmSettings.autoFollowup ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
                           </button>
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-2">Active Platforms</label>
+                          <label className="text-[10px] text-text-muted block mb-2">Active Platforms</label>
                           <div className="space-y-2">
                             {([
                               { key: "instagram" as const, label: "Instagram", icon: <InstagramIcon size={14} /> },
@@ -1668,7 +1668,7 @@ export default function OutreachHubPage() {
                                 <button onClick={() => setDmSettings(prev => ({
                                   ...prev,
                                   platforms: { ...prev.platforms, [p.key]: !prev.platforms[p.key] }
-                                }))} className={`${dmSettings.platforms[p.key] ? "text-brand-accent" : "text-muted"}`}>
+                                }))} className={`${dmSettings.platforms[p.key] ? "text-brand-accent" : "text-text-muted"}`}>
                                   {dmSettings.platforms[p.key] ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
                                 </button>
                                 {p.icon}
@@ -1678,18 +1678,18 @@ export default function OutreachHubPage() {
                           </div>
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Max DMs / Day</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Max DMs / Day</label>
                           <input type="number" value={dmSettings.maxPerDay} min={1} max={100}
                             onChange={e => setDmSettings(p => ({ ...p, maxPerDay: Number(e.target.value) }))}
                             className="input w-full text-xs" />
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Send Window</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Send Window</label>
                           <div className="flex items-center gap-2">
                             <input type="time" value={dmSettings.sendWindow.start}
                               onChange={e => setDmSettings(p => ({ ...p, sendWindow: { ...p.sendWindow, start: e.target.value } }))}
                               className="input text-xs flex-1" />
-                            <span className="text-[10px] text-muted">to</span>
+                            <span className="text-[10px] text-text-muted">to</span>
                             <input type="time" value={dmSettings.sendWindow.end}
                               onChange={e => setDmSettings(p => ({ ...p, sendWindow: { ...p.sendWindow, end: e.target.value } }))}
                               className="input text-xs flex-1" />
@@ -1786,9 +1786,9 @@ export default function OutreachHubPage() {
                         <div className="flex items-center gap-2 text-xs">
                           {ch.icon}
                           <span className="font-medium w-16">{ch.channel}</span>
-                          <span className="text-[9px] text-muted">Sent: {ch.sent}</span>
-                          <span className="text-[9px] text-muted ml-3">Opened: {ch.opened}</span>
-                          <span className="text-[9px] text-muted ml-3">Replied: {ch.replied}</span>
+                          <span className="text-[9px] text-text-muted">Sent: {ch.sent}</span>
+                          <span className="text-[9px] text-text-muted ml-3">Opened: {ch.opened}</span>
+                          <span className="text-[9px] text-text-muted ml-3">Replied: {ch.replied}</span>
                         </div>
                         <div className="flex gap-1 h-2">
                           <div className={`${ch.color} rounded-full`} style={{ width: "0%" }} />
@@ -1806,25 +1806,25 @@ export default function OutreachHubPage() {
                   {/* Response Rate Heatmap */}
                   <PrismPanel padding="p-4" className="space-y-3">
                     <h3 className="text-xs font-semibold flex items-center gap-2">
-                      <Clock size={12} className="text-muted" /> Response Rate by Day
+                      <Clock size={12} className="text-text-muted" /> Response Rate by Day
                     </h3>
                     <div className="space-y-1">
                       <div className="flex gap-1 items-center mb-2">
-                        <span className="text-[9px] text-muted w-12"></span>
+                        <span className="text-[9px] text-text-muted w-12"></span>
                         {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(d => (
-                          <span key={d} className="text-[8px] text-muted flex-1 text-center">{d}</span>
+                          <span key={d} className="text-[8px] text-text-muted flex-1 text-center">{d}</span>
                         ))}
                       </div>
                       {["Email", "SMS", "Call", "DM"].map(ch => (
                         <div key={ch} className="flex gap-1 items-center">
-                          <span className="text-[9px] text-muted w-12">{ch}</span>
+                          <span className="text-[9px] text-text-muted w-12">{ch}</span>
                           {Array.from({ length: 7 }).map((_, i) => (
-                            <div key={i} className="flex-1 h-6 rounded bg-surface-light/50 border border-border/20" />
+                            <div key={i} className="flex-1 h-6 rounded bg-surface-light/50 border border-border-subtle/20" />
                           ))}
                         </div>
                       ))}
                     </div>
-                    <p className="text-[9px] text-muted text-center">No data yet</p>
+                    <p className="text-[9px] text-text-muted text-center">No data yet</p>
                   </PrismPanel>
 
                   {/* Conversion Funnel */}
@@ -1841,7 +1841,7 @@ export default function OutreachHubPage() {
                         { stage: "Converted", value: 0, width: "20%" },
                       ].map(s => (
                         <div key={s.stage} className="flex items-center gap-3">
-                          <span className="text-[10px] text-muted w-20">{s.stage}</span>
+                          <span className="text-[10px] text-text-muted w-20">{s.stage}</span>
                           <div className="flex-1 h-6 bg-surface-light rounded-lg overflow-hidden flex items-center" style={{ maxWidth: s.width }}>
                             <div className="h-full bg-[rgba(59,130,246,0.12)] w-0 rounded-lg" />
                             <span className="text-[10px] font-mono ml-2">{s.value}</span>
@@ -1864,7 +1864,7 @@ export default function OutreachHubPage() {
                     <Star size={20} className="text-brand-accent" />
                   </div>
                   <h3 className="text-sm font-semibold mb-1">Best Performing</h3>
-                  <p className="text-[11px] text-muted">No data yet � launch your first campaign to see which channels and sequences perform best.</p>
+                  <p className="text-[11px] text-text-muted">No data yet � launch your first campaign to see which channels and sequences perform best.</p>
                 </motion.div>
               </div>
             )}
@@ -1879,7 +1879,7 @@ export default function OutreachHubPage() {
                   <h2 className="text-sm font-semibold flex items-center gap-2">
                     <Sparkles size={14} className="text-brand-accent" /> Global AI Settings
                   </h2>
-                  <p className="text-[10px] text-muted">These settings apply across all outreach channels. They control how the AI generates and personalizes messages.</p>
+                  <p className="text-[10px] text-text-muted">These settings apply across all outreach channels. They control how the AI generates and personalizes messages.</p>
 
                   <div>
                     <label className="text-xs font-medium block mb-2">Communication Tone</label>
@@ -1887,7 +1887,7 @@ export default function OutreachHubPage() {
                       {["friendly", "professional", "casual", "bold", "empathetic", "authoritative"].map(t => (
                         <button key={t} onClick={() => setGlobalSettings(p => ({ ...p, tone: t }))}
                           className={`text-[10px] px-3 py-1.5 rounded-lg capitalize border ${
-                            globalSettings.tone === t ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-muted border-border-subtle hover:border-border"
+                            globalSettings.tone === t ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle hover:border-border-subtle"
                           }`}>{t}</button>
                       ))}
                     </div>
@@ -1903,10 +1903,10 @@ export default function OutreachHubPage() {
                       ].map(a => (
                         <button key={a.key} onClick={() => setGlobalSettings(p => ({ ...p, aggressiveness: a.key }))}
                           className={`flex-1 text-left p-2.5 rounded-xl border transition-all ${
-                            globalSettings.aggressiveness === a.key ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)]" : "border-border-subtle hover:border-border"
+                            globalSettings.aggressiveness === a.key ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)]" : "border-border-subtle hover:border-border-subtle"
                           }`}>
                           <p className={`text-xs font-semibold ${globalSettings.aggressiveness === a.key ? "text-brand-accent" : ""}`}>{a.label}</p>
-                          <p className="text-[9px] text-muted">{a.desc}</p>
+                          <p className="text-[9px] text-text-muted">{a.desc}</p>
                         </button>
                       ))}
                     </div>
@@ -1914,7 +1914,7 @@ export default function OutreachHubPage() {
 
                   <div>
                     <label className="text-xs font-medium block mb-1">Brand Voice</label>
-                    <p className="text-[9px] text-muted mb-2">Describe your agency&apos;s voice and personality. This is used as context for all AI-generated messages.</p>
+                    <p className="text-[9px] text-text-muted mb-2">Describe your agency&apos;s voice and personality. This is used as context for all AI-generated messages.</p>
                     <textarea value={globalSettings.brandVoice}
                       onChange={e => setGlobalSettings(p => ({ ...p, brandVoice: e.target.value }))}
                       rows={4} className="input w-full text-xs resize-y" />
@@ -1926,7 +1926,7 @@ export default function OutreachHubPage() {
 
                   <div>
                     <label className="text-xs font-medium block mb-1">Custom AI Instructions</label>
-                    <p className="text-[9px] text-muted mb-2">Additional instructions for the AI across all channels. E.g., &quot;Always mention our free consultation&quot; or &quot;Never use the word &apos;cheap&apos;&quot;.</p>
+                    <p className="text-[9px] text-text-muted mb-2">Additional instructions for the AI across all channels. E.g., &quot;Always mention our free consultation&quot; or &quot;Never use the word &apos;cheap&apos;&quot;.</p>
                     <textarea value={globalSettings.customInstructions}
                       onChange={e => setGlobalSettings(p => ({ ...p, customInstructions: e.target.value }))}
                       rows={4} className="input w-full text-xs resize-y"
@@ -1943,28 +1943,28 @@ export default function OutreachHubPage() {
                   <h2 className="text-sm font-semibold flex items-center gap-2">
                     <AlertCircle size={14} className="text-brand-accent" /> Daily Limits
                   </h2>
-                  <p className="text-[10px] text-muted">Maximum number of outreach actions per day across all campaigns.</p>
+                  <p className="text-[10px] text-text-muted">Maximum number of outreach actions per day across all campaigns.</p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <div>
-                      <label className="text-[10px] text-muted block mb-1 flex items-center gap-1"><Mail size={10} /> Max Emails</label>
+                      <label className="text-[10px] text-text-muted block mb-1 flex items-center gap-1"><Mail size={10} /> Max Emails</label>
                       <input type="number" value={dailyLimits.email} min={1} max={500}
                         onChange={e => setDailyLimits(p => ({ ...p, email: Number(e.target.value) }))}
                         className="input w-full text-xs" />
                     </div>
                     <div>
-                      <label className="text-[10px] text-muted block mb-1 flex items-center gap-1"><Smartphone size={10} /> Max SMS</label>
+                      <label className="text-[10px] text-text-muted block mb-1 flex items-center gap-1"><Smartphone size={10} /> Max SMS</label>
                       <input type="number" value={dailyLimits.sms} min={1} max={500}
                         onChange={e => setDailyLimits(p => ({ ...p, sms: Number(e.target.value) }))}
                         className="input w-full text-xs" />
                     </div>
                     <div>
-                      <label className="text-[10px] text-muted block mb-1 flex items-center gap-1"><PhoneCall size={10} /> Max Calls</label>
+                      <label className="text-[10px] text-text-muted block mb-1 flex items-center gap-1"><PhoneCall size={10} /> Max Calls</label>
                       <input type="number" value={dailyLimits.calls} min={1} max={200}
                         onChange={e => setDailyLimits(p => ({ ...p, calls: Number(e.target.value) }))}
                         className="input w-full text-xs" />
                     </div>
                     <div>
-                      <label className="text-[10px] text-muted block mb-1 flex items-center gap-1"><MessageSquare size={10} /> Max DMs</label>
+                      <label className="text-[10px] text-text-muted block mb-1 flex items-center gap-1"><MessageSquare size={10} /> Max DMs</label>
                       <input type="number" value={dailyLimits.dms} min={1} max={200}
                         onChange={e => setDailyLimits(p => ({ ...p, dms: Number(e.target.value) }))}
                         className="input w-full text-xs" />
@@ -1977,7 +1977,7 @@ export default function OutreachHubPage() {
                   <h2 className="text-sm font-semibold flex items-center gap-2">
                     <Shield size={14} className="text-brand-accent" /> Compliance
                   </h2>
-                  <p className="text-[10px] text-muted">Ensure your outreach complies with regulations.</p>
+                  <p className="text-[10px] text-text-muted">Ensure your outreach complies with regulations.</p>
                   <div className="space-y-3">
                     {[
                       { key: "optOut" as const, label: "Opt-Out Handling", desc: "Automatically stop contacting leads who opt out" },
@@ -1988,10 +1988,10 @@ export default function OutreachHubPage() {
                       <div key={c.key} className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light">
                         <div>
                           <p className="text-xs font-medium">{c.label}</p>
-                          <p className="text-[9px] text-muted">{c.desc}</p>
+                          <p className="text-[9px] text-text-muted">{c.desc}</p>
                         </div>
                         <button onClick={() => setCompliance(p => ({ ...p, [c.key]: !p[c.key] }))}
-                          className={`${compliance[c.key] ? "text-brand-accent" : "text-muted"}`}>
+                          className={`${compliance[c.key] ? "text-brand-accent" : "text-text-muted"}`}>
                           {compliance[c.key] ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
                         </button>
                       </div>
@@ -2011,7 +2011,7 @@ export default function OutreachHubPage() {
                       {(["b2b", "b2c"] as TargetMode[]).map(m => (
                         <button key={m} onClick={() => setDefaultTargetMode(m)}
                           className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-all ${
-                            defaultTargetMode === m ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-muted border-border/50"
+                            defaultTargetMode === m ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle/50"
                           }`}>{m.toUpperCase()}</button>
                       ))}
                     </div>
@@ -2028,12 +2028,12 @@ export default function OutreachHubPage() {
 
                   <div>
                     <label className="text-xs font-medium block mb-1">Working Hours</label>
-                    <p className="text-[9px] text-muted mb-2">Outreach will only be sent during these hours.</p>
+                    <p className="text-[9px] text-text-muted mb-2">Outreach will only be sent during these hours.</p>
                     <div className="flex items-center gap-2">
                       <input type="time" value={workingHours.start}
                         onChange={e => setWorkingHours(p => ({ ...p, start: e.target.value }))}
                         className="input text-xs flex-1" />
-                      <span className="text-[10px] text-muted">to</span>
+                      <span className="text-[10px] text-text-muted">to</span>
                       <input type="time" value={workingHours.end}
                         onChange={e => setWorkingHours(p => ({ ...p, end: e.target.value }))}
                         className="input text-xs flex-1" />
@@ -2046,7 +2046,7 @@ export default function OutreachHubPage() {
                   <h3 className="text-xs font-semibold flex items-center gap-2">
                     <Hash size={12} className="text-brand-accent" /> Available Variables
                   </h3>
-                  <p className="text-[9px] text-muted">Use these in any template. They&apos;re replaced with real lead data at send time.</p>
+                  <p className="text-[9px] text-text-muted">Use these in any template. They&apos;re replaced with real lead data at send time.</p>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                     {[
                       { var: "name", desc: "Lead/owner name" },
@@ -2064,7 +2064,7 @@ export default function OutreachHubPage() {
                     ].map(v => (
                       <div key={v.var} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light text-[10px]">
                         <code className="text-brand-accent font-mono text-[9px]">{`{{${v.var}}}`}</code>
-                        <span className="text-muted">{v.desc}</span>
+                        <span className="text-text-muted">{v.desc}</span>
                       </div>
                     ))}
                   </div>

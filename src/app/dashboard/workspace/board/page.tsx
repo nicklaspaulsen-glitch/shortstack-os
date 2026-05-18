@@ -429,7 +429,7 @@ export default function WorkspaceBoardPage() {
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setFiltersOpen((v) => !v)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/5 hover:bg-black/10 border border-border text-sm text-foreground transition-colors"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/5 hover:bg-black/10 border border-border-subtle text-sm text-text-primary transition-colors"
                   >
                     <Filter size={14} /> Filters
                   </motion.button>
@@ -448,7 +448,7 @@ export default function WorkspaceBoardPage() {
                 </div>
       </div>
     </div>{/* View bar */}<div className="flex items-center justify-between gap-3 flex-wrap">
-              <div className="inline-flex items-center gap-1 p-1 rounded-lg bg-surface-light border border-border">
+              <div className="inline-flex items-center gap-1 p-1 rounded-lg bg-surface-light border border-border-subtle">
                 {(
                   [
                     { v: "all", label: "All tasks" },
@@ -465,7 +465,7 @@ export default function WorkspaceBoardPage() {
                     className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
                       view === opt.v
                         ? "bg-[rgba(59,130,246,0.12)] text-brand-accent"
-                        : "text-muted hover:text-fg"
+                        : "text-text-muted hover:text-fg"
                     }`}
                   >
                     {opt.label}
@@ -478,7 +478,7 @@ export default function WorkspaceBoardPage() {
                   <select
                     value={filterClient}
                     onChange={(e) => setFilterClient(e.target.value)}
-                    className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs focus:border-brand-accent focus:outline-none"
+                    className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border-subtle text-xs focus:border-brand-accent focus:outline-none"
                   >
                     <option value="">All clients</option>
                     {clientsList.map((c) => (
@@ -490,7 +490,7 @@ export default function WorkspaceBoardPage() {
                   <select
                     value={filterAssignee}
                     onChange={(e) => setFilterAssignee(e.target.value)}
-                    className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border text-xs focus:border-brand-accent focus:outline-none"
+                    className="px-2.5 py-1.5 rounded-lg bg-surface-light border border-border-subtle text-xs focus:border-brand-accent focus:outline-none"
                   >
                     <option value="">All assignees</option>
                     {membersList.map((m) => (
@@ -506,7 +506,7 @@ export default function WorkspaceBoardPage() {
                         setFilterClient("");
                         setFilterAssignee("");
                       }}
-                      className="text-[11px] text-muted hover:text-fg"
+                      className="text-[11px] text-text-muted hover:text-fg"
                     >
                       Clear
                     </button>
@@ -574,7 +574,7 @@ export default function WorkspaceBoardPage() {
                             setModalDefaultStatus(status);
                             setModalOpen(true);
                           }}
-                          className="p-1 rounded text-muted hover:text-fg hover:bg-[rgba(0,0,0,0.03)] transition-colors"
+                          className="p-1 rounded text-text-muted hover:text-fg hover:bg-[rgba(0,0,0,0.03)] transition-colors"
                           aria-label={`Add task to ${meta.label}`}
                         >
                           <Plus size={14} />
@@ -590,7 +590,7 @@ export default function WorkspaceBoardPage() {
                         }`}
                       >
                         {columnTasks.length === 0 ? (
-                          <div className="text-center text-[11px] text-muted/70 py-8">
+                          <div className="text-center text-[11px] text-text-muted/70 py-8">
                             Drop tasks here
                           </div>
                         ) : (

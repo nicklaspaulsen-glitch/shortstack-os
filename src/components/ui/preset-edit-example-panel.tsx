@@ -154,19 +154,19 @@ function PanelShell({
         aria-hidden
       />
       {/* Panel */}
-      <aside className="fixed right-0 top-0 h-screen w-full max-w-[480px] z-50 flex flex-col border-l border-border bg-surface shadow-2xl">
+      <aside className="fixed right-0 top-0 h-screen w-full max-w-[480px] z-50 flex flex-col border-l border-border-subtle bg-surface shadow-2xl">
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 px-5 py-4 border-b border-border bg-surface-light/40">
+        <div className="flex items-start justify-between gap-3 px-5 py-4 border-b border-border-subtle bg-surface-light/40">
           <div className="min-w-0">
-            <h2 className="text-sm font-semibold text-foreground truncate">{title}</h2>
+            <h2 className="text-sm font-semibold text-text-primary truncate">{title}</h2>
             {subtitle && (
-              <p className="text-[11px] text-muted mt-0.5">{subtitle}</p>
+              <p className="text-[11px] text-text-muted mt-0.5">{subtitle}</p>
             )}
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-lg p-1.5 text-muted hover:text-foreground hover:bg-surface-light transition"
+            className="shrink-0 rounded-lg p-1.5 text-text-muted hover:text-text-primary hover:bg-surface-light transition"
             aria-label="Close panel"
           >
             <X size={15} />
@@ -179,7 +179,7 @@ function PanelShell({
         </div>
 
         {/* Footer */}
-        <div className="border-t border-border bg-surface-light/40 px-5 py-3">
+        <div className="border-t border-border-subtle bg-surface-light/40 px-5 py-3">
           {footer}
         </div>
       </aside>
@@ -246,7 +246,7 @@ function VideoEditExample({
             value={customName}
             onChange={(e) => setCustomName(e.target.value)}
             placeholder="Custom preset name..."
-            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
+            className="flex-1 bg-surface border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
           />
           <button
             type="button"
@@ -296,10 +296,10 @@ function VideoEditExample({
         {details.map(({ label, value }) => (
           <div
             key={label}
-            className="rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2.5"
+            className="rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2.5"
           >
-            <p className="text-[10px] text-muted uppercase tracking-wide">{label}</p>
-            <p className="text-sm font-medium text-foreground mt-0.5 capitalize">
+            <p className="text-[10px] text-text-muted uppercase tracking-wide">{label}</p>
+            <p className="text-sm font-medium text-text-primary mt-0.5 capitalize">
               {value}
             </p>
           </div>
@@ -307,7 +307,7 @@ function VideoEditExample({
       </div>
 
       {/* Info note */}
-      <div className="rounded-lg border border-border/50 bg-surface-light/30 px-3 py-2.5 text-[11px] text-muted leading-relaxed">
+      <div className="rounded-lg border border-border-subtle/50 bg-surface-light/30 px-3 py-2.5 text-[11px] text-text-muted leading-relaxed">
         This preview shows the preset configuration. The actual effect will be
         applied by the AI video editor when you use this preset on a clip.
       </div>
@@ -364,7 +364,7 @@ function ThumbnailEditExample({
             value={customName}
             onChange={(e) => setCustomName(e.target.value)}
             placeholder="Custom preset name..."
-            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
+            className="flex-1 bg-surface border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
           />
           <button
             type="button"
@@ -407,18 +407,18 @@ function ThumbnailEditExample({
 
       {/* Editable overlay text field */}
       <div>
-        <label className="text-xs text-muted mb-1.5 block">Overlay text (editable)</label>
+        <label className="text-xs text-text-muted mb-1.5 block">Overlay text (editable)</label>
         <input
           value={overlayText}
           onChange={(e) => setOverlayText(e.target.value)}
           placeholder="Your headline here..."
-          className="w-full bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
+          className="w-full bg-surface-light border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
         />
       </div>
 
       {/* Description */}
       {preset.description && (
-        <div className="rounded-lg border border-border/50 bg-surface-light/30 px-3 py-2.5 text-[11px] text-muted leading-relaxed">
+        <div className="rounded-lg border border-border-subtle/50 bg-surface-light/30 px-3 py-2.5 text-[11px] text-text-muted leading-relaxed">
           {preset.description}
         </div>
       )}
@@ -431,10 +431,10 @@ function ThumbnailEditExample({
         ].map(({ label, value }) => (
           <div
             key={label}
-            className="rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2.5"
+            className="rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2.5"
           >
-            <p className="text-[10px] text-muted uppercase tracking-wide">{label}</p>
-            <p className="text-sm font-medium text-foreground mt-0.5 capitalize">
+            <p className="text-[10px] text-text-muted uppercase tracking-wide">{label}</p>
+            <p className="text-sm font-medium text-text-primary mt-0.5 capitalize">
               {value.replace(/_/g, " ")}
             </p>
           </div>
@@ -500,7 +500,7 @@ function TelegramEditExample({
             value={customName}
             onChange={(e) => setCustomName(e.target.value)}
             placeholder="Custom preset name..."
-            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
+            className="flex-1 bg-surface border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
           />
           <button
             type="button"
@@ -523,7 +523,7 @@ function TelegramEditExample({
       {/* Variable inputs */}
       {vars.length > 0 && (
         <div className="space-y-2">
-          <p className="text-xs text-muted font-medium">Fill in variables to preview</p>
+          <p className="text-xs text-text-muted font-medium">Fill in variables to preview</p>
           {vars.map((v) => (
             <div key={v} className="flex items-center gap-2">
               <span className="text-[10px] text-[#2563EB] font-mono bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] rounded px-2 py-1 min-w-[110px] text-center shrink-0">
@@ -535,7 +535,7 @@ function TelegramEditExample({
                   setVarValues((prev) => ({ ...prev, [v]: e.target.value }))
                 }
                 placeholder={v}
-                className="flex-1 bg-surface-light border border-border rounded-lg px-3 py-1.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
+                className="flex-1 bg-surface-light border border-border-subtle rounded-lg px-3 py-1.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
               />
             </div>
           ))}
@@ -544,7 +544,7 @@ function TelegramEditExample({
 
       {/* Fake Telegram bubble */}
       <div>
-        <p className="text-xs text-muted mb-2">Live preview</p>
+        <p className="text-xs text-text-muted mb-2">Live preview</p>
         <div className=" rounded-tl-sm bg-[#17212b] border border-[#2b5278]/40 px-4 py-3 max-w-sm">
           {/* Telegram sender line */}
           <div className="flex items-center gap-2 mb-2">

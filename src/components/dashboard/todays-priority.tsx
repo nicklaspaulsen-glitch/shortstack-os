@@ -72,7 +72,7 @@ export default function TodaysPriority() {
       className={`block  border ${accent.ring} bg-gradient-to-br ${accent.bg} p-4 transition-all hover:-translate-y-0.5 hover:shadow-md group`}
     >
       <div className="flex items-center justify-between mb-2">
-        <span className="text-[10px] text-muted font-semibold uppercase tracking-wider flex items-center gap-1.5">
+        <span className="text-[10px] text-text-muted font-semibold uppercase tracking-wider flex items-center gap-1.5">
           <Target size={11} className={accent.iconColor} /> Today&apos;s Priority
         </span>
         <span className={`text-[9px] font-semibold uppercase tracking-wider ${accent.text}`}>
@@ -85,7 +85,7 @@ export default function TodaysPriority() {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-base font-bold truncate">{priority.title}</p>
-          <p className="text-[11px] text-muted mt-0.5 truncate">{priority.subtitle}</p>
+          <p className="text-[11px] text-text-muted mt-0.5 truncate">{priority.subtitle}</p>
         </div>
         <span
           className={`shrink-0 inline-flex items-center gap-1.5 text-[11px] font-semibold px-3 py-2 rounded-xl border ${accent.cta} transition-all group-hover:gap-2`}

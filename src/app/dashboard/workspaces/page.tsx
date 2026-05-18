@@ -148,9 +148,9 @@ export default function WorkspacesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                <LayoutGrid size={40} className="text-muted opacity-30" />
+                <LayoutGrid size={40} className="text-text-muted opacity-30" />
                 <p className="text-[#111827] font-semibold">No workspaces yet</p>
-                <p className="text-muted text-sm max-w-xs">Create your first workspace to start isolating data per brand or client.</p>
+                <p className="text-text-muted text-sm max-w-xs">Create your first workspace to start isolating data per brand or client.</p>
                 <button onClick={() => setShowCreate(true)}
                   className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
                   <Plus size={15} /> Create first workspace
@@ -182,12 +182,12 @@ export default function WorkspacesPage() {
                               <span className="text-[10px] bg-brand-accent/10 text-[#3B82F6] border border-brand-accent/20 px-1.5 py-0.5 rounded-full shrink-0">Default</span>
                             )}
                           </div>
-                          <p className="text-muted text-xs mt-0.5 font-mono">{w.slug}</p>
+                          <p className="text-text-muted text-xs mt-0.5 font-mono">{w.slug}</p>
                         </div>
                         {isActive && <CheckCircle size={18} className="text-brand-accent shrink-0 mt-0.5" />}
                       </div>
-                      {w.description && <p className="text-muted text-xs line-clamp-2">{w.description}</p>}
-                      <div className="flex items-center gap-3 text-xs text-muted mt-auto">
+                      {w.description && <p className="text-text-muted text-xs line-clamp-2">{w.description}</p>}
+                      <div className="flex items-center gap-3 text-xs text-text-muted mt-auto">
                         <span className="flex items-center gap-1"><Users size={12} /> {w._memberCount} member{w._memberCount !== 1 ? "s" : ""}</span>
                         <span>·</span>
                         <span>{new Date(w.created_at).toLocaleDateString()}</span>

@@ -495,11 +495,11 @@ export default function TelegramBotPage() {
                     {botConnected === null ? "Checking..." : botConnected ? "Connected" : "Disconnected"}
                   </span>
                   {botUsername && (
-                    <span className="text-xs text-foreground bg-black/5 border border-border px-3 py-1.5 rounded-full">
+                    <span className="text-xs text-text-primary bg-black/5 border border-border-subtle px-3 py-1.5 rounded-full">
                       @{botUsername}
                     </span>
                   )}
-                  <span className="text-xs text-foreground bg-black/5 border border-border px-3 py-1.5 rounded-full">
+                  <span className="text-xs text-text-primary bg-black/5 border border-border-subtle px-3 py-1.5 rounded-full">
                     {activeCount} active / {pausedCount} paused
                   </span>
                 </>
@@ -512,7 +512,7 @@ export default function TelegramBotPage() {
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
                     tab === t.key
                       ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]"
-                      : "text-muted hover:text-foreground hover:bg-surface"
+                      : "text-text-muted hover:text-text-primary hover:bg-surface"
                   }`}
                 >
                   {t.icon}
@@ -523,8 +523,8 @@ export default function TelegramBotPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="section-header mb-0">Bot Routines</h3>
-                    <p className="text-xs text-muted mt-0.5">Scheduled tasks that send you Telegram messages.</p>
+                    <h3 className="mb-0">Bot Routines</h3>
+                    <p className="text-xs text-text-muted mt-0.5">Scheduled tasks that send you Telegram messages.</p>
                   </div>
                   <button
                     onClick={openNewModal}
@@ -536,11 +536,11 @@ export default function TelegramBotPage() {
                 </div>
 
                 {loadingRoutines ? (
-                  <div className="card flex items-center justify-center py-12">
+                  <div className="glass rounded-xl p-4 flex items-center justify-center py-12">
                     <Loader size={18} className="animate-spin text-brand-accent" />
                   </div>
                 ) : routines.length === 0 ? (
-                  <div className="card">
+                  <div className="glass rounded-xl p-4">
                     <EmptyState
                       icon={<TelegramIcon size={48} />}
                       title="No routines yet"
@@ -569,7 +569,7 @@ export default function TelegramBotPage() {
                       const statusBadge = r.paused
                         ? { label: "Paused", cls: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]" }
                         : !r.enabled
-                        ? { label: "Disabled", cls: "bg-surface-light text-muted border-border" }
+                        ? { label: "Disabled", cls: "bg-surface-light text-text-muted border-border-subtle" }
                         : (r.fail_count ?? 0) > (r.success_count ?? 0) && (r.run_count ?? 0) > 0
                         ? { label: "Failing", cls: "bg-red-500/10 text-red-400 border-red-500/20" }
                         : { label: "Active", cls: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" };
@@ -581,21 +581,21 @@ export default function TelegramBotPage() {
                           transition={{ delay: idx * 0.04 }}
                           className="glass rounded-xl !p-4 flex items-center gap-4 flex-wrap md:flex-nowrap"
                         >
-                          <div className={`w-10 h-10 rounded-xl bg-surface-light border border-border flex items-center justify-center flex-shrink-0 ${colorForType(r.routine_type)}`}>
+                          <div className={`w-10 h-10 rounded-xl bg-surface-light border border-border-subtle flex items-center justify-center flex-shrink-0 ${colorForType(r.routine_type)}`}>
                             {iconForType(r.routine_type)}
                           </div>
 
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <p className="text-sm font-medium text-foreground truncate">{r.name}</p>
+                              <p className="text-sm font-medium text-text-primary truncate">{r.name}</p>
                               <span className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded border ${statusBadge.cls}`}>
                                 {statusBadge.label}
                               </span>
-                              <span className="text-[10px] text-muted bg-surface-light border border-border rounded px-1.5 py-0.5">
+                              <span className="text-[10px] text-text-muted bg-surface-light border border-border-subtle rounded px-1.5 py-0.5">
                                 {r.routine_type}
                               </span>
                             </div>
-                            <div className="flex items-center gap-3 mt-1 text-xs text-muted flex-wrap">
+                            <div className="flex items-center gap-3 mt-1 text-xs text-text-muted flex-wrap">
                               <span className="flex items-center gap-1"><Clock size={10} /> {r.schedule}</span>
                               <span>Last run: {fmtTime(r.last_run_at)}</span>
                               <span>Runs: {r.run_count ?? 0}</span>
@@ -623,21 +623,21 @@ export default function TelegramBotPage() {
                             <button
                               onClick={() => handleRunNow(r)}
                               title="Run now"
-                              className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-colors"
+                              className="p-2 rounded-lg bg-surface-light border border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-colors"
                             >
                               <Zap size={14} />
                             </button>
                             <button
                               onClick={() => openEditModal(r)}
                               title="Edit"
-                              className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.2)] transition-colors"
+                              className="p-2 rounded-lg bg-surface-light border border-border-subtle text-text-muted hover:text-text-primary hover:border-[rgba(59,130,246,0.2)] transition-colors"
                             >
                               <Edit3 size={14} />
                             </button>
                             <button
                               onClick={() => handleDelete(r)}
                               title="Delete"
-                              className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-red-400 hover:border-red-400/20 transition-colors"
+                              className="p-2 rounded-lg bg-surface-light border border-border-subtle text-text-muted hover:text-red-400 hover:border-red-400/20 transition-colors"
                             >
                               <Trash2 size={14} />
                             </button>
@@ -651,11 +651,11 @@ export default function TelegramBotPage() {
             )}{/* ═══════════ LIVE ACTIVITY TAB ═══════════ */}{tab === "activity" && (
               <div className="space-y-4">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Filter size={14} className="text-muted" />
+                  <Filter size={14} className="text-text-muted" />
                   <select
                     value={activityFilter}
                     onChange={e => setActivityFilter(e.target.value)}
-                    className="bg-surface-light border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
+                    className="bg-surface-light border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
                   >
                     <option value="">All routines</option>
                     {ROUTINE_TYPES.map(t => (
@@ -664,19 +664,19 @@ export default function TelegramBotPage() {
                   </select>
                   <button
                     onClick={() => loadActivity(activityFilter)}
-                    className="px-3 py-2 bg-surface-light border border-border rounded-lg text-xs text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.2)]"
+                    className="px-3 py-2 bg-surface-light border border-border-subtle rounded-lg text-xs text-text-muted hover:text-text-primary hover:border-[rgba(59,130,246,0.2)]"
                   >
                     Refresh
                   </button>
-                  <span className="text-xs text-muted ml-auto">Last 100 messages</span>
+                  <span className="text-xs text-text-muted ml-auto">Last 100 messages</span>
                 </div>
 
                 {loadingActivity ? (
-                  <div className="card flex items-center justify-center py-12">
+                  <div className="glass rounded-xl p-4 flex items-center justify-center py-12">
                     <Loader size={18} className="animate-spin text-brand-accent" />
                   </div>
                 ) : activity.length === 0 ? (
-                  <div className="card">
+                  <div className="glass rounded-xl p-4">
                     <EmptyState
                       icon={<Activity size={48} />}
                       title="No activity yet"
@@ -698,20 +698,20 @@ export default function TelegramBotPage() {
                           transition={{ delay: idx * 0.04 }}
                           className="glass-md rounded-xl !p-3 flex items-start gap-3"
                         >
-                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isOk ? "bg-emerald-500/10 text-emerald-400" : a.status === "failed" ? "bg-red-500/10 text-red-400" : "bg-surface-light text-muted"}`}>
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isOk ? "bg-emerald-500/10 text-emerald-400" : a.status === "failed" ? "bg-red-500/10 text-red-400" : "bg-surface-light text-text-muted"}`}>
                             <Bot size={14} />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-xs font-medium text-foreground">{a.description}</span>
-                              <span className="text-[10px] text-muted bg-surface-light border border-border rounded px-1.5 py-0.5">
+                              <span className="text-xs font-medium text-text-primary">{a.description}</span>
+                              <span className="text-[10px] text-text-muted bg-surface-light border border-border-subtle rounded px-1.5 py-0.5">
                                 {a.action_type}
                               </span>
                             </div>
                             {msgPreview && (
-                              <p className="text-xs text-muted mt-1 whitespace-pre-wrap line-clamp-3">{msgPreview}</p>
+                              <p className="text-xs text-text-muted mt-1 whitespace-pre-wrap line-clamp-3">{msgPreview}</p>
                             )}
-                            <p className="text-[10px] text-muted mt-1">{fmtTime(a.created_at)}</p>
+                            <p className="text-[10px] text-text-muted mt-1">{fmtTime(a.created_at)}</p>
                           </div>
                         </motion.div>
                       );
@@ -722,8 +722,8 @@ export default function TelegramBotPage() {
             )}{/* ═══════════ TEMPLATES TAB ═══════════ */}{tab === "templates" && (
               <div className="space-y-4">
                 <div>
-                  <h3 className="section-header mb-0">Routine Templates</h3>
-                  <p className="text-xs text-muted mt-0.5">Click a template to clone it as a new routine.</p>
+                  <h3 className="mb-0">Routine Templates</h3>
+                  <p className="text-xs text-text-muted mt-0.5">Click a template to clone it as a new routine.</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {ROUTINE_TEMPLATES.map((t, i) => (
@@ -742,16 +742,16 @@ export default function TelegramBotPage() {
                       }}
                     >
                       <div className="flex items-center gap-3 mb-3">
-                        <div className={`w-10 h-10 rounded-xl bg-surface-light border border-border flex items-center justify-center ${t.color}`}>
+                        <div className={`w-10 h-10 rounded-xl bg-surface-light border border-border-subtle flex items-center justify-center ${t.color}`}>
                           {t.icon}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-foreground">{t.name}</p>
-                          <p className="text-[10px] text-muted">{t.schedule}</p>
+                          <p className="text-sm font-semibold text-text-primary">{t.name}</p>
+                          <p className="text-[10px] text-text-muted">{t.schedule}</p>
                         </div>
                       </div>
-                      <p className="text-xs text-muted mb-3 line-clamp-2">{t.description}</p>
-                      <div className="bg-surface-light border border-border rounded-lg p-2 text-[10px] text-muted font-mono whitespace-pre-wrap line-clamp-3">
+                      <p className="text-xs text-text-muted mb-3 line-clamp-2">{t.description}</p>
+                      <div className="bg-surface-light border border-border-subtle rounded-lg p-2 text-[10px] text-text-muted font-mono whitespace-pre-wrap line-clamp-3">
                         {t.message_template}
                       </div>
                       <div className="mt-3 flex items-center justify-end">
@@ -766,7 +766,7 @@ export default function TelegramBotPage() {
             )}{/* ═══════════ SETTINGS TAB ═══════════ */}{tab === "settings" && (
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
-                  <h3 className="section-header flex items-center gap-2">
+                  <h3 className="flex items-center gap-2">
                     <Wifi size={14} className="text-brand-accent" />
                     Bot Connection
                   </h3>
@@ -774,13 +774,13 @@ export default function TelegramBotPage() {
                     <div className="flex items-center gap-3">
                       <div className={`w-3 h-3 rounded-full ${botConnected ? "bg-emerald-400 animate-pulse" : "bg-red-400"}`} />
                       <div>
-                        <p className="text-sm font-medium text-foreground">
+                        <p className="text-sm font-medium text-text-primary">
                           {botConnected === null ? "Checking..." : botConnected ? `Connected${botUsername ? ` as @${botUsername}` : ""}` : "Bot token missing or invalid"}
                         </p>
                         {isPlatformAdmin ? (
-                          <p className="text-xs text-muted">Uses <code className="text-brand-accent">TELEGRAM_BOT_TOKEN</code> env var</p>
+                          <p className="text-xs text-text-muted">Uses <code className="text-brand-accent">TELEGRAM_BOT_TOKEN</code> env var</p>
                         ) : (
-                          <p className="text-xs text-muted">Telegram bot connection status</p>
+                          <p className="text-xs text-text-muted">Telegram bot connection status</p>
                         )}
                       </div>
                     </div>
@@ -794,16 +794,16 @@ export default function TelegramBotPage() {
                 </div>
 
                 <div className="glass rounded-xl p-4">
-                  <h3 className="section-header flex items-center gap-2">
+                  <h3 className="flex items-center gap-2">
                     <MessageCircle size={14} className="text-brand-accent" />
                     Default Chat ID
                   </h3>
-                  <p className="text-xs text-muted mt-1">
+                  <p className="text-xs text-text-muted mt-1">
                     {isPlatformAdmin
                       ? <>Where all routines send messages. Configured via <code className="text-brand-accent">TELEGRAM_CHAT_ID</code> env var.</>
                       : "Where all routines send messages."}
                   </p>
-                  <div className="mt-3 bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm font-mono text-muted">
+                  <div className="mt-3 bg-surface-light border border-border-subtle rounded-lg px-4 py-2.5 text-sm font-mono text-text-muted">
                     {"Configured server-side"}
                   </div>
                 </div>
@@ -811,11 +811,11 @@ export default function TelegramBotPage() {
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="section-header mb-0 flex items-center gap-2">
+                      <h3 className="mb-0 flex items-center gap-2">
                         <Zap size={14} className="text-brand-accent" />
                         Master Toggle
                       </h3>
-                      <p className="text-xs text-muted mt-0.5">Pause every routine at once</p>
+                      <p className="text-xs text-text-muted mt-0.5">Pause every routine at once</p>
                     </div>
                     <button
                       onClick={async () => {
@@ -837,7 +837,7 @@ export default function TelegramBotPage() {
                           toast.error("Failed to update all");
                         }
                       }}
-                      className={`w-14 h-7 rounded-full relative transition-colors ${masterEnabled ? "bg-emerald-500" : "bg-surface-light border border-border"}`}
+                      className={`w-14 h-7 rounded-full relative transition-colors ${masterEnabled ? "bg-emerald-500" : "bg-surface-light border border-border-subtle"}`}
                     >
                       <span className={`absolute top-0.5 h-6 w-6 rounded-full bg-white transition-all ${masterEnabled ? "left-7" : "left-0.5"}`} />
                     </button>
@@ -845,11 +845,11 @@ export default function TelegramBotPage() {
                 </div>
 
                 <div className="glass rounded-xl p-4">
-                  <h3 className="section-header flex items-center gap-2">
+                  <h3 className="flex items-center gap-2">
                     <Clock size={14} className="text-brand-accent" />
                     Activity Retention
                   </h3>
-                  <p className="text-xs text-muted mt-1">How long to keep message history</p>
+                  <p className="text-xs text-text-muted mt-1">How long to keep message history</p>
                   <div className="mt-3 flex gap-2">
                     {[30, 60, 90].map(d => (
                       <button
@@ -858,7 +858,7 @@ export default function TelegramBotPage() {
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                           retentionDays === d
                             ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]"
-                            : "bg-surface-light text-muted border border-border hover:border-[rgba(59,130,246,0.2)]"
+                            : "bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(59,130,246,0.2)]"
                         }`}
                       >
                         {d} days
@@ -868,11 +868,11 @@ export default function TelegramBotPage() {
                 </div>
 
                 <div className="glass rounded-xl p-4 border-red-500/20">
-                  <h3 className="section-header flex items-center gap-2 text-red-400">
+                  <h3 className="flex items-center gap-2 text-red-400">
                     <Trash2 size={14} />
                     Danger Zone
                   </h3>
-                  <p className="text-xs text-muted mt-1">Permanently remove routines and activity history</p>
+                  <p className="text-xs text-text-muted mt-1">Permanently remove routines and activity history</p>
                   <div className="mt-3 flex gap-2 flex-wrap">
                     <button
                       onClick={() => toast("Server-side activity purge coming soon", { icon: "🚧" })}
@@ -898,14 +898,14 @@ export default function TelegramBotPage() {
               </div>
             )}{/* ═══════════ CREATE/EDIT MODAL ═══════════ */}{showModal && editing && (
               <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-                <div className="bg-surface border border-border  max-w-2xl w-full my-8 max-h-[90vh] overflow-y-auto">
-                  <div className="sticky top-0 bg-surface border-b border-border px-6 py-4 flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-foreground">
+                <div className="bg-surface border border-border-subtle  max-w-2xl w-full my-8 max-h-[90vh] overflow-y-auto">
+                  <div className="sticky top-0 bg-surface border-b border-border-subtle px-6 py-4 flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-text-primary">
                       {editing.id ? "Edit Routine" : "New Routine"}
                     </h3>
                     <button
                       onClick={() => { setShowModal(false); setEditing(null); }}
-                      className="text-muted hover:text-foreground"
+                      className="text-text-muted hover:text-text-primary"
                     >
                       <X size={20} />
                     </button>
@@ -913,34 +913,34 @@ export default function TelegramBotPage() {
 
                   <div className="p-6 space-y-4">
                     <div>
-                      <label className="text-xs text-muted mb-1 block">Name</label>
+                      <label className="text-xs text-text-muted mb-1 block">Name</label>
                       <input
                         type="text"
                         value={editing.name}
                         onChange={e => setEditing({ ...editing, name: e.target.value })}
-                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)]"
+                        className="w-full bg-surface-light border border-border-subtle rounded-lg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)]"
                         placeholder="Daily Lead Brief"
                       />
                     </div>
 
                     <div>
-                      <label className="text-xs text-muted mb-1 block">Description</label>
+                      <label className="text-xs text-text-muted mb-1 block">Description</label>
                       <input
                         type="text"
                         value={editing.description || ""}
                         onChange={e => setEditing({ ...editing, description: e.target.value })}
-                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)]"
+                        className="w-full bg-surface-light border border-border-subtle rounded-lg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)]"
                         placeholder="What this routine does"
                       />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
-                        <label className="text-xs text-muted mb-1 block">Routine Type</label>
+                        <label className="text-xs text-text-muted mb-1 block">Routine Type</label>
                         <select
                           value={editing.routine_type}
                           onChange={e => setEditing({ ...editing, routine_type: e.target.value })}
-                          className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
+                          className="w-full bg-surface-light border border-border-subtle rounded-lg px-4 py-2.5 text-sm text-text-primary focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
                         >
                           {ROUTINE_TYPES.map(t => (
                             <option key={t.value} value={t.value}>{t.label}</option>
@@ -949,7 +949,7 @@ export default function TelegramBotPage() {
                       </div>
 
                       <div>
-                        <label className="text-xs text-muted mb-1 block">Schedule Preset</label>
+                        <label className="text-xs text-text-muted mb-1 block">Schedule Preset</label>
                         <select
                           value={SCHEDULE_PRESETS.find(p => p.value === editing.schedule)?.value || "custom"}
                           onChange={e => {
@@ -957,7 +957,7 @@ export default function TelegramBotPage() {
                               setEditing({ ...editing, schedule: e.target.value });
                             }
                           }}
-                          className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
+                          className="w-full bg-surface-light border border-border-subtle rounded-lg px-4 py-2.5 text-sm text-text-primary focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
                         >
                           {SCHEDULE_PRESETS.map(p => (
                             <option key={p.value} value={p.value}>{p.label}</option>
@@ -967,30 +967,30 @@ export default function TelegramBotPage() {
                     </div>
 
                     <div>
-                      <label className="text-xs text-muted mb-1 block">Custom Cron Expression</label>
+                      <label className="text-xs text-text-muted mb-1 block">Custom Cron Expression</label>
                       <input
                         type="text"
                         value={editing.schedule}
                         onChange={e => setEditing({ ...editing, schedule: e.target.value })}
-                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm font-mono text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)]"
+                        className="w-full bg-surface-light border border-border-subtle rounded-lg px-4 py-2.5 text-sm font-mono text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)]"
                         placeholder="0 9 * * *   or   manual"
                       />
-                      <p className="text-[10px] text-muted mt-1">
+                      <p className="text-[10px] text-text-muted mt-1">
                         Format: minute hour day month weekday. Use &quot;manual&quot; for run-on-demand only.
                       </p>
                     </div>
 
                     <div>
-                      <label className="text-xs text-muted mb-1 block">Message Template</label>
+                      <label className="text-xs text-text-muted mb-1 block">Message Template</label>
                       <textarea
                         value={editing.message_template || ""}
                         onChange={e => setEditing({ ...editing, message_template: e.target.value })}
                         rows={6}
-                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-3 text-sm font-mono text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)] resize-none"
+                        className="w-full bg-surface-light border border-border-subtle rounded-lg px-4 py-3 text-sm font-mono text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)] resize-none"
                         placeholder="Hello! Today is {{today_date}} and you have {{lead_count}} new leads."
                       />
                       <div className="mt-2 flex flex-wrap gap-1.5">
-                        <span className="text-[10px] text-muted">Variables:</span>
+                        <span className="text-[10px] text-text-muted">Variables:</span>
                         {VARIABLES.map(v => (
                           <button
                             key={v}
@@ -1011,7 +1011,7 @@ export default function TelegramBotPage() {
                     </div>
 
                     <div>
-                      <label className="text-xs text-muted mb-1 block">
+                      <label className="text-xs text-text-muted mb-1 block">
                         Conditions (JSON, optional)
                       </label>
                       <textarea
@@ -1024,23 +1024,23 @@ export default function TelegramBotPage() {
                           }
                         }}
                         rows={3}
-                        className="w-full bg-surface-light border border-border rounded-lg px-4 py-3 text-xs font-mono text-foreground placeholder:text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)] resize-none"
+                        className="w-full bg-surface-light border border-border-subtle rounded-lg px-4 py-3 text-xs font-mono text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)] resize-none"
                         placeholder='{ "min_deal_value": 500 }'
                       />
                     </div>
                   </div>
 
-                  <div className="sticky bottom-0 bg-surface border-t border-border px-6 py-4 flex items-center justify-between gap-2">
+                  <div className="sticky bottom-0 bg-surface border-t border-border-subtle px-6 py-4 flex items-center justify-between gap-2">
                     <button
                       onClick={handleSendTestFromModal}
-                      className="px-4 py-2 bg-surface-light border border-border rounded-lg text-sm font-medium text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-all flex items-center gap-2"
+                      className="px-4 py-2 bg-surface-light border border-border-subtle rounded-lg text-sm font-medium text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-all flex items-center gap-2"
                     >
                       <Zap size={14} /> Test
                     </button>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => { setShowModal(false); setEditing(null); }}
-                        className="px-4 py-2 text-sm text-muted hover:text-foreground"
+                        className="px-4 py-2 text-sm text-text-muted hover:text-text-primary"
                       >
                         Cancel
                       </button>

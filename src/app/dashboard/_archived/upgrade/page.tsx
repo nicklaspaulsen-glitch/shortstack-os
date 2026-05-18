@@ -156,18 +156,18 @@ export default function UpgradePage() {
   }
 
   return (
-    <MotionPage className="fade-in max-w-7xl mx-auto space-y-8">{/* -- Upgrade your plan command strip -- */}
+    <MotionPage className="max-w-7xl mx-auto space-y-8">{/* -- Upgrade your plan command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Plans</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Upgrade your plan</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <div className="flex items-center gap-2 bg-black/5 border border-border rounded-xl p-1">
+        <div className="flex items-center gap-2 bg-black/5 border border-border-subtle rounded-xl p-1">
                   <button
                     onClick={() => setBillingCycle("monthly")}
                     className={`px-3 py-1 rounded-lg text-[11px] font-medium transition-all ${
-                      billingCycle === "monthly" ? "bg-white text-black" : "text-muted hover:text-white"
+                      billingCycle === "monthly" ? "bg-white text-black" : "text-text-muted hover:text-white"
                     }`}
                   >
                     Monthly
@@ -175,7 +175,7 @@ export default function UpgradePage() {
                   <button
                     onClick={() => setBillingCycle("yearly")}
                     className={`px-3 py-1 rounded-lg text-[11px] font-medium transition-all flex items-center gap-1 ${
-                      billingCycle === "yearly" ? "bg-white text-black" : "text-muted hover:text-white"
+                      billingCycle === "yearly" ? "bg-white text-black" : "text-text-muted hover:text-white"
                     }`}
                   >
                     Yearly
@@ -213,7 +213,7 @@ export default function UpgradePage() {
                         ? "border-emerald-500/30 bg-emerald-500/[0.03] ring-1 ring-emerald-500/15 shadow-card"
                         : isCurrent
                         ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.03)] ring-1 ring-[rgba(59,130,246,0.1)]"
-                        : "border-border bg-surface shadow-soft hover:shadow-card-hover"
+                        : "border-border-subtle bg-surface shadow-soft hover:shadow-card-hover"
                     }`}
                   >
                     {isRecommended && !isCurrent && (
@@ -235,14 +235,14 @@ export default function UpgradePage() {
                       {PLAN_ICONS[tier]}
                     </div>
 
-                    <h3 className="text-base font-bold text-foreground">{config.badge_label}</h3>
-                    <p className="text-[10px] text-muted mt-0.5 leading-relaxed">{PLAN_TAGLINE[tier]}</p>
+                    <h3 className="text-base font-bold text-text-primary">{config.badge_label}</h3>
+                    <p className="text-[10px] text-text-muted mt-0.5 leading-relaxed">{PLAN_TAGLINE[tier]}</p>
 
                     <div className="mt-3 mb-1">
-                      <span className="text-2xl font-bold text-foreground">${displayPrice.toLocaleString()}</span>
-                      <span className="text-[10px] text-muted">/mo</span>
+                      <span className="text-2xl font-bold text-text-primary">${displayPrice.toLocaleString()}</span>
+                      <span className="text-[10px] text-text-muted">/mo</span>
                     </div>
-                    <p className="text-[10px] text-muted mb-4">
+                    <p className="text-[10px] text-text-muted mb-4">
                       {billingCycle === "yearly" ? (
                         <>
                           <span className="text-emerald-400">${(displayPrice * 12).toLocaleString()}/yr</span>
@@ -263,7 +263,7 @@ export default function UpgradePage() {
                           ? "bg-emerald-500 text-white hover:bg-emerald-600 shadow-sm"
                           : isUpgrade
                           ? "bg-brand-accent text-white hover:bg-brand-accent/80 shadow-sm"
-                          : "bg-surface-light text-foreground border border-border hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent"
+                          : "bg-surface-light text-text-primary border border-border-subtle hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent"
                       } ${loadingTier === tier ? "opacity-70 cursor-wait" : ""}`}
                     >
                       {loadingTier === tier ? (
@@ -283,16 +283,16 @@ export default function UpgradePage() {
                     </button>
 
                     {/* Limits grid */}
-                    <div className="mt-4 pt-4 border-t border-border space-y-1.5">
+                    <div className="mt-4 pt-4 border-t border-border-subtle space-y-1.5">
                       {LIMIT_ROWS.map((row) => {
                         const val = limits[row.key];
                         return (
                           <div key={row.key} className="flex items-center justify-between text-[10px]">
-                            <span className="flex items-center gap-1.5 text-muted">
-                              <span className="text-muted/60">{row.icon}</span>
+                            <span className="flex items-center gap-1.5 text-text-muted">
+                              <span className="text-text-muted/60">{row.icon}</span>
                               {row.label}
                             </span>
-                            <span className="font-mono font-medium text-foreground">
+                            <span className="font-mono font-medium text-text-primary">
                               {!Number.isFinite(val) ? (
                                 <span className="text-brand-accent">Unlimited</span>
                               ) : (
@@ -305,11 +305,11 @@ export default function UpgradePage() {
                     </div>
 
                     {/* Feature list — derived from LIMITS_BY_TIER via getTierFeatures */}
-                    <div className="mt-3 pt-3 border-t border-border space-y-1.5">
+                    <div className="mt-3 pt-3 border-t border-border-subtle space-y-1.5">
                       {getTierFeatures(tier).map((f) => (
                         <div key={f} className="flex items-start gap-1.5">
                           <Check size={10} className="mt-0.5 shrink-0 text-brand-accent" />
-                          <span className="text-[10px] text-foreground/80 leading-relaxed">{f}</span>
+                          <span className="text-[10px] text-text-primary/80 leading-relaxed">{f}</span>
                         </div>
                       ))}
                     </div>
@@ -319,18 +319,18 @@ export default function UpgradePage() {
             </div>{/* ─── Why upgrade? ──────────────────────────────────────────── */}<section className="glass rounded-xl p-6">
               <div className="flex items-center gap-2 mb-3">
                 <Sparkles size={16} className="text-brand-accent" />
-                <h2 className="text-sm font-bold text-foreground">Why upgrade?</h2>
+                <h2 className="text-sm font-bold text-text-primary">Why upgrade?</h2>
               </div>
-              <p className="text-xs text-muted mb-5 max-w-3xl leading-relaxed">
+              <p className="text-xs text-text-muted mb-5 max-w-3xl leading-relaxed">
                 The per-use math almost always makes a higher tier cheaper once you&apos;re running a real
                 book of clients. Here&apos;s a rough comparison at typical agency-usage levels.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div className="rounded-xl bg-surface p-4 border border-border">
-                  <p className="text-[10px] uppercase tracking-wider text-muted font-semibold mb-1.5">
+                <div className="rounded-xl bg-surface p-4 border border-border-subtle">
+                  <p className="text-[10px] uppercase tracking-wider text-text-muted font-semibold mb-1.5">
                     Starter → Growth
                   </p>
-                  <p className="text-xs text-foreground leading-relaxed mb-2">
+                  <p className="text-xs text-text-primary leading-relaxed mb-2">
                     <span className="font-bold">4× AI tokens</span>, <span className="font-bold">10× SMS</span>, unlimited social
                     platforms, AI Caller minutes.
                   </p>
@@ -338,11 +338,11 @@ export default function UpgradePage() {
                     ~$500/mo saved vs pay-per-use at 3 active clients
                   </p>
                 </div>
-                <div className="rounded-xl bg-surface p-4 border border-border">
-                  <p className="text-[10px] uppercase tracking-wider text-muted font-semibold mb-1.5">
+                <div className="rounded-xl bg-surface p-4 border border-border-subtle">
+                  <p className="text-[10px] uppercase tracking-wider text-text-muted font-semibold mb-1.5">
                     Growth → Pro
                   </p>
-                  <p className="text-xs text-foreground leading-relaxed mb-2">
+                  <p className="text-xs text-text-primary leading-relaxed mb-2">
                     <span className="font-bold">5× tokens</span>, 50 clients, API access, 10 team seats,
                     advanced analytics.
                   </p>
@@ -350,11 +350,11 @@ export default function UpgradePage() {
                     ~$1,200/mo saved at 15+ clients
                   </p>
                 </div>
-                <div className="rounded-xl bg-surface p-4 border border-border">
-                  <p className="text-[10px] uppercase tracking-wider text-muted font-semibold mb-1.5">
+                <div className="rounded-xl bg-surface p-4 border border-border-subtle">
+                  <p className="text-[10px] uppercase tracking-wider text-text-muted font-semibold mb-1.5">
                     Pro → Business
                   </p>
-                  <p className="text-xs text-foreground leading-relaxed mb-2">
+                  <p className="text-xs text-text-primary leading-relaxed mb-2">
                     <span className="font-bold">White label</span>, custom AI tuning, 150 clients, 25 team
                     seats, dedicated success.
                   </p>
@@ -363,12 +363,12 @@ export default function UpgradePage() {
                   </p>
                 </div>
               </div>
-              <div className="mt-5 flex items-center gap-2 text-[11px] text-muted">
+              <div className="mt-5 flex items-center gap-2 text-[11px] text-text-muted">
                 <ShieldCheck size={12} className="text-emerald-400" />
                 14-day free trial on every plan · Cancel anytime · No setup fees
               </div>
             </section>{/* ─── FAQ ───────────────────────────────────────────────────── */}<section>
-              <h2 className="text-sm font-bold text-foreground mb-4">Frequently asked questions</h2>
+              <h2 className="text-sm font-bold text-text-primary mb-4">Frequently asked questions</h2>
               <div className="glass rounded-xl divide-y divide-border">
                 {FAQS.map((faq, idx) => {
                   const open = openFaq === idx;
@@ -378,16 +378,16 @@ export default function UpgradePage() {
                         onClick={() => setOpenFaq(open ? null : idx)}
                         className="w-full flex items-center justify-between px-5 py-3.5 text-left hover:bg-surface-light/50 transition-colors"
                       >
-                        <span className="text-xs font-medium text-foreground pr-4">{faq.q}</span>
+                        <span className="text-xs font-medium text-text-primary pr-4">{faq.q}</span>
                         <Minus
                           size={12}
-                          className={`shrink-0 text-muted transition-transform ${
+                          className={`shrink-0 text-text-muted transition-transform ${
                             open ? "rotate-0" : "rotate-90"
                           }`}
                         />
                       </button>
                       {open && (
-                        <div className="px-5 pb-4 -mt-1 text-[11px] text-muted leading-relaxed">
+                        <div className="px-5 pb-4 -mt-1 text-[11px] text-text-muted leading-relaxed">
                           {faq.a}
                         </div>
                       )}
@@ -396,10 +396,10 @@ export default function UpgradePage() {
                 })}
               </div>
             </section>{/* ─── CTA ───────────────────────────────────────────────────── */}<section className="glass rounded-xl p-6 text-center">
-              <p className="text-xs text-muted mb-3">Still not sure? See your current usage and invoices.</p>
+              <p className="text-xs text-text-muted mb-3">Still not sure? See your current usage and invoices.</p>
               <Link
                 href="/dashboard/billing"
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-light text-text-primary text-xs font-medium border border-border-subtle hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent transition-colors"
               >
                 View billing & usage
                 <ArrowUpRight size={12} />

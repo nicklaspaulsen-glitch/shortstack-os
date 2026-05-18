@@ -215,7 +215,7 @@ export default function FirstCallWizard() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold text-foreground">
+              <h3 className="text-sm font-bold text-text-primary">
                 {fullySetUp
                   ? "✓ Voice Receptionist is wired"
                   : "Place your first call in 3 steps"}
@@ -224,7 +224,7 @@ export default function FirstCallWizard() {
                 Setup
               </span>
             </div>
-            <p className="text-[11.5px] text-muted mt-0.5">
+            <p className="text-[11.5px] text-text-muted mt-0.5">
               {fullySetUp
                 ? "You can dismiss this wizard or use it again to set up another client."
                 : "Twilio number → ElevenLabs agent → ring it. Should take ~5 minutes."}
@@ -233,7 +233,7 @@ export default function FirstCallWizard() {
         </div>
         <button
           onClick={onDismiss}
-          className="text-muted hover:text-foreground p-1 rounded hover:bg-white/[0.05] transition"
+          className="text-text-muted hover:text-text-primary p-1 rounded hover:bg-white/[0.05] transition"
           title="Dismiss"
         >
           <X size={14} />
@@ -320,7 +320,7 @@ export default function FirstCallWizard() {
                 if (c && !c.twilio_phone_number) setStep(2);
                 else if (c && !c.eleven_agent_id) setStep(3);
               }}
-              className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500/50"
+              className="w-full bg-card border border-border-subtle rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500/50"
             >
               {clients.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -351,7 +351,7 @@ export default function FirstCallWizard() {
               value={twilioInput}
               onChange={(e) => setTwilioInput(e.target.value)}
               placeholder="+1 555 555 0123"
-              className="flex-1 bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500/50"
+              className="flex-1 bg-card border border-border-subtle rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500/50"
               disabled={!selectedClientId || savingTwilio}
             />
             <button
@@ -431,9 +431,9 @@ export default function FirstCallWizard() {
           <p className="text-[12px] text-emerald-700 font-semibold mb-1">
             🎉 You&apos;re live. Place a test call now:
           </p>
-          <p className="text-[11.5px] text-muted">
+          <p className="text-[11.5px] text-text-muted">
             Dial{" "}
-            <span className="text-foreground font-mono font-semibold">
+            <span className="text-text-primary font-mono font-semibold">
               {selectedClient.twilio_phone_number}
             </span>{" "}
             from your phone. The AI will pick up. Watch the call appear below
@@ -487,7 +487,7 @@ function StepRow({
         >
           {done ? <CheckCircle2 size={12} /> : icon}
         </div>
-        <h4 className="text-[13px] font-bold text-foreground">
+        <h4 className="text-[13px] font-bold text-text-primary">
           Step {n} — {title}
         </h4>
         {done && (
@@ -496,7 +496,7 @@ function StepRow({
           </span>
         )}
       </div>
-      <p className="text-[11.5px] text-muted leading-relaxed mb-2">{subtitle}</p>
+      <p className="text-[11.5px] text-text-muted leading-relaxed mb-2">{subtitle}</p>
       {(active || done) && children}
     </div>
   );

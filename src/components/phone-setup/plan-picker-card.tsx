@@ -65,8 +65,8 @@ export default function PlanPickerCard() {
 
   if (loading) {
     return (
-      <div className=" p-5 bg-card border border-border">
-        <div className="flex items-center gap-2 text-sm text-muted">
+      <div className=" p-5 bg-card border border-border-subtle">
+        <div className="flex items-center gap-2 text-sm text-text-muted">
           <Loader size={14} className="animate-spin" /> Checking your plan…
         </div>
       </div>
@@ -115,7 +115,7 @@ export default function PlanPickerCard() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-foreground">
+                <h2 className="text-base font-bold text-text-primary">
                   Your {tier} plan
                 </h2>
                 <span
@@ -128,7 +128,7 @@ export default function PlanPickerCard() {
                   Active
                 </span>
               </div>
-              <p className="text-[11.5px] text-muted">
+              <p className="text-[11.5px] text-text-muted">
                 {numbersDisplay} numbers used
               </p>
             </div>
@@ -159,11 +159,11 @@ export default function PlanPickerCard() {
             >
               <div className="flex items-center gap-1.5 mb-1.5">
                 <row.Icon size={11} className="text-purple-300" />
-                <p className="text-[9.5px] uppercase tracking-wider text-muted font-semibold">
+                <p className="text-[9.5px] uppercase tracking-wider text-text-muted font-semibold">
                   {row.label}
                 </p>
               </div>
-              <p className="text-[12px] font-bold text-foreground leading-tight">
+              <p className="text-[12px] font-bold text-text-primary leading-tight">
                 {row.value}
               </p>
             </div>
@@ -180,16 +180,16 @@ export default function PlanPickerCard() {
           }}
         >
           <div className="flex-1">
-            <p className="text-[10.5px] uppercase tracking-wider text-muted font-semibold mb-1">
+            <p className="text-[10.5px] uppercase tracking-wider text-text-muted font-semibold mb-1">
               Cost per new number
             </p>
-            <p className="text-[12px] text-foreground">
+            <p className="text-[12px] text-text-primary">
               <span className="text-lg font-extrabold text-emerald-600">
                 ${features.perNumber.toFixed(2)}/mo
               </span>{" "}
               billed by Twilio · included in your plan tier
             </p>
-            <p className="text-[10.5px] text-muted mt-1">
+            <p className="text-[10.5px] text-text-muted mt-1">
               No setup fee · porting available · cancel any time
             </p>
           </div>

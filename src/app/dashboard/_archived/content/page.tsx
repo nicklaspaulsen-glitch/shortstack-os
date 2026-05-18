@@ -569,10 +569,10 @@ export default function ContentPage() {
       <div className="glass-indigo rounded-xl p-4 border border-[rgba(59,130,246,0.25)] bg-gradient-to-br from-[rgba(59,130,246,0.05)] to-transparent">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h2 className="section-header flex items-center gap-2 mb-1">
+            <h2 className="flex items-center gap-2 mb-1">
               <Sparkles size={18} className="text-brand-accent" /> Drop & Go — AI handles the rest
             </h2>
-            <p className="text-xs text-muted">Drop any file. AI writes titles, descriptions, hashtags, and best post times for every platform.</p>
+            <p className="text-xs text-text-muted">Drop any file. AI writes titles, descriptions, hashtags, and best post times for every platform.</p>
           </div>
           {dropItems.filter((i) => i.status === "ready").length > 0 && (
             <div className="flex items-center gap-1.5">
@@ -615,7 +615,7 @@ export default function ContentPage() {
         >
           <Upload size={36} className="mx-auto mb-3 text-brand-accent" />
           <p className="text-sm font-medium">Drag & drop images, videos, PDFs, or docs</p>
-          <p className="text-xs text-muted mt-1">or click to browse — AI auto-packages each file. JPG, PNG, WebP, GIF, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV up to 100 MB.</p>
+          <p className="text-xs text-text-muted mt-1">or click to browse — AI auto-packages each file. JPG, PNG, WebP, GIF, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV up to 100 MB.</p>
           <input
             ref={fileInputRef}
             type="file"
@@ -647,7 +647,7 @@ export default function ContentPage() {
                         <FileText size={14} className="text-brand-accent shrink-0" />}
                     <p className="text-sm font-medium truncate">{item.file_name}</p>
                     {item.status === "uploading" && (
-                      <span className="text-[10px] text-muted flex items-center gap-1">
+                      <span className="text-[10px] text-text-muted flex items-center gap-1">
                         <Loader size={10} className="animate-spin" /> Uploading...
                       </span>
                     )}
@@ -667,7 +667,7 @@ export default function ContentPage() {
                       </span>
                     )}
                   </div>
-                  <button onClick={() => removeDropItem(item.id)} className="text-muted hover:text-danger transition-colors" aria-label="Remove item">
+                  <button onClick={() => removeDropItem(item.id)} className="text-text-muted hover:text-danger transition-colors" aria-label="Remove item">
                     <X size={14} />
                   </button>
                 </div>
@@ -677,7 +677,7 @@ export default function ContentPage() {
                   <div className="space-y-3">
                     {/* Titles per platform with remix */}
                     <div>
-                      <p className="text-[10px] text-muted uppercase tracking-wider mb-2">AI Titles per Platform</p>
+                      <p className="text-[10px] text-text-muted uppercase tracking-wider mb-2">AI Titles per Platform</p>
                       <div className="space-y-2">
                         {DROP_GO_PLATFORMS.map((plat) => {
                           const title = item.ai_package?.titles?.[plat];
@@ -686,7 +686,7 @@ export default function ContentPage() {
                           return (
                             <div key={plat} className="flex items-start gap-2">
                               <span className="text-[10px] uppercase text-brand-accent w-20 shrink-0 pt-1">{plat}</span>
-                              <p className="text-xs text-foreground flex-1">{title}</p>
+                              <p className="text-xs text-text-primary flex-1">{title}</p>
                               <button
                                 onClick={() => remixPlatformTitle(item, plat)}
                                 disabled={isRemixing}
@@ -704,15 +704,15 @@ export default function ContentPage() {
                     {/* Descriptions */}
                     {item.ai_package.descriptions && (
                       <div>
-                        <p className="text-[10px] text-muted uppercase tracking-wider mb-2">Descriptions</p>
+                        <p className="text-[10px] text-text-muted uppercase tracking-wider mb-2">Descriptions</p>
                         <div className="space-y-1">
                           {DROP_GO_PLATFORMS.map((plat) => {
                             const desc = item.ai_package?.descriptions?.[plat];
                             if (!desc) return null;
                             return (
                               <div key={plat} className="flex items-start gap-2">
-                                <span className="text-[10px] uppercase text-muted w-20 shrink-0 pt-0.5">{plat}</span>
-                                <p className="text-[11px] text-muted/90 flex-1">{desc}</p>
+                                <span className="text-[10px] uppercase text-text-muted w-20 shrink-0 pt-0.5">{plat}</span>
+                                <p className="text-[11px] text-text-muted/90 flex-1">{desc}</p>
                               </div>
                             );
                           })}
@@ -723,8 +723,8 @@ export default function ContentPage() {
                     {/* Hashtags + Best times grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {item.ai_package.hashtags && (
-                        <div className="border border-border rounded-lg p-3">
-                          <p className="text-[10px] text-muted uppercase tracking-wider mb-2">Hashtags</p>
+                        <div className="border border-border-subtle rounded-lg p-3">
+                          <p className="text-[10px] text-text-muted uppercase tracking-wider mb-2">Hashtags</p>
                           <div className="space-y-1.5">
                             {(["instagram", "tiktok", "twitter", "linkedin"] as DropGoPlatform[]).map((plat) => {
                               const tags = item.ai_package?.hashtags?.[plat];
@@ -732,7 +732,7 @@ export default function ContentPage() {
                               return (
                                 <div key={plat}>
                                   <span className="text-[9px] uppercase text-brand-accent mr-2">{plat}</span>
-                                  <span className="text-[10px] text-muted">{tags.join(" ")}</span>
+                                  <span className="text-[10px] text-text-muted">{tags.join(" ")}</span>
                                 </div>
                               );
                             })}
@@ -740,8 +740,8 @@ export default function ContentPage() {
                         </div>
                       )}
                       {item.ai_package.best_times && (
-                        <div className="border border-border rounded-lg p-3">
-                          <p className="text-[10px] text-muted uppercase tracking-wider mb-2 flex items-center gap-1">
+                        <div className="border border-border-subtle rounded-lg p-3">
+                          <p className="text-[10px] text-text-muted uppercase tracking-wider mb-2 flex items-center gap-1">
                             <Clock size={10} /> Best Post Times
                           </p>
                           <div className="grid grid-cols-2 gap-1.5">
@@ -750,7 +750,7 @@ export default function ContentPage() {
                               if (!t) return null;
                               return (
                                 <div key={plat} className="flex items-center justify-between text-[10px]">
-                                  <span className="text-muted capitalize">{plat}</span>
+                                  <span className="text-text-muted capitalize">{plat}</span>
                                   <span className="text-brand-accent font-medium">{t}</span>
                                 </div>
                               );
@@ -763,12 +763,12 @@ export default function ContentPage() {
                     {/* Caption variations */}
                     {Array.isArray(item.ai_package.suggested_caption_variations) && item.ai_package.suggested_caption_variations.length > 0 && (
                       <div>
-                        <p className="text-[10px] text-muted uppercase tracking-wider mb-2">Caption Variations</p>
+                        <p className="text-[10px] text-text-muted uppercase tracking-wider mb-2">Caption Variations</p>
                         <div className="space-y-1.5">
                           {item.ai_package.suggested_caption_variations.map((cap, idx) => (
-                            <div key={idx} className="text-[11px] p-2 bg-surface-light/50 border border-border rounded flex items-start gap-2">
+                            <div key={idx} className="text-[11px] p-2 bg-surface-light/50 border border-border-subtle rounded flex items-start gap-2">
                               <span className="text-brand-accent font-medium shrink-0">#{idx + 1}</span>
-                              <span className="text-foreground/90">{cap}</span>
+                              <span className="text-text-primary/90">{cap}</span>
                             </div>
                           ))}
                         </div>
@@ -814,13 +814,13 @@ export default function ContentPage() {
 
             {/* Gap analysis banner */}
             {planGapAnalysis && (
-              <div className="mb-3 p-2.5 rounded-lg bg-surface/60 border border-border text-[10px] text-muted flex items-center gap-3">
-                <span><strong className="text-foreground">{planGapAnalysis.real_assets}</strong> real assets</span>
+              <div className="mb-3 p-2.5 rounded-lg bg-surface/60 border border-border-subtle text-[10px] text-text-muted flex items-center gap-3">
+                <span><strong className="text-text-primary">{planGapAnalysis.real_assets}</strong> real assets</span>
                 <span className="text-border">/</span>
-                <span><strong className="text-foreground">{planGapAnalysis.target_posts}</strong> target posts</span>
+                <span><strong className="text-text-primary">{planGapAnalysis.target_posts}</strong> target posts</span>
                 <span className="text-border">/</span>
                 <span><strong className="text-amber-400">{planGapAnalysis.needs_creation}</strong> to create</span>
-                {planGapAnalysis.recommendation && <span className="text-muted/70 ml-2 flex-1 italic truncate">&ldquo;{planGapAnalysis.recommendation}&rdquo;</span>}
+                {planGapAnalysis.recommendation && <span className="text-text-muted/70 ml-2 flex-1 italic truncate">&ldquo;{planGapAnalysis.recommendation}&rdquo;</span>}
               </div>
             )}
 
@@ -832,7 +832,7 @@ export default function ContentPage() {
                     W{t.week}: {t.theme}
                   </span>
                 ))}
-                {planThemes.length > 12 && <span className="text-[10px] text-muted">+{planThemes.length - 12} more weeks…</span>}
+                {planThemes.length > 12 && <span className="text-[10px] text-text-muted">+{planThemes.length - 12} more weeks…</span>}
               </div>
             )}
 
@@ -848,13 +848,13 @@ export default function ContentPage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: i * 0.04 }}
                     whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
-                    className={`flex items-center gap-3 text-[11px] p-2 border rounded ${p.needs_creation ? "border-amber-500/30 bg-amber-500/5" : "border-border bg-surface/50"}`}
+                    className={`flex items-center gap-3 text-[11px] p-2 border rounded ${p.needs_creation ? "border-amber-500/30 bg-amber-500/5" : "border-border-subtle bg-surface/50"}`}
                   >
                     <span className="text-brand-accent font-medium w-12 shrink-0">{p.day}</span>
-                    <span className="text-muted w-16 shrink-0">{p.date?.slice(5)}</span>
-                    <span className="text-muted w-14 shrink-0">{p.post_time}</span>
-                    <span className="text-foreground capitalize w-20 shrink-0">{p.platform}</span>
-                    <span className="text-muted flex-1 truncate">{p.title || p.caption || "—"}</span>
+                    <span className="text-text-muted w-16 shrink-0">{p.date?.slice(5)}</span>
+                    <span className="text-text-muted w-14 shrink-0">{p.post_time}</span>
+                    <span className="text-text-primary capitalize w-20 shrink-0">{p.platform}</span>
+                    <span className="text-text-muted flex-1 truncate">{p.title || p.caption || "—"}</span>
                     {/* Status indicator */}
                     <span className="shrink-0 flex items-center gap-1 min-w-[80px] justify-end">
                       {isPublishing && (
@@ -918,11 +918,11 @@ export default function ContentPage() {
       {/* Plan Complete dialog — asks what to do next */}
       {showPlanComplete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm modal-backdrop" onClick={() => setShowPlanComplete(false)}>
-          <div className="card max-w-lg w-full p-6" onClick={(e) => e.stopPropagation()}>
+          <div className="glass rounded-xl p-4 max-w-lg w-full p-6" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-lg font-bold mb-1 flex items-center gap-2">
               <Sparkles size={18} className="text-brand-accent" /> Plan ready — what&apos;s next?
             </h2>
-            <p className="text-xs text-muted mb-5">
+            <p className="text-xs text-text-muted mb-5">
               {planPeriodDays === 7 && "Your 7-day schedule is live. "}
               {planPeriodDays === 30 && "Your 30-day schedule is live. "}
               {planPeriodDays === 365 && "Your 12-month content strategy is live. "}
@@ -938,12 +938,12 @@ export default function ContentPage() {
                   const el = document.querySelector('[data-drop-zone]');
                   el?.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
-                className="w-full text-left p-3 rounded-lg border border-border hover:border-[rgba(59,130,246,0.3)] hover:bg-[rgba(59,130,246,0.05)] transition flex items-start gap-3"
+                className="w-full text-left p-3 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.3)] hover:bg-[rgba(59,130,246,0.05)] transition flex items-start gap-3"
               >
                 <Upload size={16} className="text-brand-accent mt-0.5 shrink-0" />
                 <div>
                   <p className="text-sm font-medium">I have more content to upload</p>
-                  <p className="text-[10px] text-muted">Drop more files — I&apos;ll re-plan with the full set</p>
+                  <p className="text-[10px] text-text-muted">Drop more files — I&apos;ll re-plan with the full set</p>
                 </div>
               </button>
               {planPeriodDays < 30 && (
@@ -954,7 +954,7 @@ export default function ContentPage() {
                   <Calendar size={16} className="text-brand-accent mt-0.5 shrink-0" />
                   <div>
                     <p className="text-sm font-medium">Plan the rest of the month</p>
-                    <p className="text-[10px] text-muted">30-day schedule with themes + AI-generated content ideas to fill gaps</p>
+                    <p className="text-[10px] text-text-muted">30-day schedule with themes + AI-generated content ideas to fill gaps</p>
                   </div>
                 </button>
               )}
@@ -966,23 +966,23 @@ export default function ContentPage() {
                   <Sparkles size={16} className="text-brand-accent mt-0.5 shrink-0" />
                   <div>
                     <p className="text-sm font-medium">Plan the whole year</p>
-                    <p className="text-[10px] text-muted">12-month strategy with weekly themes, seasonal moments, and gap-filling ideas for every week</p>
+                    <p className="text-[10px] text-text-muted">12-month strategy with weekly themes, seasonal moments, and gap-filling ideas for every week</p>
                   </div>
                 </button>
               )}
               <button
                 onClick={() => { setShowPlanComplete(false); setTab("calendar"); }}
-                className="w-full text-left p-3 rounded-lg border border-border hover:border-border/60 transition flex items-start gap-3"
+                className="w-full text-left p-3 rounded-lg border border-border-subtle hover:border-border-subtle/60 transition flex items-start gap-3"
               >
-                <Calendar size={16} className="text-muted mt-0.5 shrink-0" />
+                <Calendar size={16} className="text-text-muted mt-0.5 shrink-0" />
                 <div>
                   <p className="text-sm font-medium">View my calendar</p>
-                  <p className="text-[10px] text-muted">Jump to the Calendar tab to edit or reschedule</p>
+                  <p className="text-[10px] text-text-muted">Jump to the Calendar tab to edit or reschedule</p>
                 </div>
               </button>
               <button
                 onClick={() => setShowPlanComplete(false)}
-                className="w-full text-center py-2 text-[11px] text-muted hover:text-foreground"
+                className="w-full text-center py-2 text-[11px] text-text-muted hover:text-text-primary"
               >
                 Close
               </button>
@@ -996,7 +996,7 @@ export default function ContentPage() {
         {tabs.map((t) => (
           <button key={t.key} onClick={() => setTab(t.key)}
             className={`px-4 py-2 text-sm rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              tab === t.key ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
+              tab === t.key ? "bg-brand-accent text-white font-medium" : "text-text-muted hover:text-text-primary"
             }`}
           >
             {t.icon} {t.label}
@@ -1013,7 +1013,7 @@ export default function ContentPage() {
                 { key: "title", label: "Title", render: (s: ContentScript) => (
                   <div>
                     <p className="font-medium">{s.title}</p>
-                    <p className="text-xs text-muted">{s.script_type === "long_form" ? "Long Form" : "Short Form"}</p>
+                    <p className="text-xs text-text-muted">{s.script_type === "long_form" ? "Long Form" : "Short Form"}</p>
                   </div>
                 )},
                 { key: "seo_title", label: "SEO Title", render: (s: ContentScript) => (
@@ -1024,7 +1024,7 @@ export default function ContentPage() {
                 )},
                 { key: "status", label: "Status", render: (s: ContentScript) => <StatusBadge status={s.status} /> },
                 { key: "hashtags", label: "Hashtags", render: (s: ContentScript) => (
-                  <span className="text-xs text-muted">{s.hashtags?.length || 0} tags</span>
+                  <span className="text-xs text-text-muted">{s.hashtags?.length || 0} tags</span>
                 )},
                 { key: "created_at", label: "Created", render: (s: ContentScript) => formatDate(s.created_at) },
               ]}
@@ -1044,7 +1044,7 @@ export default function ContentPage() {
                 )},
                 { key: "ai_brief", label: "AI Brief", render: (r: ContentRequest) => r.ai_brief ? (
                   <span className="text-xs text-success flex items-center gap-1"><Check size={12} /> Generated</span>
-                ) : <span className="text-xs text-muted">Pending</span> },
+                ) : <span className="text-xs text-text-muted">Pending</span> },
                 { key: "status", label: "Status", render: (r: ContentRequest) => <StatusBadge status={r.status} /> },
                 { key: "created_at", label: "Received", render: (r: ContentRequest) => formatDate(r.created_at) },
               ]}
@@ -1144,7 +1144,7 @@ export default function ContentPage() {
             <div className="space-y-6">
               {/* Long Form Ideas */}
               <div>
-                <h2 className="section-header flex items-center gap-2">
+                <h2 className="flex items-center gap-2">
                   <Film size={18} /> Long-Form Ideas (5 per Sunday)
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1157,13 +1157,13 @@ export default function ContentPage() {
                           <h3 className="font-medium text-sm leading-tight">{idea.title}</h3>
                           {idea.is_approved && <Check size={16} className="text-success shrink-0" />}
                         </div>
-                        <p className="text-xs text-muted mb-2">{idea.hook?.slice(0, 100)}...</p>
-                        <div className="flex items-center gap-2 text-xs text-muted mb-3">
+                        <p className="text-xs text-text-muted mb-2">{idea.hook?.slice(0, 100)}...</p>
+                        <div className="flex items-center gap-2 text-xs text-text-muted mb-3">
                           <Clock size={12} /> {idea.estimated_length}
                           <span className="text-brand-accent">#{idea.target_keyword}</span>
                         </div>
                         {idea.thumbnail_concept && (
-                          <p className="text-xs text-muted mb-3 bg-surface-light p-2 rounded">
+                          <p className="text-xs text-text-muted mb-3 bg-surface-light p-2 rounded">
                             Thumbnail: {idea.thumbnail_concept}
                           </p>
                         )}
@@ -1183,7 +1183,7 @@ export default function ContentPage() {
 
               {/* Short Form Ideas */}
               <div>
-                <h2 className="section-header flex items-center gap-2">
+                <h2 className="flex items-center gap-2">
                   <Send size={18} /> Short-Form Ideas (20 per Sunday)
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -1194,7 +1194,7 @@ export default function ContentPage() {
                       <div key={idea.id} className="card-hover p-4">
                         <h3 className="font-medium text-sm mb-1">{idea.title}</h3>
                         <p className="text-xs text-brand-accent mb-1">Hook: {idea.hook}</p>
-                        <p className="text-xs text-muted mb-2">{idea.core_concept}</p>
+                        <p className="text-xs text-text-muted mb-2">{idea.core_concept}</p>
                         <div className="flex items-center justify-between">
                           <span className="badge bg-surface-light text-xs">{idea.platform_recommendation}</span>
                           <div className="flex gap-1">
@@ -1204,7 +1204,7 @@ export default function ContentPage() {
                           </div>
                         </div>
                         {idea.trending_angle && (
-                          <p className="text-xs text-muted mt-2 italic">{idea.trending_angle}</p>
+                          <p className="text-xs text-text-muted mt-2 italic">{idea.trending_angle}</p>
                         )}
                       </div>
                     ))
@@ -1227,28 +1227,28 @@ export default function ContentPage() {
                 </select>
               </div>
               {pipelineItems.length === 0 && (
-                <div className="card text-center py-12">
-                  <Layers size={28} className="mx-auto mb-2 text-muted/30" />
-                  <p className="text-sm text-muted">No content in the pipeline yet.</p>
+                <div className="glass rounded-xl p-4 text-center py-12">
+                  <Layers size={28} className="mx-auto mb-2 text-text-muted/30" />
+                  <p className="text-sm text-text-muted">No content in the pipeline yet.</p>
                 </div>
               )}
               <div className="grid grid-cols-5 gap-3">
                 {["idea", "draft", "review", "approved", "scheduled"].map(stage => (
                   <div key={stage} className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-xs font-medium capitalize text-muted">{stage}</h3>
-                      <span className="text-[9px] bg-surface-light px-1.5 py-0.5 rounded text-muted">
+                      <h3 className="text-xs font-medium capitalize text-text-muted">{stage}</h3>
+                      <span className="text-[9px] bg-surface-light px-1.5 py-0.5 rounded text-text-muted">
                         {pipelineItems.filter(p => p.stage === stage && (pipelineFilter === "all" || p.type === pipelineFilter)).length}
                       </span>
                     </div>
                     {pipelineItems.filter(p => p.stage === stage && (pipelineFilter === "all" || p.type === pipelineFilter)).map(item => (
-                      <div key={item.id} className="card p-3 text-xs">
+                      <div key={item.id} className="glass rounded-xl p-3 text-xs">
                         <p className="font-medium mb-1">{item.title}</p>
-                        <div className="flex items-center gap-2 text-[10px] text-muted">
+                        <div className="flex items-center gap-2 text-[10px] text-text-muted">
                           <span className={`px-1.5 py-0.5 rounded ${item.type === "blog" ? "bg-info/10 text-info" : item.type === "video" ? "bg-danger/10 text-danger" : item.type === "email" ? "bg-purple-500/10 text-purple-700" : "bg-[rgba(59,130,246,0.08)] text-brand-accent"}`}>{item.type}</span>
                           <span>{item.assignee}</span>
                         </div>
-                        {item.due && <p className="text-[10px] text-muted mt-1 flex items-center gap-1"><Clock size={9} /> Due: {item.due}</p>}
+                        {item.due && <p className="text-[10px] text-text-muted mt-1 flex items-center gap-1"><Clock size={9} /> Due: {item.due}</p>}
                         {item.seo_score > 0 && <p className="text-[10px] mt-1 flex items-center gap-1"><Search size={9} className="text-brand-accent" /> SEO: {item.seo_score}/100</p>}
                       </div>
                     ))}
@@ -1256,42 +1256,42 @@ export default function ContentPage() {
                 ))}
               </div>
               {/* Content Approval Flow */}
-              <div className="card">
+              <div className="glass rounded-xl p-4">
                 <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Shield size={14} className="text-brand-accent" /> Content Approval Flow</h3>
                 <div className="flex items-center gap-4">
                   {["AI Draft", "Internal Review", "Client Approval", "Schedule", "Publish"].map((step, i) => (
                     <div key={step} className="flex items-center gap-2">
                       <div className="text-center">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${i < 3 ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "bg-surface-light text-muted border border-border"}`}>{i + 1}</div>
-                        <p className="text-[9px] text-muted mt-1">{step}</p>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${i < 3 ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "bg-surface-light text-text-muted border border-border-subtle"}`}>{i + 1}</div>
+                        <p className="text-[9px] text-text-muted mt-1">{step}</p>
                       </div>
-                      {i < 4 && <ChevronRight size={12} className="text-muted" />}
+                      {i < 4 && <ChevronRight size={12} className="text-text-muted" />}
                     </div>
                   ))}
                 </div>
               </div>
               {/* Repurpose Suggestions */}
-              <div className="card">
+              <div className="glass rounded-xl p-4">
                 <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><RefreshCw size={14} className="text-brand-accent" /> Repurpose Suggestions</h3>
-                <p className="text-xs text-muted text-center py-6">No repurpose suggestions yet. Add content to the pipeline to get started.</p>
+                <p className="text-xs text-text-muted text-center py-6">No repurpose suggestions yet. Add content to the pipeline to get started.</p>
               </div>
               {/* Version Control */}
-              <div className="card">
+              <div className="glass rounded-xl p-4">
                 <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><GitBranch size={14} className="text-brand-accent" /> Version History</h3>
                 <div className="space-y-2">
                   {versions.length === 0 ? (
-                    <p className="text-xs text-muted text-center py-6">No version history yet.</p>
+                    <p className="text-xs text-text-muted text-center py-6">No version history yet.</p>
                   ) : (
                     versions.map(v => (
-                      <div key={v.id} className="flex items-center justify-between p-2 border border-border rounded-lg">
+                      <div key={v.id} className="flex items-center justify-between p-2 border border-border-subtle rounded-lg">
                         <div className="flex items-center gap-3">
                           <span className="text-[10px] bg-surface-light px-2 py-0.5 rounded font-mono">v{v.version}</span>
                           <div>
                             <p className="text-xs font-medium">{v.content_title}</p>
-                            <p className="text-[10px] text-muted">{v.changes}</p>
+                            <p className="text-[10px] text-text-muted">{v.changes}</p>
                           </div>
                         </div>
-                        <div className="text-right text-[10px] text-muted">
+                        <div className="text-right text-[10px] text-text-muted">
                           <p>{v.author}</p>
                           <p>{new Date(v.timestamp).toLocaleString()}</p>
                         </div>
@@ -1332,27 +1332,27 @@ export default function ContentPage() {
                   <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{contentAnalytics.ai_enhanced}%</p>
                 </motion.div>
               </div>
-              <div className="card">
+              <div className="glass rounded-xl p-4">
                 <h3 className="text-sm font-medium mb-3">Content by Type</h3>
                 <div className="grid grid-cols-4 gap-3">
                   {Object.entries(contentAnalytics.content_types).map(([type, count]) => (
-                    <div key={type} className="text-center p-3 bg-surface-light/50 rounded-lg border border-border">
+                    <div key={type} className="text-center p-3 bg-surface-light/50 rounded-lg border border-border-subtle">
                       <p className="text-lg font-bold text-brand-accent">{count}</p>
-                      <p className="text-[10px] text-muted capitalize">{type}</p>
+                      <p className="text-[10px] text-text-muted capitalize">{type}</p>
                     </div>
                   ))}
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <div className="card">
+                <div className="glass rounded-xl p-4">
                   <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><ThumbsUp size={14} className="text-success" /> Approval Rate</h3>
                   <p className="text-3xl font-bold text-success">{contentAnalytics.approval_rate}%</p>
-                  <p className="text-xs text-muted">of content approved on first review</p>
+                  <p className="text-xs text-text-muted">of content approved on first review</p>
                 </div>
-                <div className="card">
+                <div className="glass rounded-xl p-4">
                   <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Star size={14} className="text-brand-accent" /> Top Performing</h3>
                   <p className="text-sm font-medium">{contentAnalytics.top_performing}</p>
-                  <p className="text-xs text-muted">Highest engagement this month</p>
+                  <p className="text-xs text-text-muted">Highest engagement this month</p>
                 </div>
               </div>
             </div>
@@ -1361,15 +1361,15 @@ export default function ContentPage() {
           {/* SEO & Quality Tab */}
           {tab === "seo" && (
             <div className="space-y-4">
-              <div className="card">
+              <div className="glass rounded-xl p-4">
                 <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><Search size={14} className="text-brand-accent" /> SEO & Readability Checker</h3>
                 <div className="space-y-3">
                   <div>
-                    <label className="text-[10px] text-muted uppercase tracking-wider">Target Keyword (optional)</label>
+                    <label className="text-[10px] text-text-muted uppercase tracking-wider">Target Keyword (optional)</label>
                     <input value={seoKeyword} onChange={e => setSeoKeyword(e.target.value)} placeholder="e.g. digital marketing agency" className="input glass rounded-lg w-full text-sm mt-1" />
                   </div>
                   <div>
-                    <label className="text-[10px] text-muted uppercase tracking-wider">Content</label>
+                    <label className="text-[10px] text-text-muted uppercase tracking-wider">Content</label>
                     <textarea value={seoText} onChange={e => setSeoText(e.target.value)} placeholder="Paste your content here..." rows={8} className="input glass rounded-lg w-full text-sm mt-1" />
                     <button
                       onClick={() => enhanceText(seoText, `Improve this content for SEO.${seoKeyword ? ` Target keyword: "${seoKeyword}".` : ""} Make it more engaging, add relevant headers, improve readability, and naturally incorporate keywords. Keep the same topic and message.`, setSeoText, "seo")}
@@ -1385,11 +1385,11 @@ export default function ContentPage() {
                   </button>
                 </div>
                 {seoResults && (
-                  <div className="mt-4 space-y-3 pt-4 border-t border-border">
+                  <div className="mt-4 space-y-3 pt-4 border-t border-border-subtle">
                     <div className="grid grid-cols-4 gap-3">
                       {[
                         { value: seoResults.score, label: "SEO Score", className: `text-2xl font-bold ${seoResults.score >= 70 ? "text-success" : seoResults.score >= 40 ? "text-warning" : "text-danger"}` },
-                        { value: seoResults.wordCount, label: "Word Count", className: "text-2xl font-bold text-foreground" },
+                        { value: seoResults.wordCount, label: "Word Count", className: "text-2xl font-bold text-text-primary" },
                         { value: seoResults.readability, label: "Readability", className: "text-sm font-medium text-info" },
                         { value: seoResults.plagiarism, label: "Plagiarism", className: "text-sm font-medium text-success" },
                       ].map((tile, index) => (
@@ -1400,7 +1400,7 @@ export default function ContentPage() {
                           delay={index * 0.06}
                         >
                           <p className={tile.className}>{tile.value}</p>
-                          <p className="text-[10px] text-muted">{tile.label}</p>
+                          <p className="text-[10px] text-text-muted">{tile.label}</p>
                         </PrismPanel>
                       ))}
                     </div>
@@ -1418,12 +1418,12 @@ export default function ContentPage() {
                 )}
               </div>
               {/* AI Enhance */}
-              <div className="card">
+              <div className="glass rounded-xl p-4">
                 <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Sparkles size={14} className="text-brand-accent" /> AI Enhance</h3>
-                <p className="text-xs text-muted mb-3">Let AI improve your content for better SEO, readability, and engagement.</p>
+                <p className="text-xs text-text-muted mb-3">Let AI improve your content for better SEO, readability, and engagement.</p>
                 <div className="grid grid-cols-3 gap-2">
                   {["Improve Readability", "Add Keywords", "Expand Content", "Shorten & Tighten", "Add CTA", "Fix Grammar"].map(action => (
-                    <button key={action} onClick={() => toast.success(`AI enhancing: ${action}`)} className="p-3 border border-border rounded-lg text-xs text-left hover:border-[rgba(59,130,246,0.25)] transition-all">
+                    <button key={action} onClick={() => toast.success(`AI enhancing: ${action}`)} className="p-3 border border-border-subtle rounded-lg text-xs text-left hover:border-[rgba(59,130,246,0.25)] transition-all">
                       <Sparkles size={12} className="text-brand-accent mb-1" />
                       {action}
                     </button>
@@ -1440,14 +1440,14 @@ export default function ContentPage() {
         <form onSubmit={(e) => { e.preventDefault(); generateScript(new FormData(e.currentTarget)); }} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-muted mb-1">Script Type *</label>
+              <label className="block text-sm text-text-muted mb-1">Script Type *</label>
               <select name="script_type" className="input w-full" required>
                 <option value="long_form">Long Form (8-15 min)</option>
                 <option value="short_form">Short Form (30-60 sec)</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">Platform</label>
+              <label className="block text-sm text-text-muted mb-1">Platform</label>
               <select name="platform" className="input w-full">
                 <option value="">Auto-detect</option>
                 <option value="youtube">YouTube</option>
@@ -1460,11 +1460,11 @@ export default function ContentPage() {
             </div>
           </div>
           <div>
-            <label className="block text-sm text-muted mb-1">Topic / Idea *</label>
+            <label className="block text-sm text-text-muted mb-1">Topic / Idea *</label>
             <input name="topic" className="input w-full" placeholder="What should the video be about?" required />
           </div>
           <div>
-            <label className="block text-sm text-muted mb-1">Brand Voice</label>
+            <label className="block text-sm text-text-muted mb-1">Brand Voice</label>
             <input name="brand_voice" className="input w-full" placeholder="e.g., professional, casual, energetic" />
           </div>
           <div className="flex justify-end gap-3 pt-4">
@@ -1480,7 +1480,7 @@ export default function ContentPage() {
       <Modal isOpen={!!remixOptions} onClose={() => setRemixOptions(null)} title="Pick a better title" size="md">
         {remixOptions && (
           <div className="space-y-3">
-            <p className="text-xs text-muted">AI suggestions for <span className="text-brand-accent capitalize">{remixOptions.platform}</span>:</p>
+            <p className="text-xs text-text-muted">AI suggestions for <span className="text-brand-accent capitalize">{remixOptions.platform}</span>:</p>
             <div className="space-y-2">
               {remixOptions.alternatives.map((alt, i) => (
                 <button
@@ -1505,7 +1505,7 @@ export default function ContentPage() {
         {showPublishEditor && (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm text-muted mb-1">Video Title</label>
+              <label className="block text-sm text-text-muted mb-1">Video Title</label>
               <input
                 className="input w-full"
                 value={editingPublish.video_title || ""}
@@ -1513,7 +1513,7 @@ export default function ContentPage() {
               />
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">Description</label>
+              <label className="block text-sm text-text-muted mb-1">Description</label>
               <textarea
                 className="input w-full h-32"
                 value={editingPublish.description || ""}
@@ -1529,7 +1529,7 @@ export default function ContentPage() {
               </button>
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">Hashtags (comma separated)</label>
+              <label className="block text-sm text-text-muted mb-1">Hashtags (comma separated)</label>
               <textarea
                 className="input w-full h-20"
                 value={editingPublish.hashtags?.join(", ") || ""}
@@ -1546,7 +1546,7 @@ export default function ContentPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm text-muted mb-1">Thumbnail Text</label>
+                <label className="block text-sm text-text-muted mb-1">Thumbnail Text</label>
                 <input
                   className="input w-full"
                   value={editingPublish.thumbnail_text || ""}
@@ -1554,7 +1554,7 @@ export default function ContentPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm text-muted mb-1">Scheduled Date & Time</label>
+                <label className="block text-sm text-text-muted mb-1">Scheduled Date & Time</label>
                 <input
                   type="datetime-local"
                   className="input w-full"
@@ -1564,7 +1564,7 @@ export default function ContentPage() {
               </div>
             </div>
             <div>
-              <label className="block text-sm text-muted mb-2">Platforms</label>
+              <label className="block text-sm text-text-muted mb-2">Platforms</label>
               <div className="flex flex-wrap gap-2">
                 {["youtube", "youtube_shorts", "tiktok", "instagram_reels", "facebook_reels", "linkedin_video"].map((p) => (
                   <label key={p} className="flex items-center gap-2 bg-surface-light px-3 py-2 rounded-lg cursor-pointer">
@@ -1579,7 +1579,7 @@ export default function ContentPage() {
                 ))}
               </div>
             </div>
-            <div className="flex justify-end gap-3 pt-4 border-t border-border">
+            <div className="flex justify-end gap-3 pt-4 border-t border-border-subtle">
               <button onClick={() => setShowPublishEditor(null)} className="btn-secondary">Cancel</button>
               <button onClick={() => { /* Publish now logic */ }} className="btn-secondary flex items-center gap-2">
                 <Send size={16} /> Publish Now

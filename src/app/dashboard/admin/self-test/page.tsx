@@ -135,7 +135,7 @@ export default function SelfTestDashboard() {
 
   if (authLoading || state === "loading") {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[60vh] text-muted text-sm">Loading self-test results…
+      <MotionPage className="flex items-center justify-center min-h-[60vh] text-text-muted text-sm">Loading self-test results…
               </MotionPage>
     );
   }
@@ -143,12 +143,12 @@ export default function SelfTestDashboard() {
   if (state === "forbidden") {
     return (
       <div className="max-w-xl mx-auto py-12 text-center space-y-3">
-        <Lock size={32} className="text-muted mx-auto" />
+        <Lock size={32} className="text-text-muted mx-auto" />
         <h1 className="text-lg font-bold">Admin only</h1>
-        <p className="text-xs text-muted">The self-test dashboard is admin-gated.</p>
+        <p className="text-xs text-text-muted">The self-test dashboard is admin-gated.</p>
         <button
           onClick={() => router.push("/dashboard")}
-          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border bg-surface hover:bg-surface-light"
+          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light"
         >
           <ArrowLeft size={12} /> Back to Dashboard
         </button>
@@ -163,7 +163,7 @@ export default function SelfTestDashboard() {
         <h1 className="text-lg font-bold">Couldn&apos;t load self-test results</h1>
         <button
           onClick={load}
-          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border bg-surface hover:bg-surface-light"
+          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light"
         >
           <RefreshCw size={12} /> Retry
         </button>
@@ -187,7 +187,7 @@ export default function SelfTestDashboard() {
     : [];
 
   return (
-    <div className="fade-in max-w-6xl mx-auto space-y-5">
+    <div className="max-w-6xl mx-auto space-y-5">
       {/* -- Self-Test (Tier 1) command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -199,7 +199,7 @@ export default function SelfTestDashboard() {
             <button
               onClick={runNow}
               disabled={running || refreshing}
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/10 border border-border text-foreground hover:bg-black/15 disabled:opacity-50 font-medium"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/10 border border-border-subtle text-text-primary hover:bg-black/15 disabled:opacity-50 font-medium"
             >
               <Play size={12} className={running ? "animate-pulse" : ""} />
               {running ? "Running…" : "Run now"}
@@ -207,7 +207,7 @@ export default function SelfTestDashboard() {
             <button
               onClick={load}
               disabled={refreshing || running}
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/5 border border-border text-foreground hover:bg-black/10 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/5 border border-border-subtle text-text-primary hover:bg-black/10 disabled:opacity-50"
             >
               <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
               {refreshing ? "Loading…" : "Refresh"}
@@ -221,8 +221,8 @@ export default function SelfTestDashboard() {
         <div className=" border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] p-4 flex items-start gap-3">
           <AlertTriangle size={20} className="text-brand-accent shrink-0 mt-0.5" />
           <div>
-            <div className="text-sm font-bold text-foreground">No runs yet</div>
-            <div className="text-[11px] text-muted mt-0.5">
+            <div className="text-sm font-bold text-text-primary">No runs yet</div>
+            <div className="text-[11px] text-text-muted mt-0.5">
               {note || "Click 'Run now' to kick the first sweep, or wait for the 03:15 UTC cron."}
             </div>
           </div>
@@ -243,10 +243,10 @@ export default function SelfTestDashboard() {
             {allGreen ? <CheckCircle2 size={20} /> : <XCircle size={20} />}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-bold text-foreground">
+            <div className="text-sm font-bold text-text-primary">
               {allGreen ? "All routes green" : `${latest_run.failed} failing route${latest_run.failed === 1 ? "" : "s"}`}
             </div>
-            <div className="text-[11px] text-muted mt-0.5">
+            <div className="text-[11px] text-text-muted mt-0.5">
               {latest_run.passed}/{total} passed · last run {new Date(latest_run.started_at).toLocaleString()}
             </div>
           </div>
@@ -255,8 +255,8 @@ export default function SelfTestDashboard() {
 
       {/* Trend */}
       {trend.length > 0 && (
-        <div className=" border border-border bg-surface p-4">
-          <h2 className="text-xs font-bold mb-3 text-foreground">Last 14 runs</h2>
+        <div className=" border border-border-subtle bg-surface p-4">
+          <h2 className="text-xs font-bold mb-3 text-text-primary">Last 14 runs</h2>
           <div className="flex items-end gap-1 h-12">
             {trend.map((t) => {
               const total = t.pass + t.fail;
@@ -282,19 +282,19 @@ export default function SelfTestDashboard() {
 
       {/* Results table */}
       {latest_run && (
-        <div className=" border border-border bg-surface">
-          <div className="p-4 flex items-center justify-between border-b border-border">
-            <h2 className="text-sm font-bold text-foreground">Route results</h2>
+        <div className=" border border-border-subtle bg-surface">
+          <div className="p-4 flex items-center justify-between border-b border-border-subtle">
+            <h2 className="text-sm font-bold text-text-primary">Route results</h2>
             <div className="flex items-center gap-1 text-[10px]">
               <button
                 onClick={() => setFilter("all")}
-                className={`px-2 py-1 rounded ${filter === "all" ? "bg-surface-light text-foreground" : "text-muted"}`}
+                className={`px-2 py-1 rounded ${filter === "all" ? "bg-surface-light text-text-primary" : "text-text-muted"}`}
               >
                 All ({latest_run.rows.length})
               </button>
               <button
                 onClick={() => setFilter("failed")}
-                className={`px-2 py-1 rounded ${filter === "failed" ? "bg-danger/20 text-danger" : "text-muted"}`}
+                className={`px-2 py-1 rounded ${filter === "failed" ? "bg-danger/20 text-danger" : "text-text-muted"}`}
               >
                 Failed ({latest_run.failed})
               </button>
@@ -302,7 +302,7 @@ export default function SelfTestDashboard() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
-              <thead className="bg-surface-light text-muted">
+              <thead className="bg-surface-light text-text-muted">
                 <tr>
                   <th className="text-left px-4 py-2 font-medium">Status</th>
                   <th className="text-left px-4 py-2 font-medium">Method</th>
@@ -315,7 +315,7 @@ export default function SelfTestDashboard() {
               </thead>
               <tbody>
                 {visibleRows.map((r) => (
-                  <tr key={r.id} className="border-t border-border">
+                  <tr key={r.id} className="border-t border-border-subtle">
                     <td className="px-4 py-2">
                       {r.ok ? (
                         <span className="inline-flex items-center gap-1 text-success">
@@ -327,21 +327,21 @@ export default function SelfTestDashboard() {
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-2 font-mono text-muted">{r.method}</td>
-                    <td className="px-4 py-2 font-mono text-foreground">{r.route_path}</td>
-                    <td className="px-4 py-2 text-right font-mono text-muted">{r.expected_status ?? "–"}</td>
-                    <td className={`px-4 py-2 text-right font-mono ${r.ok ? "text-foreground" : "text-danger"}`}>
+                    <td className="px-4 py-2 font-mono text-text-muted">{r.method}</td>
+                    <td className="px-4 py-2 font-mono text-text-primary">{r.route_path}</td>
+                    <td className="px-4 py-2 text-right font-mono text-text-muted">{r.expected_status ?? "–"}</td>
+                    <td className={`px-4 py-2 text-right font-mono ${r.ok ? "text-text-primary" : "text-danger"}`}>
                       {r.actual_status ?? "ERR"}
                     </td>
-                    <td className="px-4 py-2 text-right font-mono text-muted">{r.duration_ms}ms</td>
-                    <td className="px-4 py-2 text-[10px] text-muted max-w-xs truncate" title={r.error_text || ""}>
+                    <td className="px-4 py-2 text-right font-mono text-text-muted">{r.duration_ms}ms</td>
+                    <td className="px-4 py-2 text-[10px] text-text-muted max-w-xs truncate" title={r.error_text || ""}>
                       {r.error_text || "—"}
                     </td>
                   </tr>
                 ))}
                 {visibleRows.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="text-center py-6 text-muted text-[11px]">
+                    <td colSpan={7} className="text-center py-6 text-text-muted text-[11px]">
                       {filter === "failed" ? "No failures — everything is green." : "No rows."}
                     </td>
                   </tr>

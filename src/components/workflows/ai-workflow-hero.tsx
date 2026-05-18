@@ -134,10 +134,10 @@ export default function AiWorkflowHero({
             <Sparkles size={16} style={{ color: "#c8a855" }} />
           </div>
           <div>
-            <h2 className="text-base font-bold text-foreground">
+            <h2 className="text-base font-bold text-text-primary">
               Describe a workflow. AI builds it.
             </h2>
-            <p className="text-[12px] text-muted">
+            <p className="text-[12px] text-text-muted">
               Plain English in. Trigger + steps + actions out. Edit before saving.
             </p>
           </div>
@@ -150,7 +150,7 @@ export default function AiWorkflowHero({
             disabled={generating}
             rows={3}
             placeholder="e.g. When a new lead replies to outreach, send me a Telegram alert and tag the deal as 'hot' in CRM…"
-            className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[rgba(59,130,246,0.4)] resize-none disabled:opacity-60"
+            className="w-full bg-card border border-border-subtle rounded-xl px-4 py-3 text-sm text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-[rgba(59,130,246,0.4)] resize-none disabled:opacity-60"
             onKeyDown={(e) => {
               if ((e.metaKey || e.ctrlKey) && e.key === "Enter") generate();
             }}
@@ -162,7 +162,7 @@ export default function AiWorkflowHero({
             value={selectedClient}
             onChange={(e) => setSelectedClient(e.target.value)}
             disabled={generating}
-            className="flex-1 sm:flex-none sm:w-[240px] bg-card border border-border rounded-lg px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[rgba(59,130,246,0.4)] disabled:opacity-60"
+            className="flex-1 sm:flex-none sm:w-[240px] bg-card border border-border-subtle rounded-lg px-3 py-2 text-xs text-text-primary focus:outline-none focus:border-[rgba(59,130,246,0.4)] disabled:opacity-60"
           >
             <option value="">All clients (template)</option>
             {clients.map((c) => (
@@ -194,7 +194,7 @@ export default function AiWorkflowHero({
               </>
             )}
           </button>
-          <span className="text-[10px] text-muted/70 hidden sm:block">⌘ + Enter</span>
+          <span className="text-[10px] text-text-muted/70 hidden sm:block">⌘ + Enter</span>
         </div>
 
         {/* Suggestions */}
@@ -202,7 +202,7 @@ export default function AiWorkflowHero({
           <div>
             <div className="flex items-center gap-1.5 mb-2">
               <Lightbulb size={11} className="text-amber-600" />
-              <p className="text-[10.5px] uppercase tracking-wider text-muted font-semibold">
+              <p className="text-[10.5px] uppercase tracking-wider text-text-muted font-semibold">
                 Try one of these
               </p>
             </div>
@@ -230,7 +230,7 @@ export default function AiWorkflowHero({
         {/* Recent prompts */}
         {recent.length > 0 && (
           <div>
-            <p className="text-[10.5px] uppercase tracking-wider text-muted font-semibold mb-2">
+            <p className="text-[10.5px] uppercase tracking-wider text-text-muted font-semibold mb-2">
               Recent
             </p>
             <div className="flex flex-wrap gap-1.5">

@@ -275,7 +275,7 @@ export default function BillingPage() {
   const nextRenewal = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
   return (
-    <MotionPage className="fade-in max-w-6xl mx-auto space-y-6">{/* -- Billing & Usage command strip -- */}
+    <MotionPage className="max-w-6xl mx-auto space-y-6">{/* -- Billing & Usage command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Billing</p>
@@ -315,7 +315,7 @@ export default function BillingPage() {
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
-                    <h2 className="text-base font-bold text-foreground truncate">
+                    <h2 className="text-base font-bold text-text-primary truncate">
                       {planConfig.badge_label} Plan
                     </h2>
                     <span
@@ -325,12 +325,12 @@ export default function BillingPage() {
                       Active
                     </span>
                   </div>
-                  <p className="text-xs text-muted">
+                  <p className="text-xs text-text-muted">
                     {monthlyPrice > 0 ? (
                       <>
-                        <span className="text-foreground font-semibold">${monthlyPrice.toLocaleString()}</span>
+                        <span className="text-text-primary font-semibold">${monthlyPrice.toLocaleString()}</span>
                         <span>/mo</span>
-                        <span className="mx-1.5 text-muted/40">�</span>
+                        <span className="mx-1.5 text-text-muted/40">�</span>
                         <span>Renews {nextRenewal.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
                       </>
                     ) : (
@@ -362,9 +362,9 @@ export default function BillingPage() {
               </div>
             </motion.div>{/* --- Usage this month ---------------------------------------- */}<section>
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-bold text-foreground">Usage this month</h2>
+                <h2 className="text-sm font-bold text-text-primary">Usage this month</h2>
                 {usage?.notes && usage.notes.length > 0 && (
-                  <span className="text-[10px] text-muted italic">
+                  <span className="text-[10px] text-text-muted italic">
                     Some metrics may be approximate
                   </span>
                 )}
@@ -409,7 +409,7 @@ export default function BillingPage() {
                           >
                             {meta.icon}
                           </div>
-                          <span className="text-xs font-semibold text-foreground">{meta.label}</span>
+                          <span className="text-xs font-semibold text-text-primary">{meta.label}</span>
                         </div>
                         {maxed && (
                           <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-red-500/15 text-red-400">
@@ -428,11 +428,11 @@ export default function BillingPage() {
                       ) : (
                         <>
                           <div className="flex items-baseline gap-1 mb-2">
-                            <span className="text-xl font-bold text-foreground">
+                            <span className="text-xl font-bold text-text-primary">
                               {used.toLocaleString()}
                             </span>
-                            {meta.suffix && <span className="text-[10px] text-muted">{meta.suffix}</span>}
-                            <span className="text-[11px] text-muted ml-1">
+                            {meta.suffix && <span className="text-[10px] text-text-muted">{meta.suffix}</span>}
+                            <span className="text-[11px] text-text-muted ml-1">
                               / {unlimited ? "Unlimited" : `${limit.toLocaleString()}${meta.suffix ? ` ${meta.suffix}` : ""}`}
                             </span>
                           </div>
@@ -442,7 +442,7 @@ export default function BillingPage() {
                               style={{ width: unlimited ? "100%" : `${pct}%`, opacity: unlimited ? 0.25 : 1 }}
                             />
                           </div>
-                          <p className="text-[10px] text-muted mt-1.5">
+                          <p className="text-[10px] text-text-muted mt-1.5">
                             {unlimited ? "Unlimited on your plan" : `${pct}% used`}
                           </p>
                         </>
@@ -456,17 +456,17 @@ export default function BillingPage() {
             </section>{/* --- Token top-up -------------------------------------------- */}<section>
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <h2 className="text-sm font-bold text-text-primary flex items-center gap-2">
                     <Sparkles size={14} className="text-brand-accent" />
                     Token top-up
                   </h2>
-                  <p className="text-[11px] text-muted mt-0.5">
+                  <p className="text-[11px] text-text-muted mt-0.5">
                     Ran out of tokens this month? One-time purchase � no subscription change.
                   </p>
                 </div>
                 <Link
                   href="/dashboard/usage"
-                  className="text-[11px] text-muted hover:text-brand-accent transition-colors"
+                  className="text-[11px] text-text-muted hover:text-brand-accent transition-colors"
                 >
                   View usage detail ?
                 </Link>
@@ -498,12 +498,12 @@ export default function BillingPage() {
                         </div>
                       )}
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-semibold text-foreground">{pack.label}</span>
-                        <span className="text-[10px] text-muted">${(pack.price / (pack.tokens / 1_000_000)).toFixed(0)}/M</span>
+                        <span className="text-xs font-semibold text-text-primary">{pack.label}</span>
+                        <span className="text-[10px] text-text-muted">${(pack.price / (pack.tokens / 1_000_000)).toFixed(0)}/M</span>
                       </div>
                       <div className="flex items-baseline gap-1 mb-3">
-                        <span className="text-2xl font-bold text-foreground">${pack.price}</span>
-                        <span className="text-[10px] text-muted">one-time</span>
+                        <span className="text-2xl font-bold text-text-primary">${pack.price}</span>
+                        <span className="text-[10px] text-text-muted">one-time</span>
                       </div>
                       <button
                         onClick={() => handleTopUp(pack.id)}
@@ -525,8 +525,8 @@ export default function BillingPage() {
               </div>
             </section>{/* --- Plan comparison ---------------------------------------- */}<section>
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-bold text-foreground">Compare plans</h2>
-                <span className="text-[11px] text-muted">Monthly pricing</span>
+                <h2 className="text-sm font-bold text-text-primary">Compare plans</h2>
+                <span className="text-[11px] text-text-muted">Monthly pricing</span>
               </div>
               <PricingInteraction
                 currentPlanId={planTier}
@@ -535,11 +535,11 @@ export default function BillingPage() {
               />
             </section>{/* --- Invoices ------------------------------------------------ */}<section>
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-bold text-foreground">Recent invoices</h2>
+                <h2 className="text-sm font-bold text-text-primary">Recent invoices</h2>
                 <button
                   onClick={handleManageSubscription}
                   disabled={portalLoading}
-                  className="text-[11px] text-muted hover:text-brand-accent transition-colors disabled:opacity-60"
+                  className="text-[11px] text-text-muted hover:text-brand-accent transition-colors disabled:opacity-60"
                 >
                   View all in Stripe portal ?
                 </button>
@@ -549,25 +549,25 @@ export default function BillingPage() {
                 {invoicesLoading ? (
                   <div className="p-8 text-center">
                     <Loader2 size={16} className="animate-spin text-brand-accent mx-auto" />
-                    <p className="text-[11px] text-muted mt-2">Loading invoices�</p>
+                    <p className="text-[11px] text-text-muted mt-2">Loading invoices�</p>
                   </div>
                 ) : invoices.length === 0 ? (
                   <div className="p-8 text-center">
-                    <CreditCard size={20} className="text-muted/40 mx-auto mb-2" />
-                    <p className="text-xs text-foreground font-medium">No invoices yet</p>
-                    <p className="text-[11px] text-muted mt-1">
+                    <CreditCard size={20} className="text-text-muted/40 mx-auto mb-2" />
+                    <p className="text-xs text-text-primary font-medium">No invoices yet</p>
+                    <p className="text-[11px] text-text-muted mt-1">
                       Once you subscribe, invoices appear here automatically.
                     </p>
                   </div>
                 ) : (
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-border bg-surface-light/30">
-                        <th className="text-left text-[10px] font-semibold uppercase tracking-wider text-muted px-4 py-2.5">Date</th>
-                        <th className="text-left text-[10px] font-semibold uppercase tracking-wider text-muted px-4 py-2.5">Invoice</th>
-                        <th className="text-left text-[10px] font-semibold uppercase tracking-wider text-muted px-4 py-2.5">Status</th>
-                        <th className="text-right text-[10px] font-semibold uppercase tracking-wider text-muted px-4 py-2.5">Amount</th>
-                        <th className="text-right text-[10px] font-semibold uppercase tracking-wider text-muted px-4 py-2.5"></th>
+                      <tr className="border-b border-border-subtle bg-surface-light/30">
+                        <th className="text-left text-[10px] font-semibold uppercase tracking-wider text-text-muted px-4 py-2.5">Date</th>
+                        <th className="text-left text-[10px] font-semibold uppercase tracking-wider text-text-muted px-4 py-2.5">Invoice</th>
+                        <th className="text-left text-[10px] font-semibold uppercase tracking-wider text-text-muted px-4 py-2.5">Status</th>
+                        <th className="text-right text-[10px] font-semibold uppercase tracking-wider text-text-muted px-4 py-2.5">Amount</th>
+                        <th className="text-right text-[10px] font-semibold uppercase tracking-wider text-text-muted px-4 py-2.5"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -578,25 +578,25 @@ export default function BillingPage() {
                             : inv.status === "open" || inv.status === "draft"
                             ? "text-amber-500 bg-amber-500/10"
                             : inv.status === "void" || inv.status === "uncollectible"
-                            ? "text-muted bg-surface-light"
-                            : "text-foreground bg-surface-light";
+                            ? "text-text-muted bg-surface-light"
+                            : "text-text-primary bg-surface-light";
                         return (
                           <motion.tr
                             key={inv.id}
-                            className="border-b border-border last:border-0"
+                            className="border-b border-border-subtle last:border-0"
                             initial={{ opacity: 0, x: -8 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.18, delay: index * 0.04 }}
                             whileHover={{ backgroundColor: "rgba(255,255,255,0.03)" }}
                           >
-                            <td className="px-4 py-3 text-xs text-foreground">{formatDate(inv.created)}</td>
-                            <td className="px-4 py-3 text-xs text-muted font-mono">{inv.number || inv.id.slice(-8)}</td>
+                            <td className="px-4 py-3 text-xs text-text-primary">{formatDate(inv.created)}</td>
+                            <td className="px-4 py-3 text-xs text-text-muted font-mono">{inv.number || inv.id.slice(-8)}</td>
                             <td className="px-4 py-3">
                               <span className={`text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded ${statusColor}`}>
                                 {inv.status}
                               </span>
                             </td>
-                            <td className="px-4 py-3 text-xs text-foreground font-medium text-right">
+                            <td className="px-4 py-3 text-xs text-text-primary font-medium text-right">
                               {formatAmount(inv.amount_paid, inv.currency)}
                             </td>
                             <td className="px-4 py-3 text-right">
@@ -606,7 +606,7 @@ export default function BillingPage() {
                                     href={inv.hosted_invoice_url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-1 rounded text-muted hover:text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-colors"
+                                    className="p-1 rounded text-text-muted hover:text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-colors"
                                     title="View invoice"
                                   >
                                     <ExternalLink size={12} />
@@ -617,7 +617,7 @@ export default function BillingPage() {
                                     href={inv.invoice_pdf}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-1 rounded text-muted hover:text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-colors"
+                                    className="p-1 rounded text-text-muted hover:text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-colors"
                                     title="Download PDF"
                                   >
                                     <Download size={12} />

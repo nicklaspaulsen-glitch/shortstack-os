@@ -662,7 +662,7 @@ export default function CopywriterPage() {
             value={topic}
             onChange={e => setTopic(e.target.value)}
             placeholder={`e.g., ${activeType.id === "email" ? "Welcome sequence for SaaS onboarding" : activeType.id === "ad" ? "Local gym offering 30-day free trial" : "How to start a successful newsletter in 2026"}`}
-            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all"
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all"
             autoFocus
             aria-label="Topic"
           />
@@ -681,15 +681,15 @@ export default function CopywriterPage() {
             onSelect={picked => setTopic(picked)}
           />
           <div>
-            <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
-              Who&apos;s it for? <span className="text-muted/60 normal-case">(optional but helps)</span>
+            <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">
+              Who&apos;s it for? <span className="text-text-muted/60 normal-case">(optional but helps)</span>
             </label>
             <input
               type="text"
               value={audience}
               onChange={e => setAudience(e.target.value)}
               placeholder="e.g., SaaS founders, busy moms, first-time home buyers"
-              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all"
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all"
               aria-label="Target audience"
             />
           </div>
@@ -731,18 +731,18 @@ export default function CopywriterPage() {
       icon: <Wand2 size={18} />,
       component: (
         <div className="space-y-3">
-          <div className="card bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)] space-y-2">
+          <div className="glass rounded-xl p-4 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)] space-y-2">
             <div className="flex items-center gap-2">
               <activeType.icon size={16} style={{ color: activeType.color }} />
               <p className="text-sm font-semibold">{activeType.label}</p>
-              <span className="text-[10px] text-muted">ï¿½ {tone} tone</span>
+              <span className="text-[10px] text-text-muted">ï¿½ {tone} tone</span>
             </div>
-            <p className="text-sm leading-relaxed">{topic || <span className="text-muted italic">(no topic yet)</span>}</p>
+            <p className="text-sm leading-relaxed">{topic || <span className="text-text-muted italic">(no topic yet)</span>}</p>
             {audience && (
-              <p className="text-[11px] text-muted">For: <span className="text-foreground">{audience}</span></p>
+              <p className="text-[11px] text-text-muted">For: <span className="text-text-primary">{audience}</span></p>
             )}
           </div>
-          <p className="text-[11px] text-muted text-center">
+          <p className="text-[11px] text-text-muted text-center">
             Need keywords, length control, or templates? Flip to <span className="text-brand-accent font-semibold">Advanced mode</span> at the top.
           </p>
         </div>
@@ -1050,7 +1050,7 @@ export default function CopywriterPage() {
   }, [audience]);
 
   return (
-    <MotionPage className="p-6 max-w-7xl mx-auto fade-in space-y-6">{/* -- AI Copywriter command strip -- */}
+    <MotionPage className="p-6 max-w-7xl mx-auto space-y-6">{/* -- AI Copywriter command strip -- */}
             <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4 mb-6">
               <div className="min-w-0">
                 <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Copy Engine</p>
@@ -1069,19 +1069,19 @@ export default function CopywriterPage() {
                     </button>
                     <button
                       onClick={() => { setOutput(""); setTopic(""); setKeywords(""); toast.success("Blank canvas ready"); }}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border text-foreground hover:bg-black/5 transition-all"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border-subtle text-text-primary hover:bg-black/5 transition-all"
                     >
                       <Plus size={13} /> Blank
                     </button>
                     <button
                       onClick={() => setShowTemplates(!showTemplates)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/10 transition-all"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border-subtle text-text-primary hover:bg-black/10 transition-all"
                     >
                       <Layers size={13} /> Templates
                     </button>
                     <button
                       onClick={() => setShowHistory(!showHistory)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border text-foreground hover:bg-black/10 transition-all"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border-subtle text-text-primary hover:bg-black/10 transition-all"
                     >
                       <Clock size={13} /> History
                       {history.length > 0 && (
@@ -1114,7 +1114,7 @@ export default function CopywriterPage() {
                 className="glass rounded-xl p-5 space-y-3"
               >
                 <div className="flex items-center justify-between">
-                  <h2 className="section-header flex items-center gap-2">
+                  <h2 className="flex items-center gap-2">
                     <CheckCircle size={14} className="text-success" /> Your copy is ready
                   </h2>
                   <motion.button
@@ -1126,12 +1126,12 @@ export default function CopywriterPage() {
                     <Copy size={11} /> Copy
                   </motion.button>
                 </div>
-                <div className="rounded-xl bg-surface-light border border-border p-4 max-h-[420px] overflow-y-auto">
-                  <pre className="text-xs text-foreground whitespace-pre-wrap font-sans leading-relaxed">{output}</pre>
+                <div className="rounded-xl bg-surface-light border border-border-subtle p-4 max-h-[420px] overflow-y-auto">
+                  <pre className="text-xs text-text-primary whitespace-pre-wrap font-sans leading-relaxed">{output}</pre>
                 </div>
               </motion.div>
             )}{/* Rolling preview of example copywriter outputs */}{advancedMode && (
-              <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-6 mb-6">
+              <div className="relative  overflow-hidden border border-border-subtle bg-surface-light/30 py-6 mb-6">
                 <div className="absolute inset-0 pointer-events-none">
                   <RollingPreview
                     items={COPYWRITER_PREVIEW_FALLBACK}
@@ -1146,10 +1146,10 @@ export default function CopywriterPage() {
                   <p className="text-[11px] uppercase tracking-widest text-[rgba(59,130,246,0.80)] font-semibold">
                     Example copy library
                   </p>
-                  <h3 className="text-lg font-bold text-foreground mt-1">
+                  <h3 className="text-lg font-bold text-text-primary mt-1">
                     Every angle, every tone, every funnel stage
                   </h3>
-                  <p className="text-xs text-muted max-w-md mx-auto mt-1">
+                  <p className="text-xs text-text-muted max-w-md mx-auto mt-1">
                     Subject lines, ad headlines, landing heros ï¿½ pick a template or
                     start blank. ShortStack writes in your brand voice automatically.
                   </p>
@@ -1181,12 +1181,12 @@ export default function CopywriterPage() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <Layers size={16} className="text-brand-accent" />
-                    <h2 className="text-sm font-bold text-foreground">Template Gallery</h2>
+                    <h2 className="text-sm font-bold text-text-primary">Template Gallery</h2>
                     <span className="text-[9px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-2 py-0.5 rounded-full font-medium">
                       {TEMPLATES.length} templates
                     </span>
                   </div>
-                  <button onClick={() => setShowTemplates(false)} className="text-muted hover:text-foreground transition-colors" aria-label="Close templates">
+                  <button onClick={() => setShowTemplates(false)} className="text-text-muted hover:text-text-primary transition-colors" aria-label="Close templates">
                     <X size={16} />
                   </button>
                 </div>
@@ -1211,16 +1211,16 @@ export default function CopywriterPage() {
                           >
                             <Icon size={13} style={{ color: template.color }} />
                           </div>
-                          <span className="text-xs font-semibold text-foreground group-hover:text-brand-accent transition-colors">
+                          <span className="text-xs font-semibold text-text-primary group-hover:text-brand-accent transition-colors">
                             {template.name}
                           </span>
                         </div>
-                        <p className="text-[10px] text-muted leading-relaxed">{template.description}</p>
+                        <p className="text-[10px] text-text-muted leading-relaxed">{template.description}</p>
                         <div className="flex items-center gap-1.5 mt-2">
-                          <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-surface-light text-muted border border-border">
+                          <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-surface-light text-text-muted border border-border-subtle">
                             {CONTENT_TYPES.find(c => c.id === template.type)?.label}
                           </span>
-                          <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-surface-light text-muted border border-border">
+                          <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-surface-light text-text-muted border border-border-subtle">
                             {template.tone}
                           </span>
                         </div>
@@ -1239,17 +1239,17 @@ export default function CopywriterPage() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <Clock size={16} className="text-brand-accent" />
-                    <h2 className="text-sm font-bold text-foreground">Recent Generations</h2>
+                    <h2 className="text-sm font-bold text-text-primary">Recent Generations</h2>
                   </div>
-                  <button onClick={() => setShowHistory(false)} className="text-muted hover:text-foreground transition-colors" aria-label="Close history">
+                  <button onClick={() => setShowHistory(false)} className="text-text-muted hover:text-text-primary transition-colors" aria-label="Close history">
                     <X size={16} />
                   </button>
                 </div>
                 {history.length === 0 ? (
                   <div className="text-center py-8">
-                    <Clock size={24} className="mx-auto mb-2 text-muted/40" />
-                    <p className="text-xs text-muted">No generations yet</p>
-                    <p className="text-[10px] text-muted/60 mt-1">Your generated content will appear here</p>
+                    <Clock size={24} className="mx-auto mb-2 text-text-muted/40" />
+                    <p className="text-xs text-text-muted">No generations yet</p>
+                    <p className="text-[10px] text-text-muted/60 mt-1">Your generated content will appear here</p>
                   </div>
                 ) : (
                   <div className="glass rounded-xl overflow-hidden">
@@ -1273,20 +1273,20 @@ export default function CopywriterPage() {
                             <TypeIcon size={14} style={{ color: typeConfig.color }} />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium text-foreground truncate group-hover:text-brand-accent transition-colors">
+                            <p className="text-xs font-medium text-text-primary truncate group-hover:text-brand-accent transition-colors">
                               {item.topic}
                             </p>
                             <div className="flex items-center gap-2 mt-1">
-                              <span className="text-[9px] text-muted">{typeConfig.label}</span>
-                              <span className="text-[9px] text-muted/40">|</span>
-                              <span className="text-[9px] text-muted">{item.wordCount} words</span>
-                              <span className="text-[9px] text-muted/40">|</span>
-                              <span className="text-[9px] text-muted">
+                              <span className="text-[9px] text-text-muted">{typeConfig.label}</span>
+                              <span className="text-[9px] text-text-muted/40">|</span>
+                              <span className="text-[9px] text-text-muted">{item.wordCount} words</span>
+                              <span className="text-[9px] text-text-muted/40">|</span>
+                              <span className="text-[9px] text-text-muted">
                                 {item.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                               </span>
                             </div>
                           </div>
-                          <ChevronRight size={14} className="text-muted/30 group-hover:text-brand-accent shrink-0 mt-1 transition-colors" />
+                          <ChevronRight size={14} className="text-text-muted/30 group-hover:text-brand-accent shrink-0 mt-1 transition-colors" />
                         </motion.button>
                       );
                     })}
@@ -1295,7 +1295,7 @@ export default function CopywriterPage() {
                 {history.length > 0 && (
                   <button
                     onClick={() => { setHistory([]); toast.success("History cleared"); }}
-                    className="mt-3 flex items-center gap-1 text-[10px] text-muted hover:text-danger transition-colors"
+                    className="mt-3 flex items-center gap-1 text-[10px] text-text-muted hover:text-danger transition-colors"
                   >
                     <Trash2 size={10} /> Clear history
                   </button>
@@ -1312,7 +1312,7 @@ export default function CopywriterPage() {
                   transition={{ duration: 0.35 }}
                   className="glass rounded-xl p-5"
                 >
-                  <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-3">
+                  <label className="text-xs font-semibold text-text-primary flex items-center gap-1.5 mb-3">
                     <Type size={13} className="text-brand-accent" />
                     Content Type
                   </label>
@@ -1342,10 +1342,10 @@ export default function CopywriterPage() {
                               <Icon size={12} style={{ color: type.color }} />
                             </div>
                             <div>
-                              <span className={`text-[11px] font-semibold block leading-tight ${active ? "text-foreground" : "text-muted"}`}>
+                              <span className={`text-[11px] font-semibold block leading-tight ${active ? "text-text-primary" : "text-text-muted"}`}>
                                 {type.label}
                               </span>
-                              <span className="text-[8px] text-muted leading-tight">{type.description}</span>
+                              <span className="text-[8px] text-text-muted leading-tight">{type.description}</span>
                             </div>
                           </div>
                         </motion.button>
@@ -1363,7 +1363,7 @@ export default function CopywriterPage() {
                 >
                   {/* Topic / Brief */}
                   <div>
-                    <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
+                    <label className="text-xs font-semibold text-text-primary flex items-center gap-1.5 mb-2">
                       <Sparkles size={13} className="text-brand-accent" />
                       Topic / Brief
                     </label>
@@ -1372,13 +1372,13 @@ export default function CopywriterPage() {
                       onChange={e => setTopic(e.target.value)}
                       placeholder={`Describe what you want to write about...\n\nExample: "How AI is transforming small business marketing in 2026"`}
                       rows={4}
-                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all resize-none"
+                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all resize-none"
                     />
                   </div>
 
                   {/* Tone */}
                   <div>
-                    <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
+                    <label className="text-xs font-semibold text-text-primary flex items-center gap-1.5 mb-2">
                       <Sliders size={13} className="text-brand-accent" />
                       Tone
                     </label>
@@ -1389,8 +1389,8 @@ export default function CopywriterPage() {
                           onClick={() => setTone(t.id)}
                           className={`flex-1 py-2 text-[11px] font-medium rounded-lg border transition-all ${
                             tone === t.id
-                              ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-foreground"
-                              : "border-border bg-surface-light text-muted hover:text-foreground hover:bg-surface"
+                              ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-text-primary"
+                              : "border-border-subtle bg-surface-light text-text-muted hover:text-text-primary hover:bg-surface"
                           }`}
                         >
                           {t.label}
@@ -1401,7 +1401,7 @@ export default function CopywriterPage() {
 
                   {/* Target Audience */}
                   <div>
-                    <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
+                    <label className="text-xs font-semibold text-text-primary flex items-center gap-1.5 mb-2">
                       <Users size={13} className="text-brand-accent" />
                       Target Audience
                     </label>
@@ -1410,13 +1410,13 @@ export default function CopywriterPage() {
                       value={audience}
                       onChange={e => setAudience(e.target.value)}
                       placeholder="e.g., SaaS founders, e-commerce brands, local businesses"
-                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all"
+                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all"
                     />
                   </div>
 
                   {/* Keywords */}
                   <div>
-                    <label className="text-xs font-semibold text-foreground flex items-center gap-1.5 mb-2">
+                    <label className="text-xs font-semibold text-text-primary flex items-center gap-1.5 mb-2">
                       <Hash size={13} className="text-brand-accent" />
                       Keywords
                     </label>
@@ -1425,18 +1425,18 @@ export default function CopywriterPage() {
                       value={keywords}
                       onChange={e => setKeywords(e.target.value)}
                       placeholder="Comma-separated: growth, automation, ROI, conversions"
-                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-foreground placeholder:text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all"
+                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all"
                     />
                   </div>
 
                   {/* Word Count Slider */}
                   <div>
-                    <label className="text-xs font-semibold text-foreground flex items-center justify-between mb-2">
+                    <label className="text-xs font-semibold text-text-primary flex items-center justify-between mb-2">
                       <span className="flex items-center gap-1.5">
                         <Target size={13} className="text-brand-accent" />
                         Word Count
                       </span>
-                      <span className="text-[10px] font-mono bg-surface-light border border-border px-2 py-0.5 rounded-lg text-muted">
+                      <span className="text-[10px] font-mono bg-surface-light border border-border-subtle px-2 py-0.5 rounded-lg text-text-muted">
                         {wordCount} words
                       </span>
                     </label>
@@ -1453,8 +1453,8 @@ export default function CopywriterPage() {
                       }}
                     />
                     <div className="flex justify-between mt-1">
-                      <span className="text-[8px] text-muted">100</span>
-                      <span className="text-[8px] text-muted">2000</span>
+                      <span className="text-[8px] text-text-muted">100</span>
+                      <span className="text-[8px] text-text-muted">2000</span>
                     </div>
                   </div>
 
@@ -1536,7 +1536,7 @@ export default function CopywriterPage() {
                   className="glass rounded-xl p-5 min-h-[600px] flex flex-col"
                 >
                   {/* Output Header */}
-                  <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
+                  <div className="flex items-center justify-between mb-4 pb-3 border-b border-border-subtle">
                     <div className="flex items-center gap-2">
                       <div
                         className="w-7 h-7 rounded-lg flex items-center justify-center"
@@ -1545,8 +1545,8 @@ export default function CopywriterPage() {
                         {(() => { const Icon = activeType.icon; return <Icon size={14} style={{ color: activeType.color }} />; })()}
                       </div>
                       <div>
-                        <h2 className="text-sm font-bold text-foreground">{activeType.label} Output</h2>
-                        <p className="text-[9px] text-muted">
+                        <h2 className="text-sm font-bold text-text-primary">{activeType.label} Output</h2>
+                        <p className="text-[9px] text-text-muted">
                           {output ? `${output.split(/\s+/).length} words generated` : "Configure your brief and hit Generate"}
                         </p>
                       </div>
@@ -1555,7 +1555,7 @@ export default function CopywriterPage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={copyToClipboard}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-lg bg-surface-light border border-border text-foreground hover:bg-[rgba(59,130,246,0.05)] hover:border-[rgba(59,130,246,0.2)] transition-all"
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-lg bg-surface-light border border-border-subtle text-text-primary hover:bg-[rgba(59,130,246,0.05)] hover:border-[rgba(59,130,246,0.2)] transition-all"
                         >
                           <Copy size={12} />
                           Copy
@@ -1579,7 +1579,7 @@ export default function CopywriterPage() {
                     <div className="w-5 h-5 rounded-full bg-[rgba(59,130,246,0.12)] flex items-center justify-center">
                       <Sparkles size={10} className="text-brand-accent" />
                     </div>
-                    <span className="text-xs text-muted">AI is writing your {activeType.label.toLowerCase()}...</span>
+                    <span className="text-xs text-text-muted">AI is writing your {activeType.label.toLowerCase()}...</span>
                   </div>
                   {/* Skeleton lines */}
                   <div className="skeleton h-6 w-3/4 rounded-lg" />
@@ -1602,12 +1602,12 @@ export default function CopywriterPage() {
                 </div>
               ) : output ? (
                 <div className="prose-output">
-                  <div className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">
+                  <div className="text-xs text-text-primary leading-relaxed whitespace-pre-wrap">
                     {output.split("\n").map((line, i) => {
                       // Heading 1
                       if (line.startsWith("# ")) {
                         return (
-                          <h2 key={i} className="text-base font-bold text-foreground mt-5 mb-2 first:mt-0">
+                          <h2 key={i} className="text-base font-bold text-text-primary mt-5 mb-2 first:mt-0">
                             {line.replace(/^# /, "")}
                           </h2>
                         );
@@ -1615,7 +1615,7 @@ export default function CopywriterPage() {
                       // Heading 2
                       if (line.startsWith("## ")) {
                         return (
-                          <h3 key={i} className="text-sm font-bold text-foreground mt-4 mb-2">
+                          <h3 key={i} className="text-sm font-bold text-text-primary mt-4 mb-2">
                             {line.replace(/^## /, "")}
                           </h3>
                         );
@@ -1623,19 +1623,19 @@ export default function CopywriterPage() {
                       // Heading 3
                       if (line.startsWith("### ")) {
                         return (
-                          <h4 key={i} className="text-xs font-bold text-foreground mt-3 mb-1.5">
+                          <h4 key={i} className="text-xs font-bold text-text-primary mt-3 mb-1.5">
                             {line.replace(/^### /, "")}
                           </h4>
                         );
                       }
                       // Horizontal rule
                       if (line.trim() === "---") {
-                        return <hr key={i} className="my-4 border-border" />;
+                        return <hr key={i} className="my-4 border-border-subtle" />;
                       }
                       // Blockquote
                       if (line.startsWith("> ")) {
                         return (
-                          <blockquote key={i} className="border-l-2 border-[rgba(59,130,246,0.40)] pl-3 my-2 text-muted italic text-[11px]">
+                          <blockquote key={i} className="border-l-2 border-[rgba(59,130,246,0.40)] pl-3 my-2 text-text-muted italic text-[11px]">
                             {renderInlineFormatting(line.replace(/^> /, ""))}
                           </blockquote>
                         );
@@ -1668,7 +1668,7 @@ export default function CopywriterPage() {
                       // Italic comment line (starts with *)
                       if (line.startsWith("*") && line.endsWith("*") && !line.startsWith("**")) {
                         return (
-                          <p key={i} className="text-[10px] text-muted italic my-1">
+                          <p key={i} className="text-[10px] text-text-muted italic my-1">
                             {line.replace(/^\*|\*$/g, "")}
                           </p>
                         );
@@ -1687,8 +1687,8 @@ export default function CopywriterPage() {
                   <div className="w-16 h-16  bg-[rgba(59,130,246,0.05)] flex items-center justify-center mb-4">
                     <PenTool size={28} className="text-[rgba(59,130,246,0.40)]" />
                   </div>
-                  <h3 className="text-sm font-semibold text-foreground mb-1">Ready to Write</h3>
-                  <p className="text-[11px] text-muted max-w-xs mb-4">
+                  <h3 className="text-sm font-semibold text-text-primary mb-1">Ready to Write</h3>
+                  <p className="text-[11px] text-text-muted max-w-xs mb-4">
                     Fill in your brief on the left and hit Generate to create polished, agency-quality copy in seconds.
                   </p>
                   <div className="flex flex-wrap items-center justify-center gap-2">
@@ -1697,7 +1697,7 @@ export default function CopywriterPage() {
                       return (
                         <span
                           key={type.id}
-                          className="inline-flex items-center gap-1 text-[9px] px-2 py-1 rounded-lg bg-surface-light border border-border text-muted"
+                          className="inline-flex items-center gap-1 text-[9px] px-2 py-1 rounded-lg bg-surface-light border border-border-subtle text-text-muted"
                         >
                           <Icon size={10} style={{ color: type.color }} />
                           {type.label}
@@ -1713,11 +1713,11 @@ export default function CopywriterPage() {
             {output && (
               <div className="mt-4 pt-3 border-t border-[rgba(0,0,0,0.08)] flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="text-[9px] text-muted flex items-center gap-1">
+                  <span className="text-[9px] text-text-muted flex items-center gap-1">
                     <CheckCircle size={10} className="text-success" />
                     Generated successfully
                   </span>
-                  <span className="text-[9px] text-muted">
+                  <span className="text-[9px] text-text-muted">
                     {output.split(/\s+/).length} words
                   </span>
                 </div>
@@ -1725,7 +1725,7 @@ export default function CopywriterPage() {
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => { setOutput(""); handleGenerate(); }}
-                  className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground transition-colors"
+                  className="flex items-center gap-1 text-[10px] text-text-muted hover:text-text-primary transition-colors"
                 >
                   <RotateCcw size={10} />
                   Regenerate
@@ -1756,7 +1756,7 @@ function renderInlineFormatting(text: string): (string | JSX.Element)[] {
     if (match[1]) {
       // Bold text
       parts.push(
-        <strong key={match.index} className="font-semibold text-foreground">
+        <strong key={match.index} className="font-semibold text-text-primary">
           {match[1]}
         </strong>
       );

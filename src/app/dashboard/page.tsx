@@ -990,7 +990,7 @@ function ClientDashboard() {
   const firstName = profile?.nickname?.split(" ")[0] || profile?.full_name?.split(" ")[0];
 
   return (
-    <div className="fade-in space-y-6 max-w-[1000px] mx-auto">
+    <div className="space-y-6 max-w-[1000px] mx-auto">
       <div className="relative inline-block">
         <h1 className="font-display text-3xl font-bold tracking-tight">
           Welcome, {profile?.full_name}

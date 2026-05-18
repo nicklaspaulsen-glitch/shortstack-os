@@ -206,7 +206,7 @@ function StepVisual({ idx }: { idx: number }) {
             className="flex items-center gap-2 text-[10.5px] text-gray-300 px-2 py-1.5 rounded-md"
             style={{
               background: "rgba(255,255,255,0.02)",
-              animation: "task-fade-in 4s ease-in-out infinite",
+              animation: "task-4s ease-in-out infinite",
               animationDelay: `${item.delay}s`,
             }}
           >
@@ -216,7 +216,7 @@ function StepVisual({ idx }: { idx: number }) {
           </div>
         ))}
         <style jsx>{`
-          @keyframes task-fade-in {
+          @keyframes task-{
             0%,
             100% {
               opacity: 0.4;

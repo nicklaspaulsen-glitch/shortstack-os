@@ -930,7 +930,7 @@ export default function KumoScene({
             <p className="text-text-muted mt-1 text-[10px] leading-snug">{d.agent.blurb}</p>
             <p className="mt-2 inline-flex items-center gap-1 text-[10px]">
               <span
-                className={`h-1.5 w-1.5 rounded-full ${d.isWorking ? "bg-brand-accent animate-pulse" : "bg-text-muted"}`}
+                className={`h-1.5 w-1.5 rounded-full ${d.isWorking ? "bg-brand-accent animate-pulse" : "bg-text-text-muted"}`}
               />
               <span className={d.isWorking ? "text-brand-accent" : "text-text-muted"}>
                 {d.isWorking ? "Working now" : "Idle"}

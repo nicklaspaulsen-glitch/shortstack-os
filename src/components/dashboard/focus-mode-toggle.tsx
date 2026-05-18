@@ -34,7 +34,7 @@ export function FocusModeToggle({ focus, onToggle }: { focus: boolean; onToggle:
       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[11px] font-medium transition-all ${
         focus
           ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.3)] text-[#2563EB] shadow-[0_0_18px_-4px_rgba(59,130,246,0.4)]"
-          : "bg-surface border-border text-muted hover:border-[rgba(59,130,246,0.2)] hover:text-foreground"
+          : "bg-surface border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.2)] hover:text-text-primary"
       }`}
     >
       {focus ? <Focus size={12} /> : <Eye size={12} />}
@@ -65,12 +65,12 @@ export function CommandPaletteHint() {
     <button
       onClick={openPalette}
       title="Quick search"
-      className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-surface text-[11px] text-muted hover:border-[rgba(59,130,246,0.2)] hover:text-foreground transition-all"
+      className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border-subtle bg-surface text-[11px] text-text-muted hover:border-[rgba(59,130,246,0.2)] hover:text-text-primary transition-all"
     >
-      <kbd className="text-[9px] font-mono bg-surface-light px-1 py-0.5 rounded border border-border/50">
+      <kbd className="text-[9px] font-mono bg-surface-light px-1 py-0.5 rounded border border-border-subtle/50">
         {isMac ? "⌘" : "Ctrl"}
       </kbd>
-      <kbd className="text-[9px] font-mono bg-surface-light px-1 py-0.5 rounded border border-border/50">K</kbd>
+      <kbd className="text-[9px] font-mono bg-surface-light px-1 py-0.5 rounded border border-border-subtle/50">K</kbd>
       <span className="text-[10px]">Quick Search</span>
     </button>
   );

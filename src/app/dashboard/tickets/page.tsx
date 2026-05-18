@@ -79,7 +79,7 @@ const ACCENT_STYLES: Record<string, { ring: string; iconBg: string; iconText: st
 
 export default function ContactSupportPage() {
   return (
-    <MotionPage className="min-h-screen bg-background text-foreground">{/* -- Contact Support command strip -- */}
+    <MotionPage className="min-h-screen bg-background text-text-primary">{/* -- Contact Support command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">SUPPORT TICKETS</p>
@@ -108,13 +108,13 @@ export default function ContactSupportPage() {
                       >
                         {channel.icon}
                       </div>
-                      <h3 className="text-base font-semibold text-foreground">
+                      <h3 className="text-base font-semibold text-text-primary">
                         {channel.title}
                       </h3>
-                      <p className="mt-1.5 flex-1 text-[13px] leading-relaxed text-muted">
+                      <p className="mt-1.5 flex-1 text-[13px] leading-relaxed text-text-muted">
                         {channel.description}
                       </p>
-                      <p className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-medium text-muted">
+                      <p className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-medium text-text-muted">
                         <Clock size={11} /> {channel.responseTime}
                       </p>
                       <span
@@ -139,10 +139,10 @@ export default function ContactSupportPage() {
                     <Sparkles size={18} />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-sm font-semibold text-foreground">
+                    <h3 className="text-sm font-semibold text-text-primary">
                       Try these first — most answers are in the product
                     </h3>
-                    <p className="mt-1 text-[12px] text-muted">
+                    <p className="mt-1 text-[12px] text-text-muted">
                       Faster than waiting on a reply. If none of these solve it, hit
                       a channel above and we&apos;ll dig in.
                     </p>
@@ -154,7 +154,7 @@ export default function ContactSupportPage() {
                         >
                           Integrations status
                         </Link>{" "}
-                        <span className="text-muted">— check for red dots first</span>
+                        <span className="text-text-muted">— check for red dots first</span>
                       </li>
                       <li>
                         <Link
@@ -163,7 +163,7 @@ export default function ContactSupportPage() {
                         >
                           Token usage
                         </Link>{" "}
-                        <span className="text-muted">— if AI features look stuck</span>
+                        <span className="text-text-muted">— if AI features look stuck</span>
                       </li>
                       <li>
                         <Link
@@ -172,7 +172,7 @@ export default function ContactSupportPage() {
                         >
                           Unified inbox
                         </Link>{" "}
-                        <span className="text-muted">— for missing client messages</span>
+                        <span className="text-text-muted">— for missing client messages</span>
                       </li>
                       <li>
                         <Link
@@ -181,7 +181,7 @@ export default function ContactSupportPage() {
                         >
                           Plans &amp; billing
                         </Link>{" "}
-                        <span className="text-muted">— upgrade or change plan</span>
+                        <span className="text-text-muted">— upgrade or change plan</span>
                       </li>
                     </ul>
                   </div>
@@ -193,9 +193,9 @@ export default function ContactSupportPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.4 }}
-                className="glass rounded-xl p-5 text-[12px] text-muted"
+                className="glass rounded-xl p-5 text-[12px] text-text-muted"
               >
-                <p className="font-semibold text-foreground">On the roadmap</p>
+                <p className="font-semibold text-text-primary">On the roadmap</p>
                 <p className="mt-1">
                   A first-class in-product ticket inbox with email intake, SLA timers
                   per plan, and team assignment is in active development. Until then,

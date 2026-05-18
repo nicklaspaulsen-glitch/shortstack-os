@@ -79,10 +79,10 @@ export default function PromptEnhancer({
       />
 
       {/* Bottom bar inside textarea */}
-      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-3 py-1.5 border-t border-border/30 bg-surface/80 backdrop-blur-sm rounded-b-lg">
+      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-3 py-1.5 border-t border-border-subtle/30 bg-surface/80 backdrop-blur-sm rounded-b-lg">
         <div className="flex items-center gap-2">
           {maxLength && (
-            <span className={`text-[10px] font-mono ${value.length > (maxLength * 0.9) ? "text-warning" : "text-muted"}`}>
+            <span className={`text-[10px] font-mono ${value.length > (maxLength * 0.9) ? "text-warning" : "text-text-muted"}`}>
               {value.length}/{maxLength}
             </span>
           )}
@@ -94,22 +94,22 @@ export default function PromptEnhancer({
             <div className="relative">
               <button
                 onClick={() => setShowSuggestions(!showSuggestions)}
-                className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground px-2 py-1 rounded-md hover:bg-surface-light transition-colors"
+                className="flex items-center gap-1 text-[10px] text-text-muted hover:text-text-primary px-2 py-1 rounded-md hover:bg-surface-light transition-colors"
               >
                 <ChevronDown size={10} className={showSuggestions ? "rotate-180" : ""} />
                 {suggestions.length} alternatives
               </button>
 
               {showSuggestions && (
-                <div className="absolute bottom-full right-0 mb-1 w-80 bg-surface border border-border rounded-lg shadow-xl shadow-black/50 z-50 max-h-60 overflow-y-auto">
-                  <div className="p-2 border-b border-border/30">
-                    <p className="text-[10px] text-muted font-medium">AI Suggestions</p>
+                <div className="absolute bottom-full right-0 mb-1 w-80 bg-surface border border-border-subtle rounded-lg shadow-xl shadow-black/50 z-50 max-h-60 overflow-y-auto">
+                  <div className="p-2 border-b border-border-subtle/30">
+                    <p className="text-[10px] text-text-muted font-medium">AI Suggestions</p>
                   </div>
                   {suggestions.map((s, i) => (
                     <button
                       key={i}
                       onClick={() => applySuggestion(s)}
-                      className="w-full text-left px-3 py-2 text-xs text-muted hover:text-foreground hover:bg-surface-light border-b border-border/10 last:border-0 transition-colors"
+                      className="w-full text-left px-3 py-2 text-xs text-text-muted hover:text-text-primary hover:bg-surface-light border-b border-border-subtle/10 last:border-0 transition-colors"
                     >
                       <span className="text-[9px] text-[#2563EB] font-medium mr-1">#{i + 1}</span>
                       {s.length > 120 ? s.substring(0, 120) + "..." : s}

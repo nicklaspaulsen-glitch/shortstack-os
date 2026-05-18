@@ -111,7 +111,7 @@ export default function PricingPage() {
   }
 
   return (
-    <MotionPage className="fade-in max-w-7xl mx-auto">
+    <MotionPage className="max-w-7xl mx-auto">
       <PageHero
         eyebrow="Billing"
         title="Choose Your Plan"

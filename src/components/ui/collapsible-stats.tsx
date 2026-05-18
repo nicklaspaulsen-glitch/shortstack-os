@@ -59,7 +59,7 @@ export default function CollapsibleStats({
   }, [collapsed, hydrated, storageKey]);
 
   return (
-    <div className="card p-0 overflow-hidden">
+    <div className="glass rounded-xl p-0 overflow-hidden">
       <button
         type="button"
         onClick={() => setCollapsed(c => !c)}
@@ -70,15 +70,15 @@ export default function CollapsibleStats({
           {icon}
           <span className="text-xs font-semibold shrink-0">{title}</span>
           {collapsed && summary && (
-            <span className="text-[10px] text-muted truncate flex items-center gap-1.5">
+            <span className="text-[10px] text-text-muted truncate flex items-center gap-1.5">
               {summary}
             </span>
           )}
         </div>
         {collapsed ? (
-          <ChevronDown size={14} className="text-muted shrink-0" />
+          <ChevronDown size={14} className="text-text-muted shrink-0" />
         ) : (
-          <ChevronUp size={14} className="text-muted shrink-0" />
+          <ChevronUp size={14} className="text-text-muted shrink-0" />
         )}
       </button>
       {!collapsed && <div className="px-4 pb-4 pt-1">{children}</div>}

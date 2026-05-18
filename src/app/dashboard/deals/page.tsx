@@ -174,7 +174,7 @@ export default function DealsPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-3">{/* -- Deals command strip (slim editorial header, no PageHero) -- */}
+    <MotionPage className="space-y-3">{/* -- Deals command strip (slim editorial header, no PageHero) -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0 flex items-center gap-3">
           <div>
@@ -283,7 +283,7 @@ export default function DealsPage() {
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-                    activeTab === t.key ? "bg-[rgba(59,130,246,0.10)] text-brand-accent border border-[rgba(59,130,246,0.25)] font-medium" : "text-muted hover:text-foreground"
+                    activeTab === t.key ? "bg-[rgba(59,130,246,0.10)] text-brand-accent border border-[rgba(59,130,246,0.25)] font-medium" : "text-text-muted hover:text-text-primary"
                   }`}>
                   {t.icon} {t.label}
                 </button>
@@ -330,7 +330,7 @@ export default function DealsPage() {
                           </div>
                           <span className="text-[9px] font-mono" style={{ color: stage.color }}>{stageDeals.length}</span>
                         </div>
-                        <p className="text-[9px] text-muted mb-2 px-1">{formatCurrency(stageValue)}</p>
+                        <p className="text-[9px] text-text-muted mb-2 px-1">{formatCurrency(stageValue)}</p>
                         <motion.div
                           className="space-y-2 max-h-[500px] overflow-y-auto"
                           variants={containerVariants}
@@ -339,7 +339,7 @@ export default function DealsPage() {
 >
                           {stageDeals.length === 0 && (
                             <div className={`text-center py-8 border border-dashed rounded-lg transition-colors ${draggedDealId ? "border-indigo-500/30 bg-indigo-500/5" : ""}`} style={{ borderColor: draggedDealId ? undefined : `${stage.color}20` }}>
-                              <p className="text-[9px] text-muted">Drop deals here</p>
+                              <p className="text-[9px] text-text-muted">Drop deals here</p>
                             </div>
                           )}
                           {stageDeals.map(deal => {
@@ -351,25 +351,25 @@ export default function DealsPage() {
                               draggable
                               onDragStart={() => onDragStart(deal.id)}
                               onClick={() => setExpandedDeal(expandedDeal === deal.id ? null : deal.id)}
-                              className="glass rounded-xl p-3 cursor-grab active:cursor-grabbing hover:border-border transition-colors border border-[rgba(255,255,255,0.08)] spotlight-card"
+                              className="glass rounded-xl p-3 cursor-grab active:cursor-grabbing hover:border-border-subtle transition-colors border border-[rgba(255,255,255,0.08)] spotlight-card"
                               onMouseMove={(e) => {
                                 const rect = e.currentTarget.getBoundingClientRect();
                                 e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
                                 e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
                               }}>
                               <p className="text-[11px] font-semibold truncate">{deal.title}</p>
-                              <p className="text-[9px] text-muted">{deal.client_name}</p>
+                              <p className="text-[9px] text-text-muted">{deal.client_name}</p>
                               <p className="text-sm font-bold mt-1" style={{ color: stage.color }}>{formatCurrency(Number(deal.value))}</p>
                               <div className="flex items-center justify-between mt-2">
-                                <span className="text-[8px] text-muted flex items-center gap-0.5"><Clock size={8} /> {daysSinceUpdate}d</span>
-                                <span className="text-[8px] text-muted">{deal.probability}% prob</span>
+                                <span className="text-[8px] text-text-muted flex items-center gap-0.5"><Clock size={8} /> {daysSinceUpdate}d</span>
+                                <span className="text-[8px] text-text-muted">{deal.probability}% prob</span>
                               </div>
                               {expandedDeal === deal.id && (
                                 <div className="mt-2 pt-2 border-t border-border-subtle space-y-1.5">
-                                  <p className="text-[9px]"><span className="text-muted">Source:</span> {deal.source || "N/A"}</p>
-                                  <p className="text-[9px]"><span className="text-muted">Email:</span> {deal.contact_email || "N/A"}</p>
-                                  <p className="text-[9px]"><span className="text-muted">Close:</span> {deal.expected_close_date || "N/A"}</p>
-                                  {deal.notes && <p className="text-[9px]"><span className="text-muted">Notes:</span> {deal.notes}</p>}
+                                  <p className="text-[9px]"><span className="text-text-muted">Source:</span> {deal.source || "N/A"}</p>
+                                  <p className="text-[9px]"><span className="text-text-muted">Email:</span> {deal.contact_email || "N/A"}</p>
+                                  <p className="text-[9px]"><span className="text-text-muted">Close:</span> {deal.expected_close_date || "N/A"}</p>
+                                  {deal.notes && <p className="text-[9px]"><span className="text-text-muted">Notes:</span> {deal.notes}</p>}
                                   <div className="flex gap-1 pt-1 flex-wrap">
                                     {STAGES.filter(s => s.key !== stage.key && s.key !== "closed_lost").slice(0, 3).map(s => (
                                       <button key={s.key}
@@ -415,7 +415,7 @@ export default function DealsPage() {
                       { stage: "Negotiation to Close", avg: "0 days", trend: "faster" },
                     ].map((v, i) => (
                       <motion.div key={i} variants={fadeUp} className="glass rounded-lg p-3 text-center border border-[rgba(255,255,255,0.08)]">
-                        <p className="text-[9px] text-muted mb-1">{v.stage}</p>
+                        <p className="text-[9px] text-text-muted mb-1">{v.stage}</p>
                         <p className="text-sm font-bold">{v.avg}</p>
                         <p className={`text-[8px] flex items-center justify-center gap-0.5 ${v.trend === "faster" ? "text-emerald-700" : "text-rose-700"}`}>
                           {v.trend === "faster" ? <TrendingDown size={8} /> : <TrendingUp size={8} />} {v.trend}
@@ -423,7 +423,7 @@ export default function DealsPage() {
                       </motion.div>
                     ))}
                   </motion.div>
-                  <p className="text-[10px] text-muted mt-3">Average sales cycle: <span className="text-brand-accent font-semibold">0 days</span></p>
+                  <p className="text-[10px] text-text-muted mt-3">Average sales cycle: <span className="text-brand-accent font-semibold">0 days</span></p>
                 </PrismPanel>
 
                 {/* Deal Timeline */}
@@ -431,7 +431,7 @@ export default function DealsPage() {
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                     <Calendar size={14} className="text-brand-accent" /> Recent Deal Timeline
                   </h3>
-                  <div className="text-center py-8 text-muted text-xs">No deal activity yet.</div>
+                  <div className="text-center py-8 text-text-muted text-xs">No deal activity yet.</div>
                 </PrismPanel>
               </div>
             )}{/* ===== REVENUE FORECAST ===== */}{activeTab === "forecast" && (
@@ -442,7 +442,7 @@ export default function DealsPage() {
                     {(["month", "quarter"] as const).map(p => (
                       <button key={p} onClick={() => setForecastPeriod(p)}
                         className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                          forecastPeriod === p ? "bg-brand-accent/80/10 text-brand-accent border border-[#1D4ED8]/20" : "text-muted border border-border-subtle"
+                          forecastPeriod === p ? "bg-brand-accent/80/10 text-brand-accent border border-[#1D4ED8]/20" : "text-text-muted border border-border-subtle"
                         }`}>{p}</button>
                     ))}
                   </div>
@@ -459,16 +459,16 @@ export default function DealsPage() {
                     { label: "Best Case", value: formatCurrency(totalPipeline), sub: "100% close rate", color: "text-emerald-700", bar: "bg-gradient-to-r from-green-500 to-emerald-500" },
                   ].map((card, i) => (
                     <PrismPanel key={i} padding="p-5" className="text-center" delay={i * 0.06}>
-                      <p className="text-[10px] text-muted mb-1 uppercase font-semibold">{card.label}</p>
+                      <p className="text-[10px] text-text-muted mb-1 uppercase font-semibold">{card.label}</p>
                       <p className={`text-2xl font-bold ${card.color}`}>{card.value}</p>
-                      <p className="text-[9px] text-muted mt-1">{card.sub}</p>
+                      <p className="text-[9px] text-text-muted mt-1">{card.sub}</p>
                     </PrismPanel>
                   ))}
                 </motion.div>
                 {/* Monthly breakdown */}
                 <PrismPanel padding="p-4">
                   <h4 className="text-xs font-semibold mb-3">Monthly Revenue Trend</h4>
-                  <div className="text-center py-8 text-muted text-xs">
+                  <div className="text-center py-8 text-text-muted text-xs">
                     Monthly revenue trend will appear once deals are closed.
                   </div>
                 </PrismPanel>
@@ -481,14 +481,14 @@ export default function DealsPage() {
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <CheckCircle size={14} className="text-emerald-700" /> Win Factors
                     </h3>
-                    <div className="text-center py-8 text-muted text-xs">No win data yet.</div>
+                    <div className="text-center py-8 text-text-muted text-xs">No win data yet.</div>
                   </PrismPanel>
                   {/* Loss Reasons */}
                   <PrismPanel padding="p-4" delay={0.06}>
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <AlertTriangle size={14} className="text-rose-700" /> Loss Reasons
                     </h3>
-                    <div className="text-center py-8 text-muted text-xs">No loss data yet.</div>
+                    <div className="text-center py-8 text-text-muted text-xs">No loss data yet.</div>
                   </PrismPanel>
                 </div>
                 {/* Competitor notes */}
@@ -496,7 +496,7 @@ export default function DealsPage() {
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                     <Shield size={14} className="text-brand-accent" /> Competitor Intelligence
                   </h3>
-                  <div className="text-center py-8 text-muted text-xs">No competitor data yet.</div>
+                  <div className="text-center py-8 text-text-muted text-xs">No competitor data yet.</div>
                 </PrismPanel>
               </div>
             )}{/* ===== DEAL SCORING ===== */}{activeTab === "scoring" && (
@@ -511,7 +511,7 @@ export default function DealsPage() {
                   animate="show"
 >
                   {openDeals.length === 0 && (
-                    <div className="text-center py-8 text-muted text-xs">No open deals to score yet.</div>
+                    <div className="text-center py-8 text-text-muted text-xs">No open deals to score yet.</div>
                   )}
                   {[...openDeals].sort((a, b) => b.probability - a.probability).map(deal => {
                     const daysSinceUpdate = Math.floor((Date.now() - new Date(deal.updated_at).getTime()) / 86400000);
@@ -537,12 +537,12 @@ export default function DealsPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <p className="text-xs font-semibold truncate">{deal.title}</p>
-                            <span className="text-[9px] text-muted">({deal.client_name})</span>
+                            <span className="text-[9px] text-text-muted">({deal.client_name})</span>
                           </div>
                           <div className="w-full bg-white/[0.06] rounded-full h-1.5 mt-1.5">
                             <div className={`${scoreBg} rounded-full h-1.5`} style={{ width: `${score}%` }} />
                           </div>
-                          <div className="flex gap-4 mt-1.5 text-[9px] text-muted">
+                          <div className="flex gap-4 mt-1.5 text-[9px] text-text-muted">
                             <span>Stage: {STAGES.find(s => s.key === deal.stage)?.label}</span>
                             <span>{daysSinceUpdate}d in stage</span>
                             <span>{deal.probability}% probability</span>
@@ -550,9 +550,9 @@ export default function DealsPage() {
                         </div>
                         <div className="text-right flex-shrink-0">
                           <p className="text-sm font-bold text-brand-accent">{formatCurrency(amt)}</p>
-                          <p className="text-[9px] text-muted">Close: {deal.expected_close_date || "N/A"}</p>
+                          <p className="text-[9px] text-text-muted">Close: {deal.expected_close_date || "N/A"}</p>
                         </div>
-                        <ChevronRight size={14} className="text-muted flex-shrink-0" />
+                        <ChevronRight size={14} className="text-text-muted flex-shrink-0" />
                       </motion.div>
                     );
                   })}
@@ -563,7 +563,7 @@ export default function DealsPage() {
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                     <ArrowRight size={14} className="text-brand-accent" /> Deal Stage Automation
                   </h3>
-                  <p className="text-[10px] text-muted mb-3">Starter rule templates. Automation not yet wired to real triggers.</p>
+                  <p className="text-[10px] text-text-muted mb-3">Starter rule templates. Automation not yet wired to real triggers.</p>
                   <div className="space-y-2">
                     {[
                       { trigger: "Score reaches 80+", action: "Auto-move to Proposal stage" },
@@ -576,7 +576,7 @@ export default function DealsPage() {
                           <Zap size={12} className="text-brand-accent" />
                           <div>
                             <p className="text-[10px] font-semibold">When: {rule.trigger}</p>
-                            <p className="text-[9px] text-muted">Then: {rule.action}</p>
+                            <p className="text-[9px] text-text-muted">Then: {rule.action}</p>
                           </div>
                         </div>
                         <div className="w-8 h-4 rounded-full bg-white/[0.06]">
@@ -606,16 +606,16 @@ export default function DealsPage() {
                           key={i}
                           whileHover={{ y: -2 }}
                           onClick={() => toast("Contract templates coming soon � needs API")}
-                          className="flex items-center justify-between p-3 rounded-lg hover:border-border transition-all cursor-pointer border border-border-subtle" style={{ background: "rgba(255,255,255,0.05)" }}
+                          className="flex items-center justify-between p-3 rounded-lg hover:border-border-subtle transition-all cursor-pointer border border-border-subtle" style={{ background: "rgba(255,255,255,0.05)" }}
 >
                           <div className="flex items-center gap-2">
-                            <FileText size={14} className="text-muted" />
+                            <FileText size={14} className="text-text-muted" />
                             <div>
                               <p className="text-xs font-medium">{t.name}</p>
-                              <p className="text-[9px] text-muted">{t.pages} pages</p>
+                              <p className="text-[9px] text-text-muted">{t.pages} pages</p>
                             </div>
                           </div>
-                          <ChevronRight size={12} className="text-muted" />
+                          <ChevronRight size={12} className="text-text-muted" />
                         </motion.div>
                       ))}
                     </div>
@@ -641,7 +641,7 @@ export default function DealsPage() {
                           <button
                             key={s}
                             onClick={() => toast(`${s} service selection coming soon � needs proposal builder`)}
-                            className="text-[9px] px-2 py-1 rounded border border-border hover:border-[#1D4ED8]/30 hover:bg-brand-accent/80/5 text-muted hover:text-brand-accent transition-all"
+                            className="text-[9px] px-2 py-1 rounded border border-border-subtle hover:border-[#1D4ED8]/30 hover:bg-brand-accent/80/5 text-text-muted hover:text-brand-accent transition-all"
 >{s}</button>
                         ))}
                       </div>
@@ -674,9 +674,9 @@ export default function DealsPage() {
                     { label: "YTD Earnings", value: formatCurrency(0), sub: "No data yet", color: "text-emerald-700", bar: "bg-gradient-to-r from-green-500 to-emerald-500" },
                   ].map((card, i) => (
                     <PrismPanel key={i} padding="p-5" className="text-center" delay={i * 0.06}>
-                      <p className="text-[10px] text-muted uppercase mb-1">{card.label}</p>
+                      <p className="text-[10px] text-text-muted uppercase mb-1">{card.label}</p>
                       <p className={`text-3xl font-bold ${card.color}`}>{card.value}</p>
-                      <p className="text-[10px] text-muted mt-1">{card.sub}</p>
+                      <p className="text-[10px] text-text-muted mt-1">{card.sub}</p>
                     </PrismPanel>
                   ))}
                 </motion.div>
@@ -686,11 +686,11 @@ export default function DealsPage() {
                     <h4 className="text-xs font-semibold">Commission Breakdown</h4>
                   </div>
                   <div className="p-4 space-y-1.5">
-                    <div className="grid grid-cols-5 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
+                    <div className="grid grid-cols-5 text-[9px] text-text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
                       <span>Deal</span><span>Amount</span><span>Rate</span><span>Commission</span><span>Status</span>
                     </div>
                     {deals.filter(d => d.stage === "closed_won" || d.probability>= 50).length === 0 && (
-                      <div className="text-center py-8 text-muted text-xs">No commission data yet.</div>
+                      <div className="text-center py-8 text-text-muted text-xs">No commission data yet.</div>
                     )}
                     <motion.div
                       className="space-y-1"

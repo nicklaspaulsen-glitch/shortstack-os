@@ -758,11 +758,11 @@ export default function EmailComposerPage() {
                                 className={`text-left p-4 rounded-xl border transition-all ${
                                   sel
                                     ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.1)]"
-                                    : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                                    : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
                                 }`}
 >
                                 <p className="text-sm font-semibold">{k.label}</p>
-                                <p className="text-[10px] text-muted mt-1">{k.desc}</p>
+                                <p className="text-[10px] text-text-muted mt-1">{k.desc}</p>
                               </button>
                               </MotionPage>
             );
@@ -779,19 +779,19 @@ export default function EmailComposerPage() {
       component: (
         <div className="space-y-3">
           <div>
-            <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
-              Audience <span className="text-muted/60 normal-case">(optional)</span>
+            <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">
+              Audience <span className="text-text-muted/60 normal-case">(optional)</span>
             </label>
             <input
               type="text"
               value={guidedAudience}
               onChange={e => setGuidedAudience(e.target.value)}
               placeholder="e.g., SaaS founders on a free trial"
-              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)] transition-all"
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)] transition-all"
  />
           </div>
           <div>
-            <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
+            <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">
               What should it say? / CTA
             </label>
             <textarea
@@ -799,7 +799,7 @@ export default function EmailComposerPage() {
               onChange={e => setGuidedDirection(e.target.value)}
               placeholder="Key points to cover, must-include details, what the reader should do next�"
               rows={4}
-              className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)] transition-all resize-none"
+              className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)] transition-all resize-none"
               autoFocus
  />
           </div>
@@ -812,9 +812,9 @@ export default function EmailComposerPage() {
       description: "We'll write the subject and body. You can tweak every line in Advanced mode before sending.",
       icon: <Wand2 size={18} />,
       component: (
-        <div className="card bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)] space-y-2">
+        <div className="glass rounded-xl p-4 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)] space-y-2">
           <p className="text-sm">
-            <span className="text-muted capitalize">{guidedKind} email</span>
+            <span className="text-text-muted capitalize">{guidedKind} email</span>
             {guidedAudience.trim() && (
               <>
                 {" � "}
@@ -822,7 +822,7 @@ export default function EmailComposerPage() {
               </>
             )}
           </p>
-          <p className="text-[11px] text-muted leading-relaxed whitespace-pre-wrap">
+          <p className="text-[11px] text-text-muted leading-relaxed whitespace-pre-wrap">
             {guidedDirection || <span className="italic">(no direction yet)</span>}
           </p>
         </div>
@@ -840,7 +840,7 @@ export default function EmailComposerPage() {
   ];
 
   return (
-    <div className="fade-in space-y-5 p-6 max-w-7xl mx-auto">
+    <div className="space-y-5 p-6 max-w-7xl mx-auto">
       {/* -- Email Composer command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -862,23 +862,23 @@ export default function EmailComposerPage() {
                 </button>
                 <button
                   onClick={() => { setEmail({ to: "", subject: "", body: "", fromName: email.fromName, fromEmail: email.fromEmail, replyTo: email.replyTo }); setActiveTab("compose"); toast.success("Blank email ready"); }}
-                  className="px-3 py-1.5 rounded-lg bg-transparent border border-border text-foreground text-xs font-medium hover:bg-black/5 transition-all flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-lg bg-transparent border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/5 transition-all flex items-center gap-1.5"
 >
                   <Plus size={12} /> Blank
                 </button>
-                <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={aiWriting}>
+                <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={aiWriting}>
                   {aiWriting ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} AI Write
                 </button>
-                <button onClick={handleAiImprove} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={aiImproving}>
+                <button onClick={handleAiImprove} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={aiImproving}>
                   {aiImproving ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />} AI Improve
                 </button>
-                <button onClick={handleGenerateSubjectVariants} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={loadingVariants}>
+                <button onClick={handleGenerateSubjectVariants} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={loadingVariants}>
                   {loadingVariants ? <Loader2 size={12} className="animate-spin" /> : <TrendingUp size={12} />} Subject Variants
                 </button>
                 <button
                   onClick={() => handleSend()}
                   disabled={sending}
-                  className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
 >
                   {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />} {sending ? "Sending..." : "Send"}
                 </button>
@@ -926,7 +926,7 @@ export default function EmailComposerPage() {
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-lg flex items-center gap-2 whitespace-nowrap transition-all ${
-              activeTab === t.key ? "bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 font-medium" : "text-muted hover:text-foreground"
+              activeTab === t.key ? "bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 font-medium" : "text-text-muted hover:text-text-primary"
             }`}>{t.icon} {t.label}</button>
         ))}
       </PrismPanel>
@@ -946,9 +946,9 @@ export default function EmailComposerPage() {
               {/* Email Provider Selector */}
               <div>
                 <div className="flex items-center gap-1.5 mb-1">
-                  <label className="text-[9px] text-muted uppercase tracking-wider">Send via</label>
+                  <label className="text-[9px] text-text-muted uppercase tracking-wider">Send via</label>
                   <span
-                    className="inline-flex text-muted/70 hover:text-brand-accent cursor-help"
+                    className="inline-flex text-text-muted/70 hover:text-brand-accent cursor-help"
                     title="SMTP = brand blasts, Gmail/Outlook = personal 1:1s"
                     aria-label="SMTP = brand blasts, Gmail/Outlook = personal 1:1s"
 >
@@ -963,7 +963,7 @@ export default function EmailComposerPage() {
                   ]).map(p => (
                     <button key={p.id} onClick={() => setProvider(p.id)}
                       className={`flex-1 text-[10px] py-1.5 rounded-lg border capitalize transition-all flex items-center justify-center gap-1.5 ${
-                        provider === p.id ? "border-indigo-500/30 bg-indigo-500/10 text-indigo-400" : "border-border text-muted"
+                        provider === p.id ? "border-indigo-500/30 bg-indigo-500/10 text-indigo-400" : "border-border-subtle text-text-muted"
                       }`}>
                       {p.icon} {p.label}
                       {p.id === "smtp" && (
@@ -975,7 +975,7 @@ export default function EmailComposerPage() {
                   ))}
                 </div>
                 {/* Contextual help per provider � explains WHY you'd pick each one */}
-                <p className="text-[9px] text-muted mt-1.5 leading-relaxed">
+                <p className="text-[9px] text-text-muted mt-1.5 leading-relaxed">
                   {provider === "smtp" && (
                     "Branded send via your verified domain. Best for most outreach. Tracking, webhooks, unlimited volume."
                   )}
@@ -1018,33 +1018,33 @@ export default function EmailComposerPage() {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">To</label>
-                  <input value={email.to} onChange={e => setEmail({ ...email, to: e.target.value })} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Recipient email or select from list..." />
+                  <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">To</label>
+                  <input value={email.to} onChange={e => setEmail({ ...email, to: e.target.value })} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Recipient email or select from list..." />
                 </div>
                 <div>
-                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">From name</label>
+                  <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">From name</label>
                   <input
                     value={email.fromName}
                     onChange={e => setEmail({ ...email, fromName: e.target.value })}
-                    className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                     placeholder="e.g. Nicklas at ShortStack"
  />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">From email</label>
+                  <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">From email</label>
                   <input
                     type="email"
                     value={email.fromEmail}
                     onChange={e => setEmail({ ...email, fromEmail: e.target.value })}
-                    className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                     placeholder="growth@yourdomain.com (uses verified domain if blank)"
  />
                 </div>
                 <div>
-                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Reply-To</label>
-                  <input value={email.replyTo} onChange={e => setEmail({ ...email, replyTo: e.target.value })} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="replies@yourdomain.com" />
+                  <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Reply-To</label>
+                  <input value={email.replyTo} onChange={e => setEmail({ ...email, replyTo: e.target.value })} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="replies@yourdomain.com" />
                 </div>
               </div>
             </motion.div>
@@ -1052,7 +1052,7 @@ export default function EmailComposerPage() {
             {/* Subject + AI Subject Line Generator */}
             <div className="relative">
               <input value={email.subject} onChange={e => setEmail({ ...email, subject: e.target.value })}
-                className="w-full text-sm font-medium pr-24 rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Subject line..." />
+                className="w-full text-sm font-medium pr-24 rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Subject line..." />
               <button onClick={handleSubjectIdeas} disabled={loadingVariants}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition-all flex items-center gap-1">
                 {loadingVariants ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />} AI Ideas
@@ -1062,16 +1062,16 @@ export default function EmailComposerPage() {
               <PrismPanel padding="px-3 py-3" className="space-y-1.5">
                 <p className="text-[10px] font-semibold text-indigo-400 mb-2">AI Subject Line Suggestions</p>
                 {loadingVariants && (
-                  <div className="flex items-center gap-2 text-[9px] text-muted py-2">
+                  <div className="flex items-center gap-2 text-[9px] text-text-muted py-2">
                     <Loader2 size={10} className="animate-spin" /> Generating...
                   </div>
                 )}
                 {!loadingVariants && subjectIdeas.length === 0 && (
-                  <p className="text-[9px] text-muted text-center py-2">No AI suggestions yet. Write the email body first.</p>
+                  <p className="text-[9px] text-text-muted text-center py-2">No AI suggestions yet. Write the email body first.</p>
                 )}
                 {subjectIdeas.map((idea, i) => (
                   <button key={i} onClick={() => { setEmail({ ...email, subject: idea }); setShowSubjectAI(false); }}
-                    className="block w-full text-left text-[10px] p-2 rounded hover:bg-indigo-500/5 transition-all text-muted hover:text-foreground">
+                    className="block w-full text-left text-[10px] p-2 rounded hover:bg-indigo-500/5 transition-all text-text-muted hover:text-text-primary">
                     {idea}
                   </button>
                 ))}
@@ -1088,20 +1088,20 @@ export default function EmailComposerPage() {
                 { icon: <ImageIcon size={12} />, label: "Image" },
                 { icon: <Type size={12} />, label: "Heading" },
               ].map(tool => (
-                <button key={tool.label} className="p-2 rounded text-muted hover:text-foreground hover:bg-[rgba(0,0,0,0.05)] transition-colors" title={tool.label}>
+                <button key={tool.label} className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-[rgba(0,0,0,0.05)] transition-colors" title={tool.label}>
                   {tool.icon}
                 </button>
               ))}
-              <div className="w-px h-4 bg-border mx-1" />
-              <button onClick={() => setShowVarPanel(!showVarPanel)} className="p-2 rounded text-muted hover:text-indigo-400 hover:bg-indigo-500/5 transition-colors flex items-center gap-1" title="Insert Variable">
+              <div className="w-px h-4 bg-border-subtle mx-1" />
+              <button onClick={() => setShowVarPanel(!showVarPanel)} className="p-2 rounded text-text-muted hover:text-indigo-400 hover:bg-indigo-500/5 transition-colors flex items-center gap-1" title="Insert Variable">
                 <Hash size={12} /> <span className="text-[9px]">Variables</span>
               </button>
-              <div className="w-px h-4 bg-border mx-1" />
-              <button onClick={() => setShowHtml(!showHtml)} className={`p-2 rounded transition-colors flex items-center gap-1 ${showHtml ? "text-indigo-400 bg-indigo-500/10" : "text-muted hover:text-foreground hover:bg-[rgba(0,0,0,0.05)]"}`}>
+              <div className="w-px h-4 bg-border-subtle mx-1" />
+              <button onClick={() => setShowHtml(!showHtml)} className={`p-2 rounded transition-colors flex items-center gap-1 ${showHtml ? "text-indigo-400 bg-indigo-500/10" : "text-text-muted hover:text-text-primary hover:bg-[rgba(0,0,0,0.05)]"}`}>
                 <Code size={12} /> <span className="text-[9px]">HTML</span>
               </button>
               <div className="ml-auto flex items-center gap-2">
-                <label className="flex items-center gap-1 text-[9px] text-muted cursor-pointer">
+                <label className="flex items-center gap-1 text-[9px] text-text-muted cursor-pointer">
                   <MousePointerClick size={9} />
                   <span>Link Tracking</span>
                   <button onClick={() => setLinkTracking(!linkTracking)}
@@ -1117,14 +1117,14 @@ export default function EmailComposerPage() {
               <PrismPanel padding="px-3 py-3">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-[10px] font-semibold text-indigo-400">Insert Variable</p>
-                  <button onClick={() => setShowVarPanel(false)} className="text-muted hover:text-foreground"><X size={12} /></button>
+                  <button onClick={() => setShowVarPanel(false)} className="text-text-muted hover:text-text-primary"><X size={12} /></button>
                 </div>
                 <div className="grid grid-cols-3 gap-1.5">
                   {VARIABLES.map(v => (
                     <button key={v.tag} onClick={() => setEmail(prev => ({ ...prev, body: prev.body + " " + v.tag }))}
                       className="text-left p-2 rounded hover:border-indigo-500/20 transition-all" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}>
                       <p className="text-[9px] font-mono text-indigo-400">{v.tag}</p>
-                      <p className="text-[8px] text-muted">{v.label} ({v.example})</p>
+                      <p className="text-[8px] text-text-muted">{v.label} ({v.example})</p>
                     </button>
                   ))}
                 </div>
@@ -1134,11 +1134,11 @@ export default function EmailComposerPage() {
             {/* Body Editor / HTML Source */}
             {showHtml ? (
               <textarea value={`<html><body><p>${email.body.replace(/\n/g, "</p><p>")}</p></body></html>`}
-                className="w-full text-xs font-mono leading-relaxed rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" style={{ minHeight: 300, resize: "vertical" }}
+                className="w-full text-xs font-mono leading-relaxed rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" style={{ minHeight: 300, resize: "vertical" }}
                 readOnly />
             ) : (
               <textarea value={email.body} onChange={e => setEmail({ ...email, body: e.target.value })}
-                className="w-full text-sm leading-relaxed rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" style={{ minHeight: 300, resize: "vertical" }}
+                className="w-full text-sm leading-relaxed rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" style={{ minHeight: 300, resize: "vertical" }}
                 placeholder="Write your email here..." />
             )}
 
@@ -1152,14 +1152,14 @@ export default function EmailComposerPage() {
                 </button>
               </div>
               {attachments.length === 0 ? (
-                <p className="text-[9px] text-muted text-center py-3">No attachments. Click Add to attach files.</p>
+                <p className="text-[9px] text-text-muted text-center py-3">No attachments. Click Add to attach files.</p>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {attachments.map((file, i) => (
-                    <div key={i} className="flex items-center gap-1.5 px-2 py-1 rounded bg-surface-light border border-border text-[9px]">
-                      <Paperclip size={9} className="text-muted" />
+                    <div key={i} className="flex items-center gap-1.5 px-2 py-1 rounded bg-surface-light border border-border-subtle text-[9px]">
+                      <Paperclip size={9} className="text-text-muted" />
                       <span>{file}</span>
-                      <button onClick={() => setAttachments(prev => prev.filter((_, j) => j !== i))} className="text-muted hover:text-red-400"><X size={8} /></button>
+                      <button onClick={() => setAttachments(prev => prev.filter((_, j) => j !== i))} className="text-text-muted hover:text-red-400"><X size={8} /></button>
                     </div>
                   ))}
                 </div>
@@ -1168,7 +1168,7 @@ export default function EmailComposerPage() {
 
             {/* Footer */}
             <div className="flex justify-between items-center">
-              <div className="flex items-center gap-3 text-[10px] text-muted">
+              <div className="flex items-center gap-3 text-[10px] text-text-muted">
                 <span>From: {email.fromName}</span>
                 <span>{wordCount} words</span>
                 <span>{charCount} chars</span>
@@ -1196,7 +1196,7 @@ export default function EmailComposerPage() {
                   whileTap={{ scale: 0.97 }}
                   onClick={() => handleSend({ testMode: true })}
                   disabled={sendingTest || sending}
-                  className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg hover:border-border transition-all disabled:opacity-60 disabled:cursor-not-allowed bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)]"
+                  className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg hover:border-border-subtle transition-all disabled:opacity-60 disabled:cursor-not-allowed bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)]"
 >
                   {sendingTest ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                   {sendingTest ? "Sending..." : "Test Send"}
@@ -1222,7 +1222,7 @@ export default function EmailComposerPage() {
               className="rounded-xl p-4"
               
 >
-              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Composer Stats</h3>
+              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-text-muted">Composer Stats</h3>
               <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
                 {/* Focal tile — Spam Score */}
                 <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
@@ -1263,10 +1263,10 @@ export default function EmailComposerPage() {
               className="rounded-xl p-4"
               
 >
-              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Quick Templates</h3>
+              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-text-muted">Quick Templates</h3>
               <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(255,255,255,0.70)" }}>
                 {TEMPLATE_GALLERY.length === 0 && (
-                  <p className="text-[9px] text-muted text-center py-3">No templates yet.</p>
+                  <p className="text-[9px] text-text-muted text-center py-3">No templates yet.</p>
                 )}
                 {TEMPLATE_GALLERY.slice(0, 6).map((t, i) => (
                   <motion.button
@@ -1279,7 +1279,7 @@ export default function EmailComposerPage() {
                     className="w-full text-left p-2 text-[10px] transition-all border-b border-[rgba(0,0,0,0.06)] last:border-0"
 >
                     <p className="font-semibold">{t.name}</p>
-                    <p className="text-muted truncate">{t.subject}</p>
+                    <p className="text-text-muted truncate">{t.subject}</p>
                   </motion.button>
                 ))}
               </div>
@@ -1295,13 +1295,13 @@ export default function EmailComposerPage() {
             {["all", "Outreach", "Value", "Sales", "Onboarding", "Client", "Billing", "Retention", "Promo"].map(c => (
               <button key={c} onClick={() => setTemplateCategory(c)}
                 className={`text-[10px] px-3 py-1.5 rounded-lg ${
-                  templateCategory === c ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20" : "text-muted border border-[rgba(0,0,0,0.06)]"
+                  templateCategory === c ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20" : "text-text-muted border border-[rgba(0,0,0,0.06)]"
                 }`}>{c}</button>
             ))}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-2">
             {filteredTemplates.length === 0 && (
-              <div className="col-span-5 text-center py-12 text-muted text-xs">No templates yet.</div>
+              <div className="col-span-5 text-center py-12 text-text-muted text-xs">No templates yet.</div>
             )}
             {filteredTemplates.map((t, i) => (
               <motion.button
@@ -1316,7 +1316,7 @@ export default function EmailComposerPage() {
 >
                 <p className="text-[10px] font-semibold">{t.name}</p>
                 <p className="text-[9px] text-indigo-400 mt-0.5">{t.category}</p>
-                <p className="text-[9px] text-muted mt-1 line-clamp-2">{t.subject}</p>
+                <p className="text-[9px] text-text-muted mt-1 line-clamp-2">{t.subject}</p>
               </motion.button>
             ))}
           </div>
@@ -1329,11 +1329,11 @@ export default function EmailComposerPage() {
           <div className="flex items-center justify-center gap-2">
             <button onClick={() => setPreviewMode("desktop")}
               className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
-                previewMode === "desktop" ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20" : "text-muted border border-[rgba(0,0,0,0.06)]"
+                previewMode === "desktop" ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20" : "text-text-muted border border-[rgba(0,0,0,0.06)]"
               }`}><Monitor size={12} /> Desktop</button>
             <button onClick={() => setPreviewMode("mobile")}
               className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
-                previewMode === "mobile" ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20" : "text-muted border border-[rgba(0,0,0,0.06)]"
+                previewMode === "mobile" ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20" : "text-text-muted border border-[rgba(0,0,0,0.06)]"
               }`}><Smartphone size={12} /> Mobile</button>
           </div>
           <div className="flex justify-center">
@@ -1346,7 +1346,7 @@ export default function EmailComposerPage() {
                     <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
                   </div>
                   <div className="flex-1 text-center">
-                    <p className="text-[10px] text-muted font-mono">Inbox</p>
+                    <p className="text-[10px] text-text-muted font-mono">Inbox</p>
                   </div>
                 </div>
               </div>
@@ -1358,7 +1358,7 @@ export default function EmailComposerPage() {
                 </div>
                 {attachments.length> 0 && (
                   <div className="mt-4 pt-4 border-t border-[rgba(0,0,0,0.10)]">
-                    <p className="text-[10px] text-muted mb-2">Attachments ({attachments.length})</p>
+                    <p className="text-[10px] text-text-muted mb-2">Attachments ({attachments.length})</p>
                     <div className="flex gap-2">
                       {attachments.map((f, i) => (
                         <div key={i} className="flex items-center gap-1 px-2 py-1 rounded bg-[rgba(0,0,0,0.04)] text-[9px] text-[#6B7280]">
@@ -1390,7 +1390,7 @@ export default function EmailComposerPage() {
               }`}>
                 <div>
                   <p className={`text-3xl font-bold ${spamScore>= 80 ? "text-green-400" : spamScore>= 50 ? "text-yellow-400" : "text-red-400"}`}>{spamScore}</p>
-                  <p className="text-[9px] text-muted">/ 100</p>
+                  <p className="text-[9px] text-text-muted">/ 100</p>
                 </div>
               </div>
               <h3 className="text-sm font-semibold">Spam Score</h3>
@@ -1440,12 +1440,12 @@ export default function EmailComposerPage() {
               </h3>
               <div className="space-y-3">
                 <div>
-                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Date & Time</label>
-                  <input type="datetime-local" value={scheduledTime} onChange={e => setScheduledTime(e.target.value)} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" />
+                  <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Date & Time</label>
+                  <input type="datetime-local" value={scheduledTime} onChange={e => setScheduledTime(e.target.value)} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" />
                 </div>
                 <div>
-                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Timezone</label>
-                  <select className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all">
+                  <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Timezone</label>
+                  <select className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all">
                     <option>America/New_York (ET)</option>
                     <option>America/Chicago (CT)</option>
                     <option>America/Los_Angeles (PT)</option>
@@ -1479,9 +1479,9 @@ export default function EmailComposerPage() {
               
 >
               <h3 className="text-sm font-semibold mb-3">Optimal Send Times</h3>
-              <p className="text-[10px] text-muted mb-3">Based on your audience engagement data</p>
+              <p className="text-[10px] text-text-muted mb-3">Based on your audience engagement data</p>
               <div className="space-y-2">
-                <p className="text-center text-[10px] text-muted py-4">No engagement data yet. Send times will be suggested once you have audience data.</p>
+                <p className="text-center text-[10px] text-text-muted py-4">No engagement data yet. Send times will be suggested once you have audience data.</p>
               </div>
             </motion.div>
           </div>
@@ -1492,7 +1492,7 @@ export default function EmailComposerPage() {
       <Modal isOpen={showAiWrite} onClose={() => setShowAiWrite(false)} title="Write Email with AI" size="lg">
         <div className="space-y-3">
           <div className="space-y-2">
-            <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">What should this email be about?</label>
+            <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">What should this email be about?</label>
             <textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)} rows={4}
               className="input w-full text-xs" placeholder="e.g. Follow up with a dental practice owner we called last week about a lead generation trial..." />
             {/* AI auto-suggest: niche-aware email topic ideas */}
@@ -1504,7 +1504,7 @@ export default function EmailComposerPage() {
           </div>
           <div className="grid grid-cols-3 gap-2">
             <div>
-              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Tone</label>
+              <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Tone</label>
               <select value={aiTone} onChange={e => setAiTone(e.target.value as ComposeTone)} className="input w-full text-xs">
                 <option value="professional">Professional</option>
                 <option value="friendly">Friendly</option>
@@ -1514,7 +1514,7 @@ export default function EmailComposerPage() {
               </select>
             </div>
             <div>
-              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Length</label>
+              <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Length</label>
               <select value={aiLength} onChange={e => setAiLength(e.target.value as "short" | "medium" | "long")} className="input w-full text-xs">
                 <option value="short">Short</option>
                 <option value="medium">Medium</option>
@@ -1522,7 +1522,7 @@ export default function EmailComposerPage() {
               </select>
             </div>
             <div>
-              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Audience</label>
+              <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Audience</label>
               <input value={aiAudience} onChange={e => setAiAudience(e.target.value)} className="input w-full text-xs" placeholder="e.g. SMB owners" />
             </div>
           </div>
@@ -1539,21 +1539,21 @@ export default function EmailComposerPage() {
       <Modal isOpen={showSubjectVariants} onClose={() => setShowSubjectVariants(false)} title="Subject Line Variants (Ranked)" size="lg">
         <div className="space-y-2">
           {loadingVariants && (
-            <div className="flex items-center justify-center gap-2 text-xs text-muted py-8">
+            <div className="flex items-center justify-center gap-2 text-xs text-text-muted py-8">
               <Loader2 size={14} className="animate-spin" /> Scoring variants...
             </div>
           )}
           {!loadingVariants && subjectVariants.length === 0 && (
-            <p className="text-xs text-muted text-center py-8">No variants yet.</p>
+            <p className="text-xs text-text-muted text-center py-8">No variants yet.</p>
           )}
           {!loadingVariants && subjectVariants.map((v, i) => (
             <button key={i} onClick={() => { setEmail({ ...email, subject: v.subject }); setShowSubjectVariants(false); toast.success("Subject applied"); }}
-              className="block w-full text-left p-3 rounded-lg bg-surface-light border border-border hover:border-[rgba(59,130,246,0.25)] transition-all">
+              className="block w-full text-left p-3 rounded-lg bg-surface-light border border-border-subtle hover:border-[rgba(59,130,246,0.25)] transition-all">
               <div className="flex items-center justify-between mb-1">
                 <p className="text-sm font-semibold">{v.subject}</p>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 font-bold">{v.predicted_open_rate.toFixed(0)}% open</span>
               </div>
-              <p className="text-[10px] text-muted">{v.reason}</p>
+              <p className="text-[10px] text-text-muted">{v.reason}</p>
             </button>
           ))}
         </div>
@@ -1574,12 +1574,12 @@ export default function EmailComposerPage() {
               
 >
               <h4 className="text-xs font-semibold">Edit Signature</h4>
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Full Name" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Title" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Phone" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Email" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Website" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Calendar link" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Full Name" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Title" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Phone" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Email" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Website" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-[#FFFFFF] border border-[rgba(0,0,0,0.08)] text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Calendar link" defaultValue="" />
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}

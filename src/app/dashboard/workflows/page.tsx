@@ -49,7 +49,7 @@ const NODE_TYPES: Record<string, { icon: React.ReactNode; color: string; bg: str
   generate_content: { icon: <Sparkles size={14} />, color: "text-pink-400", bg: "border-pink-400/20 bg-pink-400/5" },
   create_invoice: { icon: <FileText size={14} />, color: "text-emerald-400", bg: "border-emerald-400/20 bg-emerald-400/5" },
   webhook: { icon: <Webhook size={14} />, color: "text-yellow-400", bg: "border-yellow-400/20 bg-yellow-400/5" },
-  delay: { icon: <Clock size={14} />, color: "text-muted", bg: "border-border bg-surface-light/50" },
+  delay: { icon: <Clock size={14} />, color: "text-text-muted", bg: "border-border-subtle bg-surface-light/50" },
   ghl_add_tag: { icon: <Tag size={14} />, color: "text-teal-400", bg: "border-teal-400/20 bg-teal-400/5" },
   condition: { icon: <GitBranch size={14} />, color: "text-amber-400", bg: "border-amber-400/20 bg-amber-400/5" },
 };
@@ -289,7 +289,7 @@ export default function WorkflowsPage() {
 
   function getNodeStyle(step: WorkflowStep) {
     const action = (step.config?.action as string) || step.type;
-    return NODE_TYPES[action] || { icon: <Zap size={14} />, color: "text-muted", bg: "border-border bg-surface-light/50" };
+    return NODE_TYPES[action] || { icon: <Zap size={14} />, color: "text-text-muted", bg: "border-border-subtle bg-surface-light/50" };
   }
 
   function applyPreset(preset: WorkflowPreset) {
@@ -354,7 +354,7 @@ export default function WorkflowsPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-3">{/* -- Workflows command strip -- */}
+    <MotionPage className="space-y-3">{/* -- Workflows command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">WORKFLOWS</p>
@@ -408,12 +408,12 @@ export default function WorkflowsPage() {
             </div>{/* Builder Tab */}{tab === "builder" && (
               <div className="space-y-4">
                 {/* Quick prompts */}
-                <div className="card">
-                  <h3 className="text-[10px] text-muted uppercase tracking-wider mb-2">Quick start</h3>
+                <div className="glass rounded-xl p-4">
+                  <h3 className="text-[10px] text-text-muted uppercase tracking-wider mb-2">Quick start</h3>
                   <div className="flex flex-wrap gap-1.5">
                     {EXAMPLE_PROMPTS.map((p, i) => (
                       <button key={i} onClick={() => { setPrompt(p.replace(/&apos;/g, "'")); setShowCreate(true); }}
-                        className="text-[10px] bg-surface-light px-2.5 py-1.5 rounded-md text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.2)] border border-border transition-all text-left"
+                        className="text-[10px] bg-surface-light px-2.5 py-1.5 rounded-md text-text-muted hover:text-text-primary hover:border-[rgba(59,130,246,0.2)] border border-border-subtle transition-all text-left"
                       >{p.replace(/&apos;/g, "'")}</button>
                     ))}
                   </div>
@@ -421,13 +421,13 @@ export default function WorkflowsPage() {
 
                 {/* Visual workflow preview */}
                 {previewWorkflow && (
-                  <div className="card border-[rgba(59,130,246,0.15)] relative overflow-hidden">
+                  <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.15)] relative overflow-hidden">
                     <div className="absolute inset-0 bg-mesh opacity-30" />
                     <div className="relative">
                       <div className="flex items-center justify-between mb-4">
                         <div>
                           <h2 className="text-sm font-bold text-brand-accent">{previewWorkflow.name}</h2>
-                          <p className="text-[10px] text-muted mt-0.5">{previewWorkflow.description}</p>
+                          <p className="text-[10px] text-text-muted mt-0.5">{previewWorkflow.description}</p>
                         </div>
                         <div className="flex gap-1.5">
                           <button onClick={() => runWorkflow(previewWorkflow)} className="btn-primary text-xs py-1.5 flex items-center gap-1">
@@ -459,7 +459,7 @@ export default function WorkflowsPage() {
                               {/* Connector line */}
                               {i > 0 && (
                                 <div className="flex items-center justify-center py-0.5">
-                                  <div className="w-px h-4 bg-border" />
+                                  <div className="w-px h-4 bg-border-subtle" />
                                 </div>
                               )}
                               <div className="flex items-center gap-2">
@@ -469,7 +469,7 @@ export default function WorkflowsPage() {
                                 <div className={`flex-1 rounded-lg px-3 py-2 border ${style.bg}`}>
                                   <div className="flex items-center justify-between">
                                     <p className="text-xs font-medium">{step.name}</p>
-                                    <span className="text-[9px] text-muted font-mono">{(step.config?.action as string || step.type).replace(/_/g, " ")}</span>
+                                    <span className="text-[9px] text-text-muted font-mono">{(step.config?.action as string || step.type).replace(/_/g, " ")}</span>
                                   </div>
                                   {(() => {
                                     const params = step.config?.params;
@@ -477,7 +477,7 @@ export default function WorkflowsPage() {
                                     return (
                                       <div className="mt-1 flex flex-wrap gap-1">
                                         {Object.entries(params as Record<string, string>).slice(0, 3).map(([k, v]) => (
-                                          <span key={k} className="text-[9px] bg-surface-light/80 px-1.5 py-0.5 rounded text-muted">
+                                          <span key={k} className="text-[9px] bg-surface-light/80 px-1.5 py-0.5 rounded text-text-muted">
                                             {k}: {String(v).substring(0, 30)}
                                           </span>
                                         ))}
@@ -486,7 +486,7 @@ export default function WorkflowsPage() {
                                   })()}
                                 </div>
                                 {step.type === "condition" && (
-                                  <div className="flex flex-col items-center gap-0.5 text-[8px] text-muted">
+                                  <div className="flex flex-col items-center gap-0.5 text-[8px] text-text-muted">
                                     <span className="text-success">Y</span>
                                     <GitBranch size={10} className="text-amber-400" />
                                     <span className="text-danger">N</span>
@@ -500,13 +500,13 @@ export default function WorkflowsPage() {
 
                       {/* End node */}
                       <div className="flex items-center justify-center py-1">
-                        <div className="w-px h-4 bg-border" />
+                        <div className="w-px h-4 bg-border-subtle" />
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-7 h-7 bg-success/10 border border-success/20 rounded-lg flex items-center justify-center">
                           <span className="text-success text-[10px] font-bold">END</span>
                         </div>
-                        <span className="text-[10px] text-muted">Workflow complete</span>
+                        <span className="text-[10px] text-text-muted">Workflow complete</span>
                       </div>
                     </div>
                   </div>
@@ -517,7 +517,7 @@ export default function WorkflowsPage() {
                 {/* Search + filters */}
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="relative flex-1 min-w-[200px]">
-                    <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
+                    <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                     <input
                       type="text"
                       value={presetSearch}
@@ -532,7 +532,7 @@ export default function WorkflowsPage() {
                         className={`text-[10px] px-2.5 py-1.5 rounded-lg border transition-all ${
                           presetDifficulty === d
                             ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent font-medium"
-                            : "border-border text-muted hover:text-foreground"
+                            : "border-border-subtle text-text-muted hover:text-text-primary"
                         }`}>
                         {d === "all" ? "All Levels" : d.charAt(0).toUpperCase() + d.slice(1)}
                       </button>
@@ -546,7 +546,7 @@ export default function WorkflowsPage() {
                     className={`text-[10px] px-2.5 py-1.5 rounded-lg border transition-all flex items-center gap-1 ${
                       presetCategory === "all"
                         ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent font-medium"
-                        : "border-border text-muted hover:text-foreground"
+                        : "border-border-subtle text-text-muted hover:text-text-primary"
                     }`}>
                     <BookOpen size={10} /> All ({WORKFLOW_PRESETS.length})
                   </button>
@@ -555,7 +555,7 @@ export default function WorkflowsPage() {
                       className={`text-[10px] px-2.5 py-1.5 rounded-lg border transition-all flex items-center gap-1 ${
                         presetCategory === cat.id
                           ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent font-medium"
-                          : "border-border text-muted hover:text-foreground"
+                          : "border-border-subtle text-text-muted hover:text-text-primary"
                       }`}>
                       {CATEGORY_ICONS[cat.id]} {cat.name} ({cat.count})
                     </button>
@@ -563,7 +563,7 @@ export default function WorkflowsPage() {
                 </div>
 
                 {/* Results count */}
-                <p className="text-[10px] text-muted">{filteredPresets.length} preset{filteredPresets.length !== 1 ? "s" : ""} found</p>
+                <p className="text-[10px] text-text-muted">{filteredPresets.length} preset{filteredPresets.length !== 1 ? "s" : ""} found</p>
 
                 {/* Preset cards */}
                 <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
@@ -571,7 +571,7 @@ export default function WorkflowsPage() {
                     <motion.div
                       key={preset.id}
                       variants={itemVariants}
-                      className="card card-hover p-4 flex flex-col spotlight-card"
+                      className="glass rounded-xl p-4 card-hover p-4 flex flex-col spotlight-card"
                       onMouseMove={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
                         e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
@@ -585,7 +585,7 @@ export default function WorkflowsPage() {
                           </div>
                           <div className="min-w-0">
                             <h3 className="text-xs font-semibold truncate">{preset.name}</h3>
-                            <span className="text-[8px] text-muted">{categoryCounts.find(c => c.id === preset.category)?.name}</span>
+                            <span className="text-[8px] text-text-muted">{categoryCounts.find(c => c.id === preset.category)?.name}</span>
                           </div>
                         </div>
                         <span className={`text-[8px] px-1.5 py-0.5 rounded shrink-0 font-medium ${
@@ -597,18 +597,18 @@ export default function WorkflowsPage() {
                         </span>
                       </div>
 
-                      <p className="text-[10px] text-muted mb-2 flex-1">{preset.description}</p>
+                      <p className="text-[10px] text-text-muted mb-2 flex-1">{preset.description}</p>
 
                       <div className="space-y-2">
                         {/* Steps preview */}
                         <div className="flex items-center gap-1 flex-wrap">
                           {preset.steps.slice(0, 3).map((step, i) => (
-                            <span key={i} className="text-[8px] bg-surface-light px-1.5 py-0.5 rounded text-muted truncate max-w-[120px]">
+                            <span key={i} className="text-[8px] bg-surface-light px-1.5 py-0.5 rounded text-text-muted truncate max-w-[120px]">
                               {i + 1}. {step}
                             </span>
                           ))}
                           {preset.steps.length > 3 && (
-                            <span className="text-[8px] text-muted">+{preset.steps.length - 3} more</span>
+                            <span className="text-[8px] text-text-muted">+{preset.steps.length - 3} more</span>
                           )}
                         </div>
 
@@ -631,8 +631,8 @@ export default function WorkflowsPage() {
 
                 {filteredPresets.length === 0 && (
                   <div className="card-static text-center py-12">
-                    <BookOpen size={24} className="text-muted mx-auto mb-2" />
-                    <p className="text-sm text-muted">No presets match your filters</p>
+                    <BookOpen size={24} className="text-text-muted mx-auto mb-2" />
+                    <p className="text-sm text-text-muted">No presets match your filters</p>
                     <button onClick={() => { setPresetSearch(""); setPresetCategory("all"); setPresetDifficulty("all"); }}
                       className="btn-secondary text-xs mt-3">
                       Clear Filters
@@ -641,18 +641,18 @@ export default function WorkflowsPage() {
                 )}
               </div>
             )}{/* Agent Tab — conversational AI workflow builder */}{tab === "agent" && (
-              <div className="card border-[rgba(59,130,246,0.1)] relative overflow-hidden" style={{ minHeight: "500px" }}>
+              <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.1)] relative overflow-hidden" style={{ minHeight: "500px" }}>
                 <div className="absolute inset-0 bg-mesh opacity-20" />
                 <div className="relative flex flex-col h-full" style={{ minHeight: "480px" }}>
                   {/* Agent header */}
-                  <div className="flex items-center justify-between pb-3 border-b border-border mb-3">
+                  <div className="flex items-center justify-between pb-3 border-b border-border-subtle mb-3">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center">
                         <Bot size={16} className="text-brand-accent" />
                       </div>
                       <div>
                         <p className="text-xs font-semibold">Workflow Agent</p>
-                        <p className="text-[9px] text-muted">I can design, modify, and execute workflows for you</p>
+                        <p className="text-[9px] text-text-muted">I can design, modify, and execute workflows for you</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -673,7 +673,7 @@ export default function WorkflowsPage() {
                     {agentChat.length === 0 && (
                       <div className="text-center py-12">
                         <Bot size={32} className="mx-auto mb-3 text-[rgba(59,130,246,0.3)]" />
-                        <p className="text-xs text-muted mb-4">Tell me what you want to automate. I&apos;ll design it, show you the plan, and execute it.</p>
+                        <p className="text-xs text-text-muted mb-4">Tell me what you want to automate. I&apos;ll design it, show you the plan, and execute it.</p>
                         <div className="flex flex-wrap justify-center gap-1.5">
                           {[
                             "Build me an onboarding workflow for new clients",
@@ -682,7 +682,7 @@ export default function WorkflowsPage() {
                             "When a lead replies, notify me and create a task",
                           ].map((s, i) => (
                             <button key={i} onClick={() => { setAgentInput(s); }}
-                              className="text-[10px] bg-surface-light/50 px-2.5 py-1.5 rounded-md text-muted hover:text-foreground border border-border hover:border-[rgba(59,130,246,0.2)] transition-all">
+                              className="text-[10px] bg-surface-light/50 px-2.5 py-1.5 rounded-md text-text-muted hover:text-text-primary border border-border-subtle hover:border-[rgba(59,130,246,0.2)] transition-all">
                               {s}
                             </button>
                           ))}
@@ -694,12 +694,12 @@ export default function WorkflowsPage() {
                       <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                         <div className={`max-w-[80%] rounded-lg px-3 py-2 ${
                           msg.role === "user"
-                            ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.15)] text-foreground"
-                            : "bg-surface-light/50 border border-border"
+                            ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.15)] text-text-primary"
+                            : "bg-surface-light/50 border border-border-subtle"
                         }`}>
                           <p className="text-xs whitespace-pre-wrap">{msg.content}</p>
                           {msg.workflow && (
-                            <div className="mt-2 pt-2 border-t border-border">
+                            <div className="mt-2 pt-2 border-t border-border-subtle">
                               <div className="flex items-center justify-between mb-1.5">
                                 <span className="text-[10px] text-brand-accent font-medium">{msg.workflow.name}</span>
                                 <div className="flex gap-1">
@@ -729,10 +729,10 @@ export default function WorkflowsPage() {
 
                     {agentThinking && (
                       <div className="flex justify-start">
-                        <div className="bg-surface-light/50 border border-border rounded-lg px-3 py-2">
+                        <div className="bg-surface-light/50 border border-border-subtle rounded-lg px-3 py-2">
                           <div className="flex items-center gap-1.5">
                             <Loader size={12} className="animate-spin text-brand-accent" />
-                            <span className="text-[10px] text-muted">Thinking...</span>
+                            <span className="text-[10px] text-text-muted">Thinking...</span>
                           </div>
                         </div>
                       </div>
@@ -760,7 +760,7 @@ export default function WorkflowsPage() {
             )}{/* n8n Live Tab */}{tab === "n8n" && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-muted">Live workflows from your n8n instance</p>
+                  <p className="text-xs text-text-muted">Live workflows from your n8n instance</p>
                   <div className="flex gap-2">
                     <a href={`${process.env.NEXT_PUBLIC_N8N_URL || "https://n8n-production-97d7.up.railway.app"}`}
                       target="_blank" rel="noopener noreferrer"
@@ -773,13 +773,13 @@ export default function WorkflowsPage() {
                   </div>
                 </div>
                 {n8nLoading ? (
-                  <div className="card text-center py-8"><Loader size={16} className="animate-spin text-brand-accent mx-auto" /></div>
+                  <div className="glass rounded-xl p-4 text-center py-8"><Loader size={16} className="animate-spin text-brand-accent mx-auto" /></div>
                 ) : n8nWorkflows.length === 0 ? (
-                  <div className="card text-center py-8">
+                  <div className="glass rounded-xl p-4 text-center py-8">
                     <Zap size={20} className="mx-auto mb-2 text-[rgba(59,130,246,0.3)]" />
-                    <p className="text-xs text-muted">No n8n workflows found. Create one in the Builder tab or via Agent Mode.</p>
+                    <p className="text-xs text-text-muted">No n8n workflows found. Create one in the Builder tab or via Agent Mode.</p>
                     {isPlatformAdmin && (
-                      <p className="text-[9px] text-muted mt-1">Make sure N8N_API_KEY is set in your environment variables.</p>
+                      <p className="text-[9px] text-text-muted mt-1">Make sure N8N_API_KEY is set in your environment variables.</p>
                     )}
                   </div>
                 ) : (
@@ -790,15 +790,15 @@ export default function WorkflowsPage() {
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${w.active ? "bg-success/10" : "bg-surface-light"}`}>
-                              <Zap size={14} className={w.active ? "text-success" : "text-muted"} />
+                              <Zap size={14} className={w.active ? "text-success" : "text-text-muted"} />
                             </div>
                             <div>
                               <h3 className="text-xs font-semibold">{w.name}</h3>
-                              <p className="text-[9px] text-muted">{w.nodes} nodes · Updated {formatRelativeTime(w.updatedAt)}</p>
+                              <p className="text-[9px] text-text-muted">{w.nodes} nodes · Updated {formatRelativeTime(w.updatedAt)}</p>
                             </div>
                           </div>
                           <button onClick={() => toggleN8nWorkflow(w.id, w.active)}
-                            className={`relative w-10 h-5 rounded-full transition-colors ${w.active ? "bg-success" : "bg-surface-light border border-border"}`}>
+                            className={`relative w-10 h-5 rounded-full transition-colors ${w.active ? "bg-success" : "bg-surface-light border border-border-subtle"}`}>
                             <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${w.active ? "left-5" : "left-0.5"}`} />
                           </button>
                         </div>
@@ -828,7 +828,7 @@ export default function WorkflowsPage() {
               </div>
             )}{/* ================================================================== */}{/* TRIGGERS & ACTIONS TAB                                              */}{/* ================================================================== */}{tab === "triggers" && (
               <div className="space-y-4">
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Zap size={13} className="text-brand-accent" /> Trigger Library (15+)</p>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                     {[
@@ -846,21 +846,21 @@ export default function WorkflowsPage() {
                       { name: "Appointment Booked", icon: Calendar, color: "text-teal-400", desc: "Client books appointment" },
                       { name: "Chat Message", icon: MessageCircle, color: "text-violet-400", desc: "New chat from prospect" },
                       { name: "Campaign Launched", icon: Globe, color: "text-indigo-400", desc: "New ad campaign starts" },
-                      { name: "Manual Trigger", icon: Play, color: "text-muted", desc: "Run on-demand manually" },
+                      { name: "Manual Trigger", icon: Play, color: "text-text-muted", desc: "Run on-demand manually" },
                     ].map(trigger => (
                       <button key={trigger.name} onClick={() => { setPrompt(`When: ${trigger.name} - ${trigger.desc}`); setShowCreate(true); setTab("builder"); }}
                         className="card-hover p-3 text-left flex items-start gap-2">
                         <trigger.icon size={14} className={`${trigger.color} mt-0.5 shrink-0`} />
-                        <div><p className="text-[10px] font-semibold">{trigger.name}</p><p className="text-[9px] text-muted">{trigger.desc}</p></div>
+                        <div><p className="text-[10px] font-semibold">{trigger.name}</p><p className="text-[9px] text-text-muted">{trigger.desc}</p></div>
                       </button>
                     ))}
                   </div>
                 </div>
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Play size={13} className="text-brand-accent" /> Action Library (20+)</p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {["Send Email", "Send SMS", "Send Telegram", "Send Slack Message", "Create Task", "Update Lead Status", "Add Tag", "Generate Content", "Create Invoice", "Fire Webhook", "Add to CRM", "Schedule Meeting", "Generate Report", "Push Notification", "Create Proposal", "Update Database", "Run AI Analysis", "Deploy Website", "Generate Social Posts", "Send Voice Message"].map((action, i) => (
-                      <div key={action} className="px-3 py-2 rounded-lg border border-border text-[10px] font-medium flex items-center gap-1.5">
+                      <div key={action} className="px-3 py-2 rounded-lg border border-border-subtle text-[10px] font-medium flex items-center gap-1.5">
                         <span className={`w-2 h-2 rounded-full ${["bg-cyan-400", "bg-green-400", "bg-blue-400", "bg-purple-400", "bg-brand-accent", "bg-orange-400", "bg-teal-400", "bg-pink-400", "bg-emerald-400", "bg-yellow-400"][i % 10]}`} />
                         {action}
                       </div>
@@ -868,33 +868,33 @@ export default function WorkflowsPage() {
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><GitBranch size={13} className="text-brand-accent" /> Condition Nodes</p>
                     <div className="space-y-2">
                       {["If lead has email", "If deal value > $1000", "If client is active", "If score > 80", "If tag contains X", "If time is between 9-5"].map(cond => (
-                        <div key={cond} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border text-[10px]"><GitBranch size={10} className="text-amber-400" /> {cond}</div>
+                        <div key={cond} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border-subtle text-[10px]"><GitBranch size={10} className="text-amber-400" /> {cond}</div>
                       ))}
                     </div>
                   </div>
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Clock size={13} className="text-brand-accent" /> Delay Nodes</p>
                     <div className="space-y-2">
                       {["Wait 5 minutes", "Wait 1 hour", "Wait 24 hours", "Wait 3 days", "Wait until specific time", "Wait until next business day"].map(delay => (
-                        <div key={delay} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border text-[10px]"><Clock size={10} className="text-muted" /> {delay}</div>
+                        <div key={delay} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border-subtle text-[10px]"><Clock size={10} className="text-text-muted" /> {delay}</div>
                       ))}
                     </div>
                   </div>
                 </div>
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Bell size={13} className="text-brand-accent" /> Error Handling</p>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <div><p className="text-xs font-semibold">Error Notifications</p><p className="text-[9px] text-muted">Get notified when a step fails</p></div>
-                      <button onClick={() => setErrorNotifications(!errorNotifications)} className={`w-10 h-5 rounded-full transition-colors relative ${errorNotifications ? "bg-brand-accent" : "bg-surface-light border border-border"}`}><span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${errorNotifications ? "left-5" : "left-0.5"}`} /></button>
+                      <div><p className="text-xs font-semibold">Error Notifications</p><p className="text-[9px] text-text-muted">Get notified when a step fails</p></div>
+                      <button onClick={() => setErrorNotifications(!errorNotifications)} className={`w-10 h-5 rounded-full transition-colors relative ${errorNotifications ? "bg-brand-accent" : "bg-surface-light border border-border-subtle"}`}><span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${errorNotifications ? "left-5" : "left-0.5"}`} /></button>
                     </div>
                     <div className="flex items-center justify-between">
-                      <div><p className="text-xs font-semibold">Auto-Retry on Failure</p><p className="text-[9px] text-muted">Retry failed steps up to {maxRetries}x</p></div>
-                      <button onClick={() => setRetryOnFailure(!retryOnFailure)} className={`w-10 h-5 rounded-full transition-colors relative ${retryOnFailure ? "bg-brand-accent" : "bg-surface-light border border-border"}`}><span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${retryOnFailure ? "left-5" : "left-0.5"}`} /></button>
+                      <div><p className="text-xs font-semibold">Auto-Retry on Failure</p><p className="text-[9px] text-text-muted">Retry failed steps up to {maxRetries}x</p></div>
+                      <button onClick={() => setRetryOnFailure(!retryOnFailure)} className={`w-10 h-5 rounded-full transition-colors relative ${retryOnFailure ? "bg-brand-accent" : "bg-surface-light border border-border-subtle"}`}><span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${retryOnFailure ? "left-5" : "left-0.5"}`} /></button>
                     </div>
                   </div>
                 </div>
@@ -902,36 +902,36 @@ export default function WorkflowsPage() {
             )}{/* ================================================================== */}{/* ANALYTICS TAB                                                       */}{/* ================================================================== */}{tab === "analytics" && (
               <div className="space-y-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-                  <div className="card p-3"><div className="flex items-center gap-1.5 mb-1"><Play size={12} className="text-brand-accent" /><p className="text-[10px] text-muted uppercase tracking-wider">Total Runs</p></div><p className="text-lg font-bold text-brand-accent">{workflowAnalytics.totalRuns}</p></div>
-                  <div className="card p-3"><div className="flex items-center gap-1.5 mb-1"><Target size={12} className="text-green-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Success Rate</p></div><p className="text-lg font-bold text-green-400">{workflowAnalytics.successRate}%</p></div>
-                  <div className="card p-3"><div className="flex items-center gap-1.5 mb-1"><Clock size={12} className="text-blue-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Avg Duration</p></div><p className="text-lg font-bold text-blue-400">{workflowAnalytics.avgDuration}</p></div>
-                  <div className="card p-3"><div className="flex items-center gap-1.5 mb-1"><Zap size={12} className="text-brand-accent" /><p className="text-[10px] text-muted uppercase tracking-wider">Hours Saved</p></div><p className="text-lg font-bold text-brand-accent">{workflowAnalytics.savedHours}h</p></div>
+                  <div className="glass rounded-xl p-3"><div className="flex items-center gap-1.5 mb-1"><Play size={12} className="text-brand-accent" /><p className="text-[10px] text-text-muted uppercase tracking-wider">Total Runs</p></div><p className="text-lg font-bold text-brand-accent">{workflowAnalytics.totalRuns}</p></div>
+                  <div className="glass rounded-xl p-3"><div className="flex items-center gap-1.5 mb-1"><Target size={12} className="text-green-400" /><p className="text-[10px] text-text-muted uppercase tracking-wider">Success Rate</p></div><p className="text-lg font-bold text-green-400">{workflowAnalytics.successRate}%</p></div>
+                  <div className="glass rounded-xl p-3"><div className="flex items-center gap-1.5 mb-1"><Clock size={12} className="text-blue-400" /><p className="text-[10px] text-text-muted uppercase tracking-wider">Avg Duration</p></div><p className="text-lg font-bold text-blue-400">{workflowAnalytics.avgDuration}</p></div>
+                  <div className="glass rounded-xl p-3"><div className="flex items-center gap-1.5 mb-1"><Zap size={12} className="text-brand-accent" /><p className="text-[10px] text-text-muted uppercase tracking-wider">Hours Saved</p></div><p className="text-lg font-bold text-brand-accent">{workflowAnalytics.savedHours}h</p></div>
                 </div>
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between mb-3">
                     <p className="text-xs font-semibold flex items-center gap-1.5"><Clock size={13} className="text-brand-accent" /> Recent Runs</p>
                     <div className="flex items-center gap-2">
-                      <span className="text-[9px] text-muted flex items-center gap-1"><span className={`w-2 h-2 rounded-full ${testMode ? "bg-yellow-400" : "bg-green-400"}`} />{testMode ? "Test Mode" : "Live Mode"}</span>
+                      <span className="text-[9px] text-text-muted flex items-center gap-1"><span className={`w-2 h-2 rounded-full ${testMode ? "bg-yellow-400" : "bg-green-400"}`} />{testMode ? "Test Mode" : "Live Mode"}</span>
                       <button onClick={() => setTestMode(!testMode)} className="btn-secondary text-[9px] flex items-center gap-1">{testMode ? <Play size={9} /> : <Eye size={9} />} {testMode ? "Go Live" : "Test Mode"}</button>
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <div className="grid grid-cols-12 gap-2 px-3 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
+                    <div className="grid grid-cols-12 gap-2 px-3 py-2 text-[10px] text-text-muted uppercase tracking-wider font-semibold">
                       <div className="col-span-1">ID</div><div className="col-span-3">Workflow</div><div className="col-span-2">Status</div><div className="col-span-2">Duration</div><div className="col-span-1">Steps</div><div className="col-span-3">Time</div>
                     </div>
                     {runHistory.length === 0 ? (
                       <div className="text-center py-6">
-                        <Clock size={18} className="mx-auto mb-2 text-muted/30" />
-                        <p className="text-[10px] text-muted">No workflow runs yet</p>
+                        <Clock size={18} className="mx-auto mb-2 text-text-muted/30" />
+                        <p className="text-[10px] text-text-muted">No workflow runs yet</p>
                       </div>
                     ) : runHistory.map(run => (
-                      <div key={run.id} className="grid grid-cols-12 gap-2 items-center px-3 py-2 rounded-lg bg-surface-light border border-border">
-                        <div className="col-span-1"><span className="text-[9px] font-mono text-muted">{run.id}</span></div>
+                      <div key={run.id} className="grid grid-cols-12 gap-2 items-center px-3 py-2 rounded-lg bg-surface-light border border-border-subtle">
+                        <div className="col-span-1"><span className="text-[9px] font-mono text-text-muted">{run.id}</span></div>
                         <div className="col-span-3"><span className="text-[10px] font-semibold">{run.workflow}</span></div>
                         <div className="col-span-2"><span className={`text-[9px] px-2 py-0.5 rounded-full border ${run.status === "success" ? "text-green-400 border-green-400/30 bg-green-400/10" : "text-red-400 border-red-400/30 bg-red-400/10"}`}>{run.status === "success" ? "Success" : "Failed"}</span></div>
-                        <div className="col-span-2"><span className="text-[10px] text-muted">{run.duration}</span></div>
-                        <div className="col-span-1"><span className="text-[10px] text-muted">{run.steps}</span></div>
-                        <div className="col-span-3"><span className="text-[9px] text-muted">{run.timestamp}</span></div>
+                        <div className="col-span-2"><span className="text-[10px] text-text-muted">{run.duration}</span></div>
+                        <div className="col-span-1"><span className="text-[10px] text-text-muted">{run.steps}</span></div>
+                        <div className="col-span-3"><span className="text-[9px] text-text-muted">{run.timestamp}</span></div>
                       </div>
                     ))}
                   </div>
@@ -940,25 +940,25 @@ export default function WorkflowsPage() {
             )}{/* ================================================================== */}{/* SHARING TAB                                                         */}{/* ================================================================== */}{tab === "sharing" && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-muted">Share workflows with your team or the community</p>
+                  <p className="text-xs text-text-muted">Share workflows with your team or the community</p>
                   <button onClick={() => toast("Community sharing coming soon", { icon: "🚧" })} className="btn-primary text-[10px] flex items-center gap-1"><Send size={10} /> Share Workflow</button>
                 </div>
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Users size={13} className="text-brand-accent" /> Community Workflows</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {sharedWorkflows.length === 0 ? (
                       <div className="col-span-2 text-center py-6">
-                        <Users size={18} className="mx-auto mb-2 text-muted/30" />
-                        <p className="text-[10px] text-muted">No shared workflows yet</p>
+                        <Users size={18} className="mx-auto mb-2 text-text-muted/30" />
+                        <p className="text-[10px] text-text-muted">No shared workflows yet</p>
                       </div>
                     ) : sharedWorkflows.map(sw => (
-                      <div key={sw.id} className="p-3 rounded-lg bg-surface-light border border-border">
+                      <div key={sw.id} className="p-3 rounded-lg bg-surface-light border border-border-subtle">
                         <div className="flex items-start justify-between mb-2">
-                          <div><h3 className="text-xs font-semibold">{sw.name}</h3><p className="text-[9px] text-muted">by {sw.author}</p></div>
+                          <div><h3 className="text-xs font-semibold">{sw.name}</h3><p className="text-[9px] text-text-muted">by {sw.author}</p></div>
                           <div className="flex items-center gap-1 text-[9px] text-brand-accent"><Star size={9} /> {sw.rating}</div>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-[9px] text-muted">{sw.downloads} downloads</span>
+                          <span className="text-[9px] text-text-muted">{sw.downloads} downloads</span>
                           <button onClick={() => toast("Import coming soon", { icon: "🚧" })} className="btn-secondary text-[9px] flex items-center gap-1"><RotateCcw size={9} /> Import</button>
                         </div>
                       </div>
@@ -966,22 +966,22 @@ export default function WorkflowsPage() {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Send size={13} className="text-brand-accent" /> Export Workflows</p>
-                    <p className="text-[10px] text-muted mb-3">Export as JSON to share or back up</p>
+                    <p className="text-[10px] text-text-muted mb-3">Export as JSON to share or back up</p>
                     <button onClick={exportWorkflowsJson} className="btn-primary text-xs w-full flex items-center justify-center gap-1.5"><FileText size={12} /> Export All</button>
                   </div>
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><RotateCcw size={13} className="text-brand-accent" /> Import Workflows</p>
-                    <p className="text-[10px] text-muted mb-3">Import from JSON or shared links</p>
+                    <p className="text-[10px] text-text-muted mb-3">Import from JSON or shared links</p>
                     <button onClick={() => toast("Import via JSON coming soon", { icon: "🚧" })} className="btn-secondary text-xs w-full flex items-center justify-center gap-1.5"><FileText size={12} /> Import JSON</button>
                   </div>
                 </div>
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><GitBranch size={13} className="text-brand-accent" /> Workflow Versioning</p>
-                  <p className="text-[10px] text-muted mb-3">Each edit creates a new version. Rollback anytime.</p>
-                  <div className="text-center py-6 text-[10px] text-muted">
-                    <GitBranch size={16} className="mx-auto mb-2 text-muted/40" />
+                  <p className="text-[10px] text-text-muted mb-3">Each edit creates a new version. Rollback anytime.</p>
+                  <div className="text-center py-6 text-[10px] text-text-muted">
+                    <GitBranch size={16} className="mx-auto mb-2 text-text-muted/40" />
                     Version history will appear here once you edit a workflow.
                   </div>
                 </div>
@@ -991,8 +991,8 @@ export default function WorkflowsPage() {
                 {workflowsLoading ? (
                   <>{Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} />)}</>
                 ) : workflows.length === 0 ? (
-                  <div className="card text-center py-8">
-                    <p className="text-xs text-muted">No workflows yet</p>
+                  <div className="glass rounded-xl p-4 text-center py-8">
+                    <p className="text-xs text-text-muted">No workflows yet</p>
                   </div>
                 ) : (
                   workflows.map((w) => (
@@ -1003,7 +1003,7 @@ export default function WorkflowsPage() {
                         </div>
                         <div>
                           <p className="text-xs font-medium">{w.workflow?.name || w.client_name}</p>
-                          <p className="text-[10px] text-muted">{w.workflow?.steps?.length || 0} steps · {formatRelativeTime(w.created_at)}</p>
+                          <p className="text-[10px] text-text-muted">{w.workflow?.steps?.length || 0} steps · {formatRelativeTime(w.created_at)}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -1021,14 +1021,14 @@ export default function WorkflowsPage() {
             )}{/* Create Workflow Modal */}<Modal isOpen={showCreate} onClose={() => setShowCreate(false)} title="Design Workflow" size="lg">
               <div className="space-y-3">
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Client (optional)</label>
+                  <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider">Client (optional)</label>
                   <select value={selectedClient} onChange={(e) => setSelectedClient(e.target.value)} className="input w-full text-xs">
                     <option value="">General workflow</option>
                     {clients.map((c) => <option key={c.id} value={c.id}>{c.business_name}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">What do you want to automate?</label>
+                  <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider">What do you want to automate?</label>
                   <textarea
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
@@ -1089,20 +1089,20 @@ function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => v
 
   return (
     <div className="fixed inset-0 z-50 bg-[rgba(0,0,0,0.40)] backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
-      <div className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 space-y-4" onClick={e => e.stopPropagation()}>
+      <div className="glass rounded-xl p-4 max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 space-y-4" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles size={16} className="text-brand-accent" />
             <h3 className="text-sm font-semibold">AI Workflow Generator</h3>
             <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent">Sonnet</span>
           </div>
-          <button onClick={onClose} className="text-muted hover:text-foreground text-lg">×</button>
+          <button onClick={onClose} className="text-text-muted hover:text-text-primary text-lg">×</button>
         </div>
 
         {!result ? (
           <>
             <div>
-              <label className="text-[10px] text-muted uppercase tracking-wider">Goal</label>
+              <label className="text-[10px] text-text-muted uppercase tracking-wider">Goal</label>
               <textarea
                 className="input w-full text-xs mt-1"
                 rows={3}
@@ -1113,11 +1113,11 @@ function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => v
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[10px] text-muted uppercase tracking-wider">Audience</label>
+                <label className="text-[10px] text-text-muted uppercase tracking-wider">Audience</label>
                 <input className="input w-full text-xs mt-1" placeholder="e.g., SaaS founders" value={audience} onChange={e => setAudience(e.target.value)} />
               </div>
               <div>
-                <label className="text-[10px] text-muted uppercase tracking-wider">Tone</label>
+                <label className="text-[10px] text-text-muted uppercase tracking-wider">Tone</label>
                 <select className="input w-full text-xs mt-1" value={tone} onChange={e => setTone(e.target.value)}>
                   <option value="professional">Professional</option>
                   <option value="friendly">Friendly</option>
@@ -1128,14 +1128,14 @@ function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => v
               </div>
             </div>
             <div>
-              <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Channels</label>
+              <label className="text-[10px] text-text-muted uppercase tracking-wider mb-1 block">Channels</label>
               <div className="flex gap-2 flex-wrap">
                 {["email","sms","dm","call","webhook","ai_content"].map(ch => (
                   <button key={ch} type="button" onClick={() => toggleChannel(ch)}
                     className={`text-[10px] px-2.5 py-1 rounded-full border capitalize ${
                       channels.includes(ch)
                         ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent"
-                        : "bg-surface-light border-border text-muted"
+                        : "bg-surface-light border-border-subtle text-text-muted"
                     }`}>
                     {ch.replace("_", " ")}
                   </button>
@@ -1143,7 +1143,7 @@ function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => v
               </div>
             </div>
             <div>
-              <label className="text-[10px] text-muted uppercase tracking-wider">Duration</label>
+              <label className="text-[10px] text-text-muted uppercase tracking-wider">Duration</label>
               <select className="input w-full text-xs mt-1" value={duration} onChange={e => setDuration(e.target.value)}>
                 <option>3 days</option>
                 <option>1 week</option>
@@ -1169,8 +1169,8 @@ function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => v
                   {result.confidence}% confidence
                 </span>
               </div>
-              <p className="text-[11px] text-muted">{result.description}</p>
-              <div className="flex items-center gap-3 mt-2 text-[10px] text-muted">
+              <p className="text-[11px] text-text-muted">{result.description}</p>
+              <div className="flex items-center gap-3 mt-2 text-[10px] text-text-muted">
                 <span>📅 {result.estimated_duration_days} days</span>
                 <span>🔗 {result.nodes.length} nodes</span>
                 <span>🎯 {result.objective}</span>
@@ -1178,7 +1178,7 @@ function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => v
             </div>
             <div className="space-y-1.5 max-h-[300px] overflow-y-auto">
               {result.nodes.map((node, i) => (
-                <div key={node.id} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light/50 border border-border">
+                <div key={node.id} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light/50 border border-border-subtle">
                   <span className="w-6 h-6 rounded-md bg-[rgba(59,130,246,0.08)] text-brand-accent text-[9px] font-bold flex items-center justify-center">{i + 1}</span>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -1187,18 +1187,18 @@ function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => v
                         node.type === "action" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
                         node.type === "condition" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
                         node.type === "wait" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
-                        "bg-surface-light text-muted"
+                        "bg-surface-light text-text-muted"
                       }`}>{node.type}</span>
                       <span className="text-[10px] font-medium">{node.label}</span>
                     </div>
-                    <p className="text-[9px] text-muted mt-0.5">{node.subtype}</p>
+                    <p className="text-[9px] text-text-muted mt-0.5">{node.subtype}</p>
                   </div>
                 </div>
               ))}
             </div>
             <div className="flex flex-wrap gap-1">
               {result.tags.map(tag => (
-                <span key={tag} className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light border border-border text-muted">#{tag}</span>
+                <span key={tag} className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light border border-border-subtle text-text-muted">#{tag}</span>
               ))}
             </div>
             <div className="flex justify-end gap-2 pt-2">

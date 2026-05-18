@@ -288,7 +288,7 @@ export default function ClientOutreachPage() {
 
                 {/* Config sidebar */}
                 <div className="space-y-3">
-                  <div className="card">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-[10px] text-text-muted uppercase tracking-wider font-semibold mb-2">Campaign Settings</h3>
                     <div className="space-y-3">
                       <div>
@@ -308,7 +308,7 @@ export default function ClientOutreachPage() {
                       </div>
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" checked={useAI} onChange={(e) => setUseAI(e.target.checked)}
-                          className="w-3.5 h-3.5 rounded border-border" />
+                          className="w-3.5 h-3.5 rounded border-border-subtle" />
                         <span className="text-[10px] flex items-center gap-1">
                           <Sparkles size={10} className="text-blue-400" /> AI Personalization
                         </span>
@@ -317,7 +317,7 @@ export default function ClientOutreachPage() {
                   </div>
 
                   {/* Template picker */}
-                  <div className="card">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-[10px] text-text-muted uppercase tracking-wider font-semibold mb-2">Quick Templates</h3>
                     <div className="space-y-1.5">
                       {MESSAGE_TEMPLATES[channel].map((tpl, i) => (
@@ -337,7 +337,7 @@ export default function ClientOutreachPage() {
                   </div>
 
                   {channel === "dm" && (
-                    <div className="card bg-blue-500/[0.10] border-blue-500/[0.20]">
+                    <div className="glass rounded-xl p-4 bg-blue-500/[0.10] border-blue-500/[0.20]">
                       <p className="text-[10px] text-blue-400 flex items-center gap-1 mb-1">
                         <Globe size={10} /> Chrome Extension Required
                       </p>
@@ -348,7 +348,7 @@ export default function ClientOutreachPage() {
                   )}
 
                   {channel === "call" && (
-                    <div className="card bg-blue-500/[0.10] border-blue-500/[0.20]">
+                    <div className="glass rounded-xl p-4 bg-blue-500/[0.10] border-blue-500/[0.20]">
                       <p className="text-[10px] text-blue-400 flex items-center gap-1 mb-1">
                         <Bot size={10} /> AI-Powered Calls
                       </p>
@@ -360,7 +360,7 @@ export default function ClientOutreachPage() {
                 </div>
               </div>
             )}{/* History Tab */}{tab === "history" && (
-              <div className="card p-0 overflow-hidden">
+              <div className="glass rounded-xl p-0 overflow-hidden">
                 {loadingHistory ? (
                   <div className="text-center py-12 text-text-muted">
                     <Loader size={16} className="animate-spin mx-auto mb-2" /> Loading history...
@@ -407,7 +407,7 @@ export default function ClientOutreachPage() {
             )}{/* Templates Tab */}{tab === "templates" && (
               <div className="grid grid-cols-2 gap-4">
                 {Object.entries(MESSAGE_TEMPLATES).map(([ch, templates]) => (
-                  <div key={ch} className="card">
+                  <div key={ch} className="glass rounded-xl p-4">
                     <h3 className="text-xs font-semibold capitalize flex items-center gap-2 mb-3 text-text-primary">
                       {ch === "email" && <Mail size={13} className="text-blue-400" />}
                       {ch === "dm" && <MessageSquare size={13} className="text-blue-400" />}

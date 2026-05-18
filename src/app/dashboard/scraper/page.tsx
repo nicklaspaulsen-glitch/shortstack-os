@@ -612,7 +612,7 @@ export default function ScraperPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-4"><ErrorBoundary section="Lead Finder">
+    <MotionPage className="space-y-4"><ErrorBoundary section="Lead Finder">
             {/* Hero Header */}
             {/* -- Lead Finder command strip -- */}
             <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
@@ -630,7 +630,7 @@ export default function ScraperPage() {
                     className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium border transition-all ${
                       autoRunEnabled
                         ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
-                        : "bg-surface-light border-border text-muted hover:text-foreground"
+                        : "bg-surface-light border-border-subtle text-text-muted hover:text-text-primary"
                     }`}
                   >
                     <Clock size={14} />
@@ -640,21 +640,21 @@ export default function ScraperPage() {
 
                   {/* Auto-run config dropdown */}
                   {showAutoRunConfig && (
-                    <div className="absolute right-0 top-full mt-2 w-72 bg-surface border border-border rounded-xl shadow-2xl p-4 z-50">
+                    <div className="absolute right-0 top-full mt-2 w-72 bg-surface border border-border-subtle rounded-xl shadow-2xl p-4 z-50">
                       <div className="flex items-center justify-between mb-3">
                         <h4 className="text-xs font-semibold flex items-center gap-2">
                           <Clock size={12} className="text-brand-accent" /> Auto-Run Daily
                         </h4>
-                        <button onClick={() => setShowAutoRunConfig(false)} className="text-muted hover:text-foreground">
+                        <button onClick={() => setShowAutoRunConfig(false)} className="text-text-muted hover:text-text-primary">
                           <X size={14} />
                         </button>
                       </div>
-                      <p className="text-[10px] text-muted mb-3">
+                      <p className="text-[10px] text-text-muted mb-3">
                         Automatically run the lead finder every day at a set time using your current search configuration.
                       </p>
                       <div className="space-y-3">
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Run Time</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Run Time</label>
                           <input
                             type="time"
                             value={autoRunTime}
@@ -663,7 +663,7 @@ export default function ScraperPage() {
                           />
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Run on Days</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Run on Days</label>
                           <div className="flex gap-1">
                             {[
                               { id: "mon", label: "M" },
@@ -682,7 +682,7 @@ export default function ScraperPage() {
                                 className={`w-8 h-8 rounded-lg text-[10px] font-bold transition-all ${
                                   autoRunDays.includes(day.id)
                                     ? "bg-brand-accent text-white"
-                                    : "bg-surface-light text-muted border border-border hover:border-[rgba(59,130,246,0.25)]"
+                                    : "bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
                                 }`}
                               >
                                 {day.label}
@@ -690,23 +690,23 @@ export default function ScraperPage() {
                             ))}
                           </div>
                           <div className="flex gap-2 mt-1.5">
-                            <button onClick={() => setAutoRunDays(["mon","tue","wed","thu","fri"])} className="text-[8px] text-muted hover:text-brand-accent">Weekdays</button>
-                            <button onClick={() => setAutoRunDays(["mon","tue","wed","thu","fri","sat","sun"])} className="text-[8px] text-muted hover:text-brand-accent">Every day</button>
-                            <button onClick={() => setAutoRunDays(["mon","wed","fri"])} className="text-[8px] text-muted hover:text-brand-accent">MWF</button>
+                            <button onClick={() => setAutoRunDays(["mon","tue","wed","thu","fri"])} className="text-[8px] text-text-muted hover:text-brand-accent">Weekdays</button>
+                            <button onClick={() => setAutoRunDays(["mon","tue","wed","thu","fri","sat","sun"])} className="text-[8px] text-text-muted hover:text-brand-accent">Every day</button>
+                            <button onClick={() => setAutoRunDays(["mon","wed","fri"])} className="text-[8px] text-text-muted hover:text-brand-accent">MWF</button>
                           </div>
                         </div>
-                        <div className="p-2.5 bg-surface-light rounded-lg border border-border">
-                          <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Current Config</p>
+                        <div className="p-2.5 bg-surface-light rounded-lg border border-border-subtle">
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1.5">Current Config</p>
                           <div className="flex flex-wrap gap-1">
                             {selectedPlatforms.map(p => <span key={p} className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{p.replace("_", " ")}</span>)}
                             {niches.slice(0, 3).map(n => <span key={n} className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{n}</span>)}
-                            {niches.length > 3 && <span className="text-[8px] text-muted">+{niches.length - 3} more</span>}
+                            {niches.length > 3 && <span className="text-[8px] text-text-muted">+{niches.length - 3} more</span>}
                             {locations.slice(0, 2).map(l => <span key={l} className="text-[8px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded">{l}</span>)}
-                            {locations.length > 2 && <span className="text-[8px] text-muted">+{locations.length - 2} more</span>}
+                            {locations.length > 2 && <span className="text-[8px] text-text-muted">+{locations.length - 2} more</span>}
                           </div>
                         </div>
                         {!autoRunEnabled && autoRunDays.length > 0 && (
-                          <p className="text-[9px] text-muted text-center">
+                          <p className="text-[9px] text-text-muted text-center">
                             Will run {autoRunDays.length === 7 ? "every day" : autoRunDays.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(", ")} at {autoRunTime}
                           </p>
                         )}
@@ -742,10 +742,10 @@ export default function ScraperPage() {
             </div>
 
             {/* Tabs (sticky) */}
-            <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 border-b border-border pb-0">
+            <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 border-b border-border-subtle pb-0">
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
-                  className={`flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-t-lg transition-all ${tab === t.id ? "bg-surface-light border border-b-0 border-border text-brand-accent" : "text-muted hover:text-foreground"}`}>
+                  className={`flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-t-lg transition-all ${tab === t.id ? "bg-surface-light border border-b-0 border-border-subtle text-brand-accent" : "text-text-muted hover:text-text-primary"}`}>
                   {t.icon} {t.label}
                 </button>
               ))}
@@ -755,7 +755,7 @@ export default function ScraperPage() {
             {tab === "search" && (
               <div className="glass-indigo rounded-xl px-4 py-3 flex items-center justify-between">
                 <span className="text-sm">Estimated output: <span className="text-brand-accent font-bold">{estimatedLeads.toLocaleString()} leads</span></span>
-                <span className="text-xs text-muted">{selectedPlatforms.length} platform(s) x {niches.length} niche(s) x {locations.length} location(s) x {maxResults} per search</span>
+                <span className="text-xs text-text-muted">{selectedPlatforms.length} platform(s) x {niches.length} niche(s) x {locations.length} location(s) x {maxResults} per search</span>
               </div>
             )}
 
@@ -777,7 +777,7 @@ export default function ScraperPage() {
                         className={`px-3 py-1 rounded-lg text-xs font-medium border transition-all ${
                           targetMode === mode.id
                             ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent"
-                            : "border-border text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.25)]"
+                            : "border-border-subtle text-text-muted hover:text-text-primary hover:border-[rgba(59,130,246,0.25)]"
                         }`}
                       >
                         {mode.label}
@@ -785,7 +785,7 @@ export default function ScraperPage() {
                     ))}
                   </div>
                 </div>
-                <p className="text-[10px] text-muted ml-6">
+                <p className="text-[10px] text-text-muted ml-6">
                   {targetMode === "b2b" && "Target businesses that sell to other businesses"}
                   {targetMode === "b2c" && "Target businesses that sell to consumers"}
                   {targetMode === "both" && "All business types"}
@@ -820,18 +820,18 @@ export default function ScraperPage() {
                   <div className="glass rounded-xl p-4">
                     <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Hash size={14} className="text-brand-accent" /> Results per search</h3>
                     <input type="range" min="5" max="500" value={maxResults} onChange={e => setMaxResults(parseInt(e.target.value))} className="w-full accent-[#2563EB]" />
-                    <div className="flex justify-between text-xs text-muted mt-1"><span>5</span><span className="text-brand-accent font-bold">{maxResults}</span><span>500</span></div>
+                    <div className="flex justify-between text-xs text-text-muted mt-1"><span>5</span><span className="text-brand-accent font-bold">{maxResults}</span><span>500</span></div>
                   </div>
                   {/* Advanced Filters */}
                   <div className="glass rounded-xl p-4">
                     <button onClick={() => setShowFilters(!showFilters)} className="w-full flex items-center justify-between">
                       <h3 className="text-xs font-medium flex items-center gap-2"><Filter size={13} className="text-brand-accent" /> Filters</h3>
-                      <span className="text-[10px] text-muted">{showFilters ? "Hide" : "Show"}</span>
+                      <span className="text-[10px] text-text-muted">{showFilters ? "Hide" : "Show"}</span>
                     </button>
                     {showFilters && (
-                      <div className="space-y-3 mt-3 pt-3 border-t border-border">
+                      <div className="space-y-3 mt-3 pt-3 border-t border-border-subtle">
                         <div>
-                          <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Quick Presets</p>
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1.5">Quick Presets</p>
                           <div className="flex flex-wrap gap-1">
                             <button onClick={() => setFilters({ ...filters, max_reviews: 10, max_rating: 3.5, low_reviews_only: true, bad_ratings_only: true, require_local: true })} className="text-[9px] bg-danger/10 text-danger px-2 py-1 rounded-lg border border-danger/20 hover:bg-danger/20 transition-all">Low review + bad rating</button>
                             <button onClick={() => setFilters({ ...filters, max_reviews: 20, no_website: true, require_local: true })} className="text-[9px] bg-warning/10 text-warning px-2 py-1 rounded-lg border border-warning/20 hover:bg-warning/20 transition-all">No website + few reviews</button>
@@ -856,7 +856,7 @@ export default function ScraperPage() {
                         </div>
                         {/* Presence Filters */}
                         <div>
-                          <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Presence Filters</p>
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1.5">Presence Filters</p>
                           <div className="space-y-2">
                             {[
                               { key: "has_google_business", label: "Has Google Business Profile" },
@@ -876,27 +876,27 @@ export default function ScraperPage() {
                         </div>
                         {/* Annual Revenue */}
                         <div>
-                          <p className="text-[9px] text-muted uppercase tracking-wider mb-1 flex items-center gap-1"><DollarSign size={10} className="text-brand-accent" /> Annual Revenue</p>
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1 flex items-center gap-1"><DollarSign size={10} className="text-brand-accent" /> Annual Revenue</p>
                           <div className="flex flex-wrap gap-1">
                             {REVENUE_RANGES.map(r => (
                               <button key={r} onClick={() => setFilters({ ...filters, revenue_range: filters.revenue_range === r ? "" : r })}
-                                className={`text-[9px] px-2 py-1 rounded border transition-all ${filters.revenue_range === r ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"}`}>{r}</button>
+                                className={`text-[9px] px-2 py-1 rounded border transition-all ${filters.revenue_range === r ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border-subtle text-text-muted hover:text-text-primary"}`}>{r}</button>
                             ))}
                           </div>
                         </div>
                         {/* Company Size Filter */}
                         <div>
-                          <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Company Size</p>
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">Company Size</p>
                           <div className="flex flex-wrap gap-1">
                             {COMPANY_SIZES.map(s => (
                               <button key={s} onClick={() => setFilters({ ...filters, company_size: filters.company_size === s ? "" : s })}
-                                className={`text-[9px] px-2 py-1 rounded border transition-all ${filters.company_size === s ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"}`}>{s}</button>
+                                className={`text-[9px] px-2 py-1 rounded border transition-all ${filters.company_size === s ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border-subtle text-text-muted hover:text-text-primary"}`}>{s}</button>
                             ))}
                           </div>
                         </div>
                         {/* Tech Stack Filter */}
                         <div>
-                          <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Tech Stack</p>
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">Tech Stack</p>
                           <select value={filters.tech_stack} onChange={e => setFilters({ ...filters, tech_stack: e.target.value })} className="input text-xs py-1.5 w-full">
                             <option value="">Any</option>
                             {TECH_STACKS.map(t => <option key={t} value={t}>{t}</option>)}
@@ -904,10 +904,10 @@ export default function ScraperPage() {
                         </div>
                         {/* Google Reviews - Stars Visual Selector */}
                         <div>
-                          <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5 flex items-center gap-1"><Star size={10} className="text-warning" /> Rating Range</p>
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1.5 flex items-center gap-1"><Star size={10} className="text-warning" /> Rating Range</p>
                           <div className="flex items-center gap-3 mb-1.5">
                             <div className="flex-1">
-                              <p className="text-[8px] text-muted mb-0.5">Min: {filters.min_rating}</p>
+                              <p className="text-[8px] text-text-muted mb-0.5">Min: {filters.min_rating}</p>
                               <div className="flex gap-0.5">
                                 {[1, 2, 3, 4, 5].map(s => (
                                   <button key={`min-${s}`} onClick={() => setFilters({ ...filters, min_rating: filters.min_rating === s ? 0 : s })}
@@ -918,7 +918,7 @@ export default function ScraperPage() {
                               </div>
                             </div>
                             <div className="flex-1">
-                              <p className="text-[8px] text-muted mb-0.5">Max: {filters.max_rating}</p>
+                              <p className="text-[8px] text-text-muted mb-0.5">Max: {filters.max_rating}</p>
                               <div className="flex gap-0.5">
                                 {[1, 2, 3, 4, 5].map(s => (
                                   <button key={`max-${s}`} onClick={() => setFilters({ ...filters, max_rating: s })}
@@ -943,7 +943,7 @@ export default function ScraperPage() {
                         {/* Review Count Range */}
                         <div>
                           <div className="flex items-center justify-between">
-                            <span className="text-[10px] text-muted">Reviews: {filters.min_reviews} - {filters.max_reviews}</span>
+                            <span className="text-[10px] text-text-muted">Reviews: {filters.min_reviews} - {filters.max_reviews}</span>
                             <label className="flex items-center gap-1 cursor-pointer">
                               <input type="checkbox" checked={filters.low_reviews_only} onChange={e => setFilters({ ...filters, low_reviews_only: e.target.checked, max_reviews: e.target.checked ? 10 : 500 })} className="accent-warning w-3 h-3" />
                               <span className="text-[9px] text-warning">Low reviews only</span>
@@ -956,7 +956,7 @@ export default function ScraperPage() {
                         </div>
                         {/* Enhanced Review Toggles */}
                         <div>
-                          <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Review Insights</p>
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1.5">Review Insights</p>
                           <div className="space-y-2">
                             <label className="flex items-center gap-2 cursor-pointer">
                               <input type="checkbox" checked={filters.has_negative_reviews} onChange={e => setFilters({ ...filters, has_negative_reviews: e.target.checked })} className="accent-danger w-3.5 h-3.5" />
@@ -975,18 +975,18 @@ export default function ScraperPage() {
                   <div className="glass rounded-xl p-4">
                     <button onClick={() => setShowScoringConfig(!showScoringConfig)} className="w-full flex items-center justify-between">
                       <h3 className="text-xs font-medium flex items-center gap-2"><Target size={13} className="text-brand-accent" /> Lead Scoring Weights</h3>
-                      <span className="text-[10px] text-muted">{showScoringConfig ? "Hide" : "Configure"}</span>
+                      <span className="text-[10px] text-text-muted">{showScoringConfig ? "Hide" : "Configure"}</span>
                     </button>
                     {showScoringConfig && (
-                      <div className="space-y-2 mt-3 pt-3 border-t border-border">
+                      <div className="space-y-2 mt-3 pt-3 border-t border-border-subtle">
                         {Object.entries(scoringWeights).map(([key, val]) => (
                           <div key={key} className="flex items-center gap-2">
-                            <span className="text-[10px] text-muted w-24 capitalize">{key.replace(/_/g, " ")}</span>
+                            <span className="text-[10px] text-text-muted w-24 capitalize">{key.replace(/_/g, " ")}</span>
                             <input type="range" min="0" max="30" value={val} onChange={e => setScoringWeights({ ...scoringWeights, [key]: parseInt(e.target.value) })} className="flex-1 accent-[#2563EB]" />
                             <span className="text-[10px] text-brand-accent font-mono w-6 text-right">{val}</span>
                           </div>
                         ))}
-                        <p className="text-[9px] text-muted text-right">Total: {Object.values(scoringWeights).reduce((a, b) => a + b, 0)}/100</p>
+                        <p className="text-[9px] text-text-muted text-right">Total: {Object.values(scoringWeights).reduce((a, b) => a + b, 0)}/100</p>
                       </div>
                     )}
                   </div>
@@ -994,10 +994,10 @@ export default function ScraperPage() {
                   <div className="glass rounded-xl p-4">
                     <button onClick={() => setFilters({ ...filters, find_decision_makers: !filters.find_decision_makers })} className="w-full flex items-center justify-between">
                       <h3 className="text-xs font-medium flex items-center gap-2"><UserPlus size={13} className="text-brand-accent" /> Decision Maker Targeting</h3>
-                      <span className="text-[10px] text-muted">{filters.find_decision_makers ? "On" : "Off"}</span>
+                      <span className="text-[10px] text-text-muted">{filters.find_decision_makers ? "On" : "Off"}</span>
                     </button>
                     {filters.find_decision_makers && (
-                      <div className="space-y-3 mt-3 pt-3 border-t border-border">
+                      <div className="space-y-3 mt-3 pt-3 border-t border-border-subtle">
                         <div>
                           <label className="flex items-center gap-2 cursor-pointer mb-2">
                             <input type="checkbox" checked={filters.find_decision_makers} onChange={e => setFilters({ ...filters, find_decision_makers: e.target.checked })} className="accent-[#2563EB] w-3.5 h-3.5" />
@@ -1005,11 +1005,11 @@ export default function ScraperPage() {
                           </label>
                         </div>
                         <div>
-                          <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Job Titles</p>
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1.5">Job Titles</p>
                           <div className="flex flex-wrap gap-1">
                             {DECISION_MAKER_TITLES.map(title => (
                               <button key={title} onClick={() => toggleDecisionMakerTitle(title)}
-                                className={`text-[9px] px-2 py-1 rounded border transition-all ${decisionMakerTitles.includes(title) ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"}`}>
+                                className={`text-[9px] px-2 py-1 rounded border transition-all ${decisionMakerTitles.includes(title) ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border-subtle text-text-muted hover:text-text-primary"}`}>
                                 <Briefcase size={8} className="inline mr-1" />{title}
                               </button>
                             ))}
@@ -1025,12 +1025,12 @@ export default function ScraperPage() {
                   <div className="glass-indigo rounded-xl p-4">
                     <button onClick={() => setAiMatchEnabled(!aiMatchEnabled)} className="w-full flex items-center justify-between">
                       <h3 className="text-xs font-medium flex items-center gap-2"><FlaskConical size={13} className="text-brand-accent" /> Smart AI Match</h3>
-                      <span className="text-[10px] text-muted">{aiMatchEnabled ? "On" : "Off"}</span>
+                      <span className="text-[10px] text-text-muted">{aiMatchEnabled ? "On" : "Off"}</span>
                     </button>
                     {aiMatchEnabled && (
-                      <div className="space-y-3 mt-3 pt-3 border-t border-border">
+                      <div className="space-y-3 mt-3 pt-3 border-t border-border-subtle">
                         <div>
-                          <p className="text-[9px] text-muted mb-1.5">Describe what kind of businesses you are looking for. AI will score leads based on this prompt.</p>
+                          <p className="text-[9px] text-text-muted mb-1.5">Describe what kind of businesses you are looking for. AI will score leads based on this prompt.</p>
                           <textarea
                             value={aiMatchPrompt}
                             onChange={e => setAiMatchPrompt(e.target.value)}
@@ -1046,7 +1046,7 @@ export default function ScraperPage() {
                         {aiMatchPrompt && (
                           <div className="p-2 bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.1)] rounded-lg">
                             <p className="text-[8px] text-brand-accent uppercase tracking-wider mb-0.5">AI Prompt Active</p>
-                            <p className="text-[9px] text-muted truncate">{aiMatchPrompt}</p>
+                            <p className="text-[9px] text-text-muted truncate">{aiMatchPrompt}</p>
                           </div>
                         )}
                       </div>
@@ -1058,7 +1058,7 @@ export default function ScraperPage() {
                 <div className="space-y-4">
                   <div className="glass rounded-xl p-4">
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-sm font-medium flex items-center gap-2"><Zap size={14} className="text-brand-accent" /> Niches / Industries <span className="text-[9px] text-muted font-normal">({ALL_NICHES.length} total)</span></h3>
+                      <h3 className="text-sm font-medium flex items-center gap-2"><Zap size={14} className="text-brand-accent" /> Niches / Industries <span className="text-[9px] text-text-muted font-normal">({ALL_NICHES.length} total)</span></h3>
                       <button onClick={() => setBatchMode(!batchMode)} className="text-[9px] text-brand-accent hover:underline">{batchMode ? "Single mode" : "Batch import"}</button>
                     </div>
                     {batchMode ? (
@@ -1072,7 +1072,7 @@ export default function ScraperPage() {
                         <div className="flex flex-wrap gap-1.5 mb-3">
                           {niches.map(n => (
                             <span key={n} className="bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] text-brand-accent text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                              {n}<button onClick={() => setNiches(niches.filter(x => x !== n))} className="hover:text-foreground"><X size={10} /></button>
+                              {n}<button onClick={() => setNiches(niches.filter(x => x !== n))} className="hover:text-text-primary"><X size={10} /></button>
                             </span>
                           ))}
                         </div>
@@ -1083,7 +1083,7 @@ export default function ScraperPage() {
                         </div>
                         {/* Search filter for niches */}
                         <div className="relative mb-3">
-                          <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
+                          <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                           <input
                             value={nicheSearch}
                             onChange={e => setNicheSearch(e.target.value)}
@@ -1091,7 +1091,7 @@ export default function ScraperPage() {
                             className="input w-full text-xs py-1.5 pl-7"
                           />
                           {nicheSearch && (
-                            <button onClick={() => setNicheSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-foreground"><X size={10} /></button>
+                            <button onClick={() => setNicheSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary"><X size={10} /></button>
                           )}
                         </div>
                         {/* Categorized niche list */}
@@ -1100,13 +1100,13 @@ export default function ScraperPage() {
                             const isExpanded = expandedCategories.has(category) || nicheSearch.trim().length > 0;
                             const selectedInCategory = items.filter(n => niches.includes(n)).length;
                             return (
-                              <div key={category} className="border border-border rounded-lg overflow-hidden">
+                              <div key={category} className="border border-border-subtle rounded-lg overflow-hidden">
                                 <button
                                   onClick={() => toggleCategory(category)}
                                   className="w-full flex items-center justify-between px-2.5 py-2 bg-surface-light/50 hover:bg-surface-light transition-colors"
                                 >
                                   <div className="flex items-center gap-2">
-                                    {isExpanded ? <ChevronDown size={12} className="text-brand-accent" /> : <ChevronRight size={12} className="text-muted" />}
+                                    {isExpanded ? <ChevronDown size={12} className="text-brand-accent" /> : <ChevronRight size={12} className="text-text-muted" />}
                                     <Building size={11} className="text-brand-accent" />
                                     <span className="text-[10px] font-medium">{category}</span>
                                   </div>
@@ -1114,13 +1114,13 @@ export default function ScraperPage() {
                                     {selectedInCategory > 0 && (
                                       <span className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded-full font-medium">{selectedInCategory} selected</span>
                                     )}
-                                    <span className="text-[8px] text-muted">{items.length}</span>
+                                    <span className="text-[8px] text-text-muted">{items.length}</span>
                                   </div>
                                 </button>
                                 {isExpanded && (
-                                  <div className="flex flex-wrap gap-1 p-2 border-t border-border">
+                                  <div className="flex flex-wrap gap-1 p-2 border-t border-border-subtle">
                                     {items.filter(n => !niches.includes(n)).map(n => (
-                                      <button key={n} onClick={() => addNiche(n)} className="text-[10px] bg-surface-light px-2 py-1 rounded text-muted hover:text-foreground hover:bg-border transition-colors">{n}</button>
+                                      <button key={n} onClick={() => addNiche(n)} className="text-[10px] bg-surface-light px-2 py-1 rounded text-text-muted hover:text-text-primary hover:bg-border-subtle transition-colors">{n}</button>
                                     ))}
                                     {items.filter(n => !niches.includes(n)).length === 0 && (
                                       <p className="text-[9px] text-[rgba(59,130,246,0.6)] italic px-1">All niches in this category are selected</p>
@@ -1131,7 +1131,7 @@ export default function ScraperPage() {
                             );
                           })}
                           {Object.keys(filteredNicheCategories).length === 0 && nicheSearch && (
-                            <p className="text-[10px] text-muted text-center py-4">No niches match &quot;{nicheSearch}&quot;</p>
+                            <p className="text-[10px] text-text-muted text-center py-4">No niches match &quot;{nicheSearch}&quot;</p>
                           )}
                         </div>
                       </>
@@ -1166,7 +1166,7 @@ export default function ScraperPage() {
                   <div className="flex flex-wrap gap-1.5 mb-3">
                     {locations.map(l => (
                       <span key={l} className="bg-success/10 border border-success/20 text-success text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                        {l}<button onClick={() => setLocations(locations.filter(x => x !== l))} className="hover:text-foreground"><X size={10} /></button>
+                        {l}<button onClick={() => setLocations(locations.filter(x => x !== l))} className="hover:text-text-primary"><X size={10} /></button>
                       </span>
                     ))}
                   </div>
@@ -1177,7 +1177,7 @@ export default function ScraperPage() {
                   </div>
                   {/* Search cities */}
                   <div className="relative mb-3">
-                    <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
+                    <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                     <input
                       value={locationSearch}
                       onChange={e => setLocationSearch(e.target.value)}
@@ -1185,12 +1185,12 @@ export default function ScraperPage() {
                       className="input w-full text-xs py-1.5 pl-7"
                     />
                     {locationSearch && (
-                      <button onClick={() => setLocationSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-foreground"><X size={10} /></button>
+                      <button onClick={() => setLocationSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary"><X size={10} /></button>
                     )}
                   </div>
                   {/* Country selector */}
                   <div className="mb-3">
-                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Countries</p>
+                    <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1.5">Countries</p>
                     <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
                       {COUNTRIES.map(c => (
                         <button
@@ -1199,7 +1199,7 @@ export default function ScraperPage() {
                           className={`text-[10px] px-2 py-1 rounded border transition-all flex items-center gap-1 ${
                             selectedCountries.includes(c.code)
                               ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent"
-                              : "border-border text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.25)]"
+                              : "border-border-subtle text-text-muted hover:text-text-primary hover:border-[rgba(59,130,246,0.25)]"
                           }`}
                         >
                           <span>{c.flag}</span> {c.name}
@@ -1217,10 +1217,10 @@ export default function ScraperPage() {
                       if (cities.length === 0 && locationSearch.trim()) return null;
                       return (
                         <div key={code}>
-                          <p className="text-[9px] text-muted uppercase tracking-wider mb-1">{country?.flag} {country?.name}</p>
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">{country?.flag} {country?.name}</p>
                           <div className="flex flex-wrap gap-1">
                             {cities.map(city => (
-                              <button key={city} onClick={() => addLocation(city)} className="text-[10px] bg-surface-light px-2 py-1 rounded text-muted hover:text-foreground hover:bg-border transition-colors">{city}</button>
+                              <button key={city} onClick={() => addLocation(city)} className="text-[10px] bg-surface-light px-2 py-1 rounded text-text-muted hover:text-text-primary hover:bg-border-subtle transition-colors">{city}</button>
                             ))}
                             {cities.length === 0 && !locationSearch.trim() && (
                               <p className="text-[9px] text-[rgba(59,130,246,0.6)] italic px-1">All cities selected</p>
@@ -1230,7 +1230,7 @@ export default function ScraperPage() {
                       );
                     })}
                     {selectedCountries.length === 0 && (
-                      <p className="text-[10px] text-muted text-center py-4">Select a country to see cities</p>
+                      <p className="text-[10px] text-text-muted text-center py-4">Select a country to see cities</p>
                     )}
                   </div>
                 </div>
@@ -1247,8 +1247,8 @@ export default function ScraperPage() {
                       <Lightbulb size={12} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[11px] font-semibold text-foreground">Tip: Leads found here can be pushed into an Outreach Campaign.</p>
-                      <p className="text-[10px] text-muted">
+                      <p className="text-[11px] font-semibold text-text-primary">Tip: Leads found here can be pushed into an Outreach Campaign.</p>
+                      <p className="text-[10px] text-text-muted">
                         Create your campaign first in Outreach, then come back to find leads for it.
                         {" "}
                         <a href="/dashboard/outreach-hub" className="text-brand-accent hover:underline inline-flex items-center gap-0.5">
@@ -1258,7 +1258,7 @@ export default function ScraperPage() {
                     </div>
                     <button
                       onClick={() => setPushTipDismissed(true)}
-                      className="text-muted hover:text-foreground flex-shrink-0"
+                      className="text-text-muted hover:text-text-primary flex-shrink-0"
                       aria-label="Dismiss tip"
                     >
                       <X size={12} />
@@ -1343,9 +1343,9 @@ export default function ScraperPage() {
                             <div className="flex items-start justify-between mb-2">
                               <div className="flex-1 min-w-0">
                                 <p className="font-medium text-sm truncate">{r.business_name}</p>
-                                <p className="text-[10px] text-muted">{r.industry} - {r.source}</p>
+                                <p className="text-[10px] text-text-muted">{r.industry} - {r.source}</p>
                               </div>
-                              <div className={`text-center ml-2 ${score >= 70 ? "text-success" : score >= 40 ? "text-warning" : "text-muted"}`}>
+                              <div className={`text-center ml-2 ${score >= 70 ? "text-success" : score >= 40 ? "text-warning" : "text-text-muted"}`}>
                                 <p className="text-lg font-bold">{score}</p>
                                 <p className="text-[8px]">{score >= 70 ? "HOT" : score >= 40 ? "WARM" : "COLD"}</p>
                               </div>
@@ -1354,7 +1354,7 @@ export default function ScraperPage() {
                               {r.phone && <p className="flex items-center gap-1.5"><Phone size={10} className="text-brand-accent" /> {r.phone}</p>}
                               {r.email && <p className="flex items-center gap-1.5"><Mail size={10} className="text-brand-accent" /> {r.email}</p>}
                               {r.website && <p className="flex items-center gap-1.5 text-brand-accent"><Globe size={10} /> <a href={r.website} target="_blank" rel="noopener" className="hover:underline truncate">{r.website}</a></p>}
-                              {r.address && <p className="flex items-center gap-1.5"><MapPin size={10} className="text-muted" /> {r.address}</p>}
+                              {r.address && <p className="flex items-center gap-1.5"><MapPin size={10} className="text-text-muted" /> {r.address}</p>}
                               {r.google_rating && <p className="flex items-center gap-1"><Star size={10} className="text-warning fill-warning" /> {r.google_rating} ({r.review_count} reviews)</p>}
                               {r.tech_stack && <p className="flex items-center gap-1.5"><Wifi size={10} className="text-info" /> {r.tech_stack}</p>}
                               {r.decision_maker && <p className="flex items-center gap-1.5"><Users size={10} className="text-brand-accent" /> {r.decision_maker} - {r.decision_maker_title}</p>}
@@ -1375,11 +1375,11 @@ export default function ScraperPage() {
                           { key: "select", label: "", render: (r: ScrapedLead) => { const i = results.indexOf(r); return <input type="checkbox" checked={selectedLeads.has(i)} onChange={() => toggleLeadSelection(i)} className="accent-[#2563EB] w-3.5 h-3.5" />; } },
                           { key: "lead_score", label: "Score", render: (r: ScrapedLead) => {
                             const score = r.lead_score || computeLeadScore(r);
-                            return <span className={`text-sm font-bold ${score >= 70 ? "text-success" : score >= 40 ? "text-warning" : "text-muted"}`}>{score}</span>;
+                            return <span className={`text-sm font-bold ${score >= 70 ? "text-success" : score >= 40 ? "text-warning" : "text-text-muted"}`}>{score}</span>;
                           }},
-                          { key: "business_name", label: "Business", render: (r: ScrapedLead) => <div><p className="font-medium text-sm">{r.business_name}</p><p className="text-[10px] text-muted">{r.industry}</p></div> },
-                          { key: "phone", label: "Phone", render: (r: ScrapedLead) => r.phone ? <a href={`tel:${r.phone}`} className="text-brand-accent text-xs">{r.phone}</a> : <span className="text-muted text-xs">-</span> },
-                          { key: "email", label: "Email", render: (r: ScrapedLead) => r.email ? <span className="text-xs text-brand-accent">{r.email}</span> : <span className="text-muted text-xs">-</span> },
+                          { key: "business_name", label: "Business", render: (r: ScrapedLead) => <div><p className="font-medium text-sm">{r.business_name}</p><p className="text-[10px] text-text-muted">{r.industry}</p></div> },
+                          { key: "phone", label: "Phone", render: (r: ScrapedLead) => r.phone ? <a href={`tel:${r.phone}`} className="text-brand-accent text-xs">{r.phone}</a> : <span className="text-text-muted text-xs">-</span> },
+                          { key: "email", label: "Email", render: (r: ScrapedLead) => r.email ? <span className="text-xs text-brand-accent">{r.email}</span> : <span className="text-text-muted text-xs">-</span> },
                           { key: "source", label: "Source", render: (r: ScrapedLead) => <StatusBadge status={r.source} /> },
                         ]}
                         data={results.slice(9)}
@@ -1389,8 +1389,8 @@ export default function ScraperPage() {
                   </>
                 ) : (
                   <div className="glass rounded-xl text-center py-16">
-                    <Search size={48} className="mx-auto text-muted/30 mb-4" />
-                    <p className="text-muted text-sm">No results yet. Configure and run the scraper.</p>
+                    <Search size={48} className="mx-auto text-text-muted/30 mb-4" />
+                    <p className="text-text-muted text-sm">No results yet. Configure and run the scraper.</p>
                   </div>
                 )}
               </div>
@@ -1401,7 +1401,7 @@ export default function ScraperPage() {
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
                   <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><UserPlus size={14} className="text-brand-accent" /> Lead Enrichment</h3>
-                  <p className="text-xs text-muted mb-4">Select leads from the Results tab, then choose an enrichment type to find additional data.</p>
+                  <p className="text-xs text-text-muted mb-4">Select leads from the Results tab, then choose an enrichment type to find additional data.</p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                     {[
                       { id: "contact" as const, label: "Contact Finder", desc: "Find email, phone, social profiles", icon: <Mail size={18} />, color: "text-brand-accent" },
@@ -1409,10 +1409,10 @@ export default function ScraperPage() {
                       { id: "decision_maker" as const, label: "Decision Maker Finder", desc: "Find owners, CEOs, key contacts", icon: <Users size={18} />, color: "text-brand-accent" },
                     ].map(e => (
                       <button key={e.id} onClick={() => setEnrichmentType(e.id)}
-                        className={`p-4 rounded-xl border text-left transition-all ${enrichmentType === e.id ? "border-brand-accent bg-[rgba(59,130,246,0.08)]" : "border-border hover:border-[rgba(59,130,246,0.25)]"}`}>
+                        className={`p-4 rounded-xl border text-left transition-all ${enrichmentType === e.id ? "border-brand-accent bg-[rgba(59,130,246,0.08)]" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"}`}>
                         <div className={e.color}>{e.icon}</div>
                         <p className="font-medium text-sm mt-2">{e.label}</p>
-                        <p className="text-[10px] text-muted">{e.desc}</p>
+                        <p className="text-[10px] text-text-muted">{e.desc}</p>
                       </button>
                     ))}
                   </div>
@@ -1421,7 +1421,7 @@ export default function ScraperPage() {
                       className="btn-primary flex items-center gap-2 disabled:opacity-50">
                       {enriching ? <><div className="w-3 h-3 border-2 border-black/20 border-t-black rounded-full animate-spin" /> Enriching...</> : <><Zap size={14} /> Enrich {selectedLeads.size} Lead{selectedLeads.size !== 1 ? "s" : ""}</>}
                     </button>
-                    <span className="text-xs text-muted">{selectedLeads.size} of {results.length} leads selected</span>
+                    <span className="text-xs text-text-muted">{selectedLeads.size} of {results.length} leads selected</span>
                   </div>
                 </div>
                 {/* Enrichment stats */}
@@ -1503,7 +1503,7 @@ export default function ScraperPage() {
             {tab === "saved" && (
               <div className="space-y-4">
                 {savedSearches.length === 0 ? (
-                  <div className="glass rounded-xl text-center py-12"><Bookmark size={32} className="mx-auto text-muted/30 mb-3" /><p className="text-muted text-sm">No saved searches yet. Save a search from the Search tab.</p></div>
+                  <div className="glass rounded-xl text-center py-12"><Bookmark size={32} className="mx-auto text-text-muted/30 mb-3" /><p className="text-text-muted text-sm">No saved searches yet. Save a search from the Search tab.</p></div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {savedSearches.map((s, si) => (
@@ -1519,7 +1519,7 @@ export default function ScraperPage() {
                         <div className="flex items-start justify-between mb-2">
                           <div>
                             <p className="font-medium text-sm">{s.name}</p>
-                            <p className="text-[10px] text-muted">{new Date(s.created_at).toLocaleDateString()}</p>
+                            <p className="text-[10px] text-text-muted">{new Date(s.created_at).toLocaleDateString()}</p>
                           </div>
                           <div className="flex gap-1">
                             <button onClick={() => loadSavedSearch(s)} className="btn-primary text-[10px] py-1 px-2"><Play size={10} /> Run</button>
@@ -1531,7 +1531,7 @@ export default function ScraperPage() {
                           {s.niches.map(n => <span key={n} className="text-[8px] bg-info/10 text-info px-1.5 py-0.5 rounded">{n}</span>)}
                           {s.locations.map(l => <span key={l} className="text-[8px] bg-success/10 text-success px-1.5 py-0.5 rounded">{l}</span>)}
                         </div>
-                        <div className="flex items-center gap-3 text-[10px] text-muted">
+                        <div className="flex items-center gap-3 text-[10px] text-text-muted">
                           {s.result_count !== undefined && <span className="flex items-center gap-1"><Database size={10} /> {s.result_count} leads</span>}
                           {s.last_run && <span className="flex items-center gap-1"><Clock size={10} /> Last run: {new Date(s.last_run).toLocaleDateString()}</span>}
                         </div>
@@ -1562,12 +1562,12 @@ export default function ScraperPage() {
                             {h.niches.map(n => <span key={n} className="text-[8px] bg-info/10 text-info px-1.5 py-0.5 rounded">{n}</span>)}
                             {h.locations.map(l => <span key={l} className="text-[8px] bg-success/10 text-success px-1.5 py-0.5 rounded">{l}</span>)}
                           </div>
-                          <span className="text-[10px] text-muted">{new Date(h.timestamp).toLocaleString()}</span>
+                          <span className="text-[10px] text-text-muted">{new Date(h.timestamp).toLocaleString()}</span>
                         </div>
                         <div className="flex items-center gap-4 text-xs">
                           <span className="text-brand-accent font-medium">{h.results_found} found</span>
                           <span className="text-emerald-400">{h.leads_saved} saved</span>
-                          <span className="text-muted">{h.results_found - h.leads_saved} duplicates</span>
+                          <span className="text-text-muted">{h.results_found - h.leads_saved} duplicates</span>
                         </div>
                       </motion.div>
                     ))}
@@ -1591,14 +1591,14 @@ export default function ScraperPage() {
                     className="glass-indigo rounded-xl p-4"
                   >
                     <h4 className="text-xs font-medium mb-3">Create Scheduled Scrape</h4>
-                    <p className="text-[10px] text-muted mb-3">Uses current search config (platforms, niches, locations)</p>
+                    <p className="text-[10px] text-text-muted mb-3">Uses current search config (platforms, niches, locations)</p>
                     <div className="grid grid-cols-2 gap-3 mb-3">
                       <div>
-                        <label className="text-[10px] text-muted">Schedule Name</label>
+                        <label className="text-[10px] text-text-muted">Schedule Name</label>
                         <input value={scheduleForm.name} onChange={e => setScheduleForm({ ...scheduleForm, name: e.target.value })} placeholder="e.g. Weekly Dentist Sweep" className="input text-xs py-1.5 w-full" />
                       </div>
                       <div>
-                        <label className="text-[10px] text-muted">Frequency</label>
+                        <label className="text-[10px] text-text-muted">Frequency</label>
                         <select value={scheduleForm.schedule} onChange={e => setScheduleForm({ ...scheduleForm, schedule: e.target.value })} className="input text-xs py-1.5 w-full">
                           {SCHEDULE_OPTIONS.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
                         </select>
@@ -1616,7 +1616,7 @@ export default function ScraperPage() {
                   </motion.div>
                 )}
                 {scheduledScrapes.length === 0 ? (
-                  <div className="glass rounded-xl text-center py-12"><Calendar size={32} className="mx-auto text-muted/30 mb-3" /><p className="text-muted text-sm">No scheduled scrapes yet.</p></div>
+                  <div className="glass rounded-xl text-center py-12"><Calendar size={32} className="mx-auto text-text-muted/30 mb-3" /><p className="text-text-muted text-sm">No scheduled scrapes yet.</p></div>
                 ) : (
                   <div className="space-y-3">
                     {scheduledScrapes.map((s, sci) => (
@@ -1630,7 +1630,7 @@ export default function ScraperPage() {
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="font-medium text-sm flex items-center gap-2">{s.name}
-                              <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${s.is_active ? "bg-success/10 text-success" : "bg-muted/10 text-muted"}`}>{s.is_active ? "Active" : "Paused"}</span>
+                              <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${s.is_active ? "bg-success/10 text-success" : "bg-muted/10 text-text-muted"}`}>{s.is_active ? "Active" : "Paused"}</span>
                             </p>
                             <div className="flex flex-wrap gap-1 mt-1">
                               {s.platforms.map(p => <span key={p} className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{p}</span>)}
@@ -1638,7 +1638,7 @@ export default function ScraperPage() {
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
-                            <div className="text-right text-[10px] text-muted">
+                            <div className="text-right text-[10px] text-text-muted">
                               <p>Next run: {new Date(s.next_run).toLocaleDateString()}</p>
                               <p>{s.total_runs} runs / {s.total_leads} leads</p>
                             </div>
@@ -1658,19 +1658,19 @@ export default function ScraperPage() {
             {testResults && (
               <div className="space-y-4">
                 <div className="glass-indigo rounded-xl p-4">
-                  <h3 className="section-header flex items-center gap-2"><FlaskConical size={14} className="text-brand-accent" /> 500-Lead Test Results</h3>
+                  <h3 className="flex items-center gap-2"><FlaskConical size={14} className="text-brand-accent" /> 500-Lead Test Results</h3>
                   <div className="grid grid-cols-4 gap-3 mb-4">
-                    <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border"><p className="text-lg font-bold font-mono text-brand-accent">{testResults.totalFound}</p><p className="text-[9px] text-muted uppercase tracking-wider">Found</p></div>
-                    <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border"><p className="text-lg font-bold font-mono text-success">{testResults.totalSaved}</p><p className="text-[9px] text-muted uppercase tracking-wider">Saved</p></div>
-                    <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border"><p className="text-lg font-bold font-mono text-warning">{testResults.totalSkipped}</p><p className="text-[9px] text-muted uppercase tracking-wider">Duplicates</p></div>
-                    <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border"><p className="text-lg font-bold font-mono text-danger">{testResults.errors.length}</p><p className="text-[9px] text-muted uppercase tracking-wider">Errors</p></div>
+                    <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border-subtle"><p className="text-lg font-bold font-mono text-brand-accent">{testResults.totalFound}</p><p className="text-[9px] text-text-muted uppercase tracking-wider">Found</p></div>
+                    <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border-subtle"><p className="text-lg font-bold font-mono text-success">{testResults.totalSaved}</p><p className="text-[9px] text-text-muted uppercase tracking-wider">Saved</p></div>
+                    <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border-subtle"><p className="text-lg font-bold font-mono text-warning">{testResults.totalSkipped}</p><p className="text-[9px] text-text-muted uppercase tracking-wider">Duplicates</p></div>
+                    <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border-subtle"><p className="text-lg font-bold font-mono text-danger">{testResults.errors.length}</p><p className="text-[9px] text-text-muted uppercase tracking-wider">Errors</p></div>
                   </div>
                   <div className="table-container">
                     <table className="table">
                       <thead><tr><th>Niche</th><th>City</th><th>Found</th><th>Saved</th><th>Skipped</th></tr></thead>
                       <tbody>
                         {testResults.breakdown.map((r, i) => (
-                          <tr key={i}><td className="text-xs font-medium capitalize">{r.niche}</td><td className="text-xs text-muted">{r.city}</td><td className="text-xs font-mono">{r.found}</td><td className="text-xs font-mono text-success">{r.saved}</td><td className="text-xs font-mono text-muted">{r.skipped}</td></tr>
+                          <tr key={i}><td className="text-xs font-medium capitalize">{r.niche}</td><td className="text-xs text-text-muted">{r.city}</td><td className="text-xs font-mono">{r.found}</td><td className="text-xs font-mono text-success">{r.saved}</td><td className="text-xs font-mono text-text-muted">{r.skipped}</td></tr>
                         ))}
                       </tbody>
                     </table>
@@ -1702,10 +1702,10 @@ export default function ScraperPage() {
                       </div>
                       <div>
                         <h2 className="text-base font-bold text-[#111827]">Launch Outreach</h2>
-                        <p className="text-[10px] text-muted">Configure outreach settings for your new leads</p>
+                        <p className="text-[10px] text-text-muted">Configure outreach settings for your new leads</p>
                       </div>
                     </div>
-                    <button onClick={() => setShowOutreachModal(false)} className="p-2 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.08)] text-muted hover:text-[#111827] transition-all">
+                    <button onClick={() => setShowOutreachModal(false)} className="p-2 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.08)] text-text-muted hover:text-[#111827] transition-all">
                       <X size={16} />
                     </button>
                   </div>
@@ -1718,7 +1718,7 @@ export default function ScraperPage() {
                         <Phone size={13} className="text-brand-accent" /> Phone Numbers
                       </h3>
                       <div className="p-3 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
-                        <p className="text-[10px] text-muted">No phone numbers configured.</p>
+                        <p className="text-[10px] text-text-muted">No phone numbers configured.</p>
                         <a href="/dashboard/settings" className="text-[10px] text-brand-accent hover:underline">
                           Add numbers in Settings &rarr; Phone &amp; Email
                         </a>
@@ -1731,7 +1731,7 @@ export default function ScraperPage() {
                         <Mail size={13} className="text-brand-accent" /> Email Accounts
                       </h3>
                       <div className="p-3 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
-                        <p className="text-[10px] text-muted">No email accounts configured.</p>
+                        <p className="text-[10px] text-text-muted">No email accounts configured.</p>
                         <a href="/dashboard/settings" className="text-[10px] text-brand-accent hover:underline">
                           Add SMTP in Settings &rarr; SMTP
                         </a>
@@ -1744,7 +1744,7 @@ export default function ScraperPage() {
                         <Users size={13} className="text-brand-accent" /> Social Media Accounts
                       </h3>
                       <div className="p-3 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
-                        <p className="text-[10px] text-muted mb-2">Connect accounts to scrape from your feed:</p>
+                        <p className="text-[10px] text-text-muted mb-2">Connect accounts to scrape from your feed:</p>
                         <InlineSocialConnect
                           platforms={["instagram", "facebook", "linkedin", "tiktok"]}
                           compact
@@ -1760,7 +1760,7 @@ export default function ScraperPage() {
                       </h3>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Daily Email Limit</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Daily Email Limit</label>
                           <input
                             type="number"
                             value={outreachConfig.daily_email_limit}
@@ -1771,7 +1771,7 @@ export default function ScraperPage() {
                           />
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Daily SMS Limit</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Daily SMS Limit</label>
                           <input
                             type="number"
                             value={outreachConfig.daily_sms_limit}
@@ -1782,7 +1782,7 @@ export default function ScraperPage() {
                           />
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Daily DM Limit</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Daily DM Limit</label>
                           <input
                             type="number"
                             value={outreachConfig.daily_dm_limit}
@@ -1793,7 +1793,7 @@ export default function ScraperPage() {
                           />
                         </div>
                         <div>
-                          <label className="text-[10px] text-muted block mb-1">Daily Call Limit</label>
+                          <label className="text-[10px] text-text-muted block mb-1">Daily Call Limit</label>
                           <input
                             type="number"
                             value={outreachConfig.daily_call_limit}
@@ -1807,7 +1807,7 @@ export default function ScraperPage() {
 
                       {/* Start Delay */}
                       <div>
-                        <label className="text-[10px] text-muted block mb-1.5">Start Delay</label>
+                        <label className="text-[10px] text-text-muted block mb-1.5">Start Delay</label>
                         <div className="flex gap-2">
                           {([
                             { id: "immediately" as const, label: "Start immediately" },
@@ -1820,7 +1820,7 @@ export default function ScraperPage() {
                               className={`flex-1 py-2 rounded-lg text-[10px] font-medium border transition-all ${
                                 outreachConfig.start_delay === opt.id
                                   ? "border-brand-accent bg-[rgba(59,130,246,0.10)] text-brand-accent"
-                                  : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] text-muted hover:text-[#111827] hover:border-[rgba(0,0,0,0.16)]"
+                                  : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] text-text-muted hover:text-[#111827] hover:border-[rgba(0,0,0,0.16)]"
                               }`}
                             >
                               {opt.label}
@@ -1835,7 +1835,7 @@ export default function ScraperPage() {
                   <div className="flex items-center justify-between px-6 py-4 border-t border-[rgba(0,0,0,0.08)] shrink-0">
                     <button
                       onClick={() => setShowOutreachModal(false)}
-                      className="text-xs text-muted hover:text-[#111827] transition-all px-3 py-2"
+                      className="text-xs text-text-muted hover:text-[#111827] transition-all px-3 py-2"
                     >
                       Skip Outreach
                     </button>
@@ -1862,7 +1862,7 @@ export default function ScraperPage() {
                 size="md"
               >
                 <div className="space-y-4">
-                  <p className="text-[11px] text-muted">
+                  <p className="text-[11px] text-text-muted">
                     Pick a campaign and schedule.
                     {selectedLeads.size > 0
                       ? ` ${selectedLeads.size} selected lead${selectedLeads.size === 1 ? "" : "s"} will be linked.`
@@ -1870,13 +1870,13 @@ export default function ScraperPage() {
                   </p>
 
                   <div>
-                    <label className="text-[10px] text-muted block mb-1">Campaign</label>
+                    <label className="text-[10px] text-text-muted block mb-1">Campaign</label>
                     {pushCampaignsLoading ? (
-                      <div className="flex items-center gap-2 text-[11px] text-muted">
+                      <div className="flex items-center gap-2 text-[11px] text-text-muted">
                         <Loader2 size={12} className="animate-spin" /> Loading campaigns...
                       </div>
                     ) : pushCampaigns.length === 0 ? (
-                      <div className="p-3 rounded-lg border border-border bg-surface-light text-[11px] text-muted">
+                      <div className="p-3 rounded-lg border border-border-subtle bg-surface-light text-[11px] text-text-muted">
                         You don&apos;t have any campaigns yet.
                         {" "}
                         <a href="/dashboard/outreach-hub" className="text-brand-accent hover:underline">Create one in Outreach</a>.
@@ -1889,7 +1889,7 @@ export default function ScraperPage() {
                             className={`flex items-center gap-2 p-2.5 rounded-lg border cursor-pointer transition-all ${
                               selectedPushCampaign === c.id
                                 ? "border-brand-accent bg-[rgba(59,130,246,0.05)]"
-                                : "border-border hover:border-[rgba(59,130,246,0.25)]"
+                                : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
                             }`}
                           >
                             <input
@@ -1901,13 +1901,13 @@ export default function ScraperPage() {
                               className="accent-[#2563EB]"
                             />
                             <div className="flex-1 min-w-0">
-                              <p className="text-[11px] font-medium text-foreground truncate">{c.name}</p>
+                              <p className="text-[11px] font-medium text-text-primary truncate">{c.name}</p>
                               {c.targetMode && (
-                                <p className="text-[9px] text-muted uppercase tracking-wide">{c.targetMode}</p>
+                                <p className="text-[9px] text-text-muted uppercase tracking-wide">{c.targetMode}</p>
                               )}
                             </div>
                             {c.status && (
-                              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-surface-light text-muted border border-border">
+                              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-surface-light text-text-muted border border-border-subtle">
                                 {c.status}
                               </span>
                             )}
@@ -1918,7 +1918,7 @@ export default function ScraperPage() {
                   </div>
 
                   <div>
-                    <label className="text-[10px] text-muted block mb-1">Schedule</label>
+                    <label className="text-[10px] text-text-muted block mb-1">Schedule</label>
                     <div className="grid grid-cols-2 gap-2">
                       {([
                         { id: "once" as const, label: "Once", desc: "Send once" },
@@ -1933,18 +1933,18 @@ export default function ScraperPage() {
                           className={`p-2.5 rounded-lg border text-left transition-all ${
                             pushSchedule === s.id
                               ? "border-brand-accent bg-[rgba(59,130,246,0.05)]"
-                              : "border-border hover:border-[rgba(59,130,246,0.25)]"
+                              : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
                           }`}
                         >
-                          <p className="text-[11px] font-medium text-foreground">{s.label}</p>
-                          <p className="text-[9px] text-muted">{s.desc}</p>
+                          <p className="text-[11px] font-medium text-text-primary">{s.label}</p>
+                          <p className="text-[9px] text-text-muted">{s.desc}</p>
                         </button>
                       ))}
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-[10px] text-muted block mb-1">Start at (optional)</label>
+                    <label className="text-[10px] text-text-muted block mb-1">Start at (optional)</label>
                     <input
                       type="datetime-local"
                       value={pushStartAt}
@@ -1953,7 +1953,7 @@ export default function ScraperPage() {
                     />
                   </div>
 
-                  <div className="flex items-center justify-end gap-2 pt-2 border-t border-border/50">
+                  <div className="flex items-center justify-end gap-2 pt-2 border-t border-border-subtle/50">
                     <button
                       onClick={() => setPushToCampaignOpen(false)}
                       className="btn-secondary text-xs"

@@ -114,15 +114,15 @@ export default function ClientContentPage() {
     : "Describe the changes you'd like before this gets published.";
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="space-y-5">
       <div>
         <h1 className="page-header mb-0 flex items-center gap-2"><Film size={18} className="text-blue-400" /> Your Content</h1>
         <p className="text-xs text-text-muted mt-0.5">All content created and scheduled for your brand</p>
       </div>
 
       {/* Content Calendar */}
-      <div className="card">
-        <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-blue-400" /> Content Calendar</h2>
+      <div className="glass rounded-xl p-4">
+        <h2 className="flex items-center gap-2"><Calendar size={13} className="text-blue-400" /> Content Calendar</h2>
         {calendar.length === 0 ? (
           <EmptyState icon={<Calendar size={32} />} title="No Content Scheduled" description="Your content calendar is empty. We&apos;ll start populating it soon." />
         ) : (
@@ -168,8 +168,8 @@ export default function ClientContentPage() {
 
       {/* Scripts */}
       {scripts.length > 0 && (
-        <div className="card">
-          <h2 className="section-header">Content Scripts</h2>
+        <div className="glass rounded-xl p-4">
+          <h2 className="">Content Scripts</h2>
           <div className="space-y-2">
             {scripts.map((s) => (
               <div key={s.id} className="flex items-center justify-between py-2 border-b border-border-subtle last:border-0">

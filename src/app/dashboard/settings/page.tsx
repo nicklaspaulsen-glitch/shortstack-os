@@ -132,7 +132,7 @@ export default function SettingsIndexPage() {
   }, [profile?.id, profile?.plan_tier]);
 
   return (
-    <MotionPage className="fade-in space-y-6 max-w-[1200px] mx-auto">{/* -- Settings command strip -- */}
+    <MotionPage className="space-y-6 max-w-[1200px] mx-auto">{/* -- Settings command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Configuration</p>

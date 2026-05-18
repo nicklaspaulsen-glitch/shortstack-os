@@ -253,7 +253,7 @@ export default function ElevenAgentsPage() {
   }
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- ElevenAgents command strip -- */}
+    <MotionPage className="space-y-5">{/* -- ElevenAgents command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">VOICE AGENTS</p>
@@ -261,7 +261,7 @@ export default function ElevenAgentsPage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button onClick={() => { loadAgents(); loadVoices(); }} disabled={apiLoading}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/10 border border-border text-foreground text-xs font-medium hover:bg-black/15 transition-all disabled:opacity-50">
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/15 transition-all disabled:opacity-50">
                   <RefreshCw size={12} className={apiLoading ? "animate-spin" : ""} /> {apiLoading ? "Loading..." : "Refresh"}
                 </button>
       </div>
@@ -330,8 +330,8 @@ export default function ElevenAgentsPage() {
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="text-sm font-semibold flex items-center gap-2">
                       <Phone size={14} /> Your Agents
-                      {apiLoading && <Loader2 size={12} className="animate-spin text-muted" />}
-                      <span className="text-[9px] text-muted font-normal">({liveAgents.length} from ElevenLabs)</span>
+                      {apiLoading && <Loader2 size={12} className="animate-spin text-text-muted" />}
+                      <span className="text-[9px] text-text-muted font-normal">({liveAgents.length} from ElevenLabs)</span>
                     </h2>
                     <button onClick={() => { setShowCreateForm(!showCreateForm); if (!showCreateForm) handleLoadDefaults(); }}
                       className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.14)] transition-all flex items-center gap-1">
@@ -345,28 +345,28 @@ export default function ElevenAgentsPage() {
                       <h3 className="text-xs font-semibold text-brand-accent">Create New ElevenLabs Agent</h3>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <label className="text-[9px] text-muted uppercase block mb-1">Agent Name *</label>
+                          <label className="text-[9px] text-text-muted uppercase block mb-1">Agent Name *</label>
                           <input value={createForm.name} onChange={e => setCreateForm(f => ({ ...f, name: e.target.value }))}
                             className="input text-xs w-full" placeholder="e.g. ShortStack Cold Caller" />
                         </div>
                         <div>
-                          <label className="text-[9px] text-muted uppercase block mb-1">Max Call Duration (seconds)</label>
+                          <label className="text-[9px] text-text-muted uppercase block mb-1">Max Call Duration (seconds)</label>
                           <input type="number" value={createForm.maxDuration} onChange={e => setCreateForm(f => ({ ...f, maxDuration: parseInt(e.target.value) || 300 }))}
                             className="input text-xs w-full" placeholder="300" />
                         </div>
                       </div>
                       <div>
-                        <label className="text-[9px] text-muted uppercase block mb-1">First Message</label>
+                        <label className="text-[9px] text-text-muted uppercase block mb-1">First Message</label>
                         <input value={createForm.firstMessage} onChange={e => setCreateForm(f => ({ ...f, firstMessage: e.target.value }))}
                           className="input text-xs w-full" placeholder="Hi! This is Alex from ShortStack..." />
                       </div>
                       <div>
-                        <label className="text-[9px] text-muted uppercase block mb-1">System Prompt (AI Personality &amp; Script)</label>
+                        <label className="text-[9px] text-text-muted uppercase block mb-1">System Prompt (AI Personality &amp; Script)</label>
                         <textarea value={createForm.systemPrompt} onChange={e => setCreateForm(f => ({ ...f, systemPrompt: e.target.value }))}
                           className="input text-xs w-full h-32 resize-y" placeholder="You are Alex, a friendly sales rep..." />
                       </div>
                       <div>
-                        <label className="text-[9px] text-muted uppercase block mb-1">Voice ID (optional — defaults to Rachel)</label>
+                        <label className="text-[9px] text-text-muted uppercase block mb-1">Voice ID (optional — defaults to Rachel)</label>
                         <input value={createForm.voiceId} onChange={e => setCreateForm(f => ({ ...f, voiceId: e.target.value }))}
                           className="input text-xs w-full" placeholder="21m00Tcm4TlvDq8ikWAM" />
                       </div>
@@ -402,7 +402,7 @@ export default function ElevenAgentsPage() {
                                 </div>
                                 <div>
                                   <p className="text-[11px] font-semibold">{name}</p>
-                                  <p className="text-[9px] text-muted font-mono">{agentId.slice(0, 16)}...</p>
+                                  <p className="text-[9px] text-text-muted font-mono">{agentId.slice(0, 16)}...</p>
                                 </div>
                               </div>
                               <button onClick={() => handleDeleteAgent(agentId)}
@@ -434,7 +434,7 @@ export default function ElevenAgentsPage() {
                 {/* ── Demo Agents (local state) ── */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-sm font-semibold flex items-center gap-2"><Phone size={14} /> Quick Agent Profiles <span className="text-[9px] text-muted font-normal">(local config)</span></h2>
+                    <h2 className="text-sm font-semibold flex items-center gap-2"><Phone size={14} /> Quick Agent Profiles <span className="text-[9px] text-text-muted font-normal">(local config)</span></h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {agents.map(agent => (
@@ -448,7 +448,7 @@ export default function ElevenAgentsPage() {
                             </div>
                             <div>
                               <p className="text-[11px] font-semibold">{agent.name}</p>
-                              <p className="text-[9px] text-muted">{agent.voice}</p>
+                              <p className="text-[9px] text-text-muted">{agent.voice}</p>
                             </div>
                           </div>
                           <button onClick={() => toggleAgent(agent.id)}
@@ -468,7 +468,7 @@ export default function ElevenAgentsPage() {
 
                 {/* ── Recent Conversations from API ── */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="glass rounded-xl p-4">
-                  <h2 className="text-sm font-semibold mb-3">Recent Conversations {liveConversations.length > 0 && <span className="text-[9px] text-muted font-normal">({liveConversations.length} from API)</span>}</h2>
+                  <h2 className="text-sm font-semibold mb-3">Recent Conversations {liveConversations.length > 0 && <span className="text-[9px] text-text-muted font-normal">({liveConversations.length} from API)</span>}</h2>
                   {liveConversations.length > 0 ? (
                     <div className="space-y-1.5">
                       {liveConversations.slice(0, 10).map((convo: Record<string, unknown>, i: number) => {
@@ -503,7 +503,7 @@ export default function ElevenAgentsPage() {
                     <div className="flex items-center justify-between">
                       <h2 className="text-sm font-semibold flex items-center gap-2">
                         <PhoneCall size={14} /> Call History
-                        <span className="text-[9px] text-muted font-normal">({liveConversations.length} conversations)</span>
+                        <span className="text-[9px] text-text-muted font-normal">({liveConversations.length} conversations)</span>
                       </h2>
                       <button onClick={() => loadAgents()} disabled={apiLoading}
                         className="text-[10px] px-3 py-1.5 rounded-lg border border-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] transition-all disabled:opacity-50 flex items-center gap-1">
@@ -568,14 +568,14 @@ export default function ElevenAgentsPage() {
                             onClick={() => setSelectedCall(selectedCall === call.id ? null : call.id)}>
                             <div className="col-span-2">
                               <p className="font-medium">{call.contactName}</p>
-                              <p className="text-[9px] text-muted font-mono">{call.phone}</p>
+                              <p className="text-[9px] text-text-muted font-mono">{call.phone}</p>
                             </div>
-                            <div className="text-muted truncate">{call.agent}</div>
+                            <div className="text-text-muted truncate">{call.agent}</div>
                             <div className="font-mono">{formatDuration(call.duration)}</div>
                             <div><span className={`px-1.5 py-0.5 rounded text-[8px] ${outcomeColors[call.outcome]}`}>{call.outcome.replace("_", " ")}</span></div>
                             <div className={sentimentColors[call.sentiment]}>{call.sentiment}</div>
                             <div className="font-mono text-cyan-400">${call.cost.toFixed(2)}</div>
-                            <div className="text-muted">{call.startTime}</div>
+                            <div className="text-text-muted">{call.startTime}</div>
                           </div>
                         ))}
                       </div>
@@ -712,13 +712,13 @@ export default function ElevenAgentsPage() {
                             }`}>{test.status}</span>
                           </div>
                           <div className="grid grid-cols-2 gap-3">
-                            <div className={`p-2 rounded border ${winner === "A" ? "border-green-500/20 bg-green-500/5" : "border-border"}`}>
-                              <p className="text-[9px] font-bold text-muted">Script A: {test.scriptA}</p>
-                              <p className="text-sm font-bold mt-1">{totalA}% <span className="text-[9px] text-muted font-normal">({test.convA}/{test.callsA})</span></p>
+                            <div className={`p-2 rounded border ${winner === "A" ? "border-green-500/20 bg-green-500/5" : "border-border-subtle"}`}>
+                              <p className="text-[9px] font-bold text-text-muted">Script A: {test.scriptA}</p>
+                              <p className="text-sm font-bold mt-1">{totalA}% <span className="text-[9px] text-text-muted font-normal">({test.convA}/{test.callsA})</span></p>
                             </div>
-                            <div className={`p-2 rounded border ${winner === "B" ? "border-green-500/20 bg-green-500/5" : "border-border"}`}>
-                              <p className="text-[9px] font-bold text-muted">Script B: {test.scriptB}</p>
-                              <p className="text-sm font-bold mt-1">{totalB}% <span className="text-[9px] text-muted font-normal">({test.convB}/{test.callsB})</span></p>
+                            <div className={`p-2 rounded border ${winner === "B" ? "border-green-500/20 bg-green-500/5" : "border-border-subtle"}`}>
+                              <p className="text-[9px] font-bold text-text-muted">Script B: {test.scriptB}</p>
+                              <p className="text-sm font-bold mt-1">{totalB}% <span className="text-[9px] text-text-muted font-normal">({test.convB}/{test.callsB})</span></p>
                             </div>
                           </div>
                         </div>

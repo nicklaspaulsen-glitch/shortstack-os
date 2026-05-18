@@ -80,7 +80,7 @@ export default function OverviewPanel() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12 text-muted">
+      <div className="flex items-center justify-center py-12 text-text-muted">
         <Loader2 className="animate-spin mr-2" size={16} />
         Loading overview...
       </div>
@@ -137,12 +137,12 @@ export default function OverviewPanel() {
             >
               <div className="flex items-center justify-between mb-2">
                 <PlatformBadge platform={p} />
-                <span className="text-[11px] text-muted">{pp.campaigns} active</span>
+                <span className="text-[11px] text-text-muted">{pp.campaigns} active</span>
               </div>
               <div className="text-2xl font-semibold mb-1">
                 {fmtCurrency(pp.spend)}
               </div>
-              <div className="flex gap-3 text-[11px] text-muted">
+              <div className="flex gap-3 text-[11px] text-text-muted">
                 <span>
                   CTR: <span className="text-text">{pp.ctr.toFixed(2)}%</span>
                 </span>
@@ -154,7 +154,7 @@ export default function OverviewPanel() {
                 </span>
               </div>
               {!hasData && (
-                <div className="mt-2 text-[11px] text-muted/70">
+                <div className="mt-2 text-[11px] text-text-muted/70">
                   No spend yet - connect or sync.
                 </div>
               )}
@@ -166,12 +166,12 @@ export default function OverviewPanel() {
       <div className="rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-medium">Last 30 days spend</h3>
-          <span className="text-[11px] text-muted">
+          <span className="text-[11px] text-text-muted">
             {dailySeries.length} days of data
           </span>
         </div>
         {dailySeries.length === 0 ? (
-          <div className="text-sm text-muted py-8 text-center">
+          <div className="text-sm text-text-muted py-8 text-center">
             No daily metrics in cache yet. The nightly cron at /api/cron/refresh-ads-metrics
             populates this once you have connected accounts.
           </div>
@@ -223,12 +223,12 @@ export default function OverviewPanel() {
           <h3 className="text-sm font-medium">Top 5 campaigns by spend</h3>
         </div>
         {topCampaigns.length === 0 ? (
-          <div className="text-sm text-muted py-8 text-center">
+          <div className="text-sm text-text-muted py-8 text-center">
             No campaigns yet. Connect Meta, Google, or TikTok in the Connect tab.
           </div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="text-[11px] uppercase tracking-wide text-muted bg-[rgba(0,0,0,0.02)]">
+            <thead className="text-[11px] uppercase tracking-wide text-text-muted bg-[rgba(0,0,0,0.02)]">
               <tr>
                 <th className="text-left px-4 py-2 font-medium">Campaign</th>
                 <th className="text-left px-4 py-2 font-medium">Platform</th>
@@ -250,7 +250,7 @@ export default function OverviewPanel() {
                   <td className="px-4 py-2 text-right tabular-nums">
                     {c.roas !== null ? `${c.roas.toFixed(2)}x` : "-"}
                   </td>
-                  <td className="px-4 py-2 capitalize text-muted">{c.status}</td>
+                  <td className="px-4 py-2 capitalize text-text-muted">{c.status}</td>
                 </tr>
               ))}
             </tbody>

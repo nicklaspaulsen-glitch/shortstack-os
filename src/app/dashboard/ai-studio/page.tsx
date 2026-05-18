@@ -921,7 +921,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
         <Mic size={16} className="text-brand-accent" />
-        <h2 className="text-sm font-bold text-foreground">Speech to Text</h2>
+        <h2 className="text-sm font-bold text-text-primary">Speech to Text</h2>
         <span className="text-[9px] bg-brand-accent/10 text-brand-accent px-2 py-0.5 rounded-full">Whisper Large V3</span>
       </motion.div>
 
@@ -930,17 +930,17 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
         <div>
           <div
             onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-brand-accent/30 hover:bg-brand-accent/[0.02] transition-all"
+            className="border-2 border-dashed border-border-subtle rounded-xl p-8 text-center cursor-pointer hover:border-brand-accent/30 hover:bg-brand-accent/[0.02] transition-all"
           >
             <input ref={fileRef} type="file" accept="audio/*,video/*" className="hidden" onChange={e => setFile(e.target.files?.[0] || null)} />
-            <Upload size={24} className="mx-auto mb-2 text-muted" />
-            <p className="text-xs text-foreground font-medium">{file ? file.name : "Drop audio/video file"}</p>
-            <p className="text-[10px] text-muted mt-1">MP3, WAV, MP4, WebM, M4A, OGG, FLAC</p>
+            <Upload size={24} className="mx-auto mb-2 text-text-muted" />
+            <p className="text-xs text-text-primary font-medium">{file ? file.name : "Drop audio/video file"}</p>
+            <p className="text-[10px] text-text-muted mt-1">MP3, WAV, MP4, WebM, M4A, OGG, FLAC</p>
           </div>
 
           <div className="flex items-center gap-3 mt-3">
             <select value={language} onChange={e => setLanguage(e.target.value)}
-              className="flex-1 text-xs bg-surface-light border border-border rounded-lg px-3 py-2 text-foreground">
+              className="flex-1 text-xs bg-surface-light border border-border-subtle rounded-lg px-3 py-2 text-text-primary">
               <option value="auto">Auto-detect language</option>
               <option value="en">English</option>
               <option value="es">Spanish</option>
@@ -972,20 +972,20 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
           transition={{ duration: 0.22, delay: 0.08 }}
         >
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-foreground">Transcript</span>
+            <span className="text-xs font-medium text-text-primary">Transcript</span>
             {transcript && (
               <button onClick={() => { navigator.clipboard.writeText(transcript); toast.success("Copied"); }}
-                className="text-[10px] text-muted hover:text-foreground flex items-center gap-1">
+                className="text-[10px] text-text-muted hover:text-text-primary flex items-center gap-1">
                 <Copy size={10} /> Copy
               </button>
             )}
           </div>
           {transcript ? (
             <div className="space-y-2">
-              <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap">{transcript}</p>
+              <p className="text-xs text-text-primary leading-relaxed whitespace-pre-wrap">{transcript}</p>
               {segments.length > 0 && (
-                <div className="mt-3 pt-3 border-t border-border">
-                  <p className="text-[10px] font-semibold text-muted mb-2">Timestamps</p>
+                <div className="mt-3 pt-3 border-t border-border-subtle">
+                  <p className="text-[10px] font-semibold text-text-muted mb-2">Timestamps</p>
                   <div className="space-y-1 max-h-[200px] overflow-y-auto">
                     {segments.slice(0, 20).map((seg, i) => (
                       <div key={i} className="flex gap-2 text-[10px]">
@@ -998,7 +998,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
               )}
             </div>
           ) : (
-            <p className="text-xs text-muted">Upload a file and click Transcribe to get started.</p>
+            <p className="text-xs text-text-muted">Upload a file and click Transcribe to get started.</p>
           )}
         </motion.div>
       </div>
@@ -1506,7 +1506,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
         <Palette size={16} className="text-brand-accent" />
-        <h2 className="text-sm font-bold text-foreground">Image Generator</h2>
+        <h2 className="text-sm font-bold text-text-primary">Image Generator</h2>
         <span className="text-[9px] bg-brand-accent/10 text-brand-accent px-2 py-0.5 rounded-full">FLUX / DALL-E</span>
       </motion.div>
 
@@ -1515,7 +1515,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
           <AlertTriangle size={14} className="text-yellow-400 mt-0.5 shrink-0" />
           <div>
             <p className="text-xs font-medium text-yellow-400">Setup Required</p>
-            <p className="text-[10px] text-muted mt-0.5">
+            <p className="text-[10px] text-text-muted mt-0.5">
               {isPlatformAdmin
                 ? "Configure REPLICATE_API_TOKEN, RUNPOD_API_KEY, or OPENAI_API_KEY in your environment to enable image generation."
                 : "Image generation isn't enabled on this workspace yet. Reach out to your platform admin to switch it on."}
@@ -1538,28 +1538,28 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
           />
 
           <div>
-            <span className="text-[10px] text-muted mb-1 block">Style</span>
+            <span className="text-[10px] text-text-muted mb-1 block">Style</span>
             <div className="flex flex-wrap gap-1.5">
               {styles.map(s => (
                 <button key={s.value} onClick={() => setStyle(s.value)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg ${
                     style === s.value
                       ? "bg-brand-accent text-white font-semibold"
-                      : "bg-surface-light text-muted"
+                      : "bg-surface-light text-text-muted"
                   }`}>{s.label}</button>
               ))}
             </div>
           </div>
 
           <div>
-            <span className="text-[10px] text-muted mb-1 block">Aspect Ratio</span>
+            <span className="text-[10px] text-text-muted mb-1 block">Aspect Ratio</span>
             <div className="flex gap-1.5">
               {sizes.map(s => (
                 <button key={s.value} onClick={() => setSize(s.value)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg ${
                     size === s.value
                       ? "bg-brand-accent text-white font-semibold"
-                      : "bg-surface-light text-muted"
+                      : "bg-surface-light text-text-muted"
                   }`}>{s.label}</button>
               ))}
             </div>
@@ -1624,8 +1624,8 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
             </div>
           ) : (
             <div className="text-center">
-              <Palette size={32} className="mx-auto mb-2 text-muted/30" />
-              <p className="text-xs text-muted">Generated image will appear here</p>
+              <Palette size={32} className="mx-auto mb-2 text-text-muted/30" />
+              <p className="text-xs text-text-muted">Generated image will appear here</p>
             </div>
           )}
         </motion.div>
@@ -1700,40 +1700,40 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
         <ArrowUpRight size={16} className="text-green-400" />
-        <h2 className="text-sm font-bold text-foreground">AI Image Upscaler</h2>
+        <h2 className="text-sm font-bold text-text-primary">AI Image Upscaler</h2>
         <span className="text-[9px] bg-green-500/10 text-green-400 px-2 py-0.5 rounded-full">Real-ESRGAN</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-green-400/30 transition-all">
+            className="border-2 border-dashed border-border-subtle rounded-xl p-8 text-center cursor-pointer hover:border-green-400/30 transition-all">
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && handleFile(e.target.files[0])} />
             {preview ? (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img src={preview} alt="Preview" className="max-h-[200px] mx-auto rounded-lg" />
             ) : (
               <>
-                <ImagePlus size={24} className="mx-auto mb-2 text-muted" />
-                <p className="text-xs text-foreground font-medium">Drop image to upscale</p>
-                <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP � max 20MB</p>
+                <ImagePlus size={24} className="mx-auto mb-2 text-text-muted" />
+                <p className="text-xs text-text-primary font-medium">Drop image to upscale</p>
+                <p className="text-[10px] text-text-muted mt-1">JPG, PNG, WebP � max 20MB</p>
               </>
             )}
           </div>
 
           <div className="flex items-center gap-3 mt-3">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] text-muted">Scale:</span>
+              <span className="text-[10px] text-text-muted">Scale:</span>
               {[2, 4].map(s => (
                 <button key={s} onClick={() => setScale(s)}
-                  className={`text-xs px-2.5 py-1 rounded-lg font-medium ${scale === s ? "bg-green-500 text-white" : "bg-surface-light text-muted"}`}>
+                  className={`text-xs px-2.5 py-1 rounded-lg font-medium ${scale === s ? "bg-green-500 text-white" : "bg-surface-light text-text-muted"}`}>
                   {s}x
                 </button>
               ))}
             </div>
             <label className="flex items-center gap-1.5 cursor-pointer">
               <input type="checkbox" checked={faceEnhance} onChange={e => setFaceEnhance(e.target.checked)} className="w-3 h-3 rounded" />
-              <span className="text-[10px] text-muted">Face enhance</span>
+              <span className="text-[10px] text-text-muted">Face enhance</span>
             </label>
             <motion.button onClick={handleUpscale} disabled={processing || !file}
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
@@ -1759,7 +1759,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
               </a>
             </div>
           ) : (
-            <p className="text-xs text-muted">Upscaled result will appear here</p>
+            <p className="text-xs text-text-muted">Upscaled result will appear here</p>
           )}
         </motion.div>
       </div>
@@ -1822,23 +1822,23 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
         <Scissors size={16} className="text-pink-400" />
-        <h2 className="text-sm font-bold text-foreground">Background Remover</h2>
+        <h2 className="text-sm font-bold text-text-primary">Background Remover</h2>
         <span className="text-[9px] bg-pink-500/10 text-pink-400 px-2 py-0.5 rounded-full">REMBG / SAM</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-pink-400/30 transition-all">
+            className="border-2 border-dashed border-border-subtle rounded-xl p-8 text-center cursor-pointer hover:border-pink-400/30 transition-all">
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) { setFile(f); setPreview(URL.createObjectURL(f)); setResult(null); } }} />
             {preview ? (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img src={preview} alt="" className="max-h-[200px] mx-auto rounded-lg" />
             ) : (
               <>
-                <Scissors size={24} className="mx-auto mb-2 text-muted" />
-                <p className="text-xs text-foreground font-medium">Drop image</p>
-                <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP � max 15MB</p>
+                <Scissors size={24} className="mx-auto mb-2 text-text-muted" />
+                <p className="text-xs text-text-primary font-medium">Drop image</p>
+                <p className="text-[10px] text-text-muted mt-1">JPG, PNG, WebP � max 15MB</p>
               </>
             )}
           </div>
@@ -1876,7 +1876,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
               </a>
             </div>
           ) : (
-            <p className="text-xs text-muted">Result with transparent background</p>
+            <p className="text-xs text-text-muted">Result with transparent background</p>
           )}
         </motion.div>
       </div>
@@ -1926,38 +1926,38 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
         <Film size={16} className="text-[#3B82F6]" />
-        <h2 className="text-sm font-bold text-foreground">Image to Video</h2>
+        <h2 className="text-sm font-bold text-text-primary">Image to Video</h2>
         <span className="text-[9px] bg-[rgba(59,130,246,0.12)] text-blue-300 px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-[rgba(59,130,246,0.35)] transition-all">
+            className="border-2 border-dashed border-border-subtle rounded-xl p-8 text-center cursor-pointer hover:border-[rgba(59,130,246,0.35)] transition-all">
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) { setFile(f); setPreview(URL.createObjectURL(f)); setResult(null); } }} />
             {preview ? (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img src={preview} alt="" className="max-h-[200px] mx-auto rounded-lg" />
             ) : (
               <>
-                <Film size={24} className="mx-auto mb-2 text-muted" />
-                <p className="text-xs text-foreground font-medium">Drop still image to animate</p>
-                <p className="text-[10px] text-muted mt-1">Product shots, logos, hero images</p>
+                <Film size={24} className="mx-auto mb-2 text-text-muted" />
+                <p className="text-xs text-text-primary font-medium">Drop still image to animate</p>
+                <p className="text-[10px] text-text-muted mt-1">Product shots, logos, hero images</p>
               </>
             )}
           </div>
           <div className="mt-3 space-y-2">
             <div className="flex items-center gap-3">
-              <span className="text-[10px] text-muted w-16">Motion:</span>
+              <span className="text-[10px] text-text-muted w-16">Motion:</span>
               <input type="range" min={1} max={255} value={motionBucket} onChange={e => setMotionBucket(Number(e.target.value))}
                 className="flex-1 h-1 accent-[#2563EB]" />
-              <span className="text-[10px] text-muted w-8">{motionBucket}</span>
+              <span className="text-[10px] text-text-muted w-8">{motionBucket}</span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-[10px] text-muted w-16">FPS:</span>
+              <span className="text-[10px] text-text-muted w-16">FPS:</span>
               {[6, 12, 24].map(f => (
                 <button key={f} onClick={() => setFps(f)}
-                  className={`text-xs px-2 py-1 rounded ${fps === f ? "bg-brand-accent text-white" : "bg-surface-light text-muted"}`}>{f}</button>
+                  className={`text-xs px-2 py-1 rounded ${fps === f ? "bg-brand-accent text-white" : "bg-surface-light text-text-muted"}`}>{f}</button>
               ))}
             </div>
           </div>
@@ -1976,7 +1976,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
           {result ? (
             <video src={result} controls autoPlay loop muted className="max-h-[300px] rounded-lg" />
           ) : (
-            <p className="text-xs text-muted">Animated video will appear here</p>
+            <p className="text-xs text-text-muted">Animated video will appear here</p>
           )}
         </motion.div>
       </div>
@@ -2029,41 +2029,41 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
         <Music size={16} className="text-[#3B82F6]" />
-        <h2 className="text-sm font-bold text-foreground">AI Music Generator</h2>
+        <h2 className="text-sm font-bold text-text-primary">AI Music Generator</h2>
         <span className="text-[9px] bg-[rgba(59,130,246,0.1)] text-[#3B82F6] px-2 py-0.5 rounded-full">MusicGen</span>
-        <span className="text-[9px] text-muted ml-auto">Royalty-free output</span>
+        <span className="text-[9px] text-text-muted ml-auto">Royalty-free output</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
           <textarea value={prompt} onChange={e => setPrompt(e.target.value)} placeholder="Describe the music... e.g. 'upbeat background music with light drums and synth pads for a tech product video'"
-            className="w-full h-20 text-xs bg-surface-light border border-border rounded-xl px-3 py-2 text-foreground resize-none" />
+            className="w-full h-20 text-xs bg-surface-light border border-border-subtle rounded-xl px-3 py-2 text-text-primary resize-none" />
 
           <div>
-            <span className="text-[10px] text-muted mb-1 block">Mood</span>
+            <span className="text-[10px] text-text-muted mb-1 block">Mood</span>
             <div className="flex flex-wrap gap-1.5">
               {moods.map(m => (
                 <button key={m} onClick={() => setMood(m)}
-                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${mood === m ? "bg-brand-accent text-white font-semibold" : "bg-surface-light text-muted"}`}>{m}</button>
+                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${mood === m ? "bg-brand-accent text-white font-semibold" : "bg-surface-light text-text-muted"}`}>{m}</button>
               ))}
             </div>
           </div>
 
           <div>
-            <span className="text-[10px] text-muted mb-1 block">Genre</span>
+            <span className="text-[10px] text-text-muted mb-1 block">Genre</span>
             <div className="flex flex-wrap gap-1.5">
               {genres.map(g => (
                 <button key={g} onClick={() => setGenre(g)}
-                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${genre === g ? "bg-brand-accent text-white font-semibold" : "bg-surface-light text-muted"}`}>{g}</button>
+                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${genre === g ? "bg-brand-accent text-white font-semibold" : "bg-surface-light text-text-muted"}`}>{g}</button>
               ))}
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="text-[10px] text-muted">Duration:</span>
+            <span className="text-[10px] text-text-muted">Duration:</span>
             <input type="range" min={5} max={30} value={duration} onChange={e => setDuration(Number(e.target.value))}
               className="flex-1 h-1 accent-[#2563EB]" />
-            <span className="text-xs text-foreground font-mono">{duration}s</span>
+            <span className="text-xs text-text-primary font-mono">{duration}s</span>
           </div>
 
           <motion.button onClick={handleGenerate} disabled={processing || !prompt}
@@ -2091,7 +2091,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
               </a>
             </div>
           ) : (
-            <p className="text-xs text-muted">Generated music will play here</p>
+            <p className="text-xs text-text-muted">Generated music will play here</p>
           )}
         </motion.div>
       </div>
@@ -2179,7 +2179,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
         <Volume2 size={16} className="text-orange-400" />
-        <h2 className="text-sm font-bold text-foreground">Voice Clone + TTS</h2>
+        <h2 className="text-sm font-bold text-text-primary">Voice Clone + TTS</h2>
         <span className="text-[9px] bg-orange-500/10 text-orange-400 px-2 py-0.5 rounded-full">XTTS v2</span>
       </motion.div>
 
@@ -2195,23 +2195,23 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
       {mode === "clone" ? (
         <div className="space-y-3">
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-orange-400/30 transition-all">
+            className="border-2 border-dashed border-border-subtle rounded-xl p-6 text-center cursor-pointer hover:border-orange-400/30 transition-all">
             <input ref={fileRef} type="file" accept="audio/*" multiple className="hidden" onChange={e => {
               const files = Array.from(e.target.files || []);
               if (files.length) setVoiceFiles(prev => [...prev, ...files]);
               e.target.value = "";
             }} />
-            <FileAudio size={24} className="mx-auto mb-2 text-muted" />
-            <p className="text-xs text-foreground font-medium">{voiceFiles.length > 0 ? `${voiceFiles.length} sample${voiceFiles.length > 1 ? "s" : ""} selected` : "Upload voice samples (6+ seconds each)"}</p>
-            <p className="text-[10px] text-muted mt-1">Clone multiple voices in one batch</p>
+            <FileAudio size={24} className="mx-auto mb-2 text-text-muted" />
+            <p className="text-xs text-text-primary font-medium">{voiceFiles.length > 0 ? `${voiceFiles.length} sample${voiceFiles.length > 1 ? "s" : ""} selected` : "Upload voice samples (6+ seconds each)"}</p>
+            <p className="text-[10px] text-text-muted mt-1">Clone multiple voices in one batch</p>
           </div>
           {voiceFiles.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {voiceFiles.map((f, i) => (
-                <div key={i} className="flex items-center gap-1 bg-surface-light border border-border rounded-lg px-2 py-1 text-[10px] text-foreground">
+                <div key={i} className="flex items-center gap-1 bg-surface-light border border-border-subtle rounded-lg px-2 py-1 text-[10px] text-text-primary">
                   <FileAudio size={10} className="text-orange-400" />
                   <span className="truncate max-w-[120px]">{f.name}</span>
-                  <button onClick={() => setVoiceFiles(prev => prev.filter((_, j) => j !== i))} className="text-muted hover:text-red-400" aria-label={`Remove ${f.name}`}>
+                  <button onClick={() => setVoiceFiles(prev => prev.filter((_, j) => j !== i))} className="text-text-muted hover:text-red-400" aria-label={`Remove ${f.name}`}>
                     <X size={10} />
                   </button>
                 </div>
@@ -2219,7 +2219,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
             </div>
           )}
           <input value={voiceName} onChange={e => setVoiceName(e.target.value)} placeholder="Voice name (e.g. 'Client - John')"
-            className="w-full text-xs bg-surface-light border border-border rounded-lg px-3 py-2 text-foreground" />
+            className="w-full text-xs bg-surface-light border border-border-subtle rounded-lg px-3 py-2 text-text-primary" />
           <motion.button onClick={handleClone} disabled={processing || voiceFiles.length === 0}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
@@ -2232,13 +2232,13 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
           <div className="space-y-3">
             {savedVoices.length > 0 && (
               <select value={selectedVoice} onChange={e => setSelectedVoice(e.target.value)}
-                className="w-full text-xs bg-surface-light border border-border rounded-lg px-3 py-2 text-foreground">
+                className="w-full text-xs bg-surface-light border border-border-subtle rounded-lg px-3 py-2 text-text-primary">
                 <option value="">Use reference audio</option>
                 {savedVoices.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
               </select>
             )}
             <textarea value={text} onChange={e => setText(e.target.value)} placeholder="Enter text to speak in the cloned voice..."
-              className="w-full h-32 text-xs bg-surface-light border border-border rounded-xl px-3 py-2 text-foreground resize-none" />
+              className="w-full h-32 text-xs bg-surface-light border border-border-subtle rounded-xl px-3 py-2 text-text-primary resize-none" />
             <motion.button onClick={handleSpeak} disabled={processing || !text}
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
@@ -2259,7 +2259,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
                 </a>
               </div>
             ) : (
-              <p className="text-xs text-muted">Generated speech plays here</p>
+              <p className="text-xs text-text-muted">Generated speech plays here</p>
             )}
           </motion.div>
         </div>
@@ -2324,20 +2324,20 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
         <Brain size={16} className="text-[#3B82F6]" />
-        <h2 className="text-sm font-bold text-foreground">Brand LoRA Training</h2>
+        <h2 className="text-sm font-bold text-text-primary">Brand LoRA Training</h2>
         <span className="text-[9px] bg-[rgba(59,130,246,0.12)] text-blue-300 px-2 py-0.5 rounded-full">Business+ Only</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-[rgba(0,0,0,0.3)] transition-all">
+            className="border-2 border-dashed border-border-subtle rounded-xl p-6 text-center cursor-pointer hover:border-[rgba(0,0,0,0.3)] transition-all">
             <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
-            <Layers size={24} className="mx-auto mb-2 text-muted" />
-            <p className="text-xs text-foreground font-medium">
+            <Layers size={24} className="mx-auto mb-2 text-text-muted" />
+            <p className="text-xs text-text-primary font-medium">
               {images.length > 0 ? `${images.length} images selected` : "Upload 10-20 reference images"}
             </p>
-            <p className="text-[10px] text-muted mt-1">Same style, consistent quality</p>
+            <p className="text-[10px] text-text-muted mt-1">Same style, consistent quality</p>
           </div>
 
           {images.length > 0 && (
@@ -2361,15 +2361,15 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
           )}
 
           <input value={loraName} onChange={e => setLoraName(e.target.value)} placeholder="Model name (e.g. 'acme-brand-style')"
-            className="w-full text-xs bg-surface-light border border-border rounded-lg px-3 py-2 text-foreground" />
+            className="w-full text-xs bg-surface-light border border-border-subtle rounded-lg px-3 py-2 text-text-primary" />
           <input value={triggerWord} onChange={e => setTriggerWord(e.target.value)} placeholder="Trigger word"
-            className="w-full text-xs bg-surface-light border border-border rounded-lg px-3 py-2 text-foreground" />
+            className="w-full text-xs bg-surface-light border border-border-subtle rounded-lg px-3 py-2 text-text-primary" />
 
           <div className="flex items-center gap-3">
-            <span className="text-[10px] text-muted">Steps:</span>
+            <span className="text-[10px] text-text-muted">Steps:</span>
             <input type="range" min={500} max={5000} step={100} value={steps} onChange={e => setSteps(Number(e.target.value))}
               className="flex-1 h-1 accent-[#2563EB]" />
-            <span className="text-xs text-foreground font-mono">{steps}</span>
+            <span className="text-xs text-text-primary font-mono">{steps}</span>
           </div>
 
           <motion.button onClick={handleTrain} disabled={processing || images.length < 5}
@@ -2385,7 +2385,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
 
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
-          <h3 className="text-xs font-semibold text-foreground mb-3">How it works</h3>
+          <h3 className="text-xs font-semibold text-text-primary mb-3">How it works</h3>
           <div className="space-y-2">
             {[
               { step: 1, text: "Upload 10-20 images in your client's brand style" },
@@ -2397,7 +2397,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
                 <div className="w-5 h-5 rounded-full bg-[rgba(59,130,246,0.12)] flex items-center justify-center shrink-0">
                   <span className="text-[9px] font-bold text-[#3B82F6]">{step}</span>
                 </div>
-                <p className="text-[10px] text-muted leading-relaxed">{text}</p>
+                <p className="text-[10px] text-text-muted leading-relaxed">{text}</p>
               </div>
             ))}
           </div>
@@ -2455,7 +2455,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
         <Layers size={16} className="text-cyan-400" />
-        <h2 className="text-sm font-bold text-foreground">Batch Image Generation</h2>
+        <h2 className="text-sm font-bold text-text-primary">Batch Image Generation</h2>
         <span className="text-[9px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded-full">FLUX / SDXL</span>
       </motion.div>
 
@@ -2464,13 +2464,13 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
           <div className="space-y-2">
             {prompts.map((p, i) => (
               <div key={i} className="flex gap-2">
-                <span className="text-[10px] text-muted mt-2 w-4">{i + 1}.</span>
+                <span className="text-[10px] text-text-muted mt-2 w-4">{i + 1}.</span>
                 <input value={p} onChange={e => { const np = [...prompts]; np[i] = e.target.value; setPrompts(np); }}
                   placeholder="Describe image..."
-                  className="flex-1 text-xs bg-surface-light border border-border rounded-lg px-3 py-2 text-foreground" />
+                  className="flex-1 text-xs bg-surface-light border border-border-subtle rounded-lg px-3 py-2 text-text-primary" />
                 {prompts.length > 1 && (
                   <button onClick={() => setPrompts(prev => prev.filter((_, j) => j !== i))}
-                    className="text-muted hover:text-red-400" aria-label={`Remove prompt ${i + 1}`}><X size={12} /></button>
+                    className="text-text-muted hover:text-red-400" aria-label={`Remove prompt ${i + 1}`}><X size={12} /></button>
                 )}
               </div>
             ))}
@@ -2483,23 +2483,23 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
 
           <div className="flex flex-wrap gap-3">
             <div>
-              <span className="text-[10px] text-muted block mb-1">Style</span>
+              <span className="text-[10px] text-text-muted block mb-1">Style</span>
               <select value={style} onChange={e => setStyle(e.target.value)}
-                className="text-xs bg-surface-light border border-border rounded-lg px-2 py-1.5 text-foreground">
+                className="text-xs bg-surface-light border border-border-subtle rounded-lg px-2 py-1.5 text-text-primary">
                 {styles.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
             <div>
-              <span className="text-[10px] text-muted block mb-1">Size</span>
+              <span className="text-[10px] text-text-muted block mb-1">Size</span>
               <select value={size} onChange={e => setSize(e.target.value)}
-                className="text-xs bg-surface-light border border-border rounded-lg px-2 py-1.5 text-foreground">
+                className="text-xs bg-surface-light border border-border-subtle rounded-lg px-2 py-1.5 text-text-primary">
                 {sizes.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
             <div>
-              <span className="text-[10px] text-muted block mb-1">Model</span>
+              <span className="text-[10px] text-text-muted block mb-1">Model</span>
               <select value={model} onChange={e => setModel(e.target.value)}
-                className="text-xs bg-surface-light border border-border rounded-lg px-2 py-1.5 text-foreground">
+                className="text-xs bg-surface-light border border-border-subtle rounded-lg px-2 py-1.5 text-text-primary">
                 <option value="flux">FLUX.1-dev</option>
                 <option value="sdxl">SDXL</option>
               </select>
@@ -2519,7 +2519,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
 
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
-          <h3 className="text-xs font-semibold text-foreground mb-3">Queue ({results.length})</h3>
+          <h3 className="text-xs font-semibold text-text-primary mb-3">Queue ({results.length})</h3>
           {results.length > 0 ? (
             <div className="space-y-2 max-h-[300px] overflow-y-auto">
               {results.map((r, i) => (
@@ -2527,13 +2527,13 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
                   <div className={`w-2 h-2 rounded-full ${
                     r.status === "COMPLETED" ? "bg-green-400" : r.status === "FAILED" ? "bg-red-400" : "bg-yellow-400 animate-pulse"
                   }`} />
-                  <span className="text-[10px] text-foreground flex-1 truncate">{r.prompt}</span>
-                  <span className="text-[9px] text-muted">{r.status}</span>
+                  <span className="text-[10px] text-text-primary flex-1 truncate">{r.prompt}</span>
+                  <span className="text-[9px] text-text-muted">{r.status}</span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-xs text-muted">Batch results will appear here</p>
+            <p className="text-xs text-text-muted">Batch results will appear here</p>
           )}
         </motion.div>
       </div>

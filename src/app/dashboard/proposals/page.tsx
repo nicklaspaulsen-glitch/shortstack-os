@@ -43,7 +43,7 @@ interface Proposal {
 const STORAGE_KEY = "ss_proposals_v1";
 
 const STATUS_STYLES: Record<Proposal["status"], { label: string; tint: string }> = {
-  draft: { label: "Draft", tint: "bg-muted/20 text-muted" },
+  draft: { label: "Draft", tint: "bg-muted/20 text-text-muted" },
   sent: { label: "Sent", tint: "bg-[rgba(59,130,246,0.08)] text-brand-accent" },
   signed: { label: "Signed", tint: "bg-emerald-500/15 text-emerald-400" },
   declined: { label: "Declined", tint: "bg-rose-500/15 text-rose-400" },
@@ -123,7 +123,7 @@ export default function ProposalsPage() {
   }, [proposals]);
 
   return (
-    <MotionPage className="min-h-screen bg-background text-foreground">{/* -- Proposals command strip -- */}
+    <MotionPage className="min-h-screen bg-background text-text-primary">{/* -- Proposals command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">PROPOSAL STUDIO</p>
@@ -174,7 +174,7 @@ export default function ProposalsPage() {
 
               {/* Toolbar */}
               <div className="flex items-center justify-between">
-                <p className="text-sm text-muted">
+                <p className="text-sm text-text-muted">
                   {loading
                     ? "Loading…"
                     : `${proposals.length} proposal${proposals.length === 1 ? "" : "s"}`}
@@ -203,7 +203,7 @@ export default function ProposalsPage() {
 
               {/* List */}
               {loading ? (
-                <div className="flex items-center gap-2 text-sm text-muted">
+                <div className="flex items-center gap-2 text-sm text-text-muted">
                   <Loader size={14} className="animate-spin" /> Loading…
                 </div>
               ) : proposals.length === 0 ? (
@@ -243,8 +243,8 @@ export default function ProposalsPage() {
               )}
 
               {/* Help */}
-              <div className="mt-8 glass rounded-xl p-5 text-[12px] text-muted">
-                <p className="mb-2 font-semibold text-foreground">Coming soon</p>
+              <div className="mt-8 glass rounded-xl p-5 text-[12px] text-text-muted">
+                <p className="mb-2 font-semibold text-text-primary">Coming soon</p>
                 <ul className="ml-4 list-disc space-y-1">
                   <li>Claude-drafted proposals from a short brief</li>
                   <li>PandaDoc e-sign with auto-save on sign</li>
@@ -306,7 +306,7 @@ function ProposalCard({
               {style.label}
             </span>
           </div>
-          <p className="mt-0.5 truncate text-[11px] text-muted">
+          <p className="mt-0.5 truncate text-[11px] text-text-muted">
             {proposal.client_name} · {proposal.client_email} ·{" "}
             <DollarSign size={10} className="inline" />
             {proposal.amount.toLocaleString()} {proposal.currency} ·{" "}
@@ -340,7 +340,7 @@ function ProposalCard({
       </div>
       {proposal.summary && (
         <div className="border-t border-border-subtle bg-white/[0.04] p-3 rounded-b-xl">
-          <p className="text-[12px] leading-relaxed text-muted">{proposal.summary}</p>
+          <p className="text-[12px] leading-relaxed text-text-muted">{proposal.summary}</p>
         </div>
       )}
     </motion.div>
@@ -394,7 +394,7 @@ function NewProposalForm({
     >
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <button onClick={onClose} className="rounded p-1 text-muted hover:text-foreground" aria-label="Back to proposals list">
+          <button onClick={onClose} className="rounded p-1 text-text-muted hover:text-text-primary" aria-label="Back to proposals list">
             <ArrowLeft size={14} />
           </button>
           <h3 className="text-base font-semibold">New proposal</h3>
@@ -403,7 +403,7 @@ function NewProposalForm({
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="sm:col-span-2">
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">
+          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">
             Title
           </label>
           <input
@@ -415,7 +415,7 @@ function NewProposalForm({
           />
         </div>
         <div>
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">
+          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">
             Client name
           </label>
           <input
@@ -427,7 +427,7 @@ function NewProposalForm({
           />
         </div>
         <div>
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">
+          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">
             Client email
           </label>
           <input
@@ -439,7 +439,7 @@ function NewProposalForm({
           />
         </div>
         <div>
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">
+          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">
             Amount
           </label>
           <input
@@ -451,7 +451,7 @@ function NewProposalForm({
           />
         </div>
         <div>
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">
+          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">
             Currency
           </label>
           <select
@@ -466,7 +466,7 @@ function NewProposalForm({
           </select>
         </div>
         <div className="sm:col-span-2">
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">
+          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">
             Summary
           </label>
           <textarea
@@ -482,7 +482,7 @@ function NewProposalForm({
       <div className="mt-4 flex items-center justify-end gap-2">
         <button
           onClick={onClose}
-          className="rounded-lg px-4 py-2 text-sm text-muted hover:text-foreground"
+          className="rounded-lg px-4 py-2 text-sm text-text-muted hover:text-text-primary"
         >
           Cancel
         </button>

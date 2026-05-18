@@ -160,7 +160,7 @@ export default function TokenUsageWidget() {
       {/* Expanded breakdown on hover */}
       {expanded && (
         <div
-          className="absolute bottom-full right-0 mb-2 w-64  border border-border bg-surface shadow-2xl shadow-black/50 p-3 fade-in"
+          className="absolute bottom-full right-0 mb-2 w-64  border border-border-subtle bg-surface shadow-2xl shadow-black/50 p-3"
           onMouseEnter={() => setExpanded(true)}
           onMouseLeave={() => setExpanded(false)}
         >
@@ -168,31 +168,31 @@ export default function TokenUsageWidget() {
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#2563EB]">
               Token usage
             </span>
-            <span className="text-[10px] text-muted">{data.plan}</span>
+            <span className="text-[10px] text-text-muted">{data.plan}</span>
           </div>
-          <div className="text-xs text-foreground mb-1">
+          <div className="text-xs text-text-primary mb-1">
             <span className="font-semibold">{formatNum(data.used)}</span>
-            <span className="text-muted">
+            <span className="text-text-muted">
               {" / "}
               {unlimited ? "∞" : formatNum(effectiveLimit)} tokens
             </span>
           </div>
           {!unlimited && (
-            <div className="text-[10px] text-muted mb-2">
+            <div className="text-[10px] text-text-muted mb-2">
               {Math.round(clampedPct * 100)}% used ·{" "}
               {data.days_remaining} day{data.days_remaining === 1 ? "" : "s"}{" "}
               left
             </div>
           )}
           {categoryEntries.length > 0 && (
-            <div className="space-y-1 pt-2 border-t border-border">
+            <div className="space-y-1 pt-2 border-t border-border-subtle">
               {categoryEntries.slice(0, 5).map(([cat, tokens]) => (
                 <div
                   key={cat}
                   className="flex items-center justify-between text-[10px]"
                 >
-                  <span className="text-muted truncate">{cat}</span>
-                  <span className="text-foreground font-medium ml-2">
+                  <span className="text-text-muted truncate">{cat}</span>
+                  <span className="text-text-primary font-medium ml-2">
                     {formatNum(tokens)}
                   </span>
                 </div>
@@ -218,7 +218,7 @@ export default function TokenUsageWidget() {
         className={`group flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-surface border shadow-lg backdrop-blur transition-all hover:scale-[1.02] active:scale-95 ${
           atLimit
             ? "border-danger/50 shadow-danger/20 animate-pulse"
-            : "border-border hover:border-[rgba(59,130,246,0.4)]"
+            : "border-border-subtle hover:border-[rgba(59,130,246,0.4)]"
         }`}
         style={{
           background:
@@ -269,14 +269,14 @@ export default function TokenUsageWidget() {
 
         {/* Label */}
         <div className="flex flex-col leading-tight min-w-0">
-          <span className="text-[11px] font-semibold text-foreground tabular-nums">
+          <span className="text-[11px] font-semibold text-text-primary tabular-nums">
             {formatNum(data.used)}
-            <span className="text-muted">
+            <span className="text-text-muted">
               {" / "}
               {unlimited ? "∞" : formatNum(effectiveLimit)}
             </span>
           </span>
-          <span className="text-[9px] uppercase tracking-wider text-muted">
+          <span className="text-[9px] uppercase tracking-wider text-text-muted">
             {unlimited
               ? "Unlimited"
               : atLimit
@@ -289,7 +289,7 @@ export default function TokenUsageWidget() {
         <button
           onClick={dismissSession}
           aria-label="Dismiss for this session"
-          className="ml-1 p-1 rounded-full text-muted hover:text-foreground hover:bg-surface-light transition-colors"
+          className="ml-1 p-1 rounded-full text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors"
         >
           <X size={10} />
         </button>

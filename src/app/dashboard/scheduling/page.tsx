@@ -263,7 +263,7 @@ export default function SchedulingPage() {
   }
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="space-y-5">
       {/* -- AI Smart Scheduler command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -272,13 +272,13 @@ export default function SchedulingPage() {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <>
-            <div className="flex items-center gap-1.5 text-[10px] bg-black/5 text-foreground px-2.5 py-1 rounded-md border border-border">
+            <div className="flex items-center gap-1.5 text-[10px] bg-black/5 text-text-primary px-2.5 py-1 rounded-md border border-border-subtle">
               <Globe size={10} /><span className="font-medium">{detectedTimezone.split(" ")[0].split("/")[1]}</span>
             </div>
-            <button onClick={() => setShowLinkGen(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
+            <button onClick={() => setShowLinkGen(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
               <Link2 size={12} /> Get Booking Link
             </button>
-            <button onClick={() => setShowCreateModal(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
+            <button onClick={() => setShowCreateModal(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
               <Plus size={12} /> New Meeting Type
             </button>
           </>
@@ -333,7 +333,7 @@ export default function SchedulingPage() {
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-              tab === t.id ? "bg-[rgba(59,130,246,0.08)] text-brand-accent font-medium" : "text-muted hover:text-foreground"
+              tab === t.id ? "bg-[rgba(59,130,246,0.08)] text-brand-accent font-medium" : "text-text-muted hover:text-text-primary"
             }`}>
             {t.icon} {t.label}
           </button>
@@ -375,12 +375,12 @@ export default function SchedulingPage() {
                             {mt.active ? "Active" : "Inactive"}
                           </button>
                           <button onClick={() => setEditingType(editingType === mt.id ? null : mt.id)} className="btn-ghost p-1" aria-label="Edit meeting type">
-                            <Edit3 size={10} className="text-muted" />
+                            <Edit3 size={10} className="text-text-muted" />
                           </button>
                         </div>
                       </div>
-                      {mt.description && <p className="text-[10px] text-muted mb-2">{mt.description}</p>}
-                      <div className="flex items-center gap-3 text-[10px] text-muted mb-2">
+                      {mt.description && <p className="text-[10px] text-text-muted mb-2">{mt.description}</p>}
+                      <div className="flex items-center gap-3 text-[10px] text-text-muted mb-2">
                         <span className="flex items-center gap-1"><Clock size={9} /> {mt.duration} min</span>
                         <span className="flex items-center gap-1"><Shield size={9} /> {mt.buffer_time}m buffer</span>
                         {mt.max_bookings_per_day && (
@@ -395,17 +395,17 @@ export default function SchedulingPage() {
                         <button onClick={() => copyLink(bookingLink(mt.id))} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
                           <Copy size={10} /> Copy Link
                         </button>
-                        <a href={bookingLink(mt.id)} target="_blank" rel="noopener" className="btn-ghost text-[10px] px-2 py-1 flex items-center gap-1 text-muted hover:text-foreground">
+                        <a href={bookingLink(mt.id)} target="_blank" rel="noopener" className="btn-ghost text-[10px] px-2 py-1 flex items-center gap-1 text-text-muted hover:text-text-primary">
                           <ExternalLink size={10} /> Preview
                         </a>
                       </div>
 
                       {/* Edit Expanded */}
                       {editingType === mt.id && (
-                        <div className="mt-3 pt-3 border-t border-border space-y-3">
+                        <div className="mt-3 pt-3 border-t border-border-subtle space-y-3">
                           <div className="grid grid-cols-3 gap-2">
                             <div>
-                              <label className="block text-[9px] text-muted mb-1">Buffer Time</label>
+                              <label className="block text-[9px] text-text-muted mb-1">Buffer Time</label>
                               <select className="input w-full text-[10px]" defaultValue={mt.buffer_time}
                                 onChange={async (e) => {
                                   const buffer_time = parseInt(e.target.value);
@@ -424,7 +424,7 @@ export default function SchedulingPage() {
                               </select>
                             </div>
                             <div>
-                              <label className="block text-[9px] text-muted mb-1">Duration</label>
+                              <label className="block text-[9px] text-text-muted mb-1">Duration</label>
                               <select className="input w-full text-[10px]" defaultValue={mt.duration}
                                 onChange={async (e) => {
                                   const duration = parseInt(e.target.value);
@@ -443,7 +443,7 @@ export default function SchedulingPage() {
                               </select>
                             </div>
                             <div>
-                              <label className="block text-[9px] text-muted mb-1">Max/Day</label>
+                              <label className="block text-[9px] text-text-muted mb-1">Max/Day</label>
                               <input type="number" className="input w-full text-[10px]" defaultValue={mt.max_bookings_per_day ?? ""}
                                 placeholder="No limit"
                                 onBlur={async (e) => {
@@ -475,11 +475,11 @@ export default function SchedulingPage() {
 
           {/* Recent Bookings */}
           <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.4 }}>
-            <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-brand-accent" /> Recent Bookings</h2>
+            <h2 className="flex items-center gap-2"><Calendar size={13} className="text-brand-accent" /> Recent Bookings</h2>
             {bookings.length === 0 ? (
               <div className="py-6 text-center">
-                <Users size={24} className="mx-auto text-muted/30 mb-2" />
-                <p className="text-xs text-muted">No bookings yet. Share your booking links to get started.</p>
+                <Users size={24} className="mx-auto text-text-muted/30 mb-2" />
+                <p className="text-xs text-text-muted">No bookings yet. Share your booking links to get started.</p>
               </div>
             ) : (
               <div className="space-y-2">
@@ -487,16 +487,16 @@ export default function SchedulingPage() {
                   <motion.div key={b.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}
                     className="glass-md flex items-center gap-3 p-3 rounded-lg">
                     <div className="text-center shrink-0 w-12">
-                      <p className="text-[9px] text-muted">{new Date(b.date).toLocaleDateString("en-US", { month: "short" })}</p>
+                      <p className="text-[9px] text-text-muted">{new Date(b.date).toLocaleDateString("en-US", { month: "short" })}</p>
                       <p className="text-lg font-bold leading-none">{new Date(b.date).getDate()}</p>
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold">{b.guest_name}</p>
-                      <p className="text-[10px] text-muted">
+                      <p className="text-[10px] text-text-muted">
                         {b.meeting_types?.name ?? "Meeting"} at {b.time}
                       </p>
-                      <p className="text-[9px] text-muted/70">{b.guest_email}</p>
-                      {b.notes && <p className="text-[9px] text-muted/50 mt-0.5">{b.notes}</p>}
+                      <p className="text-[9px] text-text-muted/70">{b.guest_email}</p>
+                      {b.notes && <p className="text-[9px] text-text-muted/50 mt-0.5">{b.notes}</p>}
                     </div>
                     <div className="flex items-center gap-2">
                       {b.status === "confirmed" && (
@@ -511,7 +511,7 @@ export default function SchedulingPage() {
                           Complete
                         </button>
                       )}
-                      <span className={`text-[9px] px-2 py-0.5 rounded-full ${STATUS_COLORS[b.status] ?? "text-muted"}`}>{b.status}</span>
+                      <span className={`text-[9px] px-2 py-0.5 rounded-full ${STATUS_COLORS[b.status] ?? "text-text-muted"}`}>{b.status}</span>
                     </div>
                   </motion.div>
                 ))}
@@ -522,13 +522,13 @@ export default function SchedulingPage() {
           {/* Confirmation Email Preview */}
           <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.4 }}>
             <div className="flex items-center justify-between">
-              <h2 className="section-header flex items-center gap-2 mb-0"><Mail size={13} className="text-brand-accent" /> Confirmation Email Preview</h2>
+              <h2 className="flex items-center gap-2 mb-0"><Mail size={13} className="text-brand-accent" /> Confirmation Email Preview</h2>
               <button onClick={() => setShowEmailPreview(!showEmailPreview)} className="btn-ghost text-[10px]">
                 {showEmailPreview ? "Hide" : "Show"} Preview
               </button>
             </div>
             {showEmailPreview && (
-              <div className="mt-3 rounded-xl bg-[#FAFAFB] p-5 text-foreground text-xs">
+              <div className="mt-3 rounded-xl bg-[#FAFAFB] p-5 text-text-primary text-xs">
                 <p className="font-bold text-base mb-2" style={{ color: "#2563EB" }}>ShortStack Creative</p>
                 <p className="mb-3">Hi <strong>[Client Name]</strong>,</p>
                 <p className="mb-2">Your <strong>[Meeting Type]</strong> has been confirmed!</p>
@@ -538,7 +538,7 @@ export default function SchedulingPage() {
                   <p><strong>Duration:</strong> [Duration] minutes</p>
                   <p><strong>Join Link:</strong> <span className="text-blue-500">[Video Link]</span></p>
                 </div>
-                <p className="text-muted text-[10px]">Need to reschedule? Click the link in this email to find a new time.</p>
+                <p className="text-text-muted text-[10px]">Need to reschedule? Click the link in this email to find a new time.</p>
               </div>
             )}
           </motion.div>
@@ -549,17 +549,17 @@ export default function SchedulingPage() {
       {tab === "availability" && (
         <div className="space-y-4">
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-brand-accent" /> Weekly Availability</h2>
+            <h2 className="flex items-center gap-2"><Clock size={13} className="text-brand-accent" /> Weekly Availability</h2>
             <div className="space-y-2">
               {DAYS.map(day => {
                 const dayAvail = availability[day];
                 return (
-                  <div key={day} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
+                  <div key={day} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border-subtle">
                     <label className="flex items-center gap-2 w-28 cursor-pointer">
                       <input type="checkbox" checked={dayAvail.enabled}
                         onChange={e => setAvailability(prev => ({ ...prev, [day]: { ...prev[day], enabled: e.target.checked } }))}
                         className="accent-[#2563EB]" />
-                      <span className={`text-xs font-medium ${dayAvail.enabled ? "" : "text-muted"}`}>{day}</span>
+                      <span className={`text-xs font-medium ${dayAvail.enabled ? "" : "text-text-muted"}`}>{day}</span>
                     </label>
                     {dayAvail.enabled ? (
                       <div className="flex items-center gap-2">
@@ -568,7 +568,7 @@ export default function SchedulingPage() {
                           className="input text-[10px] w-24">
                           {TIME_SLOTS.map(t => <option key={t} value={t}>{t}</option>)}
                         </select>
-                        <span className="text-muted text-xs">to</span>
+                        <span className="text-text-muted text-xs">to</span>
                         <select value={dayAvail.end}
                           onChange={e => setAvailability(prev => ({ ...prev, [day]: { ...prev[day], end: e.target.value } }))}
                           className="input text-[10px] w-24">
@@ -576,7 +576,7 @@ export default function SchedulingPage() {
                         </select>
                       </div>
                     ) : (
-                      <span className="text-[10px] text-muted">Unavailable</span>
+                      <span className="text-[10px] text-text-muted">Unavailable</span>
                     )}
                   </div>
                 );
@@ -586,15 +586,15 @@ export default function SchedulingPage() {
 
           {/* Time Slots Grid Visual */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-brand-accent" /> Available Slots This Week</h2>
+            <h2 className="flex items-center gap-2"><Calendar size={13} className="text-brand-accent" /> Available Slots This Week</h2>
             <div className="grid grid-cols-8 gap-px text-[9px]">
               <div />
               {DAYS.slice(0, 7).map(d => (
-                <div key={d} className="text-center text-muted font-semibold py-1">{d.slice(0, 3)}</div>
+                <div key={d} className="text-center text-text-muted font-semibold py-1">{d.slice(0, 3)}</div>
               ))}
               {["09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00"].map(slot => (
                 <div key={slot} className="contents">
-                  <div className="text-muted pr-2 text-right py-1">{slot}</div>
+                  <div className="text-text-muted pr-2 text-right py-1">{slot}</div>
                   {DAYS.slice(0, 7).map(day => {
                     const avail = availability[day];
                     const inRange = avail.enabled && slot >= avail.start && slot < avail.end;
@@ -605,7 +605,7 @@ export default function SchedulingPage() {
                     });
                     return (
                       <div key={`${day}-${slot}`}
-                        className={`text-center py-1 rounded ${booked ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : inRange ? "bg-emerald-400/10 text-emerald-400" : "bg-surface-light text-muted/20"}`}>
+                        className={`text-center py-1 rounded ${booked ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : inRange ? "bg-emerald-400/10 text-emerald-400" : "bg-surface-light text-text-muted/20"}`}>
                         {booked ? "Booked" : inRange ? "Open" : "-"}
                       </div>
                     );
@@ -617,23 +617,23 @@ export default function SchedulingPage() {
 
           {/* Calendar Integration */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-brand-accent" /> Calendar Integration</h2>
+            <h2 className="flex items-center gap-2"><Globe size={13} className="text-brand-accent" /> Calendar Integration</h2>
             <div className="space-y-2">
               {([] as { name: string; connected: boolean; icon: string }[]).map(cal => (
-                <div key={cal.name} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${cal.connected ? "bg-emerald-400/10 text-emerald-400" : "bg-surface text-muted"}`}>
+                <div key={cal.name} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border-subtle">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${cal.connected ? "bg-emerald-400/10 text-emerald-400" : "bg-surface text-text-muted"}`}>
                     {cal.icon}
                   </div>
                   <div className="flex-1">
                     <p className="text-xs font-medium">{cal.name}</p>
-                    <p className="text-[9px] text-muted">{cal.connected ? "Connected and syncing" : "Not connected"}</p>
+                    <p className="text-[9px] text-text-muted">{cal.connected ? "Connected and syncing" : "Not connected"}</p>
                   </div>
                   <button className={`text-[10px] px-3 py-1 rounded-lg ${cal.connected ? "btn-secondary" : "btn-primary"}`}>
                     {cal.connected ? "Disconnect" : "Connect"}
                   </button>
                 </div>
               ))}
-              <p className="text-xs text-muted text-center py-4">No calendars connected</p>
+              <p className="text-xs text-text-muted text-center py-4">No calendars connected</p>
             </div>
           </div>
         </div>
@@ -647,13 +647,13 @@ export default function SchedulingPage() {
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
               <Brain size={13} className="text-brand-accent" /> AI-Suggested Optimal Meeting Times
             </h3>
-            <p className="text-[10px] text-muted mb-3">Based on your past 90 days of booking patterns and client preferences</p>
+            <p className="text-[10px] text-text-muted mb-3">Based on your past 90 days of booking patterns and client preferences</p>
             <div className="space-y-2">
               {AI_SUGGESTED_TIMES.length === 0 && (
-                <p className="text-xs text-muted text-center py-4">No AI suggestions available yet. Book some meetings to get insights.</p>
+                <p className="text-xs text-text-muted text-center py-4">No AI suggestions available yet. Book some meetings to get insights.</p>
               )}
               {AI_SUGGESTED_TIMES.map((slot, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-[rgba(59,130,246,0.12)] transition-all">
+                <div key={i} className="flex items-center gap-3 p-3 rounded-xl border border-border-subtle hover:border-[rgba(59,130,246,0.12)] transition-all">
                   <div className="w-10 h-10 rounded-xl bg-[rgba(59,130,246,0.08)] flex items-center justify-center shrink-0">
                     <span className="text-xs font-bold text-brand-accent">{slot.score}</span>
                   </div>
@@ -666,7 +666,7 @@ export default function SchedulingPage() {
                         </span>
                       )}
                     </div>
-                    <p className="text-[10px] text-muted">{slot.reason}</p>
+                    <p className="text-[10px] text-text-muted">{slot.reason}</p>
                   </div>
                   <div className="w-24 h-1.5 rounded-full bg-surface-light overflow-hidden">
                     <div className="h-full rounded-full bg-brand-accent transition-all" style={{ width: `${slot.score}%` }} />
@@ -702,9 +702,9 @@ export default function SchedulingPage() {
                     </div>
                     <div className="flex-1">
                       <p className="text-xs font-semibold">{alert.title}</p>
-                      <p className="text-[10px] text-muted">{alert.description}</p>
+                      <p className="text-[10px] text-text-muted">{alert.description}</p>
                     </div>
-                    <button className="text-[10px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground transition-all shrink-0">
+                    <button className="text-[10px] px-2 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary transition-all shrink-0">
                       Resolve
                     </button>
                   </div>
@@ -718,10 +718,10 @@ export default function SchedulingPage() {
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
               <Timer size={13} className="text-brand-accent" /> Auto Buffer Management
             </h3>
-            <div className="flex items-center justify-between p-3 rounded-xl bg-surface-light border border-border mb-3">
+            <div className="flex items-center justify-between p-3 rounded-xl bg-surface-light border border-border-subtle mb-3">
               <div>
                 <p className="text-xs font-semibold">Automatic Buffer Time</p>
-                <p className="text-[10px] text-muted">Automatically add buffer between back-to-back meetings</p>
+                <p className="text-[10px] text-text-muted">Automatically add buffer between back-to-back meetings</p>
               </div>
               <button onClick={() => setAutoBuffer(!autoBuffer)}
                 className={`w-10 h-5 rounded-full transition-all relative ${autoBuffer ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.06)]"}`}>
@@ -729,13 +729,13 @@ export default function SchedulingPage() {
               </button>
             </div>
             {autoBuffer && (
-              <div className="flex items-center gap-3 p-3 rounded-xl border border-border">
-                <span className="text-xs text-muted">Buffer duration:</span>
+              <div className="flex items-center gap-3 p-3 rounded-xl border border-border-subtle">
+                <span className="text-xs text-text-muted">Buffer duration:</span>
                 <div className="flex gap-1.5">
                   {[5, 10, 15, 20, 30].map(min => (
                     <button key={min} onClick={() => setBufferMinutes(min)}
                       className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${
-                        bufferMinutes === min ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border text-muted"
+                        bufferMinutes === min ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border-subtle text-text-muted"
                       }`}>
                       {min}m
                     </button>
@@ -756,14 +756,14 @@ export default function SchedulingPage() {
             </div>
             <div className="space-y-1.5">
               {([] as { name: string; tz: string; offset: string }[]).map((client, i) => (
-                <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border text-xs">
+                <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border-subtle text-xs">
                   <Globe size={12} className="text-brand-accent shrink-0" />
                   <span className="font-medium w-28">{client.name}</span>
-                  <span className="text-muted flex-1">{client.tz}</span>
+                  <span className="text-text-muted flex-1">{client.tz}</span>
                   <span className="text-[10px] text-brand-accent">{client.offset}</span>
                 </div>
               ))}
-              <p className="text-xs text-muted text-center py-2">No client timezone data available</p>
+              <p className="text-xs text-text-muted text-center py-2">No client timezone data available</p>
             </div>
           </div>
 
@@ -772,9 +772,9 @@ export default function SchedulingPage() {
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
               <Sparkles size={13} className="text-brand-accent" /> AI Meeting Prep Cards
             </h3>
-            <p className="text-[10px] text-muted mb-3">AI-generated prep briefs for your upcoming meetings</p>
+            <p className="text-[10px] text-text-muted mb-3">AI-generated prep briefs for your upcoming meetings</p>
             <div className="space-y-3">
-              <p className="text-xs text-muted text-center py-4">No upcoming meetings to prep for.</p>
+              <p className="text-xs text-text-muted text-center py-4">No upcoming meetings to prep for.</p>
             </div>
           </div>
         </div>
@@ -798,7 +798,7 @@ export default function SchedulingPage() {
                 className="glass rounded-xl overflow-hidden text-center"
               >
                 <div className="p-3">
-                  <p className="text-[10px] text-muted">{stat.label}</p>
+                  <p className="text-[10px] text-text-muted">{stat.label}</p>
                   <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
                 </div>
               </motion.div>
@@ -807,24 +807,24 @@ export default function SchedulingPage() {
 
           {/* Popular Times Heatmap */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2">
+            <h2 className="flex items-center gap-2">
               <Zap size={13} className="text-brand-accent" /> Popular Times Heatmap
             </h2>
-            <p className="text-[10px] text-muted mb-3">Booking frequency by day and hour (last 90 days)</p>
+            <p className="text-[10px] text-text-muted mb-3">Booking frequency by day and hour (last 90 days)</p>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr>
-                    <th className="text-[9px] text-muted font-semibold py-1 text-left w-12" />
+                    <th className="text-[9px] text-text-muted font-semibold py-1 text-left w-12" />
                     {["09", "10", "11", "12", "13", "14", "15", "16"].map(h => (
-                      <th key={h} className="text-[9px] text-muted font-semibold py-1 text-center">{parseInt(h) > 12 ? `${parseInt(h) - 12}PM` : `${parseInt(h)}AM`}</th>
+                      <th key={h} className="text-[9px] text-text-muted font-semibold py-1 text-center">{parseInt(h) > 12 ? `${parseInt(h) - 12}PM` : `${parseInt(h)}AM`}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {Object.entries(HEATMAP_DATA).map(([day, hours]) => (
                     <tr key={day}>
-                      <td className="text-[9px] font-semibold text-muted pr-2 py-0.5">{day}</td>
+                      <td className="text-[9px] font-semibold text-text-muted pr-2 py-0.5">{day}</td>
                       {["09", "10", "11", "12", "13", "14", "15", "16"].map(h => {
                         const val = hours[h] || 0;
                         const max = 10;
@@ -847,13 +847,13 @@ export default function SchedulingPage() {
               </table>
             </div>
             <div className="flex items-center gap-3 mt-3 justify-center">
-              <div className="flex items-center gap-1 text-[8px] text-muted">
+              <div className="flex items-center gap-1 text-[8px] text-text-muted">
                 <div className="w-3 h-3 rounded" style={{ background: "rgba(201,168,76,0.08)" }} /> Low
               </div>
-              <div className="flex items-center gap-1 text-[8px] text-muted">
+              <div className="flex items-center gap-1 text-[8px] text-text-muted">
                 <div className="w-3 h-3 rounded" style={{ background: "rgba(201,168,76,0.2)" }} /> Medium
               </div>
-              <div className="flex items-center gap-1 text-[8px] text-muted">
+              <div className="flex items-center gap-1 text-[8px] text-text-muted">
                 <div className="w-3 h-3 rounded" style={{ background: "rgba(201,168,76,0.35)" }} /> High
               </div>
             </div>
@@ -861,9 +861,9 @@ export default function SchedulingPage() {
 
           {/* Bookings by Type */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-brand-accent" /> Bookings by Meeting Type</h2>
+            <h2 className="flex items-center gap-2"><BarChart3 size={13} className="text-brand-accent" /> Bookings by Meeting Type</h2>
             {meetingTypes.length === 0 ? (
-              <p className="text-xs text-muted text-center py-4">Create meeting types to see analytics.</p>
+              <p className="text-xs text-text-muted text-center py-4">Create meeting types to see analytics.</p>
             ) : (
               <div className="space-y-2">
                 {meetingTypes.map(mt => {
@@ -886,9 +886,9 @@ export default function SchedulingPage() {
 
           {/* Popular Booking Times */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-brand-accent" /> Popular Booking Times</h2>
+            <h2 className="flex items-center gap-2"><Clock size={13} className="text-brand-accent" /> Popular Booking Times</h2>
             {bookings.length === 0 ? (
-              <p className="text-xs text-muted text-center py-4">Booking data will appear here once you have bookings.</p>
+              <p className="text-xs text-text-muted text-center py-4">Booking data will appear here once you have bookings.</p>
             ) : (
               <div className="grid grid-cols-5 gap-2">
                 {(() => {
@@ -901,7 +901,7 @@ export default function SchedulingPage() {
                       <div className="h-20 rounded-lg bg-surface-light flex items-end justify-center overflow-hidden mb-1">
                         <div className="w-full rounded-t-lg bg-[rgba(59,130,246,0.12)]" style={{ height: `${(count / max) * 100}%` }} />
                       </div>
-                      <p className="text-[9px] text-muted">{time}</p>
+                      <p className="text-[9px] text-text-muted">{time}</p>
                       <p className="text-[10px] font-bold">{count}</p>
                     </div>
                   ));
@@ -912,15 +912,15 @@ export default function SchedulingPage() {
 
           {/* Status Distribution */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-brand-accent" /> Bookings by Status</h2>
+            <h2 className="flex items-center gap-2"><Globe size={13} className="text-brand-accent" /> Bookings by Status</h2>
             <div className="grid grid-cols-4 gap-3">
               {(["confirmed", "completed", "cancelled", "no_show"] as const).map(status => {
                 const count = bookings.filter(b => b.status === status).length;
                 const pct = totalBookings > 0 ? Math.round((count / totalBookings) * 100) : 0;
                 return (
-                  <div key={status} className="p-3 rounded-lg bg-surface-light text-center border border-border">
+                  <div key={status} className="p-3 rounded-lg bg-surface-light text-center border border-border-subtle">
                     <p className="text-lg font-bold">{count}</p>
-                    <p className="text-[10px] text-muted capitalize">{status.replace("_", " ")} ({pct}%)</p>
+                    <p className="text-[10px] text-text-muted capitalize">{status.replace("_", " ")} ({pct}%)</p>
                   </div>
                 );
               })}
@@ -934,11 +934,11 @@ export default function SchedulingPage() {
         <div className="space-y-4">
           {/* Round-Robin */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><Shuffle size={13} className="text-brand-accent" /> Round-Robin Team Scheduling</h2>
+            <h2 className="flex items-center gap-2"><Shuffle size={13} className="text-brand-accent" /> Round-Robin Team Scheduling</h2>
             <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light mb-3">
               <div>
                 <p className="text-xs font-semibold">Enable Round-Robin Scheduling</p>
-                <p className="text-[10px] text-muted">Automatically distribute bookings among team members</p>
+                <p className="text-[10px] text-text-muted">Automatically distribute bookings among team members</p>
               </div>
               <button onClick={() => setRoundRobin(!roundRobin)}
                 className={`w-10 h-5 rounded-full transition-all relative ${roundRobin ? "bg-brand-accent" : "bg-surface-light"}`}>
@@ -948,17 +948,17 @@ export default function SchedulingPage() {
             {roundRobin && (
               <div className="space-y-2">
                 {TEAM_MEMBERS.map(member => (
-                  <div key={member.id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
+                  <div key={member.id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border-subtle">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white" style={{ background: member.color }}>
                       {member.name[0]}
                     </div>
                     <div className="flex-1">
                       <p className="text-xs font-medium">{member.name}</p>
-                      <p className="text-[9px] text-muted">{member.role}</p>
+                      <p className="text-[9px] text-text-muted">{member.role}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-xs font-bold">{member.bookingsThisWeek}</p>
-                      <p className="text-[9px] text-muted">this week</p>
+                      <p className="text-[9px] text-text-muted">this week</p>
                     </div>
                     <div className="w-16 h-1.5 rounded-full bg-surface overflow-hidden">
                       <div className="h-full rounded-full" style={{ width: `${(member.bookingsThisWeek / 15) * 100}%`, background: member.color }} />
@@ -972,11 +972,11 @@ export default function SchedulingPage() {
 
           {/* Timezone */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-brand-accent" /> Timezone Detection</h2>
+            <h2 className="flex items-center gap-2"><Globe size={13} className="text-brand-accent" /> Timezone Detection</h2>
             <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light">
               <div>
                 <p className="text-xs font-semibold">Auto-detect Client Timezone</p>
-                <p className="text-[10px] text-muted">Show available times in the booker&apos;s local timezone</p>
+                <p className="text-[10px] text-text-muted">Show available times in the booker&apos;s local timezone</p>
               </div>
               <button onClick={() => setAutoTimezone(!autoTimezone)}
                 className={`w-10 h-5 rounded-full transition-all relative ${autoTimezone ? "bg-brand-accent" : "bg-surface-light"}`}>
@@ -987,10 +987,10 @@ export default function SchedulingPage() {
 
           {/* Policies */}
           <div className="glass rounded-xl p-4">
-            <h2 className="section-header flex items-center gap-2"><AlertCircle size={13} className="text-red-400" /> Reschedule / Cancel Policy</h2>
+            <h2 className="flex items-center gap-2"><AlertCircle size={13} className="text-red-400" /> Reschedule / Cancel Policy</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Minimum Reschedule Notice</label>
+                <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Minimum Reschedule Notice</label>
                 <select value={reschedulePolicy} onChange={e => setReschedulePolicy(e.target.value)} className="input w-full text-xs">
                   <option value="none">No minimum</option>
                   <option value="1h">1 hour</option>
@@ -1000,7 +1000,7 @@ export default function SchedulingPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Minimum Cancel Notice</label>
+                <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Minimum Cancel Notice</label>
                 <select value={cancelPolicy} onChange={e => setCancelPolicy(e.target.value)} className="input w-full text-xs">
                   <option value="none">No minimum</option>
                   <option value="1h">1 hour</option>
@@ -1017,17 +1017,17 @@ export default function SchedulingPage() {
       {/* ---- Link Generator Modal ---- */}
       {showLinkGen && (
         <div className="fixed inset-0 bg-[rgba(0,0,0,0.35)] backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowLinkGen(false)}>
-          <div className="bg-surface  border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface  border border-border-subtle w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2"><Link2 size={14} className="text-brand-accent" /> Booking Link Generator</h3>
-              <button onClick={() => setShowLinkGen(false)} className="text-muted hover:text-foreground" aria-label="Close link generator"><X size={16} /></button>
+              <button onClick={() => setShowLinkGen(false)} className="text-text-muted hover:text-text-primary" aria-label="Close link generator"><X size={16} /></button>
             </div>
             {meetingTypes.filter(m => m.active).length === 0 ? (
-              <p className="text-xs text-muted text-center py-4">No active meeting types. Create one first.</p>
+              <p className="text-xs text-text-muted text-center py-4">No active meeting types. Create one first.</p>
             ) : (
               <>
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Select Meeting Type</label>
+                  <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Select Meeting Type</label>
                   <select value={selectedLink} onChange={e => setSelectedLink(e.target.value)} className="input w-full text-xs">
                     <option value="">Choose...</option>
                     {meetingTypes.filter(m => m.active).map(mt => (
@@ -1037,9 +1037,9 @@ export default function SchedulingPage() {
                 </div>
                 {selectedLink && (
                   <div>
-                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Your Link</label>
+                    <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Your Link</label>
                     <div className="flex gap-2">
-                      <code className="flex-1 text-[10px] p-2.5 rounded-lg bg-surface-light border border-border truncate">{selectedLink}</code>
+                      <code className="flex-1 text-[10px] p-2.5 rounded-lg bg-surface-light border border-border-subtle truncate">{selectedLink}</code>
                       <button onClick={() => copyLink(selectedLink)} className="btn-primary text-xs px-3">
                         <Copy size={12} />
                       </button>
@@ -1055,28 +1055,28 @@ export default function SchedulingPage() {
       {/* ---- Create Meeting Type Modal ---- */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-[rgba(0,0,0,0.35)] backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCreateModal(false)}>
-          <div className="bg-surface  border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface  border border-border-subtle w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-brand-accent" /> New Meeting Type</h3>
-              <button onClick={() => setShowCreateModal(false)} className="text-muted hover:text-foreground" aria-label="Close dialog"><X size={16} /></button>
+              <button onClick={() => setShowCreateModal(false)} className="text-text-muted hover:text-text-primary" aria-label="Close dialog"><X size={16} /></button>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Name *</label>
+                <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Name *</label>
                 <input type="text" className="input w-full text-xs" placeholder="e.g. Discovery Call"
                   value={newMeeting.name} onChange={e => setNewMeeting(prev => ({ ...prev, name: e.target.value }))} />
               </div>
 
               <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Description</label>
+                <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Description</label>
                 <textarea className="input w-full text-xs" rows={2} placeholder="Brief description of this meeting type..."
                   value={newMeeting.description} onChange={e => setNewMeeting(prev => ({ ...prev, description: e.target.value }))} />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Duration</label>
+                  <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Duration</label>
                   <select className="input w-full text-xs" value={newMeeting.duration}
                     onChange={e => setNewMeeting(prev => ({ ...prev, duration: parseInt(e.target.value) }))}>
                     <option value={15}>15 minutes</option>
@@ -1087,7 +1087,7 @@ export default function SchedulingPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Location</label>
+                  <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Location</label>
                   <select className="input w-full text-xs" value={newMeeting.location_type}
                     onChange={e => setNewMeeting(prev => ({ ...prev, location_type: e.target.value }))}>
                     {LOCATION_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -1097,7 +1097,7 @@ export default function SchedulingPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Buffer Time</label>
+                  <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Buffer Time</label>
                   <select className="input w-full text-xs" value={newMeeting.buffer_time}
                     onChange={e => setNewMeeting(prev => ({ ...prev, buffer_time: parseInt(e.target.value) }))}>
                     <option value={0}>No buffer</option>
@@ -1108,7 +1108,7 @@ export default function SchedulingPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Max/Day</label>
+                  <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Max/Day</label>
                   <input type="number" className="input w-full text-xs" placeholder="No limit"
                     value={newMeeting.max_bookings_per_day}
                     onChange={e => setNewMeeting(prev => ({ ...prev, max_bookings_per_day: e.target.value }))} />
@@ -1116,7 +1116,7 @@ export default function SchedulingPage() {
               </div>
 
               <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Color</label>
+                <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Color</label>
                 <div className="flex gap-2">
                   {COLOR_OPTIONS.map(c => (
                     <button key={c} onClick={() => setNewMeeting(prev => ({ ...prev, color: c }))}

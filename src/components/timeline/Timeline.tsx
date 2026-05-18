@@ -546,11 +546,11 @@ export function Timeline({
 
   return (
     <div
-      className={`rounded-xl border border-border bg-surface/70 backdrop-blur-sm overflow-hidden ${className}`}
+      className={`rounded-xl border border-border-subtle bg-surface/70 backdrop-blur-sm overflow-hidden ${className}`}
       data-testid={testId}
     >
       {/* Toolbar */}
-      <div className="flex items-center gap-2 px-2 py-1.5 border-b border-border bg-surface-light/40">
+      <div className="flex items-center gap-2 px-2 py-1.5 border-b border-border-subtle bg-surface-light/40">
         {onPlayPause !== undefined && (
           <button
             type="button"
@@ -561,7 +561,7 @@ export function Timeline({
               }
               onPlayPause?.();
             }}
-            className="text-foreground hover:text-[#2563EB] transition-colors"
+            className="text-text-primary hover:text-[#2563EB] transition-colors"
             aria-label={playing ? "Pause" : "Play"}
           >
             {playing ? <Pause size={14} /> : <Play size={14} />}
@@ -570,7 +570,7 @@ export function Timeline({
         <button
           type="button"
           onClick={() => setPlayhead(Math.max(0, playhead - 1000))}
-          className="text-muted hover:text-foreground"
+          className="text-text-muted hover:text-text-primary"
           aria-label="Skip back 1s"
         >
           <SkipBack size={12} />
@@ -578,7 +578,7 @@ export function Timeline({
         <button
           type="button"
           onClick={() => setPlayhead(playhead + 1000)}
-          className="text-muted hover:text-foreground"
+          className="text-text-muted hover:text-text-primary"
           aria-label="Skip forward 1s"
         >
           <SkipForward size={12} />
@@ -589,7 +589,7 @@ export function Timeline({
           type="button"
           onClick={doUndo}
           disabled={!history.canUndo}
-          className={`text-muted hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 text-[10px]`}
+          className={`text-text-muted hover:text-text-primary disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 text-[10px]`}
           title="Undo (Ctrl+Z)"
           aria-label="Undo"
         >
@@ -599,15 +599,15 @@ export function Timeline({
           type="button"
           onClick={doRedo}
           disabled={!history.canRedo}
-          className={`text-muted hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 text-[10px]`}
+          className={`text-text-muted hover:text-text-primary disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 text-[10px]`}
           title="Redo (Ctrl+Shift+Z)"
           aria-label="Redo"
         >
           <Redo2 size={12} />
         </button>
 
-        <div className="mx-2 text-[10px] font-mono text-foreground">
-          {formatTime(playhead)} <span className="text-muted">/ {formatTime(safeProject.duration)}</span>
+        <div className="mx-2 text-[10px] font-mono text-text-primary">
+          {formatTime(playhead)} <span className="text-text-muted">/ {formatTime(safeProject.duration)}</span>
         </div>
 
         <div className="flex-1" />
@@ -621,7 +621,7 @@ export function Timeline({
             title="Delete selected (Del)"
           >
             <Trash2 size={10} /> Delete
-            <span className="text-[8px] text-muted">({selectedIds.length})</span>
+            <span className="text-[8px] text-text-muted">({selectedIds.length})</span>
           </button>
         )}
 
@@ -630,7 +630,7 @@ export function Timeline({
           type="button"
           onClick={() => setSnapOn((v) => !v)}
           className={`flex items-center gap-1 text-[9px] rounded px-2 py-1 border transition-colors ${
-            snapOn ? "border-[rgba(59,130,246,0.3)] bg-[rgba(59,130,246,0.08)] text-[#2563EB]" : "border-border text-muted hover:text-foreground"
+            snapOn ? "border-[rgba(59,130,246,0.3)] bg-[rgba(59,130,246,0.08)] text-[#2563EB]" : "border-border-subtle text-text-muted hover:text-text-primary"
           }`}
           title="Snap to 1-second grid, clip edges & playhead"
         >
@@ -644,7 +644,7 @@ export function Timeline({
           className={`flex items-center gap-1 text-[9px] rounded px-2 py-1 border transition-colors ${
             showSections
               ? "border-blue-400/30 bg-blue-400/10 text-blue-300"
-              : "border-border text-muted hover:text-foreground"
+              : "border-border-subtle text-text-muted hover:text-text-primary"
           }`}
           title="Toggle intro / body / outro section markers"
         >
@@ -658,7 +658,7 @@ export function Timeline({
           <button
             type="button"
             onClick={() => setPxPerMs((z) => Math.max(minPxPerMs, z / 1.5))}
-            className="text-muted hover:text-foreground"
+            className="text-text-muted hover:text-text-primary"
             aria-label="Zoom out"
             title="Zoom out (-)"
           >
@@ -677,7 +677,7 @@ export function Timeline({
           <button
             type="button"
             onClick={() => setPxPerMs((z) => Math.min(maxPxPerMs, z * 1.5))}
-            className="text-muted hover:text-foreground"
+            className="text-text-muted hover:text-text-primary"
             aria-label="Zoom in"
             title="Zoom in (+)"
           >
@@ -686,7 +686,7 @@ export function Timeline({
         </div>
 
         <span
-          className="text-[8px] text-muted flex items-center gap-1"
+          className="text-[8px] text-text-muted flex items-center gap-1"
           title="Space play/pause · +/- zoom · Shift+click multi-select · Del remove · Ctrl+Z undo · Ctrl+Shift+Z redo"
         >
           <Keyboard size={10} /> shortcuts
@@ -696,8 +696,8 @@ export function Timeline({
       {/* Body */}
       <div className="flex">
         {/* Track headers */}
-        <div className="flex-shrink-0 border-r border-border" style={{ width: TRACK_HEADER_WIDTH }}>
-          <div style={{ height: RULER_HEIGHT }} className="border-b border-border bg-surface-light/30" />
+        <div className="flex-shrink-0 border-r border-border-subtle" style={{ width: TRACK_HEADER_WIDTH }}>
+          <div style={{ height: RULER_HEIGHT }} className="border-b border-border-subtle bg-surface-light/30" />
           {safeProject.tracks.map((track, i) => (
             <TrackHeader key={track.id} track={track} firstRow={i === 0} />
           ))}
@@ -713,7 +713,7 @@ export function Timeline({
           >
             {/* Ruler */}
             <div
-              className="sticky top-0 z-10 bg-surface-light/80 backdrop-blur-sm border-b border-border"
+              className="sticky top-0 z-10 bg-surface-light/80 backdrop-blur-sm border-b border-border-subtle"
               style={{ height: RULER_HEIGHT, width: railWidth }}
             >
               {ticks.map((tick) => (
@@ -728,7 +728,7 @@ export function Timeline({
                   }}
                 >
                   {tick.major && (
-                    <span className="absolute top-0 left-1 text-[8px] font-mono text-muted select-none">
+                    <span className="absolute top-0 left-1 text-[8px] font-mono text-text-muted select-none">
                       {formatTime(tick.ms).replace(".00", "")}
                     </span>
                   )}
@@ -740,7 +740,7 @@ export function Timeline({
             {safeProject.tracks.map((track, i) => (
               <div
                 key={track.id}
-                className="absolute left-0 right-0 border-b border-border/40 bg-surface/30"
+                className="absolute left-0 right-0 border-b border-border-subtle/40 bg-surface/30"
                 style={{
                   top: trackTop(i),
                   height: TRACK_HEIGHT,
@@ -849,7 +849,7 @@ export function Timeline({
 
       {/* Empty state */}
       {safeProject.clips.length === 0 && (
-        <div className="border-t border-border/60 px-3 py-2 text-[10px] text-muted italic text-center">
+        <div className="border-t border-border-subtle/60 px-3 py-2 text-[10px] text-text-muted italic text-center">
           No clips on the timeline yet.
         </div>
       )}
@@ -862,11 +862,11 @@ export function Timeline({
 function TrackHeader({ track, firstRow }: { track: TimelineTrack; firstRow: boolean }) {
   return (
     <div
-      className="flex items-center gap-1.5 px-2 border-b border-border/60"
+      className="flex items-center gap-1.5 px-2 border-b border-border-subtle/60"
       style={{ height: TRACK_HEIGHT, marginTop: firstRow ? 0 : TRACK_GAP }}
     >
       <span style={{ color: track.accent || undefined }}>{iconForKind(track.kind)}</span>
-      <span className="text-[10px] font-mono text-foreground truncate">{track.label}</span>
+      <span className="text-[10px] font-mono text-text-primary truncate">{track.label}</span>
     </div>
   );
 }
@@ -925,7 +925,7 @@ function ClipBlock({ clip, top, left, width, color, isSelected, onClick, onMouse
         />
       )}
 
-      <span className="relative px-2 py-0.5 text-[9px] text-foreground drop-shadow font-medium truncate block">
+      <span className="relative px-2 py-0.5 text-[9px] text-text-primary drop-shadow font-medium truncate block">
         {clip.label}
       </span>
     </div>
@@ -959,7 +959,7 @@ function ClipMarker({ clip, top, left, color, isSelected, onClick, onMouseDown }
       onMouseDown={onMouseDown}
       onClick={onClick}
     >
-      <span className="absolute top-0 left-2 whitespace-nowrap text-[8px] text-muted group-hover:text-white bg-black/40 px-1 rounded pointer-events-none">
+      <span className="absolute top-0 left-2 whitespace-nowrap text-[8px] text-text-muted group-hover:text-white bg-black/40 px-1 rounded pointer-events-none">
         {clip.label}
       </span>
     </div>

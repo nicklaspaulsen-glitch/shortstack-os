@@ -111,7 +111,7 @@ export default function DemoManagementPage() {
   }
 
   return (
-    <div className="fade-in space-y-4 p-4 max-w-3xl mx-auto">
+    <div className="space-y-4 p-4 max-w-3xl mx-auto">
       {/* Demo Management command strip */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -127,7 +127,7 @@ export default function DemoManagementPage() {
         transition={{ duration: 0.4 }}
         className="glass rounded-xl p-4"
       >
-        <div className="section-header flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2 mb-3">
           <ClipboardList className="w-3.5 h-3.5 text-brand-accent" />
           <h2 className="text-xs font-semibold text-[#111827]">Demo Client Status</h2>
         </div>
@@ -253,7 +253,7 @@ export default function DemoManagementPage() {
         transition={{ duration: 0.4, delay: 0.1 }}
         className="glass rounded-xl p-4"
       >
-        <div className="section-header flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2 mb-3">
           <Link2 className="w-3.5 h-3.5 text-brand-accent" />
           <h2 className="text-xs font-semibold text-[#111827]">Share Demo Link</h2>
         </div>
@@ -279,7 +279,7 @@ export default function DemoManagementPage() {
         transition={{ duration: 0.4, delay: 0.2 }}
         className="glass rounded-xl p-4"
       >
-        <div className="section-header flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2 mb-3">
           <Sparkles className="w-3.5 h-3.5 text-brand-accent" />
           <h2 className="text-xs font-semibold text-[#111827]">How to Use Demo Mode</h2>
         </div>

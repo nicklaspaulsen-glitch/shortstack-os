@@ -128,7 +128,7 @@ export default function WebsiteScraper({
           </div>
           <div className="flex-1">
             <h3 className="text-sm font-semibold">Extract data from a website</h3>
-            <p className="text-[10px] text-muted mt-0.5">
+            <p className="text-[10px] text-text-muted mt-0.5">
               Paste any business URL — we&apos;ll pull contact info, social links, brand colors, and infer industry, audience and brand voice.
             </p>
           </div>
@@ -138,7 +138,7 @@ export default function WebsiteScraper({
       {/* Input row */}
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
-          <Globe size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+          <Globe size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
           <input
             type="url"
             value={url}
@@ -190,7 +190,7 @@ function ResultCard({
   const { extracted: x, ai } = result;
 
   return (
-    <div className="rounded-xl border border-border bg-surface-light/40 p-4 space-y-4">
+    <div className="rounded-xl border border-border-subtle bg-surface-light/40 p-4 space-y-4">
       {/* Header */}
       <div className="flex items-start gap-3">
         {x.logo ? (
@@ -198,18 +198,18 @@ function ResultCard({
           <img
             src={x.logo}
             alt="Logo"
-            className="w-12 h-12 rounded-lg object-contain bg-surface border border-border/30"
+            className="w-12 h-12 rounded-lg object-contain bg-surface border border-border-subtle/30"
             onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
         ) : (
-          <div className="w-12 h-12 rounded-lg bg-surface border border-border/30 flex items-center justify-center">
-            <Building size={16} className="text-muted" />
+          <div className="w-12 h-12 rounded-lg bg-surface border border-border-subtle/30 flex items-center justify-center">
+            <Building size={16} className="text-text-muted" />
           </div>
         )}
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold truncate">{x.businessName || "Unknown business"}</p>
           {x.description && (
-            <p className="text-[11px] text-muted leading-snug line-clamp-2 mt-0.5">{x.description}</p>
+            <p className="text-[11px] text-text-muted leading-snug line-clamp-2 mt-0.5">{x.description}</p>
           )}
           <a
             href={result.url}
@@ -223,11 +223,11 @@ function ResultCard({
         {x.primaryColor && (
           <div className="flex flex-col items-center gap-1 shrink-0">
             <div
-              className="w-7 h-7 rounded-md border border-border/40 shadow-inner"
+              className="w-7 h-7 rounded-md border border-border-subtle/40 shadow-inner"
               style={{ background: x.primaryColor }}
               title={`Primary color: ${x.primaryColor}`}
             />
-            <p className="text-[8px] font-mono text-muted">{x.primaryColor}</p>
+            <p className="text-[8px] font-mono text-text-muted">{x.primaryColor}</p>
           </div>
         )}
       </div>
@@ -242,7 +242,7 @@ function ResultCard({
           <Field icon={<Building size={11} />} label="Estimated size" value={ai.estimatedSize} />
           {ai.services.length > 0 && (
             <div className="md:col-span-2">
-              <p className="text-[9px] uppercase tracking-wider text-muted mb-1">AI-detected services</p>
+              <p className="text-[9px] uppercase tracking-wider text-text-muted mb-1">AI-detected services</p>
               <div className="flex flex-wrap gap-1.5">
                 {ai.services.map((s, i) => (
                   <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-[#2563EB] border border-[rgba(59,130,246,0.2)]">
@@ -269,7 +269,7 @@ function ResultCard({
 
       {x.socialLinks.length > 0 && (
         <div>
-          <p className="text-[9px] uppercase tracking-wider text-muted mb-1">Socials</p>
+          <p className="text-[9px] uppercase tracking-wider text-text-muted mb-1">Socials</p>
           <div className="flex flex-wrap gap-1.5">
             {x.socialLinks.map((s, i) => (
               <a
@@ -277,7 +277,7 @@ function ResultCard({
                 href={s.url}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[10px] px-2 py-0.5 rounded-md bg-surface border border-border hover:border-[rgba(59,130,246,0.25)] capitalize"
+                className="text-[10px] px-2 py-0.5 rounded-md bg-surface border border-border-subtle hover:border-[rgba(59,130,246,0.25)] capitalize"
               >
                 {s.platform}
               </a>
@@ -288,7 +288,7 @@ function ResultCard({
 
       {x.techStack.length > 0 && (
         <div>
-          <p className="text-[9px] uppercase tracking-wider text-muted mb-1">Tech stack</p>
+          <p className="text-[9px] uppercase tracking-wider text-text-muted mb-1">Tech stack</p>
           <div className="flex flex-wrap gap-1.5">
             {x.techStack.map((t, i) => (
               <span key={i} className="text-[10px] px-2 py-0.5 rounded-md bg-info/10 text-info border border-info/20">
@@ -301,10 +301,10 @@ function ResultCard({
 
       {x.keywords.length > 0 && (
         <div>
-          <p className="text-[9px] uppercase tracking-wider text-muted mb-1">Keywords</p>
+          <p className="text-[9px] uppercase tracking-wider text-text-muted mb-1">Keywords</p>
           <div className="flex flex-wrap gap-1">
             {x.keywords.slice(0, 12).map((k, i) => (
-              <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-surface border border-border/30 text-muted">
+              <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-surface border border-border-subtle/30 text-text-muted">
                 {k}
               </span>
             ))}
@@ -314,21 +314,21 @@ function ResultCard({
 
       {x.ogImage && (
         <div>
-          <p className="text-[9px] uppercase tracking-wider text-muted mb-1 flex items-center gap-1">
+          <p className="text-[9px] uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1">
             <ImageIcon size={10} /> Open Graph image
           </p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={x.ogImage}
             alt="OG"
-            className="rounded-lg max-h-32 border border-border/30"
+            className="rounded-lg max-h-32 border border-border-subtle/30"
             onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
         </div>
       )}
 
       {onUse && (
-        <div className="flex justify-end pt-2 border-t border-border/30">
+        <div className="flex justify-end pt-2 border-t border-border-subtle/30">
           <button onClick={onUse} className="btn-primary text-xs px-4 py-1.5 flex items-center gap-2">
             <Zap size={12} /> {ctaLabel}
           </button>
@@ -336,7 +336,7 @@ function ResultCard({
       )}
 
       {!ai && (
-        <p className="text-[10px] text-muted flex items-center gap-1">
+        <p className="text-[10px] text-text-muted flex items-center gap-1">
           <CheckCircle2 size={10} className="text-success" /> Extracted without AI summary (analysis unavailable).
         </p>
       )}
@@ -357,8 +357,8 @@ function Field({
   className?: string;
 }) {
   return (
-    <div className={`p-2.5 rounded-lg bg-surface border border-border/30 ${className}`}>
-      <p className="text-[9px] uppercase tracking-wider text-muted flex items-center gap-1 mb-0.5">
+    <div className={`p-2.5 rounded-lg bg-surface border border-border-subtle/30 ${className}`}>
+      <p className="text-[9px] uppercase tracking-wider text-text-muted flex items-center gap-1 mb-0.5">
         {icon} {label}
       </p>
       <p className="text-[11px] capitalize-first">{value}</p>
@@ -378,12 +378,12 @@ function ListBlock({
   empty: string;
 }) {
   return (
-    <div className="p-2.5 rounded-lg bg-surface border border-border/30">
-      <p className="text-[9px] uppercase tracking-wider text-muted flex items-center gap-1 mb-1">
+    <div className="p-2.5 rounded-lg bg-surface border border-border-subtle/30">
+      <p className="text-[9px] uppercase tracking-wider text-text-muted flex items-center gap-1 mb-1">
         {icon} {label}
       </p>
       {items.length === 0 ? (
-        <p className="text-[10px] text-muted/70">{empty}</p>
+        <p className="text-[10px] text-text-muted/70">{empty}</p>
       ) : (
         <ul className="space-y-0.5">
           {items.map((it, i) => (

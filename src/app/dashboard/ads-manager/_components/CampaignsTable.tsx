@@ -289,7 +289,7 @@ export default function CampaignsTable() {
       )}
 
       {loading ? (
-        <div className="flex items-center justify-center py-12 text-muted">
+        <div className="flex items-center justify-center py-12 text-text-muted">
           <Loader2 className="animate-spin mr-2" size={16} />
           Loading campaigns...
         </div>
@@ -298,16 +298,16 @@ export default function CampaignsTable() {
           {error}
         </div>
       ) : campaigns.length === 0 ? (
-        <div className="rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] py-12 text-center text-sm text-muted">
+        <div className="rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] py-12 text-center text-sm text-text-muted">
           No campaigns match these filters.
         </div>
       ) : (
         <div className="rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="text-[11px] uppercase tracking-wide text-muted bg-[rgba(0,0,0,0.02)]">
+            <thead className="text-[11px] uppercase tracking-wide text-text-muted bg-[rgba(0,0,0,0.02)]">
               <tr>
                 <th className="px-3 py-2 w-8">
-                  <button onClick={toggleAll} className="text-muted hover:text-text">
+                  <button onClick={toggleAll} className="text-text-muted hover:text-text">
                     {allChecked ? <CheckSquare size={14} /> : <Square size={14} />}
                   </button>
                 </th>
@@ -330,7 +330,7 @@ export default function CampaignsTable() {
                   <td className="px-3 py-2">
                     <button
                       onClick={() => toggleRow(c.id)}
-                      className="text-muted hover:text-text"
+                      className="text-text-muted hover:text-text"
                     >
                       {selected.has(c.id) ? (
                         <CheckSquare size={14} />
@@ -359,7 +359,7 @@ export default function CampaignsTable() {
                           ? "bg-success/15 text-success"
                           : c.status === "paused"
                           ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
-                          : "bg-[rgba(0,0,0,0.04)] text-muted"
+                          : "bg-[rgba(0,0,0,0.04)] text-text-muted"
                       }`}
                     >
                       {c.status}
@@ -389,7 +389,7 @@ export default function CampaignsTable() {
                             setEditingId(null);
                             setEditingBudget("");
                           }}
-                          className="text-muted hover:text-text"
+                          className="text-text-muted hover:text-text"
                           title="Cancel"
                         >
                           X
@@ -398,7 +398,7 @@ export default function CampaignsTable() {
                     ) : c.dailyBudget !== null ? (
                       fmtCurrency(c.dailyBudget)
                     ) : (
-                      <span className="text-muted">-</span>
+                      <span className="text-text-muted">-</span>
                     )}
                   </td>
                   <td className="px-3 py-2 text-right tabular-nums">

@@ -77,10 +77,10 @@ export default function DashboardError({
           <AlertTriangle size={24} className="text-danger" />
         </div>
 
-        <h2 className="text-lg font-bold text-foreground mb-1">
+        <h2 className="text-lg font-bold text-text-primary mb-1">
           Something went wrong on this page
         </h2>
-        <p className="text-xs text-muted mb-4">
+        <p className="text-xs text-text-muted mb-4">
           This section crashed &mdash; the rest of the dashboard is still working.
         </p>
 
@@ -125,7 +125,7 @@ export default function DashboardError({
         </div>
 
         {error.digest && (
-          <p className="text-[10px] text-muted/50 font-mono mt-6">
+          <p className="text-[10px] text-text-muted/50 font-mono mt-6">
             Error ID: {error.digest}
           </p>
         )}

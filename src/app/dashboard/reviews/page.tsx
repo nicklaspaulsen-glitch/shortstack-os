@@ -96,7 +96,7 @@ function Stars({ rating }: { rating: number }) {
         <Star
           key={n}
           size={12}
-          className={n <= rating ? "fill-[#2563EB] text-brand-accent" : "text-muted/40"}
+          className={n <= rating ? "fill-[#2563EB] text-brand-accent" : "text-text-muted/40"}
         />
       ))}
     </div>
@@ -112,20 +112,20 @@ export default function ReviewsPage() {
   const [tab, setTab] = useState<"manager" | "requests">("manager");
 
   return (
-    <MotionPage className="min-h-screen bg-background text-foreground">{/* -- Reviews command strip -- */}
+    <MotionPage className="min-h-screen bg-background text-text-primary">{/* -- Reviews command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">REVIEWS</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Reviews</h1>
       </div>
     </div>{/* Tab bar */}<div className="mx-auto max-w-5xl px-6 pt-5">
-              <div className="flex gap-1 border-b border-border/40 mb-6">
+              <div className="flex gap-1 border-b border-border-subtle/40 mb-6">
                 <button
                   onClick={() => setTab("manager")}
                   className={`px-4 py-2 text-sm font-medium transition border-b-2 -mb-px ${
                     tab === "manager"
                       ? "border-brand-accent text-brand-accent"
-                      : "border-transparent text-muted hover:text-foreground"
+                      : "border-transparent text-text-muted hover:text-text-primary"
                   }`}
                 >
                   Review Manager
@@ -135,7 +135,7 @@ export default function ReviewsPage() {
                   className={`px-4 py-2 text-sm font-medium transition border-b-2 -mb-px flex items-center gap-1.5 ${
                     tab === "requests"
                       ? "border-brand-accent text-brand-accent"
-                      : "border-transparent text-muted hover:text-foreground"
+                      : "border-transparent text-text-muted hover:text-text-primary"
                   }`}
                 >
                   <Send size={13} />
@@ -248,7 +248,7 @@ function ReviewManager() {
               key={f}
               onClick={() => setFilter(f)}
               className={`rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition ${
-                filter === f ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light/40 text-muted hover:text-foreground"
+                filter === f ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light/40 text-text-muted hover:text-text-primary"
               }`}
             >
               {f}
@@ -271,7 +271,7 @@ function ReviewManager() {
       )}
 
       {loading ? (
-        <div className="flex items-center gap-2 text-sm text-muted"><Loader size={14} className="animate-spin" /> Loading…</div>
+        <div className="flex items-center gap-2 text-sm text-text-muted"><Loader size={14} className="animate-spin" /> Loading…</div>
       ) : filtered.length === 0 ? (
         <div className="glass rounded-xl p-4">
           <EmptyState
@@ -291,8 +291,8 @@ function ReviewManager() {
         </div>
       )}
 
-      <div className="mt-8 rounded-xl border border-border/40 bg-background/40 p-5 text-[12px] text-muted">
-        <p className="mb-2 font-semibold text-foreground">Coming soon</p>
+      <div className="mt-8 rounded-xl border border-border-subtle/40 bg-background/40 p-5 text-[12px] text-text-muted">
+        <p className="mb-2 font-semibold text-text-primary">Coming soon</p>
         <ul className="ml-4 list-disc space-y-1">
           <li>Auto-import from Google Business Profile, Yelp, Trustpilot, G2</li>
           <li>AI-drafted replies tuned to your brand voice</li>
@@ -379,25 +379,25 @@ function ReviewRequests() {
       <div className="flex gap-2">
         <button
           onClick={() => setSubTab("config")}
-          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${subTab === "config" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light/40 text-muted hover:text-foreground"}`}
+          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${subTab === "config" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light/40 text-text-muted hover:text-text-primary"}`}
         >
           <Settings2 size={12} /> Configs
         </button>
         <button
           onClick={() => setSubTab("history")}
-          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${subTab === "history" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light/40 text-muted hover:text-foreground"}`}
+          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${subTab === "history" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light/40 text-text-muted hover:text-text-primary"}`}
         >
           <History size={12} /> Sent History
         </button>
       </div>
 
       {loading ? (
-        <div className="flex items-center gap-2 text-sm text-muted"><Loader size={14} className="animate-spin" /> Loading…</div>
+        <div className="flex items-center gap-2 text-sm text-text-muted"><Loader size={14} className="animate-spin" /> Loading…</div>
       ) : subTab === "config" ? (
         <>
           {/* Config list */}
           <div className="flex items-center justify-between">
-            <p className="text-sm text-muted">
+            <p className="text-sm text-text-muted">
               Auto-send review links after appointments complete. Runs every 15 minutes via cron.
             </p>
             <button
@@ -437,20 +437,20 @@ function ReviewRequests() {
               {configs.map((cfg, idx) => (
                 <motion.div key={cfg.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl p-4">
                   <div className="flex items-start gap-3">
-                    <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${cfg.enabled ? "bg-emerald-500/15 text-emerald-700" : "bg-surface-light/60 text-muted"}`}>
+                    <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${cfg.enabled ? "bg-emerald-500/15 text-emerald-700" : "bg-surface-light/60 text-text-muted"}`}>
                       <Send size={14} />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="text-sm font-semibold">{PLATFORM_LABELS[cfg.platform] || cfg.platform}</span>
-                        <span className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-muted">{CHANNEL_LABELS[cfg.channel] || cfg.channel}</span>
-                        <span className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-muted flex items-center gap-1"><Clock size={9} /> {cfg.delay_minutes}m delay</span>
-                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${cfg.enabled ? "bg-emerald-500/15 text-emerald-700" : "bg-muted/10 text-muted"}`}>
+                        <span className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-text-muted">{CHANNEL_LABELS[cfg.channel] || cfg.channel}</span>
+                        <span className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-text-muted flex items-center gap-1"><Clock size={9} /> {cfg.delay_minutes}m delay</span>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${cfg.enabled ? "bg-emerald-500/15 text-emerald-700" : "bg-muted/10 text-text-muted"}`}>
                           {cfg.enabled ? "Enabled" : "Disabled"}
                         </span>
                       </div>
-                      <p className="mt-1 text-[11px] text-muted truncate">{cfg.review_url}</p>
-                      <p className="mt-0.5 text-[11px] text-muted/60 truncate">{cfg.message_template}</p>
+                      <p className="mt-1 text-[11px] text-text-muted truncate">{cfg.review_url}</p>
+                      <p className="mt-0.5 text-[11px] text-text-muted/60 truncate">{cfg.message_template}</p>
                     </div>
                     <div className="flex shrink-0 flex-col items-end gap-1">
                       <button
@@ -461,7 +461,7 @@ function ReviewRequests() {
                       </button>
                       <button
                         onClick={() => { setEditing(cfg); setShowForm(true); }}
-                        className="rounded bg-surface-light/40 px-2.5 py-1 text-[11px] text-muted hover:text-foreground"
+                        className="rounded bg-surface-light/40 px-2.5 py-1 text-[11px] text-text-muted hover:text-text-primary"
                       >
                         Edit
                       </button>
@@ -485,11 +485,11 @@ function ReviewRequests() {
               <h3 className="mb-3 text-sm font-semibold">Send Now (Manual)</h3>
               <div className="flex flex-wrap items-end gap-3">
                 <div>
-                  <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">Config</label>
+                  <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">Config</label>
                   <select
                     value={manualConfigId}
                     onChange={(e) => setManualConfigId(e.target.value)}
-                    className="rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm min-w-[160px]"
+                    className="rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-sm min-w-[160px]"
                   >
                     <option value="">— select —</option>
                     {configs.map((c) => (
@@ -498,11 +498,11 @@ function ReviewRequests() {
                   </select>
                 </div>
                 <div>
-                  <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">Client</label>
+                  <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">Client</label>
                   <select
                     value={manualClientId}
                     onChange={(e) => setManualClientId(e.target.value)}
-                    className="rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm min-w-[160px]"
+                    className="rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-sm min-w-[160px]"
                   >
                     <option value="">— select —</option>
                     {clients.map((c) => (
@@ -525,7 +525,7 @@ function ReviewRequests() {
       ) : (
         /* History tab */
         <>
-          <p className="text-sm text-muted">All review requests sent (auto + manual), newest first.</p>
+          <p className="text-sm text-text-muted">All review requests sent (auto + manual), newest first.</p>
           {history.length === 0 ? (
             <div className="glass rounded-xl p-4">
               <EmptyState
@@ -538,7 +538,7 @@ function ReviewRequests() {
             <div className="glass rounded-xl overflow-hidden">
               <table className="w-full text-[12px]">
                 <thead>
-                  <tr className="border-b border-border/40 text-left text-[10px] uppercase tracking-wider text-muted">
+                  <tr className="border-b border-border-subtle/40 text-left text-[10px] uppercase tracking-wider text-text-muted">
                     <th className="px-4 py-3">Sent</th>
                     <th className="px-4 py-3">Channel</th>
                     <th className="px-4 py-3">Platform</th>
@@ -548,8 +548,8 @@ function ReviewRequests() {
                 </thead>
                 <tbody>
                   {history.map((row, idx) => (
-                    <motion.tr key={row.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="border-b border-border/20 hover:bg-surface-light/10">
-                      <td className="px-4 py-3 text-muted">{new Date(row.sent_at).toLocaleString()}</td>
+                    <motion.tr key={row.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="border-b border-border-subtle/20 hover:bg-surface-light/10">
+                      <td className="px-4 py-3 text-text-muted">{new Date(row.sent_at).toLocaleString()}</td>
                       <td className="px-4 py-3 capitalize">{row.channel}</td>
                       <td className="px-4 py-3 capitalize">{(row.config as { platform?: string } | null)?.platform || "—"}</td>
                       <td className="px-4 py-3">
@@ -557,7 +557,7 @@ function ReviewRequests() {
                           {row.status}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-muted font-mono text-[10px]">{row.event_id ? row.event_id.slice(0, 8) + "…" : "manual"}</td>
+                      <td className="px-4 py-3 text-text-muted font-mono text-[10px]">{row.event_id ? row.event_id.slice(0, 8) + "…" : "manual"}</td>
                     </motion.tr>
                   ))}
                 </tbody>
@@ -616,7 +616,7 @@ function ConfigForm({
     <div className="rounded-xl border border-[rgba(59,130,246,0.3)] bg-[rgba(59,130,246,0.05)] p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <button onClick={onClose} className="rounded p-1 text-muted hover:text-foreground" aria-label="Close form"><ArrowLeft size={14} /></button>
+          <button onClick={onClose} className="rounded p-1 text-text-muted hover:text-text-primary" aria-label="Close form"><ArrowLeft size={14} /></button>
           <h3 className="text-base font-semibold">{initial ? "Edit config" : "New review request config"}</h3>
         </div>
       </div>
@@ -624,8 +624,8 @@ function ConfigForm({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Platform */}
         <div>
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">Platform</label>
-          <select value={platform} onChange={(e) => setPlatform(e.target.value)} className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm">
+          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">Platform</label>
+          <select value={platform} onChange={(e) => setPlatform(e.target.value)} className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-sm">
             <option value="google">Google</option>
             <option value="yelp">Yelp</option>
             <option value="custom">Custom</option>
@@ -634,8 +634,8 @@ function ConfigForm({
 
         {/* Channel */}
         <div>
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">Channel</label>
-          <select value={channel} onChange={(e) => setChannel(e.target.value)} className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm">
+          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">Channel</label>
+          <select value={channel} onChange={(e) => setChannel(e.target.value)} className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-sm">
             <option value="sms">SMS</option>
             <option value="email">Email</option>
             <option value="whatsapp">WhatsApp</option>
@@ -644,19 +644,19 @@ function ConfigForm({
 
         {/* Review URL */}
         <div className="sm:col-span-2">
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">Review URL</label>
+          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">Review URL</label>
           <input
             type="url"
             value={reviewUrl}
             onChange={(e) => setReviewUrl(e.target.value)}
             placeholder="https://g.page/r/your-business/review"
-            className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-sm"
           />
         </div>
 
         {/* Delay */}
         <div>
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">
+          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">
             Delay after appointment ends (minutes)
           </label>
           <input
@@ -665,7 +665,7 @@ function ConfigForm({
             max={10080}
             value={delayMinutes}
             onChange={(e) => setDelayMinutes(Number(e.target.value))}
-            className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-sm"
           />
         </div>
 
@@ -676,7 +676,7 @@ function ConfigForm({
               type="checkbox"
               checked={enabled}
               onChange={(e) => setEnabled(e.target.checked)}
-              className="h-4 w-4 rounded border-border/50 accent-[#2563EB]"
+              className="h-4 w-4 rounded border-border-subtle/50 accent-[#2563EB]"
             />
             Enabled
           </label>
@@ -684,16 +684,16 @@ function ConfigForm({
 
         {/* Message template */}
         <div className="sm:col-span-2">
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">
+          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">
             Message template
           </label>
           <textarea
             value={template}
             onChange={(e) => setTemplate(e.target.value)}
             rows={3}
-            className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm font-mono"
+            className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-sm font-mono"
           />
-          <p className="mt-1 text-[10px] text-muted">
+          <p className="mt-1 text-[10px] text-text-muted">
             Variables: <code className="text-brand-accent">{"{{first_name}}"}</code>{" "}
             <code className="text-brand-accent">{"{{last_name}}"}</code>{" "}
             <code className="text-brand-accent">{"{{review_url}}"}</code>{" "}
@@ -703,7 +703,7 @@ function ConfigForm({
       </div>
 
       <div className="mt-4 flex items-center justify-end gap-2">
-        <button onClick={onClose} className="rounded-lg px-4 py-2 text-sm text-muted hover:text-foreground">Cancel</button>
+        <button onClick={onClose} className="rounded-lg px-4 py-2 text-sm text-text-muted hover:text-text-primary">Cancel</button>
         <button
           onClick={save}
           disabled={saving || !reviewUrl.trim()}
@@ -738,7 +738,7 @@ function ReviewCard({
   const critical = review.rating <= 2;
 
   return (
-    <div className={`rounded-lg border bg-surface-light/20 transition hover:border-[rgba(59,130,246,0.4)] ${critical ? "border-rose-500/30" : "border-border/50"}`}>
+    <div className={`rounded-lg border bg-surface-light/20 transition hover:border-[rgba(59,130,246,0.4)] ${critical ? "border-rose-500/30" : "border-border-subtle/50"}`}>
       <div className="flex items-start gap-3 p-4">
         <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${critical ? "bg-rose-500/15 text-rose-700" : "bg-[rgba(59,130,246,0.08)] text-brand-accent"}`}>
           <Star size={16} />
@@ -746,23 +746,23 @@ function ReviewCard({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <p className="truncate text-sm font-semibold">{review.author}</p>
-            <span className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-muted">{review.source}</span>
+            <span className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-text-muted">{review.source}</span>
             <Stars rating={review.rating} />
             <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${style.tint}`}>{style.label}</span>
           </div>
-          <p className="mt-1 text-[12px] leading-relaxed text-foreground">{review.body}</p>
-          <p className="mt-1 text-[10px] text-muted">{new Date(review.created_at).toLocaleDateString()}</p>
+          <p className="mt-1 text-[12px] leading-relaxed text-text-primary">{review.body}</p>
+          <p className="mt-1 text-[10px] text-text-muted">{new Date(review.created_at).toLocaleDateString()}</p>
           {review.reply && !replying && (
             <div className="mt-2 rounded-lg border-l-2 border-[rgba(59,130,246,0.25)] bg-background/40 px-3 py-2">
               <p className="mb-0.5 text-[10px] uppercase tracking-wider text-brand-accent">Your reply</p>
-              <p className="text-[12px] leading-relaxed text-foreground">{review.reply}</p>
+              <p className="text-[12px] leading-relaxed text-text-primary">{review.reply}</p>
             </div>
           )}
           {replying && (
             <div className="mt-2">
-              <textarea value={draft} onChange={(e) => setDraft(e.target.value)} rows={3} placeholder="Thanks for sharing your feedback…" className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm" />
+              <textarea value={draft} onChange={(e) => setDraft(e.target.value)} rows={3} placeholder="Thanks for sharing your feedback…" className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-sm" />
               <div className="mt-2 flex items-center justify-end gap-2">
-                <button onClick={() => { setReplying(false); setDraft(review.reply); }} className="rounded-lg px-3 py-1.5 text-xs text-muted hover:text-foreground">Cancel</button>
+                <button onClick={() => { setReplying(false); setDraft(review.reply); }} className="rounded-lg px-3 py-1.5 text-xs text-text-muted hover:text-text-primary">Cancel</button>
                 <button onClick={() => { if (!draft.trim()) return; onReply(draft.trim()); setReplying(false); }} disabled={!draft.trim()} className="inline-flex items-center gap-1 rounded-lg bg-brand-accent px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-40">
                   <MessageSquare size={11} /> Save reply
                 </button>
@@ -813,39 +813,39 @@ function NewReviewForm({ onClose, onCreated }: { onClose: () => void; onCreated:
     <div className="rounded-xl border border-[rgba(59,130,246,0.3)] bg-[rgba(59,130,246,0.05)] p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <button onClick={onClose} className="rounded p-1 text-muted hover:text-foreground" aria-label="Back to reviews list"><ArrowLeft size={14} /></button>
+          <button onClick={onClose} className="rounded p-1 text-text-muted hover:text-text-primary" aria-label="Back to reviews list"><ArrowLeft size={14} /></button>
           <h3 className="text-base font-semibold">Log review</h3>
         </div>
-        <Link href="/dashboard/google-business" className="inline-flex items-center gap-1 text-[11px] text-muted hover:text-brand-accent"><ExternalLink size={11} /> Google Business</Link>
+        <Link href="/dashboard/google-business" className="inline-flex items-center gap-1 text-[11px] text-text-muted hover:text-brand-accent"><ExternalLink size={11} /> Google Business</Link>
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">Reviewer name</label>
-          <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)} placeholder="Sarah K." className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm" />
+          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">Reviewer name</label>
+          <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)} placeholder="Sarah K." className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-sm" />
         </div>
         <div>
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">Source</label>
-          <select value={source} onChange={(e) => setSource(e.target.value)} className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm">
+          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">Source</label>
+          <select value={source} onChange={(e) => setSource(e.target.value)} className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-sm">
             {SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
         <div className="sm:col-span-2">
-          <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted">Rating</label>
+          <label className="mb-1 block text-[10px] uppercase tracking-wider text-text-muted">Rating</label>
           <div className="flex items-center gap-1">
             {[1, 2, 3, 4, 5].map((n) => (
               <button key={n} type="button" onClick={() => setRating(n)} aria-label={`${n} stars`} className="p-1">
-                <Star size={22} className={n <= rating ? "fill-[#2563EB] text-brand-accent" : "text-muted/40 hover:text-brand-accent/60"} />
+                <Star size={22} className={n <= rating ? "fill-[#2563EB] text-brand-accent" : "text-text-muted/40 hover:text-brand-accent/60"} />
               </button>
             ))}
           </div>
         </div>
         <div className="sm:col-span-2">
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">Review text</label>
-          <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={4} placeholder="Great service, quick turnaround…" className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm" />
+          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">Review text</label>
+          <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={4} placeholder="Great service, quick turnaround…" className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-sm" />
         </div>
       </div>
       <div className="mt-4 flex items-center justify-end gap-2">
-        <button onClick={onClose} className="rounded-lg px-4 py-2 text-sm text-muted hover:text-foreground">Cancel</button>
+        <button onClick={onClose} className="rounded-lg px-4 py-2 text-sm text-text-muted hover:text-text-primary">Cancel</button>
         <button onClick={submit} disabled={!canSubmit} className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-5 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-40">
           <Plus size={14} /> Log review
         </button>

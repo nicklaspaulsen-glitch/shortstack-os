@@ -96,25 +96,25 @@ export default function SidebarCustomizer({
         <button
           type="button"
           onClick={selectAll}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light border border-border text-xs font-medium text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.25)] transition-all"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light border border-border-subtle text-xs font-medium text-text-muted hover:text-text-primary hover:border-[rgba(59,130,246,0.25)] transition-all"
         >
           <CheckSquare size={12} /> Select All
         </button>
         <button
           type="button"
           onClick={selectNone}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light border border-border text-xs font-medium text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.25)] transition-all"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light border border-border-subtle text-xs font-medium text-text-muted hover:text-text-primary hover:border-[rgba(59,130,246,0.25)] transition-all"
         >
           <Square size={12} /> Select None
         </button>
         <div className="flex-1" />
-        <span className="text-[11px] text-muted">
+        <span className="text-[11px] text-text-muted">
           <span className="text-[#2563EB] font-semibold">{enabledItems.length}</span> of {ALL_SIDEBAR_ITEMS.length} enabled
         </span>
       </div>
 
       {reasoning && (
-        <div className="px-3 py-2 rounded-lg bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.08)] text-[11px] text-muted italic">
+        <div className="px-3 py-2 rounded-lg bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.08)] text-[11px] text-text-muted italic">
           <span className="text-[#2563EB] font-medium">AI: </span>
           {reasoning}
         </div>
@@ -128,7 +128,7 @@ export default function SidebarCustomizer({
           const allSelected = catHrefs.every((h) => enabledSet.has(h));
           const someSelected = catHrefs.some((h) => enabledSet.has(h));
           return (
-            <div key={cat.category} className="rounded-xl border border-border bg-surface-light/30 overflow-hidden">
+            <div key={cat.category} className="rounded-xl border border-border-subtle bg-surface-light/30 overflow-hidden">
               <button
                 type="button"
                 onClick={() => selectCategory(cat.category)}
@@ -136,8 +136,8 @@ export default function SidebarCustomizer({
               >
                 <div className="flex items-center gap-2">
                   <Grid size={12} className="text-[#2563EB]" />
-                  <span className="text-xs font-semibold text-foreground">{cat.category}</span>
-                  <span className="text-[10px] text-muted">
+                  <span className="text-xs font-semibold text-text-primary">{cat.category}</span>
+                  <span className="text-[10px] text-text-muted">
                     {catHrefs.filter((h) => enabledSet.has(h)).length}/{catHrefs.length}
                   </span>
                 </div>
@@ -147,7 +147,7 @@ export default function SidebarCustomizer({
                       ? "bg-[#2563EB] border-[#2563EB] text-white"
                       : someSelected
                       ? "bg-[rgba(59,130,246,0.18)] border-[rgba(59,130,246,0.4)] text-[#2563EB]"
-                      : "border-border"
+                      : "border-border-subtle"
                   }`}
                 >
                   {allSelected ? <Check size={9} /> : someSelected ? "—" : ""}
@@ -163,14 +163,14 @@ export default function SidebarCustomizer({
                       onClick={() => toggle(item.href)}
                       className={`flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg text-xs text-left transition-all ${
                         selected
-                          ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-foreground"
-                          : "bg-transparent border border-transparent text-muted hover:text-foreground hover:bg-surface-light"
+                          ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-text-primary"
+                          : "bg-transparent border border-transparent text-text-muted hover:text-text-primary hover:bg-surface-light"
                       }`}
                     >
                       <span className="truncate">{item.label}</span>
                       <span
                         className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                          selected ? "bg-[#2563EB] border-[#2563EB]" : "border-border"
+                          selected ? "bg-[#2563EB] border-[#2563EB]" : "border-border-subtle"
                         }`}
                       >
                         {selected && <Check size={9} className="text-white" />}
@@ -185,10 +185,10 @@ export default function SidebarCustomizer({
       </div>
 
       {showSummary && enabledItems.length > 0 && (
-        <div className="text-[11px] text-muted">
+        <div className="text-[11px] text-text-muted">
           Tip: sections become invisible in the sidebar when all their items are unchecked. Core navigation like{" "}
-          <span className="text-foreground font-medium">Dashboard</span> and{" "}
-          <span className="text-foreground font-medium">Settings</span> should stay enabled so you can still navigate.
+          <span className="text-text-primary font-medium">Dashboard</span> and{" "}
+          <span className="text-text-primary font-medium">Settings</span> should stay enabled so you can still navigate.
         </div>
       )}
     </div>

@@ -159,7 +159,7 @@ export default function AffiliatePortalPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] text-muted">
+      <div className="flex items-center justify-center min-h-[60vh] text-text-muted">
         <Loader2 className="animate-spin" size={20} />
       </div>
     );
@@ -170,7 +170,7 @@ export default function AffiliatePortalPage() {
       <div className="max-w-3xl mx-auto py-16 px-6 text-center space-y-4">
         <Award size={40} className="mx-auto text-[rgba(59,130,246,0.6)]" />
         <h1 className="text-2xl font-semibold">Affiliate portal</h1>
-        <p className="text-muted">
+        <p className="text-text-muted">
           You're not enrolled in any affiliate program yet. If you've been invited
           via email, sign in with that email to link your account.
         </p>
@@ -197,21 +197,21 @@ export default function AffiliatePortalPage() {
         </div>
         <div>
           <h1 className="text-2xl font-semibold">Your affiliate portal</h1>
-          <p className="text-sm text-muted">Track referrals, earnings, and payouts</p>
+          <p className="text-sm text-text-muted">Track referrals, earnings, and payouts</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className=" border border-border bg-card/40 p-5">
-          <div className="text-xs uppercase text-muted">Total earned</div>
+        <div className=" border border-border-subtle bg-card/40 p-5">
+          <div className="text-xs uppercase text-text-muted">Total earned</div>
           <div className="text-2xl font-bold text-[#2563EB] mt-1">{fmtCents(totalEarned)}</div>
         </div>
-        <div className=" border border-border bg-card/40 p-5">
-          <div className="text-xs uppercase text-muted">Pending</div>
+        <div className=" border border-border-subtle bg-card/40 p-5">
+          <div className="text-xs uppercase text-text-muted">Pending</div>
           <div className="text-2xl font-bold mt-1">{fmtCents(totalPending)}</div>
         </div>
-        <div className=" border border-border bg-card/40 p-5">
-          <div className="text-xs uppercase text-muted">Paid out</div>
+        <div className=" border border-border-subtle bg-card/40 p-5">
+          <div className="text-xs uppercase text-text-muted">Paid out</div>
           <div className="text-2xl font-bold text-success mt-1">{fmtCents(totalPaid)}</div>
         </div>
       </div>
@@ -220,7 +220,7 @@ export default function AffiliatePortalPage() {
         <div className=" border border-warning/40 bg-warning/5 p-5 flex flex-col sm:flex-row sm:items-center gap-4">
           <div className="flex-1">
             <h3 className="font-semibold">Connect Stripe to receive payouts</h3>
-            <p className="text-sm text-muted">
+            <p className="text-sm text-text-muted">
               Once connected, your commissions are paid to your Stripe account
               automatically as soon as they cross the program threshold.
             </p>
@@ -244,28 +244,28 @@ export default function AffiliatePortalPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className=" border border-border bg-card/40 p-5 space-y-3">
+        <div className=" border border-border-subtle bg-card/40 p-5 space-y-3">
           <h3 className="font-semibold">Recent referrals</h3>
           {recentReferrals.length === 0 ? (
-            <p className="text-xs text-muted">No referrals yet — share your link!</p>
+            <p className="text-xs text-text-muted">No referrals yet — share your link!</p>
           ) : (
             <div className="space-y-2 max-h-[360px] overflow-y-auto">
               {recentReferrals.map((r) => (
                 <div
                   key={r.id}
-                  className="flex justify-between gap-3 text-xs border-b border-border last:border-0 py-2"
+                  className="flex justify-between gap-3 text-xs border-b border-border-subtle last:border-0 py-2"
                 >
                   <span className="truncate">
                     {r.referred_email ?? "(anonymous click)"}
                   </span>
-                  <span className="text-muted whitespace-nowrap">{fmtDate(r.created_at)}</span>
+                  <span className="text-text-muted whitespace-nowrap">{fmtDate(r.created_at)}</span>
                   <span
                     className={`font-semibold capitalize ${
                       r.status === "subscribed"
                         ? "text-success"
                         : r.status === "signed_up"
                         ? "text-blue-400"
-                        : "text-muted"
+                        : "text-text-muted"
                     }`}
                   >
                     {r.status.replace("_", " ")}
@@ -275,28 +275,28 @@ export default function AffiliatePortalPage() {
             </div>
           )}
         </div>
-        <div className=" border border-border bg-card/40 p-5 space-y-3">
+        <div className=" border border-border-subtle bg-card/40 p-5 space-y-3">
           <h3 className="font-semibold">Recent payouts</h3>
           {recentCommissions.length === 0 ? (
-            <p className="text-xs text-muted">No commissions yet.</p>
+            <p className="text-xs text-text-muted">No commissions yet.</p>
           ) : (
             <div className="space-y-2 max-h-[360px] overflow-y-auto">
               {recentCommissions.map((c) => (
                 <div
                   key={c.id}
-                  className="flex justify-between gap-3 text-xs border-b border-border last:border-0 py-2"
+                  className="flex justify-between gap-3 text-xs border-b border-border-subtle last:border-0 py-2"
                 >
                   <span className="font-mono">
                     {fmtCents(c.amount_cents, c.currency)}
                   </span>
-                  <span className="text-muted">{fmtDate(c.created_at)}</span>
+                  <span className="text-text-muted">{fmtDate(c.created_at)}</span>
                   <span
                     className={`font-semibold capitalize ${
                       c.status === "paid"
                         ? "text-success"
                         : c.status === "pending"
                         ? "text-warning"
-                        : "text-muted"
+                        : "text-text-muted"
                     }`}
                   >
                     {c.status}
@@ -338,12 +338,12 @@ function AffiliateProgramBlock({ affiliate }: { affiliate: AffiliateRow }) {
   }, [refLink, program?.name]);
 
   return (
-    <div className=" border border-border bg-card/40 p-5 space-y-3">
+    <div className=" border border-border-subtle bg-card/40 p-5 space-y-3">
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div>
           <h3 className="font-semibold">{program?.name ?? "Program"}</h3>
           {program?.description && (
-            <p className="text-xs text-muted">{program.description}</p>
+            <p className="text-xs text-text-muted">{program.description}</p>
           )}
           {program && (
             <p className="text-xs text-[#2563EB] mt-1">
@@ -369,7 +369,7 @@ function AffiliateProgramBlock({ affiliate }: { affiliate: AffiliateRow }) {
         <input
           value={refLink}
           readOnly
-          className="flex-1 rounded-lg bg-muted/10 border border-border px-3 py-2 text-sm font-mono"
+          className="flex-1 rounded-lg bg-muted/10 border border-border-subtle px-3 py-2 text-sm font-mono"
         />
         <button
           onClick={copy}
@@ -379,7 +379,7 @@ function AffiliateProgramBlock({ affiliate }: { affiliate: AffiliateRow }) {
         </button>
         <button
           onClick={share}
-          className="px-3 py-2 border border-border rounded-lg text-sm flex items-center gap-2"
+          className="px-3 py-2 border border-border-subtle rounded-lg text-sm flex items-center gap-2"
         >
           <Share2 size={14} /> Share
         </button>
@@ -387,15 +387,15 @@ function AffiliateProgramBlock({ affiliate }: { affiliate: AffiliateRow }) {
 
       <div className="grid grid-cols-3 gap-2 text-xs">
         <div className="rounded-lg bg-muted/10 p-2">
-          <div className="text-muted">Earned</div>
+          <div className="text-text-muted">Earned</div>
           <div className="font-semibold text-[#2563EB]">{fmtCents(affiliate.total_earned_cents)}</div>
         </div>
         <div className="rounded-lg bg-muted/10 p-2">
-          <div className="text-muted">Pending</div>
+          <div className="text-text-muted">Pending</div>
           <div className="font-semibold">{fmtCents(affiliate.pending_cents)}</div>
         </div>
         <div className="rounded-lg bg-muted/10 p-2">
-          <div className="text-muted">Paid</div>
+          <div className="text-text-muted">Paid</div>
           <div className="font-semibold text-success">{fmtCents(affiliate.paid_cents)}</div>
         </div>
       </div>

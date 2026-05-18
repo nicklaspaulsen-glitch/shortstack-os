@@ -86,16 +86,16 @@ export default function TutorialSection({
   const gridClass = COLUMN_CLASS[columns];
 
   return (
-    <section className="card">
+    <section className="glass rounded-xl p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="section-header mb-0 flex items-center gap-2">{title}</h2>
-          {subtitle && <p className="text-[10px] text-muted mt-1">{subtitle}</p>}
+          <h2 className="mb-0 flex items-center gap-2">{title}</h2>
+          {subtitle && <p className="text-[10px] text-text-muted mt-1">{subtitle}</p>}
         </div>
         {collapsible && (
           <button
             onClick={toggle}
-            className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-surface-light flex-shrink-0"
+            className="flex items-center gap-1 text-[10px] text-text-muted hover:text-text-primary transition-colors px-2 py-1 rounded-md hover:bg-surface-light flex-shrink-0"
             aria-expanded={open}
             aria-controls="tutorial-section-grid"
           >
@@ -119,7 +119,7 @@ export default function TutorialSection({
             return (
               <div
                 key={step.number}
-                className="relative flex flex-col gap-2 p-3 rounded-xl border border-border bg-surface-light/40 hover:border-[rgba(59,130,246,0.25)] transition-all"
+                className="relative flex flex-col gap-2 p-3 rounded-xl border border-border-subtle bg-surface-light/40 hover:border-[rgba(59,130,246,0.25)] transition-all"
               >
                 <div className="flex items-start gap-2">
                   <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[rgba(59,130,246,0.12)] text-[#2563EB] text-[11px] font-bold flex items-center justify-center border border-[rgba(59,130,246,0.25)]">
@@ -128,11 +128,11 @@ export default function TutorialSection({
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
                       {Icon && <Icon size={12} className="text-[#2563EB] flex-shrink-0" />}
-                      <h3 className="text-[11px] font-semibold text-foreground truncate">
+                      <h3 className="text-[11px] font-semibold text-text-primary truncate">
                         {step.title}
                       </h3>
                     </div>
-                    <p className="text-[10px] text-muted mt-1 leading-relaxed">
+                    <p className="text-[10px] text-text-muted mt-1 leading-relaxed">
                       {step.description}
                     </p>
                   </div>
@@ -144,14 +144,14 @@ export default function TutorialSection({
                     src={step.screenshot}
                     alt={step.title}
                     loading="lazy"
-                    className="w-full rounded-lg border border-border/60 object-cover aspect-video"
+                    className="w-full rounded-lg border border-border-subtle/60 object-cover aspect-video"
                   />
                 )}
 
                 {step.videoEmbed && (
                   <button
                     onClick={() => setVideoOpen(step.videoEmbed || null)}
-                    className="relative w-full rounded-lg overflow-hidden border border-border/60 group/video"
+                    className="relative w-full rounded-lg overflow-hidden border border-border-subtle/60 group/video"
                   >
                     {step.screenshot ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -186,7 +186,7 @@ export default function TutorialSection({
         >
           <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
           <div
-            className="relative w-full max-w-3xl aspect-video bg-black rounded-xl overflow-hidden border border-border shadow-2xl"
+            className="relative w-full max-w-3xl aspect-video bg-black rounded-xl overflow-hidden border border-border-subtle shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <button

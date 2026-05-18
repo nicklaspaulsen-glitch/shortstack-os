@@ -58,7 +58,7 @@ function Stars({ rating }: { rating: number | null }) {
         <Star
           key={n}
           size={11}
-          className={n <= rating ? "fill-amber-400 text-amber-400" : "text-muted/40"}
+          className={n <= rating ? "fill-amber-400 text-amber-400" : "text-text-muted/40"}
         />
       ))}
     </div>
@@ -206,7 +206,7 @@ export default function ReviewsAutoReplyPage() {
         <div className="flex items-center gap-2">
                   <Link
                     href="/dashboard/reviews"
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-muted hover:text-foreground bg-black/5 hover:bg-black/5 transition-all"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-text-muted hover:text-text-primary bg-black/5 hover:bg-black/5 transition-all"
                   >
                     <ArrowLeft size={14} /> Back
                   </Link>

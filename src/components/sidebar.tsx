@@ -736,7 +736,7 @@ export default function Sidebar() {
       // 320ms reads as "considered" without feeling slow. `transform-gpu`
       // forces the aside onto its own compositor layer so the width tween
       // doesn't trigger layout reflow on the rest of the page.
-      className={`sidebar-fade-in sidebar-rail-anim fixed inset-y-0 left-0 z-40 flex flex-col transform-gpu ${
+      className={`sidebar-sidebar-rail-anim fixed inset-y-0 left-0 z-40 flex flex-col transform-gpu ${
         collapsed ? "w-[56px]" : "w-60"
       } ${hoverExpanded && !pinned ? "shadow-[8px_0_36px_-10px_rgba(0,0,0,0.55)]" : ""}`}
       style={{

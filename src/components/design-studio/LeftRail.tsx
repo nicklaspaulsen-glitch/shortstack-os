@@ -102,9 +102,9 @@ export default function LeftRail() {
   ];
 
   return (
-    <div className="w-60 flex flex-col border-r border-border bg-[#151525] shrink-0">
+    <div className="w-60 flex flex-col border-r border-border-subtle bg-[#151525] shrink-0">
       {/* Tab bar */}
-      <div className="flex border-b border-border">
+      <div className="flex border-b border-border-subtle">
         {tabs.map((t) => (
           <button
             key={t.id}
@@ -170,7 +170,7 @@ export default function LeftRail() {
             >
               Configure White Label →
             </a>
-            <div className="border-t border-border pt-3">
+            <div className="border-t border-border-subtle pt-3">
               <p className="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wider">Quick apply</p>
               <button
                 onClick={() => {
@@ -204,7 +204,7 @@ export default function LeftRail() {
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="A professional headshot on white background…"
                 rows={3}
-                className="mt-1 w-full bg-black/5 border border-border rounded text-xs text-gray-300 placeholder-gray-600 p-2 resize-none focus:outline-none focus:border-border"
+                className="mt-1 w-full bg-black/5 border border-border-subtle rounded text-xs text-gray-300 placeholder-gray-600 p-2 resize-none focus:outline-none focus:border-border-subtle"
               />
             </div>
             <div className="grid grid-cols-2 gap-2">
@@ -213,7 +213,7 @@ export default function LeftRail() {
                 <select
                   value={genWidth}
                   onChange={(e) => setGenWidth(Number(e.target.value))}
-                  className="mt-1 w-full bg-black/5 border border-border rounded text-xs text-gray-300 p-1 focus:outline-none"
+                  className="mt-1 w-full bg-black/5 border border-border-subtle rounded text-xs text-gray-300 p-1 focus:outline-none"
                 >
                   {[512, 768, 1024, 1280].map((v) => (
                     <option key={v} value={v} className="bg-[#1a1a2e]">{v}</option>
@@ -225,7 +225,7 @@ export default function LeftRail() {
                 <select
                   value={genHeight}
                   onChange={(e) => setGenHeight(Number(e.target.value))}
-                  className="mt-1 w-full bg-black/5 border border-border rounded text-xs text-gray-300 p-1 focus:outline-none"
+                  className="mt-1 w-full bg-black/5 border border-border-subtle rounded text-xs text-gray-300 p-1 focus:outline-none"
                 >
                   {[512, 768, 1024, 1280].map((v) => (
                     <option key={v} value={v} className="bg-[#1a1a2e]">{v}</option>
@@ -275,7 +275,7 @@ export default function LeftRail() {
               </div>
             </div>
 
-            <div className="border-t border-border pt-2">
+            <div className="border-t border-border-subtle pt-2">
               <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Shapes</p>
               <div className="grid grid-cols-3 gap-1">
                 {(["rectangle", "ellipse", "triangle"] as const).map((shape) => (
@@ -303,7 +303,7 @@ export default function LeftRail() {
               </div>
             </div>
 
-            <div className="border-t border-border pt-2">
+            <div className="border-t border-border-subtle pt-2">
               <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Image</p>
               <button
                 onClick={() => {

@@ -33,7 +33,7 @@ export function DotsPulse({ size = 40, color = "var(--gold, #C9A84C)", label, cl
           />
         ))}
       </div>
-      {label && <span className="text-[10px] text-muted">{label}</span>}
+      {label && <span className="text-[10px] text-text-muted">{label}</span>}
       <style jsx>{`
         @keyframes ssDotPulse {
           0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
@@ -71,7 +71,7 @@ export function OrbitLoader({ size = 40, color = "var(--gold, #C9A84C)", label, 
           </div>
         ))}
       </div>
-      {label && <span className="text-[10px] text-muted">{label}</span>}
+      {label && <span className="text-[10px] text-text-muted">{label}</span>}
       <style jsx>{`
         @keyframes ssOrbit { to { transform: rotate(360deg); } }
         .ss-orbit { animation: ssOrbit 1.2s linear infinite; }
@@ -98,7 +98,7 @@ export function WaveBars({ size = 40, color = "var(--gold, #C9A84C)", label, cla
           />
         ))}
       </div>
-      {label && <span className="text-[10px] text-muted">{label}</span>}
+      {label && <span className="text-[10px] text-text-muted">{label}</span>}
       <style jsx>{`
         @keyframes ssWave {
           0%, 100% { height: 20%; opacity: 0.5; }
@@ -126,7 +126,7 @@ export function InfinityLoader({ size = 60, color = "var(--gold, #C9A84C)", labe
           className="ss-infinity"
         />
       </svg>
-      {label && <span className="text-[10px] text-muted">{label}</span>}
+      {label && <span className="text-[10px] text-text-muted">{label}</span>}
       <style jsx>{`
         @keyframes ssInfinity { to { stroke-dashoffset: -300; } }
         .ss-infinity { animation: ssInfinity 2s linear infinite; }
@@ -143,7 +143,7 @@ export function MorphShapes({ size = 40, color = "var(--gold, #C9A84C)", label, 
         className="ss-morph"
         style={{ width: size, height: size, background: color }}
       />
-      {label && <span className="text-[10px] text-muted">{label}</span>}
+      {label && <span className="text-[10px] text-text-muted">{label}</span>}
       <style jsx>{`
         @keyframes ssMorph {
           0%, 100% { border-radius: 10%; transform: rotate(0); }
@@ -190,7 +190,7 @@ export function ParticleBurst({ size = 50, color = "var(--gold, #C9A84C)", label
           }}
         />
       </div>
-      {label && <span className="text-[10px] text-muted">{label}</span>}
+      {label && <span className="text-[10px] text-text-muted">{label}</span>}
       <style jsx>{`
         @keyframes ssParticle {
           0% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--r, 0deg)) translateY(-10%); }
@@ -244,7 +244,7 @@ export function SphereLoader({ size = 40, color = "var(--gold, #C9A84C)", label,
           boxShadow: `0 0 ${size / 2}px ${color}80, inset 0 0 ${size / 3}px rgba(0,0,0,0.3)`,
         }}
       />
-      {label && <span className="text-[10px] text-muted">{label}</span>}
+      {label && <span className="text-[10px] text-text-muted">{label}</span>}
       <style jsx>{`
         @keyframes ssSphere { to { transform: rotate(360deg); } }
         .ss-sphere { animation: ssSphere 1.5s linear infinite; }
@@ -258,7 +258,7 @@ export function ScanLineLoader({ size = 100, color = "var(--gold, #C9A84C)", lab
   return (
     <div className={`inline-flex flex-col items-center gap-2 ${className}`}>
       <div
-        className="relative overflow-hidden rounded-lg border border-border"
+        className="relative overflow-hidden rounded-lg border border-border-subtle"
         style={{ width: size, height: size * 0.4, background: "rgba(255,255,255,0.02)" }}
       >
         <span
@@ -269,7 +269,7 @@ export function ScanLineLoader({ size = 100, color = "var(--gold, #C9A84C)", lab
           }}
         />
       </div>
-      {label && <span className="text-[10px] text-muted">{label}</span>}
+      {label && <span className="text-[10px] text-text-muted">{label}</span>}
       <style jsx>{`
         @keyframes ssScanLine {
           0%, 100% { top: 10%; }
@@ -302,7 +302,7 @@ export function QuantumLoader({ size = 50, color = "var(--gold, #C9A84C)", label
           />
         ))}
       </div>
-      {label && <span className="text-[10px] text-muted">{label}</span>}
+      {label && <span className="text-[10px] text-text-muted">{label}</span>}
       <style jsx>{`
         @keyframes ssQuantum { to { transform: rotate(360deg) scale(var(--s, 1)); } }
         .ss-quantum { animation-name: ssQuantum; animation-timing-function: linear; animation-iteration-count: infinite; }

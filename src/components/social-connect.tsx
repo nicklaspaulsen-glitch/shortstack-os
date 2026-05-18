@@ -21,13 +21,13 @@ interface ConnectedAccount {
 const PLATFORMS = [
   { id: "instagram", name: "Instagram", icon: <Camera size={16} />, color: "text-pink-400", bg: "bg-pink-400/10 border-pink-400/20", urlPrefix: "instagram.com/", placeholder: "@handle" },
   { id: "facebook", name: "Facebook", icon: <MessageCircle size={16} />, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20", urlPrefix: "facebook.com/", placeholder: "Page name or URL" },
-  { id: "tiktok", name: "TikTok", icon: <Music size={16} />, color: "text-foreground", bg: "bg-black/5 border-border", urlPrefix: "tiktok.com/@", placeholder: "@handle" },
+  { id: "tiktok", name: "TikTok", icon: <Music size={16} />, color: "text-text-primary", bg: "bg-black/5 border-border-subtle", urlPrefix: "tiktok.com/@", placeholder: "@handle" },
   { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={16} />, color: "text-blue-600", bg: "bg-blue-300/10 border-blue-300/20", urlPrefix: "linkedin.com/company/", placeholder: "Company page URL" },
   { id: "youtube", name: "YouTube", icon: <Play size={16} />, color: "text-red-400", bg: "bg-red-400/10 border-red-400/20", urlPrefix: "youtube.com/@", placeholder: "@channel or URL" },
   { id: "google_ads", name: "Google Ads", icon: <Megaphone size={16} />, color: "text-green-400", bg: "bg-green-400/10 border-green-400/20", urlPrefix: "", placeholder: "Account ID (xxx-xxx-xxxx)" },
   { id: "meta_ads", name: "Meta Ads", icon: <Megaphone size={16} />, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20", urlPrefix: "", placeholder: "Ad Account ID" },
   { id: "tiktok_ads", name: "TikTok Ads", icon: <Megaphone size={16} />, color: "text-cyan-400", bg: "bg-cyan-400/10 border-cyan-400/20", urlPrefix: "", placeholder: "Advertiser ID" },
-  { id: "x_twitter", name: "X (Twitter)", icon: <Hash size={16} />, color: "text-foreground", bg: "bg-black/5 border-border", urlPrefix: "x.com/", placeholder: "@handle" },
+  { id: "x_twitter", name: "X (Twitter)", icon: <Hash size={16} />, color: "text-text-primary", bg: "bg-black/5 border-border-subtle", urlPrefix: "x.com/", placeholder: "@handle" },
   { id: "website", name: "Website", icon: <Globe size={16} />, color: "text-[#2563EB]", bg: "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)]", urlPrefix: "", placeholder: "https://example.com" },
 ];
 
@@ -149,7 +149,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
         <div className="flex items-center gap-2">
           <Link2 size={14} className="text-[#2563EB]" />
           <h3 className="text-sm font-semibold">Connected Accounts</h3>
-          <span className="text-[10px] text-muted bg-surface-light px-1.5 py-0.5 rounded">
+          <span className="text-[10px] text-text-muted bg-surface-light px-1.5 py-0.5 rounded">
             {accounts.filter(a => a.is_active).length}
           </span>
         </div>
@@ -163,11 +163,11 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
 
       {/* Connected accounts grid */}
       {loading ? (
-        <div className="text-xs text-muted py-4 text-center">Loading...</div>
+        <div className="text-xs text-text-muted py-4 text-center">Loading...</div>
       ) : accounts.filter(a => a.is_active).length === 0 ? (
-        <div className="text-center py-6 border border-dashed border-border/50 rounded-lg">
-          <Link2 size={20} className="mx-auto mb-2 text-muted/50" />
-          <p className="text-xs text-muted">No accounts linked yet</p>
+        <div className="text-center py-6 border border-dashed border-border-subtle/50 rounded-lg">
+          <Link2 size={20} className="mx-auto mb-2 text-text-muted/50" />
+          <p className="text-xs text-text-muted">No accounts linked yet</p>
           <button onClick={() => setShowConnect(true)} className="text-[10px] text-[#2563EB] mt-1 hover:underline">
             Link first account
           </button>
@@ -178,14 +178,14 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
             const platform = PLATFORMS.find(p => p.id === account.platform);
             const hasApi = hasOAuthToken(account);
             return (
-              <div key={account.id} className={`flex items-center gap-2.5 p-2.5 rounded-lg border ${platform?.bg || "bg-surface-light/50 border-border/30"}`}>
-                <span className={platform?.color || "text-muted"}>
+              <div key={account.id} className={`flex items-center gap-2.5 p-2.5 rounded-lg border ${platform?.bg || "bg-surface-light/50 border-border-subtle/30"}`}>
+                <span className={platform?.color || "text-text-muted"}>
                   {platform?.icon || <Globe size={16} />}
                 </span>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium truncate">{account.account_name}</p>
                   <div className="flex items-center gap-1.5">
-                    <p className="text-[10px] text-muted capitalize">{account.platform.replace(/_/g, " ")}</p>
+                    <p className="text-[10px] text-text-muted capitalize">{account.platform.replace(/_/g, " ")}</p>
                     {hasApi ? (
                       <span className="text-[8px] px-1 py-px rounded bg-success/10 text-success font-semibold uppercase tracking-wider">API</span>
                     ) : (
@@ -206,7 +206,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
                         const p = PLATFORMS.find(pl => pl.id === account.platform);
                         if (p) startOAuth(p);
                       }}
-                      className="p-1 rounded hover:bg-[rgba(59,130,246,0.08)] text-muted hover:text-[#2563EB] transition-colors"
+                      className="p-1 rounded hover:bg-[rgba(59,130,246,0.08)] text-text-muted hover:text-[#2563EB] transition-colors"
                       title="Upgrade to API access"
                     >
                       <Zap size={12} />
@@ -214,7 +214,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
                   )}
                   <button
                     onClick={() => disconnectAccount(account.id, account.account_name)}
-                    className="p-1 rounded hover:bg-danger/10 text-muted hover:text-danger transition-colors"
+                    className="p-1 rounded hover:bg-danger/10 text-text-muted hover:text-danger transition-colors"
                     title="Disconnect"
                   >
                     <Unlink size={12} />
@@ -230,7 +230,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
       <Modal isOpen={showConnect} onClose={() => { setShowConnect(false); setConnectPlatform(null); }} title={connectPlatform ? `Link ${connectPlatform.name}` : "Link Account"} size="md">
         {!connectPlatform ? (
           <div className="space-y-2">
-            <p className="text-xs text-muted mb-3">
+            <p className="text-xs text-text-muted mb-3">
               Choose a platform to link{clientName ? ` for ${clientName}` : ""}
             </p>
             <div className="grid grid-cols-3 gap-2">
@@ -245,7 +245,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
                 </button>
               ))}
               {availablePlatforms.length === 0 && (
-                <div className="col-span-3 py-6 text-center text-xs text-muted">
+                <div className="col-span-3 py-6 text-center text-xs text-text-muted">
                   <Check size={16} className="mx-auto mb-1 text-success" />
                   All platforms linked
                 </div>
@@ -258,21 +258,21 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
               <span className={connectPlatform.color}>{connectPlatform.icon}</span>
               <div>
                 <span className="text-xs font-bold">{connectPlatform.name}</span>
-                <p className="text-[9px] text-muted">Link {clientName ? `${clientName}'s` : "the client's"} {connectPlatform.name} account</p>
+                <p className="text-[9px] text-text-muted">Link {clientName ? `${clientName}'s` : "the client's"} {connectPlatform.name} account</p>
               </div>
             </div>
 
             {/* Manual link form — primary path */}
             <form onSubmit={(e) => { e.preventDefault(); connectAccount(new FormData(e.currentTarget)); }} className="space-y-2">
               <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Account Name / Handle *</label>
+                <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Account Name / Handle *</label>
                 <input name="account_name" className="input w-full" placeholder={connectPlatform.placeholder} required />
               </div>
               {connectPlatform.urlPrefix && (
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Profile URL</label>
+                  <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Profile URL</label>
                   <div className="flex items-center gap-0">
-                    <span className="text-[10px] text-muted bg-surface-light border border-border border-r-0 rounded-l px-2 py-[7px]">
+                    <span className="text-[10px] text-text-muted bg-surface-light border border-border-subtle border-r-0 rounded-l px-2 py-[7px]">
                       {connectPlatform.urlPrefix}
                     </span>
                     <input name="profile_url" className="input w-full rounded-l-none" placeholder="username" />
@@ -281,13 +281,13 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
               )}
               {!connectPlatform.urlPrefix && connectPlatform.id === "website" && (
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Website URL</label>
+                  <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Website URL</label>
                   <input name="profile_url" className="input w-full" placeholder="https://example.com" />
                 </div>
               )}
               {["google_ads", "meta_ads", "tiktok_ads"].includes(connectPlatform.id) && (
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Account / Advertiser ID</label>
+                  <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Account / Advertiser ID</label>
                   <input name="account_id" className="input w-full" placeholder={connectPlatform.placeholder} />
                 </div>
               )}
@@ -305,18 +305,18 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
             {OAUTH_PLATFORMS.includes(connectPlatform.id) && (
               <>
                 <div className="flex items-center gap-2 py-1">
-                  <div className="flex-1 h-px bg-border" />
-                  <span className="text-[9px] text-muted">or connect with API access</span>
-                  <div className="flex-1 h-px bg-border" />
+                  <div className="flex-1 h-px bg-border-subtle" />
+                  <span className="text-[9px] text-text-muted">or connect with API access</span>
+                  <div className="flex-1 h-px bg-border-subtle" />
                 </div>
 
                 <button
                   onClick={() => startOAuth(connectPlatform)}
-                  className="w-full py-2.5 bg-surface-light hover:bg-surface-light/80 border border-border rounded-lg text-xs font-medium flex items-center justify-center gap-2 transition-all text-muted hover:text-foreground"
+                  className="w-full py-2.5 bg-surface-light hover:bg-surface-light/80 border border-border-subtle rounded-lg text-xs font-medium flex items-center justify-center gap-2 transition-all text-text-muted hover:text-text-primary"
                 >
                   <Zap size={13} />
                   Sign in with {["instagram", "facebook", "meta_ads"].includes(connectPlatform.id) ? "Meta" : ["youtube", "google_ads"].includes(connectPlatform.id) ? "Google" : connectPlatform.name}
-                  <span className="text-[9px] text-muted ml-1">— enables analytics & posting</span>
+                  <span className="text-[9px] text-text-muted ml-1">— enables analytics & posting</span>
                 </button>
               </>
             )}

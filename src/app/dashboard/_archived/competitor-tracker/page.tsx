@@ -192,7 +192,7 @@ export default function CompetitorTrackerPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={openCreate}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm font-medium transition-colors border border-border"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-text-primary text-sm font-medium transition-colors border border-border-subtle"
 >
                   <Plus size={15} /> Add Competitor
                 </button>

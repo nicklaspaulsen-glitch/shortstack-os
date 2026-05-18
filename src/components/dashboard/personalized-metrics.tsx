@@ -122,17 +122,17 @@ export default function PersonalizedMetrics({ userType: providedType }: Props) {
             <Sparkles size={13} className="text-[#2563EB]" />
           </div>
           <div>
-            <p className="text-xs font-bold text-foreground">
+            <p className="text-xs font-bold text-text-primary">
               Personalized for your {meta.label}
             </p>
-            <p className="text-[10px] text-muted">
+            <p className="text-[10px] text-text-muted">
               Metrics that matter most to you — tuned during onboarding.
             </p>
           </div>
         </div>
         <Link
           href="/dashboard/settings"
-          className="text-[10px] text-muted hover:text-[#2563EB] transition-colors"
+          className="text-[10px] text-text-muted hover:text-[#2563EB] transition-colors"
         >
           Customize
         </Link>
@@ -147,22 +147,22 @@ export default function PersonalizedMetrics({ userType: providedType }: Props) {
           return (
             <div
               key={key}
-              className="rounded-xl border border-border bg-surface-light/40 p-3 hover:border-[rgba(59,130,246,0.25)] transition-all"
+              className="rounded-xl border border-border-subtle bg-surface-light/40 p-3 hover:border-[rgba(59,130,246,0.25)] transition-all"
             >
               <div className="flex items-center gap-2 mb-1">
                 <Icon size={13} className={accent} />
-                <p className="text-[10px] text-muted uppercase tracking-wider font-semibold">
+                <p className="text-[10px] text-text-muted uppercase tracking-wider font-semibold">
                   {label}
                 </p>
               </div>
-              <p className="text-xl font-bold text-foreground">—</p>
-              <p className="text-[9px] text-muted mt-0.5">{hint}</p>
+              <p className="text-xl font-bold text-text-primary">—</p>
+              <p className="text-[9px] text-text-muted mt-0.5">{hint}</p>
             </div>
           );
         })}
       </div>
 
-      <div className="mt-3 text-[10px] text-muted/70 italic">
+      <div className="mt-3 text-[10px] text-text-muted/70 italic">
         <Rocket size={10} className="inline mr-1 text-[rgba(59,130,246,0.7)]" />
         Connect your platforms to populate these metrics live.
       </div>

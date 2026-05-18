@@ -217,7 +217,7 @@ export default function AffiliatesPage() {
                   {card}
                 </motion.div>
               ))}
-            </div><div className="flex flex-wrap gap-1 border-b border-border">
+            </div><div className="flex flex-wrap gap-1 border-b border-border-subtle">
               {(
                 [
                   { k: "programs", label: "Programs" },
@@ -232,14 +232,14 @@ export default function AffiliatesPage() {
                   className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
                     tab === t.k
                       ? "border-brand-accent text-brand-accent"
-                      : "border-transparent text-muted hover:text-foreground"
+                      : "border-transparent text-text-muted hover:text-text-primary"
                   }`}
                 >
                   {t.label}
                 </button>
               ))}
             </div>{loading ? (
-              <div className="flex items-center justify-center p-20 text-muted">
+              <div className="flex items-center justify-center p-20 text-text-muted">
                 <Loader2 className="animate-spin" size={20} />
               </div>
             ) : tab === "programs" ? (
@@ -275,7 +275,7 @@ function ProgramsTab({
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <p className="text-sm text-muted">
+        <p className="text-sm text-text-muted">
           Each program holds the commercial terms (commission, cookie window,
           threshold) and groups affiliates under those terms.
         </p>
@@ -288,10 +288,10 @@ function ProgramsTab({
       </div>
 
       {programs.length === 0 ? (
-        <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
+        <div className=" border border-dashed border-border-subtle bg-card/40 p-12 text-center">
           <Award size={32} className="mx-auto text-[rgba(59,130,246,0.6)] mb-3" />
           <h3 className="text-lg font-semibold mb-1">No programs yet</h3>
-          <p className="text-sm text-muted mb-4">
+          <p className="text-sm text-text-muted mb-4">
             Create your first program to start recruiting affiliates.
           </p>
           <button
@@ -364,7 +364,7 @@ function ProgramCard({
         <div className="space-y-1 min-w-0">
           <h3 className="font-semibold truncate">{program.name}</h3>
           {program.description && (
-            <p className="text-xs text-muted line-clamp-2">{program.description}</p>
+            <p className="text-xs text-text-muted line-clamp-2">{program.description}</p>
           )}
         </div>
         <span
@@ -373,7 +373,7 @@ function ProgramCard({
               ? "bg-success/15 text-success"
               : program.status === "paused"
               ? "bg-warning/15 text-warning"
-              : "bg-muted/15 text-muted"
+              : "bg-muted/15 text-text-muted"
           }`}
         >
           {program.status}
@@ -382,29 +382,29 @@ function ProgramCard({
 
       <div className="grid grid-cols-2 gap-3 text-xs">
         <div>
-          <div className="text-muted">Commission</div>
+          <div className="text-text-muted">Commission</div>
           <div className="font-semibold text-brand-accent">{commissionLabel(program)}</div>
         </div>
         <div>
-          <div className="text-muted">Cookie</div>
+          <div className="text-text-muted">Cookie</div>
           <div className="font-semibold">{program.cookie_days} days</div>
         </div>
         <div>
-          <div className="text-muted">Threshold</div>
+          <div className="text-text-muted">Threshold</div>
           <div className="font-semibold">{fmtCents(program.payout_threshold_cents)}</div>
         </div>
         <div>
-          <div className="text-muted">Payout</div>
+          <div className="text-text-muted">Payout</div>
           <div className="font-semibold capitalize">{program.payout_schedule}</div>
         </div>
       </div>
 
-      <div className="flex items-center justify-between text-xs pt-2 border-t border-border">
-        <span className="text-muted">{program.affiliate_count ?? 0} affiliates</span>
+      <div className="flex items-center justify-between text-xs pt-2 border-t border-border-subtle">
+        <span className="text-text-muted">{program.affiliate_count ?? 0} affiliates</span>
         <button
           onClick={togglePause}
           disabled={busy || program.status === "closed"}
-          className="flex items-center gap-1 text-muted hover:text-foreground disabled:opacity-40"
+          className="flex items-center gap-1 text-text-muted hover:text-text-primary disabled:opacity-40"
         >
           {program.status === "active" ? (
             <>
@@ -477,50 +477,50 @@ function CreateProgramModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="w-full max-w-lg  bg-card border border-border p-6 space-y-4">
+      <div className="w-full max-w-lg  bg-card border border-border-subtle p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">New affiliate program</h2>
-          <button onClick={onClose} className="text-muted hover:text-foreground">
+          <button onClick={onClose} className="text-text-muted hover:text-text-primary">
             <X size={18} />
           </button>
         </div>
 
         <div className="space-y-3">
-          <label className="block text-xs uppercase text-muted">
+          <label className="block text-xs uppercase text-text-muted">
             Name
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 w-full rounded-lg bg-muted/10 border border-border px-3 py-2 text-sm text-foreground"
+              className="mt-1 w-full rounded-lg bg-muted/10 border border-border-subtle px-3 py-2 text-sm text-text-primary"
               placeholder="Main program"
             />
           </label>
 
-          <label className="block text-xs uppercase text-muted">
+          <label className="block text-xs uppercase text-text-muted">
             Description (optional)
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
-              className="mt-1 w-full rounded-lg bg-muted/10 border border-border px-3 py-2 text-sm text-foreground"
+              className="mt-1 w-full rounded-lg bg-muted/10 border border-border-subtle px-3 py-2 text-sm text-text-primary"
               placeholder="What's this program for?"
             />
           </label>
 
           <div className="grid grid-cols-2 gap-3">
-            <label className="block text-xs uppercase text-muted">
+            <label className="block text-xs uppercase text-text-muted">
               Commission type
               <select
                 value={commissionType}
                 onChange={(e) => setCommissionType(e.target.value as CommissionType)}
-                className="mt-1 w-full rounded-lg bg-muted/10 border border-border px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-lg bg-muted/10 border border-border-subtle px-3 py-2 text-sm"
               >
                 <option value="percentage">Percentage (recurring)</option>
                 <option value="flat">Flat amount (one-time)</option>
               </select>
             </label>
 
-            <label className="block text-xs uppercase text-muted">
+            <label className="block text-xs uppercase text-text-muted">
               {commissionType === "percentage" ? "Percent" : "Amount (USD)"}
               <input
                 type="number"
@@ -528,13 +528,13 @@ function CreateProgramModal({
                 min={0}
                 value={commissionValue}
                 onChange={(e) => setCommissionValue(Number(e.target.value))}
-                className="mt-1 w-full rounded-lg bg-muted/10 border border-border px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-lg bg-muted/10 border border-border-subtle px-3 py-2 text-sm"
               />
             </label>
           </div>
 
           <div className="grid grid-cols-3 gap-3">
-            <label className="block text-xs uppercase text-muted">
+            <label className="block text-xs uppercase text-text-muted">
               Cookie days
               <input
                 type="number"
@@ -542,10 +542,10 @@ function CreateProgramModal({
                 max={365}
                 value={cookieDays}
                 onChange={(e) => setCookieDays(Number(e.target.value))}
-                className="mt-1 w-full rounded-lg bg-muted/10 border border-border px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-lg bg-muted/10 border border-border-subtle px-3 py-2 text-sm"
               />
             </label>
-            <label className="block text-xs uppercase text-muted">
+            <label className="block text-xs uppercase text-text-muted">
               Payout threshold ($)
               <input
                 type="number"
@@ -553,17 +553,17 @@ function CreateProgramModal({
                 step="1"
                 value={thresholdDollars}
                 onChange={(e) => setThresholdDollars(Number(e.target.value))}
-                className="mt-1 w-full rounded-lg bg-muted/10 border border-border px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-lg bg-muted/10 border border-border-subtle px-3 py-2 text-sm"
               />
             </label>
-            <label className="block text-xs uppercase text-muted">
+            <label className="block text-xs uppercase text-text-muted">
               Schedule
               <select
                 value={schedule}
                 onChange={(e) =>
                   setSchedule(e.target.value as "weekly" | "monthly" | "quarterly")
                 }
-                className="mt-1 w-full rounded-lg bg-muted/10 border border-border px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-lg bg-muted/10 border border-border-subtle px-3 py-2 text-sm"
               >
                 <option value="weekly">Weekly</option>
                 <option value="monthly">Monthly</option>
@@ -576,7 +576,7 @@ function CreateProgramModal({
         <div className="flex justify-end gap-2 pt-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm border border-border rounded-lg"
+            className="px-4 py-2 text-sm border border-border-subtle rounded-lg"
           >
             Cancel
           </button>
@@ -607,8 +607,8 @@ function AffiliatesTab({
 
   if (programs.length === 0) {
     return (
-      <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
-        <p className="text-sm text-muted">
+      <div className=" border border-dashed border-border-subtle bg-card/40 p-12 text-center">
+        <p className="text-sm text-text-muted">
           Create a program first, then invite affiliates into it.
         </p>
       </div>
@@ -618,7 +618,7 @@ function AffiliatesTab({
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <p className="text-sm text-muted">
+        <p className="text-sm text-text-muted">
           Invite affiliates by email — they get a unique ref code and a portal
           link to track their stats and connect Stripe.
         </p>
@@ -631,14 +631,14 @@ function AffiliatesTab({
       </div>
 
       {affiliates.length === 0 ? (
-        <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
+        <div className=" border border-dashed border-border-subtle bg-card/40 p-12 text-center">
           <Users size={32} className="mx-auto text-[rgba(59,130,246,0.6)] mb-3" />
-          <p className="text-sm text-muted">No affiliates yet</p>
+          <p className="text-sm text-text-muted">No affiliates yet</p>
         </div>
       ) : (
         <div className="glass rounded-xl overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-muted/10 text-xs uppercase text-muted">
+            <thead className="bg-muted/10 text-xs uppercase text-text-muted">
               <tr>
                 <th className="text-left px-4 py-3">Affiliate</th>
                 <th className="text-left px-4 py-3">Program</th>
@@ -704,11 +704,11 @@ function AffiliateRow({
   );
 
   return (
-    <tr className="border-t border-border hover:bg-muted/5">
+    <tr className="border-t border-border-subtle hover:bg-muted/5">
       <td className="px-4 py-3">
         <div className="font-semibold">{affiliate.name}</div>
-        <div className="text-xs text-muted">{affiliate.email}</div>
-        <div className="text-[10px] text-muted/70 font-mono mt-0.5">
+        <div className="text-xs text-text-muted">{affiliate.email}</div>
+        <div className="text-[10px] text-text-muted/70 font-mono mt-0.5">
           {affiliate.ref_code}
         </div>
       </td>
@@ -727,7 +727,7 @@ function AffiliateRow({
             {fmtCents(affiliate.pending_cents)}
           </span>
         ) : (
-          <span className="text-muted">—</span>
+          <span className="text-text-muted">—</span>
         )}
       </td>
       <td className="px-4 py-3">
@@ -736,7 +736,7 @@ function AffiliateRow({
             <CheckCircle2 size={12} /> Connected
           </span>
         ) : (
-          <span className="text-xs text-muted">Not connected</span>
+          <span className="text-xs text-text-muted">Not connected</span>
         )}
       </td>
       <td className="px-4 py-3 text-right">
@@ -761,7 +761,7 @@ function AffiliateRow({
           )}
           <Link
             href={`/dashboard/affiliates/${affiliate.id}`}
-            className="text-muted hover:text-foreground"
+            className="text-text-muted hover:text-text-primary"
           >
             <ChevronRight size={16} />
           </Link>
@@ -782,17 +782,17 @@ function StatusBadge({ status }: { status: AffiliateStatus | ReferralStatus | Pr
     pending: "bg-warning/15 text-warning",
     paused: "bg-warning/15 text-warning",
     signed_up: "bg-[rgba(59,130,246,0.08)] text-brand-accent",
-    clicked: "bg-muted/15 text-muted",
+    clicked: "bg-muted/15 text-text-muted",
     suspended: "bg-danger/15 text-danger",
     rejected: "bg-danger/15 text-danger",
     cancelled: "bg-danger/15 text-danger",
     refunded: "bg-danger/15 text-danger",
-    closed: "bg-muted/15 text-muted",
+    closed: "bg-muted/15 text-text-muted",
   };
   return (
     <span
       className={`text-[10px] uppercase font-bold px-2 py-1 rounded-full whitespace-nowrap ${
-        map[status] ?? "bg-muted/15 text-muted"
+        map[status] ?? "bg-muted/15 text-text-muted"
       }`}
     >
       {String(status).replace("_", " ")}
@@ -846,20 +846,20 @@ function InviteAffiliateModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="w-full max-w-md  bg-card border border-border p-6 space-y-4">
+      <div className="w-full max-w-md  bg-card border border-border-subtle p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Invite affiliate</h2>
-          <button onClick={onClose} className="text-muted hover:text-foreground">
+          <button onClick={onClose} className="text-text-muted hover:text-text-primary">
             <X size={18} />
           </button>
         </div>
         <div className="space-y-3">
-          <label className="block text-xs uppercase text-muted">
+          <label className="block text-xs uppercase text-text-muted">
             Program
             <select
               value={programId}
               onChange={(e) => setProgramId(e.target.value)}
-              className="mt-1 w-full rounded-lg bg-muted/10 border border-border px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg bg-muted/10 border border-border-subtle px-3 py-2 text-sm"
             >
               {programs.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -868,26 +868,26 @@ function InviteAffiliateModal({
               ))}
             </select>
           </label>
-          <label className="block text-xs uppercase text-muted">
+          <label className="block text-xs uppercase text-text-muted">
             Name
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Jane Doe"
-              className="mt-1 w-full rounded-lg bg-muted/10 border border-border px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg bg-muted/10 border border-border-subtle px-3 py-2 text-sm"
             />
           </label>
-          <label className="block text-xs uppercase text-muted">
+          <label className="block text-xs uppercase text-text-muted">
             Email
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="jane@example.com"
-              className="mt-1 w-full rounded-lg bg-muted/10 border border-border px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg bg-muted/10 border border-border-subtle px-3 py-2 text-sm"
             />
           </label>
-          <label className="flex items-center gap-2 text-xs text-muted">
+          <label className="flex items-center gap-2 text-xs text-text-muted">
             <input
               type="checkbox"
               checked={autoApprove}
@@ -899,7 +899,7 @@ function InviteAffiliateModal({
         <div className="flex justify-end gap-2 pt-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm border border-border rounded-lg"
+            className="px-4 py-2 text-sm border border-border-subtle rounded-lg"
           >
             Cancel
           </button>
@@ -947,12 +947,12 @@ function ReferralsTab({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
-        <label className="text-xs uppercase text-muted">
+        <label className="text-xs uppercase text-text-muted">
           Filter by affiliate
           <select
             value={filterAffiliate}
             onChange={(e) => setFilterAffiliate(e.target.value)}
-            className="ml-2 rounded-lg bg-muted/10 border border-border px-3 py-1.5 text-sm"
+            className="ml-2 rounded-lg bg-muted/10 border border-border-subtle px-3 py-1.5 text-sm"
           >
             <option value="">All</option>
             {affiliates.map((a) => (
@@ -962,7 +962,7 @@ function ReferralsTab({
             ))}
           </select>
         </label>
-        <span className="ml-auto text-xs text-muted">
+        <span className="ml-auto text-xs text-text-muted">
           {totalClicks} clicks → {subs} subscribed (
           <span className="text-success font-semibold">
             {conversionRate.toFixed(1)}%
@@ -1012,7 +1012,7 @@ function KanbanColumn({
     success: "border-success/40",
   };
   const titleMap: Record<string, string> = {
-    muted: "text-muted",
+    muted: "text-text-muted",
     blue: "text-brand-accent",
     success: "text-success",
   };
@@ -1030,27 +1030,27 @@ function KanbanColumn({
         <h3 className={`font-semibold uppercase text-xs tracking-wide ${titleMap[color]}`}>
           {title}
         </h3>
-        <span className="text-xs text-muted">{rows.length}</span>
+        <span className="text-xs text-text-muted">{rows.length}</span>
       </div>
       <div className="space-y-2 max-h-[480px] overflow-y-auto">
         {rows.length === 0 ? (
-          <p className="text-xs text-muted py-4 text-center">No referrals here yet</p>
+          <p className="text-xs text-text-muted py-4 text-center">No referrals here yet</p>
         ) : (
           rows.map((r) => {
             const aff = affiliateById.get(r.affiliate_id);
             return (
               <div
                 key={r.id}
-                className="rounded-lg bg-muted/10 border border-border p-3 text-xs space-y-1"
+                className="rounded-lg bg-muted/10 border border-border-subtle p-3 text-xs space-y-1"
               >
                 <div className="font-semibold truncate">
                   {r.referred_email ?? "(anonymous click)"}
                 </div>
-                <div className="text-muted truncate">
+                <div className="text-text-muted truncate">
                   via {aff?.name ?? "—"}
                   {r.source ? ` · ${r.source}` : ""}
                 </div>
-                <div className="text-[10px] text-muted/70">
+                <div className="text-[10px] text-text-muted/70">
                   {fmtDate(r.conversion_at ?? r.created_at)}
                 </div>
               </div>
@@ -1148,7 +1148,7 @@ function PayoutsTab({
           <div className="text-sm font-semibold">
             {readyCount} affiliate{readyCount === 1 ? "" : "s"} ready to pay
           </div>
-          <div className="text-xs text-muted">
+          <div className="text-xs text-text-muted">
             Total ready: <span className="text-brand-accent font-semibold">{fmtCents(readyTotal)}</span>
             {" · "}Affiliates without Stripe Connect or below threshold are skipped.
           </div>
@@ -1157,7 +1157,7 @@ function PayoutsTab({
           <button
             onClick={() => runPayouts(true)}
             disabled={running}
-            className="px-3 py-2 text-xs border border-border rounded-lg hover:bg-muted/10 disabled:opacity-60"
+            className="px-3 py-2 text-xs border border-border-subtle rounded-lg hover:bg-muted/10 disabled:opacity-60"
           >
             Dry run
           </button>
@@ -1173,13 +1173,13 @@ function PayoutsTab({
       </div>
 
       {eligible.length === 0 ? (
-        <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
-          <p className="text-sm text-muted">No pending payouts.</p>
+        <div className=" border border-dashed border-border-subtle bg-card/40 p-12 text-center">
+          <p className="text-sm text-text-muted">No pending payouts.</p>
         </div>
       ) : (
         <div className="glass rounded-xl overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-muted/10 text-xs uppercase text-muted">
+            <thead className="bg-muted/10 text-xs uppercase text-text-muted">
               <tr>
                 <th className="text-left px-4 py-3">Affiliate</th>
                 <th className="text-right px-4 py-3">Pending</th>
@@ -1190,15 +1190,15 @@ function PayoutsTab({
             </thead>
             <tbody>
               {eligible.map((e) => (
-                <tr key={e.affiliate.id} className="border-t border-border">
+                <tr key={e.affiliate.id} className="border-t border-border-subtle">
                   <td className="px-4 py-3">
                     <div className="font-semibold">{e.affiliate.name}</div>
-                    <div className="text-xs text-muted">{e.affiliate.email}</div>
+                    <div className="text-xs text-text-muted">{e.affiliate.email}</div>
                   </td>
                   <td className="px-4 py-3 text-right font-semibold text-brand-accent">
                     {fmtCents(e.affiliate.pending_cents)}
                   </td>
-                  <td className="px-4 py-3 text-right text-muted">
+                  <td className="px-4 py-3 text-right text-text-muted">
                     {fmtCents(e.threshold)}
                   </td>
                   <td className="px-4 py-3">
@@ -1231,7 +1231,7 @@ function PayoutsTab({
             {results.map((r) => (
               <li
                 key={`${r.affiliate_id}-${r.transfer_id ?? r.status}`}
-                className="flex justify-between gap-4 border-b border-border last:border-0 py-2"
+                className="flex justify-between gap-4 border-b border-border-subtle last:border-0 py-2"
               >
                 <span>{r.affiliate_email}</span>
                 <span className="font-mono">{fmtCents(r.amount_cents, r.currency)}</span>

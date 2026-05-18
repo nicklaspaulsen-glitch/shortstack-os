@@ -142,7 +142,7 @@ export default function SMSTemplatesPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- SMS Templates command strip -- */}
+    <MotionPage className="space-y-5">{/* -- SMS Templates command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">SMS TEMPLATES</p>
@@ -150,10 +150,10 @@ export default function SMSTemplatesPage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <>
-                  <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
+                  <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
                     <Sparkles size={12} /> Generate with AI
                   </button>
-                  <button onClick={() => setShowAdd(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
+                  <button onClick={() => setShowAdd(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
                     <Plus size={12} /> New
                   </button>
                 </>
@@ -162,7 +162,7 @@ export default function SMSTemplatesPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Intent</label>
+                    <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Intent</label>
                     <select value={aiIntent} onChange={e => setAiIntent(e.target.value as SmsIntent)} className="input w-full text-xs">
                       <option value="reminder">Reminder</option>
                       <option value="promo">Promo</option>
@@ -175,7 +175,7 @@ export default function SMSTemplatesPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Tone</label>
+                    <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Tone</label>
                     <select value={aiTone} onChange={e => setAiTone(e.target.value)} className="input w-full text-xs">
                       <option value="friendly">Friendly</option>
                       <option value="professional">Professional</option>
@@ -186,16 +186,16 @@ export default function SMSTemplatesPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Goal</label>
+                  <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Goal</label>
                   <input value={aiGoal} onChange={e => setAiGoal(e.target.value)} className="input w-full text-xs" placeholder="e.g. Remind patient about tomorrow's appointment at 3pm" />
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Audience</label>
+                  <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Audience</label>
                   <input value={aiAudience} onChange={e => setAiAudience(e.target.value)} className="input w-full text-xs" placeholder="e.g. Existing dental patients" />
                 </div>
                 <div className="flex items-center gap-2">
                   <input type="checkbox" id="ai-sms-link" checked={aiIncludeLink} onChange={e => setAiIncludeLink(e.target.checked)} className="accent-blue-600" />
-                  <label htmlFor="ai-sms-link" className="text-xs text-muted">Include {"{link}"} placeholder</label>
+                  <label htmlFor="ai-sms-link" className="text-xs text-text-muted">Include {"{link}"} placeholder</label>
                 </div>
                 <div className="flex items-center justify-end gap-2 pt-1">
                   <button onClick={() => { setShowAiModal(false); setAiVariants([]); }} className="btn-ghost text-xs">Close</button>
@@ -205,21 +205,21 @@ export default function SMSTemplatesPage() {
                 </div>
 
                 {aiVariants.length > 0 && (
-                  <div className="space-y-2 pt-2 border-t border-border">
+                  <div className="space-y-2 pt-2 border-t border-border-subtle">
                     <p className="text-[10px] font-semibold text-brand-accent uppercase tracking-wider">Variants</p>
                     {aiVariants.map((v, i) => (
-                      <div key={i} className="p-3 rounded-lg bg-surface-light border border-border">
+                      <div key={i} className="p-3 rounded-lg bg-surface-light border border-border-subtle">
                         <p className="text-xs leading-relaxed">{v.text}</p>
                         <div className="flex items-center justify-between mt-2">
                           <div className="flex items-center gap-2 text-[9px]">
                             <span className={`px-1.5 py-0.5 rounded ${v.char_count > 160 ? "bg-yellow-400/10 text-yellow-400" : "bg-green-400/10 text-green-400"}`}>
                               {v.char_count}/160 chars
                             </span>
-                            <span className="text-muted">{v.segments} segment{v.segments > 1 ? "s" : ""}</span>
-                            <span className="text-muted capitalize">{v.tone}</span>
+                            <span className="text-text-muted">{v.segments} segment{v.segments > 1 ? "s" : ""}</span>
+                            <span className="text-text-muted capitalize">{v.tone}</span>
                           </div>
                           <div className="flex gap-1">
-                            <button onClick={() => { navigator.clipboard.writeText(v.text); toast.success("Copied"); }} className="text-[9px] px-2 py-1 rounded bg-[rgba(0,0,0,0.04)] text-muted hover:text-brand-accent">
+                            <button onClick={() => { navigator.clipboard.writeText(v.text); toast.success("Copied"); }} className="text-[9px] px-2 py-1 rounded bg-[rgba(0,0,0,0.04)] text-text-muted hover:text-brand-accent">
                               <Copy size={9} />
                             </button>
                             <button onClick={() => saveAiVariant(v)} className="text-[9px] px-2 py-1 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-1">
@@ -228,7 +228,7 @@ export default function SMSTemplatesPage() {
                           </div>
                         </div>
                         {v.compliance_notes.length > 0 && (
-                          <div className="mt-2 pt-2 border-t border-border flex gap-1 flex-wrap">
+                          <div className="mt-2 pt-2 border-t border-border-subtle flex gap-1 flex-wrap">
                             {v.compliance_notes.map((note, ni) => (
                               <span key={ni} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent flex items-center gap-0.5">
                                 <Shield size={8} /> {note}
@@ -245,7 +245,7 @@ export default function SMSTemplatesPage() {
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-                    activeTab === t.key ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
+                    activeTab === t.key ? "bg-brand-accent text-white font-medium" : "text-text-muted hover:text-text-primary"
                   }`}>{t.icon} {t.label}</button>
               ))}
             </div>{/* ===== TEMPLATE LIBRARY ===== */}{activeTab === "library" && (
@@ -253,14 +253,14 @@ export default function SMSTemplatesPage() {
                 {/* Filters */}
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="relative flex-1 min-w-[200px]">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                     <input value={search} onChange={e => setSearch(e.target.value)} className="input w-full pl-9 text-xs" placeholder="Search templates..." aria-label="Search SMS templates" />
                   </div>
                   <div className="flex gap-1.5 flex-wrap">
                     {categories.map(c => (
                       <button key={c} onClick={() => setFilter(c)}
                         className={`text-[10px] px-2.5 py-1.5 rounded-lg capitalize ${
-                          filter === c ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-muted border border-[rgba(0,0,0,0.06)]"
+                          filter === c ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-[rgba(0,0,0,0.06)]"
                         }`}>{c}</button>
                     ))}
                   </div>
@@ -284,18 +284,18 @@ export default function SMSTemplatesPage() {
                       </select>
                     </div>
                     <div className="flex items-center justify-between">
-                      <label className="text-[9px] text-muted uppercase tracking-wider">Message</label>
+                      <label className="text-[9px] text-text-muted uppercase tracking-wider">Message</label>
                       <AIEnhanceButton value={newTemplate.body} onResult={next => setNewTemplate({ ...newTemplate, body: next })} context="SMS message" variant="inline" />
                     </div>
                     <div className="relative">
                       <textarea value={newTemplate.body} onChange={e => setNewTemplate({ ...newTemplate, body: e.target.value })} className="input w-full h-20 text-xs" placeholder="SMS body..." />
-                      <button onClick={() => setShowEmoji(!showEmoji)} className="absolute right-2 bottom-2 text-muted hover:text-brand-accent"><Smile size={14} /></button>
+                      <button onClick={() => setShowEmoji(!showEmoji)} className="absolute right-2 bottom-2 text-text-muted hover:text-brand-accent"><Smile size={14} /></button>
                     </div>
                     {showEmoji && (
-                      <div className="p-2 rounded-lg bg-surface-light border border-border">
+                      <div className="p-2 rounded-lg bg-surface-light border border-border-subtle">
                         {EMOJI_CATEGORIES.map(cat => (
                           <div key={cat.name} className="mb-1.5">
-                            <p className="text-[8px] text-muted mb-0.5">{cat.name}</p>
+                            <p className="text-[8px] text-text-muted mb-0.5">{cat.name}</p>
                             <div className="flex gap-1 flex-wrap">
                               {cat.emojis.map(e => (
                                 <button key={e} onClick={() => setNewTemplate(prev => ({ ...prev, body: prev.body + e }))}
@@ -316,8 +316,8 @@ export default function SMSTemplatesPage() {
                     {/* Character counter */}
                     <div className="flex items-center justify-between text-[9px]">
                       <div className="flex items-center gap-3">
-                        <span className={newTemplate.body.length > 160 ? "text-yellow-400" : "text-muted"}>{newTemplate.body.length}/160 chars</span>
-                        <span className="text-muted">{getSegments(newTemplate.body)} segment{getSegments(newTemplate.body) > 1 ? "s" : ""}</span>
+                        <span className={newTemplate.body.length > 160 ? "text-yellow-400" : "text-text-muted"}>{newTemplate.body.length}/160 chars</span>
+                        <span className="text-text-muted">{getSegments(newTemplate.body)} segment{getSegments(newTemplate.body) > 1 ? "s" : ""}</span>
                         {getSegments(newTemplate.body) > 1 && <span className="text-yellow-400">({getSegments(newTemplate.body)} credits)</span>}
                       </div>
                       <div className="flex gap-2">
@@ -337,7 +337,7 @@ export default function SMSTemplatesPage() {
                 {/* Template Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {filtered.length === 0 && (
-                    <div className="col-span-2 text-center py-12 text-muted text-xs">No templates yet. Click &quot;New&quot; to create your first SMS template.</div>
+                    <div className="col-span-2 text-center py-12 text-text-muted text-xs">No templates yet. Click &quot;New&quot; to create your first SMS template.</div>
                   )}
                   {filtered.map((template, idx) => (
                     <motion.div key={template.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-4 group transition-all hover:border-indigo-500/10 spotlight-card" onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
@@ -347,10 +347,10 @@ export default function SMSTemplatesPage() {
                           <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent">{template.category}</span>
                         </div>
                         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button onClick={() => { navigator.clipboard.writeText(template.body); }} className="p-1 rounded hover:bg-black/[0.04] text-muted hover:text-foreground"><Copy size={10} /></button>
-                          <button onClick={() => setPreviewTemplate(template)} className="p-1 rounded hover:bg-black/[0.04] text-muted hover:text-foreground"><Eye size={10} /></button>
-                          <button onClick={() => setEditing(editing === template.id ? null : template.id)} className="p-1 rounded hover:bg-black/[0.04] text-muted hover:text-foreground"><Edit3 size={10} /></button>
-                          <button onClick={() => setTemplates(prev => prev.filter(t => t.id !== template.id))} className="p-1 rounded hover:bg-red-400/10 text-muted hover:text-red-400"><Trash2 size={10} /></button>
+                          <button onClick={() => { navigator.clipboard.writeText(template.body); }} className="p-1 rounded hover:bg-black/[0.04] text-text-muted hover:text-text-primary"><Copy size={10} /></button>
+                          <button onClick={() => setPreviewTemplate(template)} className="p-1 rounded hover:bg-black/[0.04] text-text-muted hover:text-text-primary"><Eye size={10} /></button>
+                          <button onClick={() => setEditing(editing === template.id ? null : template.id)} className="p-1 rounded hover:bg-black/[0.04] text-text-muted hover:text-text-primary"><Edit3 size={10} /></button>
+                          <button onClick={() => setTemplates(prev => prev.filter(t => t.id !== template.id))} className="p-1 rounded hover:bg-red-400/10 text-text-muted hover:text-red-400"><Trash2 size={10} /></button>
                         </div>
                       </div>
 
@@ -364,11 +364,11 @@ export default function SMSTemplatesPage() {
                           }} className="input w-full h-20 text-xs" />
                         </div>
                       ) : (
-                        <p className="text-[11px] text-muted leading-relaxed">{template.body}</p>
+                        <p className="text-[11px] text-text-muted leading-relaxed">{template.body}</p>
                       )}
 
-                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
-                        <div className="flex items-center gap-3 text-[8px] text-muted">
+                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-border-subtle">
+                        <div className="flex items-center gap-3 text-[8px] text-text-muted">
                           <span>{template.body.length} chars</span>
                           <span>{getSegments(template.body)} seg</span>
                           {template.sends > 0 && (
@@ -435,15 +435,15 @@ export default function SMSTemplatesPage() {
                   <h4 className="text-xs font-semibold mb-2">Select Template to Preview</h4>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5">
                     {templates.length === 0 && (
-                      <p className="col-span-4 text-center text-[10px] text-muted py-4">No templates yet.</p>
+                      <p className="col-span-4 text-center text-[10px] text-text-muted py-4">No templates yet.</p>
                     )}
                     {templates.slice(0, 8).map(t => (
                       <button key={t.id} onClick={() => setPreviewTemplate(t)}
                         className={`text-left p-2 rounded-lg text-[9px] border transition-all ${
-                          previewTemplate?.id === t.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border hover:border-[rgba(59,130,246,0.1)]"
+                          previewTemplate?.id === t.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border-subtle hover:border-[rgba(59,130,246,0.1)]"
                         }`}>
                         <p className="font-semibold truncate">{t.name}</p>
-                        <p className="text-muted">{t.body.length} chars</p>
+                        <p className="text-text-muted">{t.body.length} chars</p>
                       </button>
                     ))}
                   </div>
@@ -488,7 +488,7 @@ export default function SMSTemplatesPage() {
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Settings size={14} className="text-brand-accent" /> Opt-out Footer Manager
                     </h3>
-                    <p className="text-[10px] text-muted mb-3">This footer is automatically appended to all outgoing SMS.</p>
+                    <p className="text-[10px] text-text-muted mb-3">This footer is automatically appended to all outgoing SMS.</p>
                     <div className="space-y-2">
                       {[
                         "Reply STOP to unsubscribe",
@@ -498,7 +498,7 @@ export default function SMSTemplatesPage() {
                       ].map((footer, i) => (
                         <button key={i} onClick={() => setOptOutFooter(footer)}
                           className={`w-full text-left p-2.5 rounded-lg text-[10px] border transition-all ${
-                            optOutFooter === footer ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted hover:border-[rgba(59,130,246,0.1)]"
+                            optOutFooter === footer ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.1)]"
                           }`}>{footer}</button>
                       ))}
                       <div className="flex gap-2 mt-2">
@@ -561,7 +561,7 @@ export default function SMSTemplatesPage() {
                   <h3 className="text-sm font-semibold mb-3">Delivery Rate by Template</h3>
                   <div className="space-y-2">
                     {templates.filter(t => t.sends > 0).length === 0 && (
-                      <p className="text-center text-[10px] text-muted py-6">No delivery data yet. Analytics will appear once templates are sent.</p>
+                      <p className="text-center text-[10px] text-text-muted py-6">No delivery data yet. Analytics will appear once templates are sent.</p>
                     )}
                     {templates.filter(t => t.sends > 0).sort((a, b) => (b.delivered / b.sends) - (a.delivered / a.sends)).map(t => {
                       const rate = ((t.delivered / t.sends) * 100).toFixed(1);
@@ -578,7 +578,7 @@ export default function SMSTemplatesPage() {
                           </div>
                           <div className="text-center text-[9px] flex-shrink-0 w-16">
                             <p className="font-bold">{t.replies}</p>
-                            <p className="text-muted">replies</p>
+                            <p className="text-text-muted">replies</p>
                           </div>
                         </div>
                       );
@@ -592,17 +592,17 @@ export default function SMSTemplatesPage() {
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                     <Link2 size={14} className="text-brand-accent" /> Short Link Generator
                   </h3>
-                  <p className="text-[10px] text-muted mb-3">Create short, trackable links for your SMS messages</p>
+                  <p className="text-[10px] text-text-muted mb-3">Create short, trackable links for your SMS messages</p>
                   <div className="flex gap-2 mb-4">
                     <input value={shortLinkInput} onChange={e => setShortLinkInput(e.target.value)} className="input flex-1 text-xs" placeholder="Paste your long URL here..." />
                     <button className="btn-primary text-xs flex items-center gap-1.5"><Link2 size={12} /> Shorten</button>
                   </div>
                   <div className="space-y-1.5">
-                    <div className="grid grid-cols-4 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
+                    <div className="grid grid-cols-4 text-[9px] text-text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
                       <span>Short Link</span><span>Original URL</span><span className="text-center">Clicks</span><span className="text-center">Created</span>
                     </div>
                     {([] as { short: string; long: string; clicks: number; date: string }[]).length === 0 ? (
-                      <div className="text-center py-6 text-[10px] text-muted col-span-4">No short links yet. Paste a URL above to create one.</div>
+                      <div className="text-center py-6 text-[10px] text-text-muted col-span-4">No short links yet. Paste a URL above to create one.</div>
                     ) : null}
                   </div>
                 </PrismPanel>
@@ -634,7 +634,7 @@ export default function SMSTemplatesPage() {
                   <PrismPanel padding="p-4">
                     <h3 className="text-sm font-semibold mb-3">Scheduled Messages</h3>
                     <div className="space-y-2">
-                      <div className="text-center py-6 text-[10px] text-muted">No scheduled messages yet. Use the form to schedule one.</div>
+                      <div className="text-center py-6 text-[10px] text-text-muted">No scheduled messages yet. Use the form to schedule one.</div>
                     </div>
                   </PrismPanel>
                 </div>

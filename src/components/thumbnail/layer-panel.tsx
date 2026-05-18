@@ -237,7 +237,7 @@ export function LayerPanel({
 
   return (
     <div
-      className={`flex flex-col gap-2 rounded-xl border border-border bg-surface/70 backdrop-blur-sm p-3 ${className}`}
+      className={`flex flex-col gap-2 rounded-xl border border-border-subtle bg-surface/70 backdrop-blur-sm p-3 ${className}`}
       data-testid="thumbnail-layer-panel"
     >
       {/* Header */}
@@ -248,14 +248,14 @@ export function LayerPanel({
       >
         <div className="flex items-center gap-2">
           <LayersIcon size={14} className="text-[#2563EB]" />
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-foreground">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-text-primary">
             Layers
           </span>
-          <span className="text-[9px] text-muted rounded-full bg-surface-light px-2 py-0.5">
+          <span className="text-[9px] text-text-muted rounded-full bg-surface-light px-2 py-0.5">
             {1 + 1 + (layers.texts?.length || 0) + effects.filter((e) => e.enabled).length + (layers.faceSwap?.sourceUrl ? 1 : 0)}
           </span>
         </div>
-        {collapsed ? <ChevronDown size={14} className="text-muted" /> : <ChevronUp size={14} className="text-muted" />}
+        {collapsed ? <ChevronDown size={14} className="text-text-muted" /> : <ChevronUp size={14} className="text-text-muted" />}
       </button>
 
       {!collapsed && (
@@ -270,7 +270,7 @@ export function LayerPanel({
               background: { ...(layers.background || {}), visible: layers.background?.visible === false ? true : false },
             })}
             swatch={
-              <div className="flex gap-[2px] rounded overflow-hidden border border-border">
+              <div className="flex gap-[2px] rounded overflow-hidden border border-border-subtle">
                 {(layers.background?.colors || ["#222", "#111"]).slice(0, 2).map((c, i) => (
                   <span key={i} style={{ background: c }} className="block w-3 h-4" />
                 ))}
@@ -290,7 +290,7 @@ export function LayerPanel({
                   }}
                   title={sw.name}
                   className={`aspect-video rounded border ${
-                    layers.background?.id === sw.id ? "border-[#2563EB] ring-1 ring-[rgba(59,130,246,0.25)]" : "border-border hover:border-border"
+                    layers.background?.id === sw.id ? "border-[#2563EB] ring-1 ring-[rgba(59,130,246,0.25)]" : "border-border-subtle hover:border-border-subtle"
                   }`}
                   style={{ background: `linear-gradient(135deg, ${sw.colors[0]}, ${sw.colors[1]})` }}
                 >
@@ -312,9 +312,9 @@ export function LayerPanel({
             swatch={
               imageUrl ? (
                 /* eslint-disable-next-line @next/next/no-img-element */
-                <img src={imageUrl} alt="" className="h-4 w-6 object-cover rounded border border-border" />
+                <img src={imageUrl} alt="" className="h-4 w-6 object-cover rounded border border-border-subtle" />
               ) : (
-                <div className="h-4 w-6 rounded bg-surface-light border border-border" />
+                <div className="h-4 w-6 rounded bg-surface-light border border-border-subtle" />
               )
             }
             onEdit={() => setEditingId(editingId === "subject" ? null : "subject")}
@@ -348,7 +348,7 @@ export function LayerPanel({
           {/* ── Text overlays ── */}
           <div>
             <div className="flex items-center justify-between px-1 py-1">
-              <span className="text-[9px] uppercase tracking-wider text-muted flex items-center gap-1.5">
+              <span className="text-[9px] uppercase tracking-wider text-text-muted flex items-center gap-1.5">
                 <Type size={10} /> Text overlays ({(layers.texts || []).length})
               </span>
               <button
@@ -361,7 +361,7 @@ export function LayerPanel({
             </div>
 
             {(layers.texts || []).length === 0 && (
-              <div className="text-[9px] text-muted italic px-2 py-1">No text overlays &mdash; click &ldquo;Add text&rdquo; to create one.</div>
+              <div className="text-[9px] text-text-muted italic px-2 py-1">No text overlays &mdash; click &ldquo;Add text&rdquo; to create one.</div>
             )}
 
             {(layers.texts || []).map((t) => (
@@ -373,29 +373,29 @@ export function LayerPanel({
                 visible={t.visible !== false}
                 onToggleVisible={() => toggleTextVisible(t.id)}
                 swatch={
-                  <div className="w-4 h-4 rounded border border-border" style={{ background: t.color || "#ffffff" }} />
+                  <div className="w-4 h-4 rounded border border-border-subtle" style={{ background: t.color || "#ffffff" }} />
                 }
                 onEdit={() => setEditingId(editingId === `text:${t.id}` ? null : `text:${t.id}`)}
                 editing={editingId === `text:${t.id}`}
                 onDelete={() => removeText(t.id)}
               >
                 <div className="mt-2 grid grid-cols-2 gap-2">
-                  <label className="col-span-2 text-[9px] text-muted">
+                  <label className="col-span-2 text-[9px] text-text-muted">
                     Content
                     <input
                       type="text"
                       value={t.text}
                       onChange={(e) => editText(t.id, { text: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-border bg-surface-light px-2 py-1 text-xs text-foreground focus:border-[rgba(59,130,246,0.4)] focus:outline-none"
+                      className="mt-0.5 w-full rounded border border-border-subtle bg-surface-light px-2 py-1 text-xs text-text-primary focus:border-[rgba(59,130,246,0.4)] focus:outline-none"
                     />
                   </label>
-                  <label className="text-[9px] text-muted">
+                  <label className="text-[9px] text-text-muted">
                     Font
                     <input
                       type="text"
                       value={t.fontFamily || "Inter"}
                       onChange={(e) => editText(t.id, { fontFamily: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-border bg-surface-light px-2 py-1 text-[11px] text-foreground focus:border-[rgba(59,130,246,0.4)] focus:outline-none"
+                      className="mt-0.5 w-full rounded border border-border-subtle bg-surface-light px-2 py-1 text-[11px] text-text-primary focus:border-[rgba(59,130,246,0.4)] focus:outline-none"
                     />
                   </label>
                   <NumberField
@@ -405,13 +405,13 @@ export function LayerPanel({
                     max={300}
                     onChange={(v) => editText(t.id, { fontSize: v })}
                   />
-                  <label className="text-[9px] text-muted">
+                  <label className="text-[9px] text-text-muted">
                     Color
                     <input
                       type="color"
                       value={t.color || "#FFFFFF"}
                       onChange={(e) => editText(t.id, { color: e.target.value })}
-                      className="mt-0.5 w-full h-7 rounded border border-border bg-surface-light cursor-pointer"
+                      className="mt-0.5 w-full h-7 rounded border border-border-subtle bg-surface-light cursor-pointer"
                     />
                   </label>
                   <NumberField
@@ -457,7 +457,7 @@ export function LayerPanel({
                       }`}
                     />
                   </button>
-                  <span className="text-[10px] text-foreground flex-1">{e.label}</span>
+                  <span className="text-[10px] text-text-primary flex-1">{e.label}</span>
                   <input
                     type="range"
                     min={0}
@@ -467,7 +467,7 @@ export function LayerPanel({
                     onChange={(ev) => setEffectIntensity(e.id, Number(ev.target.value))}
                     className="flex-1 h-1 accent-[#2563EB] disabled:opacity-30"
                   />
-                  <span className="text-[9px] text-muted w-7 text-right font-mono">{e.intensity ?? 50}</span>
+                  <span className="text-[9px] text-text-muted w-7 text-right font-mono">{e.intensity ?? 50}</span>
                 </div>
               ))}
             </div>
@@ -483,7 +483,7 @@ export function LayerPanel({
             swatch={
               layers.style?.id ? (
                 <div
-                  className="w-6 h-4 rounded border border-border"
+                  className="w-6 h-4 rounded border border-border-subtle"
                   style={{
                     background: `linear-gradient(135deg, ${
                       styleOptions.find((s) => s.id === layers.style?.id)?.gradient?.[0] || "#222"
@@ -491,7 +491,7 @@ export function LayerPanel({
                   }}
                 />
               ) : (
-                <div className="w-6 h-4 rounded bg-surface-light border border-border" />
+                <div className="w-6 h-4 rounded bg-surface-light border border-border-subtle" />
               )
             }
             onEdit={() => setEditingId(editingId === "style" ? null : "style")}
@@ -504,7 +504,7 @@ export function LayerPanel({
                   const s = styleOptions.find((x) => x.id === e.target.value);
                   if (s) patch({ style: { id: s.id, name: s.name } });
                 }}
-                className="w-full rounded border border-border bg-surface-light px-2 py-1 text-[11px] text-foreground focus:border-[rgba(59,130,246,0.4)] focus:outline-none"
+                className="w-full rounded border border-border-subtle bg-surface-light px-2 py-1 text-[11px] text-text-primary focus:border-[rgba(59,130,246,0.4)] focus:outline-none"
               >
                 <option value="">Select a style…</option>
                 {styleOptions.map((s) => (
@@ -525,9 +525,9 @@ export function LayerPanel({
               swatch={
                 layers.faceSwap?.sourceUrl ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
-                  <img src={layers.faceSwap.sourceUrl} alt="" className="h-4 w-4 rounded-full object-cover border border-border" />
+                  <img src={layers.faceSwap.sourceUrl} alt="" className="h-4 w-4 rounded-full object-cover border border-border-subtle" />
                 ) : (
-                  <div className="h-4 w-4 rounded-full bg-surface-light border border-border" />
+                  <div className="h-4 w-4 rounded-full bg-surface-light border border-border-subtle" />
                 )
               }
               onEdit={onChangeFaceSwap}
@@ -572,13 +572,13 @@ function LayerRow({
   icon, name, description, visible, onToggleVisible, swatch, onEdit, editing, onDelete, children,
 }: LayerRowProps) {
   return (
-    <div className={`rounded-lg border ${editing ? "border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.05)]" : "border-border bg-surface/40"} transition-colors`}>
+    <div className={`rounded-lg border ${editing ? "border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.05)]" : "border-border-subtle bg-surface/40"} transition-colors`}>
       <div className="flex items-center gap-2 px-2 py-1.5">
         {onToggleVisible ? (
           <button
             type="button"
             onClick={onToggleVisible}
-            className="text-muted hover:text-foreground transition-colors"
+            className="text-text-muted hover:text-text-primary transition-colors"
             aria-label={visible ? "Hide layer" : "Show layer"}
           >
             {visible ? <Eye size={12} /> : <EyeOff size={12} />}
@@ -588,9 +588,9 @@ function LayerRow({
         )}
         <span className="text-[#2563EB]">{icon}</span>
         <div className="flex-1 min-w-0">
-          <div className="text-[11px] font-medium text-foreground truncate">{name}</div>
+          <div className="text-[11px] font-medium text-text-primary truncate">{name}</div>
           {description ? (
-            <div className="text-[9px] text-muted truncate">{description}</div>
+            <div className="text-[9px] text-text-muted truncate">{description}</div>
           ) : null}
         </div>
         {swatch}
@@ -598,7 +598,7 @@ function LayerRow({
           <button
             type="button"
             onClick={onEdit}
-            className="text-muted hover:text-foreground rounded border border-border px-1.5 py-0.5 text-[9px] flex items-center gap-1"
+            className="text-text-muted hover:text-text-primary rounded border border-border-subtle px-1.5 py-0.5 text-[9px] flex items-center gap-1"
           >
             {editing ? <><Check size={9} /> Done</> : <><Edit3 size={9} /> Edit</>}
           </button>
@@ -607,7 +607,7 @@ function LayerRow({
           <button
             type="button"
             onClick={onDelete}
-            className="text-muted hover:text-danger"
+            className="text-text-muted hover:text-danger"
             aria-label="Delete layer"
           >
             <Trash2 size={11} />
@@ -615,7 +615,7 @@ function LayerRow({
         )}
       </div>
       {editing && children && (
-        <div className="border-t border-border/60 px-2 py-2">{children}</div>
+        <div className="border-t border-border-subtle/60 px-2 py-2">{children}</div>
       )}
     </div>
   );
@@ -634,7 +634,7 @@ function NumberField({
   onChange: (v: number) => void;
 }) {
   return (
-    <label className="text-[9px] text-muted">
+    <label className="text-[9px] text-text-muted">
       {label}
       <input
         type="number"
@@ -643,7 +643,7 @@ function NumberField({
         max={max}
         step={step}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="mt-0.5 w-full rounded border border-border bg-surface-light px-2 py-1 text-[11px] text-foreground focus:border-[rgba(59,130,246,0.4)] focus:outline-none"
+        className="mt-0.5 w-full rounded border border-border-subtle bg-surface-light px-2 py-1 text-[11px] text-text-primary focus:border-[rgba(59,130,246,0.4)] focus:outline-none"
       />
     </label>
   );

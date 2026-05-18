@@ -452,7 +452,7 @@ export default function OnboardPage() {
   // Step 0: User type selector (shown first for everyone)
   if (!userType) {
     return (
-      <MotionPage className="fade-in space-y-6">{/* -- Welcome to Trinity command strip -- */}
+      <MotionPage className="space-y-6">{/* -- Welcome to Trinity command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
           <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">WELCOME TO TRINITY</p>
@@ -461,7 +461,7 @@ export default function OnboardPage() {
       </div><div className="glass rounded-xl p-6">
                   <div className="text-center mb-6">
                     <h2 className="text-2xl font-bold mb-1">What best describes you?</h2>
-                    <p className="text-sm text-muted">Pick one — you can change it later in Settings.</p>
+                    <p className="text-sm text-text-muted">Pick one — you can change it later in Settings.</p>
                   </div>
                   <ChoiceCards
                     columns={4}
@@ -487,7 +487,7 @@ export default function OnboardPage() {
   if (!isAgencyPath) {
     if (soloComplete && soloSummary) {
       return (
-        <div className="fade-in space-y-6">
+        <div className="space-y-6">
           {/* -- You're all set! command strip -- */}
           <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
             <div className="min-w-0">
@@ -500,10 +500,10 @@ export default function OnboardPage() {
               <CheckCircle2 size={40} className="text-brand-accent" />
             </div>
             <h2 className="text-2xl font-bold text-brand-accent">Welcome aboard!</h2>
-            <p className="text-sm text-muted max-w-lg mx-auto">
-              <span className="font-semibold text-foreground">{soloSummary.name}</span> is set up with{" "}
-              <span className="font-semibold text-foreground">{soloSummary.count}</span> sidebar tools tuned to your{" "}
-              <span className="font-semibold text-foreground">{soloSummary.label}</span> business.
+            <p className="text-sm text-text-muted max-w-lg mx-auto">
+              <span className="font-semibold text-text-primary">{soloSummary.name}</span> is set up with{" "}
+              <span className="font-semibold text-text-primary">{soloSummary.count}</span> sidebar tools tuned to your{" "}
+              <span className="font-semibold text-text-primary">{soloSummary.label}</span> business.
             </p>
             <div className="flex items-center justify-center gap-3">
               <a
@@ -514,7 +514,7 @@ export default function OnboardPage() {
               </a>
               <button
                 onClick={() => { setUserType(null); setSoloComplete(false); setSoloSummary(null); }}
-                className="px-5 py-2.5 rounded-lg border border-[var(--color-border)] text-sm text-muted hover:text-foreground transition-colors"
+                className="px-5 py-2.5 rounded-lg border border-[var(--color-border)] text-sm text-text-muted hover:text-text-primary transition-colors"
               >
                 Start Over
               </button>
@@ -524,7 +524,7 @@ export default function OnboardPage() {
       );
     }
     return (
-      <div className="fade-in space-y-6">
+      <div className="space-y-6">
         {/* -- Onboard command strip -- */}
         <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
           <div className="min-w-0">
@@ -534,7 +534,7 @@ export default function OnboardPage() {
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setUserType(null)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border bg-black/5 text-foreground hover:bg-black/10 transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border-subtle bg-black/5 text-text-primary hover:bg-black/10 transition-all"
             >
               <ArrowLeft size={12} /> Change type
             </button>
@@ -554,7 +554,7 @@ export default function OnboardPage() {
   // ══════════════════════════════════════════════════════════════════
 
   return (
-    <div className="fade-in space-y-6">
+    <div className="space-y-6">
       {/* -- Client Onboarding Wizard command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -565,16 +565,16 @@ export default function OnboardPage() {
           <>
             <button
               onClick={() => setUserType(null)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border bg-black/5 text-foreground hover:bg-black/10 transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border-subtle bg-black/5 text-text-primary hover:bg-black/10 transition-all"
             >
               <ArrowLeft size={12} /> Change type
             </button>
             <button onClick={() => setShowTemplates(!showTemplates)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border bg-black/5 text-foreground hover:bg-black/10 transition-all">
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border-subtle bg-black/5 text-text-primary hover:bg-black/10 transition-all">
               <Layout size={12} /> Templates
             </button>
             {selectedTemplate && (
-              <span className="text-[9px] px-2 py-0.5 bg-black/10 border border-border text-foreground rounded-full">
+              <span className="text-[9px] px-2 py-0.5 bg-black/10 border border-border-subtle text-text-primary rounded-full">
                 Using: {ONBOARD_TEMPLATES.find(t => t.id === selectedTemplate)?.name}
               </span>
             )}
@@ -587,14 +587,14 @@ export default function OnboardPage() {
         <button
           onClick={() => setMode("full")}
           className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
-            mode === "full" ? "bg-brand-accent text-white" : "text-muted hover:text-foreground"
+            mode === "full" ? "bg-brand-accent text-white" : "text-text-muted hover:text-text-primary"
           }`}>
           Full Wizard
         </button>
         <button
           onClick={() => setMode("quick")}
           className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
-            mode === "quick" ? "bg-brand-accent text-white" : "text-muted hover:text-foreground"
+            mode === "quick" ? "bg-brand-accent text-white" : "text-text-muted hover:text-text-primary"
           }`}>
           Quick Add
         </button>
@@ -608,8 +608,8 @@ export default function OnboardPage() {
               <CheckCircle2 size={40} className="text-brand-accent" />
             </div>
             <h2 className="text-2xl font-bold text-brand-accent">Client Created!</h2>
-            <p className="text-sm text-muted max-w-lg mx-auto">
-              <span className="font-semibold text-foreground">{quickForm.business_name}</span> has been added on the{" "}
+            <p className="text-sm text-text-muted max-w-lg mx-auto">
+              <span className="font-semibold text-text-primary">{quickForm.business_name}</span> has been added on the{" "}
               <span className="text-brand-accent font-semibold">{quickForm.package_tier}</span> plan.
             </p>
             <div className="flex items-center justify-center gap-3">
@@ -619,7 +619,7 @@ export default function OnboardPage() {
                   setQuickLaunchedId(null);
                   setQuickForm({ business_name: "", contact_name: "", email: "", phone: "", package_tier: "Growth" });
                 }}
-                className="px-5 py-2.5 rounded-lg border border-[var(--color-border)] text-sm text-muted hover:text-foreground transition-colors">
+                className="px-5 py-2.5 rounded-lg border border-[var(--color-border)] text-sm text-text-muted hover:text-text-primary transition-colors">
                 Add Another
               </button>
               <button
@@ -638,7 +638,7 @@ export default function OnboardPage() {
               <h2 className="text-lg font-bold flex items-center gap-2">
                 <Zap size={18} className="text-brand-accent" /> Quick Add Client
               </h2>
-              <p className="text-xs text-muted mt-0.5">
+              <p className="text-xs text-text-muted mt-0.5">
                 Rapidly add a client without the full onboarding wizard
               </p>
             </div>
@@ -646,53 +646,53 @@ export default function OnboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Business Name */}
               <div>
-                <label className="block text-[10px] text-muted mb-1 font-medium">Business Name *</label>
+                <label className="block text-[10px] text-text-muted mb-1 font-medium">Business Name *</label>
                 <div className="relative">
-                  <Building2 size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/40" />
+                  <Building2 size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/40" />
                   <input value={quickForm.business_name} onChange={e => updateQuick("business_name", e.target.value)}
                     placeholder="Acme Corp"
-                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors" />
+                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-text-primary text-sm focus:outline-none focus:border-brand-accent transition-colors" />
                 </div>
               </div>
 
               {/* Contact Name */}
               <div>
-                <label className="block text-[10px] text-muted mb-1 font-medium">Contact Name *</label>
+                <label className="block text-[10px] text-text-muted mb-1 font-medium">Contact Name *</label>
                 <div className="relative">
-                  <Users size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/40" />
+                  <Users size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/40" />
                   <input value={quickForm.contact_name} onChange={e => updateQuick("contact_name", e.target.value)}
                     placeholder="John Smith"
-                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors" />
+                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-text-primary text-sm focus:outline-none focus:border-brand-accent transition-colors" />
                 </div>
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-[10px] text-muted mb-1 font-medium">Email *</label>
+                <label className="block text-[10px] text-text-muted mb-1 font-medium">Email *</label>
                 <div className="relative">
-                  <Mail size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/40" />
+                  <Mail size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/40" />
                   <input value={quickForm.email} onChange={e => updateQuick("email", e.target.value)}
                     placeholder="john@acme.com" type="email"
-                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors" />
+                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-text-primary text-sm focus:outline-none focus:border-brand-accent transition-colors" />
                 </div>
               </div>
 
               {/* Phone */}
               <div>
-                <label className="block text-[10px] text-muted mb-1 font-medium">Phone</label>
+                <label className="block text-[10px] text-text-muted mb-1 font-medium">Phone</label>
                 <div className="relative">
-                  <Phone size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/40" />
+                  <Phone size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/40" />
                   <input value={quickForm.phone} onChange={e => updateQuick("phone", e.target.value)}
                     placeholder="+1 (555) 123-4567"
-                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors" />
+                    className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-text-primary text-sm focus:outline-none focus:border-brand-accent transition-colors" />
                 </div>
               </div>
 
               {/* Package Dropdown */}
               <div className="md:col-span-2">
-                <label className="block text-[10px] text-muted mb-1 font-medium">Package</label>
+                <label className="block text-[10px] text-text-muted mb-1 font-medium">Package</label>
                 <select value={quickForm.package_tier} onChange={e => updateQuick("package_tier", e.target.value)}
-                  className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors">
+                  className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-text-primary text-sm focus:outline-none focus:border-brand-accent transition-colors">
                   {PACKAGES.map(pkg => (
                     <option key={pkg.name} value={pkg.name}>{pkg.name} ({pkg.price}/mo)</option>
                   ))}
@@ -702,7 +702,7 @@ export default function OnboardPage() {
 
             <div className="flex items-center justify-end gap-3 pt-2">
               <button onClick={() => setMode("full")}
-                className="px-4 py-2.5 border border-[var(--color-border)] rounded-lg text-sm text-muted hover:text-foreground transition-colors">
+                className="px-4 py-2.5 border border-[var(--color-border)] rounded-lg text-sm text-text-muted hover:text-text-primary transition-colors">
                 Switch to Full Wizard
               </button>
               <button
@@ -763,9 +763,9 @@ export default function OnboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-sm font-bold flex items-center gap-2"><Layers size={14} className="text-brand-accent" /> Onboarding Templates</h2>
-              <p className="text-[10px] text-muted mt-0.5">Pre-built flows for different client types</p>
+              <p className="text-[10px] text-text-muted mt-0.5">Pre-built flows for different client types</p>
             </div>
-            <button onClick={() => setShowTemplates(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+            <button onClick={() => setShowTemplates(false)} className="text-text-muted hover:text-text-primary"><X size={16} /></button>
           </div>
           <ChoiceCards
             columns={4}
@@ -791,8 +791,8 @@ export default function OnboardPage() {
             <CheckCircle2 size={40} className="text-brand-accent" />
           </div>
           <h2 className="text-2xl font-bold text-brand-accent">Client Launched Successfully!</h2>
-          <p className="text-sm text-muted max-w-lg mx-auto">
-            <span className="font-semibold text-foreground">{form.business_name || "New Client"}</span> has been onboarded.
+          <p className="text-sm text-text-muted max-w-lg mx-auto">
+            <span className="font-semibold text-text-primary">{form.business_name || "New Client"}</span> has been onboarded.
             Their workspace is being configured with {selectedServices.length} services and {accessUsers.length} team member{accessUsers.length !== 1 ? "s" : ""}.
           </p>
           <div className="max-w-xl mx-auto">
@@ -825,7 +825,7 @@ export default function OnboardPage() {
           </div>
           <div className="flex items-center justify-center gap-3">
             <button onClick={() => { setWizardComplete(false); setLaunchedClientId(null); setStep(0); setForm({ business_name: "", contact_name: "", email: "", phone: "", website: "", industry: "", target_audience: "", goals: "", brand_voice: "", package_tier: "Growth", notes: "" }); }}
-              className="px-5 py-2.5 rounded-lg border border-[var(--color-border)] text-sm text-muted hover:text-foreground transition-colors">
+              className="px-5 py-2.5 rounded-lg border border-[var(--color-border)] text-sm text-text-muted hover:text-text-primary transition-colors">
               Onboard Another Client
             </button>
             <button
@@ -843,7 +843,7 @@ export default function OnboardPage() {
           {/* Progress Bar */}
           <div className="glass rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-xs text-muted">Step {step + 1} of {STEP_META.length}</p>
+              <p className="text-xs text-text-muted">Step {step + 1} of {STEP_META.length}</p>
               <p className="text-xs font-semibold text-brand-accent">{progressPercent}% complete</p>
             </div>
             <div className="w-full h-2 bg-[rgba(0,0,0,0.04)] rounded-full overflow-hidden mb-4">
@@ -865,13 +865,13 @@ export default function OnboardPage() {
                     <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
                       isDone ? "bg-emerald-500 text-black" :
                       isActive ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" :
-                      "bg-[rgba(0,0,0,0.04)] text-muted"
+                      "bg-[rgba(0,0,0,0.04)] text-text-muted"
                     }`}>
                       {isDone ? <Check size={12} /> : <Icon size={12} />}
                     </div>
                     <div className="hidden lg:block min-w-0">
-                      <p className={`text-[10px] font-semibold truncate ${isActive ? "text-brand-accent" : isDone ? "text-emerald-400" : "text-muted"}`}>{s.label}</p>
-                      <p className="text-[8px] text-muted truncate">{s.description}</p>
+                      <p className={`text-[10px] font-semibold truncate ${isActive ? "text-brand-accent" : isDone ? "text-emerald-400" : "text-text-muted"}`}>{s.label}</p>
+                      <p className="text-[8px] text-text-muted truncate">{s.description}</p>
                     </div>
                   </button>
                 );
@@ -890,7 +890,7 @@ export default function OnboardPage() {
                     <Sparkles size={28} className="text-brand-accent" />
                   </div>
                   <h2 className="text-xl font-bold">Welcome to Client Onboarding</h2>
-                  <p className="text-sm text-muted max-w-md mx-auto">
+                  <p className="text-sm text-text-muted max-w-md mx-auto">
                     This wizard will guide you through setting up a new client in Trinity.
                     Everything from business details to brand assets and service configuration.
                   </p>
@@ -907,7 +907,7 @@ export default function OnboardPage() {
                       <div className="p-4 text-center">
                         <item.icon size={20} className="mx-auto mb-2 text-brand-accent" />
                         <p className="text-xs font-semibold">{item.label}</p>
-                        <p className="text-[9px] text-muted mt-0.5">{item.desc}</p>
+                        <p className="text-[9px] text-text-muted mt-0.5">{item.desc}</p>
                       </div>
                     </motion.div>
                   ))}
@@ -942,10 +942,10 @@ export default function OnboardPage() {
                       <button onClick={() => setExpandedFaq(expandedFaq === faq.id ? null : faq.id)}
                         className="w-full flex items-center justify-between p-3 text-left hover:bg-[rgba(0,0,0,0.03)] transition-colors">
                         <span className="text-xs">{faq.q}</span>
-                        {expandedFaq === faq.id ? <ChevronUp size={12} className="text-muted" /> : <ChevronDown size={12} className="text-muted" />}
+                        {expandedFaq === faq.id ? <ChevronUp size={12} className="text-text-muted" /> : <ChevronDown size={12} className="text-text-muted" />}
                       </button>
                       {expandedFaq === faq.id && (
-                        <div className="px-3 pb-3 text-[10px] text-muted border-t border-[var(--color-border)] pt-2">{faq.a}</div>
+                        <div className="px-3 pb-3 text-[10px] text-text-muted border-t border-[var(--color-border)] pt-2">{faq.a}</div>
                       )}
                     </div>
                   ))}
@@ -958,7 +958,7 @@ export default function OnboardPage() {
               <div className="space-y-5">
                 <div>
                   <h2 className="text-lg font-bold flex items-center gap-2"><Building2 size={18} className="text-brand-accent" /> Business Information</h2>
-                  <p className="text-xs text-muted mt-0.5">Core details about the new client</p>
+                  <p className="text-xs text-text-muted mt-0.5">Core details about the new client</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -970,24 +970,24 @@ export default function OnboardPage() {
                     { key: "website", label: "Website", placeholder: "https://acme.com", icon: Globe },
                   ].map(field => (
                     <div key={field.key}>
-                      <label className="block text-[10px] text-muted mb-1 font-medium">{field.label}</label>
+                      <label className="block text-[10px] text-text-muted mb-1 font-medium">{field.label}</label>
                       <div className="relative">
-                        <field.icon size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/40" />
+                        <field.icon size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/40" />
                         <input
                           value={form[field.key as keyof typeof form]}
                           onChange={e => updateForm(field.key, e.target.value)}
                           placeholder={field.placeholder}
-                          className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors"
+                          className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-text-primary text-sm focus:outline-none focus:border-brand-accent transition-colors"
                         />
                       </div>
                     </div>
                   ))}
                   <div>
-                    <label className="block text-[10px] text-muted mb-1 font-medium">Industry</label>
+                    <label className="block text-[10px] text-text-muted mb-1 font-medium">Industry</label>
                     <select
                       value={form.industry}
                       onChange={e => updateForm("industry", e.target.value)}
-                      className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors">
+                      className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-text-primary text-sm focus:outline-none focus:border-brand-accent transition-colors">
                       <option value="">Select industry...</option>
                       {INDUSTRIES.map(ind => <option key={ind} value={ind}>{ind}</option>)}
                     </select>
@@ -998,15 +998,15 @@ export default function OnboardPage() {
                   <p className="text-xs text-brand-accent font-semibold mb-3 flex items-center gap-1.5"><Zap size={12} /> AI Context (improves content generation)</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[10px] text-muted mb-1">Target Audience</label>
+                      <label className="block text-[10px] text-text-muted mb-1">Target Audience</label>
                       <input value={form.target_audience} onChange={e => updateForm("target_audience", e.target.value)}
                         placeholder="e.g., Women 25-45 in urban areas"
-                        className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors" />
+                        className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-text-primary text-sm focus:outline-none focus:border-brand-accent transition-colors" />
                     </div>
                     <div>
-                      <label className="block text-[10px] text-muted mb-1">Brand Voice</label>
+                      <label className="block text-[10px] text-text-muted mb-1">Brand Voice</label>
                       <select value={form.brand_voice} onChange={e => updateForm("brand_voice", e.target.value)}
-                        className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors">
+                        className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-text-primary text-sm focus:outline-none focus:border-brand-accent transition-colors">
                         <option value="">Select tone...</option>
                         <option value="professional">Professional & Trustworthy</option>
                         <option value="friendly">Friendly & Approachable</option>
@@ -1016,10 +1016,10 @@ export default function OnboardPage() {
                       </select>
                     </div>
                     <div className="md:col-span-2">
-                      <label className="block text-[10px] text-muted mb-1">Main Goals</label>
+                      <label className="block text-[10px] text-text-muted mb-1">Main Goals</label>
                       <textarea value={form.goals} onChange={e => updateForm("goals", e.target.value)}
                         placeholder="What does this client want to achieve? e.g., Increase bookings by 50%, grow Instagram to 10k followers..."
-                        className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors h-20 resize-none" />
+                        className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-text-primary text-sm focus:outline-none focus:border-brand-accent transition-colors h-20 resize-none" />
                     </div>
                   </div>
                 </div>
@@ -1031,7 +1031,7 @@ export default function OnboardPage() {
               <div className="space-y-5">
                 <div>
                   <h2 className="text-lg font-bold flex items-center gap-2"><Palette size={18} className="text-brand-accent" /> Brand Assets</h2>
-                  <p className="text-xs text-muted mt-0.5">Upload logos, set brand colors, and choose fonts</p>
+                  <p className="text-xs text-text-muted mt-0.5">Upload logos, set brand colors, and choose fonts</p>
                 </div>
 
                 {/* File uploads */}
@@ -1044,13 +1044,13 @@ export default function OnboardPage() {
                           asset.uploaded ? "border-emerald-500/20 bg-emerald-500/5" : "border-[var(--color-border)] hover:border-[rgba(59,130,246,0.25)]"
                         }`}>
                         <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
-                          asset.uploaded ? "bg-emerald-500/10 text-emerald-400" : "bg-[rgba(0,0,0,0.04)] text-muted"
+                          asset.uploaded ? "bg-emerald-500/10 text-emerald-400" : "bg-[rgba(0,0,0,0.04)] text-text-muted"
                         }`}>
                           {asset.uploaded ? <Check size={16} /> : <Upload size={16} />}
                         </div>
                         <div className="text-left">
                           <p className="text-xs font-medium">{asset.name}</p>
-                          <p className="text-[9px] text-muted">{asset.uploaded ? "Uploaded" : "Click to upload (mock)"}</p>
+                          <p className="text-[9px] text-text-muted">{asset.uploaded ? "Uploaded" : "Click to upload (mock)"}</p>
                         </div>
                       </button>
                     ))}
@@ -1077,22 +1077,22 @@ export default function OnboardPage() {
                   </div>
                   <div className="flex gap-6">
                     <div>
-                      <label className="block text-[9px] text-muted mb-1">Primary</label>
+                      <label className="block text-[9px] text-text-muted mb-1">Primary</label>
                       <div className="flex items-center gap-2">
                         <input type="color" value={customPrimary} onChange={e => setCustomPrimary(e.target.value)} className="w-8 h-8 rounded cursor-pointer border-0 bg-transparent" />
-                        <span className="text-xs text-muted font-mono">{customPrimary}</span>
+                        <span className="text-xs text-text-muted font-mono">{customPrimary}</span>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[9px] text-muted mb-1">Secondary</label>
+                      <label className="block text-[9px] text-text-muted mb-1">Secondary</label>
                       <div className="flex items-center gap-2">
                         <input type="color" value={customSecondary} onChange={e => setCustomSecondary(e.target.value)} className="w-8 h-8 rounded cursor-pointer border-0 bg-transparent" />
-                        <span className="text-xs text-muted font-mono">{customSecondary}</span>
+                        <span className="text-xs text-text-muted font-mono">{customSecondary}</span>
                       </div>
                     </div>
                     {/* Live preview */}
                     <div className="flex-1">
-                      <label className="block text-[9px] text-muted mb-1">Preview</label>
+                      <label className="block text-[9px] text-text-muted mb-1">Preview</label>
                       <div className="flex items-center gap-2 p-2 rounded-lg border border-[var(--color-border)]">
                         <div className="w-8 h-8 rounded-lg" style={{ backgroundColor: customPrimary }} />
                         <div className="flex-1 space-y-1">
@@ -1114,7 +1114,7 @@ export default function OnboardPage() {
                           selectedFont === font ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "border-[var(--color-border)] hover:border-[rgba(59,130,246,0.25)]"
                         }`}>
                         <p className="text-sm font-semibold" style={{ fontFamily: font }}>{font}</p>
-                        <p className="text-[8px] text-muted mt-0.5" style={{ fontFamily: font }}>The quick brown fox</p>
+                        <p className="text-[8px] text-text-muted mt-0.5" style={{ fontFamily: font }}>The quick brown fox</p>
                       </button>
                     ))}
                   </div>
@@ -1128,7 +1128,7 @@ export default function OnboardPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-lg font-bold flex items-center gap-2"><Briefcase size={18} className="text-brand-accent" /> Service Selection</h2>
-                    <p className="text-xs text-muted mt-0.5">{selectedServices.length} services selected for {form.package_tier} package</p>
+                    <p className="text-xs text-text-muted mt-0.5">{selectedServices.length} services selected for {form.package_tier} package</p>
                   </div>
                   <span className="text-sm font-bold text-brand-accent">{selectedServices.length} active</span>
                 </div>
@@ -1138,7 +1138,7 @@ export default function OnboardPage() {
                   {categories.map(cat => (
                     <button key={cat} onClick={() => setServiceFilter(cat)}
                       className={`px-3 py-1.5 text-[10px] rounded-lg font-medium transition-all ${
-                        serviceFilter === cat ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-muted hover:text-foreground"
+                        serviceFilter === cat ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted hover:text-text-primary"
                       }`}>
                       {cat}
                     </button>
@@ -1155,7 +1155,7 @@ export default function OnboardPage() {
                       <div className="flex items-start justify-between">
                         <div>
                           <p className="text-xs font-semibold">{svc.name}</p>
-                          <p className="text-[9px] text-muted mt-0.5">{svc.description}</p>
+                          <p className="text-[9px] text-text-muted mt-0.5">{svc.description}</p>
                         </div>
                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ml-2 ${
                           svc.included ? "border-brand-accent bg-brand-accent" : "border-[var(--color-border)]"
@@ -1163,7 +1163,7 @@ export default function OnboardPage() {
                           {svc.included && <Check size={10} className="text-white" />}
                         </div>
                       </div>
-                      <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-muted mt-2 inline-block">{svc.category}</span>
+                      <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-text-muted mt-2 inline-block">{svc.category}</span>
                     </button>
                   ))}
                 </div>
@@ -1187,7 +1187,7 @@ export default function OnboardPage() {
               <div className="space-y-5">
                 <div>
                   <h2 className="text-lg font-bold flex items-center gap-2"><ShieldCheck size={18} className="text-brand-accent" /> Access Setup</h2>
-                  <p className="text-xs text-muted mt-0.5">Configure portal access and team assignments</p>
+                  <p className="text-xs text-text-muted mt-0.5">Configure portal access and team assignments</p>
                 </div>
 
                 {/* Toggle cards */}
@@ -1205,7 +1205,7 @@ export default function OnboardPage() {
                       </div>
                       <div>
                         <p className="text-xs font-semibold">{toggle.label}</p>
-                        <p className="text-[9px] text-muted">{toggle.desc}</p>
+                        <p className="text-[9px] text-text-muted">{toggle.desc}</p>
                       </div>
                     </label>
                   ))}
@@ -1216,9 +1216,9 @@ export default function OnboardPage() {
                   <p className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Users size={12} className="text-brand-accent" /> Team Members</p>
                   <div className="flex gap-2 mb-3">
                     <input value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="team@agency.com"
-                      className="flex-1 px-3 py-2 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-sm text-foreground focus:outline-none focus:border-brand-accent transition-colors" />
+                      className="flex-1 px-3 py-2 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-sm text-text-primary focus:outline-none focus:border-brand-accent transition-colors" />
                     <select value={newRole} onChange={e => setNewRole(e.target.value as AccessUser["role"])}
-                      className="px-3 py-2 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-sm text-foreground focus:outline-none focus:border-brand-accent transition-colors">
+                      className="px-3 py-2 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-sm text-text-primary focus:outline-none focus:border-brand-accent transition-colors">
                       <option value="admin">Admin</option>
                       <option value="manager">Manager</option>
                       <option value="editor">Editor</option>
@@ -1237,7 +1237,7 @@ export default function OnboardPage() {
                           </div>
                           <div>
                             <p className="text-xs font-medium">{user.email}</p>
-                            <p className="text-[9px] text-muted capitalize">{user.role}</p>
+                            <p className="text-[9px] text-text-muted capitalize">{user.role}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
@@ -1246,7 +1246,7 @@ export default function OnboardPage() {
                             user.status === "invited" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
                             "bg-yellow-500/10 text-yellow-400"
                           }`}>{user.status}</span>
-                          <button onClick={() => removeAccessUser(user.email)} className="text-muted hover:text-red-400 transition-colors"><X size={12} /></button>
+                          <button onClick={() => removeAccessUser(user.email)} className="text-text-muted hover:text-red-400 transition-colors"><X size={12} /></button>
                         </div>
                       </div>
                     ))}
@@ -1255,10 +1255,10 @@ export default function OnboardPage() {
 
                 {/* Notes */}
                 <div>
-                  <label className="block text-[10px] text-muted mb-1">Internal Notes</label>
+                  <label className="block text-[10px] text-text-muted mb-1">Internal Notes</label>
                   <textarea value={form.notes} onChange={e => updateForm("notes", e.target.value)}
                     placeholder="Anything to note about this client setup..."
-                    className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-sm text-foreground focus:outline-none focus:border-brand-accent h-20 resize-none transition-colors" />
+                    className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-sm text-text-primary focus:outline-none focus:border-brand-accent h-20 resize-none transition-colors" />
                 </div>
               </div>
             )}
@@ -1270,7 +1270,7 @@ export default function OnboardPage() {
                   <h2 className="text-lg font-bold flex items-center gap-2 text-brand-accent">
                     <Sparkles size={18} className="text-brand-accent" /> Personalized for you
                   </h2>
-                  <p className="text-xs text-muted mt-0.5">
+                  <p className="text-xs text-text-muted mt-0.5">
                     A few optional follow-up questions — your answers help us tune content generation and your AI copilot.
                   </p>
                 </div>
@@ -1278,12 +1278,12 @@ export default function OnboardPage() {
                 {personalizeLoading && (
                   <div className="flex flex-col items-center gap-2 py-12 rounded-xl border border-[rgba(59,130,246,0.2)] bg-gradient-to-b from-[rgba(59,130,246,0.05)] to-transparent">
                     <Loader2 size={22} className="animate-spin text-brand-accent" />
-                    <p className="text-xs text-muted">Our AI is getting to know you...</p>
+                    <p className="text-xs text-text-muted">Our AI is getting to know you...</p>
                   </div>
                 )}
 
                 {!personalizeLoading && personalizeQuestions.length === 0 && (
-                  <div className="rounded-xl border border-[var(--color-border)] p-6 text-center text-xs text-muted">
+                  <div className="rounded-xl border border-[var(--color-border)] p-6 text-center text-xs text-text-muted">
                     No custom questions right now — click Continue to skip this step.
                   </div>
                 )}
@@ -1292,12 +1292,12 @@ export default function OnboardPage() {
                   <div className="space-y-4">
                     {personalizeQuestions.map((q) => (
                       <div key={q.id} className="rounded-xl border border-[var(--color-border)] p-4 bg-[rgba(0,0,0,0.04)]">
-                        <label className="block text-xs font-semibold text-foreground mb-1.5 flex items-start gap-1.5">
+                        <label className="block text-xs font-semibold text-text-primary mb-1.5 flex items-start gap-1.5">
                           <Sparkles size={11} className="text-brand-accent mt-0.5 shrink-0" />
                           <span>{q.question}</span>
                         </label>
                         {q.help_text && (
-                          <p className="text-[10px] text-muted mb-2 ml-5">{q.help_text}</p>
+                          <p className="text-[10px] text-text-muted mb-2 ml-5">{q.help_text}</p>
                         )}
                         <textarea
                           value={personalizeAnswers[q.id] || ""}
@@ -1306,11 +1306,11 @@ export default function OnboardPage() {
                           }
                           placeholder={q.placeholder}
                           rows={2}
-                          className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-brand-accent transition-colors resize-none"
+                          className="w-full px-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-text-primary text-sm focus:outline-none focus:border-brand-accent transition-colors resize-none"
                         />
                       </div>
                     ))}
-                    <p className="text-[10px] text-muted text-center">
+                    <p className="text-[10px] text-text-muted text-center">
                       All questions are optional. Click Skip or Continue when done.
                     </p>
                   </div>
@@ -1323,7 +1323,7 @@ export default function OnboardPage() {
               <div className="space-y-5">
                 <div className="text-center space-y-2">
                   <h2 className="text-lg font-bold flex items-center justify-center gap-2"><Eye size={18} className="text-brand-accent" /> Review & Launch</h2>
-                  <p className="text-xs text-muted">Verify everything looks correct, then hit Launch Client.</p>
+                  <p className="text-xs text-text-muted">Verify everything looks correct, then hit Launch Client.</p>
                 </div>
 
                 {/* Summary grid */}
@@ -1332,12 +1332,12 @@ export default function OnboardPage() {
                   <div className="rounded-xl border border-[var(--color-border)] p-4 space-y-2">
                     <p className="text-xs font-semibold text-brand-accent flex items-center gap-1.5"><Building2 size={12} /> Business Info</p>
                     <div className="space-y-1.5 text-xs">
-                      <div className="flex justify-between"><span className="text-muted">Business</span><span className="font-medium">{form.business_name || "---"}</span></div>
-                      <div className="flex justify-between"><span className="text-muted">Contact</span><span>{form.contact_name || "---"}</span></div>
-                      <div className="flex justify-between"><span className="text-muted">Email</span><span>{form.email || "---"}</span></div>
-                      <div className="flex justify-between"><span className="text-muted">Phone</span><span>{form.phone || "---"}</span></div>
-                      <div className="flex justify-between"><span className="text-muted">Industry</span><span>{form.industry || "---"}</span></div>
-                      <div className="flex justify-between"><span className="text-muted">Package</span><span className="text-brand-accent font-bold">{form.package_tier}</span></div>
+                      <div className="flex justify-between"><span className="text-text-muted">Business</span><span className="font-medium">{form.business_name || "---"}</span></div>
+                      <div className="flex justify-between"><span className="text-text-muted">Contact</span><span>{form.contact_name || "---"}</span></div>
+                      <div className="flex justify-between"><span className="text-text-muted">Email</span><span>{form.email || "---"}</span></div>
+                      <div className="flex justify-between"><span className="text-text-muted">Phone</span><span>{form.phone || "---"}</span></div>
+                      <div className="flex justify-between"><span className="text-text-muted">Industry</span><span>{form.industry || "---"}</span></div>
+                      <div className="flex justify-between"><span className="text-text-muted">Package</span><span className="text-brand-accent font-bold">{form.package_tier}</span></div>
                     </div>
                   </div>
 
@@ -1346,15 +1346,15 @@ export default function OnboardPage() {
                     <p className="text-xs font-semibold text-brand-accent flex items-center gap-1.5"><Palette size={12} /> Brand Assets</p>
                     <div className="space-y-1.5 text-xs">
                       <div className="flex justify-between items-center">
-                        <span className="text-muted">Colors</span>
+                        <span className="text-text-muted">Colors</span>
                         <div className="flex gap-1">
                           <div className="w-5 h-5 rounded-full border border-[rgba(0,0,0,0.08)]" style={{ backgroundColor: customPrimary }} />
                           <div className="w-5 h-5 rounded-full border border-[rgba(0,0,0,0.08)]" style={{ backgroundColor: customSecondary }} />
                         </div>
                       </div>
-                      <div className="flex justify-between"><span className="text-muted">Font</span><span>{selectedFont}</span></div>
-                      <div className="flex justify-between"><span className="text-muted">Assets Uploaded</span><span>{uploadedAssets}/{assets.length}</span></div>
-                      {form.brand_voice && <div className="flex justify-between"><span className="text-muted">Brand Voice</span><span className="capitalize">{form.brand_voice}</span></div>}
+                      <div className="flex justify-between"><span className="text-text-muted">Font</span><span>{selectedFont}</span></div>
+                      <div className="flex justify-between"><span className="text-text-muted">Assets Uploaded</span><span>{uploadedAssets}/{assets.length}</span></div>
+                      {form.brand_voice && <div className="flex justify-between"><span className="text-text-muted">Brand Voice</span><span className="capitalize">{form.brand_voice}</span></div>}
                     </div>
                   </div>
 
@@ -1368,7 +1368,7 @@ export default function OnboardPage() {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-[10px] text-muted">No services selected</p>
+                      <p className="text-[10px] text-text-muted">No services selected</p>
                     )}
                   </div>
 
@@ -1377,18 +1377,18 @@ export default function OnboardPage() {
                     <p className="text-xs font-semibold text-brand-accent flex items-center gap-1.5"><ShieldCheck size={12} /> Access & Setup</p>
                     <div className="space-y-1.5 text-xs">
                       <div className="flex items-center gap-2">
-                        {portalEnabled ? <Check size={12} className="text-emerald-400" /> : <X size={12} className="text-muted" />}
-                        <span className={portalEnabled ? "" : "text-muted"}>Portal access</span>
+                        {portalEnabled ? <Check size={12} className="text-emerald-400" /> : <X size={12} className="text-text-muted" />}
+                        <span className={portalEnabled ? "" : "text-text-muted"}>Portal access</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        {sendWelcome ? <Check size={12} className="text-emerald-400" /> : <X size={12} className="text-muted" />}
-                        <span className={sendWelcome ? "" : "text-muted"}>Welcome email</span>
+                        {sendWelcome ? <Check size={12} className="text-emerald-400" /> : <X size={12} className="text-text-muted" />}
+                        <span className={sendWelcome ? "" : "text-text-muted"}>Welcome email</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        {autoInvoice ? <Check size={12} className="text-emerald-400" /> : <X size={12} className="text-muted" />}
-                        <span className={autoInvoice ? "" : "text-muted"}>Auto invoice</span>
+                        {autoInvoice ? <Check size={12} className="text-emerald-400" /> : <X size={12} className="text-text-muted" />}
+                        <span className={autoInvoice ? "" : "text-text-muted"}>Auto invoice</span>
                       </div>
-                      <div className="flex justify-between"><span className="text-muted">Team members</span><span>{accessUsers.length}</span></div>
+                      <div className="flex justify-between"><span className="text-text-muted">Team members</span><span>{accessUsers.length}</span></div>
                     </div>
                   </div>
                 </div>
@@ -1397,16 +1397,16 @@ export default function OnboardPage() {
                 {(form.goals || form.notes) && (
                   <div className="rounded-xl border border-[var(--color-border)] p-4 space-y-2">
                     <p className="text-xs font-semibold text-brand-accent flex items-center gap-1.5"><Target size={12} /> Goals & Notes</p>
-                    {form.goals && <p className="text-xs text-muted"><span className="text-foreground font-medium">Goals:</span> {form.goals}</p>}
-                    {form.target_audience && <p className="text-xs text-muted"><span className="text-foreground font-medium">Target:</span> {form.target_audience}</p>}
-                    {form.notes && <p className="text-xs text-muted"><span className="text-foreground font-medium">Notes:</span> {form.notes}</p>}
+                    {form.goals && <p className="text-xs text-text-muted"><span className="text-text-primary font-medium">Goals:</span> {form.goals}</p>}
+                    {form.target_audience && <p className="text-xs text-text-muted"><span className="text-text-primary font-medium">Target:</span> {form.target_audience}</p>}
+                    {form.notes && <p className="text-xs text-text-muted"><span className="text-text-primary font-medium">Notes:</span> {form.notes}</p>}
                   </div>
                 )}
 
                 {/* Launch confirmation */}
                 <div className="p-4 rounded-xl bg-[rgba(59,130,246,0.05)] border border-brand-accent/15 text-center">
                   <p className="text-xs text-brand-accent font-semibold mb-1">Ready to launch?</p>
-                  <p className="text-[10px] text-muted">This will create the client workspace, configure services, and send invitations.</p>
+                  <p className="text-[10px] text-text-muted">This will create the client workspace, configure services, and send invitations.</p>
                 </div>
               </div>
             )}
@@ -1415,7 +1415,7 @@ export default function OnboardPage() {
           {/* Navigation Buttons */}
           <div className="flex items-center justify-between">
             <button onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0}
-              className="flex items-center gap-2 px-4 py-2.5 border border-[var(--color-border)] rounded-lg text-sm text-muted hover:text-foreground disabled:opacity-30 transition-colors">
+              className="flex items-center gap-2 px-4 py-2.5 border border-[var(--color-border)] rounded-lg text-sm text-text-muted hover:text-text-primary disabled:opacity-30 transition-colors">
               <ArrowLeft size={14} /> Back
             </button>
 
@@ -1425,7 +1425,7 @@ export default function OnboardPage() {
               {step > 0 && step < STEP_META.length - 1 && (
                 <button
                   onClick={() => setStep(step + 1)}
-                  className="text-[11px] text-muted hover:text-foreground transition-colors px-3 py-2 font-medium"
+                  className="text-[11px] text-text-muted hover:text-text-primary transition-colors px-3 py-2 font-medium"
                   title="Skip this step — come back later from Settings"
                 >
                   Skip this step
@@ -1434,7 +1434,7 @@ export default function OnboardPage() {
               {/* Jump straight to the final review from any mid-step. */}
               {step > 0 && step < STEP_META.length - 2 && (
                 <button onClick={() => setStep(STEP_META.length - 1)}
-                  className="text-[10px] text-muted hover:text-foreground transition-colors px-3 py-2">
+                  className="text-[10px] text-text-muted hover:text-text-primary transition-colors px-3 py-2">
                   Skip to end
                 </button>
               )}

@@ -50,39 +50,39 @@ export default function ClientSetupPage() {
       <Image src="/icons/shortstack-logo.svg" alt="Trinity" width={80} height={80} className="mx-auto" />
       <div>
         <h1 className="text-3xl font-bold text-text-primary">Welcome aboard</h1>
-        <p className="text-muted mt-2 max-w-md mx-auto">
+        <p className="text-text-muted mt-2 max-w-md mx-auto">
           Hi {profile?.full_name || "there"}! Let&apos;s get your account set up so our AI agents can start working for you.
         </p>
       </div>
-      <p className="text-sm text-muted">This takes about 2 minutes</p>
+      <p className="text-sm text-text-muted">This takes about 2 minutes</p>
     </div>,
 
     // Step 1: Tell us about your business
     <div key="business" className="space-y-4">
       <h2 className="text-xl font-bold text-text-primary">Tell us about your business</h2>
-      <p className="text-sm text-muted">This helps our AI personalize everything for you.</p>
+      <p className="text-sm text-text-muted">This helps our AI personalize everything for you.</p>
       <div>
-        <label className="block text-sm text-muted mb-1">What does your business do? *</label>
+        <label className="block text-sm text-text-muted mb-1">What does your business do? *</label>
         <textarea value={businessInfo.description} onChange={e => setBusinessInfo({ ...businessInfo, description: e.target.value })}
           className="input w-full h-20" placeholder="e.g., We're a dental clinic serving families in Miami..." />
       </div>
       <div>
-        <label className="block text-sm text-muted mb-1">What are your main goals?</label>
+        <label className="block text-sm text-text-muted mb-1">What are your main goals?</label>
         <textarea value={businessInfo.goals} onChange={e => setBusinessInfo({ ...businessInfo, goals: e.target.value })}
           className="input w-full h-16" placeholder="e.g., Get more patients, increase online visibility, run ads..." />
       </div>
       <div>
-        <label className="block text-sm text-muted mb-1">Who is your target audience?</label>
+        <label className="block text-sm text-text-muted mb-1">Who is your target audience?</label>
         <input value={businessInfo.target_audience} onChange={e => setBusinessInfo({ ...businessInfo, target_audience: e.target.value })}
           className="input w-full" placeholder="e.g., Families with kids aged 25-45 in Miami area" />
       </div>
       <div>
-        <label className="block text-sm text-muted mb-1">Any competitors you want to beat?</label>
+        <label className="block text-sm text-text-muted mb-1">Any competitors you want to beat?</label>
         <input value={businessInfo.competitors} onChange={e => setBusinessInfo({ ...businessInfo, competitors: e.target.value })}
           className="input w-full" placeholder="e.g., Bright Smile Dental, Miami Family Dentistry" />
       </div>
       <div>
-        <label className="block text-sm text-muted mb-1">How should we sound when we talk about your brand?</label>
+        <label className="block text-sm text-text-muted mb-1">How should we sound when we talk about your brand?</label>
         <input value={businessInfo.brand_voice} onChange={e => setBusinessInfo({ ...businessInfo, brand_voice: e.target.value })}
           className="input w-full" placeholder="e.g., Professional but friendly, warm, trustworthy" />
       </div>
@@ -91,7 +91,7 @@ export default function ClientSetupPage() {
     // Step 2: Connect social media
     <div key="social" className="space-y-4">
       <h2 className="text-xl font-bold text-text-primary">Connect Your Social Media</h2>
-      <p className="text-sm text-muted">Select the platforms you use. We&apos;ll manage content and publishing for you.</p>
+      <p className="text-sm text-text-muted">Select the platforms you use. We&apos;ll manage content and publishing for you.</p>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {SOCIAL_PLATFORMS.map(platform => (
           <button key={platform.id} onClick={() => togglePlatform(platform.id)}
@@ -109,7 +109,7 @@ export default function ClientSetupPage() {
         ))}
       </div>
       <div className="flex gap-3 pt-2">
-        <button onClick={() => setStep(3)} className="text-sm text-muted hover:text-foreground flex items-center gap-1">
+        <button onClick={() => setStep(3)} className="text-sm text-text-muted hover:text-text-primary flex items-center gap-1">
           <X size={14} /> No thanks, maybe later
         </button>
         <button onClick={() => toast("Contact your account manager for help connecting accounts.")}
@@ -126,13 +126,13 @@ export default function ClientSetupPage() {
       </div>
       <div>
         <h2 className="text-xl font-bold text-text-primary">Meet Your AI Assistant</h2>
-        <p className="text-muted mt-2 max-w-md mx-auto">
+        <p className="text-text-muted mt-2 max-w-md mx-auto">
           Trinity is your personal AI assistant. Ask questions about your account, request content, check progress, or get marketing advice — anytime.
         </p>
       </div>
       <div className="bg-white/[0.04] rounded-xl p-4 max-w-md mx-auto text-left">
         <p className="text-sm text-brand-accent mb-2">Try asking Trinity:</p>
-        <ul className="space-y-1.5 text-sm text-muted">
+        <ul className="space-y-1.5 text-sm text-text-muted">
           <li>&quot;What&apos;s the status of my content?&quot;</li>
           <li>&quot;When is my next invoice due?&quot;</li>
           <li>&quot;What are my competitors doing?&quot;</li>
@@ -140,7 +140,7 @@ export default function ClientSetupPage() {
           <li>&quot;How are my ads performing?&quot;</li>
         </ul>
       </div>
-      <p className="text-xs text-muted">You can chat with Trinity from your portal dashboard anytime.</p>
+      <p className="text-xs text-text-muted">You can chat with Trinity from your portal dashboard anytime.</p>
     </div>,
 
     // Step 4: All set
@@ -150,7 +150,7 @@ export default function ClientSetupPage() {
       </div>
       <div>
         <h2 className="text-2xl font-bold">You&apos;re All Set!</h2>
-        <p className="text-muted mt-2 max-w-md mx-auto">
+        <p className="text-text-muted mt-2 max-w-md mx-auto">
           Our AI agents are now configured for your business. Here&apos;s what happens next:
         </p>
       </div>
@@ -176,11 +176,11 @@ export default function ClientSetupPage() {
   ];
 
   return (
-    <MotionPage className="fade-in max-w-2xl mx-auto py-8 space-y-6">{/* Progress */}<div className="flex gap-1">
+    <MotionPage className="max-w-2xl mx-auto py-8 space-y-6">{/* Progress */}<div className="flex gap-1">
               {steps.map((_, i) => (
                 <div key={i} className={`flex-1 h-1.5 rounded-full transition-all ${i <= step ? "bg-brand-accent" : "bg-white/[0.10]"}`} />
               ))}
-            </div>{/* Step content */}<div className="card min-h-[400px] flex flex-col justify-center">
+            </div>{/* Step content */}<div className="glass rounded-xl p-4 min-h-[400px] flex flex-col justify-center">
               {steps[step]}
             </div>{/* Navigation */}<div className="flex justify-between">
               {step > 0 ? (

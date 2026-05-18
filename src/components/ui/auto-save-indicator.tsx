@@ -71,8 +71,8 @@ export default function AutoSaveIndicator({ status, lastSavedAt, error, classNam
     );
   } else if (lastSavedAt) {
     // idle, but has a last save timestamp
-    colorClass = "text-muted";
-    borderClass = "border-border/30";
+    colorClass = "text-text-muted";
+    borderClass = "border-border-subtle/30";
     bgClass = "bg-surface/70";
     content = (
       <>

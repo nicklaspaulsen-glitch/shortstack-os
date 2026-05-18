@@ -116,7 +116,7 @@ export function BoardCard({
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
       onClick={onClick}
-      className={`relative p-3 rounded-lg bg-surface-light border border-border hover:border-[rgba(59,130,246,0.3)] transition-colors cursor-grab active:cursor-grabbing ${
+      className={`relative p-3 rounded-lg bg-surface-light border border-border-subtle hover:border-[rgba(59,130,246,0.3)] transition-colors cursor-grab active:cursor-grabbing ${
         isDragging ? "opacity-40" : ""
       }`}
       whileHover={{ y: -1 }}
@@ -140,7 +140,7 @@ export function BoardCard({
           {TYPE_LABEL[task.type]}
         </span>
         {client && (
-          <span className="text-[10px] text-muted truncate">
+          <span className="text-[10px] text-text-muted truncate">
             · {client.business_name}
           </span>
         )}
@@ -150,7 +150,7 @@ export function BoardCard({
         {task.title}
       </h4>
 
-      <div className="flex items-center justify-between gap-2 text-[11px] text-muted">
+      <div className="flex items-center justify-between gap-2 text-[11px] text-text-muted">
         <div className="flex items-center gap-2 min-w-0">
           {due && (
             <span

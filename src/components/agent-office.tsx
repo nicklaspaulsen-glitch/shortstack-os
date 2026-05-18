@@ -93,16 +93,16 @@ export default function AgentOffice() {
   return (
     <Link href="/dashboard/agent-supervisor" className="block">
       <div ref={containerRef} onMouseMove={handleMouseMove}
-        className="rounded-xl overflow-hidden cursor-pointer transition-all hover:ring-1 hover:ring-[rgba(59,130,246,0.1)] border border-border bg-surface/60"
+        className="rounded-xl overflow-hidden cursor-pointer transition-all hover:ring-1 hover:ring-[rgba(59,130,246,0.1)] border border-border-subtle bg-surface/60"
         style={{ padding: "16px 12px 8px" }}>
 
         {/* Header */}
         <div className="flex items-center justify-between mb-3 px-2">
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
-            <span className="text-[10px] font-semibold text-muted uppercase tracking-wider">Agent Office</span>
+            <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">Agent Office</span>
           </div>
-          <span className="text-[9px] text-muted">{activeCount}/{agents.length} active</span>
+          <span className="text-[9px] text-text-muted">{activeCount}/{agents.length} active</span>
         </div>
 
         {/* Floating heads grid */}
@@ -220,12 +220,12 @@ export default function AgentOffice() {
                 {/* Hover tooltip */}
                 {hovered === agent.id && (
                   <div className="absolute -top-14 left-1/2 -translate-x-1/2 z-50 whitespace-nowrap">
-                    <div className="px-2.5 py-1.5 rounded-lg text-center bg-surface border border-border" style={{
+                    <div className="px-2.5 py-1.5 rounded-lg text-center bg-surface border border-border-subtle" style={{
                       boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
                     }}>
                       <p className="text-[9px] font-bold" style={{ color: agent.color }}>{agent.name} — {agent.role}</p>
-                      {agent.lastAction && <p className="text-[7px] text-muted truncate max-w-[120px]">{agent.lastAction}</p>}
-                      <p className="text-[7px] text-muted">{agent.actionsToday} actions today</p>
+                      {agent.lastAction && <p className="text-[7px] text-text-muted truncate max-w-[120px]">{agent.lastAction}</p>}
+                      <p className="text-[7px] text-text-muted">{agent.actionsToday} actions today</p>
                     </div>
                   </div>
                 )}

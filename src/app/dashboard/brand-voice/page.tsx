@@ -263,25 +263,25 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
   ];
 
   return (
-    <MotionPage className="fade-in space-y-6"><AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />{/* -- Brand Voice Manager command strip -- */}
+    <MotionPage className="space-y-6"><AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />{/* -- Brand Voice Manager command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">BRAND VOICE</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Brand Voice Manager</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <button onClick={() => setShowNewProfile(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1">
+        <button onClick={() => setShowNewProfile(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1">
                   <Plus size={14} /> New Profile
                 </button>
       </div>
     </div>{/* Auto-save footer with manual fallback */}{profiles.length > 0 && (
-              <div className="flex items-center justify-between text-[10px] text-muted/70 px-1">
+              <div className="flex items-center justify-between text-[10px] text-text-muted/70 px-1">
                 <span className="flex items-center gap-1">
                   <CheckCircle size={10} className="text-emerald-400/60" />
                   Brand voice changes auto-save as you edit
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className="text-muted/50">or save manually</span>
+                  <span className="text-text-muted/50">or save manually</span>
                   <button
                     disabled={savingManual}
                     onClick={async () => {
@@ -327,7 +327,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
               {/* Sidebar - Profile List */}
               <div className="col-span-12 md:col-span-3 space-y-3">
                 <div className="relative">
-                  <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
+                  <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                   <input
                     value={searchFilter}
                     onChange={e => setSearchFilter(e.target.value)}
@@ -360,20 +360,20 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-xs font-semibold">{p.clientName}</p>
-                          <p className="text-[10px] text-muted capitalize">{p.preset} voice</p>
+                          <p className="text-[10px] text-text-muted capitalize">{p.preset} voice</p>
                         </div>
                         <button
                           onClick={e => { e.stopPropagation(); toggleActive(p.id); }}
-                          className="text-muted hover:text-[#374151] transition-colors"
+                          className="text-text-muted hover:text-[#374151] transition-colors"
                         >
                           {p.active
                             ? <ToggleRight size={20} className="text-green-400" />
-                            : <ToggleLeft size={20} className="text-muted" />
+                            : <ToggleLeft size={20} className="text-text-muted" />
                           }
                         </button>
                       </div>
                       {!p.active && (
-                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-muted mt-1 inline-block">Inactive</span>
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-text-muted mt-1 inline-block">Inactive</span>
                       )}
                     </motion.div>
                   ))}
@@ -391,7 +391,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                           key={t.key}
                           onClick={() => setTab(t.key)}
                           className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-all ${
-                            tab === t.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-muted hover:text-text-primary"
+                            tab === t.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-text-muted hover:text-text-primary"
                           }`}
                         >
                           {t.icon} {t.label}
@@ -403,7 +403,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                     {tab === "editor" && (
                       <div className="space-y-4">
                         {/* Preset Selector */}
-                        <div className="card">
+                        <div className="glass rounded-xl p-4">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2">
                               <Palette size={16} className="text-brand-accent" />
@@ -444,7 +444,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                 className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${
                                   profile.preset === p.key
                                     ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]"
-                                    : "bg-[rgba(0,0,0,0.04)] text-muted hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"
+                                    : "bg-[rgba(0,0,0,0.04)] text-text-muted hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"
                                 }`}
                               >
                                 {p.icon} {p.label}
@@ -454,7 +454,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         </div>
 
                         {/* Tone Sliders */}
-                        <div className="card">
+                        <div className="glass rounded-xl p-4">
                           <div className="flex items-center gap-2 mb-4">
                             <Sliders size={16} className="text-brand-accent" />
                             <span className="text-sm font-semibold">Tone Sliders</span>
@@ -462,7 +462,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                           <div className="space-y-4">
                             {SLIDER_CONFIG.map(s => (
                               <div key={s.key}>
-                                <div className="flex justify-between text-[10px] text-muted mb-1">
+                                <div className="flex justify-between text-[10px] text-text-muted mb-1">
                                   <span>{s.left}</span>
                                   <span>{s.right}</span>
                                 </div>
@@ -474,14 +474,14 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                   onChange={e => updateSlider(s.key, Number(e.target.value))}
                                   className="w-full accent-[#2563EB] h-1.5"
                                 />
-                                <div className="text-center text-[10px] text-muted mt-0.5">{profile.toneSliders[s.key]}%</div>
+                                <div className="text-center text-[10px] text-text-muted mt-0.5">{profile.toneSliders[s.key]}%</div>
                               </div>
                             ))}
                           </div>
                         </div>
 
                         {/* AI Guidelines */}
-                        <div className="card">
+                        <div className="glass rounded-xl p-4">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2">
                               <Wand2 size={16} className="text-brand-accent" />
@@ -498,7 +498,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                           </div>
                           {profile.guidelines ? (
                             <div className="relative">
-                              <pre className="text-xs text-muted whitespace-pre-wrap bg-[rgba(0,0,0,0.05)] rounded-lg p-3 max-h-60 overflow-y-auto">{profile.guidelines}</pre>
+                              <pre className="text-xs text-text-muted whitespace-pre-wrap bg-[rgba(0,0,0,0.05)] rounded-lg p-3 max-h-60 overflow-y-auto">{profile.guidelines}</pre>
                               <button
                                 onClick={() => { navigator.clipboard.writeText(profile.guidelines); toast.success("Copied to clipboard"); }}
                                 className="absolute top-2 right-2 p-1 rounded bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.10)] transition-colors"
@@ -507,7 +507,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                               </button>
                             </div>
                           ) : (
-                            <p className="text-xs text-muted">Click Generate to create AI voice guidelines based on your samples and settings.</p>
+                            <p className="text-xs text-text-muted">Click Generate to create AI voice guidelines based on your samples and settings.</p>
                           )}
                         </div>
                       </div>
@@ -517,18 +517,18 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                     {tab === "samples" && (
                       <div className="space-y-4">
                         {/* Writing Samples */}
-                        <div className="card">
+                        <div className="glass rounded-xl p-4">
                           <div className="flex items-center gap-2 mb-3">
                             <BookOpen size={16} className="text-brand-accent" />
                             <span className="text-sm font-semibold">Writing Style Samples</span>
                           </div>
-                          <p className="text-[10px] text-muted mb-3">Paste example content that represents this brand&apos;s voice</p>
+                          <p className="text-[10px] text-text-muted mb-3">Paste example content that represents this brand&apos;s voice</p>
                           <div className="space-y-2 mb-3">
                             {profile.samples.map((s, i) => (
                               <div key={i} className="flex items-start gap-2 p-2 rounded bg-[rgba(0,0,0,0.04)] group">
-                                <Eye size={12} className="text-muted mt-0.5 shrink-0" />
-                                <p className="text-xs text-muted flex-1">&quot;{s}&quot;</p>
-                                <button onClick={() => removeItem("samples", i)} className="text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
+                                <Eye size={12} className="text-text-muted mt-0.5 shrink-0" />
+                                <p className="text-xs text-text-muted flex-1">&quot;{s}&quot;</p>
+                                <button onClick={() => removeItem("samples", i)} className="text-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
                                   <Trash2 size={12} />
                                 </button>
                               </div>
@@ -558,7 +558,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         </div>
 
                         {/* Do's */}
-                        <div className="card">
+                        <div className="glass rounded-xl p-4">
                           <div className="flex items-center gap-2 mb-3">
                             <ThumbsUp size={16} className="text-green-400" />
                             <span className="text-sm font-semibold">Do&apos;s</span>
@@ -568,7 +568,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                               <div key={i} className="flex items-center gap-2 p-1.5 rounded bg-green-500/5 group">
                                 <Check size={12} className="text-green-400 shrink-0" />
                                 <span className="text-xs flex-1">{d}</span>
-                                <button onClick={() => removeItem("dos", i)} className="text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
+                                <button onClick={() => removeItem("dos", i)} className="text-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
                                   <X size={12} />
                                 </button>
                               </div>
@@ -587,7 +587,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         </div>
 
                         {/* Don'ts */}
-                        <div className="card">
+                        <div className="glass rounded-xl p-4">
                           <div className="flex items-center gap-2 mb-3">
                             <ThumbsDown size={16} className="text-red-400" />
                             <span className="text-sm font-semibold">Don&apos;ts</span>
@@ -597,7 +597,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                               <div key={i} className="flex items-center gap-2 p-1.5 rounded bg-red-500/5 group">
                                 <X size={12} className="text-red-400 shrink-0" />
                                 <span className="text-xs flex-1">{d}</span>
-                                <button onClick={() => removeItem("donts", i)} className="text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
+                                <button onClick={() => removeItem("donts", i)} className="text-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
                                   <Trash2 size={12} />
                                 </button>
                               </div>
@@ -621,7 +621,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                     {tab === "vocabulary" && (
                       <div className="space-y-4">
                         {/* Approved Terms */}
-                        <div className="card">
+                        <div className="glass rounded-xl p-4">
                           <div className="flex items-center gap-2 mb-3">
                             <CheckCircle size={16} className="text-green-400" />
                             <span className="text-sm font-semibold">Approved Terms</span>
@@ -649,7 +649,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         </div>
 
                         {/* Banned Words */}
-                        <div className="card">
+                        <div className="glass rounded-xl p-4">
                           <div className="flex items-center gap-2 mb-3">
                             <AlertCircle size={16} className="text-red-400" />
                             <span className="text-sm font-semibold">Banned Words</span>
@@ -677,7 +677,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         </div>
 
                         {/* Competitor Names */}
-                        <div className="card">
+                        <div className="glass rounded-xl p-4">
                           <div className="flex items-center gap-2 mb-3">
                             <Shield size={16} className="text-yellow-400" />
                             <span className="text-sm font-semibold">Competitor Names to Avoid</span>
@@ -709,12 +709,12 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                     {/* Voice Checker Tab */}
                     {tab === "checker" && (
                       <div className="space-y-4">
-                        <div className="card">
+                        <div className="glass rounded-xl p-4">
                           <div className="flex items-center gap-2 mb-3">
                             <CheckCircle size={16} className="text-brand-accent" />
                             <span className="text-sm font-semibold">Voice Consistency Checker</span>
                           </div>
-                          <p className="text-[10px] text-muted mb-3">
+                          <p className="text-[10px] text-text-muted mb-3">
                             Paste any text to check if it matches the &quot;{profile.clientName}&quot; brand voice
                           </p>
                           <textarea
@@ -742,7 +742,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         </div>
 
                         {checkerResult && (
-                          <div className="card">
+                          <div className="glass rounded-xl p-4">
                             <div className="flex items-center justify-between mb-4">
                               <span className="text-sm font-semibold">Results</span>
                               <div className={`text-lg font-bold ${
@@ -789,9 +789,9 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                     )}
                   </>
                 ) : (
-                  <div className="card text-center py-12">
-                    <Mic size={32} className="text-muted mx-auto mb-3" />
-                    <p className="text-sm text-muted">Select a voice profile to get started</p>
+                  <div className="glass rounded-xl p-4 text-center py-12">
+                    <Mic size={32} className="text-text-muted mx-auto mb-3" />
+                    <p className="text-sm text-text-muted">Select a voice profile to get started</p>
                   </div>
                 )}
               </div>

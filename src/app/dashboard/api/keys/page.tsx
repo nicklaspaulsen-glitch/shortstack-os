@@ -140,7 +140,7 @@ export default function ApiKeysPage() {
   const revokedKeys = keys.filter((k) => k.revoked_at);
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- API Keys command strip -- */}
+    <MotionPage className="space-y-5">{/* -- API Keys command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">API KEYS</p>
@@ -149,33 +149,33 @@ export default function ApiKeysPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={() => setShowCreate((v) => !v)}
-                  className="text-[11px] px-3 py-1.5 rounded-lg bg-black/10 text-foreground border border-border hover:bg-black/15 transition-all flex items-center gap-1.5"
+                  className="text-[11px] px-3 py-1.5 rounded-lg bg-black/10 text-text-primary border border-border-subtle hover:bg-black/15 transition-all flex items-center gap-1.5"
                 >
                   <Plus size={11} />
                   New Key
                 </button>
       </div>
     </div>{error && (
-              <div className="card p-3 border-red-500/30 bg-red-500/5 text-[11px] text-red-400 flex items-center gap-2">
+              <div className="glass rounded-xl p-3 border-red-500/30 bg-red-500/5 text-[11px] text-red-400 flex items-center gap-2">
                 <AlertTriangle size={13} />
                 <span>{error}</span>
               </div>
             )}{justCreatedKey && (
-              <div className="card p-4 border-green-500/30 bg-green-500/5">
+              <div className="glass rounded-xl p-4 border-green-500/30 bg-green-500/5">
                 <div className="flex items-start gap-3">
                   <CheckCircle size={16} className="text-green-400 mt-0.5 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-semibold text-green-400 mb-1">
                       Key created — copy it now
                     </p>
-                    <p className="text-[10px] text-muted mb-2">
+                    <p className="text-[10px] text-text-muted mb-2">
                       We hash and forget. You will not see this string again.
                     </p>
                     <div className="flex items-center gap-2 bg-[rgba(0,0,0,0.04)] rounded-lg px-3 py-2 font-mono text-[11px]">
                       <span className="truncate flex-1">{justCreatedKey}</span>
                       <button
                         onClick={copyKey}
-                        className="text-muted hover:text-brand-accent transition-colors flex-shrink-0"
+                        className="text-text-muted hover:text-brand-accent transition-colors flex-shrink-0"
                       >
                         {copied ? (
                           <CheckCircle size={12} className="text-green-400" />
@@ -187,21 +187,21 @@ export default function ApiKeysPage() {
                   </div>
                   <button
                     onClick={() => setJustCreatedKey(null)}
-                    className="text-muted hover:text-foreground text-xs flex-shrink-0"
+                    className="text-text-muted hover:text-text-primary text-xs flex-shrink-0"
                   >
                     Dismiss
                   </button>
                 </div>
               </div>
             )}{showCreate && (
-              <div className="card p-4 space-y-3 border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.02)]">
+              <div className="glass rounded-xl p-4 space-y-3 border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.02)]">
                 <div className="flex items-center gap-2">
                   <Key size={13} className="text-brand-accent" />
                   <h2 className="text-xs font-semibold text-brand-accent">New API Key</h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                    <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
                       Name
                     </label>
                     <input
@@ -212,7 +212,7 @@ export default function ApiKeysPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                    <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
                       Scopes
                     </label>
                     <div className="flex gap-1.5">
@@ -223,7 +223,7 @@ export default function ApiKeysPage() {
                           className={`flex-1 text-[10px] px-2 py-1.5 rounded-lg border transition-all ${
                             newScopes.includes(s)
                               ? SCOPE_PILLS[s]
-                              : "border-border text-muted hover:text-foreground"
+                              : "border-border-subtle text-text-muted hover:text-text-primary"
                           }`}
                         >
                           {s}
@@ -232,7 +232,7 @@ export default function ApiKeysPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                    <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
                       Rate limit (req/min)
                     </label>
                     <input
@@ -248,7 +248,7 @@ export default function ApiKeysPage() {
                 <div className="flex justify-end gap-2 pt-1">
                   <button
                     onClick={() => setShowCreate(false)}
-                    className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-all"
+                    className="text-[10px] px-3 py-1.5 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary transition-all"
                   >
                     Cancel
                   </button>
@@ -262,29 +262,29 @@ export default function ApiKeysPage() {
                 </div>
               </div>
             )}<div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="card p-3">
+              <div className="glass rounded-xl p-3">
                 <div className="flex items-center gap-2 mb-1">
                   <Key size={12} className="text-brand-accent" />
-                  <p className="text-[9px] text-muted uppercase tracking-wider">Total</p>
+                  <p className="text-[9px] text-text-muted uppercase tracking-wider">Total</p>
                 </div>
                 <p className="text-lg font-bold text-brand-accent">{keys.length}</p>
               </div>
-              <div className="card p-3">
+              <div className="glass rounded-xl p-3">
                 <div className="flex items-center gap-2 mb-1">
                   <CheckCircle size={12} className="text-green-400" />
-                  <p className="text-[9px] text-muted uppercase tracking-wider">Active</p>
+                  <p className="text-[9px] text-text-muted uppercase tracking-wider">Active</p>
                 </div>
                 <p className="text-lg font-bold text-green-400">{activeKeys.length}</p>
               </div>
-              <div className="card p-3">
+              <div className="glass rounded-xl p-3">
                 <div className="flex items-center gap-2 mb-1">
                   <Shield size={12} className="text-red-400" />
-                  <p className="text-[9px] text-muted uppercase tracking-wider">Revoked</p>
+                  <p className="text-[9px] text-text-muted uppercase tracking-wider">Revoked</p>
                 </div>
                 <p className="text-lg font-bold text-red-400">{revokedKeys.length}</p>
               </div>
-            </div><div className="card p-0 overflow-hidden">
-              <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider bg-surface-light/40">
+            </div><div className="glass rounded-xl p-0 overflow-hidden">
+              <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b border-border-subtle text-[9px] text-text-muted uppercase tracking-wider bg-surface-light/40">
                 <div className="col-span-3">Name</div>
                 <div className="col-span-2">Prefix</div>
                 <div className="col-span-2">Scopes</div>
@@ -293,27 +293,27 @@ export default function ApiKeysPage() {
                 <div className="col-span-2 text-right">Actions</div>
               </div>
               {loading ? (
-                <div className="px-4 py-8 text-center text-[11px] text-muted">Loading…</div>
+                <div className="px-4 py-8 text-center text-[11px] text-text-muted">Loading…</div>
               ) : keys.length === 0 ? (
                 <div className="px-4 py-10 text-center">
-                  <Key size={22} className="mx-auto mb-2 text-muted opacity-40" />
-                  <p className="text-[11px] text-muted">No API keys yet. Create one to get started.</p>
+                  <Key size={22} className="mx-auto mb-2 text-text-muted opacity-40" />
+                  <p className="text-[11px] text-text-muted">No API keys yet. Create one to get started.</p>
                 </div>
               ) : (
                 keys.map((k) => (
                   <div
                     key={k.id}
-                    className={`grid grid-cols-12 gap-2 px-4 py-3 border-b border-border last:border-0 text-[11px] items-center ${
+                    className={`grid grid-cols-12 gap-2 px-4 py-3 border-b border-border-subtle last:border-0 text-[11px] items-center ${
                       k.revoked_at ? "opacity-50" : ""
                     }`}
                   >
                     <div className="col-span-3">
                       <div className="font-medium truncate">{k.name}</div>
-                      <div className="text-[9px] text-muted">
+                      <div className="text-[9px] text-text-muted">
                         Created {formatDate(k.created_at)}
                       </div>
                     </div>
-                    <div className="col-span-2 font-mono text-[10px] text-muted truncate">
+                    <div className="col-span-2 font-mono text-[10px] text-text-muted truncate">
                       {k.key_prefix}…
                     </div>
                     <div className="col-span-2 flex flex-wrap gap-1">
@@ -326,8 +326,8 @@ export default function ApiKeysPage() {
                         </span>
                       ))}
                     </div>
-                    <div className="text-[10px] text-muted">{k.rate_limit_per_minute}</div>
-                    <div className="col-span-2 text-[10px] text-muted flex items-center gap-1">
+                    <div className="text-[10px] text-text-muted">{k.rate_limit_per_minute}</div>
+                    <div className="col-span-2 text-[10px] text-text-muted flex items-center gap-1">
                       <Clock size={9} />
                       {timeAgo(k.last_used_at)}
                     </div>
@@ -349,7 +349,7 @@ export default function ApiKeysPage() {
                   </div>
                 ))
               )}
-            </div><div className="card p-4">
+            </div><div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Shield size={12} className="text-brand-accent" />
                 <h3 className="text-xs font-semibold">Using your key</h3>
@@ -358,7 +358,7 @@ export default function ApiKeysPage() {
       {`curl https://app.shortstack.work/api/v1/leads \\
   -H "Authorization: Bearer ss_live_your_key_here"`}
               </pre>
-              <p className="text-[10px] text-muted mt-2">
+              <p className="text-[10px] text-text-muted mt-2">
                 Full reference at <code className="text-brand-accent">/docs/PUBLIC_API.md</code>.
               </p>
             </div></MotionPage>

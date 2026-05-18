@@ -27,7 +27,7 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
 const PRIORITY_COLORS: Record<string, string> = {
   high: "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)]",
   medium: "border-[rgba(59,130,246,0.1)] bg-[rgba(59,130,246,0.05)]",
-  low: "border-border/30",
+  low: "border-border-subtle/30",
 };
 
 const CATEGORY_BADGES: Record<string, string> = {
@@ -84,7 +84,7 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
 
   if (loading) {
     return (
-      <div className="card border-[rgba(59,130,246,0.1)]">
+      <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.1)]">
         <div className="flex items-center gap-2 mb-3">
           <Sparkles size={14} className="text-[#2563EB] animate-pulse" />
           <span className="text-xs font-semibold">AI is analyzing your business...</span>
@@ -110,7 +110,7 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
             {insights.length - actionedIds.size} active
           </span>
         </div>
-        <button onClick={refresh} className="text-muted hover:text-foreground transition-colors">
+        <button onClick={refresh} className="text-text-muted hover:text-text-primary transition-colors">
           <RefreshCw size={12} />
         </button>
       </div>
@@ -122,13 +122,13 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
             <div
               key={i}
               className={`rounded-xl p-3 border transition-all duration-300 ${
-                isActioned ? "opacity-40 scale-[0.98]" : PRIORITY_COLORS[insight.priority] || "border-border/30"
+                isActioned ? "opacity-40 scale-[0.98]" : PRIORITY_COLORS[insight.priority] || "border-border-subtle/30"
               }`}
             >
               <div className="flex items-start justify-between mb-1.5">
                 <div className="flex items-center gap-1.5">
                   <span className="text-[#2563EB]">{TYPE_ICONS[insight.type] || <Zap size={14} />}</span>
-                  <span className={`text-[8px] px-1.5 py-0.5 rounded-md font-medium ${CATEGORY_BADGES[insight.category] || "bg-surface-light text-muted"}`}>
+                  <span className={`text-[8px] px-1.5 py-0.5 rounded-md font-medium ${CATEGORY_BADGES[insight.category] || "bg-surface-light text-text-muted"}`}>
                     {insight.category}
                   </span>
                 </div>
@@ -138,7 +138,7 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
               </div>
 
               <h3 className="text-[11px] font-semibold mb-1 leading-tight">{insight.title}</h3>
-              <p className="text-[10px] text-muted leading-relaxed mb-2">{insight.description}</p>
+              <p className="text-[10px] text-text-muted leading-relaxed mb-2">{insight.description}</p>
 
               <div className="flex items-center justify-between">
                 <p className="text-[9px] text-[rgba(59,130,246,0.8)] flex items-center gap-1">
@@ -146,7 +146,7 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
                 </p>
                 {!isActioned && (
                   <button onClick={() => markActioned(i)}
-                    className="text-[8px] text-muted hover:text-success transition-colors flex items-center gap-0.5">
+                    className="text-[8px] text-text-muted hover:text-success transition-colors flex items-center gap-0.5">
                     <CheckCircle size={9} /> Done
                   </button>
                 )}

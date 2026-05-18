@@ -80,7 +80,7 @@ export default function AiToday() {
 
   if (loading) {
     return (
-      <div className=" p-5 bg-card border border-border">
+      <div className=" p-5 bg-card border border-border-subtle">
         <div className="flex items-center gap-2 mb-4">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center animate-pulse"
@@ -97,7 +97,7 @@ export default function AiToday() {
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="h-28 rounded-xl bg-black/5 border border-border animate-pulse"
+              className="h-28 rounded-xl bg-black/5 border border-border-subtle animate-pulse"
             />
           ))}
         </div>
@@ -108,7 +108,7 @@ export default function AiToday() {
   if (!actions || actions.length === 0) return null;
 
   return (
-    <section className="relative  p-5 bg-card border border-border overflow-hidden">
+    <section className="relative  p-5 bg-card border border-border-subtle overflow-hidden">
       {/* Ambient gold glow keyed to the AI vibe */}
       <div
         className="absolute -top-12 -right-12 w-48 h-48 rounded-full pointer-events-none blur-3xl opacity-50"
@@ -132,7 +132,7 @@ export default function AiToday() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold text-foreground">AI Today</h3>
+              <h3 className="text-sm font-bold text-text-primary">AI Today</h3>
               <span
                 className="text-[9.5px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded"
                 style={{
@@ -143,7 +143,7 @@ export default function AiToday() {
                 Live
               </span>
             </div>
-            <p className="text-[11px] text-muted">
+            <p className="text-[11px] text-text-muted">
               Three things AI thinks you should do right now, based on your data.
             </p>
           </div>
@@ -151,7 +151,7 @@ export default function AiToday() {
         <button
           onClick={() => load(true)}
           disabled={refreshing}
-          className="text-[11px] text-muted hover:text-foreground flex items-center gap-1 px-2 py-1 rounded-md hover:bg-white/[0.03] transition disabled:opacity-50"
+          className="text-[11px] text-text-muted hover:text-text-primary flex items-center gap-1 px-2 py-1 rounded-md hover:bg-white/[0.03] transition disabled:opacity-50"
           title="Re-run AI suggestions"
         >
           <RefreshCw
@@ -212,10 +212,10 @@ function ActionCard({ action }: { action: Action }) {
         </span>
       </div>
 
-      <h4 className="text-[13px] font-bold text-foreground leading-snug mb-1 relative">
+      <h4 className="text-[13px] font-bold text-text-primary leading-snug mb-1 relative">
         {action.title}
       </h4>
-      <p className="text-[11px] text-muted leading-relaxed flex-1 mb-3 relative">
+      <p className="text-[11px] text-text-muted leading-relaxed flex-1 mb-3 relative">
         {action.why}
       </p>
 

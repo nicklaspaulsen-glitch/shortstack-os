@@ -391,7 +391,7 @@ export default function WorkspaceFilesPage() {
           <button
             type="button"
             onClick={() => setCreatingFolder((v) => !v)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-black/5 hover:bg-black/10 border border-border text-foreground text-sm px-3 py-1.5 transition"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-black/5 hover:bg-black/10 border border-border-subtle text-text-primary text-sm px-3 py-1.5 transition"
           >
             <FolderPlus size={14} /> New folder
           </button>

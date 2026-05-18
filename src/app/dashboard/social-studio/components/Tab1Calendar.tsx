@@ -182,7 +182,7 @@ export default function Tab1Calendar() {
         <StatCard label="Avg engagement rate" value={`${stats.avg_engagement_rate}%`} />
       </div>
 
-      <div className="rounded-xl border border-border/40 bg-surface p-4">
+      <div className="rounded-xl border border-border-subtle/40 bg-surface p-4">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
           <div className="flex items-center gap-2">
             <button
@@ -192,7 +192,7 @@ export default function Tab1Calendar() {
                 d.setMonth(d.getMonth() - 1);
                 setAnchor(d);
               }}
-              className="px-2 py-1 rounded-md border border-border/40 hover:bg-elevated text-xs"
+              className="px-2 py-1 rounded-md border border-border-subtle/40 hover:bg-elevated text-xs"
             >
               Previous
             </button>
@@ -204,22 +204,22 @@ export default function Tab1Calendar() {
                 d.setMonth(d.getMonth() + 1);
                 setAnchor(d);
               }}
-              className="px-2 py-1 rounded-md border border-border/40 hover:bg-elevated text-xs"
+              className="px-2 py-1 rounded-md border border-border-subtle/40 hover:bg-elevated text-xs"
             >
               Next
             </button>
             <button
               type="button"
               onClick={() => setAnchor(new Date())}
-              className="px-2 py-1 rounded-md border border-border/40 hover:bg-elevated text-xs"
+              className="px-2 py-1 rounded-md border border-border-subtle/40 hover:bg-elevated text-xs"
             >
               Today
             </button>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <Filter size={12} className="text-muted" />
-            <span className="text-[10px] uppercase tracking-wider text-muted">Status</span>
+            <Filter size={12} className="text-text-muted" />
+            <span className="text-[10px] uppercase tracking-wider text-text-muted">Status</span>
             {STATUS_OPTIONS.map((s) => {
               const meta = STATUS_META[s];
               const active = statusFilters.includes(s);
@@ -247,7 +247,7 @@ export default function Tab1Calendar() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2 mb-3">
-          <span className="text-[10px] uppercase tracking-wider text-muted">Platform</span>
+          <span className="text-[10px] uppercase tracking-wider text-text-muted">Platform</span>
           {ALL_PLATFORMS.map((p) => {
             const active = platformFilters.includes(p);
             const meta = PLATFORM_META[p];
@@ -273,20 +273,20 @@ export default function Tab1Calendar() {
             <button
               type="button"
               onClick={() => setPlatformFilters([])}
-              className="text-[10px] text-muted underline"
+              className="text-[10px] text-text-muted underline"
             >
               clear
             </button>
           )}
         </div>
 
-        <div className="grid grid-cols-7 gap-px bg-border/40 rounded-md overflow-hidden text-[10px] uppercase tracking-wider">
+        <div className="grid grid-cols-7 gap-px bg-border-subtle/40 rounded-md overflow-hidden text-[10px] uppercase tracking-wider">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-            <div key={d} className="bg-surface px-2 py-1 text-muted text-center">{d}</div>
+            <div key={d} className="bg-surface px-2 py-1 text-text-muted text-center">{d}</div>
           ))}
         </div>
 
-        <div className="grid grid-cols-7 gap-px bg-border/40 rounded-md mt-px overflow-hidden">
+        <div className="grid grid-cols-7 gap-px bg-border-subtle/40 rounded-md mt-px overflow-hidden">
           {grid.map((day) => {
             const key = isoDay(day);
             const inMonth = day.getMonth() === anchor.getMonth();
@@ -298,7 +298,7 @@ export default function Tab1Calendar() {
                 key={key}
                 className={`bg-surface min-h-[100px] p-1.5 flex flex-col gap-1 ${inMonth ? "" : "opacity-40"}`}
               >
-                <div className={`text-[10px] font-semibold ${isToday ? "text-brand-accent" : "text-muted"}`}>
+                <div className={`text-[10px] font-semibold ${isToday ? "text-brand-accent" : "text-text-muted"}`}>
                   {day.getDate()}
                 </div>
                 {loading && dayPosts.length === 0 ? null : (
@@ -324,7 +324,7 @@ export default function Tab1Calendar() {
                       );
                     })}
                     {dayPosts.length > 3 && (
-                      <span className="text-[9px] text-muted pl-1">+{dayPosts.length - 3} more</span>
+                      <span className="text-[9px] text-text-muted pl-1">+{dayPosts.length - 3} more</span>
                     )}
                   </div>
                 )}
@@ -334,13 +334,13 @@ export default function Tab1Calendar() {
         </div>
 
         {loading && (
-          <div className="flex items-center justify-center gap-2 mt-4 text-xs text-muted">
+          <div className="flex items-center justify-center gap-2 mt-4 text-xs text-text-muted">
             <Loader2 size={12} className="animate-spin" />
             Loading lineup...
           </div>
         )}
         {!loading && posts.length === 0 && (
-          <div className="text-center py-8 text-xs text-muted">
+          <div className="text-center py-8 text-xs text-text-muted">
             No posts yet — try the AI Auto-Upload tab to schedule your first one.
           </div>
         )}
@@ -358,37 +358,37 @@ export default function Tab1Calendar() {
               <StatusBadge status={selected.status} />
               {selected.platforms.map((p) => <PlatformChip key={p} platform={p} />)}
               {selected.scheduled_at && (
-                <span className="text-[10px] text-muted">
+                <span className="text-[10px] text-text-muted">
                   Scheduled {new Date(selected.scheduled_at).toLocaleString()}
                 </span>
               )}
               {selected.published_at && (
-                <span className="text-[10px] text-muted">
+                <span className="text-[10px] text-text-muted">
                   Published {new Date(selected.published_at).toLocaleString()}
                 </span>
               )}
             </div>
 
             <div>
-              <label className="text-[10px] uppercase tracking-wider text-muted">Caption</label>
+              <label className="text-[10px] uppercase tracking-wider text-text-muted">Caption</label>
               <textarea
                 value={editCaption}
                 onChange={(e) => setEditCaption(e.target.value)}
                 rows={6}
-                className="w-full mt-1 px-3 py-2 rounded-md bg-elevated border border-border/40 text-sm"
+                className="w-full mt-1 px-3 py-2 rounded-md bg-elevated border border-border-subtle/40 text-sm"
               />
             </div>
 
             <div>
-              <label className="text-[10px] uppercase tracking-wider text-muted">Scheduled at</label>
+              <label className="text-[10px] uppercase tracking-wider text-text-muted">Scheduled at</label>
               <input
                 type="datetime-local"
                 value={editScheduled}
                 onChange={(e) => setEditScheduled(e.target.value)}
-                className="w-full mt-1 px-3 py-2 rounded-md bg-elevated border border-border/40 text-sm"
+                className="w-full mt-1 px-3 py-2 rounded-md bg-elevated border border-border-subtle/40 text-sm"
               />
               {selected.status === "published" && (
-                <p className="text-[10px] text-muted mt-1">
+                <p className="text-[10px] text-text-muted mt-1">
                   This post is already published — editing the time here only updates the local record.
                 </p>
               )}
@@ -396,7 +396,7 @@ export default function Tab1Calendar() {
 
             {selected.hashtags && selected.hashtags.length > 0 && (
               <div>
-                <label className="text-[10px] uppercase tracking-wider text-muted">Hashtags</label>
+                <label className="text-[10px] uppercase tracking-wider text-text-muted">Hashtags</label>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {selected.hashtags.map((h) => (
                     <span key={h} className="text-[10px] px-1.5 py-0.5 rounded bg-elevated">
@@ -409,7 +409,7 @@ export default function Tab1Calendar() {
 
             {selected.media_urls && selected.media_urls.length > 0 && (
               <div>
-                <label className="text-[10px] uppercase tracking-wider text-muted">Media</label>
+                <label className="text-[10px] uppercase tracking-wider text-text-muted">Media</label>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {selected.media_urls.map((u) => (
                     <a
@@ -426,7 +426,7 @@ export default function Tab1Calendar() {
               </div>
             )}
 
-            <div className="flex items-center justify-between pt-2 border-t border-border/30">
+            <div className="flex items-center justify-between pt-2 border-t border-border-subtle/30">
               <button
                 type="button"
                 onClick={handleCancelPost}
@@ -440,7 +440,7 @@ export default function Tab1Calendar() {
                 <button
                   type="button"
                   onClick={() => setSelected(null)}
-                  className="px-3 py-1.5 text-xs rounded-md border border-border/40 hover:bg-elevated"
+                  className="px-3 py-1.5 text-xs rounded-md border border-border-subtle/40 hover:bg-elevated"
                 >
                   <X size={12} className="inline mr-1" />
                   Close

@@ -228,24 +228,24 @@ export default function NewSmartInvoicePage() {
   }
 
   return (
-    <MotionPage className="fade-in space-y-5 max-w-4xl mx-auto"><div className="flex items-center gap-3">
+    <MotionPage className="space-y-5 max-w-4xl mx-auto"><div className="flex items-center gap-3">
               <Link
                 href="/dashboard/invoices"
-                className="text-muted hover:text-foreground"
+                className="text-text-muted hover:text-text-primary"
               >
                 <ArrowLeft size={16} />
               </Link>
               <div>
                 <h1 className="text-lg font-bold">New smart invoice</h1>
-                <p className="text-[10px] text-muted">
+                <p className="text-[10px] text-text-muted">
                   Describe the scope in plain English — Claude will draft line items
                   you can edit, then generate a Stripe payment link or send it straight away.
                 </p>
               </div>
-            </div>{/* Client + scope */}<div className="card p-5 space-y-3">
+            </div>{/* Client + scope */}<div className="glass rounded-xl p-5 space-y-3">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                  <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
                     Client
                   </label>
                   <select
@@ -262,7 +262,7 @@ export default function NewSmartInvoicePage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                  <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
                     Due in
                   </label>
                   <select
@@ -279,7 +279,7 @@ export default function NewSmartInvoicePage() {
               </div>
 
               <div>
-                <label className="text-[9px] text-muted uppercase tracking-wider block mb-1 flex items-center gap-1">
+                <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1 flex items-center gap-1">
                   <Sparkles size={9} className="text-brand-accent" /> Scope (AI will draft line items from this)
                 </label>
                 <textarea
@@ -305,11 +305,11 @@ export default function NewSmartInvoicePage() {
               </button>
 
               {reasoning && (
-                <p className="text-[10px] text-muted italic border-l-2 border-[rgba(59,130,246,0.30)] pl-2">
+                <p className="text-[10px] text-text-muted italic border-l-2 border-[rgba(59,130,246,0.30)] pl-2">
                   {reasoning}
                 </p>
               )}
-            </div>{/* Line items */}<div className="card p-5 space-y-3">
+            </div>{/* Line items */}<div className="glass rounded-xl p-5 space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold">Line items</h3>
                 <button
@@ -321,12 +321,12 @@ export default function NewSmartInvoicePage() {
               </div>
 
               {lineItems.length === 0 ? (
-                <p className="text-[11px] text-muted text-center py-4">
+                <p className="text-[11px] text-text-muted text-center py-4">
                   No line items yet. Use AI draft above or add them manually.
                 </p>
               ) : (
                 <div className="space-y-1.5">
-                  <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-1 px-2">
+                  <div className="grid grid-cols-12 text-[9px] text-text-muted uppercase tracking-wider font-semibold py-1 px-2">
                     <span className="col-span-6">Description</span>
                     <span className="col-span-1 text-center">Qty</span>
                     <span className="col-span-2 text-center">Rate</span>
@@ -368,7 +368,7 @@ export default function NewSmartInvoicePage() {
                       </span>
                       <button
                         onClick={() => removeItem(i)}
-                        className="col-span-1 text-right text-muted hover:text-rose-700"
+                        className="col-span-1 text-right text-text-muted hover:text-rose-700"
                       >
                         <Trash2 size={11} />
                       </button>
@@ -378,15 +378,15 @@ export default function NewSmartInvoicePage() {
               )}
 
               {/* Totals */}
-              <div className="pt-2 border-t border-border space-y-1">
+              <div className="pt-2 border-t border-border-subtle space-y-1">
                 <div className="flex justify-between text-[11px]">
-                  <span className="text-muted">Subtotal</span>
+                  <span className="text-text-muted">Subtotal</span>
                   <span>${centsToDollars(subtotal)}</span>
                 </div>
                 <div className="flex items-center justify-between text-[11px]">
-                  <span className="text-muted">Tax</span>
+                  <span className="text-text-muted">Tax</span>
                   <div className="flex items-center gap-1">
-                    <span className="text-muted">$</span>
+                    <span className="text-text-muted">$</span>
                     <input
                       type="number"
                       min={0}
@@ -397,13 +397,13 @@ export default function NewSmartInvoicePage() {
                     />
                   </div>
                 </div>
-                <div className="flex justify-between text-sm font-bold pt-1 border-t border-border">
+                <div className="flex justify-between text-sm font-bold pt-1 border-t border-border-subtle">
                   <span>Total</span>
                   <span className="text-brand-accent font-bold">${centsToDollars(total)}</span>
                 </div>
               </div>
-            </div>{/* Notes */}<div className="card p-5 space-y-2">
-              <label className="text-[9px] text-muted uppercase tracking-wider block">
+            </div>{/* Notes */}<div className="glass rounded-xl p-5 space-y-2">
+              <label className="text-[9px] text-text-muted uppercase tracking-wider block">
                 Notes (shown in the email + payment link)
               </label>
               <textarea
@@ -414,7 +414,7 @@ export default function NewSmartInvoicePage() {
                 className="input w-full text-xs resize-none"
               />
             </div>{paymentLink && (
-              <div className="card border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] p-4 flex items-center justify-between gap-3">
+              <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] p-4 flex items-center justify-between gap-3">
                 <div>
                   <p className="text-[11px] font-semibold">Stripe payment link ready</p>
                   <a

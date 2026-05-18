@@ -476,7 +476,7 @@ export default function FinancialsPage() {
   const mostExpensive = subscriptions.reduce((m, s) => s.cost_monthly > (m?.cost_monthly || 0) ? s : m, null as typeof subscriptions[number] | null);
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* Hero Header */}{/* -- Financials command strip -- */}
+    <MotionPage className="space-y-5">{/* Hero Header */}{/* -- Financials command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">FINANCIALS</p>
@@ -499,15 +499,15 @@ export default function FinancialsPage() {
                   </button>
                 )}
               </div>
-            </div>{/* Tabs */}<div className="flex gap-1 border-b border-border pb-0">
+            </div>{/* Tabs */}<div className="flex gap-1 border-b border-border-subtle pb-0">
               {TABS.map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-t-lg transition-colors ${
                     activeTab === tab.id
-                      ? "bg-surface-light text-brand-accent border border-border border-b-transparent -mb-px"
-                      : "text-muted hover:text-foreground"
+                      ? "bg-surface-light text-brand-accent border border-border-subtle border-b-transparent -mb-px"
+                      : "text-text-muted hover:text-text-primary"
                   }`}
                 >
                   <tab.icon size={12} /> {tab.label}
@@ -621,28 +621,28 @@ export default function FinancialsPage() {
                   <div className="space-y-3">
                     <div>
                       <div className="flex justify-between text-[10px] mb-1">
-                        <span className="text-muted">Revenue</span>
+                        <span className="text-text-muted">Revenue</span>
                         <span className="text-brand-accent font-semibold">{formatCurrency(totalMRR)}</span>
                       </div>
-                      <div className="h-5 rounded-lg bg-surface-light border border-border overflow-hidden">
+                      <div className="h-5 rounded-lg bg-surface-light border border-border-subtle overflow-hidden">
                         <div className="h-full rounded-lg transition-all duration-500" style={{ width: barWidth(totalMRR), background: "rgba(59,130,246,0.7)" }} />
                       </div>
                     </div>
                     <div>
                       <div className="flex justify-between text-[10px] mb-1">
-                        <span className="text-muted">Expenses</span>
+                        <span className="text-text-muted">Expenses</span>
                         <span className="text-rose-700 font-semibold">{formatCurrency(totalMonthlyExpenses)}</span>
                       </div>
-                      <div className="h-5 rounded-lg bg-surface-light border border-border overflow-hidden">
+                      <div className="h-5 rounded-lg bg-surface-light border border-border-subtle overflow-hidden">
                         <div className="h-full rounded-lg bg-red-500/60 transition-all duration-500" style={{ width: barWidth(totalMonthlyExpenses) }} />
                       </div>
                     </div>
                     <div>
                       <div className="flex justify-between text-[10px] mb-1">
-                        <span className="text-muted">Net Profit</span>
+                        <span className="text-text-muted">Net Profit</span>
                         <span className={`font-semibold ${netProfit >= 0 ? "text-emerald-700" : "text-rose-700"}`}>{formatCurrency(netProfit)}</span>
                       </div>
-                      <div className="h-5 rounded-lg bg-surface-light border border-border overflow-hidden">
+                      <div className="h-5 rounded-lg bg-surface-light border border-border-subtle overflow-hidden">
                         <div className={`h-full rounded-lg transition-all duration-500 ${netProfit >= 0 ? "bg-green-500/60" : "bg-red-500/60"}`} style={{ width: barWidth(netProfit) }} />
                       </div>
                     </div>
@@ -661,11 +661,11 @@ export default function FinancialsPage() {
                         const height = `${Math.max((item.mrr / maxMRR) * 100, 4)}%`;
                         return (
                           <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                            <span className="text-[8px] text-muted">{formatCurrency(item.mrr)}</span>
+                            <span className="text-[8px] text-text-muted">{formatCurrency(item.mrr)}</span>
                             <div className="w-full flex-1 flex items-end">
                               <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(59,130,246,0.6)" }} />
                             </div>
-                            <span className="text-[8px] text-muted">{item.month}</span>
+                            <span className="text-[8px] text-text-muted">{item.month}</span>
                           </div>
                         );
                       })}
@@ -681,15 +681,15 @@ export default function FinancialsPage() {
                   <div className="space-y-2">
                     {revenueByTier.map(tier => (
                       <div key={tier.name} className="flex items-center gap-3">
-                        <span className="text-[10px] text-muted w-20 shrink-0">{tier.name}</span>
-                        <div className="flex-1 h-4 rounded bg-surface-light border border-border overflow-hidden">
+                        <span className="text-[10px] text-text-muted w-20 shrink-0">{tier.name}</span>
+                        <div className="flex-1 h-4 rounded bg-surface-light border border-border-subtle overflow-hidden">
                           <div
                             className={`h-full rounded ${tier.color}/60 transition-all duration-500`}
                             style={{ width: `${totalTierRevenue > 0 ? Math.max((tier.revenue / totalTierRevenue) * 100, 2) : 2}%` }}
                           />
                         </div>
-                        <span className="text-[10px] text-muted w-8 text-center">{tier.count}</span>
-                        <span className="text-[10px] font-semibold text-foreground w-20 text-right">{formatCurrency(tier.revenue)}</span>
+                        <span className="text-[10px] text-text-muted w-8 text-center">{tier.count}</span>
+                        <span className="text-[10px] font-semibold text-text-primary w-20 text-right">{formatCurrency(tier.revenue)}</span>
                       </div>
                     ))}
                   </div>
@@ -701,18 +701,18 @@ export default function FinancialsPage() {
                     <CreditCard size={13} className="text-brand-accent" /> Payment Method Distribution
                   </p>
                   {paymentMethods.length === 0 ? (
-                    <p className="text-xs text-muted text-center py-6">Connect Stripe to see payment method data</p>
+                    <p className="text-xs text-text-muted text-center py-6">Connect Stripe to see payment method data</p>
                   ) : (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
                     {paymentMethods.map(pm => (
-                      <div key={pm.method} className="bg-surface-light border border-border rounded-lg p-3">
-                        <p className="text-[10px] text-muted">{pm.method}</p>
-                        <p className="text-lg font-bold text-foreground">{pm.count}</p>
+                      <div key={pm.method} className="bg-surface-light border border-border-subtle rounded-lg p-3">
+                        <p className="text-[10px] text-text-muted">{pm.method}</p>
+                        <p className="text-lg font-bold text-text-primary">{pm.count}</p>
                         <div className="flex items-center gap-1 mt-1">
-                          <div className="flex-1 h-1.5 rounded bg-surface border border-border overflow-hidden">
+                          <div className="flex-1 h-1.5 rounded bg-surface border border-border-subtle overflow-hidden">
                             <div className="h-full rounded" style={{ width: `${pm.pct}%`, background: "rgba(59,130,246,0.6)" }} />
                           </div>
-                          <span className="text-[9px] text-muted">{pm.pct}%</span>
+                          <span className="text-[9px] text-text-muted">{pm.pct}%</span>
                         </div>
                       </div>
                     ))}
@@ -773,9 +773,9 @@ export default function FinancialsPage() {
                   <div className="space-y-2.5">
                     {budgetsWithActual.map(b => (
                       <div key={b.category} className="flex items-center gap-3">
-                        <span className="text-[10px] text-muted w-28 shrink-0">{b.category}</span>
+                        <span className="text-[10px] text-text-muted w-28 shrink-0">{b.category}</span>
                         <div className="flex-1 relative">
-                          <div className="h-4 rounded bg-surface-light border border-border overflow-hidden">
+                          <div className="h-4 rounded bg-surface-light border border-border-subtle overflow-hidden">
                             <div
                               className={`h-full rounded transition-all duration-500 ${b.actual > b.budget ? "bg-red-500/60" : "bg-green-500/40"}`}
                               style={{ width: `${Math.min((b.actual / (b.budget || 1)) * 100, 100)}%` }}
@@ -788,9 +788,9 @@ export default function FinancialsPage() {
                             />
                           )}
                         </div>
-                        <span className="text-[10px] text-muted w-16 text-right">{formatCurrency(b.actual)}</span>
-                        <span className="text-[10px] text-muted w-2">/</span>
-                        <span className="text-[10px] font-semibold text-foreground w-16">{formatCurrency(b.budget)}</span>
+                        <span className="text-[10px] text-text-muted w-16 text-right">{formatCurrency(b.actual)}</span>
+                        <span className="text-[10px] text-text-muted w-2">/</span>
+                        <span className="text-[10px] font-semibold text-text-primary w-16">{formatCurrency(b.budget)}</span>
                         <span className={`text-[10px] w-16 text-right font-semibold ${b.variance >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
                           {b.variance >= 0 ? "+" : ""}{formatCurrency(b.variance)}
                         </span>
@@ -808,11 +808,11 @@ export default function FinancialsPage() {
                     <div className="space-y-2">
                       {categoryTotals.map((cat) => (
                         <div key={cat.category} className="flex items-center gap-3">
-                          <span className="text-[10px] text-muted w-28 shrink-0">{cat.category}</span>
-                          <div className="flex-1 h-3 rounded bg-surface-light border border-border overflow-hidden">
+                          <span className="text-[10px] text-text-muted w-28 shrink-0">{cat.category}</span>
+                          <div className="flex-1 h-3 rounded bg-surface-light border border-border-subtle overflow-hidden">
                             <div className="h-full rounded bg-red-500/40 transition-all duration-500" style={{ width: `${Math.max((cat.total / (totalMonthlyExpenses || 1)) * 100, 2)}%` }} />
                           </div>
-                          <span className="text-[10px] font-semibold text-foreground w-16 text-right">{formatCurrency(cat.total)}</span>
+                          <span className="text-[10px] font-semibold text-text-primary w-16 text-right">{formatCurrency(cat.total)}</span>
                         </div>
                       ))}
                     </div>
@@ -827,7 +827,7 @@ export default function FinancialsPage() {
                 </div>
 
                 {showPresets && (
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <p className="text-xs font-semibold mb-3">Quick-Add Presets</p>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                       {PRESET_EXPENSES.map((preset) => {
@@ -838,11 +838,11 @@ export default function FinancialsPage() {
                             onClick={() => addPreset(preset)}
                             disabled={exists}
                             className={`text-left p-2.5 rounded-lg border text-xs transition-all ${
-                              exists ? "border-border/30 text-muted/40 cursor-not-allowed" : "border-border hover:border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.05)]"
+                              exists ? "border-border-subtle/30 text-text-muted/40 cursor-not-allowed" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.05)]"
                             }`}
                           >
                             <p className="font-semibold">{preset.name}</p>
-                            <p className="text-[10px] text-muted">
+                            <p className="text-[10px] text-text-muted">
                               {preset.cost === 0 ? "Usage-based" : `${formatCurrency(preset.cost)}/mo`} · {preset.category}
                             </p>
                           </button>
@@ -854,19 +854,19 @@ export default function FinancialsPage() {
 
                 {/* Expense Table */}
                 <div>
-                  <p className="section-header text-[10px] uppercase tracking-wider text-muted">
+                  <p className="text-[10px] uppercase tracking-wider text-text-muted">
                     Expense Subscriptions ({expenses.length})
                   </p>
 
                   {expenses.length === 0 ? (
-                    <div className="card text-center py-12">
-                      <Receipt size={24} className="mx-auto mb-2 text-muted/30" />
-                      <p className="text-xs text-muted">No expenses tracked yet</p>
-                      <p className="text-[10px] text-muted mt-1">Add your tool subscriptions to calculate real profit</p>
+                    <div className="glass rounded-xl p-4 text-center py-12">
+                      <Receipt size={24} className="mx-auto mb-2 text-text-muted/30" />
+                      <p className="text-xs text-text-muted">No expenses tracked yet</p>
+                      <p className="text-[10px] text-text-muted mt-1">Add your tool subscriptions to calculate real profit</p>
                     </div>
                   ) : (
                     <div className="space-y-1.5">
-                      <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
+                      <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] text-text-muted uppercase tracking-wider font-semibold">
                         <div className="col-span-4">Name</div>
                         <div className="col-span-2">Category</div>
                         <div className="col-span-2 text-right">Cost</div>
@@ -874,26 +874,26 @@ export default function FinancialsPage() {
                         <div className="col-span-2 text-right">Actions</div>
                       </div>
                       {expenses.map((exp) => (
-                        <div key={exp.id} className="grid grid-cols-12 gap-2 items-center px-4 py-2.5 rounded-xl bg-surface-light border border-border transition-all hover:border-border/80">
+                        <div key={exp.id} className="grid grid-cols-12 gap-2 items-center px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle transition-all hover:border-border-subtle/80">
                           <div className="col-span-4"><p className="text-sm font-semibold">{exp.name}</p></div>
                           <div className="col-span-2">
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-muted">{exp.category}</span>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-text-muted">{exp.category}</span>
                           </div>
                           <div className="col-span-2 text-right">
                             <p className="text-sm">{formatCurrency(exp.cost)}</p>
-                            <p className="text-[9px] text-muted">/{exp.interval === "annual" ? "yr" : "mo"}</p>
+                            <p className="text-[9px] text-text-muted">/{exp.interval === "annual" ? "yr" : "mo"}</p>
                           </div>
                           <div className="col-span-2 text-right">
                             <p className="text-sm font-semibold text-rose-700">{formatCurrency(monthlyEquivalent(exp))}</p>
                           </div>
                           <div className="col-span-2 flex justify-end gap-1.5">
-                            <button onClick={() => openEdit(exp)} className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors" aria-label="Edit expense"><Pencil size={12} /></button>
-                            <button onClick={() => deleteExpense(exp.id)} className="p-1.5 rounded-md hover:bg-rose-50 text-muted hover:text-rose-700 transition-colors" aria-label="Delete expense"><Trash2 size={12} /></button>
+                            <button onClick={() => openEdit(exp)} className="p-1.5 rounded-md hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors" aria-label="Edit expense"><Pencil size={12} /></button>
+                            <button onClick={() => deleteExpense(exp.id)} className="p-1.5 rounded-md hover:bg-rose-50 text-text-muted hover:text-rose-700 transition-colors" aria-label="Delete expense"><Trash2 size={12} /></button>
                           </div>
                         </div>
                       ))}
-                      <div className="grid grid-cols-12 gap-2 px-4 py-2.5 border-t border-border mt-1">
-                        <div className="col-span-8 text-xs font-semibold text-muted">Total Monthly</div>
+                      <div className="grid grid-cols-12 gap-2 px-4 py-2.5 border-t border-border-subtle mt-1">
+                        <div className="col-span-8 text-xs font-semibold text-text-muted">Total Monthly</div>
                         <div className="col-span-2 text-right"><p className="text-sm font-bold text-rose-700">{formatCurrency(totalMonthlyExpenses)}</p></div>
                         <div className="col-span-2" />
                       </div>
@@ -953,8 +953,8 @@ export default function FinancialsPage() {
                 {/* Header + Add button */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-sm font-semibold text-foreground">Software & Subscriptions</h2>
-                    <p className="text-[11px] text-muted">Track every tool you and your clients pay for.</p>
+                    <h2 className="text-sm font-semibold text-text-primary">Software & Subscriptions</h2>
+                    <p className="text-[11px] text-text-muted">Track every tool you and your clients pay for.</p>
                   </div>
                   <button onClick={() => setShowAddSub(true)} className="btn-primary text-xs flex items-center gap-1.5">
                     <Plus size={12} /> Add Subscription
@@ -962,19 +962,19 @@ export default function FinancialsPage() {
                 </div>
 
                 {/* Subscriptions list */}
-                <div className="card p-0 overflow-hidden">
+                <div className="glass rounded-xl p-0 overflow-hidden">
                   {subsLoading ? (
-                    <div className="p-8 text-center text-xs text-muted">Loading...</div>
+                    <div className="p-8 text-center text-xs text-text-muted">Loading...</div>
                   ) : subscriptions.length === 0 ? (
                     <div className="p-12 text-center">
-                      <Package size={32} className="text-muted/30 mx-auto mb-3" />
-                      <p className="text-sm font-medium text-foreground mb-1">No subscriptions tracked yet</p>
-                      <p className="text-xs text-muted mb-4">Track your agency software spend to cut unused tools and optimize costs.</p>
+                      <Package size={32} className="text-text-muted/30 mx-auto mb-3" />
+                      <p className="text-sm font-medium text-text-primary mb-1">No subscriptions tracked yet</p>
+                      <p className="text-xs text-text-muted mb-4">Track your agency software spend to cut unused tools and optimize costs.</p>
                       <button onClick={() => setShowAddSub(true)} className="btn-primary text-xs">Add your first tool</button>
                     </div>
                   ) : (
                     <div className="divide-y divide-border">
-                      <div className="grid grid-cols-12 px-4 py-2.5 bg-surface-light/40 text-[10px] uppercase tracking-wider text-muted font-semibold">
+                      <div className="grid grid-cols-12 px-4 py-2.5 bg-surface-light/40 text-[10px] uppercase tracking-wider text-text-muted font-semibold">
                         <div className="col-span-4">Tool</div>
                         <div className="col-span-2">Category</div>
                         <div className="col-span-2 text-right">Cost</div>
@@ -985,24 +985,24 @@ export default function FinancialsPage() {
                       {subscriptions.map(s => (
                         <div key={s.id} className="grid grid-cols-12 px-4 py-3 items-center hover:bg-surface-light/30 transition-colors text-xs">
                           <div className="col-span-4 flex items-center gap-2">
-                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${s.status === "active" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "bg-surface-light text-muted"}`}>
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${s.status === "active" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "bg-surface-light text-text-muted"}`}>
                               {s.tool_name.charAt(0).toUpperCase()}
                             </div>
                             <div>
-                              <p className="font-medium text-foreground">{s.tool_name}</p>
-                              {s.notes && <p className="text-[9px] text-muted truncate max-w-[180px]">{s.notes}</p>}
+                              <p className="font-medium text-text-primary">{s.tool_name}</p>
+                              {s.notes && <p className="text-[9px] text-text-muted truncate max-w-[180px]">{s.notes}</p>}
                             </div>
                           </div>
-                          <div className="col-span-2 text-muted">{s.category}</div>
+                          <div className="col-span-2 text-text-muted">{s.category}</div>
                           <div className="col-span-2 text-right">
-                            <p className="font-semibold text-foreground">{formatCurrency(s.cost_monthly)}</p>
-                            <p className="text-[9px] text-muted">/{s.billing_cycle.slice(0,2)}</p>
+                            <p className="font-semibold text-text-primary">{formatCurrency(s.cost_monthly)}</p>
+                            <p className="text-[9px] text-text-muted">/{s.billing_cycle.slice(0,2)}</p>
                           </div>
-                          <div className="col-span-2 text-muted">
+                          <div className="col-span-2 text-text-muted">
                             {s.next_charge_date ? new Date(s.next_charge_date).toLocaleDateString() : "—"}
                           </div>
                           <div className="col-span-1">
-                            <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light border border-border capitalize">
+                            <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light border border-border-subtle capitalize">
                               {s.used_by}
                             </span>
                           </div>
@@ -1012,7 +1012,7 @@ export default function FinancialsPage() {
                         </div>
                       ))}
                       <div className="grid grid-cols-12 px-4 py-3 bg-surface-light/40 text-xs font-semibold">
-                        <div className="col-span-6 text-muted">Total Monthly</div>
+                        <div className="col-span-6 text-text-muted">Total Monthly</div>
                         <div className="col-span-2 text-right text-rose-700">{formatCurrency(totalMonthlySubs)}</div>
                         <div className="col-span-4" />
                       </div>
@@ -1023,10 +1023,10 @@ export default function FinancialsPage() {
                 {/* Add Subscription Modal */}
                 {showAddSub && (
                   <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowAddSub(false)}>
-                    <div className="card max-w-lg w-full p-5 space-y-3" onClick={e => e.stopPropagation()}>
+                    <div className="glass rounded-xl p-4 max-w-lg w-full p-5 space-y-3" onClick={e => e.stopPropagation()}>
                       <div className="flex items-center justify-between">
                         <h3 className="text-sm font-semibold">Add Subscription</h3>
-                        <button onClick={() => setShowAddSub(false)} className="text-muted hover:text-foreground" aria-label="Close dialog"><X size={16} /></button>
+                        <button onClick={() => setShowAddSub(false)} className="text-text-muted hover:text-text-primary" aria-label="Close dialog"><X size={16} /></button>
                       </div>
                       <input list="saas-list" className="input w-full text-xs" placeholder="Tool name (e.g., Canva)" value={newSub.tool_name} onChange={e => setNewSub({...newSub, tool_name: e.target.value})} />
                       <datalist id="saas-list">
@@ -1111,7 +1111,7 @@ export default function FinancialsPage() {
                 </div>
 
                 {/* Invoice Aging Chart */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
                     <Clock size={13} className="text-brand-accent" /> Invoice Aging Report
                   </p>
@@ -1129,8 +1129,8 @@ export default function FinancialsPage() {
                             style={{ height: `${Math.max((bucket.amount / (invoiceTotals.overdue + invoiceTotals.pending + invoiceTotals.dueSoon || 1)) * 100, 8)}%` }}
                           />
                         </div>
-                        <p className="text-[9px] text-muted">{bucket.label}</p>
-                        <p className="text-[10px] font-semibold text-foreground">{formatCurrency(bucket.amount)}</p>
+                        <p className="text-[9px] text-text-muted">{bucket.label}</p>
+                        <p className="text-[10px] font-semibold text-text-primary">{formatCurrency(bucket.amount)}</p>
                       </div>
                     ))}
                   </div>
@@ -1138,11 +1138,11 @@ export default function FinancialsPage() {
 
                 {/* Invoice List */}
                 <div>
-                  <p className="section-header text-[10px] uppercase tracking-wider text-muted">
+                  <p className="text-[10px] uppercase tracking-wider text-text-muted">
                     All Invoices ({invoices.length})
                   </p>
                   {invoices.length === 0 ? (
-                    <div className="card">
+                    <div className="glass rounded-xl p-4">
                       <EmptyState
                         type="no-invoices"
                         title="No invoices yet"
@@ -1151,7 +1151,7 @@ export default function FinancialsPage() {
                     </div>
                   ) : (
                   <div className="space-y-1.5">
-                    <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
+                    <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] text-text-muted uppercase tracking-wider font-semibold">
                       <div className="col-span-2">Invoice</div>
                       <div className="col-span-3">Client</div>
                       <div className="col-span-2 text-right">Amount</div>
@@ -1159,11 +1159,11 @@ export default function FinancialsPage() {
                       <div className="col-span-2 text-right">Status</div>
                     </div>
                     {invoices.map(inv => (
-                      <div key={inv.id} className="grid grid-cols-12 gap-2 items-center px-4 py-2.5 rounded-xl bg-surface-light border border-border transition-all hover:border-border/80">
+                      <div key={inv.id} className="grid grid-cols-12 gap-2 items-center px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle transition-all hover:border-border-subtle/80">
                         <div className="col-span-2"><p className="text-xs font-mono font-semibold">{inv.id}</p></div>
                         <div className="col-span-3"><p className="text-sm">{inv.client}</p></div>
                         <div className="col-span-2 text-right"><p className="text-sm font-semibold">{formatCurrency(inv.amount)}</p></div>
-                        <div className="col-span-3"><p className="text-xs text-muted">{inv.due}</p></div>
+                        <div className="col-span-3"><p className="text-xs text-text-muted">{inv.due}</p></div>
                         <div className="col-span-2 text-right">
                           <span className={`text-[10px] px-2 py-0.5 rounded-full border ${
                             inv.status === "paid" ? "text-emerald-700 border-emerald-200 bg-emerald-50" :
@@ -1187,56 +1187,56 @@ export default function FinancialsPage() {
                     className="card-hover p-3 text-left">
                     <Plus size={14} className="text-brand-accent mb-1.5" />
                     <p className="text-xs font-semibold">Create Invoice</p>
-                    <p className="text-[10px] text-muted">Open a client → Billing tab</p>
+                    <p className="text-[10px] text-text-muted">Open a client → Billing tab</p>
                   </button>
                   <button
                     onClick={() => toast("Automated reminders ship with the invoicing backend. For now, chase manually from the client's Billing tab.", { icon: "💡", duration: 6000 })}
                     className="card-hover p-3 text-left">
                     <RefreshCw size={14} className="text-blue-400 mb-1.5" />
                     <p className="text-xs font-semibold">Send Reminders</p>
-                    <p className="text-[10px] text-muted">Coming soon</p>
+                    <p className="text-[10px] text-text-muted">Coming soon</p>
                   </button>
                   <button
                     onClick={() => { window.location.href = "/dashboard/clients"; }}
                     className="card-hover p-3 text-left">
                     <Calendar size={14} className="text-purple-400 mb-1.5" />
                     <p className="text-xs font-semibold">Recurring Invoice</p>
-                    <p className="text-[10px] text-muted">Open a client → Subscribe</p>
+                    <p className="text-[10px] text-text-muted">Open a client → Subscribe</p>
                   </button>
                   <button
                     onClick={() => toast("Batch invoice export is not yet wired. Export individual invoices from Stripe via Billing → Manage subscription.", { icon: "💡", duration: 6000 })}
                     className="card-hover p-3 text-left">
                     <Download size={14} className="text-emerald-700 mb-1.5" />
                     <p className="text-xs font-semibold">Export Invoices</p>
-                    <p className="text-[10px] text-muted">Coming soon</p>
+                    <p className="text-[10px] text-text-muted">Coming soon</p>
                   </button>
                 </div>
               </>
             )}{/* ================================================================== */}{/* FORECASTING TAB                                                     */}{/* ================================================================== */}{activeTab === "forecasting" && (
               <>
                 {/* Forecast Config */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
                     <Target size={13} className="text-brand-accent" /> Forecast Parameters
                   </p>
                   <div className="grid grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Forecast Period</label>
-                      <p className="text-sm font-semibold text-foreground">{forecastMonths} months</p>
+                      <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Forecast Period</label>
+                      <p className="text-sm font-semibold text-text-primary">{forecastMonths} months</p>
                     </div>
                     <div>
-                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Monthly Growth Rate</label>
+                      <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Monthly Growth Rate</label>
                       <p className="text-sm font-semibold text-emerald-700">{monthlyGrowthRate}%</p>
                     </div>
                     <div>
-                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Monthly Churn Rate</label>
+                      <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Monthly Churn Rate</label>
                       <p className="text-sm font-semibold text-rose-700">{monthlyChurnRate}%</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Forecast Chart */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
                     <TrendingUp size={13} className="text-brand-accent" /> Revenue Forecast ({forecastMonths}-Month)
                   </p>
@@ -1246,11 +1246,11 @@ export default function FinancialsPage() {
                       const height = `${Math.max((item.projected / maxVal) * 100, 4)}%`;
                       return (
                         <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                          <span className="text-[8px] text-muted">{formatCurrency(item.projected)}</span>
+                          <span className="text-[8px] text-text-muted">{formatCurrency(item.projected)}</span>
                           <div className="w-full flex-1 flex items-end">
                             <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(59,130,246,0.5)" }} />
                           </div>
-                          <span className="text-[8px] text-muted">{item.month}</span>
+                          <span className="text-[8px] text-text-muted">{item.month}</span>
                         </div>
                       );
                     })}
@@ -1258,19 +1258,19 @@ export default function FinancialsPage() {
                 </div>
 
                 {/* Forecast Table */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
                     <BarChart3 size={13} className="text-brand-accent" /> Projected P&L
                   </p>
                   <div className="space-y-1.5">
-                    <div className="grid grid-cols-4 gap-2 px-3 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
+                    <div className="grid grid-cols-4 gap-2 px-3 py-2 text-[10px] text-text-muted uppercase tracking-wider font-semibold">
                       <div>Month</div>
                       <div className="text-right">Revenue</div>
                       <div className="text-right">Expenses</div>
                       <div className="text-right">Net Profit</div>
                     </div>
                     {forecast.map((item, i) => (
-                      <div key={i} className="grid grid-cols-4 gap-2 px-3 py-2 rounded-lg bg-surface-light border border-border">
+                      <div key={i} className="grid grid-cols-4 gap-2 px-3 py-2 rounded-lg bg-surface-light border border-border-subtle">
                         <div className="text-xs font-semibold">{item.month}</div>
                         <div className="text-xs text-right text-brand-accent">{formatCurrency(item.projected)}</div>
                         <div className="text-xs text-right text-rose-700">{formatCurrency(item.expenses)}</div>
@@ -1284,16 +1284,16 @@ export default function FinancialsPage() {
 
                 {/* Key Projections */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-                  <div className="card p-3">
-                    <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Projected MRR ({forecastMonths}mo)</p>
+                  <div className="glass rounded-xl p-3">
+                    <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Projected MRR ({forecastMonths}mo)</p>
                     <p className="text-lg font-bold text-brand-accent">{formatCurrency(forecast[forecast.length - 1]?.projected || 0)}</p>
                   </div>
-                  <div className="card p-3">
-                    <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Projected ARR ({forecastMonths}mo)</p>
+                  <div className="glass rounded-xl p-3">
+                    <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Projected ARR ({forecastMonths}mo)</p>
                     <p className="text-lg font-bold text-blue-400">{formatCurrency((forecast[forecast.length - 1]?.projected || 0) * 12)}</p>
                   </div>
-                  <div className="card p-3">
-                    <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Cumulative Profit</p>
+                  <div className="glass rounded-xl p-3">
+                    <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Cumulative Profit</p>
                     <p className={`text-lg font-bold ${forecast.reduce((s, f) => s + f.profit, 0) >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
                       {formatCurrency(forecast.reduce((s, f) => s + f.profit, 0))}
                     </p>
@@ -1301,25 +1301,25 @@ export default function FinancialsPage() {
                 </div>
 
                 {/* Tax Summary */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
                     <Shield size={13} className="text-brand-accent" /> Tax Summary (Estimated)
                   </p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <div>
-                      <p className="text-[10px] text-muted">Annual Revenue</p>
+                      <p className="text-[10px] text-text-muted">Annual Revenue</p>
                       <p className="text-sm font-bold text-brand-accent">{formatCurrency(annualRecurringRevenue)}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-muted">Annual Expenses</p>
+                      <p className="text-[10px] text-text-muted">Annual Expenses</p>
                       <p className="text-sm font-bold text-rose-700">{formatCurrency(totalMonthlyExpenses * 12)}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-muted">Taxable Income</p>
-                      <p className="text-sm font-bold text-foreground">{formatCurrency(annualProfit)}</p>
+                      <p className="text-[10px] text-text-muted">Taxable Income</p>
+                      <p className="text-sm font-bold text-text-primary">{formatCurrency(annualProfit)}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-muted">Estimated Tax ({estimatedTaxRate}%)</p>
+                      <p className="text-[10px] text-text-muted">Estimated Tax ({estimatedTaxRate}%)</p>
                       <p className="text-sm font-bold text-orange-400">{formatCurrency(estimatedTax)}</p>
                     </div>
                   </div>
@@ -1328,20 +1328,20 @@ export default function FinancialsPage() {
             )}{/* ================================================================== */}{/* EXPORT TAB                                                          */}{/* ================================================================== */}{activeTab === "export" && (
               <>
                 {/* Export Config */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-4 flex items-center gap-1.5">
                     <Download size={13} className="text-brand-accent" /> Financial Export
                   </p>
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Format</label>
+                      <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Format</label>
                       <div className="flex gap-2">
                         {(["csv", "pdf", "xlsx"] as const).map(fmt => (
                           <button
                             key={fmt}
                             onClick={() => setExportFormat(fmt)}
                             className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
-                              exportFormat === fmt ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"
+                              exportFormat === fmt ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border-subtle text-text-muted hover:text-text-primary"
                             }`}
                           >
                             {fmt.toUpperCase()}
@@ -1350,14 +1350,14 @@ export default function FinancialsPage() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Date Range</label>
+                      <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Date Range</label>
                       <div className="flex gap-2">
                         {(["month", "quarter", "year", "all"] as const).map(range => (
                           <button
                             key={range}
                             onClick={() => setExportRange(range)}
                             className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
-                              exportRange === range ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border text-muted hover:text-foreground"
+                              exportRange === range ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border-subtle text-text-muted hover:text-text-primary"
                             }`}
                           >
                             {range.charAt(0).toUpperCase() + range.slice(1)}
@@ -1385,7 +1385,7 @@ export default function FinancialsPage() {
                     >
                       <report.icon size={16} className={`${report.color} mb-2`} />
                       <p className="text-xs font-semibold">{report.label}</p>
-                      <p className="text-[10px] text-muted mt-0.5">{report.desc}</p>
+                      <p className="text-[10px] text-text-muted mt-0.5">{report.desc}</p>
                       <p className="text-[10px] text-brand-accent mt-2 flex items-center gap-1">
                         <Download size={10} /> Coming soon
                       </p>
@@ -1394,18 +1394,18 @@ export default function FinancialsPage() {
                 </div>
 
                 {/* Payment Processors */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
                     <CreditCard size={13} className="text-brand-accent" /> Payment Processors
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {/* Stripe */}
-                    <div className="p-3 rounded-lg border border-border bg-surface-light">
+                    <div className="p-3 rounded-lg border border-border-subtle bg-surface-light">
                       <div className="flex items-center gap-2 mb-2">
                         <StripeIcon size={22} />
                         <div>
                           <p className="text-xs font-semibold">Stripe</p>
-                          <p className="text-[9px] text-muted">
+                          <p className="text-[9px] text-text-muted">
                             {stripeSynced ? `Synced ${lastSyncTime || "just now"}` : "Not connected"}
                           </p>
                         </div>
@@ -1418,33 +1418,33 @@ export default function FinancialsPage() {
                       </button>
                     </div>
                     {/* PayPal */}
-                    <div className="p-3 rounded-lg border border-border bg-surface-light">
+                    <div className="p-3 rounded-lg border border-border-subtle bg-surface-light">
                       <div className="flex items-center gap-2 mb-2">
                         <PayPalIcon size={22} />
                         <div>
                           <p className="text-xs font-semibold">PayPal</p>
-                          <p className="text-[9px] text-muted">Not connected</p>
+                          <p className="text-[9px] text-text-muted">Not connected</p>
                         </div>
                       </div>
                       <button
                         onClick={() => toast("Configure PayPal in Settings > Integrations")}
-                        className="w-full text-[10px] py-1.5 rounded border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-all flex items-center justify-center gap-1"
+                        className="w-full text-[10px] py-1.5 rounded border border-border-subtle text-text-muted hover:text-text-primary hover:border-foreground/30 transition-all flex items-center justify-center gap-1"
                       >
                         <Plus size={10} /> Connect
                       </button>
                     </div>
                     {/* Square */}
-                    <div className="p-3 rounded-lg border border-border bg-surface-light">
+                    <div className="p-3 rounded-lg border border-border-subtle bg-surface-light">
                       <div className="flex items-center gap-2 mb-2">
                         <SquareIcon size={22} />
                         <div>
                           <p className="text-xs font-semibold">Square</p>
-                          <p className="text-[9px] text-muted">Not connected</p>
+                          <p className="text-[9px] text-text-muted">Not connected</p>
                         </div>
                       </div>
                       <button
                         onClick={() => toast("Configure Square in Settings > Integrations")}
-                        className="w-full text-[10px] py-1.5 rounded border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-all flex items-center justify-center gap-1"
+                        className="w-full text-[10px] py-1.5 rounded border border-border-subtle text-text-muted hover:text-text-primary hover:border-foreground/30 transition-all flex items-center justify-center gap-1"
                       >
                         <Plus size={10} /> Connect
                       </button>
@@ -1453,24 +1453,24 @@ export default function FinancialsPage() {
                 </div>
 
                 {/* Import Section */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
                     <FileText size={13} className="text-brand-accent" /> Import Financial Data
                   </p>
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => toast("CSV import is coming soon. Add expenses manually via the Expenses tab → Add Expense.", { icon: "💡", duration: 6000 })}
-                      className="p-4 rounded-lg border-2 border-dashed border-border hover:border-[rgba(59,130,246,0.25)] transition-colors text-center">
-                      <FileText size={20} className="mx-auto mb-2 text-muted" />
+                      className="p-4 rounded-lg border-2 border-dashed border-border-subtle hover:border-[rgba(59,130,246,0.25)] transition-colors text-center">
+                      <FileText size={20} className="mx-auto mb-2 text-text-muted" />
                       <p className="text-xs font-semibold">Import CSV</p>
-                      <p className="text-[10px] text-muted mt-0.5">Coming soon</p>
+                      <p className="text-[10px] text-text-muted mt-0.5">Coming soon</p>
                     </button>
                     <button
                       onClick={() => toast("QuickBooks sync is on the roadmap. For now, enter expenses manually or use the Subscriptions tab.", { icon: "💡", duration: 6000 })}
-                      className="p-4 rounded-lg border-2 border-dashed border-border hover:border-[rgba(59,130,246,0.25)] transition-colors text-center">
-                      <Globe size={20} className="mx-auto mb-2 text-muted" />
+                      className="p-4 rounded-lg border-2 border-dashed border-border-subtle hover:border-[rgba(59,130,246,0.25)] transition-colors text-center">
+                      <Globe size={20} className="mx-auto mb-2 text-text-muted" />
                       <p className="text-xs font-semibold">QuickBooks Import</p>
-                      <p className="text-[10px] text-muted mt-0.5">Coming soon</p>
+                      <p className="text-[10px] text-text-muted mt-0.5">Coming soon</p>
                     </button>
                   </div>
                 </div>
@@ -1483,7 +1483,7 @@ export default function FinancialsPage() {
             >
               <div className="space-y-3">
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">
+                  <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">
                     Name *
                   </label>
                   <input
@@ -1496,11 +1496,11 @@ export default function FinancialsPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">
+                    <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">
                       Cost *
                     </label>
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted text-xs">$</span>
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-xs">$</span>
                       <input
                         type="number"
                         min={0}
@@ -1512,7 +1512,7 @@ export default function FinancialsPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">
+                    <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">
                       Interval
                     </label>
                     <select
@@ -1529,7 +1529,7 @@ export default function FinancialsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">
+                  <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">
                     Category
                   </label>
                   <select
@@ -1546,7 +1546,7 @@ export default function FinancialsPage() {
                 </div>
 
                 {form.interval === "annual" && form.cost > 0 && (
-                  <p className="text-[10px] text-muted bg-surface-light border border-border rounded-lg px-3 py-2">
+                  <p className="text-[10px] text-text-muted bg-surface-light border border-border-subtle rounded-lg px-3 py-2">
                     Monthly equivalent: <span className="text-brand-accent font-semibold">{formatCurrency(form.cost / 12)}</span>/mo
                   </p>
                 )}

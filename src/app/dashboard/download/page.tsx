@@ -163,7 +163,7 @@ export default function DownloadDesktopPage() {
                   href={GH_RELEASES}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 hover:bg-black/10 text-foreground border border-border transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 hover:bg-black/10 text-text-primary border border-border-subtle transition-colors"
                 >
                   View all releases <ExternalLink size={12} />
                 </a>
@@ -242,17 +242,17 @@ export default function DownloadDesktopPage() {
                       </div>
                       <Download
                         size={18}
-                        className="text-muted group-hover:text-brand-accent transition-colors"
+                        className="text-text-muted group-hover:text-brand-accent transition-colors"
                       />
                     </div>
-                    <div className="text-lg font-semibold text-foreground mb-0.5">{p.title}</div>
-                    <div className="text-xs text-muted mb-3">{p.subtitle}</div>
+                    <div className="text-lg font-semibold text-text-primary mb-0.5">{p.title}</div>
+                    <div className="text-xs text-text-muted mb-3">{p.subtitle}</div>
                     <div className="text-[11px] text-muted-light mb-4">
                       {p.fileNote}
                       {size ? ` · ${size}` : ""}
                     </div>
-                    <div className="flex items-center justify-between pt-3 border-t border-border">
-                      <span className="text-[11px] text-muted">v{version}</span>
+                    <div className="flex items-center justify-between pt-3 border-t border-border-subtle">
+                      <span className="text-[11px] text-text-muted">v{version}</span>
                       <span className="text-xs font-medium text-brand-accent group-hover:underline">
                         Download
                       </span>
@@ -270,7 +270,7 @@ export default function DownloadDesktopPage() {
                 <div className="text-[10px] font-bold uppercase tracking-wider text-brand-accent mb-1">
                   What&apos;s included
                 </div>
-                <h2 className="text-xl font-semibold text-foreground">
+                <h2 className="text-xl font-semibold text-text-primary">
                   Everything the web app does — plus native superpowers
                 </h2>
               </div>
@@ -287,11 +287,11 @@ export default function DownloadDesktopPage() {
                       <CheckCircle2 size={16} />
                     </div>
                     <div className="min-w-0">
-                      <div className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                      <div className="text-sm font-semibold text-text-primary flex items-center gap-1.5">
                         <span className="text-brand-accent">{f.icon}</span>
                         {f.title}
                       </div>
-                      <div className="text-[11px] text-muted mt-0.5 leading-relaxed">{f.desc}</div>
+                      <div className="text-[11px] text-text-muted mt-0.5 leading-relaxed">{f.desc}</div>
                     </div>
                   </motion.div>
                 ))}
@@ -302,15 +302,15 @@ export default function DownloadDesktopPage() {
               transition={{ duration: 0.4, delay: 0.2 }}
               className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 glass rounded-xl p-4"
             >
-              <div className="flex items-center gap-3 text-xs text-muted">
+              <div className="flex items-center gap-3 text-xs text-text-muted">
                 <Keyboard size={14} className="text-brand-accent" />
                 <span>
                   Current version{" "}
-                  <span className="font-mono font-semibold text-foreground">v{version}</span>
+                  <span className="font-mono font-semibold text-text-primary">v{version}</span>
                   {updatedStr ? (
                     <>
                       {" · Updated "}
-                      <span className="text-foreground">{updatedStr}</span>
+                      <span className="text-text-primary">{updatedStr}</span>
                     </>
                   ) : null}
                   {" · Built with Electron & electron-builder"}

@@ -162,10 +162,10 @@ export default function DiscordPage() {
   /** Banner shown on tabs whose UI exists but has no backend yet. */
   function PreviewBanner() {
     return (
-      <MotionPage className="card border-warning/20 bg-warning/5"><div className="flex items-start gap-2">
+      <MotionPage className="glass rounded-xl p-4 border-warning/20 bg-warning/5"><div className="flex items-start gap-2">
                   <AlertTriangle size={12} className="text-warning shrink-0 mt-0.5" />
-                  <p className="text-[10px] text-muted leading-relaxed">
-                    <strong className="text-foreground">Preview only.</strong> This tab&apos;s UI is wired up for review; server-side wiring for moderation, analytics, and custom commands ships later. For now use the <span className="text-foreground">Install</span> tab to connect a server and receive real-time pings.
+                  <p className="text-[10px] text-text-muted leading-relaxed">
+                    <strong className="text-text-primary">Preview only.</strong> This tab&apos;s UI is wired up for review; server-side wiring for moderation, analytics, and custom commands ships later. For now use the <span className="text-text-primary">Install</span> tab to connect a server and receive real-time pings.
                   </p>
                 </div></MotionPage>
     );
@@ -193,7 +193,7 @@ export default function DiscordPage() {
   const currentServer = undefined as { name: string } | undefined;
 
   return (
-    <div className="fade-in space-y-6 max-w-[1200px] mx-auto">
+    <div className="space-y-6 max-w-[1200px] mx-auto">
       {/* -- Discord command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -201,7 +201,7 @@ export default function DiscordPage() {
           <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Discord</h1>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-xs text-muted">No servers connected</span>
+          <span className="text-xs text-text-muted">No servers connected</span>
         </div>
       </div>
 
@@ -253,10 +253,10 @@ export default function DiscordPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 overflow-x-auto border-b border-border pb-px">
+      <div className="flex gap-1 overflow-x-auto border-b border-border-subtle pb-px">
         {tabs.map(t => (
           <button key={t} onClick={() => setActiveTab(t)}
-            className={`px-3 py-2 text-xs font-medium whitespace-nowrap border-b-2 transition-all ${activeTab === t ? "border-brand-accent text-brand-accent" : "border-transparent text-muted hover:text-foreground"}`}>
+            className={`px-3 py-2 text-xs font-medium whitespace-nowrap border-b-2 transition-all ${activeTab === t ? "border-brand-accent text-brand-accent" : "border-transparent text-text-muted hover:text-text-primary"}`}>
             {t}
           </button>
         ))}
@@ -273,7 +273,7 @@ export default function DiscordPage() {
               </div>
               <div className="flex-1">
                 <h2 className="text-lg font-semibold mb-1">Install Trinity in your own Discord</h2>
-                <p className="text-xs text-muted leading-relaxed mb-4">
+                <p className="text-xs text-text-muted leading-relaxed mb-4">
                   Trinity is a public Discord bot. Your agency, your clients, or any partner team can install
                   Trinity in their own server in one click � then get real-time pings, slash commands, and AI
                   digests right where your team already talks.
@@ -292,7 +292,7 @@ export default function DiscordPage() {
 
           {/* Why-it's-useful grid */}
           <div>
-            <h3 className="section-header">Why agencies put Trinity in Discord</h3>
+            <h3 className="">Why agencies put Trinity in Discord</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {[
                 { icon: Bell, color: "text-[#5865F2]", title: "Real-time agency status in your team's Discord",
@@ -305,7 +305,7 @@ export default function DiscordPage() {
                   desc: "Team members can @-mention Trinity with a question � Claude answers with real data pulled from your workspace." },
                 { icon: Users, color: "text-cyan-400", title: "Everyone stays aligned",
                   desc: "Account managers, cold-call team, designers, clients � one Discord, one source of truth." },
-                { icon: Shield, color: "text-muted", title: "Minimal permissions",
+                { icon: Shield, color: "text-text-muted", title: "Minimal permissions",
                   desc: "Trinity asks for Send Messages, Embed Links, Read History, and Slash Commands. Nothing else." },
               ].map((f, i) => (
                 <motion.div
@@ -322,7 +322,7 @@ export default function DiscordPage() {
                   </div>
                   <div>
                     <p className="text-xs font-semibold mb-1">{f.title}</p>
-                    <p className="text-[11px] text-muted leading-relaxed">{f.desc}</p>
+                    <p className="text-[11px] text-text-muted leading-relaxed">{f.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -332,14 +332,14 @@ export default function DiscordPage() {
           {/* Installed integrations */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h3 className="section-header mb-0">Your installed servers</h3>
-              {loadingIntegrations && <Loader size={12} className="animate-spin text-muted" />}
+              <h3 className="mb-0">Your installed servers</h3>
+              {loadingIntegrations && <Loader size={12} className="animate-spin text-text-muted" />}
             </div>
 
             {integrations.length === 0 && !loadingIntegrations && (
-              <div className="card p-6 text-center">
-                <Server size={20} className="mx-auto mb-2 text-muted opacity-50" />
-                <p className="text-xs text-muted">No servers connected yet. Click <strong className="text-foreground">Add Trinity to Discord</strong> above to install.</p>
+              <div className="glass rounded-xl p-6 text-center">
+                <Server size={20} className="mx-auto mb-2 text-text-muted opacity-50" />
+                <p className="text-xs text-text-muted">No servers connected yet. Click <strong className="text-text-primary">Add Trinity to Discord</strong> above to install.</p>
               </div>
             )}
 
@@ -370,13 +370,13 @@ export default function DiscordPage() {
                         )}
                         <div>
                           <p className="text-sm font-semibold">{int.guild_name || "Unknown server"}</p>
-                          <p className="text-[10px] text-muted">
+                          <p className="text-[10px] text-text-muted">
                             Installed {new Date(int.installed_at).toLocaleDateString()} � guild ID <code className="font-mono">{int.guild_id}</code>
                           </p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <label className="flex items-center gap-1.5 text-[10px] text-muted cursor-pointer">
+                        <label className="flex items-center gap-1.5 text-[10px] text-text-muted cursor-pointer">
                           <input
                             type="checkbox"
                             checked={int.notifications_enabled}
@@ -386,7 +386,7 @@ export default function DiscordPage() {
                         </label>
                         <button
                           onClick={() => removeIntegration(int.id)}
-                          className="text-[10px] text-muted hover:text-danger flex items-center gap-1"
+                          className="text-[10px] text-text-muted hover:text-danger flex items-center gap-1"
                         >
                           <Unlink size={11} /> Remove
                         </button>
@@ -396,11 +396,11 @@ export default function DiscordPage() {
                     {/* Channel selector */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
-                        <label className="text-[10px] text-muted font-semibold uppercase">Post notifications in</label>
+                        <label className="text-[10px] text-text-muted font-semibold uppercase">Post notifications in</label>
                         <select
                           value={int.notify_channel_id || ""}
                           onChange={e => updateIntegration(int.id, { notify_channel_id: e.target.value || null })}
-                          className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface"
+                          className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface"
                         >
                           <option value="">� Pick a channel �</option>
                           {channels.map(c => (
@@ -408,20 +408,20 @@ export default function DiscordPage() {
                           ))}
                         </select>
                         {channels.length === 0 && (
-                          <p className="text-[9px] text-muted mt-1">
+                          <p className="text-[9px] text-text-muted mt-1">
                             No channels visible � make sure Trinity has View Channel permission in your server.
                           </p>
                         )}
                       </div>
 
                       <div>
-                        <label className="text-[10px] text-muted font-semibold uppercase">Event categories</label>
+                        <label className="text-[10px] text-text-muted font-semibold uppercase">Event categories</label>
                         <div className="grid grid-cols-2 gap-1.5 mt-1">
                           {NOTIFY_CATEGORIES.map(cat => {
                             const enabled = int.notify_on?.[cat.key] !== false;
                             return (
                               <label key={cat.key}
-                                className="flex items-center gap-1.5 p-1.5 rounded bg-surface-light border border-border text-[10px] cursor-pointer">
+                                className="flex items-center gap-1.5 p-1.5 rounded bg-surface-light border border-border-subtle text-[10px] cursor-pointer">
                                 <input
                                   type="checkbox"
                                   checked={enabled}
@@ -447,27 +447,27 @@ export default function DiscordPage() {
             <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
               <Zap size={14} className="text-brand-accent" /> What agencies actually do with it
             </h3>
-            <ol className="space-y-2 text-[11px] text-muted leading-relaxed list-decimal list-inside">
-              <li><strong className="text-foreground">Morning standup at 9:30am:</strong> team opens #trinity-ops in Discord, sees the overnight AI digest (leads, replies, revenue), and plans the day.</li>
-              <li><strong className="text-foreground">Account manager gets a ping</strong> the moment a client pays an invoice � acknowledges with a reaction; Trinity logs it to the CRM.</li>
-              <li><strong className="text-foreground">Cold-call rep runs</strong> <code className="font-mono">/trinity-lead add business:&quot;Acme Plumbing&quot; city:Dallas</code> straight from Discord � no tab switching.</li>
-              <li><strong className="text-foreground">Designer asks</strong> <code className="font-mono">@Trinity what did we post for Acme this week?</code> � gets a list back with links.</li>
-              <li><strong className="text-foreground">Founder checks</strong> <code className="font-mono">/trinity-status</code> on their phone in bed on a Sunday. MRR went up. They smile.</li>
+            <ol className="space-y-2 text-[11px] text-text-muted leading-relaxed list-decimal list-inside">
+              <li><strong className="text-text-primary">Morning standup at 9:30am:</strong> team opens #trinity-ops in Discord, sees the overnight AI digest (leads, replies, revenue), and plans the day.</li>
+              <li><strong className="text-text-primary">Account manager gets a ping</strong> the moment a client pays an invoice � acknowledges with a reaction; Trinity logs it to the CRM.</li>
+              <li><strong className="text-text-primary">Cold-call rep runs</strong> <code className="font-mono">/trinity-lead add business:&quot;Acme Plumbing&quot; city:Dallas</code> straight from Discord � no tab switching.</li>
+              <li><strong className="text-text-primary">Designer asks</strong> <code className="font-mono">@Trinity what did we post for Acme this week?</code> � gets a list back with links.</li>
+              <li><strong className="text-text-primary">Founder checks</strong> <code className="font-mono">/trinity-status</code> on their phone in bed on a Sunday. MRR went up. They smile.</li>
             </ol>
           </PrismPanel>
 
           {/* Env vars � Trinity-internal admin/founder only. Clients should not see this. */}
           {isPlatformAdmin && (
-            <div className="card p-4 border-warning/30 bg-warning/5">
+            <div className="glass rounded-xl p-4 border-warning/30 bg-warning/5">
               <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
                 <AlertTriangle size={14} className="text-warning" /> Required env vars (set in Vercel)
               </h3>
               <ul className="space-y-1 text-[11px] font-mono">
-                <li><code className="text-foreground">DISCORD_CLIENT_ID</code> <span className="text-muted">� app ID from the Discord Developer Portal</span></li>
-                <li><code className="text-foreground">DISCORD_CLIENT_SECRET</code> <span className="text-muted">� app secret (server-side only)</span></li>
-                <li><code className="text-foreground">DISCORD_BOT_TOKEN</code> <span className="text-muted">� bot token, used for bot-level API calls</span></li>
-                <li><code className="text-foreground">DISCORD_PUBLIC_KEY</code> <span className="text-muted">� for verifying interaction webhook signatures</span></li>
-                <li><code className="text-foreground">NEXT_PUBLIC_APP_URL</code> <span className="text-muted">� your app&apos;s public URL, used for the OAuth redirect</span></li>
+                <li><code className="text-text-primary">DISCORD_CLIENT_ID</code> <span className="text-text-muted">� app ID from the Discord Developer Portal</span></li>
+                <li><code className="text-text-primary">DISCORD_CLIENT_SECRET</code> <span className="text-text-muted">� app secret (server-side only)</span></li>
+                <li><code className="text-text-primary">DISCORD_BOT_TOKEN</code> <span className="text-text-muted">� bot token, used for bot-level API calls</span></li>
+                <li><code className="text-text-primary">DISCORD_PUBLIC_KEY</code> <span className="text-text-muted">� for verifying interaction webhook signatures</span></li>
+                <li><code className="text-text-primary">NEXT_PUBLIC_APP_URL</code> <span className="text-text-muted">� your app&apos;s public URL, used for the OAuth redirect</span></li>
               </ul>
               <a
                 href="https://discord.com/developers/applications"
@@ -487,9 +487,9 @@ export default function DiscordPage() {
         <div className="space-y-4">
           <PreviewBanner />
           <div className="flex flex-col items-center justify-center py-10 text-center">
-            <Server size={20} className="text-muted mb-2" />
-            <p className="text-xs text-muted">No servers connected yet.</p>
-            <p className="text-[10px] text-muted mt-1">Install the Trinity bot above and connect your Discord server.</p>
+            <Server size={20} className="text-text-muted mb-2" />
+            <p className="text-xs text-text-muted">No servers connected yet.</p>
+            <p className="text-[10px] text-text-muted mt-1">Install the Trinity bot above and connect your Discord server.</p>
           </div>
         </div>
       )}
@@ -499,29 +499,29 @@ export default function DiscordPage() {
         <div className="space-y-4">
           <PreviewBanner />
           <div className="flex items-center justify-between">
-            <p className="text-xs text-muted">Manage slash commands. Toggle to enable/disable per server.</p>
+            <p className="text-xs text-text-muted">Manage slash commands. Toggle to enable/disable per server.</p>
             <div className="flex gap-1">
               {["All", "Info", "Reports", "Tools"].map(f => (
                 <button key={f} onClick={() => setCommandFilter(f)}
-                  className={`text-[10px] px-2.5 py-1 rounded-full border ${commandFilter === f ? "border-brand-accent text-brand-accent bg-[rgba(59,130,246,0.05)]" : "border-border text-muted"}`}>{f}</button>
+                  className={`text-[10px] px-2.5 py-1 rounded-full border ${commandFilter === f ? "border-brand-accent text-brand-accent bg-[rgba(59,130,246,0.05)]" : "border-border-subtle text-text-muted"}`}>{f}</button>
               ))}
             </div>
           </div>
           <div className="space-y-2">
             {commands.filter(c => commandFilter === "All" || c.category === commandFilter).length === 0 && (
-              <p className="text-xs text-muted text-center py-6">No commands available. Connect a server to see slash commands.</p>
+              <p className="text-xs text-text-muted text-center py-6">No commands available. Connect a server to see slash commands.</p>
             )}
             {commands.filter(c => commandFilter === "All" || c.category === commandFilter).map(cmd => (
-              <div key={cmd.name} className="card p-3 flex items-center justify-between">
+              <div key={cmd.name} className="glass rounded-xl p-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-[#5865F2]/10 flex items-center justify-center"><Terminal size={14} className="text-[#5865F2]" /></div>
                   <div>
                     <p className="text-xs font-semibold font-mono">{cmd.name}</p>
-                    <p className="text-[10px] text-muted">{cmd.desc}</p>
+                    <p className="text-[10px] text-text-muted">{cmd.desc}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light border border-border">{cmd.category}</span>
+                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light border border-border-subtle">{cmd.category}</span>
                   <div onClick={() => toggleCommand(cmd.name)}
                     className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${cmd.enabled ? "bg-green-500" : "bg-gray-300"}`}>
                     <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${cmd.enabled ? "translate-x-[18px]" : "translate-x-0.5"}`} />
@@ -531,16 +531,16 @@ export default function DiscordPage() {
             ))}
           </div>
           {/* Custom Command Builder */}
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Code size={14} className="text-brand-accent" /> Custom Command Builder</h3>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[10px] text-muted font-semibold uppercase">Command Name</label>
-                <input className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface" placeholder="/my-command" />
+                <label className="text-[10px] text-text-muted font-semibold uppercase">Command Name</label>
+                <input className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface" placeholder="/my-command" />
               </div>
               <div>
-                <label className="text-[10px] text-muted font-semibold uppercase">Response Type</label>
-                <select className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface">
+                <label className="text-[10px] text-text-muted font-semibold uppercase">Response Type</label>
+                <select className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface">
                   <option>Text Response</option>
                   <option>Embed Response</option>
                   <option>API Call</option>
@@ -549,8 +549,8 @@ export default function DiscordPage() {
               </div>
             </div>
             <div className="mt-3">
-              <label className="text-[10px] text-muted font-semibold uppercase">Response Template</label>
-              <textarea className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface h-20 resize-none" placeholder="Enter the bot response message..." />
+              <label className="text-[10px] text-text-muted font-semibold uppercase">Response Template</label>
+              <textarea className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface h-20 resize-none" placeholder="Enter the bot response message..." />
             </div>
             <button className="mt-3 text-xs bg-[rgba(59,130,246,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium hover:bg-[rgba(59,130,246,0.12)]">Register Command</button>
           </div>
@@ -561,18 +561,18 @@ export default function DiscordPage() {
       {activeTab === "Auto-Roles" && (
         <div className="space-y-4">
           <PreviewBanner />
-          <p className="text-xs text-muted">Automatically assign roles based on join events, reactions, or commands.</p>
+          <p className="text-xs text-text-muted">Automatically assign roles based on join events, reactions, or commands.</p>
           <div className="space-y-2">
             {autoRoles.length === 0 && (
-              <p className="text-xs text-muted text-center py-4">No auto-roles configured.</p>
+              <p className="text-xs text-text-muted text-center py-4">No auto-roles configured.</p>
             )}
             {autoRoles.map(role => (
-              <div key={role.id} className="card p-3 flex items-center justify-between">
+              <div key={role.id} className="glass rounded-xl p-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: role.color }} />
                   <div>
                     <p className="text-xs font-semibold">{role.role}</p>
-                    <p className="text-[10px] text-muted">Trigger: {role.trigger}</p>
+                    <p className="text-[10px] text-text-muted">Trigger: {role.trigger}</p>
                   </div>
                 </div>
                 <div onClick={() => toggleAutoRole(role.id)}
@@ -582,12 +582,12 @@ export default function DiscordPage() {
               </div>
             ))}
           </div>
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-sm font-semibold mb-3">Add New Auto-Role</h3>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="text-[10px] text-muted font-semibold uppercase">Trigger Type</label>
-                <select className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface">
+                <label className="text-[10px] text-text-muted font-semibold uppercase">Trigger Type</label>
+                <select className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface">
                   <option>On Join</option>
                   <option>Reaction</option>
                   <option>Command</option>
@@ -596,12 +596,12 @@ export default function DiscordPage() {
                 </select>
               </div>
               <div>
-                <label className="text-[10px] text-muted font-semibold uppercase">Role Name</label>
-                <input className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface" placeholder="Role name" />
+                <label className="text-[10px] text-text-muted font-semibold uppercase">Role Name</label>
+                <input className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface" placeholder="Role name" />
               </div>
               <div>
-                <label className="text-[10px] text-muted font-semibold uppercase">Color</label>
-                <input type="color" defaultValue="#5865F2" className="w-full mt-1 h-9 border border-border rounded-lg bg-surface cursor-pointer" />
+                <label className="text-[10px] text-text-muted font-semibold uppercase">Color</label>
+                <input type="color" defaultValue="#5865F2" className="w-full mt-1 h-9 border border-border-subtle rounded-lg bg-surface cursor-pointer" />
               </div>
             </div>
             <button className="mt-3 text-xs bg-[rgba(59,130,246,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium hover:bg-[rgba(59,130,246,0.12)]">Add Rule</button>
@@ -613,23 +613,23 @@ export default function DiscordPage() {
       {activeTab === "Welcome" && (
         <div className="space-y-4">
           <PreviewBanner />
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Smile size={14} className="text-brand-accent" /> Welcome Message Editor</h3>
             <div className="mb-3">
-              <label className="text-[10px] text-muted font-semibold uppercase">Message Template</label>
+              <label className="text-[10px] text-text-muted font-semibold uppercase">Message Template</label>
               <textarea value={welcomeMsg} onChange={e => setWelcomeMsg(e.target.value)}
-                className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface h-24 resize-none" />
-              <p className="text-[9px] text-muted mt-1">Variables: {"{server}"}, {"{user}"}, {"{memberCount}"}, {"{date}"}</p>
+                className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface h-24 resize-none" />
+              <p className="text-[9px] text-text-muted mt-1">Variables: {"{server}"}, {"{user}"}, {"{memberCount}"}, {"{date}"}</p>
             </div>
             <div className="grid grid-cols-3 gap-3 mb-4">
-              <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light border border-border">
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light border border-border-subtle">
                 <span className="text-xs">Send DM</span>
                 <div onClick={() => setWelcomeDm(!welcomeDm)}
                   className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${welcomeDm ? "bg-green-500" : "bg-gray-300"}`}>
                   <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${welcomeDm ? "translate-x-[18px]" : "translate-x-0.5"}`} />
                 </div>
               </div>
-              <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light border border-border">
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light border border-border-subtle">
                 <span className="text-xs">Channel Post</span>
                 <div onClick={() => setWelcomeChannel(!welcomeChannel)}
                   className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${welcomeChannel ? "bg-green-500" : "bg-gray-300"}`}>
@@ -637,8 +637,8 @@ export default function DiscordPage() {
                 </div>
               </div>
               <div>
-                <label className="text-[10px] text-muted font-semibold uppercase">Auto-Role</label>
-                <select value={welcomeRole} onChange={e => setWelcomeRole(e.target.value)} className="w-full mt-0.5 text-xs border border-border rounded-lg px-3 py-1.5 bg-surface">
+                <label className="text-[10px] text-text-muted font-semibold uppercase">Auto-Role</label>
+                <select value={welcomeRole} onChange={e => setWelcomeRole(e.target.value)} className="w-full mt-0.5 text-xs border border-border-subtle rounded-lg px-3 py-1.5 bg-surface">
                   <option>Member</option>
                   <option>Guest</option>
                   <option>Client</option>
@@ -665,19 +665,19 @@ export default function DiscordPage() {
       {activeTab === "Moderation" && (
         <div className="space-y-4">
           <PreviewBanner />
-          <p className="text-xs text-muted">Auto-moderation rules to keep your community safe and clean.</p>
+          <p className="text-xs text-text-muted">Auto-moderation rules to keep your community safe and clean.</p>
           <div className="space-y-2">
             {modRules.length === 0 && (
-              <p className="text-xs text-muted text-center py-4">No moderation rules configured.</p>
+              <p className="text-xs text-text-muted text-center py-4">No moderation rules configured.</p>
             )}
             {modRules.map(rule => (
-              <div key={rule.id} className="card p-3">
+              <div key={rule.id} className="glass rounded-xl p-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Shield size={14} className={rule.enabled ? "text-green-400" : "text-muted"} />
+                    <Shield size={14} className={rule.enabled ? "text-green-400" : "text-text-muted"} />
                     <div>
                       <p className="text-xs font-semibold">{rule.name}</p>
-                      <p className="text-[10px] text-muted">{rule.desc}</p>
+                      <p className="text-[10px] text-text-muted">{rule.desc}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -692,9 +692,9 @@ export default function DiscordPage() {
             ))}
           </div>
           {/* Mod log */}
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><AlertTriangle size={14} className="text-yellow-400" /> Recent Mod Actions</h3>
-            <div className="p-6 text-center text-muted text-xs">
+            <div className="p-6 text-center text-text-muted text-xs">
               <AlertTriangle size={20} className="mx-auto mb-2 opacity-40" />
               <p>No mod actions yet. Once moderation rules are enabled and the bot is posted to a server, auto-mod events will show up here.</p>
             </div>
@@ -752,22 +752,22 @@ export default function DiscordPage() {
             </motion.div>
           </div>
           {/* Daily Activity Chart */}
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-brand-accent" /> Daily Activity</h3>
             <div className="flex items-end gap-2 h-32">
               {dailyActivity.map(d => (
                 <div key={d.day} className="flex-1 flex flex-col items-center gap-1">
-                  <span className="text-[9px] text-muted">{d.messages}</span>
+                  <span className="text-[9px] text-text-muted">{d.messages}</span>
                   <div className="w-full rounded-t" style={{ height: `${(d.messages / maxMessages) * 100}%`, backgroundColor: "#5865F2" }} />
-                  <span className="text-[9px] text-muted">{d.day}</span>
+                  <span className="text-[9px] text-text-muted">{d.day}</span>
                 </div>
               ))}
             </div>
           </div>
           {/* Top Channels */}
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-sm font-semibold mb-3">Top Active Channels</h3>
-            <p className="text-xs text-muted text-center py-4">No channel data available.</p>
+            <p className="text-xs text-text-muted text-center py-4">No channel data available.</p>
           </div>
         </div>
       )}
@@ -777,40 +777,40 @@ export default function DiscordPage() {
         <div className="space-y-4">
           <PreviewBanner />
           <div className="flex items-center justify-between">
-            <p className="text-xs text-muted">Schedule and manage Discord events.</p>
+            <p className="text-xs text-text-muted">Schedule and manage Discord events.</p>
             <button onClick={() => setShowNewEvent(!showNewEvent)} className="text-xs bg-[rgba(59,130,246,0.08)] text-brand-accent px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5">
               <Plus size={12} /> New Event
             </button>
           </div>
           {showNewEvent && (
-            <div className="card p-4">
+            <div className="glass rounded-xl p-4">
               <h3 className="text-sm font-semibold mb-3">Create Event</h3>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] text-muted font-semibold uppercase">Event Title</label>
-                  <input className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface" placeholder="Event name" />
+                  <label className="text-[10px] text-text-muted font-semibold uppercase">Event Title</label>
+                  <input className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface" placeholder="Event name" />
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted font-semibold uppercase">Channel</label>
-                  <select className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface">
+                  <label className="text-[10px] text-text-muted font-semibold uppercase">Channel</label>
+                  <select className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface">
                     <option value="">No channels � connect a server first</option>
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted font-semibold uppercase">Date</label>
-                  <input type="date" className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface" />
+                  <label className="text-[10px] text-text-muted font-semibold uppercase">Date</label>
+                  <input type="date" className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface" />
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted font-semibold uppercase">Time</label>
-                  <input type="time" className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface" />
+                  <label className="text-[10px] text-text-muted font-semibold uppercase">Time</label>
+                  <input type="time" className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface" />
                 </div>
               </div>
               <button className="mt-3 text-xs bg-[rgba(59,130,246,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium">Create Event</button>
             </div>
           )}
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <Calendar size={18} className="text-muted mb-2" />
-            <p className="text-xs text-muted">No events scheduled yet.</p>
+            <Calendar size={18} className="text-text-muted mb-2" />
+            <p className="text-xs text-text-muted">No events scheduled yet.</p>
           </div>
         </div>
       )}
@@ -821,28 +821,28 @@ export default function DiscordPage() {
           <PreviewBanner />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Builder */}
-            <div className="card p-4">
+            <div className="glass rounded-xl p-4">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Code size={14} className="text-brand-accent" /> Embed Builder</h3>
               <div className="space-y-3">
                 <div>
-                  <label className="text-[10px] text-muted font-semibold uppercase">Title</label>
+                  <label className="text-[10px] text-text-muted font-semibold uppercase">Title</label>
                   <input value={embedTitle} onChange={e => setEmbedTitle(e.target.value)}
-                    className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface" placeholder="Embed title" />
+                    className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface" placeholder="Embed title" />
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted font-semibold uppercase">Description</label>
+                  <label className="text-[10px] text-text-muted font-semibold uppercase">Description</label>
                   <textarea value={embedDesc} onChange={e => setEmbedDesc(e.target.value)}
-                    className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface h-20 resize-none" placeholder="Embed description..." />
+                    className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface h-20 resize-none" placeholder="Embed description..." />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[10px] text-muted font-semibold uppercase">Color</label>
-                    <input type="color" value={embedColor} onChange={e => setEmbedColor(e.target.value)} className="w-full mt-1 h-9 border border-border rounded-lg bg-surface cursor-pointer" />
+                    <label className="text-[10px] text-text-muted font-semibold uppercase">Color</label>
+                    <input type="color" value={embedColor} onChange={e => setEmbedColor(e.target.value)} className="w-full mt-1 h-9 border border-border-subtle rounded-lg bg-surface cursor-pointer" />
                   </div>
                   <div>
-                    <label className="text-[10px] text-muted font-semibold uppercase">Footer</label>
+                    <label className="text-[10px] text-text-muted font-semibold uppercase">Footer</label>
                     <input value={embedFooter} onChange={e => setEmbedFooter(e.target.value)}
-                      className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface" placeholder="Footer text" />
+                      className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface" placeholder="Footer text" />
                   </div>
                 </div>
                 <button className="text-xs bg-[rgba(59,130,246,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium hover:bg-[rgba(59,130,246,0.12)] w-full">
@@ -851,7 +851,7 @@ export default function DiscordPage() {
               </div>
             </div>
             {/* Preview */}
-            <div className="card p-4">
+            <div className="glass rounded-xl p-4">
               <h3 className="text-sm font-semibold mb-3">Preview</h3>
               <div className="p-3 rounded-lg bg-[#36393f] border border-[#202225]">
                 <div className="flex gap-2">
@@ -869,7 +869,7 @@ export default function DiscordPage() {
               </div>
               {/* Saved Templates */}
               <div className="mt-4">
-                <p className="text-[10px] text-muted font-semibold uppercase mb-2">Saved Templates</p>
+                <p className="text-[10px] text-text-muted font-semibold uppercase mb-2">Saved Templates</p>
                 <div className="space-y-1.5">
                   {[
                     { name: "Welcome Embed", color: "#57F287" },
@@ -893,28 +893,28 @@ export default function DiscordPage() {
       {activeTab === "Webhooks" && (
         <div className="space-y-4">
           <PreviewBanner />
-          <p className="text-xs text-muted">Manage webhooks for external integrations and automated notifications.</p>
+          <p className="text-xs text-text-muted">Manage webhooks for external integrations and automated notifications.</p>
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <Link size={18} className="text-muted mb-2" />
-            <p className="text-xs text-muted">No webhooks created yet.</p>
+            <Link size={18} className="text-text-muted mb-2" />
+            <p className="text-xs text-text-muted">No webhooks created yet.</p>
           </div>
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-sm font-semibold mb-3">Create Webhook</h3>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[10px] text-muted font-semibold uppercase">Webhook Name</label>
-                <input className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface" placeholder="e.g. Lead Alert" />
+                <label className="text-[10px] text-text-muted font-semibold uppercase">Webhook Name</label>
+                <input className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface" placeholder="e.g. Lead Alert" />
               </div>
               <div>
-                <label className="text-[10px] text-muted font-semibold uppercase">Target Channel</label>
-                <select className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface">
+                <label className="text-[10px] text-text-muted font-semibold uppercase">Target Channel</label>
+                <select className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface">
                   <option value="">No channels � connect a server first</option>
                 </select>
               </div>
             </div>
             <div className="mt-3">
-              <label className="text-[10px] text-muted font-semibold uppercase">Trigger Event</label>
-              <select className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface">
+              <label className="text-[10px] text-text-muted font-semibold uppercase">Trigger Event</label>
+              <select className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface">
                 <option>New Lead Created</option>
                 <option>Client Health Changed</option>
                 <option>Task Completed</option>
@@ -931,34 +931,34 @@ export default function DiscordPage() {
       {activeTab === "Announcements" && (
         <div className="space-y-4">
           <PreviewBanner />
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Megaphone size={14} className="text-brand-accent" /> Schedule Announcement</h3>
             <div className="space-y-3">
               <div>
-                <label className="text-[10px] text-muted font-semibold uppercase">Title</label>
-                <input className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface" placeholder="Announcement title" />
+                <label className="text-[10px] text-text-muted font-semibold uppercase">Title</label>
+                <input className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface" placeholder="Announcement title" />
               </div>
               <div>
-                <label className="text-[10px] text-muted font-semibold uppercase">Content</label>
+                <label className="text-[10px] text-text-muted font-semibold uppercase">Content</label>
                 <textarea value={announcementDraft} onChange={e => setAnnouncementDraft(e.target.value)}
-                  className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface h-20 resize-none" placeholder="Write your announcement..." />
+                  className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface h-20 resize-none" placeholder="Write your announcement..." />
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="text-[10px] text-muted font-semibold uppercase">Date & Time</label>
-                  <input type="datetime-local" className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface" />
+                  <label className="text-[10px] text-text-muted font-semibold uppercase">Date & Time</label>
+                  <input type="datetime-local" className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface" />
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted font-semibold uppercase">Channels</label>
-                  <select className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface">
+                  <label className="text-[10px] text-text-muted font-semibold uppercase">Channels</label>
+                  <select className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface">
                     <option>#announcements</option>
                     <option>#general</option>
                     <option>All Channels</option>
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted font-semibold uppercase">Mention</label>
-                  <select className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface">
+                  <label className="text-[10px] text-text-muted font-semibold uppercase">Mention</label>
+                  <select className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface">
                     <option>@everyone</option>
                     <option>@here</option>
                     <option>No mention</option>
@@ -969,8 +969,8 @@ export default function DiscordPage() {
             </div>
           </div>
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <Megaphone size={18} className="text-muted mb-2" />
-            <p className="text-xs text-muted">No announcements scheduled yet.</p>
+            <Megaphone size={18} className="text-text-muted mb-2" />
+            <p className="text-xs text-text-muted">No announcements scheduled yet.</p>
           </div>
         </div>
       )}
@@ -980,20 +980,20 @@ export default function DiscordPage() {
         <div className="space-y-4">
           <PreviewBanner />
           <div className="flex items-center gap-2 mb-2">
-            <Search size={14} className="text-muted" />
+            <Search size={14} className="text-text-muted" />
             <input value={searchMembers} onChange={e => setSearchMembers(e.target.value)} placeholder="Search members..."
               className="text-xs rounded-lg px-3 py-1.5 flex-1 input" />
           </div>
           {/* Member Insights */}
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Users size={14} className="text-brand-accent" /> Member Insights</h3>
-            <div className="p-6 text-center text-muted text-xs">
+            <div className="p-6 text-center text-text-muted text-xs">
               <Users size={24} className="mx-auto mb-2 opacity-40" />
               <p>No member data yet. Connect your Discord server to track activity and contributions.</p>
             </div>
           </div>
           {/* Engagement trends */}
-          <div className="card p-4">
+          <div className="glass rounded-xl p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><TrendingUp size={14} className="text-green-400" /> Engagement Trends</h3>
             <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
               {/* Focal tile */}

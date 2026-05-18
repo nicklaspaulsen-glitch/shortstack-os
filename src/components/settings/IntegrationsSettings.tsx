@@ -50,10 +50,10 @@ export default function IntegrationsSettings({ socialAccounts, socialLoading, di
     <div className="space-y-4">
       {/* Connected Social Accounts via Zernio */}
       <div>
-        <h3 className="text-xs text-muted uppercase tracking-wider mb-2">Connected Social Accounts</h3>
+        <h3 className="text-xs text-text-muted uppercase tracking-wider mb-2">Connected Social Accounts</h3>
         {socialLoading ? (
-          <div className="card p-6 text-center">
-            <Loader2 size={16} className="animate-spin mx-auto text-muted" />
+          <div className="glass rounded-xl p-6 text-center">
+            <Loader2 size={16} className="animate-spin mx-auto text-text-muted" />
           </div>
         ) : socialAccounts.filter(a => a.is_active).length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -72,7 +72,7 @@ export default function IntegrationsSettings({ socialAccounts, socialLoading, di
                           <span className="text-[9px] bg-red-500/10 text-red-400 px-1.5 py-0.5 rounded-full font-normal">expired</span>
                         )}
                       </p>
-                      <p className="text-xs text-muted">{account.account_name || "Connected"}</p>
+                      <p className="text-xs text-text-muted">{account.account_name || "Connected"}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -91,7 +91,7 @@ export default function IntegrationsSettings({ socialAccounts, socialLoading, di
                   </div>
                 </div>
                 {account.token_expires_at && (
-                  <p className="text-[10px] text-muted mt-2">
+                  <p className="text-[10px] text-text-muted mt-2">
                     Token expires: {new Date(account.token_expires_at).toLocaleDateString()}
                   </p>
                 )}
@@ -99,9 +99,9 @@ export default function IntegrationsSettings({ socialAccounts, socialLoading, di
             ))}
           </div>
         ) : (
-          <div className="card p-6">
-            <Globe size={20} className="mx-auto mb-2 text-muted/30" />
-            <p className="text-xs text-muted mb-3 text-center">No social accounts connected</p>
+          <div className="glass rounded-xl p-6">
+            <Globe size={20} className="mx-auto mb-2 text-text-muted/30" />
+            <p className="text-xs text-text-muted mb-3 text-center">No social accounts connected</p>
             <InlineSocialConnect
               platforms={["instagram", "facebook", "linkedin", "tiktok"]}
             />
@@ -115,7 +115,7 @@ export default function IntegrationsSettings({ socialAccounts, socialLoading, di
         if (items.length === 0) return null;
         return (
           <div key={category}>
-            <h3 className="text-xs text-muted uppercase tracking-wider mb-2">{category}</h3>
+            <h3 className="text-xs text-text-muted uppercase tracking-wider mb-2">{category}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {items.map(integration => {
                 const health = healthData.find(h => h.integration_name === integration.name);
@@ -123,7 +123,7 @@ export default function IntegrationsSettings({ socialAccounts, socialLoading, di
                   <div key={integration.name} className="card-hover p-4 flex items-center justify-between">
                     <div>
                       <p className="font-medium text-sm">{integration.name}</p>
-                      <p className="text-xs text-muted">{integration.key}</p>
+                      <p className="text-xs text-text-muted">{integration.key}</p>
                     </div>
                     <StatusBadge status={health?.status || "unknown"} />
                   </div>

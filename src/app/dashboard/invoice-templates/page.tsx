@@ -152,11 +152,11 @@ function LineItemsEditor({
           <input className="input w-24 text-sm h-8" placeholder="$0.00" type="number" min={0}
             value={item.unit_price} onChange={(e) => updateItem(i, { unit_price: parseFloat(e.target.value) || 0 })} />
           <button type="button" onClick={() => removeItem(i)} disabled={items.length === 1}
-            className="p-1.5 text-muted hover:text-rose-700 disabled:opacity-30 mt-0.5"><X size={14} /></button>
+            className="p-1.5 text-text-muted hover:text-rose-700 disabled:opacity-30 mt-0.5"><X size={14} /></button>
         </div>
       ))}
       <button type="button" onClick={addItem}
-        className="text-xs text-muted hover:text-[#111827] flex items-center gap-1 pt-1">
+        className="text-xs text-text-muted hover:text-[#111827] flex items-center gap-1 pt-1">
         <Plus size={13} /> Add line item
       </button>
     </div>
@@ -276,13 +276,13 @@ export default function InvoiceTemplatesPage() {
                     value={createForm.tax_rate} onChange={(e) => setCreateForm({ ...createForm, tax_rate: e.target.value })} />
                 </div>
                 <div>
-                  <p className="text-xs text-muted mb-2">Line Items</p>
+                  <p className="text-xs text-text-muted mb-2">Line Items</p>
                   <LineItemsEditor items={createForm.line_items}
                     onChange={(items) => setCreateForm({ ...createForm, line_items: items })} />
                 </div>
                 <textarea className="input w-full text-sm h-16 resize-none" placeholder="Notes / payment terms (optional)"
                   value={createForm.notes} onChange={(e) => setCreateForm({ ...createForm, notes: e.target.value })} />
-                <label className="flex items-center gap-2 text-sm text-muted cursor-pointer">
+                <label className="flex items-center gap-2 text-sm text-text-muted cursor-pointer">
                   <input type="checkbox" checked={createForm.is_default}
                     onChange={(e) => setCreateForm({ ...createForm, is_default: e.target.checked })}
                     className="accent-yellow-400" />
@@ -305,9 +305,9 @@ export default function InvoiceTemplatesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center"
               >
-                <ReceiptText size={40} className="text-muted opacity-30" />
+                <ReceiptText size={40} className="text-text-muted opacity-30" />
                 <p className="text-[#111827] font-semibold">No invoice templates yet</p>
-                <p className="text-muted text-sm max-w-xs">Create reusable templates to spin up invoices in seconds.</p>
+                <p className="text-text-muted text-sm max-w-xs">Create reusable templates to spin up invoices in seconds.</p>
                 <button onClick={() => setShowCreate(true)}
                   className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
                   <Plus size={15} /> Create first template
@@ -331,13 +331,13 @@ export default function InvoiceTemplatesPage() {
                           value={editForm.tax_rate} onChange={(e) => setEditForm({ ...editForm, tax_rate: e.target.value })} />
                       </div>
                       <div>
-                        <p className="text-xs text-muted mb-2">Line Items</p>
+                        <p className="text-xs text-text-muted mb-2">Line Items</p>
                         <LineItemsEditor items={editForm.line_items}
                           onChange={(items) => setEditForm({ ...editForm, line_items: items })} />
                       </div>
                       <textarea className="input w-full text-sm h-16 resize-none" placeholder="Notes"
                         value={editForm.notes} onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })} />
-                      <label className="flex items-center gap-2 text-sm text-muted cursor-pointer">
+                      <label className="flex items-center gap-2 text-sm text-text-muted cursor-pointer">
                         <input type="checkbox" checked={editForm.is_default}
                           onChange={(e) => setEditForm({ ...editForm, is_default: e.target.checked })}
                           className="accent-yellow-400" />
@@ -382,15 +382,15 @@ export default function InvoiceTemplatesPage() {
                       </div>
                       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                         <button onClick={() => setPreview(t)}
-                          className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#111827]" title="Preview">
+                          className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-[#111827]" title="Preview">
                           <Eye size={14} />
                         </button>
                         <button onClick={() => { setEditId(t.id); setEditForm(templateToForm(t)); }}
-                          className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#111827]" title="Edit">
+                          className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-[#111827]" title="Edit">
                           <Pencil size={14} />
                         </button>
                         <button onClick={() => handleDelete(t.id)} disabled={deleting === t.id}
-                          className="p-1.5 rounded hover:bg-rose-50 text-muted hover:text-rose-700" title="Delete">
+                          className="p-1.5 rounded hover:bg-rose-50 text-text-muted hover:text-rose-700" title="Delete">
                           {deleting === t.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                         </button>
                       </div>

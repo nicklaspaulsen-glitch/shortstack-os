@@ -48,7 +48,7 @@ export default function ActionItems({ meetingId, initial }: Props) {
 
   if (!items.length) {
     return (
-      <p className="text-[11px] text-muted">No action items yet. Run analysis on the transcript.</p>
+      <p className="text-[11px] text-text-muted">No action items yet. Run analysis on the transcript.</p>
     );
   }
 
@@ -64,7 +64,7 @@ export default function ActionItems({ meetingId, initial }: Props) {
           <button
             onClick={() => toggle(i)}
             disabled={savingIdx === i}
-            className="flex-shrink-0 mt-0.5 text-muted hover:text-[#2563EB] transition-colors"
+            className="flex-shrink-0 mt-0.5 text-text-muted hover:text-[#2563EB] transition-colors"
             aria-label={item.done ? "Mark not done" : "Mark done"}
           >
             {item.done ? (
@@ -76,12 +76,12 @@ export default function ActionItems({ meetingId, initial }: Props) {
           <div className="flex-1 min-w-0">
             <p
               className={`text-[11px] leading-snug ${
-                item.done ? "line-through text-muted" : "text-foreground"
+                item.done ? "line-through text-text-muted" : "text-text-primary"
               }`}
             >
               {item.text}
             </p>
-            <div className="flex items-center gap-3 mt-0.5 text-[9px] text-muted">
+            <div className="flex items-center gap-3 mt-0.5 text-[9px] text-text-muted">
               {item.assignee && (
                 <span className="flex items-center gap-0.5">
                   <User size={9} /> {item.assignee}

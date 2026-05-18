@@ -285,10 +285,10 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
   }
 
   return (
-    <div style={panelStyle} className="w-[380px] max-h-[500px] flex flex-col bg-surface border border-border/50  shadow-2xl shadow-black/40 overflow-hidden fade-in">
+    <div style={panelStyle} className="w-[380px] max-h-[500px] flex flex-col bg-surface border border-border-subtle/50  shadow-2xl shadow-black/40 overflow-hidden">
       {/* Header — draggable */}
       <div
-        className="flex items-center justify-between px-4 py-3 border-b border-border/30 bg-surface-light/30 cursor-grab active:cursor-grabbing"
+        className="flex items-center justify-between px-4 py-3 border-b border-border-subtle/30 bg-surface-light/30 cursor-grab active:cursor-grabbing"
         onMouseDown={(e) => {
           const startX = e.clientX;
           const startY = e.clientY;
@@ -323,10 +323,10 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
           </div>
         </div>
         <div className="flex items-center gap-1">
-          <button onClick={() => setMinimized(true)} className="p-1 rounded hover:bg-surface-light text-muted hover:text-foreground transition-colors">
+          <button onClick={() => setMinimized(true)} className="p-1 rounded hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors">
             <Minimize2 size={12} />
           </button>
-          <button onClick={() => { setOpen(false); setMessages([]); }} className="p-1 rounded hover:bg-surface-light text-muted hover:text-foreground transition-colors">
+          <button onClick={() => { setOpen(false); setMessages([]); }} className="p-1 rounded hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors">
             <X size={12} />
           </button>
         </div>
@@ -337,11 +337,11 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
         {messages.length === 0 && (
           <div className="text-center py-4">
             <Sparkles size={20} className="mx-auto mb-2 text-[rgba(59,130,246,0.3)]" />
-            <p className="text-[10px] text-muted mb-3">Ask me anything about this page</p>
+            <p className="text-[10px] text-text-muted mb-3">Ask me anything about this page</p>
             <div className="space-y-1">
               {suggestions.map((s, i) => (
                 <button key={i} onClick={() => sendMessage(s)}
-                  className="w-full text-left text-[10px] p-2 rounded-lg border border-border/20 hover:border-[rgba(59,130,246,0.2)] text-muted hover:text-foreground transition-all">
+                  className="w-full text-left text-[10px] p-2 rounded-lg border border-border-subtle/20 hover:border-[rgba(59,130,246,0.2)] text-text-muted hover:text-text-primary transition-all">
                   {s}
                 </button>
               ))}
@@ -359,7 +359,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
               <div className={`max-w-[85%] rounded-xl px-3 py-2 ${
                 msg.role === "user"
                   ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.08)]"
-                  : "bg-surface-light/50 border border-border/20"
+                  : "bg-surface-light/50 border border-border-subtle/20"
               }`}>
                 <p className="text-[11px] whitespace-pre-wrap leading-relaxed">
                   {displayText}
@@ -369,7 +369,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
                 </p>
                 {msg.role === "ai" && !isStreaming && (
                   <button onClick={() => { navigator.clipboard.writeText(msg.content); toast.success("Copied!"); }}
-                    className="mt-1 text-[8px] text-muted hover:text-foreground flex items-center gap-0.5">
+                    className="mt-1 text-[8px] text-text-muted hover:text-text-primary flex items-center gap-0.5">
                     <Copy size={8} /> Copy
                   </button>
                 )}
@@ -380,7 +380,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
 
         {thinking && (
           <div className="flex justify-start">
-            <div className="bg-surface-light/50 border border-border/20 rounded-xl px-3 py-2.5 flex items-center gap-1.5">
+            <div className="bg-surface-light/50 border border-border-subtle/20 rounded-xl px-3 py-2.5 flex items-center gap-1.5">
               <TypingDots />
             </div>
           </div>
@@ -390,7 +390,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
 
       {/* Input */}
       <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }}
-        className="border-t border-border/30 px-3 py-2 flex gap-2">
+        className="border-t border-border-subtle/30 px-3 py-2 flex gap-2">
         <input type="text" value={input} onChange={e => setInput(e.target.value)}
           placeholder={`Ask ${pageName} AI...`}
           className="flex-1 bg-transparent text-xs placeholder-muted/50 outline-none"

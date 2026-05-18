@@ -74,7 +74,7 @@ export default function DangerZonePage() {
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Settings</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Danger Zone</h1>
       </div>
-    </div><section className="card">
+    </div><section className="glass rounded-xl p-4">
               <div className="flex items-start gap-4">
                 <div className="rounded-lg bg-surface-light p-2.5 text-text-secondary">
                   <Download size={18} />
@@ -96,7 +96,7 @@ export default function DangerZonePage() {
                   {busy === "export" ? "Working..." : "Request export"}
                 </button>
               </div>
-            </section><section className="card">
+            </section><section className="glass rounded-xl p-4">
               <div className="flex items-start gap-4">
                 <div className="rounded-lg bg-surface-light p-2.5 text-text-secondary">
                   <ArrowLeftRight size={18} />
@@ -119,7 +119,7 @@ export default function DangerZonePage() {
                 </button>
               </div>
             </section><section
-              className="card"
+              className="glass rounded-xl p-4"
               style={{
                 borderColor: "rgba(242, 96, 99, 0.30)",
                 background: "linear-gradient(180deg, color-mix(in srgb, #3B82F6 6%, transparent) 0%, transparent 60%)",

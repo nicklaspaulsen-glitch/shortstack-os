@@ -130,21 +130,21 @@ function ExtensionAuthInner() {
         <h1 className="text-xl font-semibold">Connecting ShortStack Extension</h1>
 
         {status === "checking" && (
-          <div className="flex flex-col items-center gap-3 text-muted">
+          <div className="flex flex-col items-center gap-3 text-text-muted">
             <Loader className="animate-spin" size={32} />
             <p>Checking your session…</p>
           </div>
         )}
 
         {status === "needs_login" && (
-          <div className="flex flex-col items-center gap-3 text-muted">
+          <div className="flex flex-col items-center gap-3 text-text-muted">
             <Loader className="animate-spin" size={32} />
             <p>Redirecting to login…</p>
           </div>
         )}
 
         {status === "handshaking" && (
-          <div className="flex flex-col items-center gap-3 text-muted">
+          <div className="flex flex-col items-center gap-3 text-text-muted">
             <Loader className="animate-spin" size={32} />
             <p>Handshaking with the extension…</p>
           </div>
@@ -153,15 +153,15 @@ function ExtensionAuthInner() {
         {status === "success" && (
           <div className="flex flex-col items-center gap-3 text-success">
             <CheckCircle2 size={40} />
-            <p className="text-foreground">Extension connected! You can close this tab.</p>
+            <p className="text-text-primary">Extension connected! You can close this tab.</p>
           </div>
         )}
 
         {status === "error" && (
           <div className="flex flex-col items-center gap-3 text-error">
             <AlertCircle size={40} />
-            <p className="text-foreground">Connection failed.</p>
-            {errorMsg && <p className="text-xs text-muted max-w-xs">{errorMsg}</p>}
+            <p className="text-text-primary">Connection failed.</p>
+            {errorMsg && <p className="text-xs text-text-muted max-w-xs">{errorMsg}</p>}
           </div>
         )}
       </div>

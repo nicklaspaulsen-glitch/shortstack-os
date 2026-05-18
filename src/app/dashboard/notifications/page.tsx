@@ -154,7 +154,7 @@ function NotificationSkeleton() {
   return (
     <div className="space-y-3">
       {[...Array(5)].map((_, i) => (
-        <div key={i} className="card p-4 animate-pulse">
+        <div key={i} className="glass rounded-xl p-4 animate-pulse">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-xl bg-surface-light/60" />
             <div className="flex-1 space-y-2">
@@ -296,7 +296,7 @@ export default function NotificationsPage() {
 
   /* -- Render -- */
   return (
-    <MotionPage className="fade-in space-y-6">{/* -- Notifications command strip -- */}
+    <MotionPage className="space-y-6">{/* -- Notifications command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">NOTIFICATIONS</p>
@@ -333,14 +333,14 @@ export default function NotificationsPage() {
     </div>{/* --- Search + Filter Tabs --- */}<div className="space-y-3">
               {/* Search */}
               <div className="relative">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   type="text"
                   placeholder="Search notifications..."
                   aria-label="Search notifications"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="glass w-full pl-9 pr-4 py-2.5 rounded-lg text-xs text-foreground placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-[rgba(59,130,246,0.25)] focus:border-[rgba(59,130,246,0.25)] transition-all"
+                  className="glass w-full pl-9 pr-4 py-2.5 rounded-lg text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-[rgba(59,130,246,0.25)] focus:border-[rgba(59,130,246,0.25)] transition-all"
                 />
               </div>
 
@@ -353,14 +353,14 @@ export default function NotificationsPage() {
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-medium whitespace-nowrap transition-all ${
                       activeTab === tab.key
                         ? "text-brand-accent bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)]"
-                        : "text-muted hover:text-foreground hover:bg-surface-light border border-transparent"
+                        : "text-text-muted hover:text-text-primary hover:bg-surface-light border border-transparent"
                     }`}
                   >
                     {tab.icon}
                     {tab.label}
                     {tabCounts[tab.key] > 0 && (
                       <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
-                        activeTab === tab.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light text-muted"
+                        activeTab === tab.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light text-text-muted"
                       }`}>
                         {tabCounts[tab.key]}
                       </span>
@@ -371,10 +371,10 @@ export default function NotificationsPage() {
             </div>{/* --- Content --- */}{loading ? (
               <NotificationSkeleton />
             ) : error ? (
-              <div className="card p-8 text-center">
+              <div className="glass rounded-xl p-8 text-center">
                 <AlertTriangle size={24} className="mx-auto mb-2 text-danger" />
-                <p className="text-sm text-foreground font-medium mb-1">Failed to load notifications</p>
-                <p className="text-xs text-muted mb-4">{error}</p>
+                <p className="text-sm text-text-primary font-medium mb-1">Failed to load notifications</p>
+                <p className="text-xs text-text-muted mb-4">{error}</p>
                 <button
                   onClick={fetchNotifications}
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium text-brand-accent bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.12)] transition-colors"
@@ -385,10 +385,10 @@ export default function NotificationsPage() {
               </div>
             ) : filtered.length === 0 ? (
               searchQuery || activeTab !== "all" ? (
-                <div className="card p-8 text-center">
-                  <Filter size={20} className="mx-auto mb-2 text-muted/30" />
-                  <p className="text-sm text-foreground font-medium mb-1">No matching notifications</p>
-                  <p className="text-xs text-muted">
+                <div className="glass rounded-xl p-8 text-center">
+                  <Filter size={20} className="mx-auto mb-2 text-text-muted/30" />
+                  <p className="text-sm text-text-primary font-medium mb-1">No matching notifications</p>
+                  <p className="text-xs text-text-muted">
                     {searchQuery ? `No results for "${searchQuery}"` : `No ${activeTab} notifications yet`}
                   </p>
                   <button
@@ -411,11 +411,11 @@ export default function NotificationsPage() {
                   <div key={group.label}>
                     {/* Date group header */}
                     <div className="flex items-center gap-3 mb-3">
-                      <span className="text-[10px] font-semibold text-muted uppercase tracking-[0.15em]">
+                      <span className="text-[10px] font-semibold text-text-muted uppercase tracking-[0.15em]">
                         {group.label}
                       </span>
-                      <div className="flex-1 h-px bg-border/30" />
-                      <span className="text-[9px] text-muted">
+                      <div className="flex-1 h-px bg-border-subtle/30" />
+                      <span className="text-[9px] text-text-muted">
                         {group.items.length} {group.items.length === 1 ? "notification" : "notifications"}
                       </span>
                     </div>
@@ -448,7 +448,7 @@ export default function NotificationsPage() {
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2 mb-0.5">
                                   <p className={`text-sm font-medium truncate ${
-                                    !n.read ? "text-foreground" : "text-muted-light"
+                                    !n.read ? "text-text-primary" : "text-muted-light"
                                   }`}>
                                     {n.title}
                                   </p>
@@ -461,19 +461,19 @@ export default function NotificationsPage() {
                                 </div>
                                 {n.message && (
                                   <p className={`text-xs mt-0.5 line-clamp-2 ${
-                                    !n.read ? "text-muted" : "text-muted/60"
+                                    !n.read ? "text-text-muted" : "text-text-muted/60"
                                   }`}>
                                     {n.message}
                                   </p>
                                 )}
                                 <div className="flex items-center gap-3 mt-2">
-                                  <span className="text-[10px] text-muted/60">
+                                  <span className="text-[10px] text-text-muted/60">
                                     {formatRelativeTime(n.created_at)}
                                   </span>
                                   {!n.read && (
                                     <button
                                       onClick={() => markRead(n.id)}
-                                      className="text-[10px] text-muted hover:text-foreground flex items-center gap-1 transition-colors"
+                                      className="text-[10px] text-text-muted hover:text-text-primary flex items-center gap-1 transition-colors"
                                     >
                                       <Eye size={10} />
                                       Mark read
@@ -526,10 +526,10 @@ export default function NotificationsPage() {
                       }`}
                     >
                       <div className="flex items-center justify-center gap-1.5 mb-1 mt-1">
-                        <span className="text-muted">{tab.icon}</span>
-                        <span className="text-lg font-bold text-foreground">{count}</span>
+                        <span className="text-text-muted">{tab.icon}</span>
+                        <span className="text-lg font-bold text-text-primary">{count}</span>
                       </div>
-                      <p className="text-[10px] text-muted">{tab.label}</p>
+                      <p className="text-[10px] text-text-muted">{tab.label}</p>
                       {unread > 0 && (
                         <span className="text-[8px] text-brand-accent bg-[rgba(59,130,246,0.08)] px-1.5 py-0.5 rounded-full mt-1 inline-block">
                           {unread} new

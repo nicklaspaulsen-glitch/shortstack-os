@@ -236,7 +236,7 @@ export default function AdminStatusPage() {
 
   if (authLoading || (incidents === null && !forbidden)) {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[60vh] text-muted text-sm">Loading status page…
+      <MotionPage className="flex items-center justify-center min-h-[60vh] text-text-muted text-sm">Loading status page…
               </MotionPage>
     );
   }
@@ -244,9 +244,9 @@ export default function AdminStatusPage() {
   if (forbidden) {
     return (
       <div className="max-w-xl mx-auto py-12 text-center space-y-3">
-        <Lock size={32} className="text-muted mx-auto" />
+        <Lock size={32} className="text-text-muted mx-auto" />
         <h1 className="text-lg font-bold">Admin only</h1>
-        <p className="text-xs text-muted">
+        <p className="text-xs text-text-muted">
           Status page management is restricted to admin/agency owners.
         </p>
       </div>
@@ -269,14 +269,14 @@ export default function AdminStatusPage() {
               href={publicUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border bg-black/5 hover:bg-black/5"
+              className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-black/5 hover:bg-black/5"
             >
               <ExternalLink size={12} /> View public page
             </a>
             <button
               onClick={load}
               disabled={refreshing}
-              className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border bg-black/5 hover:bg-black/5 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-black/5 hover:bg-black/5 disabled:opacity-50"
             >
               <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
               Refresh
@@ -319,7 +319,7 @@ export default function AdminStatusPage() {
             </h2>
             <button
               onClick={cancelDraft}
-              className="text-xs text-muted hover:text-fg"
+              className="text-xs text-text-muted hover:text-fg"
             >
               Cancel
             </button>
@@ -327,21 +327,21 @@ export default function AdminStatusPage() {
 
           <div className="space-y-3">
             <label className="block">
-              <span className="text-[11px] font-semibold text-muted uppercase tracking-wide">
+              <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wide">
                 Title
               </span>
               <input
                 type="text"
                 value={draft.title}
                 onChange={(e) => setDraft({ ...draft, title: e.target.value })}
-                className="mt-1 w-full px-3 py-2 rounded-lg border border-border bg-bg text-sm"
+                className="mt-1 w-full px-3 py-2 rounded-lg border border-border-subtle bg-bg text-sm"
                 placeholder="e.g. Email delivery degraded"
               />
             </label>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <label className="block">
-                <span className="text-[11px] font-semibold text-muted uppercase tracking-wide">
+                <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wide">
                   Severity
                 </span>
                 <select
@@ -349,7 +349,7 @@ export default function AdminStatusPage() {
                   onChange={(e) =>
                     setDraft({ ...draft, severity: e.target.value as Severity })
                   }
-                  className="mt-1 w-full px-3 py-2 rounded-lg border border-border bg-bg text-sm"
+                  className="mt-1 w-full px-3 py-2 rounded-lg border border-border-subtle bg-bg text-sm"
                 >
                   {(Object.keys(SEVERITY_STYLES) as Severity[]).map((s) => (
                     <option key={s} value={s}>
@@ -360,7 +360,7 @@ export default function AdminStatusPage() {
               </label>
 
               <label className="block">
-                <span className="text-[11px] font-semibold text-muted uppercase tracking-wide">
+                <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wide">
                   Affected components (comma-separated)
                 </span>
                 <input
@@ -372,30 +372,30 @@ export default function AdminStatusPage() {
                       affected_components: e.target.value,
                     })
                   }
-                  className="mt-1 w-full px-3 py-2 rounded-lg border border-border bg-bg text-sm"
+                  className="mt-1 w-full px-3 py-2 rounded-lg border border-border-subtle bg-bg text-sm"
                   placeholder="e.g. Email, Outreach, Webhooks"
                 />
               </label>
             </div>
 
             <label className="block">
-              <span className="text-[11px] font-semibold text-muted uppercase tracking-wide">
+              <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wide">
                 Body (Markdown / plain text)
               </span>
               <textarea
                 value={draft.body}
                 onChange={(e) => setDraft({ ...draft, body: e.target.value })}
                 rows={5}
-                className="mt-1 w-full px-3 py-2 rounded-lg border border-border bg-bg text-sm font-mono"
+                className="mt-1 w-full px-3 py-2 rounded-lg border border-border-subtle bg-bg text-sm font-mono"
                 placeholder="What's happening, what's affected, what we're doing about it. Update as the incident progresses."
               />
             </label>
           </div>
 
-          <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-border-subtle">
             <button
               onClick={cancelDraft}
-              className="text-xs px-4 py-2 rounded-xl border border-border bg-surface hover:bg-surface-light"
+              className="text-xs px-4 py-2 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light"
               disabled={saving}
             >
               Cancel
@@ -415,7 +415,7 @@ export default function AdminStatusPage() {
       <section className="space-y-3">
         <header className="flex items-center justify-between">
           <h2 className="text-sm font-semibold">Active incidents</h2>
-          <span className="text-[11px] text-muted">
+          <span className="text-[11px] text-text-muted">
             Visible on your public status page
           </span>
         </header>
@@ -423,7 +423,7 @@ export default function AdminStatusPage() {
           <div className=" border border-success/30 bg-success/5 p-5 text-center">
             <CheckCircle2 size={20} className="text-success mx-auto mb-2" />
             <p className="text-sm font-semibold">All systems operational</p>
-            <p className="text-[11px] text-muted">
+            <p className="text-[11px] text-text-muted">
               No active incidents. Public status page shows green.
             </p>
           </div>
@@ -448,10 +448,10 @@ export default function AdminStatusPage() {
       <section className="space-y-3">
         <header className="flex items-center justify-between">
           <h2 className="text-sm font-semibold">Recently resolved</h2>
-          <span className="text-[11px] text-muted">Last 7 days on public page</span>
+          <span className="text-[11px] text-text-muted">Last 7 days on public page</span>
         </header>
         {resolvedCount === 0 ? (
-          <p className="text-xs text-muted py-4">No resolved incidents yet.</p>
+          <p className="text-xs text-text-muted py-4">No resolved incidents yet.</p>
         ) : (
           <ul className="space-y-2">
             {(incidents ?? [])
@@ -482,7 +482,7 @@ interface IncidentCardProps {
 function IncidentCard({ incident, onEdit, onResolve, onDelete }: IncidentCardProps) {
   const style = SEVERITY_STYLES[incident.severity];
   return (
-    <li className=" border border-border bg-surface p-4 hover:border-border-bright transition-colors">
+    <li className=" border border-border-subtle bg-surface p-4 hover:border-border-bright transition-colors">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 mb-1">
@@ -490,7 +490,7 @@ function IncidentCard({ incident, onEdit, onResolve, onDelete }: IncidentCardPro
               <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
               {style.label}
             </span>
-            <span className="text-[11px] text-muted">
+            <span className="text-[11px] text-text-muted">
               Started {formatRelative(incident.started_at)}
               {incident.resolved_at &&
                 ` · Resolved ${formatRelative(incident.resolved_at)}`}
@@ -498,7 +498,7 @@ function IncidentCard({ incident, onEdit, onResolve, onDelete }: IncidentCardPro
           </div>
           <h3 className="text-sm font-semibold leading-snug">{incident.title}</h3>
           {incident.body && (
-            <p className="text-xs text-muted mt-1 whitespace-pre-wrap">
+            <p className="text-xs text-text-muted mt-1 whitespace-pre-wrap">
               {incident.body}
             </p>
           )}
@@ -507,7 +507,7 @@ function IncidentCard({ incident, onEdit, onResolve, onDelete }: IncidentCardPro
               {incident.affected_components.map((c) => (
                 <span
                   key={c}
-                  className="text-[10px] px-2 py-0.5 rounded-full bg-bg border border-border text-muted"
+                  className="text-[10px] px-2 py-0.5 rounded-full bg-bg border border-border-subtle text-text-muted"
                 >
                   {c}
                 </span>
@@ -518,7 +518,7 @@ function IncidentCard({ incident, onEdit, onResolve, onDelete }: IncidentCardPro
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onEdit}
-            className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-fg"
+            className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted hover:text-fg"
             title="Edit"
           >
             <Pencil size={13} />
@@ -526,7 +526,7 @@ function IncidentCard({ incident, onEdit, onResolve, onDelete }: IncidentCardPro
           {onResolve && (
             <button
               onClick={onResolve}
-              className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-success"
+              className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted hover:text-success"
               title="Resolve"
             >
               <CheckCircle2 size={13} />
@@ -534,7 +534,7 @@ function IncidentCard({ incident, onEdit, onResolve, onDelete }: IncidentCardPro
           )}
           <button
             onClick={onDelete}
-            className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-danger"
+            className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted hover:text-danger"
             title="Delete"
           >
             <Trash2 size={13} />

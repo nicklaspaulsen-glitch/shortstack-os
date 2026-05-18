@@ -52,12 +52,12 @@ export function getStatusColor(status: string): string {
     sent: "text-info",
     delivered: "text-blue-400",
     replied: "text-success",
-    no_reply: "text-muted",
+    no_reply: "text-text-muted",
     bounced: "text-danger",
     pending: "text-warning",
     completed: "text-success",
-    cancelled: "text-muted",
-    draft: "text-muted",
+    cancelled: "text-text-muted",
+    draft: "text-text-muted",
     signed: "text-success",
     expired: "text-danger",
     paid: "text-success",
@@ -67,17 +67,17 @@ export function getStatusColor(status: string): string {
     healthy: "text-success",
     degraded: "text-warning",
     down: "text-danger",
-    unknown: "text-muted",
+    unknown: "text-text-muted",
     failed: "text-danger",
     published: "text-success",
     scheduled: "text-info",
-    idea: "text-muted",
+    idea: "text-text-muted",
     scripted: "text-blue-400",
     in_production: "text-warning",
     editing: "text-orange-400",
     ready_to_publish: "text-[#2563EB]",
   };
-  return colors[status] || "text-foreground";
+  return colors[status] || "text-text-primary";
 }
 
 export function getStatusBgColor(status: string): string {
@@ -85,7 +85,7 @@ export function getStatusBgColor(status: string): string {
     healthy: "bg-success/10 text-success",
     degraded: "bg-warning/10 text-warning",
     down: "bg-danger/10 text-danger",
-    unknown: "bg-muted/10 text-muted",
+    unknown: "bg-muted/10 text-text-muted",
     new: "bg-info/10 text-info",
     active: "bg-success/10 text-success",
     paid: "bg-success/10 text-success",
@@ -93,7 +93,7 @@ export function getStatusBgColor(status: string): string {
     published: "bg-success/10 text-success",
     failed: "bg-danger/10 text-danger",
   };
-  return colors[status] || "bg-surface-light text-foreground";
+  return colors[status] || "bg-surface-light text-text-primary";
 }
 
 export function truncate(str: string, maxLength: number): string {

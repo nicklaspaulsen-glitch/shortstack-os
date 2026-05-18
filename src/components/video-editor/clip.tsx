@@ -144,7 +144,7 @@ export function Clip({
           {renderPeaks(clip, Math.max(1, widthPx - 12), 100)}
         </div>
       )}
-      <div className="absolute left-2 top-0.5 right-2 truncate text-foreground font-mono drop-shadow-[0_1px_0_rgba(0,0,0,0.6)] pointer-events-none">
+      <div className="absolute left-2 top-0.5 right-2 truncate text-text-primary font-mono drop-shadow-[0_1px_0_rgba(0,0,0,0.6)] pointer-events-none">
         {clip.label}
       </div>
     </div>

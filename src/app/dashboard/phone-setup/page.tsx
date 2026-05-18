@@ -287,7 +287,7 @@ export default function PhoneSetupPage() {
   const planTierLabel = usage?.plan_tier || "Starter";
 
   return (
-    <MotionPage className="min-h-screen bg-background text-foreground">{/* -- Phone Setup command strip -- */}
+    <MotionPage className="min-h-screen bg-background text-text-primary">{/* -- Phone Setup command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">PHONE SETUP</p>
@@ -295,7 +295,7 @@ export default function PhoneSetupPage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         usage ? (
-                  <div className="flex items-center gap-1.5 rounded-lg border border-border bg-black/5 px-2.5 py-1.5 text-[10px] text-foreground">
+                  <div className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-black/5 px-2.5 py-1.5 text-[10px] text-text-primary">
                     <Phone size={11} />
                     <span>
                       <span className="font-semibold">{phoneUsed}</span>
@@ -313,14 +313,14 @@ export default function PhoneSetupPage() {
               <PlanPickerCard />
 
               {/* Quota / agency-pays hint — always visible under the hero */}
-              <div className="mb-4 flex flex-wrap items-start gap-3 rounded-xl border border-border/40 bg-surface-light/20 p-3 text-[11px] text-muted">
-                <div className="flex items-center gap-1.5 text-[11px] text-foreground/80">
+              <div className="mb-4 flex flex-wrap items-start gap-3 rounded-xl border border-border-subtle/40 bg-surface-light/20 p-3 text-[11px] text-text-muted">
+                <div className="flex items-center gap-1.5 text-[11px] text-text-primary/80">
                   <Sparkles size={12} className="text-brand-accent" />
                   <span>
                     You&apos;ve provisioned{" "}
-                    <span className="font-semibold text-foreground">{phoneUsed}</span> of{" "}
-                    <span className="font-semibold text-foreground">{phoneLimitDisplay}</span> numbers on
-                    your <span className="font-semibold text-foreground">{planTierLabel}</span> plan.
+                    <span className="font-semibold text-text-primary">{phoneUsed}</span> of{" "}
+                    <span className="font-semibold text-text-primary">{phoneLimitDisplay}</span> numbers on
+                    your <span className="font-semibold text-text-primary">{planTierLabel}</span> plan.
                   </span>
                 </div>
                 <span className="opacity-40">·</span>
@@ -340,9 +340,9 @@ export default function PhoneSetupPage() {
                       You&apos;ve hit your {planTierLabel} plan&apos;s phone-number cap
                     </h2>
                   </div>
-                  <p className="mb-4 text-sm text-muted">
-                    You&apos;re using <span className="font-semibold text-foreground">{phoneUsed}</span>{" "}
-                    of <span className="font-semibold text-foreground">{phoneLimitDisplay}</span>{" "}
+                  <p className="mb-4 text-sm text-text-muted">
+                    You&apos;re using <span className="font-semibold text-text-primary">{phoneUsed}</span>{" "}
+                    of <span className="font-semibold text-text-primary">{phoneLimitDisplay}</span>{" "}
                     numbers. Upgrade to a higher tier to provision another, or release an existing
                     number from{" "}
                     <a href="/dashboard/phone-email" className="text-brand-accent hover:underline">
@@ -359,7 +359,7 @@ export default function PhoneSetupPage() {
                     </a>
                     <a
                       href="/dashboard/phone-email"
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 px-4 py-2 text-sm text-muted transition hover:text-foreground"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-border-subtle/60 px-4 py-2 text-sm text-text-muted transition hover:text-text-primary"
                     >
                       <Settings size={14} /> Manage existing numbers
                     </a>
@@ -382,17 +382,17 @@ export default function PhoneSetupPage() {
                             ? "bg-brand-accent text-white"
                             : active
                               ? "bg-[rgba(59,130,246,0.08)] text-brand-accent ring-2 ring-[rgba(59,130,246,0.4)]"
-                              : "bg-surface-light text-muted"
+                              : "bg-surface-light text-text-muted"
                         }`}
                       >
                         {done ? <Check size={12} /> : n}
                       </div>
                       <span
-                        className={`text-[11px] font-medium ${active ? "text-foreground" : "text-muted"}`}
+                        className={`text-[11px] font-medium ${active ? "text-text-primary" : "text-text-muted"}`}
                       >
                         {label}
                       </span>
-                      {n < 4 && <div className="ml-1 flex-1 h-px bg-border/60" />}
+                      {n < 4 && <div className="ml-1 flex-1 h-px bg-border-subtle/60" />}
                     </div>
                   );
                 })}
@@ -402,21 +402,21 @@ export default function PhoneSetupPage() {
               {step === 1 && (
                 <div className="glass rounded-xl p-6">
                   <h2 className="mb-1 text-lg font-semibold">Which client is this number for?</h2>
-                  <p className="mb-5 text-sm text-muted">
+                  <p className="mb-5 text-sm text-text-muted">
                     The phone will be attached to this client so their calls + SMS route correctly.
                   </p>
 
                   {loadingClients ? (
-                    <div className="flex items-center gap-2 text-sm text-muted">
+                    <div className="flex items-center gap-2 text-sm text-text-muted">
                       <Loader size={14} className="animate-spin" /> Loading your clients…
                     </div>
                   ) : clients.length === 0 ? (
-                    <div className="rounded-lg border border-dashed border-border/50 bg-background/30 p-8 text-center">
-                      <Users size={28} className="mx-auto mb-3 text-muted/40" />
-                      <p className="mb-1 text-sm font-semibold text-foreground">
+                    <div className="rounded-lg border border-dashed border-border-subtle/50 bg-background/30 p-8 text-center">
+                      <Users size={28} className="mx-auto mb-3 text-text-muted/40" />
+                      <p className="mb-1 text-sm font-semibold text-text-primary">
                         You need to add a client first
                       </p>
-                      <p className="mb-4 text-[12px] text-muted">
+                      <p className="mb-4 text-[12px] text-text-muted">
                         Phone numbers are attached to a specific client so calls + SMS route
                         correctly. Add a client, then come back here.
                       </p>
@@ -444,8 +444,8 @@ export default function PhoneSetupPage() {
                               selected
                                 ? "border-brand-accent bg-[rgba(59,130,246,0.08)]"
                                 : alreadyHas
-                                  ? "border-border/30 bg-surface-light/10 opacity-50 cursor-not-allowed"
-                                  : "border-border/50 hover:border-[rgba(59,130,246,0.2)]"
+                                  ? "border-border-subtle/30 bg-surface-light/10 opacity-50 cursor-not-allowed"
+                                  : "border-border-subtle/50 hover:border-[rgba(59,130,246,0.2)]"
                             }`}
                           >
                             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent font-semibold">
@@ -453,7 +453,7 @@ export default function PhoneSetupPage() {
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-sm font-semibold">{c.business_name}</p>
-                              <p className="truncate text-[11px] text-muted">
+                              <p className="truncate text-[11px] text-text-muted">
                                 {alreadyHas
                                   ? `Already has ${c.twilio_phone_number}`
                                   : c.contact_name || c.email || "—"}
@@ -482,20 +482,20 @@ export default function PhoneSetupPage() {
               {step === 2 && (
                 <div className="glass rounded-xl p-6">
                   <h2 className="mb-1 text-lg font-semibold">Pick a phone number</h2>
-                  <p className="mb-4 text-sm text-muted">
+                  <p className="mb-4 text-sm text-text-muted">
                     Search by area code and pick any available number. Numbers are $1/mo from Twilio.
                   </p>
 
                   {/* Search controls */}
                   <div className="mb-4 grid grid-cols-1 gap-2 sm:grid-cols-[180px_1fr_auto]">
                     <div>
-                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted">
+                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-text-muted">
                         Country
                       </label>
                       <select
                         value={country}
                         onChange={(e) => setCountry(e.target.value)}
-                        className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
+                        className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-sm"
                       >
                         {COUNTRIES.map((c) => (
                           <option key={c.code} value={c.code}>
@@ -505,7 +505,7 @@ export default function PhoneSetupPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted">
+                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-text-muted">
                         Area code (optional)
                       </label>
                       <input
@@ -513,7 +513,7 @@ export default function PhoneSetupPage() {
                         value={areaCode}
                         onChange={(e) => setAreaCode(e.target.value.replace(/\D/g, "").slice(0, 4))}
                         placeholder="415, 212, 305…"
-                        className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm placeholder:text-muted"
+                        className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-sm placeholder:text-text-muted"
                       />
                     </div>
                     <div className="flex items-end">
@@ -534,7 +534,7 @@ export default function PhoneSetupPage() {
 
                   {/* Results */}
                   {availableNumbers.length === 0 && !loadingNumbers ? (
-                    <div className="rounded-lg border border-dashed border-border/50 p-8 text-center text-sm text-muted">
+                    <div className="rounded-lg border border-dashed border-border-subtle/50 p-8 text-center text-sm text-text-muted">
                       <Globe size={20} className="mx-auto mb-2 opacity-50" />
                       Click Search to see available numbers.
                     </div>
@@ -552,11 +552,11 @@ export default function PhoneSetupPage() {
                             className={`rounded-lg border p-3 text-left transition ${
                               selected
                                 ? "border-brand-accent bg-[rgba(59,130,246,0.08)]"
-                                : "border-border/50 hover:border-[rgba(59,130,246,0.2)]"
+                                : "border-border-subtle/50 hover:border-[rgba(59,130,246,0.2)]"
                             }`}
                           >
                             <p className="font-mono text-sm font-semibold">{n.phone}</p>
-                            <p className="text-[11px] text-muted">
+                            <p className="text-[11px] text-text-muted">
                               {n.locality || "—"}, {n.region || country}
                             </p>
                           </motion.button>
@@ -568,7 +568,7 @@ export default function PhoneSetupPage() {
                   <div className="mt-6 flex justify-between">
                     <button
                       onClick={() => setStep(1)}
-                      className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted hover:text-foreground"
+                      className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-text-muted hover:text-text-primary"
                     >
                       <ArrowLeft size={14} /> Back
                     </button>
@@ -587,16 +587,16 @@ export default function PhoneSetupPage() {
               {step === 3 && selectedClient && selectedNumber && (
                 <div className="glass rounded-xl p-6">
                   <h2 className="mb-1 text-lg font-semibold">Confirm purchase</h2>
-                  <p className="mb-5 text-sm text-muted">
+                  <p className="mb-5 text-sm text-text-muted">
                     Review before we charge your Twilio balance.
                   </p>
 
-                  <div className="mb-5 space-y-3 rounded-lg border border-border/40 bg-background/40 p-4">
+                  <div className="mb-5 space-y-3 rounded-lg border border-border-subtle/40 bg-background/40 p-4">
                     <Row label="Client" value={selectedClient.business_name} />
                     <Row
                       label="Phone number"
                       value={
-                        <span className="font-mono font-semibold text-foreground">
+                        <span className="font-mono font-semibold text-text-primary">
                           {selectedNumber.phone}
                         </span>
                       }
@@ -629,7 +629,7 @@ export default function PhoneSetupPage() {
                         <Loader size={13} className="animate-spin" /> Provisioning your number —
                         hang tight, this takes 2-3 seconds
                       </div>
-                      <div className="space-y-1.5 text-[11px] text-muted">
+                      <div className="space-y-1.5 text-[11px] text-text-muted">
                         <PipelineStep
                           label="Purchasing from Twilio"
                           active={buyingStage === "purchasing"}
@@ -658,7 +658,7 @@ export default function PhoneSetupPage() {
                     <button
                       onClick={() => setStep(2)}
                       disabled={buying}
-                      className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted hover:text-foreground disabled:opacity-40"
+                      className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-text-muted hover:text-text-primary disabled:opacity-40"
                     >
                       <ArrowLeft size={14} /> Back
                     </button>
@@ -689,7 +689,7 @@ export default function PhoneSetupPage() {
                     <h2 className="text-lg font-semibold">Number is live!</h2>
                   </div>
 
-                  <div className="mb-5 space-y-3 rounded-lg border border-border/40 bg-background/40 p-4">
+                  <div className="mb-5 space-y-3 rounded-lg border border-border-subtle/40 bg-background/40 p-4">
                     <Row label="Client" value={selectedClient.business_name} />
                     <Row
                       label="Phone"
@@ -712,7 +712,7 @@ export default function PhoneSetupPage() {
                     )}
                   </div>
 
-                  <p className="mb-4 text-sm text-muted">
+                  <p className="mb-4 text-sm text-text-muted">
                     <MessageSquare size={12} className="mr-1 inline" /> SMS webhook wired → inbound
                     messages appear in Conversations.
                     <br />
@@ -738,7 +738,7 @@ export default function PhoneSetupPage() {
                     </button>
                     <a
                       href="/dashboard/phone-email"
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-surface-light/60 px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-surface-light"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-border-subtle/60 bg-surface-light/60 px-4 py-2 text-sm font-semibold text-text-primary transition hover:bg-surface-light"
                     >
                       <Settings size={14} /> Manage this number
                     </a>
@@ -760,15 +760,15 @@ export default function PhoneSetupPage() {
                     </button>
                     <a
                       href="/dashboard/eleven-agents"
-                      className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm text-muted transition hover:text-foreground"
+                      className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm text-text-muted transition hover:text-text-primary"
                     >
                       Customise the AI agent →
                     </a>
                   </div>
 
                   {/* Next-step nudge — connect this number to a real inbox + outbound */}
-                  <div className="mt-5 rounded-lg border border-border/40 bg-background/40 p-3 text-[11px] text-muted">
-                    <span className="font-semibold text-foreground">Next step:</span> assign a sender
+                  <div className="mt-5 rounded-lg border border-border-subtle/40 bg-background/40 p-3 text-[11px] text-text-muted">
+                    <span className="font-semibold text-text-primary">Next step:</span> assign a sender
                     identity and compose your first broadcast from{" "}
                     <a href="/dashboard/phone-email" className="text-brand-accent hover:underline">
                       Phone &amp; Email
@@ -789,15 +789,15 @@ function PipelineStep({ label, active, done }: { label: string; active: boolean;
       ) : active ? (
         <Loader size={12} className="animate-spin text-brand-accent" />
       ) : (
-        <span className="inline-block h-[10px] w-[10px] rounded-full border border-border/60" />
+        <span className="inline-block h-[10px] w-[10px] rounded-full border border-border-subtle/60" />
       )}
       <span
         className={
           done
             ? "text-emerald-700"
             : active
-              ? "text-foreground"
-              : "text-muted opacity-60"
+              ? "text-text-primary"
+              : "text-text-muted opacity-60"
         }
       >
         {label}
@@ -809,8 +809,8 @@ function PipelineStep({ label, active, done }: { label: string; active: boolean;
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex items-start justify-between gap-4">
-      <span className="text-[11px] uppercase tracking-wider text-muted">{label}</span>
-      <span className="text-right text-sm text-foreground">{value}</span>
+      <span className="text-[11px] uppercase tracking-wider text-text-muted">{label}</span>
+      <span className="text-right text-sm text-text-primary">{value}</span>
     </div>
   );
 }

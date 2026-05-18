@@ -287,13 +287,13 @@ function outcomeMeta(outcome: CallOutcome): {
     case "pending":
       return {
         label: "Pending",
-        className: "bg-muted/20 text-muted",
+        className: "bg-muted/20 text-text-muted",
         icon: Clock,
       };
     default:
       return {
         label: "Other",
-        className: "bg-muted/20 text-muted",
+        className: "bg-muted/20 text-text-muted",
         icon: PhoneCall,
       };
   }
@@ -612,7 +612,7 @@ export default function VoiceReceptionistPage() {
 
   // -- Render -------------------------------------------------------
   return (
-    <MotionPage className="min-h-screen bg-background text-foreground">{/* -- AI Voice Receptionist command strip -- */}
+    <MotionPage className="min-h-screen bg-background text-text-primary">{/* -- AI Voice Receptionist command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Beta</p>
@@ -642,7 +642,7 @@ export default function VoiceReceptionistPage() {
                         ? "No real calls yet � showing sample data"
                         : "Connect ElevenLabs + a Twilio number to start tracking real calls"}
                     </p>
-                    <p className="mt-1 text-muted">
+                    <p className="mt-1 text-text-muted">
                       The pipeline is fully wired � Twilio voice-webhook,
                       ElevenLabs ConvAI bridge, status callback, and the
                       conversation-ended webhook all log straight into your{" "}
@@ -654,7 +654,7 @@ export default function VoiceReceptionistPage() {
                       AI-classified outcome (booked / qualified / unqualified /
                       spam), caller number, duration, and transcript.
                       {backendNote && (
-                        <span className="mt-1 block text-[11px] text-muted/80">
+                        <span className="mt-1 block text-[11px] text-text-muted/80">
                           ({backendNote})
                         </span>
                       )}
@@ -668,7 +668,7 @@ export default function VoiceReceptionistPage() {
                 <div className="mb-3 flex items-center justify-between">
                   <div>
                     <h2 className="text-base font-semibold">This month</h2>
-                    <p className="text-[11px] text-muted">
+                    <p className="text-[11px] text-text-muted">
                       Activity across every number pointed at your receptionist agent.
                     </p>
                   </div>
@@ -676,7 +676,7 @@ export default function VoiceReceptionistPage() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={loadAll}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-3 py-2 text-[11px] font-medium text-muted hover:bg-surface-light hover:text-foreground"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-3 py-2 text-[11px] font-medium text-text-muted hover:bg-surface-light hover:text-text-primary"
                   >
                     <RefreshCw size={12} /> Refresh
                   </motion.button>
@@ -718,7 +718,7 @@ export default function VoiceReceptionistPage() {
                     </div>
                     <div>
                       <h2 className="text-sm font-semibold">Agent setup</h2>
-                      <p className="text-[10px] text-muted">
+                      <p className="text-[10px] text-text-muted">
                         Voice, greeting, hours, transfer rules. Powers every call the agent takes.
                       </p>
                     </div>
@@ -741,7 +741,7 @@ export default function VoiceReceptionistPage() {
                           setConfig({ ...config, agentName: e.target.value })
                         }
                         placeholder="Front-desk AI"
-                        className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px] placeholder:text-muted/60"
+                        className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-[13px] placeholder:text-text-muted/60"
                       />
                     </Field>
 
@@ -759,7 +759,7 @@ export default function VoiceReceptionistPage() {
                           setConfig({ ...config, voiceId: e.target.value })
                         }
                         disabled={voices.length === 0}
-                        className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px] disabled:opacity-50"
+                        className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-[13px] disabled:opacity-50"
                       >
                         <option value="">Default (Rachel)</option>
                         {voices.map((v) => (
@@ -772,20 +772,20 @@ export default function VoiceReceptionistPage() {
                     </Field>
 
                     {/* Voice-clone upload � honest about not being wired */}
-                    <div className="rounded-lg border border-dashed border-border/50 bg-surface-light/20 p-4">
+                    <div className="rounded-lg border border-dashed border-border-subtle/50 bg-surface-light/20 p-4">
                       <div className="mb-1 flex items-center justify-between">
                         <p className="text-[12px] font-semibold">Upload voice sample</p>
-                        <span className="rounded-full bg-muted/20 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted">
+                        <span className="rounded-full bg-muted/20 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-text-muted">
                           Coming soon
                         </span>
                       </div>
-                      <p className="text-[11px] text-muted">
+                      <p className="text-[11px] text-text-muted">
                         Drop a 30-second recording to clone your best salesperson into ElevenLabs.
                         Shipping next � for now, pick from the stock voice list above.
                       </p>
                       <button
                         disabled
-                        className="mt-3 inline-flex cursor-not-allowed items-center gap-1.5 rounded-lg bg-surface-light/60 px-3 py-1.5 text-[11px] font-medium text-muted opacity-60"
+                        className="mt-3 inline-flex cursor-not-allowed items-center gap-1.5 rounded-lg bg-surface-light/60 px-3 py-1.5 text-[11px] font-medium text-text-muted opacity-60"
                       >
                         <Upload size={11} /> Upload sample (.mp3 / .wav)
                       </button>
@@ -802,7 +802,7 @@ export default function VoiceReceptionistPage() {
                         }
                         rows={4}
                         placeholder="Hi, thanks for calling�"
-                        className="w-full resize-none rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px] leading-relaxed placeholder:text-muted/60"
+                        className="w-full resize-none rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-[13px] leading-relaxed placeholder:text-text-muted/60"
                       />
                     </Field>
 
@@ -814,7 +814,7 @@ export default function VoiceReceptionistPage() {
                           onChange={(e) =>
                             setConfig({ ...config, hoursStart: e.target.value })
                           }
-                          className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px]"
+                          className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-[13px]"
                         />
                       </Field>
                       <Field label="Hours end">
@@ -824,7 +824,7 @@ export default function VoiceReceptionistPage() {
                           onChange={(e) =>
                             setConfig({ ...config, hoursEnd: e.target.value })
                           }
-                          className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px]"
+                          className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-[13px]"
                         />
                       </Field>
                     </div>
@@ -841,7 +841,7 @@ export default function VoiceReceptionistPage() {
                             transferRule: e.target.value as AgentConfig["transferRule"],
                           })
                         }
-                        className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px]"
+                        className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-[13px]"
                       >
                         <option value="qualified_only">
                           Only after the lead is qualified
@@ -860,14 +860,14 @@ export default function VoiceReceptionistPage() {
                             setConfig({ ...config, transferNumber: e.target.value })
                           }
                           placeholder="+1 415 555 0100"
-                          className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-[13px] font-mono placeholder:text-muted/60"
+                          className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-[13px] font-mono placeholder:text-text-muted/60"
                         />
                       </Field>
                     )}
                   </div>
                 </div>
 
-                <div className="mt-5 flex flex-wrap items-center justify-end gap-2 border-t border-border/30 pt-4">
+                <div className="mt-5 flex flex-wrap items-center justify-end gap-2 border-t border-border-subtle/30 pt-4">
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -916,7 +916,7 @@ export default function VoiceReceptionistPage() {
                     </div>
                     <div>
                       <h2 className="text-sm font-semibold">Call log</h2>
-                      <p className="text-[10px] text-muted">
+                      <p className="text-[10px] text-text-muted">
                         Every call the agent handled, newest first.
                       </p>
                     </div>
@@ -929,7 +929,7 @@ export default function VoiceReceptionistPage() {
                 </div>
 
                 {loading ? (
-                  <div className="flex items-center justify-center gap-2 py-10 text-sm text-muted">
+                  <div className="flex items-center justify-center gap-2 py-10 text-sm text-text-muted">
                     <Loader2 size={14} className="animate-spin" /> Loading calls�
                   </div>
                 ) : calls.length === 0 ? (
@@ -941,7 +941,7 @@ export default function VoiceReceptionistPage() {
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-[12px]">
-                      <thead className="border-b border-border/40 text-[10px] uppercase tracking-wider text-muted">
+                      <thead className="border-b border-border-subtle/40 text-[10px] uppercase tracking-wider text-text-muted">
                         <tr>
                           <th className="px-2 py-2 font-semibold">Caller</th>
                           <th className="px-2 py-2 font-semibold">When</th>
@@ -962,15 +962,15 @@ export default function VoiceReceptionistPage() {
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ duration: 0.18, delay: index * 0.04 }}
                               whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
-                              className="border-b border-border/20 transition"
+                              className="border-b border-border-subtle/20 transition"
                             >
                               <td className="px-2 py-3 font-mono text-[11.5px]">
                                 {c.caller}
                               </td>
-                              <td className="px-2 py-3 text-muted">
+                              <td className="px-2 py-3 text-text-muted">
                                 {fmtRelative(c.startedAt)}
                               </td>
-                              <td className="px-2 py-3 text-muted">
+                              <td className="px-2 py-3 text-text-muted">
                                 {fmtDuration(c.durationSec)}
                               </td>
                               <td className="px-2 py-3">
@@ -980,7 +980,7 @@ export default function VoiceReceptionistPage() {
                                   <OutIcon size={10} /> {om.label}
                                 </span>
                               </td>
-                              <td className="px-2 py-3 max-w-[320px] truncate text-muted">
+                              <td className="px-2 py-3 max-w-[320px] truncate text-text-muted">
                                 {c.transcriptPreview}
                               </td>
                               <td className="px-2 py-3 text-right">
@@ -992,7 +992,7 @@ export default function VoiceReceptionistPage() {
                                     Open <ExternalLink size={10} />
                                   </Link>
                                 ) : (
-                                  <span className="text-[10px] text-muted/70">�</span>
+                                  <span className="text-[10px] text-text-muted/70">�</span>
                                 )}
                               </td>
                             </motion.tr>
@@ -1015,9 +1015,9 @@ export default function VoiceReceptionistPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: 0.36 }}
-                className="mt-2 glass rounded-xl p-5 text-[12px] text-muted"
+                className="mt-2 glass rounded-xl p-5 text-[12px] text-text-muted"
               >
-                <p className="mb-2 font-semibold text-foreground">How it works</p>
+                <p className="mb-2 font-semibold text-text-primary">How it works</p>
                 <ul className="ml-4 list-disc space-y-1">
                   <li>
                     Every incoming call to your provisioned Twilio number hits the ElevenLabs
@@ -1069,11 +1069,11 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-muted">
+      <span className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-text-muted">
         {label}
       </span>
       {children}
-      {hint && <p className="mt-1 text-[10.5px] text-muted/80">{hint}</p>}
+      {hint && <p className="mt-1 text-[10.5px] text-text-muted/80">{hint}</p>}
     </label>
   );
 }
@@ -1126,14 +1126,14 @@ function CalendarIntegrationCard() {
         </div>
         <div>
           <h2 className="text-sm font-semibold">Calendar for booking</h2>
-          <p className="text-[10px] text-muted">
+          <p className="text-[10px] text-text-muted">
             Where the agent drops qualified bookings.
           </p>
         </div>
       </div>
 
       {state === "loading" ? (
-        <div className="flex items-center gap-2 text-[12px] text-muted">
+        <div className="flex items-center gap-2 text-[12px] text-text-muted">
           <Loader2 size={12} className="animate-spin" /> Checking connection�
         </div>
       ) : state === "connected" ? (
@@ -1141,10 +1141,10 @@ function CalendarIntegrationCard() {
           <div className="flex items-center gap-2">
             <CheckCircle2 size={15} className="text-emerald-600" />
             <div>
-              <p className="text-[12.5px] font-semibold text-foreground">
+              <p className="text-[12.5px] font-semibold text-text-primary">
                 Connected
               </p>
-              <p className="text-[11px] text-muted">
+              <p className="text-[11px] text-text-muted">
                 {provider || "Google Calendar"} � bookings land directly on your
                 calendar.
               </p>
@@ -1153,24 +1153,24 @@ function CalendarIntegrationCard() {
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Link
               href="/dashboard/calendar"
-              className="inline-flex items-center gap-1 rounded-lg bg-surface-light/80 px-3 py-1.5 text-[11px] font-medium text-muted hover:bg-surface-light hover:text-foreground"
+              className="inline-flex items-center gap-1 rounded-lg bg-surface-light/80 px-3 py-1.5 text-[11px] font-medium text-text-muted hover:bg-surface-light hover:text-text-primary"
             >
               Manage <ArrowRight size={11} />
             </Link>
           </motion.div>
         </div>
       ) : (
-        <div className="flex flex-col items-start gap-3 rounded-lg border border-dashed border-border/50 bg-surface-light/20 p-4">
+        <div className="flex flex-col items-start gap-3 rounded-lg border border-dashed border-border-subtle/50 bg-surface-light/20 p-4">
           <div className="flex items-start gap-2">
             <AlertCircle
               size={15}
               className="mt-0.5 shrink-0 text-brand-accent"
             />
             <div>
-              <p className="text-[12.5px] font-semibold text-foreground">
+              <p className="text-[12.5px] font-semibold text-text-primary">
                 No calendar connected
               </p>
-              <p className="text-[11px] text-muted">
+              <p className="text-[11px] text-text-muted">
                 Until you connect a calendar, the agent can qualify leads but
                 can&apos;t book confirmed time slots.
               </p>
@@ -1216,24 +1216,24 @@ function QuotaCard({
         </div>
         <div>
           <h2 className="text-sm font-semibold">Call minutes this month</h2>
-          <p className="text-[10px] text-muted">
+          <p className="text-[10px] text-text-muted">
             Counted against your plan tier. Resets on the 1st.
           </p>
         </div>
       </div>
 
       {!quota ? (
-        <p className="text-[11px] text-muted">Usage data unavailable.</p>
+        <p className="text-[11px] text-text-muted">Usage data unavailable.</p>
       ) : (
         <div className="space-y-2.5">
           <div className="flex items-center justify-between text-[12px]">
-            <span className="text-muted">
+            <span className="text-text-muted">
               Plan:{" "}
               <span className="font-semibold text-brand-accent">
                 {planTier || "�"}
               </span>
             </span>
-            <span className="font-mono text-[13px] text-foreground">
+            <span className="font-mono text-[13px] text-text-primary">
               {quota.used.toLocaleString()}
               {quota.isUnlimited
                 ? " � Unlimited"

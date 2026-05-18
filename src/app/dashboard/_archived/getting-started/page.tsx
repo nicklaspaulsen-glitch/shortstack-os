@@ -135,7 +135,7 @@ export default function GettingStartedPage() {
   const progress = Math.round((completed.size / STEPS.length) * 100);
 
   return (
-    <MotionPage className="fade-in space-y-5 max-w-2xl">{/* -- Getting Started command strip -- */}
+    <MotionPage className="space-y-5 max-w-2xl">{/* -- Getting Started command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">GETTING STARTED</p>

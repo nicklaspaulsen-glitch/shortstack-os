@@ -94,10 +94,10 @@ export default function ClientBillingPage() {
   const pending = invoices.filter(i => i.status === "sent" || i.status === "overdue");
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="space-y-5">
       <div>
         <h1 className="page-header mb-0 flex items-center gap-2"><CreditCard size={18} className="text-warning" /> Billing</h1>
-        <p className="text-xs text-muted mt-0.5">Invoices, contracts, and payment history</p>
+        <p className="text-xs text-text-muted mt-0.5">Invoices, contracts, and payment history</p>
       </div>
 
       <div className="grid grid-cols-3 gap-2.5">
@@ -107,13 +107,13 @@ export default function ClientBillingPage() {
       </div>
 
       {displayCurrency && (
-        <div className="text-[10px] text-muted -mt-2">
+        <div className="text-[10px] text-text-muted -mt-2">
           Amounts shown in invoice currency, with local equivalent in <span className="font-mono">{displayCurrency}</span>.
         </div>
       )}
 
-      <div className="card">
-        <h2 className="section-header">Invoices</h2>
+      <div className="glass rounded-xl p-4">
+        <h2 className="">Invoices</h2>
         <DataTable
           columns={[
             { key: "description", label: "Description", render: (i: Invoice) => <span className="text-xs">{i.description || "Invoice"}</span> },
@@ -123,8 +123,8 @@ export default function ClientBillingPage() {
               </span>
             ) },
             { key: "status", label: "Status", render: (i: Invoice) => <StatusBadge status={i.status} /> },
-            { key: "due_date", label: "Due", render: (i: Invoice) => <span className="text-xs text-muted">{i.due_date ? formatDate(i.due_date) : "-"}</span> },
-            { key: "paid_at", label: "Paid", render: (i: Invoice) => <span className="text-xs text-muted">{i.paid_at ? formatDate(i.paid_at) : "-"}</span> },
+            { key: "due_date", label: "Due", render: (i: Invoice) => <span className="text-xs text-text-muted">{i.due_date ? formatDate(i.due_date) : "-"}</span> },
+            { key: "paid_at", label: "Paid", render: (i: Invoice) => <span className="text-xs text-text-muted">{i.paid_at ? formatDate(i.paid_at) : "-"}</span> },
             { key: "actions", label: "", render: (i: Invoice) => (i.status === "sent" || i.status === "overdue") ? (
               <button onClick={async (e) => {
                 e.stopPropagation();
@@ -148,8 +148,8 @@ export default function ClientBillingPage() {
       </div>
 
       {contracts.length > 0 && (
-        <div className="card">
-          <h2 className="section-header">Contracts</h2>
+        <div className="glass rounded-xl p-4">
+          <h2 className="">Contracts</h2>
           <DataTable
             columns={[
               { key: "title", label: "Contract", render: (c: Contract) => <span className="text-xs font-medium">{c.title}</span> },
@@ -161,7 +161,7 @@ export default function ClientBillingPage() {
                 </span>
               ) },
               { key: "status", label: "Status", render: (c: Contract) => <StatusBadge status={c.status} /> },
-              { key: "start_date", label: "Period", render: (c: Contract) => <span className="text-[10px] text-muted">{c.start_date ? formatDate(c.start_date) : "?"} - {c.end_date ? formatDate(c.end_date) : "Ongoing"}</span> },
+              { key: "start_date", label: "Period", render: (c: Contract) => <span className="text-[10px] text-text-muted">{c.start_date ? formatDate(c.start_date) : "?"} - {c.end_date ? formatDate(c.end_date) : "Ongoing"}</span> },
             ]}
             data={contracts}
             emptyMessage="No contracts"

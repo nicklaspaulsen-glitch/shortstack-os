@@ -14,9 +14,9 @@ interface EnvPanelProps {
 export default function EnvPanel({ items }: EnvPanelProps) {
   if (!items) {
     return (
-      <div className=" border border-border bg-surface p-4">
-        <h2 className="text-xs font-bold mb-3 text-foreground">Env-var presence</h2>
-        <p className="text-[11px] text-muted">Unavailable</p>
+      <div className=" border border-border-subtle bg-surface p-4">
+        <h2 className="text-xs font-bold mb-3 text-text-primary">Env-var presence</h2>
+        <p className="text-[11px] text-text-muted">Unavailable</p>
       </div>
     );
   }
@@ -24,9 +24,9 @@ export default function EnvPanel({ items }: EnvPanelProps) {
   const missing = items.filter((i) => !i.present);
 
   return (
-    <div className=" border border-border bg-surface p-4">
+    <div className=" border border-border-subtle bg-surface p-4">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-xs font-bold text-foreground">Env-var presence</h2>
+        <h2 className="text-xs font-bold text-text-primary">Env-var presence</h2>
         <span
           className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
             missing.length === 0
@@ -51,7 +51,7 @@ export default function EnvPanel({ items }: EnvPanelProps) {
             ) : (
               <XCircle size={13} className="shrink-0 text-danger" />
             )}
-            <span className="font-mono text-[11px] text-foreground truncate">
+            <span className="font-mono text-[11px] text-text-primary truncate">
               {item.name}
             </span>
             <span

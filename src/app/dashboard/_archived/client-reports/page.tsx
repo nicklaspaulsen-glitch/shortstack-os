@@ -152,7 +152,7 @@ export default function ClientReportsPage() {
         <div className="flex items-center gap-2 shrink-0">
           <Link
             href="/dashboard/report-generator"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.08)] text-white text-sm font-medium transition-colors border border-border"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.08)] text-white text-sm font-medium transition-colors border border-border-subtle"
           >
             <FileText size={14} /> Generate Report
           </Link>

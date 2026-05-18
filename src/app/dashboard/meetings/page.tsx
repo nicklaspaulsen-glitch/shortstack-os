@@ -43,7 +43,7 @@ function formatDuration(seconds: number | null): string {
 
 function statusBadge(status: MeetingRow["status"]) {
   const map = {
-    scheduled: { color: "bg-[rgba(0,0,0,0.04)] text-muted", icon: Clock, label: "Scheduled" },
+    scheduled: { color: "bg-[rgba(0,0,0,0.04)] text-text-muted", icon: Clock, label: "Scheduled" },
     recording: { color: "bg-red-400/10 text-red-400", icon: Mic, label: "Recording" },
     processing: { color: "bg-yellow-400/10 text-yellow-400", icon: Loader2, label: "Processing" },
     ready: { color: "bg-green-400/10 text-green-400", icon: CheckCircle2, label: "Ready" },
@@ -144,7 +144,7 @@ export default function MeetingsPage() {
   }
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Meetings command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Meetings command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">MEETINGS</p>
@@ -167,7 +167,7 @@ export default function MeetingsPage() {
               <div className="flex items-center gap-2 text-[11px] font-semibold mb-1">
                 <Sparkles size={11} className="text-brand-accent" /> AI Notetaker
               </div>
-              <p className="text-[10px] text-muted leading-relaxed">
+              <p className="text-[10px] text-text-muted leading-relaxed">
                 Drop in a recording or paste a Zoom/Loom share URL — Whisper transcribes,
                 Claude extracts action items, decisions, and key moments, and you can
                 push the summary into the linked contact&apos;s CRM activity feed in one click.
@@ -215,7 +215,7 @@ export default function MeetingsPage() {
                   className="input w-full text-xs"
                 />
               )}
-              <div className="flex items-center gap-3 text-[10px] text-muted">
+              <div className="flex items-center gap-3 text-[10px] text-text-muted">
                 <button
                   onClick={() => setUrlMode((v) => !v)}
                   className="hover:text-brand-accent transition-colors flex items-center gap-1"
@@ -231,7 +231,7 @@ export default function MeetingsPage() {
                 </Link>
               </div>
             </motion.div>{loading ? (
-              <p className="text-[11px] text-muted flex items-center gap-1.5">
+              <p className="text-[11px] text-text-muted flex items-center gap-1.5">
                 <Loader2 size={11} className="animate-spin" /> Loading meetings...
               </p>
             ) : meetings.length === 0 ? (
@@ -272,7 +272,7 @@ export default function MeetingsPage() {
                         </div>
                         <div className="min-w-0">
                           <p className="text-sm font-semibold truncate">{m.title}</p>
-                          <p className="text-[10px] text-muted truncate">
+                          <p className="text-[10px] text-text-muted truncate">
                             {new Date(m.created_at).toLocaleString()} · {formatDuration(m.duration_seconds)}
                           </p>
                         </div>

@@ -175,26 +175,26 @@ export default function MeetingDetailPage() {
 
   if (loading) {
     return (
-      <MotionPage className="p-6 text-[11px] text-muted flex items-center gap-2"><Loader2 size={12} className="animate-spin" />Loading...
+      <MotionPage className="p-6 text-[11px] text-text-muted flex items-center gap-2"><Loader2 size={12} className="animate-spin" />Loading...
               </MotionPage>
     );
   }
   if (!meeting) return null;
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="space-y-5">
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <Link
             href="/dashboard/meetings"
-            className="text-muted hover:text-foreground transition-colors"
+            className="text-text-muted hover:text-text-primary transition-colors"
           >
             <ArrowLeft size={16} />
           </Link>
           <div className="min-w-0">
             <h1 className="text-lg font-bold truncate">{meeting.title}</h1>
-            <p className="text-[10px] text-muted flex items-center gap-2 flex-wrap">
+            <p className="text-[10px] text-text-muted flex items-center gap-2 flex-wrap">
               <span>{new Date(meeting.created_at).toLocaleString()}</span>
               {meeting.duration_seconds ? (
                 <span>· {formatTs(meeting.duration_seconds)}</span>
@@ -211,14 +211,14 @@ export default function MeetingDetailPage() {
         </div>
         <button
           onClick={remove}
-          className="text-[10px] text-muted hover:text-red-400 flex items-center gap-1"
+          className="text-[10px] text-text-muted hover:text-red-400 flex items-center gap-1"
         >
           <Trash2 size={10} /> Delete
         </button>
       </div>
 
       {/* Audio + controls */}
-      <div className="card p-4 space-y-3">
+      <div className="glass rounded-xl p-4 space-y-3">
         {meeting.audio_url ? (
           <audio
             ref={audioRef}
@@ -228,7 +228,7 @@ export default function MeetingDetailPage() {
             className="w-full"
           />
         ) : (
-          <div className="text-[11px] text-muted">
+          <div className="text-[11px] text-text-muted">
             No audio uploaded yet.{" "}
             <Link href="/dashboard/meetings/new" className="text-brand-accent underline">
               Upload a recording
@@ -274,7 +274,7 @@ export default function MeetingDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         {/* Transcript */}
         <div className="lg:col-span-3 card p-4 space-y-2 max-h-[70vh] overflow-y-auto">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
             <Mic size={11} /> Transcript
           </h3>
           <TranscriptViewer
@@ -305,20 +305,20 @@ export default function MeetingDetailPage() {
           />
 
           {/* Summary */}
-          <div className="card p-4 space-y-2">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
+          <div className="glass rounded-xl p-4 space-y-2">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
               <Sparkles size={11} /> Summary
             </h3>
             {meeting.summary ? (
               <p className="text-[11px] leading-relaxed whitespace-pre-wrap">{meeting.summary}</p>
             ) : (
-              <p className="text-[11px] text-muted">Run analysis to generate a summary.</p>
+              <p className="text-[11px] text-text-muted">Run analysis to generate a summary.</p>
             )}
           </div>
 
           {/* Action items */}
-          <div className="card p-4 space-y-2">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted">
+          <div className="glass rounded-xl p-4 space-y-2">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-text-muted">
               Action items
             </h3>
             <ActionItems meetingId={id} initial={meeting.action_items || []} />
@@ -326,7 +326,7 @@ export default function MeetingDetailPage() {
 
           {/* Decisions */}
           {meeting.decisions && meeting.decisions.length > 0 && (
-            <div className="card border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] p-4 space-y-2">
+            <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] p-4 space-y-2">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-brand-accent flex items-center gap-1.5">
                 <Lightbulb size={11} /> Decisions
               </h3>
@@ -334,7 +334,7 @@ export default function MeetingDetailPage() {
                 {meeting.decisions.map((d, i) => (
                   <li key={i} className="text-[11px]">
                     <p className="font-medium">{d.text}</p>
-                    {d.context && <p className="text-[10px] text-muted mt-0.5">{d.context}</p>}
+                    {d.context && <p className="text-[10px] text-text-muted mt-0.5">{d.context}</p>}
                   </li>
                 ))}
               </ul>
@@ -343,8 +343,8 @@ export default function MeetingDetailPage() {
 
           {/* Key moments */}
           {meeting.key_moments && meeting.key_moments.length > 0 && (
-            <div className="card p-4 space-y-2">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
+            <div className="glass rounded-xl p-4 space-y-2">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
                 <Clock size={11} /> Key moments
               </h3>
               <div className="flex flex-wrap gap-1.5">

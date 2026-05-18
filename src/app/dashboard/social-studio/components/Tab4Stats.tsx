@@ -81,7 +81,7 @@ export default function Tab4Stats() {
 
   if (loading) {
     return (
-      <div className="rounded-xl border border-border/40 bg-surface p-8 flex items-center justify-center text-xs text-muted">
+      <div className="rounded-xl border border-border-subtle/40 bg-surface p-8 flex items-center justify-center text-xs text-text-muted">
         <Loader2 size={14} className="animate-spin mr-2" />
         Crunching the numbers…
       </div>
@@ -90,7 +90,7 @@ export default function Tab4Stats() {
 
   if (!data) {
     return (
-      <div className="rounded-xl border border-border/40 bg-surface p-8 text-center text-xs text-muted">
+      <div className="rounded-xl border border-border-subtle/40 bg-surface p-8 text-center text-xs text-text-muted">
         No stats yet — once you publish posts via Zernio they&apos;ll show up here.
       </div>
     );
@@ -98,7 +98,7 @@ export default function Tab4Stats() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-border/40 bg-surface p-4">
+      <div className="rounded-xl border border-border-subtle/40 bg-surface p-4">
         <div className="flex items-center gap-2 mb-3">
           <BarChart3 size={14} className="text-brand-accent" />
           <h3 className="text-sm font-semibold tracking-tight">Posts per platform — last 12 weeks</h3>
@@ -136,18 +136,18 @@ export default function Tab4Stats() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="rounded-xl border border-border/40 bg-surface p-4 lg:col-span-2">
+        <div className="rounded-xl border border-border-subtle/40 bg-surface p-4 lg:col-span-2">
           <div className="flex items-center gap-2 mb-3">
             <Trophy size={14} className="text-brand-accent" />
             <h3 className="text-sm font-semibold tracking-tight">Top posts by engagement</h3>
           </div>
           {data.top_posts.length === 0 ? (
-            <p className="text-xs text-muted py-6 text-center">
+            <p className="text-xs text-text-muted py-6 text-center">
               No published posts in the last 12 weeks.
             </p>
           ) : (
             <table className="w-full text-xs">
-              <thead className="text-[10px] uppercase tracking-wider text-muted">
+              <thead className="text-[10px] uppercase tracking-wider text-text-muted">
                 <tr>
                   <th className="text-left py-2 font-medium">Post</th>
                   <th className="text-left py-2 font-medium">Platforms</th>
@@ -157,7 +157,7 @@ export default function Tab4Stats() {
               </thead>
               <tbody>
                 {data.top_posts.map((p) => (
-                  <tr key={p.id} className="border-t border-border/20 hover:bg-elevated/40">
+                  <tr key={p.id} className="border-t border-border-subtle/20 hover:bg-elevated/40">
                     <td className="py-2 pr-2 max-w-[260px] truncate" title={p.caption ?? ""}>
                       {p.caption ?? "(no caption)"}
                     </td>
@@ -166,7 +166,7 @@ export default function Tab4Stats() {
                         {p.platforms.map((pl) => <PlatformChip key={pl} platform={pl} />)}
                       </div>
                     </td>
-                    <td className="py-2 pr-2 text-muted">
+                    <td className="py-2 pr-2 text-text-muted">
                       {p.published_at ? new Date(p.published_at).toLocaleDateString() : "—"}
                     </td>
                     <td className="py-2 text-right font-medium">{p.engagement_total.toLocaleString()}</td>
@@ -177,12 +177,12 @@ export default function Tab4Stats() {
           )}
         </div>
 
-        <div className="rounded-xl border border-border/40 bg-surface p-4">
+        <div className="rounded-xl border border-border-subtle/40 bg-surface p-4">
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp size={14} className="text-brand-accent" />
             <h3 className="text-sm font-semibold tracking-tight">Best post times</h3>
           </div>
-          <p className="text-[10px] text-muted mb-2">
+          <p className="text-[10px] text-text-muted mb-2">
             Day × hour heatmap — colour intensity scales with engagement of posts published in that slot.
           </p>
           <div className="overflow-x-auto">
@@ -190,18 +190,18 @@ export default function Tab4Stats() {
               <div className="grid" style={{ gridTemplateColumns: "32px repeat(24, minmax(14px, 1fr))", gap: 2 }}>
                 <div />
                 {Array.from({ length: 24 }).map((_, h) => (
-                  <div key={h} className="text-[8px] text-muted text-center">
+                  <div key={h} className="text-[8px] text-text-muted text-center">
                     {h % 3 === 0 ? h : ""}
                   </div>
                 ))}
                 {heatmapByDay.map((row, dayIdx) => (
                   <div key={dayIdx} className="contents">
-                    <div className="text-[10px] text-muted self-center">{DAYS[dayIdx]}</div>
+                    <div className="text-[10px] text-text-muted self-center">{DAYS[dayIdx]}</div>
                     {row.map((cell) => (
                       <div
                         key={`${cell.day}-${cell.hour}`}
                         title={`${DAYS[cell.day]} ${cell.hour}:00 — ${cell.count} engagement`}
-                        className="rounded-sm border border-border/20"
+                        className="rounded-sm border border-border-subtle/20"
                         style={{
                           height: 18,
                           background: intensityColor(cell.intensity),

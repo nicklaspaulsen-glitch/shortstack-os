@@ -102,18 +102,18 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
 
   return (
     <div
-      className={`card p-4 ${status?.active ? "border border-[rgba(59,130,246,0.25)]" : "border border-border"}`}
+      className={`glass rounded-xl p-4 ${status?.active ? "border border-[rgba(59,130,246,0.25)]" : "border border-border-subtle"}`}
       style={{ borderRadius: "0.75rem" }}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className={`p-1.5 rounded-md ${status?.active ? "bg-[rgba(59,130,246,0.08)]" : "bg-black/5"}`}>
-            <Bot size={14} className={status?.active ? "text-[#2563EB]" : "text-muted"} />
+            <Bot size={14} className={status?.active ? "text-[#2563EB]" : "text-text-muted"} />
           </div>
           <div>
-            <p className="text-xs font-semibold text-foreground leading-none">AI Auto-Pilot</p>
-            <p className="text-[10px] text-muted mt-0.5">Content generation engine</p>
+            <p className="text-xs font-semibold text-text-primary leading-none">AI Auto-Pilot</p>
+            <p className="text-[10px] text-text-muted mt-0.5">Content generation engine</p>
           </div>
         </div>
 
@@ -125,7 +125,7 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
             className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
               status?.active
                 ? "bg-[rgba(59,130,246,0.08)] text-[#2563EB] border border-[rgba(59,130,246,0.2)]"
-                : "bg-black/5 text-muted border border-border"
+                : "bg-black/5 text-text-muted border border-border-subtle"
             }`}
           >
             {status?.active ? "Active" : "Inactive"}
@@ -142,12 +142,12 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
         // Empty state
         <div className="text-center py-6 px-2">
           <div className="flex justify-center mb-2">
-            <Sparkles size={20} className="text-foreground/20" />
+            <Sparkles size={20} className="text-text-primary/20" />
           </div>
-          <p className="text-xs text-muted leading-snug">
+          <p className="text-xs text-text-muted leading-snug">
             Auto-pilot hasn&apos;t been launched yet.
           </p>
-          <p className="text-[10px] text-muted mt-1">
+          <p className="text-[10px] text-text-muted mt-1">
             Complete your onboarding to get started.
           </p>
         </div>
@@ -156,18 +156,18 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
           {/* Summary bar */}
           <div className="flex items-center gap-3 mb-3 px-1">
             <div className="text-center">
-              <p className="text-sm font-bold text-foreground leading-none">{status?.total_generated || 0}</p>
-              <p className="text-[9px] text-muted mt-0.5">Generated</p>
+              <p className="text-sm font-bold text-text-primary leading-none">{status?.total_generated || 0}</p>
+              <p className="text-[9px] text-text-muted mt-0.5">Generated</p>
             </div>
             <div className="w-px h-6 bg-black/5" />
             <div className="text-center">
-              <p className="text-sm font-bold text-foreground leading-none">{status?.social_posts_count || 0}</p>
-              <p className="text-[9px] text-muted mt-0.5">Posts</p>
+              <p className="text-sm font-bold text-text-primary leading-none">{status?.social_posts_count || 0}</p>
+              <p className="text-[9px] text-text-muted mt-0.5">Posts</p>
             </div>
             {status?.last_run && (
               <>
                 <div className="w-px h-6 bg-black/5" />
-                <div className="flex items-center gap-1 text-[10px] text-muted">
+                <div className="flex items-center gap-1 text-[10px] text-text-muted">
                   <Clock size={9} />
                   <span>{formatRelativeTime(status.last_run)}</span>
                 </div>
@@ -210,7 +210,7 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
                       ) : isFailed ? (
                         <div className="w-3 h-3 rounded-full border border-red-500/40 bg-red-500/10" />
                       ) : (
-                        <div className="w-3 h-3 rounded-full border border-border bg-black/5" />
+                        <div className="w-3 h-3 rounded-full border border-border-subtle bg-black/5" />
                       )}
                     </div>
 
@@ -220,7 +220,7 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
                     {/* Label */}
                     <span
                       className={`text-[11px] flex-1 ${
-                        isComplete ? "text-foreground" : "text-muted"
+                        isComplete ? "text-text-primary" : "text-text-muted"
                       }`}
                     >
                       {meta?.label || task.title}
@@ -228,7 +228,7 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
 
                     {/* Count badge */}
                     {isComplete && task.count !== undefined && meta?.countLabel && (
-                      <span className="text-[9px] text-muted">
+                      <span className="text-[9px] text-text-muted">
                         {meta.countLabel(task.count)}
                       </span>
                     )}
@@ -237,18 +237,18 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
                     {hasPreview && (
                       <ChevronDown
                         size={10}
-                        className={`text-muted transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                        className={`text-text-muted transition-transform ${isExpanded ? "rotate-180" : ""}`}
                       />
                     )}
                   </button>
 
                   {/* Expanded preview */}
                   {isExpanded && task.content_preview && (
-                    <div className="mx-6 mb-1 p-2 rounded bg-black/5 border border-border">
-                      <p className="text-[10px] text-muted leading-relaxed">
+                    <div className="mx-6 mb-1 p-2 rounded bg-black/5 border border-border-subtle">
+                      <p className="text-[10px] text-text-muted leading-relaxed">
                         {task.content_preview}
                         {task.content_preview.length >= 200 && (
-                          <span className="text-foreground/20">…</span>
+                          <span className="text-text-primary/20">…</span>
                         )}
                       </p>
                     </div>
@@ -262,9 +262,9 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
 
       {/* Footer — loading indicator if tasks are still generating */}
       {status?.active && status.total_generated < 6 && (
-        <div className="flex items-center gap-1.5 mt-3 pt-2 border-t border-border">
+        <div className="flex items-center gap-1.5 mt-3 pt-2 border-t border-border-subtle">
           <Loader2 size={9} className="text-[#2563EB] animate-spin" />
-          <span className="text-[9px] text-muted">Generating remaining tasks…</span>
+          <span className="text-[9px] text-text-muted">Generating remaining tasks…</span>
         </div>
       )}
 

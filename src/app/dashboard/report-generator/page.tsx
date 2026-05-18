@@ -209,11 +209,11 @@ export default function ReportGeneratorPage() {
 
   const stepClient = (
     <div className="space-y-3">
-      <label className="text-[10px] text-muted uppercase tracking-wider font-medium">Client</label>
+      <label className="text-[10px] text-text-muted uppercase tracking-wider font-medium">Client</label>
       {loadingClients ? (
-        <div className="flex items-center gap-2 text-xs text-muted"><Loader size={12} className="animate-spin" /> Loading clients…</div>
+        <div className="flex items-center gap-2 text-xs text-text-muted"><Loader size={12} className="animate-spin" /> Loading clients…</div>
       ) : clients.length === 0 ? (
-        <div className="p-4 rounded-xl bg-surface-light border border-border/30 text-xs text-muted">
+        <div className="p-4 rounded-xl bg-surface-light border border-border-subtle/30 text-xs text-text-muted">
           No clients yet. Add one in the Clients page first.
         </div>
       ) : (
@@ -230,9 +230,9 @@ export default function ReportGeneratorPage() {
         </select>
       )}
       {selectedClientObj && (
-        <div className="p-3 rounded-xl bg-surface-light border border-border/30 text-xs">
-          <p className="font-semibold text-foreground">{selectedClientObj.business_name}</p>
-          <div className="flex flex-wrap items-center gap-3 mt-1 text-[10px] text-muted">
+        <div className="p-3 rounded-xl bg-surface-light border border-border-subtle/30 text-xs">
+          <p className="font-semibold text-text-primary">{selectedClientObj.business_name}</p>
+          <div className="flex flex-wrap items-center gap-3 mt-1 text-[10px] text-text-muted">
             {selectedClientObj.contact_name && <span>Contact: {selectedClientObj.contact_name}</span>}
             {selectedClientObj.email && <span>Email: {selectedClientObj.email}</span>}
             {selectedClientObj.industry && <span>Industry: {selectedClientObj.industry}</span>}
@@ -244,7 +244,7 @@ export default function ReportGeneratorPage() {
 
   const stepRange = (
     <div className="space-y-3">
-      <label className="text-[10px] text-muted uppercase tracking-wider font-medium">Date range</label>
+      <label className="text-[10px] text-text-muted uppercase tracking-wider font-medium">Date range</label>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
         {RANGE_PRESETS.map(p => (
           <button
@@ -254,7 +254,7 @@ export default function ReportGeneratorPage() {
             className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all ${
               rangePreset === p.id
                 ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.4)] text-brand-accent"
-                : "bg-surface-light border-border/30 text-muted hover:text-foreground"
+                : "bg-surface-light border-border-subtle/30 text-text-muted hover:text-text-primary"
             }`}
           >
             {p.label}
@@ -264,7 +264,7 @@ export default function ReportGeneratorPage() {
       {rangePreset === "custom" && (
         <div className="grid grid-cols-2 gap-3 pt-2">
           <div>
-            <label className="text-[10px] text-muted uppercase tracking-wider font-medium">From</label>
+            <label className="text-[10px] text-text-muted uppercase tracking-wider font-medium">From</label>
             <input
               type="date"
               value={customFrom}
@@ -274,7 +274,7 @@ export default function ReportGeneratorPage() {
             />
           </div>
           <div>
-            <label className="text-[10px] text-muted uppercase tracking-wider font-medium">To</label>
+            <label className="text-[10px] text-text-muted uppercase tracking-wider font-medium">To</label>
             <input
               type="date"
               value={customTo}
@@ -286,14 +286,14 @@ export default function ReportGeneratorPage() {
           </div>
         </div>
       )}
-      <p className="text-[10px] text-muted">Window: <span className="text-foreground font-medium">{fromDate}</span> → <span className="text-foreground font-medium">{toDate}</span></p>
+      <p className="text-[10px] text-text-muted">Window: <span className="text-text-primary font-medium">{fromDate}</span> → <span className="text-text-primary font-medium">{toDate}</span></p>
     </div>
   );
 
   const stepMetrics = (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <label className="text-[10px] text-muted uppercase tracking-wider font-medium">Metrics to include</label>
+        <label className="text-[10px] text-text-muted uppercase tracking-wider font-medium">Metrics to include</label>
         <div className="flex items-center gap-2 text-[10px]">
           <button
             type="button"
@@ -302,15 +302,15 @@ export default function ReportGeneratorPage() {
           >
             Select all
           </button>
-          <span className="text-muted">·</span>
-          <button type="button" onClick={() => setMetrics([])} className="text-muted hover:text-foreground">
+          <span className="text-text-muted">·</span>
+          <button type="button" onClick={() => setMetrics([])} className="text-text-muted hover:text-text-primary">
             Clear
           </button>
         </div>
       </div>
       {(["outbound", "revenue", "content", "platform"] as const).map(group => (
         <div key={group} className="space-y-2">
-          <p className="text-[10px] text-muted font-semibold uppercase tracking-wider">{GROUP_LABEL[group]}</p>
+          <p className="text-[10px] text-text-muted font-semibold uppercase tracking-wider">{GROUP_LABEL[group]}</p>
           <div className="grid grid-cols-2 gap-2">
             {METRIC_OPTIONS.filter(m => m.group === group).map(m => {
               const on = metrics.includes(m.id);
@@ -319,7 +319,7 @@ export default function ReportGeneratorPage() {
                                     <label
                                     key={m.id}
                                     className={`flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer text-xs transition-all ${
-                                      on ? "border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.05)] text-foreground" : "border-border/30 bg-surface-light text-muted hover:text-foreground"
+                                      on ? "border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.05)] text-text-primary" : "border-border-subtle/30 bg-surface-light text-text-muted hover:text-text-primary"
                                     }`}
                                   >
                                     <input
@@ -336,7 +336,7 @@ export default function ReportGeneratorPage() {
           </div>
         </div>
       ))}
-      <p className="text-[10px] text-muted">Pick at least one metric. The PDF will include a section per metric.</p>
+      <p className="text-[10px] text-text-muted">Pick at least one metric. The PDF will include a section per metric.</p>
     </div>
   );
 
@@ -348,29 +348,29 @@ export default function ReportGeneratorPage() {
         <p className="text-[10px] uppercase tracking-wider font-semibold text-brand-accent">Report preview</p>
       </div>
       <div className="space-y-1">
-        <p className="text-base font-bold text-foreground">{selectedClientObj?.business_name || "No client selected"}</p>
-        {selectedClientObj?.industry && <p className="text-[11px] text-muted">{selectedClientObj.industry}</p>}
-        <p className="text-[11px] text-muted">
+        <p className="text-base font-bold text-text-primary">{selectedClientObj?.business_name || "No client selected"}</p>
+        {selectedClientObj?.industry && <p className="text-[11px] text-text-muted">{selectedClientObj.industry}</p>}
+        <p className="text-[11px] text-text-muted">
           <Calendar size={10} className="inline -mt-0.5 mr-1" />
           {fromDate} → {toDate}
         </p>
       </div>
-      <div className="mt-3 border-t border-border/30 pt-3 space-y-2">
+      <div className="mt-3 border-t border-border-subtle/30 pt-3 space-y-2">
         {metrics.length === 0 ? (
-          <p className="text-[11px] text-muted italic">No metrics selected yet.</p>
+          <p className="text-[11px] text-text-muted italic">No metrics selected yet.</p>
         ) : (
           metrics.map(id => {
             const meta = METRIC_OPTIONS.find(m => m.id === id);
             return (
               <div key={id} className="flex items-center gap-2 text-[11px]">
                 <Check size={11} className="text-brand-accent" />
-                <span className="text-foreground">{meta?.label || id}</span>
+                <span className="text-text-primary">{meta?.label || id}</span>
               </div>
             );
           })
         )}
       </div>
-      <div className="mt-3 border-t border-border/30 pt-3">
+      <div className="mt-3 border-t border-border-subtle/30 pt-3">
         <label className="flex items-center gap-2 text-[11px] cursor-pointer">
           <input
             type="checkbox"
@@ -380,7 +380,7 @@ export default function ReportGeneratorPage() {
             disabled={!selectedClientObj?.email}
           />
           <Mail size={11} className="text-brand-accent" />
-          <span className={selectedClientObj?.email ? "text-foreground" : "text-muted"}>
+          <span className={selectedClientObj?.email ? "text-text-primary" : "text-text-muted"}>
             Email PDF to client{selectedClientObj?.email ? ` (${selectedClientObj.email})` : " (client email missing)"}
           </span>
         </label>
@@ -392,8 +392,8 @@ export default function ReportGeneratorPage() {
   const stepPreview = (
     <div className="space-y-4">
       {previewBlock}
-      <div className="text-[10px] text-muted">
-        Click <span className="font-semibold text-foreground">Generate PDF</span> to render the report, upload it to
+      <div className="text-[10px] text-text-muted">
+        Click <span className="font-semibold text-text-primary">Generate PDF</span> to render the report, upload it to
         secure storage, and save it to your history. Signed URL valid for 7 days.
       </div>
     </div>
@@ -437,7 +437,7 @@ export default function ReportGeneratorPage() {
   /* ── Render ───────────────────────────────────────────── */
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6 fade-in">
+    <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* -- Report Generator command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -447,7 +447,7 @@ export default function ReportGeneratorPage() {
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => { fetchClients(); fetchHistory(); }}
-            className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border text-foreground font-medium hover:bg-black/15 transition-all"
+            className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border-subtle text-text-primary font-medium hover:bg-black/15 transition-all"
           >
             <RefreshCw size={12} /> Refresh
           </button>
@@ -464,7 +464,7 @@ export default function ReportGeneratorPage() {
             busy={generating}
             preview={
               step === 3 ? undefined : (
-                <div className="text-[11px] text-muted flex flex-wrap items-center gap-3">
+                <div className="text-[11px] text-text-muted flex flex-wrap items-center gap-3">
                   <span className="inline-flex items-center gap-1">
                     <Users size={10} className="text-brand-accent" />
                     {selectedClientObj?.business_name || "No client"}
@@ -496,32 +496,32 @@ export default function ReportGeneratorPage() {
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.4 }} className="glass overflow-hidden spotlight-card" whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
           <div className="p-5">
             <div className="flex items-center gap-2 mb-3">
-              <History size={14} className="text-muted" />
-              <h2 className="text-sm font-semibold text-foreground">Past reports</h2>
-              <span className="text-[9px] text-muted bg-surface-light px-2 py-0.5 rounded-full">{history.length}</span>
+              <History size={14} className="text-text-muted" />
+              <h2 className="text-sm font-semibold text-text-primary">Past reports</h2>
+              <span className="text-[9px] text-text-muted bg-surface-light px-2 py-0.5 rounded-full">{history.length}</span>
             </div>
 
             {loadingHistory ? (
               <div className="flex items-center justify-center py-8">
-                <Loader size={14} className="animate-spin text-muted" />
+                <Loader size={14} className="animate-spin text-text-muted" />
               </div>
             ) : history.length === 0 ? (
-              <div className="text-[11px] text-muted py-4 text-center">No reports generated yet.</div>
+              <div className="text-[11px] text-text-muted py-4 text-center">No reports generated yet.</div>
             ) : (
               <ul className="space-y-2">
                 {history.map(r => {
                   const c = clients.find(cl => cl.id === r.client_id);
                   return (
-                    <li key={r.id} className="border border-border/30 rounded-xl px-3 py-2.5 flex items-center gap-3">
+                    <li key={r.id} className="border border-border-subtle/30 rounded-xl px-3 py-2.5 flex items-center gap-3">
                       <div className="w-1.5 h-1.5 rounded-full bg-brand-accent shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-[11px] font-medium text-foreground truncate">
+                        <p className="text-[11px] font-medium text-text-primary truncate">
                           {c?.business_name || "Unknown client"}
                         </p>
-                        <p className="text-[10px] text-muted truncate">
+                        <p className="text-[10px] text-text-muted truncate">
                           {r.date_from} → {r.date_to} · {r.metrics.length} metric{r.metrics.length === 1 ? "" : "s"} · {fmtBytes(r.pdf_size_bytes)}
                         </p>
-                        <p className="text-[9px] text-muted/70">
+                        <p className="text-[9px] text-text-muted/70">
                           <Clock size={8} className="inline -mt-0.5 mr-1" />
                           {new Date(r.created_at).toLocaleString()}
                         </p>

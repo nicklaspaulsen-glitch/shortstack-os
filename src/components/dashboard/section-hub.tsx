@@ -130,7 +130,7 @@ export default function SectionHub({
   }, [fetchData]);
 
   return (
-    <div className="fade-in space-y-5 max-w-[1400px] mx-auto">
+    <div className="space-y-5 max-w-[1400px] mx-auto">
       {/* Hero */}
       <PageHero
         icon={heroIcon}
@@ -142,7 +142,7 @@ export default function SectionHub({
 
       {/* Rolling preview marquee (optional — each hub can pass its own set) */}
       {preview && preview.items.length > 0 && (
-        <div className="relative overflow-hidden border border-border bg-surface-light/30 py-5">
+        <div className="relative overflow-hidden border border-border-subtle bg-surface-light/30 py-5">
           <div className="absolute inset-0 pointer-events-none">
             <RollingPreview
               items={preview.items}
@@ -157,7 +157,7 @@ export default function SectionHub({
             <p className="text-[11px] uppercase tracking-widest text-[rgba(59,130,246,0.8)] font-semibold">
               In this section
             </p>
-            <h3 className="text-base font-bold text-foreground mt-1">
+            <h3 className="text-base font-bold text-text-primary mt-1">
               {preview.caption || `Explore the ${title.toLowerCase()} toolkit`}
             </h3>
           </div>
@@ -173,16 +173,16 @@ export default function SectionHub({
               <Link
                 key={a.label}
                 href={a.href}
-                className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-surface hover:bg-surface-light hover:border-[rgba(59,130,246,0.25)] transition-all"
+                className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light hover:border-[rgba(59,130,246,0.25)] transition-all"
               >
                 <div className="w-9 h-9 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] flex items-center justify-center text-[#2563EB] shrink-0 group-hover:bg-[rgba(59,130,246,0.08)] transition-colors">
                   <Icon size={16} />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[12px] font-semibold text-foreground leading-tight truncate">{a.label}</p>
-                  <p className="text-[10px] text-muted leading-tight">Quick action</p>
+                  <p className="text-[12px] font-semibold text-text-primary leading-tight truncate">{a.label}</p>
+                  <p className="text-[10px] text-text-muted leading-tight">Quick action</p>
                 </div>
-                <ChevronRight size={14} className="text-muted group-hover:text-[#2563EB] transition-colors shrink-0" />
+                <ChevronRight size={14} className="text-text-muted group-hover:text-[#2563EB] transition-colors shrink-0" />
               </Link>
             );
           })}
@@ -196,13 +196,13 @@ export default function SectionHub({
           const raw = data?.stats?.[s.key];
           const display = loading ? "…" : formatStat(raw, s.format);
           return (
-            <div key={s.key} className="card !py-3 !px-3.5 flex items-center gap-3">
+            <div key={s.key} className="glass rounded-xl !py-3 !px-3.5 flex items-center gap-3">
               <div className={s.color || "text-[#2563EB]"}>
                 <Icon size={16} />
               </div>
               <div className="min-w-0">
                 <p className="text-lg font-bold leading-none">{display}</p>
-                <p className="text-[10px] text-muted truncate">{s.label}</p>
+                <p className="text-[10px] text-text-muted truncate">{s.label}</p>
               </div>
             </div>
           );
@@ -215,8 +215,8 @@ export default function SectionHub({
             the tools have a category (back-compat with old call sites). */}
         <div className="lg:col-span-2 space-y-2.5">
           <div className="flex items-center justify-between px-1">
-            <h2 className="text-[11px] font-semibold text-muted uppercase tracking-[0.18em]">Tools</h2>
-            <span className="text-[10px] text-muted">{tools.length} in this section</span>
+            <h2 className="text-[11px] font-semibold text-text-muted uppercase tracking-[0.18em]">Tools</h2>
+            <span className="text-[10px] text-text-muted">{tools.length} in this section</span>
           </div>
           {(() => {
             // Bucket tools by category. Preserves first-occurrence order
@@ -246,29 +246,29 @@ export default function SectionHub({
                       <Icon size={16} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-[12px] font-semibold text-foreground leading-tight truncate">
+                      <p className="text-[12px] font-semibold text-text-primary leading-tight truncate">
                         {tool.label}
                         {disabled && (
-                          <span className="ml-1.5 text-[9px] text-muted font-medium uppercase tracking-wider">
+                          <span className="ml-1.5 text-[9px] text-text-muted font-medium uppercase tracking-wider">
                             Soon
                           </span>
                         )}
                       </p>
-                      <p className="text-[10px] text-muted leading-snug line-clamp-2 mt-0.5">
+                      <p className="text-[10px] text-text-muted leading-snug line-clamp-2 mt-0.5">
                         {tool.description}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between pt-2 mt-auto border-t border-border/50">
-                    <span className="text-[9px] text-muted flex items-center gap-1">
+                  <div className="flex items-center justify-between pt-2 mt-auto border-t border-border-subtle/50">
+                    <span className="text-[9px] text-text-muted flex items-center gap-1">
                       <Clock size={9} /> {ts ? formatRelativeTime(ts) : "Not used yet"}
                     </span>
-                    <ChevronRight size={12} className="text-muted" />
+                    <ChevronRight size={12} className="text-text-muted" />
                   </div>
                 </>
               );
               const cls =
-                "group flex flex-col gap-2 p-3 rounded-xl border border-border bg-surface transition-all " +
+                "group flex flex-col gap-2 p-3 rounded-xl border border-border-subtle bg-surface transition-all " +
                 (disabled
                   ? "opacity-50 cursor-not-allowed"
                   : "hover:bg-surface-light hover:border-[rgba(59,130,246,0.25)] cursor-pointer");
@@ -309,18 +309,18 @@ export default function SectionHub({
         {/* Recent activity feed */}
         <div className="space-y-2.5">
           <div className="flex items-center justify-between px-1">
-            <h2 className="text-[11px] font-semibold text-muted uppercase tracking-[0.18em]">
+            <h2 className="text-[11px] font-semibold text-text-muted uppercase tracking-[0.18em]">
               Recent activity
             </h2>
           </div>
-          <div className="card !p-0 overflow-hidden">
+          <div className="glass rounded-xl !p-0 overflow-hidden">
             {loading ? (
-              <div className="p-4 text-[11px] text-muted text-center">Loading…</div>
+              <div className="p-4 text-[11px] text-text-muted text-center">Loading…</div>
             ) : !data?.activity?.length ? (
               <div className="p-6 text-center">
-                <Activity size={18} className="mx-auto text-muted/50 mb-2" />
-                <p className="text-[11px] text-muted">No activity yet</p>
-                <p className="text-[10px] text-muted/70 mt-0.5">
+                <Activity size={18} className="mx-auto text-text-muted/50 mb-2" />
+                <p className="text-[11px] text-text-muted">No activity yet</p>
+                <p className="text-[10px] text-text-muted/70 mt-0.5">
                   Use a tool below to populate this feed
                 </p>
               </div>
@@ -330,10 +330,10 @@ export default function SectionHub({
                   <li key={a.id} className="flex items-start gap-2.5 px-3 py-2.5">
                     <Sparkles size={12} className="text-[rgba(59,130,246,0.7)] mt-0.5 shrink-0" />
                     <div className="min-w-0 flex-1">
-                      <p className="text-[11px] text-foreground leading-snug line-clamp-2">
+                      <p className="text-[11px] text-text-primary leading-snug line-clamp-2">
                         {a.description || humanizeAction(a.action_type)}
                       </p>
-                      <p className="text-[9px] text-muted mt-0.5">
+                      <p className="text-[9px] text-text-muted mt-0.5">
                         {formatRelativeTime(a.created_at)} · {humanizeAction(a.action_type)}
                       </p>
                     </div>

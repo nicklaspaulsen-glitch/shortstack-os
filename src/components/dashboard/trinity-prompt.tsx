@@ -117,18 +117,18 @@ export default function TrinityPrompt() {
               className="shrink-0"
               style={{ color: "#2563EB" }}
             />
-            <span className="text-xs font-semibold tracking-wide text-muted uppercase">
+            <span className="text-xs font-semibold tracking-wide text-text-muted uppercase">
               Ask Trinity
             </span>
             <span
-              className="ml-auto text-[10px] text-muted/60 font-mono border rounded px-1.5 py-0.5"
+              className="ml-auto text-[10px] text-text-muted/60 font-mono border rounded px-1.5 py-0.5"
               style={{ borderColor: "rgba(0,0,0,0.10)" }}
             >
               esc
             </span>
             <button
               onClick={() => setOpen(false)}
-              className="p-1 rounded-md text-muted hover:text-foreground hover:bg-surface-light transition-colors"
+              className="p-1 rounded-md text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors"
               aria-label="Close"
             >
               <X size={14} />
@@ -150,7 +150,7 @@ export default function TrinityPrompt() {
               rows={1}
               placeholder="Ask anything about your business..."
               disabled={sending}
-              className="w-full resize-none bg-transparent text-sm placeholder:text-muted/60 focus:outline-none"
+              className="w-full resize-none bg-transparent text-sm placeholder:text-text-muted/60 focus:outline-none"
               style={{ maxHeight: 120 }}
             />
           </div>
@@ -165,7 +165,7 @@ export default function TrinityPrompt() {
               }}
             >
               {sending ? (
-                <span className="flex items-center gap-2 text-muted text-xs">
+                <span className="flex items-center gap-2 text-text-muted text-xs">
                   <Loader size={12} className="animate-spin" style={{ color: "#2563EB" }} />
                   Trinity is thinking…
                 </span>
@@ -182,7 +182,7 @@ export default function TrinityPrompt() {
             className="flex items-center justify-between px-4 py-2.5 border-t"
             style={{ borderColor: "rgba(0,0,0,0.08)" }}
           >
-            <span className="text-[10px] text-muted/60">
+            <span className="text-[10px] text-text-muted/60">
               Enter to send · Shift+Enter for new line
             </span>
             <button

@@ -68,7 +68,7 @@ export default function ClientReportsPage() {
   const completionRate = stats.totalTasks > 0 ? Math.round((stats.tasksCompleted / stats.totalTasks) * 100) : 0;
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="space-y-5">
       <div>
         <h1 className="page-header mb-0 flex items-center gap-2"><BarChart3 size={18} className="text-emerald-400" /> Reports</h1>
         <p className="text-xs text-text-muted mt-0.5">Performance overview and activity log</p>
@@ -82,9 +82,9 @@ export default function ClientReportsPage() {
       </div>
 
       {/* Progress bar */}
-      <div className="card">
+      <div className="glass rounded-xl p-4">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="section-header mb-0">Project Progress</h2>
+          <h2 className="mb-0">Project Progress</h2>
           <span className="text-[10px] font-mono text-blue-400">{stats.tasksCompleted}/{stats.totalTasks} tasks</span>
         </div>
         <div className="w-full bg-white/[0.10] rounded-full h-2.5">
@@ -93,8 +93,8 @@ export default function ClientReportsPage() {
       </div>
 
       {/* Activity log */}
-      <div className="card">
-        <h2 className="section-header flex items-center gap-2">
+      <div className="glass rounded-xl p-4">
+        <h2 className="flex items-center gap-2">
           <Calendar size={13} className="text-blue-400" /> Activity Log
         </h2>
         <div className="space-y-2 max-h-[400px] overflow-y-auto">

@@ -162,10 +162,10 @@ export default function ChoiceCards({
             onKeyDown={(e) => !item.disabled && onKeyDown(e, focusIdx)}
             className={`relative text-left border transition-all outline-none ${SIZE_CARD[size]} ${
               item.disabled
-                ? "opacity-50 cursor-not-allowed border-border bg-surface-light"
+                ? "opacity-50 cursor-not-allowed border-border-subtle bg-surface-light"
                 : selected
                   ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] ring-2 ring-[rgba(59,130,246,0.25)]"
-                  : "border-border bg-surface-light hover:border-[rgba(59,130,246,0.25)] focus-visible:border-[rgba(59,130,246,0.5)] focus-visible:ring-2 focus-visible:ring-[rgba(59,130,246,0.12)]"
+                  : "border-border-subtle bg-surface-light hover:border-[rgba(59,130,246,0.25)] focus-visible:border-[rgba(59,130,246,0.5)] focus-visible:ring-2 focus-visible:ring-[rgba(59,130,246,0.12)]"
             }`}
           >
             {item.badge && (
@@ -177,7 +177,7 @@ export default function ChoiceCards({
               <div className="flex items-center gap-2 mb-2">
                 <div
                   className={`${SIZE_ICON[size]} flex items-center justify-center shrink-0 ${
-                    selected ? "bg-[rgba(59,130,246,0.12)] text-[#2563EB]" : "bg-surface-light text-muted"
+                    selected ? "bg-[rgba(59,130,246,0.12)] text-[#2563EB]" : "bg-surface-light text-text-muted"
                   }`}
                 >
                   {item.icon}
@@ -190,12 +190,12 @@ export default function ChoiceCards({
               </div>
             )}
             <p
-              className={`${SIZE_TITLE[size]} font-semibold text-foreground mb-0.5`}
+              className={`${SIZE_TITLE[size]} font-semibold text-text-primary mb-0.5`}
             >
               {item.title}
             </p>
             {item.description && (
-              <p className={`${SIZE_DESC[size]} text-muted leading-snug`}>
+              <p className={`${SIZE_DESC[size]} text-text-muted leading-snug`}>
                 {item.description}
               </p>
             )}

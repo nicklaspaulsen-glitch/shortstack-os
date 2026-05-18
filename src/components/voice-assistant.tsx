@@ -292,24 +292,24 @@ export default function VoiceAssistant() {
 
   return (
     <Draggable defaultX={288} defaultY={typeof window !== "undefined" ? window.innerHeight - 580 : 200} storageKey="voice_panel">
-    <div className="w-[420px] bg-surface border border-border  shadow-2xl shadow-black/50 flex flex-col overflow-hidden fade-in" style={{ height: "560px" }}>
+    <div className="w-[420px] bg-surface border border-border-subtle  shadow-2xl shadow-black/50 flex flex-col overflow-hidden" style={{ height: "560px" }}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-[rgba(29,78,216,0.2)] to-[rgba(59,130,246,0.1)] px-4 py-3 flex items-center justify-between border-b border-border">
+      <div className="bg-gradient-to-r from-[rgba(29,78,216,0.2)] to-[rgba(59,130,246,0.1)] px-4 py-3 flex items-center justify-between border-b border-border-subtle">
         <div className="flex items-center gap-2">
           <div className="w-9 h-9 bg-[rgba(59,130,246,0.12)] rounded-full flex items-center justify-center relative">
             <Image src="/icons/shortstack-logo.svg" alt="Assistant" width={20} height={20} />
             {isSpeaking && <div className="absolute inset-0 rounded-full border-2 border-[#2563EB] animate-ping" />}
           </div>
           <div>
-            <p className="text-sm font-medium text-foreground">Trinity AI</p>
+            <p className="text-sm font-medium text-text-primary">Trinity AI</p>
             <p className="text-[10px] text-[#2563EB]">{isListening ? "Listening..." : isSpeaking ? "Speaking..." : processing ? "Thinking..." : "Ready"}</p>
           </div>
         </div>
         <div className="flex gap-1">
-          <button onClick={() => setShowSettings(!showSettings)} className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground transition-colors">
+          <button onClick={() => setShowSettings(!showSettings)} className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors">
             <Settings size={14} />
           </button>
-          <button onClick={() => { stopSpeaking(); setIsOpen(false); }} className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground transition-colors">
+          <button onClick={() => { stopSpeaking(); setIsOpen(false); }} className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors">
             <X size={14} />
           </button>
         </div>
@@ -317,22 +317,22 @@ export default function VoiceAssistant() {
 
       {/* Settings panel */}
       {showSettings && (
-        <div className="px-4 py-3 bg-surface-light border-b border-border space-y-2">
+        <div className="px-4 py-3 bg-surface-light border-b border-border-subtle space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted">Input Mode</span>
+            <span className="text-xs text-text-muted">Input Mode</span>
             <div className="flex gap-1">
               <button onClick={() => setInputMode("voice")}
-                className={`text-xs px-2 py-1 rounded ${inputMode === "voice" ? "bg-[#2563EB] text-white" : "bg-surface text-muted"}`}>
+                className={`text-xs px-2 py-1 rounded ${inputMode === "voice" ? "bg-[#2563EB] text-white" : "bg-surface text-text-muted"}`}>
                 Voice
               </button>
               <button onClick={() => setInputMode("text")}
-                className={`text-xs px-2 py-1 rounded ${inputMode === "text" ? "bg-[#2563EB] text-white" : "bg-surface text-muted"}`}>
+                className={`text-xs px-2 py-1 rounded ${inputMode === "text" ? "bg-[#2563EB] text-white" : "bg-surface text-text-muted"}`}>
                 Text
               </button>
             </div>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted">Audio Output</span>
+            <span className="text-xs text-text-muted">Audio Output</span>
             <button onClick={() => { setIsMuted(!isMuted); if (!isMuted) stopSpeaking(); }}
               className={`text-xs px-2 py-1 rounded flex items-center gap-1 ${isMuted ? "bg-danger/20 text-danger" : "bg-success/20 text-success"}`}>
               {isMuted ? <VolumeX size={12} /> : <Volume2 size={12} />}
@@ -340,15 +340,15 @@ export default function VoiceAssistant() {
             </button>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted">Speed: {voiceSpeed}x</span>
+            <span className="text-xs text-text-muted">Speed: {voiceSpeed}x</span>
             <input type="range" min="0.5" max="2" step="0.1" value={voiceSpeed}
               onChange={(e) => setVoiceSpeed(parseFloat(e.target.value))}
               className="w-24 accent-[#2563EB]" />
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted">Auto-briefing on open</span>
+            <span className="text-xs text-text-muted">Auto-briefing on open</span>
             <button onClick={() => setAutoPlayBriefing(!autoPlayBriefing)}
-              className={`text-xs px-2 py-1 rounded ${autoPlayBriefing ? "bg-[#2563EB] text-white" : "bg-surface text-muted"}`}>
+              className={`text-xs px-2 py-1 rounded ${autoPlayBriefing ? "bg-[#2563EB] text-white" : "bg-surface text-text-muted"}`}>
               {autoPlayBriefing ? "On" : "Off"}
             </button>
           </div>
@@ -362,10 +362,10 @@ export default function VoiceAssistant() {
             <div className={`max-w-[85%]  px-3.5 py-2.5 ${
               msg.role === "user"
                 ? "bg-[#2563EB] text-white rounded-br-sm"
-                : "bg-surface-light text-foreground rounded-bl-sm"
+                : "bg-surface-light text-text-primary rounded-bl-sm"
             }`}>
               <p className="text-sm leading-relaxed">{msg.content}</p>
-              <p className={`text-[9px] mt-1 ${msg.role === "user" ? "text-black/40" : "text-muted"}`}>
+              <p className={`text-[9px] mt-1 ${msg.role === "user" ? "text-black/40" : "text-text-muted"}`}>
                 {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
               </p>
             </div>
@@ -386,12 +386,12 @@ export default function VoiceAssistant() {
       </div>
 
       {/* Controls */}
-      <div className="p-3 border-t border-border">
+      <div className="p-3 border-t border-border-subtle">
         {inputMode === "voice" ? (
           <div className="flex items-center justify-center gap-4">
             {/* Mute button */}
             <button onClick={() => { setIsMuted(!isMuted); if (!isMuted) stopSpeaking(); }}
-              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isMuted ? "bg-danger/20 text-danger" : "bg-surface-light text-muted hover:text-foreground"}`}>
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isMuted ? "bg-danger/20 text-danger" : "bg-surface-light text-text-muted hover:text-text-primary"}`}>
               {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
             </button>
 
@@ -415,14 +415,14 @@ export default function VoiceAssistant() {
 
             {/* Switch to text */}
             <button onClick={() => setInputMode("text")}
-              className="w-10 h-10 rounded-full bg-surface-light flex items-center justify-center text-muted hover:text-foreground transition-colors">
+              className="w-10 h-10 rounded-full bg-surface-light flex items-center justify-center text-text-muted hover:text-text-primary transition-colors">
               <MessageSquare size={18} />
             </button>
           </div>
         ) : (
           <form onSubmit={(e) => { e.preventDefault(); sendMessage(textInput); setTextInput(""); }} className="flex gap-2">
             <button type="button" onClick={() => setInputMode("voice")}
-              className="w-9 h-9 rounded-full bg-surface-light flex items-center justify-center text-muted hover:text-foreground shrink-0">
+              className="w-9 h-9 rounded-full bg-surface-light flex items-center justify-center text-text-muted hover:text-text-primary shrink-0">
               <Mic size={16} />
             </button>
             <input
@@ -430,7 +430,7 @@ export default function VoiceAssistant() {
               value={textInput}
               onChange={(e) => setTextInput(e.target.value)}
               placeholder="Type a message..."
-              className="flex-1 bg-surface-light border border-border rounded-full px-4 py-2 text-sm text-foreground placeholder-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
+              className="flex-1 bg-surface-light border border-border-subtle rounded-full px-4 py-2 text-sm text-text-primary placeholder-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
               disabled={processing}
               autoFocus
             />
@@ -441,7 +441,7 @@ export default function VoiceAssistant() {
           </form>
         )}
 
-        <p className="text-center text-[9px] text-muted mt-2">
+        <p className="text-center text-[9px] text-text-muted mt-2">
           {isListening ? "Listening... speak now" : isSpeaking ? "Tap blue button to stop" : inputMode === "voice" ? "Tap mic to speak" : "Type or switch to voice"}
         </p>
       </div>

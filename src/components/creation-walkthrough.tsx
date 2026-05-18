@@ -159,7 +159,7 @@ export default function CreationWalkthrough({
       );
     }
     return (
-      <span className="w-5 h-5 rounded-full border border-border bg-surface-light/40 flex items-center justify-center shrink-0">
+      <span className="w-5 h-5 rounded-full border border-border-subtle bg-surface-light/40 flex items-center justify-center shrink-0">
         <span className="w-1.5 h-1.5 rounded-full bg-muted/40" />
       </span>
     );
@@ -210,7 +210,7 @@ export default function CreationWalkthrough({
           <div className="flex items-center gap-2">
             <input
               type="color"
-              className="w-9 h-9 rounded-lg border border-border bg-transparent cursor-pointer"
+              className="w-9 h-9 rounded-lg border border-border-subtle bg-transparent cursor-pointer"
               value={String(setting.value ?? "#ffffff")}
               onChange={(e) => handle(e.target.value)}
             />
@@ -228,7 +228,7 @@ export default function CreationWalkthrough({
             type="button"
             onClick={() => handle(!setting.value)}
             className={`relative inline-flex w-10 h-5 rounded-full transition-colors ${
-              setting.value ? "bg-[#2563EB]" : "bg-surface-light border border-border"
+              setting.value ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"
             }`}
           >
             <span
@@ -269,9 +269,9 @@ export default function CreationWalkthrough({
       />
 
       {/* Main container */}
-      <div className="relative w-full max-w-5xl max-h-[90vh] bg-surface border border-border  shadow-2xl shadow-black/50 overflow-hidden flex flex-col fade-in">
+      <div className="relative w-full max-w-5xl max-h-[90vh] bg-surface border border-border-subtle  shadow-2xl shadow-black/50 overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-border bg-surface-light/40">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-border-subtle bg-surface-light/40">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-[rgba(59,130,246,0.08)] rounded-xl flex items-center justify-center">
               <Sparkles size={16} className="text-[#2563EB]" />
@@ -279,7 +279,7 @@ export default function CreationWalkthrough({
             <div>
               <h2 className="text-sm font-semibold">{title}</h2>
               {subtitle && (
-                <p className="text-[11px] text-muted mt-0.5">{subtitle}</p>
+                <p className="text-[11px] text-text-muted mt-0.5">{subtitle}</p>
               )}
             </div>
           </div>
@@ -295,19 +295,19 @@ export default function CreationWalkthrough({
         {/* Body: sidebar + main */}
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar */}
-          <div className="w-64 shrink-0 border-r border-border bg-surface-light/20 overflow-y-auto">
+          <div className="w-64 shrink-0 border-r border-border-subtle bg-surface-light/20 overflow-y-auto">
             <ul className="py-3">
               {steps.map((s, i) => {
                 const isActive = i === currentStepIndex;
                 const isClickable = onJumpToStep && i < currentStepIndex;
                 const textCls =
                   i < currentStepIndex
-                    ? "text-foreground"
+                    ? "text-text-primary"
                     : isActive && stepStatus === "in_progress"
                       ? "text-[#2563EB] font-semibold"
                       : isActive
-                        ? "text-foreground font-semibold"
-                        : "text-muted";
+                        ? "text-text-primary font-semibold"
+                        : "text-text-muted";
                 return (
                   <li key={s.id}>
                     <button
@@ -327,12 +327,12 @@ export default function CreationWalkthrough({
                       {renderStatusIndicator(i)}
                       <div className="flex-1 min-w-0">
                         <div className={`text-xs ${textCls}`}>
-                          <span className="text-[10px] text-muted mr-1.5">
+                          <span className="text-[10px] text-text-muted mr-1.5">
                             {i + 1}
                           </span>
                           {s.title}
                         </div>
-                        <div className="text-[10px] text-muted mt-0.5 truncate">
+                        <div className="text-[10px] text-text-muted mt-0.5 truncate">
                           {s.description}
                         </div>
                       </div>
@@ -353,7 +353,7 @@ export default function CreationWalkthrough({
                   </div>
                   <div>
                     <h3 className="text-base font-semibold">All done!</h3>
-                    <p className="text-xs text-muted mt-0.5">
+                    <p className="text-xs text-text-muted mt-0.5">
                       Every step completed. Review the result below.
                     </p>
                   </div>
@@ -400,7 +400,7 @@ export default function CreationWalkthrough({
                     )}
                     <h3 className="text-base font-semibold">{current.title}</h3>
                   </div>
-                  <p className="text-xs text-muted">{current.description}</p>
+                  <p className="text-xs text-text-muted">{current.description}</p>
                 </div>
 
                 {/* In-progress indicator */}
@@ -431,10 +431,10 @@ export default function CreationWalkthrough({
                 {/* Preview */}
                 {current.preview && (
                   <div>
-                    <div className="text-[10px] uppercase tracking-wide text-muted mb-1.5 font-semibold">
+                    <div className="text-[10px] uppercase tracking-wide text-text-muted mb-1.5 font-semibold">
                       Preview
                     </div>
-                    <div className="rounded-xl border border-border bg-surface-light/30 p-4">
+                    <div className="rounded-xl border border-border-subtle bg-surface-light/30 p-4">
                       {current.preview}
                     </div>
                   </div>
@@ -461,13 +461,13 @@ export default function CreationWalkthrough({
                         />
                       </button>
                       {showSettings && (
-                        <div className="mt-3 rounded-xl border border-border bg-surface-light/30 p-4 space-y-3">
+                        <div className="mt-3 rounded-xl border border-border-subtle bg-surface-light/30 p-4 space-y-3">
                           {current.editableSettings.map((s) => (
                             <div
                               key={s.key}
                               className="grid grid-cols-[140px_1fr] gap-3 items-center"
                             >
-                              <label className="text-[11px] text-muted">
+                              <label className="text-[11px] text-text-muted">
                                 {s.label}
                               </label>
                               <div>{renderSettingField(s)}</div>
@@ -526,15 +526,15 @@ export default function CreationWalkthrough({
         </div>
 
         {/* Footer: progress bar */}
-        <div className="border-t border-border bg-surface-light/30 px-5 py-2.5">
+        <div className="border-t border-border-subtle bg-surface-light/30 px-5 py-2.5">
           <div className="flex items-center gap-3">
-            <div className="flex-1 h-1.5 bg-surface-light/60 rounded-full overflow-hidden border border-border/60">
+            <div className="flex-1 h-1.5 bg-surface-light/60 rounded-full overflow-hidden border border-border-subtle/60">
               <div
                 className="h-full bg-gradient-to-r from-[rgba(59,130,246,0.7)] to-[#2563EB] transition-all duration-300 ease-out"
                 style={{ width: `${progressPct}%` }}
               />
             </div>
-            <span className="text-[10px] text-muted font-mono tabular-nums whitespace-nowrap">
+            <span className="text-[10px] text-text-muted font-mono tabular-nums whitespace-nowrap">
               Step {Math.min(currentStepIndex + 1, steps.length)} of{" "}
               {steps.length}
             </span>

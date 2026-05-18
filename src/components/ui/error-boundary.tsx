@@ -26,10 +26,10 @@ export default class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return this.props.fallback || (
-        <div className="card border-danger/15 text-center py-8">
+        <div className="glass rounded-xl p-4 border-danger/15 text-center py-8">
           <AlertTriangle size={24} className="mx-auto mb-3 text-danger/50" />
           <h3 className="text-sm font-semibold mb-1">Something went wrong</h3>
-          <p className="text-[10px] text-muted mb-3">
+          <p className="text-[10px] text-text-muted mb-3">
             {this.state.error?.message || "An unexpected error occurred"}
           </p>
           <button

@@ -142,7 +142,7 @@ export default function LlmCostsDashboard() {
 
   if (authLoading || state === "loading") {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[60vh] text-muted text-sm">Loading LLM cost dashboard�
+      <MotionPage className="flex items-center justify-center min-h-[60vh] text-text-muted text-sm">Loading LLM cost dashboard�
               </MotionPage>
     );
   }
@@ -150,14 +150,14 @@ export default function LlmCostsDashboard() {
   if (state === "forbidden") {
     return (
       <div className="max-w-xl mx-auto py-12 text-center space-y-3">
-        <Lock size={32} className="text-muted mx-auto" />
+        <Lock size={32} className="text-text-muted mx-auto" />
         <h1 className="text-lg font-bold">Admin only</h1>
-        <p className="text-xs text-muted">
+        <p className="text-xs text-text-muted">
           The LLM cost dashboard is restricted to admin/founder roles.
         </p>
         <button
           onClick={() => router.push("/dashboard")}
-          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border bg-surface hover:bg-surface-light"
+          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light"
         >
           <ArrowLeft size={12} /> Back to Dashboard
         </button>
@@ -171,7 +171,7 @@ export default function LlmCostsDashboard() {
         <h1 className="text-lg font-bold">Couldn&apos;t load LLM cost data</h1>
         <button
           onClick={load}
-          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border bg-surface hover:bg-surface-light"
+          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light"
         >
           <RefreshCw size={12} /> Retry
         </button>
@@ -226,15 +226,15 @@ export default function LlmCostsDashboard() {
       </div>
 
       {/* Daily spend sparkline */}
-      <section className=" border border-border bg-surface p-5">
+      <section className=" border border-border-subtle bg-surface p-5">
         <header className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-sm font-semibold">Daily spend (this month)</h2>
-            <p className="text-[11px] text-muted">USD per UTC day</p>
+            <p className="text-[11px] text-text-muted">USD per UTC day</p>
           </div>
         </header>
         {data.daily_series.length === 0 ? (
-          <p className="text-xs text-muted py-8 text-center">
+          <p className="text-xs text-text-muted py-8 text-center">
             No usage events yet this month � once the smart router takes over, daily spend will appear here.
           </p>
         ) : (
@@ -251,11 +251,11 @@ export default function LlmCostsDashboard() {
                 <XAxis
                   dataKey="date"
                   tick={{ fontSize: 10, fill: "currentColor" }}
-                  className="text-muted"
+                  className="text-text-muted"
                 />
                 <YAxis
                   tick={{ fontSize: 10, fill: "currentColor" }}
-                  className="text-muted"
+                  className="text-text-muted"
                   tickFormatter={(v: number) => formatUsd(v)}
                   width={60}
                 />
@@ -283,13 +283,13 @@ export default function LlmCostsDashboard() {
 
       {/* Top tasks + Top models � side by side */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <section className=" border border-border bg-surface p-5">
+        <section className=" border border-border-subtle bg-surface p-5">
           <header className="mb-4">
             <h2 className="text-sm font-semibold">Top tasks by cost</h2>
-            <p className="text-[11px] text-muted">This month</p>
+            <p className="text-[11px] text-text-muted">This month</p>
           </header>
           {data.top_tasks.length === 0 ? (
-            <p className="text-xs text-muted py-8 text-center">
+            <p className="text-xs text-text-muted py-8 text-center">
               No task data yet.
             </p>
           ) : (
@@ -324,20 +324,20 @@ export default function LlmCostsDashboard() {
           )}
         </section>
 
-        <section className=" border border-border bg-surface p-5">
+        <section className=" border border-border-subtle bg-surface p-5">
           <header className="mb-4">
             <h2 className="text-sm font-semibold">Top models by cost</h2>
-            <p className="text-[11px] text-muted">This month</p>
+            <p className="text-[11px] text-text-muted">This month</p>
           </header>
           {data.top_models.length === 0 ? (
-            <p className="text-xs text-muted py-8 text-center">
+            <p className="text-xs text-text-muted py-8 text-center">
               No model data yet.
             </p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="text-left text-muted border-b border-border">
+                  <tr className="text-left text-text-muted border-b border-border-subtle">
                     <th className="pb-2 font-medium">Model</th>
                     <th className="pb-2 font-medium">Provider</th>
                     <th className="pb-2 font-medium text-right">Calls</th>
@@ -346,9 +346,9 @@ export default function LlmCostsDashboard() {
                 </thead>
                 <tbody>
                   {data.top_models.map((m) => (
-                    <tr key={m.model} className="border-b border-border/40">
+                    <tr key={m.model} className="border-b border-border-subtle/40">
                       <td className="py-2 font-mono text-[11px]">{m.model}</td>
-                      <td className="py-2 text-muted">{m.provider}</td>
+                      <td className="py-2 text-text-muted">{m.provider}</td>
                       <td className="py-2 text-right">{m.call_count.toLocaleString()}</td>
                       <td className="py-2 text-right font-medium">
                         {formatUsd(m.cost_usd)}
@@ -363,11 +363,11 @@ export default function LlmCostsDashboard() {
       </div>
 
       {/* Optimisation hints */}
-      <section className=" border border-border bg-surface p-5">
+      <section className=" border border-border-subtle bg-surface p-5">
         <header className="mb-4 flex items-center justify-between">
           <div>
             <h2 className="text-sm font-semibold">Optimisation hints</h2>
-            <p className="text-[11px] text-muted">
+            <p className="text-[11px] text-text-muted">
               Heuristic suggestions for cutting spend further
               {totalEstimatedSavings > 0 ? (
                 <>

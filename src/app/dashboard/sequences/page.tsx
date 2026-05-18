@@ -154,7 +154,7 @@ const STEP_COLORS: Record<string, { bg: string; text: string; border: string }> 
   sms: { bg: "bg-green-500/10", text: "text-green-600", border: "border-green-500/20" },
   call: { bg: "bg-amber-500/10", text: "text-amber-700", border: "border-amber-500/20" },
   social: { bg: "bg-pink-500/10", text: "text-pink-600", border: "border-pink-500/20" },
-  wait: { bg: "bg-[rgba(0,0,0,0.04)]", text: "text-[#6B7280]", border: "border-border" },
+  wait: { bg: "bg-[rgba(0,0,0,0.04)]", text: "text-[#6B7280]", border: "border-border-subtle" },
   condition: { bg: "bg-[rgba(59,130,246,0.08)]", text: "text-brand-accent", border: "border-[rgba(59,130,246,0.25)]" },
   dm: { bg: "bg-pink-500/10", text: "text-pink-600", border: "border-pink-500/20" },
 };
@@ -591,7 +591,7 @@ export default function SequencesPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Email Sequences command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Email Sequences command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">SEQUENCE BUILDER</p>
@@ -628,10 +628,10 @@ export default function SequencesPage() {
                 <h3 className="text-xs font-semibold flex items-center gap-2">
                   <Activity size={12} className="text-brand-accent" /> Recent activity
                 </h3>
-                <button onClick={() => void loadActivity()} className="text-[10px] text-muted hover:text-foreground">Refresh</button>
+                <button onClick={() => void loadActivity()} className="text-[10px] text-text-muted hover:text-text-primary">Refresh</button>
               </div>
               {activity.length === 0 ? (
-                <p className="text-[10px] text-muted">No sequence activity yet. Once the hourly cron runs, executions will appear here.</p>
+                <p className="text-[10px] text-text-muted">No sequence activity yet. Once the hourly cron runs, executions will appear here.</p>
               ) : (
                 <ul className="space-y-1">
                   {activity.map(a => (
@@ -642,7 +642,7 @@ export default function SequencesPage() {
                         </span>
                         <span>{a.description || `${a.sequence_name} ? step ${(a.step_order ?? 0) + 1}`}</span>
                       </span>
-                      <span className="text-muted">{a.executed_at ? new Date(a.executed_at).toLocaleString() : ""}</span>
+                      <span className="text-text-muted">{a.executed_at ? new Date(a.executed_at).toLocaleString() : ""}</span>
                     </li>
                   ))}
                 </ul>
@@ -660,34 +660,34 @@ export default function SequencesPage() {
                     <Sparkles size={16} className="text-brand-accent" />
                     <div>
                       <p className="text-xs font-semibold">{aiSummary.name}</p>
-                      <p className="text-[10px] text-muted">{aiSummary.description}</p>
+                      <p className="text-[10px] text-text-muted">{aiSummary.description}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4 text-[10px]">
-                    <div className="text-center"><p className="font-bold text-brand-accent">{aiSummary.step_count}</p><p className="text-muted">Steps</p></div>
-                    <div className="text-center"><p className="font-bold text-brand-accent">{aiSummary.channels.length}</p><p className="text-muted">Channels</p></div>
-                    <div className="text-center"><p className="font-bold text-brand-accent">{aiSummary.duration_days}d</p><p className="text-muted">Duration</p></div>
-                    <button onClick={() => setAiSummary(null)} className="text-muted hover:text-foreground p-1"><XCircle size={12} /></button>
+                    <div className="text-center"><p className="font-bold text-brand-accent">{aiSummary.step_count}</p><p className="text-text-muted">Steps</p></div>
+                    <div className="text-center"><p className="font-bold text-brand-accent">{aiSummary.channels.length}</p><p className="text-text-muted">Channels</p></div>
+                    <div className="text-center"><p className="font-bold text-brand-accent">{aiSummary.duration_days}d</p><p className="text-text-muted">Duration</p></div>
+                    <button onClick={() => setAiSummary(null)} className="text-text-muted hover:text-text-primary p-1"><XCircle size={12} /></button>
                   </div>
                 </div>
               </motion.div>
             )}{/* AI Generator Modal */}<Modal isOpen={showAiModal} onClose={() => setShowAiModal(false)} title="Generate Sequence with AI" size="lg">
               <div className="space-y-4">
                 <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Objective / Goal *</label>
+                  <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Objective / Goal *</label>
                   <textarea value={aiObjective} onChange={e => setAiObjective(e.target.value)} rows={3} className="input w-full text-xs"
                     placeholder="e.g. Book discovery calls with dental practice owners..." />
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Audience *</label>
+                  <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Audience *</label>
                   <input value={aiAudience} onChange={e => setAiAudience(e.target.value)} className="input w-full text-xs"
                     placeholder="e.g. Dental practice owners in the US, 50+ patients/month" />
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-2">Channels *</label>
+                  <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-2">Channels *</label>
                   <div className="flex gap-2">
                     {([{ key: "email", label: "Email" }, { key: "sms", label: "SMS" }, { key: "dm", label: "DM" }] as const).map(c => (
-                      <label key={c.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border cursor-pointer hover:border-[rgba(59,130,246,0.2)] transition-all">
+                      <label key={c.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border-subtle cursor-pointer hover:border-[rgba(59,130,246,0.2)] transition-all">
                         <input type="checkbox" checked={aiChannels[c.key]} onChange={() => setAiChannels(prev => ({ ...prev, [c.key]: !prev[c.key] }))} className="accent-[#2563EB]" />
                         <span className="text-xs">{c.label}</span>
                       </label>
@@ -696,13 +696,13 @@ export default function SequencesPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Length (days)</label>
+                    <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Length (days)</label>
                     <select value={aiLength} onChange={e => setAiLength(parseInt(e.target.value))} className="input w-full text-xs">
                       {[3, 5, 7, 10, 14].map(d => <option key={d} value={d}>{d} days</option>)}
                     </select>
                   </div>
                   <div>
-                    <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Tone</label>
+                    <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Tone</label>
                     <select value={aiTone} onChange={e => setAiTone(e.target.value)} className="input w-full text-xs">
                       <option value="professional">Professional</option>
                       <option value="friendly">Friendly</option>
@@ -731,9 +731,9 @@ export default function SequencesPage() {
                   <>
                     {/* Sequence List */}
                     {loading ? (
-                      <div className="card p-8 text-center">
+                      <div className="glass rounded-xl p-8 text-center">
                         <Loader2 size={24} className="animate-spin mx-auto text-brand-accent mb-2" />
-                        <p className="text-[10px] text-muted">Loading sequences...</p>
+                        <p className="text-[10px] text-text-muted">Loading sequences...</p>
                       </div>
                     ) : (
                       <PrismPanel rainbow padding="p-0" className="overflow-hidden space-y-0">
@@ -750,14 +750,14 @@ export default function SequencesPage() {
                               <div className={`w-2.5 h-2.5 rounded-full ${seq.active ? "bg-green-400 animate-pulse" : "bg-muted"}`} />
                               <div>
                                 <p className="text-xs font-semibold">{seq.name}</p>
-                                <p className="text-[10px] text-muted">{seq.steps.length} steps | {seq.enrolled} enrolled</p>
+                                <p className="text-[10px] text-text-muted">{seq.steps.length} steps | {seq.enrolled} enrolled</p>
                               </div>
                             </div>
                             <div className="flex items-center gap-4">
                               <div className="grid grid-cols-3 gap-4 text-center text-[10px]">
-                                <div><p className="font-bold">{seq.enrolled}</p><p className="text-[8px] text-muted">Enrolled</p></div>
-                                <div><p className="font-bold text-green-400">{seq.replied}</p><p className="text-[8px] text-muted">Replied</p></div>
-                                <div><p className="font-bold text-brand-accent">{seq.enrolled > 0 ? ((seq.replied / seq.enrolled) * 100).toFixed(1) : 0}%</p><p className="text-[8px] text-muted">Rate</p></div>
+                                <div><p className="font-bold">{seq.enrolled}</p><p className="text-[8px] text-text-muted">Enrolled</p></div>
+                                <div><p className="font-bold text-green-400">{seq.replied}</p><p className="text-[8px] text-text-muted">Replied</p></div>
+                                <div><p className="font-bold text-brand-accent">{seq.enrolled > 0 ? ((seq.replied / seq.enrolled) * 100).toFixed(1) : 0}%</p><p className="text-[8px] text-text-muted">Rate</p></div>
                               </div>
                               <div className="flex gap-1.5">
                                 <button onClick={() => void openSequence(seq)} className="btn-secondary text-[9px] py-1 px-2">Edit</button>
@@ -770,10 +770,10 @@ export default function SequencesPage() {
                       </PrismPanel>
                     )}
                     {/* Quick create from template hint */}
-                    <div className="card border-[rgba(59,130,246,0.1)] text-center py-6">
+                    <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.1)] text-center py-6">
                       <Sparkles size={24} className="mx-auto mb-2 text-brand-accent" />
                       <p className="text-sm font-semibold">Create a new sequence</p>
-                      <p className="text-[10px] text-muted mt-1">Pick a template from the Templates tab, or build from scratch</p>
+                      <p className="text-[10px] text-text-muted mt-1">Pick a template from the Templates tab, or build from scratch</p>
                       <button onClick={() => setActiveTab("templates")} className="btn-secondary text-xs mt-3">Browse Templates</button>
                     </div>
                   </>
@@ -806,12 +806,12 @@ export default function SequencesPage() {
                     </div>
 
                     {/* A/B Test Toggle */}
-                    <div className="card p-3 flex items-center justify-between">
+                    <div className="glass rounded-xl p-3 flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Target size={14} className="text-brand-accent" />
                         <div>
                           <p className="text-xs font-semibold">A/B Testing</p>
-                          <p className="text-[9px] text-muted">Split test subject lines and content</p>
+                          <p className="text-[9px] text-text-muted">Split test subject lines and content</p>
                         </div>
                       </div>
                       <button onClick={() => setAbEnabled(!abEnabled)}
@@ -839,15 +839,15 @@ export default function SequencesPage() {
                                   <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase flex items-center gap-1 ${colors.text}`}>
                                     {STEP_ICONS[step.type]} {step.type === "wait" ? `Wait ${step.delay_days}d` : step.type === "condition" ? "Condition" : step.type}
                                   </span>
-                                  <span className="text-[9px] text-muted">Step {i + 1}</span>
-                                  {step.channel && <span className="text-[8px] px-1.5 py-0.5 rounded bg-black/[0.04] text-muted capitalize">{step.channel}</span>}
+                                  <span className="text-[9px] text-text-muted">Step {i + 1}</span>
+                                  {step.channel && <span className="text-[8px] px-1.5 py-0.5 rounded bg-black/[0.04] text-text-muted capitalize">{step.channel}</span>}
                                 </div>
-                                <button onClick={() => removeStep(step.id)} className="text-muted hover:text-red-400 p-1"><Trash2 size={12} /></button>
+                                <button onClick={() => removeStep(step.id)} className="text-text-muted hover:text-red-400 p-1"><Trash2 size={12} /></button>
                               </div>
 
                               {step.type === "wait" ? (
                                 <div className="flex items-center gap-2">
-                                  <Clock size={14} className="text-muted" />
+                                  <Clock size={14} className="text-text-muted" />
                                   <input type="number" min={1} max={30} value={step.delay_days}
                                     onChange={e => {
                                       const steps = [...activeSequence.steps];
@@ -857,7 +857,7 @@ export default function SequencesPage() {
                                       setSequences(prev => prev.map(s => s.id === updated.id ? updated : s));
                                     }}
                                     className="input w-16 text-xs text-center" />
-                                  <span className="text-xs text-muted">days</span>
+                                  <span className="text-xs text-text-muted">days</span>
                                 </div>
                               ) : step.type === "condition" ? (
                                 <div className="flex items-center gap-2">
@@ -876,8 +876,8 @@ export default function SequencesPage() {
                                     <option value="not_replied">If no reply</option>
                                     <option value="booked">If booked call</option>
                                   </select>
-                                  <ArrowRight size={12} className="text-muted" />
-                                  <span className="text-[10px] text-muted">Then continue / Exit sequence</span>
+                                  <ArrowRight size={12} className="text-text-muted" />
+                                  <span className="text-[10px] text-text-muted">Then continue / Exit sequence</span>
                                 </div>
                               ) : (
                                 <div className="space-y-2">
@@ -905,7 +905,7 @@ export default function SequencesPage() {
                             </motion.div>
                             {i < activeSequence.steps.length - 1 && (
                               <div className="flex justify-center py-1">
-                                <ArrowDown size={14} className="text-muted/30" />
+                                <ArrowDown size={14} className="text-text-muted/30" />
                               </div>
                             )}
                           </div>
@@ -931,7 +931,7 @@ export default function SequencesPage() {
                     </div>
 
                     {/* Exit Conditions */}
-                    <div className="card">
+                    <div className="glass rounded-xl p-4">
                       <h4 className="text-xs font-semibold mb-2 flex items-center gap-2">
                         <XCircle size={12} className="text-red-400" /> Exit Conditions
                       </h4>
@@ -945,7 +945,7 @@ export default function SequencesPage() {
                         ].map((ex, i) => (
                           <div key={i} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
                             <div className="flex items-center gap-2">
-                              <CheckCircle size={10} className={ex.enabled ? "text-green-400" : "text-muted"} />
+                              <CheckCircle size={10} className={ex.enabled ? "text-green-400" : "text-text-muted"} />
                               <span>{ex.label}</span>
                             </div>
                             <div className={`w-6 h-3 rounded-full ${ex.enabled ? "bg-green-400" : "bg-surface"}`}>
@@ -983,7 +983,7 @@ export default function SequencesPage() {
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <p className="text-xs font-semibold">{t.name}</p>
-                          <p className="text-[10px] text-muted mt-0.5">{t.description}</p>
+                          <p className="text-[10px] text-text-muted mt-0.5">{t.description}</p>
                         </div>
                         <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">{t.category}</span>
                       </div>
@@ -1074,20 +1074,20 @@ export default function SequencesPage() {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.18, delay: index * 0.04 }}
                           whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
-                          className="p-3 rounded-lg bg-surface-light border border-border"
+                          className="p-3 rounded-lg bg-surface-light border border-border-subtle"
                         >
                           <div className="flex items-center justify-between mb-2">
                             <p className="text-xs font-semibold flex items-center gap-2">
                               <span className={`w-2 h-2 rounded-full ${seq.active ? "bg-green-400" : "bg-muted"}`} />
                               {seq.name}
                             </p>
-                            <span className="text-[9px] text-muted">{seq.steps.length} steps</span>
+                            <span className="text-[9px] text-text-muted">{seq.steps.length} steps</span>
                           </div>
                           <div className="grid grid-cols-4 gap-2 text-center text-[10px]">
-                            <div><p className="font-bold">{seq.enrolled}</p><p className="text-[8px] text-muted">Enrolled</p></div>
-                            <div><p className="font-bold text-green-400">{seq.completed}</p><p className="text-[8px] text-muted">Completed</p></div>
-                            <div><p className="font-bold text-brand-accent">{seq.replied}</p><p className="text-[8px] text-muted">Replied</p></div>
-                            <div><p className="font-bold text-brand-accent">{replyRate.toFixed(1)}%</p><p className="text-[8px] text-muted">Reply Rate</p></div>
+                            <div><p className="font-bold">{seq.enrolled}</p><p className="text-[8px] text-text-muted">Enrolled</p></div>
+                            <div><p className="font-bold text-green-400">{seq.completed}</p><p className="text-[8px] text-text-muted">Completed</p></div>
+                            <div><p className="font-bold text-brand-accent">{seq.replied}</p><p className="text-[8px] text-text-muted">Replied</p></div>
+                            <div><p className="font-bold text-brand-accent">{replyRate.toFixed(1)}%</p><p className="text-[8px] text-text-muted">Reply Rate</p></div>
                           </div>
                           <div className="w-full bg-surface rounded-full h-1.5 mt-2">
                             <div className="rounded-full h-1.5" style={{ width: `${seq.enrolled > 0 ? (seq.completed / seq.enrolled) * 100 : 0}%`, background: PRISM_RAINBOW_GRADIENT }} />
@@ -1103,13 +1103,13 @@ export default function SequencesPage() {
                 <h3 className="text-sm font-semibold flex items-center gap-2">
                   <Users size={14} className="text-brand-accent" /> Contact Enrollment Rules
                 </h3>
-                <div className="card">
-                  <p className="text-[10px] text-muted mb-3">
+                <div className="glass rounded-xl p-4">
+                  <p className="text-[10px] text-text-muted mb-3">
                     To enroll leads, call POST /api/sequences/{`{sequence_id}`}/enroll with {`{ lead_ids: [...] }`}.
                     Rule-based auto-enrollment is coming next.
                   </p>
                 </div>
-                <div className="card">
+                <div className="glass rounded-xl p-4">
                   <h4 className="text-xs font-semibold mb-3 flex items-center gap-2">
                     <Eye size={12} className="text-brand-accent" /> Reply Detection Rules
                   </h4>
@@ -1123,7 +1123,7 @@ export default function SequencesPage() {
                       <div key={i} className="flex items-center justify-between p-2.5 rounded bg-surface-light text-[10px]">
                         <div>
                           <p className="font-semibold">{rule.condition}</p>
-                          <p className="text-[9px] text-muted">{rule.action}</p>
+                          <p className="text-[9px] text-text-muted">{rule.action}</p>
                         </div>
                         <div className={`w-6 h-3 rounded-full ${rule.active ? "bg-green-400" : "bg-surface"}`}>
                           <div className={`w-2.5 h-2.5 bg-white rounded-full mt-px ${rule.active ? "ml-3" : "ml-0.5"}`} />
@@ -1159,10 +1159,10 @@ export default function SequencesPage() {
                   {runsLoading ? (
                     <div className="text-center py-6">
                       <Loader2 size={16} className="animate-spin mx-auto text-brand-accent mb-2" />
-                      <p className="text-[10px] text-muted">Loading runs...</p>
+                      <p className="text-[10px] text-text-muted">Loading runs...</p>
                     </div>
                   ) : runs.length === 0 ? (
-                    <p className="text-[10px] text-muted text-center py-4">
+                    <p className="text-[10px] text-text-muted text-center py-4">
                       No multi-channel runs yet. Enroll contacts via POST /api/sequences/enroll
                       with {"{"}sequence_id, contact_ids[]{"}"} to create runs.
                     </p>
@@ -1187,12 +1187,12 @@ export default function SequencesPage() {
                               {r.status}
                             </span>
                             <span>step {r.current_step + 1}</span>
-                            <span className="text-muted">�</span>
-                            <span className="text-muted">contact {r.contact_id ? r.contact_id.slice(0, 8) : "�"}</span>
+                            <span className="text-text-muted">�</span>
+                            <span className="text-text-muted">contact {r.contact_id ? r.contact_id.slice(0, 8) : "�"}</span>
                             {r.next_action_at && (
-                              <span className="text-muted">� next {new Date(r.next_action_at).toLocaleString()}</span>
+                              <span className="text-text-muted">� next {new Date(r.next_action_at).toLocaleString()}</span>
                             )}
-                            {r.exit_reason && <span className="text-muted">� {r.exit_reason}</span>}
+                            {r.exit_reason && <span className="text-text-muted">� {r.exit_reason}</span>}
                           </div>
                           <div className="flex gap-1">
                             {r.status === "active" && (
@@ -1210,7 +1210,7 @@ export default function SequencesPage() {
                     </ul>
                   )}
                 </PrismPanel>
-                <p className="text-[9px] text-muted px-2">
+                <p className="text-[9px] text-text-muted px-2">
                   The cron runner ticks every minute and advances active runs. Reply on
                   email/SMS/DM auto-exits the contact's runs (`exit_reason` will read
                   replied_email / replied_sms / replied_dm).
@@ -1219,7 +1219,7 @@ export default function SequencesPage() {
             )}{/* ===== SETTINGS ===== */}{activeTab === "settings" && (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  <div className="card">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Settings size={14} className="text-brand-accent" /> Sending Limits
                     </h3>
@@ -1238,7 +1238,7 @@ export default function SequencesPage() {
                       ))}
                     </div>
                   </div>
-                  <div className="card">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Pause size={14} className="text-brand-accent" /> Pause / Resume Controls
                     </h3>
@@ -1248,7 +1248,7 @@ export default function SequencesPage() {
                           <div className="flex items-center gap-2">
                             <span className={`w-2 h-2 rounded-full ${seq.active ? "bg-green-400" : "bg-muted"}`} />
                             <span className="font-semibold">{seq.name}</span>
-                            <span className="text-muted">({seq.enrolled} enrolled)</span>
+                            <span className="text-text-muted">({seq.enrolled} enrolled)</span>
                           </div>
                           <button
                             onClick={async () => {

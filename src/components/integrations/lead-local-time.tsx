@@ -79,10 +79,10 @@ export default function LeadLocalTime({
     <span className={`inline-flex items-center gap-1 text-[11px] ${className}`}>
       {flag && <span>{flag}</span>}
       {!hideLabel && labelParts.length > 0 && (
-        <span className="text-muted">{labelParts.join(", ")}</span>
+        <span className="text-text-muted">{labelParts.join(", ")}</span>
       )}
       {localTime && (
-        <span className="text-muted inline-flex items-center gap-0.5">
+        <span className="text-text-muted inline-flex items-center gap-0.5">
           <Clock className="w-3 h-3" />
           {localTime}
         </span>

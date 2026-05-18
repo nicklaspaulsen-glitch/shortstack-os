@@ -190,7 +190,7 @@ export default function ColdEmailPage() {
   }
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- AI Cold Email command strip -- */}
+    <MotionPage className="space-y-5">{/* -- AI Cold Email command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">EMAIL OUTREACH</p>
@@ -227,43 +227,43 @@ export default function ColdEmailPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                    <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
                       Campaign Name
                     </label>
                     <input
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Q2 dental outreach"
-                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-brand-accent"
+                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-accent"
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                    <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
                       Lead status filter
                     </label>
                     <input
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value)}
                       placeholder="new"
-                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-brand-accent"
+                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-accent"
                     />
-                    <p className="text-[9px] text-muted mt-0.5">
+                    <p className="text-[9px] text-text-muted mt-0.5">
                       We pull all leads with this status that have an email.
                     </p>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                  <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
                     Template seed
                   </label>
                   <textarea
                     value={templateSeed}
                     onChange={(e) => setTemplateSeed(e.target.value)}
                     rows={4}
-                    className="glass rounded-lg w-full text-xs py-2 px-2 bg-transparent border border-black/10 text-foreground placeholder:text-muted focus:outline-none focus:border-brand-accent font-mono"
+                    className="glass rounded-lg w-full text-xs py-2 px-2 bg-transparent border border-black/10 text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-accent font-mono"
                   />
-                  <p className="text-[9px] text-muted mt-0.5">
+                  <p className="text-[9px] text-text-muted mt-0.5">
                     Tokens: <code>{"{{first_name}}"}</code>, <code>{"{{business_name}}"}</code>,{" "}
                     <code>{"{{industry}}"}</code>, <code>{"{{location}}"}</code>,{" "}
                     <code>{"{{personal_hook}}"}</code> (LLM-generated).
@@ -279,7 +279,7 @@ export default function ColdEmailPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                    <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
                       Research depth
                     </label>
                     <div className="flex gap-1.5">
@@ -290,7 +290,7 @@ export default function ColdEmailPage() {
                           className={`flex-1 text-[10px] px-2 py-1.5 rounded border transition-all ${
                             depth === d
                               ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.10)] text-brand-accent"
-                              : "border-border text-muted hover:text-foreground"
+                              : "border-border-subtle text-text-muted hover:text-text-primary"
                           }`}
                         >
                           <div className="font-medium">{DEPTH_COPY[d].label}</div>
@@ -298,10 +298,10 @@ export default function ColdEmailPage() {
                         </button>
                       ))}
                     </div>
-                    <p className="text-[9px] text-muted mt-0.5">{DEPTH_COPY[depth].desc}</p>
+                    <p className="text-[9px] text-text-muted mt-0.5">{DEPTH_COPY[depth].desc}</p>
                   </div>
                   <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                    <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
                       Throttle (per hour)
                     </label>
                     <input
@@ -310,9 +310,9 @@ export default function ColdEmailPage() {
                       onChange={(e) => setThrottle(parseInt(e.target.value || "100") || 100)}
                       min={1}
                       max={5000}
-                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-foreground focus:outline-none focus:border-brand-accent"
+                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-text-primary focus:outline-none focus:border-brand-accent"
                     />
-                    <p className="text-[9px] text-muted mt-0.5">
+                    <p className="text-[9px] text-text-muted mt-0.5">
                       Recommended: 100/hr to protect domain reputation.
                     </p>
                   </div>
@@ -321,7 +321,7 @@ export default function ColdEmailPage() {
                 <div className="flex justify-end gap-2 pt-1">
                   <button
                     onClick={() => setShowCreate(false)}
-                    className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground"
+                    className="text-[10px] px-3 py-1.5 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary"
                   >
                     Cancel
                   </button>
@@ -338,11 +338,11 @@ export default function ColdEmailPage() {
               </motion.div>
             )}<PrismPanel rainbow padding="p-0" className="overflow-hidden space-y-0">
               {loading ? (
-                <div className="p-8 text-center text-[11px] text-muted">Loading�</div>
+                <div className="p-8 text-center text-[11px] text-text-muted">Loading�</div>
               ) : jobs.length === 0 ? (
                 <div className="p-10 text-center">
-                  <MailPlus size={22} className="mx-auto mb-2 text-muted opacity-40" />
-                  <p className="text-[11px] text-muted">
+                  <MailPlus size={22} className="mx-auto mb-2 text-text-muted opacity-40" />
+                  <p className="text-[11px] text-text-muted">
                     No campaigns yet. Create one to start cold-email at scale.
                   </p>
                 </div>
@@ -382,7 +382,7 @@ export default function ColdEmailPage() {
                               {j.status}
                             </span>
                           </div>
-                          <div className="flex items-center gap-3 text-[10px] text-muted">
+                          <div className="flex items-center gap-3 text-[10px] text-text-muted">
                             <span>{j.recipients_count.toLocaleString()} recipients</span>
                             <span>�</span>
                             <span>{DEPTH_COPY[j.research_depth].label} research</span>
@@ -429,7 +429,7 @@ export default function ColdEmailPage() {
                       </div>
 
                       <div>
-                        <div className="flex items-center justify-between text-[9px] text-muted mb-1">
+                        <div className="flex items-center justify-between text-[9px] text-text-muted mb-1">
                           <span>
                             Generated {j.generated_count} / {j.recipients_count}
                           </span>
@@ -450,7 +450,7 @@ export default function ColdEmailPage() {
 
                       {jobSamples.length > 0 && (
                         <div className="space-y-2 pt-2 border-t border-black/[0.05]">
-                          <p className="text-[9px] text-muted uppercase tracking-wider">
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider">
                             Preview samples
                           </p>
                           {jobSamples.map((s) => (
@@ -462,13 +462,13 @@ export default function ColdEmailPage() {
                                 </div>
                               ) : (
                                 <>
-                                  <div className="text-[10px] text-muted">
+                                  <div className="text-[10px] text-text-muted">
                                     <span className="text-brand-accent">Subject:</span> {s.subject}
                                   </div>
-                                  <pre className="text-[10px] text-foreground whitespace-pre-wrap font-sans leading-relaxed">
+                                  <pre className="text-[10px] text-text-primary whitespace-pre-wrap font-sans leading-relaxed">
                                     {s.body}
                                   </pre>
-                                  <div className="text-[9px] text-muted flex items-center gap-2">
+                                  <div className="text-[9px] text-text-muted flex items-center gap-2">
                                     <span>${Number(s.cost_usd).toFixed(5)}</span>
                                     <span>�</span>
                                     <CheckCircle size={9} className="text-green-400" />
@@ -481,7 +481,7 @@ export default function ColdEmailPage() {
                         </div>
                       )}
 
-                      <div className="flex items-center gap-3 text-[9px] text-muted pt-1">
+                      <div className="flex items-center gap-3 text-[9px] text-text-muted pt-1">
                         <span className="flex items-center gap-1">
                           <Clock size={9} />
                           Created {new Date(j.created_at).toISOString().split("T")[0]}

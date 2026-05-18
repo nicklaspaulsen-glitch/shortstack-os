@@ -594,8 +594,8 @@ export default function ImageWizard({
           <div className="w-20 h-20  bg-gradient-to-br from-[rgba(59,130,246,0.12)] to-amber-500/10 flex items-center justify-center mb-4">
             <Loader2 size={32} className="text-[#2563EB] animate-spin" />
           </div>
-          <h2 className="text-base font-semibold text-foreground mb-1.5">Generating with FLUX on RunPod</h2>
-          <p className="text-xs text-muted text-center max-w-md">
+          <h2 className="text-base font-semibold text-text-primary mb-1.5">Generating with FLUX on RunPod</h2>
+          <p className="text-xs text-text-muted text-center max-w-md">
             {isCarousel
               ? `Building ${total}-slide carousel — each slide shares your style. ${results.length}/${total} done.`
               : "FLUX is rendering your image. This usually takes 8–25 seconds."}
@@ -640,11 +640,11 @@ export default function ImageWizard({
 function FullModal({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 fade-in"
+      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3"
       onClick={onClose}
     >
       <div
-        className="bg-surface border border-border  shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden"
+        className="bg-surface border border-border-subtle  shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {children}
@@ -668,18 +668,18 @@ function ReviewModal({
 }) {
   return (
     <FullModal onClose={onClose}>
-      <div className="px-6 py-4 border-b border-border flex items-center gap-3">
+      <div className="px-6 py-4 border-b border-border-subtle flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[#2563EB]">
           <Wand2 size={18} />
         </div>
         <div className="flex-1 min-w-0">
-          <h2 className="text-sm font-semibold text-foreground">{title}</h2>
-          <p className="text-[11px] text-muted">Edit anything you want before we send it to FLUX.</p>
+          <h2 className="text-sm font-semibold text-text-primary">{title}</h2>
+          <p className="text-[11px] text-text-muted">Edit anything you want before we send it to FLUX.</p>
         </div>
-        <button onClick={onBack} className="text-xs text-muted hover:text-foreground px-2 py-1">
+        <button onClick={onBack} className="text-xs text-text-muted hover:text-text-primary px-2 py-1">
           Back to wizard
         </button>
-        <button onClick={onClose} className="p-2 rounded-lg hover:bg-surface-light text-muted hover:text-foreground">
+        <button onClick={onClose} className="p-2 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary">
           <X size={14} />
         </button>
       </div>
@@ -713,46 +713,46 @@ function PromptReview({
         <span className="px-2 py-1 rounded-full bg-[rgba(59,130,246,0.08)] text-[#2563EB] border border-[rgba(59,130,246,0.25)] font-semibold uppercase tracking-wider">
           {build?.recommended_model || "flux"}
         </span>
-        <span className="text-muted">
+        <span className="text-text-muted">
           {dimensions.width} × {dimensions.height}
         </span>
         {build?.steps != null && (
-          <span className="text-muted">{build.steps} steps</span>
+          <span className="text-text-muted">{build.steps} steps</span>
         )}
         {build?.guidance_scale != null && (
-          <span className="text-muted">guidance {build.guidance_scale}</span>
+          <span className="text-text-muted">guidance {build.guidance_scale}</span>
         )}
       </div>
 
       <div>
-        <label className="text-[11px] font-semibold text-foreground uppercase tracking-wider flex items-center gap-1.5 mb-2">
+        <label className="text-[11px] font-semibold text-text-primary uppercase tracking-wider flex items-center gap-1.5 mb-2">
           <Wand2 size={11} className="text-[#2563EB]" /> AI-built prompt
         </label>
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           rows={5}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)] resize-none font-mono"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)] resize-none font-mono"
         />
-        <p className="text-[10px] text-muted mt-1.5">
+        <p className="text-[10px] text-text-muted mt-1.5">
           Edit freely — this is the exact text we send to FLUX.
         </p>
       </div>
 
       <div>
-        <label className="text-[11px] font-semibold text-foreground uppercase tracking-wider mb-2 block">
+        <label className="text-[11px] font-semibold text-text-primary uppercase tracking-wider mb-2 block">
           Negative prompt
         </label>
         <textarea
           value={negative}
           onChange={(e) => setNegative(e.target.value)}
           rows={2}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-xs focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)] resize-none font-mono"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-xs focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)] resize-none font-mono"
         />
       </div>
 
       {build?.notes && (
-        <div className="text-[11px] text-muted italic border-l-2 border-[rgba(59,130,246,0.25)] pl-3">{build.notes}</div>
+        <div className="text-[11px] text-text-muted italic border-l-2 border-[rgba(59,130,246,0.25)] pl-3">{build.notes}</div>
       )}
 
       <button
@@ -785,16 +785,16 @@ function CarouselSetup({
       <div className="bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.2)] rounded-xl p-4">
         <div className="flex items-center gap-2 mb-1.5">
           <Layers size={14} className="text-[#2563EB]" />
-          <h3 className="text-xs font-semibold text-foreground">Shared style locked in</h3>
+          <h3 className="text-xs font-semibold text-text-primary">Shared style locked in</h3>
         </div>
-        <p className="text-[11px] text-muted">
-          Style: <span className="text-foreground font-medium">{style || "—"}</span> · Palette:{" "}
-          <span className="text-foreground font-medium">{palette || "—"}</span> · Mood:{" "}
-          <span className="text-foreground font-medium">
+        <p className="text-[11px] text-text-muted">
+          Style: <span className="text-text-primary font-medium">{style || "—"}</span> · Palette:{" "}
+          <span className="text-text-primary font-medium">{palette || "—"}</span> · Mood:{" "}
+          <span className="text-text-primary font-medium">
             {Array.isArray(answers.mood) ? (answers.mood as string[]).join(", ") : "—"}
           </span>
         </p>
-        <p className="text-[10px] text-muted mt-2">
+        <p className="text-[10px] text-text-muted mt-2">
           Each slide will share these visuals. Just describe what each slide should depict below.
         </p>
       </div>
@@ -814,12 +814,12 @@ function CarouselSetup({
               }}
               placeholder={`Slide ${i + 1} subject — e.g. "intro slide with bold hook" or "data chart with insight"`}
               rows={2}
-              className="flex-1 px-3 py-2 rounded-lg bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] resize-none"
+              className="flex-1 px-3 py-2 rounded-lg bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] resize-none"
             />
             {subjects.length > 1 && (
               <button
                 onClick={() => setSubjects(subjects.filter((_, j) => j !== i))}
-                className="p-2 text-muted hover:text-red-400 mt-1.5"
+                className="p-2 text-text-muted hover:text-red-400 mt-1.5"
               >
                 <Trash2 size={14} />
               </button>
@@ -874,17 +874,17 @@ function ResultPanel({
   const isPfp = creationType === "pfp";
   return (
     <div className="flex flex-col h-full">
-      <div className="px-6 py-4 border-b border-border flex items-center gap-3">
+      <div className="px-6 py-4 border-b border-border-subtle flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400">
           <CheckCircle2 size={18} />
         </div>
         <div className="flex-1 min-w-0">
-          <h2 className="text-sm font-semibold text-foreground">
+          <h2 className="text-sm font-semibold text-text-primary">
             {isCarousel ? `${results.length}-slide carousel ready` : "Image ready"}
           </h2>
-          <p className="text-[11px] text-muted">Download, regenerate, tweak, or save to library.</p>
+          <p className="text-[11px] text-text-muted">Download, regenerate, tweak, or save to library.</p>
         </div>
-        <button onClick={onClose} className="p-2 rounded-lg hover:bg-surface-light text-muted hover:text-foreground">
+        <button onClick={onClose} className="p-2 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary">
           <X size={14} />
         </button>
       </div>
@@ -892,7 +892,7 @@ function ResultPanel({
       <div className="flex-1 overflow-y-auto p-6">
         <div className={`grid gap-4 ${isCarousel ? "grid-cols-2 md:grid-cols-3" : "grid-cols-1 md:grid-cols-2"}`}>
           {results.map((img, i) => (
-            <div key={i} className="bg-surface-light border border-border rounded-xl overflow-hidden">
+            <div key={i} className="bg-surface-light border border-border-subtle rounded-xl overflow-hidden">
               <div className="relative bg-black flex items-center justify-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -913,14 +913,14 @@ function ResultPanel({
                   download={`generated-${i + 1}.png`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[10px] text-foreground hover:bg-surface"
+                  className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[10px] text-text-primary hover:bg-surface"
                 >
                   <Download size={11} /> Download
                 </a>
                 {isCarousel && (
                   <button
                     onClick={() => onRegenerateOne(i)}
-                    className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[10px] text-foreground hover:bg-surface"
+                    className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[10px] text-text-primary hover:bg-surface"
                   >
                     <RefreshCw size={11} /> Regen
                   </button>
@@ -933,7 +933,7 @@ function ResultPanel({
                     <Trash2 size={11} />
                   </button>
                 )}
-                <span className="ml-auto text-[9px] text-muted font-mono">
+                <span className="ml-auto text-[9px] text-text-muted font-mono">
                   {img.width}×{img.height}
                 </span>
               </div>
@@ -942,16 +942,16 @@ function ResultPanel({
         </div>
       </div>
 
-      <div className="px-6 py-3 border-t border-border bg-surface-light/30 flex items-center gap-2">
+      <div className="px-6 py-3 border-t border-border-subtle bg-surface-light/30 flex items-center gap-2">
         <button
           onClick={onTweak}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-foreground hover:bg-surface-light"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-light"
         >
           <Edit3 size={12} /> Tweak answers
         </button>
         <button
           onClick={onRegenerateAll}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-foreground hover:bg-surface-light"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-light"
         >
           <RefreshCw size={12} /> Regenerate
         </button>

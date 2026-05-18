@@ -104,22 +104,22 @@ function LogoDropZone({
         tabIndex={0}
         onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") inputRef.current?.click(); }}
         className={`relative flex items-center gap-4 p-4 rounded-xl border-2 border-dashed cursor-pointer transition-all ${
-          dragOver ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)]" : "border-border hover:border-[rgba(59,130,246,0.4)] bg-surface-light/40"
+          dragOver ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)]" : "border-border-subtle hover:border-[rgba(59,130,246,0.4)] bg-surface-light/40"
         } ${uploading ? "opacity-60 pointer-events-none" : ""}`}
       >
-        <div className="w-14 h-14 rounded-lg border border-border bg-surface flex items-center justify-center overflow-hidden shrink-0">
+        <div className="w-14 h-14 rounded-lg border border-border-subtle bg-surface flex items-center justify-center overflow-hidden shrink-0">
           {logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={logoUrl} alt="Logo preview" className="w-full h-full object-contain" />
           ) : (
-            <Upload size={18} className="text-muted" />
+            <Upload size={18} className="text-text-muted" />
           )}
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-medium">
             {uploading ? "Uploading..." : logoUrl ? "Replace logo" : "Drop a logo here, or click to upload"}
           </p>
-          <p className="text-[10px] text-muted mt-0.5">PNG, JPEG or SVG · max 2 MB</p>
+          <p className="text-[10px] text-text-muted mt-0.5">PNG, JPEG or SVG · max 2 MB</p>
           {warn && (
             <p className="text-[10px] text-danger mt-1 flex items-center gap-1">
               <AlertTriangle size={10} /> {warn}
@@ -131,7 +131,7 @@ function LogoDropZone({
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); setWarn(null); onRemove(); }}
-            className="text-[10px] flex items-center gap-1 px-2 py-1 rounded-md border border-border hover:border-danger/40 hover:text-danger text-muted shrink-0"
+            className="text-[10px] flex items-center gap-1 px-2 py-1 rounded-md border border-border-subtle hover:border-danger/40 hover:text-danger text-text-muted shrink-0"
             title="Remove the current logo"
           >
             <Trash2 size={10} /> Remove logo
@@ -148,73 +148,73 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Left column — Config form */}
       <div className="lg:col-span-2 space-y-4">
-        <div className="card">
-          <h3 className="section-header flex items-center gap-2">
+        <div className="glass rounded-xl p-4">
+          <h3 className="flex items-center gap-2">
             <Palette size={14} className="text-[#2563EB]" /> Branding
           </h3>
-          <p className="text-xs text-muted mb-4">Rebrand ShortStack as your own platform. Changes apply across the sidebar, login page, and client portal.</p>
+          <p className="text-xs text-text-muted mb-4">Rebrand ShortStack as your own platform. Changes apply across the sidebar, login page, and client portal.</p>
 
           <div className="space-y-4">
             {/* Company Name */}
             <div>
-              <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Company Name</label>
+              <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1">Company Name</label>
               <input value={whiteLabel.company_name} onChange={e => setWhiteLabel({ ...whiteLabel, company_name: e.target.value })} placeholder="Your Agency Name (replaces ShortStack)" className="input w-full text-sm" />
-              <p className="text-[9px] text-muted mt-1">Displayed in the sidebar, page titles, and client-facing UI</p>
+              <p className="text-[9px] text-text-muted mt-1">Displayed in the sidebar, page titles, and client-facing UI</p>
             </div>
 
             {/* Logo Upload */}
             <div>
-              <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Logo</label>
+              <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1">Logo</label>
               <LogoDropZone
                 logoUrl={whiteLabel.logo_url}
                 onUploaded={(url) => setWhiteLabel({ ...whiteLabel, logo_url: url })}
                 onRemove={() => setWhiteLabel({ ...whiteLabel, logo_url: "" })}
               />
-              <label className="block text-[9px] text-muted uppercase tracking-wider mt-3 mb-1">Or paste a logo URL</label>
+              <label className="block text-[9px] text-text-muted uppercase tracking-wider mt-3 mb-1">Or paste a logo URL</label>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg border border-border bg-surface-light flex items-center justify-center overflow-hidden shrink-0">
+                <div className="w-10 h-10 rounded-lg border border-border-subtle bg-surface-light flex items-center justify-center overflow-hidden shrink-0">
                   {whiteLabel.logo_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={whiteLabel.logo_url} alt="Logo" className="w-full h-full object-contain" />
                   ) : (
-                    <Palette size={16} className="text-muted" />
+                    <Palette size={16} className="text-text-muted" />
                   )}
                 </div>
                 <input value={whiteLabel.logo_url} onChange={e => setWhiteLabel({ ...whiteLabel, logo_url: e.target.value })} placeholder="https://yourdomain.com/logo.png" className="input flex-1 text-sm" />
               </div>
-              <p className="text-[9px] text-muted mt-1">Square image recommended (PNG/JPEG/SVG, at least 128x128px, max 2 MB)</p>
+              <p className="text-[9px] text-text-muted mt-1">Square image recommended (PNG/JPEG/SVG, at least 128x128px, max 2 MB)</p>
             </div>
 
             {/* Colors */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Primary Color</label>
+                <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1">Primary Color</label>
                 <div className="flex items-center gap-2">
-                  <input type="color" value={whiteLabel.primary_color} onChange={e => setWhiteLabel({ ...whiteLabel, primary_color: e.target.value })} className="w-10 h-10 rounded-lg border border-border cursor-pointer" style={{ padding: 2 }} />
+                  <input type="color" value={whiteLabel.primary_color} onChange={e => setWhiteLabel({ ...whiteLabel, primary_color: e.target.value })} className="w-10 h-10 rounded-lg border border-border-subtle cursor-pointer" style={{ padding: 2 }} />
                   <input value={whiteLabel.primary_color} onChange={e => setWhiteLabel({ ...whiteLabel, primary_color: e.target.value })} className="input flex-1 text-sm font-mono" placeholder="#C9A84C" />
                 </div>
-                <p className="text-[9px] text-muted mt-1">Replaces gold (#C9A84C) across buttons, links, active states</p>
+                <p className="text-[9px] text-text-muted mt-1">Replaces gold (#C9A84C) across buttons, links, active states</p>
               </div>
               <div>
-                <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Accent Color</label>
+                <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1">Accent Color</label>
                 <div className="flex items-center gap-2">
-                  <input type="color" value={whiteLabel.accent_color} onChange={e => setWhiteLabel({ ...whiteLabel, accent_color: e.target.value })} className="w-10 h-10 rounded-lg border border-border cursor-pointer" style={{ padding: 2 }} />
+                  <input type="color" value={whiteLabel.accent_color} onChange={e => setWhiteLabel({ ...whiteLabel, accent_color: e.target.value })} className="w-10 h-10 rounded-lg border border-border-subtle cursor-pointer" style={{ padding: 2 }} />
                   <input value={whiteLabel.accent_color} onChange={e => setWhiteLabel({ ...whiteLabel, accent_color: e.target.value })} className="input flex-1 text-sm font-mono" placeholder="#B8942F" />
                 </div>
-                <p className="text-[9px] text-muted mt-1">Secondary accent for hover states and highlights</p>
+                <p className="text-[9px] text-text-muted mt-1">Secondary accent for hover states and highlights</p>
               </div>
             </div>
 
             {/* Favicon */}
             <div>
-              <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Favicon URL</label>
+              <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1">Favicon URL</label>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded border border-border bg-surface-light flex items-center justify-center overflow-hidden shrink-0">
+                <div className="w-8 h-8 rounded border border-border-subtle bg-surface-light flex items-center justify-center overflow-hidden shrink-0">
                   {whiteLabel.favicon_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={whiteLabel.favicon_url} alt="Favicon" className="w-full h-full object-contain" />
                   ) : (
-                    <Globe size={12} className="text-muted" />
+                    <Globe size={12} className="text-text-muted" />
                   )}
                 </div>
                 <input value={whiteLabel.favicon_url} onChange={e => setWhiteLabel({ ...whiteLabel, favicon_url: e.target.value })} placeholder="https://yourdomain.com/favicon.ico" className="input flex-1 text-sm" />
@@ -223,7 +223,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
 
             {/* Login Page Text */}
             <div>
-              <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Custom Login Page Text</label>
+              <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1">Custom Login Page Text</label>
               <textarea
                 value={whiteLabel.login_text}
                 onChange={e => setWhiteLabel({ ...whiteLabel, login_text: e.target.value })}
@@ -231,24 +231,24 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
                 rows={3}
                 className="input w-full text-sm resize-none"
               />
-              <p className="text-[9px] text-muted mt-1">Shown on the login page below your logo</p>
+              <p className="text-[9px] text-text-muted mt-1">Shown on the login page below your logo</p>
             </div>
 
             {/* Powered By toggle */}
-            <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border">
+            <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border-subtle">
               <div>
                 <p className="text-xs font-medium">Show &quot;Powered by ShortStack&quot;</p>
-                <p className="text-[10px] text-muted">Display attribution footer in sidebar and client portal</p>
+                <p className="text-[10px] text-text-muted">Display attribution footer in sidebar and client portal</p>
               </div>
               <button onClick={() => setWhiteLabel({ ...whiteLabel, show_powered_by: !whiteLabel.show_powered_by })}
-                className={`w-10 h-5 rounded-full transition-colors ${whiteLabel.show_powered_by ? "bg-[#2563EB]" : "bg-surface-light border border-border"}`}>
+                className={`w-10 h-5 rounded-full transition-colors ${whiteLabel.show_powered_by ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
                 <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${whiteLabel.show_powered_by ? "translate-x-5" : "translate-x-0.5"}`} />
               </button>
             </div>
           </div>
 
           {/* Action buttons */}
-          <div className="flex gap-2 mt-5 pt-4 border-t border-border">
+          <div className="flex gap-2 mt-5 pt-4 border-t border-border-subtle">
             <button
               disabled={wlSaving}
               onClick={async () => {
@@ -310,14 +310,14 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
       {/* Right column — Live Preview */}
       <div className="space-y-4">
         <div className="card-static">
-          <h3 className="section-header flex items-center gap-2">
+          <h3 className="flex items-center gap-2">
             <Eye size={14} className="text-[#2563EB]" /> Live Preview
           </h3>
-          <p className="text-[9px] text-muted mb-3">How your branding will appear</p>
+          <p className="text-[9px] text-text-muted mb-3">How your branding will appear</p>
 
           {/* Sidebar preview */}
-          <div className="rounded-xl border border-border overflow-hidden bg-surface-light">
-            <div className="p-3 border-b border-border flex items-center gap-2" style={{ background: "var(--color-surface)" }}>
+          <div className="rounded-xl border border-border-subtle overflow-hidden bg-surface-light">
+            <div className="p-3 border-b border-border-subtle flex items-center gap-2" style={{ background: "var(--color-surface)" }}>
               {whiteLabel.logo_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={whiteLabel.logo_url} alt="" className="w-6 h-6 rounded object-contain" />
@@ -346,15 +346,15 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
               ))}
             </div>
             {whiteLabel.show_powered_by && (
-              <div className="px-3 py-2 border-t border-border text-center">
-                <span className="text-[8px] text-muted">Powered by ShortStack</span>
+              <div className="px-3 py-2 border-t border-border-subtle text-center">
+                <span className="text-[8px] text-text-muted">Powered by ShortStack</span>
               </div>
             )}
           </div>
 
           {/* Button preview */}
           <div className="mt-4 space-y-2">
-            <p className="text-[9px] text-muted uppercase tracking-wider font-medium">Buttons</p>
+            <p className="text-[9px] text-text-muted uppercase tracking-wider font-medium">Buttons</p>
             <div className="flex gap-2">
               <span className="text-[10px] font-semibold px-3 py-1.5 rounded-lg text-white inline-block" style={{ background: whiteLabel.primary_color || "#C9A84C" }}>
                 Primary
@@ -367,7 +367,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
 
           {/* Color swatches */}
           <div className="mt-4 space-y-2">
-            <p className="text-[9px] text-muted uppercase tracking-wider font-medium">Accents</p>
+            <p className="text-[9px] text-text-muted uppercase tracking-wider font-medium">Accents</p>
             <div className="flex gap-2 items-center">
               <div className="w-4 h-4 rounded-full" style={{ background: whiteLabel.primary_color || "#C9A84C" }} />
               <span className="text-[10px] font-mono" style={{ color: whiteLabel.primary_color || "#C9A84C" }}>{whiteLabel.primary_color || "#C9A84C"}</span>
@@ -381,13 +381,13 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
           {/* Login preview */}
           {whiteLabel.login_text && (
             <div className="mt-4 space-y-2">
-              <p className="text-[9px] text-muted uppercase tracking-wider font-medium">Login Page</p>
-              <div className="p-3 rounded-lg border border-border bg-surface text-center">
+              <p className="text-[9px] text-text-muted uppercase tracking-wider font-medium">Login Page</p>
+              <div className="p-3 rounded-lg border border-border-subtle bg-surface text-center">
                 {whiteLabel.logo_url && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={whiteLabel.logo_url} alt="" className="w-8 h-8 rounded mx-auto mb-2 object-contain" />
                 )}
-                <p className="text-[10px] text-muted leading-relaxed">{whiteLabel.login_text}</p>
+                <p className="text-[10px] text-text-muted leading-relaxed">{whiteLabel.login_text}</p>
               </div>
             </div>
           )}

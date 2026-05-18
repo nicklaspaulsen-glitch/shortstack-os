@@ -137,7 +137,7 @@ export function applyTheme(themeId: string): void {
   root.style.setProperty("--bg-surface-3", theme.border);
   root.style.setProperty("--text-primary", theme.text);
   root.style.setProperty("--text-secondary", theme.muted);
-  root.style.setProperty("--text-muted", theme.muted);
+  root.style.setProperty("--text-text-muted", theme.muted);
   root.style.setProperty("--brand-lime", theme.accent);            // legacy alias
   root.style.setProperty("--brand-lime-soft", theme.accentSoft);   // legacy alias
   root.style.setProperty("--brand-lime-dim", theme.accentDim);     // legacy alias

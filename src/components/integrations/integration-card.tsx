@@ -84,7 +84,7 @@ function StatusDot({ status }: { status: IntegrationStatus }) {
   }[status];
 
   return (
-    <div className="flex items-center gap-1.5 text-[10px] text-muted">
+    <div className="flex items-center gap-1.5 text-[10px] text-text-muted">
       <span
         aria-hidden
         className="inline-block w-1.5 h-1.5 rounded-full"
@@ -123,13 +123,13 @@ export default function IntegrationCard({
         "group relative rounded-xl border bg-surface p-4 hover-lift",
         "hover:border-[rgba(255,255,255,0.25)]",
         isComingSoon ? "opacity-70" : "",
-        "border-border",
+        "border-border-subtle",
       ].join(" ")}
     >
       {/* Top row: logo + name + status dot */}
       <div className="flex items-start gap-3">
         <div
-          className="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center bg-surface-light border border-border/60 overflow-hidden"
+          className="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center bg-surface-light border border-border-subtle/60 overflow-hidden"
           style={{
             boxShadow:
               "0 1px 0 rgba(255,255,255,1) inset, 0 2px 8px rgba(0,0,0,0.06)",
@@ -161,25 +161,25 @@ export default function IntegrationCard({
             <p className="text-sm font-semibold leading-tight truncate">
               {integration.name}
             </p>
-            <span className="text-[9px] font-medium uppercase tracking-wider text-muted bg-surface-light border border-border/60 px-1.5 py-0.5 rounded">
+            <span className="text-[9px] font-medium uppercase tracking-wider text-text-muted bg-surface-light border border-border-subtle/60 px-1.5 py-0.5 rounded">
               {integration.category}
             </span>
           </div>
-          <p className="text-[11px] text-muted mt-0.5 line-clamp-2">
+          <p className="text-[11px] text-text-muted mt-0.5 line-clamp-2">
             {integration.description}
           </p>
         </div>
       </div>
 
       {/* Bottom row: status + action */}
-      <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between gap-2">
+      <div className="mt-4 pt-3 border-t border-border-subtle/60 flex items-center justify-between gap-2">
         <StatusDot status={status} />
 
         {isComingSoon && (
           <button
             type="button"
             disabled
-            className="text-[11px] font-medium px-3 py-1.5 rounded-md border border-border/60 text-muted cursor-not-allowed"
+            className="text-[11px] font-medium px-3 py-1.5 rounded-md border border-border-subtle/60 text-text-muted cursor-not-allowed"
           >
             Coming soon
           </button>
@@ -221,7 +221,7 @@ export default function IntegrationCard({
               type="button"
               disabled={busy}
               onClick={() => onDisconnect(integration)}
-              className="flex items-center gap-1 text-[10px] text-muted hover:text-danger transition-colors disabled:opacity-60"
+              className="flex items-center gap-1 text-[10px] text-text-muted hover:text-danger transition-colors disabled:opacity-60"
               aria-label={`Disconnect ${integration.name}`}
             >
               {busy ? (

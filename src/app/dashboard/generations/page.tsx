@@ -120,7 +120,7 @@ export default function GenerationsPage() {
   const hasMore = page * limit < total;
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Generations command strip (slim editorial header, no PageHero) -- */}
+    <MotionPage className="space-y-5">{/* -- Generations command strip (slim editorial header, no PageHero) -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
           <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
@@ -186,7 +186,7 @@ export default function GenerationsPage() {
       </div>
 
       {/* Search */}<div className="relative max-w-md">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
@@ -202,7 +202,7 @@ export default function GenerationsPage() {
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all ${
                     category === c.key
                       ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] font-medium"
-                      : "bg-black/4 text-muted hover:text-foreground hover:bg-black/8 border border-transparent"
+                      : "bg-black/4 text-text-muted hover:text-text-primary hover:bg-black/8 border border-transparent"
                   }`}
                 >
                   <span className={category === c.key ? "text-brand-accent" : c.color}>{c.icon}</span>
@@ -217,9 +217,9 @@ export default function GenerationsPage() {
               ) : filtered.length === 0 ? (
                 /* Empty State */
                 <div className="glass rounded-xl text-center py-16">
-                  <Sparkles size={32} className="mx-auto mb-3 text-muted/30" />
-                  <p className="text-sm text-muted font-medium mb-1">No generations yet</p>
-                  <p className="text-[10px] text-muted max-w-xs mx-auto">
+                  <Sparkles size={32} className="mx-auto mb-3 text-text-muted/30" />
+                  <p className="text-sm text-text-muted font-medium mb-1">No generations yet</p>
+                  <p className="text-[10px] text-text-muted max-w-xs mx-auto">
                     Create content from any tool in Trinity and it will appear here automatically.
                   </p>
                 </div>
@@ -248,15 +248,15 @@ export default function GenerationsPage() {
                             <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium ${cat.bg} ${cat.color}`}>
                               {cat.label}
                             </span>
-                            <span className="text-[9px] text-muted">{gen.source_tool}</span>
+                            <span className="text-[9px] text-text-muted">{gen.source_tool}</span>
                           </div>
                           <p className="text-xs font-semibold truncate">{gen.title}</p>
                           {gen.content_preview && (
-                            <p className="text-[10px] text-muted mt-0.5 line-clamp-2 leading-relaxed">
+                            <p className="text-[10px] text-text-muted mt-0.5 line-clamp-2 leading-relaxed">
                               {gen.content_preview}
                             </p>
                           )}
-                          <p className="text-[9px] text-muted mt-1">{timeAgo(gen.created_at)}</p>
+                          <p className="text-[9px] text-text-muted mt-1">{timeAgo(gen.created_at)}</p>
                         </div>
 
                         {/* Actions — preview/re-gen require per-tool routes that
@@ -265,14 +265,14 @@ export default function GenerationsPage() {
                         <div className="shrink-0 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
                           <button
                             onClick={() => copyContent(gen)}
-                            className="p-1.5 rounded-lg hover:bg-black/6 text-muted hover:text-foreground transition-all"
+                            className="p-1.5 rounded-lg hover:bg-black/6 text-text-muted hover:text-text-primary transition-all"
                             title="Copy content"
                           >
                             <Copy size={13} />
                           </button>
                           <button
                             onClick={() => deleteGeneration(gen.id)}
-                            className="p-1.5 rounded-lg hover:bg-red-500/10 text-muted hover:text-red-400 transition-all"
+                            className="p-1.5 rounded-lg hover:bg-red-500/10 text-text-muted hover:text-red-400 transition-all"
                             title="Hide from list (local only)"
                           >
                             <Trash2 size={13} />
@@ -285,21 +285,21 @@ export default function GenerationsPage() {
               )}
             </div>{/* Pagination */}{!loading && filtered.length > 0 && (
               <div className="flex items-center justify-between">
-                <p className="text-[10px] text-muted">
+                <p className="text-[10px] text-text-muted">
                   Showing {(page - 1) * limit + 1}–{Math.min(page * limit, total)} of {total}
                 </p>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setPage(p => Math.max(1, p - 1))}
                     disabled={page <= 1}
-                    className="px-3 py-1 rounded-lg bg-black/4 hover:bg-black/8 text-xs text-muted hover:text-foreground disabled:opacity-30 transition-all"
+                    className="px-3 py-1 rounded-lg bg-black/4 hover:bg-black/8 text-xs text-text-muted hover:text-text-primary disabled:opacity-30 transition-all"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => setPage(p => p + 1)}
                     disabled={!hasMore}
-                    className="px-3 py-1 rounded-lg bg-black/4 hover:bg-black/8 text-xs text-muted hover:text-foreground disabled:opacity-30 transition-all"
+                    className="px-3 py-1 rounded-lg bg-black/4 hover:bg-black/8 text-xs text-text-muted hover:text-text-primary disabled:opacity-30 transition-all"
                   >
                     Next
                   </button>

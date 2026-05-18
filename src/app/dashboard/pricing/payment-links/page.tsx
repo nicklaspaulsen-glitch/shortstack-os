@@ -84,7 +84,7 @@ export default function PaymentLinksPage() {
 
   if (loading || fetchState === "loading") {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[60vh] text-muted text-sm">Loading...
+      <MotionPage className="flex items-center justify-center min-h-[60vh] text-text-muted text-sm">Loading...
               </MotionPage>
     );
   }
@@ -92,14 +92,14 @@ export default function PaymentLinksPage() {
   if (fetchState === "forbidden") {
     return (
       <div className="max-w-xl mx-auto py-12 text-center space-y-3">
-        <Lock size={32} className="text-muted mx-auto" />
+        <Lock size={32} className="text-text-muted mx-auto" />
         <h1 className="text-lg font-bold">Admin only</h1>
-        <p className="text-xs text-muted">
+        <p className="text-xs text-text-muted">
           Payment Links are only visible to account admins.
         </p>
         <button
           onClick={() => router.push("/dashboard/pricing")}
-          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border bg-surface hover:bg-surface-light"
+          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light"
         >
           <ArrowLeft size={12} /> Back to Pricing
         </button>
@@ -118,7 +118,7 @@ export default function PaymentLinksPage() {
   const configuredCount = links.filter((l) => !!l.url).length;
 
   return (
-    <div className="fade-in max-w-5xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6">
       {/* -- Stripe Payment Links command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -128,17 +128,17 @@ export default function PaymentLinksPage() {
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => router.push("/dashboard/pricing")}
-            className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/5 border border-border text-foreground hover:bg-black/10"
+            className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/5 border border-border-subtle text-text-primary hover:bg-black/10"
           >
             <ArrowLeft size={12} /> Pricing
           </button>
         </div>
       </div>
 
-      <div className=" border border-border bg-surface p-4">
-        <p className="text-[11px] text-muted leading-relaxed">
-          <span className="text-foreground font-medium">{configuredCount}</span> of{" "}
-          <span className="text-foreground font-medium">{links.length}</span> payment links configured.{" "}
+      <div className=" border border-border-subtle bg-surface p-4">
+        <p className="text-[11px] text-text-muted leading-relaxed">
+          <span className="text-text-primary font-medium">{configuredCount}</span> of{" "}
+          <span className="text-text-primary font-medium">{links.length}</span> payment links configured.{" "}
           To add a missing link, create it in{" "}
           <a
             href="https://dashboard.stripe.com/payment-links"
@@ -156,10 +156,10 @@ export default function PaymentLinksPage() {
         {tierOrder
           .filter((t) => byTier[t])
           .map((tier) => (
-            <div key={tier} className=" border border-border bg-surface p-5">
+            <div key={tier} className=" border border-border-subtle bg-surface p-5">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-bold text-foreground">{TIER_LABELS[tier]}</h2>
-                <span className="text-[10px] text-muted">
+                <h2 className="text-sm font-bold text-text-primary">{TIER_LABELS[tier]}</h2>
+                <span className="text-[10px] text-text-muted">
                   {byTier[tier].filter((l) => !!l.url).length}/{byTier[tier].length} configured
                 </span>
               </div>
@@ -173,24 +173,24 @@ export default function PaymentLinksPage() {
                       className={`rounded-xl border p-3 transition-colors ${
                         link.url
                           ? "border-success/20 bg-success/[0.03]"
-                          : "border-border bg-surface-light/50"
+                          : "border-border-subtle bg-surface-light/50"
                       }`}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-medium text-foreground">{cycleLabel}</span>
+                        <span className="text-xs font-medium text-text-primary">{cycleLabel}</span>
                         {link.url ? (
                           <span className="text-[9px] text-success font-medium uppercase tracking-wider">
                             Active
                           </span>
                         ) : (
-                          <span className="text-[9px] text-muted font-medium uppercase tracking-wider">
+                          <span className="text-[9px] text-text-muted font-medium uppercase tracking-wider">
                             Not set
                           </span>
                         )}
                       </div>
                       {link.url ? (
                         <div className="space-y-2">
-                          <div className="text-[10px] font-mono text-muted bg-black/20 rounded-md px-2 py-1.5 truncate" title={link.url}>
+                          <div className="text-[10px] font-mono text-text-muted bg-black/20 rounded-md px-2 py-1.5 truncate" title={link.url}>
                             {link.url}
                           </div>
                           <div className="flex gap-2">
@@ -205,7 +205,7 @@ export default function PaymentLinksPage() {
                               href={link.url}
                               target="_blank"
                               rel="noreferrer"
-                              className="flex items-center justify-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-surface-light text-foreground hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent border border-border font-medium"
+                              className="flex items-center justify-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-surface-light text-text-primary hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent border border-border-subtle font-medium"
                             >
                               <ExternalLink size={11} />
                               Preview
@@ -213,9 +213,9 @@ export default function PaymentLinksPage() {
                           </div>
                         </div>
                       ) : (
-                        <div className="text-[10px] text-muted leading-relaxed">
+                        <div className="text-[10px] text-text-muted leading-relaxed">
                           Set env var:{" "}
-                          <code className="text-[10px] font-mono text-foreground bg-black/30 px-1.5 py-0.5 rounded">
+                          <code className="text-[10px] font-mono text-text-primary bg-black/30 px-1.5 py-0.5 rounded">
                             {link.env_var}
                           </code>
                         </div>

@@ -36,7 +36,7 @@ export function PresetSearchFilterBar({
       <div className="relative">
         <Search
           size={14}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none"
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
         />
         <input
           type="search"
@@ -49,7 +49,7 @@ export function PresetSearchFilterBar({
           <button
             type="button"
             onClick={() => onQueryChange("")}
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded p-0.5 text-muted hover:text-foreground"
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded p-0.5 text-text-muted hover:text-text-primary"
             aria-label="Clear search"
           >
             <X size={13} />
@@ -97,7 +97,7 @@ function FilterChip({
       className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition-all ${
         active
           ? "bg-[rgba(59,130,246,0.12)] text-[#2563EB] border border-[rgba(59,130,246,0.3)]"
-          : "bg-surface-light/60 text-muted hover:text-foreground border border-transparent hover:border-border"
+          : "bg-surface-light/60 text-text-muted hover:text-text-primary border border-transparent hover:border-border-subtle"
       }`}
     >
       {children}

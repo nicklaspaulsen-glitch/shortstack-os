@@ -278,7 +278,7 @@ export default function BrandKitPage() {
   ];
 
   return (
-    <MotionPage className="fade-in p-6 max-w-7xl mx-auto space-y-6"><AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />{/* -- Brand Kit command strip -- */}
+    <MotionPage className="p-6 max-w-7xl mx-auto space-y-6"><AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />{/* -- Brand Kit command strip -- */}
               <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
                 <div className="min-w-0">
                   <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Brand Kit</p>
@@ -289,31 +289,31 @@ export default function BrandKitPage() {
                     <div className="relative" ref={exportMenuRef}>
                       <button
                         onClick={() => setShowExportMenu((v) => !v)}
-                        className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"
+                        className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"
 >
                         <Download size={13} /> Export Kit
                         <ChevronDown size={12} className={showExportMenu ? "rotate-180 transition-transform" : "transition-transform"} />
                       </button>
                       {showExportMenu && (
-                        <div className="absolute right-0 top-full mt-2 w-56 bg-surface border border-border/30 rounded-xl shadow-2xl z-50 py-1 overflow-hidden">
+                        <div className="absolute right-0 top-full mt-2 w-56 bg-surface border border-border-subtle/30 rounded-xl shadow-2xl z-50 py-1 overflow-hidden">
                           <button onClick={exportAsJSON} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(59,130,246,0.05)] transition-colors">
                             <Braces size={14} className="text-brand-accent shrink-0" />
-                            <div><p className="font-medium">Export as JSON</p><p className="text-[10px] text-muted">Full brand data file</p></div>
+                            <div><p className="font-medium">Export as JSON</p><p className="text-[10px] text-text-muted">Full brand data file</p></div>
                           </button>
                           <button onClick={copyBrandSummary} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(59,130,246,0.05)] transition-colors">
                             <ClipboardList size={14} className="text-brand-accent shrink-0" />
-                            <div><p className="font-medium">Copy Brand Summary</p><p className="text-[10px] text-muted">Formatted text to clipboard</p></div>
+                            <div><p className="font-medium">Copy Brand Summary</p><p className="text-[10px] text-text-muted">Formatted text to clipboard</p></div>
                           </button>
                           <button onClick={exportCSSVariables} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(59,130,246,0.05)] transition-colors">
                             <FileCode size={14} className="text-brand-accent shrink-0" />
-                            <div><p className="font-medium">Export CSS Variables</p><p className="text-[10px] text-muted">Colors &amp; fonts as CSS</p></div>
+                            <div><p className="font-medium">Export CSS Variables</p><p className="text-[10px] text-text-muted">Colors &amp; fonts as CSS</p></div>
                           </button>
                         </div>
                       )}
                     </div>
                     <button
                       onClick={() => { setBrand(null); setUrl(""); setTab("extract"); if (typeof window !== "undefined") { localStorage.removeItem("ss_brand_kit_data"); localStorage.removeItem("ss_brand_kit_url"); } }}
-                      className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"
+                      className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"
 >
                       <RefreshCw size={13} /> New Scan
                     </button>
@@ -321,13 +321,13 @@ export default function BrandKitPage() {
                 )}
               </div>
               {/* Auto-save footer */}{(brand || url.trim()) && (
-              <div className="flex items-center justify-between text-[10px] text-muted/70 px-1">
+              <div className="flex items-center justify-between text-[10px] text-text-muted/70 px-1">
                 <span className="flex items-center gap-1">
                   <Check size={10} className="text-emerald-400/60" />
                   Brand kit auto-saves locally as you extract
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className="text-muted/50">or save manually</span>
+                  <span className="text-text-muted/50">or save manually</span>
                   <button
                     disabled={savingManual}
                     onClick={async () => {
@@ -347,7 +347,7 @@ export default function BrandKitPage() {
                   </button>
                 </div>
               </div>
-            )}{/* Tabs */}<div className="flex gap-1 border-b border-border/30 pb-px">
+            )}{/* Tabs */}<div className="flex gap-1 border-b border-border-subtle/30 pb-px">
               {tabs.map(t => (
                 <button
                   key={t.key}
@@ -357,8 +357,8 @@ export default function BrandKitPage() {
                     tab === t.key
                       ? "text-brand-accent border-b-2 border-brand-accent bg-[rgba(59,130,246,0.05)]"
                       : t.disabled
-                        ? "text-muted/40 cursor-not-allowed"
-                        : "text-muted hover:text-foreground"
+                        ? "text-text-muted/40 cursor-not-allowed"
+                        : "text-text-muted hover:text-text-primary"
                   }`}
 >
                   {t.icon} {t.label}
@@ -377,20 +377,20 @@ export default function BrandKitPage() {
                     <Globe size={28} className="text-brand-accent" />
                   </div>
                   <h2 className="text-lg font-bold">Extract Brand Identity</h2>
-                  <p className="text-xs text-muted max-w-md mx-auto">
+                  <p className="text-xs text-text-muted max-w-md mx-auto">
                     Enter a website URL and we&apos;ll analyze it to extract brand colors, fonts, logos, imagery, and social profiles.
                     Use this data to generate on-brand content instantly.
                   </p>
                   <div className="max-w-lg mx-auto flex gap-2">
                     <div className="relative flex-1">
-                      <Link2 size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                      <Link2 size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                       <input
                         type="url"
                         placeholder="https://example.com"
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && scrapeBrand()}
-                        className="rounded-lg w-full pl-9 py-2.5 text-sm bg-transparent focus:outline-none focus:ring-1 focus:ring-brand-accent/40 placeholder:text-muted" style={{ border: "1px solid rgba(0,0,0,0.10)" }}
+                        className="rounded-lg w-full pl-9 py-2.5 text-sm bg-transparent focus:outline-none focus:ring-1 focus:ring-brand-accent/40 placeholder:text-text-muted" style={{ border: "1px solid rgba(0,0,0,0.10)" }}
                         disabled={loading}
  />
                     </div>
@@ -447,7 +447,7 @@ export default function BrandKitPage() {
                         {step.icon}
                       </div>
                       <p className="text-xs font-semibold">{step.title}</p>
-                      <p className="text-[10px] text-muted mt-0.5">{step.desc}</p>
+                      <p className="text-[10px] text-text-muted mt-0.5">{step.desc}</p>
                     </motion.div>
                   ))}
                 </motion.div>
@@ -458,11 +458,11 @@ export default function BrandKitPage() {
                     <div className="flex items-center gap-4">
                       {brand.favicon && (
  // eslint-disable-next-line @next/next/no-img-element
-                        <img src={brand.favicon} alt="Favicon" className="w-10 h-10 rounded-lg bg-surface-light border border-border/20" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                        <img src={brand.favicon} alt="Favicon" className="w-10 h-10 rounded-lg bg-surface-light border border-border-subtle/20" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
                       )}
                       <div>
                         <h3 className="font-bold text-sm">{brand.siteName || "Unknown Site"}</h3>
-                        <p className="text-[10px] text-muted">{brand.description || "No description found"}</p>
+                        <p className="text-[10px] text-text-muted">{brand.description || "No description found"}</p>
                       </div>
                     </div>
 
@@ -536,13 +536,13 @@ export default function BrandKitPage() {
                     <h3 className="text-sm font-semibold flex items-center gap-2">
                       <Palette size={14} className="text-brand-accent" /> Extracted Color Palette
                     </h3>
-                    <motion.button whileHover={{ scale: 1.05 }} onClick={copyAllColors} className="text-xs text-muted hover:text-brand-accent flex items-center gap-1">
+                    <motion.button whileHover={{ scale: 1.05 }} onClick={copyAllColors} className="text-xs text-text-muted hover:text-brand-accent flex items-center gap-1">
                       <Copy size={12} /> Copy All
                     </motion.button>
                   </div>
 
                   {brand.colors.length === 0 ? (
-                    <p className="text-xs text-muted text-center py-8">No brand colors detected. The site may use CSS variables or external stylesheets.</p>
+                    <p className="text-xs text-text-muted text-center py-8">No brand colors detected. The site may use CSS variables or external stylesheets.</p>
                   ) : (
                     <>
                       {/* Large swatches */}
@@ -553,7 +553,7 @@ export default function BrandKitPage() {
                             variants={tileVariants}
                             whileHover={{ scale: 1.07 }}
                             onClick={() => copyColor(color)}
-                            className="group relative aspect-square rounded-xl border border-border/20 transition-all hover:shadow-lg"
+                            className="group relative aspect-square rounded-xl border border-border-subtle/20 transition-all hover:shadow-lg"
                             style={{ backgroundColor: color }}
 >
                             <div className="absolute inset-x-0 bottom-0 bg-black/60 backdrop-blur-sm rounded-b-xl px-2 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -577,7 +577,7 @@ export default function BrandKitPage() {
                               onClick={() => copyColor(color)}
                               className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 hover:border-[rgba(59,130,246,0.25)] transition-all text-xs" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
 >
-                              <div className="w-4 h-4 rounded-md border border-border/30" style={{ backgroundColor: color }} />
+                              <div className="w-4 h-4 rounded-md border border-border-subtle/30" style={{ backgroundColor: color }} />
                               <span className="font-mono text-[10px]">{color}</span>
                             </motion.button>
                           ))}
@@ -596,7 +596,7 @@ export default function BrandKitPage() {
                     <motion.div variants={containerVariants} className="grid grid-cols-3 gap-3">
                       {brand.colors.length>= 2 && (
                         <motion.div variants={tileVariants} className="glass rounded-lg p-3">
-                          <p className="text-[9px] text-muted uppercase mb-2">Primary + Accent</p>
+                          <p className="text-[9px] text-text-muted uppercase mb-2">Primary + Accent</p>
                           <div className="flex h-12 rounded-lg overflow-hidden">
                             <div className="flex-1" style={{ backgroundColor: brand.colors[0] }} />
                             <div className="flex-1" style={{ backgroundColor: brand.colors[1] }} />
@@ -605,7 +605,7 @@ export default function BrandKitPage() {
                       )}
                       {brand.colors.length>= 3 && (
                         <motion.div variants={tileVariants} className="glass rounded-lg p-3">
-                          <p className="text-[9px] text-muted uppercase mb-2">Tricolor</p>
+                          <p className="text-[9px] text-text-muted uppercase mb-2">Tricolor</p>
                           <div className="flex h-12 rounded-lg overflow-hidden">
                             <div className="flex-1" style={{ backgroundColor: brand.colors[0] }} />
                             <div className="flex-1" style={{ backgroundColor: brand.colors[1] }} />
@@ -615,7 +615,7 @@ export default function BrandKitPage() {
                       )}
                       {brand.colors.length>= 4 && (
                         <motion.div variants={tileVariants} className="glass rounded-lg p-3">
-                          <p className="text-[9px] text-muted uppercase mb-2">Full Palette</p>
+                          <p className="text-[9px] text-text-muted uppercase mb-2">Full Palette</p>
                           <div className="flex h-12 rounded-lg overflow-hidden">
                             {brand.colors.slice(0, 5).map((c, i) => (
                               <div key={i} className="flex-1" style={{ backgroundColor: c }} />
@@ -664,7 +664,7 @@ export default function BrandKitPage() {
                     <Type size={14} className="text-brand-accent" /> Extracted Fonts
                   </h3>
                   {brand.fonts.length === 0 ? (
-                    <p className="text-xs text-muted text-center py-8">No custom fonts detected. The site may use system fonts or load fonts dynamically.</p>
+                    <p className="text-xs text-text-muted text-center py-8">No custom fonts detected. The site may use system fonts or load fonts dynamically.</p>
                   ) : (
                     <motion.div variants={containerVariants} className="space-y-4">
                       {brand.fonts.map((font, i) => (
@@ -674,7 +674,7 @@ export default function BrandKitPage() {
                             <motion.button
                               whileHover={{ scale: 1.05 }}
                               onClick={() => { navigator.clipboard.writeText(font); toast.success(`Copied "${font}"`); }}
-                              className="text-[10px] text-muted hover:text-brand-accent flex items-center gap-1"
+                              className="text-[10px] text-text-muted hover:text-brand-accent flex items-center gap-1"
 >
                               <Copy size={10} /> Copy
                             </motion.button>
@@ -708,7 +708,7 @@ export default function BrandKitPage() {
                           <p className="text-xs">{h}</p>
                           <button
                             onClick={() => { navigator.clipboard.writeText(h); toast.success("Copied!"); }}
-                            className="text-muted hover:text-brand-accent shrink-0 ml-2"
+                            className="text-text-muted hover:text-brand-accent shrink-0 ml-2"
 >
                             <Copy size={12} />
                           </button>
@@ -747,7 +747,7 @@ export default function BrandKitPage() {
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Share2 size={14} className="text-brand-accent" /> Social Preview Image (OG)
                     </h3>
-                    <div className="rounded-lg overflow-hidden border border-border/20 max-w-2xl">
+                    <div className="rounded-lg overflow-hidden border border-border-subtle/20 max-w-2xl">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={brand.ogImage} alt="OG Preview" className="w-full h-auto" onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }} />
                     </div>
@@ -758,10 +758,10 @@ export default function BrandKitPage() {
                 <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                   <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
                     <ImageIcon size={14} className="text-brand-accent" /> Extracted Images
-                    <span className="text-[10px] text-muted bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 rounded">{brand.images.length}</span>
+                    <span className="text-[10px] text-text-muted bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 rounded">{brand.images.length}</span>
                   </h3>
                   {brand.images.length === 0 ? (
-                    <p className="text-xs text-muted text-center py-8">No images found on the page.</p>
+                    <p className="text-xs text-text-muted text-center py-8">No images found on the page.</p>
                   ) : (
                     <motion.div variants={containerVariants} className="grid grid-cols-4 gap-3">
                       {brand.images.map((img, i) => (
@@ -769,7 +769,7 @@ export default function BrandKitPage() {
                           key={i}
                           variants={tileVariants}
                           whileHover={{ y: -2 }}
-                          className="group relative aspect-video rounded-lg overflow-hidden border border-border/20 bg-surface-light"
+                          className="group relative aspect-video rounded-lg overflow-hidden border border-border-subtle/20 bg-surface-light"
 >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
@@ -811,11 +811,11 @@ export default function BrandKitPage() {
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-semibold">{brand.siteName || "Brand"}</p>
-                    <p className="text-[10px] text-muted truncate">{brand.colors.length} colors, {brand.fonts.length} fonts, {brand.images.length} images extracted</p>
+                    <p className="text-[10px] text-text-muted truncate">{brand.colors.length} colors, {brand.fonts.length} fonts, {brand.images.length} images extracted</p>
                   </div>
                   <div className="flex gap-1">
                     {brand.colors.slice(0, 5).map((c, i) => (
-                      <div key={i} className="w-5 h-5 rounded-md border border-border/20" style={{ backgroundColor: c }} />
+                      <div key={i} className="w-5 h-5 rounded-md border border-border-subtle/20" style={{ backgroundColor: c }} />
                     ))}
                   </div>
                 </motion.div>
@@ -825,7 +825,7 @@ export default function BrandKitPage() {
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                     <Sparkles size={14} className="text-brand-accent" /> Content Presets
                   </h3>
-                  <p className="text-xs text-muted mb-4">
+                  <p className="text-xs text-text-muted mb-4">
                     Choose what to generate using the extracted brand data. Each preset uses your colors, fonts, and imagery automatically.
                   </p>
                   <motion.div variants={containerVariants} className="grid grid-cols-2 gap-3">
@@ -848,13 +848,13 @@ export default function BrandKitPage() {
                           <div className={`p-2 rounded-lg ${
                             selectedPreset === preset.id && generating
                               ? "bg-[rgba(59,130,246,0.12)] text-brand-accent"
-                              : "bg-[rgba(0,0,0,0.04)] text-muted group-hover:text-brand-accent"
+                              : "bg-[rgba(0,0,0,0.04)] text-text-muted group-hover:text-brand-accent"
                           } transition-colors`}>
                             {selectedPreset === preset.id && generating ? <Loader size={16} className="animate-spin" /> : preset.icon}
                           </div>
                           <div>
                             <p className="text-xs font-semibold">{preset.label}</p>
-                            <p className="text-[10px] text-muted mt-0.5">{preset.desc}</p>
+                            <p className="text-[10px] text-text-muted mt-0.5">{preset.desc}</p>
                           </div>
                         </div>
                       </motion.button>

@@ -220,7 +220,7 @@ export default function WebhooksPage() {
   }
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Webhooks command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Webhooks command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">WEBHOOKS</p>
@@ -237,10 +237,10 @@ export default function WebhooksPage() {
               transition={{ delay: 0.08, duration: 0.38, ease: "easeOut" }}
               className="glass rounded-xl p-4"
             >
-              <h2 className="section-header">Inbound Webhook URL</h2>
-              <p className="text-[10px] text-muted mb-2">Send data TO Trinity from external tools (Zapier, Make, n8n)</p>
+              <h2 className="">Inbound Webhook URL</h2>
+              <p className="text-[10px] text-text-muted mb-2">Send data TO Trinity from external tools (Zapier, Make, n8n)</p>
               <div className="flex gap-2">
-                <code className="flex-1 text-[10px] font-mono p-2.5 rounded-lg truncate bg-surface-light border border-border">{inboundUrl}</code>
+                <code className="flex-1 text-[10px] font-mono p-2.5 rounded-lg truncate bg-surface-light border border-border-subtle">{inboundUrl}</code>
                 <button onClick={() => { navigator.clipboard.writeText(inboundUrl); toast.success("Copied"); }} className="btn-secondary text-xs px-3"><Copy size={12} /></button>
               </div>
             </motion.div>{/* Local-only disclaimer */}<motion.div
@@ -251,7 +251,7 @@ export default function WebhooksPage() {
             >
               <div className="flex items-start gap-2">
                 <AlertCircle size={12} className="text-warning shrink-0 mt-0.5" />
-                <p className="text-[10px] text-muted leading-relaxed">
+                <p className="text-[10px] text-text-muted leading-relaxed">
                   Outbound endpoints and delivery log are stored locally in your browser while the server-side
                   <code className="mx-1 font-mono">/api/webhooks/manage</code> endpoint is wrapped up.
                   They&apos;ll persist across reloads but won&apos;t fire automatically yet. Trinity still delivers the
@@ -267,7 +267,7 @@ export default function WebhooksPage() {
               {TABS.map(t => (
                 <button key={t} onClick={() => setTab(t)}
                   className={`px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all ${
-                    tab === t ? "bg-[rgba(59,130,246,0.10)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "text-muted border border-transparent hover:text-foreground"
+                    tab === t ? "bg-[rgba(59,130,246,0.10)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "text-text-muted border border-transparent hover:text-text-primary"
                   }`}>{t}</button>
               ))}
             </motion.div>{/* ═══ ENDPOINTS TAB ═══ */}{tab === "Endpoints" && (
@@ -279,7 +279,7 @@ export default function WebhooksPage() {
                     transition={{ duration: 0.35, ease: "easeOut" }}
                     className="glass rounded-xl p-4 border-indigo-500/10"
                   >
-                    <h2 className="section-header">Create Outbound Webhook</h2>
+                    <h2 className="">Create Outbound Webhook</h2>
                     <div className="space-y-3">
                       <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
                         className="input w-full" placeholder="Webhook name (e.g. Zapier Lead Sync)" />
@@ -287,11 +287,11 @@ export default function WebhooksPage() {
                         className="input w-full" placeholder="https://hooks.zapier.com/..." />
                       <div>
                         <div className="flex items-center gap-2 mb-2">
-                          <p className="text-[10px] text-muted font-semibold">Events:</p>
+                          <p className="text-[10px] text-text-muted font-semibold">Events:</p>
                           <div className="flex gap-1">
                             {categories.map(c => (
                               <button key={c} onClick={() => setFilterCategory(c)}
-                                className={`text-[8px] px-2 py-0.5 rounded capitalize ${filterCategory === c ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-muted"}`}>{c}</button>
+                                className={`text-[8px] px-2 py-0.5 rounded capitalize ${filterCategory === c ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted"}`}>{c}</button>
                             ))}
                           </div>
                         </div>
@@ -299,7 +299,7 @@ export default function WebhooksPage() {
                           {filteredEvents.map(event => (
                             <button key={event.id} onClick={() => toggleEvent(event.id)}
                               className={`flex items-center gap-2 p-2 rounded-lg text-[10px] transition-all text-left border ${
-                                form.events.includes(event.id) ? "border-[rgba(59,130,246,0.1)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
+                                form.events.includes(event.id) ? "border-[rgba(59,130,246,0.1)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border-subtle text-text-muted"
                               }`}>
                               {event.icon}
                               <span>{event.label}</span>
@@ -337,23 +337,23 @@ export default function WebhooksPage() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.07, duration: 0.35, ease: "easeOut" }}
                         whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
-                        className={`p-4 rounded-xl border transition-colors ${wh.active ? "glass border-black/10" : "bg-surface border-border/50 opacity-60"}`}>
+                        className={`p-4 rounded-xl border transition-colors ${wh.active ? "glass border-black/10" : "bg-surface border-border-subtle/50 opacity-60"}`}>
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-3">
                             <div className={`w-2.5 h-2.5 rounded-full ${wh.active ? "bg-emerald-400" : "bg-muted"}`} />
                             <div>
                               <p className="text-xs font-semibold">{wh.name}</p>
-                              <p className="text-[9px] text-muted font-mono truncate max-w-[300px]">{wh.url}</p>
+                              <p className="text-[9px] text-text-muted font-mono truncate max-w-[300px]">{wh.url}</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-1.5">
-                            <button onClick={() => toggleActive(wh.id)} className="text-muted hover:text-foreground p-1" title={wh.active ? "Pause" : "Resume"}>
+                            <button onClick={() => toggleActive(wh.id)} className="text-text-muted hover:text-text-primary p-1" title={wh.active ? "Pause" : "Resume"}>
                               {wh.active ? <Pause size={12} /> : <Play size={12} />}
                             </button>
-                            <button onClick={() => setShowSecret(showSecret === wh.id ? null : wh.id)} className="text-muted hover:text-foreground p-1" title="Show secret">
+                            <button onClick={() => setShowSecret(showSecret === wh.id ? null : wh.id)} className="text-text-muted hover:text-text-primary p-1" title="Show secret">
                               <Key size={12} />
                             </button>
-                            <button onClick={() => deleteWebhook(wh.id)} className="text-muted hover:text-red-400 p-1">
+                            <button onClick={() => deleteWebhook(wh.id)} className="text-text-muted hover:text-red-400 p-1">
                               <Trash2 size={12} />
                             </button>
                           </div>
@@ -363,7 +363,7 @@ export default function WebhooksPage() {
                             <span key={e} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">{e}</span>
                           ))}
                         </div>
-                        <div className="flex items-center gap-4 text-[9px] text-muted">
+                        <div className="flex items-center gap-4 text-[9px] text-text-muted">
                           <span>Last: {wh.lastTriggered || "Never"}</span>
                           <span className="text-emerald-400">{wh.successCount} delivered</span>
                           {wh.failCount > 0 && <span className="text-red-400">{wh.failCount} failed</span>}
@@ -371,22 +371,22 @@ export default function WebhooksPage() {
                           <span>Limit: {wh.rateLimit}/min</span>
                         </div>
                         {showSecret === wh.id && (
-                          <div className="mt-2 p-2 rounded-lg bg-black/5 border border-border">
+                          <div className="mt-2 p-2 rounded-lg bg-black/5 border border-border-subtle">
                             <div className="flex items-center gap-2">
-                              <span className="text-[9px] text-muted">Signing Secret:</span>
+                              <span className="text-[9px] text-text-muted">Signing Secret:</span>
                               <code className="text-[10px] font-mono text-brand-accent">{wh.secret}</code>
-                              <button onClick={() => navigator.clipboard.writeText(wh.secret)} className="text-muted hover:text-brand-accent"><Copy size={10} /></button>
+                              <button onClick={() => navigator.clipboard.writeText(wh.secret)} className="text-text-muted hover:text-brand-accent"><Copy size={10} /></button>
                             </div>
                           </div>
                         )}
                         {editingRetry === wh.id && (
                           <div className="mt-2 grid grid-cols-2 gap-2">
                             <div>
-                              <label className="text-[8px] text-muted">Retry Count</label>
+                              <label className="text-[8px] text-text-muted">Retry Count</label>
                               <input type="number" defaultValue={wh.retryCount} className="input w-full text-[10px]" min={0} max={10} />
                             </div>
                             <div>
-                              <label className="text-[8px] text-muted">Rate Limit/min</label>
+                              <label className="text-[8px] text-text-muted">Rate Limit/min</label>
                               <input type="number" defaultValue={wh.rateLimit} className="input w-full text-[10px]" min={1} max={1000} />
                             </div>
                           </div>
@@ -410,7 +410,7 @@ export default function WebhooksPage() {
                   {deliveries.map(d => (
                     <div key={d.id}>
                       <button onClick={() => setExpandedDelivery(expandedDelivery === d.id ? null : d.id)}
-                        className="w-full flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border hover:border-indigo-500/20 transition-all text-left">
+                        className="w-full flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border-subtle hover:border-indigo-500/20 transition-all text-left">
                         <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
                           d.statusCode < 300 ? "bg-emerald-500/10 text-emerald-400" : d.statusCode < 500 ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "bg-red-500/10 text-red-400"
                         }`}>{d.statusCode}</span>
@@ -420,17 +420,17 @@ export default function WebhooksPage() {
                             <span className="text-[9px] text-brand-accent">{d.event}</span>
                           </div>
                         </div>
-                        <span className="text-[9px] text-muted font-mono">{d.responseTime}ms</span>
-                        <span className="text-[9px] text-muted">{d.timestamp}</span>
+                        <span className="text-[9px] text-text-muted font-mono">{d.responseTime}ms</span>
+                        <span className="text-[9px] text-text-muted">{d.timestamp}</span>
                       </button>
                       {expandedDelivery === d.id && (
-                        <div className="mx-3 mb-2 p-3 rounded-lg bg-black/5 border border-border space-y-2">
+                        <div className="mx-3 mb-2 p-3 rounded-lg bg-black/5 border border-border-subtle space-y-2">
                           <div>
-                            <p className="text-[9px] text-muted uppercase mb-1">Request Payload</p>
+                            <p className="text-[9px] text-text-muted uppercase mb-1">Request Payload</p>
                             <pre className="text-[10px] font-mono text-emerald-400 whitespace-pre-wrap">{d.payload}</pre>
                           </div>
                           <div>
-                            <p className="text-[9px] text-muted uppercase mb-1">Response</p>
+                            <p className="text-[9px] text-text-muted uppercase mb-1">Response</p>
                             <pre className="text-[10px] font-mono text-blue-400 whitespace-pre-wrap">{d.response}</pre>
                           </div>
                         </div>
@@ -449,10 +449,10 @@ export default function WebhooksPage() {
                 <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
                   <Send size={14} className="text-brand-accent" /> Test Webhook
                 </h2>
-                <p className="text-[10px] text-muted mb-3">Send a test payload to any configured webhook endpoint.</p>
+                <p className="text-[10px] text-text-muted mb-3">Send a test payload to any configured webhook endpoint.</p>
                 <div className="space-y-3">
                   <div>
-                    <label className="text-[9px] text-muted uppercase mb-1 block">Webhook</label>
+                    <label className="text-[9px] text-text-muted uppercase mb-1 block">Webhook</label>
                     <select value={testWebhook} onChange={e => setTestWebhook(e.target.value)} className="input w-full text-xs">
                       <option value="">Select webhook...</option>
                       {webhooks.filter(w => w.active).map(w => (
@@ -461,13 +461,13 @@ export default function WebhooksPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="text-[9px] text-muted uppercase mb-1 block">Event Type</label>
+                    <label className="text-[9px] text-text-muted uppercase mb-1 block">Event Type</label>
                     <select value={testEvent} onChange={e => setTestEvent(e.target.value)} className="input w-full text-xs">
                       {EVENTS.map(e => <option key={e.id} value={e.id}>{e.label}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label className="text-[9px] text-muted uppercase mb-1 block">Payload Preview</label>
+                    <label className="text-[9px] text-text-muted uppercase mb-1 block">Payload Preview</label>
                     <pre className="bg-black/5 rounded-lg p-3 text-[10px] font-mono text-emerald-700">
       {`{
   "event": "${testEvent}",
@@ -504,7 +504,7 @@ export default function WebhooksPage() {
                 <h2 className="text-sm font-bold flex items-center gap-2">
                   <FileText size={14} className="text-brand-accent" /> Webhook Templates
                 </h2>
-                <p className="text-[10px] text-muted">Quick-start with pre-configured webhook templates.</p>
+                <p className="text-[10px] text-text-muted">Quick-start with pre-configured webhook templates.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {TEMPLATES.map((t, i) => (
                     <motion.div
@@ -520,7 +520,7 @@ export default function WebhooksPage() {
                         <TemplateBrandIcon name={t.name} size={14} />
                         {t.name}
                       </p>
-                      <p className="text-[9px] text-muted font-mono mb-2">{t.url}</p>
+                      <p className="text-[9px] text-text-muted font-mono mb-2">{t.url}</p>
                       <div className="flex flex-wrap gap-1 mb-2">
                         {t.events.map(e => <span key={e} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">{e}</span>)}
                       </div>
@@ -545,19 +545,19 @@ export default function WebhooksPage() {
                   </h2>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="text-[9px] text-muted uppercase mb-1 block">Default Retry Count</label>
+                      <label className="text-[9px] text-text-muted uppercase mb-1 block">Default Retry Count</label>
                       <input type="number" defaultValue={3} className="input w-full text-xs" min={0} max={10} />
                     </div>
                     <div>
-                      <label className="text-[9px] text-muted uppercase mb-1 block">Retry Backoff (seconds)</label>
+                      <label className="text-[9px] text-text-muted uppercase mb-1 block">Retry Backoff (seconds)</label>
                       <input type="number" defaultValue={30} className="input w-full text-xs" min={5} max={300} />
                     </div>
                     <div>
-                      <label className="text-[9px] text-muted uppercase mb-1 block">Global Rate Limit (req/min)</label>
+                      <label className="text-[9px] text-text-muted uppercase mb-1 block">Global Rate Limit (req/min)</label>
                       <input type="number" defaultValue={100} className="input w-full text-xs" min={1} max={1000} />
                     </div>
                     <div>
-                      <label className="text-[9px] text-muted uppercase mb-1 block">Timeout (seconds)</label>
+                      <label className="text-[9px] text-text-muted uppercase mb-1 block">Timeout (seconds)</label>
                       <input type="number" defaultValue={30} className="input w-full text-xs" min={5} max={120} />
                     </div>
                   </div>
@@ -566,21 +566,21 @@ export default function WebhooksPage() {
                   <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
                     <Filter size={14} className="text-brand-accent" /> Filter Rules
                   </h2>
-                  <p className="text-[10px] text-muted mb-3">Add conditions to filter which payloads get delivered.</p>
+                  <p className="text-[10px] text-text-muted mb-3">Add conditions to filter which payloads get delivered.</p>
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border text-[10px]">
+                    <div className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border-subtle text-[10px]">
                       <span className="text-brand-accent font-mono">IF</span>
                       <span>lead.source</span>
-                      <span className="text-muted">=</span>
+                      <span className="text-text-muted">=</span>
                       <span className="text-emerald-400">&quot;google_maps&quot;</span>
-                      <span className="text-muted ml-auto">Active</span>
+                      <span className="text-text-muted ml-auto">Active</span>
                     </div>
-                    <div className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border text-[10px]">
+                    <div className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border-subtle text-[10px]">
                       <span className="text-brand-accent font-mono">IF</span>
                       <span>deal.value</span>
-                      <span className="text-muted">&gt;</span>
+                      <span className="text-text-muted">&gt;</span>
                       <span className="text-emerald-400">1000</span>
-                      <span className="text-muted ml-auto">Active</span>
+                      <span className="text-text-muted ml-auto">Active</span>
                     </div>
                   </div>
                   <button className="mt-2 text-[10px] text-brand-accent flex items-center gap-1 hover:underline"><Plus size={10} /> Add Filter Rule</button>

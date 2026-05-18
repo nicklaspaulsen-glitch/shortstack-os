@@ -366,7 +366,7 @@ export default function FormsPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Form Builder command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Form Builder command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">FORMS</p>
@@ -374,24 +374,24 @@ export default function FormsPage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <>
-                  <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
+                  <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
                     <Sparkles size={12} /> Describe your form
                   </button>
                   {activeForm && (
-                    <button onClick={() => setActiveForm(null)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all">All Forms</button>
+                    <button onClick={() => setActiveForm(null)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all">All Forms</button>
                   )}
                 </>
       </div>
     </div>{/* ===== AI FORM MODAL ===== */}<Modal isOpen={showAiModal} onClose={() => setShowAiModal(false)} title="Describe the form you need" size="lg">
               <div className="space-y-3">
                 <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Natural-language description *</label>
+                  <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Natural-language description *</label>
                   <textarea value={aiDescription} onChange={e => setAiDescription(e.target.value)} rows={5} className="input w-full text-xs"
                     placeholder="e.g. A consultation booking form for a dental practice. Collect name, email, phone, insurance provider from a list, preferred day, and any specific concerns." />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Form Type</label>
+                    <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Form Type</label>
                     <select value={aiFormType} onChange={e => setAiFormType(e.target.value as AiFormType)} className="input w-full text-xs">
                       <option value="contact">Contact</option>
                       <option value="signup">Signup</option>
@@ -404,7 +404,7 @@ export default function FormsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Target fields</label>
+                    <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Target fields</label>
                     <select value={aiFieldCount} onChange={e => setAiFieldCount(parseInt(e.target.value))} className="input w-full text-xs">
                       {[3, 4, 5, 6, 7, 8, 10, 12].map(n => <option key={n} value={n}>{n} fields</option>)}
                     </select>
@@ -462,7 +462,7 @@ export default function FormsPage() {
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-                    tab === t.id ? "bg-[rgba(59,130,246,0.10)] text-brand-accent font-medium" : "text-muted hover:text-foreground"
+                    tab === t.id ? "bg-[rgba(59,130,246,0.10)] text-brand-accent font-medium" : "text-text-muted hover:text-text-primary"
                   }`}>
                   {t.icon} {t.label}
                 </button>
@@ -471,7 +471,7 @@ export default function FormsPage() {
               <div className="space-y-4">
                 {forms.length > 0 && (
                   <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                    <h2 className="section-header">Your Forms</h2>
+                    <h2 className="">Your Forms</h2>
                     <div className="space-y-2">
                       {forms.map((form, i) => (
                         <motion.div
@@ -485,7 +485,7 @@ export default function FormsPage() {
                             <div className="w-3 h-8 rounded-full" style={{ background: form.accentColor }} />
                             <div>
                               <p className="text-xs font-semibold">{form.name}</p>
-                              <p className="text-[10px] text-muted">{form.fields.length} fields - {form.completions} submissions</p>
+                              <p className="text-[10px] text-text-muted">{form.fields.length} fields - {form.completions} submissions</p>
                             </div>
                           </div>
                           <div className="flex gap-1.5">
@@ -510,7 +510,7 @@ export default function FormsPage() {
                 <div className="space-y-4">
                   <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                     <div className="flex items-center justify-between mb-3">
-                      <h2 className="section-header mb-0">Edit Form</h2>
+                      <h2 className="mb-0">Edit Form</h2>
                     </div>
                     <input value={activeForm.name} onChange={e => {
                       const updated = { ...activeForm, name: e.target.value };
@@ -524,19 +524,19 @@ export default function FormsPage() {
                         <div key={field.id} className="p-2.5 rounded-lg border" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.subtle }}>
                           <div className="flex items-center gap-2">
                             <div className="flex flex-col gap-0.5">
-                              <button onClick={() => moveField(field.id, "up")} className="text-muted hover:text-foreground" aria-label="Move field up"><ChevronUp size={10} /></button>
-                              <button onClick={() => moveField(field.id, "down")} className="text-muted hover:text-foreground" aria-label="Move field down"><ChevronDown size={10} /></button>
+                              <button onClick={() => moveField(field.id, "up")} className="text-text-muted hover:text-text-primary" aria-label="Move field up"><ChevronUp size={10} /></button>
+                              <button onClick={() => moveField(field.id, "down")} className="text-text-muted hover:text-text-primary" aria-label="Move field down"><ChevronDown size={10} /></button>
                             </div>
-                            <span className="text-muted">{FIELD_TYPES.find(t => t.type === field.type)?.icon}</span>
+                            <span className="text-text-muted">{FIELD_TYPES.find(t => t.type === field.type)?.icon}</span>
                             <input value={field.label} onChange={e => updateField(field.id, "label", e.target.value)}
                               className="flex-1 bg-transparent text-xs outline-none font-medium" aria-label="Field label" />
-                            <span className="text-[8px] text-muted px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)]">{field.type}</span>
+                            <span className="text-[8px] text-text-muted px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)]">{field.type}</span>
                             <button onClick={() => updateField(field.id, "required", !field.required)}
-                              className={`text-[8px] px-1.5 py-0.5 rounded ${field.required ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-muted"}`}>
+                              className={`text-[8px] px-1.5 py-0.5 rounded ${field.required ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted"}`}>
                               {field.required ? "Required" : "Optional"}
                             </button>
                             <button onClick={() => handleRegenFieldValidation(field.id)} disabled={regenFieldId === field.id}
-                              className="text-muted hover:text-brand-accent p-1" title="Regenerate label / placeholder">
+                              className="text-text-muted hover:text-brand-accent p-1" title="Regenerate label / placeholder">
                               {regenFieldId === field.id ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
                             </button>
                             <button
@@ -544,14 +544,14 @@ export default function FormsPage() {
                               className={`text-[8px] px-1.5 py-0.5 rounded flex items-center gap-1 ${
                                 (field.conditions?.length ?? 0) > 0
                                   ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
-                                  : "text-muted hover:text-brand-accent"
+                                  : "text-text-muted hover:text-brand-accent"
                               }`}
                               title="Add show/hide/require rules"
                             >
                               <Zap size={9} />
                               {(field.conditions?.length ?? 0) > 0 ? `${field.conditions?.length} rule${(field.conditions?.length ?? 0) === 1 ? "" : "s"}` : "Conditions"}
                             </button>
-                            <button onClick={() => removeField(field.id)} className="text-muted hover:text-red-400 p-1" aria-label="Remove field"><Trash2 size={10} /></button>
+                            <button onClick={() => removeField(field.id)} className="text-text-muted hover:text-red-400 p-1" aria-label="Remove field"><Trash2 size={10} /></button>
                           </div>
                           {field.type === "select" && field.options && (
                             <div className="mt-2 ml-8">
@@ -574,7 +574,7 @@ export default function FormsPage() {
                     <div className="flex flex-wrap gap-1.5">
                       {FIELD_TYPES.map(ft => (
                         <button key={ft.type} onClick={() => addField(ft.type)}
-                          className="flex items-center gap-1 text-[9px] px-2 py-1 rounded-md border text-muted hover:text-foreground" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.subtle }}>
+                          className="flex items-center gap-1 text-[9px] px-2 py-1 rounded-md border text-text-muted hover:text-text-primary" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.subtle }}>
                           <Plus size={8} /> {ft.label}
                         </button>
                       ))}
@@ -583,22 +583,22 @@ export default function FormsPage() {
 
                   {/* Form Settings */}
                   <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                    <h2 className="section-header flex items-center gap-2"><Settings size={12} className="text-brand-accent" /> Form Settings</h2>
+                    <h2 className="flex items-center gap-2"><Settings size={12} className="text-brand-accent" /> Form Settings</h2>
                     <div className="space-y-3">
                       <div>
-                        <label className="block text-[10px] text-muted mb-1">Submit Button Text</label>
+                        <label className="block text-[10px] text-text-muted mb-1">Submit Button Text</label>
                         <input value={activeForm.submitText} onChange={e => {
                           const u = { ...activeForm, submitText: e.target.value }; setActiveForm(u); setForms(p => p.map(f => f.id === u.id ? u : f));
                         }} className="input w-full text-xs" />
                       </div>
                       <div>
-                        <label className="block text-[10px] text-muted mb-1">Thank You Message</label>
+                        <label className="block text-[10px] text-text-muted mb-1">Thank You Message</label>
                         <textarea value={activeForm.thankYouMessage} onChange={e => {
                           const u = { ...activeForm, thankYouMessage: e.target.value }; setActiveForm(u); setForms(p => p.map(f => f.id === u.id ? u : f));
                         }} className="input w-full text-xs h-16" />
                       </div>
                       <div>
-                        <label className="block text-[10px] text-muted mb-1">Accent Color</label>
+                        <label className="block text-[10px] text-text-muted mb-1">Accent Color</label>
                         <div className="flex gap-2">
                           {["#2563EB", "#2563EB", "#2563EB", "#ef4444", "#8b5cf6", "#ec4899", "#f59e0b"].map(c => (
                             <button key={c} onClick={() => {
@@ -609,7 +609,7 @@ export default function FormsPage() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-[10px] text-muted mb-1">Webhook URL (on submit)</label>
+                        <label className="block text-[10px] text-text-muted mb-1">Webhook URL (on submit)</label>
                         <input value={activeForm.webhookUrl} onChange={e => {
                           const u = { ...activeForm, webhookUrl: e.target.value }; setActiveForm(u); setForms(p => p.map(f => f.id === u.id ? u : f));
                         }} className="input w-full text-xs" placeholder="https://hooks.zapier.com/..." />
@@ -630,8 +630,8 @@ export default function FormsPage() {
 
                   {/* Embed Code */}
                   <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                    <h2 className="section-header flex items-center gap-2"><Code size={12} className="text-brand-accent" /> Embed Code</h2>
-                    <pre className="text-[9px] text-muted bg-[rgba(0,0,0,0.04)] rounded-lg p-3 overflow-x-auto whitespace-pre-wrap">{generateEmbedCode()}</pre>
+                    <h2 className="flex items-center gap-2"><Code size={12} className="text-brand-accent" /> Embed Code</h2>
+                    <pre className="text-[9px] text-text-muted bg-[rgba(0,0,0,0.04)] rounded-lg p-3 overflow-x-auto whitespace-pre-wrap">{generateEmbedCode()}</pre>
                     <button onClick={() => navigator.clipboard.writeText(generateEmbedCode())} className="btn-primary w-full text-xs mt-2 flex items-center justify-center gap-1.5">
                       <Copy size={12} /> Copy Embed Code
                     </button>
@@ -640,7 +640,7 @@ export default function FormsPage() {
 
                 {/* Live Preview */}
                 <div className=" border p-4 sticky top-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                  <h2 className="section-header flex items-center gap-2"><Eye size={12} className="text-brand-accent" /> Live Preview</h2>
+                  <h2 className="flex items-center gap-2"><Eye size={12} className="text-brand-accent" /> Live Preview</h2>
                   <div className="glass rounded-xl p-6" style={{ border: "1px solid rgba(0,0,0,0.06)" }}>
                     <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111", marginBottom: 16 }}>{activeForm.name}</h2>
                     {(() => {
@@ -726,7 +726,7 @@ export default function FormsPage() {
                     className="text-left border p-4 transition-all spotlight-card" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}
                   >
                     <p className="text-sm font-bold mb-1">{tpl.name}</p>
-                    <p className="text-[10px] text-muted mb-2">{tpl.desc} - {tpl.fields.length} fields</p>
+                    <p className="text-[10px] text-text-muted mb-2">{tpl.desc} - {tpl.fields.length} fields</p>
                     <div className="flex flex-wrap gap-1">
                       {tpl.fields.map((f, j) => (
                         <span key={j} className="text-[8px] px-1.5 py-0.5 rounded border flex items-center gap-0.5" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.subtle }}>
@@ -740,7 +740,7 @@ export default function FormsPage() {
             )}{/* Submissions Tab */}{tab === "submissions" && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h2 className="section-header mb-0">Recent Submissions</h2>
+                  <h2 className="mb-0">Recent Submissions</h2>
                   <button className="btn-secondary text-xs flex items-center gap-1.5"><Download size={12} /> Export CSV</button>
                 </div>
                 {INITIAL_SUBMISSIONS.length === 0 ? (
@@ -764,13 +764,13 @@ export default function FormsPage() {
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <span className="text-[9px] px-2 py-0.5 rounded-full bg-blue-400/10 text-blue-400">{sub.source}</span>
-                            <span className="text-[9px] text-muted">{new Date(sub.submittedAt).toLocaleString()}</span>
+                            <span className="text-[9px] text-text-muted">{new Date(sub.submittedAt).toLocaleString()}</span>
                           </div>
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                           {Object.entries(sub.data).map(([key, val]) => (
                             <div key={key}>
-                              <p className="text-[9px] text-muted">{key}</p>
+                              <p className="text-[9px] text-text-muted">{key}</p>
                               <p className="text-xs font-medium">{val}</p>
                             </div>
                           ))}
@@ -783,7 +783,7 @@ export default function FormsPage() {
             )}{/* Analytics Tab */}{tab === "analytics" && (
               <div className="space-y-4">
                 <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                  <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-brand-accent" /> Form Funnel</h2>
+                  <h2 className="flex items-center gap-2"><BarChart3 size={13} className="text-brand-accent" /> Form Funnel</h2>
                   <div className="flex items-end gap-4 h-40 justify-center">
                     {[
                       { label: "Views", value: 0, color: "#2563EB" },
@@ -795,7 +795,7 @@ export default function FormsPage() {
                       <div key={item.label} className="flex flex-col items-center gap-1">
                         <p className="text-xs font-bold" style={{ color: item.color }}>{item.value}</p>
                         <div className="w-20 rounded-t-lg" style={{ height: `${(item.value / maxVal) * 120}px`, background: item.color }} />
-                        <p className="text-[10px] text-muted">{item.label}</p>
+                        <p className="text-[10px] text-text-muted">{item.label}</p>
                       </div>
                       );
                     })}
@@ -803,15 +803,15 @@ export default function FormsPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                    <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-blue-400" /> Traffic Sources</h2>
+                    <h2 className="flex items-center gap-2"><Globe size={13} className="text-blue-400" /> Traffic Sources</h2>
                     <div className="space-y-2">
-                      <div className="text-center py-4"><p className="text-[10px] text-muted">No traffic data yet</p></div>
+                      <div className="text-center py-4"><p className="text-[10px] text-text-muted">No traffic data yet</p></div>
                     </div>
                   </div>
                   <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                    <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-brand-accent" /> Drop-off Points</h2>
+                    <h2 className="flex items-center gap-2"><Zap size={13} className="text-brand-accent" /> Drop-off Points</h2>
                     <div className="space-y-2">
-                      <div className="text-center py-4"><p className="text-[10px] text-muted">No drop-off data yet</p></div>
+                      <div className="text-center py-4"><p className="text-[10px] text-text-muted">No drop-off data yet</p></div>
                     </div>
                   </div>
                 </div>
@@ -819,10 +819,10 @@ export default function FormsPage() {
             )}{/* Settings Tab */}{tab === "settings" && (
               <div className="space-y-4">
                 <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                  <h2 className="section-header flex items-center gap-2"><Palette size={13} className="text-brand-accent" /> Form Styling</h2>
+                  <h2 className="flex items-center gap-2"><Palette size={13} className="text-brand-accent" /> Form Styling</h2>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[10px] text-muted mb-1">Font Family</label>
+                      <label className="block text-[10px] text-text-muted mb-1">Font Family</label>
                       <select className="input w-full text-xs">
                         <option>System Default</option>
                         <option>Inter</option>
@@ -831,7 +831,7 @@ export default function FormsPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[10px] text-muted mb-1">Border Radius</label>
+                      <label className="block text-[10px] text-text-muted mb-1">Border Radius</label>
                       <select className="input w-full text-xs">
                         <option>Rounded (8px)</option>
                         <option>Sharp (0px)</option>
@@ -839,7 +839,7 @@ export default function FormsPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[10px] text-muted mb-1">Background</label>
+                      <label className="block text-[10px] text-text-muted mb-1">Background</label>
                       <select className="input w-full text-xs">
                         <option>White</option>
                         <option>Light Gray</option>
@@ -847,7 +847,7 @@ export default function FormsPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[10px] text-muted mb-1">Submit Button Style</label>
+                      <label className="block text-[10px] text-text-muted mb-1">Submit Button Style</label>
                       <select className="input w-full text-xs">
                         <option>Filled</option>
                         <option>Outlined</option>
@@ -857,7 +857,7 @@ export default function FormsPage() {
                   </div>
                 </div>
                 <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
-                  <h2 className="section-header flex items-center gap-2"><Link2 size={13} className="text-blue-400" /> Integrations</h2>
+                  <h2 className="flex items-center gap-2"><Link2 size={13} className="text-blue-400" /> Integrations</h2>
                   <div className="space-y-2">
                     {[
                       { name: "Zapier Webhook", connected: true },
@@ -873,7 +873,7 @@ export default function FormsPage() {
                         className="flex items-center justify-between p-2.5 rounded-lg border" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.subtle }}
                       >
                         <span className="text-xs">{int.name}</span>
-                        <span className={`text-[9px] px-2 py-0.5 rounded-full ${int.connected ? "bg-emerald-400/10 text-emerald-400" : "bg-[rgba(0,0,0,0.04)] text-muted"}`}>
+                        <span className={`text-[9px] px-2 py-0.5 rounded-full ${int.connected ? "bg-emerald-400/10 text-emerald-400" : "bg-[rgba(0,0,0,0.04)] text-text-muted"}`}>
                           {int.connected ? "Connected" : "Connect"}
                         </span>
                       </motion.div>
@@ -941,7 +941,7 @@ function ConditionEditor({ field, otherFields, onChange }: ConditionEditorProps)
 
   if (otherFields.length === 0) {
     return (
-      <div className="mt-2 ml-8 p-2 rounded-md border text-[10px] text-muted" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.subtle }}>
+      <div className="mt-2 ml-8 p-2 rounded-md border text-[10px] text-text-muted" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.subtle }}>
         Add at least one other field above to set conditions.
       </div>
     );
@@ -950,7 +950,7 @@ function ConditionEditor({ field, otherFields, onChange }: ConditionEditorProps)
   return (
     <div className="mt-2 ml-8 p-2.5 rounded-md border space-y-2" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
       <div className="flex items-center justify-between">
-        <p className="text-[10px] uppercase tracking-wider text-muted">Conditions for {field.label}</p>
+        <p className="text-[10px] uppercase tracking-wider text-text-muted">Conditions for {field.label}</p>
         <button
           onClick={addRule}
           className="flex items-center gap-1 text-[9px] px-2 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.14)]"
@@ -959,7 +959,7 @@ function ConditionEditor({ field, otherFields, onChange }: ConditionEditorProps)
         </button>
       </div>
       {rules.length === 0 ? (
-        <p className="text-[10px] text-muted">
+        <p className="text-[10px] text-text-muted">
           No rules yet. By default this field always shows. Add a rule to make
           it appear or hide based on another field&apos;s value.
         </p>
@@ -969,7 +969,7 @@ function ConditionEditor({ field, otherFields, onChange }: ConditionEditorProps)
             const op = OPERATOR_OPTIONS.find((o) => o.value === rule.if_operator);
             return (
               <div key={i} className="flex flex-wrap items-center gap-1 text-[10px]">
-                <span className="text-muted">If</span>
+                <span className="text-text-muted">If</span>
                 <select
                   value={rule.if_field}
                   onChange={(e) => update(i, { if_field: e.target.value })}
@@ -1002,7 +1002,7 @@ function ConditionEditor({ field, otherFields, onChange }: ConditionEditorProps)
                     className="input text-[10px] py-0.5 px-1.5 rounded w-24"
                   />
                 )}
-                <span className="text-muted">→</span>
+                <span className="text-text-muted">→</span>
                 <select
                   value={rule.action}
                   onChange={(e) => update(i, { action: e.target.value as ConditionAction })}
@@ -1016,7 +1016,7 @@ function ConditionEditor({ field, otherFields, onChange }: ConditionEditorProps)
                 </select>
                 <button
                   onClick={() => removeRule(i)}
-                  className="text-muted hover:text-red-400 p-0.5"
+                  className="text-text-muted hover:text-red-400 p-0.5"
                   aria-label="Remove rule"
                 >
                   <Trash2 size={9} />

@@ -161,14 +161,14 @@ export default function ContentCalendarPage() {
   );
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="page-header mb-0 flex items-center gap-2">
             <Calendar size={18} className="text-brand-accent" /> Content Calendar
           </h1>
-          <p className="text-xs text-muted mt-0.5">Plan, schedule, and track your content</p>
+          <p className="text-xs text-text-muted mt-0.5">Plan, schedule, and track your content</p>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => setShowAIPlan(true)} className="btn-primary text-xs flex items-center gap-1.5">
@@ -185,11 +185,11 @@ export default function ContentCalendarPage() {
       </div>
 
       {/* Calendar grid */}
-      <div className="card p-3">
+      <div className="glass rounded-xl p-3">
         {/* Day headers */}
         <div className="grid grid-cols-7 gap-px mb-1">
           {DAYS.map(day => (
-            <div key={day} className="text-center text-[9px] text-muted font-semibold uppercase tracking-wider py-1">
+            <div key={day} className="text-center text-[9px] text-text-muted font-semibold uppercase tracking-wider py-1">
               {day}
             </div>
           ))}
@@ -226,7 +226,7 @@ export default function ContentCalendarPage() {
                     </div>
                   ))}
                   {dayEntries.length > 3 && (
-                    <div className="text-[8px] text-muted text-center">+{dayEntries.length - 3} more</div>
+                    <div className="text-[8px] text-text-muted text-center">+{dayEntries.length - 3} more</div>
                   )}
                 </div>
               </button>
@@ -244,24 +244,24 @@ export default function ContentCalendarPage() {
         ].map(item => (
           <div key={item.label} className="flex items-center gap-1.5">
             <div className={`w-2 h-2 rounded-sm ${item.color.split(" ")[0]}`} />
-            <span className="text-[9px] text-muted">{item.label}</span>
+            <span className="text-[9px] text-text-muted">{item.label}</span>
           </div>
         ))}
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-2.5">
-        <div className="card text-center p-3">
+        <div className="glass rounded-xl p-4 text-center p-3">
           <p className="text-lg font-bold font-mono text-brand-accent count-up">{entries.length}</p>
-          <p className="text-[9px] text-muted uppercase tracking-wider">This Month</p>
+          <p className="text-[9px] text-text-muted uppercase tracking-wider">This Month</p>
         </div>
-        <div className="card text-center p-3">
+        <div className="glass rounded-xl p-4 text-center p-3">
           <p className="text-lg font-bold font-mono text-success count-up">{entries.filter(e => e.status === "published").length}</p>
-          <p className="text-[9px] text-muted uppercase tracking-wider">Published</p>
+          <p className="text-[9px] text-text-muted uppercase tracking-wider">Published</p>
         </div>
-        <div className="card text-center p-3">
+        <div className="glass rounded-xl p-4 text-center p-3">
           <p className="text-lg font-bold font-mono text-brand-accent count-up">{entries.filter(e => e.status === "scheduled" || e.status === "idea").length}</p>
-          <p className="text-[9px] text-muted uppercase tracking-wider">Upcoming</p>
+          <p className="text-[9px] text-text-muted uppercase tracking-wider">Upcoming</p>
         </div>
       </div>
 
@@ -270,10 +270,10 @@ export default function ContentCalendarPage() {
         <div className="space-y-3">
           <div className="flex items-center gap-2 p-2.5 bg-[rgba(59,130,246,0.05)] rounded-lg border border-[rgba(59,130,246,0.15)]">
             <Sparkles size={16} className="text-brand-accent shrink-0" />
-            <p className="text-[10px] text-muted">Describe your business and goals, and AI will generate a full 30-day content calendar with platform-specific ideas.</p>
+            <p className="text-[10px] text-text-muted">Describe your business and goals, and AI will generate a full 30-day content calendar with platform-specific ideas.</p>
           </div>
           <div>
-            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Tell us about your content goals</label>
+            <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider">Tell us about your content goals</label>
             <textarea
               value={aiPrompt}
               onChange={e => setAiPrompt(e.target.value)}
@@ -295,11 +295,11 @@ export default function ContentCalendarPage() {
       <Modal isOpen={showAddPost} onClose={() => { setShowAddPost(false); setSelectedDay(null); }} title={`Add Content — ${selectedDay?.toLocaleDateString() || ""}`} size="sm">
         <form onSubmit={addPost} className="space-y-3">
           <div>
-            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Title</label>
+            <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider">Title</label>
             <input name="title" className="input w-full text-xs" placeholder="What's the content about?" required />
           </div>
           <div>
-            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Platform</label>
+            <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider">Platform</label>
             <select name="platform" className="input w-full text-xs">
               <option value="instagram">Instagram</option>
               <option value="tiktok">TikTok</option>
@@ -309,7 +309,7 @@ export default function ContentCalendarPage() {
             </select>
           </div>
           <div>
-            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Type</label>
+            <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider">Type</label>
             <select name="content_type" className="input w-full text-xs">
               <option value="reel">Reel / Short</option>
               <option value="post">Post</option>

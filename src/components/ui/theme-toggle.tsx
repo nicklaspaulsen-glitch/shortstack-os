@@ -48,7 +48,7 @@ export default function ThemeToggle({ variant = "icon", className = "" }: ThemeT
       <button
         type="button"
         onClick={handleToggle}
-        className={`inline-flex items-center gap-2 rounded-full border border-border bg-surface-light px-3 py-1.5 text-xs text-foreground/80 transition-colors hover:border-accent/40 hover:text-foreground ${className}`}
+        className={`inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-light px-3 py-1.5 text-xs text-text-primary/80 transition-colors hover:border-accent/40 hover:text-text-primary ${className}`}
         aria-label={label}
         title={label}
       >
@@ -62,7 +62,7 @@ export default function ThemeToggle({ variant = "icon", className = "" }: ThemeT
     <button
       type="button"
       onClick={handleToggle}
-      className={`inline-flex h-8 w-8 items-center justify-center rounded-md text-muted transition-colors hover:bg-surface-light hover:text-foreground ${className}`}
+      className={`inline-flex h-8 w-8 items-center justify-center rounded-md text-text-muted transition-colors hover:bg-surface-light hover:text-text-primary ${className}`}
       aria-label={label}
       title={label}
     >

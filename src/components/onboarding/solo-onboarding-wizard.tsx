@@ -268,12 +268,12 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
       {/* ─── Progress ─────────────────────────────────────────── */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-[11px] text-muted font-medium">
+          <span className="text-[11px] text-text-muted font-medium">
             Step {stepIdx + 1} of {STEPS.length}
           </span>
           <span className="text-[11px] font-bold text-[#2563EB]">{Math.round(progress)}%</span>
         </div>
-        <div className="h-1.5 rounded-full bg-surface-light border border-border overflow-hidden">
+        <div className="h-1.5 rounded-full bg-surface-light border border-border-subtle overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-[#2563EB] to-[#3B82F6] transition-all duration-500"
             style={{ width: `${progress}%` }}
@@ -289,7 +289,7 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
                   ? "w-6 h-1.5 bg-[#2563EB]"
                   : i < stepIdx
                   ? "w-1.5 h-1.5 bg-[rgba(59,130,246,0.4)] hover:bg-[rgba(59,130,246,0.7)] cursor-pointer"
-                  : "w-1.5 h-1.5 bg-border cursor-default"
+                  : "w-1.5 h-1.5 bg-border-subtle cursor-default"
               }`}
               disabled={i >= stepIdx}
             />
@@ -298,7 +298,7 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
       </div>
 
       {/* ─── Step body ────────────────────────────────────────── */}
-      <div className=" border border-border bg-surface p-6 min-h-[480px]">
+      <div className=" border border-border-subtle bg-surface p-6 min-h-[480px]">
         {stepKey === "user_type" && (
           <StepUserType
             selected={state.user_type}
@@ -389,7 +389,7 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
       <div className="flex items-center justify-between mt-5">
         <button
           onClick={stepIdx === 0 ? onCancel : back}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-border text-muted text-xs hover:text-foreground transition-all"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-border-subtle text-text-muted text-xs hover:text-text-primary transition-all"
         >
           <ArrowLeft size={13} /> {stepIdx === 0 ? "Cancel" : "Back"}
         </button>
@@ -399,7 +399,7 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
             {stepKey === "personalize" && (
               <button
                 onClick={next}
-                className="text-[11px] text-muted hover:text-[#2563EB] transition-colors px-3 py-2 font-medium"
+                className="text-[11px] text-text-muted hover:text-[#2563EB] transition-colors px-3 py-2 font-medium"
               >
                 Skip for now
               </button>
@@ -445,7 +445,7 @@ function StepUserType({
           <Sparkles size={24} className="text-[#2563EB]" />
         </div>
         <h2 className="text-2xl font-bold mb-1">What best describes you?</h2>
-        <p className="text-sm text-muted">We&apos;ll tailor Trinity to your business.</p>
+        <p className="text-sm text-text-muted">We&apos;ll tailor Trinity to your business.</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {USER_TYPES.map((t) => {
@@ -458,13 +458,13 @@ function StepUserType({
               className={`relative text-left p-4  border transition-all hover-lift ${
                 isSelected
                   ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] shadow-[0_0_0_2px_rgba(59,130,246,0.18)]"
-                  : "border-border bg-surface-light hover:border-[rgba(59,130,246,0.25)]"
+                  : "border-border-subtle bg-surface-light hover:border-[rgba(59,130,246,0.25)]"
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
                 <div
                   className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                    isSelected ? "bg-[rgba(59,130,246,0.12)] text-[#2563EB]" : "bg-surface-light text-muted"
+                    isSelected ? "bg-[rgba(59,130,246,0.12)] text-[#2563EB]" : "bg-surface-light text-text-muted"
                   }`}
                 >
                   <Icon size={18} />
@@ -475,8 +475,8 @@ function StepUserType({
                   </span>
                 )}
               </div>
-              <p className="text-sm font-semibold text-foreground mb-0.5">{t.label}</p>
-              <p className="text-[11px] text-muted leading-snug">{t.description}</p>
+              <p className="text-sm font-semibold text-text-primary mb-0.5">{t.label}</p>
+              <p className="text-[11px] text-text-muted leading-snug">{t.description}</p>
             </button>
           );
         })}
@@ -507,14 +507,14 @@ function StepBusinessInfo({
         <h2 className="text-2xl font-bold mb-1 flex items-center gap-2">
           <Building2 size={22} className="text-[#2563EB]" /> Your business basics
         </h2>
-        <p className="text-sm text-muted">
+        <p className="text-sm text-text-muted">
           We&apos;ll auto-fill everything we can from your website — skip it if you prefer.
         </p>
       </div>
 
       <div className="space-y-5">
         <div>
-          <label className="block text-xs font-semibold text-foreground mb-1.5 uppercase tracking-wider">
+          <label className="block text-xs font-semibold text-text-primary mb-1.5 uppercase tracking-wider">
             Business / Brand name *
           </label>
           <input
@@ -522,29 +522,29 @@ function StepBusinessInfo({
             value={state.business_name}
             onChange={(e) => onChange("business_name", e.target.value)}
             placeholder="e.g. Northfield Collective"
-            className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
+            className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-foreground mb-1.5 uppercase tracking-wider">
-            Handle / username <span className="text-muted normal-case">(optional)</span>
+          <label className="block text-xs font-semibold text-text-primary mb-1.5 uppercase tracking-wider">
+            Handle / username <span className="text-text-muted normal-case">(optional)</span>
           </label>
           <div className="flex items-center gap-2">
-            <span className="text-muted text-sm">@</span>
+            <span className="text-text-muted text-sm">@</span>
             <input
               type="text"
               value={state.handle}
               onChange={(e) => onChange("handle", e.target.value.replace(/^@/, ""))}
               placeholder="yourbrand"
-              className="flex-1 px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
+              className="flex-1 px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-foreground mb-1.5 uppercase tracking-wider">
-            Website <span className="text-muted normal-case">(optional — we&apos;ll scrape it)</span>
+          <label className="block text-xs font-semibold text-text-primary mb-1.5 uppercase tracking-wider">
+            Website <span className="text-text-muted normal-case">(optional — we&apos;ll scrape it)</span>
           </label>
           <WebsiteScraper
             defaultUrl={state.website_url}
@@ -588,7 +588,7 @@ function StepNiche({
         <h2 className="text-2xl font-bold mb-1 flex items-center gap-2">
           <Target size={22} className="text-[#2563EB]" /> Your niche / focus
         </h2>
-        <p className="text-sm text-muted">{meta.nichePrompt}</p>
+        <p className="text-sm text-text-muted">{meta.nichePrompt}</p>
       </div>
 
       <textarea
@@ -596,7 +596,7 @@ function StepNiche({
         onChange={(e) => onChange(e.target.value)}
         placeholder={meta.nichePrompt}
         rows={4}
-        className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
+        className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
       />
     </div>
   );
@@ -634,13 +634,13 @@ function StepAIQuestions({
           <h2 className="text-2xl font-bold mb-1 flex items-center gap-2">
             <Sparkles size={22} className="text-[#2563EB]" /> {title}
           </h2>
-          <p className="text-sm text-muted">{description}</p>
+          <p className="text-sm text-text-muted">{description}</p>
         </div>
         <button
           type="button"
           onClick={onRegenerate}
           disabled={loading}
-          className="text-[10px] text-muted hover:text-[#2563EB] transition-colors whitespace-nowrap disabled:opacity-40"
+          className="text-[10px] text-text-muted hover:text-[#2563EB] transition-colors whitespace-nowrap disabled:opacity-40"
         >
           Regenerate
         </button>
@@ -649,12 +649,12 @@ function StepAIQuestions({
       {loading && (
         <div className="flex flex-col items-center gap-2 py-10">
           <Loader2 size={22} className="animate-spin text-[#2563EB]" />
-          <p className="text-xs text-muted">Personalizing questions for you...</p>
+          <p className="text-xs text-text-muted">Personalizing questions for you...</p>
         </div>
       )}
 
       {!loading && questions.length === 0 && (
-        <div className="rounded-xl border border-border p-6 text-center text-sm text-muted">
+        <div className="rounded-xl border border-border-subtle p-6 text-center text-sm text-text-muted">
           We couldn&apos;t generate custom questions right now — you can click Continue to skip this step.
         </div>
       )}
@@ -688,7 +688,7 @@ function QuestionField({
     const arr: string[] = Array.isArray(value) ? (value as string[]) : [];
     return (
       <div>
-        <label className="block text-xs font-semibold text-foreground mb-2 uppercase tracking-wider">
+        <label className="block text-xs font-semibold text-text-primary mb-2 uppercase tracking-wider">
           {q.label}
         </label>
         <div className="flex flex-wrap gap-2">
@@ -702,7 +702,7 @@ function QuestionField({
                 className={`px-3 py-1.5 rounded-full text-[11px] border transition-all ${
                   sel
                     ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.4)] text-[#2563EB]"
-                    : "bg-surface-light border-border text-muted hover:text-foreground"
+                    : "bg-surface-light border-border-subtle text-text-muted hover:text-text-primary"
                 }`}
               >
                 {opt}
@@ -718,7 +718,7 @@ function QuestionField({
   if (q.kind === "long_text") {
     return (
       <div>
-        <label className="block text-xs font-semibold text-foreground mb-2 uppercase tracking-wider">
+        <label className="block text-xs font-semibold text-text-primary mb-2 uppercase tracking-wider">
           {q.label}
         </label>
         <textarea
@@ -726,7 +726,7 @@ function QuestionField({
           onChange={(e) => onChange(e.target.value)}
           placeholder={q.placeholder}
           rows={3}
-          className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
+          className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
         />
       </div>
     );
@@ -735,7 +735,7 @@ function QuestionField({
   // short_text fallback
   return (
     <div>
-      <label className="block text-xs font-semibold text-foreground mb-2 uppercase tracking-wider">
+      <label className="block text-xs font-semibold text-text-primary mb-2 uppercase tracking-wider">
         {q.label}
       </label>
       <input
@@ -743,7 +743,7 @@ function QuestionField({
         value={(value as string) || ""}
         onChange={(e) => onChange(e.target.value)}
         placeholder={q.placeholder}
-        className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
+        className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
       />
     </div>
   );
@@ -774,7 +774,7 @@ function StepSidebar({
         <h2 className="text-2xl font-bold mb-1 flex items-center gap-2">
           <Layers size={22} className="text-[#2563EB]" /> Build your sidebar
         </h2>
-        <p className="text-sm text-muted">
+        <p className="text-sm text-text-muted">
           Pick the tools that matter — we&apos;ll hide the rest. Click &quot;AI Recommended&quot; for a starter set tailored to you.
         </p>
       </div>
@@ -811,7 +811,7 @@ function StepPersonalize({
         <h2 className="text-2xl font-bold mb-1 flex items-center gap-2 bg-gradient-to-r from-[#2563EB] to-[#3B82F6] bg-clip-text text-transparent">
           <Sparkles size={22} className="text-[#2563EB]" /> Personalized for you
         </h2>
-        <p className="text-sm text-muted">
+        <p className="text-sm text-text-muted">
           Optional follow-up questions — your answers help us tune content generation and your AI copilot.
         </p>
       </div>
@@ -819,12 +819,12 @@ function StepPersonalize({
       {loading && (
         <div className="flex flex-col items-center gap-2 py-12 rounded-xl border border-[rgba(59,130,246,0.2)] bg-gradient-to-b from-[rgba(59,130,246,0.05)] to-transparent">
           <Loader2 size={22} className="animate-spin text-[#2563EB]" />
-          <p className="text-xs text-muted">Our AI is getting to know you...</p>
+          <p className="text-xs text-text-muted">Our AI is getting to know you...</p>
         </div>
       )}
 
       {!loading && questions.length === 0 && (
-        <div className="rounded-xl border border-border p-6 text-center text-sm text-muted">
+        <div className="rounded-xl border border-border-subtle p-6 text-center text-sm text-text-muted">
           We couldn&apos;t generate custom questions right now — click Continue to skip.
         </div>
       )}
@@ -832,24 +832,24 @@ function StepPersonalize({
       {!loading && questions.length > 0 && (
         <div className="space-y-4">
           {questions.map((q) => (
-            <div key={q.id} className="rounded-xl border border-border p-4 bg-surface-light/30">
-              <label className="block text-xs font-semibold text-foreground mb-1.5 flex items-start gap-1.5">
+            <div key={q.id} className="rounded-xl border border-border-subtle p-4 bg-surface-light/30">
+              <label className="block text-xs font-semibold text-text-primary mb-1.5 flex items-start gap-1.5">
                 <Sparkles size={11} className="text-[#2563EB] mt-0.5 shrink-0" />
                 <span>{q.question}</span>
               </label>
               {q.help_text && (
-                <p className="text-[10px] text-muted mb-2 ml-5">{q.help_text}</p>
+                <p className="text-[10px] text-text-muted mb-2 ml-5">{q.help_text}</p>
               )}
               <textarea
                 value={answers[q.id] || ""}
                 onChange={(e) => onChange({ ...answers, [q.id]: e.target.value })}
                 placeholder={q.placeholder}
                 rows={2}
-                className="w-full px-3 py-2.5 bg-surface-light border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
+                className="w-full px-3 py-2.5 bg-surface-light border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
               />
             </div>
           ))}
-          <p className="text-[10px] text-muted text-center">
+          <p className="text-[10px] text-text-muted text-center">
             All questions are optional.
           </p>
         </div>
@@ -877,8 +877,8 @@ function StepReady({
         <CheckCircle2 size={36} className="text-[#2563EB]" />
       </div>
       <h2 className="text-2xl font-bold mb-2">You&apos;re all set!</h2>
-      <p className="text-sm text-muted max-w-md mx-auto mb-6">
-        Trinity is personalized for <span className="text-foreground font-medium">{businessName}</span>. Your
+      <p className="text-sm text-text-muted max-w-md mx-auto mb-6">
+        Trinity is personalized for <span className="text-text-primary font-medium">{businessName}</span>. Your
         dashboard will focus on <span className="text-[#2563EB] font-medium">{userTypeLabel}</span> metrics and your
         sidebar has <span className="text-[#2563EB] font-medium">{enabledCount}</span> tools enabled.
       </p>
@@ -888,9 +888,9 @@ function StepReady({
           { icon: <Sparkles size={18} />, label: "AI-tuned" },
           { icon: <Rocket size={18} />, label: "Ready to launch" },
         ].map((x) => (
-          <div key={x.label} className="p-3 rounded-xl border border-border bg-surface-light/40">
+          <div key={x.label} className="p-3 rounded-xl border border-border-subtle bg-surface-light/40">
             <div className="text-[#2563EB] mb-1 inline-flex">{x.icon}</div>
-            <p className="text-[11px] font-medium text-foreground">{x.label}</p>
+            <p className="text-[11px] font-medium text-text-primary">{x.label}</p>
           </div>
         ))}
       </div>

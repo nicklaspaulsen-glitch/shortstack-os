@@ -395,7 +395,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           {/* Page content — Apr 28: "stagger-shatter" entry transition
               retired (user described as "weird flicker"). Replaced with
-              a single soft fade-in on mount, no exit animation. New
+              a single soft on mount, no exit animation. New
               pages just appear. Faster perceived load + no layout
               jitter. Honors prefers-reduced-motion via the underlying
               `.page-soft-enter` keyframe. */}

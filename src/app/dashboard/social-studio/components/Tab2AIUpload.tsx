@@ -254,7 +254,7 @@ export default function Tab2AIUpload() {
         className={`relative  border-2 border-dashed transition-all p-8 text-center ${
           dragOver
             ? "border-[rgba(59,130,246,0.5)] bg-[rgba(59,130,246,0.05)]"
-            : "border-border/40 bg-surface hover:border-border/60"
+            : "border-border-subtle/40 bg-surface hover:border-border-subtle/60"
         }`}
       >
         <div className="flex flex-col items-center gap-3">
@@ -265,7 +265,7 @@ export default function Tab2AIUpload() {
             <h3 className="text-base font-semibold tracking-tight">
               Drop your image, video, or text here
             </h3>
-            <p className="text-xs text-muted mt-1">
+            <p className="text-xs text-text-muted mt-1">
               AI picks platforms, writes captions, suggests hashtags + the best time to post.
             </p>
           </div>
@@ -273,7 +273,7 @@ export default function Tab2AIUpload() {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="px-3 py-1.5 rounded-md text-xs border border-border/40 hover:bg-elevated inline-flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-md text-xs border border-border-subtle/40 hover:bg-elevated inline-flex items-center gap-1.5"
             >
               <ImageIcon size={12} />
               Choose file
@@ -287,21 +287,21 @@ export default function Tab2AIUpload() {
             />
           </div>
           {uploading && (
-            <div className="text-xs text-muted inline-flex items-center gap-1.5">
+            <div className="text-xs text-text-muted inline-flex items-center gap-1.5">
               <Loader2 size={12} className="animate-spin" />
               Uploading to storage...
             </div>
           )}
           {!uploading && asset && (
-            <div className="text-xs text-muted">
-              Loaded: <span className="text-foreground">{asset.kind === "text" ? "text snippet" : (asset as { name: string }).name}</span>
+            <div className="text-xs text-text-muted">
+              Loaded: <span className="text-text-primary">{asset.kind === "text" ? "text snippet" : (asset as { name: string }).name}</span>
             </div>
           )}
         </div>
       </div>
 
-      <div className="rounded-xl border border-border/40 bg-surface p-4 space-y-3">
-        <label className="text-[10px] uppercase tracking-wider text-muted">
+      <div className="rounded-xl border border-border-subtle/40 bg-surface p-4 space-y-3">
+        <label className="text-[10px] uppercase tracking-wider text-text-muted">
           Or paste / type your post text
         </label>
         <textarea
@@ -309,11 +309,11 @@ export default function Tab2AIUpload() {
           onChange={(e) => setTextInput(e.target.value)}
           rows={4}
           placeholder="What do you want to say?"
-          className="w-full px-3 py-2 rounded-md bg-elevated border border-border/40 text-sm"
+          className="w-full px-3 py-2 rounded-md bg-elevated border border-border-subtle/40 text-sm"
         />
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div className="flex items-center gap-2 flex-wrap">
-            <label className="text-[10px] uppercase tracking-wider text-muted">Tone</label>
+            <label className="text-[10px] uppercase tracking-wider text-text-muted">Tone</label>
             {["professional", "playful", "punchy", "story-driven", "expert"].map((t) => (
               <button
                 key={t}
@@ -322,7 +322,7 @@ export default function Tab2AIUpload() {
                 className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${
                   tone === t
                     ? "bg-[rgba(59,130,246,0.12)] border-[rgba(59,130,246,0.4)] text-brand-accent"
-                    : "border-border/40 text-muted hover:bg-elevated"
+                    : "border-border-subtle/40 text-text-muted hover:bg-elevated"
                 }`}
               >
                 {t}
@@ -343,7 +343,7 @@ export default function Tab2AIUpload() {
 
       {suggestions && (
         <div className="space-y-4">
-          <div className="rounded-xl border border-border/40 bg-surface p-4">
+          <div className="rounded-xl border border-border-subtle/40 bg-surface p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Wand2 size={14} className="text-brand-accent" />
@@ -353,15 +353,15 @@ export default function Tab2AIUpload() {
                 type="button"
                 onClick={handleAnalyze}
                 disabled={analyzing}
-                className="text-[10px] inline-flex items-center gap-1 text-muted hover:text-foreground"
+                className="text-[10px] inline-flex items-center gap-1 text-text-muted hover:text-text-primary"
               >
                 <RefreshCcw size={10} className={analyzing ? "animate-spin" : ""} />
                 Regenerate
               </button>
             </div>
-            <p className="text-xs text-muted mt-2">{suggestions.asset_summary}</p>
+            <p className="text-xs text-text-muted mt-2">{suggestions.asset_summary}</p>
             <div className="flex flex-wrap items-center gap-1.5 mt-3">
-              <span className="text-[10px] uppercase tracking-wider text-muted">Recommended</span>
+              <span className="text-[10px] uppercase tracking-wider text-text-muted">Recommended</span>
               {suggestions.platforms_recommended.map((p) => (
                 <PlatformChip key={p} platform={p} />
               ))}
@@ -385,7 +385,7 @@ export default function Tab2AIUpload() {
                 >
                   <div className="flex items-center justify-between mb-3">
                     <PlatformChip platform={platform} size="md" />
-                    <label className="inline-flex items-center gap-2 text-[10px] text-muted cursor-pointer">
+                    <label className="inline-flex items-center gap-2 text-[10px] text-text-muted cursor-pointer">
                       <input
                         type="checkbox"
                         checked={e.enabled}
@@ -397,7 +397,7 @@ export default function Tab2AIUpload() {
 
                   <div className="space-y-3">
                     <div>
-                      <label className="text-[10px] uppercase tracking-wider text-muted">Caption variants</label>
+                      <label className="text-[10px] uppercase tracking-wider text-text-muted">Caption variants</label>
                       <div className="grid grid-cols-3 gap-1.5 mt-1">
                         {captions.map((c) => (
                           <button
@@ -407,7 +407,7 @@ export default function Tab2AIUpload() {
                             className={`text-[10px] px-2 py-1 rounded border transition-all ${
                               e.selectedVariant === c.variant
                                 ? "border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.08)] text-brand-accent"
-                                : "border-border/40 text-muted hover:bg-elevated"
+                                : "border-border-subtle/40 text-text-muted hover:bg-elevated"
                             }`}
                           >
                             #{c.variant}
@@ -418,22 +418,22 @@ export default function Tab2AIUpload() {
                         value={e.captionText}
                         onChange={(ev) => updateEdit(platform, { captionText: ev.target.value })}
                         rows={4}
-                        className="w-full mt-2 px-3 py-2 rounded-md bg-elevated border border-border/40 text-sm"
+                        className="w-full mt-2 px-3 py-2 rounded-md bg-elevated border border-border-subtle/40 text-sm"
                       />
                       {captions[e.selectedVariant - 1]?.rationale && (
-                        <p className="text-[10px] text-muted mt-1">
+                        <p className="text-[10px] text-text-muted mt-1">
                           Why: {captions[e.selectedVariant - 1]?.rationale}
                         </p>
                       )}
                     </div>
 
                     <div>
-                      <label className="text-[10px] uppercase tracking-wider text-muted">Hashtags</label>
+                      <label className="text-[10px] uppercase tracking-wider text-text-muted">Hashtags</label>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {e.hashtags.map((h, idx) => (
                           <span
                             key={`${h}-${idx}`}
-                            className="text-[10px] px-1.5 py-0.5 rounded bg-elevated text-muted"
+                            className="text-[10px] px-1.5 py-0.5 rounded bg-elevated text-text-muted"
                           >
                             {h}
                           </span>
@@ -451,12 +451,12 @@ export default function Tab2AIUpload() {
                           updateEdit(platform, { hashtags: tags });
                         }}
                         placeholder="Edit and tab away to save"
-                        className="w-full mt-1 px-2 py-1 rounded-md bg-elevated border border-border/40 text-[11px]"
+                        className="w-full mt-1 px-2 py-1 rounded-md bg-elevated border border-border-subtle/40 text-[11px]"
                       />
                     </div>
 
                     <div>
-                      <label className="text-[10px] uppercase tracking-wider text-muted inline-flex items-center gap-1">
+                      <label className="text-[10px] uppercase tracking-wider text-text-muted inline-flex items-center gap-1">
                         <CalendarIcon size={10} />
                         Schedule for
                       </label>
@@ -464,12 +464,12 @@ export default function Tab2AIUpload() {
                         type="datetime-local"
                         value={e.scheduledAt}
                         onChange={(ev) => updateEdit(platform, { scheduledAt: ev.target.value })}
-                        className="w-full mt-1 px-3 py-1.5 rounded-md bg-elevated border border-border/40 text-sm"
+                        className="w-full mt-1 px-3 py-1.5 rounded-md bg-elevated border border-border-subtle/40 text-sm"
                       />
                       {(() => {
                         const reco = suggestions.times_recommended.find((t) => t.platform === platform);
                         if (!reco) return null;
-                        return <p className="text-[10px] text-muted mt-1">AI suggested: {reco.label}. {reco.rationale}</p>;
+                        return <p className="text-[10px] text-text-muted mt-1">AI suggested: {reco.label}. {reco.rationale}</p>;
                       })()}
                     </div>
                   </div>
@@ -483,7 +483,7 @@ export default function Tab2AIUpload() {
               type="button"
               onClick={() => handleScheduleAll(true)}
               disabled={scheduling}
-              className="px-4 py-2 rounded-md border border-border/40 text-xs hover:bg-elevated inline-flex items-center gap-2 disabled:opacity-50"
+              className="px-4 py-2 rounded-md border border-border-subtle/40 text-xs hover:bg-elevated inline-flex items-center gap-2 disabled:opacity-50"
             >
               {scheduling ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
               Publish all now

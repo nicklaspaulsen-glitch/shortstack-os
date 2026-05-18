@@ -172,7 +172,7 @@ export default function TrinityPage() {
     : 0;
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Trinity AI command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Trinity AI command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">TRINITY AI</p>
@@ -191,10 +191,10 @@ export default function TrinityPage() {
                   {messages.map((msg, i) => (
                     <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                       <div className={`max-w-[70%]  px-4 py-3 ${
-                        msg.role === "user" ? "bg-brand-accent text-white rounded-br-sm" : "bg-surface-light text-foreground rounded-bl-sm"
+                        msg.role === "user" ? "bg-brand-accent text-white rounded-br-sm" : "bg-surface-light text-text-primary rounded-bl-sm"
                       }`}>
                         <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                        <p className={`text-[10px] mt-1 ${msg.role === "user" ? "text-muted" : "text-muted"}`}>
+                        <p className={`text-[10px] mt-1 ${msg.role === "user" ? "text-text-muted" : "text-text-muted"}`}>
                           {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                         </p>
                       </div>
@@ -211,7 +211,7 @@ export default function TrinityPage() {
                   )}
                   <div ref={chatEndRef} />
                 </div>
-                <div className="border-t border-border p-4">
+                <div className="border-t border-border-subtle p-4">
                   <form onSubmit={e => { e.preventDefault(); sendMessage(); }} className="flex gap-3">
                     <input type="text" value={input} onChange={e => setInput(e.target.value)}
                       placeholder="Tell Trinity what to do..." className="input flex-1" disabled={sending} />
@@ -222,7 +222,7 @@ export default function TrinityPage() {
                   <div className="flex flex-wrap gap-2 mt-3">
                     {["Build a website", "Set up AI receptionist", "Create Discord server", "Run email campaign", "Generate leads"].map(cmd => (
                       <button key={cmd} onClick={() => setInput(cmd)}
-                        className="text-xs bg-surface-light px-3 py-1.5 rounded-full text-muted hover:text-foreground hover:bg-border transition-all">{cmd}</button>
+                        className="text-xs bg-surface-light px-3 py-1.5 rounded-full text-text-muted hover:text-text-primary hover:bg-border-subtle transition-all">{cmd}</button>
                     ))}
                   </div>
                 </div>
@@ -281,7 +281,7 @@ export default function TrinityPage() {
                       <div key={m.name} className="flex-1 flex flex-col items-center gap-1">
                         <span className="text-[9px] font-mono">{m.ms}ms</span>
                         <div className={`w-full rounded-t ${m.color}`} style={{ height: `${m.ms > 0 ? (m.ms / 600) * 100 : 0}%` }} />
-                        <span className="text-[8px] text-muted">{m.name}</span>
+                        <span className="text-[8px] text-text-muted">{m.name}</span>
                       </div>
                     ))}
                   </div>
@@ -291,20 +291,20 @@ export default function TrinityPage() {
               <div className="glass rounded-xl p-4">
                 <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-brand-accent" /> Agent Status Grid</h2>
                 {agents.length === 0 ? (
-                  <p className="text-xs text-muted text-center py-8">No agents have run yet. Trigger a command in the Chat tab to populate agent activity.</p>
+                  <p className="text-xs text-text-muted text-center py-8">No agents have run yet. Trigger a command in the Chat tab to populate agent activity.</p>
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
                     {agents.map(a => (
                       <div key={a.name} className={`p-3 rounded-xl border ${
-                        a.status === "error" ? "border-red-500/15 bg-red-500/5" : a.status === "active" ? "border-emerald-500/10 bg-emerald-500/5" : "border-border bg-surface-light"
+                        a.status === "error" ? "border-red-500/15 bg-red-500/5" : a.status === "active" ? "border-emerald-500/10 bg-emerald-500/5" : "border-border-subtle bg-surface-light"
                       }`}>
                         <div className="flex items-center gap-1.5 mb-2">
                           <div className={`w-2 h-2 rounded-full ${a.status === "active" ? "bg-emerald-400" : a.status === "error" ? "bg-red-400 animate-pulse" : "bg-amber-400"}`} />
                           <p className="text-xs font-semibold">{a.name}</p>
                         </div>
-                        <p className="text-[9px] text-muted mb-1 truncate">{a.lastAction}</p>
+                        <p className="text-[9px] text-text-muted mb-1 truncate">{a.lastAction}</p>
                         <div className="flex justify-between text-[9px]">
-                          <span className="text-muted">{a.actionsToday} today</span>
+                          <span className="text-text-muted">{a.actionsToday} today</span>
                           <span className={a.successRate >= 90 ? "text-emerald-400" : "text-brand-accent"}>{a.successRate}%</span>
                         </div>
                       </div>
@@ -317,16 +317,16 @@ export default function TrinityPage() {
                 <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Eye size={14} className="text-brand-accent" /> Combined Output Viewer</h2>
                 <div className="space-y-2">
                   {history.length === 0 ? (
-                    <p className="text-xs text-muted text-center py-8">No Trinity outputs yet. Run a command in the Chat tab to see results here.</p>
+                    <p className="text-xs text-text-muted text-center py-8">No Trinity outputs yet. Run a command in the Chat tab to see results here.</p>
                   ) : (
                     history.slice(0, 20).map(h => (
-                      <div key={h.id} className="p-3 rounded-xl bg-surface-light border border-border">
+                      <div key={h.id} className="p-3 rounded-xl bg-surface-light border border-border-subtle">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-[10px] font-semibold text-brand-accent">{h.agent}</span>
-                          <span className="text-[9px] bg-surface px-1.5 py-0.5 rounded text-muted">{h.action_type}</span>
-                          <span className="text-[9px] text-muted ml-auto">{h.created_at ? new Date(h.created_at).toLocaleString() : ""}</span>
+                          <span className="text-[9px] bg-surface px-1.5 py-0.5 rounded text-text-muted">{h.action_type}</span>
+                          <span className="text-[9px] text-text-muted ml-auto">{h.created_at ? new Date(h.created_at).toLocaleString() : ""}</span>
                         </div>
-                        <p className="text-xs text-muted">{h.description}</p>
+                        <p className="text-xs text-text-muted">{h.description}</p>
                       </div>
                     ))
                   )}
@@ -337,10 +337,10 @@ export default function TrinityPage() {
                 <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Layers size={14} className="text-brand-accent" /> Unified Task Queue</h2>
                 <div className="space-y-2">
                   {queue.length === 0 ? (
-                    <p className="text-xs text-muted text-center py-8">Queue is empty. No Trinity actions are currently queued or running.</p>
+                    <p className="text-xs text-text-muted text-center py-8">Queue is empty. No Trinity actions are currently queued or running.</p>
                   ) : (
                     queue.map(q => (
-                      <div key={q.id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
+                      <div key={q.id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border-subtle">
                         <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-bold uppercase ${
                           q.priority === "high" ? "bg-red-500/10 text-red-400" : q.priority === "medium" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "bg-[rgba(59,130,246,0.08)] text-brand-accent"
                         }`}>{q.priority}</span>
@@ -349,7 +349,7 @@ export default function TrinityPage() {
                         }`}>{q.status}</span>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium">{q.description}</p>
-                          <p className="text-[9px] text-muted">{q.agent} &middot; {q.action_type}</p>
+                          <p className="text-[9px] text-text-muted">{q.agent} &middot; {q.action_type}</p>
                         </div>
                       </div>
                     ))
@@ -405,7 +405,7 @@ export default function TrinityPage() {
                     <h3 className="text-xs font-bold mb-3">Cost by Agent</h3>
                     <div className="space-y-2">
                       {costByAgent.length === 0 ? (
-                        <p className="text-xs text-muted text-center py-4">No agent cost data yet this month.</p>
+                        <p className="text-xs text-text-muted text-center py-4">No agent cost data yet this month.</p>
                       ) : (
                         costByAgent.slice(0, 8).map(a => {
                           const pct = maxAgentAmount > 0 ? (a.amount / maxAgentAmount) * 100 : 0;
@@ -428,11 +428,11 @@ export default function TrinityPage() {
               <div className="glass rounded-xl p-4">
                 <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Star size={14} className="text-brand-accent" /> Quality Comparison</h2>
                 {agents.length === 0 ? (
-                  <p className="text-xs text-muted text-center py-8">No agent quality data yet.</p>
+                  <p className="text-xs text-text-muted text-center py-8">No agent quality data yet.</p>
                 ) : (
                   <div className="space-y-2">
                     {agents.map(a => (
-                      <div key={a.name} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
+                      <div key={a.name} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border-subtle">
                         <span className="text-[10px] w-28 shrink-0 font-medium truncate">{a.name}</span>
                         <div className="flex-1 h-2 rounded-full bg-surface">
                           <div className={`h-2 rounded-full ${a.successRate >= 95 ? "bg-emerald-400" : a.successRate >= 80 ? "bg-brand-accent" : "bg-red-400"}`}
@@ -449,31 +449,31 @@ export default function TrinityPage() {
                 <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-brand-accent" /> Fallback Chain Editor</h2>
                 <div className="space-y-2">
                   {FALLBACK_CHAIN.map((f, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
+                    <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border-subtle">
                       <div className="bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded text-[10px] font-medium">{f.primary}</div>
-                      <ArrowRight size={12} className="text-muted" />
+                      <ArrowRight size={12} className="text-text-muted" />
                       <div className="bg-[rgba(59,130,246,0.08)] text-brand-accent px-2 py-1 rounded text-[10px] font-medium">{f.fallback}</div>
-                      <span className="text-[9px] text-muted ml-auto">{f.trigger}</span>
+                      <span className="text-[9px] text-text-muted ml-auto">{f.trigger}</span>
                     </motion.div>
                   ))}
                 </div>
-                <p className="text-[9px] text-muted mt-3">Trinity automatically falls back to secondary providers when primary services are unavailable.</p>
+                <p className="text-[9px] text-text-muted mt-3">Trinity automatically falls back to secondary providers when primary services are unavailable.</p>
               </div>
             )}{/* ═══ HISTORY TAB ═══ */}{tab === "History" && (
               <div className="glass rounded-xl p-4">
                 <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><History size={14} className="text-brand-accent" /> Action History</h2>
                 <div className="space-y-1.5">
                   {history.length === 0 ? (
-                    <p className="text-xs text-muted text-center py-8">No actions recorded yet.</p>
+                    <p className="text-xs text-text-muted text-center py-8">No actions recorded yet.</p>
                   ) : (
                     history.map((h, idx) => {
                       const ok = h.status === "completed" || h.status === "success";
                       return (
-                        <motion.div key={h.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
+                        <motion.div key={h.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border-subtle">
                           {ok ? <CheckCircle size={12} className="text-emerald-400 shrink-0" /> : <XCircle size={12} className="text-red-400 shrink-0" />}
                           <div className="flex-1 min-w-0">
                             <p className="text-xs truncate">{h.description}</p>
-                            <p className="text-[9px] text-muted">
+                            <p className="text-[9px] text-text-muted">
                               {h.agent} &middot; {h.action_type}
                               {h.created_at ? ` \u00B7 ${new Date(h.created_at).toLocaleString()}` : ""}
                             </p>
@@ -532,10 +532,10 @@ export default function TrinityPage() {
                 </div>
                 <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-bold mb-3">Agent Weighting Controls</h3>
-                  <p className="text-[10px] text-muted mb-3">Adjust priority weighting for each agent in the Trinity orchestration layer.</p>
+                  <p className="text-[10px] text-text-muted mb-3">Adjust priority weighting for each agent in the Trinity orchestration layer.</p>
                   <div className="space-y-2">
                     {Object.keys(agentWeights).length === 0 && (
-                      <p className="text-xs text-muted text-center py-4">No agents configured yet.</p>
+                      <p className="text-xs text-text-muted text-center py-4">No agents configured yet.</p>
                     )}
                     {Object.entries(agentWeights).map(([name, weight]) => (
                       <div key={name} className="flex items-center gap-3">

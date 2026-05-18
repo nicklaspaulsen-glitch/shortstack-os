@@ -92,7 +92,7 @@ export default function ClientVoiceProfile({ clientId, clientName }: Props) {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="font-semibold text-base">Voice Profile</h3>
-          <p className="text-xs text-muted">
+          <p className="text-xs text-text-muted">
             How {clientName} writes. We learn from their replies and use it to
             generate copy in their voice.
           </p>
@@ -182,7 +182,7 @@ function Stats({ profile }: { profile: VoiceProfile }) {
     { label: "Exclamations", value: profile.exclamation_rate ?? 0, max: 6, suffix: "" },
   ];
   return (
-    <div className="rounded-xl border border-border bg-black/5 p-4">
+    <div className="rounded-xl border border-border-subtle bg-black/5 p-4">
       <div className="flex items-center gap-2 mb-3">
         <Type size={14} className="text-[#2563EB]" />
         <span className="text-xs font-semibold">Stats</span>
@@ -223,7 +223,7 @@ function Signature({ profile }: { profile: VoiceProfile }) {
   const hasAny = groups.some((g) => g.items && g.items.length > 0);
   if (!hasAny) return null;
   return (
-    <div className="rounded-xl border border-border bg-black/5 p-4 space-y-3">
+    <div className="rounded-xl border border-border-subtle bg-black/5 p-4 space-y-3">
       <div className="flex items-center gap-2">
         <Sparkles size={14} className="text-[#2563EB]" />
         <span className="text-xs font-semibold">Signature</span>
@@ -251,12 +251,12 @@ function Signature({ profile }: { profile: VoiceProfile }) {
 
 function PromptPanel({ snippet }: { snippet: string }) {
   return (
-    <div className="rounded-xl border border-border bg-black/5 p-4">
+    <div className="rounded-xl border border-border-subtle bg-black/5 p-4">
       <div className="flex items-center gap-2 mb-2">
         <Wand2 size={14} className="text-[#2563EB]" />
         <span className="text-xs font-semibold">Injected prompt</span>
       </div>
-      <pre className="text-[11px] whitespace-pre-wrap font-mono text-text-primary rounded-lg bg-black/[0.04] p-3 border border-border max-h-40 overflow-auto">
+      <pre className="text-[11px] whitespace-pre-wrap font-mono text-text-primary rounded-lg bg-black/[0.04] p-3 border border-border-subtle max-h-40 overflow-auto">
         {snippet}
       </pre>
     </div>
@@ -311,7 +311,7 @@ function GenerateModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-surface border border-border  w-full max-w-2xl max-h-[90vh] overflow-auto p-5 space-y-4">
+      <div className="bg-surface border border-border-subtle  w-full max-w-2xl max-h-[90vh] overflow-auto p-5 space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold">Generate copy in {clientName}&apos;s voice</h3>
           <button
@@ -328,7 +328,7 @@ function GenerateModal({
             onChange={(e) => setPrompt(e.target.value)}
             placeholder={promptHelp}
             rows={4}
-            className="w-full text-xs rounded-lg bg-bg-base border border-border p-3 focus:outline-none focus:border-[rgba(59,130,246,0.5)] resize-y"
+            className="w-full text-xs rounded-lg bg-bg-base border border-border-subtle p-3 focus:outline-none focus:border-[rgba(59,130,246,0.5)] resize-y"
           />
         </div>
         <button
@@ -341,7 +341,7 @@ function GenerateModal({
         {output && (
           <div>
             <label className="text-xs text-text-muted block mb-1">Output</label>
-            <pre className="text-xs whitespace-pre-wrap rounded-lg bg-black/[0.04] border border-border p-3">
+            <pre className="text-xs whitespace-pre-wrap rounded-lg bg-black/[0.04] border border-border-subtle p-3">
               {output}
             </pre>
           </div>

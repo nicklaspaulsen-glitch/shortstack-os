@@ -755,7 +755,7 @@ export default function CommunityPage() {
   const xpPct = Math.round((MY_STATS.xpCurrent / MY_STATS.xpNeeded) * 100);
 
   return (
-    <MotionPage className="fade-in space-y-5 max-w-[900px] mx-auto">{/* -- Community command strip (slim editorial header, no PageHero) -- */}
+    <MotionPage className="space-y-5 max-w-[900px] mx-auto">{/* -- Community command strip (slim editorial header, no PageHero) -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
           <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
@@ -783,7 +783,7 @@ export default function CommunityPage() {
                       <div className="w-32 h-1.5 rounded-full bg-[rgba(0,0,0,0.04)] overflow-hidden">
                         <div className="h-full rounded-full bg-brand-accent transition-all" style={{ width: `${xpPct}%` }} />
                       </div>
-                      <span className="text-[9px] text-muted">{MY_STATS.xpCurrent.toLocaleString()} / {MY_STATS.xpNeeded.toLocaleString()} XP to {MY_STATS.nextLevel}</span>
+                      <span className="text-[9px] text-text-muted">{MY_STATS.xpCurrent.toLocaleString()} / {MY_STATS.xpNeeded.toLocaleString()} XP to {MY_STATS.nextLevel}</span>
                     </div>
                   </div>
                 </div>
@@ -793,21 +793,21 @@ export default function CommunityPage() {
                       <Flame size={12} className="text-orange-400" />
                       <span className="text-sm font-bold font-mono">{MY_STATS.streak}</span>
                     </div>
-                    <p className="text-[9px] text-muted">Day Streak</p>
+                    <p className="text-[9px] text-text-muted">Day Streak</p>
                   </div>
                   <div className="text-center">
                     <div className="flex items-center gap-1">
                       <Star size={12} className="text-brand-accent" />
                       <span className="text-sm font-bold font-mono">{MY_STATS.points.toLocaleString()}</span>
                     </div>
-                    <p className="text-[9px] text-muted">Points</p>
+                    <p className="text-[9px] text-text-muted">Points</p>
                   </div>
                   <div className="text-center">
                     <div className="flex items-center gap-1">
                       <Trophy size={12} className="text-brand-accent" />
                       <span className="text-sm font-bold font-mono">{MY_STATS.badgesEarned}/{MY_STATS.totalBadges}</span>
                     </div>
-                    <p className="text-[9px] text-muted">Badges</p>
+                    <p className="text-[9px] text-text-muted">Badges</p>
                   </div>
                 </div>
               </div>
@@ -831,7 +831,7 @@ export default function CommunityPage() {
                     <qa.icon size={14} className={qa.color} />
                   </div>
                   <p className="text-[10px] font-semibold">{qa.label}</p>
-                  <p className="text-[9px] text-muted">{qa.sub}</p>
+                  <p className="text-[9px] text-text-muted">{qa.sub}</p>
                 </motion.button>
               ))}
             </div>{/* Stats bar */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
@@ -878,13 +878,13 @@ export default function CommunityPage() {
               {tabs.map(t => (
                 <button key={t.id} onClick={() => setActiveTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border ${
-                    activeTab === t.id ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)] text-brand-accent font-medium" : "border-border text-muted hover:text-foreground"
+                    activeTab === t.id ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)] text-brand-accent font-medium" : "border-border-subtle text-text-muted hover:text-text-primary"
                   }`}>
                   <t.icon size={12} /> {t.label}
                 </button>
               ))}
             </div>{/* Error banner */}{error && (
-              <div className="card p-3 border-red-400/30 bg-red-400/5 text-red-400 text-xs flex items-center justify-between">
+              <div className="glass rounded-xl p-3 border-red-400/30 bg-red-400/5 text-red-400 text-xs flex items-center justify-between">
                 <span>{error}</span>
                 <button onClick={() => setError(null)} className="text-[10px] underline">Dismiss</button>
               </div>
@@ -893,9 +893,9 @@ export default function CommunityPage() {
                 {/* Search + Filter */}
                 <div className="flex gap-2">
                   <div className="relative flex-1">
-                    <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                    <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                     <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                      className="w-full rounded-lg border border-border bg-surface px-3 py-1.5 pl-8 text-xs text-foreground" placeholder="Search posts..." />
+                      className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-1.5 pl-8 text-xs text-text-primary" placeholder="Search posts..." />
                   </div>
                 </div>
 
@@ -904,7 +904,7 @@ export default function CommunityPage() {
                   {POST_TYPES.map(t => (
                     <button key={t.id} onClick={() => setFilter(t.id)}
                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border ${
-                        filter === t.id ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)] text-brand-accent font-medium" : "border-border text-muted hover:text-foreground"
+                        filter === t.id ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)] text-brand-accent font-medium" : "border-border-subtle text-text-muted hover:text-text-primary"
                       }`}>
                       <t.icon size={12} /> {t.label}
                     </button>
@@ -912,8 +912,8 @@ export default function CommunityPage() {
                 </div>
 
                 {/* Discussion Categories */}
-                <div className="card p-4">
-                  <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
+                <div className="glass rounded-xl p-4">
+                  <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-text-muted">
                     <Hash size={10} className="text-brand-accent" /> Discussion Topics
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -922,7 +922,7 @@ export default function CommunityPage() {
                         className={`p-3 rounded-lg border ${cat.bg} text-left hover:brightness-110 transition-all`}>
                         <cat.icon size={16} className={cat.color} />
                         <p className="text-xs font-semibold mt-1.5">{cat.label}</p>
-                        <p className="text-[9px] text-muted mt-0.5">{cat.description}</p>
+                        <p className="text-[9px] text-text-muted mt-0.5">{cat.description}</p>
                         <p className="text-[9px] font-mono mt-1.5 opacity-60">{cat.threads} threads</p>
                       </button>
                     ))}
@@ -933,14 +933,14 @@ export default function CommunityPage() {
                   {/* Main feed column */}
                   <div className="lg:col-span-2 space-y-3">
                     {/* Trending Topics */}
-                    <div className="card p-3">
+                    <div className="glass rounded-xl p-3">
                       <h3 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><TrendingUp size={10} className="text-brand-accent" /> Trending</h3>
                       {TRENDING.length === 0 ? (
-                        <p className="text-[9px] text-muted text-center py-2">No trending topics yet</p>
+                        <p className="text-[9px] text-text-muted text-center py-2">No trending topics yet</p>
                       ) : (
                         <div className="flex gap-2 overflow-x-auto">
                           {TRENDING.map(t => (
-                            <div key={t.topic} className="flex items-center gap-1.5 px-2 py-1 rounded-lg border border-border text-[9px] whitespace-nowrap shrink-0 hover:border-[rgba(59,130,246,0.2)] transition-colors cursor-pointer">
+                            <div key={t.topic} className="flex items-center gap-1.5 px-2 py-1 rounded-lg border border-border-subtle text-[9px] whitespace-nowrap shrink-0 hover:border-[rgba(59,130,246,0.2)] transition-colors cursor-pointer">
                               <Hash size={8} className="text-brand-accent" />
                               <span>{t.topic}</span>
                               <span className="text-green-400 font-mono">{t.trend}</span>
@@ -952,7 +952,7 @@ export default function CommunityPage() {
 
                     {/* New Post Form */}
                     {showNewPost && (
-                      <div className="card p-4 border-[rgba(59,130,246,0.2)]">
+                      <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.2)]">
                         <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
                           {quickAction === "share-win" && <><Trophy size={12} className="text-brand-accent" /> Share a Win</>}
                           {quickAction === "ask-question" && <><HelpCircle size={12} className="text-yellow-400" /> Ask a Question</>}
@@ -962,7 +962,7 @@ export default function CommunityPage() {
                           <select
                             value={newCategory}
                             onChange={e => setNewCategory(e.target.value)}
-                            className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground"
+                            className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs text-text-primary"
                           >
                             <option value="discussion">Discussion</option>
                             <option value="question">Question</option>
@@ -973,17 +973,17 @@ export default function CommunityPage() {
                           <input
                             value={newTitle}
                             onChange={e => setNewTitle(e.target.value)}
-                            className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground"
+                            className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs text-text-primary"
                             placeholder={quickAction === "share-win" ? "What did you accomplish?" : quickAction === "ask-question" ? "What do you need help with?" : "Post title..."}
                           />
                           <textarea
                             value={newContent}
                             onChange={e => setNewContent(e.target.value)}
-                            className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-24"
+                            className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs text-text-primary h-24"
                             placeholder={quickAction === "share-win" ? "Tell us about your win..." : quickAction === "ask-question" ? "Describe your question in detail..." : "Share your thoughts..."}
                           />
                           <div className="flex justify-end gap-2">
-                            <button onClick={() => { setShowNewPost(false); setQuickAction(null); }} className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted">Cancel</button>
+                            <button onClick={() => { setShowNewPost(false); setQuickAction(null); }} className="px-3 py-1.5 rounded-lg border border-border-subtle text-xs text-text-muted">Cancel</button>
                             <button
                               onClick={handleCreatePost}
                               disabled={creating || !newTitle.trim() || !newContent.trim()}
@@ -1000,25 +1000,25 @@ export default function CommunityPage() {
                     {/* Posts */}
                     <div className="space-y-3">
                       {loading ? (
-                        <div className="card text-center py-12">
-                          <Loader2 size={24} className="mx-auto mb-2 text-muted/50 animate-spin" />
-                          <p className="text-xs text-muted">Loading posts...</p>
+                        <div className="glass rounded-xl p-4 text-center py-12">
+                          <Loader2 size={24} className="mx-auto mb-2 text-text-muted/50 animate-spin" />
+                          <p className="text-xs text-text-muted">Loading posts...</p>
                         </div>
                       ) : filteredPosts.length === 0 ? (
-                        <div className="card text-center py-12">
-                          <MessageSquare size={24} className="mx-auto mb-2 text-muted/30" />
-                          <p className="text-xs text-muted">
+                        <div className="glass rounded-xl p-4 text-center py-12">
+                          <MessageSquare size={24} className="mx-auto mb-2 text-text-muted/30" />
+                          <p className="text-xs text-text-muted">
                             {posts.length === 0
                               ? "No posts yet. Be the first to share!"
                               : "No posts match your filters."}
                           </p>
                         </div>
                       ) : filteredPosts.map(post => {
-                        const tc = TYPE_CONFIG[post.category] || { bg: "bg-[rgba(0,0,0,0.04)] text-muted border-border", icon: MessageSquare };
+                        const tc = TYPE_CONFIG[post.category] || { bg: "bg-[rgba(0,0,0,0.04)] text-text-muted border-border-subtle", icon: MessageSquare };
                         const TypeIcon = tc.icon;
                         const liked = likedPosts.includes(post.id);
                         return (
-                          <div key={post.id} className={`card p-4 transition-all ${post.pinned ? "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.02)]" : ""}`}>
+                          <div key={post.id} className={`glass rounded-xl p-4 transition-all ${post.pinned ? "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.02)]" : ""}`}>
                             <div className="flex items-start gap-3">
                               <div className="w-8 h-8 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-xs font-bold text-brand-accent shrink-0">
                                 {post.author_avatar || post.author_name.charAt(0).toUpperCase()}
@@ -1028,15 +1028,15 @@ export default function CommunityPage() {
                                   <span className="text-xs font-semibold">{post.author_name}</span>
                                   <span className={`text-[8px] px-1.5 py-0.5 rounded border ${tc.bg}`}><TypeIcon size={8} className="inline mr-0.5" />{post.category}</span>
                                   {post.pinned && <Pin size={10} className="text-brand-accent" />}
-                                  <span className="text-[9px] text-muted ml-auto">{timeAgo(post.created_at)}</span>
+                                  <span className="text-[9px] text-text-muted ml-auto">{timeAgo(post.created_at)}</span>
                                 </div>
                                 <h3 className="text-sm font-medium mt-0.5">{post.title}</h3>
-                                <p className="text-xs text-muted mt-1.5 leading-relaxed">
+                                <p className="text-xs text-text-muted mt-1.5 leading-relaxed">
                                   {expandedPost === post.id ? post.content : post.content.length > 200 ? post.content.slice(0, 200) + "..." : post.content}
                                 </p>
                                 <div className="flex items-center gap-3 mt-3">
                                   <button onClick={() => toggleLike(post.id)}
-                                    className={`flex items-center gap-1 text-[10px] transition-colors ${liked ? "text-red-400" : "text-muted hover:text-red-400"}`}>
+                                    className={`flex items-center gap-1 text-[10px] transition-colors ${liked ? "text-red-400" : "text-text-muted hover:text-red-400"}`}>
                                     <Heart size={12} fill={liked ? "currentColor" : "none"} /> {post.likes + (liked ? 1 : 0)}
                                   </button>
                                   <button onClick={() => {
@@ -1044,30 +1044,30 @@ export default function CommunityPage() {
                                     setExpandedPost(isExpanded ? null : post.id);
                                     if (!isExpanded && !postComments[post.id]) loadComments(post.id);
                                   }}
-                                    className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground">
+                                    className="flex items-center gap-1 text-[10px] text-text-muted hover:text-text-primary">
                                     <MessageSquare size={12} /> {post.comments_count} {post.comments_count === 1 ? "comment" : "comments"}
                                     <ChevronDown size={10} className={expandedPost === post.id ? "rotate-180" : ""} />
                                   </button>
                                   <button onClick={() => toggleBookmark(post.id)}
-                                    className={`flex items-center gap-1 text-[10px] transition-colors ${bookmarkedPosts.has(post.id) ? "text-brand-accent" : "text-muted hover:text-brand-accent"}`}>
+                                    className={`flex items-center gap-1 text-[10px] transition-colors ${bookmarkedPosts.has(post.id) ? "text-brand-accent" : "text-text-muted hover:text-brand-accent"}`}>
                                     <Pin size={12} fill={bookmarkedPosts.has(post.id) ? "currentColor" : "none"} />
                                   </button>
                                   <button onClick={() => {
                                     if (navigator.share) navigator.share({ title: post.title, text: post.content.slice(0, 100) });
                                     else { navigator.clipboard.writeText(`${window.location.origin}/dashboard/community#${post.id}`); }
                                   }}
-                                    className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground">
+                                    className="flex items-center gap-1 text-[10px] text-text-muted hover:text-text-primary">
                                     <ExternalLink size={12} />
                                   </button>
                                   <button onClick={() => handleDelete(post.id)}
-                                    className="flex items-center gap-1 text-[10px] text-muted hover:text-red-400 ml-auto">
+                                    className="flex items-center gap-1 text-[10px] text-text-muted hover:text-red-400 ml-auto">
                                     <Trash2 size={12} />
                                   </button>
                                 </div>
 
                                 {/* Comments section — shown when expanded */}
                                 {expandedPost === post.id && (
-                                  <div className="mt-4 pt-4 border-t border-border/50 space-y-3">
+                                  <div className="mt-4 pt-4 border-t border-border-subtle/50 space-y-3">
                                     {/* Comment input */}
                                     <div className="flex gap-2">
                                       <input
@@ -1085,14 +1085,14 @@ export default function CommunityPage() {
                                       </button>
                                     </div>
                                     {replyingTo && (
-                                      <p className="text-[9px] text-muted">Replying to a comment — <button onClick={() => setReplyingTo(null)} className="text-brand-accent hover:underline">cancel</button></p>
+                                      <p className="text-[9px] text-text-muted">Replying to a comment — <button onClick={() => setReplyingTo(null)} className="text-brand-accent hover:underline">cancel</button></p>
                                     )}
 
                                     {/* Comments list */}
                                     {commentsLoading[post.id] ? (
-                                      <p className="text-[10px] text-muted text-center py-4">Loading comments...</p>
+                                      <p className="text-[10px] text-text-muted text-center py-4">Loading comments...</p>
                                     ) : (postComments[post.id] || []).length === 0 ? (
-                                      <p className="text-[10px] text-muted text-center py-4">Be the first to comment</p>
+                                      <p className="text-[10px] text-text-muted text-center py-4">Be the first to comment</p>
                                     ) : (
                                       <div className="space-y-2.5">
                                         {(postComments[post.id] || []).filter(c => !c.parent_id).map(comment => {
@@ -1106,20 +1106,20 @@ export default function CommunityPage() {
                                                 <div className="flex-1 bg-surface-light/50 rounded-lg p-2.5">
                                                   <div className="flex items-center gap-2 mb-0.5">
                                                     <span className="text-[10px] font-semibold">{comment.author_name}</span>
-                                                    <span className="text-[8px] text-muted">{timeAgo(comment.created_at)}</span>
+                                                    <span className="text-[8px] text-text-muted">{timeAgo(comment.created_at)}</span>
                                                   </div>
                                                   <p className="text-[11px] leading-relaxed">{comment.content}</p>
                                                   <div className="flex items-center gap-3 mt-1.5">
                                                     <button onClick={() => toggleCommentLike(post.id, comment.id)}
-                                                      className="flex items-center gap-1 text-[9px] text-muted hover:text-red-400">
+                                                      className="flex items-center gap-1 text-[9px] text-text-muted hover:text-red-400">
                                                       <Heart size={9} /> {comment.likes}
                                                     </button>
                                                     <button onClick={() => setReplyingTo(comment.id)}
-                                                      className="text-[9px] text-muted hover:text-foreground">
+                                                      className="text-[9px] text-text-muted hover:text-text-primary">
                                                       Reply
                                                     </button>
                                                     <button onClick={() => deleteComment(post.id, comment.id)}
-                                                      className="text-[9px] text-muted hover:text-red-400 ml-auto">
+                                                      className="text-[9px] text-text-muted hover:text-red-400 ml-auto">
                                                       <Trash2 size={9} />
                                                     </button>
                                                   </div>
@@ -1134,16 +1134,16 @@ export default function CommunityPage() {
                                                   <div className="flex-1 bg-surface-light/30 rounded-lg p-2">
                                                     <div className="flex items-center gap-2 mb-0.5">
                                                       <span className="text-[10px] font-semibold">{reply.author_name}</span>
-                                                      <span className="text-[8px] text-muted">{timeAgo(reply.created_at)}</span>
+                                                      <span className="text-[8px] text-text-muted">{timeAgo(reply.created_at)}</span>
                                                     </div>
                                                     <p className="text-[11px] leading-relaxed">{reply.content}</p>
                                                     <div className="flex items-center gap-3 mt-1">
                                                       <button onClick={() => toggleCommentLike(post.id, reply.id)}
-                                                        className="flex items-center gap-1 text-[9px] text-muted hover:text-red-400">
+                                                        className="flex items-center gap-1 text-[9px] text-text-muted hover:text-red-400">
                                                         <Heart size={9} /> {reply.likes}
                                                       </button>
                                                       <button onClick={() => deleteComment(post.id, reply.id)}
-                                                        className="text-[9px] text-muted hover:text-red-400 ml-auto">
+                                                        className="text-[9px] text-text-muted hover:text-red-400 ml-auto">
                                                         <Trash2 size={9} />
                                                       </button>
                                                     </div>
@@ -1168,12 +1168,12 @@ export default function CommunityPage() {
                   {/* Sidebar -- Activity Feed + Leaderboard mini */}
                   <div className="space-y-3">
                     {/* Activity Feed */}
-                    <div className="card p-4">
-                      <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
+                    <div className="glass rounded-xl p-4">
+                      <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-text-muted">
                         <Zap size={10} className="text-brand-accent" /> Recent Activity
                       </h3>
                       {ACTIVITY_FEED.length === 0 ? (
-                        <p className="text-[9px] text-muted text-center py-4">No recent activity</p>
+                        <p className="text-[9px] text-text-muted text-center py-4">No recent activity</p>
                       ) : (
                         <div className="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
                           {ACTIVITY_FEED.map(item => {
@@ -1187,10 +1187,10 @@ export default function CommunityPage() {
                                 <div className="min-w-0 flex-1">
                                   <p className="text-[10px] leading-relaxed">
                                     <span className="font-semibold">{item.user}</span>{" "}
-                                    <span className="text-muted">{item.action}</span>{" "}
+                                    <span className="text-text-muted">{item.action}</span>{" "}
                                     {item.target && <span className="font-medium">{item.target}</span>}
                                   </p>
-                                  <p className="text-[9px] text-muted">{timeAgo(item.time)}</p>
+                                  <p className="text-[9px] text-text-muted">{timeAgo(item.time)}</p>
                                 </div>
                               </div>
                             );
@@ -1200,18 +1200,18 @@ export default function CommunityPage() {
                     </div>
 
                     {/* Mini Leaderboard */}
-                    <div className="card p-4">
-                      <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
+                    <div className="glass rounded-xl p-4">
+                      <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-text-muted">
                         <Trophy size={10} className="text-brand-accent" /> Top Contributors
                       </h3>
                       {LEADERBOARD.length === 0 ? (
-                        <p className="text-[9px] text-muted text-center py-4">No contributors yet</p>
+                        <p className="text-[9px] text-text-muted text-center py-4">No contributors yet</p>
                       ) : (
                         <div className="space-y-2">
                           {LEADERBOARD.slice(0, 5).map((m, i) => (
                             <div key={m.name} className="flex items-center gap-2">
                               <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold ${
-                                i === 0 ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : i === 1 ? "bg-border-strong/20 text-border-strong" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-[rgba(0,0,0,0.04)] text-muted"
+                                i === 0 ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : i === 1 ? "bg-border-strong/20 text-border-strong" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-[rgba(0,0,0,0.04)] text-text-muted"
                               }`}>{i + 1}</span>
                               <div className="w-5 h-5 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[8px] font-bold text-brand-accent shrink-0">{m.avatar}</div>
                               <span className="text-[10px] font-medium flex-1 truncate">{m.name}</span>
@@ -1226,21 +1226,21 @@ export default function CommunityPage() {
                     </div>
 
                     {/* Your Badges mini */}
-                    <div className="card p-4">
-                      <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
+                    <div className="glass rounded-xl p-4">
+                      <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-text-muted">
                         <Award size={10} className="text-brand-accent" /> Your Badges
                       </h3>
                       {BADGES.length === 0 ? (
-                        <p className="text-[9px] text-muted text-center py-4">No badges available yet</p>
+                        <p className="text-[9px] text-text-muted text-center py-4">No badges available yet</p>
                       ) : (
                         <div className="grid grid-cols-4 gap-2">
                           {BADGES.slice(0, 8).map(badge => {
                             const BIcon = badge.icon;
                             return (
                               <div key={badge.id} className={`relative group flex flex-col items-center p-2 rounded-lg border transition-all ${
-                                badge.earned ? "border-border hover:border-[rgba(59,130,246,0.2)]" : "border-border/50 opacity-30"
+                                badge.earned ? "border-border-subtle hover:border-[rgba(59,130,246,0.2)]" : "border-border-subtle/50 opacity-30"
                               }`}>
-                                <BIcon size={14} className={badge.earned ? badge.color : "text-muted"} />
+                                <BIcon size={14} className={badge.earned ? badge.color : "text-text-muted"} />
                                 <p className="text-[7px] text-center mt-1 font-medium leading-tight">{badge.label}</p>
                                 {/* Tooltip */}
                                 <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block z-10">
@@ -1260,27 +1260,27 @@ export default function CommunityPage() {
             )}{/* ---- TAB: Members ---- */}{activeTab === "members" && (
               <div className="space-y-4">
                 {/* Full Leaderboard */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Award size={12} className="text-brand-accent" /> Activity Leaderboard</h3>
                   {LEADERBOARD.length === 0 ? (
-                    <p className="text-xs text-muted text-center py-6">No leaderboard data yet. Start participating to earn points!</p>
+                    <p className="text-xs text-text-muted text-center py-6">No leaderboard data yet. Start participating to earn points!</p>
                   ) : (
                   <div className="space-y-2">
                     {LEADERBOARD.map((m, i) => (
                       <div key={m.name} className={`flex items-center gap-3 p-2.5 rounded-lg border transition-all ${
-                        i < 3 ? "border-[rgba(59,130,246,0.1)] bg-[rgba(59,130,246,0.02)]" : "border-border"
+                        i < 3 ? "border-[rgba(59,130,246,0.1)] bg-[rgba(59,130,246,0.02)]" : "border-border-subtle"
                       }`}>
                         <span className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                          i === 0 ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : i === 1 ? "bg-border-strong/20 text-border-strong" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-[rgba(0,0,0,0.04)] text-muted"
+                          i === 0 ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : i === 1 ? "bg-border-strong/20 text-border-strong" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-[rgba(0,0,0,0.04)] text-text-muted"
                         }`}>{i + 1}</span>
                         <div className="w-7 h-7 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-xs font-bold text-brand-accent shrink-0">{m.avatar}</div>
                         <span className="text-xs font-medium flex-1">{m.name}</span>
-                        <div className="flex items-center gap-1 text-[10px] text-muted">
+                        <div className="flex items-center gap-1 text-[10px] text-text-muted">
                           <Flame size={10} className="text-orange-400" />
                           <span className="font-mono">{m.streak}d</span>
                         </div>
-                        <span className="text-[10px] text-muted">{m.posts} posts</span>
-                        <span className="text-[10px] text-muted">{m.helpful} helpful</span>
+                        <span className="text-[10px] text-text-muted">{m.posts} posts</span>
+                        <span className="text-[10px] text-text-muted">{m.helpful} helpful</span>
                         <span className="text-xs font-bold font-mono text-brand-accent">{m.points.toLocaleString()} pts</span>
                       </div>
                     ))}
@@ -1289,17 +1289,17 @@ export default function CommunityPage() {
                 </div>
 
                 {/* Member Directory with Rich Cards */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Users size={12} className="text-brand-accent" /> Member Directory</h3>
                   {MEMBERS.length === 0 ? (
-                    <p className="text-xs text-muted text-center py-6">No community members yet</p>
+                    <p className="text-xs text-text-muted text-center py-6">No community members yet</p>
                   ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {MEMBERS.map(m => (
                       <div key={m.name}
                         onClick={() => setExpandedMember(expandedMember === m.name ? null : m.name)}
                         className={`p-3 rounded-lg border transition-all cursor-pointer ${
-                          expandedMember === m.name ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.02)]" : "border-border hover:border-border"
+                          expandedMember === m.name ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.02)]" : "border-border-subtle hover:border-border-subtle"
                         }`}>
                         <div className="flex items-center gap-3">
                           <div className="relative">
@@ -1313,18 +1313,18 @@ export default function CommunityPage() {
                               {m.badge === "silver" && <Award size={10} className="text-border-strong" />}
                               {m.badge === "bronze" && <Award size={10} className="text-orange-400" />}
                             </div>
-                            <p className="text-[10px] text-muted">{m.role}</p>
+                            <p className="text-[10px] text-text-muted">{m.role}</p>
                           </div>
                           <div className="text-right">
                             <p className="text-[10px] font-mono text-brand-accent">{m.points.toLocaleString()} pts</p>
-                            <p className="text-[9px] text-muted">{m.level}</p>
+                            <p className="text-[9px] text-text-muted">{m.level}</p>
                           </div>
                         </div>
                         {/* Expanded card content */}
                         {expandedMember === m.name && (
-                          <div className="mt-3 pt-3 border-t border-border space-y-2">
-                            <p className="text-[10px] text-muted italic">&quot;{m.bio}&quot;</p>
-                            <div className="flex items-center gap-4 text-[9px] text-muted">
+                          <div className="mt-3 pt-3 border-t border-border-subtle space-y-2">
+                            <p className="text-[10px] text-text-muted italic">&quot;{m.bio}&quot;</p>
+                            <div className="flex items-center gap-4 text-[9px] text-text-muted">
                               <span className="flex items-center gap-1"><MessageSquare size={8} /> {m.posts} posts</span>
                               <span className="flex items-center gap-1"><Calendar size={8} /> Joined {m.joined}</span>
                               <span className="flex items-center gap-1"><Flame size={8} className="text-orange-400" /> {m.streak} day streak</span>
@@ -1355,27 +1355,27 @@ export default function CommunityPage() {
                 </div>
 
                 {/* Achievement Badges Gallery */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Trophy size={12} className="text-brand-accent" /> Achievement Badges</h3>
                   {BADGES.length === 0 ? (
-                    <p className="text-xs text-muted text-center py-6">No badges available yet</p>
+                    <p className="text-xs text-text-muted text-center py-6">No badges available yet</p>
                   ) : (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {BADGES.map(badge => {
                       const BIcon = badge.icon;
                       return (
                         <div key={badge.id} className={`p-3 rounded-lg border text-center transition-all ${
-                          badge.earned ? "border-border hover:border-[rgba(59,130,246,0.2)]" : "border-border/40 opacity-40"
+                          badge.earned ? "border-border-subtle hover:border-[rgba(59,130,246,0.2)]" : "border-border-subtle/40 opacity-40"
                         }`}>
                           <div className={`w-10 h-10 mx-auto rounded-xl flex items-center justify-center mb-2 ${
                             badge.earned ? "bg-[rgba(0,0,0,0.04)]" : "bg-[rgba(0,0,0,0.02)]"
                           }`}>
-                            <BIcon size={20} className={badge.earned ? badge.color : "text-muted/50"} />
+                            <BIcon size={20} className={badge.earned ? badge.color : "text-text-muted/50"} />
                           </div>
                           <p className="text-[10px] font-semibold">{badge.label}</p>
-                          <p className="text-[9px] text-muted mt-0.5">{badge.description}</p>
+                          <p className="text-[9px] text-text-muted mt-0.5">{badge.description}</p>
                           {badge.earned && <p className="text-[8px] text-green-400 mt-1 font-medium">Earned</p>}
-                          {!badge.earned && <p className="text-[8px] text-muted mt-1">Locked</p>}
+                          {!badge.earned && <p className="text-[8px] text-text-muted mt-1">Locked</p>}
                         </div>
                       );
                     })}
@@ -1385,7 +1385,7 @@ export default function CommunityPage() {
               </div>
             )}{/* ---- TAB: Events ---- */}{activeTab === "events" && (
               <div className="space-y-4">
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-xs font-semibold flex items-center gap-2"><Calendar size={12} className="text-brand-accent" /> Upcoming Events</h3>
                     <button onClick={() => setShowNewEvent(s => !s)} className="px-2.5 py-1 rounded-lg bg-brand-accent text-white text-[10px] font-semibold flex items-center gap-1">
@@ -1399,13 +1399,13 @@ export default function CommunityPage() {
                         value={newEvent.title}
                         onChange={e => setNewEvent(s => ({ ...s, title: e.target.value }))}
                         placeholder="Event title"
-                        className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                        className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs"
                       />
                       <textarea
                         value={newEvent.description}
                         onChange={e => setNewEvent(s => ({ ...s, description: e.target.value }))}
                         placeholder="Description (optional)"
-                        className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs h-16"
+                        className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs h-16"
                       />
                       <div className="grid grid-cols-2 gap-2">
                         <div className="grid grid-cols-2 gap-2">
@@ -1413,20 +1413,20 @@ export default function CommunityPage() {
                             type="date"
                             value={newEvent.event_date}
                             onChange={e => setNewEvent(s => ({ ...s, event_date: e.target.value }))}
-                            className="rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                            className="rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs"
                           />
                           <input
                             type="time"
                             value={newEvent.event_time}
                             onChange={e => setNewEvent(s => ({ ...s, event_time: e.target.value }))}
-                            className="rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                            className="rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs"
                           />
                         </div>
                         <input
                           value={newEvent.location}
                           onChange={e => setNewEvent(s => ({ ...s, location: e.target.value }))}
                           placeholder="Location (or leave blank for virtual)"
-                          className="rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                          className="rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-2">
@@ -1434,7 +1434,7 @@ export default function CommunityPage() {
                           value={newEvent.category}
                           onChange={e => setNewEvent(s => ({ ...s, category: e.target.value }))}
                           placeholder="Category (e.g. workshop)"
-                          className="rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                          className="rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs"
                         />
                         <input
                           type="number"
@@ -1442,11 +1442,11 @@ export default function CommunityPage() {
                           value={newEvent.max_attendees}
                           onChange={e => setNewEvent(s => ({ ...s, max_attendees: e.target.value }))}
                           placeholder="Max attendees (optional)"
-                          className="rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                          className="rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs"
                         />
                       </div>
                       <div className="flex justify-end gap-2 pt-1">
-                        <button onClick={() => setShowNewEvent(false)} className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted">Cancel</button>
+                        <button onClick={() => setShowNewEvent(false)} className="px-3 py-1.5 rounded-lg border border-border-subtle text-xs text-text-muted">Cancel</button>
                         <button
                           onClick={handleCreateEvent}
                           disabled={creatingEvent || !newEvent.title.trim() || !newEvent.event_date}
@@ -1460,30 +1460,30 @@ export default function CommunityPage() {
                   )}
 
                   {eventsLoading ? (
-                    <div className="text-center py-6"><Loader2 size={20} className="mx-auto animate-spin text-muted/50" /></div>
+                    <div className="text-center py-6"><Loader2 size={20} className="mx-auto animate-spin text-text-muted/50" /></div>
                   ) : events.length === 0 ? (
-                    <p className="text-xs text-muted text-center py-6">No upcoming events. Check back later!</p>
+                    <p className="text-xs text-text-muted text-center py-6">No upcoming events. Check back later!</p>
                   ) : (
                     <div className="space-y-2">
                       {events.map(ev => {
                         const isFull = ev.max_attendees != null && ev.attendees_count >= ev.max_attendees && ev.my_rsvp !== "going";
                         return (
-                          <div key={ev.id} className="p-3 rounded-lg border border-border hover:border-[rgba(59,130,246,0.2)] transition-all">
+                          <div key={ev.id} className="p-3 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.2)] transition-all">
                             <div className="flex items-start justify-between gap-3 flex-wrap">
                               <div className="min-w-0 flex-1">
                                 <p className="text-xs font-semibold">{ev.title}</p>
-                                <p className="text-[10px] text-muted flex items-center gap-1 mt-0.5">
+                                <p className="text-[10px] text-text-muted flex items-center gap-1 mt-0.5">
                                   <Clock size={8} /> {formatEventDate(ev.date_time)}
                                   {ev.location && <><span className="mx-1">&middot;</span><MapPin size={8} /> {ev.location}</>}
                                   <span className="mx-1">&middot;</span>
                                   <span className="capitalize">{ev.category}</span>
                                 </p>
                                 {ev.description && (
-                                  <p className="text-[10px] text-muted mt-1 leading-relaxed">{ev.description}</p>
+                                  <p className="text-[10px] text-text-muted mt-1 leading-relaxed">{ev.description}</p>
                                 )}
                               </div>
                               <div className="flex items-center gap-2 shrink-0">
-                                <span className="text-[9px] text-muted flex items-center gap-1">
+                                <span className="text-[9px] text-text-muted flex items-center gap-1">
                                   <Users size={8} /> {ev.attendees_count}{ev.max_attendees ? `/${ev.max_attendees}` : ""}
                                 </span>
                                 <button
@@ -1493,26 +1493,26 @@ export default function CommunityPage() {
                                     ev.my_rsvp === "going"
                                       ? "bg-green-400 text-black"
                                       : isFull
-                                        ? "bg-[rgba(0,0,0,0.04)] text-muted cursor-not-allowed"
+                                        ? "bg-[rgba(0,0,0,0.04)] text-text-muted cursor-not-allowed"
                                         : "bg-brand-accent text-white hover:brightness-110"
                                   }`}
                                 >
                                   {ev.my_rsvp === "going" ? "Going" : isFull ? "Full" : "RSVP"}
                                 </button>
                                 {ev.my_rsvp && ev.my_rsvp !== "going" && (
-                                  <span className="text-[9px] text-muted capitalize">{ev.my_rsvp.replace("_", " ")}</span>
+                                  <span className="text-[9px] text-text-muted capitalize">{ev.my_rsvp.replace("_", " ")}</span>
                                 )}
                                 <button
                                   onClick={() => handleRsvp(ev.id, "maybe")}
                                   className={`px-2 py-1 rounded-lg text-[10px] font-medium border ${
-                                    ev.my_rsvp === "maybe" ? "border-yellow-400/40 bg-yellow-400/10 text-yellow-400" : "border-border text-muted hover:text-foreground"
+                                    ev.my_rsvp === "maybe" ? "border-yellow-400/40 bg-yellow-400/10 text-yellow-400" : "border-border-subtle text-text-muted hover:text-text-primary"
                                   }`}
                                 >
                                   Maybe
                                 </button>
                                 {/* Creator delete */}
                                 <button onClick={() => handleDeleteEvent(ev.id)} title="Delete (creator only)"
-                                  className="p-1 rounded-lg text-muted hover:text-red-400">
+                                  className="p-1 rounded-lg text-text-muted hover:text-red-400">
                                   <Trash2 size={10} />
                                 </button>
                               </div>
@@ -1527,14 +1527,14 @@ export default function CommunityPage() {
             )}{/* ---- TAB: Resources ---- */}{activeTab === "resources" && (
               <div className="space-y-4">
                 {/* Add resource form */}
-                <div className="card p-4 border-[rgba(59,130,246,0.1)]">
+                <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.1)]">
                   <div className="flex items-center justify-between mb-1">
                     <h3 className="text-xs font-semibold flex items-center gap-2"><Pin size={12} className="text-brand-accent" /> Pinned Resources</h3>
                     <button onClick={() => setShowNewResource(s => !s)} className="px-2.5 py-1 rounded-lg bg-brand-accent text-white text-[10px] font-semibold flex items-center gap-1">
                       <Plus size={10} /> Add resource
                     </button>
                   </div>
-                  <p className="text-[10px] text-muted mb-3">Essential guides and templates to get started</p>
+                  <p className="text-[10px] text-text-muted mb-3">Essential guides and templates to get started</p>
 
                   {showNewResource && (
                     <div className="mb-4 p-3 rounded-lg border border-[rgba(59,130,246,0.2)] space-y-2">
@@ -1542,18 +1542,18 @@ export default function CommunityPage() {
                         value={newResource.title}
                         onChange={e => setNewResource(s => ({ ...s, title: e.target.value }))}
                         placeholder="Resource title"
-                        className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                        className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs"
                       />
                       <input
                         value={newResource.url}
                         onChange={e => setNewResource(s => ({ ...s, url: e.target.value }))}
                         placeholder="URL (https://...)"
-                        className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                        className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs"
                       />
                       <select
                         value={newResource.type}
                         onChange={e => setNewResource(s => ({ ...s, type: e.target.value as CommunityResource["type"] }))}
-                        className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                        className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs"
                       >
                         <option value="link">Link</option>
                         <option value="pdf">PDF</option>
@@ -1564,10 +1564,10 @@ export default function CommunityPage() {
                         value={newResource.description}
                         onChange={e => setNewResource(s => ({ ...s, description: e.target.value }))}
                         placeholder="Description (optional)"
-                        className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs h-16"
+                        className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs h-16"
                       />
                       <div className="flex justify-end gap-2 pt-1">
-                        <button onClick={() => setShowNewResource(false)} className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted">Cancel</button>
+                        <button onClick={() => setShowNewResource(false)} className="px-3 py-1.5 rounded-lg border border-border-subtle text-xs text-text-muted">Cancel</button>
                         <button
                           onClick={handleCreateResource}
                           disabled={creatingResource || !newResource.title.trim() || !newResource.url.trim()}
@@ -1581,9 +1581,9 @@ export default function CommunityPage() {
                   )}
 
                   {resourcesLoading ? (
-                    <div className="text-center py-6"><Loader2 size={20} className="mx-auto animate-spin text-muted/50" /></div>
+                    <div className="text-center py-6"><Loader2 size={20} className="mx-auto animate-spin text-text-muted/50" /></div>
                   ) : resources.filter(r => r.pinned).length === 0 ? (
-                    <p className="text-xs text-muted text-center py-6">{resources.length === 0 ? "No resources shared yet" : "No pinned resources"}</p>
+                    <p className="text-xs text-text-muted text-center py-6">{resources.length === 0 ? "No resources shared yet" : "No pinned resources"}</p>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {resources.filter(r => r.pinned).slice(0, 4).map(r => {
@@ -1594,7 +1594,7 @@ export default function CommunityPage() {
                               <div className="w-9 h-9 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center shrink-0"><RIcon size={16} className="text-brand-accent" /></div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-xs font-medium truncate">{r.title}</p>
-                                <p className="text-[10px] text-muted">{r.type} &middot; {r.downloads} downloads</p>
+                                <p className="text-[10px] text-text-muted">{r.type} &middot; {r.downloads} downloads</p>
                               </div>
                               <button onClick={() => handleResourceOpen(r)} className="text-[10px] text-brand-accent hover:underline flex items-center gap-0.5 shrink-0">
                                 <ExternalLink size={8} /> Open
@@ -1609,18 +1609,18 @@ export default function CommunityPage() {
 
                 {/* Full Library */}
                 {resources.length > 0 && (
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><BookOpen size={12} className="text-brand-accent" /> Resource Library</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {resources.map(r => {
                         const RIcon = resourceIcon(r.type);
                         return (
-                          <div key={r.id} className="p-3 rounded-lg border border-border hover:border-[rgba(59,130,246,0.2)] transition-all">
+                          <div key={r.id} className="p-3 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.2)] transition-all">
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center"><RIcon size={14} className="text-brand-accent" /></div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-xs font-medium truncate">{r.title}</p>
-                                <p className="text-[10px] text-muted">{r.type} &middot; {r.downloads} downloads{r.description ? ` · ${r.description}` : ""}</p>
+                                <p className="text-[10px] text-text-muted">{r.type} &middot; {r.downloads} downloads{r.description ? ` · ${r.description}` : ""}</p>
                               </div>
                               <button onClick={() => handleResourceOpen(r)} className="text-[10px] text-brand-accent hover:underline">
                                 {r.type === "pdf" || r.type === "template" ? "Download" : "Open"}
@@ -1634,7 +1634,7 @@ export default function CommunityPage() {
                 )}
 
                 {/* Helpful Links — point at real in-app destinations */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Link2 size={12} className="text-brand-accent" /> Helpful Links</h3>
                   <div className="space-y-2">
                     {[
@@ -1643,11 +1643,11 @@ export default function CommunityPage() {
                       { label: "Referral Program", url: "/dashboard/referrals", desc: "Earn rewards for every client you refer" },
                       { label: "Marketplace", url: "/dashboard/marketplace", desc: "Plugins and templates from the community" },
                     ].map(link => (
-                      <a key={link.label} href={link.url} className="flex items-center gap-3 p-2.5 rounded-lg border border-border hover:border-[rgba(59,130,246,0.2)] transition-all">
+                      <a key={link.label} href={link.url} className="flex items-center gap-3 p-2.5 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.2)] transition-all">
                         <ExternalLink size={12} className="text-brand-accent shrink-0" />
                         <div>
                           <p className="text-xs font-medium">{link.label}</p>
-                          <p className="text-[9px] text-muted">{link.desc}</p>
+                          <p className="text-[9px] text-text-muted">{link.desc}</p>
                         </div>
                       </a>
                     ))}
@@ -1664,12 +1664,12 @@ export default function CommunityPage() {
                 </div>
 
                 {showNewPoll && (
-                  <div className="card p-4 border-[rgba(59,130,246,0.2)] space-y-2">
+                  <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.2)] space-y-2">
                     <input
                       value={newPoll.question}
                       onChange={e => setNewPoll(s => ({ ...s, question: e.target.value }))}
                       placeholder="What do you want to ask?"
-                      className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                      className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs"
                     />
                     <div className="space-y-1.5">
                       {newPoll.options.map((opt, i) => (
@@ -1682,11 +1682,11 @@ export default function CommunityPage() {
                               return { ...s, options: next };
                             })}
                             placeholder={`Option ${i + 1}`}
-                            className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                            className="flex-1 rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs"
                           />
                           {newPoll.options.length > 2 && (
                             <button onClick={() => setNewPoll(s => ({ ...s, options: s.options.filter((_, idx) => idx !== i) }))}
-                              className="px-2 rounded-lg text-muted hover:text-red-400">
+                              className="px-2 rounded-lg text-text-muted hover:text-red-400">
                               <X size={12} />
                             </button>
                           )}
@@ -1700,16 +1700,16 @@ export default function CommunityPage() {
                       </button>
                     </div>
                     <div className="flex items-center gap-2">
-                      <label className="text-[10px] text-muted shrink-0">Ends at (optional):</label>
+                      <label className="text-[10px] text-text-muted shrink-0">Ends at (optional):</label>
                       <input
                         type="datetime-local"
                         value={newPoll.ends_at}
                         onChange={e => setNewPoll(s => ({ ...s, ends_at: e.target.value }))}
-                        className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs"
+                        className="rounded-lg border border-border-subtle bg-surface px-3 py-1.5 text-xs"
                       />
                     </div>
                     <div className="flex justify-end gap-2 pt-1">
-                      <button onClick={() => setShowNewPoll(false)} className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted">Cancel</button>
+                      <button onClick={() => setShowNewPoll(false)} className="px-3 py-1.5 rounded-lg border border-border-subtle text-xs text-text-muted">Cancel</button>
                       <button
                         onClick={handleCreatePoll}
                         disabled={creatingPoll || !newPoll.question.trim() || newPoll.options.filter(o => o.trim()).length < 2}
@@ -1723,29 +1723,29 @@ export default function CommunityPage() {
                 )}
 
                 {pollsLoading ? (
-                  <div className="card text-center py-12"><Loader2 size={24} className="mx-auto animate-spin text-muted/50" /></div>
+                  <div className="glass rounded-xl p-4 text-center py-12"><Loader2 size={24} className="mx-auto animate-spin text-text-muted/50" /></div>
                 ) : polls.length === 0 ? (
-                  <div className="card text-center py-12">
-                    <Vote size={24} className="mx-auto mb-2 text-muted/30" />
-                    <p className="text-xs text-muted">No active polls right now</p>
+                  <div className="glass rounded-xl p-4 text-center py-12">
+                    <Vote size={24} className="mx-auto mb-2 text-text-muted/30" />
+                    <p className="text-xs text-text-muted">No active polls right now</p>
                   </div>
                 ) : polls.map(poll => {
                   const total = poll.total_votes || 0;
                   return (
-                    <div key={poll.id} className="card p-4">
+                    <div key={poll.id} className="glass rounded-xl p-4">
                       <h3 className="text-xs font-semibold mb-1">{poll.question}</h3>
-                      <p className="text-[9px] text-muted mb-3">{total} {total === 1 ? "vote" : "votes"} &middot; {timeUntil(poll.ends_at)}</p>
+                      <p className="text-[9px] text-text-muted mb-3">{total} {total === 1 ? "vote" : "votes"} &middot; {timeUntil(poll.ends_at)}</p>
                       <div className="space-y-2">
                         {poll.option_counts.map((opt, i) => {
                           const pct = total > 0 ? Math.round((opt.votes / total) * 100) : 0;
                           const voted = poll.my_vote === i;
                           return (
                             <button key={i} onClick={() => handleVote(poll.id, i)} className="w-full text-left">
-                              <div className={`relative p-2 rounded-lg border transition-all ${voted ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border hover:border-border"}`}>
+                              <div className={`relative p-2 rounded-lg border transition-all ${voted ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border-subtle hover:border-border-subtle"}`}>
                                 <div className="absolute inset-0 rounded-lg bg-[rgba(59,130,246,0.08)]" style={{ width: `${pct}%` }} />
                                 <div className="relative flex items-center justify-between">
                                   <span className="text-xs">{opt.label}</span>
-                                  <span className="text-xs font-mono text-muted">{pct}%</span>
+                                  <span className="text-xs font-mono text-text-muted">{pct}%</span>
                                 </div>
                               </div>
                             </button>
@@ -1758,11 +1758,11 @@ export default function CommunityPage() {
               </div>
             )}{/* ---- TAB: Moderation ---- */}{activeTab === "moderation" && (
               <div className="space-y-4">
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Shield size={12} className="text-brand-accent" /> Community Guidelines</h3>
                   <div className="space-y-2">
                     {GUIDELINES.map((g, i) => (
-                      <div key={i} className="flex items-start gap-2 text-[10px] text-muted">
+                      <div key={i} className="flex items-start gap-2 text-[10px] text-text-muted">
                         <span className="w-4 h-4 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent text-[8px] flex items-center justify-center font-bold shrink-0">{i + 1}</span>
                         {g}
                       </div>
@@ -1770,7 +1770,7 @@ export default function CommunityPage() {
                   </div>
                 </div>
 
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Bell size={12} className="text-brand-accent" /> Notification Preferences</h3>
                   <div className="space-y-2">
                     {[
@@ -1780,7 +1780,7 @@ export default function CommunityPage() {
                       { label: "Event reminders", enabled: true },
                       { label: "Weekly digest email", enabled: false },
                     ].map(n => (
-                      <div key={n.label} className="flex items-center justify-between p-2 rounded-lg border border-border">
+                      <div key={n.label} className="flex items-center justify-between p-2 rounded-lg border border-border-subtle">
                         <span className="text-[10px]">{n.label}</span>
                         <div className={`w-8 h-4 rounded-full transition-all relative cursor-pointer ${n.enabled ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.06)]"}`}>
                           <div className="w-3 h-3 rounded-full bg-white absolute top-0.5 transition-all" style={{ left: n.enabled ? "18px" : "2px" }} />

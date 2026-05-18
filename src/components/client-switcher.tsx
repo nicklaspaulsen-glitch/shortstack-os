@@ -89,7 +89,7 @@ export default function ClientSwitcher() {
         className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
           managedClient
             ? "text-[#2563EB] bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.08)]"
-            : "text-muted hover:text-foreground bg-surface-light/50 border border-border/50 hover:border-[rgba(59,130,246,0.2)]"
+            : "text-text-muted hover:text-text-primary bg-surface-light/50 border border-border-subtle/50 hover:border-[rgba(59,130,246,0.2)]"
         }`}
       >
         {managedClient ? <UserCheck size={13} /> : <Users size={13} />}
@@ -101,23 +101,23 @@ export default function ClientSwitcher() {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-full mt-2 z-50 w-[480px] bg-surface border border-border/50 rounded-xl shadow-2xl shadow-black/50 fade-in overflow-hidden">
+          <div className="absolute right-0 top-full mt-2 z-50 w-[480px] bg-surface border border-border-subtle/50 rounded-xl shadow-2xl shadow-black/50 overflow-hidden">
             {/* Header */}
-            <div className="px-4 py-3 border-b border-border/30 flex items-center justify-between">
+            <div className="px-4 py-3 border-b border-border-subtle/30 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Users size={14} className="text-[#2563EB]" />
                 <span className="text-xs font-semibold">Client Switcher</span>
-                <span className="text-[10px] text-muted bg-surface-light px-1.5 py-0.5 rounded">{clients.length}</span>
+                <span className="text-[10px] text-text-muted bg-surface-light px-1.5 py-0.5 rounded">{clients.length}</span>
               </div>
-              <button onClick={() => setOpen(false)} className="text-muted hover:text-foreground">
+              <button onClick={() => setOpen(false)} className="text-text-muted hover:text-text-primary">
                 <X size={14} />
               </button>
             </div>
 
             {/* Search */}
-            <div className="px-3 py-2 border-b border-border/20">
+            <div className="px-3 py-2 border-b border-border-subtle/20">
               <div className="relative">
-                <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
+                <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   type="text"
                   placeholder="Search clients..."
@@ -131,24 +131,24 @@ export default function ClientSwitcher() {
 
             <div className="flex">
               {/* Client list */}
-              <div className="w-1/2 border-r border-border/20 max-h-[400px] overflow-y-auto">
+              <div className="w-1/2 border-r border-border-subtle/20 max-h-[400px] overflow-y-auto">
                 {loading ? (
-                  <div className="p-4 text-center text-xs text-muted">Loading clients...</div>
+                  <div className="p-4 text-center text-xs text-text-muted">Loading clients...</div>
                 ) : filtered.length === 0 ? (
-                  <div className="p-4 text-center text-xs text-muted">No clients found</div>
+                  <div className="p-4 text-center text-xs text-text-muted">No clients found</div>
                 ) : (
                   filtered.map(client => (
                     <button
                       key={client.id}
                       onClick={() => selectClient(client)}
-                      className={`w-full text-left px-3 py-2.5 border-b border-border/10 hover:bg-surface-light/50 transition-colors ${
+                      className={`w-full text-left px-3 py-2.5 border-b border-border-subtle/10 hover:bg-surface-light/50 transition-colors ${
                         activeClient?.id === client.id ? "bg-[rgba(59,130,246,0.05)] border-l-2 border-l-[#2563EB]" : ""
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="min-w-0">
                           <p className="text-xs font-medium truncate">{client.business_name}</p>
-                          <p className="text-[10px] text-muted truncate">{client.contact_name}</p>
+                          <p className="text-[10px] text-text-muted truncate">{client.contact_name}</p>
                         </div>
                         <div className="flex items-center gap-1.5 shrink-0 ml-2">
                           {client.is_active ? (
@@ -171,7 +171,7 @@ export default function ClientSwitcher() {
                     {/* Header */}
                     <div>
                       <h3 className="text-xs font-semibold">{activeClient.business_name}</h3>
-                      <p className="text-[10px] text-muted">{activeClient.contact_name} · {activeClient.industry}</p>
+                      <p className="text-[10px] text-text-muted">{activeClient.contact_name} · {activeClient.industry}</p>
                       <div className="flex items-center gap-2 mt-1.5">
                         <span className="text-[10px] bg-[rgba(59,130,246,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded font-medium">
                           {activeClient.package_tier || "No tier"}
@@ -187,35 +187,35 @@ export default function ClientSwitcher() {
 
                     {/* Metrics */}
                     <div className="grid grid-cols-2 gap-2">
-                      <div className="bg-surface-light/50 rounded-lg p-2 border border-border/20">
+                      <div className="bg-surface-light/50 rounded-lg p-2 border border-border-subtle/20">
                         <div className="flex items-center gap-1 mb-0.5">
                           <DollarSign size={10} className="text-[#2563EB]" />
-                          <span className="text-[9px] text-muted uppercase">MRR</span>
+                          <span className="text-[9px] text-text-muted uppercase">MRR</span>
                         </div>
                         <p className="text-xs font-bold font-mono">{formatCurrency(activeClient.mrr)}</p>
                       </div>
-                      <div className="bg-surface-light/50 rounded-lg p-2 border border-border/20">
+                      <div className="bg-surface-light/50 rounded-lg p-2 border border-border-subtle/20">
                         <div className="flex items-center gap-1 mb-0.5">
                           <CheckCircle size={10} className="text-success" />
-                          <span className="text-[9px] text-muted uppercase">Tasks</span>
+                          <span className="text-[9px] text-text-muted uppercase">Tasks</span>
                         </div>
                         <p className="text-xs font-bold font-mono">{activeClient.tasks.done}/{activeClient.tasks.total}</p>
                       </div>
-                      <div className="bg-surface-light/50 rounded-lg p-2 border border-border/20">
+                      <div className="bg-surface-light/50 rounded-lg p-2 border border-border-subtle/20">
                         <div className="flex items-center gap-1 mb-0.5">
                           <FileText size={10} className="text-[#2563EB]" />
-                          <span className="text-[9px] text-muted uppercase">Content</span>
+                          <span className="text-[9px] text-text-muted uppercase">Content</span>
                         </div>
                         <p className="text-xs font-bold font-mono">{activeClient.content_count}</p>
                       </div>
-                      <div className="bg-surface-light/50 rounded-lg p-2 border border-border/20">
+                      <div className="bg-surface-light/50 rounded-lg p-2 border border-border-subtle/20">
                         <div className="flex items-center gap-1 mb-0.5">
                           {activeClient.invoices_pending > 0 ? (
                             <AlertTriangle size={10} className="text-warning" />
                           ) : (
                             <DollarSign size={10} className="text-success" />
                           )}
-                          <span className="text-[9px] text-muted uppercase">Invoices</span>
+                          <span className="text-[9px] text-text-muted uppercase">Invoices</span>
                         </div>
                         <p className={`text-xs font-bold font-mono ${activeClient.invoices_pending > 0 ? "text-warning" : ""}`}>
                           {activeClient.invoices_pending} pending
@@ -226,10 +226,10 @@ export default function ClientSwitcher() {
                     {/* Connected platforms */}
                     {activeClient.connected_platforms.length > 0 && (
                       <div>
-                        <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Connected</p>
+                        <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1.5">Connected</p>
                         <div className="flex flex-wrap gap-1">
                           {activeClient.connected_platforms.map((p, i) => (
-                            <span key={i} className="text-[10px] bg-surface-light px-2 py-0.5 rounded border border-border/30">
+                            <span key={i} className="text-[10px] bg-surface-light px-2 py-0.5 rounded border border-border-subtle/30">
                               {p.platform}
                             </span>
                           ))}
@@ -246,8 +246,8 @@ export default function ClientSwitcher() {
                     </button>
                   </div>
                 ) : (
-                  <div className="p-8 text-center text-xs text-muted">
-                    <Users size={20} className="mx-auto mb-2 text-muted/50" />
+                  <div className="p-8 text-center text-xs text-text-muted">
+                    <Users size={20} className="mx-auto mb-2 text-text-muted/50" />
                     Select a client
                   </div>
                 )}

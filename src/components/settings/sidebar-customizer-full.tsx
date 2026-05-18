@@ -664,7 +664,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
 
   if (!loaded) {
     return (
-      <div className="card flex items-center gap-2 text-muted text-sm">
+      <div className="glass rounded-xl p-4 flex items-center gap-2 text-text-muted text-sm">
         <Loader2 size={14} className="animate-spin" /> Loading your sidebar preferences...
       </div>
     );
@@ -673,7 +673,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
   return (
     <div className="space-y-3">
       {/* ── Bulk actions / presets ──────────────────────────────── */}
-      <div className="card">
+      <div className="glass rounded-xl p-4">
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={runAiRecommend}
@@ -687,12 +687,12 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
           <button onClick={selectNone} className="btn-secondary text-xs flex items-center gap-1.5"><Square size={12} /> Select None</button>
           <button onClick={hideAll} className="btn-secondary text-xs flex items-center gap-1.5"><EyeOff size={12} /> Hide All</button>
           <button onClick={resetAll} className="btn-secondary text-xs flex items-center gap-1.5"><RotateCcw size={12} /> Reset</button>
-          <div className="w-px h-6 bg-border mx-1" />
+          <div className="w-px h-6 bg-border-subtle mx-1" />
           {PRESETS.map(p => (
             <button
               key={p.key}
               onClick={() => applyPreset(p.key)}
-              className="text-xs px-2.5 py-1.5 rounded-lg border border-border hover:border-[rgba(59,130,246,0.4)] text-muted hover:text-foreground transition-colors"
+              className="text-xs px-2.5 py-1.5 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.4)] text-text-muted hover:text-text-primary transition-colors"
               title={`Preset: ${p.label}`}
             >
               {p.label}
@@ -700,13 +700,13 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
           ))}
           <button
             onClick={() => applyPreset("custom")}
-            className="text-xs px-2.5 py-1.5 rounded-lg border border-border hover:border-[rgba(59,130,246,0.4)] text-muted hover:text-foreground transition-colors"
+            className="text-xs px-2.5 py-1.5 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.4)] text-text-muted hover:text-text-primary transition-colors"
             title="Custom — use your own arrangement"
           >
             Custom
           </button>
           <div className="flex-1" />
-          <span className="text-[11px] text-muted">
+          <span className="text-[11px] text-text-muted">
             <span className="text-[#2563EB] font-semibold">
               {prefs.enabled_items.length === 0 ? ALL_SIDEBAR_ITEMS.length : prefs.enabled_items.length}
             </span>
@@ -720,13 +720,13 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
         {/* ─── LEFT: library ─── */}
         <div className="lg:col-span-4 card space-y-2">
           <div className="flex items-center gap-2">
-            <h3 className="section-header !mb-0 flex items-center gap-1.5 flex-1">
+            <h3 className="!mb-0 flex items-center gap-1.5 flex-1">
               <Layers size={14} className="text-[#2563EB]" /> Library
             </h3>
-            <span className="text-[10px] text-muted">{filteredLibrary.length}</span>
+            <span className="text-[10px] text-text-muted">{filteredLibrary.length}</span>
           </div>
           <div className="relative">
-            <Search size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-muted" />
+            <Search size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted" />
             <input
               type="text"
               placeholder="Search nav items..."
@@ -758,21 +758,21 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                   onDragStart={onDragStart(item.href)}
                   onDragEnd={onDragEnd}
                   className={`flex items-center gap-2 px-2 py-1.5 rounded-lg border text-xs group transition-all cursor-grab active:cursor-grabbing ${
-                    enabled ? "bg-surface-light/40 border-border" : "bg-transparent border-dashed border-border/50 opacity-60"
+                    enabled ? "bg-surface-light/40 border-border-subtle" : "bg-transparent border-dashed border-border-subtle/50 opacity-60"
                   } ${draggedItem === item.href ? "opacity-30" : ""}`}
                   title={item.href}
                 >
-                  <GripVertical size={11} className="text-muted/50 shrink-0" />
-                  <IconByName name={prefs.icon_overrides[item.href] || "Layers"} size={12} className="text-muted shrink-0" />
+                  <GripVertical size={11} className="text-text-muted/50 shrink-0" />
+                  <IconByName name={prefs.icon_overrides[item.href] || "Layers"} size={12} className="text-text-muted shrink-0" />
                   <span className="truncate flex-1">
-                    <span className="text-foreground">{prefs.renames[item.href] || item.label}</span>
-                    <span className="ml-1 text-[9px] text-muted/60">· {item.section}</span>
+                    <span className="text-text-primary">{prefs.renames[item.href] || item.label}</span>
+                    <span className="ml-1 text-[9px] text-text-muted/60">· {item.section}</span>
                   </span>
                   {pinned && <Pin size={10} className="text-[#2563EB] shrink-0" />}
                   {assigned && <Layers size={10} className="text-blue-400 shrink-0" />}
                   <button
                     onClick={() => toggleItem(item.href)}
-                    className="p-0.5 rounded text-muted hover:text-foreground transition-colors shrink-0"
+                    className="p-0.5 rounded text-text-muted hover:text-text-primary transition-colors shrink-0"
                     title={enabled ? "Hide from sidebar" : "Show in sidebar"}
                   >
                     {enabled ? <Eye size={11} /> : <EyeOff size={11} />}
@@ -780,21 +780,21 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                   <div className="hidden group-hover:flex items-center gap-0.5 shrink-0">
                     <button
                       onClick={() => togglePin(item.href)}
-                      className="p-0.5 rounded text-muted hover:text-[#2563EB] transition-colors"
+                      className="p-0.5 rounded text-text-muted hover:text-[#2563EB] transition-colors"
                       title={pinned ? "Unpin" : "Pin to top"}
                     >
                       <Pin size={11} className={pinned ? "text-[#2563EB]" : ""} />
                     </button>
                     <button
                       onClick={() => setRenameItemHref(item.href)}
-                      className="p-0.5 rounded text-muted hover:text-foreground transition-colors"
+                      className="p-0.5 rounded text-text-muted hover:text-text-primary transition-colors"
                       title="Rename"
                     >
                       <PencilLine size={11} />
                     </button>
                     <button
                       onClick={() => { setIconPickerFor({ kind: "item", href: item.href }); setIconSearch(""); }}
-                      className="p-0.5 rounded text-muted hover:text-foreground transition-colors"
+                      className="p-0.5 rounded text-text-muted hover:text-text-primary transition-colors"
                       title="Change icon"
                     >
                       <Wand2 size={11} />
@@ -804,10 +804,10 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
               );
             })}
             {filteredLibrary.length === 0 && (
-              <div className="text-center text-muted text-xs py-8">No items match your search.</div>
+              <div className="text-center text-text-muted text-xs py-8">No items match your search.</div>
             )}
           </div>
-          <p className="text-[10px] text-muted/70 pt-1 border-t border-border/30 leading-relaxed">
+          <p className="text-[10px] text-text-muted/70 pt-1 border-t border-border-subtle/30 leading-relaxed">
             Drag items to the right column to put them in groups. Use the icons to pin, rename, or change each item&apos;s icon.
           </p>
         </div>
@@ -815,7 +815,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
         {/* ─── MIDDLE: current layout ─── */}
         <div className="lg:col-span-5 card space-y-2">
           <div className="flex items-center gap-2">
-            <h3 className="section-header !mb-0 flex items-center gap-1.5 flex-1">
+            <h3 className="!mb-0 flex items-center gap-1.5 flex-1">
               <Settings2 size={14} className="text-[#2563EB]" /> Your Layout
             </h3>
             <button
@@ -884,7 +884,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                 toast.success("Created your first group — drop more items in, or rename it.");
               }}
               className={`text-[11px] text-center py-6 border border-dashed rounded-xl transition-colors ${
-                dragTarget === "_newgroup" ? "border-[#2563EB] bg-[rgba(59,130,246,0.06)] text-foreground" : "border-border/50 text-muted"
+                dragTarget === "_newgroup" ? "border-[#2563EB] bg-[rgba(59,130,246,0.06)] text-text-primary" : "border-border-subtle/50 text-text-muted"
               }`}
             >
               {dragTarget === "_newgroup"
@@ -930,13 +930,13 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
             onDragOver={(e) => { e.preventDefault(); setDragTarget("_unassigned"); }}
             onDrop={onDropUnassign}
             className={`rounded-xl p-2 border border-dashed ${
-              dragTarget === "_unassigned" ? "border-[#2563EB] bg-[rgba(59,130,246,0.06)]" : "border-border/60 bg-surface-light/30"
+              dragTarget === "_unassigned" ? "border-[#2563EB] bg-[rgba(59,130,246,0.06)]" : "border-border-subtle/60 bg-surface-light/30"
             }`}
           >
             <div className="flex items-center gap-1.5 mb-1.5">
-              <ChevronRight size={10} className="text-muted" />
-              <span className="text-[10px] uppercase tracking-wider font-semibold text-muted">Unassigned (will appear in &quot;Other&quot;)</span>
-              <span className="ml-auto text-[10px] text-muted">{unassignedItems.length}</span>
+              <ChevronRight size={10} className="text-text-muted" />
+              <span className="text-[10px] uppercase tracking-wider font-semibold text-text-muted">Unassigned (will appear in &quot;Other&quot;)</span>
+              <span className="ml-auto text-[10px] text-text-muted">{unassignedItems.length}</span>
             </div>
             <div className="space-y-0.5">
               {unassignedItems.slice(0, 12).map(href => (
@@ -954,7 +954,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                 />
               ))}
               {unassignedItems.length > 12 && (
-                <div className="text-[10px] text-muted pt-1">...and {unassignedItems.length - 12} more</div>
+                <div className="text-[10px] text-text-muted pt-1">...and {unassignedItems.length - 12} more</div>
               )}
             </div>
           </div>
@@ -969,8 +969,8 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
       {/* ── Save/Discard sticky bar ─────────────────────────────── */}
       {isDirty && (
         <div className="sticky bottom-2 z-30">
-          <div className="card flex items-center gap-3 shadow-2xl border-[rgba(59,130,246,0.25)]">
-            <span className="text-xs text-muted">You have unsaved changes.</span>
+          <div className="glass rounded-xl p-4 flex items-center gap-3 shadow-2xl border-[rgba(59,130,246,0.25)]">
+            <span className="text-xs text-text-muted">You have unsaved changes.</span>
             <div className="flex-1" />
             <button onClick={discard} className="btn-pill-ghost text-xs flex items-center gap-1.5"><X size={12} /> Discard</button>
             <button
@@ -1056,20 +1056,20 @@ function LayoutItemRow({
       onDragEnd={onDragEnd}
       className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs group hover:bg-surface-light/70 transition-colors cursor-grab ${compact ? "" : ""}`}
     >
-      <GripVertical size={10} className="text-muted/50 shrink-0" />
-      <IconByName name={iconName} size={11} className="text-muted shrink-0" />
-      <span className="truncate flex-1 text-foreground">{label}</span>
+      <GripVertical size={10} className="text-text-muted/50 shrink-0" />
+      <IconByName name={iconName} size={11} className="text-text-muted shrink-0" />
+      <span className="truncate flex-1 text-text-primary">{label}</span>
       <div className="hidden group-hover:flex items-center gap-0.5 shrink-0">
-        <button onClick={onTogglePin} title={pinned ? "Unpin" : "Pin to top"} className="p-0.5 rounded text-muted hover:text-[#2563EB]">
+        <button onClick={onTogglePin} title={pinned ? "Unpin" : "Pin to top"} className="p-0.5 rounded text-text-muted hover:text-[#2563EB]">
           <Pin size={10} className={pinned ? "text-[#2563EB]" : ""} />
         </button>
-        <button onClick={onRename} title="Rename" className="p-0.5 rounded text-muted hover:text-foreground">
+        <button onClick={onRename} title="Rename" className="p-0.5 rounded text-text-muted hover:text-text-primary">
           <PencilLine size={10} />
         </button>
-        <button onClick={onChangeIcon} title="Change icon" className="p-0.5 rounded text-muted hover:text-foreground">
+        <button onClick={onChangeIcon} title="Change icon" className="p-0.5 rounded text-text-muted hover:text-text-primary">
           <Wand2 size={10} />
         </button>
-        <button onClick={onToggleVisibility} title="Hide" className="p-0.5 rounded text-muted hover:text-danger">
+        <button onClick={onToggleVisibility} title="Hide" className="p-0.5 rounded text-text-muted hover:text-danger">
           <EyeOff size={10} />
         </button>
       </div>
@@ -1120,13 +1120,13 @@ function GroupCard({
   useEffect(() => { setNameDraft(group.name); }, [group.name]);
 
   return (
-    <div className="rounded-xl border border-border bg-surface-light/30 overflow-hidden">
+    <div className="rounded-xl border border-border-subtle bg-surface-light/30 overflow-hidden">
       {/* Header */}
       <div
         className="flex items-center gap-2 px-2 py-1.5"
         style={{ borderLeft: `3px solid ${group.color}` }}
       >
-        <button onClick={() => setOpen(o => !o)} className="p-0.5 text-muted hover:text-foreground">
+        <button onClick={() => setOpen(o => !o)} className="p-0.5 text-text-muted hover:text-text-primary">
           {open ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
         </button>
         <button onClick={onChangeIcon} className="p-0.5 rounded hover:bg-surface-light transition-colors" title="Change icon">
@@ -1142,16 +1142,16 @@ function GroupCard({
             className="input text-xs flex-1 py-0.5"
           />
         ) : (
-          <button onClick={() => setEditingName(true)} className="text-xs font-semibold text-foreground hover:text-[#2563EB] transition-colors flex-1 text-left truncate">
+          <button onClick={() => setEditingName(true)} className="text-xs font-semibold text-text-primary hover:text-[#2563EB] transition-colors flex-1 text-left truncate">
             {group.name}
           </button>
         )}
-        <span className="text-[10px] text-muted">{group.items.length}</span>
+        <span className="text-[10px] text-text-muted">{group.items.length}</span>
         <div className="flex items-center gap-0.5">
-          <button onClick={onMoveUp} disabled={isFirst} className="p-0.5 rounded text-muted hover:text-foreground disabled:opacity-30" title="Move up"><ArrowUp size={10} /></button>
-          <button onClick={onMoveDown} disabled={isLast} className="p-0.5 rounded text-muted hover:text-foreground disabled:opacity-30" title="Move down"><ArrowDown size={10} /></button>
-          <button onClick={onAddSubgroup} className="p-0.5 rounded text-muted hover:text-[#2563EB]" title="Add subgroup"><Plus size={10} /></button>
-          <button onClick={onDelete} className="p-0.5 rounded text-muted hover:text-danger" title="Delete group"><Trash2 size={10} /></button>
+          <button onClick={onMoveUp} disabled={isFirst} className="p-0.5 rounded text-text-muted hover:text-text-primary disabled:opacity-30" title="Move up"><ArrowUp size={10} /></button>
+          <button onClick={onMoveDown} disabled={isLast} className="p-0.5 rounded text-text-muted hover:text-text-primary disabled:opacity-30" title="Move down"><ArrowDown size={10} /></button>
+          <button onClick={onAddSubgroup} className="p-0.5 rounded text-text-muted hover:text-[#2563EB]" title="Add subgroup"><Plus size={10} /></button>
+          <button onClick={onDelete} className="p-0.5 rounded text-text-muted hover:text-danger" title="Delete group"><Trash2 size={10} /></button>
         </div>
       </div>
 
@@ -1162,7 +1162,7 @@ function GroupCard({
           className={`p-1.5 space-y-0.5 transition-colors ${dragTarget === `group:${group.id}` ? "bg-[rgba(59,130,246,0.06)]" : ""}`}
         >
           {group.items.length === 0 && group.subgroups.length === 0 && (
-            <div className="text-[10px] text-muted text-center py-3 border border-dashed border-border/40 rounded-md">
+            <div className="text-[10px] text-text-muted text-center py-3 border border-dashed border-border-subtle/40 rounded-md">
               Drop items here
             </div>
           )}
@@ -1183,17 +1183,17 @@ function GroupCard({
           {group.subgroups.map(sg => {
             const sOpen = subOpen[sg.id] ?? true;
             return (
-              <div key={sg.id} className="mt-1 ml-2 rounded-lg border border-border/60 bg-surface/50">
+              <div key={sg.id} className="mt-1 ml-2 rounded-lg border border-border-subtle/60 bg-surface/50">
                 <div className="flex items-center gap-1.5 px-1.5 py-1">
-                  <button onClick={() => setSubOpen(p => ({ ...p, [sg.id]: !sOpen }))} className="p-0.5 text-muted">
+                  <button onClick={() => setSubOpen(p => ({ ...p, [sg.id]: !sOpen }))} className="p-0.5 text-text-muted">
                     {sOpen ? <ChevronDown size={10} /> : <ChevronRight size={10} />}
                   </button>
                   <SubgroupNameEditor
                     name={sg.name}
                     onSave={(n) => onRenameSubgroup(sg.id, n)}
                   />
-                  <span className="text-[10px] text-muted">{sg.items.length}</span>
-                  <button onClick={() => onDeleteSubgroup(sg.id)} className="p-0.5 rounded text-muted hover:text-danger ml-auto" title="Delete subgroup">
+                  <span className="text-[10px] text-text-muted">{sg.items.length}</span>
+                  <button onClick={() => onDeleteSubgroup(sg.id)} className="p-0.5 rounded text-text-muted hover:text-danger ml-auto" title="Delete subgroup">
                     <Trash2 size={10} />
                   </button>
                 </div>
@@ -1204,7 +1204,7 @@ function GroupCard({
                     className={`p-1 space-y-0.5 min-h-[24px] transition-colors ${dragTarget === `sub:${sg.id}` ? "bg-[rgba(59,130,246,0.08)]" : ""}`}
                   >
                     {sg.items.length === 0 ? (
-                      <div className="text-[10px] text-muted text-center py-2 border border-dashed border-border/30 rounded-md">
+                      <div className="text-[10px] text-text-muted text-center py-2 border border-dashed border-border-subtle/30 rounded-md">
                         Drop items
                       </div>
                     ) : (
@@ -1251,7 +1251,7 @@ function SubgroupNameEditor({ name, onSave }: { name: string; onSave: (n: string
     );
   }
   return (
-    <button onClick={() => setEdit(true)} className="text-[10px] text-muted font-medium hover:text-foreground flex-1 text-left truncate">
+    <button onClick={() => setEdit(true)} className="text-[10px] text-text-muted font-medium hover:text-text-primary flex-1 text-left truncate">
       {name}
     </button>
   );
@@ -1280,12 +1280,12 @@ function LivePreview({ prefs }: { prefs: SidebarPrefs }) {
   const otherItems = ALL_SIDEBAR_ITEMS.filter(h => !assignedSet.has(h) && isEnabled(h));
 
   return (
-    <div className="card !p-2 sticky top-2">
+    <div className="glass rounded-xl !p-2 sticky top-2">
       <div className="flex items-center gap-1.5 mb-2 px-1">
         <Eye size={12} className="text-[#2563EB]" />
-        <span className="text-[10px] uppercase tracking-wider text-muted font-semibold">Live Preview</span>
+        <span className="text-[10px] uppercase tracking-wider text-text-muted font-semibold">Live Preview</span>
       </div>
-      <div className="rounded-xl border border-border bg-surface p-1.5 max-h-[640px] overflow-y-auto scrollbar-none">
+      <div className="rounded-xl border border-border-subtle bg-surface p-1.5 max-h-[640px] overflow-y-auto scrollbar-none">
         {/* Pinned */}
         {prefs.pins.length > 0 && (
           <div className="mb-1.5">
@@ -1321,8 +1321,8 @@ function LivePreview({ prefs }: { prefs: SidebarPrefs }) {
                 {subs.map(sg => (
                   <div key={sg.id}>
                     <div className="flex items-center gap-1 px-3 pt-1 pb-0.5">
-                      <span className="text-[7px] text-muted/60">•</span>
-                      <span className="text-[8px] text-muted/70 font-medium">{sg.name}</span>
+                      <span className="text-[7px] text-text-muted/60">•</span>
+                      <span className="text-[8px] text-text-muted/70 font-medium">{sg.name}</span>
                     </div>
                     {sg.items.map(href => <PreviewRow key={href} href={href} prefs={prefs} indent />)}
                   </div>
@@ -1335,13 +1335,13 @@ function LivePreview({ prefs }: { prefs: SidebarPrefs }) {
         {otherItems.length > 0 && (
           <div>
             <div className="flex items-center gap-1 px-2 pt-1.5 pb-0.5">
-              <span className="text-[8px] uppercase tracking-[0.2em] font-semibold text-muted">Other</span>
+              <span className="text-[8px] uppercase tracking-[0.2em] font-semibold text-text-muted">Other</span>
             </div>
             {otherItems.map(href => <PreviewRow key={href} href={href} prefs={prefs} />)}
           </div>
         )}
       </div>
-      <p className="text-[9px] text-muted mt-2 px-1 leading-relaxed">
+      <p className="text-[9px] text-text-muted mt-2 px-1 leading-relaxed">
         Showing{" "}
         <span className="text-[#2563EB]">
           {prefs.enabled_items.length === 0 ? ALL_SIDEBAR_ITEMS.length : prefs.enabled_items.length}
@@ -1356,7 +1356,7 @@ function PreviewRow({ href, prefs, indent }: { href: string; prefs: SidebarPrefs
   const label = prefs.renames[href] || labelForHref(href);
   const iconName = prefs.icon_overrides[href] || "Layers";
   return (
-    <div className={`flex items-center gap-1.5 py-0.5 text-[10px] text-muted rounded-md hover:bg-surface-light/70 ${indent ? "pl-4 pr-2" : "px-2"}`}>
+    <div className={`flex items-center gap-1.5 py-0.5 text-[10px] text-text-muted rounded-md hover:bg-surface-light/70 ${indent ? "pl-4 pr-2" : "px-2"}`}>
       <IconByName name={iconName} size={10} className="shrink-0" />
       <span className="truncate">{label}</span>
     </div>
@@ -1389,16 +1389,16 @@ function NewGroupModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={onClose} />
-      <div className="relative w-full max-w-md mx-4 bg-surface border border-border/50 rounded-xl shadow-2xl shadow-black/50 fade-in">
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-border/30">
+      <div className="relative w-full max-w-md mx-4 bg-surface border border-border-subtle/50 rounded-xl shadow-2xl shadow-black/50">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-border-subtle/30">
           <h3 className="text-sm font-semibold">{parentGroupId ? "New Subgroup" : "New Group"}</h3>
-          <button onClick={onClose} className="p-1 rounded-md hover:bg-surface-light text-muted hover:text-foreground">
+          <button onClick={onClose} className="p-1 rounded-md hover:bg-surface-light text-text-muted hover:text-text-primary">
             <X size={14} />
           </button>
         </div>
         <div className="p-4 space-y-3">
           <div>
-            <label className="block text-[10px] uppercase tracking-wider text-muted mb-1">Name</label>
+            <label className="block text-[10px] uppercase tracking-wider text-text-muted mb-1">Name</label>
             <input
               ref={inputRef}
               value={name}
@@ -1411,7 +1411,7 @@ function NewGroupModal({
           {!parentGroupId && (
             <>
               <div>
-                <label className="block text-[10px] uppercase tracking-wider text-muted mb-1">Color</label>
+                <label className="block text-[10px] uppercase tracking-wider text-text-muted mb-1">Color</label>
                 <div className="flex flex-wrap gap-1.5">
                   {GROUP_COLOR_PALETTE.map(c => (
                     <button
@@ -1422,16 +1422,16 @@ function NewGroupModal({
                       title={c}
                     />
                   ))}
-                  <label className="w-6 h-6 rounded-full border border-border/60 overflow-hidden cursor-pointer relative">
+                  <label className="w-6 h-6 rounded-full border border-border-subtle/60 overflow-hidden cursor-pointer relative">
                     <input type="color" value={color} onChange={e => setColor(e.target.value)} className="absolute inset-0 opacity-0 cursor-pointer" />
-                    <div className="w-full h-full flex items-center justify-center text-[9px] text-muted">
+                    <div className="w-full h-full flex items-center justify-center text-[9px] text-text-muted">
                       <Palette size={10} />
                     </div>
                   </label>
                 </div>
               </div>
               <div>
-                <label className="block text-[10px] uppercase tracking-wider text-muted mb-1">Icon</label>
+                <label className="block text-[10px] uppercase tracking-wider text-text-muted mb-1">Icon</label>
                 <input
                   value={iconSearch}
                   onChange={e => setIconSearch(e.target.value)}
@@ -1444,7 +1444,7 @@ function NewGroupModal({
                       key={n}
                       onClick={() => setIcon(n)}
                       className={`p-1.5 rounded-md flex items-center justify-center transition-all ${
-                        icon === n ? "bg-[#2563EB] text-white" : "bg-surface-light/50 text-muted hover:text-foreground hover:bg-surface-light"
+                        icon === n ? "bg-[#2563EB] text-white" : "bg-surface-light/50 text-text-muted hover:text-text-primary hover:bg-surface-light"
                       }`}
                       title={n}
                     >
@@ -1456,7 +1456,7 @@ function NewGroupModal({
             </>
           )}
         </div>
-        <div className="flex justify-end gap-2 px-4 py-3 border-t border-border/30">
+        <div className="flex justify-end gap-2 px-4 py-3 border-t border-border-subtle/30">
           <button onClick={onClose} className="btn-pill-ghost text-xs">Cancel</button>
           <button
             onClick={() => onCreate({ name: name.trim(), icon, color, parentGroupId })}
@@ -1485,15 +1485,15 @@ function RenameModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={onClose} />
-      <div className="relative w-full max-w-sm mx-4 bg-surface border border-border/50 rounded-xl shadow-2xl">
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-border/30">
+      <div className="relative w-full max-w-sm mx-4 bg-surface border border-border-subtle/50 rounded-xl shadow-2xl">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-border-subtle/30">
           <h3 className="text-sm font-semibold">Rename Item</h3>
-          <button onClick={onClose} className="p-1 rounded-md hover:bg-surface-light text-muted">
+          <button onClick={onClose} className="p-1 rounded-md hover:bg-surface-light text-text-muted">
             <X size={14} />
           </button>
         </div>
         <div className="p-4 space-y-2">
-          <label className="block text-[10px] uppercase tracking-wider text-muted">Custom label</label>
+          <label className="block text-[10px] uppercase tracking-wider text-text-muted">Custom label</label>
           <input
             ref={inputRef}
             value={name}
@@ -1502,9 +1502,9 @@ function RenameModal({
             className="input w-full text-xs"
             onKeyDown={(e) => { if (e.key === "Enter") onSave(name); }}
           />
-          <p className="text-[10px] text-muted">Leave blank or set back to &quot;{defaultName}&quot; to restore the default label.</p>
+          <p className="text-[10px] text-text-muted">Leave blank or set back to &quot;{defaultName}&quot; to restore the default label.</p>
         </div>
-        <div className="flex justify-end gap-2 px-4 py-3 border-t border-border/30">
+        <div className="flex justify-end gap-2 px-4 py-3 border-t border-border-subtle/30">
           <button onClick={() => onSave("")} className="btn-pill-ghost text-xs">Reset</button>
           <button onClick={onClose} className="btn-pill-ghost text-xs">Cancel</button>
           <button onClick={() => onSave(name)} className="btn-pill text-xs flex items-center gap-1">
@@ -1531,10 +1531,10 @@ function IconPickerModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={onClose} />
-      <div className="relative w-full max-w-md mx-4 bg-surface border border-border/50 rounded-xl shadow-2xl">
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-border/30">
+      <div className="relative w-full max-w-md mx-4 bg-surface border border-border-subtle/50 rounded-xl shadow-2xl">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-border-subtle/30">
           <h3 className="text-sm font-semibold">Choose Icon</h3>
-          <button onClick={onClose} className="p-1 rounded-md hover:bg-surface-light text-muted">
+          <button onClick={onClose} className="p-1 rounded-md hover:bg-surface-light text-text-muted">
             <X size={14} />
           </button>
         </div>
@@ -1552,7 +1552,7 @@ function IconPickerModal({
                 key={n}
                 onClick={() => onPick(n)}
                 className={`p-2 rounded-md flex items-center justify-center transition-all ${
-                  currentIcon === n ? "bg-[#2563EB] text-white" : "bg-surface-light/50 text-muted hover:text-foreground hover:bg-surface-light"
+                  currentIcon === n ? "bg-[#2563EB] text-white" : "bg-surface-light/50 text-text-muted hover:text-text-primary hover:bg-surface-light"
                 }`}
                 title={n}
               >
@@ -1561,7 +1561,7 @@ function IconPickerModal({
             ))}
           </div>
         </div>
-        <div className="flex justify-end gap-2 px-4 py-3 border-t border-border/30">
+        <div className="flex justify-end gap-2 px-4 py-3 border-t border-border-subtle/30">
           <button onClick={() => onPick("")} className="btn-pill-ghost text-xs">Reset</button>
           <button onClick={onClose} className="btn-pill-ghost text-xs">Close</button>
         </div>

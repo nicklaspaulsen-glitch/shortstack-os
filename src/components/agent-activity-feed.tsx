@@ -62,19 +62,19 @@ export default function AgentActivityFeed({ clientId }: { clientId?: string | nu
   if (logs.length === 0) return null;
 
   return (
-    <div className="card p-3">
+    <div className="glass rounded-xl p-3">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-[10px] text-muted uppercase tracking-[0.15em] font-bold flex items-center gap-1.5">
+        <h3 className="text-[10px] text-text-muted uppercase tracking-[0.15em] font-bold flex items-center gap-1.5">
           <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
           Agent Activity
         </h3>
-        <span className="text-[8px] text-muted">Live</span>
+        <span className="text-[8px] text-text-muted">Live</span>
       </div>
       <div className="space-y-1 max-h-[300px] overflow-y-auto">
         {logs.map((log, i) => {
-          const agent = AGENT_MAP[log.action_type] || { name: "Agent", icon: <Bot size={10} />, color: "text-muted" };
+          const agent = AGENT_MAP[log.action_type] || { name: "Agent", icon: <Bot size={10} />, color: "text-text-muted" };
           return (
-            <div key={log.id} className={`flex items-start gap-2 py-1.5 ${i < logs.length - 1 ? "border-b border-border/10" : ""}`}
+            <div key={log.id} className={`flex items-start gap-2 py-1.5 ${i < logs.length - 1 ? "border-b border-border-subtle/10" : ""}`}
               style={{ animationDelay: `${i * 0.05}s` }}>
               <div className={`shrink-0 mt-0.5 ${agent.color}`}>{agent.icon}</div>
               <div className="flex-1 min-w-0">
@@ -82,9 +82,9 @@ export default function AgentActivityFeed({ clientId }: { clientId?: string | nu
                   <span className={`text-[9px] font-semibold ${agent.color}`}>{agent.name}</span>
                   {STATUS_ICONS[log.status] || null}
                 </div>
-                <p className="text-[9px] text-muted truncate">{log.description}</p>
+                <p className="text-[9px] text-text-muted truncate">{log.description}</p>
               </div>
-              <span className="text-[7px] text-muted/50 shrink-0">{formatRelativeTime(log.created_at)}</span>
+              <span className="text-[7px] text-text-muted/50 shrink-0">{formatRelativeTime(log.created_at)}</span>
             </div>
           );
         })}

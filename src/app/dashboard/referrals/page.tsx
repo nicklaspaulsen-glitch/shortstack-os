@@ -219,7 +219,7 @@ export default function ReferralsPage() {
   }, [me?.share_url]);
 
   return (
-    <MotionPage className="fade-in max-w-6xl mx-auto space-y-6">{/* -- Referrals & commissions command strip -- */}
+    <MotionPage className="max-w-6xl mx-auto space-y-6">{/* -- Referrals & commissions command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Affiliate program</p>
@@ -238,17 +238,17 @@ export default function ReferralsPage() {
             >
               <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
                 <div className="min-w-0">
-                  <div className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-1">
+                  <div className="text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-1">
                     Your referral code
                   </div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <code className="text-2xl sm:text-3xl font-bold tracking-widest text-foreground bg-surface border border-border rounded-xl px-4 py-2">
+                    <code className="text-2xl sm:text-3xl font-bold tracking-widest text-text-primary bg-surface border border-border-subtle rounded-xl px-4 py-2">
                       {meLoading ? "—" : me?.referral_code ?? "—"}
                     </code>
                     <button
                       onClick={handleRegen}
                       disabled={regenLoading || meLoading}
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent transition-colors disabled:opacity-60"
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-text-primary text-xs font-medium border border-border-subtle hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent transition-colors disabled:opacity-60"
                       title="Regenerate code (invalidates old link)"
                     >
                       {regenLoading ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
@@ -257,13 +257,13 @@ export default function ReferralsPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-1">
+                  <div className="text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-1">
                     Projected MRR
                   </div>
-                  <div className="text-xl sm:text-2xl font-bold text-foreground">
+                  <div className="text-xl sm:text-2xl font-bold text-text-primary">
                     {meLoading ? "—" : fmtCents(me?.stats.projected_monthly_cents ?? 0)}
                   </div>
-                  <div className="text-[10px] text-muted">
+                  <div className="text-[10px] text-text-muted">
                     from {me?.stats.active_subs ?? 0} active sub{me?.stats.active_subs === 1 ? "" : "s"}
                   </div>
                 </div>
@@ -271,8 +271,8 @@ export default function ReferralsPage() {
 
               {/* Share link + copy */}
               <div className="flex items-center gap-2 flex-wrap">
-                <div className="flex-1 min-w-[260px] flex items-center gap-2 bg-surface border border-border rounded-xl px-3 py-2">
-                  <span className="text-xs text-muted truncate flex-1">
+                <div className="flex-1 min-w-[260px] flex items-center gap-2 bg-surface border border-border-subtle rounded-xl px-3 py-2">
+                  <span className="text-xs text-text-muted truncate flex-1">
                     {meLoading ? "Loading…" : me?.share_url ?? "—"}
                   </span>
                   <button
@@ -292,7 +292,7 @@ export default function ReferralsPage() {
                       href={shareLinks.twitter}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.25)] transition-colors"
+                      className="w-9 h-9 rounded-xl bg-surface border border-border-subtle flex items-center justify-center text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.25)] transition-colors"
                       title="Share on Twitter"
                     >
                       <TwitterIcon size={14} />
@@ -301,7 +301,7 @@ export default function ReferralsPage() {
                       href={shareLinks.facebook}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.25)] transition-colors"
+                      className="w-9 h-9 rounded-xl bg-surface border border-border-subtle flex items-center justify-center text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.25)] transition-colors"
                       title="Share on Facebook"
                     >
                       <FacebookIcon size={14} />
@@ -310,7 +310,7 @@ export default function ReferralsPage() {
                       href={shareLinks.linkedin}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.25)] transition-colors"
+                      className="w-9 h-9 rounded-xl bg-surface border border-border-subtle flex items-center justify-center text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.25)] transition-colors"
                       title="Share on LinkedIn"
                     >
                       <LinkedinIcon size={14} />
@@ -319,7 +319,7 @@ export default function ReferralsPage() {
                       href={shareLinks.whatsapp}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center text-muted hover:text-emerald-400 hover:border-emerald-500/30 transition-colors"
+                      className="w-9 h-9 rounded-xl bg-surface border border-border-subtle flex items-center justify-center text-text-muted hover:text-emerald-400 hover:border-emerald-500/30 transition-colors"
                       title="Share on WhatsApp"
                     >
                       <MessageCircle size={14} />
@@ -336,12 +336,12 @@ export default function ReferralsPage() {
                   return (
                     <div
                       key={tier}
-                      className="rounded-xl border border-border bg-surface/60 px-3 py-2.5 flex items-center justify-between gap-2"
+                      className="rounded-xl border border-border-subtle bg-surface/60 px-3 py-2.5 flex items-center justify-between gap-2"
                       style={{ borderColor: `${cfg.color}25` }}
                     >
                       <div className="min-w-0">
-                        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted">{tier}</div>
-                        <div className="text-[11px] text-muted">${cfg.price_monthly.toLocaleString()}/mo</div>
+                        <div className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">{tier}</div>
+                        <div className="text-[11px] text-text-muted">${cfg.price_monthly.toLocaleString()}/mo</div>
                       </div>
                       <div className="text-base font-bold shrink-0" style={{ color: cfg.color }}>
                         {pct}%
@@ -350,7 +350,7 @@ export default function ReferralsPage() {
                   );
                 })}
               </div>
-              <p className="text-[10px] text-muted mt-3">
+              <p className="text-[10px] text-text-muted mt-3">
                 Commission paid monthly for 12 months on every active subscription. Payout sent on the 1st of each month via Stripe Connect.
               </p>
             </motion.section>{/* ─── Stat cards ─────────────────────────────────────────────── */}<section>
@@ -401,12 +401,12 @@ export default function ReferralsPage() {
             </section>{/* ─── Bottom: referred users + leaderboard ──────────────────── */}<section className="grid grid-cols-1 lg:grid-cols-3 gap-5">
               {/* Referrals table */}
               <div className="lg:col-span-2 glass rounded-xl overflow-hidden">
-                <div className="px-5 py-3.5 border-b border-border flex items-center justify-between">
+                <div className="px-5 py-3.5 border-b border-border-subtle flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Users size={14} className="text-brand-accent" />
-                    <h2 className="text-sm font-bold text-foreground">Referred users</h2>
+                    <h2 className="text-sm font-bold text-text-primary">Referred users</h2>
                     {!referralsLoading && (
-                      <span className="text-[10px] text-muted">· {referrals.length}</span>
+                      <span className="text-[10px] text-text-muted">· {referrals.length}</span>
                     )}
                   </div>
                 </div>
@@ -421,8 +421,8 @@ export default function ReferralsPage() {
                     <div className="w-12 h-12 mx-auto  bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.12)] flex items-center justify-center mb-3">
                       <Sparkles size={18} className="text-brand-accent" />
                     </div>
-                    <p className="text-sm font-medium text-foreground mb-1">No referrals yet</p>
-                    <p className="text-xs text-muted max-w-xs mx-auto">
+                    <p className="text-sm font-medium text-text-primary mb-1">No referrals yet</p>
+                    <p className="text-xs text-text-muted max-w-xs mx-auto">
                       Share your link above. When someone signs up and subscribes, they'll appear here and you start earning.
                     </p>
                   </div>
@@ -430,12 +430,12 @@ export default function ReferralsPage() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="border-b border-border bg-surface-light/30">
-                          <th className="text-left px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted">User</th>
-                          <th className="text-left px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted">Plan</th>
-                          <th className="text-left px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted">Commission</th>
-                          <th className="text-left px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted">Status</th>
-                          <th className="text-left px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted">Joined</th>
+                        <tr className="border-b border-border-subtle bg-surface-light/30">
+                          <th className="text-left px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-text-muted">User</th>
+                          <th className="text-left px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-text-muted">Plan</th>
+                          <th className="text-left px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-text-muted">Commission</th>
+                          <th className="text-left px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-text-muted">Status</th>
+                          <th className="text-left px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-text-muted">Joined</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -443,12 +443,12 @@ export default function ReferralsPage() {
                           const cfg = getPlanConfig(r.plan_tier);
                           const active = r.subscription_status === "active" || r.subscription_status === "trialing";
                           return (
-                            <motion.tr key={r.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="border-b border-border last:border-0 hover:bg-surface-light/20 transition-colors">
+                            <motion.tr key={r.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="border-b border-border-subtle last:border-0 hover:bg-surface-light/20 transition-colors">
                               <td className="px-4 py-3">
-                                <div className="text-xs font-semibold text-foreground truncate max-w-[180px]">
+                                <div className="text-xs font-semibold text-text-primary truncate max-w-[180px]">
                                   {r.full_name || "—"}
                                 </div>
-                                <div className="text-[10px] text-muted truncate max-w-[180px]">{r.email}</div>
+                                <div className="text-[10px] text-text-muted truncate max-w-[180px]">{r.email}</div>
                               </td>
                               <td className="px-4 py-3">
                                 <span
@@ -458,22 +458,22 @@ export default function ReferralsPage() {
                                   {cfg.badge_label}
                                 </span>
                               </td>
-                              <td className="px-4 py-3 text-xs text-foreground font-semibold">
+                              <td className="px-4 py-3 text-xs text-text-primary font-semibold">
                                 {r.commission_pct}%
-                                <span className="text-[10px] text-muted font-normal"> · {fmtCents(Math.round(cfg.price_monthly * 100 * (r.commission_pct / 100)))}/mo</span>
+                                <span className="text-[10px] text-text-muted font-normal"> · {fmtCents(Math.round(cfg.price_monthly * 100 * (r.commission_pct / 100)))}/mo</span>
                               </td>
                               <td className="px-4 py-3">
                                 <span
                                   className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
                                     active
                                       ? "bg-emerald-500/15 text-emerald-400"
-                                      : "bg-surface-light text-muted"
+                                      : "bg-surface-light text-text-muted"
                                   }`}
                                 >
                                   {active ? "Active" : r.subscription_status || "Inactive"}
                                 </span>
                               </td>
-                              <td className="px-4 py-3 text-xs text-muted">{fmtDate(r.signed_up_at)}</td>
+                              <td className="px-4 py-3 text-xs text-text-muted">{fmtDate(r.signed_up_at)}</td>
                             </motion.tr>
                           );
                         })}
@@ -485,9 +485,9 @@ export default function ReferralsPage() {
 
               {/* Leaderboard */}
               <div className="glass rounded-xl overflow-hidden">
-                <div className="px-5 py-3.5 border-b border-border flex items-center gap-2">
+                <div className="px-5 py-3.5 border-b border-border-subtle flex items-center gap-2">
                   <Trophy size={14} className="text-brand-accent" />
-                  <h2 className="text-sm font-bold text-foreground">Leaderboard</h2>
+                  <h2 className="text-sm font-bold text-text-primary">Leaderboard</h2>
                   {leaderboard?.is_admin_view && (
                     <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent">
                       Admin
@@ -502,7 +502,7 @@ export default function ReferralsPage() {
                   </div>
                 ) : !leaderboard || leaderboard.top.length === 0 ? (
                   <div className="p-6 text-center">
-                    <p className="text-xs text-muted">Nobody's earned yet. Be first?</p>
+                    <p className="text-xs text-text-muted">Nobody's earned yet. Be first?</p>
                   </div>
                 ) : (
                   <div className="p-3 space-y-1.5">
@@ -512,9 +512,9 @@ export default function ReferralsPage() {
                     {leaderboard.own_rank && leaderboard.own_rank > leaderboard.top.length && !leaderboard.is_admin_view && (
                       <>
                         <div className="flex items-center gap-2 py-1">
-                          <div className="flex-1 h-px bg-border" />
-                          <span className="text-[9px] font-bold uppercase tracking-wider text-muted">Your rank</span>
-                          <div className="flex-1 h-px bg-border" />
+                          <div className="flex-1 h-px bg-border-subtle" />
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-text-muted">Your rank</span>
+                          <div className="flex-1 h-px bg-border-subtle" />
                         </div>
                         <LeaderboardRow
                           entry={{
@@ -526,7 +526,7 @@ export default function ReferralsPage() {
                         />
                       </>
                     )}
-                    <div className="text-[10px] text-muted text-center pt-2">
+                    <div className="text-[10px] text-text-muted text-center pt-2">
                       {leaderboard.total_referrers} referrer{leaderboard.total_referrers === 1 ? "" : "s"} earning
                     </div>
                   </div>
@@ -537,8 +537,8 @@ export default function ReferralsPage() {
                 <Sparkles size={16} className="text-brand-accent" />
               </div>
               <div className="flex-1 min-w-[220px]">
-                <h3 className="text-sm font-semibold text-foreground mb-1">How it works</h3>
-                <ul className="text-xs text-muted space-y-1 list-disc ml-4">
+                <h3 className="text-sm font-semibold text-text-primary mb-1">How it works</h3>
+                <ul className="text-xs text-text-muted space-y-1 list-disc ml-4">
                   <li>Share your link. When someone signs up with it, we attribute them to you forever.</li>
                   <li>Once they subscribe to a paid plan, you earn commission on every monthly invoice for 12 months.</li>
                   <li>Commission rate = their plan tier. Business tier = 25%, Unlimited = 30%.</li>
@@ -547,7 +547,7 @@ export default function ReferralsPage() {
               </div>
               <a
                 href="/dashboard/settings"
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent transition-colors shrink-0"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-text-primary text-xs font-medium border border-border-subtle hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent transition-colors shrink-0"
               >
                 <ArrowUpRight size={12} />
                 Connect payout
@@ -567,16 +567,16 @@ function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
         entry.is_you ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.10)]" : "bg-surface-light/30"
       }`}
     >
-      <div className="w-6 text-center text-xs font-bold text-muted">
+      <div className="w-6 text-center text-xs font-bold text-text-muted">
         {medal ?? `#${entry.rank}`}
       </div>
       <div className="flex-1 min-w-0">
-        <div className={`text-xs font-semibold truncate ${entry.is_you ? "text-brand-accent" : "text-foreground"}`}>
+        <div className={`text-xs font-semibold truncate ${entry.is_you ? "text-brand-accent" : "text-text-primary"}`}>
           {entry.display_name}
           {entry.is_you && <span className="text-[10px] text-brand-accent ml-1">(you)</span>}
         </div>
       </div>
-      <div className="text-xs font-bold text-foreground shrink-0">
+      <div className="text-xs font-bold text-text-primary shrink-0">
         ${(entry.total_cents / 100).toLocaleString("en-US", { maximumFractionDigits: 0 })}
       </div>
     </div>

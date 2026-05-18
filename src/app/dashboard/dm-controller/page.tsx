@@ -527,7 +527,7 @@ export default function DMControllerPage() {
   /* ------------------------------------------------------------------ */
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- DM Controller command strip -- */}
+    <MotionPage className="space-y-5">{/* -- DM Controller command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">DM CONTROLLER</p>
@@ -538,7 +538,7 @@ export default function DMControllerPage() {
                   <div className={cn(
                     "flex items-center gap-1.5 text-[10px] border px-2.5 py-1 rounded-md",
                     running ? "bg-green-400/10 border-green-400/30 text-green-400" :
-                             "bg-black/5 border-border text-muted"
+                             "bg-black/5 border-border-subtle text-text-muted"
                   )}>
                     <span className={cn("w-1.5 h-1.5 rounded-full", running ? "bg-green-400 animate-pulse" : "bg-black/15")} />
                     {running ? `Running · ${completed}/${totalDMs}` : "Paused"}
@@ -574,7 +574,7 @@ export default function DMControllerPage() {
                     "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border",
                     activeTab === t.id
                       ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent font-medium"
-                      : "border-border text-muted hover:text-foreground"
+                      : "border-border-subtle text-text-muted hover:text-text-primary"
                   )}
                 >
                   <t.icon size={12} /> {t.label}
@@ -596,7 +596,7 @@ export default function DMControllerPage() {
                   <SenderAccountPicker />
 
                   {/* Platform Selector w/ real brand icons */}
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <h2 className="text-xs font-semibold mb-2">Platforms</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                       {PLATFORMS.map(p => {
@@ -607,13 +607,13 @@ export default function DMControllerPage() {
                             onClick={() => togglePlatform(p.id)}
                             className={cn(
                               "flex items-center gap-2.5 p-3 rounded-xl border transition-all",
-                              active ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]" : "border-border opacity-60 hover:opacity-90"
+                              active ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]" : "border-border-subtle opacity-60 hover:opacity-90"
                             )}
                           >
                             {p.icon(22)}
                             <div className="text-left">
                               <p className="text-xs font-semibold">{p.name}</p>
-                              <p className={cn("text-[9px]", active ? "text-green-400" : "text-muted")}>
+                              <p className={cn("text-[9px]", active ? "text-green-400" : "text-text-muted")}>
                                 {active ? "Active" : "Disabled"}
                               </p>
                             </div>
@@ -624,53 +624,53 @@ export default function DMControllerPage() {
                   </div>
 
                   {/* Settings */}
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <h2 className="text-xs font-semibold mb-2 flex items-center gap-2"><Settings size={13} className="text-brand-accent" /> Settings</h2>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">DMs per platform</label>
+                        <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">DMs per platform</label>
                         <input type="number" min={1} max={100} value={config.dmsPerPlatform}
                           onChange={e => setConfig({ ...config, dmsPerPlatform: parseInt(e.target.value) || 20 })}
-                          className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground" />
+                          className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs text-text-primary" />
                       </div>
                       <div>
-                        <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Delay between DMs (sec)</label>
+                        <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">Delay between DMs (sec)</label>
                         <input type="number" min={15} max={120} value={config.delayBetween}
                           onChange={e => setConfig({ ...config, delayBetween: parseInt(e.target.value) || 45 })}
-                          className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground" />
+                          className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs text-text-primary" />
                       </div>
                     </div>
                     <div className="mt-3">
-                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Message Style</label>
+                      <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">Message Style</label>
                       <div className="flex flex-wrap gap-1.5">
                         {["friendly", "professional", "bold", "casual"].map(s => (
                           <button key={s} onClick={() => setConfig({ ...config, messageStyle: s })}
                             className={cn(
                               "text-[10px] px-3 py-1 rounded-lg border transition-all capitalize",
-                              config.messageStyle === s ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
+                              config.messageStyle === s ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border-subtle text-text-muted"
                             )}>{s}</button>
                         ))}
                       </div>
                     </div>
                     <div className="mt-3">
-                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Send Window</label>
+                      <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">Send Window</label>
                       <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <label className="text-[8px] text-muted">Start</label>
-                          <input type="time" value={config.sendWindowStart} onChange={e => setConfig({ ...config, sendWindowStart: e.target.value })} className="w-full rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground" />
+                          <label className="text-[8px] text-text-muted">Start</label>
+                          <input type="time" value={config.sendWindowStart} onChange={e => setConfig({ ...config, sendWindowStart: e.target.value })} className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-1.5 text-xs text-text-primary" />
                         </div>
                         <div>
-                          <label className="text-[8px] text-muted">End</label>
-                          <input type="time" value={config.sendWindowEnd} onChange={e => setConfig({ ...config, sendWindowEnd: e.target.value })} className="w-full rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground" />
+                          <label className="text-[8px] text-text-muted">End</label>
+                          <input type="time" value={config.sendWindowEnd} onChange={e => setConfig({ ...config, sendWindowEnd: e.target.value })} className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-1.5 text-xs text-text-primary" />
                         </div>
                       </div>
                     </div>
-                    <div className="mt-3 flex items-center justify-between p-3 rounded-lg border border-border">
+                    <div className="mt-3 flex items-center justify-between p-3 rounded-lg border border-border-subtle">
                       <div className="flex items-center gap-2">
                         <Flame size={14} className="text-orange-400" />
                         <div>
                           <p className="text-xs font-semibold">Warm-up mode</p>
-                          <p className="text-[10px] text-muted">Ramps DM volume over 7 days to avoid spam filters.</p>
+                          <p className="text-[10px] text-text-muted">Ramps DM volume over 7 days to avoid spam filters.</p>
                         </div>
                       </div>
                       <button onClick={() => setConfig({ ...config, warmup: !config.warmup })}
@@ -687,45 +687,45 @@ export default function DMControllerPage() {
                   </div>
 
                   {/* Target Niches */}
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <h2 className="text-xs font-semibold mb-2">Target Niches</h2>
                     <div className="flex flex-wrap gap-1.5">
                       {NICHES.map(n => (
                         <button key={n} onClick={() => toggleNiche(n)}
                           className={cn(
                             "text-[10px] px-2.5 py-1 rounded-lg border transition-all",
-                            config.niches.includes(n) ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
+                            config.niches.includes(n) ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border-subtle text-text-muted"
                           )}>{n}</button>
                       ))}
                     </div>
                   </div>
 
                   {/* Services */}
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <h2 className="text-xs font-semibold mb-2">Services to Pitch</h2>
                     <div className="flex flex-wrap gap-1.5">
                       {SERVICES.map(s => (
                         <button key={s} onClick={() => toggleService(s)}
                           className={cn(
                             "text-[10px] px-2.5 py-1 rounded-lg border transition-all",
-                            config.services.includes(s) ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
+                            config.services.includes(s) ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border-subtle text-text-muted"
                           )}>{s}</button>
                       ))}
                     </div>
                   </div>
 
                   {/* Custom Message + variable autocomplete */}
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <div className="flex items-center justify-between mb-2">
                       <h2 className="text-xs font-semibold">Custom Message</h2>
                       <div className="relative">
-                        <button onClick={() => setShowVars(v => !v)} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
+                        <button onClick={() => setShowVars(v => !v)} className="text-[10px] px-2.5 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary flex items-center gap-1">
                           <Plus size={10} /> Variable
                         </button>
                         {showVars && (
                           <div className="absolute right-0 top-full mt-1 z-30 w-48 card p-1 shadow-xl">
                             {VARIABLES.map(v => (
-                              <button key={v} onClick={() => insertVariable(v)} className="w-full text-left text-[10px] font-mono px-2 py-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-foreground">
+                              <button key={v} onClick={() => insertVariable(v)} className="w-full text-left text-[10px] font-mono px-2 py-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-text-primary">
                                 {v}
                               </button>
                             ))}
@@ -736,10 +736,10 @@ export default function DMControllerPage() {
                     <textarea
                       value={config.customMessage}
                       onChange={e => setConfig({ ...config, customMessage: e.target.value })}
-                      className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-24"
+                      className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs text-text-primary h-24"
                       placeholder="Use variables: {name}, {business_name}, {industry}, {city}, {service}"
                     />
-                    <div className="mt-1.5 text-[9px] text-muted flex items-center justify-between">
+                    <div className="mt-1.5 text-[9px] text-text-muted flex items-center justify-between">
                       <span>{config.customMessage.length} chars</span>
                       <span>{VARIABLES.filter(v => config.customMessage.includes(v)).length}/{VARIABLES.length} variables used</span>
                     </div>
@@ -749,7 +749,7 @@ export default function DMControllerPage() {
                 {/* ---- Right-side panel: Preview, Safety, Launch ---- */}
                 <div className="space-y-4">
                   {/* DM Preview */}
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-xs font-semibold mb-2 flex items-center gap-2">
                       <Eye size={12} className="text-brand-accent" /> Live Preview
                     </h3>
@@ -757,19 +757,19 @@ export default function DMControllerPage() {
                       <div className="px-3 py-2 border-b border-[rgba(0,0,0,0.06)] flex items-center gap-2 bg-[rgba(0,0,0,0.04)]">
                         {platformIcon(config.platforms[0] || "instagram", 16)}
                         <span className="text-[10px] font-semibold">{platformName(config.platforms[0] || "instagram")}</span>
-                        <span className="text-[9px] text-muted ml-auto">@{(config.niches[0] || "prospect").toLowerCase().replace(/\s+/g, "_")}_co</span>
+                        <span className="text-[9px] text-text-muted ml-auto">@{(config.niches[0] || "prospect").toLowerCase().replace(/\s+/g, "_")}_co</span>
                       </div>
                       <div className="p-3 space-y-2">
-                        <div className="text-[9px] text-muted flex items-center gap-1"><Clock size={8} /> just now</div>
+                        <div className="text-[9px] text-text-muted flex items-center gap-1"><Clock size={8} /> just now</div>
                         <div className="max-w-[85%] px-3 py-2 rounded-bl-sm bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-[11px] leading-relaxed text-[#374151]">
-                          {previewText || <span className="text-muted italic">Your message will appear here…</span>}
+                          {previewText || <span className="text-text-muted italic">Your message will appear here…</span>}
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Safety meter */}
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-xs font-semibold mb-2 flex items-center gap-2">
                       <Shield size={12} className={cn(
                         safety.rating === "green" ? "text-green-400" :
@@ -782,7 +782,7 @@ export default function DMControllerPage() {
                         safety.rating === "green" ? "text-green-400" :
                         safety.rating === "amber" ? "text-amber-400" : "text-red-400"
                       )}>{safety.score}</span>
-                      <span className="text-[10px] text-muted pb-1 uppercase tracking-wider">{safety.rating}</span>
+                      <span className="text-[10px] text-text-muted pb-1 uppercase tracking-wider">{safety.rating}</span>
                     </div>
                     <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-2 mb-3 overflow-hidden">
                       <div className={cn(
@@ -799,7 +799,7 @@ export default function DMControllerPage() {
                   </div>
 
                   {/* Launch */}
-                  <div className="card p-4 border-[rgba(59,130,246,0.1)] relative overflow-hidden">
+                  <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.1)] relative overflow-hidden">
                     <div className="text-center py-3">
                       <div className={cn(
                         "w-14 h-14  flex items-center justify-center mx-auto mb-3",
@@ -812,7 +812,7 @@ export default function DMControllerPage() {
                       <h3 className="text-sm font-bold mb-1">
                         {running ? "Sending DMs…" : totalDMs === 0 ? "No targets" : "Ready to Launch"}
                       </h3>
-                      <div className="space-y-0.5 text-[10px] text-muted mb-3">
+                      <div className="space-y-0.5 text-[10px] text-text-muted mb-3">
                         <p>Platforms: {config.platforms.length}</p>
                         <p>Total DMs: {totalDMs}</p>
                         <p>Est. time: {totalDMs === 0 ? "—" : `~${estimatedTime} min`}</p>
@@ -836,9 +836,9 @@ export default function DMControllerPage() {
                   </div>
 
                   {/* Requirements */}
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Zap size={12} className="text-yellow-400" /> Requirements</h3>
-                    <div className="space-y-1.5 text-[10px] text-muted">
+                    <div className="space-y-1.5 text-[10px] text-text-muted">
                       <p>1. Chrome open with extension</p>
                       <p>2. Logged into social accounts</p>
                       <p>3. Keep Chrome in foreground</p>
@@ -854,17 +854,17 @@ export default function DMControllerPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-sm font-semibold">Active Campaigns</h2>
-                    <p className="text-[10px] text-muted">Run multiple DM campaigns in parallel — each with its own template & volume.</p>
+                    <p className="text-[10px] text-text-muted">Run multiple DM campaigns in parallel — each with its own template & volume.</p>
                   </div>
                   <button onClick={() => setWizardOpen(true)} className="px-3 py-1.5 rounded-lg bg-brand-accent text-white text-[11px] font-semibold flex items-center gap-1.5 hover:scale-[1.02] transition-transform">
                     <Plus size={12} /> New Campaign
                   </button>
                 </div>
                 {campaigns.length === 0 ? (
-                  <div className="card p-10 text-center">
+                  <div className="glass rounded-xl p-10 text-center">
                     <EmptyIllustration icon={<Target size={40} />} />
                     <h3 className="text-sm font-semibold mt-3">No campaigns yet</h3>
-                    <p className="text-[11px] text-muted mt-1">Spin up your first campaign in under 60 seconds.</p>
+                    <p className="text-[11px] text-text-muted mt-1">Spin up your first campaign in under 60 seconds.</p>
                     <button onClick={() => setWizardOpen(true)} className="mt-4 px-4 py-2 rounded-lg bg-brand-accent text-white text-[11px] font-semibold inline-flex items-center gap-1.5">
                       <Plus size={12} /> Create campaign
                     </button>
@@ -876,7 +876,7 @@ export default function DMControllerPage() {
                       const replyRate = c.sent ? ((c.replied / c.sent) * 100).toFixed(1) : "0.0";
                       const progressPct = c.leads ? Math.round((c.sent / c.leads) * 100) : 0;
                       return (
-                        <div key={c.id} className="card p-4 hover:border-[rgba(59,130,246,0.2)] transition-all">
+                        <div key={c.id} className="glass rounded-xl p-4 hover:border-[rgba(59,130,246,0.2)] transition-all">
                           <div className="flex items-start gap-3">
                             <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
                               {platform?.icon(22)}
@@ -886,7 +886,7 @@ export default function DMControllerPage() {
                                 <p className="text-xs font-semibold truncate">{c.name}</p>
                                 <StatusBadge status={c.status} />
                               </div>
-                              <div className="mt-1.5 flex items-center gap-3 text-[10px] text-muted flex-wrap">
+                              <div className="mt-1.5 flex items-center gap-3 text-[10px] text-text-muted flex-wrap">
                                 <span className="flex items-center gap-1"><Users size={9} /> {c.leads} leads</span>
                                 <span className="flex items-center gap-1"><Send size={9} /> {c.sent} sent</span>
                                 <span className="flex items-center gap-1 text-green-400"><MessageSquare size={9} /> {c.replied} replies · {replyRate}%</span>
@@ -906,19 +906,19 @@ export default function DMControllerPage() {
                             </div>
                             <div className="flex items-center gap-1">
                               <button onClick={() => toggleCampaign(c.id)} title={c.status === "running" ? "Pause" : "Play"}
-                                className="p-2 rounded-lg border border-border hover:border-[rgba(59,130,246,0.25)] transition-all">
+                                className="p-2 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.25)] transition-all">
                                 {c.status === "running" ? <Pause size={12} /> : <Play size={12} />}
                               </button>
                               <button onClick={() => setActiveTab("analytics")} title="Analytics"
-                                className="p-2 rounded-lg border border-border hover:border-[rgba(59,130,246,0.25)] transition-all">
+                                className="p-2 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.25)] transition-all">
                                 <BarChart3 size={12} />
                               </button>
                               <button onClick={() => setActiveTab("setup")} title="Edit"
-                                className="p-2 rounded-lg border border-border hover:border-[rgba(59,130,246,0.25)] transition-all">
+                                className="p-2 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.25)] transition-all">
                                 <Edit3 size={12} />
                               </button>
                               <button onClick={() => deleteCampaign(c.id)} title="Delete"
-                                className="p-2 rounded-lg border border-border hover:border-red-400/40 hover:text-red-400 transition-all">
+                                className="p-2 rounded-lg border border-border-subtle hover:border-red-400/40 hover:text-red-400 transition-all">
                                 <Trash2 size={12} />
                               </button>
                             </div>
@@ -936,12 +936,12 @@ export default function DMControllerPage() {
                 <div className="flex flex-wrap items-center gap-1.5">
                   <button onClick={() => setTemplateFilter("all")}
                     className={cn("text-[10px] px-2.5 py-1 rounded-lg border transition-all",
-                      templateFilter === "all" ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
+                      templateFilter === "all" ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border-subtle text-text-muted"
                     )}>All ({templates.length})</button>
                   {TEMPLATE_GOALS.map(g => (
                     <button key={g.id} onClick={() => setTemplateFilter(g.id)}
                       className={cn("text-[10px] px-2.5 py-1 rounded-lg border transition-all flex items-center gap-1",
-                        templateFilter === g.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border text-muted"
+                        templateFilter === g.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border-subtle text-text-muted"
                       )}><g.icon size={9} className={g.color} /> {g.label}</button>
                   ))}
                   <div className="ml-auto">
@@ -965,10 +965,10 @@ export default function DMControllerPage() {
                 </div>
 
                 {templates.filter(t => templateFilter === "all" || t.goal === templateFilter).length === 0 ? (
-                  <div className="card p-10 text-center">
+                  <div className="glass rounded-xl p-10 text-center">
                     <EmptyIllustration icon={<Copy size={40} />} />
                     <h3 className="text-sm font-semibold mt-3">No templates in this category</h3>
-                    <p className="text-[11px] text-muted mt-1">Try another filter or create a new one.</p>
+                    <p className="text-[11px] text-text-muted mt-1">Try another filter or create a new one.</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -977,7 +977,7 @@ export default function DMControllerPage() {
                       const isOptimizing = optimizing === t.id;
                       const isOptimized = optimizeResult?.id === t.id;
                       return (
-                        <div key={t.id} className="card p-4 space-y-2">
+                        <div key={t.id} className="glass rounded-xl p-4 space-y-2">
                           <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0">
                               <div className="flex items-center gap-1.5 flex-wrap">
@@ -985,14 +985,14 @@ export default function DMControllerPage() {
                                 <p className="text-xs font-semibold truncate">{t.name}</p>
                                 {t.custom && <span className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">Custom</span>}
                               </div>
-                              <p className="text-[9px] text-muted uppercase tracking-wider mt-0.5">{goal?.label}</p>
+                              <p className="text-[9px] text-text-muted uppercase tracking-wider mt-0.5">{goal?.label}</p>
                             </div>
-                            <button onClick={() => setTemplates(ts => ts.filter(x => x.id !== t.id))} className="text-muted hover:text-red-400 p-1">
+                            <button onClick={() => setTemplates(ts => ts.filter(x => x.id !== t.id))} className="text-text-muted hover:text-red-400 p-1">
                               <Trash2 size={11} />
                             </button>
                           </div>
 
-                          <div className="space-y-1.5 pt-1 border-t border-border">
+                          <div className="space-y-1.5 pt-1 border-t border-border-subtle">
                             <TemplateField label="Subject"     value={t.subject}      onChange={v => setTemplates(ts => ts.map(x => x.id === t.id ? { ...x, subject: v } : x))}     />
                             <TemplateField label="Opener"      value={t.opener}       onChange={v => setTemplates(ts => ts.map(x => x.id === t.id ? { ...x, opener: v } : x))}      />
                             <TemplateField label="Value prop"  value={t.value}        onChange={v => setTemplates(ts => ts.map(x => x.id === t.id ? { ...x, value: v } : x))}       />
@@ -1004,18 +1004,18 @@ export default function DMControllerPage() {
                             <div className="p-2.5 rounded-lg border border-purple-400/30 bg-purple-400/[0.04] text-[10px] space-y-1.5">
                               <div className="flex items-center gap-1.5 text-purple-300 font-semibold"><Wand2 size={10} /> AI Optimized</div>
                               {optimizeResult.result.optimized_template && (
-                                <p className="text-foreground leading-relaxed">&quot;{optimizeResult.result.optimized_template}&quot;</p>
+                                <p className="text-text-primary leading-relaxed">&quot;{optimizeResult.result.optimized_template}&quot;</p>
                               )}
                               <div className="flex items-center gap-3">
                                 {typeof optimizeResult.result.predicted_reply_lift_pct === "number" && (
                                   <span className="text-green-400">+{optimizeResult.result.predicted_reply_lift_pct}% predicted lift</span>
                                 )}
                                 {typeof optimizeResult.result.safety_score === "number" && (
-                                  <span className="text-muted">Safety: {optimizeResult.result.safety_score}/100</span>
+                                  <span className="text-text-muted">Safety: {optimizeResult.result.safety_score}/100</span>
                                 )}
                               </div>
                               {optimizeResult.result.improvements && optimizeResult.result.improvements.length > 0 && (
-                                <ul className="space-y-0.5 text-muted">
+                                <ul className="space-y-0.5 text-text-muted">
                                   {optimizeResult.result.improvements.slice(0, 3).map((it, i) => (
                                     <li key={i} className="flex gap-1"><ChevronRight size={9} className="shrink-0 mt-0.5" /> {it}</li>
                                   ))}
@@ -1056,9 +1056,9 @@ export default function DMControllerPage() {
               <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
                 <div className="lg:col-span-2 space-y-2 max-h-[70vh] overflow-y-auto pr-1">
                   {inbox.length === 0 ? (
-                    <div className="card p-8 text-center">
+                    <div className="glass rounded-xl p-8 text-center">
                       <EmptyIllustration icon={<Inbox size={36} />} />
-                      <p className="text-xs text-muted mt-2">No replies yet. Start a campaign to see inbound DMs.</p>
+                      <p className="text-xs text-text-muted mt-2">No replies yet. Start a campaign to see inbound DMs.</p>
                     </div>
                   ) : inbox.map(r => (
                     <button
@@ -1077,8 +1077,8 @@ export default function DMControllerPage() {
                             <SentimentBadge sentiment={r.sentiment} />
                             {r.status !== "new" && <StatusChip status={r.status} />}
                           </div>
-                          <p className="text-[10px] text-muted line-clamp-2 mt-0.5">{r.preview}</p>
-                          <p className="text-[9px] text-muted mt-1">{r.timestamp}</p>
+                          <p className="text-[10px] text-text-muted line-clamp-2 mt-0.5">{r.preview}</p>
+                          <p className="text-[9px] text-text-muted mt-1">{r.timestamp}</p>
                         </div>
                       </div>
                     </button>
@@ -1086,13 +1086,13 @@ export default function DMControllerPage() {
                 </div>
                 <div className="lg:col-span-3">
                   {openReply ? (
-                    <div className="card p-4 space-y-3">
-                      <div className="flex items-center justify-between gap-2 pb-3 border-b border-border">
+                    <div className="glass rounded-xl p-4 space-y-3">
+                      <div className="flex items-center justify-between gap-2 pb-3 border-b border-border-subtle">
                         <div className="flex items-center gap-2 min-w-0">
                           {platformIcon(openReply.platform, 22)}
                           <div className="min-w-0">
                             <p className="text-sm font-semibold truncate">{openReply.from}</p>
-                            <p className="text-[10px] text-muted">{platformName(openReply.platform)} · {openReply.timestamp}</p>
+                            <p className="text-[10px] text-text-muted">{platformName(openReply.platform)} · {openReply.timestamp}</p>
                           </div>
                         </div>
                         <SentimentBadge sentiment={openReply.sentiment} />
@@ -1101,7 +1101,7 @@ export default function DMControllerPage() {
                       {/* Conversation thread */}
                       <div className="space-y-2">
                         <div className="max-w-[85%] px-3 py-2 rounded-bl-sm bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[11px] text-[#374151]">
-                          <p className="text-[9px] text-muted mb-1">You</p>
+                          <p className="text-[9px] text-text-muted mb-1">You</p>
                           {openReply.original}
                         </div>
                         <div className="max-w-[85%] ml-auto px-3 py-2 rounded-br-sm bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-[11px] text-[#374151]">
@@ -1111,7 +1111,7 @@ export default function DMControllerPage() {
                       </div>
 
                       {/* AI Replies */}
-                      <div className="pt-2 border-t border-border">
+                      <div className="pt-2 border-t border-border-subtle">
                         <div className="flex items-center justify-between mb-2">
                           <h4 className="text-xs font-semibold flex items-center gap-1.5"><Sparkles size={11} className="text-purple-400" /> AI Reply Drafts</h4>
                           <button
@@ -1132,44 +1132,44 @@ export default function DMControllerPage() {
                                   <span className="text-[9px] uppercase tracking-wider text-purple-300 font-semibold">{r.tone}</span>
                                 </div>
                                 <p className="text-[11px] leading-relaxed">{r.text}</p>
-                                {r.cta && <p className="text-[9px] text-muted italic">CTA: {r.cta}</p>}
+                                {r.cta && <p className="text-[9px] text-text-muted italic">CTA: {r.cta}</p>}
                                 <div className="flex items-center gap-1.5 pt-1">
-                                  <button onClick={() => navigator.clipboard?.writeText(r.text)} className="text-[9px] px-2 py-0.5 rounded border border-border text-muted hover:text-foreground">Copy</button>
+                                  <button onClick={() => navigator.clipboard?.writeText(r.text)} className="text-[9px] px-2 py-0.5 rounded border border-border-subtle text-text-muted hover:text-text-primary">Copy</button>
                                   <button className="text-[9px] px-2 py-0.5 rounded border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent">Use this</button>
                                 </div>
                               </div>
                             ))}
                           </div>
                         ) : !aiReplyLoading && !aiReplyError ? (
-                          <p className="text-[10px] text-muted italic">Click &quot;Suggest Reply&quot; to get 3 AI-drafted responses.</p>
+                          <p className="text-[10px] text-text-muted italic">Click &quot;Suggest Reply&quot; to get 3 AI-drafted responses.</p>
                         ) : null}
                       </div>
 
                       {/* Actions */}
-                      <div className="flex items-center gap-1.5 pt-2 border-t border-border">
+                      <div className="flex items-center gap-1.5 pt-2 border-t border-border-subtle">
                         <button
                           onClick={() => setInbox(ibx => ibx.map(x => x.id === openReply.id ? { ...x, status: "closed" } : x))}
-                          className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border hover:border-[rgba(0,0,0,0.14)] text-muted hover:text-foreground flex items-center justify-center gap-1.5">
+                          className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border-subtle hover:border-[rgba(0,0,0,0.14)] text-text-muted hover:text-text-primary flex items-center justify-center gap-1.5">
                           <CheckCircle size={10} /> Close
                         </button>
                         <button
                           onClick={() => setInbox(ibx => ibx.map(x => x.id === openReply.id ? { ...x, status: "handed_off" } : x))}
-                          className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border hover:border-blue-400/30 text-muted hover:text-blue-400 flex items-center justify-center gap-1.5">
+                          className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border-subtle hover:border-blue-400/30 text-text-muted hover:text-blue-400 flex items-center justify-center gap-1.5">
                           <UserCheck size={10} /> Hand off
                         </button>
                         <button
                           onClick={() => setInbox(ibx => ibx.map(x => x.id === openReply.id ? { ...x, status: "needs_human" } : x))}
-                          className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border hover:border-amber-400/30 text-muted hover:text-amber-400 flex items-center justify-center gap-1.5">
+                          className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border-subtle hover:border-amber-400/30 text-text-muted hover:text-amber-400 flex items-center justify-center gap-1.5">
                           <Flag size={10} /> Needs human
                         </button>
                       </div>
                     </div>
                   ) : (
-                    <div className="card p-10 text-center h-full flex items-center justify-center">
+                    <div className="glass rounded-xl p-10 text-center h-full flex items-center justify-center">
                       <div>
                         <EmptyIllustration icon={<MessageSquare size={40} />} />
                         <h3 className="text-sm font-semibold mt-3">Select a reply</h3>
-                        <p className="text-[11px] text-muted mt-1">Pick a conversation from the left to view & respond.</p>
+                        <p className="text-[11px] text-text-muted mt-1">Pick a conversation from the left to view & respond.</p>
                       </div>
                     </div>
                   )}
@@ -1211,7 +1211,7 @@ export default function DMControllerPage() {
                 </div>
 
                 {/* Per-platform breakdown */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><TrendingUp size={12} className="text-brand-accent" /> By Platform</h3>
                   <div className="space-y-3">
                     {PLATFORMS.map(p => {
@@ -1223,7 +1223,7 @@ export default function DMControllerPage() {
                         <div key={p.id}>
                           <div className="flex items-center justify-between mb-1">
                             <span className="text-xs font-medium flex items-center gap-2">{p.icon(14)} {p.name}</span>
-                            <span className="text-xs text-muted">{sent} sent · {replied} replies · {rate.toFixed(1)}%</span>
+                            <span className="text-xs text-text-muted">{sent} sent · {replied} replies · {rate.toFixed(1)}%</span>
                           </div>
                           <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-2 overflow-hidden">
                             <div className="h-full rounded-full bg-brand-accent transition-all" style={{ width: `${Math.min(100, rate * 5)}%` }} />
@@ -1235,25 +1235,25 @@ export default function DMControllerPage() {
                 </div>
 
                 {/* Per-campaign leaderboard */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Star size={12} className="text-brand-accent" /> Campaign Leaderboard</h3>
                   {campaigns.length === 0 ? (
-                    <p className="text-[10px] text-muted">No campaigns yet.</p>
+                    <p className="text-[10px] text-text-muted">No campaigns yet.</p>
                   ) : (
                     <div className="space-y-2">
                       {[...campaigns].sort((a, b) => (b.replied / Math.max(b.sent, 1)) - (a.replied / Math.max(a.sent, 1))).slice(0, 6).map((c, i) => {
                         const rate = c.sent ? ((c.replied / c.sent) * 100).toFixed(1) : "0.0";
                         return (
-                          <div key={c.id} className="flex items-center gap-3 p-2 rounded-lg border border-border">
+                          <div key={c.id} className="flex items-center gap-3 p-2 rounded-lg border border-border-subtle">
                             <div className="w-6 h-6 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent text-[10px] font-bold flex items-center justify-center">{i + 1}</div>
                             <div className="shrink-0">{platformIcon(c.platform, 14)}</div>
                             <div className="flex-1 min-w-0">
                               <p className="text-xs truncate">{c.name}</p>
-                              <p className="text-[10px] text-muted">{c.sent} sent · {c.replied} replies</p>
+                              <p className="text-[10px] text-text-muted">{c.sent} sent · {c.replied} replies</p>
                             </div>
                             <div className="text-right">
                               <p className="text-sm font-bold font-mono text-green-400">{rate}%</p>
-                              <p className="text-[9px] text-muted">reply rate</p>
+                              <p className="text-[9px] text-text-muted">reply rate</p>
                             </div>
                           </div>
                         );
@@ -1264,7 +1264,7 @@ export default function DMControllerPage() {
 
                 {/* AI Insights + heatmap */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Lightbulb size={12} className="text-purple-400" /> AI Insights</h3>
                     <div className="space-y-2">
                       <InsightBubble tone="positive">
@@ -1281,10 +1281,10 @@ export default function DMControllerPage() {
                       </InsightBubble>
                     </div>
                   </div>
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Calendar size={12} className="text-brand-accent" /> Best Time Heatmap</h3>
                     <Heatmap />
-                    <p className="text-[9px] text-muted mt-2">Darker = higher reply rate · based on the last 30 days of campaign data.</p>
+                    <p className="text-[9px] text-text-muted mt-2">Darker = higher reply rate · based on the last 30 days of campaign data.</p>
                   </div>
                 </div>
               </div>
@@ -1292,7 +1292,7 @@ export default function DMControllerPage() {
                TAB 6 · AUTOMATION
                ============================================================= */}{activeTab === "automation" && (
               <div className="space-y-4">
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-xs font-semibold flex items-center gap-2"><Zap size={12} className="text-brand-accent" /> Automation Rules</h3>
                     <button
@@ -1308,11 +1308,11 @@ export default function DMControllerPage() {
                     </button>
                   </div>
                   {rules.length === 0 ? (
-                    <p className="text-[10px] text-muted py-4 text-center">No automation rules configured.</p>
+                    <p className="text-[10px] text-text-muted py-4 text-center">No automation rules configured.</p>
                   ) : (
                     <div className="space-y-2">
                       {rules.map(r => (
-                        <div key={r.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+                        <div key={r.id} className="flex items-center gap-3 p-3 rounded-lg border border-border-subtle">
                           <div className="shrink-0 w-8 h-8 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
                             {r.type === "auto_reply"    && <MessageSquare size={14} className="text-brand-accent" />}
                             {r.type === "auto_followup" && <RefreshCw size={14} className="text-brand-accent" />}
@@ -1321,7 +1321,7 @@ export default function DMControllerPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-semibold">{r.label}</p>
-                            <p className="text-[10px] text-muted">{r.config}</p>
+                            <p className="text-[10px] text-text-muted">{r.config}</p>
                           </div>
                           <button
                             onClick={() => setRules(rs => rs.map(x => x.id === r.id ? { ...x, enabled: !x.enabled } : x))}
@@ -1334,15 +1334,15 @@ export default function DMControllerPage() {
                               r.enabled ? "left-[22px]" : "left-0.5"
                             )} />
                           </button>
-                          <button className="p-1.5 rounded-lg border border-border text-muted hover:text-foreground" aria-label="Edit rule"><Edit3 size={11} /></button>
-                          <button onClick={() => setRules(rs => rs.filter(x => x.id !== r.id))} className="p-1.5 rounded-lg border border-border text-muted hover:text-red-400" aria-label="Delete rule"><Trash2 size={11} /></button>
+                          <button className="p-1.5 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary" aria-label="Edit rule"><Edit3 size={11} /></button>
+                          <button onClick={() => setRules(rs => rs.filter(x => x.id !== r.id))} className="p-1.5 rounded-lg border border-border-subtle text-text-muted hover:text-red-400" aria-label="Delete rule"><Trash2 size={11} /></button>
                         </div>
                       ))}
                     </div>
                   )}
                 </div>
 
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><GitBranch size={12} className="text-brand-accent" /> Available Automation Types</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <TypeCard title="Auto-reply to keywords"  desc="Match inbound keywords → fire template response instantly" icon={<MessageSquare size={14} />} />
@@ -1357,13 +1357,13 @@ export default function DMControllerPage() {
                ============================================================= */}{activeTab === "compliance" && (
               <div className="space-y-4">
                 {/* Rate-limit status */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Shield size={12} className="text-brand-accent" /> Rate Limit Status · per platform</h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {PLATFORMS.map(p => {
                       const usage = Math.floor(Math.random() * 80);
                       return (
-                        <div key={p.id} className="p-3 rounded-lg border border-border">
+                        <div key={p.id} className="p-3 rounded-lg border border-border-subtle">
                           <div className="flex items-center gap-2 mb-2">
                             {p.icon(16)}
                             <span className="text-xs font-semibold">{p.name}</span>
@@ -1374,7 +1374,7 @@ export default function DMControllerPage() {
                               usage > 70 ? "bg-red-500" : usage > 40 ? "bg-amber-500" : "bg-green-500"
                             )} style={{ width: `${usage}%` }} />
                           </div>
-                          <p className="text-[9px] text-muted">{usage}% of daily quota</p>
+                          <p className="text-[9px] text-text-muted">{usage}% of daily quota</p>
                         </div>
                       );
                     })}
@@ -1382,7 +1382,7 @@ export default function DMControllerPage() {
                 </div>
 
                 {/* Warm-up progress per account */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Flame size={12} className="text-orange-400" /> Warm-Up Progress</h3>
                   <div className="space-y-2">
                     {PLATFORMS.map((p, idx) => {
@@ -1392,7 +1392,7 @@ export default function DMControllerPage() {
                         <div key={p.id}>
                           <div className="flex items-center justify-between mb-1">
                             <span className="text-xs font-medium flex items-center gap-2">{p.icon(14)} {p.name}</span>
-                            <span className="text-[10px] text-muted">Day {day} / 7</span>
+                            <span className="text-[10px] text-text-muted">Day {day} / 7</span>
                           </div>
                           <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 overflow-hidden">
                             <div className="h-full rounded-full bg-orange-500" style={{ width: `${pct}%` }} />
@@ -1404,10 +1404,10 @@ export default function DMControllerPage() {
                 </div>
 
                 {/* Blacklist · usernames */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-xs font-semibold flex items-center gap-2"><Ban size={12} className="text-red-400" /> Username Blacklist</h3>
-                    <span className="text-[10px] text-muted">{blacklist.length} entries</span>
+                    <span className="text-[10px] text-text-muted">{blacklist.length} entries</span>
                   </div>
                   <div className="flex items-center gap-2 mb-3">
                     <input
@@ -1420,7 +1420,7 @@ export default function DMControllerPage() {
                         }
                       }}
                       placeholder="@username or handle · Enter to add"
-                      className="flex-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground"
+                      className="flex-1 rounded-lg border border-border-subtle bg-surface px-3 py-1.5 text-xs text-text-primary"
                     />
                     <button
                       onClick={() => {
@@ -1434,19 +1434,19 @@ export default function DMControllerPage() {
                     </button>
                   </div>
                   {blacklist.length === 0 ? (
-                    <p className="text-[10px] text-muted text-center py-4">No blacklisted accounts.</p>
+                    <p className="text-[10px] text-text-muted text-center py-4">No blacklisted accounts.</p>
                   ) : (
                     <div className="space-y-1.5">
                       {blacklist.map((b, i) => (
-                        <div key={i} className="flex items-center justify-between p-2.5 rounded-lg border border-border">
+                        <div key={i} className="flex items-center justify-between p-2.5 rounded-lg border border-border-subtle">
                           <div className="flex items-center gap-2.5">
                             <Ban size={12} className="text-red-400" />
                             <div>
                               <p className="text-xs">{b.name}</p>
-                              <p className="text-[9px] text-muted">{b.platform} · {b.reason} · {b.date}</p>
+                              <p className="text-[9px] text-text-muted">{b.platform} · {b.reason} · {b.date}</p>
                             </div>
                           </div>
-                          <button onClick={() => setBlacklist(bl => bl.filter((_, idx) => idx !== i))} className="text-muted hover:text-red-400">
+                          <button onClick={() => setBlacklist(bl => bl.filter((_, idx) => idx !== i))} className="text-text-muted hover:text-red-400">
                             <Trash2 size={11} />
                           </button>
                         </div>
@@ -1456,10 +1456,10 @@ export default function DMControllerPage() {
                 </div>
 
                 {/* Keyword blacklist */}
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-xs font-semibold flex items-center gap-2"><AlertTriangle size={12} className="text-amber-400" /> Keyword Blocklist</h3>
-                    <span className="text-[10px] text-muted">{keywordBlacklist.length} entries</span>
+                    <span className="text-[10px] text-text-muted">{keywordBlacklist.length} entries</span>
                   </div>
                   <div className="flex items-center gap-2 mb-3">
                     <input
@@ -1472,7 +1472,7 @@ export default function DMControllerPage() {
                         }
                       }}
                       placeholder="Keyword · Enter to add"
-                      className="flex-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground"
+                      className="flex-1 rounded-lg border border-border-subtle bg-surface px-3 py-1.5 text-xs text-text-primary"
                     />
                   </div>
                   <div className="flex flex-wrap gap-1.5">
@@ -1484,23 +1484,23 @@ export default function DMControllerPage() {
                         </button>
                       </span>
                     ))}
-                    {keywordBlacklist.length === 0 && <p className="text-[10px] text-muted">No keywords blocked.</p>}
+                    {keywordBlacklist.length === 0 && <p className="text-[10px] text-text-muted">No keywords blocked.</p>}
                   </div>
                 </div>
 
                 {/* Opt-out / DNC */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><MinusCircle size={12} className="text-amber-400" /> Opt-out list</h3>
-                    <p className="text-[10px] text-muted mb-2">Accounts that asked to be removed. Auto-enforced across platforms.</p>
-                    <div className="text-[10px] text-muted text-center py-2">
+                    <p className="text-[10px] text-text-muted mb-2">Accounts that asked to be removed. Auto-enforced across platforms.</p>
+                    <div className="text-[10px] text-text-muted text-center py-2">
                       0 opt-outs recorded.
                     </div>
                   </div>
-                  <div className="card p-4">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><ShieldAlert size={12} className="text-red-400" /> Do-not-contact</h3>
-                    <p className="text-[10px] text-muted mb-2">Legally-mandated exclusions. Sync with your CRM.</p>
-                    <div className="text-[10px] text-muted text-center py-2">
+                    <p className="text-[10px] text-text-muted mb-2">Legally-mandated exclusions. Sync with your CRM.</p>
+                    <div className="text-[10px] text-text-muted text-center py-2">
                       0 DNC records.
                     </div>
                   </div>
@@ -1521,7 +1521,7 @@ export default function DMControllerPage() {
                         {p.icon(20)}
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-semibold">{p.name}</p>
-                          <p className="text-[9px] text-muted">{sessionsActive ? "Active session" : "Idle"}</p>
+                          <p className="text-[9px] text-text-muted">{sessionsActive ? "Active session" : "Idle"}</p>
                         </div>
                         {sessionsActive && <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />}
                       </div>
@@ -1529,14 +1529,14 @@ export default function DMControllerPage() {
                   })}
                 </div>
 
-                <div className="card p-4">
+                <div className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-xs font-semibold flex items-center gap-2">
-                      <Activity size={12} className={cn(running ? "text-green-400" : "text-muted")} />
+                      <Activity size={12} className={cn(running ? "text-green-400" : "text-text-muted")} />
                       Real-time Activity
                     </h3>
                     <div className="flex items-center gap-2">
-                      <button onClick={() => setLiveEvents([])} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground">Clear</button>
+                      <button onClick={() => setLiveEvents([])} className="text-[10px] px-2.5 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary">Clear</button>
                       {running && (
                         <button onClick={() => setRunning(false)} className="text-[10px] px-2.5 py-1 rounded-lg bg-red-500 text-white flex items-center gap-1.5">
                           <PauseCircle size={10} /> Pause all
@@ -1548,11 +1548,11 @@ export default function DMControllerPage() {
                     {liveEvents.length === 0 ? (
                       <div className="text-center py-10">
                         <EmptyIllustration icon={<Activity size={36} />} />
-                        <p className="text-xs text-muted mt-2">No activity. {running ? "Events will stream in real-time." : "Start a campaign to see live events."}</p>
+                        <p className="text-xs text-text-muted mt-2">No activity. {running ? "Events will stream in real-time." : "Start a campaign to see live events."}</p>
                       </div>
                     ) : liveEvents.map(ev => (
                       <div key={ev.id} className="flex items-center gap-2.5 p-2 rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.03)]">
-                        <span className="text-[9px] font-mono text-muted shrink-0 w-16">{ev.at}</span>
+                        <span className="text-[9px] font-mono text-text-muted shrink-0 w-16">{ev.at}</span>
                         <div className="shrink-0">{platformIcon(ev.platform, 12)}</div>
                         <LiveIcon kind={ev.kind} />
                         <p className="text-[10px] flex-1 truncate">
@@ -1605,7 +1605,7 @@ function StatTile({ label, value, icon, tone, index }: { label: string; value: s
     >
       <div className="p-3">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-[9px] text-muted uppercase tracking-wider">{label}</span>
+          <span className="text-[9px] text-text-muted uppercase tracking-wider">{label}</span>
           {icon && <span className={cn("opacity-70", toneClass)}>{icon}</span>}
         </div>
         <p className={cn("text-xl font-bold font-mono", toneClass)}>{value}</p>
@@ -1634,7 +1634,7 @@ function Meter({ label, value }: { label: string; value: number }) {
   const bar = rating === "green" ? "bg-green-400" : rating === "amber" ? "bg-amber-400" : "bg-red-400";
   return (
     <div>
-      <div className="flex items-center justify-between text-[9px] text-muted mb-0.5">
+      <div className="flex items-center justify-between text-[9px] text-text-muted mb-0.5">
         <span>{label}</span>
         <span className="font-mono">{Math.round(value)}</span>
       </div>
@@ -1649,18 +1649,18 @@ function StatusBadge({ status }: { status: CampaignStatus }) {
   const cfg = {
     running: { cls: "bg-green-400/10 text-green-400 border-green-400/30", label: "Running" },
     paused:  { cls: "bg-amber-400/10 text-amber-400 border-amber-400/30", label: "Paused" },
-    draft:   { cls: "bg-[rgba(0,0,0,0.04)] text-muted border-[rgba(0,0,0,0.08)]", label: "Draft" },
+    draft:   { cls: "bg-[rgba(0,0,0,0.04)] text-text-muted border-[rgba(0,0,0,0.08)]", label: "Draft" },
     done:    { cls: "bg-blue-400/10 text-blue-400 border-blue-400/30",    label: "Done" },
   }[status];
   return <span className={cn("text-[9px] px-2 py-0.5 rounded border", cfg.cls)}>{cfg.label}</span>;
 }
 
 function MiniStat({ label, value, tone }: { label: string; value: number; tone?: "blue" | "green" }) {
-  const c = tone === "blue" ? "text-brand-accent" : tone === "green" ? "text-green-400" : "text-foreground";
+  const c = tone === "blue" ? "text-brand-accent" : tone === "green" ? "text-green-400" : "text-text-primary";
   return (
     <div className="text-right">
       <p className={cn("text-xs font-bold font-mono", c)}>{value}</p>
-      <p className="text-[9px] text-muted">{label}</p>
+      <p className="text-[9px] text-text-muted">{label}</p>
     </div>
   );
 }
@@ -1670,7 +1670,7 @@ function SentimentBadge({ sentiment }: { sentiment: InboxReply["sentiment"] }) {
     positive: { cls: "bg-green-400/10 text-green-400 border-green-400/30",  label: "Positive", icon: ThumbsUp    },
     negative: { cls: "bg-red-400/10 text-red-400 border-red-400/30",        label: "Negative", icon: ThumbsDown  },
     question: { cls: "bg-blue-400/10 text-blue-400 border-blue-400/30",     label: "Question", icon: MessageSquare},
-    neutral:  { cls: "bg-[rgba(0,0,0,0.04)] text-muted border-[rgba(0,0,0,0.08)]", label: "Neutral", icon: MinusCircle },
+    neutral:  { cls: "bg-[rgba(0,0,0,0.04)] text-text-muted border-[rgba(0,0,0,0.08)]", label: "Neutral", icon: MinusCircle },
   }[sentiment];
   const Icon = cfg.icon;
   return <span className={cn("text-[9px] px-1.5 py-0.5 rounded border flex items-center gap-1", cfg.cls)}><Icon size={8} /> {cfg.label}</span>;
@@ -1679,7 +1679,7 @@ function SentimentBadge({ sentiment }: { sentiment: InboxReply["sentiment"] }) {
 function StatusChip({ status }: { status: InboxReply["status"] }) {
   const cfg = {
     new:          { cls: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]",            label: "New" },
-    closed:       { cls: "bg-[rgba(0,0,0,0.04)] text-muted border-[rgba(0,0,0,0.08)]", label: "Closed" },
+    closed:       { cls: "bg-[rgba(0,0,0,0.04)] text-text-muted border-[rgba(0,0,0,0.08)]", label: "Closed" },
     handed_off:   { cls: "bg-blue-400/10 text-blue-400 border-blue-400/30",label: "Handed off" },
     needs_human:  { cls: "bg-amber-400/10 text-amber-400 border-amber-400/30", label: "Needs human" },
   }[status];
@@ -1700,11 +1700,11 @@ function EmptyIllustration({ icon }: { icon: React.ReactNode }) {
 function TemplateField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   return (
     <div>
-      <label className="block text-[8px] uppercase tracking-wider text-muted mb-0.5">{label}</label>
+      <label className="block text-[8px] uppercase tracking-wider text-text-muted mb-0.5">{label}</label>
       <input
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-full rounded border border-border bg-surface px-2 py-1 text-[11px] text-foreground"
+        className="w-full rounded border border-border-subtle bg-surface px-2 py-1 text-[11px] text-text-primary"
       />
     </div>
   );
@@ -1712,21 +1712,21 @@ function TemplateField({ label, value, onChange }: { label: string; value: strin
 
 function TypeCard({ title, desc, icon }: { title: string; desc: string; icon: React.ReactNode }) {
   return (
-    <div className="p-3 rounded-lg border border-border hover:border-[rgba(59,130,246,0.2)] transition-all">
+    <div className="p-3 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.2)] transition-all">
       <div className="flex items-center gap-2 mb-1">
         <span className="text-brand-accent">{icon}</span>
         <p className="text-xs font-semibold">{title}</p>
       </div>
-      <p className="text-[10px] text-muted">{desc}</p>
+      <p className="text-[10px] text-text-muted">{desc}</p>
     </div>
   );
 }
 
 function InsightBubble({ tone, children }: { tone: "positive" | "warning" | "info"; children: React.ReactNode }) {
   const cls = {
-    positive: "border-green-400/20 bg-green-400/[0.03] text-foreground",
-    warning:  "border-amber-400/20 bg-amber-400/[0.03] text-foreground",
-    info:     "border-blue-400/20 bg-blue-400/[0.03] text-foreground",
+    positive: "border-green-400/20 bg-green-400/[0.03] text-text-primary",
+    warning:  "border-amber-400/20 bg-amber-400/[0.03] text-text-primary",
+    info:     "border-blue-400/20 bg-blue-400/[0.03] text-text-primary",
   }[tone];
   const icon = tone === "positive" ? <TrendingUp size={11} className="text-green-400" /> :
                tone === "warning"  ? <AlertTriangle size={11} className="text-amber-400" /> :
@@ -1753,11 +1753,11 @@ function Heatmap() {
       <div className="grid grid-cols-[auto_repeat(11,minmax(0,1fr))] gap-0.5">
         <div />
         {hours.map(h => (
-          <div key={h} className="text-[8px] text-muted text-center font-mono">{h}</div>
+          <div key={h} className="text-[8px] text-text-muted text-center font-mono">{h}</div>
         ))}
         {days.map((d, dIdx) => (
           <>
-            <div key={`d${dIdx}`} className="text-[8px] text-muted pr-1 text-right font-mono">{d}</div>
+            <div key={`d${dIdx}`} className="text-[8px] text-text-muted pr-1 text-right font-mono">{d}</div>
             {hours.map(h => {
               const v = heat(dIdx, h);
               return (
@@ -1781,7 +1781,7 @@ function LiveIcon({ kind }: { kind: LiveEvent["kind"] }) {
   if (kind === "typing") return <MoreVertical size={11} className="text-amber-400 shrink-0" />;
   if (kind === "sent")   return <Send size={11} className="text-green-400 shrink-0" />;
   if (kind === "reply")  return <MessageSquare size={11} className="text-brand-accent shrink-0" />;
-  return <AlertTriangle size={11} className="text-muted shrink-0" />;
+  return <AlertTriangle size={11} className="text-text-muted shrink-0" />;
 }
 
 function LiveLabel({ kind }: { kind: LiveEvent["kind"] }) {
@@ -1792,7 +1792,7 @@ function LiveLabel({ kind }: { kind: LiveEvent["kind"] }) {
     reply:  "Reply received from",
     skip:   "Skipped (blacklist)",
   };
-  return <span className="text-muted">{map[kind]}</span>;
+  return <span className="text-text-muted">{map[kind]}</span>;
 }
 
 /* ================================================================== *
@@ -1812,18 +1812,18 @@ function HowItWorksFlow() {
   }
   if (collapsed) {
     return (
-      <button onClick={() => setCollapsed(false)} className="text-[10px] text-muted hover:text-brand-accent flex items-center gap-1">
+      <button onClick={() => setCollapsed(false)} className="text-[10px] text-text-muted hover:text-brand-accent flex items-center gap-1">
         <span>💡</span> How does DM Controller work?
       </button>
     );
   }
   return (
-    <div className="card p-4 bg-gradient-to-br from-[rgba(59,130,246,0.04)] to-transparent border-[rgba(59,130,246,0.2)]">
+    <div className="glass rounded-xl p-4 bg-gradient-to-br from-[rgba(59,130,246,0.04)] to-transparent border-[rgba(59,130,246,0.2)]">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-xs font-semibold flex items-center gap-1.5">
           <span className="text-base">💡</span> How DM Controller works
         </h3>
-        <button onClick={dismiss} className="text-[9px] text-muted hover:text-foreground">Got it · Hide</button>
+        <button onClick={dismiss} className="text-[9px] text-text-muted hover:text-text-primary">Got it · Hide</button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
         {[
@@ -1832,12 +1832,12 @@ function HowItWorksFlow() {
           { n: 3, title: "Pick platform", desc: "Instagram, Facebook, LinkedIn, or TikTok — rotates across your senders", href: null, link: null },
           { n: 4, title: "Write & launch", desc: "AI-generated or custom message, schedule, monitor replies in Inbox tab", href: null, link: null },
         ].map(step => (
-          <div key={step.n} className="bg-surface-light/50 rounded-xl p-3 border border-border relative">
+          <div key={step.n} className="bg-surface-light/50 rounded-xl p-3 border border-border-subtle relative">
             <div className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-brand-accent text-white text-[10px] font-bold flex items-center justify-center">
               {step.n}
             </div>
             <h4 className="text-[11px] font-semibold mt-1">{step.title}</h4>
-            <p className="text-[9px] text-muted mt-1 leading-relaxed">{step.desc}</p>
+            <p className="text-[9px] text-text-muted mt-1 leading-relaxed">{step.desc}</p>
             {step.href && (
               <Link href={step.href} className="text-[9px] text-brand-accent hover:underline mt-1.5 inline-block">→ {step.link}</Link>
             )}
@@ -1870,14 +1870,14 @@ function LeadSourcePicker() {
   }, []);
 
   return (
-    <div className="card p-4">
+    <div className="glass rounded-xl p-4">
       <div className="flex items-center justify-between mb-3">
         <div>
           <h2 className="text-xs font-semibold flex items-center gap-1.5">
             <span className="w-5 h-5 rounded-full bg-brand-accent text-white text-[9px] font-bold flex items-center justify-center">1</span>
             Lead Source
           </h2>
-          <p className="text-[10px] text-muted mt-0.5">Where do the DMs go? Choose who you&apos;re contacting.</p>
+          <p className="text-[10px] text-text-muted mt-0.5">Where do the DMs go? Choose who you&apos;re contacting.</p>
         </div>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -1894,14 +1894,14 @@ function LeadSourcePicker() {
               onClick={() => setSource(opt.id as "scraped" | "campaign" | "crm" | "manual")}
               className={cn(
                 "text-left p-3 rounded-xl border transition-all",
-                active ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)]" : "bg-surface-light/30 border-border hover:border-[rgba(59,130,246,0.2)]"
+                active ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)]" : "bg-surface-light/30 border-border-subtle hover:border-[rgba(59,130,246,0.2)]"
               )}
             >
               <div className="flex items-center gap-1.5">
                 <span className="text-base">{opt.emoji}</span>
                 <p className="text-[11px] font-semibold">{opt.label}</p>
               </div>
-              <p className="text-[9px] text-muted mt-1">{opt.desc}</p>
+              <p className="text-[9px] text-text-muted mt-1">{opt.desc}</p>
               {active && opt.href && (
                 <Link href={opt.href} className="text-[9px] text-brand-accent hover:underline mt-1 block">Open →</Link>
               )}
@@ -1911,11 +1911,11 @@ function LeadSourcePicker() {
       </div>
       {/* Campaign dropdown if campaign selected */}
       {source === "campaign" && (
-        <div className="mt-3 p-3 rounded-lg bg-surface-light/40 border border-border">
-          <p className="text-[10px] text-muted mb-1.5">Pick a campaign to load its leads:</p>
+        <div className="mt-3 p-3 rounded-lg bg-surface-light/40 border border-border-subtle">
+          <p className="text-[10px] text-text-muted mb-1.5">Pick a campaign to load its leads:</p>
           {campaigns.length === 0 ? (
             <div className="flex items-center justify-between">
-              <p className="text-[10px] text-muted">No campaigns yet.</p>
+              <p className="text-[10px] text-text-muted">No campaigns yet.</p>
               <Link href="/dashboard/outreach-hub" className="text-[10px] text-brand-accent hover:underline">Create first →</Link>
             </div>
           ) : (
@@ -1977,14 +1977,14 @@ function SenderAccountPicker() {
   }, {} as Record<string, typeof accounts>);
 
   return (
-    <div className="card p-4">
+    <div className="glass rounded-xl p-4">
       <div className="flex items-center justify-between mb-3">
         <div>
           <h2 className="text-xs font-semibold flex items-center gap-1.5">
             <span className="w-5 h-5 rounded-full bg-brand-accent text-white text-[9px] font-bold flex items-center justify-center">2</span>
             Sender Accounts
           </h2>
-          <p className="text-[10px] text-muted mt-0.5">Which of YOUR accounts will send the DMs? Rotates across selected to avoid spam flags.</p>
+          <p className="text-[10px] text-text-muted mt-0.5">Which of YOUR accounts will send the DMs? Rotates across selected to avoid spam flags.</p>
         </div>
         <div className="hidden md:block">
           <InlineSocialConnect
@@ -1995,10 +1995,10 @@ function SenderAccountPicker() {
         </div>
       </div>
       {loading ? (
-        <p className="text-[10px] text-muted">Loading your connected accounts...</p>
+        <p className="text-[10px] text-text-muted">Loading your connected accounts...</p>
       ) : accounts.length === 0 ? (
-        <div className="py-5 border border-dashed border-border rounded-lg px-4">
-          <p className="text-xs text-muted mb-3 text-center">No accounts connected yet — connect one below to start</p>
+        <div className="py-5 border border-dashed border-border-subtle rounded-lg px-4">
+          <p className="text-xs text-text-muted mb-3 text-center">No accounts connected yet — connect one below to start</p>
           <InlineSocialConnect
             platforms={["instagram", "facebook", "linkedin", "tiktok"]}
             label="Connect"
@@ -2008,7 +2008,7 @@ function SenderAccountPicker() {
         <div className="space-y-3">
           {Object.entries(platformGroups).map(([platform, accs]) => (
             <div key={platform}>
-              <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5 capitalize">{platform} · {accs.length}</p>
+              <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1.5 capitalize">{platform} · {accs.length}</p>
               <div className="flex flex-wrap gap-1.5">
                 {accs.map(a => {
                   const isSelected = selected.has(a.id);
@@ -2020,7 +2020,7 @@ function SenderAccountPicker() {
                         "text-[10px] px-2.5 py-1.5 rounded-full border flex items-center gap-1.5 transition-all",
                         isSelected
                           ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent"
-                          : "bg-surface-light border-border text-muted hover:text-foreground"
+                          : "bg-surface-light border-border-subtle text-text-muted hover:text-text-primary"
                       )}
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-current" />
@@ -2032,7 +2032,7 @@ function SenderAccountPicker() {
               </div>
             </div>
           ))}
-          <p className="text-[9px] text-muted mt-2">
+          <p className="text-[9px] text-text-muted mt-2">
             {selected.size} of {accounts.length} active · DMs will rotate across these accounts
           </p>
         </div>

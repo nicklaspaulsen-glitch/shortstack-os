@@ -50,10 +50,10 @@ export default function PlanGate({ requiredPlan, clientPlan, children, featureNa
       <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(59,130,246,0.08)]">
         <ArrowUpCircle size={20} className="text-[#2563EB]" />
       </div>
-      <h3 className="text-sm font-semibold text-foreground mb-1">
+      <h3 className="text-sm font-semibold text-text-primary mb-1">
         {featureName ? `${featureName} requires` : "Upgrade to"} {requiredPlan}
       </h3>
-      <p className="text-xs text-muted mb-4 max-w-xs mx-auto">
+      <p className="text-xs text-text-muted mb-4 max-w-xs mx-auto">
         {clientPlan || "Starter"} plan doesn&apos;t include this feature.
         Upgrade to <span className="text-[#2563EB] font-medium">{requiredPlan}</span> to unlock it.
       </p>

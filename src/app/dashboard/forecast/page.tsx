@@ -93,7 +93,7 @@ function BarChart({ buckets }: { buckets: MonthBucket[] }) {
               style={{ transformOrigin: "bottom" }}
               className="flex-1 flex flex-col items-center gap-1.5 min-w-0"
             >
-              <span className="text-[10px] text-muted">{b.weighted > 0 ? fmt(b.weighted) : ""}</span>
+              <span className="text-[10px] text-text-muted">{b.weighted > 0 ? fmt(b.weighted) : ""}</span>
               <div className="w-full relative" style={{ height: "100px" }}>
                 <div
                   className={`absolute bottom-0 w-full rounded-t-md transition-all duration-500 ${
@@ -104,7 +104,7 @@ function BarChart({ buckets }: { buckets: MonthBucket[] }) {
                   style={{ height: `${heightPct}%` }}
                 />
               </div>
-              <span className="text-[10px] text-muted text-center leading-tight">{b.label}</span>
+              <span className="text-[10px] text-text-muted text-center leading-tight">{b.label}</span>
             </motion.div>
           );
         })}
@@ -153,7 +153,7 @@ export default function ForecastPage() {
               <PrismPanel padding="p-8" className="flex flex-col items-center gap-3 text-center">
                 <AlertCircle size={32} className="text-red-700" />
                 <p className="text-text-primary font-semibold">Failed to load deals</p>
-                <p className="text-muted text-sm">{error}</p>
+                <p className="text-text-muted text-sm">{error}</p>
                 <motion.button
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
@@ -209,9 +209,9 @@ export default function ForecastPage() {
 
                 {deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length === 0 ? (
                   <PrismPanel padding="p-10" className="flex flex-col items-center gap-3 text-center">
-                    <TrendingUp size={36} className="text-muted opacity-30" />
+                    <TrendingUp size={36} className="text-text-muted opacity-30" />
                     <p className="text-text-primary font-semibold">No open deals to forecast</p>
-                    <p className="text-muted text-sm max-w-xs">Add deals with expected close dates and probabilities to see your revenue forecast.</p>
+                    <p className="text-text-muted text-sm max-w-xs">Add deals with expected close dates and probabilities to see your revenue forecast.</p>
                     <a href="/dashboard/deals" className="btn-primary text-sm px-4 py-2 rounded-lg mt-2">Go to Deals ?</a>
                   </PrismPanel>
                 ) : (
@@ -223,11 +223,11 @@ export default function ForecastPage() {
                       <PrismPanel padding="p-0" className="overflow-hidden">
                         <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.06)]">
                           <p className="text-sm font-semibold text-text-primary">Likely to Close This Month</p>
-                          <p className="text-xs text-muted mt-0.5">Deals with =70% probability closing in {new Date().toLocaleString("default", { month: "long" })}</p>
+                          <p className="text-xs text-text-muted mt-0.5">Deals with =70% probability closing in {new Date().toLocaleString("default", { month: "long" })}</p>
                         </div>
                         <table className="w-full text-sm">
                           <thead>
-                            <tr className="border-b border-[rgba(0,0,0,0.06)] text-muted text-xs">
+                            <tr className="border-b border-[rgba(0,0,0,0.06)] text-text-muted text-xs">
                               <th className="text-left px-4 py-2.5 font-medium">Deal</th>
                               <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">Client</th>
                               <th className="text-right px-4 py-2.5 font-medium">Value</th>
@@ -248,7 +248,7 @@ export default function ForecastPage() {
                                 className="hover:bg-blue-500/5 transition-colors"
                               >
                                 <td className="px-4 py-3 text-text-primary font-medium">{d.title}</td>
-                                <td className="px-4 py-3 text-muted hidden sm:table-cell">{d.client_name}</td>
+                                <td className="px-4 py-3 text-text-muted hidden sm:table-cell">{d.client_name}</td>
                                 <td className="px-4 py-3 text-right text-text-primary">{fmt(d.value)}</td>
                                 <td className="px-4 py-3 text-right hidden md:table-cell">
                                   <span className="text-xs bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 rounded-full">
@@ -272,7 +272,7 @@ export default function ForecastPage() {
                       </div>
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="border-b border-[rgba(0,0,0,0.06)] text-muted text-xs">
+                          <tr className="border-b border-[rgba(0,0,0,0.06)] text-text-muted text-xs">
                             <th className="text-left px-4 py-2.5 font-medium">Deal</th>
                             <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">Stage</th>
                             <th className="text-right px-4 py-2.5 font-medium">Value</th>
@@ -297,13 +297,13 @@ export default function ForecastPage() {
                               >
                                 <td className="px-4 py-3">
                                   <p className="text-text-primary">{d.title}</p>
-                                  <p className="text-muted text-xs">{d.client_name}</p>
+                                  <p className="text-text-muted text-xs">{d.client_name}</p>
                                 </td>
-                                <td className="px-4 py-3 text-muted text-xs hidden sm:table-cell">
+                                <td className="px-4 py-3 text-text-muted text-xs hidden sm:table-cell">
                                   {d.stage.replace(/_/g, " ")}
                                 </td>
                                 <td className="px-4 py-3 text-right text-text-primary">{fmt(d.value)}</td>
-                                <td className="px-4 py-3 text-right text-muted hidden md:table-cell">
+                                <td className="px-4 py-3 text-right text-text-muted hidden md:table-cell">
                                   {d.expected_close_date
                                     ? new Date(d.expected_close_date).toLocaleDateString()
                                     : "�"}

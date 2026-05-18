@@ -16,9 +16,9 @@ interface SelfTestHistoryProps {
 export default function SelfTestHistory({ runs }: SelfTestHistoryProps) {
   if (!runs) {
     return (
-      <div className=" border border-border bg-surface p-4">
-        <h2 className="text-xs font-bold mb-3 text-foreground">Self-test history</h2>
-        <p className="text-[11px] text-muted">Unavailable</p>
+      <div className=" border border-border-subtle bg-surface p-4">
+        <h2 className="text-xs font-bold mb-3 text-text-primary">Self-test history</h2>
+        <p className="text-[11px] text-text-muted">Unavailable</p>
       </div>
     );
   }
@@ -26,9 +26,9 @@ export default function SelfTestHistory({ runs }: SelfTestHistoryProps) {
   const maxTotal = Math.max(...runs.map((r) => r.total), 1);
 
   return (
-    <div className=" border border-border bg-surface p-4">
+    <div className=" border border-border-subtle bg-surface p-4">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-xs font-bold text-foreground">Self-test history</h2>
+        <h2 className="text-xs font-bold text-text-primary">Self-test history</h2>
         <Link
           href="/dashboard/admin/self-test"
           className="text-[10px] text-accent hover:underline"
@@ -38,7 +38,7 @@ export default function SelfTestHistory({ runs }: SelfTestHistoryProps) {
       </div>
 
       {runs.length === 0 ? (
-        <p className="text-[11px] text-muted">No runs yet.</p>
+        <p className="text-[11px] text-text-muted">No runs yet.</p>
       ) : (
         <div className="space-y-2">
           {/* Sparkline */}
@@ -69,14 +69,14 @@ export default function SelfTestHistory({ runs }: SelfTestHistoryProps) {
             return (
               <div
                 key={run.run_id}
-                className="flex items-center gap-3 text-[11px] border-t border-border pt-2"
+                className="flex items-center gap-3 text-[11px] border-t border-border-subtle pt-2"
               >
                 {allGreen ? (
                   <CheckCircle2 size={12} className="shrink-0 text-success" />
                 ) : (
                   <XCircle size={12} className="shrink-0 text-danger" />
                 )}
-                <span className="text-muted flex-1">
+                <span className="text-text-muted flex-1">
                   {new Date(run.started_at).toLocaleString()}
                 </span>
                 <span className={`font-medium ${allGreen ? "text-success" : "text-danger"}`}>

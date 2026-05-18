@@ -167,7 +167,7 @@ export default function MonitorPage() {
                 >
                   <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${bar}`} />
                   <div className={`text-2xl font-bold ${cls}`}>{count}</div>
-                  <div className="text-xs text-muted mt-0.5">{label}</div>
+                  <div className="text-xs text-text-muted mt-0.5">{label}</div>
                 </motion.div>
               ))}
             </div>{/* Per-category boards */}{loading ? (
@@ -182,7 +182,7 @@ export default function MonitorPage() {
                 ))}
               </div>
             ) : annotated.length === 0 ? (
-              <div className="glass rounded-xl p-10 text-center text-muted">
+              <div className="glass rounded-xl p-10 text-center text-text-muted">
                 <Activity className="w-10 h-10 mx-auto mb-3 opacity-30" />
                 <p>No services found. Health checks will appear here once running.</p>
               </div>
@@ -198,7 +198,7 @@ export default function MonitorPage() {
                   >
                     <div className="px-5 py-3 border-b border-[rgba(0,0,0,0.06)] flex items-center justify-between">
                       <span className="text-sm font-semibold text-[#111827]">{category}</span>
-                      <span className="text-xs text-muted">{svcs.length} service{svcs.length !== 1 ? "s" : ""}</span>
+                      <span className="text-xs text-text-muted">{svcs.length} service{svcs.length !== 1 ? "s" : ""}</span>
                     </div>
                     <div className="divide-y divide-[rgba(0,0,0,0.06)]">
                       {svcs.map((svc, si) => (
@@ -212,7 +212,7 @@ export default function MonitorPage() {
                           <StatusDot status={svc.computedStatus} />
                           <StatusIcon status={svc.computedStatus} />
                           <span className="flex-1 text-sm text-[#374151]">{svc.integration_name}</span>
-                          <div className="flex items-center gap-4 text-xs text-muted">
+                          <div className="flex items-center gap-4 text-xs text-text-muted">
                             {svc.response_time_ms != null && <span>{svc.response_time_ms}ms</span>}
                             {svc.uptime_percentage != null && (
                               <span className="text-[#6B7280]">{Number(svc.uptime_percentage).toFixed(1)}% uptime</span>

@@ -304,7 +304,7 @@ export default function CalendarPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Calendar command strip (slim editorial header, no PageHero) -- */}
+    <MotionPage className="space-y-5">{/* -- Calendar command strip (slim editorial header, no PageHero) -- */}
           <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
             <div className="min-w-0">
               <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
@@ -334,15 +334,15 @@ export default function CalendarPage() {
                 <TableSkeleton rows={4} />
               </div>
             )}{/* Filters Panel */}{showFilters && (
-              <div className="card p-4 space-y-4">
+              <div className="glass rounded-xl p-4 space-y-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {/* View Mode Toggle */}
                   <div>
-                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">View</label>
+                    <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">View</label>
                     <div className="flex gap-1">
                       {(["month", "week", "day"] as const).map(v => (
                         <button key={v} onClick={() => setViewMode(v)}
-                          className={`px-2.5 py-1 text-[10px] rounded-md capitalize transition-all ${viewMode === v ? "bg-brand-accent text-white font-medium" : "bg-surface-light text-muted"}`}>
+                          className={`px-2.5 py-1 text-[10px] rounded-md capitalize transition-all ${viewMode === v ? "bg-brand-accent text-white font-medium" : "bg-surface-light text-text-muted"}`}>
                           {v}
                         </button>
                       ))}
@@ -351,7 +351,7 @@ export default function CalendarPage() {
 
                   {/* Team Filter */}
                   <div>
-                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Team Member</label>
+                    <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Team Member</label>
                     <select value={selectedTeam} onChange={e => setSelectedTeam(e.target.value)} className="input w-full text-xs">
                       {TEAM_MEMBERS.map(m => <option key={m} value={m}>{m}</option>)}
                     </select>
@@ -359,7 +359,7 @@ export default function CalendarPage() {
 
                   {/* Client Filter */}
                   <div>
-                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Client</label>
+                    <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Client</label>
                     <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="input w-full text-xs">
                       {CLIENTS.map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
@@ -367,7 +367,7 @@ export default function CalendarPage() {
 
                   {/* Timezone */}
                   <div>
-                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Timezone</label>
+                    <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Timezone</label>
                     <select value={timezone} onChange={e => setTimezone(e.target.value)} className="input w-full text-xs">
                       {TIMEZONES.map(tz => <option key={tz.value} value={tz.value}>{tz.label}</option>)}
                     </select>
@@ -376,12 +376,12 @@ export default function CalendarPage() {
 
                 {/* Category Filters */}
                 <div>
-                  <label className="block text-[10px] text-muted mb-1.5 uppercase tracking-wider font-semibold">Categories</label>
+                  <label className="block text-[10px] text-text-muted mb-1.5 uppercase tracking-wider font-semibold">Categories</label>
                   <div className="flex gap-2">
                     {(Object.keys(CATEGORY_CONFIG) as EventCategory[]).map(cat => (
                       <button key={cat} onClick={() => toggleCategory(cat)}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs border transition-all ${
-                          selectedCategories.includes(cat) ? `${CATEGORY_CONFIG[cat].bg} ${CATEGORY_CONFIG[cat].color} border-transparent` : "border-border text-muted"
+                          selectedCategories.includes(cat) ? `${CATEGORY_CONFIG[cat].bg} ${CATEGORY_CONFIG[cat].color} border-transparent` : "border-border-subtle text-text-muted"
                         }`}>
                         <div className="w-2 h-2 rounded-full" style={{ background: cat === "meeting" ? "#1D4ED8" : cat === "deadline" ? "#dc2626" : cat === "content" ? "#7c3aed" : "#1D4ED8" }} />
                         {CATEGORY_CONFIG[cat].label}
@@ -392,12 +392,12 @@ export default function CalendarPage() {
 
                 {/* Calendar Sync Status */}
                 <div>
-                  <label className="block text-[10px] text-muted mb-1.5 uppercase tracking-wider font-semibold">Calendar Sync</label>
+                  <label className="block text-[10px] text-text-muted mb-1.5 uppercase tracking-wider font-semibold">Calendar Sync</label>
                   <div className="flex gap-3">
                     {Object.entries(syncStatus).map(([name, connected]) => (
                       <div key={name} className="flex items-center gap-1.5 text-xs">
                         <div className={`w-2 h-2 rounded-full ${connected ? "bg-emerald-400" : "bg-red-400"}`} />
-                        <span className="capitalize text-muted">{name}</span>
+                        <span className="capitalize text-text-muted">{name}</span>
                         <span className={`text-[9px] ${connected ? "text-emerald-400" : "text-red-400"}`}>
                           {connected ? "Synced" : "Not Connected"}
                         </span>
@@ -435,7 +435,7 @@ export default function CalendarPage() {
                   <div>
                     <div className="grid grid-cols-7 gap-px mb-px">
                       {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(d => (
-                        <div key={d} className="text-center text-[10px] text-muted py-1 font-semibold">{d}</div>
+                        <div key={d} className="text-center text-[10px] text-text-muted py-1 font-semibold">{d}</div>
                       ))}
                     </div>
                     <div className="grid grid-cols-7 gap-1">
@@ -449,7 +449,7 @@ export default function CalendarPage() {
                             onDragOver={e => e.preventDefault()}
                             onDrop={() => handleDrop(dateStr)}
                             className={`rounded-lg p-1.5 min-h-[80px] border transition-all ${
-                              isToday ? "ring-1 ring-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.1)]" : "border-border"
+                              isToday ? "ring-1 ring-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.1)]" : "border-border-subtle"
                             } ${!isCurrentMonth ? "opacity-30" : "bg-surface-light"}`}>
                             <p className={`text-[10px] font-medium text-center ${isToday ? "text-brand-accent" : ""}`}>{day.getDate()}</p>
                             {dayEvts.slice(0, 3).map(evt => (
@@ -460,7 +460,7 @@ export default function CalendarPage() {
                               </div>
                             ))}
                             {dayEvts.length > 3 && (
-                              <p className="text-[8px] text-muted text-center mt-0.5">+{dayEvts.length - 3} more</p>
+                              <p className="text-[8px] text-text-muted text-center mt-0.5">+{dayEvts.length - 3} more</p>
                             )}
                           </div>
                         );
@@ -481,12 +481,12 @@ export default function CalendarPage() {
                         <div key={dateStr}
                           onDragOver={e => e.preventDefault()}
                           onDrop={() => handleDrop(dateStr)}
-                          className={`rounded-xl p-3 min-h-[220px] border border-border ${
+                          className={`rounded-xl p-3 min-h-[220px] border border-border-subtle ${
                             isToday ? "ring-1 ring-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)]" : "bg-surface-light"
                           }`}>
                           <div className="text-center mb-2">
-                            <p className="text-[10px] text-muted uppercase">{day.toLocaleDateString("en-US", { weekday: "short" })}</p>
-                            <p className={`text-lg font-bold ${isToday ? "text-brand-accent" : "text-foreground"}`}>{day.getDate()}</p>
+                            <p className="text-[10px] text-text-muted uppercase">{day.toLocaleDateString("en-US", { weekday: "short" })}</p>
+                            <p className={`text-lg font-bold ${isToday ? "text-brand-accent" : "text-text-primary"}`}>{day.getDate()}</p>
                           </div>
                           <div className="space-y-1.5">
                             {dayAppts.map(appt => {
@@ -498,16 +498,16 @@ export default function CalendarPage() {
                                   <div className="flex items-center gap-1 mb-0.5">
                                     <span className={catConfig.color}>{TYPE_ICONS[appt.type]}</span>
                                     <span className="font-semibold truncate">{appt.time}</span>
-                                    {appt.recurring && <Repeat size={7} className="text-muted" />}
+                                    {appt.recurring && <Repeat size={7} className="text-text-muted" />}
                                   </div>
                                   <p className="truncate font-medium">{appt.client}</p>
-                                  <p className="text-muted truncate">{appt.title}</p>
+                                  <p className="text-text-muted truncate">{appt.title}</p>
                                 </div>
                               );
                             })}
                             {dayAppts.length === 0 && (
                               <button onClick={() => { setNewEvent({ ...newEvent, date: dateStr }); setShowCreate(true); }}
-                                className="w-full py-3 text-[9px] text-text-muted/50 hover:text-text-muted transition-colors text-center rounded-lg border border-dashed border-border-subtle hover:border-border">
+                                className="w-full py-3 text-[9px] text-text-muted/50 hover:text-text-muted transition-colors text-center rounded-lg border border-dashed border-border-subtle hover:border-border-subtle">
                                 + Add
                               </button>
                             )}
@@ -521,8 +521,8 @@ export default function CalendarPage() {
 
                 {/* Day View */}
                 {viewMode === "day" && (
-                  <div className="card">
-                    <h2 className="section-header flex items-center gap-2">
+                  <div className="glass rounded-xl p-4">
+                    <h2 className="flex items-center gap-2">
                       <Eye size={13} className="text-brand-accent" />
                       {new Date(today).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
                     </h2>
@@ -530,16 +530,16 @@ export default function CalendarPage() {
                       {["08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00"].map(slot => {
                         const slotEvents = filteredEvents.filter(e => e.date === today && e.time === slot);
                         return (
-                          <div key={slot} className="flex gap-3 py-2 border-b border-border">
-                            <span className="text-[10px] text-muted w-12 shrink-0 pt-0.5">{slot}</span>
+                          <div key={slot} className="flex gap-3 py-2 border-b border-border-subtle">
+                            <span className="text-[10px] text-text-muted w-12 shrink-0 pt-0.5">{slot}</span>
                             <div className="flex-1 min-h-[32px]">
                               {slotEvents.map(evt => (
                                 <div key={evt.id} className="flex items-center gap-2 p-2 rounded-lg text-xs" style={{ background: `${evt.color}10`, borderLeft: `3px solid ${evt.color}` }}>
                                   <span className={CATEGORY_CONFIG[evt.category].color}>{TYPE_ICONS[evt.type]}</span>
                                   <span className="font-medium">{evt.title}</span>
-                                  <span className="text-muted">with {evt.client}</span>
-                                  <span className="text-[10px] text-muted ml-auto">{evt.duration}min</span>
-                                  {evt.recurring && <Repeat size={10} className="text-muted" />}
+                                  <span className="text-text-muted">with {evt.client}</span>
+                                  <span className="text-[10px] text-text-muted ml-auto">{evt.duration}min</span>
+                                  {evt.recurring && <Repeat size={10} className="text-text-muted" />}
                                 </div>
                               ))}
                             </div>
@@ -554,7 +554,7 @@ export default function CalendarPage() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <div className="lg:col-span-2 space-y-3">
                   <PrismPanel padding="p-4">
-                    <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-brand-accent" /> Today&apos;s Schedule</h2>
+                    <h2 className="flex items-center gap-2"><Clock size={13} className="text-brand-accent" /> Today&apos;s Schedule</h2>
                     {todaysEvents.length === 0 ? (
                       <EmptyState
                         type="no-calendar"
@@ -571,18 +571,18 @@ export default function CalendarPage() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.18, delay: index * 0.04 }}
                             whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
-                            className="flex items-center gap-3 p-3 rounded-lg border border-border transition-colors">
+                            className="flex items-center gap-3 p-3 rounded-lg border border-border-subtle transition-colors">
                             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${CATEGORY_CONFIG[evt.category].bg}`}>
                               <span className={CATEGORY_CONFIG[evt.category].color}>{TYPE_ICONS[evt.type]}</span>
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-xs font-semibold">{evt.title}</p>
-                              <p className="text-[10px] text-muted">{evt.client} - {evt.teamMember} - {evt.duration}min</p>
+                              <p className="text-[10px] text-text-muted">{evt.client} - {evt.teamMember} - {evt.duration}min</p>
                             </div>
                             <div className="text-right shrink-0">
                               <p className="text-xs font-medium">{evt.time}</p>
                               <div className="flex items-center gap-1">
-                                {evt.recurring && <Repeat size={9} className="text-muted" />}
+                                {evt.recurring && <Repeat size={9} className="text-text-muted" />}
                                 <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${CATEGORY_CONFIG[evt.category].bg} ${CATEGORY_CONFIG[evt.category].color}`}>
                                   {CATEGORY_CONFIG[evt.category].label}
                                 </span>
@@ -601,7 +601,7 @@ export default function CalendarPage() {
                 <div className="space-y-3">
                   <PrismPanel padding="p-0" rainbow>
                     <div className="p-4">
-                      <h2 className="section-header flex items-center gap-2"><Star size={13} className="text-brand-accent" /> Quick Stats</h2>
+                      <h2 className="flex items-center gap-2"><Star size={13} className="text-brand-accent" /> Quick Stats</h2>
                       <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
                         <motion.div
                           className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
@@ -652,7 +652,7 @@ export default function CalendarPage() {
                     </div>
                   </PrismPanel>
                   <PrismPanel padding="p-4">
-                    <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-brand-accent" /> Team Today</h2>
+                    <h2 className="flex items-center gap-2"><Users size={13} className="text-brand-accent" /> Team Today</h2>
                     <div className="space-y-1.5">
                       {TEAM_MEMBERS.filter(m => m !== "All").map(member => {
                         const count = todaysEvents.filter(e => e.teamMember === member).length;
@@ -660,7 +660,7 @@ export default function CalendarPage() {
                           <div key={member} className="flex items-center gap-2 text-xs p-1.5 rounded-lg hover:bg-white/[0.04]">
                             <div className="w-6 h-6 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[9px] font-bold text-brand-accent">{member[0]}</div>
                             <span className="flex-1">{member}</span>
-                            <span className="text-muted">{count} event{count !== 1 ? "s" : ""}</span>
+                            <span className="text-text-muted">{count} event{count !== 1 ? "s" : ""}</span>
                           </div>
                         );
                       })}
@@ -671,9 +671,9 @@ export default function CalendarPage() {
             )}{/* Deadlines Tab */}{!loading && tab === "deadlines" && (
               <div className="space-y-3">
                 <PrismPanel padding="p-4">
-                  <h2 className="section-header flex items-center gap-2"><AlertCircle size={13} className="text-red-400" /> Upcoming Deadlines</h2>
+                  <h2 className="flex items-center gap-2"><AlertCircle size={13} className="text-red-400" /> Upcoming Deadlines</h2>
                   {upcomingDeadlines.length === 0 ? (
-                    <p className="text-xs text-muted text-center py-8">No upcoming deadlines</p>
+                    <p className="text-xs text-text-muted text-center py-8">No upcoming deadlines</p>
                   ) : (
                     <div className="space-y-2">
                       {upcomingDeadlines.map((dl, index) => {
@@ -685,18 +685,18 @@ export default function CalendarPage() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.18, delay: index * 0.04 }}
                             whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
-                            className="flex items-center gap-3 p-3 rounded-lg border border-border"
+                            className="flex items-center gap-3 p-3 rounded-lg border border-border-subtle"
                           >
                             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${daysLeft <= 1 ? "bg-red-400/10" : daysLeft <= 3 ? "bg-yellow-400/10" : "bg-blue-400/10"}`}>
                               <AlertCircle size={16} className={daysLeft <= 1 ? "text-red-400" : daysLeft <= 3 ? "text-yellow-400" : "text-blue-400"} />
                             </div>
                             <div className="flex-1">
                               <p className="text-xs font-semibold">{dl.title}</p>
-                              <p className="text-[10px] text-muted">{dl.client} - {dl.teamMember}</p>
+                              <p className="text-[10px] text-text-muted">{dl.client} - {dl.teamMember}</p>
                             </div>
                             <div className="text-right">
                               <p className="text-xs font-medium">{dl.date}</p>
-                              <p className={`text-[10px] font-bold ${daysLeft <= 1 ? "text-red-400" : daysLeft <= 3 ? "text-yellow-400" : "text-muted"}`}>
+                              <p className={`text-[10px] font-bold ${daysLeft <= 1 ? "text-red-400" : daysLeft <= 3 ? "text-yellow-400" : "text-text-muted"}`}>
                                 {daysLeft === 0 ? "Today!" : `${daysLeft} day${daysLeft !== 1 ? "s" : ""} left`}
                               </p>
                             </div>
@@ -708,10 +708,10 @@ export default function CalendarPage() {
                 </PrismPanel>
                 {/* Recurring Events */}
                 <PrismPanel padding="p-4">
-                  <h2 className="section-header flex items-center gap-2"><Repeat size={13} className="text-brand-accent" /> Recurring Events</h2>
+                  <h2 className="flex items-center gap-2"><Repeat size={13} className="text-brand-accent" /> Recurring Events</h2>
                   <div className="space-y-2">
                     {events.filter(e => e.recurring).length === 0 ? (
-                      <p className="text-xs text-muted text-center py-8">No recurring events</p>
+                      <p className="text-xs text-text-muted text-center py-8">No recurring events</p>
                     ) : (
                       events.filter(e => e.recurring).map((evt, index) => (
                         <motion.div
@@ -720,12 +720,12 @@ export default function CalendarPage() {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.18, delay: index * 0.04 }}
                           whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
-                          className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border"
+                          className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border-subtle"
                         >
                           <Repeat size={12} className="text-brand-accent shrink-0" />
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-medium truncate">{evt.title}</p>
-                            <p className="text-[10px] text-muted">{evt.client} - Every {new Date(evt.date).toLocaleDateString("en-US", { weekday: "long" })} at {evt.time}</p>
+                            <p className="text-[10px] text-text-muted">{evt.client} - Every {new Date(evt.date).toLocaleDateString("en-US", { weekday: "long" })} at {evt.time}</p>
                           </div>
                           <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${CATEGORY_CONFIG[evt.category].bg} ${CATEGORY_CONFIG[evt.category].color}`}>
                             {CATEGORY_CONFIG[evt.category].label}
@@ -738,27 +738,27 @@ export default function CalendarPage() {
               </div>
             )}{/* Create Event Modal */}{showCreate && (
               <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCreate(false)}>
-                <div className="bg-surface  border border-border w-full max-w-lg p-5 space-y-3" onClick={e => e.stopPropagation()}>
+                <div className="bg-surface  border border-border-subtle w-full max-w-lg p-5 space-y-3" onClick={e => e.stopPropagation()}>
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-brand-accent" /> New Event</h3>
-                    <button onClick={() => setShowCreate(false)} className="text-muted hover:text-foreground" aria-label="Close dialog"><X size={16} /></button>
+                    <button onClick={() => setShowCreate(false)} className="text-text-muted hover:text-text-primary" aria-label="Close dialog"><X size={16} /></button>
                   </div>
 
                   <div>
-                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Title</label>
+                    <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Title</label>
                     <input value={newEvent.title} onChange={e => setNewEvent({ ...newEvent, title: e.target.value })}
                       className="input w-full text-xs" placeholder="Event title" />
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Client</label>
+                      <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Client</label>
                       <select value={newEvent.client} onChange={e => setNewEvent({ ...newEvent, client: e.target.value })} className="input w-full text-xs">
                         {CLIENTS.filter(c => c !== "All").map(c => <option key={c} value={c}>{c}</option>)}
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Team Member</label>
+                      <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Team Member</label>
                       <select value={newEvent.teamMember} onChange={e => setNewEvent({ ...newEvent, teamMember: e.target.value })} className="input w-full text-xs">
                         {TEAM_MEMBERS.filter(m => m !== "All").map(m => <option key={m} value={m}>{m}</option>)}
                       </select>
@@ -767,15 +767,15 @@ export default function CalendarPage() {
 
                   <div className="grid grid-cols-3 gap-2">
                     <div>
-                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Date</label>
+                      <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Date</label>
                       <input type="date" value={newEvent.date} onChange={e => setNewEvent({ ...newEvent, date: e.target.value })} className="input w-full text-xs" />
                     </div>
                     <div>
-                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Time</label>
+                      <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Time</label>
                       <input type="time" value={newEvent.time} onChange={e => setNewEvent({ ...newEvent, time: e.target.value })} className="input w-full text-xs" />
                     </div>
                     <div>
-                      <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Duration</label>
+                      <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Duration</label>
                       <select value={newEvent.duration} onChange={e => setNewEvent({ ...newEvent, duration: parseInt(e.target.value) })} className="input w-full text-xs">
                         <option value={15}>15 min</option>
                         <option value={30}>30 min</option>
@@ -788,12 +788,12 @@ export default function CalendarPage() {
                   </div>
 
                   <div>
-                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Category</label>
+                    <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Category</label>
                     <div className="flex gap-2">
                       {(Object.keys(CATEGORY_CONFIG) as EventCategory[]).map(cat => (
                         <button key={cat} onClick={() => setNewEvent({ ...newEvent, category: cat })}
                           className={`flex-1 p-2 rounded-lg border text-xs text-center transition-all ${
-                            newEvent.category === cat ? `${CATEGORY_CONFIG[cat].bg} ${CATEGORY_CONFIG[cat].color} border-transparent` : "border-border text-muted"
+                            newEvent.category === cat ? `${CATEGORY_CONFIG[cat].bg} ${CATEGORY_CONFIG[cat].color} border-transparent` : "border-border-subtle text-text-muted"
                           }`}>
                           {CATEGORY_CONFIG[cat].label}
                         </button>
@@ -802,7 +802,7 @@ export default function CalendarPage() {
                   </div>
 
                   <div>
-                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Type</label>
+                    <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Type</label>
                     <div className="flex gap-2">
                       {([
                         { id: "call" as const, label: "Phone", icon: <Phone size={12} /> },
@@ -811,7 +811,7 @@ export default function CalendarPage() {
                       ] as const).map(t => (
                         <button key={t.id} onClick={() => setNewEvent({ ...newEvent, type: t.id })}
                           className={`flex-1 flex items-center justify-center gap-1.5 p-2 rounded-lg border text-xs transition-all ${
-                            newEvent.type === t.id ? "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] text-brand-accent" : "border-border text-muted"
+                            newEvent.type === t.id ? "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] text-brand-accent" : "border-border-subtle text-text-muted"
                           }`}>
                           {t.icon} {t.label}
                         </button>
@@ -819,7 +819,7 @@ export default function CalendarPage() {
                     </div>
                   </div>
 
-                  <label className="flex items-center gap-2 text-xs text-muted cursor-pointer">
+                  <label className="flex items-center gap-2 text-xs text-text-muted cursor-pointer">
                     <input type="checkbox" checked={newEvent.recurring} onChange={e => setNewEvent({ ...newEvent, recurring: e.target.checked })} className="accent-[#2563EB]" />
                     <Repeat size={12} /> Make recurring (weekly)
                   </label>

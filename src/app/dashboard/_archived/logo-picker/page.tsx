@@ -142,12 +142,12 @@ export default function LogoPickerPage() {
   const revertTarget = history?.previous?.applied_concept ?? null;
 
   return (
-    <MotionPage className="min-h-screen bg-background text-foreground"><div className="mx-auto max-w-[1500px] px-6 py-10">
+    <MotionPage className="min-h-screen bg-background text-text-primary"><div className="mx-auto max-w-[1500px] px-6 py-10">
               <div className="mb-8 flex items-start justify-between gap-6">
                 <div>
                   <p className="font-editorial text-[11px] italic text-text-muted mb-1">Brand Identity</p>
                   <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none mb-2">Logo Picker</h1>
-                  <p className="max-w-2xl text-sm text-muted">
+                  <p className="max-w-2xl text-sm text-text-muted">
                     20 SVG concepts — all riffs on the stacked-rectangles ShortStack mark.
                     <span className="text-brand-accent"> Preview in app</span> flips the live mark temporarily.
                     {isAdmin && (
@@ -158,7 +158,7 @@ export default function LogoPickerPage() {
                     )}
                   </p>
                   {history?.last && (
-                    <p className="mt-2 text-xs text-muted">
+                    <p className="mt-2 text-xs text-text-muted">
                       Last applied: concept #{String(history.last.applied_concept).padStart(2, "0")} on{" "}
                       {new Date(history.last.applied_at).toLocaleString()}
                     </p>
@@ -185,7 +185,7 @@ export default function LogoPickerPage() {
                 >
                   <Eye size={16} className="text-brand-accent" />
                   <span className="font-medium">Previewing #{previewConcept.id} — {previewConcept.name}</span>
-                  <span className="text-xs text-muted">(temporary — CSS var override only)</span>
+                  <span className="text-xs text-text-muted">(temporary — CSS var override only)</span>
                   <button
                     onClick={() => setPreview(null)}
                     className="ml-auto rounded bg-surface-light px-2 py-1 text-xs hover:bg-surface-light/70"
@@ -235,16 +235,16 @@ export default function LogoPickerPage() {
                       </div>
 
                       {/* Favicon-scale row */}
-                      <div className="flex items-center justify-center gap-4 border-t border-border/30 py-2">
+                      <div className="flex items-center justify-center gap-4 border-t border-border-subtle/30 py-2">
                         <img src={c.url} alt="" width={16} height={16} />
                         <img src={c.url} alt="" width={24} height={24} />
                         <img src={c.url} alt="" width={32} height={32} />
                       </div>
 
-                      <div className="space-y-2 border-t border-border/30 p-3">
+                      <div className="space-y-2 border-t border-border-subtle/30 p-3">
                         <div>
                           <p className="text-sm font-semibold leading-tight">{c.name}</p>
-                          <p className="text-[11px] leading-snug text-muted">{c.theme}</p>
+                          <p className="text-[11px] leading-snug text-text-muted">{c.theme}</p>
                         </div>
                         <div className="flex flex-col gap-1.5">
                           <button
@@ -255,7 +255,7 @@ export default function LogoPickerPage() {
                             className={`w-full rounded-md px-2 py-1.5 text-xs font-medium transition ${
                               isPreviewing
                                 ? "bg-brand-accent text-white"
-                                : "bg-[rgba(0,0,0,0.04)] text-foreground hover:bg-[rgba(59,130,246,0.14)] hover:text-brand-accent"
+                                : "bg-[rgba(0,0,0,0.04)] text-text-primary hover:bg-[rgba(59,130,246,0.14)] hover:text-brand-accent"
                             }`}
                           >
                             {isPreviewing ? (
@@ -291,9 +291,9 @@ export default function LogoPickerPage() {
                   initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.2 }}
-                  className="mt-8 glass rounded-xl border border-dashed border-border/50 p-4 text-xs text-muted"
+                  className="mt-8 glass rounded-xl border border-dashed border-border-subtle/50 p-4 text-xs text-text-muted"
                 >
-                  <p className="mb-1 font-semibold text-foreground">Admin access required to apply permanently.</p>
+                  <p className="mb-1 font-semibold text-text-primary">Admin access required to apply permanently.</p>
                   <p>
                     Use <span className="font-mono text-brand-accent">Preview in app</span> to test any concept live — it sets a CSS
                     variable override that affects any component using <code>var(--ss-logo-url)</code>.

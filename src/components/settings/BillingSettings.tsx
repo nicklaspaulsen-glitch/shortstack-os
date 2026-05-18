@@ -37,9 +37,9 @@ interface Props {
 
 /** Inline usage widget — shows quota bars for the current billing period. */
 function PlanUsageWidget({ planUsage }: { planUsage: PlanUsage | null }) {
-  if (!planUsage) return <p className="text-xs text-muted text-center py-4">No usage data available.</p>;
+  if (!planUsage) return <p className="text-xs text-text-muted text-center py-4">No usage data available.</p>;
   const entries = Object.entries(planUsage.usage);
-  if (entries.length === 0) return <p className="text-xs text-muted text-center py-4">No usage this period.</p>;
+  if (entries.length === 0) return <p className="text-xs text-text-muted text-center py-4">No usage this period.</p>;
   return (
     <div className="space-y-3">
       {entries.map(([key, used]) => {
@@ -49,8 +49,8 @@ function PlanUsageWidget({ planUsage }: { planUsage: PlanUsage | null }) {
         return (
           <div key={key}>
             <div className="flex items-center justify-between text-[10px] mb-1">
-              <span className="text-foreground">{label}</span>
-              <span className="text-muted">{used} / {limit === "unlimited" ? "∞" : limit}</span>
+              <span className="text-text-primary">{label}</span>
+              <span className="text-text-muted">{used} / {limit === "unlimited" ? "∞" : limit}</span>
             </div>
             {limit !== "unlimited" && (
               <div className="h-1.5 rounded-full bg-surface">
@@ -68,12 +68,12 @@ function PlanUsageWidget({ planUsage }: { planUsage: PlanUsage | null }) {
 export default function BillingSettings({ profile, planUsage, planUsageLoaded, paymentMethod, paymentLoading, portalLoading, openBillingPortal }: Props) {
   return (
     <div className="space-y-4">
-      <div className="card">
-        <h3 className="section-header">Current Plan</h3>
+      <div className="glass rounded-xl p-4">
+        <h3 className="">Current Plan</h3>
         <div className="flex items-center justify-between p-4 bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.2)] rounded-xl flex-wrap gap-3">
           <div>
             <p className="text-lg font-bold" style={{ color: getPlanConfig(profile?.plan_tier).color }}>{getPlanConfig(profile?.plan_tier).badge_label}</p>
-            <p className="text-xs text-muted">${getPlanConfig(profile?.plan_tier).price_monthly}/month</p>
+            <p className="text-xs text-text-muted">${getPlanConfig(profile?.plan_tier).price_monthly}/month</p>
           </div>
           <div className="flex items-center gap-2">
             <a href="/dashboard/pricing" className="btn-primary text-xs flex items-center gap-1">
@@ -85,18 +85,18 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
             </button>
           </div>
         </div>
-        <p className="text-[10px] text-muted mt-2 flex items-center gap-1">
+        <p className="text-[10px] text-text-muted mt-2 flex items-center gap-1">
           <Shield size={9} /> Use &quot;Change Plan&quot; for upgrades/downgrades. &quot;Manage in Stripe&quot; to view invoices, update card, or cancel.
         </p>
       </div>
 
       {/* Cancel Subscription */}
-      <div className="card border-red-500/20 bg-red-500/[0.02]">
+      <div className="glass rounded-xl p-4 border-red-500/20 bg-red-500/[0.02]">
         <div className="flex items-start gap-3">
           <AlertTriangle size={14} className="text-red-400 shrink-0 mt-0.5" />
           <div className="flex-1">
             <h3 className="text-sm font-semibold text-red-400">Cancel Subscription</h3>
-            <p className="text-[10px] text-muted mt-0.5">
+            <p className="text-[10px] text-text-muted mt-0.5">
               Stop billing at the end of the current period. You keep access until then.
             </p>
           </div>
@@ -111,10 +111,10 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
       <AgencyStripeConnect />
 
       {/* Monthly Usage */}
-      <div className="card">
-        <h3 className="section-header">Usage This Month</h3>
+      <div className="glass rounded-xl p-4">
+        <h3 className="">Usage This Month</h3>
         {!planUsageLoaded ? (
-          <div className="flex items-center gap-2 text-xs text-muted py-6 justify-center">
+          <div className="flex items-center gap-2 text-xs text-text-muted py-6 justify-center">
             <Loader2 size={12} className="animate-spin" /> Loading usage...
           </div>
         ) : (
@@ -123,10 +123,10 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
       </div>
 
       {/* Payment Method */}
-      <div className="card">
-        <h3 className="section-header">Payment Method</h3>
+      <div className="glass rounded-xl p-4">
+        <h3 className="">Payment Method</h3>
         {paymentLoading ? (
-          <div className="flex items-center gap-3 p-3 bg-surface-light/50 rounded-lg border border-border animate-pulse">
+          <div className="flex items-center gap-3 p-3 bg-surface-light/50 rounded-lg border border-border-subtle animate-pulse">
             <div className="w-5 h-5 bg-black/5 rounded" />
             <div className="flex-1 space-y-1.5">
               <div className="h-3 w-32 bg-black/5 rounded" />
@@ -134,11 +134,11 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
             </div>
           </div>
         ) : paymentMethod ? (
-          <div className="flex items-center gap-3 p-3 bg-surface-light/50 rounded-lg border border-border">
+          <div className="flex items-center gap-3 p-3 bg-surface-light/50 rounded-lg border border-border-subtle">
             <CreditCard size={20} className="text-[#2563EB]" />
             <div>
               <p className="text-sm font-medium capitalize">{paymentMethod.brand} ending in {paymentMethod.last4}</p>
-              <p className="text-xs text-muted">Expires {String(paymentMethod.exp_month).padStart(2, "0")}/{paymentMethod.exp_year}</p>
+              <p className="text-xs text-text-muted">Expires {String(paymentMethod.exp_month).padStart(2, "0")}/{paymentMethod.exp_year}</p>
             </div>
             <button onClick={openBillingPortal} disabled={portalLoading}
               className="ml-auto text-xs text-[#2563EB] hover:underline flex items-center gap-1 disabled:opacity-50">
@@ -147,10 +147,10 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-between p-3 bg-surface-light/50 rounded-lg border border-border">
+          <div className="flex items-center justify-between p-3 bg-surface-light/50 rounded-lg border border-border-subtle">
             <div className="flex items-center gap-3">
-              <CreditCard size={20} className="text-muted" />
-              <p className="text-sm text-muted">No payment method on file</p>
+              <CreditCard size={20} className="text-text-muted" />
+              <p className="text-sm text-text-muted">No payment method on file</p>
             </div>
             <button onClick={openBillingPortal} disabled={portalLoading}
               className="text-xs bg-[rgba(59,130,246,0.08)] text-[#2563EB] border border-[rgba(59,130,246,0.2)] px-3 py-1.5 rounded-lg hover:bg-[rgba(59,130,246,0.12)] transition flex items-center gap-1 disabled:opacity-50">

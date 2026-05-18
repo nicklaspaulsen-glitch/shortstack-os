@@ -92,7 +92,7 @@ function StatusDot({ status, showLabel }: { status: LiveStatus; showLabel?: bool
     operational: { color: "bg-emerald-400", ring: "ring-emerald-400/30", label: "Working", text: "text-emerald-400" },
     degraded:    { color: "bg-amber-400",   ring: "ring-amber-400/30",   label: "Issues",  text: "text-amber-400" },
     down:        { color: "bg-red-400",     ring: "ring-red-400/30",     label: "Down",    text: "text-red-400" },
-    unknown:     { color: "bg-zinc-500",    ring: "ring-zinc-500/30",    label: "Unknown", text: "text-muted" },
+    unknown:     { color: "bg-zinc-500",    ring: "ring-zinc-500/30",    label: "Unknown", text: "text-text-muted" },
   }[status];
   return (
     <div className="flex items-center gap-1">
@@ -256,7 +256,7 @@ export default function OutreachAccounts() {
   const activeSocials = socials.filter(s => s.is_active !== false).length;
 
   return (
-    <div className="card">
+    <div className="glass rounded-xl p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
@@ -266,7 +266,7 @@ export default function OutreachAccounts() {
             {activeEmails + activePhones + activeSocials} active
           </span>
           {lastCheck && (
-            <span className="text-[9px] text-muted hidden md:inline" title={`Last checked: ${new Date(lastCheck).toLocaleString()}`}>
+            <span className="text-[9px] text-text-muted hidden md:inline" title={`Last checked: ${new Date(lastCheck).toLocaleString()}`}>
               · checked {new Date(lastCheck).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
             </span>
           )}
@@ -292,10 +292,10 @@ export default function OutreachAccounts() {
               {staleCount}
             </button>
           )}
-          <button onClick={loadAll} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-surface-light transition-colors">
+          <button onClick={loadAll} className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors">
             <RefreshCw size={11} className={loading ? "animate-spin" : ""} />
           </button>
-          <Link href="/dashboard/phone-email" className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-surface-light transition-colors">
+          <Link href="/dashboard/phone-email" className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors">
             <Settings size={11} />
           </Link>
         </div>
@@ -304,18 +304,18 @@ export default function OutreachAccounts() {
       {/* Cleanup confirmation modal */}
       {showCleanupConfirm && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowCleanupConfirm(false)}>
-          <div className="card max-w-sm w-full p-4 space-y-3" onClick={e => e.stopPropagation()}>
+          <div className="glass rounded-xl p-4 max-w-sm w-full p-4 space-y-3" onClick={e => e.stopPropagation()}>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-red-500/15 text-red-400 flex items-center justify-center">
                 <Trash2 size={14} />
               </div>
               <div>
                 <h3 className="text-sm font-semibold">Delete stale accounts?</h3>
-                <p className="text-[10px] text-muted">Older than 7 days, down/disconnected</p>
+                <p className="text-[10px] text-text-muted">Older than 7 days, down/disconnected</p>
               </div>
             </div>
-            <p className="text-[11px] text-muted">
-              This will permanently delete <span className="text-foreground font-semibold">{staleCount}</span> {staleCount === 1 ? "account" : "accounts"} that have been disconnected or erroring for over a week.
+            <p className="text-[11px] text-text-muted">
+              This will permanently delete <span className="text-text-primary font-semibold">{staleCount}</span> {staleCount === 1 ? "account" : "accounts"} that have been disconnected or erroring for over a week.
               You can re-add them anytime.
             </p>
             <div className="flex gap-2">
@@ -342,26 +342,26 @@ export default function OutreachAccounts() {
         <button
           onClick={() => setActiveTab("email")}
           className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded text-[11px] font-medium transition-all ${
-            activeTab === "email" ? "bg-surface text-foreground shadow-sm" : "text-muted hover:text-foreground"
+            activeTab === "email" ? "bg-surface text-text-primary shadow-sm" : "text-text-muted hover:text-text-primary"
           }`}
         >
-          <Mail size={11} /> Email <span className="text-[9px] text-muted">({emails.length})</span>
+          <Mail size={11} /> Email <span className="text-[9px] text-text-muted">({emails.length})</span>
         </button>
         <button
           onClick={() => setActiveTab("phone")}
           className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded text-[11px] font-medium transition-all ${
-            activeTab === "phone" ? "bg-surface text-foreground shadow-sm" : "text-muted hover:text-foreground"
+            activeTab === "phone" ? "bg-surface text-text-primary shadow-sm" : "text-text-muted hover:text-text-primary"
           }`}
         >
-          <Phone size={11} /> Phone <span className="text-[9px] text-muted">({phones.length})</span>
+          <Phone size={11} /> Phone <span className="text-[9px] text-text-muted">({phones.length})</span>
         </button>
         <button
           onClick={() => setActiveTab("social")}
           className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded text-[11px] font-medium transition-all ${
-            activeTab === "social" ? "bg-surface text-foreground shadow-sm" : "text-muted hover:text-foreground"
+            activeTab === "social" ? "bg-surface text-text-primary shadow-sm" : "text-text-muted hover:text-text-primary"
           }`}
         >
-          <Zap size={11} /> Social <span className="text-[9px] text-muted">({socials.length})</span>
+          <Zap size={11} /> Social <span className="text-[9px] text-text-muted">({socials.length})</span>
         </button>
       </div>
 
@@ -383,12 +383,12 @@ export default function OutreachAccounts() {
                 const usagePct = sender.daily_limit ? Math.min(100, ((sender.sent_today || 0) / sender.daily_limit) * 100) : 0;
                 return (
                   <div key={sender.id} className={`group flex items-center gap-2 p-2 rounded-lg border transition-all ${
-                    sender.is_active !== false ? "border-border bg-surface-light/30 hover:bg-surface-light/60" : "border-border/50 bg-surface-light/10 opacity-60"
+                    sender.is_active !== false ? "border-border-subtle bg-surface-light/30 hover:bg-surface-light/60" : "border-border-subtle/50 bg-surface-light/10 opacity-60"
                   }`}>
                     <button
                       onClick={() => toggleEmailActive(sender.id, !(sender.is_active !== false))}
                       className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                        sender.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-border"
+                        sender.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-border-subtle"
                       }`}
                     >
                       {sender.is_active !== false && <Check size={10} className="text-black" />}
@@ -404,7 +404,7 @@ export default function OutreachAccounts() {
                       </div>
                       <div className="flex items-center gap-2 mt-0.5">
                         {sender.daily_limit && (
-                          <span className="text-[9px] text-muted">
+                          <span className="text-[9px] text-text-muted">
                             {sender.sent_today || 0}/{sender.daily_limit} today
                           </span>
                         )}
@@ -433,7 +433,7 @@ export default function OutreachAccounts() {
                     {!sender.is_primary && sender.is_active !== false && (
                       <button
                         onClick={() => setEmailPrimary(sender.id)}
-                        className="opacity-0 group-hover:opacity-100 text-[9px] text-muted hover:text-[#2563EB] transition-opacity"
+                        className="opacity-0 group-hover:opacity-100 text-[9px] text-text-muted hover:text-[#2563EB] transition-opacity"
                       >
                         Set primary
                       </button>
@@ -452,12 +452,12 @@ export default function OutreachAccounts() {
                 const usagePct = phone.daily_limit ? Math.min(100, ((phone.sent_today || 0) / phone.daily_limit) * 100) : 0;
                 return (
                   <div key={phone.id} className={`flex items-center gap-2 p-2 rounded-lg border transition-all ${
-                    phone.is_active !== false ? "border-border bg-surface-light/30 hover:bg-surface-light/60" : "border-border/50 bg-surface-light/10 opacity-60"
+                    phone.is_active !== false ? "border-border-subtle bg-surface-light/30 hover:bg-surface-light/60" : "border-border-subtle/50 bg-surface-light/10 opacity-60"
                   }`}>
                     <button
                       onClick={() => togglePhoneActive(phone.id, !(phone.is_active !== false))}
                       className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                        phone.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-border"
+                        phone.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-border-subtle"
                       }`}
                     >
                       {phone.is_active !== false && <Check size={10} className="text-black" />}
@@ -467,11 +467,11 @@ export default function OutreachAccounts() {
                       <div className="flex items-center gap-1.5">
                         <StatusDot status={deriveLiveStatus(phone)} />
                         <p className="text-[11px] font-medium truncate font-mono">{phone.phone_number}</p>
-                        {phone.label && <span className="text-[9px] text-muted">· {phone.label}</span>}
+                        {phone.label && <span className="text-[9px] text-text-muted">· {phone.label}</span>}
                       </div>
                       {phone.daily_limit && (
                         <>
-                          <p className="text-[9px] text-muted">
+                          <p className="text-[9px] text-text-muted">
                             {phone.sent_today || 0}/{phone.daily_limit} SMS today
                           </p>
                           <div className="h-0.5 bg-surface-light rounded-full mt-1 overflow-hidden">
@@ -494,8 +494,8 @@ export default function OutreachAccounts() {
           {activeTab === "social" && (
             <>
               {socials.length === 0 ? (
-                <div className="p-3 rounded-lg border border-dashed border-border bg-surface-light/20">
-                  <p className="text-[10px] text-muted mb-2 text-center">No social accounts yet</p>
+                <div className="p-3 rounded-lg border border-dashed border-border-subtle bg-surface-light/20">
+                  <p className="text-[10px] text-text-muted mb-2 text-center">No social accounts yet</p>
                   <InlineSocialConnect
                     platforms={["instagram", "facebook", "linkedin", "tiktok"]}
                     compact
@@ -504,12 +504,12 @@ export default function OutreachAccounts() {
                 </div>
               ) : socials.map(acc => (
                 <div key={acc.id} className={`flex items-center gap-2 p-2 rounded-lg border transition-all ${
-                  acc.is_active !== false ? "border-border bg-surface-light/30 hover:bg-surface-light/60" : "border-border/50 bg-surface-light/10 opacity-60"
+                  acc.is_active !== false ? "border-border-subtle bg-surface-light/30 hover:bg-surface-light/60" : "border-border-subtle/50 bg-surface-light/10 opacity-60"
                 }`}>
                   <button
                     onClick={() => toggleSocialActive(acc.id, !(acc.is_active !== false))}
                     className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                      acc.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-border"
+                      acc.is_active !== false ? "bg-[#2563EB] border-[#2563EB]" : "border-border-subtle"
                     }`}
                   >
                     {acc.is_active !== false && <Check size={10} className="text-black" />}
@@ -520,7 +520,7 @@ export default function OutreachAccounts() {
                       <StatusDot status={deriveLiveStatus(acc)} />
                       <p className="text-[11px] font-medium truncate">{acc.account_name}</p>
                     </div>
-                    <p className="text-[9px] text-muted capitalize">
+                    <p className="text-[9px] text-text-muted capitalize">
                       {acc.platform}
                       {acc.status && acc.status !== "active" && <span className="ml-1 text-red-400">· {acc.status}</span>}
                       {acc.token_expires_at && new Date(acc.token_expires_at) < new Date() && (
@@ -536,7 +536,7 @@ export default function OutreachAccounts() {
       )}
 
       {/* Footer */}
-      <div className="mt-3 pt-3 border-t border-border flex items-center justify-between text-[10px] text-muted">
+      <div className="mt-3 pt-3 border-t border-border-subtle flex items-center justify-between text-[10px] text-text-muted">
         <span>
           {activeTab === "email" && `${activeEmails}/${emails.length} emails active`}
           {activeTab === "phone" && `${activePhones}/${phones.length} phones active`}
@@ -566,10 +566,10 @@ export default function OutreachAccounts() {
 function EmptyState({ icon, label, linkText, link }: { icon: React.ReactNode; label: string; linkText: string; link: string }) {
   return (
     <div className="py-6 text-center">
-      <div className="w-10 h-10 mx-auto rounded-xl bg-surface-light flex items-center justify-center text-muted mb-2">
+      <div className="w-10 h-10 mx-auto rounded-xl bg-surface-light flex items-center justify-center text-text-muted mb-2">
         {icon}
       </div>
-      <p className="text-[11px] text-muted mb-2">{label}</p>
+      <p className="text-[11px] text-text-muted mb-2">{label}</p>
       <Link href={link} className="inline-flex items-center gap-1 text-[10px] text-[#2563EB] hover:underline">
         <Plus size={10} /> {linkText}
       </Link>
@@ -593,11 +593,11 @@ function StatusSummaryBar({ emails, phones, socials }: { emails: EmailSender[]; 
   const unk = all.filter(s => s === "unknown").length;
 
   return (
-    <div className="mb-3 p-2.5 rounded-lg bg-surface-light/40 border border-border">
+    <div className="mb-3 p-2.5 rounded-lg bg-surface-light/40 border border-border-subtle">
       <div className="flex items-center justify-between mb-1.5">
-        <span className="text-[10px] text-muted font-semibold uppercase tracking-wider">System Status</span>
+        <span className="text-[10px] text-text-muted font-semibold uppercase tracking-wider">System Status</span>
         <span className={`text-[9px] font-semibold ${
-          down > 0 ? "text-red-400" : deg > 0 ? "text-amber-400" : op > 0 ? "text-emerald-400" : "text-muted"
+          down > 0 ? "text-red-400" : deg > 0 ? "text-amber-400" : op > 0 ? "text-emerald-400" : "text-text-muted"
         }`}>
           {down > 0 ? `${down} Down` : deg > 0 ? `${deg} Issues` : op > 0 ? "All Working" : "No checks yet"}
         </span>
@@ -613,7 +613,7 @@ function StatusSummaryBar({ emails, phones, socials }: { emails: EmailSender[]; 
         {op > 0 && <span className="flex items-center gap-1 text-[9px] text-emerald-400"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />{op} working</span>}
         {deg > 0 && <span className="flex items-center gap-1 text-[9px] text-amber-400"><span className="w-1.5 h-1.5 rounded-full bg-amber-400" />{deg} degraded</span>}
         {down > 0 && <span className="flex items-center gap-1 text-[9px] text-red-400"><span className="w-1.5 h-1.5 rounded-full bg-red-400" />{down} down</span>}
-        {unk > 0 && <span className="flex items-center gap-1 text-[9px] text-muted"><span className="w-1.5 h-1.5 rounded-full bg-zinc-500" />{unk} unchecked</span>}
+        {unk > 0 && <span className="flex items-center gap-1 text-[9px] text-text-muted"><span className="w-1.5 h-1.5 rounded-full bg-zinc-500" />{unk} unchecked</span>}
       </div>
     </div>
   );

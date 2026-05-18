@@ -193,7 +193,7 @@ export default function ClientUploadsPage() {
     if (type.startsWith("video") || ["mp4", "mov", "avi", "webm"].includes(type)) return <Film size={14} className="text-purple-400" />;
     if (type.startsWith("audio") || ["mp3", "wav", "ogg"].includes(type)) return <Music size={14} className="text-pink-400" />;
     if (["pdf", "doc", "docx", "txt"].includes(type)) return <FileText size={14} className="text-text-secondary" />;
-    return <File size={14} className="text-muted" />;
+    return <File size={14} className="text-text-muted" />;
   }
 
   function formatFileSize(bytes: number): string {
@@ -226,7 +226,7 @@ export default function ClientUploadsPage() {
   if (loading) return <PageLoading />;
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="space-y-5">
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 bg-[rgba(59,130,246,0.08)] rounded-xl flex items-center justify-center">
@@ -234,37 +234,37 @@ export default function ClientUploadsPage() {
         </div>
         <div>
           <h1 className="page-header mb-0">My Uploads & Media</h1>
-          <p className="text-xs text-muted">Your files, published content, and social media analytics</p>
+          <p className="text-xs text-text-muted">Your files, published content, and social media analytics</p>
         </div>
       </div>
 
       {/* Analytics cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="card p-4">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <Upload size={14} className="text-brand-accent" />
-            <span className="text-[9px] text-muted uppercase tracking-wider">Uploads</span>
+            <span className="text-[9px] text-text-muted uppercase tracking-wider">Uploads</span>
           </div>
           <p className="text-2xl font-bold font-mono">{analytics.totalUploads}</p>
         </div>
-        <div className="card p-4">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <Film size={14} className="text-purple-700" />
-            <span className="text-[9px] text-muted uppercase tracking-wider">Content</span>
+            <span className="text-[9px] text-text-muted uppercase tracking-wider">Content</span>
           </div>
           <p className="text-2xl font-bold font-mono">{analytics.totalContent}</p>
         </div>
-        <div className="card p-4">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <Globe size={14} className="text-success" />
-            <span className="text-[9px] text-muted uppercase tracking-wider">Published</span>
+            <span className="text-[9px] text-text-muted uppercase tracking-wider">Published</span>
           </div>
           <p className="text-2xl font-bold font-mono text-success">{analytics.totalPublished}</p>
         </div>
-        <div className="card p-4">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <TrendingUp size={14} className="text-blue-600" />
-            <span className="text-[9px] text-muted uppercase tracking-wider">This Week</span>
+            <span className="text-[9px] text-text-muted uppercase tracking-wider">This Week</span>
           </div>
           <p className="text-2xl font-bold font-mono">{analytics.recentActivity}</p>
         </div>
@@ -272,8 +272,8 @@ export default function ClientUploadsPage() {
 
       {/* Platform breakdown */}
       {Object.keys(analytics.platformBreakdown).length > 0 && (
-        <div className="card p-4">
-          <h3 className="text-[10px] text-muted uppercase tracking-wider mb-2">Platform Distribution</h3>
+        <div className="glass rounded-xl p-4">
+          <h3 className="text-[10px] text-text-muted uppercase tracking-wider mb-2">Platform Distribution</h3>
           <div className="flex flex-wrap gap-3">
             {Object.entries(analytics.platformBreakdown).map(([platform, count]) => (
               <div key={platform} className="flex items-center gap-2 bg-white/[0.04] px-3 py-1.5 rounded-lg">
@@ -324,7 +324,7 @@ export default function ClientUploadsPage() {
             {uploading ? (
               <div className="flex flex-col items-center gap-2">
                 <Loader size={24} className="animate-spin text-brand-accent" />
-                <p className="text-xs text-muted">Uploading files...</p>
+                <p className="text-xs text-text-muted">Uploading files...</p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2">
@@ -332,7 +332,7 @@ export default function ClientUploadsPage() {
                   <Upload size={20} className="text-brand-accent" />
                 </div>
                 <p className="text-sm font-medium">Drop files here or click to upload</p>
-                <p className="text-[10px] text-muted">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV — max {maxUploadLabel}</p>
+                <p className="text-[10px] text-text-muted">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV — max {maxUploadLabel}</p>
               </div>
             )}
           </div>
@@ -347,16 +347,16 @@ export default function ClientUploadsPage() {
           ) : (
             <div className="space-y-2">
               {uploads.map(upload => (
-                <div key={upload.id} className="card card-hover p-3 flex items-center gap-3">
+                <div key={upload.id} className="glass rounded-xl p-4 card-hover p-3 flex items-center gap-3">
                   <div className="w-9 h-9 bg-white/[0.04] rounded-lg flex items-center justify-center shrink-0">
                     {getFileIcon(upload.file_type)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium truncate">{upload.file_name}</p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-[9px] text-muted">{formatFileSize(upload.file_size)}</span>
-                      <span className="text-[9px] text-muted">{upload.category}</span>
-                      <span className="text-[9px] text-muted">{formatRelativeTime(upload.created_at)}</span>
+                      <span className="text-[9px] text-text-muted">{formatFileSize(upload.file_size)}</span>
+                      <span className="text-[9px] text-text-muted">{upload.category}</span>
+                      <span className="text-[9px] text-text-muted">{formatRelativeTime(upload.created_at)}</span>
                     </div>
                   </div>
                   <StatusBadge status={upload.status} />
@@ -384,12 +384,12 @@ export default function ClientUploadsPage() {
             />
           ) : (
             published.map(item => (
-              <div key={item.id} className="card card-hover p-4">
+              <div key={item.id} className="glass rounded-xl p-4 card-hover p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <h3 className="text-xs font-semibold truncate">{item.video_title}</h3>
                     {item.description && (
-                      <p className="text-[10px] text-muted mt-0.5 line-clamp-2">{item.description}</p>
+                      <p className="text-[10px] text-text-muted mt-0.5 line-clamp-2">{item.description}</p>
                     )}
                     <div className="flex items-center gap-2 mt-1.5">
                       <StatusBadge status={item.status} />
@@ -398,7 +398,7 @@ export default function ClientUploadsPage() {
                           {p.replace(/_/g, " ")}
                         </span>
                       ))}
-                      <span className="text-[9px] text-muted">
+                      <span className="text-[9px] text-text-muted">
                         {item.published_at ? formatDate(item.published_at) : formatDate(item.created_at)}
                       </span>
                     </div>
@@ -431,7 +431,7 @@ export default function ClientUploadsPage() {
             />
           ) : (
             content.map(item => (
-              <div key={item.id} className="card card-hover p-3 flex items-center gap-3">
+              <div key={item.id} className="glass rounded-xl p-4 card-hover p-3 flex items-center gap-3">
                 <div className="w-9 h-9 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center shrink-0">
                   <Film size={14} className="text-brand-accent" />
                 </div>
@@ -444,7 +444,7 @@ export default function ClientUploadsPage() {
                         {item.target_platform.replace(/_/g, " ")}
                       </span>
                     )}
-                    <span className="text-[9px] text-muted">{formatRelativeTime(item.created_at)}</span>
+                    <span className="text-[9px] text-text-muted">{formatRelativeTime(item.created_at)}</span>
                   </div>
                 </div>
                 <StatusBadge status={item.status} />
@@ -469,22 +469,22 @@ export default function ClientUploadsPage() {
                 <Share2 size={28} className="text-brand-accent" />
               </div>
               <h3 className="text-sm font-semibold mb-1">Social accounts not connected</h3>
-              <p className="text-xs text-muted max-w-xs mx-auto mb-4">
+              <p className="text-xs text-text-muted max-w-xs mx-auto mb-4">
                 Ask your agency to connect your social media accounts through Zernio for automatic publishing and analytics.
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-sm mx-auto">
                 {["Instagram", "TikTok", "YouTube", "Facebook", "LinkedIn", "Twitter/X"].map(p => (
                   <div key={p} className="p-3 rounded-xl border border-border-subtle text-center">
-                    <Globe size={16} className="text-muted mx-auto mb-1" />
-                    <p className="text-[10px] text-muted">{p}</p>
+                    <Globe size={16} className="text-text-muted mx-auto mb-1" />
+                    <p className="text-[10px] text-text-muted">{p}</p>
                   </div>
                 ))}
               </div>
             </div>
           ) : (
             <div className="space-y-3">
-              <div className="card p-4">
-                <h3 className="text-[10px] text-muted uppercase tracking-wider mb-3">Connected Accounts</h3>
+              <div className="glass rounded-xl p-4">
+                <h3 className="text-[10px] text-text-muted uppercase tracking-wider mb-3">Connected Accounts</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {zernioProfiles.map(p => (
                     <div key={p.id} className="flex items-center gap-3 p-3 bg-white/[0.04] rounded-xl">
@@ -495,7 +495,7 @@ export default function ClientUploadsPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-semibold capitalize">{p.platform}</p>
-                        <p className="text-[10px] text-muted truncate">@{p.username}</p>
+                        <p className="text-[10px] text-text-muted truncate">@{p.username}</p>
                       </div>
                       <span className={`text-[8px] px-1.5 py-0.5 rounded font-medium ${
                         p.status === "active" ? "bg-success/10 text-success" : "bg-warning/10 text-warning"
@@ -508,31 +508,31 @@ export default function ClientUploadsPage() {
               </div>
 
               {/* Analytics placeholder */}
-              <div className="card p-4">
-                <h3 className="text-[10px] text-muted uppercase tracking-wider mb-3">Social Performance</h3>
+              <div className="glass rounded-xl p-4">
+                <h3 className="text-[10px] text-text-muted uppercase tracking-wider mb-3">Social Performance</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div className="text-center p-3 bg-white/[0.04] rounded-xl">
                     <Eye size={16} className="text-blue-600 mx-auto mb-1" />
-                    <p className="text-[9px] text-muted">Impressions</p>
+                    <p className="text-[9px] text-text-muted">Impressions</p>
                     <p className="text-sm font-bold font-mono">—</p>
                   </div>
                   <div className="text-center p-3 bg-white/[0.04] rounded-xl">
                     <Users size={16} className="text-purple-400 mx-auto mb-1" />
-                    <p className="text-[9px] text-muted">Reach</p>
+                    <p className="text-[9px] text-text-muted">Reach</p>
                     <p className="text-sm font-bold font-mono">—</p>
                   </div>
                   <div className="text-center p-3 bg-white/[0.04] rounded-xl">
                     <Heart size={16} className="text-pink-400 mx-auto mb-1" />
-                    <p className="text-[9px] text-muted">Engagement</p>
+                    <p className="text-[9px] text-text-muted">Engagement</p>
                     <p className="text-sm font-bold font-mono">—</p>
                   </div>
                   <div className="text-center p-3 bg-white/[0.04] rounded-xl">
                     <ChevronRight size={16} className="text-brand-accent mx-auto mb-1" />
-                    <p className="text-[9px] text-muted">Clicks</p>
+                    <p className="text-[9px] text-text-muted">Clicks</p>
                     <p className="text-sm font-bold font-mono">—</p>
                   </div>
                 </div>
-                <p className="text-[9px] text-muted text-center mt-3">
+                <p className="text-[9px] text-text-muted text-center mt-3">
                   Live analytics will populate as content is published through Zernio
                 </p>
               </div>

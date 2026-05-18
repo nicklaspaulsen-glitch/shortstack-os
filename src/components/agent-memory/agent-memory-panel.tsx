@@ -104,13 +104,13 @@ export default function AgentMemoryPanel({
   }, [readOnly, subjectKind, subjectId]);
 
   return (
-    <section className=" border border-border bg-surface overflow-hidden">
-      <header className="flex items-center justify-between px-5 py-4 border-b border-border">
+    <section className=" border border-border-subtle bg-surface overflow-hidden">
+      <header className="flex items-center justify-between px-5 py-4 border-b border-border-subtle">
         <div className="flex items-center gap-2">
-          <Brain size={16} className="text-muted" />
+          <Brain size={16} className="text-text-muted" />
           <div>
             <h2 className="text-sm font-semibold">{title}</h2>
-            <p className="text-[11px] text-muted">
+            <p className="text-[11px] text-text-muted">
               What ShortStack&apos;s AI agents remember from past interactions.
             </p>
           </div>
@@ -119,7 +119,7 @@ export default function AgentMemoryPanel({
           <button
             onClick={load}
             disabled={loading}
-            className="inline-flex items-center gap-1 text-[11px] px-2.5 py-1.5 rounded-lg border border-border bg-background/60 hover:bg-surface-light disabled:opacity-50"
+            className="inline-flex items-center gap-1 text-[11px] px-2.5 py-1.5 rounded-lg border border-border-subtle bg-background/60 hover:bg-surface-light disabled:opacity-50"
           >
             <RefreshCw size={11} className={loading ? "animate-spin" : ""} />
             Refresh
@@ -140,9 +140,9 @@ export default function AgentMemoryPanel({
       {error ? (
         <div className="px-5 py-8 text-center text-xs text-danger">{error}</div>
       ) : loading ? (
-        <div className="px-5 py-8 text-center text-xs text-muted">Loading…</div>
+        <div className="px-5 py-8 text-center text-xs text-text-muted">Loading…</div>
       ) : rows.length === 0 ? (
-        <div className="px-5 py-10 text-center text-xs text-muted space-y-1.5">
+        <div className="px-5 py-10 text-center text-xs text-text-muted space-y-1.5">
           <Brain size={20} className="mx-auto opacity-40" />
           <p>No memories yet for this {subjectKind}.</p>
           <p className="text-[10px]">
@@ -157,7 +157,7 @@ export default function AgentMemoryPanel({
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-xs">{row.fact}</p>
-                  <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10px] text-muted">
+                  <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[10px] text-text-muted">
                     {row.agent_key ? (
                       <span className="px-1.5 py-0.5 rounded-full bg-accent/10 text-accent uppercase tracking-wide">
                         {row.agent_key}
@@ -172,7 +172,7 @@ export default function AgentMemoryPanel({
             </li>
           ))}
           {rows.length > 20 ? (
-            <li className="px-5 py-2 text-[10px] text-muted text-center">
+            <li className="px-5 py-2 text-[10px] text-text-muted text-center">
               {rows.length - 20} older memories not shown.
             </li>
           ) : null}

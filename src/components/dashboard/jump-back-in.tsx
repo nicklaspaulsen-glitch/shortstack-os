@@ -27,7 +27,7 @@ const TYPE_META: Record<string, { label: string; icon: React.ReactNode; color: s
   form:         { label: "Form",         icon: <Layers size={13} />,    color: "text-violet-400",  bg: "bg-violet-500/10" },
   sequence:     { label: "Sequence",     icon: <Mail size={13} />,      color: "text-fuchsia-400", bg: "bg-fuchsia-500/10" },
   proposal:     { label: "Proposal",     icon: <FileText size={13} />,  color: "text-purple-400",  bg: "bg-purple-500/10" },
-  other:        { label: "Draft",        icon: <FileText size={13} />,  color: "text-muted",       bg: "bg-surface-light" },
+  other:        { label: "Draft",        icon: <FileText size={13} />,  color: "text-text-muted",       bg: "bg-surface-light" },
 };
 
 function timeAgo(dateStr: string): string {
@@ -95,7 +95,7 @@ export default function JumpBackIn() {
         <h2 className="text-sm font-semibold flex items-center gap-2">
           <RotateCcw size={14} className="text-info" /> Jump Back In
         </h2>
-        <span className="text-[10px] text-muted">{items.length} draft{items.length === 1 ? "" : "s"}</span>
+        <span className="text-[10px] text-text-muted">{items.length} draft{items.length === 1 ? "" : "s"}</span>
       </div>
 
       {loading ? (
@@ -106,9 +106,9 @@ export default function JumpBackIn() {
         </div>
       ) : items.length === 0 ? (
         <div className="text-center py-6">
-          <RotateCcw size={24} className="mx-auto mb-2 text-muted/30" />
-          <p className="text-xs text-muted font-medium mb-1">No drafts in progress</p>
-          <p className="text-[10px] text-muted max-w-xs mx-auto mb-2">
+          <RotateCcw size={24} className="mx-auto mb-2 text-text-muted/30" />
+          <p className="text-xs text-text-muted font-medium mb-1">No drafts in progress</p>
+          <p className="text-[10px] text-text-muted max-w-xs mx-auto mb-2">
             Saved drafts and in-progress edits will show up here.
           </p>
           <Link
@@ -126,13 +126,13 @@ export default function JumpBackIn() {
               <Link
                 key={item.id}
                 href={item.href}
-                className="group p-3 rounded-xl border border-border bg-surface hover:border-[rgba(59,130,246,0.25)] hover:shadow-sm transition-all flex flex-col gap-2"
+                className="group p-3 rounded-xl border border-border-subtle bg-surface hover:border-[rgba(59,130,246,0.25)] hover:shadow-sm transition-all flex flex-col gap-2"
               >
                 <div className="flex items-center justify-between">
                   <span className={`inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full font-semibold ${meta.bg} ${meta.color}`}>
                     {meta.icon} {meta.label}
                   </span>
-                  <span className="text-[8px] text-muted">{timeAgo(item.updated_at)}</span>
+                  <span className="text-[8px] text-text-muted">{timeAgo(item.updated_at)}</span>
                 </div>
                 <p className="text-[11px] font-semibold truncate group-hover:text-[#2563EB] transition-colors">
                   {item.title}

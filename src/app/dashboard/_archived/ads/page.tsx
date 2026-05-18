@@ -369,7 +369,7 @@ export default function AdsPage() {
                         </MotionPage>;
 
   return (
-    <div className="fade-in space-y-6 max-w-[1400px] mx-auto">
+    <div className="space-y-6 max-w-[1400px] mx-auto">
       {/* -- Ads Center command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -378,10 +378,10 @@ export default function AdsPage() {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <>
-            <button onClick={fetchData} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
+            <button onClick={fetchData} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
               <RefreshCw size={12} /> Sync
             </button>
-            <button onClick={() => setShowAddCampaign(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
+            <button onClick={() => setShowAddCampaign(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
               <Plus size={12} /> New Campaign
             </button>
           </>
@@ -400,7 +400,7 @@ export default function AdsPage() {
           ] as const).map(t => (
             <button key={t.id} onClick={() => { setTab(t.id); if (t.id === "copilot") fetchActions(); }}
               className={`flex items-center gap-1.5 px-3.5 py-2 text-xs rounded-lg transition-all ${
-                tab === t.id ? "bg-brand-accent text-white font-medium shadow-sm" : "text-muted hover:text-foreground"
+                tab === t.id ? "bg-brand-accent text-white font-medium shadow-sm" : "text-text-muted hover:text-text-primary"
               }`}
             >
               {t.icon} {t.label}
@@ -415,7 +415,7 @@ export default function AdsPage() {
 
         {tab === "campaigns" && (
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 text-[10px] text-muted">
+            <div className="flex items-center gap-1.5 text-[10px] text-text-muted">
               <Filter size={11} />
             </div>
             <select value={clientFilter} onChange={e => setClientFilter(e.target.value)}
@@ -488,12 +488,12 @@ export default function AdsPage() {
                       ? platCampaigns.filter(c => c.ctr > 0).reduce((s, c) => s + c.ctr, 0) / platCampaigns.filter(c => c.ctr > 0).length : 0;
                     const platClicks = platCampaigns.reduce((s, c) => s + c.clicks, 0);
                     return (
-                      <div key={p.id} className="p-3 rounded-xl bg-surface-light border border-border">
+                      <div key={p.id} className="p-3 rounded-xl bg-surface-light border border-border-subtle">
                         <div className="flex items-center gap-3 mb-2">
                           <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">{getBrandIcon(p.id, 32)}</div>
                           <div className="flex-1">
                             <p className="text-xs font-semibold">{p.label}</p>
-                            <p className="text-[9px] text-muted">{platCampaigns.length} campaign{platCampaigns.length !== 1 ? "s" : ""}</p>
+                            <p className="text-[9px] text-text-muted">{platCampaigns.length} campaign{platCampaigns.length !== 1 ? "s" : ""}</p>
                           </div>
                           {platSpend > 0 && <div className="w-24 h-2 bg-surface rounded-full overflow-hidden">
                             <div className="h-full rounded-full" style={{ backgroundColor: p.color, width: `${totalSpend > 0 ? (platSpend / totalSpend) * 100 : 0}%` }} />
@@ -510,7 +510,7 @@ export default function AdsPage() {
                             ].map(m => (
                               <div key={m.label} className="text-center">
                                 <p className={`text-[11px] font-bold font-mono ${(m as {good?: boolean}).good ? "text-success" : ""}`}>{m.value}</p>
-                                <p className="text-[8px] text-muted">{m.label}</p>
+                                <p className="text-[8px] text-text-muted">{m.label}</p>
                               </div>
                             ))}
                           </div>
@@ -540,7 +540,7 @@ export default function AdsPage() {
                       const clConv = clCampaigns.reduce((s, c) => s + c.conversions, 0);
                       const mrr = clientMrr[cl.id] || 0;
                       return (
-                        <div key={cl.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
+                        <div key={cl.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border-subtle">
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-medium truncate">{cl.business_name}</p>
                             <div className="flex items-center gap-3 mt-0.5">
@@ -550,16 +550,16 @@ export default function AdsPage() {
                             </div>
                           </div>
                           <div className="grid grid-cols-4 gap-4 text-center shrink-0">
-                            <div><p className="text-[10px] font-bold font-mono">{formatCurrency(clSpend)}</p><p className="text-[7px] text-muted">Spend</p></div>
-                            <div><p className={`text-[10px] font-bold font-mono ${clRoas >= 2 ? "text-success" : clRoas < 1 ? "text-danger" : ""}`}>{clRoas.toFixed(1)}x</p><p className="text-[7px] text-muted">ROAS</p></div>
-                            <div><p className="text-[10px] font-bold font-mono">{clConv}</p><p className="text-[7px] text-muted">Conv.</p></div>
-                            <div><p className="text-[10px] font-bold font-mono">{formatCurrency(mrr)}</p><p className="text-[7px] text-muted">MRR</p></div>
+                            <div><p className="text-[10px] font-bold font-mono">{formatCurrency(clSpend)}</p><p className="text-[7px] text-text-muted">Spend</p></div>
+                            <div><p className={`text-[10px] font-bold font-mono ${clRoas >= 2 ? "text-success" : clRoas < 1 ? "text-danger" : ""}`}>{clRoas.toFixed(1)}x</p><p className="text-[7px] text-text-muted">ROAS</p></div>
+                            <div><p className="text-[10px] font-bold font-mono">{clConv}</p><p className="text-[7px] text-text-muted">Conv.</p></div>
+                            <div><p className="text-[10px] font-bold font-mono">{formatCurrency(mrr)}</p><p className="text-[7px] text-text-muted">MRR</p></div>
                           </div>
                         </div>
                       );
                     }).filter(Boolean)}
                   </div>
-                ) : <p className="text-xs text-muted text-center py-4">No clients with campaigns</p>}
+                ) : <p className="text-xs text-text-muted text-center py-4">No clients with campaigns</p>}
               </motion.div>
             </div>
 
@@ -583,14 +583,14 @@ export default function AdsPage() {
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                       autopilotConfig.enabled
                         ? "bg-success/10 text-success border border-success/20"
-                        : "bg-surface-light text-muted border border-border"
+                        : "bg-surface-light text-text-muted border border-border-subtle"
                     }`}>
                     {autopilotConfig.enabled ? <ToggleRight size={14} /> : <ToggleLeft size={14} />}
                     {autopilotConfig.enabled ? "ON" : "OFF"}
                   </button>
                 </div>
 
-                <p className="text-[10px] text-muted mb-3">AI analyzes campaigns and auto-executes allowed actions. Control exactly what it can do.</p>
+                <p className="text-[10px] text-text-muted mb-3">AI analyzes campaigns and auto-executes allowed actions. Control exactly what it can do.</p>
 
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="mb-4">
                   <button onClick={runAutopilot} disabled={autopilotRunning || !autopilotConfig.enabled}
@@ -601,7 +601,7 @@ export default function AdsPage() {
 
                 {/* Permission toggles */}
                 <div className="space-y-2">
-                  <p className="text-[9px] text-muted font-semibold uppercase tracking-wider">Allowed Actions</p>
+                  <p className="text-[9px] text-text-muted font-semibold uppercase tracking-wider">Allowed Actions</p>
                   {[
                     { key: "allow_budget_increase", label: "Increase budgets", desc: "On high-ROAS campaigns" },
                     { key: "allow_budget_decrease", label: "Decrease budgets", desc: "On low-ROAS campaigns" },
@@ -610,15 +610,15 @@ export default function AdsPage() {
                     { key: "allow_create_ads", label: "Create new ads", desc: "AI generates copy & creates ads" },
                     { key: "auto_sync", label: "Auto-sync data", desc: "Pull latest data before analysis" },
                   ].map(toggle => (
-                    <div key={toggle.key} className="flex items-center justify-between p-2 rounded-lg border border-border hover:border-[rgba(59,130,246,0.1)] transition-all">
+                    <div key={toggle.key} className="flex items-center justify-between p-2 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.1)] transition-all">
                       <div>
                         <p className="text-[10px] font-medium">{toggle.label}</p>
-                        <p className="text-[8px] text-muted">{toggle.desc}</p>
+                        <p className="text-[8px] text-text-muted">{toggle.desc}</p>
                       </div>
                       <button
                         onClick={() => saveAutopilotConfig({ [toggle.key]: !autopilotConfig[toggle.key] })}
                         className={`w-8 h-4.5 rounded-full transition-all flex items-center ${
-                          autopilotConfig[toggle.key] ? "bg-success justify-end" : "bg-surface-light border border-border justify-start"
+                          autopilotConfig[toggle.key] ? "bg-success justify-end" : "bg-surface-light border border-border-subtle justify-start"
                         }`}>
                         <div className={`w-3.5 h-3.5 rounded-full mx-0.5 transition-all ${
                           autopilotConfig[toggle.key] ? "bg-white" : "bg-muted/40"
@@ -630,28 +630,28 @@ export default function AdsPage() {
 
                 {/* Thresholds */}
                 <div className="mt-4 space-y-2">
-                  <p className="text-[9px] text-muted font-semibold uppercase tracking-wider">Thresholds</p>
+                  <p className="text-[9px] text-text-muted font-semibold uppercase tracking-wider">Thresholds</p>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="text-[8px] text-muted">Max budget change %</label>
+                      <label className="text-[8px] text-text-muted">Max budget change %</label>
                       <input type="number" value={Number(autopilotConfig.max_budget_change_pct) || 20}
                         onChange={e => saveAutopilotConfig({ max_budget_change_pct: parseInt(e.target.value) || 20 })}
                         className="input w-full text-xs py-1" />
                     </div>
                     <div>
-                      <label className="text-[8px] text-muted">Min ROAS for increase</label>
+                      <label className="text-[8px] text-text-muted">Min ROAS for increase</label>
                       <input type="number" step="0.1" value={Number(autopilotConfig.min_roas_for_increase) || 2}
                         onChange={e => saveAutopilotConfig({ min_roas_for_increase: parseFloat(e.target.value) || 2 })}
                         className="input w-full text-xs py-1" />
                     </div>
                     <div>
-                      <label className="text-[8px] text-muted">Max ROAS for decrease</label>
+                      <label className="text-[8px] text-text-muted">Max ROAS for decrease</label>
                       <input type="number" step="0.1" value={Number(autopilotConfig.max_roas_for_decrease) || 0.8}
                         onChange={e => saveAutopilotConfig({ max_roas_for_decrease: parseFloat(e.target.value) || 0.8 })}
                         className="input w-full text-xs py-1" />
                     </div>
                     <div>
-                      <label className="text-[8px] text-muted">Pause if ROAS below</label>
+                      <label className="text-[8px] text-text-muted">Pause if ROAS below</label>
                       <input type="number" step="0.1" value={Number(autopilotConfig.pause_roas_threshold) || 0.3}
                         onChange={e => saveAutopilotConfig({ pause_roas_threshold: parseFloat(e.target.value) || 0.3 })}
                         className="input w-full text-xs py-1" />
@@ -671,10 +671,10 @@ export default function AdsPage() {
                   <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Activity size={12} className="text-success" /> Recent AI Actions</h3>
                   <div className="space-y-1.5 max-h-48 overflow-y-auto">
                     {actions.filter(a => a.status === "executed").slice(0, 8).map(a => (
-                      <div key={a.id} className="flex items-center gap-2 text-[10px] py-1 border-b border-border/50 last:border-0">
+                      <div key={a.id} className="flex items-center gap-2 text-[10px] py-1 border-b border-border-subtle/50 last:border-0">
                         <CheckCircle2 size={10} className="text-success shrink-0" />
                         <span className="truncate flex-1">{a.title}</span>
-                        <span className="text-[8px] text-muted shrink-0">{new Date(a.executed_at || a.created_at).toLocaleDateString()}</span>
+                        <span className="text-[8px] text-text-muted shrink-0">{new Date(a.executed_at || a.created_at).toLocaleDateString()}</span>
                       </div>
                     ))}
                   </div>
@@ -690,7 +690,7 @@ export default function AdsPage() {
                 whileHover={{ y: -2 }}
               >
                 <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Settings2 size={12} className="text-brand-accent" /> How Autopilot Works</h3>
-                <ol className="space-y-1 text-[10px] text-muted">
+                <ol className="space-y-1 text-[10px] text-text-muted">
                   <li className="flex gap-2"><span className="text-brand-accent font-bold">1.</span> Syncs latest campaign data from all platforms</li>
                   <li className="flex gap-2"><span className="text-brand-accent font-bold">2.</span> AI analyzes performance vs benchmarks</li>
                   <li className="flex gap-2"><span className="text-brand-accent font-bold">3.</span> Proposes budget/status changes within your limits</li>
@@ -708,9 +708,9 @@ export default function AdsPage() {
         <div className="space-y-2">
           {filtered.length === 0 ? (
             <div className="card-static text-center py-16">
-              <Megaphone size={32} className="mx-auto mb-3 text-muted/30" />
-              <p className="text-sm font-medium text-muted">No campaigns found</p>
-              <p className="text-xs text-muted mt-1">
+              <Megaphone size={32} className="mx-auto mb-3 text-text-muted/30" />
+              <p className="text-sm font-medium text-text-muted">No campaigns found</p>
+              <p className="text-xs text-text-muted mt-1">
                 {campaigns.length > 0 ? "Try adjusting your filters" : "Connect client ad accounts from the AI Copilot tab, then sync to pull campaigns"}
               </p>
               <div className="flex items-center justify-center gap-2 mt-4">
@@ -755,32 +755,32 @@ export default function AdsPage() {
                         <p className="text-sm font-semibold truncate">{campaign.name}</p>
                         <StatusBadge status={campaign.status} />
                       </div>
-                      <p className="text-[10px] text-muted truncate">{getClientName(campaign.client_id)} � {platform.label}</p>
+                      <p className="text-[10px] text-text-muted truncate">{getClientName(campaign.client_id)} � {platform.label}</p>
                     </div>
 
                     {/* Metrics Strip */}
                     <div className="hidden lg:flex items-center gap-6 text-center">
                       <div>
                         <p className="text-xs font-bold font-mono">{formatCurrency(campaign.spend)}</p>
-                        <p className="text-[9px] text-muted">Spend</p>
+                        <p className="text-[9px] text-text-muted">Spend</p>
                       </div>
                       <div>
                         <p className="text-xs font-bold font-mono">{campaign.impressions.toLocaleString()}</p>
-                        <p className="text-[9px] text-muted">Impr.</p>
+                        <p className="text-[9px] text-text-muted">Impr.</p>
                       </div>
                       <div>
                         <p className="text-xs font-bold font-mono">{campaign.clicks.toLocaleString()}</p>
-                        <p className="text-[9px] text-muted">Clicks</p>
+                        <p className="text-[9px] text-text-muted">Clicks</p>
                       </div>
                       <div>
                         <p className={`text-xs font-bold font-mono ${campaign.roas >= 2 ? "text-success" : campaign.roas >= 1 ? "text-warning" : "text-danger"}`}>
                           {campaign.roas.toFixed(1)}x
                         </p>
-                        <p className="text-[9px] text-muted">ROAS</p>
+                        <p className="text-[9px] text-text-muted">ROAS</p>
                       </div>
                       <div>
                         <p className="text-xs font-bold font-mono">{(campaign.ctr * 100).toFixed(2)}%</p>
-                        <p className="text-[9px] text-muted">CTR</p>
+                        <p className="text-[9px] text-text-muted">CTR</p>
                       </div>
                     </div>
 
@@ -788,12 +788,12 @@ export default function AdsPage() {
                     <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
                       {campaign.status === "active" ? (
                         <button onClick={() => updateCampaignStatus(campaign.id, "paused")}
-                          className="p-2 rounded-lg hover:bg-surface border border-transparent hover:border-border transition-all" title="Pause">
-                          <Pause size={13} className="text-muted" />
+                          className="p-2 rounded-lg hover:bg-surface border border-transparent hover:border-border-subtle transition-all" title="Pause">
+                          <Pause size={13} className="text-text-muted" />
                         </button>
                       ) : campaign.status === "paused" || campaign.status === "draft" ? (
                         <button onClick={() => updateCampaignStatus(campaign.id, "active")}
-                          className="p-2 rounded-lg hover:bg-surface border border-transparent hover:border-border transition-all" title="Activate">
+                          className="p-2 rounded-lg hover:bg-surface border border-transparent hover:border-border-subtle transition-all" title="Activate">
                           <Play size={13} className="text-success" />
                         </button>
                       ) : null}
@@ -808,13 +808,13 @@ export default function AdsPage() {
                           : <Sparkles size={13} className="text-brand-accent" />
                         }
                       </button>
-                      <ChevronDown size={14} className={`text-muted transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+                      <ChevronDown size={14} className={`text-text-muted transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
                     </div>
                   </div>
 
                   {/* Expanded Detail */}
                   {isExpanded && (
-                    <div className="mt-4 pt-4 border-t border-border space-y-4 animate-in slide-in-from-top-2 duration-200">
+                    <div className="mt-4 pt-4 border-t border-border-subtle space-y-4 animate-in slide-in-from-top-2 duration-200">
                       {/* Metrics Grid */}
                       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
                         {[
@@ -828,37 +828,37 @@ export default function AdsPage() {
                         ].map(m => (
                           <div key={m.label} className="bg-surface-light rounded-lg p-3 text-center">
                             <p className={`text-sm font-bold font-mono ${(m as {highlight?: boolean}).highlight ? "text-success" : ""}`}>{m.value}</p>
-                            <p className="text-[9px] text-muted mt-0.5">{m.label}</p>
+                            <p className="text-[9px] text-text-muted mt-0.5">{m.label}</p>
                           </div>
                         ))}
                       </div>
 
                       {/* Budget Info */}
-                      <div className="flex items-center gap-6 text-xs text-muted">
-                        {campaign.budget_daily && <span>Daily Budget: <strong className="text-foreground">{formatCurrency(campaign.budget_daily)}</strong></span>}
-                        {campaign.budget_total && <span>Total Budget: <strong className="text-foreground">{formatCurrency(campaign.budget_total)}</strong></span>}
-                        {campaign.start_date && <span>Start: <strong className="text-foreground">{new Date(campaign.start_date).toLocaleDateString()}</strong></span>}
-                        {campaign.end_date && <span>End: <strong className="text-foreground">{new Date(campaign.end_date).toLocaleDateString()}</strong></span>}
+                      <div className="flex items-center gap-6 text-xs text-text-muted">
+                        {campaign.budget_daily && <span>Daily Budget: <strong className="text-text-primary">{formatCurrency(campaign.budget_daily)}</strong></span>}
+                        {campaign.budget_total && <span>Total Budget: <strong className="text-text-primary">{formatCurrency(campaign.budget_total)}</strong></span>}
+                        {campaign.start_date && <span>Start: <strong className="text-text-primary">{new Date(campaign.start_date).toLocaleDateString()}</strong></span>}
+                        {campaign.end_date && <span>End: <strong className="text-text-primary">{new Date(campaign.end_date).toLocaleDateString()}</strong></span>}
                       </div>
 
                       {/* Creatives for this campaign */}
                       {campaignCreatives.length > 0 && (
                         <div>
-                          <p className="text-[10px] text-muted font-semibold uppercase tracking-wider mb-2">Linked Creatives</p>
+                          <p className="text-[10px] text-text-muted font-semibold uppercase tracking-wider mb-2">Linked Creatives</p>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                             {campaignCreatives.map(cr => (
-                              <div key={cr.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
+                              <div key={cr.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border-subtle">
                                 {cr.image_url ? (
                                   /* eslint-disable-next-line @next/next/no-img-element */
                                   <img src={cr.image_url} alt="" className="w-12 h-12 rounded-lg object-cover shrink-0" />
                                 ) : (
                                   <div className="w-12 h-12 rounded-lg bg-surface flex items-center justify-center shrink-0">
-                                    <ImageIcon size={16} className="text-muted" />
+                                    <ImageIcon size={16} className="text-text-muted" />
                                   </div>
                                 )}
                                 <div className="min-w-0 flex-1">
                                   <p className="text-xs font-medium truncate">{cr.title}</p>
-                                  {cr.headline && <p className="text-[10px] text-muted truncate">{cr.headline}</p>}
+                                  {cr.headline && <p className="text-[10px] text-text-muted truncate">{cr.headline}</p>}
                                   <StatusBadge status={cr.status} />
                                 </div>
                               </div>
@@ -874,7 +874,7 @@ export default function AdsPage() {
                             <Sparkles size={14} className="text-brand-accent" />
                             <p className="text-xs font-semibold">AI Optimization Suggestions</p>
                           </div>
-                          <p className="text-xs text-muted whitespace-pre-wrap leading-relaxed">{campaign.ai_suggestions}</p>
+                          <p className="text-xs text-text-muted whitespace-pre-wrap leading-relaxed">{campaign.ai_suggestions}</p>
                         </div>
                       )}
                     </div>
@@ -891,9 +891,9 @@ export default function AdsPage() {
         <div>
           {creatives.length === 0 ? (
             <div className="card-static text-center py-16">
-              <ImageIcon size={32} className="mx-auto mb-3 text-muted/30" />
-              <p className="text-sm font-medium text-muted">No creatives yet</p>
-              <p className="text-xs text-muted mt-1">Ad creatives will appear here once linked to campaigns</p>
+              <ImageIcon size={32} className="mx-auto mb-3 text-text-muted/30" />
+              <p className="text-sm font-medium text-text-muted">No creatives yet</p>
+              <p className="text-xs text-text-muted mt-1">Ad creatives will appear here once linked to campaigns</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -909,7 +909,7 @@ export default function AdsPage() {
                     whileHover={{ y: -2 }}
                   >
                     {/* Preview */}
-                    <div className="aspect-video rounded-lg bg-surface-light border border-border mb-3 overflow-hidden relative">
+                    <div className="aspect-video rounded-lg bg-surface-light border border-border-subtle mb-3 overflow-hidden relative">
                       {cr.image_url ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
                         <img src={cr.image_url} alt="" className="w-full h-full object-cover" />
@@ -917,7 +917,7 @@ export default function AdsPage() {
                         <video src={cr.video_url} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <ImageIcon size={24} className="text-muted/30" />
+                          <ImageIcon size={24} className="text-text-muted/30" />
                         </div>
                       )}
                       <div className="absolute top-2 right-2">
@@ -934,10 +934,10 @@ export default function AdsPage() {
                         <StatusBadge status={cr.status} />
                       </div>
                       {cr.headline && (
-                        <p className="text-xs text-muted line-clamp-2">{cr.headline}</p>
+                        <p className="text-xs text-text-muted line-clamp-2">{cr.headline}</p>
                       )}
                       {cr.body_text && (
-                        <p className="text-[10px] text-muted line-clamp-2">{cr.body_text}</p>
+                        <p className="text-[10px] text-text-muted line-clamp-2">{cr.body_text}</p>
                       )}
                       {cr.cta_text && (
                         <div className="inline-block bg-[rgba(59,130,246,0.08)] text-brand-accent text-[9px] font-semibold px-2 py-0.5 rounded-full">
@@ -967,24 +967,24 @@ export default function AdsPage() {
               <Wand2 size={16} className="text-brand-accent" />
               <h2 className="text-sm font-semibold">AI Copy Generator</h2>
             </div>
-            <p className="text-[10px] text-muted -mt-2">Generate high-converting ad copy variations with AI. Pick your platform, audience, and offer.</p>
+            <p className="text-[10px] text-text-muted -mt-2">Generate high-converting ad copy variations with AI. Pick your platform, audience, and offer.</p>
 
             <div>
-              <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Client</label>
+              <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Client</label>
               <select value={copyClient} onChange={e => setCopyClient(e.target.value)} className="input w-full text-xs">
                 <option value="">General / No client</option>
                 {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Platform</label>
+              <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Platform</label>
               <div className="flex gap-2">
                 {PLATFORMS.map(p => (
                   <button key={p.id} onClick={() => setCopyPlatform(p.id)}
                     className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium border transition-all ${
                       copyPlatform === p.id
-                        ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-foreground"
-                        : "border-border bg-surface-light text-muted hover:text-foreground"
+                        ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-text-primary"
+                        : "border-border-subtle bg-surface-light text-text-muted hover:text-text-primary"
                     }`}>
                     <span className="w-5 h-5 rounded-md flex items-center justify-center text-white text-[8px] font-bold" style={{ backgroundColor: p.color }}>
                       {p.icon}
@@ -995,7 +995,7 @@ export default function AdsPage() {
               </div>
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Objective</label>
+              <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Objective</label>
               <select value={copyObjective} onChange={e => setCopyObjective(e.target.value)} className="input w-full text-xs">
                 <option>Lead generation</option>
                 <option>Brand awareness</option>
@@ -1006,17 +1006,17 @@ export default function AdsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Target Audience</label>
+              <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Target Audience</label>
               <input value={copyAudience} onChange={e => setCopyAudience(e.target.value)}
                 className="input w-full text-xs" placeholder="e.g. Homeowners 25-55, local area" />
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Offer / Hook</label>
+              <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Offer / Hook</label>
               <input value={copyOffer} onChange={e => setCopyOffer(e.target.value)}
                 className="input w-full text-xs" placeholder="e.g. Free consultation, 20% off first month" />
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Tone</label>
+              <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Tone</label>
               <input value={copyTone} onChange={e => setCopyTone(e.target.value)}
                 className="input w-full text-xs" placeholder="professional, urgent, benefit-focused" />
             </div>
@@ -1033,9 +1033,9 @@ export default function AdsPage() {
           <div className="lg:col-span-3 space-y-4">
             {!generatedCopy ? (
               <div className="card-static text-center py-20">
-                <Wand2 size={32} className="mx-auto mb-3 text-muted/20" />
-                <p className="text-sm text-muted">Configure your ad and hit generate</p>
-                <p className="text-[10px] text-muted mt-1">AI will create 5 copy variations with headlines, body text, CTAs, and image suggestions</p>
+                <Wand2 size={32} className="mx-auto mb-3 text-text-muted/20" />
+                <p className="text-sm text-text-muted">Configure your ad and hit generate</p>
+                <p className="text-[10px] text-text-muted mt-1">AI will create 5 copy variations with headlines, body text, CTAs, and image suggestions</p>
               </div>
             ) : (
               <>
@@ -1061,7 +1061,7 @@ export default function AdsPage() {
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <span className="w-5 h-5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent text-[9px] font-bold flex items-center justify-center">{i + 1}</span>
-                            <span className="text-[9px] text-muted uppercase tracking-wider">{v.hook_type}</span>
+                            <span className="text-[9px] text-text-muted uppercase tracking-wider">{v.hook_type}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
                             {isHigh && (
@@ -1074,21 +1074,21 @@ export default function AdsPage() {
                               navigator.clipboard.writeText(`${v.headline}\n\n${v.primary_text}\n\n${v.cta}`);
                               toast.success("Copied!");
                             }} className="p-1 rounded hover:bg-surface-light opacity-0 group-hover:opacity-100 transition-all">
-                              <Copy size={11} className="text-muted" />
+                              <Copy size={11} className="text-text-muted" />
                             </button>
                           </div>
                         </div>
                         <p className="text-sm font-bold mb-1">{v.headline}</p>
-                        <p className="text-xs text-muted leading-relaxed">{v.primary_text}</p>
-                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
-                          <span className="text-[9px] text-muted">{v.description}</span>
+                        <p className="text-xs text-text-muted leading-relaxed">{v.primary_text}</p>
+                        <div className="flex items-center justify-between mt-2 pt-2 border-t border-border-subtle">
+                          <span className="text-[9px] text-text-muted">{v.description}</span>
                           <span className="text-[10px] bg-[rgba(59,130,246,0.08)] text-brand-accent font-semibold px-2 py-0.5 rounded-full">{v.cta}</span>
                         </div>
                         {v.image_concept && (
-                          <div className="mt-2 pt-2 border-t border-border">
+                          <div className="mt-2 pt-2 border-t border-border-subtle">
                             <div className="flex items-center gap-1.5">
-                              <ImageIcon size={10} className="text-muted shrink-0" />
-                              <span className="text-[9px] text-muted">{v.image_concept}</span>
+                              <ImageIcon size={10} className="text-text-muted shrink-0" />
+                              <span className="text-[9px] text-text-muted">{v.image_concept}</span>
                             </div>
                           </div>
                         )}
@@ -1111,7 +1111,7 @@ export default function AdsPage() {
                     </h3>
                     <div className="space-y-2">
                       {((generatedCopy as Record<string, unknown>).image_suggestions as Array<Record<string, string>>).map((img, i) => (
-                        <div key={i} className="p-3 rounded-lg bg-surface-light border border-border">
+                        <div key={i} className="p-3 rounded-lg bg-surface-light border border-border-subtle">
                           <p className="text-xs">{typeof img === "string" ? img : img.concept || img.description || JSON.stringify(img)}</p>
                         </div>
                       ))}
@@ -1130,7 +1130,7 @@ export default function AdsPage() {
                     <h3 className="text-xs font-semibold flex items-center gap-2 mb-2">
                       <Zap size={13} className="text-brand-accent" /> A/B Test Recommendation
                     </h3>
-                    <p className="text-xs text-muted leading-relaxed">
+                    <p className="text-xs text-text-muted leading-relaxed">
                       {typeof (generatedCopy as Record<string, unknown>).a_b_test_plan === "string"
                         ? (generatedCopy as Record<string, unknown>).a_b_test_plan as string
                         : JSON.stringify((generatedCopy as Record<string, unknown>).a_b_test_plan)}
@@ -1149,7 +1149,7 @@ export default function AdsPage() {
                     <h3 className="text-xs font-semibold flex items-center gap-2 mb-2">
                       <Globe size={13} /> Platform Tips
                     </h3>
-                    <p className="text-xs text-muted leading-relaxed">
+                    <p className="text-xs text-text-muted leading-relaxed">
                       {typeof (generatedCopy as Record<string, unknown>).platform_tips === "string"
                         ? (generatedCopy as Record<string, unknown>).platform_tips as string
                         : JSON.stringify((generatedCopy as Record<string, unknown>).platform_tips)}
@@ -1178,7 +1178,7 @@ export default function AdsPage() {
                 <Bot size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-semibold">AI Ad Copilot</h2>
               </div>
-              <p className="text-[10px] text-muted">AI analyzes your campaigns and proposes optimizations. Review and approve actions before they execute.</p>
+              <p className="text-[10px] text-text-muted">AI analyzes your campaigns and proposes optimizations. Review and approve actions before they execute.</p>
 
               <button onClick={fetchInsights} disabled={loadingInsights || campaigns.length === 0}
                 className="btn-primary w-full text-xs flex items-center justify-center gap-2 disabled:opacity-50">
@@ -1187,12 +1187,12 @@ export default function AdsPage() {
 
               {/* Per-campaign optimize */}
               <div>
-                <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Optimize Campaign</label>
+                <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Optimize Campaign</label>
                 <div className="space-y-1.5 max-h-48 overflow-y-auto">
                   {campaigns.map(c => (
                     <button key={c.id} onClick={() => generateAISuggestions(c.id)}
                       disabled={optimizingId === c.id}
-                      className="w-full flex items-center gap-2 p-2 rounded-lg border border-border hover:border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.05)] transition-all text-left">
+                      className="w-full flex items-center gap-2 p-2 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.05)] transition-all text-left">
                       <div className="w-6 h-6 rounded-md flex items-center justify-center text-white text-[8px] font-bold shrink-0"
                         style={{ backgroundColor: getPlatformInfo(c.platform).color }}>
                         {getPlatformInfo(c.platform).icon}
@@ -1203,7 +1203,7 @@ export default function AdsPage() {
                         : <Sparkles size={10} className="text-brand-accent shrink-0" />}
                     </button>
                   ))}
-                  {campaigns.length === 0 && <p className="text-[10px] text-muted text-center py-2">No campaigns to optimize</p>}
+                  {campaigns.length === 0 && <p className="text-[10px] text-text-muted text-center py-2">No campaigns to optimize</p>}
                 </div>
               </div>
             </motion.div>
@@ -1219,13 +1219,13 @@ export default function AdsPage() {
                 <Plug size={14} className="text-info" />
                 <h2 className="text-sm font-semibold">Ad Accounts</h2>
               </div>
-              <p className="text-[10px] text-muted">Connect client ad accounts, then sync campaign data.</p>
+              <p className="text-[10px] text-text-muted">Connect client ad accounts, then sync campaign data.</p>
               {clients.length > 0 ? (
                 <div className="space-y-2">
                   {clients.map(client => {
                     const connected = adConnections[client.id] || [];
                     return (
-                      <div key={client.id} className="p-2.5 rounded-lg border border-border">
+                      <div key={client.id} className="p-2.5 rounded-lg border border-border-subtle">
                         <p className="text-[10px] font-medium mb-2">{client.business_name}</p>
                         <div className="space-y-1.5">
                           {PLATFORMS.map(p => {
@@ -1242,7 +1242,7 @@ export default function AdsPage() {
                                     <button
                                       onClick={() => syncPlatform(client.id, p.id)}
                                       disabled={syncing !== null}
-                                      className="text-[9px] px-2 py-1 rounded-md font-medium border border-border hover:border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.05)] transition-all disabled:opacity-50 flex items-center gap-1">
+                                      className="text-[9px] px-2 py-1 rounded-md font-medium border border-border-subtle hover:border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.05)] transition-all disabled:opacity-50 flex items-center gap-1">
                                       {syncing === p.id ? <Loader size={8} className="animate-spin" /> : <RefreshCw size={8} />}
                                       Sync
                                     </button>
@@ -1262,7 +1262,7 @@ export default function AdsPage() {
                     );
                   })}
                 </div>
-              ) : <p className="text-[10px] text-muted text-center">No clients yet</p>}
+              ) : <p className="text-[10px] text-text-muted text-center">No clients yet</p>}
             </motion.div>
 
             {/* How It Works */}
@@ -1277,7 +1277,7 @@ export default function AdsPage() {
                 <Shield size={14} className="text-brand-accent" />
                 <h3 className="text-xs font-semibold">How Copilot Works</h3>
               </div>
-              <ol className="space-y-1.5 text-[10px] text-muted">
+              <ol className="space-y-1.5 text-[10px] text-text-muted">
                 <li className="flex gap-2"><span className="text-brand-accent font-bold">1.</span> AI analyzes campaign performance data</li>
                 <li className="flex gap-2"><span className="text-brand-accent font-bold">2.</span> Proposes optimizations with reasoning</li>
                 <li className="flex gap-2"><span className="text-brand-accent font-bold">3.</span> You review and approve/reject each action</li>
@@ -1301,13 +1301,13 @@ export default function AdsPage() {
                   <BarChart3 size={14} className="text-brand-accent" />
                   <h2 className="text-sm font-semibold">Portfolio Insights</h2>
                 </div>
-                <pre className="whitespace-pre-wrap text-xs text-foreground leading-relaxed font-sans bg-surface-light rounded-xl p-4 border border-border/30 max-h-[300px] overflow-y-auto">
+                <pre className="whitespace-pre-wrap text-xs text-text-primary leading-relaxed font-sans bg-surface-light rounded-xl p-4 border border-border-subtle/30 max-h-[300px] overflow-y-auto">
                   {(insights as Record<string, unknown>).summary as string || JSON.stringify(insights, null, 2)}
                 </pre>
                 {String((insights as Record<string, unknown>).budget_recommendations || "") && (
                   <div className="mt-3 p-3 rounded-lg bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.1)]">
                     <p className="text-[10px] font-semibold text-brand-accent mb-1">Budget Recommendations</p>
-                    <p className="text-[10px] text-muted">{String((insights as Record<string, unknown>).budget_recommendations)}</p>
+                    <p className="text-[10px] text-text-muted">{String((insights as Record<string, unknown>).budget_recommendations)}</p>
                   </div>
                 )}
               </motion.div>
@@ -1334,12 +1334,12 @@ export default function AdsPage() {
               </div>
 
               {loadingActions ? (
-                <div className="flex items-center justify-center py-8"><Loader size={16} className="animate-spin text-muted" /></div>
+                <div className="flex items-center justify-center py-8"><Loader size={16} className="animate-spin text-text-muted" /></div>
               ) : pendingActions.length === 0 ? (
                 <div className="text-center py-8">
                   <CheckCircle2 size={24} className="text-success/30 mx-auto mb-2" />
-                  <p className="text-xs text-muted">No pending actions</p>
-                  <p className="text-[10px] text-muted/60 mt-1">Run AI optimization on a campaign to get recommendations</p>
+                  <p className="text-xs text-text-muted">No pending actions</p>
+                  <p className="text-[10px] text-text-muted/60 mt-1">Run AI optimization on a campaign to get recommendations</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -1347,7 +1347,7 @@ export default function AdsPage() {
                     <div key={action.id} className={`border rounded-xl p-4 transition-all ${
                       action.priority === "critical" ? "border-danger/30 bg-danger/[0.02]" :
                       action.priority === "high" ? "border-warning/30 bg-warning/[0.02]" :
-                      "border-border"
+                      "border-border-subtle"
                     }`}>
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
@@ -1356,9 +1356,9 @@ export default function AdsPage() {
                               action.priority === "critical" ? "bg-danger/10 text-danger" :
                               action.priority === "high" ? "bg-warning/10 text-warning" :
                               action.priority === "medium" ? "bg-info/10 text-info" :
-                              "bg-surface-light text-muted"
+                              "bg-surface-light text-text-muted"
                             }`}>{action.priority}</span>
-                            <span className="text-[9px] text-muted">{action.action_type.replace(/_/g, " ")}</span>
+                            <span className="text-[9px] text-text-muted">{action.action_type.replace(/_/g, " ")}</span>
                             {action.platform && (
                               <span className="w-4 h-4 rounded-sm flex items-center justify-center text-white text-[7px] font-bold"
                                 style={{ backgroundColor: getPlatformInfo(action.platform).color }}>
@@ -1367,11 +1367,11 @@ export default function AdsPage() {
                             )}
                           </div>
                           <p className="text-xs font-semibold">{action.title}</p>
-                          {action.description && <p className="text-[10px] text-muted mt-0.5">{action.description}</p>}
+                          {action.description && <p className="text-[10px] text-text-muted mt-0.5">{action.description}</p>}
                           {action.ai_reasoning && (
                             <div className="mt-2 p-2 rounded-lg bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.1)]">
                               <p className="text-[9px] text-brand-accent font-medium mb-0.5">AI Reasoning</p>
-                              <p className="text-[10px] text-muted leading-relaxed">{action.ai_reasoning}</p>
+                              <p className="text-[10px] text-text-muted leading-relaxed">{action.ai_reasoning}</p>
                             </div>
                           )}
                           {action.estimated_impact && (
@@ -1423,7 +1423,7 @@ export default function AdsPage() {
                         </span>
                         <div>
                           <p className="text-xs font-medium">{action.title}</p>
-                          <p className="text-[9px] text-muted">{action.action_type.replace(/_/g, " ")}</p>
+                          <p className="text-[9px] text-text-muted">{action.action_type.replace(/_/g, " ")}</p>
                         </div>
                       </div>
                       <button onClick={() => handleAction(action.id, "execute")}
@@ -1447,7 +1447,7 @@ export default function AdsPage() {
                 transition={{ duration: 0.22, delay: 0.24 }}
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <Clock size={14} className="text-muted" />
+                  <Clock size={14} className="text-text-muted" />
                   <h2 className="text-sm font-semibold">Recent History</h2>
                 </div>
                 <div className="space-y-1.5">
@@ -1465,16 +1465,16 @@ export default function AdsPage() {
                       }`}>
                         {action.status === "executed" ? <CheckCircle2 size={10} className="text-success" /> :
                          action.status === "failed" ? <XCircle size={10} className="text-danger" /> :
-                         <XCircle size={10} className="text-muted" />}
+                         <XCircle size={10} className="text-text-muted" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-[10px] font-medium truncate">{action.title}</p>
-                        <p className="text-[9px] text-muted">{action.action_type.replace(/_/g, " ")} � {new Date(action.created_at).toLocaleDateString()}</p>
+                        <p className="text-[9px] text-text-muted">{action.action_type.replace(/_/g, " ")} � {new Date(action.created_at).toLocaleDateString()}</p>
                       </div>
                       <span className={`text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-full ${
                         action.status === "executed" ? "bg-success/10 text-success" :
                         action.status === "failed" ? "bg-danger/10 text-danger" :
-                        "bg-surface-light text-muted"
+                        "bg-surface-light text-text-muted"
                       }`}>{action.status}</span>
                     </motion.div>
                   ))}
@@ -1490,36 +1490,36 @@ export default function AdsPage() {
         <form onSubmit={e => { e.preventDefault(); addCampaign(new FormData(e.currentTarget)); }} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2">
-              <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Campaign Name *</label>
+              <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Campaign Name *</label>
               <input name="name" className="input w-full" required placeholder="e.g. Spring Sale - Meta Lead Gen" />
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Client *</label>
+              <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Client *</label>
               <select name="client_id" className="input w-full" required>
                 <option value="">Select client...</option>
                 {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Platform *</label>
+              <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Platform *</label>
               <select name="platform" className="input w-full" required>
                 {PLATFORMS.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Daily Budget ($)</label>
+              <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Daily Budget ($)</label>
               <input name="budget_daily" type="number" step="0.01" className="input w-full" placeholder="50.00" />
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Total Budget ($)</label>
+              <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Total Budget ($)</label>
               <input name="budget_total" type="number" step="0.01" className="input w-full" placeholder="1500.00" />
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Start Date</label>
+              <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Start Date</label>
               <input name="start_date" type="date" className="input w-full" />
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">End Date</label>
+              <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">End Date</label>
               <input name="end_date" type="date" className="input w-full" />
             </div>
           </div>

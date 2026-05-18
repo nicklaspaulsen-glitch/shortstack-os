@@ -26,8 +26,8 @@ export default function AgentLegend({ selectedKey, onSelect }: LegendProps) {
             onClick={() => onSelect(agent.key)}
             className={`group flex items-center gap-2.5 rounded-lg border px-3 py-2 text-left transition ${
               active
-                ? "border-border bg-white/[0.06]"
-                : "border-border bg-white/[0.02] hover:border-border hover:bg-white/[0.04]"
+                ? "border-border-subtle bg-white/[0.06]"
+                : "border-border-subtle bg-white/[0.02] hover:border-border-subtle hover:bg-white/[0.04]"
             }`}
             aria-pressed={active}
           >
@@ -40,7 +40,7 @@ export default function AgentLegend({ selectedKey, onSelect }: LegendProps) {
             />
             <span className="flex flex-col leading-tight">
               <span className="text-xs font-bold text-white">{agent.name}</span>
-              <span className="text-[10px] uppercase tracking-wide text-muted">
+              <span className="text-[10px] uppercase tracking-wide text-text-muted">
                 {agent.role}
               </span>
             </span>

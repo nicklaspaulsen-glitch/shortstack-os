@@ -159,7 +159,7 @@ export default function ListingsPage() {
   };
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- My Listings command strip -- */}
+    <MotionPage className="space-y-5">{/* -- My Listings command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">MY LISTINGS</p>
@@ -168,14 +168,14 @@ export default function ListingsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={() => setShowForm((v) => !v)}
-                  className="flex items-center gap-2 rounded-lg border border-border bg-black/5 px-4 py-2 text-sm font-medium text-foreground transition hover:bg-black/10"
+                  className="flex items-center gap-2 rounded-lg border border-border-subtle bg-black/5 px-4 py-2 text-sm font-medium text-text-primary transition hover:bg-black/10"
                 >
                   <Plus size={14} />
                   New listing
                 </button>
       </div>
     </div>{showForm && (
-              <div className="rounded-xl border border-border bg-surface p-5">
+              <div className="rounded-xl border border-border-subtle bg-surface p-5">
                 <div className="mb-4 flex items-center justify-between">
                   <h2 className="text-sm font-semibold text-[#111827]">New service listing</h2>
                   <button
@@ -183,7 +183,7 @@ export default function ListingsPage() {
                       setShowForm(false);
                       setDraft(EMPTY_DRAFT);
                     }}
-                    className="text-muted hover:text-[#111827]"
+                    className="text-text-muted hover:text-[#111827]"
                     aria-label="Cancel"
                   >
                     <X size={16} />
@@ -191,7 +191,7 @@ export default function ListingsPage() {
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="md:col-span-2">
-                    <label htmlFor="svc-title" className="block text-xs text-muted mb-1">
+                    <label htmlFor="svc-title" className="block text-xs text-text-muted mb-1">
                       Title
                     </label>
                     <input
@@ -199,14 +199,14 @@ export default function ListingsPage() {
                       value={draft.title}
                       onChange={(e) => setDraft({ ...draft, title: e.target.value })}
                       maxLength={200}
-                      className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                      className="w-full rounded-lg border border-border-subtle bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
                       placeholder="Short, specific. e.g. Edit a 60-second YouTube Short"
                     />
                   </div>
                   <div className="md:col-span-2">
                     <label
                       htmlFor="svc-desc"
-                      className="block text-xs text-muted mb-1"
+                      className="block text-xs text-text-muted mb-1"
                     >
                       Description
                     </label>
@@ -216,19 +216,19 @@ export default function ListingsPage() {
                       onChange={(e) => setDraft({ ...draft, description: e.target.value })}
                       maxLength={5000}
                       rows={5}
-                      className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                      className="w-full rounded-lg border border-border-subtle bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
                       placeholder="What's included, what you need from the buyer, what they'll receive."
                     />
                   </div>
                   <div>
-                    <label htmlFor="svc-cat" className="block text-xs text-muted mb-1">
+                    <label htmlFor="svc-cat" className="block text-xs text-text-muted mb-1">
                       Category
                     </label>
                     <select
                       id="svc-cat"
                       value={draft.category}
                       onChange={(e) => setDraft({ ...draft, category: e.target.value })}
-                      className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                      className="w-full rounded-lg border border-border-subtle bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
                     >
                       {CATEGORIES.map((c) => (
                         <option key={c} value={c} className="capitalize">
@@ -240,7 +240,7 @@ export default function ListingsPage() {
                   <div>
                     <label
                       htmlFor="svc-price"
-                      className="block text-xs text-muted mb-1"
+                      className="block text-xs text-text-muted mb-1"
                     >
                       Price (USD)
                     </label>
@@ -253,13 +253,13 @@ export default function ListingsPage() {
                       onChange={(e) =>
                         setDraft({ ...draft, priceDollars: e.target.value })
                       }
-                      className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                      className="w-full rounded-lg border border-border-subtle bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="svc-days"
-                      className="block text-xs text-muted mb-1"
+                      className="block text-xs text-text-muted mb-1"
                     >
                       Delivery (days)
                     </label>
@@ -272,13 +272,13 @@ export default function ListingsPage() {
                       onChange={(e) =>
                         setDraft({ ...draft, deliveryDays: e.target.value })
                       }
-                      className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                      className="w-full rounded-lg border border-border-subtle bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
                     />
                   </div>
                   <div>
                     <label
                       htmlFor="svc-status"
-                      className="block text-xs text-muted mb-1"
+                      className="block text-xs text-text-muted mb-1"
                     >
                       Status
                     </label>
@@ -288,7 +288,7 @@ export default function ListingsPage() {
                       onChange={(e) =>
                         setDraft({ ...draft, status: e.target.value as "active" | "draft" })
                       }
-                      className="w-full rounded-lg border border-border bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                      className="w-full rounded-lg border border-border-subtle bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
                     >
                       <option value="active">Active (visible to buyers)</option>
                       <option value="draft">Draft (hidden)</option>
@@ -301,7 +301,7 @@ export default function ListingsPage() {
                       setShowForm(false);
                       setDraft(EMPTY_DRAFT);
                     }}
-                    className="rounded-lg border border-border px-4 py-2 text-xs text-muted hover:text-[#111827]"
+                    className="rounded-lg border border-border-subtle px-4 py-2 text-xs text-text-muted hover:text-[#111827]"
                   >
                     Cancel
                   </button>
@@ -316,19 +316,19 @@ export default function ListingsPage() {
                 </div>
               </div>
             )}{loading ? (
-              <div className="py-12 text-center text-sm text-muted">Loading...</div>
+              <div className="py-12 text-center text-sm text-text-muted">Loading...</div>
             ) : services.length === 0 ? (
-              <div className="card flex flex-col items-center justify-center py-12 text-center">
-                <Store size={36} className="mb-3 text-muted/30" />
+              <div className="glass rounded-xl p-4 flex flex-col items-center justify-center py-12 text-center">
+                <Store size={36} className="mb-3 text-text-muted/30" />
                 <p className="text-sm font-medium text-[#111827]">No listings yet</p>
-                <p className="mt-1 text-xs text-muted">
+                <p className="mt-1 text-xs text-text-muted">
                   Create your first service to start selling.
                 </p>
               </div>
             ) : (
               <div className="space-y-3">
                 {services.map((svc) => (
-                  <div key={svc.id} className="card flex items-center justify-between gap-4">
+                  <div key={svc.id} className="glass rounded-xl p-4 flex items-center justify-between gap-4">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <h3 className="truncate text-sm font-semibold text-[#111827]">
@@ -346,8 +346,8 @@ export default function ListingsPage() {
                           {svc.status}
                         </span>
                       </div>
-                      <p className="mt-1 line-clamp-1 text-xs text-muted">{svc.description}</p>
-                      <div className="mt-2 flex items-center gap-3 text-xs text-muted">
+                      <p className="mt-1 line-clamp-1 text-xs text-text-muted">{svc.description}</p>
+                      <div className="mt-2 flex items-center gap-3 text-xs text-text-muted">
                         <span className="capitalize">{svc.category}</span>
                         <span>·</span>
                         <span>{formatPrice(svc.price_cents, svc.currency)}</span>
@@ -359,7 +359,7 @@ export default function ListingsPage() {
                       {(svc.status === "active" || svc.status === "paused") && (
                         <button
                           onClick={() => togglePause(svc)}
-                          className="rounded-lg border border-border p-2 text-muted hover:text-[#111827]"
+                          className="rounded-lg border border-border-subtle p-2 text-text-muted hover:text-[#111827]"
                           title={svc.status === "active" ? "Pause" : "Activate"}
                         >
                           {svc.status === "active" ? (

@@ -244,7 +244,7 @@ export default function RollingPreview({
                 return (
                   <div
                     key={tileKey}
-                    className={`rolling-preview-tile group relative flex-shrink-0 ${tileWidth} ${aspectClass} rounded-lg overflow-hidden border border-border pointer-events-auto`}
+                    className={`rolling-preview-tile group relative flex-shrink-0 ${tileWidth} ${aspectClass} rounded-lg overflow-hidden border border-border-subtle pointer-events-auto`}
                     style={{ background: gradient }}
                   >
                     <div className="absolute inset-0 flex flex-col justify-center p-3 text-left">
@@ -280,7 +280,7 @@ export default function RollingPreview({
               return (
                 <div
                   key={tileKey}
-                  className={`rolling-preview-tile group relative flex-shrink-0 ${tileWidth} ${aspectClass} rounded-lg overflow-hidden border border-border pointer-events-auto transition-opacity duration-500 ${hasLoaded ? "opacity-100 bg-surface" : "opacity-0"}`}
+                  className={`rolling-preview-tile group relative flex-shrink-0 ${tileWidth} ${aspectClass} rounded-lg overflow-hidden border border-border-subtle pointer-events-auto transition-opacity duration-500 ${hasLoaded ? "opacity-100 bg-surface" : "opacity-0"}`}
                   aria-hidden={!hasLoaded}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -64,20 +64,20 @@ export default function OrdersPage() {
   }, [reload]);
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Marketplace Orders command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Marketplace Orders command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">MY ORDERS</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Marketplace Orders</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <div className="flex items-center gap-1 rounded-lg border border-border bg-black/5 p-1">
+        <div className="flex items-center gap-1 rounded-lg border border-border-subtle bg-black/5 p-1">
                   <button
                     onClick={() => setRole("buyer")}
                     className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition ${
                       role === "buyer"
-                        ? "bg-black/10 text-foreground"
-                        : "text-muted hover:text-white"
+                        ? "bg-black/10 text-text-primary"
+                        : "text-text-muted hover:text-white"
                     }`}
                   >
                     <ShoppingBag size={12} />
@@ -87,8 +87,8 @@ export default function OrdersPage() {
                     onClick={() => setRole("seller")}
                     className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition ${
                       role === "seller"
-                        ? "bg-black/10 text-foreground"
-                        : "text-muted hover:text-white"
+                        ? "bg-black/10 text-text-primary"
+                        : "text-text-muted hover:text-white"
                     }`}
                   >
                     <Briefcase size={12} />
@@ -97,14 +97,14 @@ export default function OrdersPage() {
                 </div>
       </div>
     </div>{loading ? (
-              <div className="py-12 text-center text-sm text-muted">Loading...</div>
+              <div className="py-12 text-center text-sm text-text-muted">Loading...</div>
             ) : orders.length === 0 ? (
-              <div className="card flex flex-col items-center justify-center py-12 text-center">
+              <div className="glass rounded-xl p-4 flex flex-col items-center justify-center py-12 text-center">
                 <Receipt size={36} className="mb-3 text-text-muted" />
                 <p className="text-sm font-medium text-[#111827]">
                   No {role === "buyer" ? "purchases" : "incoming orders"} yet
                 </p>
-                <p className="mt-1 text-xs text-muted">
+                <p className="mt-1 text-xs text-text-muted">
                   {role === "buyer"
                     ? "Browse the marketplace to find services."
                     : "List a service to start receiving orders."}
@@ -122,11 +122,11 @@ export default function OrdersPage() {
                   <Link
                     key={o.id}
                     href={`/dashboard/marketplace/orders/${o.id}`}
-                    className="card group flex items-center justify-between gap-4 transition hover:border-brand-accent/30"
+                    className="glass rounded-xl p-4 group flex items-center justify-between gap-4 transition hover:border-brand-accent/30"
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs text-muted">
+                        <span className="font-mono text-xs text-text-muted">
                           #{o.id.slice(0, 8)}
                         </span>
                         <span
@@ -137,7 +137,7 @@ export default function OrdersPage() {
                           {o.status.replace("_", " ")}
                         </span>
                       </div>
-                      <div className="mt-1 text-xs text-muted">
+                      <div className="mt-1 text-xs text-text-muted">
                         {new Date(o.created_at).toLocaleString()}
                       </div>
                     </div>
@@ -146,7 +146,7 @@ export default function OrdersPage() {
                         {formatPrice(o.amount_cents, o.currency)}
                       </div>
                       {role === "seller" && (
-                        <div className="text-[10px] text-muted">
+                        <div className="text-[10px] text-text-muted">
                           payout {formatPrice(o.seller_payout_cents, o.currency)}
                         </div>
                       )}

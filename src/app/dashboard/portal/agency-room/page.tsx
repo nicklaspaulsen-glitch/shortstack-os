@@ -80,7 +80,7 @@ export default function PortalAgencyRoomPage() {
     // Either logged in as an agency staff member with no impersonation, or a
     // brand-new client account that isn't yet linked to a `clients` row.
     return (
-      <div className="fade-in space-y-5 p-6">
+      <div className="space-y-5 p-6">
         {/* -- Your Agency Room command strip -- */}
         <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
           <div className="min-w-0">
@@ -91,7 +91,7 @@ export default function PortalAgencyRoomPage() {
         <div className="border border-border-subtle bg-white/[0.05] p-8 text-center">
           <Sparkles className="mx-auto mb-3 text-brand-accent/60" size={32} />
           <h2 className="text-base font-semibold mb-1">Your room isn&apos;t set up yet</h2>
-          <p className="text-[12px] text-muted max-w-md mx-auto">
+          <p className="text-[12px] text-text-muted max-w-md mx-auto">
             Once your agency finishes onboarding your account, this view will
             light up with every agent assigned to your project — content,
             outreach, scheduling, reporting, and more.
@@ -102,7 +102,7 @@ export default function PortalAgencyRoomPage() {
   }
 
   return (
-    <div className="fade-in space-y-5 p-6">
+    <div className="space-y-5 p-6">
       {/* -- Your Agency Room command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">

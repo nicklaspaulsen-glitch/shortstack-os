@@ -44,9 +44,9 @@ function completeness(lead: Lead): number {
 function FieldRow({ label, a, b }: { label: string; a: string | null; b: string | null }) {
   const differs = (a ?? "") !== (b ?? "");
   return (
-    <div className={`grid grid-cols-[100px_1fr_1fr] gap-2 py-1.5 text-xs ${differs ? "text-foreground" : "text-muted"}`}>
-      <span className="text-muted/70 font-medium">{label}</span>
-      <span className={differs && a ? "text-foreground" : ""}>{a ?? "—"}</span>
+    <div className={`grid grid-cols-[100px_1fr_1fr] gap-2 py-1.5 text-xs ${differs ? "text-text-primary" : "text-text-muted"}`}>
+      <span className="text-text-muted/70 font-medium">{label}</span>
+      <span className={differs && a ? "text-text-primary" : ""}>{a ?? "—"}</span>
       <span className={differs && b ? "text-emerald-700" : ""}>{b ?? "—"}</span>
     </div>
   );
@@ -154,7 +154,7 @@ export default function DedupPage() {
         <button
                   onClick={load}
                   disabled={loading}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground text-sm transition-colors border border-border disabled:opacity-50"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-text-primary text-sm transition-colors border border-border-subtle disabled:opacity-50"
                 >
                   <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
                   Re-scan
@@ -193,9 +193,9 @@ export default function DedupPage() {
                 ))}
               </div>
             ) : pendingGroups.length === 0 ? (
-              <div className="glass rounded-xl p-12 text-center text-muted">
+              <div className="glass rounded-xl p-12 text-center text-text-muted">
                 <CheckCircle className="w-12 h-12 mx-auto mb-4 text-emerald-600 opacity-50" />
-                <p className="font-semibold text-foreground/70 mb-1">
+                <p className="font-semibold text-text-primary/70 mb-1">
                   {merged.size > 0 ? "All duplicates resolved!" : "No duplicates found"}
                 </p>
                 <p className="text-sm">
@@ -225,10 +225,10 @@ export default function DedupPage() {
                           {group.matchType === "phone"
                             ? <Phone className="w-4 h-4 text-blue-400" />
                             : <Building2 className="w-4 h-4 text-purple-400" />}
-                          <span className="text-xs text-muted">
-                            Match by <span className="text-foreground font-medium">{group.matchType === "phone" ? "phone number" : "business name"}</span>
+                          <span className="text-xs text-text-muted">
+                            Match by <span className="text-text-primary font-medium">{group.matchType === "phone" ? "phone number" : "business name"}</span>
                           </span>
-                          <span className="text-xs text-muted">— {group.leads.length} records</span>
+                          <span className="text-xs text-text-muted">— {group.leads.length} records</span>
                         </div>
                         <button
                           onClick={() => handleMerge(group)}
@@ -242,9 +242,9 @@ export default function DedupPage() {
 
                       {/* Side-by-side diff */}
                       <div className="p-5">
-                        <div className="grid grid-cols-[100px_1fr_1fr] gap-2 text-[10px] font-semibold uppercase tracking-wider text-muted/60 mb-2 pb-2 border-b border-black/6">
+                        <div className="grid grid-cols-[100px_1fr_1fr] gap-2 text-[10px] font-semibold uppercase tracking-wider text-text-muted/60 mb-2 pb-2 border-b border-black/6">
                           <span>Field</span>
-                          <span className="text-foreground/40">Keep (most complete)</span>
+                          <span className="text-text-primary/40">Keep (most complete)</span>
                           <span className="text-emerald-700/60">Merge from</span>
                         </div>
 
@@ -259,12 +259,12 @@ export default function DedupPage() {
                         </div>
 
                         {group.leads.length > 2 && (
-                          <p className="text-[10px] text-muted mt-3">
+                          <p className="text-[10px] text-text-muted mt-3">
                             + {group.leads.length - 2} more duplicate{group.leads.length - 2 !== 1 ? "s" : ""} will also be soft-deleted.
                           </p>
                         )}
 
-                        <p className="text-[10px] text-muted/60 mt-2">
+                        <p className="text-[10px] text-text-muted/60 mt-2">
                           Merge sets <code className="font-mono">status = &apos;merged&apos;</code> on duplicates. No data is permanently deleted.
                         </p>
                       </div>

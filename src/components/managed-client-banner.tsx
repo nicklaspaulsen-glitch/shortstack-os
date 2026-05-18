@@ -38,7 +38,7 @@ export default function ManagedClientBanner() {
           <span className="text-xs font-semibold text-[#2563EB]">
             {managedClient.business_name}
           </span>
-          <span className="text-[10px] text-muted ml-1">
+          <span className="text-[10px] text-text-muted ml-1">
             {managedClient.contact_name}
           </span>
           {managedClient.package_tier && (
@@ -56,7 +56,7 @@ export default function ManagedClientBanner() {
                 className={`flex items-center gap-1 text-[9px] px-2 py-0.5 rounded transition-all ${
                   pathname === link.href
                     ? "bg-[rgba(59,130,246,0.08)] text-[#2563EB] font-medium"
-                    : "text-muted hover:text-[#2563EB] hover:bg-[rgba(59,130,246,0.05)]"
+                    : "text-text-muted hover:text-[#2563EB] hover:bg-[rgba(59,130,246,0.05)]"
                 }`}
               >
                 {link.icon} {link.label}
@@ -67,7 +67,7 @@ export default function ManagedClientBanner() {
 
         <button
           onClick={() => setManagedClient(null)}
-          className="flex items-center gap-1.5 text-[10px] text-muted hover:text-foreground bg-surface-light/50 hover:bg-surface-light px-2.5 py-1 rounded-md border border-border/30 transition-all"
+          className="flex items-center gap-1.5 text-[10px] text-text-muted hover:text-text-primary bg-surface-light/50 hover:bg-surface-light px-2.5 py-1 rounded-md border border-border-subtle/30 transition-all"
           title="Stop managing this client"
         >
           <X size={10} />

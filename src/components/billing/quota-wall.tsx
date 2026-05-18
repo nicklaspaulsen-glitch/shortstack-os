@@ -95,10 +95,10 @@ export function QuotaWall({ payload, onClose, inline = false }: QuotaWallProps) 
           <AlertTriangle size={18} className="text-red-400" />
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-bold text-foreground">
+          <h3 className="text-sm font-bold text-text-primary">
             You hit your {label} limit for this month
           </h3>
-          <p className="text-xs text-muted mt-1 leading-relaxed">
+          <p className="text-xs text-text-muted mt-1 leading-relaxed">
             {payload.error ||
               `Your ${plan} plan's monthly ${label} cap has been reached. Upgrade or top up to keep going.`}
           </p>
@@ -106,7 +106,7 @@ export function QuotaWall({ payload, onClose, inline = false }: QuotaWallProps) 
         {onClose && !inline && (
           <button
             onClick={onClose}
-            className="p-1 rounded-md text-muted hover:text-foreground hover:bg-surface-light transition-colors"
+            className="p-1 rounded-md text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors"
             aria-label="Close"
           >
             <X size={14} />
@@ -117,8 +117,8 @@ export function QuotaWall({ payload, onClose, inline = false }: QuotaWallProps) 
       {current !== undefined && limit !== undefined && (
         <div className="mb-5">
           <div className="flex justify-between text-[10px] font-medium uppercase tracking-wider mb-1.5">
-            <span className="text-muted">Usage</span>
-            <span className="text-foreground">
+            <span className="text-text-muted">Usage</span>
+            <span className="text-text-primary">
               {current.toLocaleString()} / {limit.toLocaleString()}
             </span>
           </div>
@@ -143,7 +143,7 @@ export function QuotaWall({ payload, onClose, inline = false }: QuotaWallProps) 
         <Link
           href="/dashboard/billing"
           onClick={onClose}
-          className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-[rgba(59,130,246,0.08)] hover:text-[#2563EB] transition-colors"
+          className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-text-primary text-xs font-medium border border-border-subtle hover:bg-[rgba(59,130,246,0.08)] hover:text-[#2563EB] transition-colors"
         >
           <Plus size={12} />
           Buy more tokens
@@ -157,11 +157,11 @@ export function QuotaWall({ payload, onClose, inline = false }: QuotaWallProps) 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={onClose} />
-      <div className="relative w-full max-w-md mx-4 bg-surface border border-border/50  shadow-2xl shadow-black/50 fade-in">
-        <div className="flex items-center justify-between px-5 py-3 border-b border-border/30">
+      <div className="relative w-full max-w-md mx-4 bg-surface border border-border-subtle/50  shadow-2xl shadow-black/50">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-border-subtle/30">
           <div className="flex items-center gap-2">
             <CreditCard size={14} className="text-[#2563EB]" />
-            <h2 className="text-xs font-semibold text-foreground">Plan limit reached</h2>
+            <h2 className="text-xs font-semibold text-text-primary">Plan limit reached</h2>
           </div>
         </div>
         {body}

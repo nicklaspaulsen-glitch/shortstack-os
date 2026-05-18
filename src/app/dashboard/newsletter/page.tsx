@@ -497,7 +497,7 @@ export default function NewsletterPage() {
             onChange={e => setGuidedTopic(e.target.value)}
             placeholder={`e.g., "${new Date().toLocaleString("default", { month: "long" })} round-up: new features, 2 client wins, and what's coming next"`}
             rows={3}
-            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-2 focus:ring-[rgba(59,130,246,0.08)] transition-all resize-none"
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-2 focus:ring-[rgba(59,130,246,0.08)] transition-all resize-none"
             autoFocus
           />
         </div>
@@ -511,7 +511,7 @@ export default function NewsletterPage() {
       component: (
         <div className="space-y-4">
           <div>
-            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Length</p>
+            <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">Length</p>
             <div className="grid grid-cols-3 gap-2">
               {([
                 { id: "short" as const, label: "Short", desc: "1 section" },
@@ -528,11 +528,11 @@ export default function NewsletterPage() {
                                         className={`p-3 rounded-xl border text-center transition-all ${
                                           sel
                                             ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent shadow-lg shadow-[rgba(59,130,246,0.1)]"
-                                            : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                                            : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
                                         }`}
                                       >
                                         <p className="text-sm font-semibold">{l.label}</p>
-                                        <p className="text-[10px] text-muted mt-0.5">{l.desc}</p>
+                                        <p className="text-[10px] text-text-muted mt-0.5">{l.desc}</p>
                                       </button>
                                       </MotionPage>
                 );
@@ -540,7 +540,7 @@ export default function NewsletterPage() {
             </div>
           </div>
           <div>
-            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Tone</p>
+            <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">Tone</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {([
                 { id: "professional" as const, label: "Professional" },
@@ -557,7 +557,7 @@ export default function NewsletterPage() {
                     className={`p-3 rounded-xl border text-sm font-semibold transition-all ${
                       sel
                         ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent shadow-lg shadow-[rgba(59,130,246,0.1)]"
-                        : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                        : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
                     }`}
                   >
                     {t.label}
@@ -575,12 +575,12 @@ export default function NewsletterPage() {
       description: "We'll write the subject, headline, and section copy. You'll be able to tweak every block in the builder.",
       icon: <Wand2 size={18} />,
       component: (
-        <div className="card bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)] space-y-2">
+        <div className="glass rounded-xl p-4 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)] space-y-2">
           <p className="text-sm">
-            <span className="text-muted">Topic: </span>
-            <span className="font-semibold">{guidedTopic || <span className="italic text-muted">(none)</span>}</span>
+            <span className="text-text-muted">Topic: </span>
+            <span className="font-semibold">{guidedTopic || <span className="italic text-text-muted">(none)</span>}</span>
           </p>
-          <p className="text-[11px] text-muted capitalize">
+          <p className="text-[11px] text-text-muted capitalize">
             {guidedLength} � {guidedTone}
           </p>
         </div>
@@ -590,7 +590,7 @@ export default function NewsletterPage() {
 
   /* --------- RENDER --------- */
   return (
-    <div className="fade-in space-y-5">
+    <div className="space-y-5">
       {/* -- Newsletter Builder command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -602,10 +602,10 @@ export default function NewsletterPage() {
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             {advancedMode && (
               <>
-                <button onClick={() => setActiveTab("preview")} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
+                <button onClick={() => setActiveTab("preview")} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
                   <Eye size={12} /> Preview
                 </button>
-                <button onClick={handleSend} disabled={sending} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
+                <button onClick={handleSend} disabled={sending} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
                   {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                   {sendMode === "schedule" ? "Schedule" : "Send"}
                 </button>
@@ -631,7 +631,7 @@ export default function NewsletterPage() {
 
       {/* Rolling preview of example newsletter templates */}
       {advancedMode && (
-      <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-6">
+      <div className="relative  overflow-hidden border border-border-subtle bg-surface-light/30 py-6">
         <div className="absolute inset-0 pointer-events-none">
           <RollingPreview
             items={NEWSLETTER_PREVIEW_FALLBACK}
@@ -645,10 +645,10 @@ export default function NewsletterPage() {
           <p className="text-[11px] uppercase tracking-widest text-[rgba(59,130,246,0.8)] font-semibold">
             Newsletter template library
           </p>
-          <h3 className="text-lg font-bold text-foreground mt-1">
+          <h3 className="text-lg font-bold text-text-primary mt-1">
             Every industry, every cadence, ready to send
           </h3>
-          <p className="text-xs text-muted max-w-md mx-auto mt-1">
+          <p className="text-xs text-text-muted max-w-md mx-auto mt-1">
             Drag-and-drop blocks, AI subject lines, schedule or send
             immediately � preview desktop & mobile before it leaves your outbox.
           </p>
@@ -662,7 +662,7 @@ export default function NewsletterPage() {
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              activeTab === t.key ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
+              activeTab === t.key ? "bg-brand-accent text-white font-medium" : "text-text-muted hover:text-text-primary"
             }`}>{t.icon} {t.label}</button>
         ))}
       </div>
@@ -675,7 +675,7 @@ export default function NewsletterPage() {
             {/* Subject line */}
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="text-[9px] text-muted uppercase tracking-wider">Subject</label>
+                <label className="text-[9px] text-text-muted uppercase tracking-wider">Subject</label>
                 <AIEnhanceButton value={subject} onResult={setSubject} context="newsletter subject line" variant="inline" />
               </div>
               <div className="relative">
@@ -695,14 +695,14 @@ export default function NewsletterPage() {
 
             {/* AI subject suggestions */}
             {subjectAiOpen && aiSubjects.length > 0 && (
-              <div className="card border-[rgba(59,130,246,0.1)] p-3 space-y-1.5">
+              <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.1)] p-3 space-y-1.5">
                 <div className="flex items-center justify-between mb-1">
                   <p className="text-[10px] font-semibold text-brand-accent">AI Subject Line Suggestions</p>
-                  <button onClick={() => setSubjectAiOpen(false)} className="text-muted hover:text-foreground"><X size={12} /></button>
+                  <button onClick={() => setSubjectAiOpen(false)} className="text-text-muted hover:text-text-primary"><X size={12} /></button>
                 </div>
                 {aiSubjects.map((s, i) => (
                   <button key={i} onClick={() => { setSubject(s); setSubjectAiOpen(false); toast.success("Subject line applied"); }}
-                    className="block w-full text-left text-[10px] p-2 rounded hover:bg-[rgba(59,130,246,0.05)] transition-all text-muted hover:text-foreground">
+                    className="block w-full text-left text-[10px] p-2 rounded hover:bg-[rgba(59,130,246,0.05)] transition-all text-text-muted hover:text-text-primary">
                     {s}
                   </button>
                 ))}
@@ -719,20 +719,20 @@ export default function NewsletterPage() {
                   onDragEnter={() => handleDragEnter(index)}
                   onDragEnd={handleDragEnd}
                   onDragOver={e => e.preventDefault()}
-                  className="card group relative"
+                  className="glass rounded-xl p-4 group relative"
                   style={{ cursor: "grab" }}
                 >
                   {/* Block toolbar */}
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <GripVertical size={14} className="text-muted opacity-0 group-hover:opacity-100 transition-opacity cursor-grab" />
-                      <span className="text-[9px] uppercase tracking-wider font-semibold text-muted">{blockLabel(block.type)}</span>
+                      <GripVertical size={14} className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity cursor-grab" />
+                      <span className="text-[9px] uppercase tracking-wider font-semibold text-text-muted">{blockLabel(block.type)}</span>
                     </div>
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={() => moveBlock(index, "up")} className="p-1 rounded text-muted hover:text-foreground hover:bg-surface-light" title="Move up"><ArrowUp size={12} /></button>
-                      <button onClick={() => moveBlock(index, "down")} className="p-1 rounded text-muted hover:text-foreground hover:bg-surface-light" title="Move down"><ArrowDown size={12} /></button>
+                      <button onClick={() => moveBlock(index, "up")} className="p-1 rounded text-text-muted hover:text-text-primary hover:bg-surface-light" title="Move up"><ArrowUp size={12} /></button>
+                      <button onClick={() => moveBlock(index, "down")} className="p-1 rounded text-text-muted hover:text-text-primary hover:bg-surface-light" title="Move down"><ArrowDown size={12} /></button>
                       {block.type !== "header" && block.type !== "footer" && (
-                        <button onClick={() => removeBlock(block.id)} className="p-1 rounded text-muted hover:text-red-400 hover:bg-red-400/5" title="Remove"><Trash2 size={12} /></button>
+                        <button onClick={() => removeBlock(block.id)} className="p-1 rounded text-text-muted hover:text-red-400 hover:bg-red-400/5" title="Remove"><Trash2 size={12} /></button>
                       )}
                     </div>
                   </div>
@@ -741,11 +741,11 @@ export default function NewsletterPage() {
                   {block.type === "header" && (
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Title</label>
+                        <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Title</label>
                         <input value={block.content.title} onChange={e => updateBlockContent(block.id, "title", e.target.value)} className="input w-full text-xs" />
                       </div>
                       <div>
-                        <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Tagline</label>
+                        <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Tagline</label>
                         <input value={block.content.tagline} onChange={e => updateBlockContent(block.id, "tagline", e.target.value)} className="input w-full text-xs" />
                       </div>
                     </div>
@@ -754,15 +754,15 @@ export default function NewsletterPage() {
                   {block.type === "hero" && (
                     <div className="space-y-2">
                       <div>
-                        <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Headline</label>
+                        <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Headline</label>
                         <input value={block.content.headline} onChange={e => updateBlockContent(block.id, "headline", e.target.value)} className="input w-full text-sm font-semibold" />
                       </div>
                       <div>
-                        <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Subheadline</label>
+                        <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Subheadline</label>
                         <input value={block.content.subheadline} onChange={e => updateBlockContent(block.id, "subheadline", e.target.value)} className="input w-full text-xs" />
                       </div>
                       <div>
-                        <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Hero Image URL (optional)</label>
+                        <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Hero Image URL (optional)</label>
                         <input value={block.content.imageUrl} onChange={e => updateBlockContent(block.id, "imageUrl", e.target.value)} className="input w-full text-xs" placeholder="https://..." />
                       </div>
                     </div>
@@ -771,7 +771,7 @@ export default function NewsletterPage() {
                   {block.type === "text" && (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <label className="text-[9px] text-muted uppercase tracking-wider">Body</label>
+                        <label className="text-[9px] text-text-muted uppercase tracking-wider">Body</label>
                         <AIEnhanceButton value={block.content.body} onResult={next => updateBlockContent(block.id, "body", next)} context="newsletter body copy" variant="inline" />
                       </div>
                       <textarea
@@ -794,21 +794,21 @@ export default function NewsletterPage() {
                   {block.type === "image" && (
                     <div className="space-y-2">
                       <div>
-                        <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Image URL</label>
+                        <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Image URL</label>
                         <input value={block.content.url} onChange={e => updateBlockContent(block.id, "url", e.target.value)} className="input w-full text-xs" placeholder="https://..." />
                       </div>
                       <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Alt Text</label>
+                          <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Alt Text</label>
                           <input value={block.content.alt} onChange={e => updateBlockContent(block.id, "alt", e.target.value)} className="input w-full text-xs" />
                         </div>
                         <div>
-                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Caption</label>
+                          <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Caption</label>
                           <input value={block.content.caption} onChange={e => updateBlockContent(block.id, "caption", e.target.value)} className="input w-full text-xs" />
                         </div>
                       </div>
                       {!block.content.url && (
-                        <div className="h-28 rounded-lg bg-surface-light border border-dashed border-border flex items-center justify-center text-muted text-[10px]">
+                        <div className="h-28 rounded-lg bg-surface-light border border-dashed border-border-subtle flex items-center justify-center text-text-muted text-[10px]">
                           <ImageIcon size={14} className="mr-2" /> Image preview will appear here
                         </div>
                       )}
@@ -818,15 +818,15 @@ export default function NewsletterPage() {
                   {block.type === "button" && (
                     <div className="grid grid-cols-3 gap-2">
                       <div>
-                        <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Label</label>
+                        <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Label</label>
                         <input value={block.content.label} onChange={e => updateBlockContent(block.id, "label", e.target.value)} className="input w-full text-xs" />
                       </div>
                       <div>
-                        <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">URL</label>
+                        <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">URL</label>
                         <input value={block.content.url} onChange={e => updateBlockContent(block.id, "url", e.target.value)} className="input w-full text-xs" placeholder="https://..." />
                       </div>
                       <div>
-                        <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Color</label>
+                        <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Color</label>
                         <div className="flex gap-1.5">
                           {["#2563EB", "#2563EB", "#2563EB", "#EF4444", "#8B5CF6", "#1a1a2e"].map(c => (
                             <button key={c} onClick={() => updateBlockContent(block.id, "color", c)}
@@ -840,32 +840,32 @@ export default function NewsletterPage() {
                   )}
 
                   {block.type === "divider" && (
-                    <div className="border-t border-dashed border-border" />
+                    <div className="border-t border-dashed border-border-subtle" />
                   )}
 
                   {block.type === "footer" && (
                     <div className="space-y-2">
                       <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Company</label>
+                          <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Company</label>
                           <input value={block.content.company} onChange={e => updateBlockContent(block.id, "company", e.target.value)} className="input w-full text-xs" />
                         </div>
                         <div>
-                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Address</label>
+                          <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Address</label>
                           <input value={block.content.address} onChange={e => updateBlockContent(block.id, "address", e.target.value)} className="input w-full text-xs" />
                         </div>
                       </div>
                       <div className="grid grid-cols-3 gap-2">
                         <div>
-                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Twitter</label>
+                          <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Twitter</label>
                           <input value={block.content.twitter} onChange={e => updateBlockContent(block.id, "twitter", e.target.value)} className="input w-full text-xs" placeholder="#" />
                         </div>
                         <div>
-                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">LinkedIn</label>
+                          <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">LinkedIn</label>
                           <input value={block.content.linkedin} onChange={e => updateBlockContent(block.id, "linkedin", e.target.value)} className="input w-full text-xs" placeholder="#" />
                         </div>
                         <div>
-                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Instagram</label>
+                          <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Instagram</label>
                           <input value={block.content.instagram} onChange={e => updateBlockContent(block.id, "instagram", e.target.value)} className="input w-full text-xs" placeholder="#" />
                         </div>
                       </div>
@@ -876,11 +876,11 @@ export default function NewsletterPage() {
             </div>
 
             {/* Add block toolbar */}
-            <div className="flex items-center gap-2 p-3 rounded-xl bg-surface-light border border-dashed border-border">
-              <span className="text-[9px] text-muted uppercase tracking-wider font-semibold mr-2">Add Block:</span>
+            <div className="flex items-center gap-2 p-3 rounded-xl bg-surface-light border border-dashed border-border-subtle">
+              <span className="text-[9px] text-text-muted uppercase tracking-wider font-semibold mr-2">Add Block:</span>
               {(["text", "image", "button", "divider"] as const).map(type => (
                 <button key={type} onClick={() => addBlock(type)}
-                  className="text-[10px] px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-[rgba(59,130,246,0.2)] hover:text-brand-accent transition-all flex items-center gap-1.5">
+                  className="text-[10px] px-3 py-1.5 rounded-lg bg-surface border border-border-subtle hover:border-[rgba(59,130,246,0.2)] hover:text-brand-accent transition-all flex items-center gap-1.5">
                   {type === "text" && <Type size={10} />}
                   {type === "image" && <ImageIcon size={10} />}
                   {type === "button" && <MousePointerClick size={10} />}
@@ -894,28 +894,28 @@ export default function NewsletterPage() {
           {/* Sidebar */}
           <div className="space-y-3">
             {/* Recipient list */}
-            <div className="card">
-              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted flex items-center gap-1.5"><Users size={10} /> Recipients</h3>
+            <div className="glass rounded-xl p-4">
+              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-text-muted flex items-center gap-1.5"><Users size={10} /> Recipients</h3>
               <div className="relative">
                 <button onClick={() => setShowRecipientDropdown(!showRecipientDropdown)}
-                  className="w-full text-left p-2.5 rounded-xl bg-surface-light border border-border hover:border-[rgba(59,130,246,0.2)] transition-all flex items-center justify-between text-xs">
+                  className="w-full text-left p-2.5 rounded-xl bg-surface-light border border-border-subtle hover:border-[rgba(59,130,246,0.2)] transition-all flex items-center justify-between text-xs">
                   <span className="flex items-center gap-2">
                     <span className={`w-2 h-2 rounded-full ${selectedList?.color === "text-blue-400" ? "bg-blue-400" : selectedList?.color === "text-green-400" ? "bg-green-400" : selectedList?.color === "text-yellow-400" ? "bg-yellow-400" : "bg-purple-400"}`} />
                     {selectedList?.label}
-                    <span className="text-muted">({selectedList?.count})</span>
+                    <span className="text-text-muted">({selectedList?.count})</span>
                   </span>
                   {showRecipientDropdown ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
                 </button>
                 {showRecipientDropdown && (
-                  <div className="absolute z-10 top-full left-0 right-0 mt-1 rounded-xl bg-surface border border-border shadow-lg overflow-hidden">
+                  <div className="absolute z-10 top-full left-0 right-0 mt-1 rounded-xl bg-surface border border-border-subtle shadow-lg overflow-hidden">
                     {RECIPIENT_LISTS.map(l => (
                       <button key={l.id} onClick={() => { setRecipientList(l.id); setShowRecipientDropdown(false); }}
-                        className={`w-full text-left px-3 py-2.5 text-xs hover:bg-surface-light transition-all flex items-center justify-between ${recipientList === l.id ? "bg-[rgba(59,130,246,0.05)] text-brand-accent" : "text-foreground"}`}>
+                        className={`w-full text-left px-3 py-2.5 text-xs hover:bg-surface-light transition-all flex items-center justify-between ${recipientList === l.id ? "bg-[rgba(59,130,246,0.05)] text-brand-accent" : "text-text-primary"}`}>
                         <span className="flex items-center gap-2">
                           <span className={`w-2 h-2 rounded-full ${l.color === "text-blue-400" ? "bg-blue-400" : l.color === "text-green-400" ? "bg-green-400" : l.color === "text-yellow-400" ? "bg-yellow-400" : "bg-purple-400"}`} />
                           {l.label}
                         </span>
-                        <span className="text-muted text-[10px]">{l.count}</span>
+                        <span className="text-text-muted text-[10px]">{l.count}</span>
                       </button>
                     ))}
                   </div>
@@ -924,21 +924,21 @@ export default function NewsletterPage() {
             </div>
 
             {/* Send options */}
-            <div className="card">
-              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted flex items-center gap-1.5"><Send size={10} /> Send Options</h3>
+            <div className="glass rounded-xl p-4">
+              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-text-muted flex items-center gap-1.5"><Send size={10} /> Send Options</h3>
               <div className="flex gap-1 mb-3">
                 <button onClick={() => setSendMode("now")}
-                  className={`flex-1 text-[10px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${sendMode === "now" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-muted border border-border"}`}>
+                  className={`flex-1 text-[10px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${sendMode === "now" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-border-subtle"}`}>
                   <Zap size={10} /> Send Now
                 </button>
                 <button onClick={() => setSendMode("schedule")}
-                  className={`flex-1 text-[10px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${sendMode === "schedule" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-muted border border-border"}`}>
+                  className={`flex-1 text-[10px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${sendMode === "schedule" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-border-subtle"}`}>
                   <Clock size={10} /> Schedule
                 </button>
               </div>
               {sendMode === "schedule" && (
                 <div className="space-y-2">
-                  <label className="text-[9px] text-muted uppercase tracking-wider block">Date & Time</label>
+                  <label className="text-[9px] text-text-muted uppercase tracking-wider block">Date & Time</label>
                   <input type="datetime-local" value={scheduleDate} onChange={e => setScheduleDate(e.target.value)} className="input w-full text-xs" />
                   <select className="input w-full text-xs">
                     <option>America/New_York (ET)</option>
@@ -957,39 +957,39 @@ export default function NewsletterPage() {
             </div>
 
             {/* Block count summary */}
-            <div className="card">
-              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Builder Stats</h3>
+            <div className="glass rounded-xl p-4">
+              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-text-muted">Builder Stats</h3>
               <div className="grid grid-cols-2 gap-2">
                 <div className="text-center p-2 rounded bg-surface-light">
                   <p className="text-sm font-bold text-brand-accent">{blocks.length}</p>
-                  <p className="text-[8px] text-muted">Blocks</p>
+                  <p className="text-[8px] text-text-muted">Blocks</p>
                 </div>
                 <div className="text-center p-2 rounded bg-surface-light">
                   <p className="text-sm font-bold">{blocks.filter(b => b.type === "text").length}</p>
-                  <p className="text-[8px] text-muted">Text Sections</p>
+                  <p className="text-[8px] text-text-muted">Text Sections</p>
                 </div>
                 <div className="text-center p-2 rounded bg-surface-light">
                   <p className="text-sm font-bold">{blocks.filter(b => b.type === "image").length}</p>
-                  <p className="text-[8px] text-muted">Images</p>
+                  <p className="text-[8px] text-text-muted">Images</p>
                 </div>
                 <div className="text-center p-2 rounded bg-surface-light">
                   <p className="text-sm font-bold">{blocks.filter(b => b.type === "button").length}</p>
-                  <p className="text-[8px] text-muted">CTAs</p>
+                  <p className="text-[8px] text-text-muted">CTAs</p>
                 </div>
               </div>
             </div>
 
             {/* Quick links */}
-            <div className="card">
-              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Quick Actions</h3>
+            <div className="glass rounded-xl p-4">
+              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-text-muted">Quick Actions</h3>
               <div className="space-y-1">
-                <button onClick={() => setActiveTab("templates")} className="w-full text-left p-2 rounded-lg text-[10px] transition-all hover:bg-surface-light flex items-center gap-2 text-muted hover:text-foreground">
+                <button onClick={() => setActiveTab("templates")} className="w-full text-left p-2 rounded-lg text-[10px] transition-all hover:bg-surface-light flex items-center gap-2 text-text-muted hover:text-text-primary">
                   <Copy size={10} /> Load from template
                 </button>
-                <button onClick={() => setActiveTab("preview")} className="w-full text-left p-2 rounded-lg text-[10px] transition-all hover:bg-surface-light flex items-center gap-2 text-muted hover:text-foreground">
+                <button onClick={() => setActiveTab("preview")} className="w-full text-left p-2 rounded-lg text-[10px] transition-all hover:bg-surface-light flex items-center gap-2 text-text-muted hover:text-text-primary">
                   <Eye size={10} /> Preview newsletter
                 </button>
-                <button onClick={() => setActiveTab("stats")} className="w-full text-left p-2 rounded-lg text-[10px] transition-all hover:bg-surface-light flex items-center gap-2 text-muted hover:text-foreground">
+                <button onClick={() => setActiveTab("stats")} className="w-full text-left p-2 rounded-lg text-[10px] transition-all hover:bg-surface-light flex items-center gap-2 text-text-muted hover:text-text-primary">
                   <BarChart3 size={10} /> View past stats
                 </button>
               </div>
@@ -1001,22 +1001,22 @@ export default function NewsletterPage() {
       {/* ------- TEMPLATES TAB ------- */}
       {activeTab === "templates" && (
         <div className="space-y-4">
-          <p className="text-xs text-muted">Choose a template to start building your newsletter. You can customize every section after loading.</p>
+          <p className="text-xs text-text-muted">Choose a template to start building your newsletter. You can customize every section after loading.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {TEMPLATES.map(tpl => (
               <button key={tpl.id} onClick={() => loadTemplate(tpl.id)}
-                className="text-left p-5  bg-surface border border-border hover:border-[rgba(59,130,246,0.2)] hover:shadow-lg transition-all group">
+                className="text-left p-5  bg-surface border border-border-subtle hover:border-[rgba(59,130,246,0.2)] hover:shadow-lg transition-all group">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-xl bg-[rgba(59,130,246,0.08)] text-brand-accent flex items-center justify-center group-hover:bg-[rgba(59,130,246,0.12)] transition-colors">
                     {tpl.icon}
                   </div>
                   <div>
                     <p className="text-sm font-semibold">{tpl.name}</p>
-                    <p className="text-[10px] text-muted">{tpl.description}</p>
+                    <p className="text-[10px] text-text-muted">{tpl.description}</p>
                   </div>
                 </div>
                 <div className="p-3 rounded-lg bg-surface-light">
-                  <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Subject Preview</p>
+                  <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">Subject Preview</p>
                   <p className="text-xs font-medium truncate">{tpl.subject}</p>
                 </div>
               </button>
@@ -1032,11 +1032,11 @@ export default function NewsletterPage() {
           <div className="flex items-center justify-center gap-2">
             <button onClick={() => setPreviewMode("desktop")}
               className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
-                previewMode === "desktop" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-muted border border-border"
+                previewMode === "desktop" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-border-subtle"
               }`}><Monitor size={12} /> Desktop</button>
             <button onClick={() => setPreviewMode("mobile")}
               className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
-                previewMode === "mobile" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-muted border border-border"
+                previewMode === "mobile" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-border-subtle"
               }`}><Smartphone size={12} /> Mobile</button>
           </div>
 
@@ -1044,7 +1044,7 @@ export default function NewsletterPage() {
           <div className="flex justify-center">
             <div className={`bg-[#FAFAFB]  shadow-2xl overflow-hidden transition-all duration-300 ${previewMode === "desktop" ? "w-full max-w-2xl" : "w-[375px]"}`}>
               {/* Window chrome */}
-              <div className="bg-surface p-3 border-b border-border">
+              <div className="bg-surface p-3 border-b border-border-subtle">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1">
                     <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
@@ -1052,7 +1052,7 @@ export default function NewsletterPage() {
                     <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
                   </div>
                   <div className="flex-1 text-center">
-                    <p className="text-[10px] text-muted font-mono">Inbox</p>
+                    <p className="text-[10px] text-text-muted font-mono">Inbox</p>
                   </div>
                 </div>
               </div>
@@ -1207,21 +1207,21 @@ export default function NewsletterPage() {
               <table className="w-full text-xs">
                 <thead>
                   <tr>
-                    <th className="text-left py-2.5 px-3 text-[9px] uppercase tracking-wider text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>Subject</th>
-                    <th className="text-left py-2.5 px-3 text-[9px] uppercase tracking-wider text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>Sent</th>
-                    <th className="text-right py-2.5 px-3 text-[9px] uppercase tracking-wider text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>Recipients</th>
-                    <th className="text-right py-2.5 px-3 text-[9px] uppercase tracking-wider text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>Opens</th>
-                    <th className="text-right py-2.5 px-3 text-[9px] uppercase tracking-wider text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>Clicks</th>
-                    <th className="text-right py-2.5 px-3 text-[9px] uppercase tracking-wider text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>Bounces</th>
-                    <th className="text-right py-2.5 px-3 text-[9px] uppercase tracking-wider text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>Open Rate</th>
-                    <th className="text-right py-2.5 px-3 text-[9px] uppercase tracking-wider text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>CTR</th>
+                    <th className="text-left py-2.5 px-3 text-[9px] uppercase tracking-wider text-text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>Subject</th>
+                    <th className="text-left py-2.5 px-3 text-[9px] uppercase tracking-wider text-text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>Sent</th>
+                    <th className="text-right py-2.5 px-3 text-[9px] uppercase tracking-wider text-text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>Recipients</th>
+                    <th className="text-right py-2.5 px-3 text-[9px] uppercase tracking-wider text-text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>Opens</th>
+                    <th className="text-right py-2.5 px-3 text-[9px] uppercase tracking-wider text-text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>Clicks</th>
+                    <th className="text-right py-2.5 px-3 text-[9px] uppercase tracking-wider text-text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>Bounces</th>
+                    <th className="text-right py-2.5 px-3 text-[9px] uppercase tracking-wider text-text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>Open Rate</th>
+                    <th className="text-right py-2.5 px-3 text-[9px] uppercase tracking-wider text-text-muted font-semibold" style={{ borderBottom: "1px solid var(--color-border, #e8e5e0)" }}>CTR</th>
                   </tr>
                 </thead>
                 <tbody>
                   {PAST_NEWSLETTERS.map(nl => (
                     <tr key={nl.id} className="hover:bg-surface-light transition-colors">
                       <td className="py-2.5 px-3 font-medium max-w-[260px] truncate" style={{ borderBottom: "1px solid var(--color-surface-light, #f5f3ee)" }}>{nl.subject}</td>
-                      <td className="py-2.5 px-3 text-muted" style={{ borderBottom: "1px solid var(--color-surface-light, #f5f3ee)" }}>{nl.sentAt}</td>
+                      <td className="py-2.5 px-3 text-text-muted" style={{ borderBottom: "1px solid var(--color-surface-light, #f5f3ee)" }}>{nl.sentAt}</td>
                       <td className="py-2.5 px-3 text-right" style={{ borderBottom: "1px solid var(--color-surface-light, #f5f3ee)" }}>{nl.recipients.toLocaleString()}</td>
                       <td className="py-2.5 px-3 text-right text-green-400 font-medium" style={{ borderBottom: "1px solid var(--color-surface-light, #f5f3ee)" }}>{nl.opens.toLocaleString()}</td>
                       <td className="py-2.5 px-3 text-right text-brand-accent font-medium" style={{ borderBottom: "1px solid var(--color-surface-light, #f5f3ee)" }}>{nl.clicks.toLocaleString()}</td>
@@ -1251,7 +1251,7 @@ export default function NewsletterPage() {
                 return (
                   <div>
                     <p className="text-sm font-medium mb-1">{best.subject}</p>
-                    <div className="flex gap-3 text-[10px] text-muted">
+                    <div className="flex gap-3 text-[10px] text-text-muted">
                       <span className="text-green-400 font-semibold">{best.openRate} opens</span>
                       <span>Sent {best.sentAt}</span>
                       <span>{best.recipients.toLocaleString()} recipients</span>
@@ -1269,7 +1269,7 @@ export default function NewsletterPage() {
                 return (
                   <div>
                     <p className="text-sm font-medium mb-1">{best.subject}</p>
-                    <div className="flex gap-3 text-[10px] text-muted">
+                    <div className="flex gap-3 text-[10px] text-text-muted">
                       <span className="text-brand-accent font-semibold">{best.clickRate} CTR</span>
                       <span>Sent {best.sentAt}</span>
                       <span>{best.clicks.toLocaleString()} clicks</span>

@@ -116,7 +116,7 @@ export default function AdsManagerPage() {
                     className={`inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border-b-2 -mb-px transition-colors ${
                       isActive
                         ? "border-brand-accent text-brand-accent bg-[rgba(59,130,246,0.08)]"
-                        : "border-transparent text-muted hover:text-text"
+                        : "border-transparent text-text-muted hover:text-text"
                     }`}
                   >
                     <Icon size={14} />
@@ -125,7 +125,7 @@ export default function AdsManagerPage() {
                 );
               })}
             </PrismPanel>{activeTab && (
-              <p className="text-xs text-muted -mt-2">{activeTab.description}</p>
+              <p className="text-xs text-text-muted -mt-2">{activeTab.description}</p>
             )}{/* Tab content */}<motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}

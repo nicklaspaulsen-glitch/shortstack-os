@@ -167,19 +167,19 @@ export default function CrmLinkPanel({
   }
 
   return (
-    <div className="card p-4 space-y-3">
-      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
+    <div className="glass rounded-xl p-4 space-y-3">
+      <h3 className="text-xs font-semibold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
         <Link2 size={11} /> CRM linking
       </h3>
 
       {loading ? (
-        <p className="text-[11px] text-muted flex items-center gap-1.5">
+        <p className="text-[11px] text-text-muted flex items-center gap-1.5">
           <Loader2 size={11} className="animate-spin" /> Loading contacts and deals...
         </p>
       ) : (
         <>
           <div className="space-y-1.5">
-            <div className="text-[10px] text-muted">Contact</div>
+            <div className="text-[10px] text-text-muted">Contact</div>
             {linkedLead ? (
               <div className="flex items-center justify-between p-2 rounded-md bg-white/[0.04]">
                 <div className="flex items-center gap-1.5 text-[11px] truncate">
@@ -191,16 +191,16 @@ export default function CrmLinkPanel({
                 <button
                   onClick={() => setLink("lead_id", null)}
                   disabled={linking}
-                  className="text-[9px] text-muted hover:text-red-400"
+                  className="text-[9px] text-text-muted hover:text-red-400"
                 >
                   Unlink
                 </button>
               </div>
             ) : (
-              <p className="text-[10px] text-muted">No contact linked yet.</p>
+              <p className="text-[10px] text-text-muted">No contact linked yet.</p>
             )}
 
-            <div className="text-[10px] text-muted mt-2">Deal</div>
+            <div className="text-[10px] text-text-muted mt-2">Deal</div>
             {linkedDeal ? (
               <div className="flex items-center justify-between p-2 rounded-md bg-white/[0.04]">
                 <div className="flex items-center gap-1.5 text-[11px] truncate">
@@ -212,13 +212,13 @@ export default function CrmLinkPanel({
                 <button
                   onClick={() => setLink("deal_id", null)}
                   disabled={linking}
-                  className="text-[9px] text-muted hover:text-red-400"
+                  className="text-[9px] text-text-muted hover:text-red-400"
                 >
                   Unlink
                 </button>
               </div>
             ) : (
-              <p className="text-[10px] text-muted">No deal linked yet.</p>
+              <p className="text-[10px] text-text-muted">No deal linked yet.</p>
             )}
           </div>
 
@@ -238,7 +238,7 @@ export default function CrmLinkPanel({
                   disabled={linking || l.id === leadId}
                   className="w-full text-left p-2 rounded-md hover:bg-white/[0.05] transition-all flex items-center gap-1.5 text-[11px] disabled:opacity-50"
                 >
-                  <User size={10} className="text-muted flex-shrink-0" />
+                  <User size={10} className="text-text-muted flex-shrink-0" />
                   <span className="truncate">
                     {l.business_name || l.owner_name || l.email || "Unnamed"}
                   </span>
@@ -251,7 +251,7 @@ export default function CrmLinkPanel({
                   disabled={linking || d.id === dealId}
                   className="w-full text-left p-2 rounded-md hover:bg-white/[0.05] transition-all flex items-center gap-1.5 text-[11px] disabled:opacity-50"
                 >
-                  <Briefcase size={10} className="text-muted flex-shrink-0" />
+                  <Briefcase size={10} className="text-text-muted flex-shrink-0" />
                   <span className="truncate">
                     {d.title || d.client_name || "Unnamed deal"}
                     {d.stage ? ` · ${d.stage}` : ""}
@@ -277,12 +277,12 @@ export default function CrmLinkPanel({
           </button>
 
           {syncedAt && (
-            <p className="text-[10px] text-muted text-center">
+            <p className="text-[10px] text-text-muted text-center">
               Last synced {new Date(syncedAt).toLocaleString()}
             </p>
           )}
           {!hasSummary && (
-            <p className="text-[10px] text-muted text-center">
+            <p className="text-[10px] text-text-muted text-center">
               Run Claude analysis first to generate the note body.
             </p>
           )}

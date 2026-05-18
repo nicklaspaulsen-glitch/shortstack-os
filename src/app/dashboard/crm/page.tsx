@@ -125,7 +125,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 const OUTREACH_STATUS_COLORS: Record<string, string> = {
   sent: "text-blue-400", delivered: "text-blue-400", replied: "text-emerald-400",
-  no_reply: "text-muted", bounced: "text-red-400", failed: "text-red-400", pending: "text-amber-400",
+  no_reply: "text-text-muted", bounced: "text-red-400", failed: "text-red-400", pending: "text-amber-400",
 };
 
 const TAG_COLORS = [
@@ -888,7 +888,7 @@ export default function CRMPage() {
      ------------------------------------------------------------------- */
 
   return (
-    <MotionPage className="fade-in space-y-3"><ErrorBoundary section="CRM">
+    <MotionPage className="space-y-3"><ErrorBoundary section="CRM">
             {/* -- CRM command strip (slim editorial header, no PageHero) -- */}
             <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
               <div className="min-w-0">
@@ -907,35 +907,35 @@ export default function CRMPage() {
               )}
             </div>
             {/* -- Stats Dashboard -- */}
-            <div className="card p-0 overflow-hidden">
+            <div className="glass rounded-xl p-0 overflow-hidden">
               <button onClick={() => setStatsCollapsed(!statsCollapsed)}
                 className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-surface-light/50 transition-colors">
                 <div className="flex items-center gap-2">
                   <BarChart3 size={14} className="text-brand-accent" />
                   <span className="text-xs font-bold">CRM Dashboard</span>
-                  <span className="text-[9px] text-muted">{stats.total} total leads</span>
+                  <span className="text-[9px] text-text-muted">{stats.total} total leads</span>
                 </div>
-                {statsCollapsed ? <ChevronDown size={14} className="text-muted" /> : <ChevronUp size={14} className="text-muted" />}
+                {statsCollapsed ? <ChevronDown size={14} className="text-text-muted" /> : <ChevronUp size={14} className="text-text-muted" />}
               </button>
               {!statsCollapsed && (
                 <div className="px-4 pb-4 pt-1">
                   <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-2">
                     {[
-                      { label: "Total Leads", value: stats.total, icon: Users, color: "text-foreground" },
+                      { label: "Total Leads", value: stats.total, icon: Users, color: "text-text-primary" },
                       { label: "Avg Score", value: stats.avgScore, icon: Target, color: "text-brand-accent", suffix: "/100" },
                       { label: "Reply Rate", value: `${stats.replyRate}%`, icon: MessageCircle, color: "text-emerald-400" },
                       { label: "Conv. Rate", value: `${stats.convRate}%`, icon: TrendingUp, color: "text-purple-400" },
                       { label: "Outreach Sent", value: stats.totalOutreach, icon: Send, color: "text-blue-400" },
                       { label: "With Email", value: stats.withEmail, icon: Mail, color: "text-amber-400" },
                       { label: "With Phone", value: stats.withPhone, icon: Phone, color: "text-emerald-400" },
-                      { label: "Stale Leads", value: stats.stale, icon: AlertTriangle, color: stats.stale> 0 ? "text-red-400" : "text-muted" },
+                      { label: "Stale Leads", value: stats.stale, icon: AlertTriangle, color: stats.stale> 0 ? "text-red-400" : "text-text-muted" },
                     ].map((s, i) => (
                       <PrismPanel key={i} rainbow padding="px-3 py-2" delay={i * 0.06}>
                         <div className="flex items-center gap-1.5 mb-1">
                           <s.icon size={10} className={s.color} />
-                          <span className="text-[8px] text-muted uppercase tracking-wider">{s.label}</span>
+                          <span className="text-[8px] text-text-muted uppercase tracking-wider">{s.label}</span>
                         </div>
-                        <p className={`text-sm font-bold ${s.color}`}>{s.value}<span className="text-[8px] text-muted font-normal">{s.suffix || ""}</span></p>
+                        <p className={`text-sm font-bold ${s.color}`}>{s.value}<span className="text-[8px] text-text-muted font-normal">{s.suffix || ""}</span></p>
                       </PrismPanel>
                     ))}
                   </div>
@@ -949,10 +949,10 @@ export default function CRMPage() {
                         <div key={t.key} className="flex-1 group cursor-pointer" onClick={() => setActiveTab(t.key as CRMStatus)}>
                           <div className="h-2 rounded-full transition-all group-hover:h-3" style={{ background: colors[t.key], opacity: count> 0 ? 1 : 0.2 }} />
                           <div className="flex items-center justify-between mt-1">
-                            <span className="text-[8px] text-muted">{t.label}</span>
-                            <span className="text-[8px] font-mono" style={{ color: colors[t.key] }}>{count} <span className="text-muted">({pct}%)</span></span>
+                            <span className="text-[8px] text-text-muted">{t.label}</span>
+                            <span className="text-[8px] font-mono" style={{ color: colors[t.key] }}>{count} <span className="text-text-muted">({pct}%)</span></span>
                           </div>
-                          {i < 4 && <ArrowRight size={8} className="text-muted/30 mx-auto mt-0.5 hidden xl:block" />}
+                          {i < 4 && <ArrowRight size={8} className="text-text-muted/30 mx-auto mt-0.5 hidden xl:block" />}
                         </div>
                       );
                     })}
@@ -1053,16 +1053,16 @@ export default function CRMPage() {
             {/* -- Saved Segments -- */}
             {savedSegments.length> 0 && (
               <div className="flex items-center gap-1.5 overflow-x-auto">
-                <Bookmark size={10} className="text-muted shrink-0" />
+                <Bookmark size={10} className="text-text-muted shrink-0" />
                 {savedSegments.map(seg => (
                   <button key={seg.id} onClick={() => loadSegment(seg)}
-                    className="text-[8px] px-2 py-1 rounded-full border border-border bg-surface-light hover:border-[rgba(59,130,246,0.2)] hover:text-brand-accent transition-all whitespace-nowrap flex items-center gap-1">
+                    className="text-[8px] px-2 py-1 rounded-full border border-border-subtle bg-surface-light hover:border-[rgba(59,130,246,0.2)] hover:text-brand-accent transition-all whitespace-nowrap flex items-center gap-1">
                     {seg.name}
                     <span role="button" onClick={(e) => { e.stopPropagation(); deleteSegment(seg.id); }}
                       className="hover:text-red-400 cursor-pointer"><X size={7} /></span>
                   </button>
                 ))}
-                <button onClick={() => setShowSegmentSave(true)} className="text-[8px] px-2 py-1 rounded-full border border-dashed border-border text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-all flex items-center gap-1">
+                <button onClick={() => setShowSegmentSave(true)} className="text-[8px] px-2 py-1 rounded-full border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-all flex items-center gap-1">
                   <Plus size={8} /> Save Current
                 </button>
               </div>
@@ -1070,11 +1070,11 @@ export default function CRMPage() {
 
             {/* -- Column Config Dropdown -- */}
             {showColumnConfig && (
-              <div className="card p-3 flex flex-wrap gap-2">
-                <span className="text-[9px] text-muted font-medium w-full">Toggle Columns:</span>
+              <div className="glass rounded-xl p-3 flex flex-wrap gap-2">
+                <span className="text-[9px] text-text-muted font-medium w-full">Toggle Columns:</span>
                 {columns.filter(c => c.key !== "select" && c.key !== "expand").map(col => (
                   <button key={col.key} onClick={() => setColumns(prev => prev.map(c => c.key === col.key ? { ...c, visible: !c.visible } : c))}
-                    className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${col.visible ? "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border text-muted"}`}>
+                    className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${col.visible ? "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border-subtle text-text-muted"}`}>
                     {col.visible ? <Eye size={9} /> : <EyeOff size={9} />} {col.label}
                   </button>
                 ))}
@@ -1083,18 +1083,18 @@ export default function CRMPage() {
 
             {/* -- Advanced Filters Panel -- */}
             {showFilters && (
-              <div className="card p-4 space-y-3">
+              <div className="glass rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold flex items-center gap-2"><Filter size={12} className="text-brand-accent" /> Advanced Filters</span>
                   <div className="flex items-center gap-2">
-                    <button onClick={() => setFilters(DEFAULT_FILTERS)} className="text-[9px] text-muted hover:text-foreground">Reset All</button>
-                    <button onClick={() => setShowFilters(false)} className="text-muted hover:text-foreground" aria-label="Close filters"><X size={14} /></button>
+                    <button onClick={() => setFilters(DEFAULT_FILTERS)} className="text-[9px] text-text-muted hover:text-text-primary">Reset All</button>
+                    <button onClick={() => setShowFilters(false)} className="text-text-muted hover:text-text-primary" aria-label="Close filters"><X size={14} /></button>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {/* Industry filter */}
                   <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Industry</label>
+                    <label className="text-[9px] text-text-muted uppercase tracking-wider font-semibold block mb-1">Industry</label>
                     <div className="space-y-0.5 max-h-28 overflow-y-auto">
                       {uniqueIndustries.slice(0, 15).map(ind => (
                         <label key={ind} className="flex items-center gap-1.5 text-[10px] cursor-pointer hover:text-brand-accent transition-colors">
@@ -1103,7 +1103,7 @@ export default function CRMPage() {
                               ...prev,
                               industries: prev.industries.includes(ind) ? prev.industries.filter(i => i !== ind) : [...prev.industries, ind]
                             }))}
-                            className="rounded border-border text-brand-accent w-3 h-3" />
+                            className="rounded border-border-subtle text-brand-accent w-3 h-3" />
                           {ind}
                         </label>
                       ))}
@@ -1111,7 +1111,7 @@ export default function CRMPage() {
                   </div>
                   {/* Location filter */}
                   <div>
-                    <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Location</label>
+                    <label className="text-[9px] text-text-muted uppercase tracking-wider font-semibold block mb-1">Location</label>
                     <div className="space-y-0.5 max-h-28 overflow-y-auto">
                       {uniqueCities.slice(0, 15).map(city => (
                         <label key={city} className="flex items-center gap-1.5 text-[10px] cursor-pointer hover:text-brand-accent transition-colors">
@@ -1120,7 +1120,7 @@ export default function CRMPage() {
                               ...prev,
                               cities: prev.cities.includes(city) ? prev.cities.filter(c => c !== city) : [...prev.cities, city]
                             }))}
-                            className="rounded border-border text-brand-accent w-3 h-3" />
+                            className="rounded border-border-subtle text-brand-accent w-3 h-3" />
                           {city}
                         </label>
                       ))}
@@ -1128,23 +1128,23 @@ export default function CRMPage() {
                   </div>
                   {/* Contact info filters */}
                   <div className="space-y-2">
-                    <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block">Contact Info</label>
+                    <label className="text-[9px] text-text-muted uppercase tracking-wider font-semibold block">Contact Info</label>
                     {[
                       { key: "hasPhone" as const, label: "Has Phone", icon: Phone },
                       { key: "hasEmail" as const, label: "Has Email", icon: Mail },
                       { key: "hasSocial" as const, label: "Has Social", icon: Camera },
                     ].map(f => (
                       <div key={f.key} className="flex items-center gap-2">
-                        <f.icon size={10} className="text-muted" />
+                        <f.icon size={10} className="text-text-muted" />
                         <span className="text-[10px] flex-1">{f.label}</span>
-                        <div className="flex rounded-lg overflow-hidden border border-border text-[8px]">
+                        <div className="flex rounded-lg overflow-hidden border border-border-subtle text-[8px]">
                           {[
                             { val: null, label: "Any" },
                             { val: true, label: "Yes" },
                             { val: false, label: "No" },
                           ].map(o => (
                             <button key={String(o.val)} onClick={() => setFilters(prev => ({ ...prev, [f.key]: o.val }))}
-                              className={`px-1.5 py-0.5 ${filters[f.key] === o.val ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-muted"}`}>
+                              className={`px-1.5 py-0.5 ${filters[f.key] === o.val ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted"}`}>
                               {o.label}
                             </button>
                           ))}
@@ -1152,15 +1152,15 @@ export default function CRMPage() {
                       </div>
                     ))}
                     <div className="pt-1">
-                      <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Staleness</label>
-                      <div className="flex rounded-lg overflow-hidden border border-border text-[8px]">
+                      <label className="text-[9px] text-text-muted uppercase tracking-wider font-semibold block mb-1">Staleness</label>
+                      <div className="flex rounded-lg overflow-hidden border border-border-subtle text-[8px]">
                         {[
                           { val: null, label: "Any" },
                           { val: true, label: "Stale Only" },
                           { val: false, label: "Active Only" },
                         ].map(o => (
                           <button key={String(o.val)} onClick={() => setFilters(prev => ({ ...prev, isStale: o.val }))}
-                            className={`px-2 py-1 ${filters.isStale === o.val ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-muted"}`}>
+                            className={`px-2 py-1 ${filters.isStale === o.val ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted"}`}>
                             {o.label}
                           </button>
                         ))}
@@ -1170,7 +1170,7 @@ export default function CRMPage() {
                   {/* Score & Rating ranges */}
                   <div className="space-y-2">
                     <div>
-                      <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Rating ({filters.ratingMin}�{filters.ratingMax})</label>
+                      <label className="text-[9px] text-text-muted uppercase tracking-wider font-semibold block mb-1">Rating ({filters.ratingMin}�{filters.ratingMax})</label>
                       <div className="flex items-center gap-2">
                         <input type="range" min={0} max={5} step={0.5} value={filters.ratingMin}
                           onChange={e => setFilters(prev => ({ ...prev, ratingMin: parseFloat(e.target.value) }))}
@@ -1181,7 +1181,7 @@ export default function CRMPage() {
                       </div>
                     </div>
                     <div>
-                      <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Lead Score ({filters.scoreMin}�{filters.scoreMax})</label>
+                      <label className="text-[9px] text-text-muted uppercase tracking-wider font-semibold block mb-1">Lead Score ({filters.scoreMin}�{filters.scoreMax})</label>
                       <div className="flex items-center gap-2">
                         <input type="range" min={0} max={100} step={5} value={filters.scoreMin}
                           onChange={e => setFilters(prev => ({ ...prev, scoreMin: parseInt(e.target.value) }))}
@@ -1192,24 +1192,24 @@ export default function CRMPage() {
                       </div>
                     </div>
                     <div>
-                      <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Date Range</label>
+                      <label className="text-[9px] text-text-muted uppercase tracking-wider font-semibold block mb-1">Date Range</label>
                       <div className="flex items-center gap-1">
                         <input type="date" value={filters.dateFrom} onChange={e => setFilters(prev => ({ ...prev, dateFrom: e.target.value }))}
                           className="input text-[9px] px-1.5 py-1 flex-1" aria-label="Filter from date" />
-                        <span className="text-[8px] text-muted">to</span>
+                        <span className="text-[8px] text-text-muted">to</span>
                         <input type="date" value={filters.dateTo} onChange={e => setFilters(prev => ({ ...prev, dateTo: e.target.value }))}
                           className="input text-[9px] px-1.5 py-1 flex-1" aria-label="Filter to date" />
                       </div>
                     </div>
                     {/* Tags filter */}
                     <div>
-                      <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Tags</label>
+                      <label className="text-[9px] text-text-muted uppercase tracking-wider font-semibold block mb-1">Tags</label>
                       <div className="flex flex-wrap gap-1">
                         {AVAILABLE_TAGS.map(tag => (
                           <button key={tag.id} onClick={() => setFilters(prev => ({
                             ...prev, tags: prev.tags.includes(tag.id) ? prev.tags.filter(t => t !== tag.id) : [...prev.tags, tag.id]
                           }))}
-                            className={`text-[8px] px-1.5 py-0.5 rounded-full border transition-all ${filters.tags.includes(tag.id) ? getTagStyle(tag.color) : "border-border text-muted"}`}>
+                            className={`text-[8px] px-1.5 py-0.5 rounded-full border transition-all ${filters.tags.includes(tag.id) ? getTagStyle(tag.color) : "border-border-subtle text-text-muted"}`}>
                             {tag.label}
                           </button>
                         ))}
@@ -1223,12 +1223,12 @@ export default function CRMPage() {
             {/* -- Search + Sort -- */}
             <div className="flex items-center gap-2 flex-wrap">
               <div className="relative flex-1 min-w-[200px]">
-                <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input value={search} onChange={e => setSearch(e.target.value)}
                   placeholder="Search name, industry, city, email, phone..."
                   className="input glass w-full text-[10px] pl-8 py-1.5"
                   aria-label="Search leads" />
-                {search && <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2" aria-label="Clear search"><X size={11} className="text-muted hover:text-foreground" /></button>}
+                {search && <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2" aria-label="Clear search"><X size={11} className="text-text-muted hover:text-text-primary" /></button>}
               </div>
               <div className="relative">
                 <button onClick={() => setShowSortMenu(!showSortMenu)} className="btn-ghost text-[9px] flex items-center gap-1 py-1.5">
@@ -1236,17 +1236,17 @@ export default function CRMPage() {
                   <ChevronDown size={9} />
                 </button>
                 {showSortMenu && (
-                  <div className="absolute right-0 top-full mt-1 bg-surface border border-border rounded-xl shadow-xl z-50 py-1 min-w-[150px]">
+                  <div className="absolute right-0 top-full mt-1 bg-surface border border-border-subtle rounded-xl shadow-xl z-50 py-1 min-w-[150px]">
                     {(["newest", "oldest", "score", "rating", "reviews", "last_contacted", "name_az", "name_za"] as SortKey[]).map(s => (
                       <button key={s} onClick={() => { setSortBy(s); setShowSortMenu(false); }}
-                        className={`block w-full text-left text-[10px] px-3 py-1.5 hover:bg-surface-light transition-colors ${sortBy === s ? "text-brand-accent" : "text-muted"}`}>
+                        className={`block w-full text-left text-[10px] px-3 py-1.5 hover:bg-surface-light transition-colors ${sortBy === s ? "text-brand-accent" : "text-text-muted"}`}>
                         {s === "newest" ? "Newest First" : s === "oldest" ? "Oldest First" : s === "score" ? "Highest Score" : s === "rating" ? "Highest Rating" : s === "reviews" ? "Most Reviews" : s === "last_contacted" ? "Last Contacted" : s === "name_az" ? "Name A?Z" : "Name Z?A"}
                       </button>
                     ))}
                   </div>
                 )}
               </div>
-              <span className="text-[9px] text-muted">{filtered.length} results</span>
+              <span className="text-[9px] text-text-muted">{filtered.length} results</span>
             </div>
 
             {/* -- Status Tabs -- */}
@@ -1255,7 +1255,7 @@ export default function CRMPage() {
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`tab-pill${activeTab === t.key ? " active" : ""} flex items-center gap-1`}>
                   {t.label}
-                  <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${activeTab === t.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light text-muted"}`}>
+                  <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${activeTab === t.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light text-text-muted"}`}>
                     {statusCounts[t.key] || 0}
                   </span>
                 </button>
@@ -1276,10 +1276,10 @@ export default function CRMPage() {
                         <Tag size={9} /> Mark As <ChevronDown size={7} />
                       </button>
                       {showBulkStatusMenu && (
-                        <div className="absolute left-0 top-full mt-1 bg-surface border border-border rounded-xl shadow-xl z-50 py-1 min-w-[120px]">
+                        <div className="absolute left-0 top-full mt-1 bg-surface border border-border-subtle rounded-xl shadow-xl z-50 py-1 min-w-[120px]">
                           {["new", "contacted", "replied", "booked", "converted", "not_interested"].map(s => (
                             <button key={s} onClick={() => bulkUpdateStatus(s)}
-                              className="block w-full text-left text-[9px] px-3 py-1.5 hover:bg-surface-light transition-colors text-muted hover:text-foreground capitalize">
+                              className="block w-full text-left text-[9px] px-3 py-1.5 hover:bg-surface-light transition-colors text-text-muted hover:text-text-primary capitalize">
                               {s.replace("_", " ")}
                             </button>
                           ))}
@@ -1288,10 +1288,10 @@ export default function CRMPage() {
                     </div>
                     <button onClick={bulkDelete} className="text-[8px] px-2 py-1 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all flex items-center gap-1"><Trash2 size={9} /> Delete</button>
                   </div>
-                  <button onClick={() => { setSelectedIds(new Set()); setShowBulkStatusMenu(false); }} className="text-[8px] text-muted hover:text-foreground ml-auto" aria-label="Clear selection"><X size={10} /></button>
+                  <button onClick={() => { setSelectedIds(new Set()); setShowBulkStatusMenu(false); }} className="text-[8px] text-text-muted hover:text-text-primary ml-auto" aria-label="Clear selection"><X size={10} /></button>
                 </>
               ) : (
-                <span className="text-[9px] text-muted flex items-center gap-1"><Zap size={9} /> Select leads for bulk actions</span>
+                <span className="text-[9px] text-text-muted flex items-center gap-1"><Zap size={9} /> Select leads for bulk actions</span>
               )}
             </div>
 
@@ -1305,20 +1305,20 @@ export default function CRMPage() {
                     <div className="overflow-x-auto">
                       <table className={`w-full ${dText}`}>
                         <thead>
-                          <tr className="border-b border-border bg-surface-light">
+                          <tr className="border-b border-border-subtle bg-surface-light">
                             {columns.filter(c => c.visible).map(col => {
                               if (col.key === "select") return (
                                 <th key={col.key} className={`text-left px-2 ${dPy} ${col.width || ""}`}>
                                   <button onClick={toggleSelectAll}>
                                     {selectedIds.size === filtered.length && filtered.length> 0
                                       ? <CheckSquare size={12} className="text-brand-accent" />
-                                      : <Square size={12} className="text-muted/40" />}
+                                      : <Square size={12} className="text-text-muted/40" />}
                                   </button>
                                 </th>
                               );
                               if (col.key === "expand") return <th key={col.key} className={`${col.width || ""}`} />;
                               return (
-                                <th key={col.key} className={`text-left px-2 ${dPy} text-[8px] text-muted uppercase tracking-wider font-semibold`}>
+                                <th key={col.key} className={`text-left px-2 ${dPy} text-[8px] text-text-muted uppercase tracking-wider font-semibold`}>
                                   {col.label}
                                 </th>
                               );
@@ -1327,7 +1327,7 @@ export default function CRMPage() {
                         </thead>
                         <tbody>
                           {paginated.length === 0 && (
-                            <tr><td colSpan={columns.filter(c => c.visible).length} className="text-center py-12 text-muted text-xs">No leads found</td></tr>
+                            <tr><td colSpan={columns.filter(c => c.visible).length} className="text-center py-12 text-text-muted text-xs">No leads found</td></tr>
                           )}
                           {paginated.map((lead, index) => {
                             const score = getLeadScore(lead);
@@ -1341,7 +1341,7 @@ export default function CRMPage() {
                             return (
                               <React.Fragment key={lead.id}>
                                 <motion.tr
-                                  className={`border-b border-border/50 cursor-pointer ${isExpanded ? "bg-surface-light/20" : ""} ${selected ? "bg-[rgba(59,130,246,0.05)]" : ""}`}
+                                  className={`border-b border-border-subtle/50 cursor-pointer ${isExpanded ? "bg-surface-light/20" : ""} ${selected ? "bg-[rgba(59,130,246,0.05)]" : ""}`}
                                   initial={{ opacity: 0, x: -8 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ duration: 0.18, delay: index * 0.04 }}
@@ -1351,32 +1351,32 @@ export default function CRMPage() {
                                     if (col.key === "select") return (
                                       <td key={col.key} className={`px-2 ${dPy}`} onClick={e => e.stopPropagation()}>
                                         <button onClick={() => toggleSelect(lead.id)}>
-                                          {selected ? <CheckSquare size={12} className="text-brand-accent" /> : <Square size={12} className="text-muted/40" />}
+                                          {selected ? <CheckSquare size={12} className="text-brand-accent" /> : <Square size={12} className="text-text-muted/40" />}
                                         </button>
                                       </td>
                                     );
                                     if (col.key === "name") return (
                                       <td key={col.key} className={`px-2 ${dPy}`}>
                                         <p className="font-medium truncate max-w-[180px]">{lead.business_name}</p>
-                                        {density !== "dense" && lead.owner_name && <p className="text-[8px] text-muted truncate">{lead.owner_name}</p>}
+                                        {density !== "dense" && lead.owner_name && <p className="text-[8px] text-text-muted truncate">{lead.owner_name}</p>}
                                       </td>
                                     );
                                     if (col.key === "contact") return (
                                       <td key={col.key} className={`px-2 ${dPy}`} onClick={e => e.stopPropagation()}>
                                         <div className={`flex items-center ${dGap}`}>
-                                          {lead.email && <span title={lead.email} className="text-muted hover:text-brand-accent cursor-pointer"><Mail size={11} /></span>}
-                                          {lead.phone && <span title={lead.phone} className="text-muted hover:text-emerald-400 cursor-pointer"><Phone size={11} /></span>}
-                                          {lead.website && <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-foreground"><Globe size={11} /></a>}
+                                          {lead.email && <span title={lead.email} className="text-text-muted hover:text-brand-accent cursor-pointer"><Mail size={11} /></span>}
+                                          {lead.phone && <span title={lead.phone} className="text-text-muted hover:text-emerald-400 cursor-pointer"><Phone size={11} /></span>}
+                                          {lead.website && <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-text-primary"><Globe size={11} /></a>}
                                         </div>
                                       </td>
                                     );
                                     if (col.key === "industry") return (
-                                      <td key={col.key} className={`px-2 ${dPy} text-muted`}>
+                                      <td key={col.key} className={`px-2 ${dPy} text-text-muted`}>
                                         <span className="truncate max-w-[100px] block">{lead.industry || "�"}</span>
                                       </td>
                                     );
                                     if (col.key === "location") return (
-                                      <td key={col.key} className={`px-2 ${dPy} text-muted`}>
+                                      <td key={col.key} className={`px-2 ${dPy} text-text-muted`}>
                                         <span className="truncate max-w-[100px] block">{lead.city ? `${lead.city}${lead.state ? `, ${lead.state}` : ""}` : "�"}</span>
                                       </td>
                                     );
@@ -1385,9 +1385,9 @@ export default function CRMPage() {
                                         {lead.google_rating ? (
                                           <span className="flex items-center gap-0.5 text-amber-400">
                                             <Star size={9} className="fill-amber-400" /> {lead.google_rating}
-                                            {density !== "dense" && <span className="text-muted text-[8px]">({lead.review_count})</span>}
+                                            {density !== "dense" && <span className="text-text-muted text-[8px]">({lead.review_count})</span>}
                                           </span>
-                                        ) : <span className="text-muted">�</span>}
+                                        ) : <span className="text-text-muted">�</span>}
                                       </td>
                                     );
                                     if (col.key === "score") return (
@@ -1408,7 +1408,7 @@ export default function CRMPage() {
                                             if (!tag) return null;
                                             return <span key={tagId} className={`text-[7px] px-1 py-0.5 rounded-full border ${getTagStyle(tag.color)}`}>{tag.label}</span>;
                                           })}
-                                          {tags.length> 2 && <span className="text-[7px] text-muted">+{tags.length - 2}</span>}
+                                          {tags.length> 2 && <span className="text-[7px] text-text-muted">+{tags.length - 2}</span>}
                                         </div>
                                       </td>
                                     );
@@ -1422,10 +1422,10 @@ export default function CRMPage() {
                                           {stale && <AlertTriangle size={9} className="text-red-400" />}
                                           {!stale && expiry !== null && expiry <= 5 && <span className="text-[7px] text-amber-400">{expiry}d</span>}
                                           {inlineStatusId === lead.id && (
-                                            <div className="absolute left-0 top-full mt-1 bg-surface border border-border rounded-lg shadow-xl z-50 py-1 min-w-[110px]">
+                                            <div className="absolute left-0 top-full mt-1 bg-surface border border-border-subtle rounded-lg shadow-xl z-50 py-1 min-w-[110px]">
                                               {["new", "contacted", "replied", "booked", "converted", "not_interested"].map(s => (
                                                 <button key={s} onClick={() => updateLeadStatus(lead.id, s)}
-                                                  className={`block w-full text-left text-[9px] px-3 py-1 hover:bg-surface-light transition-colors capitalize ${lead.status === s ? "text-brand-accent" : "text-muted"}`}>
+                                                  className={`block w-full text-left text-[9px] px-3 py-1 hover:bg-surface-light transition-colors capitalize ${lead.status === s ? "text-brand-accent" : "text-text-muted"}`}>
                                                   {s.replace("_", " ")}
                                                 </button>
                                               ))}
@@ -1436,7 +1436,7 @@ export default function CRMPage() {
                                     );
                                     if (col.key === "last_contact") return (
                                       <td key={col.key} className={`px-2 ${dPy}`}>
-                                        <span className="text-[9px] text-muted flex items-center gap-1">
+                                        <span className="text-[9px] text-text-muted flex items-center gap-1">
                                           <Clock size={8} />
                                           {lead.outreach_log[0] ? formatShortDate(lead.outreach_log[0].sent_at) : "Never"}
                                         </span>
@@ -1464,7 +1464,7 @@ export default function CRMPage() {
                                       <td key={col.key} className={`px-1 ${dPy}`}>
                                         <button onClick={(e) => { e.stopPropagation(); setExpandedId(isExpanded ? null : lead.id); }}
                                           className="p-1 hover:bg-surface-light rounded transition-colors">
-                                          {isExpanded ? <ChevronUp size={11} className="text-muted" /> : <ChevronDown size={11} className="text-muted" />}
+                                          {isExpanded ? <ChevronUp size={11} className="text-text-muted" /> : <ChevronDown size={11} className="text-text-muted" />}
                                         </button>
                                       </td>
                                     );
@@ -1482,10 +1482,10 @@ export default function CRMPage() {
                                       <div className="flex items-center gap-2 mb-2">
                                         <Send size={10} className="text-brand-accent" />
                                         <span className="text-[9px] font-semibold text-brand-accent">Outreach History</span>
-                                        <span className="text-[8px] text-muted">({lead.outreach_log.length} messages)</span>
+                                        <span className="text-[8px] text-text-muted">({lead.outreach_log.length} messages)</span>
                                       </div>
                                       {lead.outreach_log.length === 0 ? (
-                                        <p className="text-[9px] text-muted">No outreach yet</p>
+                                        <p className="text-[9px] text-text-muted">No outreach yet</p>
                                       ) : (
                                         <div className="space-y-1 max-h-36 overflow-y-auto">
                                           {lead.outreach_log.map(e => (
@@ -1494,11 +1494,11 @@ export default function CRMPage() {
                                                 {e.platform === "email" ? <Mail size={10} className="text-brand-accent" /> :
                                                  e.platform === "call" ? <Phone size={10} className="text-green-400" /> :
                                                  <MessageSquare size={10} className="text-blue-400" />}
-                                                <span className={`text-[8px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-muted"}`}>{e.status}</span>
+                                                <span className={`text-[8px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-text-muted"}`}>{e.status}</span>
                                               </div>
-                                              <p className="flex-1 text-muted truncate">{e.message_text}</p>
+                                              <p className="flex-1 text-text-muted truncate">{e.message_text}</p>
                                               {e.reply_text && <p className="text-emerald-400 text-[8px] truncate max-w-[200px]">? {e.reply_text}</p>}
-                                              <span className="text-[7px] text-muted shrink-0">{formatShortDate(e.sent_at)}</span>
+                                              <span className="text-[7px] text-text-muted shrink-0">{formatShortDate(e.sent_at)}</span>
                                             </div>
                                           ))}
                                         </div>
@@ -1518,7 +1518,7 @@ export default function CRMPage() {
                 {/* -- CARD VIEW -- */}
                 {viewMode === "card" && (
                   <div className={`grid gap-2 ${density === "dense" ? "grid-cols-1 md:grid-cols-3 xl:grid-cols-4" : density === "compact" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"}`}>
-                    {paginated.length === 0 && <div className="col-span-full text-center py-12 text-muted text-xs">No leads found</div>}
+                    {paginated.length === 0 && <div className="col-span-full text-center py-12 text-text-muted text-xs">No leads found</div>}
                     {paginated.map((lead, index) => {
                       const score = getLeadScore(lead);
                       const scoreInfo = getScoreInfo(score);
@@ -1541,11 +1541,11 @@ export default function CRMPage() {
                           <div className="flex items-start justify-between">
                             <div className="flex items-center gap-1.5 min-w-0">
                               <button onClick={e => { e.stopPropagation(); toggleSelect(lead.id); }}>
-                                {selectedIds.has(lead.id) ? <CheckSquare size={12} className="text-brand-accent" /> : <Square size={12} className="text-muted/40" />}
+                                {selectedIds.has(lead.id) ? <CheckSquare size={12} className="text-brand-accent" /> : <Square size={12} className="text-text-muted/40" />}
                               </button>
                               <div className="min-w-0">
                                 <h3 className={`font-semibold truncate ${density === "dense" ? "text-[10px]" : "text-xs"}`}>{lead.business_name}</h3>
-                                <div className="flex items-center gap-1.5 text-[8px] text-muted">
+                                <div className="flex items-center gap-1.5 text-[8px] text-text-muted">
                                   {lead.industry && <span>{lead.industry}</span>}
                                   {lead.city && <span>� {lead.city}</span>}
                                 </div>
@@ -1564,7 +1564,7 @@ export default function CRMPage() {
                             <span className="text-[8px] font-mono" style={{ color: scoreInfo.color }}>{score}</span>
                           </div>
                           {/* Contact + social */}
-                          <div className="flex items-center gap-2 text-[9px] text-muted">
+                          <div className="flex items-center gap-2 text-[9px] text-text-muted">
                             {lead.email && <Mail size={9} />}
                             {lead.phone && <Phone size={9} />}
                             {lead.instagram_url && <InstagramIcon size={10} />}
@@ -1584,7 +1584,7 @@ export default function CRMPage() {
                             </div>
                           )}
                           {/* Status + actions */}
-                          <div className="flex items-center justify-between pt-1 border-t border-border/50">
+                          <div className="flex items-center justify-between pt-1 border-t border-border-subtle/50">
                             <span className={`text-[8px] px-2 py-0.5 rounded-full border ${STATUS_COLORS[lead.status] || STATUS_COLORS.new}`}>{lead.status}</span>
                             <div className="flex items-center gap-0.5" onClick={e => e.stopPropagation()}>
                               <button onClick={() => sendAction(lead, "email")} disabled={!lead.email} className="p-1 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] disabled:opacity-30" aria-label="Send email"><Mail size={9} /></button>
@@ -1617,7 +1617,7 @@ export default function CRMPage() {
                           <div className="space-y-1.5 max-h-[600px] overflow-y-auto pr-1">
                             {stageLeads.length === 0 && (
                               <div className="text-center py-8 border border-dashed rounded-lg" style={{ borderColor: `${color}20` }}>
-                                <p className="text-[9px] text-muted">No leads</p>
+                                <p className="text-[9px] text-text-muted">No leads</p>
                               </div>
                             )}
                             {stageLeads.map((lead, index) => {
@@ -1636,16 +1636,16 @@ export default function CRMPage() {
                                   <div className="flex items-start justify-between">
                                     <div className="min-w-0">
                                       <h4 className="text-[10px] font-bold truncate">{lead.business_name}</h4>
-                                      <p className="text-[8px] text-muted truncate">{lead.industry || "Business"} {lead.city ? `� ${lead.city}` : ""}</p>
+                                      <p className="text-[8px] text-text-muted truncate">{lead.industry || "Business"} {lead.city ? `� ${lead.city}` : ""}</p>
                                     </div>
                                     <span className="text-[7px] px-1.5 py-0.5 rounded font-bold shrink-0" style={{ background: `${scoreInfo.color}15`, color: scoreInfo.color }}>{scoreInfo.label}</span>
                                   </div>
-                                  <div className="flex items-center gap-1.5 text-[8px] text-muted">
+                                  <div className="flex items-center gap-1.5 text-[8px] text-text-muted">
                                     {lead.email && <Mail size={8} />} {lead.phone && <Phone size={8} />}
                                     {lead.google_rating && <span className="flex items-center gap-0.5 text-amber-400"><Star size={7} className="fill-amber-400" /> {lead.google_rating}</span>}
                                   </div>
                                   <div className="flex items-center gap-1.5">
-                                    <div className="flex-1 h-1 rounded-full bg-border"><div className="h-1 rounded-full" style={{ width: `${score}%`, background: scoreInfo.color }} /></div>
+                                    <div className="flex-1 h-1 rounded-full bg-border-subtle"><div className="h-1 rounded-full" style={{ width: `${score}%`, background: scoreInfo.color }} /></div>
                                     <span className="text-[7px] font-mono" style={{ color: scoreInfo.color }}>{score}</span>
                                   </div>
                                   {tags.length> 0 && (
@@ -1656,7 +1656,7 @@ export default function CRMPage() {
                                       })}
                                     </div>
                                   )}
-                                  <div className="flex items-center justify-between text-[7px] text-muted">
+                                  <div className="flex items-center justify-between text-[7px] text-text-muted">
                                     <span>{lead.outreach_log[0] ? formatShortDate(lead.outreach_log[0].sent_at) : "No outreach"}</span>
                                     <span>{lead.outreach_log.length} msgs</span>
                                   </div>
@@ -1673,15 +1673,15 @@ export default function CRMPage() {
                 {/* -- Pagination -- */}
                 {totalPages> 1 && viewMode !== "pipeline" && (
                   <div className="flex items-center justify-between px-1 mt-2">
-                    <span className="text-[9px] text-muted">
+                    <span className="text-[9px] text-text-muted">
                       {page * PAGE_SIZE + 1}�{Math.min((page + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
                     </span>
                     <div className="flex items-center gap-1">
-                      <button onClick={() => setPage(0)} disabled={page === 0} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">First</button>
-                      <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">Prev</button>
-                      <span className="text-[9px] text-muted px-2">{page + 1}/{totalPages}</span>
-                      <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page>= totalPages - 1} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">Next</button>
-                      <button onClick={() => setPage(totalPages - 1)} disabled={page>= totalPages - 1} className="text-[9px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30">Last</button>
+                      <button onClick={() => setPage(0)} disabled={page === 0} className="text-[9px] px-2 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary disabled:opacity-30">First</button>
+                      <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} className="text-[9px] px-2 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary disabled:opacity-30">Prev</button>
+                      <span className="text-[9px] text-text-muted px-2">{page + 1}/{totalPages}</span>
+                      <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page>= totalPages - 1} className="text-[9px] px-2 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary disabled:opacity-30">Next</button>
+                      <button onClick={() => setPage(totalPages - 1)} disabled={page>= totalPages - 1} className="text-[9px] px-2 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary disabled:opacity-30">Last</button>
                     </div>
                   </div>
                 )}
@@ -1690,9 +1690,9 @@ export default function CRMPage() {
               {/* -- DETAIL SIDEBAR -- */}
               {detailLead && (
                 <div ref={detailPanelRef} className="glass w-[350px] shrink-0 p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-[rgba(255,255,255,0.70)]">
-                  <div className="px-4 py-3 border-b border-border bg-surface-light/50 flex items-center justify-between">
+                  <div className="px-4 py-3 border-b border-border-subtle bg-surface-light/50 flex items-center justify-between">
                     <h3 className="text-xs font-bold truncate">{detailLead.business_name}</h3>
-                    <button onClick={() => setDetailLeadId(null)} className="text-muted hover:text-foreground" aria-label="Close detail panel"><X size={14} /></button>
+                    <button onClick={() => setDetailLeadId(null)} className="text-text-muted hover:text-text-primary" aria-label="Close detail panel"><X size={14} /></button>
                   </div>
                   <div className="p-4 space-y-4">
                     {/* Score */}
@@ -1708,16 +1708,16 @@ export default function CRMPage() {
                         </div>
                         <div>
                           <span className="text-[9px] font-bold" style={{ color: si.color }}>{si.label} LEAD</span>
-                          <p className="text-[8px] text-muted">Score based on data completeness & engagement</p>
+                          <p className="text-[8px] text-text-muted">Score based on data completeness & engagement</p>
                         </div>
                       </div>
                     ); })()}
                     {/* Contact info */}
                     <div className="space-y-1.5">
-                      <span className="text-[8px] text-muted uppercase tracking-wider font-semibold">Contact</span>
-                      {detailLead.owner_name && <p className="text-[10px] flex items-center gap-1.5"><Users size={10} className="text-muted" /> {detailLead.owner_name}</p>}
-                      {detailLead.email && <p className="text-[10px] flex items-center gap-1.5"><Mail size={10} className="text-muted" /> {detailLead.email}</p>}
-                      {detailLead.phone && <p className="text-[10px] flex items-center gap-1.5"><Phone size={10} className="text-muted" /> {detailLead.phone}</p>}
+                      <span className="text-[8px] text-text-muted uppercase tracking-wider font-semibold">Contact</span>
+                      {detailLead.owner_name && <p className="text-[10px] flex items-center gap-1.5"><Users size={10} className="text-text-muted" /> {detailLead.owner_name}</p>}
+                      {detailLead.email && <p className="text-[10px] flex items-center gap-1.5"><Mail size={10} className="text-text-muted" /> {detailLead.email}</p>}
+                      {detailLead.phone && <p className="text-[10px] flex items-center gap-1.5"><Phone size={10} className="text-text-muted" /> {detailLead.phone}</p>}
                       {detailLead.website && <a href={detailLead.website} target="_blank" rel="noopener noreferrer" className="text-[10px] flex items-center gap-1.5 text-brand-accent hover:underline"><Globe size={10} /> {detailLead.website}</a>}
                       <div className="flex items-center gap-2 pt-1">
                         {detailLead.instagram_url && <a href={detailLead.instagram_url} target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform inline-block"><InstagramIcon size={16} /></a>}
@@ -1737,7 +1737,7 @@ export default function CRMPage() {
                     </div>
                     {/* Tags */}
                     <div>
-                      <span className="text-[8px] text-muted uppercase tracking-wider font-semibold block mb-1">Tags</span>
+                      <span className="text-[8px] text-text-muted uppercase tracking-wider font-semibold block mb-1">Tags</span>
                       <div className="flex flex-wrap gap-1">
                         {(leadTags[detailLead.id] || []).map(tagId => {
                           const tag = AVAILABLE_TAGS.find(t => t.id === tagId);
@@ -1751,7 +1751,7 @@ export default function CRMPage() {
                         })}
                         {AVAILABLE_TAGS.filter(t => !(leadTags[detailLead.id] || []).includes(t.id)).slice(0, 4).map(tag => (
                           <button key={tag.id} onClick={() => addTag(detailLead.id, tag.id)}
-                            className="text-[8px] px-1.5 py-0.5 rounded-full border border-dashed border-border text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-all">
+                            className="text-[8px] px-1.5 py-0.5 rounded-full border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-all">
                             + {tag.label}
                           </button>
                         ))}
@@ -1759,7 +1759,7 @@ export default function CRMPage() {
                     </div>
                     {/* Notes */}
                     <div>
-                      <span className="text-[8px] text-muted uppercase tracking-wider font-semibold block mb-1">Notes</span>
+                      <span className="text-[8px] text-text-muted uppercase tracking-wider font-semibold block mb-1">Notes</span>
                       <div className="flex gap-1 mb-2">
                         <input value={noteInput} onChange={e => setNoteInput(e.target.value)} placeholder="Add a note..."
                           className="input text-[9px] px-2 py-1 flex-1" onKeyDown={e => { if (e.key === "Enter") addNote(detailLead.id); }} />
@@ -1769,15 +1769,15 @@ export default function CRMPage() {
                         {(leadNotes[detailLead.id] || []).map(note => (
                           <div key={note.id} className="text-[9px] p-1.5 rounded bg-surface-light">
                             <p>{note.text}</p>
-                            <span className="text-[7px] text-muted">{formatShortDate(note.created)}</span>
+                            <span className="text-[7px] text-text-muted">{formatShortDate(note.created)}</span>
                           </div>
                         ))}
-                        {(leadNotes[detailLead.id] || []).length === 0 && <p className="text-[8px] text-muted">No notes yet</p>}
+                        {(leadNotes[detailLead.id] || []).length === 0 && <p className="text-[8px] text-text-muted">No notes yet</p>}
                       </div>
                     </div>
                     {/* Follow-up scheduler */}
                     <div>
-                      <span className="text-[8px] text-muted uppercase tracking-wider font-semibold block mb-1">Schedule Follow-up</span>
+                      <span className="text-[8px] text-text-muted uppercase tracking-wider font-semibold block mb-1">Schedule Follow-up</span>
                       <div className="flex gap-1">
                         <input type="datetime-local" id="followup-date" className="input text-[9px] px-2 py-1 flex-1" />
                         <button onClick={() => {
@@ -1790,7 +1790,7 @@ export default function CRMPage() {
                       {followUps.filter(f => f.leadId === detailLead.id).length> 0 && (
                         <div className="mt-1 space-y-0.5">
                           {followUps.filter(f => f.leadId === detailLead.id).map((f, i) => (
-                            <div key={i} className="text-[8px] text-muted flex items-center gap-1">
+                            <div key={i} className="text-[8px] text-text-muted flex items-center gap-1">
                               <Bell size={8} className="text-purple-400" /> {new Date(f.date).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
                             </div>
                           ))}
@@ -1799,9 +1799,9 @@ export default function CRMPage() {
                     </div>
                     {/* Outreach timeline */}
                     <div>
-                      <span className="text-[8px] text-muted uppercase tracking-wider font-semibold block mb-1">Outreach Timeline</span>
+                      <span className="text-[8px] text-text-muted uppercase tracking-wider font-semibold block mb-1">Outreach Timeline</span>
                       {detailLead.outreach_log.length === 0 ? (
-                        <p className="text-[8px] text-muted">No outreach yet</p>
+                        <p className="text-[8px] text-text-muted">No outreach yet</p>
                       ) : (
                         <div className="space-y-1 max-h-48 overflow-y-auto">
                           {detailLead.outreach_log.map(e => (
@@ -1811,10 +1811,10 @@ export default function CRMPage() {
                                <MessageSquare size={10} className="text-blue-400 shrink-0 mt-0.5" />}
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-1">
-                                  <span className={`text-[8px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-muted"}`}>{e.status}</span>
-                                  <span className="text-[7px] text-muted">{formatShortDate(e.sent_at)}</span>
+                                  <span className={`text-[8px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-text-muted"}`}>{e.status}</span>
+                                  <span className="text-[7px] text-text-muted">{formatShortDate(e.sent_at)}</span>
                                 </div>
-                                <p className="text-muted truncate">{e.message_text}</p>
+                                <p className="text-text-muted truncate">{e.message_text}</p>
                                 {e.reply_text && <p className="text-emerald-400 text-[8px] mt-0.5">? {e.reply_text}</p>}
                               </div>
                             </div>
@@ -1830,17 +1830,17 @@ export default function CRMPage() {
             {/* -- AUTOMATION MODAL -- */}
             {showAutomation && (
               <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowAutomation(false)}>
-                <div className="bg-surface border border-border shadow-2xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden" onClick={e => e.stopPropagation()}>
-                  <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+                <div className="bg-surface border border-border-subtle shadow-2xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden" onClick={e => e.stopPropagation()}>
+                  <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle">
                     <div>
                       <h3 className="text-sm font-bold flex items-center gap-2"><Bot size={16} className="text-brand-accent" /> Automation Rules</h3>
-                      <p className="text-[10px] text-muted mt-0.5">Auto-fire SMS, emails, and calls based on lead events</p>
+                      <p className="text-[10px] text-text-muted mt-0.5">Auto-fire SMS, emails, and calls based on lead events</p>
                     </div>
-                    <button onClick={() => setShowAutomation(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+                    <button onClick={() => setShowAutomation(false)} className="text-text-muted hover:text-text-primary"><X size={16} /></button>
                   </div>
                   <div className="p-5 overflow-y-auto max-h-[60vh] space-y-3">
                     {automations.length === 0 && (
-                      <p className="text-xs text-muted text-center py-8">No automations yet. Click &ldquo;+ New Rule&rdquo; to add one.</p>
+                      <p className="text-xs text-text-muted text-center py-8">No automations yet. Click &ldquo;+ New Rule&rdquo; to add one.</p>
                     )}
                     {automations.map(rule => {
                       const triggerLabels: Record<string, string> = {
@@ -1860,7 +1860,7 @@ export default function CRMPage() {
                       const ActionIcon = action.icon;
                       const isEditing = editingAutomationId === rule.id;
                       return (
-                        <div key={rule.id} className={`rounded-xl border p-4 transition-all ${rule.enabled ? "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)]" : "border-border bg-surface-light/50 opacity-60"}`}>
+                        <div key={rule.id} className={`rounded-xl border p-4 transition-all ${rule.enabled ? "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)]" : "border-border-subtle bg-surface-light/50 opacity-60"}`}>
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2 flex-1 min-w-0">
                               <ActionIcon size={14} className={action.color} />
@@ -1874,11 +1874,11 @@ export default function CRMPage() {
                             </div>
                             <div className="flex items-center gap-2 shrink-0">
                               <button onClick={() => setEditingAutomationId(isEditing ? null : rule.id)}
-                                className="text-[9px] text-muted hover:text-brand-accent">
+                                className="text-[9px] text-text-muted hover:text-brand-accent">
                                 {isEditing ? "Done" : "Edit"}
                               </button>
                               <button onClick={() => deleteAutomation(rule.id)}
-                                className="text-[9px] text-muted hover:text-red-400">
+                                className="text-[9px] text-text-muted hover:text-red-400">
                                 <Trash2 size={11} />
                               </button>
                               <button onClick={() => toggleAutomation(rule.id)}
@@ -1892,7 +1892,7 @@ export default function CRMPage() {
                             <div className="space-y-2 mt-2">
                               <div className="grid grid-cols-2 gap-2">
                                 <div>
-                                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Trigger</label>
+                                  <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Trigger</label>
                                   <select value={rule.trigger}
                                     onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, trigger: e.target.value as AutomationTrigger } : r))}
                                     className="input text-[10px] w-full py-1">
@@ -1900,7 +1900,7 @@ export default function CRMPage() {
                                   </select>
                                 </div>
                                 <div>
-                                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Action</label>
+                                  <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Action</label>
                                   <select value={rule.action}
                                     onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, action: e.target.value as AutomationAction } : r))}
                                     className="input text-[10px] w-full py-1">
@@ -1909,7 +1909,7 @@ export default function CRMPage() {
                                 </div>
                               </div>
                               <div>
-                                <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Message (optional)</label>
+                                <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Message (optional)</label>
                                 <textarea value={rule.message ?? ""}
                                   onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, message: e.target.value } : r))}
                                   placeholder="Use {{name}}, {{business}} as placeholders"
@@ -1918,13 +1918,13 @@ export default function CRMPage() {
                             </div>
                           ) : (
                             <>
-                              <div className="flex items-center gap-2 text-[10px] text-muted">
+                              <div className="flex items-center gap-2 text-[10px] text-text-muted">
                                 <span className="flex items-center gap-1"><Timer size={10} /> {triggerLabels[rule.trigger]}</span>
                                 <ArrowRight size={10} />
                                 <span className={`flex items-center gap-1 ${action.color}`}>{action.label}</span>
                               </div>
                               {rule.message && (
-                                <p className="text-[9px] text-muted mt-2 p-2 rounded-lg bg-surface-light/50 border border-border/50 italic">
+                                <p className="text-[9px] text-text-muted mt-2 p-2 rounded-lg bg-surface-light/50 border border-border-subtle/50 italic">
                                   &ldquo;{rule.message}&rdquo;
                                 </p>
                               )}
@@ -1934,12 +1934,12 @@ export default function CRMPage() {
                       );
                     })}
                     <button onClick={addAutomation}
-                      className="w-full text-[10px] py-2 rounded-xl border border-dashed border-border text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-all flex items-center justify-center gap-1">
+                      className="w-full text-[10px] py-2 rounded-xl border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-all flex items-center justify-center gap-1">
                       <Plus size={11} /> New Rule
                     </button>
                   </div>
-                  <div className="px-5 py-3 border-t border-border bg-surface-light/30 flex items-center justify-between">
-                    <span className="text-[9px] text-muted">{automations.filter(r => r.enabled).length}/{automations.length} rules active</span>
+                  <div className="px-5 py-3 border-t border-border-subtle bg-surface-light/30 flex items-center justify-between">
+                    <span className="text-[9px] text-text-muted">{automations.filter(r => r.enabled).length}/{automations.length} rules active</span>
                     <div className="flex items-center gap-2">
                       <button onClick={() => { setShowAutomation(false); setEditingAutomationId(null); }}
                         className="btn-pill-ghost text-[10px]">
@@ -1958,13 +1958,13 @@ export default function CRMPage() {
             {/* -- BUY CREDITS MODAL -- */}
             {showBuyCredits && (
               <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowBuyCredits(false)}>
-                <div className="bg-surface border border-border shadow-2xl p-6 max-w-md w-full mx-4" onClick={e => e.stopPropagation()}>
+                <div className="bg-surface border border-border-subtle shadow-2xl p-6 max-w-md w-full mx-4" onClick={e => e.stopPropagation()}>
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <h3 className="text-sm font-bold flex items-center gap-2"><Coins size={16} className="text-brand-accent" /> Buy Email Credits</h3>
-                      <p className="text-[10px] text-muted mt-0.5">Balance: {emailCredits} credits</p>
+                      <p className="text-[10px] text-text-muted mt-0.5">Balance: {emailCredits} credits</p>
                     </div>
-                    <button onClick={() => setShowBuyCredits(false)}><X size={16} className="text-muted hover:text-foreground" /></button>
+                    <button onClick={() => setShowBuyCredits(false)}><X size={16} className="text-text-muted hover:text-text-primary" /></button>
                   </div>
                   <div className="grid gap-3">
                     {[
@@ -1973,11 +1973,11 @@ export default function CRMPage() {
                       { amount: 10000, price: "$199", per: "$0.020" },
                     ].map(tier => (
                       <button key={tier.amount} onClick={() => { setEmailCredits(p => p + tier.amount); setShowBuyCredits(false); toast.success(`Added ${tier.amount} credits`); }}
-                        className={`relative flex items-center justify-between p-4 rounded-xl border transition-all hover:scale-[1.02] ${tier.popular ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border bg-surface-light hover:border-[rgba(59,130,246,0.2)]"}`}>
+                        className={`relative flex items-center justify-between p-4 rounded-xl border transition-all hover:scale-[1.02] ${tier.popular ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border-subtle bg-surface-light hover:border-[rgba(59,130,246,0.2)]"}`}>
                         {tier.popular && <span className="absolute -top-2 left-4 text-[8px] px-2 py-0.5 rounded-full bg-brand-accent text-white font-bold">BEST VALUE</span>}
                         <div className="text-left">
-                          <span className="text-sm font-bold">{tier.amount.toLocaleString()}</span> <span className="text-[10px] text-muted">credits</span>
-                          <p className="text-[9px] text-muted">{tier.per}/email</p>
+                          <span className="text-sm font-bold">{tier.amount.toLocaleString()}</span> <span className="text-[10px] text-text-muted">credits</span>
+                          <p className="text-[9px] text-text-muted">{tier.per}/email</p>
                         </div>
                         <span className="text-lg font-bold text-brand-accent">{tier.price}</span>
                       </button>
@@ -1990,7 +1990,7 @@ export default function CRMPage() {
             {/* -- SAVE SEGMENT MODAL -- */}
             {showSegmentSave && (
               <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={() => setShowSegmentSave(false)}>
-                <div className="bg-surface border border-border shadow-2xl p-6 max-w-sm w-full mx-4" onClick={e => e.stopPropagation()}>
+                <div className="bg-surface border border-border-subtle shadow-2xl p-6 max-w-sm w-full mx-4" onClick={e => e.stopPropagation()}>
                   <h3 className="text-sm font-bold mb-3 flex items-center gap-2"><Bookmark size={14} className="text-brand-accent" /> Save Segment</h3>
                   <input value={newSegmentName} onChange={e => setNewSegmentName(e.target.value)} placeholder="Segment name..."
                     className="input w-full text-xs px-3 py-2 mb-3" onKeyDown={e => { if (e.key === "Enter") saveSegment(); }} />

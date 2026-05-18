@@ -111,7 +111,7 @@ function SignalBreakdownPills({
 }) {
   if (!breakdown) {
     return (
-      <p className="text-[9px] text-muted italic">No signals captured yet.</p>
+      <p className="text-[9px] text-text-muted italic">No signals captured yet.</p>
     );
   }
   const entries = [
@@ -128,7 +128,7 @@ function SignalBreakdownPills({
 
   if (entries.length === 0) {
     return (
-      <p className="text-[9px] text-muted italic">
+      <p className="text-[9px] text-text-muted italic">
         No engagement signals — base score driven by profile only.
       </p>
     );
@@ -139,9 +139,9 @@ function SignalBreakdownPills({
       {entries.map((e) => (
         <span
           key={e.k}
-          className="text-[9px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] border border-border text-muted"
+          className="text-[9px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] border border-border-subtle text-text-muted"
         >
-          <span className="text-foreground font-semibold">{e.v}</span>{" "}
+          <span className="text-text-primary font-semibold">{e.v}</span>{" "}
           <span className="opacity-60">{e.k}</span>
         </span>
       ))}
@@ -236,7 +236,7 @@ function ScoreDetailModal({
       onClick={onClose}
     >
       <div
-        className="card w-full max-w-2xl mx-4 max-h-[85vh] overflow-y-auto p-5 space-y-4"
+        className="glass rounded-xl p-4 w-full max-w-2xl mx-4 max-h-[85vh] overflow-y-auto p-5 space-y-4"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between">
@@ -245,7 +245,7 @@ function ScoreDetailModal({
               <Target size={14} className="text-brand-accent" />
               Score detail · {lead.business_name}
             </h2>
-            <p className="text-[10px] text-muted">
+            <p className="text-[10px] text-text-muted">
               Last updated {formatRelative(lead.score_updated_at)} ·{" "}
               {lead.industry ?? "Unknown industry"}
               {lead.city ? ` · ${lead.city}` : ""}
@@ -253,7 +253,7 @@ function ScoreDetailModal({
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded hover:bg-[rgba(0,0,0,0.04)] text-muted hover:text-foreground"
+            className="p-1 rounded hover:bg-[rgba(0,0,0,0.04)] text-text-muted hover:text-text-primary"
             aria-label="Close score detail"
           >
             <X size={14} />
@@ -282,7 +282,7 @@ function ScoreDetailModal({
         </div>
 
         <div>
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-muted">
+          <h3 className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-text-muted">
             Signal breakdown
           </h3>
           <SignalBreakdownPills breakdown={lead.score_signals} />
@@ -290,17 +290,17 @@ function ScoreDetailModal({
 
         {lead.score_reasoning ? (
           <div>
-            <h3 className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-muted">
+            <h3 className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-text-muted">
               AI reasoning
             </h3>
-            <p className="text-[11px] italic text-muted">
+            <p className="text-[11px] italic text-text-muted">
               {lead.score_reasoning}
             </p>
           </div>
         ) : null}
 
         <div>
-          <h3 className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-muted flex items-center gap-1.5">
+          <h3 className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-text-muted flex items-center gap-1.5">
             <TrendingUp size={10} /> Score history
           </h3>
           {historyLoading ? (
@@ -308,7 +308,7 @@ function ScoreDetailModal({
               <Loader size={16} className="animate-spin text-brand-accent" />
             </div>
           ) : history.length === 0 ? (
-            <p className="text-[10px] text-muted italic">
+            <p className="text-[10px] text-text-muted italic">
               No history yet — recompute the score to start tracking.
             </p>
           ) : (
@@ -534,7 +534,7 @@ export default function LeadScoringPage() {
   }
 
   return (
-    <MotionPage className="fade-in space-y-4">{/* -- AI Lead Scoring command strip -- */}
+    <MotionPage className="space-y-4">{/* -- AI Lead Scoring command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">LEAD SCORING</p>
@@ -544,14 +544,14 @@ export default function LeadScoringPage() {
         <>
                   <Link
                     href="/dashboard/leads"
-                    className="px-3 py-1.5 rounded-lg bg-black/5 border border-border text-foreground text-xs font-medium hover:bg-black/10 transition-all"
+                    className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all"
                   >
                     Back to Leads
                   </Link>
                   <button
                     onClick={handleRecomputeAllStale}
                     disabled={batchRunning}
-                    className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5 disabled:opacity-50"
+                    className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5 disabled:opacity-50"
                   >
                     {batchRunning ? (
                       <Loader size={12} className="animate-spin" />
@@ -660,7 +660,7 @@ export default function LeadScoringPage() {
                     className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${
                       gradeFilter === p.key
                         ? "bg-[rgba(59,130,246,0.12)] border-[rgba(59,130,246,0.4)] text-brand-accent"
-                        : "border-border text-muted hover:border-[rgba(59,130,246,0.2)] hover:text-foreground"
+                        : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.2)] hover:text-text-primary"
                     }`}
                   >
                     {p.label}
@@ -671,14 +671,14 @@ export default function LeadScoringPage() {
                   className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
                     sortByScore
                       ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent"
-                      : "border-border text-muted hover:border-[rgba(59,130,246,0.2)] hover:text-foreground"
+                      : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.2)] hover:text-text-primary"
                   }`}
                 >
                   <Target size={11} /> Sort by score
                 </button>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] text-muted">
+                <span className="text-[10px] text-text-muted">
                   {selected.size} selected
                 </span>
                 <button
@@ -695,7 +695,7 @@ export default function LeadScoringPage() {
                 </button>
               </div>
             </div>{/* Lead table */}<div className="space-y-1.5">
-              <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-2 px-3">
+              <div className="grid grid-cols-12 text-[9px] text-text-muted uppercase tracking-wider font-semibold py-2 px-3">
                 <span className="col-span-1 flex items-center">
                   <input
                     type="checkbox"
@@ -732,7 +732,7 @@ export default function LeadScoringPage() {
                     <div
                       key={lead.id}
                       onClick={() => setDetailLead(lead)}
-                      className="grid grid-cols-12 items-center py-2 px-3 rounded-lg bg-surface-light border border-border hover:border-[rgba(59,130,246,0.1)] transition-all cursor-pointer text-[10px]"
+                      className="grid grid-cols-12 items-center py-2 px-3 rounded-lg bg-surface-light border border-border-subtle hover:border-[rgba(59,130,246,0.1)] transition-all cursor-pointer text-[10px]"
                     >
                       <div
                         className="col-span-1"
@@ -749,14 +749,14 @@ export default function LeadScoringPage() {
                         <p className="text-xs font-semibold">
                           {lead.business_name}
                         </p>
-                        <p className="text-[9px] text-muted">
+                        <p className="text-[9px] text-text-muted">
                           {lead.industry ?? "Unknown"}
                           {lead.city ? ` · ${lead.city}` : ""}
                         </p>
                       </div>
                       <div className="col-span-2">
-                        <p className="text-muted truncate">{lead.email ?? "—"}</p>
-                        <p className="text-muted truncate">{lead.phone ?? "—"}</p>
+                        <p className="text-text-muted truncate">{lead.email ?? "—"}</p>
+                        <p className="text-text-muted truncate">{lead.phone ?? "—"}</p>
                       </div>
                       <div className="col-span-2 flex items-center justify-center">
                         <ScoreGradeBadge
@@ -769,7 +769,7 @@ export default function LeadScoringPage() {
                       <div className="col-span-3">
                         <SignalBreakdownPills breakdown={lead.score_signals} />
                       </div>
-                      <div className="col-span-1 text-center text-[9px] text-muted">
+                      <div className="col-span-1 text-center text-[9px] text-text-muted">
                         {formatRelative(lead.score_updated_at)}
                       </div>
                     </div>
@@ -778,7 +778,7 @@ export default function LeadScoringPage() {
               )}
             </div>{/* Pagination */}{!loading && totalPages > 1 ? (
               <div className="flex items-center justify-between pt-3">
-                <p className="text-[10px] text-muted">
+                <p className="text-[10px] text-text-muted">
                   Showing {(page - 1) * PAGE_LIMIT + 1}–
                   {Math.min(page * PAGE_LIMIT, totalCount)} of{" "}
                   {totalCount.toLocaleString()} leads
@@ -787,12 +787,12 @@ export default function LeadScoringPage() {
                   <button
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page <= 1}
-                    className="p-1.5 rounded-lg border border-border hover:border-[rgba(59,130,246,0.2)] disabled:opacity-30 transition-all"
+                    className="p-1.5 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.2)] disabled:opacity-30 transition-all"
                     aria-label="Previous page"
                   >
                     <ChevronLeft size={14} />
                   </button>
-                  <span className="text-xs font-mono text-muted">
+                  <span className="text-xs font-mono text-text-muted">
                     {page} / {totalPages}
                   </span>
                   <button
@@ -800,7 +800,7 @@ export default function LeadScoringPage() {
                       setPage((p) => Math.min(totalPages, p + 1))
                     }
                     disabled={page >= totalPages}
-                    className="p-1.5 rounded-lg border border-border hover:border-[rgba(59,130,246,0.2)] disabled:opacity-30 transition-all"
+                    className="p-1.5 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.2)] disabled:opacity-30 transition-all"
                     aria-label="Next page"
                   >
                     <ChevronRight size={14} />

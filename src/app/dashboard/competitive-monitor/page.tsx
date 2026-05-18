@@ -258,7 +258,7 @@ export default function CompetitiveMonitorPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-6">{/* -- Competitive Monitor command strip -- */}
+    <MotionPage className="space-y-6">{/* -- Competitive Monitor command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">COMPETITIVE INTEL</p>
@@ -320,32 +320,32 @@ export default function CompetitiveMonitorPage() {
                 transition={{ duration: 0.3 }}
                 className="glass rounded-xl p-5" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.12)" }}
               >
-                <h3 className="section-header text-sm flex items-center gap-2 mb-4"><Plus className="w-4 h-4 text-brand-accent" /> Add New Competitor</h3>
+                <h3 className="text-sm flex items-center gap-2 mb-4"><Plus className="w-4 h-4 text-brand-accent" /> Add New Competitor</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-muted mb-1">Company Name *</label>
-                    <input value={addName} onChange={e => setAddName(e.target.value)} placeholder="e.g. Acme Agency Tools" className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none" />
+                    <label className="block text-xs text-text-muted mb-1">Company Name *</label>
+                    <input value={addName} onChange={e => setAddName(e.target.value)} placeholder="e.g. Acme Agency Tools" className="w-full px-3 py-2 bg-surface-light border border-border-subtle rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none" />
                   </div>
                   <div>
-                    <label className="block text-xs text-muted mb-1">Website URL *</label>
-                    <input value={addUrl} onChange={e => setAddUrl(e.target.value)} placeholder="https://competitor.com" className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none" />
+                    <label className="block text-xs text-text-muted mb-1">Website URL *</label>
+                    <input value={addUrl} onChange={e => setAddUrl(e.target.value)} placeholder="https://competitor.com" className="w-full px-3 py-2 bg-surface-light border border-border-subtle rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none" />
                   </div>
                   <div>
-                    <label className="block text-xs text-muted mb-1">Industry</label>
-                    <input value={addIndustry} onChange={e => setAddIndustry(e.target.value)} placeholder="e.g. Agency SaaS" className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none" />
+                    <label className="block text-xs text-text-muted mb-1">Industry</label>
+                    <input value={addIndustry} onChange={e => setAddIndustry(e.target.value)} placeholder="e.g. Agency SaaS" className="w-full px-3 py-2 bg-surface-light border border-border-subtle rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none" />
                   </div>
                   <div>
-                    <label className="block text-xs text-muted mb-1">Notes</label>
-                    <input value={addNotes} onChange={e => setAddNotes(e.target.value)} placeholder="Any context about this competitor..." className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none" />
+                    <label className="block text-xs text-text-muted mb-1">Notes</label>
+                    <input value={addNotes} onChange={e => setAddNotes(e.target.value)} placeholder="Any context about this competitor..." className="w-full px-3 py-2 bg-surface-light border border-border-subtle rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none" />
                   </div>
                 </div>
                 <div className="flex gap-2 mt-4">
                   <motion.button whileHover={{ scale: 1.03 }} onClick={addCompetitor} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-500 transition">Add Competitor</motion.button>
-                  <button onClick={() => setShowAddForm(false)} className="px-4 py-2 bg-surface-light border border-border text-muted rounded-lg text-sm hover:text-text-primary transition">Cancel</button>
+                  <button onClick={() => setShowAddForm(false)} className="px-4 py-2 bg-surface-light border border-border-subtle text-text-muted rounded-lg text-sm hover:text-text-primary transition">Cancel</button>
                 </div>
               </motion.div>
             )}{/* --- Competitors Grid --- */}<div>
-              <h2 className="section-header text-sm mb-3 flex items-center gap-2"><Shield className="w-4 h-4 text-brand-accent" /> Monitored Competitors</h2>
+              <h2 className="text-sm mb-3 flex items-center gap-2"><Shield className="w-4 h-4 text-brand-accent" /> Monitored Competitors</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
                 {competitors.map((comp, ci) => (
                   <motion.div
@@ -364,7 +364,7 @@ export default function CompetitiveMonitorPage() {
                         </div>
                         <div>
                           <div className="font-medium text-sm">{comp.name}</div>
-                          <a href={comp.url} target="_blank" rel="noopener noreferrer" className="text-xs text-muted hover:text-brand-accent flex items-center gap-1">
+                          <a href={comp.url} target="_blank" rel="noopener noreferrer" className="text-xs text-text-muted hover:text-brand-accent flex items-center gap-1">
                             {comp.url.replace("https://", "")} <ExternalLink className="w-3 h-3" />
                           </a>
                         </div>
@@ -374,12 +374,12 @@ export default function CompetitiveMonitorPage() {
                       </span>
                     </div>
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="text-[10px] px-2 py-0.5 bg-surface-light rounded-full text-muted">{comp.industry}</span>
+                      <span className="text-[10px] px-2 py-0.5 bg-surface-light rounded-full text-text-muted">{comp.industry}</span>
                       {comp.changeCount > 0 && (
                         <span className="text-[10px] px-2 py-0.5 bg-[rgba(59,130,246,0.08)] text-brand-accent rounded-full font-medium">{comp.changeCount} changes</span>
                       )}
                     </div>
-                    <div className="flex items-center justify-between text-[10px] text-muted mb-3">
+                    <div className="flex items-center justify-between text-[10px] text-text-muted mb-3">
                       <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {formatTime(comp.lastChecked)}</span>
                       <span>{FREQUENCY_LABELS[comp.frequency]}</span>
                     </div>
@@ -387,13 +387,13 @@ export default function CompetitiveMonitorPage() {
                       <button onClick={() => checkNow(comp.id)} disabled={checkingId === comp.id} className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-[rgba(59,130,246,0.08)] text-brand-accent rounded text-[10px] font-medium hover:bg-[rgba(59,130,246,0.12)] transition disabled:opacity-50">
                         {checkingId === comp.id ? <Loader className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />} Check
                       </button>
-                      <button onClick={() => togglePause(comp.id)} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-text-primary transition">
+                      <button onClick={() => togglePause(comp.id)} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-text-muted rounded text-[10px] hover:text-text-primary transition">
                         {comp.status === "paused" ? <Play className="w-3 h-3" /> : <Pause className="w-3 h-3" />}
                       </button>
-                      <button onClick={() => { setFilterCompetitor(comp.id); setTab("changes"); }} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-text-primary transition">
+                      <button onClick={() => { setFilterCompetitor(comp.id); setTab("changes"); }} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-text-muted rounded text-[10px] hover:text-text-primary transition">
                         <Eye className="w-3 h-3" />
                       </button>
-                      <button onClick={() => removeCompetitor(comp.id)} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-muted rounded text-[10px] hover:text-red-400 transition">
+                      <button onClick={() => removeCompetitor(comp.id)} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-text-muted rounded text-[10px] hover:text-red-400 transition">
                         <Trash2 className="w-3 h-3" />
                       </button>
                     </div>
@@ -401,23 +401,23 @@ export default function CompetitiveMonitorPage() {
                 ))}
               </div>
             </div>{/* --- Monitoring Schedule --- */}<PrismPanel padding="p-4">
-              <h3 className="section-header text-xs flex items-center gap-2 mb-3"><Calendar className="w-3.5 h-3.5 text-brand-accent" /> Monitoring Schedule</h3>
+              <h3 className="text-xs flex items-center gap-2 mb-3"><Calendar className="w-3.5 h-3.5 text-brand-accent" /> Monitoring Schedule</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {competitors.filter(c => c.status === "active").slice(0, 4).map(c => (
                   <div key={c.id} className="flex items-center gap-2 p-2 bg-surface-light rounded-lg">
                     <div className="w-6 h-6 rounded flex items-center justify-center text-white text-[10px] font-bold" style={{ backgroundColor: c.faviconColor }}>{c.name[0]}</div>
                     <div className="flex-1 min-w-0">
                       <div className="text-xs font-medium truncate">{c.name}</div>
-                      <div className="text-[10px] text-muted">{FREQUENCY_LABELS[c.frequency]}</div>
+                      <div className="text-[10px] text-text-muted">{FREQUENCY_LABELS[c.frequency]}</div>
                     </div>
                     <div className="text-[10px] text-brand-accent whitespace-nowrap">{c.nextCheck === "�" || c.nextCheck === "Retrying..." ? c.nextCheck : formatTime(c.nextCheck, true)}</div>
                   </div>
                 ))}
               </div>
-            </PrismPanel>{/* --- Tabs --- */}<div className="flex gap-1 border-b border-border overflow-x-auto">
+            </PrismPanel>{/* --- Tabs --- */}<div className="flex gap-1 border-b border-border-subtle overflow-x-auto">
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setTab(t.key)}
-                  className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition whitespace-nowrap ${tab === t.key ? "border-brand-accent text-brand-accent" : "border-transparent text-muted hover:text-text-primary"}`}>
+                  className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition whitespace-nowrap ${tab === t.key ? "border-brand-accent text-brand-accent" : "border-transparent text-text-muted hover:text-text-primary"}`}>
                   <t.icon className="w-4 h-4" /> {t.label}
                 </button>
               ))}
@@ -425,16 +425,16 @@ export default function CompetitiveMonitorPage() {
               <div className="space-y-4">
                 {/* Filters */}
                 <div className="flex flex-wrap gap-2 items-center">
-                  <Filter className="w-4 h-4 text-muted" />
-                  <select value={filterCompetitor} onChange={e => setFilterCompetitor(e.target.value)} className="px-3 py-1.5 bg-surface-light border border-border rounded-lg text-xs focus:border-[rgba(59,130,246,0.5)] focus:outline-none">
+                  <Filter className="w-4 h-4 text-text-muted" />
+                  <select value={filterCompetitor} onChange={e => setFilterCompetitor(e.target.value)} className="px-3 py-1.5 bg-surface-light border border-border-subtle rounded-lg text-xs focus:border-[rgba(59,130,246,0.5)] focus:outline-none">
                     <option value="all">All Competitors</option>
                     {competitors.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
-                  <select value={filterType} onChange={e => setFilterType(e.target.value as ChangeType | "all")} className="px-3 py-1.5 bg-surface-light border border-border rounded-lg text-xs focus:border-[rgba(59,130,246,0.5)] focus:outline-none">
+                  <select value={filterType} onChange={e => setFilterType(e.target.value as ChangeType | "all")} className="px-3 py-1.5 bg-surface-light border border-border-subtle rounded-lg text-xs focus:border-[rgba(59,130,246,0.5)] focus:outline-none">
                     <option value="all">All Types</option>
                     {Object.entries(CHANGE_TYPE_META).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
                   </select>
-                  <select value={filterSeverity} onChange={e => setFilterSeverity(e.target.value as Severity | "all")} className="px-3 py-1.5 bg-surface-light border border-border rounded-lg text-xs focus:border-[rgba(59,130,246,0.5)] focus:outline-none">
+                  <select value={filterSeverity} onChange={e => setFilterSeverity(e.target.value as Severity | "all")} className="px-3 py-1.5 bg-surface-light border border-border-subtle rounded-lg text-xs focus:border-[rgba(59,130,246,0.5)] focus:outline-none">
                     <option value="all">All Severities</option>
                     <option value="high">High</option>
                     <option value="medium">Medium</option>
@@ -443,7 +443,7 @@ export default function CompetitiveMonitorPage() {
                   {(filterCompetitor !== "all" || filterType !== "all" || filterSeverity !== "all") && (
                     <button onClick={() => { setFilterCompetitor("all"); setFilterType("all"); setFilterSeverity("all"); }} className="text-xs text-brand-accent hover:underline">Clear filters</button>
                   )}
-                  <span className="text-xs text-muted ml-auto">{filteredChanges.length} change{filteredChanges.length !== 1 ? "s" : ""}</span>
+                  <span className="text-xs text-text-muted ml-auto">{filteredChanges.length} change{filteredChanges.length !== 1 ? "s" : ""}</span>
                 </div>
 
                 {/* Changes list */}
@@ -471,19 +471,19 @@ export default function CompetitiveMonitorPage() {
                               <span className={`text-[10px] px-2 py-0.5 rounded-full border font-medium ${sevMeta.color}`}>{sevMeta.label}</span>
                               <span className={`text-[10px] px-2 py-0.5 rounded-full ${meta.color}`}>{meta.label}</span>
                             </div>
-                            <div className="flex items-center gap-2 text-xs text-muted mb-2">
+                            <div className="flex items-center gap-2 text-xs text-text-muted mb-2">
                               <span className="font-medium text-black/65">{change.competitorName}</span>
                               <span>&#183;</span>
                               <span>{formatTime(change.detectedAt)}</span>
                             </div>
-                            <p className="text-xs text-muted leading-relaxed">{change.description}</p>
+                            <p className="text-xs text-text-muted leading-relaxed">{change.description}</p>
 
                             {/* AI Summary */}
                             <div className="mt-2 p-2.5 bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.1)] rounded-lg">
                               <div className="flex items-center gap-1.5 text-[10px] text-brand-accent font-medium mb-1">
                                 <Sparkles className="w-3 h-3" /> AI Analysis
                               </div>
-                              <p className="text-xs text-muted leading-relaxed">{change.aiSummary}</p>
+                              <p className="text-xs text-text-muted leading-relaxed">{change.aiSummary}</p>
                             </div>
 
                             {/* Expandable diff */}
@@ -502,11 +502,11 @@ export default function CompetitiveMonitorPage() {
                               <div id={`competitor-change-${change.id}`} className="mt-2 grid grid-cols-2 gap-2">
                                 <div className="p-3 bg-red-500/5 border border-red-500/10 rounded-lg">
                                   <div className="text-[10px] text-red-400 font-medium mb-1.5">Before</div>
-                                  <pre className="text-[11px] text-muted whitespace-pre-wrap font-mono">{change.beforeText}</pre>
+                                  <pre className="text-[11px] text-text-muted whitespace-pre-wrap font-mono">{change.beforeText}</pre>
                                 </div>
                                 <div className="p-3 bg-emerald-500/5 border border-emerald-500/10 rounded-lg">
                                   <div className="text-[10px] text-emerald-400 font-medium mb-1.5">After</div>
-                                  <pre className="text-[11px] text-muted whitespace-pre-wrap font-mono">{change.afterText}</pre>
+                                  <pre className="text-[11px] text-text-muted whitespace-pre-wrap font-mono">{change.afterText}</pre>
                                 </div>
                               </div>
                             )}
@@ -524,8 +524,8 @@ export default function CompetitiveMonitorPage() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs">
                       <thead>
-                        <tr className="border-b border-border">
-                          <th className="text-left p-3 text-muted font-medium sticky left-0 bg-surface z-10 min-w-[120px]">Metric</th>
+                        <tr className="border-b border-border-subtle">
+                          <th className="text-left p-3 text-text-muted font-medium sticky left-0 bg-surface z-10 min-w-[120px]">Metric</th>
                           <th className="p-3 text-center text-brand-accent font-bold min-w-[100px]">You</th>
                           {competitors.map(c => (
                             <th key={c.id} className="p-3 text-center font-medium min-w-[100px]">
@@ -539,7 +539,7 @@ export default function CompetitiveMonitorPage() {
                       </thead>
                       <tbody>
                         <tr>
-                          <td colSpan={competitors.length + 2} className="text-center py-10 text-muted text-xs">
+                          <td colSpan={competitors.length + 2} className="text-center py-10 text-text-muted text-xs">
                             Add competitors above to compare metrics side-by-side.
                           </td>
                         </tr>
@@ -550,21 +550,21 @@ export default function CompetitiveMonitorPage() {
 
                 {/* Spider chart representation */}
                 <PrismPanel padding="p-5">
-                  <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-brand-accent" /> Competitive Positioning</h3>
+                  <h3 className="text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-brand-accent" /> Competitive Positioning</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Simple radar visualization */}
                     <div className="relative flex items-center justify-center py-8">
                       <div className="relative w-64 h-64">
                         {/* Concentric rings */}
                         {[100, 75, 50, 25].map(size => (
-                          <div key={size} className="absolute border border-border/30 rounded-full" style={{ width: `${size}%`, height: `${size}%`, top: `${(100 - size) / 2}%`, left: `${(100 - size) / 2}%` }} />
+                          <div key={size} className="absolute border border-border-subtle/30 rounded-full" style={{ width: `${size}%`, height: `${size}%`, top: `${(100 - size) / 2}%`, left: `${(100 - size) / 2}%` }} />
                         ))}
                         {/* Axis labels */}
                         {["Price", "Features", "Social", "Content", "Reviews", "Team"].map((label, i) => {
                           const angle = (i * 60 - 90) * (Math.PI / 180);
                           const x = 50 + 54 * Math.cos(angle);
                           const y = 50 + 54 * Math.sin(angle);
-                          return <div key={label} className="absolute text-[10px] text-muted font-medium -translate-x-1/2 -translate-y-1/2" style={{ left: `${x}%`, top: `${y}%` }}>{label}</div>;
+                          return <div key={label} className="absolute text-[10px] text-text-muted font-medium -translate-x-1/2 -translate-y-1/2" style={{ left: `${x}%`, top: `${y}%` }}>{label}</div>;
                         })}
                         {/* Your company dot cluster */}
                         {[40, 35, 30, 38, 42, 28].map((dist, i) => {
@@ -585,7 +585,7 @@ export default function CompetitiveMonitorPage() {
                     <div className="space-y-3">
                       <div className="flex items-center gap-2 text-xs">
                         <div className="w-3 h-3 bg-brand-accent rounded-full" /> <span>Your company</span>
-                        <div className="w-3 h-3 bg-brand-accent rounded-full ml-4 opacity-60" /> <span className="text-muted">Top competitor avg.</span>
+                        <div className="w-3 h-3 bg-brand-accent rounded-full ml-4 opacity-60" /> <span className="text-text-muted">Top competitor avg.</span>
                       </div>
                       <div className="p-3 bg-surface-light rounded-lg space-y-2">
                         <div className="text-xs font-medium">Strengths</div>
@@ -600,28 +600,28 @@ export default function CompetitiveMonitorPage() {
                 {/* AI Analysis */}
                 <PrismPanel padding="p-5">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="section-header text-sm flex items-center gap-2 mb-0"><Sparkles className="w-4 h-4 text-brand-accent" /> AI Competitive Analysis</h3>
+                    <h3 className="text-sm flex items-center gap-2 mb-0"><Sparkles className="w-4 h-4 text-brand-accent" /> AI Competitive Analysis</h3>
                     <button onClick={generateAiAnalysis} disabled={generatingAnalysis} className="flex items-center gap-2 px-3 py-1.5 bg-[rgba(59,130,246,0.08)] text-brand-accent rounded-lg text-xs font-medium hover:bg-[rgba(59,130,246,0.12)] transition disabled:opacity-50">
                       {generatingAnalysis ? <Loader className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
                       Generate AI Analysis
                     </button>
                   </div>
                   {showAiAnalysis ? (
-                    <div className="p-4 bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.1)] rounded-lg text-sm text-muted leading-relaxed space-y-3">
+                    <div className="p-4 bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.1)] rounded-lg text-sm text-text-muted leading-relaxed space-y-3">
                       <p><strong className="text-text-primary">Market Position:</strong> Trinity occupies a strong mid-market position in the agency SaaS space. Your pricing is competitive against 6 of 8 tracked competitors, and your feature count (42) exceeds the median (32). However, MarketMind AI&apos;s introduction of a free tier and AgencyFlow&apos;s upmarket push are creating a squeeze that requires strategic response.</p>
                       <p><strong className="text-text-primary">Key Threats:</strong> The convergence of AgencyFlow and ClientPulse toward enterprise signals a market bifurcation. SocialSpark&apos;s rapid growth (5,000 customers) and AI content calendar launch pose the most immediate feature-parity threat. MarketMind&apos;s free tier could erode your starter plan acquisition.</p>
                       <p><strong className="text-text-primary">Opportunities:</strong> AgencyFlow&apos;s 34% price increase creates a window for targeted switching campaigns. ContentEngine&apos;s limited feature set (22) makes their customer base vulnerable. The enterprise space is underserved by purpose-built agency tools -- an enterprise tier with SSO and advanced reporting could capture this growing segment.</p>
                       <p><strong className="text-text-primary">Recommended Actions:</strong> (1) Ship AI scheduling to match SocialSpark within 30 days. (2) Launch a &ldquo;Switch from AgencyFlow&rdquo; campaign targeting price-sensitive users. (3) Evaluate a free tier or extended trial to counter MarketMind. (4) Invest in content marketing to close the blog frequency gap.</p>
                     </div>
                   ) : (
-                    <div className="text-xs text-muted text-center py-8">Click &ldquo;Generate AI Analysis&rdquo; to get an AI-written competitive assessment based on all tracked data.</div>
+                    <div className="text-xs text-text-muted text-center py-8">Click &ldquo;Generate AI Analysis&rdquo; to get an AI-written competitive assessment based on all tracked data.</div>
                   )}
                 </PrismPanel>
               </div>
             )}{/* --- Alerts Tab --- */}{tab === "alerts" && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="section-header text-sm flex items-center gap-2 mb-0"><Bell className="w-4 h-4 text-brand-accent" /> Alert Rules</h3>
+                  <h3 className="text-sm flex items-center gap-2 mb-0"><Bell className="w-4 h-4 text-brand-accent" /> Alert Rules</h3>
                   <button onClick={() => setShowAddAlert(!showAddAlert)} className="flex items-center gap-2 px-3 py-1.5 bg-[rgba(59,130,246,0.08)] text-brand-accent rounded-lg text-xs font-medium hover:bg-[rgba(59,130,246,0.12)] transition">
                     <Plus className="w-3.5 h-3.5" /> Add Rule
                   </button>
@@ -638,26 +638,26 @@ export default function CompetitiveMonitorPage() {
                     <h4 className="text-sm font-medium mb-4">New Alert Rule</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs text-muted mb-1">Alert Name *</label>
-                        <input value={newAlertName} onChange={e => setNewAlertName(e.target.value)} placeholder="e.g. Price drop detected" className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none" />
+                        <label className="block text-xs text-text-muted mb-1">Alert Name *</label>
+                        <input value={newAlertName} onChange={e => setNewAlertName(e.target.value)} placeholder="e.g. Price drop detected" className="w-full px-3 py-2 bg-surface-light border border-border-subtle rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none" />
                       </div>
                       <div>
-                        <label className="block text-xs text-muted mb-1">Trigger (Change Type)</label>
-                        <select value={newAlertTrigger} onChange={e => setNewAlertTrigger(e.target.value as ChangeType | "any")} className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none">
+                        <label className="block text-xs text-text-muted mb-1">Trigger (Change Type)</label>
+                        <select value={newAlertTrigger} onChange={e => setNewAlertTrigger(e.target.value as ChangeType | "any")} className="w-full px-3 py-2 bg-surface-light border border-border-subtle rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none">
                           <option value="any">Any change type</option>
                           {Object.entries(CHANGE_TYPE_META).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs text-muted mb-1">Competitor</label>
-                        <select value={newAlertCompetitor} onChange={e => setNewAlertCompetitor(e.target.value)} className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none">
+                        <label className="block text-xs text-text-muted mb-1">Competitor</label>
+                        <select value={newAlertCompetitor} onChange={e => setNewAlertCompetitor(e.target.value)} className="w-full px-3 py-2 bg-surface-light border border-border-subtle rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none">
                           <option value="all">All competitors</option>
                           {competitors.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs text-muted mb-1">Urgency</label>
-                        <select value={newAlertUrgency} onChange={e => setNewAlertUrgency(e.target.value as "critical" | "normal" | "low")} className="w-full px-3 py-2 bg-surface-light border border-border rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none">
+                        <label className="block text-xs text-text-muted mb-1">Urgency</label>
+                        <select value={newAlertUrgency} onChange={e => setNewAlertUrgency(e.target.value as "critical" | "normal" | "low")} className="w-full px-3 py-2 bg-surface-light border border-border-subtle rounded-lg text-sm focus:border-[rgba(59,130,246,0.5)] focus:outline-none">
                           <option value="critical">Critical</option>
                           <option value="normal">Normal</option>
                           <option value="low">Low</option>
@@ -665,11 +665,11 @@ export default function CompetitiveMonitorPage() {
                       </div>
                     </div>
                     <div className="mt-4">
-                      <label className="block text-xs text-muted mb-2">Channels</label>
+                      <label className="block text-xs text-text-muted mb-2">Channels</label>
                       <div className="flex gap-2">
                         {CHANNEL_OPTIONS.map(ch => (
                           <button key={ch} onClick={() => toggleAlertChannel(ch)}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${newAlertChannels.includes(ch) ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "bg-surface-light text-muted border border-border hover:text-text-primary"}`}>
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${newAlertChannels.includes(ch) ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "bg-surface-light text-text-muted border border-border-subtle hover:text-text-primary"}`}>
                             {ch}
                           </button>
                         ))}
@@ -677,7 +677,7 @@ export default function CompetitiveMonitorPage() {
                     </div>
                     <div className="flex gap-2 mt-4">
                       <motion.button whileHover={{ scale: 1.03 }} onClick={addAlertRule} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-500 transition">Create Rule</motion.button>
-                      <button onClick={() => setShowAddAlert(false)} className="px-4 py-2 bg-surface-light border border-border text-muted rounded-lg text-sm hover:text-text-primary transition">Cancel</button>
+                      <button onClick={() => setShowAddAlert(false)} className="px-4 py-2 bg-surface-light border border-border-subtle text-text-muted rounded-lg text-sm hover:text-text-primary transition">Cancel</button>
                     </div>
                   </motion.div>
                 )}
@@ -707,7 +707,7 @@ export default function CompetitiveMonitorPage() {
                             {triggerMeta && <span className={`text-[10px] px-2 py-0.5 rounded-full ${triggerMeta.color}`}>{triggerMeta.label}</span>}
                             <span className={`text-[10px] px-2 py-0.5 rounded-full ${urgencyColor}`}>{rule.urgency}</span>
                           </div>
-                          <div className="flex items-center gap-2 mt-1 text-xs text-muted">
+                          <div className="flex items-center gap-2 mt-1 text-xs text-text-muted">
                             <span>Applies to: {rule.competitor === "all" ? "All competitors" : competitors.find(c => c.id === rule.competitor)?.name || rule.competitor}</span>
                             <span>&#183;</span>
                             <span className="flex items-center gap-1">
@@ -716,8 +716,8 @@ export default function CompetitiveMonitorPage() {
                           </div>
                         </div>
                         <div className="flex gap-2">
-                          <button onClick={() => testAlert(rule.id)} className="px-3 py-1.5 bg-surface-light border border-border text-muted rounded-lg text-xs hover:text-brand-accent transition">Test</button>
-                          <button onClick={() => setAlertRules(prev => prev.filter(r => r.id !== rule.id))} className="px-2 py-1.5 bg-surface-light border border-border text-muted rounded-lg text-xs hover:text-red-400 transition">
+                          <button onClick={() => testAlert(rule.id)} className="px-3 py-1.5 bg-surface-light border border-border-subtle text-text-muted rounded-lg text-xs hover:text-brand-accent transition">Test</button>
+                          <button onClick={() => setAlertRules(prev => prev.filter(r => r.id !== rule.id))} className="px-2 py-1.5 bg-surface-light border border-border-subtle text-text-muted rounded-lg text-xs hover:text-red-400 transition">
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
@@ -730,8 +730,8 @@ export default function CompetitiveMonitorPage() {
               <div className="space-y-6">
                 {/* AI Market Summary */}
                 <PrismPanel padding="p-5">
-                  <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-brand-accent" /> AI Market Summary</h3>
-                  <div className="text-sm text-muted leading-relaxed space-y-2">
+                  <h3 className="text-sm flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-brand-accent" /> AI Market Summary</h3>
+                  <div className="text-sm text-text-muted leading-relaxed space-y-2">
                     <p>The agency SaaS market continues to consolidate around AI-first platforms. Over the past week, <strong className="text-text-primary">3 of 8 tracked competitors</strong> made AI-related announcements. Pricing is trending upward (AgencyFlow +34%), while MarketMind bucks the trend with a free tier launch. The enterprise segment is heating up with both AgencyFlow and ClientPulse making upmarket moves.</p>
                     <p>Your positioning remains strong on <span className="text-emerald-400">pricing</span> and <span className="text-emerald-400">review ratings</span>, but you are falling behind on <span className="text-red-400">social media presence</span> and <span className="text-red-400">content velocity</span>. The biggest opportunity window is the 2-4 week period before competitors ship their announced features.</p>
                   </div>
@@ -739,35 +739,35 @@ export default function CompetitiveMonitorPage() {
 
                 {/* Activity Heatmap */}
                 <PrismPanel padding="p-5">
-                  <h3 className="section-header text-sm flex items-center gap-2 mb-4"><LayoutGrid className="w-4 h-4 text-brand-accent" /> Competitor Activity Heatmap (Last 4 Weeks)</h3>
+                  <h3 className="text-sm flex items-center gap-2 mb-4"><LayoutGrid className="w-4 h-4 text-brand-accent" /> Competitor Activity Heatmap (Last 4 Weeks)</h3>
                   <div className="overflow-x-auto">
                     <div className="min-w-[500px]">
                       <div className="flex items-center gap-2 mb-2 pl-28">
                         {["Week 1", "Week 2", "Week 3", "Week 4"].map(w => (
-                          <div key={w} className="flex-1 text-center text-[10px] text-muted">{w}</div>
+                          <div key={w} className="flex-1 text-center text-[10px] text-text-muted">{w}</div>
                         ))}
                       </div>
                       {heatmapData.map((row, ri) => (
                         <div key={ri} className="flex items-center gap-2 mb-1.5">
-                          <div className="w-28 text-xs text-muted truncate text-right pr-2">{row.name}</div>
+                          <div className="w-28 text-xs text-text-muted truncate text-right pr-2">{row.name}</div>
                           {row.weeks.map((val, wi) => {
                             const intensity = Math.min(val / 7, 1);
                             const bg = intensity === 0 ? "bg-surface-light" : intensity < 0.3 ? "bg-emerald-500/20" : intensity < 0.6 ? "bg-emerald-500/40" : "bg-emerald-500/70";
                             return (
                               <div key={wi} className={`flex-1 h-8 rounded ${bg} flex items-center justify-center`}>
-                                <span className="text-[10px] text-muted">{val}</span>
+                                <span className="text-[10px] text-text-muted">{val}</span>
                               </div>
                             );
                           })}
                         </div>
                       ))}
                       <div className="flex items-center gap-2 mt-3 pl-28">
-                        <span className="text-[10px] text-muted">Less</span>
+                        <span className="text-[10px] text-text-muted">Less</span>
                         <div className="w-4 h-4 rounded bg-surface-light" />
                         <div className="w-4 h-4 rounded bg-emerald-500/20" />
                         <div className="w-4 h-4 rounded bg-emerald-500/40" />
                         <div className="w-4 h-4 rounded bg-emerald-500/70" />
-                        <span className="text-[10px] text-muted">More</span>
+                        <span className="text-[10px] text-text-muted">More</span>
                       </div>
                     </div>
                   </div>
@@ -775,7 +775,7 @@ export default function CompetitiveMonitorPage() {
 
                 {/* Top Threats */}
                 <div>
-                  <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Flame className="w-4 h-4 text-red-400" /> Top Threats</h3>
+                  <h3 className="text-sm flex items-center gap-2 mb-3"><Flame className="w-4 h-4 text-red-400" /> Top Threats</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {[
                       { competitor: "SocialSpark", title: "AI Content Calendar Launch", desc: "Direct feature overlap with your content scheduling. They shipped first and are marketing aggressively. You have a 2-4 week window before adoption solidifies.", severity: "critical" },
@@ -797,7 +797,7 @@ export default function CompetitiveMonitorPage() {
                           <span className={`text-[10px] px-1.5 py-0.5 rounded-full ml-auto ${threat.severity === "critical" ? "bg-red-500/10 text-red-400" : "bg-[rgba(59,130,246,0.08)] text-brand-accent"}`}>{threat.severity}</span>
                         </div>
                         <div className="text-sm font-medium mb-1.5">{threat.title}</div>
-                        <p className="text-xs text-muted leading-relaxed">{threat.desc}</p>
+                        <p className="text-xs text-text-muted leading-relaxed">{threat.desc}</p>
                       </motion.div>
                     ))}
                   </div>
@@ -805,7 +805,7 @@ export default function CompetitiveMonitorPage() {
 
                 {/* Opportunities */}
                 <div>
-                  <h3 className="section-header text-sm flex items-center gap-2 mb-3"><Lightbulb className="w-4 h-4 text-brand-accent" /> Opportunities</h3>
+                  <h3 className="text-sm flex items-center gap-2 mb-3"><Lightbulb className="w-4 h-4 text-brand-accent" /> Opportunities</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {[
                       { title: "AgencyFlow Price Increase", desc: "Their 34% price hike on the Pro plan creates a migration window. Launch a targeted \"Switch & Save\" campaign offering 6 months at your current rate with white-glove migration support.", impact: "high" },
@@ -826,7 +826,7 @@ export default function CompetitiveMonitorPage() {
                           <span className={`text-[10px] px-1.5 py-0.5 rounded-full ml-auto ${opp.impact === "high" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "bg-[rgba(59,130,246,0.08)] text-brand-accent"}`}>{opp.impact} impact</span>
                         </div>
                         <div className="text-sm font-medium mb-1.5">{opp.title}</div>
-                        <p className="text-xs text-muted leading-relaxed">{opp.desc}</p>
+                        <p className="text-xs text-text-muted leading-relaxed">{opp.desc}</p>
                       </motion.div>
                     ))}
                   </div>
@@ -834,7 +834,7 @@ export default function CompetitiveMonitorPage() {
 
                 {/* Market Share Estimation */}
                 <PrismPanel padding="p-5">
-                  <h3 className="section-header text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-brand-accent" /> Estimated Market Share (Agency SaaS Segment)</h3>
+                  <h3 className="text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-brand-accent" /> Estimated Market Share (Agency SaaS Segment)</h3>
                   <div className="space-y-3">
                     {[
                       { name: "AgencyFlow", share: 22, color: "#2563EB" },
@@ -857,7 +857,7 @@ export default function CompetitiveMonitorPage() {
                       </div>
                     ))}
                   </div>
-                  <p className="text-[10px] text-muted mt-3 text-center">Estimated based on public data, hiring signals, social metrics, and web traffic analysis. Updated weekly.</p>
+                  <p className="text-[10px] text-text-muted mt-3 text-center">Estimated based on public data, hiring signals, social metrics, and web traffic analysis. Updated weekly.</p>
                 </PrismPanel>
               </div>
             )}{/* --- PageAI --- */}<PageAI

@@ -159,13 +159,13 @@ export function AiAssistButton({
           <div className="p-3">
             <div className="flex items-center gap-2 mb-2.5">
               <Sparkles size={11} style={{ color: "#c8a855" }} />
-              <p className="text-[11px] font-bold text-foreground">
+              <p className="text-[11px] font-bold text-text-primary">
                 AI Assist
               </p>
-              <span className="text-[10px] text-muted">— {intent}</span>
+              <span className="text-[10px] text-text-muted">— {intent}</span>
               <button
                 onClick={() => setOpenMenu(false)}
-                className="ml-auto text-muted hover:text-foreground"
+                className="ml-auto text-text-muted hover:text-text-primary"
               >
                 <X size={11} />
               </button>
@@ -175,7 +175,7 @@ export function AiAssistButton({
               onChange={(e) => setBriefHint(e.target.value)}
               placeholder={`Optional hint — e.g. "make it shorter", "more casual"…`}
               rows={2}
-              className="w-full bg-card border border-border rounded-md px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[rgba(59,130,246,0.4)] mb-2 resize-none"
+              className="w-full bg-card border border-border-subtle rounded-md px-2 py-1.5 text-[11px] text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-[rgba(59,130,246,0.4)] mb-2 resize-none"
               autoFocus
             />
             <div className="flex items-center gap-1.5">

@@ -158,8 +158,8 @@ function ChoiceBtn({
       onClick={onClick}
       className={`px-4 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 ${
         selected
-          ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] text-foreground"
-          : "border-border bg-surface-light text-muted hover:border-[rgba(59,130,246,0.4)] hover:text-foreground"
+          ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] text-text-primary"
+          : "border-border-subtle bg-surface-light text-text-muted hover:border-[rgba(59,130,246,0.4)] hover:text-text-primary"
       } ${className}`}
     >
       {children}
@@ -184,7 +184,7 @@ function SelectCard({
       className={`relative text-left  p-4 border transition-all duration-200 ${
         selected
           ? "border-[#2563EB] bg-[rgba(59,130,246,0.05)] shadow-[0_0_0_1px_rgba(59,130,246,0.25)]"
-          : "border-border bg-surface-light hover:border-[rgba(59,130,246,0.4)]"
+          : "border-border-subtle bg-surface-light hover:border-[rgba(59,130,246,0.4)]"
       } ${className}`}
     >
       {selected && (
@@ -207,19 +207,19 @@ function StepLabel({ children }: { children: React.ReactNode }) {
 
 function StepTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-2xl font-bold text-foreground tracking-tight mb-1">
+    <h2 className="text-2xl font-bold text-text-primary tracking-tight mb-1">
       {children}
     </h2>
   );
 }
 
 function StepSubtitle({ children }: { children: React.ReactNode }) {
-  return <p className="text-sm text-muted mb-8">{children}</p>;
+  return <p className="text-sm text-text-muted mb-8">{children}</p>;
 }
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-xs font-semibold text-foreground mb-2.5 uppercase tracking-wider">
+    <p className="text-xs font-semibold text-text-primary mb-2.5 uppercase tracking-wider">
       {children}
     </p>
   );
@@ -369,14 +369,14 @@ export default function ClientOnboardingWizard({
             <p className="text-xs font-semibold uppercase tracking-widest text-[#2563EB] mb-3">
               Welcome to Trinity
             </p>
-            <h1 className="text-3xl font-bold text-foreground tracking-tight mb-4">
+            <h1 className="text-3xl font-bold text-text-primary tracking-tight mb-4">
               Hey, {clientName}! 👋
             </h1>
-            <p className="text-base text-muted max-w-md leading-relaxed mb-3">
+            <p className="text-base text-text-muted max-w-md leading-relaxed mb-3">
               We&apos;ll ask a few questions to build your perfect marketing strategy — tailored specifically to{" "}
-              <span className="text-foreground font-medium">your business</span>.
+              <span className="text-text-primary font-medium">your business</span>.
             </p>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border text-xs text-muted mb-10">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border-subtle text-xs text-text-muted mb-10">
               <Clock size={13} className="text-[#2563EB]" />
               Takes about 5 minutes
             </div>
@@ -434,8 +434,8 @@ export default function ClientOnboardingWizard({
                       onClick={() => set("business_type", id)}
                       className="flex flex-col items-center gap-2 py-5"
                     >
-                      <Icon size={22} className={data.business_type === id ? "text-[#2563EB]" : "text-muted"} />
-                      <span className="text-sm font-medium text-foreground">{label}</span>
+                      <Icon size={22} className={data.business_type === id ? "text-[#2563EB]" : "text-text-muted"} />
+                      <span className="text-sm font-medium text-text-primary">{label}</span>
                     </SelectCard>
                   ))}
                 </div>
@@ -542,7 +542,7 @@ export default function ClientOnboardingWizard({
                     }}
                     className={`${!sel && maxed ? "opacity-40 cursor-not-allowed" : ""}`}
                   >
-                    <span className="text-sm font-medium text-foreground leading-snug block pr-5">{goal}</span>
+                    <span className="text-sm font-medium text-text-primary leading-snug block pr-5">{goal}</span>
                     {sel && (
                       <span className="mt-2 inline-block text-[10px] font-bold text-[#2563EB]">
                         #{data.top_goals.indexOf(goal) + 1}
@@ -597,9 +597,9 @@ export default function ClientOnboardingWizard({
                     >
                       <AlertCircle
                         size={13}
-                        className={`mb-1.5 ${data.challenges.includes(c) ? "text-[#2563EB]" : "text-muted"}`}
+                        className={`mb-1.5 ${data.challenges.includes(c) ? "text-[#2563EB]" : "text-text-muted"}`}
                       />
-                      <span className="text-sm text-foreground font-medium leading-snug block pr-5">{c}</span>
+                      <span className="text-sm text-text-primary font-medium leading-snug block pr-5">{c}</span>
                     </SelectCard>
                   ))}
                 </div>
@@ -741,7 +741,7 @@ export default function ClientOnboardingWizard({
               <div>
                 <FieldLabel>
                   Brand personality — pick 3{" "}
-                  <span className={data.brand_personality.length === 3 ? "text-[#2563EB]" : "text-muted"}>
+                  <span className={data.brand_personality.length === 3 ? "text-[#2563EB]" : "text-text-muted"}>
                     ({data.brand_personality.length}/3)
                   </span>
                 </FieldLabel>
@@ -772,9 +772,9 @@ export default function ClientOnboardingWizard({
                       >
                         <Palette
                           size={16}
-                          className={`mx-auto mb-2 ${sel ? "text-[#2563EB]" : "text-muted"}`}
+                          className={`mx-auto mb-2 ${sel ? "text-[#2563EB]" : "text-text-muted"}`}
                         />
-                        <span className="text-sm font-medium text-foreground">{p}</span>
+                        <span className="text-sm font-medium text-text-primary">{p}</span>
                       </SelectCard>
                     );
                   })}
@@ -791,8 +791,8 @@ export default function ClientOnboardingWizard({
                       onClick={() => set("content_types", toggle(data.content_types, id))}
                       className="flex flex-col items-center gap-2 py-4"
                     >
-                      <Icon size={18} className={data.content_types.includes(id) ? "text-[#2563EB]" : "text-muted"} />
-                      <span className="text-xs font-medium text-foreground text-center">{label}</span>
+                      <Icon size={18} className={data.content_types.includes(id) ? "text-[#2563EB]" : "text-text-muted"} />
+                      <span className="text-xs font-medium text-text-primary text-center">{label}</span>
                     </SelectCard>
                   ))}
                 </div>
@@ -820,12 +820,12 @@ export default function ClientOnboardingWizard({
                   {data.content_topics.map((t) => (
                     <span
                       key={t}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] text-xs text-foreground font-medium"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] text-xs text-text-primary font-medium"
                     >
                       {t}
                       <button
                         onClick={() => set("content_topics", data.content_topics.filter((x) => x !== t))}
-                        className="text-muted hover:text-foreground"
+                        className="text-text-muted hover:text-text-primary"
                       >
                         <X size={11} />
                       </button>
@@ -863,7 +863,7 @@ export default function ClientOnboardingWizard({
                     <button
                       key={t}
                       onClick={() => set("content_topics", [...data.content_topics, t])}
-                      className="text-[11px] text-muted border border-dashed border-border px-2.5 py-1 rounded-full hover:border-[rgba(59,130,246,0.4)] hover:text-foreground transition-colors"
+                      className="text-[11px] text-text-muted border border-dashed border-border-subtle px-2.5 py-1 rounded-full hover:border-[rgba(59,130,246,0.4)] hover:text-text-primary transition-colors"
                     >
                       + {t}
                     </button>
@@ -901,22 +901,22 @@ export default function ClientOnboardingWizard({
                     onClick={() => set("has_google_business", true)}
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
                       data.has_google_business
-                        ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] text-foreground"
-                        : "border-border bg-surface-light text-muted hover:border-[rgba(59,130,246,0.4)]"
+                        ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] text-text-primary"
+                        : "border-border-subtle bg-surface-light text-text-muted hover:border-[rgba(59,130,246,0.4)]"
                     }`}
                   >
-                    <Check size={14} className={data.has_google_business ? "text-[#2563EB]" : "text-muted"} />
+                    <Check size={14} className={data.has_google_business ? "text-[#2563EB]" : "text-text-muted"} />
                     Yes, I have one
                   </button>
                   <button
                     onClick={() => set("has_google_business", false)}
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
                       !data.has_google_business
-                        ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] text-foreground"
-                        : "border-border bg-surface-light text-muted hover:border-[rgba(59,130,246,0.4)]"
+                        ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] text-text-primary"
+                        : "border-border-subtle bg-surface-light text-text-muted hover:border-[rgba(59,130,246,0.4)]"
                     }`}
                   >
-                    <X size={14} className={!data.has_google_business ? "text-[#2563EB]" : "text-muted"} />
+                    <X size={14} className={!data.has_google_business ? "text-[#2563EB]" : "text-text-muted"} />
                     Not yet
                   </button>
                 </div>
@@ -935,9 +935,9 @@ export default function ClientOnboardingWizard({
                 <FieldLabel>Social media accounts</FieldLabel>
                 <div className="space-y-2">
                   {SOCIAL_PLATFORMS.map(({ id, label, icon: Icon }) => (
-                    <div key={id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
-                      <Icon size={16} className="text-muted shrink-0" />
-                      <span className="text-sm font-medium text-foreground w-28 shrink-0">{label}</span>
+                    <div key={id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border-subtle">
+                      <Icon size={16} className="text-text-muted shrink-0" />
+                      <span className="text-sm font-medium text-text-primary w-28 shrink-0">{label}</span>
                       <div className="flex gap-1.5 flex-wrap">
                         {SOCIAL_STATUS_OPTIONS.map(({ value, label: optLabel }) => (
                           <button
@@ -947,8 +947,8 @@ export default function ClientOnboardingWizard({
                             }
                             className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-all ${
                               data.social_accounts[id] === value
-                                ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] text-foreground"
-                                : "border-border text-muted hover:border-[rgba(59,130,246,0.25)]"
+                                ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] text-text-primary"
+                                : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.25)]"
                             }`}
                           >
                             {optLabel}
@@ -1036,8 +1036,8 @@ export default function ClientOnboardingWizard({
                       <Icon size={18} style={{ color }} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-foreground">{label}</p>
-                      <p className="text-[11px] text-muted">{desc}</p>
+                      <p className="text-sm font-semibold text-text-primary">{label}</p>
+                      <p className="text-[11px] text-text-muted">{desc}</p>
                     </div>
                     {connected ? (
                       <span className="flex items-center gap-1.5 text-[11px] text-success font-medium shrink-0">
@@ -1062,9 +1062,9 @@ export default function ClientOnboardingWizard({
               })}
             </div>
 
-            <div className="p-4 rounded-xl bg-surface border border-border/50">
-              <p className="text-xs text-muted">
-                <span className="text-foreground font-medium">Note:</span>{" "}
+            <div className="p-4 rounded-xl bg-surface border border-border-subtle/50">
+              <p className="text-xs text-text-muted">
+                <span className="text-text-primary font-medium">Note:</span>{" "}
                 Your agency team can help you connect these later. You can always come back to this step.
               </p>
             </div>
@@ -1085,7 +1085,7 @@ export default function ClientOnboardingWizard({
                 <div className="space-y-2">
                   {[0, 1, 2].map((i) => (
                     <div key={i} className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-muted w-5 text-center">#{i + 1}</span>
+                      <span className="text-xs font-bold text-text-muted w-5 text-center">#{i + 1}</span>
                       <input
                         type="text"
                         value={data.competitors[i] ?? ""}
@@ -1160,9 +1160,9 @@ export default function ClientOnboardingWizard({
 
             <StepLabel>Step 10 of 10</StepLabel>
             <StepTitle>Ready to let AI take the wheel?</StepTitle>
-            <p className="text-sm text-muted mb-8 max-w-lg mx-auto">
+            <p className="text-sm text-text-muted mb-8 max-w-lg mx-auto">
               Based on everything you&apos;ve told us, our AI can{" "}
-              <span className="text-foreground font-medium">immediately</span> start:
+              <span className="text-text-primary font-medium">immediately</span> start:
             </p>
 
             <div className="max-w-sm mx-auto space-y-3 mb-8 text-left">
@@ -1175,12 +1175,12 @@ export default function ClientOnboardingWizard({
                 >
                   <div
                     className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
-                      i <= aiChecklistIndex ? "bg-[#2563EB] border-[#2563EB]" : "bg-transparent border-border"
+                      i <= aiChecklistIndex ? "bg-[#2563EB] border-[#2563EB]" : "bg-transparent border-border-subtle"
                     } border`}
                   >
                     {i <= aiChecklistIndex && <Check size={11} className="text-white" />}
                   </div>
-                  <span className="text-sm text-foreground font-medium">{item}</span>
+                  <span className="text-sm text-text-primary font-medium">{item}</span>
                 </div>
               ))}
             </div>
@@ -1207,12 +1207,12 @@ export default function ClientOnboardingWizard({
               </button>
             </div>
 
-            <div className="inline-flex items-center gap-3 px-5 py-3 rounded-xl bg-surface border border-border">
-              <span className="text-xs text-foreground font-medium">Keep AI Auto-Pilot running daily</span>
+            <div className="inline-flex items-center gap-3 px-5 py-3 rounded-xl bg-surface border border-border-subtle">
+              <span className="text-xs text-text-primary font-medium">Keep AI Auto-Pilot running daily</span>
               <button
                 onClick={() => set("ai_autopilot_daily", !data.ai_autopilot_daily)}
                 className={`relative w-10 h-6 rounded-full transition-colors duration-200 ${
-                  data.ai_autopilot_daily ? "bg-[#2563EB]" : "bg-border"
+                  data.ai_autopilot_daily ? "bg-[#2563EB]" : "bg-border-subtle"
                 }`}
               >
                 <span
@@ -1239,12 +1239,12 @@ export default function ClientOnboardingWizard({
         {/* ── Progress bar ── */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-muted font-medium">
+            <span className="text-xs text-text-muted font-medium">
               Step {step} of {TOTAL_STEPS}
             </span>
             <span className="text-xs font-bold text-[#2563EB]">{Math.round(progress)}%</span>
           </div>
-          <div className="h-1.5 bg-surface-light rounded-full overflow-hidden border border-border/30">
+          <div className="h-1.5 bg-surface-light rounded-full overflow-hidden border border-border-subtle/30">
             <div
               className="h-full bg-[#2563EB] rounded-full transition-all duration-500 ease-out"
               style={{ width: `${progress}%` }}
@@ -1262,7 +1262,7 @@ export default function ClientOnboardingWizard({
                     ? "w-6 h-2 bg-[#2563EB]"
                     : i + 1 < step
                     ? "w-2 h-2 bg-[rgba(59,130,246,0.4)] hover:bg-[rgba(59,130,246,0.7)] cursor-pointer"
-                    : "w-2 h-2 bg-border cursor-default"
+                    : "w-2 h-2 bg-border-subtle cursor-default"
                 }`}
               />
             ))}
@@ -1271,7 +1271,7 @@ export default function ClientOnboardingWizard({
 
         {/* ── Step content ── */}
         <div
-          className={`card p-8 transition-all duration-180 ${
+          className={`glass rounded-xl p-8 transition-all duration-180 ${
             animating
               ? direction === "forward"
                 ? "opacity-0 translate-y-2"
@@ -1297,7 +1297,7 @@ export default function ClientOnboardingWizard({
 
             <div className="flex items-center gap-3">
               {showSkip && (
-                <button onClick={next} className="text-sm text-muted hover:text-foreground transition-colors font-medium">
+                <button onClick={next} className="text-sm text-text-muted hover:text-text-primary transition-colors font-medium">
                   Skip for now
                   <ChevronRight size={14} className="inline ml-0.5" />
                 </button>

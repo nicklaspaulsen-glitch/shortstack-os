@@ -155,7 +155,7 @@ export default function FunnelsPage() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search funnels…"
-                  className="glass rounded-lg pl-9 pr-4 py-2 text-sm placeholder-text-muted outline-none focus:border-brand-accent w-56"
+                  className="glass rounded-lg pl-9 pr-4 py-2 text-sm placeholder-text-text-muted outline-none focus:border-brand-accent w-56"
                 />
               </div>
             </div>{/* Grid */}{loading ? (

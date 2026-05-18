@@ -201,7 +201,7 @@ export default function TrinityProposalsPage() {
   };
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Trinity Autonomous command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Trinity Autonomous command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AI PROPOSALS</p>
@@ -224,7 +224,7 @@ export default function TrinityProposalsPage() {
                     <div className="flex items-center gap-2">
                       <span
                         className={
-                          active ? "text-purple-600" : "text-muted"
+                          active ? "text-purple-600" : "text-text-muted"
                         }
                       >
                         {t.icon}
@@ -236,15 +236,15 @@ export default function TrinityProposalsPage() {
                         </span>
                       )}
                     </div>
-                    <p className="mt-2 text-xs text-muted">{t.desc}</p>
+                    <p className="mt-2 text-xs text-text-muted">{t.desc}</p>
                   </button>
                 );
               })}
-            </div>{/* Enabled actions + veto window */}<div className="card">
+            </div>{/* Enabled actions + veto window */}<div className="glass rounded-xl p-4">
               <h2 className="text-sm font-semibold text-[#111827]">Configure</h2>
 
               <div className="mt-4 space-y-2">
-                <div className="text-xs text-muted">Enabled action types</div>
+                <div className="text-xs text-text-muted">Enabled action types</div>
                 <div className="flex flex-wrap gap-2">
                   {actionTypes.map((a) => {
                     const enabled = settings?.enabled_actions.includes(a) ?? false;
@@ -256,7 +256,7 @@ export default function TrinityProposalsPage() {
                         className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
                           enabled
                             ? "bg-purple-100 text-purple-700 ring-1 ring-purple-300"
-                            : "bg-[rgba(0,0,0,0.04)] text-muted hover:bg-[rgba(0,0,0,0.06)]"
+                            : "bg-[rgba(0,0,0,0.04)] text-text-muted hover:bg-[rgba(0,0,0,0.06)]"
                         }`}
                       >
                         {ACTION_LABELS[a] ?? a}
@@ -270,7 +270,7 @@ export default function TrinityProposalsPage() {
                 <div>
                   <label
                     htmlFor="veto-window"
-                    className="block text-xs text-muted mb-1"
+                    className="block text-xs text-text-muted mb-1"
                   >
                     Autopilot veto window (hours)
                   </label>
@@ -295,14 +295,14 @@ export default function TrinityProposalsPage() {
                     }
                     className="w-full"
                   />
-                  <div className="text-xs text-muted mt-1">
+                  <div className="text-xs text-text-muted mt-1">
                     {settings?.veto_window_hours ?? 4}h before autopilot fires.
                   </div>
                 </div>
                 <div>
                   <label
                     htmlFor="brief-email"
-                    className="block text-xs text-muted mb-1"
+                    className="block text-xs text-text-muted mb-1"
                   >
                     Morning brief email (optional)
                   </label>
@@ -329,17 +329,17 @@ export default function TrinityProposalsPage() {
               </div>
 
               {savingSettings && (
-                <div className="mt-3 flex items-center gap-2 text-xs text-muted">
+                <div className="mt-3 flex items-center gap-2 text-xs text-text-muted">
                   <Loader2 size={12} className="animate-spin" /> Saving...
                 </div>
               )}
-            </div>{/* Tabs */}<div className="flex items-center gap-1 rounded-lg border border-border bg-surface p-1">
+            </div>{/* Tabs */}<div className="flex items-center gap-1 rounded-lg border border-border-subtle bg-surface p-1">
               <button
                 onClick={() => setTab("pending")}
                 className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition ${
                   tab === "pending"
                     ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
-                    : "text-muted hover:text-[#111827]"
+                    : "text-text-muted hover:text-[#111827]"
                 }`}
               >
                 <Clock size={12} />
@@ -350,21 +350,21 @@ export default function TrinityProposalsPage() {
                 className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition ${
                   tab === "history"
                     ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
-                    : "text-muted hover:text-[#111827]"
+                    : "text-text-muted hover:text-[#111827]"
                 }`}
               >
                 <History size={12} />
                 History
               </button>
             </div>{loadingProposals ? (
-              <div className="py-12 text-center text-sm text-muted">Loading...</div>
+              <div className="py-12 text-center text-sm text-text-muted">Loading...</div>
             ) : proposals.length === 0 ? (
-              <div className="card flex flex-col items-center justify-center py-12 text-center">
-                <Brain size={36} className="mb-3 text-muted/30" />
+              <div className="glass rounded-xl p-4 flex flex-col items-center justify-center py-12 text-center">
+                <Brain size={36} className="mb-3 text-text-muted/30" />
                 <p className="text-sm font-medium text-[#111827]">
                   {tab === "pending" ? "No pending proposals" : "No history yet"}
                 </p>
-                <p className="mt-1 text-xs text-muted">
+                <p className="mt-1 text-xs text-text-muted">
                   {tab === "pending"
                     ? "Trinity will post here when she has a recommendation."
                     : "Approved + vetoed proposals will appear here."}
@@ -376,7 +376,7 @@ export default function TrinityProposalsPage() {
                   const isPending = p.status === "proposed";
                   const acting = actingId === p.id;
                   return (
-                    <motion.div key={p.id} variants={itemVariants} className="card">
+                    <motion.div key={p.id} variants={itemVariants} className="glass rounded-xl p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
@@ -391,7 +391,7 @@ export default function TrinityProposalsPage() {
                               {p.status}
                             </span>
                           </div>
-                          <p className="mt-1 text-xs text-muted">
+                          <p className="mt-1 text-xs text-text-muted">
                             {new Date(p.created_at).toLocaleString()}
                           </p>
                         </div>
@@ -424,7 +424,7 @@ export default function TrinityProposalsPage() {
                         <p className="mt-3 text-sm text-[#374151]">{p.rationale}</p>
                       )}
                       {p.veto_window_until && p.status === "proposed" && (
-                        <p className="mt-2 text-[10px] text-muted">
+                        <p className="mt-2 text-[10px] text-text-muted">
                           Autopilot will execute after{" "}
                           {new Date(p.veto_window_until).toLocaleString()} unless
                           vetoed.

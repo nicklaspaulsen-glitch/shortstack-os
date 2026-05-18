@@ -70,7 +70,7 @@ interface StatusResponse {
 const STATUS_META: Record<Status, { color: string; bg: string; border: string; icon: LucideIcon; label: string }> = {
   ok: { color: "text-success", bg: "bg-success/10", border: "border-success/30", icon: CheckCircle2, label: "Connected" },
   configured: { color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]", border: "border-[rgba(59,130,246,0.25)]", icon: CheckCircle2, label: "Configured" },
-  missing: { color: "text-muted", bg: "bg-muted/10", border: "border-border", icon: AlertTriangle, label: "Not set" },
+  missing: { color: "text-text-muted", bg: "bg-muted/10", border: "border-border-subtle", icon: AlertTriangle, label: "Not set" },
   error: { color: "text-danger", bg: "bg-danger/10", border: "border-danger/30", icon: XCircle, label: "Error" },
 };
 
@@ -144,7 +144,7 @@ export default function SystemStatusPage() {
 
   if (authLoading || fetchState === "loading") {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[60vh] text-muted text-sm">Checking systems…
+      <MotionPage className="flex items-center justify-center min-h-[60vh] text-text-muted text-sm">Checking systems…
               </MotionPage>
     );
   }
@@ -152,14 +152,14 @@ export default function SystemStatusPage() {
   if (fetchState === "forbidden") {
     return (
       <div className="max-w-xl mx-auto py-12 text-center space-y-3">
-        <Lock size={32} className="text-muted mx-auto" />
+        <Lock size={32} className="text-text-muted mx-auto" />
         <h1 className="text-lg font-bold">Admin only</h1>
-        <p className="text-xs text-muted">
+        <p className="text-xs text-text-muted">
           System Status is only visible to account admins.
         </p>
         <button
           onClick={() => router.push("/dashboard")}
-          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border bg-surface hover:bg-surface-light"
+          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light"
         >
           <ArrowLeft size={12} /> Back to Dashboard
         </button>
@@ -174,7 +174,7 @@ export default function SystemStatusPage() {
         <h1 className="text-lg font-bold">Couldn&apos;t check system status</h1>
         <button
           onClick={load}
-          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border bg-surface hover:bg-surface-light"
+          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light"
         >
           <RefreshCw size={12} /> Retry
         </button>
@@ -190,7 +190,7 @@ export default function SystemStatusPage() {
       : "blue";
 
   return (
-    <div className="fade-in max-w-5xl mx-auto space-y-5">
+    <div className="max-w-5xl mx-auto space-y-5">
       {/* -- System Status command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -202,7 +202,7 @@ export default function SystemStatusPage() {
             <button
               onClick={runProbes}
               disabled={runningProbes || refreshing}
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/10 border border-border text-foreground hover:bg-black/15 disabled:opacity-50 font-medium"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/10 border border-border-subtle text-text-primary hover:bg-black/15 disabled:opacity-50 font-medium"
               title="Invoke the cron health-check sweep now instead of waiting 30 minutes"
             >
               <Play size={12} className={runningProbes ? "animate-pulse" : ""} />
@@ -211,7 +211,7 @@ export default function SystemStatusPage() {
             <button
               onClick={load}
               disabled={refreshing || runningProbes}
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/5 border border-border text-foreground hover:bg-black/10 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/5 border border-border-subtle text-text-primary hover:bg-black/10 disabled:opacity-50"
             >
               <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
               {refreshing ? "Checking…" : "Re-check"}
@@ -238,21 +238,21 @@ export default function SystemStatusPage() {
           {summary.ready_to_launch ? <CheckCircle2 size={20} /> : summary.blockers > 0 ? <XCircle size={20} /> : <AlertTriangle size={20} />}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-bold text-foreground">
+          <div className="text-sm font-bold text-text-primary">
             {summary.ready_to_launch
               ? "Ready to launch"
               : summary.blockers > 0
                 ? `${summary.blockers} launch-blocker${summary.blockers === 1 ? "" : "s"}`
                 : "Optional warnings only"}
           </div>
-          <div className="text-[11px] text-muted mt-0.5">
+          <div className="text-[11px] text-text-muted mt-0.5">
             {summary.ready_to_launch
               ? "All critical systems are online. Optional integrations can be added anytime."
               : summary.blockers > 0
                 ? "These systems are required for core functionality. Fix them before going live."
                 : `${summary.warnings} optional integration${summary.warnings === 1 ? " is" : "s are"} missing — that feature will be disabled until you set env vars.`}
           </div>
-          <div className="text-[10px] text-muted mt-2">
+          <div className="text-[10px] text-text-muted mt-2">
             Last checked {new Date(checked_at).toLocaleTimeString()}
           </div>
         </div>
@@ -263,11 +263,11 @@ export default function SystemStatusPage() {
         {groups.map((group, gi) => (
           <motion.div key={group.category} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: gi * 0.06, duration: 0.4 }} className="glass rounded-xl p-5">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
+              <h2 className="text-sm font-bold text-text-primary flex items-center gap-2">
                 <Zap size={14} className="text-brand-accent" />
                 {group.category}
               </h2>
-              <span className="text-[10px] text-muted">
+              <span className="text-[10px] text-text-muted">
                 {group.checks.filter((c) => c.status === "ok" || c.status === "configured").length}/{group.checks.length} healthy
               </span>
             </div>
@@ -287,7 +287,7 @@ export default function SystemStatusPage() {
                       <Icon size={16} className={`${meta.color} shrink-0 mt-0.5`} />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-xs font-semibold text-foreground">{check.label}</span>
+                          <span className="text-xs font-semibold text-text-primary">{check.label}</span>
                           <span className={`text-[9px] font-bold uppercase tracking-wider ${meta.color}`}>
                             {meta.label}
                           </span>
@@ -298,10 +298,10 @@ export default function SystemStatusPage() {
                           )}
                         </div>
                         {check.detail && (
-                          <div className="text-[10px] text-muted mt-1 leading-relaxed">{check.detail}</div>
+                          <div className="text-[10px] text-text-muted mt-1 leading-relaxed">{check.detail}</div>
                         )}
                         {check.missing && check.missing.length > 0 && (
-                          <div className="text-[10px] text-muted mt-1 font-mono break-all">
+                          <div className="text-[10px] text-text-muted mt-1 font-mono break-all">
                             <span className="text-muted-light">Add on Vercel:</span>{" "}
                             {check.missing.map((m, i) => (
                               <span key={m}>
@@ -333,7 +333,7 @@ export default function SystemStatusPage() {
 
       {/* Quick-action footer */}
       <div className="glass rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="text-[11px] text-muted">
+        <div className="text-[11px] text-text-muted">
           Missing env vars? Add them in Vercel → Project Settings → Environment Variables, then redeploy.
         </div>
         <a

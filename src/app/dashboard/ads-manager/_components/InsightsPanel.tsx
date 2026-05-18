@@ -115,7 +115,7 @@ export default function InsightsPanel() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12 text-muted">
+      <div className="flex items-center justify-center py-12 text-text-muted">
         <Loader2 className="animate-spin mr-2" size={16} />
         Loading insights...
       </div>
@@ -143,7 +143,7 @@ export default function InsightsPanel() {
             <Sparkles className="text-brand-accent" size={16} />
             <h3 className="text-sm font-medium">AI Optimization Suggestions</h3>
             {suggestions.length > 0 && (
-              <span className="text-[11px] text-muted">
+              <span className="text-[11px] text-text-muted">
                 ({suggestions.length} pending)
               </span>
             )}
@@ -196,7 +196,7 @@ export default function InsightsPanel() {
                         )}
                         {s.potential_lift_pct !== null &&
                           s.potential_lift_pct !== undefined && (
-                            <span className="text-[10px] text-muted ml-auto">
+                            <span className="text-[10px] text-text-muted ml-auto">
                               +{s.potential_lift_pct.toFixed(1)}% lift
                             </span>
                           )}

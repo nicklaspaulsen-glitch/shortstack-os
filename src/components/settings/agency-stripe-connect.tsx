@@ -124,14 +124,14 @@ export default function AgencyStripeConnect() {
   }
 
   return (
-    <div className="card">
+    <div className="glass rounded-xl p-4">
       <div className="flex items-start justify-between mb-3">
         <div>
-          <h3 className="section-header flex items-center gap-2">
+          <h3 className="flex items-center gap-2">
             <Plug size={14} className="text-[#2563EB]" />
             Accept Payments from Clients
           </h3>
-          <p className="text-[10px] text-muted">
+          <p className="text-[10px] text-text-muted">
             Connect your own Stripe account to bill your clients through Trinity —
             create invoices, payment links, and accept card payments that land in your Stripe balance.
           </p>
@@ -139,18 +139,18 @@ export default function AgencyStripeConnect() {
       </div>
 
       {loading ? (
-        <div className="flex items-center gap-2 p-4 bg-surface-light/50 rounded-lg border border-border animate-pulse">
-          <Loader2 size={14} className="animate-spin text-muted" />
-          <p className="text-xs text-muted">Checking connection...</p>
+        <div className="flex items-center gap-2 p-4 bg-surface-light/50 rounded-lg border border-border-subtle animate-pulse">
+          <Loader2 size={14} className="animate-spin text-text-muted" />
+          <p className="text-xs text-text-muted">Checking connection...</p>
         </div>
       ) : !account ? (
         // ── Not connected ──
         <div className="space-y-3">
-          <div className="flex items-start gap-3 p-3 bg-surface-light/50 rounded-lg border border-border">
+          <div className="flex items-start gap-3 p-3 bg-surface-light/50 rounded-lg border border-border-subtle">
             <CreditCard size={18} className="text-[#2563EB] shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="text-xs font-semibold">No Stripe account connected yet</p>
-              <p className="text-[10px] text-muted mt-0.5">
+              <p className="text-[10px] text-text-muted mt-0.5">
                 We&apos;ll open Stripe-hosted onboarding. Once complete, you can send invoices and generate payment links from any client&apos;s page.
               </p>
             </div>
@@ -163,7 +163,7 @@ export default function AgencyStripeConnect() {
               Connect your Stripe
             </button>
           </div>
-          <p className="text-[9px] text-muted flex items-center gap-1">
+          <p className="text-[9px] text-text-muted flex items-center gap-1">
             <Shield /> Charges land on YOUR Stripe account, not Trinity&apos;s.
             Trinity never sees customer card details.
           </p>
@@ -182,7 +182,7 @@ export default function AgencyStripeConnect() {
                   <p className="text-xs font-semibold">
                     {account.business_name || "Stripe account connected"}
                   </p>
-                  <p className="text-[10px] text-muted">
+                  <p className="text-[10px] text-text-muted">
                     {account.country ? `${account.country.toUpperCase()} · ` : ""}
                     {account.default_currency ? `${account.default_currency.toUpperCase()} · ` : ""}
                     {account.account_type === "express" ? "Express" : "Standard"}
@@ -252,7 +252,7 @@ function CapabilityChip({ label, on }: { label: string; on: boolean }) {
       className={`text-[9px] px-2 py-0.5 rounded-full font-bold flex items-center gap-1 ${
         on
           ? "bg-success/10 text-success"
-          : "bg-surface-light text-muted"
+          : "bg-surface-light text-text-muted"
       }`}
     >
       {on ? "✓" : "○"} {label}
@@ -271,12 +271,12 @@ function Shield() {
 
 function EnvHint() {
   return (
-    <details className="text-[9px] text-muted">
-      <summary className="cursor-pointer hover:text-foreground">Admin: required env vars</summary>
-      <div className="mt-2 space-y-1 p-2 bg-surface-light/50 rounded-lg border border-border">
-        <p><code className="text-foreground">STRIPE_SECRET_KEY</code> — Trinity platform key (already set)</p>
-        <p><code className="text-foreground">STRIPE_CONNECT_CLIENT_ID</code> — your Connect platform&apos;s <code>ca_xxxxx</code> ID from Stripe Connect settings</p>
-        <p><code className="text-foreground">STRIPE_CONNECT_WEBHOOK_SECRET</code> — separate from <code>STRIPE_WEBHOOK_SECRET</code>; create at Stripe Dashboard → Webhooks → &quot;Events on Connected accounts&quot; pointing to <code>/api/webhooks/stripe-connect</code></p>
+    <details className="text-[9px] text-text-muted">
+      <summary className="cursor-pointer hover:text-text-primary">Admin: required env vars</summary>
+      <div className="mt-2 space-y-1 p-2 bg-surface-light/50 rounded-lg border border-border-subtle">
+        <p><code className="text-text-primary">STRIPE_SECRET_KEY</code> — Trinity platform key (already set)</p>
+        <p><code className="text-text-primary">STRIPE_CONNECT_CLIENT_ID</code> — your Connect platform&apos;s <code>ca_xxxxx</code> ID from Stripe Connect settings</p>
+        <p><code className="text-text-primary">STRIPE_CONNECT_WEBHOOK_SECRET</code> — separate from <code>STRIPE_WEBHOOK_SECRET</code>; create at Stripe Dashboard → Webhooks → &quot;Events on Connected accounts&quot; pointing to <code>/api/webhooks/stripe-connect</code></p>
       </div>
     </details>
   );

@@ -17,7 +17,7 @@ function PasswordInput({ name, placeholder, required, minLength }: { name: strin
   return (
     <div className="relative">
       <input name={name} type={show ? "text" : "password"} className="input w-full text-xs pr-9" placeholder={placeholder} required={required} minLength={minLength} />
-      <button type="button" onClick={() => setShow(!show)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors">
+      <button type="button" onClick={() => setShow(!show)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary transition-colors">
         {show ? <EyeOff size={14} /> : <Eye size={14} />}
       </button>
     </div>
@@ -141,12 +141,12 @@ export default function AdminProfileSwitcher() {
               <Eye size={11} className="text-warning" />
               <span className="text-[9px] text-warning font-semibold uppercase tracking-wider">Viewing as</span>
             </div>
-            <button onClick={() => setImpersonatedClient(null)} className="text-warning hover:text-foreground transition-colors" title="Exit">
+            <button onClick={() => setImpersonatedClient(null)} className="text-warning hover:text-text-primary transition-colors" title="Exit">
               <X size={12} />
             </button>
           </div>
           <p className="text-xs font-medium truncate">{impersonatedClient.business_name}</p>
-          <p className="text-[10px] text-muted truncate">{impersonatedClient.contact_name}</p>
+          <p className="text-[10px] text-text-muted truncate">{impersonatedClient.contact_name}</p>
           <button onClick={() => setImpersonatedClient(null)}
             className="w-full mt-1.5 text-[10px] bg-warning/10 hover:bg-warning/20 text-warning px-2 py-1 rounded flex items-center justify-center gap-1 transition-colors">
             <EyeOff size={10} /> Back to Admin
@@ -161,26 +161,26 @@ export default function AdminProfileSwitcher() {
       <div className="mx-2 mb-1 relative">
         <button
           onClick={() => { setOpen(!open); fetchClients(); }}
-          className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-left bg-surface-light/30 hover:bg-surface-light/60 border border-border/30 hover:border-[rgba(59,130,246,0.1)] transition-all"
+          className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-left bg-surface-light/30 hover:bg-surface-light/60 border border-border-subtle/30 hover:border-[rgba(59,130,246,0.1)] transition-all"
         >
           <div className="w-6 h-6 bg-[rgba(59,130,246,0.08)] rounded-md flex items-center justify-center shrink-0">
             <Shield size={12} className="text-[#2563EB]" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] text-muted font-medium">Accounts</p>
-            <p className="text-[10px] text-muted/60">{clients.length > 0 ? `${clients.length} clients` : "Manage clients"}</p>
+            <p className="text-[10px] text-text-muted font-medium">Accounts</p>
+            <p className="text-[10px] text-text-muted/60">{clients.length > 0 ? `${clients.length} clients` : "Manage clients"}</p>
           </div>
-          <ChevronDown size={12} className={`text-muted transition-transform ${open ? "rotate-180" : ""}`} />
+          <ChevronDown size={12} className={`text-text-muted transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
 
         {/* Dropdown */}
         {open && (
           <>
             <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-            <div className="absolute left-0 top-full mt-1 z-50 w-72 bg-surface border border-border/50 rounded-xl shadow-2xl shadow-black/50 fade-in overflow-hidden">
+            <div className="absolute left-0 top-full mt-1 z-50 w-72 bg-surface border border-border-subtle/50 rounded-xl shadow-2xl shadow-black/50 overflow-hidden">
               {/* Header */}
-              <div className="px-3 py-2 border-b border-border/20 flex items-center justify-between">
-                <span className="text-[10px] text-muted font-semibold uppercase tracking-wider">Client Accounts</span>
+              <div className="px-3 py-2 border-b border-border-subtle/20 flex items-center justify-between">
+                <span className="text-[10px] text-text-muted font-semibold uppercase tracking-wider">Client Accounts</span>
                 <button onClick={() => { setOpen(false); router.push("/dashboard/onboard"); }}
                   className="text-[10px] text-[#2563EB] hover:text-[#3B82F6] flex items-center gap-0.5">
                   <Plus size={10} /> New Client
@@ -188,9 +188,9 @@ export default function AdminProfileSwitcher() {
               </div>
 
               {/* Search */}
-              <div className="p-2 border-b border-border/20">
+              <div className="p-2 border-b border-border-subtle/20">
                 <div className="relative">
-                  <Search size={11} className="absolute left-2 top-1/2 -translate-y-1/2 text-muted" />
+                  <Search size={11} className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted" />
                   <input
                     type="text"
                     placeholder="Search clients..."
@@ -205,21 +205,21 @@ export default function AdminProfileSwitcher() {
               {/* Client list */}
               <div className="max-h-[320px] overflow-y-auto">
                 {loading ? (
-                  <div className="p-4 text-center text-[10px] text-muted">Loading...</div>
+                  <div className="p-4 text-center text-[10px] text-text-muted">Loading...</div>
                 ) : filtered.length === 0 ? (
-                  <div className="p-4 text-center text-[10px] text-muted">No clients found</div>
+                  <div className="p-4 text-center text-[10px] text-text-muted">No clients found</div>
                 ) : (
                   filtered.map(client => (
                     <div
                       key={client.id}
-                      className="px-3 py-2 hover:bg-surface-light/50 border-b border-border/10 transition-colors"
+                      className="px-3 py-2 hover:bg-surface-light/50 border-b border-border-subtle/10 transition-colors"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 min-w-0 flex-1">
                           <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${client.is_active ? "bg-success" : "bg-muted"}`} />
                           <div className="min-w-0">
                             <p className="text-[11px] font-medium truncate">{client.business_name}</p>
-                            <p className="text-[9px] text-muted truncate">
+                            <p className="text-[9px] text-text-muted truncate">
                               {client.contact_name} · {client.package_tier || "No tier"} · {formatCurrency(client.mrr)}/mo
                             </p>
                           </div>
@@ -233,7 +233,7 @@ export default function AdminProfileSwitcher() {
                           <Eye size={9} /> View as
                         </button>
                         <button onClick={() => manageClient(client)}
-                          className="text-[9px] bg-surface-light text-muted hover:text-foreground px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
+                          className="text-[9px] bg-surface-light text-text-muted hover:text-text-primary px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
                           <Settings size={9} /> Manage
                         </button>
                         {!client.profile_id ? (
@@ -260,23 +260,23 @@ export default function AdminProfileSwitcher() {
       <Modal isOpen={!!showCreateProfile} onClose={() => setShowCreateProfile(null)} title="Create Client Login">
         {showCreateProfile && (
           <form onSubmit={createClientProfile} className="space-y-3">
-            <p className="text-xs text-muted">
+            <p className="text-xs text-text-muted">
               Create a login for <span className="text-[#2563EB] font-medium">{showCreateProfile.business_name}</span> so they can access their client portal.
             </p>
             <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Full Name</label>
+              <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider">Full Name</label>
               <input name="full_name" className="input w-full text-xs" defaultValue={showCreateProfile.contact_name} required />
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Email</label>
+              <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider">Email</label>
               <input name="email" type="email" className="input w-full text-xs" defaultValue={showCreateProfile.email} required />
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Password</label>
+              <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider">Password</label>
               <PasswordInput name="password" placeholder="Set initial password" required minLength={6} />
             </div>
-            <div className="bg-surface-light/50 rounded-lg p-2.5 border border-border/20">
-              <p className="text-[10px] text-muted">
+            <div className="bg-surface-light/50 rounded-lg p-2.5 border border-border-subtle/20">
+              <p className="text-[10px] text-text-muted">
                 The client will be able to log in and see: services, task checklist, invoices, contracts, and deliverables.
               </p>
             </div>

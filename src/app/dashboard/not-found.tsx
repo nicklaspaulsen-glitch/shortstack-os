@@ -11,10 +11,10 @@ export default function DashboardNotFound() {
     <div className="flex items-center justify-center min-h-[60vh] px-4">
       <div className="text-center max-w-md">
         <p className="text-6xl font-black mb-3 text-brand-accent">404</p>
-        <h1 className="text-lg font-bold text-foreground mb-2">
+        <h1 className="text-lg font-bold text-text-primary mb-2">
           Page not found
         </h1>
-        <p className="text-xs text-muted mb-6 leading-relaxed">
+        <p className="text-xs text-text-muted mb-6 leading-relaxed">
           We couldn&apos;t find that dashboard page. It may have been moved or
           renamed — check the sidebar or head back to the dashboard home.
         </p>

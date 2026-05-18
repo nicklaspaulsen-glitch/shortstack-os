@@ -228,7 +228,7 @@ export default function UsagePage() {
   // ── Render ──────────────────────────────────────────────────────────────
 
   return (
-    <MotionPage className="fade-in p-6 max-w-5xl mx-auto space-y-5">{/* -- Token Usage command strip -- */}
+    <MotionPage className="p-6 max-w-5xl mx-auto space-y-5">{/* -- Token Usage command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">USAGE & LIMITS</p>
@@ -236,14 +236,14 @@ export default function UsagePage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <>
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-black/10 text-foreground text-xs font-medium">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border-subtle bg-black/10 text-text-primary text-xs font-medium">
                     <Shield size={12} />
                     {planConfig.badge_label} Plan
                   </div>
                   <button
                     onClick={fetchData}
                     disabled={loading}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-black/5 text-foreground text-xs hover:bg-black/10 transition-all"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border-subtle bg-black/5 text-text-primary text-xs hover:bg-black/10 transition-all"
                   >
                     <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
                     Refresh
@@ -309,8 +309,8 @@ export default function UsagePage() {
             )}{/* ── Progress Bar ── */}{!isUnlimited && (
               <div className="glass rounded-xl p-5 space-y-3">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted">Monthly usage</span>
-                  <span className="font-medium text-foreground">
+                  <span className="text-text-muted">Monthly usage</span>
+                  <span className="font-medium text-text-primary">
                     {pct.toFixed(1)}% used
                   </span>
                 </div>
@@ -329,7 +329,7 @@ export default function UsagePage() {
                   )}
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-muted">
+                <div className="flex items-center justify-between text-[11px] text-text-muted">
                   <span>
                     {fmt(used)} used of {fmt(effectiveLimit)}{" "}
                     {tokenData.bonus_tokens > 0 && (
@@ -344,7 +344,7 @@ export default function UsagePage() {
                         ? "text-red-400"
                         : pct >= 75
                         ? "text-orange-400"
-                        : "text-muted"
+                        : "text-text-muted"
                     }`}
                   >
                     {pct >= 90
@@ -358,7 +358,7 @@ export default function UsagePage() {
             )}{/* ── Usage by Category + Daily Chart (side by side on larger screens) ── */}<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Usage by Category */}
               <div className="glass rounded-xl p-5 space-y-4">
-                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                <div className="flex items-center gap-2 text-sm font-medium text-text-primary">
                   <BarChart3 size={14} className="text-brand-accent" />
                   Usage by Category
                 </div>
@@ -373,7 +373,7 @@ export default function UsagePage() {
                     ))}
                   </div>
                 ) : Object.keys(tokenData.by_category).length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-8 gap-2 text-muted">
+                  <div className="flex flex-col items-center justify-center py-8 gap-2 text-text-muted">
                     <Sparkles size={24} className="opacity-30" />
                     <p className="text-xs">No AI activity recorded this month</p>
                   </div>
@@ -386,13 +386,13 @@ export default function UsagePage() {
                         return (
                           <div key={cat} className="space-y-1">
                             <div className="flex items-center justify-between text-[11px]">
-                              <div className="flex items-center gap-1.5 text-muted">
-                                <span className="text-foreground opacity-60">
+                              <div className="flex items-center gap-1.5 text-text-muted">
+                                <span className="text-text-primary opacity-60">
                                   {CATEGORY_ICONS[cat] ?? <BarChart3 size={13} />}
                                 </span>
                                 {cat}
                               </div>
-                              <span className="font-medium text-foreground tabular-nums">
+                              <span className="font-medium text-text-primary tabular-nums">
                                 {fmt(tokens)}
                               </span>
                             </div>
@@ -413,7 +413,7 @@ export default function UsagePage() {
 
               {/* Daily Usage Chart */}
               <div className="glass rounded-xl p-5 space-y-4">
-                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                <div className="flex items-center gap-2 text-sm font-medium text-text-primary">
                   <Calendar size={14} className="text-brand-accent" />
                   Daily Usage (Last 30 Days)
                 </div>
@@ -444,9 +444,9 @@ export default function UsagePage() {
                           />
                           {/* Tooltip */}
                           <div className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 hidden group-hover:block z-10 pointer-events-none">
-                            <div className="bg-surface border border-border rounded-lg px-2 py-1 text-[10px] whitespace-nowrap shadow-elevated">
-                              <div className="font-medium text-foreground">{fmt(d.tokens)}</div>
-                              <div className="text-muted">{label}</div>
+                            <div className="bg-surface border border-border-subtle rounded-lg px-2 py-1 text-[10px] whitespace-nowrap shadow-elevated">
+                              <div className="font-medium text-text-primary">{fmt(d.tokens)}</div>
+                              <div className="text-text-muted">{label}</div>
                             </div>
                           </div>
                         </div>
@@ -457,7 +457,7 @@ export default function UsagePage() {
 
                 {/* X-axis labels: show start, mid, end */}
                 {!loading && tokenData.daily_usage.length > 0 && (
-                  <div className="flex justify-between text-[9px] text-muted mt-1">
+                  <div className="flex justify-between text-[9px] text-text-muted mt-1">
                     <span>{tokenData.daily_usage[0]?.date.substring(5)}</span>
                     <span>{tokenData.daily_usage[14]?.date.substring(5)}</span>
                     <span>{tokenData.daily_usage[29]?.date.substring(5)}</span>
@@ -470,8 +470,8 @@ export default function UsagePage() {
                   <Zap size={18} />
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-foreground">You have unlimited tokens</div>
-                  <div className="text-xs text-muted mt-0.5">
+                  <div className="text-sm font-medium text-text-primary">You have unlimited tokens</div>
+                  <div className="text-xs text-text-muted mt-0.5">
                     Your {planConfig.badge_label} plan includes unlimited AI token usage — no limits, no worries.
                   </div>
                 </div>
@@ -479,7 +479,7 @@ export default function UsagePage() {
             ) : (
               <div className="glass rounded-xl p-5 space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                  <div className="flex items-center gap-2 text-sm font-medium text-text-primary">
                     <Package size={14} className="text-brand-accent" />
                     Buy More Tokens
                   </div>
@@ -491,7 +491,7 @@ export default function UsagePage() {
                   </Link>
                 </div>
 
-                <p className="text-xs text-muted">
+                <p className="text-xs text-text-muted">
                   Need more tokens before your plan resets? Purchase a one-time pack
                   and it will be added immediately to your balance.
                 </p>
@@ -507,7 +507,7 @@ export default function UsagePage() {
                       className={`relative flex flex-col items-center gap-1.5 p-4 rounded-xl border text-center transition-all ${
                         selectedPack === pack.id
                           ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent"
-                          : "border-border bg-surface-light text-foreground hover:border-[rgba(59,130,246,0.4)]"
+                          : "border-border-subtle bg-surface-light text-text-primary hover:border-[rgba(59,130,246,0.4)]"
                       }`}
                     >
                       {pack.popular && (
@@ -516,7 +516,7 @@ export default function UsagePage() {
                         </div>
                       )}
                       <div className="text-lg font-bold">{pack.label}</div>
-                      <div className="text-[10px] text-muted">tokens</div>
+                      <div className="text-[10px] text-text-muted">tokens</div>
                       <div className="text-sm font-semibold">${pack.price}</div>
                     </button>
                   ))}
@@ -536,7 +536,7 @@ export default function UsagePage() {
                       className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                         selectedPack && !buying
                           ? "bg-brand-accent text-white hover:bg-brand-accent/80"
-                          : "bg-surface-light text-muted cursor-not-allowed"
+                          : "bg-surface-light text-text-muted cursor-not-allowed"
                       }`}
                     >
                       {buying ? (
@@ -547,20 +547,20 @@ export default function UsagePage() {
                       {buying ? "Processing..." : selectedPack ? "Buy Now" : "Select a Pack"}
                     </button>
                     {selectedPack && !buying && (
-                      <span className="text-xs text-muted">
+                      <span className="text-xs text-text-muted">
                         {TOKEN_PACKS.find((p) => p.id === selectedPack)?.tokens.toLocaleString()} tokens for ${TOKEN_PACKS.find((p) => p.id === selectedPack)?.price}
                       </span>
                     )}
                   </div>
                 )}
 
-                <p className="text-[10px] text-muted">
+                <p className="text-[10px] text-text-muted">
                   Token packs are added to your account instantly. Bonus tokens carry
                   over and are used before your plan&apos;s monthly allocation.
                 </p>
               </div>
             )}{/* ── Recent Activity ── */}<div className="glass rounded-xl p-5 space-y-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <div className="flex items-center gap-2 text-sm font-medium text-text-primary">
                 <Activity size={14} className="text-brand-accent" />
                 Recent AI Activity
               </div>
@@ -572,7 +572,7 @@ export default function UsagePage() {
                   ))}
                 </div>
               ) : tokenData.recent_activity.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 gap-2 text-muted">
+                <div className="flex flex-col items-center justify-center py-10 gap-2 text-text-muted">
                   <Sparkles size={24} className="opacity-30" />
                   <p className="text-xs">No AI activity recorded this month</p>
                 </div>
@@ -580,7 +580,7 @@ export default function UsagePage() {
                 <div className="overflow-x-auto -mx-1">
                   <table className="w-full text-xs">
                     <thead>
-                      <tr className="text-left text-[10px] uppercase tracking-wider text-muted border-b border-border">
+                      <tr className="text-left text-[10px] uppercase tracking-wider text-text-muted border-b border-border-subtle">
                         <th className="pb-2 font-medium pl-1">Time</th>
                         <th className="pb-2 font-medium">Type</th>
                         <th className="pb-2 font-medium hidden sm:table-cell">Description</th>
@@ -590,15 +590,15 @@ export default function UsagePage() {
                     <tbody className="divide-y divide-border/40">
                       {tokenData.recent_activity.map((item, idx) => (
                         <motion.tr key={item.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="hover:bg-surface-light/50 transition-colors">
-                          <td className="py-2.5 pl-1 text-muted whitespace-nowrap">
+                          <td className="py-2.5 pl-1 text-text-muted whitespace-nowrap">
                             {formatRelative(item.created_at)}
                           </td>
                           <td className="py-2.5">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-light border border-border text-[10px] font-medium text-foreground whitespace-nowrap">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-light border border-border-subtle text-[10px] font-medium text-text-primary whitespace-nowrap">
                               {formatActionType(item.action_type)}
                             </span>
                           </td>
-                          <td className="py-2.5 text-muted hidden sm:table-cell max-w-[200px] truncate">
+                          <td className="py-2.5 text-text-muted hidden sm:table-cell max-w-[200px] truncate">
                             {item.description || "—"}
                           </td>
                           <td className="py-2.5 pr-1 text-right font-medium tabular-nums text-brand-accent whitespace-nowrap">

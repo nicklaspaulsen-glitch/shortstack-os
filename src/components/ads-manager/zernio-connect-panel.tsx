@@ -170,7 +170,7 @@ export default function ZernioConnectPanel() {
           <p className="font-semibold text-white mb-1">
             One bearer token. All six ad platforms.
           </p>
-          <p className="text-muted">
+          <p className="text-text-muted">
             Skip building your own Meta App ID + Google Cloud project + TikTok
             Business app. Zernio handles the OAuth dance for Meta, Google,
             TikTok, LinkedIn, Pinterest, and X — your agency stays one step
@@ -183,7 +183,7 @@ export default function ZernioConnectPanel() {
       {/* Client picker */}
       <div className="flex items-end gap-3">
         <div className="flex-1">
-          <label className="block text-[11px] font-semibold text-muted mb-1.5 uppercase tracking-wider">
+          <label className="block text-[11px] font-semibold text-text-muted mb-1.5 uppercase tracking-wider">
             Pick a client
           </label>
           {loadingClients ? (
@@ -192,7 +192,7 @@ export default function ZernioConnectPanel() {
             <select
               value={selectedClientId}
               onChange={(e) => setSelectedClientId(e.target.value)}
-              className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
+              className="w-full bg-card border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
             >
               {clients.length === 0 && <option value="">No clients yet</option>}
               {clients.map((c) => (
@@ -206,7 +206,7 @@ export default function ZernioConnectPanel() {
         <button
           onClick={() => selectedClientId && loadConnections(selectedClientId)}
           disabled={!selectedClientId || loadingConnections}
-          className="px-3 py-2 rounded-lg bg-white/[0.03] border border-border text-xs text-muted hover:text-foreground hover:bg-white/[0.06] transition flex items-center gap-1.5 disabled:opacity-50"
+          className="px-3 py-2 rounded-lg bg-white/[0.03] border border-border-subtle text-xs text-text-muted hover:text-text-primary hover:bg-white/[0.06] transition flex items-center gap-1.5 disabled:opacity-50"
         >
           {loadingConnections ? (
             <Loader size={12} className="animate-spin" />
@@ -219,13 +219,13 @@ export default function ZernioConnectPanel() {
 
       {/* Profile info */}
       {profileId && selectedClient && (
-        <p className="text-[10.5px] text-muted">
+        <p className="text-[10.5px] text-text-muted">
           Connected to Zernio profile{" "}
-          <code className="px-1.5 py-0.5 rounded bg-white/[0.04] text-foreground/80 font-mono text-[10px]">
+          <code className="px-1.5 py-0.5 rounded bg-white/[0.04] text-text-primary/80 font-mono text-[10px]">
             {profileId.slice(0, 8)}…
           </code>{" "}
           for{" "}
-          <span className="text-foreground font-semibold">
+          <span className="text-text-primary font-semibold">
             {selectedClient.business_name}
           </span>
           .
@@ -258,18 +258,18 @@ export default function ZernioConnectPanel() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2 mb-0.5">
-                  <span className="text-[13px] font-semibold text-foreground">
+                  <span className="text-[13px] font-semibold text-text-primary">
                     {p.name}
                   </span>
                   <ConnStatusBadge status={status} />
                 </div>
                 {conn?.account_name ? (
-                  <p className="text-[10.5px] text-muted truncate mb-2">
+                  <p className="text-[10.5px] text-text-muted truncate mb-2">
                     {conn.account_name}
                     {conn.currency ? ` · ${conn.currency}` : ""}
                   </p>
                 ) : (
-                  <p className="text-[10.5px] text-muted/70 mb-2">
+                  <p className="text-[10.5px] text-text-muted/70 mb-2">
                     Not connected yet
                   </p>
                 )}
@@ -311,7 +311,7 @@ export default function ZernioConnectPanel() {
       </div>
 
       {/* Footer note */}
-      <p className="text-[10.5px] text-muted/80">
+      <p className="text-[10.5px] text-text-muted/80">
         After clicking Connect, complete the platform&apos;s OAuth in the new tab.
         Connection state syncs back automatically. You can manage multiple ad
         accounts per client by reconnecting any time.
@@ -336,7 +336,7 @@ function ConnStatusBadge({ status }: { status: ZernioConnection["status"] }) {
     );
   }
   return (
-    <span className="text-[9.5px] font-bold uppercase tracking-wider text-muted/70">
+    <span className="text-[9.5px] font-bold uppercase tracking-wider text-text-muted/70">
       Off
     </span>
   );

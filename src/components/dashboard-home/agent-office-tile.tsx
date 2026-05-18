@@ -75,7 +75,7 @@ export default function AgentOfficeTile() {
   }, []);
 
   return (
-    <section className="card relative overflow-hidden" aria-label="Agent Office preview">
+    <section className="glass rounded-xl p-4 relative overflow-hidden" aria-label="Agent Office preview">
       <header className="relative z-10 flex items-center justify-between gap-3 mb-4">
         <div>
           <p className="font-editorial text-[11px] uppercase tracking-[0.18em] text-text-muted">

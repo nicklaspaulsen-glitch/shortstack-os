@@ -184,10 +184,10 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-      <div className="card w-full max-w-2xl p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+      <div className="glass rounded-xl p-4 w-full max-w-2xl p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold flex items-center gap-2"><Upload size={14} className="text-brand-accent" /> Import CSV</h2>
-          <button onClick={onClose} className="p-1 rounded hover:bg-white/[0.06] text-muted hover:text-foreground"><X size={14} /></button>
+          <button onClick={onClose} className="p-1 rounded hover:bg-white/[0.06] text-text-muted hover:text-text-primary"><X size={14} /></button>
         </div>
 
         {/* Upload step */}
@@ -198,13 +198,13 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
             onDrop={onDrop}
             onClick={() => fileRef.current?.click()}
             className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all ${
-              dragOver ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "border-border hover:border-[rgba(59,130,246,0.25)]"
+              dragOver ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
             }`}
           >
-            <FileSpreadsheet size={32} className="mx-auto mb-3 text-muted" />
+            <FileSpreadsheet size={32} className="mx-auto mb-3 text-text-muted" />
             <p className="text-xs font-medium mb-1">Drag & drop a CSV file here</p>
-            <p className="text-[10px] text-muted">or click to browse</p>
-            <p className="text-[9px] text-muted mt-3">Expected columns: business_name, email, phone, industry, city, state, source, status, website</p>
+            <p className="text-[10px] text-text-muted">or click to browse</p>
+            <p className="text-[9px] text-text-muted mt-3">Expected columns: business_name, email, phone, industry, city, state, source, status, website</p>
             <input ref={fileRef} type="file" accept={buildAccept(ALLOWED_CSV)} className="hidden" onChange={onFileChange} />
           </div>
         )}
@@ -212,15 +212,15 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
         {/* Preview step */}
         {step === "preview" && (
           <div className="space-y-4">
-            <p className="text-xs text-muted">{rows.length} rows found. Showing first {Math.min(5, rows.length)}:</p>
+            <p className="text-xs text-text-muted">{rows.length} rows found. Showing first {Math.min(5, rows.length)}:</p>
 
             {/* Column mapping */}
             <div className="space-y-2">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted">Column Mapping</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">Column Mapping</p>
               <div className="grid grid-cols-2 gap-2">
                 {CSV_COLUMNS.map(col => (
                   <div key={col} className="flex items-center gap-2">
-                    <span className="text-[10px] w-28 text-muted">{col}</span>
+                    <span className="text-[10px] w-28 text-text-muted">{col}</span>
                     <select
                       value={columnMap[col] || ""}
                       onChange={e => setColumnMap(m => ({ ...m, [col]: e.target.value }))}
@@ -239,15 +239,15 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
             <div className="overflow-x-auto">
               <table className="w-full text-[9px]">
                 <thead>
-                  <tr className="border-b border-border">
+                  <tr className="border-b border-border-subtle">
                     {csvHeaders.map(h => (
-                      <th key={h} className="text-left p-1.5 text-muted font-semibold">{h}</th>
+                      <th key={h} className="text-left p-1.5 text-text-muted font-semibold">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {previewRows.map((row, i) => (
-                    <tr key={i} className="border-b border-border/50">
+                    <tr key={i} className="border-b border-border-subtle/50">
                       {csvHeaders.map(h => (
                         <td key={h} className="p-1.5 max-w-[120px] truncate">{row[h]}</td>
                       ))}
@@ -270,7 +270,7 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
         {step === "importing" && (
           <div className="flex flex-col items-center justify-center py-10 gap-3">
             <Loader size={24} className="animate-spin text-brand-accent" />
-            <p className="text-xs text-muted">Importing {rows.length} leads...</p>
+            <p className="text-xs text-text-muted">Importing {rows.length} leads...</p>
           </div>
         )}
 
@@ -282,8 +282,8 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
             </div>
             <p className="text-sm font-semibold">Import Complete</p>
             <div className="flex justify-center gap-6 text-xs">
-              <div><span className="text-green-400 font-bold text-lg">{result.imported}</span><p className="text-muted text-[9px]">Imported</p></div>
-              <div><span className="text-yellow-400 font-bold text-lg">{result.skipped}</span><p className="text-muted text-[9px]">Skipped</p></div>
+              <div><span className="text-green-400 font-bold text-lg">{result.imported}</span><p className="text-text-muted text-[9px]">Imported</p></div>
+              <div><span className="text-yellow-400 font-bold text-lg">{result.skipped}</span><p className="text-text-muted text-[9px]">Skipped</p></div>
             </div>
             <button onClick={() => { onSuccess(); onClose(); }} className="btn-primary text-xs mt-2">Done</button>
           </div>
@@ -329,34 +329,34 @@ function AddLeadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-      <div className="card w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+      <div className="glass rounded-xl p-4 w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold flex items-center gap-2"><UserPlus size={14} className="text-brand-accent" /> Add Lead</h2>
-          <button onClick={onClose} className="p-1 rounded hover:bg-white/[0.06] text-muted hover:text-foreground"><X size={14} /></button>
+          <button onClick={onClose} className="p-1 rounded hover:bg-white/[0.06] text-text-muted hover:text-text-primary"><X size={14} /></button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
           {/* Business Name */}
           <div>
-            <label className="text-[10px] text-muted block mb-1">Business Name <span className="text-red-400">*</span></label>
+            <label className="text-[10px] text-text-muted block mb-1">Business Name <span className="text-red-400">*</span></label>
             <input value={form.business_name} onChange={e => set("business_name", e.target.value)} className="input w-full text-xs" placeholder="Acme Corp" />
           </div>
 
           {/* Email + Phone row */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] text-muted block mb-1">Email</label>
+              <label className="text-[10px] text-text-muted block mb-1">Email</label>
               <input type="email" value={form.email} onChange={e => set("email", e.target.value)} className="input w-full text-xs" placeholder="hello@acme.com" />
             </div>
             <div>
-              <label className="text-[10px] text-muted block mb-1">Phone</label>
+              <label className="text-[10px] text-text-muted block mb-1">Phone</label>
               <input value={form.phone} onChange={e => set("phone", e.target.value)} className="input w-full text-xs" placeholder="+1 555 123 4567" />
             </div>
           </div>
 
           {/* Industry dropdown */}
           <div>
-            <label className="text-[10px] text-muted block mb-1">Industry</label>
+            <label className="text-[10px] text-text-muted block mb-1">Industry</label>
             <select value={form.industry} onChange={e => set("industry", e.target.value)} className="input w-full text-xs">
               <option value="">Select industry...</option>
               {INDUSTRY_OPTIONS.map(i => <option key={i} value={i}>{i}</option>)}
@@ -366,11 +366,11 @@ function AddLeadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
           {/* City + State row */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] text-muted block mb-1">City</label>
+              <label className="text-[10px] text-text-muted block mb-1">City</label>
               <input value={form.city} onChange={e => set("city", e.target.value)} className="input w-full text-xs" placeholder="Miami" />
             </div>
             <div>
-              <label className="text-[10px] text-muted block mb-1">State</label>
+              <label className="text-[10px] text-text-muted block mb-1">State</label>
               <input value={form.state} onChange={e => set("state", e.target.value)} className="input w-full text-xs" placeholder="FL" />
             </div>
           </div>
@@ -378,13 +378,13 @@ function AddLeadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
           {/* Source + Status row */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] text-muted block mb-1">Source</label>
+              <label className="text-[10px] text-text-muted block mb-1">Source</label>
               <select value={form.source} onChange={e => set("source", e.target.value)} className="input w-full text-xs">
                 {SOURCE_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-[10px] text-muted block mb-1">Status</label>
+              <label className="text-[10px] text-text-muted block mb-1">Status</label>
               <select value={form.status} onChange={e => set("status", e.target.value)} className="input w-full text-xs">
                 {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
               </select>
@@ -393,13 +393,13 @@ function AddLeadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
 
           {/* Website */}
           <div>
-            <label className="text-[10px] text-muted block mb-1">Website</label>
+            <label className="text-[10px] text-text-muted block mb-1">Website</label>
             <input value={form.website} onChange={e => set("website", e.target.value)} className="input w-full text-xs" placeholder="https://acme.com" />
           </div>
 
           {/* Notes */}
           <div>
-            <label className="text-[10px] text-muted block mb-1">Notes</label>
+            <label className="text-[10px] text-text-muted block mb-1">Notes</label>
             <textarea value={form.notes} onChange={e => set("notes", e.target.value)} className="input w-full text-xs resize-none" rows={3} placeholder="Any additional info..." />
           </div>
 
@@ -424,7 +424,7 @@ function ScoreBadge({ score, onClick }: { score: number | null; onClick?: () => 
     return (
       <button
         onClick={(e) => { e.stopPropagation(); onClick?.(); }}
-        className="text-[9px] px-2 py-0.5 rounded bg-white/[0.04] text-muted hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent border border-dashed border-border transition-all"
+        className="text-[9px] px-2 py-0.5 rounded bg-white/[0.04] text-text-muted hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent border border-dashed border-border-subtle transition-all"
         title="Score this lead with AI"
       >
         Score
@@ -455,7 +455,7 @@ function ScoreBreakdownBars({ breakdown }: { breakdown: ScoreBreakdown }) {
       {items.map((item) => (
         <div key={item.label}>
           <div className="flex justify-between text-[9px] mb-0.5">
-            <span className="text-muted">{item.label}</span>
+            <span className="text-text-muted">{item.label}</span>
             <span className="font-semibold">{item.value}/{item.max}</span>
           </div>
           <div className="w-full bg-surface-light rounded-full h-1.5">
@@ -494,7 +494,7 @@ function LeadDetailPanel({
   const qualScore = qualChecks.filter((q) => q.ok).length;
 
   return (
-    <div className="relative flex flex-col gap-3 rounded-xl border border-border bg-[#131827] p-4 shadow-2xl">
+    <div className="relative flex flex-col gap-3 rounded-xl border border-border-subtle bg-[#131827] p-4 shadow-2xl">
       {/* Close */}
       <button
         type="button"
@@ -797,7 +797,7 @@ export default function LeadEnginePage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-4">{/* Modals */}{showImportModal && <ImportCSVModal onClose={() => setShowImportModal(false)} onSuccess={fetchLeads} />}{showAddModal && <AddLeadModal onClose={() => setShowAddModal(false)} onSuccess={fetchLeads} />}{/* Header */}{/* -- Leads command strip (slim editorial header, no PageHero) -- */}
+    <MotionPage className="space-y-4">{/* Modals */}{showImportModal && <ImportCSVModal onClose={() => setShowImportModal(false)} onSuccess={fetchLeads} />}{showAddModal && <AddLeadModal onClose={() => setShowAddModal(false)} onSuccess={fetchLeads} />}{/* Header */}{/* -- Leads command strip (slim editorial header, no PageHero) -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0 flex items-center gap-3">
           <div>
@@ -833,7 +833,7 @@ export default function LeadEnginePage() {
               title="Lead Stats"
               summary={
                 <>
-                  <span><span className="text-foreground font-semibold">{totalLeads}</span> total</span>
+                  <span><span className="text-text-primary font-semibold">{totalLeads}</span> total</span>
                   <span className="opacity-30">�</span>
                   <span><span className="text-red-400 font-semibold">{hotLeads}</span> hot</span>
                   <span className="opacity-30">�</span>
@@ -922,7 +922,7 @@ export default function LeadEnginePage() {
                 {/* Filters (sticky) */}
                 <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex flex-wrap gap-2 py-2">
                   <div className="relative flex-1 min-w-[200px]">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                     <input type="text" placeholder="Search leads..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="input glass w-full pl-9 text-xs" />
                   </div>
                   <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="input text-xs">
@@ -943,7 +943,7 @@ export default function LeadEnginePage() {
                     className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
                       highPriorityOnly
                         ? "bg-green-400/10 border-green-400/30 text-green-400"
-                        : "border-border text-muted hover:border-[rgba(59,130,246,0.1)] hover:text-foreground"
+                        : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.1)] hover:text-text-primary"
                     }`}
                   >
                     <Flame size={11} /> High priority (70+)
@@ -954,7 +954,7 @@ export default function LeadEnginePage() {
                     className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
                       sortByScore
                         ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent"
-                        : "border-border text-muted hover:border-[rgba(59,130,246,0.1)] hover:text-foreground"
+                        : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.1)] hover:text-text-primary"
                     }`}
                   >
                     <Target size={11} /> Sort by score
@@ -966,7 +966,7 @@ export default function LeadEnginePage() {
                 <div className="min-w-0 flex-1 space-y-1.5">
                   <div className="overflow-x-auto -mx-1 px-1">
                   <div className="min-w-[600px]">
-                  <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-2 px-3">
+                  <div className="grid grid-cols-12 text-[9px] text-text-muted uppercase tracking-wider font-semibold py-2 px-3">
                     <span className="col-span-3">Business</span>
                     <span className="col-span-2">Contact</span>
                     <span>Source</span>
@@ -1033,17 +1033,17 @@ export default function LeadEnginePage() {
                         className={`grid grid-cols-12 items-center py-1.5 px-3 rounded-lg border transition-all cursor-pointer text-[10px] ${
                           selectedLead?.id === lead.id
                             ? "bg-[rgba(59,130,246,0.10)] border-[rgba(59,130,246,0.28)]"
-                            : "bg-surface-light border-border hover:border-border"
+                            : "bg-surface-light border-border-subtle hover:border-border-subtle"
                         }`}>
                         <div className="col-span-3">
                           <p className="text-xs font-semibold">{lead.business_name}</p>
-                          <p className="text-[9px] text-muted">{lead.industry || "Unknown"} | {lead.city || "N/A"}</p>
+                          <p className="text-[9px] text-text-muted">{lead.industry || "Unknown"} | {lead.city || "N/A"}</p>
                         </div>
                         <div className="col-span-2">
-                          <p className="text-muted flex items-center gap-1 truncate"><Mail size={9} /> {lead.email || "---"}</p>
-                          <p className="text-muted flex items-center gap-1"><Phone size={9} /> {lead.phone || "---"}</p>
+                          <p className="text-text-muted flex items-center gap-1 truncate"><Mail size={9} /> {lead.email || "---"}</p>
+                          <p className="text-text-muted flex items-center gap-1"><Phone size={9} /> {lead.phone || "---"}</p>
                         </div>
-                        <span className="text-muted">{lead.source || "---"}</span>
+                        <span className="text-text-muted">{lead.source || "---"}</span>
                         <div className="text-center flex items-center justify-center">
                           {scoringLeads.has(lead.id) ? (
                             <Loader size={12} className="animate-spin text-brand-accent" />
@@ -1057,20 +1057,20 @@ export default function LeadEnginePage() {
                           lead.status === "qualified" ? "bg-blue-400/10 text-blue-400" :
                           lead.status === "contacted" || lead.status === "called" ? "bg-yellow-400/10 text-yellow-400" :
                           lead.status === "replied" ? "bg-emerald-400/10 text-emerald-400" :
-                          "bg-white/[0.05] text-muted"
+                          "bg-white/[0.05] text-text-muted"
                         }`}>{lead.status || "new"}</span>
                         <div className="text-center flex items-center justify-center gap-0.5">
                           {lead.google_rating ? (
                             <>
                               <Star size={9} className="text-brand-accent" />
                               <span>{lead.google_rating}</span>
-                              <span className="text-muted">({lead.review_count ?? 0})</span>
+                              <span className="text-text-muted">({lead.review_count ?? 0})</span>
                             </>
                           ) : (
-                            <span className="text-muted">---</span>
+                            <span className="text-text-muted">---</span>
                           )}
                         </div>
-                        <div className="col-span-2 text-muted truncate">
+                        <div className="col-span-2 text-text-muted truncate">
                           {[lead.city, lead.state].filter(Boolean).join(", ") || "---"}
                         </div>
                         <div className="flex items-center justify-center gap-1" onClick={(e) => e.stopPropagation()}>
@@ -1078,27 +1078,27 @@ export default function LeadEnginePage() {
                             href={lead.phone ? `tel:${lead.phone}` : undefined}
                             onClick={(e) => { if (!lead.phone) { e.preventDefault(); toast.error("No phone number"); } }}
                             aria-label={lead.phone ? `Call ${lead.business_name}` : "No phone number"}
-                            className={`p-1 rounded hover:bg-white/[0.05] text-muted hover:text-brand-accent ${!lead.phone ? "opacity-40 cursor-not-allowed" : ""}`}
+                            className={`p-1 rounded hover:bg-white/[0.05] text-text-muted hover:text-brand-accent ${!lead.phone ? "opacity-40 cursor-not-allowed" : ""}`}
                             title={lead.phone || "No phone"}
                           ><Phone size={10} /></a>
                           <a
                             href={lead.email ? `mailto:${lead.email}` : undefined}
                             onClick={(e) => { if (!lead.email) { e.preventDefault(); toast.error("No email"); } }}
                             aria-label={lead.email ? `Email ${lead.business_name}` : "No email address"}
-                            className={`p-1 rounded hover:bg-white/[0.05] text-muted hover:text-brand-accent ${!lead.email ? "opacity-40 cursor-not-allowed" : ""}`}
+                            className={`p-1 rounded hover:bg-white/[0.05] text-text-muted hover:text-brand-accent ${!lead.email ? "opacity-40 cursor-not-allowed" : ""}`}
                             title={lead.email || "No email"}
                           ><Mail size={10} /></a>
                           <Link
                             href="/dashboard/dm-controller"
                             aria-label={`Send DM to ${lead.business_name}`}
-                            className="p-1 rounded hover:bg-white/[0.05] text-muted hover:text-brand-accent"
+                            className="p-1 rounded hover:bg-white/[0.05] text-text-muted hover:text-brand-accent"
                             title="DM via DM Controller"
                           ><MessageSquare size={10} /></Link>
                         </div>
                       </div>
                       {/* Expanded drawer � score breakdown + qualification */}
                       {expandedLead === lead.id && (
-                        <div className="ml-4 mt-2 mb-3 p-3 rounded-lg bg-surface border border-border space-y-3">
+                        <div className="ml-4 mt-2 mb-3 p-3 rounded-lg bg-surface border border-border-subtle space-y-3">
                           {/* AI Score Breakdown */}
                           <div>
                             <div className="flex items-center justify-between mb-2">
@@ -1106,8 +1106,8 @@ export default function LeadEnginePage() {
                                 <Target size={10} className="text-brand-accent" /> AI Score Breakdown
                               </h4>
                               {lead.score !== null ? (
-                                <span className="text-[9px] text-muted">
-                                  Total: <span className="font-bold text-foreground">{lead.score}/100</span>
+                                <span className="text-[9px] text-text-muted">
+                                  Total: <span className="font-bold text-text-primary">{lead.score}/100</span>
                                 </span>
                               ) : (
                                 <button
@@ -1123,21 +1123,21 @@ export default function LeadEnginePage() {
                             {lead.score_breakdown ? (
                               <ScoreBreakdownBars breakdown={lead.score_breakdown} />
                             ) : (
-                              <p className="text-[9px] text-muted italic">No AI score yet � click &ldquo;Score now&rdquo; above.</p>
+                              <p className="text-[9px] text-text-muted italic">No AI score yet � click &ldquo;Score now&rdquo; above.</p>
                             )}
                             {lead.score_reasoning && (
-                              <p className="text-[9px] text-muted mt-2 italic">{lead.score_reasoning}</p>
+                              <p className="text-[9px] text-text-muted mt-2 italic">{lead.score_reasoning}</p>
                             )}
                           </div>
 
                           {/* Engagement Timeline */}
-                          <div className="pt-2 border-t border-border">
+                          <div className="pt-2 border-t border-border-subtle">
                             <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5"><Clock size={10} /> Engagement Timeline</h4>
-                            <div className="text-center py-3 text-muted text-[9px]">No engagement data yet.</div>
+                            <div className="text-center py-3 text-text-muted text-[9px]">No engagement data yet.</div>
                           </div>
 
                           {/* Qualification Checklist */}
-                          <div className="pt-2 border-t border-border">
+                          <div className="pt-2 border-t border-border-subtle">
                             <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5"><CheckCircle size={10} /> Qualification Checklist</h4>
                             <div className="grid grid-cols-2 gap-1">
                               {[
@@ -1150,7 +1150,7 @@ export default function LeadEnginePage() {
                               ].map((q, i) => (
                                 <div key={i} className="flex items-center gap-1.5 text-[9px]">
                                   {q.check ? <CheckCircle size={9} className="text-green-400" /> : <div className="w-2.5 h-2.5 rounded border border-muted" />}
-                                  <span className={q.check ? "" : "text-muted"}>{q.item}</span>
+                                  <span className={q.check ? "" : "text-text-muted"}>{q.item}</span>
                                 </div>
                               ))}
                             </div>
@@ -1182,19 +1182,19 @@ export default function LeadEnginePage() {
                 {/* Pagination */}
                 {!loading && totalPages > 1 && (
                   <div className="flex items-center justify-between pt-3">
-                    <p className="text-[10px] text-muted">
+                    <p className="text-[10px] text-text-muted">
                       Showing {((page - 1) * LIMIT) + 1}�{Math.min(page * LIMIT, totalCount)} of {totalCount.toLocaleString()} leads
                     </p>
                     <div className="flex items-center gap-2">
                       <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
-                        className="p-1.5 rounded-lg border border-border hover:border-[rgba(59,130,246,0.2)] disabled:opacity-30 transition-all">
+                        className="p-1.5 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.2)] disabled:opacity-30 transition-all">
                         <ChevronLeft size={14} />
                       </button>
-                      <span className="text-xs font-mono text-muted">
+                      <span className="text-xs font-mono text-text-muted">
                         {page} / {totalPages}
                       </span>
                       <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}
-                        className="p-1.5 rounded-lg border border-border hover:border-[rgba(59,130,246,0.2)] disabled:opacity-30 transition-all">
+                        className="p-1.5 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.2)] disabled:opacity-30 transition-all">
                         <ChevronRightIcon size={14} />
                       </button>
                     </div>
@@ -1202,18 +1202,18 @@ export default function LeadEnginePage() {
                 )}
 
                 {/* Duplicate Detection */}
-                <div className="card">
+                <div className="glass rounded-xl p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                     <Layers size={14} className="text-yellow-400" /> Duplicate Detection
                   </h3>
-                  <div className="text-center py-8 text-muted text-xs">No duplicates detected.</div>
+                  <div className="text-center py-8 text-text-muted text-xs">No duplicates detected.</div>
                 </div>
               </div>
             )}{/* ===== LEAD SCORING MATRIX ===== */}{activeTab === "scoring" && (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {/* Scoring Rules */}
-                  <div className="card">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Target size={14} className="text-brand-accent" /> Scoring Matrix
                     </h3>
@@ -1234,7 +1234,7 @@ export default function LeadEnginePage() {
                       ].map((r, i) => (
                         <div key={i} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
                           <div className="flex items-center gap-2">
-                            <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/[0.04] text-muted">{r.category}</span>
+                            <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/[0.04] text-text-muted">{r.category}</span>
                             <span>{r.factor}</span>
                           </div>
                           <span className={`font-bold ${r.points.startsWith("+") ? "text-green-400" : "text-red-400"}`}>{r.points}</span>
@@ -1243,7 +1243,7 @@ export default function LeadEnginePage() {
                     </div>
                   </div>
                   {/* Score Distribution */}
-                  <div className="card">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-sm font-semibold mb-3">Score Distribution</h3>
                     <div className="space-y-3">
                       {[
@@ -1255,7 +1255,7 @@ export default function LeadEnginePage() {
                         <div key={i}>
                           <div className="flex justify-between text-[10px] mb-1">
                             <span>{d.range}</span>
-                            <span className="text-muted">{d.count} leads ({d.pct}%)</span>
+                            <span className="text-text-muted">{d.count} leads ({d.pct}%)</span>
                           </div>
                           <div className="w-full bg-surface-light rounded-full h-2">
                             <div className={`${d.color} rounded-full h-2`} style={{ width: `${d.pct}%` }} />
@@ -1264,7 +1264,7 @@ export default function LeadEnginePage() {
                       ))}
                     </div>
                     {/* Hot Lead Alerts */}
-                    <div className="mt-4 pt-4 border-t border-border">
+                    <div className="mt-4 pt-4 border-t border-border-subtle">
                       <h4 className="text-xs font-semibold mb-2 flex items-center gap-2">
                         <Bell size={12} className="text-red-400" /> Hot Lead Alerts
                       </h4>
@@ -1274,7 +1274,7 @@ export default function LeadEnginePage() {
                             <div className="flex items-center gap-2">
                               <Flame size={10} className="text-red-400" />
                               <span className="font-semibold">{lead.business_name}</span>
-                              <span className="text-muted">Score: {lead.lead_score}</span>
+                              <span className="text-text-muted">Score: {lead.lead_score}</span>
                             </div>
                             <Link href={`/dashboard/crm?leadId=${lead.id}`} className="text-[9px] px-2 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)]">Open in CRM</Link>
                           </div>
@@ -1298,12 +1298,12 @@ export default function LeadEnginePage() {
                     { condition: "No phone number", action: "Route to email nurture sequence", priority: "Medium", active: true },
                     { condition: "Score < 30", action: "Add to cold storage (revisit in 30d)", priority: "Low", active: true },
                   ].map((rule, i) => (
-                    <div key={i} className={`card p-4 flex items-center justify-between ${!rule.active ? "opacity-50" : ""}`}>
+                    <div key={i} className={`glass rounded-xl p-4 flex items-center justify-between ${!rule.active ? "opacity-50" : ""}`}>
                       <div className="flex items-center gap-3">
                         <div className={`w-2 h-2 rounded-full ${rule.priority === "High" ? "bg-red-400" : rule.priority === "Medium" ? "bg-yellow-400" : "bg-blue-400"}`} />
                         <div>
                           <p className="text-xs font-semibold">If: {rule.condition}</p>
-                          <p className="text-[10px] text-muted">Then: {rule.action}</p>
+                          <p className="text-[10px] text-text-muted">Then: {rule.action}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -1323,14 +1323,14 @@ export default function LeadEnginePage() {
                 <h3 className="text-sm font-semibold flex items-center gap-2">
                   <BarChart3 size={14} className="text-brand-accent" /> Lead Source Attribution
                 </h3>
-                <div className="text-center py-12 text-muted text-xs">No source attribution data yet.</div>
+                <div className="text-center py-12 text-text-muted text-xs">No source attribution data yet.</div>
               </div>
             )}{/* ===== NURTURE SEQUENCES ===== */}{activeTab === "nurture" && (
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold flex items-center gap-2">
                   <Mail size={14} className="text-brand-accent" /> Lead Nurture Sequences
                 </h3>
-                <div className="text-center py-12 text-muted text-xs">No nurture sequences configured yet.</div>
+                <div className="text-center py-12 text-text-muted text-xs">No nurture sequences configured yet.</div>
               </div>
             )}{/* ===== ENRICHMENT ===== */}{activeTab === "enrichment" && (
               <div className="space-y-4">
@@ -1352,14 +1352,14 @@ export default function LeadEnginePage() {
                   ].map((s, index) => (
                     <PrismPanel key={index} padding="p-3" className="text-center" delay={index * 0.06}>
                       <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
-                      <p className="text-[9px] text-muted">{s.label}</p>
-                      <p className="text-[8px] text-muted">of {s.total} leads</p>
+                      <p className="text-[9px] text-text-muted">{s.label}</p>
+                      <p className="text-[8px] text-text-muted">of {s.total} leads</p>
                     </PrismPanel>
                   ))}
                 </div>
                 <div className="space-y-1.5">
                   {leads.length === 0 && (
-                    <div className="text-center py-8 text-muted text-xs">No leads to enrich yet.</div>
+                    <div className="text-center py-8 text-text-muted text-xs">No leads to enrich yet.</div>
                   )}
                   {leads.map((lead, index) => (
                     <motion.div
@@ -1378,7 +1378,7 @@ export default function LeadEnginePage() {
                         </div>
                         <div>
                           <p className="font-semibold">{lead.business_name}</p>
-                          <p className="text-[9px] text-muted">{lead.industry || "Unknown"} | {lead.city || "N/A"}</p>
+                          <p className="text-[9px] text-text-muted">{lead.industry || "Unknown"} | {lead.city || "N/A"}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
@@ -1413,7 +1413,7 @@ export default function LeadEnginePage() {
                     <div key={i} className="w-full max-w-2xl">
                       <div className="flex items-center justify-between mb-1 text-[10px]">
                         <span className="font-semibold">{s.stage}</span>
-                        <span className="text-muted">{s.count} ({s.pct}%)</span>
+                        <span className="text-text-muted">{s.count} ({s.pct}%)</span>
                       </div>
                       <div className="w-full bg-surface-light rounded-full h-6 overflow-hidden">
                         <div className={`${s.color} h-6 rounded-full flex items-center justify-center`} style={{ width: `${s.pct}%` }}>
@@ -1422,8 +1422,8 @@ export default function LeadEnginePage() {
                       </div>
                       {i < 5 && (
                         <div className="flex justify-center my-1">
-                          <ArrowDownRight size={12} className="text-muted/30" />
-                          <span className="text-[8px] text-muted ml-1">
+                          <ArrowDownRight size={12} className="text-text-muted/30" />
+                          <span className="text-[8px] text-text-muted ml-1">
                             {i === 0 ? "0% contact rate" : i === 1 ? "0% reply rate" : i === 2 ? "0% qualify rate" : i === 3 ? "0% book rate" : "0% close rate"}
                           </span>
                         </div>
@@ -1436,7 +1436,7 @@ export default function LeadEnginePage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {/* Lead Tagging System */}
-                  <div className="card">
+                  <div className="glass rounded-xl p-4">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                       <Tag size={14} className="text-brand-accent" /> Lead Tagging System
                     </h3>
@@ -1454,7 +1454,7 @@ export default function LeadEnginePage() {
                     </div>
                   </div>
                   {/* Hot Lead Alerts Config */}
-                  <div className="card">
+                  <div className="glass rounded-xl p-4">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-sm font-semibold flex items-center gap-2">
                         <Bell size={14} className="text-red-400" /> Hot Lead Alert Settings
@@ -1474,7 +1474,7 @@ export default function LeadEnginePage() {
                         <div key={i} className={`flex items-center justify-between p-2.5 rounded-lg bg-surface-light text-[10px] ${!alert.active ? "opacity-50" : ""}`}>
                           <div>
                             <p className="font-semibold">{alert.trigger}</p>
-                            <p className="text-[9px] text-muted">Notify via: {alert.channel}</p>
+                            <p className="text-[9px] text-text-muted">Notify via: {alert.channel}</p>
                           </div>
                           <div className={`w-6 h-3 rounded-full ${alert.active ? "bg-green-400" : "bg-surface"}`}>
                             <div className={`w-2.5 h-2.5 bg-white rounded-full mt-px ${alert.active ? "ml-3" : "ml-0.5"}`} />

@@ -100,14 +100,14 @@ export default function ProductionPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Content Production command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Content Production command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">PRODUCTION</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Content Production</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <button onClick={() => setShowSubmit(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
+        <button onClick={() => setShowSubmit(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
                   <Plus size={12} /> New Request
                 </button>
       </div>
@@ -155,7 +155,7 @@ export default function ProductionPage() {
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-                    tab === t.id ? "bg-[rgba(59,130,246,0.08)] text-brand-accent font-medium" : "text-muted hover:text-foreground"
+                    tab === t.id ? "bg-[rgba(59,130,246,0.08)] text-brand-accent font-medium" : "text-text-muted hover:text-text-primary"
                   }`}>
                   {t.icon} {t.label}
                 </button>
@@ -185,7 +185,7 @@ export default function ProductionPage() {
                     >
                       <div className="flex items-center gap-2 mb-2">
                         <span className={`text-xs font-bold ${STATUS_CONFIG[status].color}`}>{STATUS_CONFIG[status].label}</span>
-                        <span className="text-[10px] text-muted">({filtered.filter(i => i.status === status).length})</span>
+                        <span className="text-[10px] text-text-muted">({filtered.filter(i => i.status === status).length})</span>
                       </div>
                       <div className="space-y-2">
                         {filtered.filter(i => i.status === status).map((item, i) => (
@@ -204,13 +204,13 @@ export default function ProductionPage() {
                                 <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${PRIORITY_CONFIG[item.priority].bg} ${PRIORITY_CONFIG[item.priority].color}`}>
                                   {PRIORITY_CONFIG[item.priority].label}
                                 </span>
-                                <span className="text-[9px] text-muted">{item.type}</span>
+                                <span className="text-[9px] text-text-muted">{item.type}</span>
                               </div>
                               <p className="text-xs font-semibold mb-0.5">{item.title}</p>
-                              <p className="text-[10px] text-muted mb-2">{item.client}</p>
+                              <p className="text-[10px] text-text-muted mb-2">{item.client}</p>
                               {/* Checklist progress */}
                               <div className="mb-2">
-                                <div className="flex items-center justify-between text-[9px] text-muted mb-0.5">
+                                <div className="flex items-center justify-between text-[9px] text-text-muted mb-0.5">
                                   <span>{item.checklist.filter(c => c.done).length}/{item.checklist.length} tasks</span>
                                   <span>{item.actualHours}h / {item.estimatedHours}h</span>
                                 </div>
@@ -221,9 +221,9 @@ export default function ProductionPage() {
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-1">
                                   <div className="w-5 h-5 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[8px] font-bold text-brand-accent">{item.assignee[0]}</div>
-                                  <span className="text-[9px] text-muted">{item.assignee}</span>
+                                  <span className="text-[9px] text-text-muted">{item.assignee}</span>
                                 </div>
-                                <span className={`text-[9px] ${item.dueDate < new Date().toISOString().slice(0, 10) && item.status !== "delivered" ? "text-red-400" : "text-muted"}`}>
+                                <span className={`text-[9px] ${item.dueDate < new Date().toISOString().slice(0, 10) && item.status !== "delivered" ? "text-red-400" : "text-text-muted"}`}>
                                   {item.dueDate.slice(5)}
                                 </span>
                               </div>
@@ -243,13 +243,13 @@ export default function ProductionPage() {
                   transition={{ duration: 0.4 }}
                   className="glass rounded-xl"
                 >
-                  <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-brand-accent" /> Production Calendar</h2>
+                  <h2 className="flex items-center gap-2"><Calendar size={13} className="text-brand-accent" /> Production Calendar</h2>
                   <div className="space-y-2">
                     {Array.from(new Set(items.map(i => i.dueDate))).sort().map(date => {
                       const dayItems = filtered.filter(i => i.dueDate === date);
                       const isOverdue = date < new Date().toISOString().slice(0, 10);
                       return (
-                        <div key={date} className="p-3 rounded-lg bg-surface-light border border-border">
+                        <div key={date} className="p-3 rounded-lg bg-surface-light border border-border-subtle">
                           <div className="flex items-center gap-2 mb-2">
                             <Calendar size={12} className={isOverdue ? "text-red-400" : "text-brand-accent"} />
                             <span className={`text-xs font-bold ${isOverdue ? "text-red-400" : ""}`}>
@@ -262,7 +262,7 @@ export default function ProductionPage() {
                               <div key={item.id} className="flex items-center gap-2 text-[11px]">
                                 <span className={`${PRIORITY_CONFIG[item.priority].color}`}><Flag size={10} /></span>
                                 <span className="font-medium">{item.title}</span>
-                                <span className="text-muted">- {item.client}</span>
+                                <span className="text-text-muted">- {item.client}</span>
                                 <span className={`text-[9px] ml-auto ${STATUS_CONFIG[item.status].color}`}>{STATUS_CONFIG[item.status].label}</span>
                               </div>
                             ))}
@@ -279,7 +279,7 @@ export default function ProductionPage() {
                   transition={{ duration: 0.4, delay: 0.06 }}
                   className="glass rounded-xl"
                 >
-                  <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-brand-accent" /> Time: Estimated vs Actual</h2>
+                  <h2 className="flex items-center gap-2"><Clock size={13} className="text-brand-accent" /> Time: Estimated vs Actual</h2>
                   <div className="space-y-2">
                     {items.filter(i => i.actualHours > 0).map(item => {
                       const pctEst = (item.estimatedHours / Math.max(totalEstimated, 1)) * 100;
@@ -313,14 +313,14 @@ export default function ProductionPage() {
                   transition={{ duration: 0.4, delay: 0.12 }}
                   className="glass rounded-xl"
                 >
-                  <h2 className="section-header flex items-center gap-2"><AlertTriangle size={13} className="text-yellow-400" /> Bottleneck Analysis</h2>
+                  <h2 className="flex items-center gap-2"><AlertTriangle size={13} className="text-yellow-400" /> Bottleneck Analysis</h2>
                   <div className="space-y-2">
                     {bottlenecks.map(([status, count]) => (
-                      <div key={status} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
+                      <div key={status} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border-subtle">
                         <AlertTriangle size={14} className="text-yellow-400" />
                         <div className="flex-1">
                           <p className="text-xs font-semibold">{STATUS_CONFIG[status as KanbanStatus]?.label || status}</p>
-                          <p className="text-[10px] text-muted">{count} items stuck in this stage</p>
+                          <p className="text-[10px] text-text-muted">{count} items stuck in this stage</p>
                         </div>
                         <span className={`text-sm font-bold ${count > 2 ? "text-red-400" : "text-yellow-400"}`}>{count}</span>
                       </div>
@@ -336,25 +336,25 @@ export default function ProductionPage() {
                   transition={{ duration: 0.4 }}
                   className="glass rounded-xl"
                 >
-                  <h2 className="section-header flex items-center gap-2"><MessageSquare size={13} className="text-brand-accent" /> Daily Standup Summary</h2>
-                  <p className="text-[10px] text-muted mb-3">{new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</p>
+                  <h2 className="flex items-center gap-2"><MessageSquare size={13} className="text-brand-accent" /> Daily Standup Summary</h2>
+                  <p className="text-[10px] text-text-muted mb-3">{new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</p>
                   <div className="space-y-3">
                     {Array.from(new Set(items.map(i => i.assignee))).filter(Boolean).map(name => {
                       const memberItems = items.filter(i => i.assignee === name);
                       const inProg = memberItems.filter(i => i.status === "in_progress");
                       const review = memberItems.filter(i => i.status === "review");
                       return (
-                        <div key={name} className="p-3 rounded-lg bg-surface-light border border-border">
+                        <div key={name} className="p-3 rounded-lg bg-surface-light border border-border-subtle">
                           <div className="flex items-center gap-2 mb-2">
                             <div className="w-7 h-7 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[10px] font-bold text-brand-accent">{name[0]}</div>
                             <span className="text-xs font-bold">{name}</span>
-                            <span className="text-[9px] text-muted ml-auto">{memberItems.length} items</span>
+                            <span className="text-[9px] text-text-muted ml-auto">{memberItems.length} items</span>
                           </div>
                           {inProg.length > 0 && (
                             <div className="mb-1">
                               <p className="text-[9px] text-brand-accent font-semibold mb-0.5">Working On:</p>
                               {inProg.map(i => (
-                                <p key={i.id} className="text-[10px] text-muted ml-3">- {i.title} ({i.client})</p>
+                                <p key={i.id} className="text-[10px] text-text-muted ml-3">- {i.title} ({i.client})</p>
                               ))}
                             </div>
                           )}
@@ -362,7 +362,7 @@ export default function ProductionPage() {
                             <div>
                               <p className="text-[9px] text-brand-accent font-semibold mb-0.5">Awaiting Review:</p>
                               {review.map(i => (
-                                <p key={i.id} className="text-[10px] text-muted ml-3">- {i.title} ({i.client})</p>
+                                <p key={i.id} className="text-[10px] text-text-muted ml-3">- {i.title} ({i.client})</p>
                               ))}
                             </div>
                           )}
@@ -380,14 +380,14 @@ export default function ProductionPage() {
                   transition={{ duration: 0.4 }}
                   className="glass rounded-xl"
                 >
-                  <h2 className="section-header flex items-center gap-2"><CheckCircle size={13} className="text-brand-accent" /> Review & Approval Queue</h2>
+                  <h2 className="flex items-center gap-2"><CheckCircle size={13} className="text-brand-accent" /> Review & Approval Queue</h2>
                   <div className="space-y-2">
                     {items.filter(i => i.status === "review").map(item => (
-                      <div key={item.id} className="p-4 rounded-lg bg-surface-light border border-border">
+                      <div key={item.id} className="p-4 rounded-lg bg-surface-light border border-border-subtle">
                         <div className="flex items-center justify-between mb-2">
                           <div>
                             <p className="text-xs font-bold">{item.title}</p>
-                            <p className="text-[10px] text-muted">{item.client} - by {item.assignee}</p>
+                            <p className="text-[10px] text-text-muted">{item.client} - by {item.assignee}</p>
                           </div>
                           <span className={`text-[9px] px-2 py-0.5 rounded-full ${PRIORITY_CONFIG[item.priority].bg} ${PRIORITY_CONFIG[item.priority].color}`}>
                             {PRIORITY_CONFIG[item.priority].label}
@@ -395,13 +395,13 @@ export default function ProductionPage() {
                         </div>
                         {/* Asset Checklist */}
                         <div className="mb-3">
-                          <p className="text-[9px] text-muted uppercase tracking-wider font-semibold mb-1">Asset Checklist</p>
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider font-semibold mb-1">Asset Checklist</p>
                           <div className="grid grid-cols-2 gap-1">
                             {item.checklist.map((task, idx) => (
                               <button key={idx} onClick={() => toggleChecklist(item.id, idx)}
                                 className="flex items-center gap-1.5 text-[10px] p-1 rounded hover:bg-[rgba(0,0,0,0.03)]">
-                                <CheckCircle size={10} className={task.done ? "text-emerald-400" : "text-muted/30"} />
-                                <span className={task.done ? "line-through text-muted" : ""}>{task.task}</span>
+                                <CheckCircle size={10} className={task.done ? "text-emerald-400" : "text-text-muted/30"} />
+                                <span className={task.done ? "line-through text-text-muted" : ""}>{task.task}</span>
                               </button>
                             ))}
                           </div>
@@ -409,7 +409,7 @@ export default function ProductionPage() {
                         {item.reviewNotes && (
                           <div className="p-2 rounded-lg bg-yellow-400/5 border border-yellow-400/10 mb-3">
                             <p className="text-[9px] text-yellow-400 font-semibold mb-0.5">Review Notes:</p>
-                            <p className="text-[10px] text-muted">{item.reviewNotes}</p>
+                            <p className="text-[10px] text-text-muted">{item.reviewNotes}</p>
                           </div>
                         )}
                         <div className="flex gap-2">
@@ -427,7 +427,7 @@ export default function ProductionPage() {
                     {items.filter(i => i.status === "review").length === 0 && (
                       <div className="text-center py-8">
                         <CheckCircle size={24} className="mx-auto text-emerald-400/30 mb-2" />
-                        <p className="text-xs text-muted">No items pending review</p>
+                        <p className="text-xs text-text-muted">No items pending review</p>
                       </div>
                     )}
                   </div>
@@ -439,15 +439,15 @@ export default function ProductionPage() {
                   transition={{ duration: 0.4, delay: 0.06 }}
                   className="glass rounded-xl"
                 >
-                  <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-brand-accent" /> Client Approval Portal</h2>
-                  <p className="text-[10px] text-muted mb-3">Share approval links with clients for direct feedback</p>
+                  <h2 className="flex items-center gap-2"><Eye size={13} className="text-brand-accent" /> Client Approval Portal</h2>
+                  <p className="text-[10px] text-text-muted mb-3">Share approval links with clients for direct feedback</p>
                   <div className="space-y-2">
                     {items.filter(i => i.status === "approved" || i.status === "review").map(item => (
-                      <div key={item.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
+                      <div key={item.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border-subtle">
                         <Film size={14} className="text-brand-accent shrink-0" />
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium truncate">{item.title}</p>
-                          <p className="text-[9px] text-muted">{item.client}</p>
+                          <p className="text-[9px] text-text-muted">{item.client}</p>
                         </div>
                         <button
                           onClick={() => {
@@ -469,21 +469,21 @@ export default function ProductionPage() {
                 <div className="glass  w-full max-w-md p-5 space-y-3" onClick={e => e.stopPropagation()}>
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-brand-accent" /> New Production Request</h3>
-                    <button onClick={() => setShowSubmit(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+                    <button onClick={() => setShowSubmit(false)} className="text-text-muted hover:text-text-primary"><X size={16} /></button>
                   </div>
                   <div>
-                    <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Title</label>
+                    <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">Title</label>
                     <input className="input w-full text-xs" placeholder="e.g., Instagram Reels x3" />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Client</label>
+                      <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">Client</label>
                       <select className="input w-full text-xs">
                         {clients.filter(c => c !== "All").map(c => <option key={c}>{c}</option>)}
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Type</label>
+                      <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">Type</label>
                       <select className="input w-full text-xs">
                         <option>Short Form</option><option>Long Form</option><option>Ad Creative</option>
                         <option>Blog</option><option>Email</option><option>Web</option><option>Podcast</option>
@@ -492,25 +492,25 @@ export default function ProductionPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Priority</label>
+                      <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">Priority</label>
                       <select className="input w-full text-xs">
                         <option value="low">Low</option><option value="medium">Medium</option>
                         <option value="high">High</option><option value="urgent">Urgent</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Due Date</label>
+                      <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">Due Date</label>
                       <input type="date" className="input w-full text-xs" />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Assign To</label>
+                    <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">Assign To</label>
                     <select className="input w-full text-xs">
                       <option>Unassigned</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Estimated Hours</label>
+                    <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">Estimated Hours</label>
                     <input type="number" className="input w-full text-xs" placeholder="e.g., 6" />
                   </div>
                   <div className="flex justify-end gap-2 pt-1">

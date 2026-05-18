@@ -44,7 +44,7 @@ export default function AdminIndexPage() {
 
   if (!user) {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[40vh] text-muted text-sm">Loading…
+      <MotionPage className="flex items-center justify-center min-h-[40vh] text-text-muted text-sm">Loading…
               </MotionPage>
     );
   }
@@ -85,7 +85,7 @@ export default function AdminIndexPage() {
                 <p className="font-medium text-text-primary group-hover:text-brand-accent transition-colors">
                   {title}
                 </p>
-                <p className="text-xs text-muted mt-0.5 leading-relaxed">{description}</p>
+                <p className="text-xs text-text-muted mt-0.5 leading-relaxed">{description}</p>
               </div>
             </Link>
           </motion.div>

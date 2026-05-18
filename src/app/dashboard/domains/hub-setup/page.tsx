@@ -135,7 +135,7 @@ function HubSetupInner() {
   }
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="space-y-5">
       {/* -- Launch your brand command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -146,8 +146,8 @@ function HubSetupInner() {
 
       {/* Domain input card — hidden if prefilled */}
       {!prefillDomain && (
-        <div className="card">
-          <h2 className="section-header flex items-center gap-2">
+        <div className="glass rounded-xl p-4">
+          <h2 className="flex items-center gap-2">
             <Globe size={13} className="text-brand-accent" /> Which domain?
           </h2>
           <input
@@ -156,28 +156,28 @@ function HubSetupInner() {
             placeholder="mybusiness.com"
             className="input w-full text-sm"
           />
-          <p className="text-[10px] text-muted mt-2">
+          <p className="text-[10px] text-text-muted mt-2">
             If you just purchased this domain, use its exact spelling.
           </p>
         </div>
       )}
       {prefillDomain && (
-        <div className="card flex items-center gap-3 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)]">
+        <div className="glass rounded-xl p-4 flex items-center gap-3 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)]">
           <ShieldCheck size={18} className="text-brand-accent" />
           <div>
             <p className="text-xs font-semibold">{prefillDomain}</p>
-            <p className="text-[10px] text-muted">Purchase confirmed — now picking services.</p>
+            <p className="text-[10px] text-text-muted">Purchase confirmed — now picking services.</p>
           </div>
         </div>
       )}
 
       {/* 5-toggle picker */}
-      <div className="card">
+      <div className="glass rounded-xl p-4">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="section-header flex items-center gap-2 mb-0">
+          <h2 className="flex items-center gap-2 mb-0">
             <Sparkles size={13} className="text-brand-accent" /> What should we set up?
           </h2>
-          <span className="text-[10px] text-muted">
+          <span className="text-[10px] text-text-muted">
             {enabledCount} / 5 selected
           </span>
         </div>
@@ -190,25 +190,25 @@ function HubSetupInner() {
               className={`w-full text-left p-3 rounded-xl border transition flex items-start gap-3 ${
                 enabled[t.key]
                   ? "border-[rgba(59,130,246,0.35)] bg-[rgba(59,130,246,0.05)] hover:bg-[rgba(59,130,246,0.08)]"
-                  : "border-border bg-surface-light hover:border-border/60"
+                  : "border-border-subtle bg-surface-light hover:border-border-subtle/60"
               }`}
             >
               <div
                 className={`w-5 h-5 shrink-0 rounded-md flex items-center justify-center mt-0.5 border ${
-                  enabled[t.key] ? "bg-brand-accent border-brand-accent text-white" : "border-border"
+                  enabled[t.key] ? "bg-brand-accent border-brand-accent text-white" : "border-border-subtle"
                 }`}
               >
                 {enabled[t.key] && <span className="text-[10px] leading-none font-black">✓</span>}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className={`${enabled[t.key] ? "text-brand-accent" : "text-muted"}`}>
+                  <span className={`${enabled[t.key] ? "text-brand-accent" : "text-text-muted"}`}>
                     {t.icon}
                   </span>
                   <span className="text-xs font-semibold">{t.label}</span>
                 </div>
-                <p className="text-[10px] text-muted mt-1">{t.description}</p>
-                <p className="text-[10px] text-muted/70 font-mono mt-1">
+                <p className="text-[10px] text-text-muted mt-1">{t.description}</p>
+                <p className="text-[10px] text-text-muted/70 font-mono mt-1">
                   e.g. {t.example.replace("domain", domain || "domain").replace("domain.com", domain || "domain.com")}
                 </p>
               </div>
@@ -218,10 +218,10 @@ function HubSetupInner() {
 
         {/* Area-code hint only shown when phone is on */}
         {enabled.phone && (
-          <div className="mt-3 pt-3 border-t border-border/60">
+          <div className="mt-3 pt-3 border-t border-border-subtle/60">
             <label className="text-[11px] font-semibold flex items-center gap-1.5 mb-1">
               <Phone size={11} /> Preferred area code
-              <span className="text-muted font-normal">(optional)</span>
+              <span className="text-text-muted font-normal">(optional)</span>
             </label>
             <input
               value={areaCode}
@@ -229,14 +229,14 @@ function HubSetupInner() {
               placeholder="415"
               className="input w-32 text-sm"
             />
-            <p className="text-[10px] text-muted mt-1">
+            <p className="text-[10px] text-text-muted mt-1">
               Leave blank and Twilio picks any available local US number.
             </p>
           </div>
         )}
       </div>
 
-      <div className="card bg-blue-500/5 border-blue-500/25 flex items-start gap-2">
+      <div className="glass rounded-xl p-4 bg-blue-500/5 border-blue-500/25 flex items-start gap-2">
         <Info size={14} className="text-blue-600 mt-0.5 shrink-0" />
         <div className="text-[11px] text-blue-700">
           <p className="font-semibold mb-1">What happens next</p>
@@ -272,7 +272,7 @@ function HubSetupInner() {
 export default function HubSetupPage() {
   return (
     <MotionPage>
-            <Suspense fallback={<div className="p-6 text-muted text-sm">Loading…</div>}>
+            <Suspense fallback={<div className="p-6 text-text-muted text-sm">Loading…</div>}>
             <HubSetupInner />
           </Suspense>
           </MotionPage>

@@ -80,7 +80,7 @@ export default function BudgetsPanel() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12 text-muted">
+      <div className="flex items-center justify-center py-12 text-text-muted">
         <Loader2 className="animate-spin mr-2" size={16} />
         Loading budgets...
       </div>
@@ -101,7 +101,7 @@ export default function BudgetsPanel() {
     <div className="space-y-6">
       <div className="glass rounded-lg px-4 py-3 flex items-center justify-between">
         <div>
-          <div className="text-[11px] uppercase tracking-wide text-muted">
+          <div className="text-[11px] uppercase tracking-wide text-text-muted">
             Total active daily budget
           </div>
           <div className="text-2xl font-semibold tabular-nums">
@@ -109,10 +109,10 @@ export default function BudgetsPanel() {
           </div>
         </div>
         <div className="text-right">
-          <div className="text-[11px] uppercase tracking-wide text-muted">
+          <div className="text-[11px] uppercase tracking-wide text-text-muted">
             Across {current.length} platform{current.length === 1 ? "" : "s"}
           </div>
-          <div className="text-xs text-muted">
+          <div className="text-xs text-text-muted">
             Captures only campaigns with a daily-budget strategy.
           </div>
         </div>

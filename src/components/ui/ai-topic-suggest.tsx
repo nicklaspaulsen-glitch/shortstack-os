@@ -74,7 +74,7 @@ const DEFAULT_TITLE: Record<SuggestSurface, string> = {
 const IMPACT_BADGE: Record<SuggestedTopic["impact"], string> = {
   high: "bg-emerald-500/15 text-emerald-700 border border-emerald-500/30",
   medium: "bg-[rgba(59,130,246,0.12)] text-[#2563EB] border border-[rgba(59,130,246,0.25)]",
-  low: "bg-muted/15 text-muted border border-border/40",
+  low: "bg-muted/15 text-text-muted border border-border-subtle/40",
 };
 
 export default function AITopicSuggest({
@@ -137,7 +137,7 @@ export default function AITopicSuggest({
   return (
     <div className={`space-y-2 ${className}`}>
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5 text-[11px] font-medium text-foreground/80">
+        <div className="flex items-center gap-1.5 text-[11px] font-medium text-text-primary/80">
           <Sparkles size={12} className="text-[#2563EB]" />
           <span>{title ?? DEFAULT_TITLE[surface]}</span>
         </div>
@@ -145,7 +145,7 @@ export default function AITopicSuggest({
           type="button"
           onClick={() => void fetchSuggestions(true)}
           disabled={loading}
-          className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground disabled:opacity-40 transition-colors"
+          className="flex items-center gap-1 text-[10px] text-text-muted hover:text-text-primary disabled:opacity-40 transition-colors"
           title="Regenerate suggestions"
         >
           {loading ? <Loader2 size={11} className="animate-spin" /> : <RefreshCw size={11} />}
@@ -176,7 +176,7 @@ export default function AITopicSuggest({
               type="button"
               onClick={() => handlePick(s.topic)}
               title={s.reason || s.topic}
-              className="group inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-surface-light px-3 py-1 text-[11px] text-foreground/80 transition-all hover:border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.08)] hover:text-foreground"
+              className="group inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-surface-light px-3 py-1 text-[11px] text-text-primary/80 transition-all hover:border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.08)] hover:text-text-primary"
             >
               <span className={`h-1.5 w-1.5 rounded-full ${
                 s.impact === "high" ? "bg-emerald-400" :

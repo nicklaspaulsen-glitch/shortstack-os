@@ -136,7 +136,7 @@ export function AdvancedToggle({
       className={`relative z-20 shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-[11px] font-semibold border backdrop-blur-sm transition-all whitespace-nowrap ${
         value
           ? "bg-[#2563EB] text-white border-[#2563EB] shadow-sm shadow-[rgba(59,130,246,0.18)] hover:shadow-[rgba(59,130,246,0.4)]"
-          : "bg-black/30 text-white border-border hover:bg-black/40 hover:border-border"
+          : "bg-black/30 text-white border-border-subtle hover:bg-black/40 hover:border-border-subtle"
       } ${className}`}
       title={value ? "Click to return to the guided wizard" : "Click for full control"}
     >
@@ -281,16 +281,16 @@ export function Wizard({
 
   return (
     <div
-      className={`w-full bg-surface border border-border overflow-hidden shadow-card ${className}`}
+      className={`w-full bg-surface border border-border-subtle overflow-hidden shadow-card ${className}`}
       data-wizard-root
     >
       {/* Progress bar */}
-      <div className="relative px-4 md:px-6 pt-4 pb-3 border-b border-border bg-gradient-to-br from-[rgba(59,130,246,0.06)] via-transparent to-transparent">
+      <div className="relative px-4 md:px-6 pt-4 pb-3 border-b border-border-subtle bg-gradient-to-br from-[rgba(59,130,246,0.06)] via-transparent to-transparent">
         <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2 text-[11px] text-muted">
+          <div className="flex items-center gap-2 text-[11px] text-text-muted">
             <Wand2 size={12} className="text-[#2563EB]" />
-            <span className="font-semibold text-foreground">Guided Mode</span>
-            <span className="text-muted">·</span>
+            <span className="font-semibold text-text-primary">Guided Mode</span>
+            <span className="text-text-muted">·</span>
             <span>{current.title}</span>
           </div>
           <span className="text-[10px] font-bold uppercase tracking-wider text-[#2563EB] bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] px-2 py-0.5 rounded-full">
@@ -320,17 +320,17 @@ export function Wizard({
                     ? "bg-[#2563EB] text-white shadow-sm shadow-[rgba(59,130,246,0.18)]"
                     : done
                     ? "bg-[rgba(59,130,246,0.08)] text-[#2563EB] hover:bg-[rgba(59,130,246,0.12)]"
-                    : "bg-surface-light text-muted/70 cursor-not-allowed"
+                    : "bg-surface-light text-text-muted/70 cursor-not-allowed"
                 }`}
                 aria-current={active ? "step" : undefined}
               >
                 <span
                   className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[8px] font-bold ${
                     active
-                      ? "bg-black/20 text-foreground"
+                      ? "bg-black/20 text-text-primary"
                       : done
                       ? "bg-[#2563EB] text-white"
-                      : "bg-border text-muted"
+                      : "bg-border text-text-muted"
                   }`}
                 >
                   {done ? <Check size={8} /> : i + 1}
@@ -344,8 +344,8 @@ export function Wizard({
 
       {/* Optional preview slot */}
       {preview && (
-        <div className="border-b border-border bg-surface-light/40 px-4 md:px-6 py-3">
-          <div className="flex items-center gap-1.5 text-[10px] text-muted uppercase tracking-wider mb-2 font-semibold">
+        <div className="border-b border-border-subtle bg-surface-light/40 px-4 md:px-6 py-3">
+          <div className="flex items-center gap-1.5 text-[10px] text-text-muted uppercase tracking-wider mb-2 font-semibold">
             <Sparkles size={10} className="text-[#2563EB]" /> Live Preview
           </div>
           {preview}
@@ -370,17 +370,17 @@ export function Wizard({
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <h2 className="text-lg md:text-xl font-bold text-foreground leading-tight">
+                <h2 className="text-lg md:text-xl font-bold text-text-primary leading-tight">
                   {current.title}
                 </h2>
                 {current.description && (
-                  <p className="text-xs md:text-sm text-muted mt-1 leading-relaxed">
+                  <p className="text-xs md:text-sm text-text-muted mt-1 leading-relaxed">
                     {current.description}
                   </p>
                 )}
               </div>
               {current.optional && (
-                <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light text-muted border border-border shrink-0 mt-1">
+                <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light text-text-muted border border-border-subtle shrink-0 mt-1">
                   Optional
                 </span>
               )}
@@ -391,12 +391,12 @@ export function Wizard({
       </div>
 
       {/* Footer */}
-      <div className="flex flex-wrap items-center gap-2 px-4 md:px-6 py-3 border-t border-border bg-surface-light/30">
+      <div className="flex flex-wrap items-center gap-2 px-4 md:px-6 py-3 border-t border-border-subtle bg-surface-light/30">
         <button
           type="button"
           onClick={handleBack}
           disabled={idx === 0 || disabled}
-          className="flex items-center gap-1 px-3 py-2 rounded-lg text-xs text-muted hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center gap-1 px-3 py-2 rounded-lg text-xs text-text-muted hover:text-text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronLeft size={13} /> Back
         </button>
@@ -406,7 +406,7 @@ export function Wizard({
             type="button"
             onClick={onCancel}
             disabled={disabled}
-            className="px-3 py-2 rounded-lg text-xs text-muted hover:text-foreground transition-colors disabled:opacity-40"
+            className="px-3 py-2 rounded-lg text-xs text-text-muted hover:text-text-primary transition-colors disabled:opacity-40"
           >
             {cancelLabel}
           </button>
@@ -417,7 +417,7 @@ export function Wizard({
             type="button"
             onClick={() => setIdx(idx + 1)}
             disabled={disabled}
-            className="px-3 py-2 rounded-lg text-xs text-muted hover:text-foreground transition-colors disabled:opacity-40"
+            className="px-3 py-2 rounded-lg text-xs text-text-muted hover:text-text-primary transition-colors disabled:opacity-40"
           >
             Skip
           </button>
@@ -426,8 +426,8 @@ export function Wizard({
         <div className="flex-1" />
 
         {showShortcuts && (
-          <span className="hidden md:inline text-[9px] text-muted/70 mr-2">
-            Press <kbd className="px-1.5 py-0.5 rounded bg-surface-light border border-border font-mono text-[9px]">Enter</kbd> for next
+          <span className="hidden md:inline text-[9px] text-text-muted/70 mr-2">
+            Press <kbd className="px-1.5 py-0.5 rounded bg-surface-light border border-border-subtle font-mono text-[9px]">Enter</kbd> for next
           </span>
         )}
 

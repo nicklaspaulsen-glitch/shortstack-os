@@ -124,11 +124,11 @@ export default class ErrorBoundary extends React.Component<
 
     if (this.props.compact) {
       return (
-        <div className="card border-danger/15 text-center py-8">
+        <div className="glass rounded-xl p-4 border-danger/15 text-center py-8">
           <div className="w-10 h-10 rounded-full bg-danger/10 flex items-center justify-center mx-auto mb-3">
             <AlertIcon className="w-5 h-5 text-danger" />
           </div>
-          <h3 className="text-sm font-semibold mb-1 text-foreground">
+          <h3 className="text-sm font-semibold mb-1 text-text-primary">
             Something went wrong{section ? ` in ${section}` : " on this page"}
           </h3>
           {isDev && (
@@ -167,15 +167,15 @@ export default class ErrorBoundary extends React.Component<
 
     return (
       <div className="flex items-center justify-center min-h-[400px] p-6">
-        <div className="bg-surface border border-border shadow-card p-8 max-w-md w-full text-center">
+        <div className="bg-surface border border-border-subtle shadow-card p-8 max-w-md w-full text-center">
           <div className="w-12 h-12 rounded-full bg-danger/10 flex items-center justify-center mx-auto mb-4">
             <AlertIcon className="w-6 h-6 text-danger" />
           </div>
 
-          <h2 className="text-sm font-semibold text-foreground mb-1">
+          <h2 className="text-sm font-semibold text-text-primary mb-1">
             Something went wrong{section ? ` in ${section}` : " on this page"}
           </h2>
-          <p className="text-xs text-muted mb-4 leading-relaxed">
+          <p className="text-xs text-text-muted mb-4 leading-relaxed">
             This section crashed, but the rest of the app is still running.
           </p>
 
@@ -194,20 +194,20 @@ export default class ErrorBoundary extends React.Component<
             </button>
             <button
               onClick={this.handleReload}
-              className="px-4 py-2 text-xs font-medium rounded-lg border border-border text-foreground hover:bg-surface-light transition-colors"
+              className="px-4 py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-primary hover:bg-surface-light transition-colors"
             >
               Reload page
             </button>
             <Link
               href="/dashboard"
-              className="px-4 py-2 text-xs font-medium rounded-lg border border-border text-foreground hover:bg-surface-light transition-colors"
+              className="px-4 py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-primary hover:bg-surface-light transition-colors"
             >
               Go to dashboard home
             </Link>
             <button
               onClick={this.handleReport}
               disabled={this.state.reporting || this.state.reported}
-              className="px-4 py-2 text-xs font-medium rounded-lg border border-border text-foreground hover:bg-surface-light transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-xs font-medium rounded-lg border border-border-subtle text-text-primary hover:bg-surface-light transition-colors disabled:opacity-50"
             >
               {this.state.reported
                 ? "Reported"

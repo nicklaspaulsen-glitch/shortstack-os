@@ -189,13 +189,13 @@ export default function AgentOfficePage() {
 
   if (authLoading) {
     return (
-      <MotionPage className="fade-in space-y-5"><div className="h-24 animate-pulse  bg-white/[0.05]" /><div className="h-[60vh] animate-pulse  bg-white/[0.05]" /></MotionPage>
+      <MotionPage className="space-y-5"><div className="h-24 animate-pulse  bg-white/[0.05]" /><div className="h-[60vh] animate-pulse  bg-white/[0.05]" /></MotionPage>
     );
   }
 
   if (!user) {
     return (
-      <div className="fade-in space-y-5">
+      <div className="space-y-5">
         {/* -- Agent Office command strip -- */}
         <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
           <div className="min-w-0">
@@ -208,7 +208,7 @@ export default function AgentOfficePage() {
   }
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="space-y-5">
       {/* -- Agent Office command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -226,10 +226,10 @@ export default function AgentOfficePage() {
         <div className="flex items-center gap-2 shrink-0">
           <div className="flex flex-wrap items-center gap-2">
             {/* 2D / 3D toggle */}
-            <div className="flex items-center rounded-lg border border-border bg-black/5 p-0.5">
+            <div className="flex items-center rounded-lg border border-border-subtle bg-black/5 p-0.5">
               <button
                 onClick={() => setViewMode("kumo")}
-                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "kumo" ? "bg-blue-600 text-white shadow" : "text-muted hover:text-muted"}`}
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "kumo" ? "bg-blue-600 text-white shadow" : "text-text-muted hover:text-text-muted"}`}
                 title="2D Pixel view"
               >
                 <LayoutGrid size={10} />
@@ -237,7 +237,7 @@ export default function AgentOfficePage() {
               </button>
               <button
                 onClick={() => setViewMode("3d")}
-                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "3d" ? "bg-blue-600 text-white shadow" : "text-muted hover:text-muted"}`}
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "3d" ? "bg-blue-600 text-white shadow" : "text-text-muted hover:text-text-muted"}`}
                 title="3D Scene view"
               >
                 <Boxes size={10} />
@@ -364,7 +364,7 @@ function StatTile({ icon, label, value, accent }: StatTileProps) {
         {icon}
       </span>
       <div className="leading-tight">
-        <div className="text-[9px] uppercase tracking-wider text-muted">
+        <div className="text-[9px] uppercase tracking-wider text-text-muted">
           {label}
         </div>
         <div className="text-sm font-bold text-white">{value}</div>

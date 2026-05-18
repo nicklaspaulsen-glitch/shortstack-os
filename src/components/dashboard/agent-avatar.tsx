@@ -123,13 +123,13 @@ export default function AgentAvatar({
         )}
 
         {status === "offline" && (
-          <span className="absolute -top-2 right-0 text-muted font-mono" style={{ fontSize: size * 0.14 }}>
+          <span className="absolute -top-2 right-0 text-text-muted font-mono" style={{ fontSize: size * 0.14 }}>
             zZz
           </span>
         )}
       </div>
 
-      {label && <span className="text-[10px] text-muted max-w-[100px] truncate">{label}</span>}
+      {label && <span className="text-[10px] text-text-muted max-w-[100px] truncate">{label}</span>}
 
       <style jsx>{`
         @keyframes ss-agent-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }

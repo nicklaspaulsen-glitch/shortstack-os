@@ -70,7 +70,7 @@ export default function ClientContextPill() {
           {/* Label */}
           <div className="min-w-0 max-w-[200px]">
             <p className="text-[9px] text-[rgba(59,130,246,0.8)] uppercase tracking-wider leading-none">Viewing</p>
-            <p className="text-[11px] font-semibold text-foreground truncate leading-tight">{managedClient.business_name}</p>
+            <p className="text-[11px] font-semibold text-text-primary truncate leading-tight">{managedClient.business_name}</p>
           </div>
 
           {/* Change button */}
@@ -86,7 +86,7 @@ export default function ClientContextPill() {
           {/* Clear button */}
           <button
             onClick={() => setManagedClient(null)}
-            className="p-1 rounded-full hover:bg-black/5 text-muted hover:text-red-400 transition-colors"
+            className="p-1 rounded-full hover:bg-black/5 text-text-muted hover:text-red-400 transition-colors"
             title="Exit client view"
           >
             <X size={11} />
@@ -97,7 +97,7 @@ export default function ClientContextPill() {
         clients.length > 0 || open ? (
           <button
             onClick={() => setOpen(true)}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 bg-surface/90 border border-border backdrop-blur-md rounded-full px-3 py-1.5 shadow-lg hover:border-[rgba(59,130,246,0.25)] transition-all text-[11px] text-muted hover:text-foreground"
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 bg-surface/90 border border-border-subtle backdrop-blur-md rounded-full px-3 py-1.5 shadow-lg hover:border-[rgba(59,130,246,0.25)] transition-all text-[11px] text-text-muted hover:text-text-primary"
           >
             <Users size={11} />
             <span>View as client</span>
@@ -109,33 +109,33 @@ export default function ClientContextPill() {
       {/* Modal — client picker */}
       {open && (
         <div
-          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 fade-in"
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={() => setOpen(false)}
         >
           <div
-            className="bg-surface border border-border  shadow-2xl w-full max-w-md max-h-[70vh] flex flex-col overflow-hidden"
+            className="bg-surface border border-border-subtle  shadow-2xl w-full max-w-md max-h-[70vh] flex flex-col overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+            <div className="px-4 py-3 border-b border-border-subtle flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Building2 size={14} className="text-[#2563EB]" />
                 <h3 className="text-sm font-semibold">Switch Client View</h3>
               </div>
-              <button onClick={() => setOpen(false)} className="p-1 text-muted hover:text-foreground">
+              <button onClick={() => setOpen(false)} className="p-1 text-text-muted hover:text-text-primary">
                 <X size={14} />
               </button>
             </div>
 
             {/* Search */}
-            <div className="px-4 py-2 border-b border-border">
+            <div className="px-4 py-2 border-b border-border-subtle">
               <div className="relative">
-                <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
+                <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search clients..."
-                  className="w-full pl-7 pr-3 py-2 rounded-lg bg-surface-light border border-border text-xs focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
+                  className="w-full pl-7 pr-3 py-2 rounded-lg bg-surface-light border border-border-subtle text-xs focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
                   autoFocus
                 />
               </div>
@@ -157,17 +157,17 @@ export default function ClientContextPill() {
                   </div>
                   <div className="flex-1">
                     <p className="text-xs font-medium text-red-400">Exit client view</p>
-                    <p className="text-[10px] text-muted">Return to agency dashboard</p>
+                    <p className="text-[10px] text-text-muted">Return to agency dashboard</p>
                   </div>
                 </button>
               )}
 
               {loading ? (
-                <div className="py-8 text-center text-xs text-muted flex items-center justify-center gap-2">
+                <div className="py-8 text-center text-xs text-text-muted flex items-center justify-center gap-2">
                   <RefreshCw size={12} className="animate-spin" /> Loading...
                 </div>
               ) : filtered.length === 0 ? (
-                <div className="py-8 text-center text-xs text-muted">
+                <div className="py-8 text-center text-xs text-text-muted">
                   {search ? "No clients match your search" : "No clients yet"}
                 </div>
               ) : (
@@ -196,15 +196,15 @@ export default function ClientContextPill() {
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold shadow-inner ${
                         isCurrent
                           ? "bg-gradient-to-br from-[#2563EB] to-amber-500 text-white"
-                          : "bg-surface-light text-foreground"
+                          : "bg-surface-light text-text-primary"
                       }`}>
                         {clientInitials}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className={`text-xs font-medium truncate ${isCurrent ? "text-[#2563EB]" : "text-foreground"}`}>
+                        <p className={`text-xs font-medium truncate ${isCurrent ? "text-[#2563EB]" : "text-text-primary"}`}>
                           {c.business_name}
                         </p>
-                        <p className="text-[10px] text-muted truncate">
+                        <p className="text-[10px] text-text-muted truncate">
                           {c.contact_name || c.email || c.package_tier}
                         </p>
                       </div>
@@ -216,8 +216,8 @@ export default function ClientContextPill() {
             </div>
 
             {/* Footer tip */}
-            <div className="px-4 py-2 border-t border-border bg-surface-light/30">
-              <p className="text-[9px] text-muted text-center">
+            <div className="px-4 py-2 border-t border-border-subtle bg-surface-light/30">
+              <p className="text-[9px] text-text-muted text-center">
                 💡 Everything you do while viewing a client is scoped to them
               </p>
             </div>

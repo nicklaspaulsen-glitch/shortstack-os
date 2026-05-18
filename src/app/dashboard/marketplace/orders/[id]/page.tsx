@@ -149,13 +149,13 @@ export default function OrderDetailPage() {
 
   if (loading) {
     return (
-      <MotionPage className="py-20 text-center text-sm text-muted">Loading order...</MotionPage>
+      <MotionPage className="py-20 text-center text-sm text-text-muted">Loading order...</MotionPage>
     );
   }
   if (!data) {
     return (
       <div className="py-20 text-center">
-        <p className="text-sm text-muted">Order not found.</p>
+        <p className="text-sm text-text-muted">Order not found.</p>
         <Link
           href="/dashboard/marketplace/orders"
           className="mt-4 inline-block text-brand-accent hover:underline"
@@ -172,7 +172,7 @@ export default function OrderDetailPage() {
   const canReview = role === "buyer" && order.status === "delivered" && !review;
 
   return (
-    <div className="fade-in space-y-4">
+    <div className="space-y-4">
       <Link
         href="/dashboard/marketplace/orders"
         className="inline-flex items-center gap-1.5 text-xs text-[#6B7280] hover:text-[#111827]"
@@ -181,12 +181,12 @@ export default function OrderDetailPage() {
         All orders
       </Link>
 
-      <div className="card">
+      <div className="glass rounded-xl p-4">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <Receipt size={16} className="text-brand-accent" />
-              <span className="font-mono text-xs text-muted">
+              <span className="font-mono text-xs text-text-muted">
                 Order #{order.id.slice(0, 8)}
               </span>
               <span
@@ -201,7 +201,7 @@ export default function OrderDetailPage() {
               {service?.title ?? "Service"}
             </h1>
             {service?.category && (
-              <p className="mt-1 text-xs capitalize text-muted">
+              <p className="mt-1 text-xs capitalize text-text-muted">
                 {service.category} · {service.delivery_days}d delivery
               </p>
             )}
@@ -210,10 +210,10 @@ export default function OrderDetailPage() {
             <div className="text-2xl font-bold text-brand-accent">
               {formatPrice(order.amount_cents, order.currency)}
             </div>
-            <div className="mt-1 text-[10px] text-muted">
+            <div className="mt-1 text-[10px] text-text-muted">
               ShortStack fee {formatPrice(order.shortstack_fee_cents, order.currency)}
             </div>
-            <div className="text-[10px] text-muted">
+            <div className="text-[10px] text-text-muted">
               Seller payout {formatPrice(order.seller_payout_cents, order.currency)}
             </div>
           </div>
@@ -222,7 +222,7 @@ export default function OrderDetailPage() {
         <div className="mt-5 grid gap-4 md:grid-cols-2">
           <div>
             <h3 className="text-xs font-semibold text-[#111827]">Buyer notes</h3>
-            <p className="mt-1 whitespace-pre-line text-xs text-muted">
+            <p className="mt-1 whitespace-pre-line text-xs text-text-muted">
               {order.buyer_notes || "No notes provided."}
             </p>
           </div>
@@ -231,7 +231,7 @@ export default function OrderDetailPage() {
               <h3 className="text-xs font-semibold text-[#111827]">
                 Delivery notes
               </h3>
-              <p className="mt-1 whitespace-pre-line text-xs text-muted">
+              <p className="mt-1 whitespace-pre-line text-xs text-text-muted">
                 {order.seller_delivery_notes}
               </p>
             </div>
@@ -240,9 +240,9 @@ export default function OrderDetailPage() {
       </div>
 
       {canDeliver && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <h3 className="text-sm font-semibold text-[#111827]">Deliver order</h3>
-          <p className="mt-1 text-xs text-muted">
+          <p className="mt-1 text-xs text-text-muted">
             Once you mark this delivered, the buyer will be invited to leave a
             review and your Stripe payout will release per Connect schedule.
           </p>
@@ -265,7 +265,7 @@ export default function OrderDetailPage() {
       )}
 
       {canReview && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <h3 className="text-sm font-semibold text-[#111827]">Leave a review</h3>
           <div className="mt-3 flex items-center gap-2">
             {[1, 2, 3, 4, 5].map((n) => (
@@ -302,7 +302,7 @@ export default function OrderDetailPage() {
       )}
 
       {review && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <h3 className="text-sm font-semibold text-[#111827]">Your review</h3>
           <div className="mt-2 flex items-center gap-1 text-amber-400">
             {Array.from({ length: review.rating }).map((_, i) => (
@@ -313,7 +313,7 @@ export default function OrderDetailPage() {
             ))}
           </div>
           {review.text && (
-            <p className="mt-2 text-xs text-muted">{review.text}</p>
+            <p className="mt-2 text-xs text-text-muted">{review.text}</p>
           )}
         </div>
       )}

@@ -108,12 +108,12 @@ export function ComingSoon({
   const heroGradient = `linear-gradient(135deg, ${gStart} 0%, ${gEnd} 100%)`;
 
   return (
-    <div className="fade-in space-y-6 max-w-[1100px] mx-auto pb-10">
+    <div className="space-y-6 max-w-[1100px] mx-auto pb-10">
       {/* Back-to-dashboard link */}
       <div className="flex items-center justify-between">
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1.5 text-[11px] text-muted hover:text-[#2563EB] transition-colors"
+          className="inline-flex items-center gap-1.5 text-[11px] text-text-muted hover:text-[#2563EB] transition-colors"
         >
           <ArrowLeft size={12} />
           Back to dashboard
@@ -122,7 +122,7 @@ export function ComingSoon({
 
       {/* Hero */}
       <div
-        className="relative overflow-hidden  border border-border"
+        className="relative overflow-hidden  border border-border-subtle"
         style={{
           background: heroGradient,
           boxShadow:
@@ -155,7 +155,7 @@ export function ComingSoon({
             <Sparkles
               key={i}
               size={p.size}
-              className="absolute text-muted coming-soon-twinkle"
+              className="absolute text-text-muted coming-soon-twinkle"
               style={{
                 top: p.top,
                 left: p.left,
@@ -194,7 +194,7 @@ export function ComingSoon({
           </div>
 
           {/* In-development pill */}
-          <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-[0.14em] border border-border bg-white/[0.08] text-foreground backdrop-blur-sm">
+          <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-[0.14em] border border-border-subtle bg-white/[0.08] text-text-primary backdrop-blur-sm">
             <span className="relative flex w-2 h-2">
               <span className="absolute inline-flex w-full h-full rounded-full bg-amber-300 opacity-75 animate-ping" />
               <span className="relative inline-flex w-2 h-2 rounded-full bg-amber-400" />
@@ -235,10 +235,10 @@ export function ComingSoon({
               <Hammer size={14} />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-foreground leading-tight">
+              <h2 className="text-sm font-semibold text-text-primary leading-tight">
                 What&apos;s coming
               </h2>
-              <p className="text-[10px] text-muted leading-tight">
+              <p className="text-[10px] text-text-muted leading-tight">
                 Features we&apos;re building for {title}
               </p>
             </div>
@@ -247,7 +247,7 @@ export function ComingSoon({
             {features.map((feat, i) => (
               <li
                 key={i}
-                className="flex items-start gap-2.5 text-[12.5px] text-foreground leading-snug"
+                className="flex items-start gap-2.5 text-[12.5px] text-text-primary leading-snug"
               >
                 <CheckCircle2
                   size={15}
@@ -261,16 +261,16 @@ export function ComingSoon({
         </div>
 
         {/* Waitlist panel */}
-        <div className="card !p-5 flex flex-col">
+        <div className="glass rounded-xl !p-5 flex flex-col">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-7 h-7 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] flex items-center justify-center text-[#2563EB]">
               <Bell size={14} />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-foreground leading-tight">
+              <h2 className="text-sm font-semibold text-text-primary leading-tight">
                 Get notified
               </h2>
-              <p className="text-[10px] text-muted leading-tight">
+              <p className="text-[10px] text-text-muted leading-tight">
                 We&apos;ll email when it launches
               </p>
             </div>
@@ -281,10 +281,10 @@ export function ComingSoon({
               <div className="w-12 h-12  bg-success/10 border border-success/20 flex items-center justify-center text-success mb-3">
                 <CheckCircle2 size={22} />
               </div>
-              <p className="text-[13px] font-semibold text-foreground">
+              <p className="text-[13px] font-semibold text-text-primary">
                 You&apos;re on the list
               </p>
-              <p className="text-[11px] text-muted mt-1">
+              <p className="text-[11px] text-text-muted mt-1">
                 {position !== null && position > 0
                   ? `You're #${position + 1} — we'll email the moment it ships.`
                   : "We'll email the moment it ships."}
@@ -292,7 +292,7 @@ export function ComingSoon({
             </div>
           ) : (
             <form onSubmit={handleJoin} className="flex-1 flex flex-col gap-2.5">
-              <label className="text-[10px] font-semibold uppercase tracking-wider text-muted">
+              <label className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
                 Email
               </label>
               <input
@@ -300,7 +300,7 @@ export function ComingSoon({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com"
-                className="w-full px-3 py-2 rounded-lg border border-border bg-surface text-[12px] text-foreground placeholder:text-muted/60 focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)]"
+                className="w-full px-3 py-2 rounded-lg border border-border-subtle bg-surface text-[12px] text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)]"
               />
               <button
                 type="submit"
@@ -327,16 +327,16 @@ export function ComingSoon({
 
       {/* Alternatives row */}
       {alternatives && alternatives.length > 0 && (
-        <div className="card !p-5">
+        <div className="glass rounded-xl !p-5">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-7 h-7 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent">
               <ArrowRight size={14} />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-foreground leading-tight">
+              <h2 className="text-sm font-semibold text-text-primary leading-tight">
                 Use this instead for now
               </h2>
-              <p className="text-[10px] text-muted leading-tight">
+              <p className="text-[10px] text-text-muted leading-tight">
                 Nearby tools that ship the closest workflow today
               </p>
             </div>
@@ -346,14 +346,14 @@ export function ComingSoon({
               <Link
                 key={alt.href}
                 href={alt.href}
-                className="group flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl border border-border bg-surface hover:bg-surface-light hover:border-[rgba(59,130,246,0.25)] transition-all"
+                className="group flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light hover:border-[rgba(59,130,246,0.25)] transition-all"
               >
-                <span className="text-[12px] font-semibold text-foreground truncate">
+                <span className="text-[12px] font-semibold text-text-primary truncate">
                   {alt.label}
                 </span>
                 <ArrowRight
                   size={14}
-                  className="text-muted group-hover:text-[#2563EB] group-hover:translate-x-0.5 transition-all shrink-0"
+                  className="text-text-muted group-hover:text-[#2563EB] group-hover:translate-x-0.5 transition-all shrink-0"
                 />
               </Link>
             ))}

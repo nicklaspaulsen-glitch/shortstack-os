@@ -123,17 +123,17 @@ export default function NewMeetingPage() {
   }[stage];
 
   return (
-    <MotionPage className="fade-in space-y-5 max-w-2xl mx-auto"><div className="flex items-center gap-3">
+    <MotionPage className="space-y-5 max-w-2xl mx-auto"><div className="flex items-center gap-3">
               <Link
                 href="/dashboard/meetings"
-                className="text-muted hover:text-foreground transition-colors"
+                className="text-text-muted hover:text-text-primary transition-colors"
               >
                 <ArrowLeft size={16} />
               </Link>
               <h1 className="text-lg font-bold">New meeting</h1>
-            </div><div className="card p-5 space-y-4">
+            </div><div className="glass rounded-xl p-5 space-y-4">
               <div>
-                <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
                   Title
                 </label>
                 <input
@@ -145,7 +145,7 @@ export default function NewMeetingPage() {
               </div>
 
               <div>
-                <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">
+                <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
                   Audio file
                 </label>
                 <div
@@ -167,7 +167,7 @@ export default function NewMeetingPage() {
                       ? "border-brand-accent bg-[rgba(59,130,246,0.05)]"
                       : file
                       ? "border-green-400/30 bg-green-400/5"
-                      : "border-border hover:border-[rgba(59,130,246,0.25)]"
+                      : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
                   }`}
                 >
                   <input
@@ -181,15 +181,15 @@ export default function NewMeetingPage() {
                     <div className="flex items-center justify-center gap-2 text-[11px]">
                       <FileAudio size={14} className="text-green-400" />
                       <span className="font-medium">{file.name}</span>
-                      <span className="text-muted">
+                      <span className="text-text-muted">
                         ({(file.size / 1024 / 1024).toFixed(1)} MB)
                       </span>
                     </div>
                   ) : (
                     <>
-                      <Upload size={24} className="mx-auto mb-2 text-muted" />
+                      <Upload size={24} className="mx-auto mb-2 text-text-muted" />
                       <p className="text-[11px] font-medium">Drop an audio file here</p>
-                      <p className="text-[10px] text-muted mt-1">
+                      <p className="text-[10px] text-text-muted mt-1">
                         MP3, WAV, M4A, OGG, WebM up to 250 MB
                       </p>
                     </>
@@ -205,7 +205,7 @@ export default function NewMeetingPage() {
                       style={{ width: `${progress}%` }}
                     />
                   </div>
-                  <p className="text-[10px] text-muted flex items-center gap-1.5">
+                  <p className="text-[10px] text-text-muted flex items-center gap-1.5">
                     <Loader2 size={10} className="animate-spin" /> {stageLabel}
                   </p>
                 </div>

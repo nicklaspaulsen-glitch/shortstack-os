@@ -116,7 +116,7 @@ function VideoTimeline({
         <button
           type="button"
           onClick={() => void onGenerateCaptions()}
-          className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-border text-muted hover:text-foreground"
+          className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-border-subtle text-text-muted hover:text-text-primary"
           title="Auto-transcribe primary video & render caption keyframes"
         >
           <CaptionsIcon size={10} /> Captions
@@ -127,7 +127,7 @@ function VideoTimeline({
         <button
           type="button"
           onClick={() => void onSuggestEdits()}
-          className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-border text-muted hover:text-[#2563EB]"
+          className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-border-subtle text-text-muted hover:text-[#2563EB]"
           title="Ask the AI editor for timed edit suggestions"
         >
           <Lightbulb size={10} /> Suggest
@@ -136,7 +136,7 @@ function VideoTimeline({
 
       {bpm >= 40 && (
         <span
-          className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-border text-muted"
+          className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-border-subtle text-text-muted"
           title={`Detected BPM: ${bpm}`}
         >
           <Activity size={10} /> {bpm} BPM
@@ -174,7 +174,7 @@ function VideoTimeline({
         </span>
       ))}
       {suggestions.length > 3 && (
-        <span className="text-[8px] text-muted">+{suggestions.length - 3} more</span>
+        <span className="text-[8px] text-text-muted">+{suggestions.length - 3} more</span>
       )}
     </>
   );

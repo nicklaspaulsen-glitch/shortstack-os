@@ -183,14 +183,14 @@ export default function EmailTemplatesPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-6">{/* -- Email Templates command strip -- */}
+    <MotionPage className="space-y-6">{/* -- Email Templates command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">EMAIL TEMPLATES</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Email Templates</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <button className="px-3 py-1.5 rounded-lg bg-black/10 border border-border text-foreground text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
+        <button className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
                   <Plus size={12} /> New Template
                 </button>
       </div>
@@ -198,7 +198,7 @@ export default function EmailTemplatesPage() {
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-                    activeTab === t.key ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
+                    activeTab === t.key ? "bg-brand-accent text-white font-medium" : "text-text-muted hover:text-text-primary"
                   }`}>{t.icon} {t.label}</button>
               ))}
             </div>{/* ===== TEMPLATE GALLERY ===== */}{activeTab === "gallery" && (
@@ -206,10 +206,10 @@ export default function EmailTemplatesPage() {
                 {/* Filters */}
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="relative flex-1 min-w-[200px]">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                    <input value={search} onChange={e => setSearch(e.target.value)} className="rounded-xl w-full pl-9 text-xs px-3 py-2 text-foreground placeholder:text-muted outline-none bg-[#FFFFFF] border border-[rgba(0,0,0,0.10)]" placeholder="Search templates..." aria-label="Search email templates" />
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                    <input value={search} onChange={e => setSearch(e.target.value)} className="rounded-xl w-full pl-9 text-xs px-3 py-2 text-text-primary placeholder:text-text-muted outline-none bg-[#FFFFFF] border border-[rgba(0,0,0,0.10)]" placeholder="Search templates..." aria-label="Search email templates" />
                   </div>
-                  <select value={sortBy} onChange={e => setSortBy(e.target.value as typeof sortBy)} className="rounded-xl text-xs px-3 py-2 text-foreground outline-none bg-[#FFFFFF] border border-[rgba(0,0,0,0.10)]">
+                  <select value={sortBy} onChange={e => setSortBy(e.target.value as typeof sortBy)} className="rounded-xl text-xs px-3 py-2 text-text-primary outline-none bg-[#FFFFFF] border border-[rgba(0,0,0,0.10)]">
                     <option value="name">Sort: Name</option>
                     <option value="opens">Sort: Opens</option>
                     <option value="replies">Sort: Replies</option>
@@ -219,7 +219,7 @@ export default function EmailTemplatesPage() {
                   {CATEGORIES.map(cat => (
                     <button key={cat} onClick={() => setFilterCategory(cat)}
                       className={`px-3 py-1.5 rounded-lg text-[10px] font-medium transition-colors ${
-                        filterCategory === cat ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "bg-[rgba(0,0,0,0.03)] text-muted border border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.06)]"
+                        filterCategory === cat ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "bg-[rgba(0,0,0,0.03)] text-text-muted border border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.06)]"
                       }`}>{cat}</button>
                   ))}
                 </div>
@@ -227,7 +227,7 @@ export default function EmailTemplatesPage() {
                 {/* Template Cards Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                   {filtered.length === 0 && (
-                    <div className="col-span-4 text-center py-12 text-muted text-xs">No templates yet. Click &quot;New Template&quot; to get started.</div>
+                    <div className="col-span-4 text-center py-12 text-text-muted text-xs">No templates yet. Click &quot;New Template&quot; to get started.</div>
                   )}
                   {filtered.map((template, i) => (
                     <motion.div
@@ -245,24 +245,24 @@ export default function EmailTemplatesPage() {
                         <div className="flex items-start justify-between mb-2">
                           <div className="min-w-0 flex-1">
                             <p className="text-xs font-semibold truncate">{template.name}</p>
-                            <p className="text-[10px] text-muted truncate mt-0.5">{template.subject}</p>
+                            <p className="text-[10px] text-text-muted truncate mt-0.5">{template.subject}</p>
                           </div>
                           {template.shared && <Star size={10} className="text-brand-accent flex-shrink-0 mt-0.5" />}
                         </div>
                         {/* Mini preview */}
-                        <div className="rounded-lg p-2 mb-2 text-[8px] text-muted leading-relaxed line-clamp-3" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(255,255,255,0.70)" }}>
+                        <div className="rounded-lg p-2 mb-2 text-[8px] text-text-muted leading-relaxed line-clamp-3" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(255,255,255,0.70)" }}>
                           {template.body.substring(0, 120)}...
                         </div>
                         <div className="flex items-center justify-between">
                           <span className={`text-[9px] px-1.5 py-0.5 rounded ${categoryColors[template.category] || "bg-[rgba(0,0,0,0.04)] text-[#6B7280]"}`}>
                             {template.category}
                           </span>
-                          <div className="flex items-center gap-2 text-[8px] text-muted">
+                          <div className="flex items-center gap-2 text-[8px] text-text-muted">
                             <span className="flex items-center gap-0.5"><Eye size={8} /> {template.opens}%</span>
                             <span className="flex items-center gap-0.5"><Mail size={8} /> {template.replies}%</span>
                           </div>
                         </div>
-                        <p className="text-[8px] text-muted mt-1.5">v{template.version} | {template.lastEdited}</p>
+                        <p className="text-[8px] text-text-muted mt-1.5">v{template.version} | {template.lastEdited}</p>
                       </div>
                     </motion.div>
                   ))}
@@ -275,11 +275,11 @@ export default function EmailTemplatesPage() {
                     <div className="lg:col-span-2 space-y-3">
                       <div className="flex items-center gap-2">
                         <span className={`text-[9px] px-1.5 py-0.5 rounded ${categoryColors[selectedTemplate.category] || ""}`}>{selectedTemplate.category}</span>
-                        <span className="text-[9px] text-muted">v{selectedTemplate.version}</span>
+                        <span className="text-[9px] text-text-muted">v{selectedTemplate.version}</span>
                       </div>
                       <div>
                         <div className="flex items-center justify-between mb-1">
-                          <label className="text-[9px] text-muted uppercase tracking-wider">Subject</label>
+                          <label className="text-[9px] text-text-muted uppercase tracking-wider">Subject</label>
                           <AIEnhanceButton value={editedSubject} onResult={setEditedSubject} context="email subject line" variant="inline" />
                         </div>
                         <input value={editedSubject} onChange={e => setEditedSubject(e.target.value)}
@@ -287,7 +287,7 @@ export default function EmailTemplatesPage() {
                       </div>
                       <div>
                         <div className="flex items-center justify-between mb-1">
-                          <label className="text-[9px] text-muted uppercase tracking-wider">Body</label>
+                          <label className="text-[9px] text-text-muted uppercase tracking-wider">Body</label>
                           <AIEnhanceButton value={editedBody} onResult={setEditedBody} context="email body copy" variant="inline" />
                         </div>
                         <textarea value={editedBody} onChange={e => setEditedBody(e.target.value)}
@@ -303,20 +303,20 @@ export default function EmailTemplatesPage() {
                     {/* Merge Tag Helper */}
                     <div className="space-y-3">
                       <div className="glass rounded-xl p-4">
-                        <h4 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Merge Tags</h4>
+                        <h4 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-text-muted">Merge Tags</h4>
                         <div className="space-y-1">
                           {MERGE_TAGS.map(tag => (
                             <button key={tag.tag} onClick={() => setEditedBody(prev => prev + " " + tag.tag)}
                               className="flex items-center justify-between w-full p-1.5 rounded hover:bg-[rgba(59,130,246,0.05)] transition-all text-[10px]">
                               <span className="font-mono text-brand-accent">{tag.tag}</span>
-                              <span className="text-muted">{tag.desc}</span>
+                              <span className="text-text-muted">{tag.desc}</span>
                             </button>
                           ))}
                         </div>
                       </div>
                       {/* Preview Modes */}
                       <div className="glass rounded-xl p-4">
-                        <h4 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Preview Mode</h4>
+                        <h4 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-text-muted">Preview Mode</h4>
                         <div className="flex gap-1">
                           {[
                             { key: "desktop", icon: <Monitor size={12} />, label: "Desktop" },
@@ -344,8 +344,8 @@ export default function EmailTemplatesPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="glass rounded-xl text-center py-12" 
 >
-                    <Edit3 size={24} className="mx-auto mb-2 text-muted/30" />
-                    <p className="text-sm text-muted">Select a template from the Gallery to edit</p>
+                    <Edit3 size={24} className="mx-auto mb-2 text-text-muted/30" />
+                    <p className="text-sm text-text-muted">Select a template from the Gallery to edit</p>
                   </motion.div>
                 )}
               </div>
@@ -411,7 +411,7 @@ export default function EmailTemplatesPage() {
                   <h3 className="text-sm font-semibold mb-3">Template Performance Ranking</h3>
                   <div className="space-y-2">
                     {TEMPLATES.length === 0 && (
-                      <p className="text-center text-[10px] text-muted py-6">No templates yet. Performance data will appear here once templates are created and used.</p>
+                      <p className="text-center text-[10px] text-text-muted py-6">No templates yet. Performance data will appear here once templates are created and used.</p>
                     )}
                     {[...TEMPLATES].sort((a, b) => b.replies - a.replies).map((t, i) => (
                       <motion.div
@@ -421,10 +421,10 @@ export default function EmailTemplatesPage() {
                         transition={{ delay: i * 0.04 }}
                         className="flex items-center gap-3 p-2.5 rounded" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(255,255,255,0.70)" }}
 >
-                        <span className="text-[9px] text-muted font-bold w-6 text-center">#{i + 1}</span>
+                        <span className="text-[9px] text-text-muted font-bold w-6 text-center">#{i + 1}</span>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium truncate">{t.name}</p>
-                          <p className="text-[9px] text-muted">{t.category}</p>
+                          <p className="text-[9px] text-text-muted">{t.category}</p>
                         </div>
                         <div className="grid grid-cols-3 gap-4 text-center text-[10px]">
                           <div><p className="font-bold text-blue-700">{t.opens}%</p><p className="text-[8px] text-[#6B7280]">Opens</p></div>
@@ -443,7 +443,7 @@ export default function EmailTemplatesPage() {
                 </h3>
                 <div className="space-y-3">
                   {TEMPLATES.filter(t => t.version> 1).length === 0 && (
-                    <p className="text-center text-[10px] text-muted py-6">No version history yet. Versions will appear here as templates are edited.</p>
+                    <p className="text-center text-[10px] text-text-muted py-6">No version history yet. Versions will appear here as templates are edited.</p>
                   )}
                   {TEMPLATES.filter(t => t.version> 1).map((t, i) => (
                     <motion.div
@@ -462,10 +462,10 @@ export default function EmailTemplatesPage() {
                           <div key={v} className="flex items-center justify-between p-2 rounded glass-md text-[10px]">
                             <div className="flex items-center gap-2">
                               <div className={`w-2 h-2 rounded-full ${v === t.version ? "bg-brand-accent" : "bg-muted"}`} />
-                              <span className={v === t.version ? "font-semibold" : "text-muted"}>Version {v}</span>
+                              <span className={v === t.version ? "font-semibold" : "text-text-muted"}>Version {v}</span>
                             </div>
                             <div className="flex items-center gap-3">
-                              <span className="text-muted">{v === t.version ? t.lastEdited : `Mar ${10 + v}`}</span>
+                              <span className="text-text-muted">{v === t.version ? t.lastEdited : `Mar ${10 + v}`}</span>
                               {v !== t.version && (
                                 <button className="text-[9px] px-2 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-[#6B7280] hover:text-brand-accent">Restore</button>
                               )}
@@ -490,13 +490,13 @@ export default function EmailTemplatesPage() {
                     </div>
                     <div>
                       <h3 className="text-sm font-semibold">AI Template Generator</h3>
-                      <p className="text-[10px] text-muted">Describe the template you need and AI will create it.</p>
+                      <p className="text-[10px] text-text-muted">Describe the template you need and AI will create it.</p>
                     </div>
                   </div>
 
                   <div className="space-y-3">
                     <div>
-                      <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Template Type</label>
+                      <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Template Type</label>
                       <select value={aiTemplateType} onChange={e => setAiTemplateType(e.target.value as AiTemplateType)} className="input w-full text-xs">
                         <option value="welcome">Welcome</option>
                         <option value="nurture">Nurture</option>
@@ -511,7 +511,7 @@ export default function EmailTemplatesPage() {
 
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <label className="text-[10px] text-muted uppercase tracking-wider">Goal / Description</label>
+                        <label className="text-[10px] text-text-muted uppercase tracking-wider">Goal / Description</label>
                         <AIEnhanceButton value={aiPrompt} onResult={setAiPrompt} context="email body copy" variant="inline" />
                       </div>
                       <textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)}
@@ -520,11 +520,11 @@ export default function EmailTemplatesPage() {
 
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Audience</label>
+                        <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Audience</label>
                         <input value={aiAudience} onChange={e => setAiAudience(e.target.value)} className="input w-full text-xs" placeholder="Dental practice owners" />
                       </div>
                       <div>
-                        <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Brand Voice</label>
+                        <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Brand Voice</label>
                         <input value={aiBrandVoice} onChange={e => setAiBrandVoice(e.target.value)} className="input w-full text-xs" placeholder="Warm, direct, no-fluff" />
                       </div>
                     </div>
@@ -552,7 +552,7 @@ export default function EmailTemplatesPage() {
                     <div className="flex items-center justify-between mb-3">
                       <div>
                         <h4 className="text-sm font-semibold">{aiGenerated.name}</h4>
-                        <p className="text-[10px] text-muted">{aiGenerated.merge_tags.length} merge tags</p>
+                        <p className="text-[10px] text-text-muted">{aiGenerated.merge_tags.length} merge tags</p>
                       </div>
                       <div className="flex gap-2">
                         <button onClick={handleGenerateVariants} className="btn-secondary text-xs flex items-center gap-1.5">
@@ -563,18 +563,18 @@ export default function EmailTemplatesPage() {
                     <div className="space-y-2">
                       <div>
                         <div className="flex items-center justify-between mb-1">
-                          <label className="text-[10px] text-muted uppercase tracking-wider">Subject</label>
+                          <label className="text-[10px] text-text-muted uppercase tracking-wider">Subject</label>
                           <AIEnhanceButton value={editedSubject} onResult={setEditedSubject} context="email subject line" variant="inline" />
                         </div>
                         <input value={editedSubject} onChange={e => setEditedSubject(e.target.value)} className="input w-full text-xs" />
                       </div>
                       <div>
-                        <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Preheader</label>
-                        <p className="text-[10px] text-muted">{aiGenerated.preheader}</p>
+                        <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Preheader</label>
+                        <p className="text-[10px] text-text-muted">{aiGenerated.preheader}</p>
                       </div>
                       <div>
                         <div className="flex items-center justify-between mb-1">
-                          <label className="text-[10px] text-muted uppercase tracking-wider">Body</label>
+                          <label className="text-[10px] text-text-muted uppercase tracking-wider">Body</label>
                           <AIEnhanceButton value={editedBody} onResult={setEditedBody} context="email body copy" variant="inline" />
                         </div>
                         <textarea value={editedBody} onChange={e => setEditedBody(e.target.value)} rows={12} className="input w-full text-xs font-mono resize-none" />
@@ -593,12 +593,12 @@ export default function EmailTemplatesPage() {
             )}{/* A/B Variants Modal */}<Modal isOpen={showVariantsModal} onClose={() => setShowVariantsModal(false)} title="A/B Variants" size="xl">
               <div className="space-y-3">
                 {variantsLoading && (
-                  <div className="flex items-center justify-center gap-2 text-xs text-muted py-8">
+                  <div className="flex items-center justify-center gap-2 text-xs text-text-muted py-8">
                     <Loader2 size={14} className="animate-spin" /> Generating variants...
                   </div>
                 )}
                 {!variantsLoading && variants.length === 0 && (
-                  <p className="text-xs text-muted text-center py-8">No variants yet.</p>
+                  <p className="text-xs text-text-muted text-center py-8">No variants yet.</p>
                 )}
                 {!variantsLoading && variants.map((v, i) => (
                   <motion.div
@@ -613,7 +613,7 @@ export default function EmailTemplatesPage() {
                       <button onClick={() => { setEditedSubject(v.subject); setEditedBody(v.body); setShowVariantsModal(false); toast.success("Variant applied"); }} className="btn-primary text-[10px] py-1 px-2">Apply</button>
                     </div>
                     <p className="text-xs font-semibold mb-1">{v.subject}</p>
-                    <p className="text-[10px] text-muted whitespace-pre-wrap">{v.body}</p>
+                    <p className="text-[10px] text-text-muted whitespace-pre-wrap">{v.body}</p>
                   </motion.div>
                 ))}
               </div>
@@ -628,10 +628,10 @@ export default function EmailTemplatesPage() {
 >
                     <Upload size={24} className="mx-auto mb-2 text-brand-accent" />
                     <h3 className="text-sm font-semibold mb-1">Import Templates</h3>
-                    <p className="text-[10px] text-muted mb-3">Upload HTML or JSON template files</p>
-                    <div className="border-2 border-dashed border-border rounded-lg p-6 mb-3">
-                      <p className="text-[10px] text-muted">Drag and drop files here or click to browse</p>
-                      <p className="text-[8px] text-muted mt-1">Supports .html, .json, .mjml</p>
+                    <p className="text-[10px] text-text-muted mb-3">Upload HTML or JSON template files</p>
+                    <div className="border-2 border-dashed border-border-subtle rounded-lg p-6 mb-3">
+                      <p className="text-[10px] text-text-muted">Drag and drop files here or click to browse</p>
+                      <p className="text-[8px] text-text-muted mt-1">Supports .html, .json, .mjml</p>
                     </div>
                     <button className="btn-secondary text-xs">Browse Files</button>
                   </motion.div>
@@ -643,7 +643,7 @@ export default function EmailTemplatesPage() {
 >
                     <Download size={24} className="mx-auto mb-2 text-brand-accent" />
                     <h3 className="text-sm font-semibold mb-1">Export Templates</h3>
-                    <p className="text-[10px] text-muted mb-3">Download your templates for backup or sharing</p>
+                    <p className="text-[10px] text-text-muted mb-3">Download your templates for backup or sharing</p>
                     <div className="space-y-2">
                       <button className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
                         <FileText size={12} /> Export All as JSON
@@ -669,7 +669,7 @@ export default function EmailTemplatesPage() {
                   </h3>
                   <div className="space-y-1.5">
                     {TEMPLATES.length === 0 && (
-                      <p className="text-center text-[10px] text-muted py-4">No templates to share yet.</p>
+                      <p className="text-center text-[10px] text-text-muted py-4">No templates to share yet.</p>
                     )}
                     {TEMPLATES.map((t, i) => (
                       <motion.div
@@ -706,19 +706,19 @@ export default function EmailTemplatesPage() {
                       <h3 className="text-sm font-bold">{selectedTemplate.name}</h3>
                       <span className={`text-[10px] px-1.5 py-0.5 rounded ${categoryColors[selectedTemplate.category] || ""}`}>{selectedTemplate.category}</span>
                     </div>
-                    <button onClick={() => setSelectedTemplate(null)} className="text-muted hover:text-foreground"><X size={16} /></button>
+                    <button onClick={() => setSelectedTemplate(null)} className="text-text-muted hover:text-text-primary"><X size={16} /></button>
                   </div>
                   <div className="flex-1 overflow-y-auto p-4 space-y-3">
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <label className="text-[10px] text-muted uppercase tracking-wider">Subject Line</label>
+                        <label className="text-[10px] text-text-muted uppercase tracking-wider">Subject Line</label>
                         <AIEnhanceButton value={editedSubject} onResult={setEditedSubject} context="email subject line" variant="inline" />
                       </div>
                       <input value={editedSubject} onChange={e => setEditedSubject(e.target.value)} className="input w-full text-xs" />
                     </div>
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <label className="text-[10px] text-muted uppercase tracking-wider">Email Body</label>
+                        <label className="text-[10px] text-text-muted uppercase tracking-wider">Email Body</label>
                         <AIEnhanceButton value={editedBody} onResult={setEditedBody} context="email body copy" variant="inline" />
                       </div>
                       <textarea value={editedBody} onChange={e => setEditedBody(e.target.value)} rows={12} className="input w-full text-xs resize-none font-mono" />

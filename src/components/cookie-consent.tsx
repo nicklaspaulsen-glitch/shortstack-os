@@ -23,8 +23,8 @@ export function CookieConsent() {
 
   return (
     <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-50 animate-in slide-in-from-bottom-4 duration-300">
-      <div className="bg-surface border border-border/40 rounded-lg p-4 shadow-xl backdrop-blur-sm">
-        <p className="text-xs text-muted leading-relaxed mb-3">
+      <div className="bg-surface border border-border-subtle/40 rounded-lg p-4 shadow-xl backdrop-blur-sm">
+        <p className="text-xs text-text-muted leading-relaxed mb-3">
           We use essential cookies for authentication and preferences. No tracking cookies.{" "}
           <a href="/cookies" className="text-[#2563EB] hover:text-[#3B82F6] underline underline-offset-2">
             Cookie Policy

@@ -63,7 +63,7 @@ function Defs({ id }: { id: string }) {
 export function EmptyLeadsIllustration({ size = 200 }: { size?: number }) {
   const id = "ill-leads";
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-muted">
+    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-text-muted">
       <Defs id={id} />
       <circle cx="100" cy="100" r="90" fill={`url(#${id}-glow)`} />
       {/* Floating business cards behind */}
@@ -94,7 +94,7 @@ export function EmptyLeadsIllustration({ size = 200 }: { size?: number }) {
 export function EmptyClientsIllustration({ size = 200 }: { size?: number }) {
   const id = "ill-clients";
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-muted">
+    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-text-muted">
       <Defs id={id} />
       <circle cx="100" cy="100" r="90" fill={`url(#${id}-glow)`} />
       <g filter={`url(#${id}-soft-shadow)`}>
@@ -123,7 +123,7 @@ export function EmptyClientsIllustration({ size = 200 }: { size?: number }) {
 export function EmptyContentIllustration({ size = 200 }: { size?: number }) {
   const id = "ill-content";
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-muted">
+    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-text-muted">
       <Defs id={id} />
       <circle cx="100" cy="100" r="90" fill={`url(#${id}-glow)`} />
       <g filter={`url(#${id}-soft-shadow)`}>
@@ -150,7 +150,7 @@ export function EmptyContentIllustration({ size = 200 }: { size?: number }) {
 export function EmptyMessagesIllustration({ size = 200 }: { size?: number }) {
   const id = "ill-msgs";
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-muted">
+    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-text-muted">
       <Defs id={id} />
       <circle cx="100" cy="100" r="90" fill={`url(#${id}-glow)`} />
       {/* Floating bubbles */}
@@ -177,7 +177,7 @@ export function EmptyMessagesIllustration({ size = 200 }: { size?: number }) {
 export function EmptyCampaignsIllustration({ size = 200 }: { size?: number }) {
   const id = "ill-camp";
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-muted">
+    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-text-muted">
       <Defs id={id} />
       <circle cx="100" cy="100" r="90" fill={`url(#${id}-glow)`} />
       {/* Trajectory */}
@@ -206,7 +206,7 @@ export function EmptyCampaignsIllustration({ size = 200 }: { size?: number }) {
 export function EmptyAnalyticsIllustration({ size = 200 }: { size?: number }) {
   const id = "ill-analytics";
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-muted">
+    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-text-muted">
       <Defs id={id} />
       <circle cx="100" cy="100" r="90" fill={`url(#${id}-glow)`} />
       <g filter={`url(#${id}-soft-shadow)`}>
@@ -235,7 +235,7 @@ export function EmptyAnalyticsIllustration({ size = 200 }: { size?: number }) {
 export function EmptyCalendarIllustration({ size = 200 }: { size?: number }) {
   const id = "ill-cal";
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-muted">
+    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-text-muted">
       <Defs id={id} />
       <circle cx="100" cy="100" r="90" fill={`url(#${id}-glow)`} />
       <g filter={`url(#${id}-soft-shadow)`}>
@@ -262,7 +262,7 @@ export function EmptyCalendarIllustration({ size = 200 }: { size?: number }) {
 export function EmptyFilesIllustration({ size = 200 }: { size?: number }) {
   const id = "ill-files";
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-muted">
+    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-text-muted">
       <Defs id={id} />
       <circle cx="100" cy="100" r="90" fill={`url(#${id}-glow)`} />
       <g filter={`url(#${id}-soft-shadow)`}>
@@ -285,7 +285,7 @@ export function EmptyFilesIllustration({ size = 200 }: { size?: number }) {
 export function EmptyReviewsIllustration({ size = 200 }: { size?: number }) {
   const id = "ill-reviews";
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-muted">
+    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-text-muted">
       <Defs id={id} />
       <circle cx="100" cy="100" r="90" fill={`url(#${id}-glow)`} />
       {/* Speech bubble */}
@@ -309,7 +309,7 @@ export function EmptyReviewsIllustration({ size = 200 }: { size?: number }) {
 export function EmptyInvoicesIllustration({ size = 200 }: { size?: number }) {
   const id = "ill-inv";
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-muted">
+    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-text-muted">
       <Defs id={id} />
       <circle cx="100" cy="100" r="90" fill={`url(#${id}-glow)`} />
       <g filter={`url(#${id}-soft-shadow)`}>
@@ -336,7 +336,7 @@ export function EmptyInvoicesIllustration({ size = 200 }: { size?: number }) {
 export function EmptyComingSoonIllustration({ size = 200 }: { size?: number }) {
   const id = "ill-soon";
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-muted">
+    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-text-muted">
       <Defs id={id} />
       <circle cx="100" cy="100" r="90" fill={`url(#${id}-glow)`} />
       {/* Large gear */}
@@ -356,7 +356,7 @@ export function EmptyComingSoonIllustration({ size = 200 }: { size?: number }) {
 export function EmptyErrorIllustration({ size = 200 }: { size?: number }) {
   const id = "ill-err";
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-muted">
+    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-text-muted">
       <Defs id={id} />
       <circle cx="100" cy="100" r="90" fill={`url(#${id}-glow)`} />
       <g filter={`url(#${id}-soft-shadow)`}>
@@ -424,13 +424,13 @@ interface EmptyStateProps {
 export function EmptyState({ type, title, description, action, size = 180, className = "" }: EmptyStateProps) {
   const Illustration = REGISTRY[type];
   return (
-    <div className={`flex flex-col items-center justify-center py-10 gap-3 fade-in ${className}`}>
+    <div className={`flex flex-col items-center justify-center py-10 gap-3 ${className}`}>
       <div className="float">
         <Illustration size={size} />
       </div>
-      <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+      <h3 className="text-sm font-semibold text-text-primary">{title}</h3>
       {description && (
-        <p className="text-[11px] text-muted text-center max-w-sm leading-relaxed">
+        <p className="text-[11px] text-text-muted text-center max-w-sm leading-relaxed">
           {description}
         </p>
       )}

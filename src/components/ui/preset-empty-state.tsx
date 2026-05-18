@@ -21,7 +21,7 @@ export function PresetEmptyState({ onReset, label = "presets" }: PresetEmptyStat
         viewBox="0 0 140 140"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="text-muted opacity-70"
+        className="text-text-muted opacity-70"
       >
         <defs>
           <radialGradient id="pe-glow" cx="0.5" cy="0.5" r="0.5">
@@ -79,8 +79,8 @@ export function PresetEmptyState({ onReset, label = "presets" }: PresetEmptyStat
       </svg>
 
       <div className="text-center space-y-1.5">
-        <p className="text-sm font-semibold text-foreground">No {label} match</p>
-        <p className="text-[11px] text-muted max-w-[240px] leading-relaxed">
+        <p className="text-sm font-semibold text-text-primary">No {label} match</p>
+        <p className="text-[11px] text-text-muted max-w-[240px] leading-relaxed">
           Try adjusting your search or filters to find what you&apos;re looking for.
         </p>
       </div>
@@ -88,7 +88,7 @@ export function PresetEmptyState({ onReset, label = "presets" }: PresetEmptyStat
       <button
         type="button"
         onClick={onReset}
-        className="flex items-center gap-2 rounded-lg border border-border bg-surface-light px-4 py-2 text-sm text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.3)] transition-all"
+        className="flex items-center gap-2 rounded-lg border border-border-subtle bg-surface-light px-4 py-2 text-sm text-text-muted hover:text-text-primary hover:border-[rgba(59,130,246,0.3)] transition-all"
       >
         <RotateCcw size={13} />
         Reset filters

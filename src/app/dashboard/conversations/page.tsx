@@ -401,7 +401,7 @@ export default function ConversationsPage() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search�"
-                    className="w-full bg-surface-light border border-border rounded-lg pl-9 pr-3 py-2 text-sm placeholder-white/30 focus:outline-none focus:border-brand-accent/40"
+                    className="w-full bg-surface-light border border-border-subtle rounded-lg pl-9 pr-3 py-2 text-sm placeholder-white/30 focus:outline-none focus:border-brand-accent/40"
                   />
                 </div>
               </div>
@@ -688,7 +688,7 @@ function MessageBubble({ m }: { m: Message }) {
         }`}
       >
         <div className="whitespace-pre-wrap break-words">{m.body || <em className="opacity-60">No content</em>}</div>
-        <div className={`text-[10px] mt-1 ${inbound ? "text-text-muted" : "text-muted"}`}>
+        <div className={`text-[10px] mt-1 ${inbound ? "text-text-muted" : "text-text-muted"}`}>
           {fmtTime(m.sent_at)}
         </div>
       </div>
@@ -747,7 +747,7 @@ function ContactPanel({
           {conversation.tags && conversation.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 pt-1">
               {conversation.tags.map((t) => (
-                <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] border border-border">
+                <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] border border-border-subtle">
                   {t}
                 </span>
               ))}

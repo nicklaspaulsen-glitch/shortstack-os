@@ -141,11 +141,11 @@ export function TaskDrawer({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 320, damping: 32 }}
-            className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-lg bg-surface border-l border-border shadow-2xl flex flex-col"
+            className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-lg bg-surface border-l border-border-subtle shadow-2xl flex flex-col"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
-              <div className="flex items-center gap-2 text-xs text-muted">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle shrink-0">
+              <div className="flex items-center gap-2 text-xs text-text-muted">
                 <span className="font-mono">{task.id.slice(0, 8)}</span>
                 <span>·</span>
                 <span>Updated {formatTimestamp(task.updated_at)}</span>
@@ -159,7 +159,7 @@ export function TaskDrawer({
                         void onDelete();
                       }
                     }}
-                    className="p-1.5 rounded-md text-muted hover:text-red-600 hover:bg-red-500/10 transition-colors"
+                    className="p-1.5 rounded-md text-text-muted hover:text-red-600 hover:bg-red-500/10 transition-colors"
                     aria-label="Delete"
                   >
                     <Trash2 size={16} />
@@ -168,7 +168,7 @@ export function TaskDrawer({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-fg transition-colors"
+                  className="p-1.5 rounded-md hover:bg-surface-light text-text-muted hover:text-fg transition-colors"
                   aria-label="Close"
                 >
                   <X size={16} />
@@ -209,7 +209,7 @@ export function TaskDrawer({
                   <select
                     value={task.status}
                     onChange={(e) => onPatch({ status: e.target.value as TaskStatus })}
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-[#2563EB] focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#2563EB] focus:outline-none text-sm"
                   >
                     <option value="backlog">Backlog</option>
                     <option value="in_progress">In Progress</option>
@@ -223,7 +223,7 @@ export function TaskDrawer({
                     onChange={(e) =>
                       onPatch({ priority: e.target.value as TaskPriority })
                     }
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-[#2563EB] focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#2563EB] focus:outline-none text-sm"
                   >
                     {TASK_PRIORITIES.map((p) => (
                       <option key={p} value={p}>
@@ -236,7 +236,7 @@ export function TaskDrawer({
                   <select
                     value={task.type}
                     onChange={(e) => onPatch({ type: e.target.value as TaskType })}
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-[#2563EB] focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#2563EB] focus:outline-none text-sm"
                   >
                     {TASK_TYPES.map((t) => (
                       <option key={t} value={t}>
@@ -256,7 +256,7 @@ export function TaskDrawer({
                           : null,
                       })
                     }
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-[#2563EB] focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#2563EB] focus:outline-none text-sm"
                   />
                 </Field>
                 <Field label="Client">
@@ -265,7 +265,7 @@ export function TaskDrawer({
                     onChange={(e) =>
                       onPatch({ client_id: e.target.value || null })
                     }
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-[#2563EB] focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#2563EB] focus:outline-none text-sm"
                   >
                     <option value="">No client</option>
                     {Object.values(clients).map((c) => (
@@ -281,7 +281,7 @@ export function TaskDrawer({
                     onChange={(e) =>
                       onPatch({ assignee_id: e.target.value || null })
                     }
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border focus:border-[#2563EB] focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#2563EB] focus:outline-none text-sm"
                   >
                     <option value="">Unassigned</option>
                     {Object.values(members).map((m) => (
@@ -295,7 +295,7 @@ export function TaskDrawer({
 
               {/* Description (click to edit) */}
               <div>
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-1.5">
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-1.5">
                   Description
                 </div>
                 {editingDesc ? (
@@ -319,7 +319,7 @@ export function TaskDrawer({
                   <button
                     type="button"
                     onClick={() => setEditingDesc(true)}
-                    className="text-xs text-muted hover:text-fg italic"
+                    className="text-xs text-text-muted hover:text-fg italic"
                   >
                     Add a description
                   </button>
@@ -328,13 +328,13 @@ export function TaskDrawer({
 
               {/* Comments */}
               <div>
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-2">
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-2">
                   Comments {comments.length > 0 && `(${comments.length})`}
                 </div>
                 {loading ? (
-                  <div className="text-xs text-muted">Loading…</div>
+                  <div className="text-xs text-text-muted">Loading…</div>
                 ) : comments.length === 0 ? (
-                  <div className="text-xs text-muted italic">
+                  <div className="text-xs text-text-muted italic">
                     No comments yet — be the first.
                   </div>
                 ) : (
@@ -354,7 +354,7 @@ export function TaskDrawer({
             {/* Comment composer */}
             <form
               onSubmit={handleCommentSubmit}
-              className="border-t border-border p-3 shrink-0"
+              className="border-t border-border-subtle p-3 shrink-0"
             >
               <div className="flex items-end gap-2">
                 <textarea
@@ -367,7 +367,7 @@ export function TaskDrawer({
                   }}
                   rows={2}
                   placeholder="Write a comment… (⌘+Enter to send)"
-                  className="flex-1 px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[#2563EB] focus:outline-none text-sm resize-none"
+                  className="flex-1 px-3 py-2 rounded-lg bg-surface-light border border-border-subtle focus:border-[#2563EB] focus:outline-none text-sm resize-none"
                 />
                 <button
                   type="submit"
@@ -389,7 +389,7 @@ export function TaskDrawer({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-1">
+      <div className="text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-1">
         {label}
       </div>
       {children}
@@ -430,7 +430,7 @@ function CommentRow({
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 text-xs mb-0.5">
           <span className="font-medium">{author?.full_name ?? "Unknown"}</span>
-          <span className="text-muted">{formatTimestamp(comment.created_at)}</span>
+          <span className="text-text-muted">{formatTimestamp(comment.created_at)}</span>
         </div>
         <p className="text-sm text-fg/90 whitespace-pre-wrap break-words">
           {comment.body}

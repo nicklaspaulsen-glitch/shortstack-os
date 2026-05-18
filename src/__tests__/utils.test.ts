@@ -88,7 +88,7 @@ describe("getStatusColor", () => {
   });
 
   it("returns default for unknown status", () => {
-    expect(getStatusColor("nonexistent")).toBe("text-foreground");
+    expect(getStatusColor("nonexistent")).toBe("text-text-primary");
   });
 });
 
@@ -100,7 +100,7 @@ describe("getStatusBgColor", () => {
   });
 
   it("returns default for unknown status", () => {
-    expect(getStatusBgColor("nonexistent")).toBe("bg-surface-light text-foreground");
+    expect(getStatusBgColor("nonexistent")).toBe("bg-surface-light text-text-primary");
   });
 });
 

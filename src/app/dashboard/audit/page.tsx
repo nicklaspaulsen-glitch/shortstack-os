@@ -211,7 +211,7 @@ export default function AuditPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Audit Log command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Audit Log command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AUDIT LOG</p>
@@ -255,7 +255,7 @@ export default function AuditPage() {
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-                    tab === t.id ? "bg-[rgba(59,130,246,0.08)] text-brand-accent font-medium" : "text-muted hover:text-foreground"
+                    tab === t.id ? "bg-[rgba(59,130,246,0.08)] text-brand-accent font-medium" : "text-text-muted hover:text-text-primary"
                   }`}>
                   {t.icon} {t.label}
                   {t.badge !== undefined && t.badge > 0 && (
@@ -268,17 +268,17 @@ export default function AuditPage() {
                 {/* Filters */}
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="relative flex-1 min-w-[200px] max-w-sm">
-                    <Search size={11} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
+                    <Search size={11} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                     <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                       placeholder="Search actions, users, resources..." className="input w-full pl-7 text-xs py-1.5" />
                   </div>
 
                   {/* Action type filter */}
                   <div className="flex gap-1 bg-surface rounded-lg p-0.5">
-                    <button onClick={() => setActionFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${actionFilter === "all" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-muted"}`}>All</button>
+                    <button onClick={() => setActionFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${actionFilter === "all" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-text-muted"}`}>All</button>
                     {ACTION_FILTERS.map(af => (
                       <button key={af} onClick={() => setActionFilter(af)}
-                        className={`px-2 py-1 rounded-md text-[9px] font-medium capitalize ${actionFilter === af ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-muted"}`}>
+                        className={`px-2 py-1 rounded-md text-[9px] font-medium capitalize ${actionFilter === af ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-text-muted"}`}>
                         {ACTION_STYLES[af].label}
                       </button>
                     ))}
@@ -296,48 +296,48 @@ export default function AuditPage() {
                   <div className="flex gap-1">
                     {([["today", "Today"], ["7d", "7 Days"], ["30d", "30 Days"], ["all", "All"]] as const).map(([val, label]) => (
                       <button key={val} onClick={() => setDateFilter(val)}
-                        className={`px-2 py-1 rounded text-[9px] ${dateFilter === val ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-muted"}`}>{label}</button>
+                        className={`px-2 py-1 rounded text-[9px] ${dateFilter === val ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-text-muted"}`}>{label}</button>
                     ))}
                   </div>
 
                   {/* Sensitive toggle */}
                   <button onClick={() => setShowSensitiveOnly(!showSensitiveOnly)}
-                    className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${showSensitiveOnly ? "bg-[rgba(59,130,246,0.10)] text-brand-accent" : "text-muted"}`}>
+                    className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${showSensitiveOnly ? "bg-[rgba(59,130,246,0.10)] text-brand-accent" : "text-text-muted"}`}>
                     <Lock size={9} /> Sensitive Only
                   </button>
 
-                  <span className="text-[9px] text-muted ml-auto">{filtered.length} entries</span>
+                  <span className="text-[9px] text-text-muted ml-auto">{filtered.length} entries</span>
                 </div>
 
                 {/* Audit Table */}
                 <PrismPanel padding="p-0" className="overflow-x-auto">
                   <table className="w-full text-xs">
                     <thead>
-                      <tr className="border-b border-border">
-                        <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Timestamp</th>
-                        <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">User</th>
-                        <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Action</th>
-                        <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Resource</th>
-                        <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px] hidden lg:table-cell">Details</th>
-                        <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px] hidden md:table-cell">IP</th>
-                        <th className="text-center py-2.5 px-3 text-muted font-semibold text-[10px]">Status</th>
+                      <tr className="border-b border-border-subtle">
+                        <th className="text-left py-2.5 px-3 text-text-muted font-semibold text-[10px]">Timestamp</th>
+                        <th className="text-left py-2.5 px-3 text-text-muted font-semibold text-[10px]">User</th>
+                        <th className="text-left py-2.5 px-3 text-text-muted font-semibold text-[10px]">Action</th>
+                        <th className="text-left py-2.5 px-3 text-text-muted font-semibold text-[10px]">Resource</th>
+                        <th className="text-left py-2.5 px-3 text-text-muted font-semibold text-[10px] hidden lg:table-cell">Details</th>
+                        <th className="text-left py-2.5 px-3 text-text-muted font-semibold text-[10px] hidden md:table-cell">IP</th>
+                        <th className="text-center py-2.5 px-3 text-text-muted font-semibold text-[10px]">Status</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filtered.length === 0 && (
                         <tr><td colSpan={7} className="text-center py-12">
-                          <Activity size={28} className="mx-auto mb-2 text-muted/30" />
-                          <p className="text-sm text-muted">{loading ? "Loading audit entries..." : "No audit entries yet."}</p>
+                          <Activity size={28} className="mx-auto mb-2 text-text-muted/30" />
+                          <p className="text-sm text-text-muted">{loading ? "Loading audit entries..." : "No audit entries yet."}</p>
                         </td></tr>
                       )}
                       {filtered.map((entry, idx) => {
                         const style = ACTION_STYLES[entry.action];
                         return (
                           <motion.tr key={entry.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }}
-                            className="border-b border-border/30 hover:bg-surface-light/50 transition-colors cursor-pointer"
+                            className="border-b border-border-subtle/30 hover:bg-surface-light/50 transition-colors cursor-pointer"
                             onClick={() => setExpandedEntry(expandedEntry === entry.id ? null : entry.id)}>
                             <td className="py-2.5 px-3">
-                              <span className="text-[10px] font-mono text-muted">{entry.timestamp}</span>
+                              <span className="text-[10px] font-mono text-text-muted">{entry.timestamp}</span>
                             </td>
                             <td className="py-2.5 px-3">
                               <div className="flex items-center gap-2">
@@ -352,8 +352,8 @@ export default function AuditPage() {
                               </span>
                             </td>
                             <td className="py-2.5 px-3 text-[10px] font-medium">{entry.resource}</td>
-                            <td className="py-2.5 px-3 text-[10px] text-muted truncate max-w-[200px] hidden lg:table-cell">{entry.details}</td>
-                            <td className="py-2.5 px-3 text-[10px] font-mono text-muted hidden md:table-cell">{entry.ip}</td>
+                            <td className="py-2.5 px-3 text-[10px] text-text-muted truncate max-w-[200px] hidden lg:table-cell">{entry.details}</td>
+                            <td className="py-2.5 px-3 text-[10px] font-mono text-text-muted hidden md:table-cell">{entry.ip}</td>
                             <td className="py-2.5 px-3 text-center">
                               <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium inline-flex items-center gap-1 ${
                                 entry.status === "success" ? "bg-emerald-500/10 text-emerald-400" :
@@ -385,32 +385,32 @@ export default function AuditPage() {
                         <button
                           onClick={() => setExpandedEntry(null)}
                           aria-label="Close detail"
-                          className="text-muted hover:text-foreground"><X size={14} /></button>
+                          className="text-text-muted hover:text-text-primary"><X size={14} /></button>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                         <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                          <p className="text-[8px] text-muted uppercase">Timestamp</p>
+                          <p className="text-[8px] text-text-muted uppercase">Timestamp</p>
                           <p className="text-[10px] font-mono mt-0.5">{e.timestamp}</p>
                         </div>
                         <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                          <p className="text-[8px] text-muted uppercase">User</p>
+                          <p className="text-[8px] text-text-muted uppercase">User</p>
                           <p className="text-[10px] font-medium mt-0.5">{e.user}</p>
                         </div>
                         <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                          <p className="text-[8px] text-muted uppercase">Action</p>
+                          <p className="text-[8px] text-text-muted uppercase">Action</p>
                           <p className={`text-[10px] font-medium mt-0.5 ${style.color}`}>{style.label}</p>
                         </div>
                         <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                          <p className="text-[8px] text-muted uppercase">IP Address</p>
+                          <p className="text-[8px] text-text-muted uppercase">IP Address</p>
                           <p className="text-[10px] font-mono mt-0.5">{e.ip}</p>
                         </div>
                       </div>
                       <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                        <p className="text-[8px] text-muted uppercase mb-1">Full Details</p>
+                        <p className="text-[8px] text-text-muted uppercase mb-1">Full Details</p>
                         <p className="text-[10px]">{e.details}</p>
                       </div>
                       <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                        <p className="text-[8px] text-muted uppercase mb-1">Resource</p>
+                        <p className="text-[8px] text-text-muted uppercase mb-1">Resource</p>
                         <p className="text-[10px] font-medium">{e.resource}</p>
                       </div>
                       {e.sensitive && (
@@ -427,12 +427,12 @@ export default function AuditPage() {
               <div className="space-y-4">
                 {/* Unresolved alerts */}
                 <PrismPanel padding="p-4">
-                  <h2 className="section-header flex items-center gap-2"><Shield size={13} className="text-red-400" /> Unresolved Alerts</h2>
+                  <h2 className="flex items-center gap-2"><Shield size={13} className="text-red-400" /> Unresolved Alerts</h2>
                   <div className="space-y-2">
                     {alerts.filter(a => !a.resolved).length === 0 && (
                       <div className="text-center py-8">
                         <CheckCircle size={24} className="mx-auto mb-2 text-emerald-400" />
-                        <p className="text-xs text-muted">{loading ? "Loading alerts..." : "All alerts resolved. System secure."}</p>
+                        <p className="text-xs text-text-muted">{loading ? "Loading alerts..." : "All alerts resolved. System secure."}</p>
                       </div>
                     )}
                     {alerts.filter(a => !a.resolved).map(alert => (
@@ -465,10 +465,10 @@ export default function AuditPage() {
 
                 {/* Resolved alerts */}
                 <PrismPanel padding="p-4">
-                  <h2 className="section-header flex items-center gap-2"><CheckCircle size={13} className="text-emerald-400" /> Resolved Alerts</h2>
+                  <h2 className="flex items-center gap-2"><CheckCircle size={13} className="text-emerald-400" /> Resolved Alerts</h2>
                   <div className="space-y-2">
                     {alerts.filter(a => a.resolved).length === 0 && (
-                      <p className="text-xs text-muted text-center py-6">No resolved alerts yet.</p>
+                      <p className="text-xs text-text-muted text-center py-6">No resolved alerts yet.</p>
                     )}
                     {alerts.filter(a => a.resolved).map(alert => (
                       <div key={alert.id} className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
@@ -476,7 +476,7 @@ export default function AuditPage() {
                           <CheckCircle size={12} className="text-emerald-400 shrink-0" />
                           <div className="flex-1 min-w-0">
                             <p className="text-[10px] font-medium">{alert.title}</p>
-                            <p className="text-[9px] text-muted">{new Date(alert.created_at).toLocaleString()}</p>
+                            <p className="text-[9px] text-text-muted">{new Date(alert.created_at).toLocaleString()}</p>
                           </div>
                           <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-medium ${SEVERITY_STYLES[alert.severity]}`}>{alert.severity}</span>
                         </div>
@@ -487,7 +487,7 @@ export default function AuditPage() {
 
                 {/* Security Overview — computed from real entries */}
                 <PrismPanel padding="p-4">
-                  <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-brand-accent" /> Security Overview</h2>
+                  <h2 className="flex items-center gap-2"><Eye size={13} className="text-brand-accent" /> Security Overview</h2>
                   {(() => {
                     const sevenDaysAgo = Date.now() - 7 * 86400000;
                     const recent = entries.filter(e => new Date(e.timestamp).getTime() >= sevenDaysAgo);
@@ -498,8 +498,8 @@ export default function AuditPage() {
                     const isEmpty = recent.length === 0;
                     if (isEmpty) {
                       return (
-                        <div className="py-8 text-center text-xs text-muted">
-                          <Shield size={20} className="mx-auto mb-2 text-muted/40" />
+                        <div className="py-8 text-center text-xs text-text-muted">
+                          <Shield size={20} className="mx-auto mb-2 text-text-muted/40" />
                           No security events recorded yet. Stats will populate as your team uses the platform.
                         </div>
                       );
@@ -513,7 +513,7 @@ export default function AuditPage() {
                           { label: "Unique IPs (7d)", value: uniqueIps, color: "text-brand-accent" },
                         ].map((s, i) => (
                           <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl p-3 text-center" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                            <p className="text-[9px] text-muted uppercase">{s.label}</p>
+                            <p className="text-[9px] text-text-muted uppercase">{s.label}</p>
                             <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
                           </motion.div>
                         ))}
@@ -525,45 +525,45 @@ export default function AuditPage() {
             )}{/* ═══ RETENTION TAB ═══ */}{tab === "retention" && (
               <div className="space-y-4">
                 <PrismPanel padding="p-4">
-                  <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-brand-accent" /> Retention Policy</h2>
+                  <h2 className="flex items-center gap-2"><Clock size={13} className="text-brand-accent" /> Retention Policy</h2>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Retention Period (days)</label>
+                      <label className="text-[9px] text-text-muted uppercase mb-1 block font-semibold">Retention Period (days)</label>
                       <div className="flex items-center gap-3">
                         <input type="number" value={retentionDays} onChange={e => setRetentionDays(Number(e.target.value))}
                           className="input w-32 text-xs" min={30} max={365} />
                         <div className="flex gap-1">
                           {[30, 60, 90, 180, 365].map(d => (
                             <button key={d} onClick={() => setRetentionDays(d)}
-                              className={`px-2 py-1 rounded text-[9px] ${retentionDays === d ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-muted hover:text-foreground"}`}>{d}d</button>
+                              className={`px-2 py-1 rounded text-[9px] ${retentionDays === d ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-text-muted hover:text-text-primary"}`}>{d}d</button>
                           ))}
                         </div>
                       </div>
                     </div>
-                    <p className="text-[10px] text-muted">Audit logs older than {retentionDays} days will be automatically archived and removed from the active view.</p>
+                    <p className="text-[10px] text-text-muted">Audit logs older than {retentionDays} days will be automatically archived and removed from the active view.</p>
 
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
                       <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                        <p className="text-[9px] text-muted uppercase">Active Entries</p>
+                        <p className="text-[9px] text-text-muted uppercase">Active Entries</p>
                         <p className="text-lg font-bold text-brand-accent mt-0.5">{entries.length}</p>
                       </div>
                       <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                        <p className="text-[9px] text-muted uppercase">Storage Used</p>
+                        <p className="text-[9px] text-text-muted uppercase">Storage Used</p>
                         {/* Rough estimate: ~200 bytes/entry; exact size comes from backend once wired. */}
                         <p className="text-lg font-bold text-brand-accent mt-0.5">
                           {entries.length > 0 ? `${(entries.length * 0.2).toFixed(1)} KB` : "0 KB"}
                         </p>
                       </div>
                       <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
-                        <p className="text-[9px] text-muted uppercase">Archived</p>
-                        <p className="text-lg font-bold text-muted mt-0.5">0</p>
+                        <p className="text-[9px] text-text-muted uppercase">Archived</p>
+                        <p className="text-lg font-bold text-text-muted mt-0.5">0</p>
                       </div>
                     </div>
                   </div>
                 </PrismPanel>
 
                 <PrismPanel padding="p-4">
-                  <h2 className="section-header flex items-center gap-2"><Database size={13} className="text-brand-accent" /> Data Lifecycle</h2>
+                  <h2 className="flex items-center gap-2"><Database size={13} className="text-brand-accent" /> Data Lifecycle</h2>
                   <div className="space-y-2">
                     {[
                       { stage: "Active", desc: `0 - ${retentionDays} days`, status: "Current data, fully searchable", color: "text-emerald-400" },
@@ -574,9 +574,9 @@ export default function AuditPage() {
                         <div className={`w-2 h-2 rounded-full ${item.color === "text-emerald-400" ? "bg-emerald-400" : item.color === "text-brand-accent" ? "bg-brand-accent" : "bg-red-400"}`} />
                         <div className="flex-1">
                           <p className={`text-[10px] font-semibold ${item.color}`}>{item.stage}</p>
-                          <p className="text-[9px] text-muted">{item.desc}</p>
+                          <p className="text-[9px] text-text-muted">{item.desc}</p>
                         </div>
-                        <span className="text-[9px] text-muted">{item.status}</span>
+                        <span className="text-[9px] text-text-muted">{item.status}</span>
                       </motion.div>
                     ))}
                   </div>
@@ -584,23 +584,23 @@ export default function AuditPage() {
               </div>
             )}{/* ═══ EXPORT TAB ═══ */}{tab === "export" && (
               <PrismPanel padding="p-4">
-                <h2 className="section-header flex items-center gap-2"><Download size={13} className="text-brand-accent" /> Export Audit Report</h2>
+                <h2 className="flex items-center gap-2"><Download size={13} className="text-brand-accent" /> Export Audit Report</h2>
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Start Date</label>
+                      <label className="text-[9px] text-text-muted uppercase mb-1 block font-semibold">Start Date</label>
                       <input type="date" value={exportStartDate} onChange={e => setExportStartDate(e.target.value)}
                         className="input w-full text-xs" />
                     </div>
                     <div>
-                      <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">End Date</label>
+                      <label className="text-[9px] text-text-muted uppercase mb-1 block font-semibold">End Date</label>
                       <input type="date" value={exportEndDate} onChange={e => setExportEndDate(e.target.value)}
                         className="input w-full text-xs" />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Format</label>
+                      <label className="text-[9px] text-text-muted uppercase mb-1 block font-semibold">Format</label>
                       <select value={exportFormat} onChange={e => setExportFormat(e.target.value as typeof exportFormat)}
                         className="input w-full text-xs">
                         <option>CSV</option>
@@ -609,7 +609,7 @@ export default function AuditPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Filter by Action</label>
+                      <label className="text-[9px] text-text-muted uppercase mb-1 block font-semibold">Filter by Action</label>
                       <select value={exportActionFilter} onChange={e => setExportActionFilter(e.target.value as ActionType | "all")}
                         className="input w-full text-xs">
                         <option value="all">All Actions</option>
@@ -618,14 +618,14 @@ export default function AuditPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Filter by User</label>
+                    <label className="text-[9px] text-text-muted uppercase mb-1 block font-semibold">Filter by User</label>
                     <select value={exportUserFilter} onChange={e => setExportUserFilter(e.target.value)}
                       className="input w-full text-xs">
                       <option value="all">All Users</option>
                       {uniqueUsers.map(u => <option key={u} value={u}>{u}</option>)}
                     </select>
                   </div>
-                  <div className="rounded-xl p-3 text-[10px] text-muted" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                  <div className="rounded-xl p-3 text-[10px] text-text-muted" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
                     Estimated export size: <span className="font-bold text-brand-accent">{exportFiltered.length} entries</span> ({(exportFiltered.length * 0.2).toFixed(1)} KB)
                   </div>
                   <div className="flex gap-2">

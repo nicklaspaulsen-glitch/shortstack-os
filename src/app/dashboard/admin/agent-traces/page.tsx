@@ -151,7 +151,7 @@ export default function AgentTracesDashboard() {
 
   if (authLoading || state === "loading") {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[60vh] text-muted text-sm">Loading agent traces…
+      <MotionPage className="flex items-center justify-center min-h-[60vh] text-text-muted text-sm">Loading agent traces…
               </MotionPage>
     );
   }
@@ -159,9 +159,9 @@ export default function AgentTracesDashboard() {
   if (state === "forbidden") {
     return (
       <div className="max-w-xl mx-auto py-12 text-center space-y-3">
-        <Lock size={32} className="text-muted mx-auto" />
+        <Lock size={32} className="text-text-muted mx-auto" />
         <h1 className="text-lg font-bold">Admin only</h1>
-        <p className="text-xs text-muted">
+        <p className="text-xs text-text-muted">
           The agent traces dashboard is restricted to admin/founder roles.
         </p>
       </div>
@@ -174,7 +174,7 @@ export default function AgentTracesDashboard() {
         <h1 className="text-lg font-bold">Couldn&apos;t load agent traces</h1>
         <button
           onClick={load}
-          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border bg-surface hover:bg-surface-light"
+          className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light"
         >
           <RefreshCw size={12} /> Retry
         </button>
@@ -232,9 +232,9 @@ export default function AgentTracesDashboard() {
       </div>
 
       {/* Filter chips */}
-      <section className=" border border-border bg-surface p-5 space-y-3">
+      <section className=" border border-border-subtle bg-surface p-5 space-y-3">
         <div className="space-y-2">
-          <p className="text-[11px] uppercase tracking-wide text-muted">Surface</p>
+          <p className="text-[11px] uppercase tracking-wide text-text-muted">Surface</p>
           <div className="flex flex-wrap gap-2">
             {SURFACE_CHIPS.map((chip) => (
               <button
@@ -243,7 +243,7 @@ export default function AgentTracesDashboard() {
                 className={`text-xs px-3 py-1.5 rounded-full border transition ${
                   surface === chip.id
                     ? "border-accent/60 bg-accent/15 text-accent"
-                    : "border-border bg-background/60 text-muted hover:bg-surface-light"
+                    : "border-border-subtle bg-background/60 text-text-muted hover:bg-surface-light"
                 }`}
               >
                 {chip.label}
@@ -252,7 +252,7 @@ export default function AgentTracesDashboard() {
           </div>
         </div>
         <div className="space-y-2">
-          <p className="text-[11px] uppercase tracking-wide text-muted">Status</p>
+          <p className="text-[11px] uppercase tracking-wide text-text-muted">Status</p>
           <div className="flex flex-wrap gap-2">
             {STATUS_CHIPS.map((chip) => (
               <button
@@ -261,7 +261,7 @@ export default function AgentTracesDashboard() {
                 className={`text-xs px-3 py-1.5 rounded-full border transition ${
                   status === chip.id
                     ? "border-accent/60 bg-accent/15 text-accent"
-                    : "border-border bg-background/60 text-muted hover:bg-surface-light"
+                    : "border-border-subtle bg-background/60 text-text-muted hover:bg-surface-light"
                 }`}
               >
                 {chip.label}
@@ -272,17 +272,17 @@ export default function AgentTracesDashboard() {
       </section>
 
       {/* Trace table */}
-      <section className=" border border-border bg-surface overflow-hidden">
-        <header className="flex items-center justify-between px-5 py-4 border-b border-border">
+      <section className=" border border-border-subtle bg-surface overflow-hidden">
+        <header className="flex items-center justify-between px-5 py-4 border-b border-border-subtle">
           <div>
             <h2 className="text-sm font-semibold">Recent traces</h2>
-            <p className="text-[11px] text-muted">
+            <p className="text-[11px] text-text-muted">
               Showing up to 100. Click a row to open the full trace in Langfuse.
             </p>
           </div>
         </header>
         {resp.data.length === 0 ? (
-          <div className="px-5 py-12 text-center text-xs text-muted">
+          <div className="px-5 py-12 text-center text-xs text-text-muted">
             No traces in this window.
             {!stats?.total_calls && (
               <p className="mt-2">
@@ -296,7 +296,7 @@ export default function AgentTracesDashboard() {
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="text-[10px] uppercase tracking-wide text-muted border-b border-border">
+                <tr className="text-[10px] uppercase tracking-wide text-text-muted border-b border-border-subtle">
                   <th className="text-left px-4 py-2 font-medium">Time</th>
                   <th className="text-left px-4 py-2 font-medium">Surface</th>
                   <th className="text-left px-4 py-2 font-medium">Task</th>
@@ -312,19 +312,19 @@ export default function AgentTracesDashboard() {
                   <tr
                     key={row.id}
                     onClick={() => window.open(row.langfuse_url, "_blank", "noopener")}
-                    className="border-b border-border/40 hover:bg-surface-light cursor-pointer transition"
+                    className="border-b border-border-subtle/40 hover:bg-surface-light cursor-pointer transition"
                   >
-                    <td className="px-4 py-2.5 whitespace-nowrap text-muted">
+                    <td className="px-4 py-2.5 whitespace-nowrap text-text-muted">
                       {formatRelativeTime(row.created_at)}
                     </td>
                     <td className="px-4 py-2.5 whitespace-nowrap">
                       <span className="inline-flex items-center gap-1">
                         {row.agent_surface}
-                        <ExternalLink size={10} className="text-muted" />
+                        <ExternalLink size={10} className="text-text-muted" />
                       </span>
                     </td>
-                    <td className="px-4 py-2.5 text-muted">{row.task_type ?? "—"}</td>
-                    <td className="px-4 py-2.5 text-muted">
+                    <td className="px-4 py-2.5 text-text-muted">{row.task_type ?? "—"}</td>
+                    <td className="px-4 py-2.5 text-text-muted">
                       {row.related_subject_kind
                         ? `${row.related_subject_kind}${
                             row.related_subject_id

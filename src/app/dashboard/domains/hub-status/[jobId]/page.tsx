@@ -131,7 +131,7 @@ export default function HubStatusPage() {
 
   if (!job) {
     return (
-      <MotionPage className="fade-in p-6 text-center text-muted text-sm"><Loader className="inline animate-spin mr-2" size={14} />Loading job status…
+      <MotionPage className="p-6 text-center text-text-muted text-sm"><Loader className="inline animate-spin mr-2" size={14} />Loading job status…
               </MotionPage>
     );
   }
@@ -143,7 +143,7 @@ export default function HubStatusPage() {
   const pendingCount = orderedServices.filter(s => s.status === "pending" || s.status === "in_progress").length;
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="space-y-5">
       {/* -- Hub Status command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -153,13 +153,13 @@ export default function HubStatusPage() {
       </div>
 
       {/* 5 colored dots — the visual contract from the spec */}
-      <div className="card">
+      <div className="glass rounded-xl p-4">
         <div className="flex items-center justify-center gap-4 py-2 flex-wrap">
           {orderedServices.map(s => (
             <div key={s.service} className="flex flex-col items-center gap-1 min-w-[90px]">
               <div className={`w-4 h-4 rounded-full ${dotColor(s.status)} ring-2 ring-offset-2 ring-offset-surface ring-transparent`} />
-              <span className="text-[10px] text-muted">{SERVICE_META[s.service].label}</span>
-              <span className="text-[9px] text-muted/70">{dotLabel(s.status)}</span>
+              <span className="text-[10px] text-text-muted">{SERVICE_META[s.service].label}</span>
+              <span className="text-[9px] text-text-muted/70">{dotLabel(s.status)}</span>
             </div>
           ))}
         </div>
@@ -171,8 +171,8 @@ export default function HubStatusPage() {
           const meta = SERVICE_META[s.service];
           if (s.status === "skipped") {
             return (
-              <div key={s.service} className="card opacity-60">
-                <div className="flex items-center gap-2 text-muted text-xs">
+              <div key={s.service} className="glass rounded-xl p-4 opacity-60">
+                <div className="flex items-center gap-2 text-text-muted text-xs">
                   {meta.icon}
                   <span>{meta.label} — skipped</span>
                 </div>
@@ -195,7 +195,7 @@ export default function HubStatusPage() {
       {/* Live-DNS-still-pending callout — relevant once email/portal are done */}
       {job.all_done && (job.services.some(s => s.service === "email" && s.status === "done") ||
         job.services.some(s => s.service === "portal" && s.status === "done")) && (
-        <div className="card border-blue-500/25 bg-blue-500/5 flex items-start gap-2">
+        <div className="glass rounded-xl p-4 border-blue-500/25 bg-blue-500/5 flex items-start gap-2">
           <Info size={14} className="text-blue-600 mt-0.5 shrink-0" />
           <div className="text-[11px] text-blue-700">
             <p className="font-semibold mb-1">DNS may still be propagating</p>
@@ -227,14 +227,14 @@ function ServiceCard({
   const r = (summary.result ?? {}) as Record<string, unknown>;
 
   return (
-    <div className="card">
+    <div className="glass rounded-xl p-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
           <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
             summary.status === "done" ? "bg-emerald-500/10 text-emerald-400" :
               summary.status === "failed" ? "bg-red-500/10 text-red-400" :
                 summary.status === "in_progress" ? "bg-amber-500/10 text-amber-400" :
-                  "bg-slate-500/10 text-muted"
+                  "bg-slate-500/10 text-text-muted"
           }`}>
             {summary.status === "done" ? <CheckCircle size={14} /> :
               summary.status === "failed" ? <AlertTriangle size={14} /> :
@@ -243,7 +243,7 @@ function ServiceCard({
           </div>
           <div>
             <p className="text-xs font-semibold">{meta.label}</p>
-            <p className="text-[10px] text-muted">{dotLabel(summary.status)}</p>
+            <p className="text-[10px] text-text-muted">{dotLabel(summary.status)}</p>
           </div>
         </div>
         {summary.status === "failed" && (
@@ -284,7 +284,7 @@ function ServiceDoneDetail({
     const dns = Array.isArray(result.dns_records) ? (result.dns_records as Array<Record<string, string>>) : [];
     const sandbox = result.sandbox === true;
     return (
-      <div className="mt-3 pt-3 border-t border-border/60 space-y-2">
+      <div className="mt-3 pt-3 border-t border-border-subtle/60 space-y-2">
         {sandbox && (
           <div className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-700 flex items-center gap-2">
             <AlertTriangle size={11} /> Sandbox — DNS not written to GoDaddy OTE. Works on production.
@@ -294,14 +294,14 @@ function ServiceDoneDetail({
           <span className="text-[11px] font-mono text-brand-accent">{sendAddress}</span>
           <button
             onClick={() => copyToClipboard(sendAddress, "Address")}
-            className="text-[10px] p-1.5 rounded border border-border hover:bg-black/5"
+            className="text-[10px] p-1.5 rounded border border-border-subtle hover:bg-black/5"
           >
             <Copy size={10} />
           </button>
         </div>
         {dns.length > 0 && (
-          <details className="text-[10px] text-muted">
-            <summary className="cursor-pointer hover:text-foreground">
+          <details className="text-[10px] text-text-muted">
+            <summary className="cursor-pointer hover:text-text-primary">
               DNS records still propagating ({dns.length}) — tap to expand
             </summary>
             <div className="mt-2 space-y-1">
@@ -320,16 +320,16 @@ function ServiceDoneDetail({
   if (service === "phone") {
     const phone = result.phone_number as string;
     return (
-      <div className="mt-3 pt-3 border-t border-border/60 flex items-center justify-between">
+      <div className="mt-3 pt-3 border-t border-border-subtle/60 flex items-center justify-between">
         <div>
           <p className="text-sm font-mono font-semibold">{phone}</p>
-          <p className="text-[10px] text-muted">
+          <p className="text-[10px] text-text-muted">
             {(result.locality as string) || ""} {(result.region as string) || ""} · ${(result.monthly_cost_usd as number)?.toFixed(2) ?? "1.15"}/mo
           </p>
         </div>
         <button
           onClick={() => copyToClipboard(phone, "Number")}
-          className="text-[10px] p-1.5 rounded border border-border hover:bg-black/5"
+          className="text-[10px] p-1.5 rounded border border-border-subtle hover:bg-black/5"
         >
           <Copy size={10} />
         </button>
@@ -341,10 +341,10 @@ function ServiceDoneDetail({
     const editorUrl = result.editor_url as string;
     const publicUrl = result.public_url as string;
     return (
-      <div className="mt-3 pt-3 border-t border-border/60 flex items-center justify-between gap-2 flex-wrap">
-        <div className="text-[11px] text-muted min-w-0">
+      <div className="mt-3 pt-3 border-t border-border-subtle/60 flex items-center justify-between gap-2 flex-wrap">
+        <div className="text-[11px] text-text-muted min-w-0">
           <p>Template: {String(result.template || "coming-soon")}</p>
-          <p className="font-mono text-foreground truncate">{publicUrl}</p>
+          <p className="font-mono text-text-primary truncate">{publicUrl}</p>
         </div>
         <a
           href={editorUrl}
@@ -361,12 +361,12 @@ function ServiceDoneDetail({
     const manual = result.manual_dns_required === true;
     const cnameTarget = result.cname_target as string;
     return (
-      <div className="mt-3 pt-3 border-t border-border/60 space-y-2">
+      <div className="mt-3 pt-3 border-t border-border-subtle/60 space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-mono text-brand-accent">https://{subdomain}</span>
           <button
             onClick={() => copyToClipboard(`https://${subdomain}`, "Portal URL")}
-            className="text-[10px] p-1.5 rounded border border-border hover:bg-black/5"
+            className="text-[10px] p-1.5 rounded border border-border-subtle hover:bg-black/5"
           >
             <Copy size={10} />
           </button>
@@ -384,14 +384,14 @@ function ServiceDoneDetail({
   if (service === "chat") {
     const embed = result.embed_script as string;
     return (
-      <div className="mt-3 pt-3 border-t border-border/60 space-y-2">
-        <p className="text-[10px] text-muted">Paste this into the &lt;head&gt; of the client&apos;s site:</p>
-        <pre className="text-[10px] bg-background/40 rounded p-2 overflow-x-auto font-mono border border-border/50">
+      <div className="mt-3 pt-3 border-t border-border-subtle/60 space-y-2">
+        <p className="text-[10px] text-text-muted">Paste this into the &lt;head&gt; of the client&apos;s site:</p>
+        <pre className="text-[10px] bg-background/40 rounded p-2 overflow-x-auto font-mono border border-border-subtle/50">
           {embed}
         </pre>
         <button
           onClick={() => copyToClipboard(embed, "Embed script")}
-          className="text-[10px] px-2.5 py-1 rounded-lg border border-border hover:bg-black/5 flex items-center gap-1"
+          className="text-[10px] px-2.5 py-1 rounded-lg border border-border-subtle hover:bg-black/5 flex items-center gap-1"
         >
           <Copy size={10} /> Copy embed
         </button>

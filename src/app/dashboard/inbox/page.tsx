@@ -518,7 +518,7 @@ export default function InboxPage() {
     };
     return (
       <MotionPage>
-                <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium capitalize ${colors[status] || "bg-[rgba(0,0,0,0.06)] text-muted"}`}>
+                <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium capitalize ${colors[status] || "bg-[rgba(0,0,0,0.06)] text-text-muted"}`}>
                 {status}
               </span>
               </MotionPage>
@@ -527,7 +527,7 @@ export default function InboxPage() {
 
   /* -- Render -- */
   return (
-    <div className="fade-in h-[calc(100vh-4rem)] flex flex-col max-w-[1400px] w-full mx-auto overflow-x-hidden">
+    <div className="h-[calc(100vh-4rem)] flex flex-col max-w-[1400px] w-full mx-auto overflow-x-hidden">
       {/* Header */}
       <div className="px-4 md:px-6 pt-4 md:pt-6 pb-3 space-y-4 shrink-0 min-w-0">
         {/* -- Inbox command strip -- */}
@@ -541,22 +541,22 @@ export default function InboxPage() {
               <div className="flex items-center gap-0.5 bg-black/5 rounded-lg p-0.5">
                 <button
                   onClick={() => setView("inbox")}
-                  className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "inbox" ? "bg-black/10 text-foreground" : "text-muted hover:text-foreground"}`}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "inbox" ? "bg-black/10 text-text-primary" : "text-text-muted hover:text-text-primary"}`}
                 >
                   <Inbox size={11} /> Inbox
                 </button>
                 <button
                   onClick={() => setView("auto-runs")}
-                  className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "auto-runs" ? "bg-black/10 text-foreground" : "text-muted hover:text-foreground"}`}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "auto-runs" ? "bg-black/10 text-text-primary" : "text-text-muted hover:text-text-primary"}`}
                 >
                   <Zap size={11} /> Auto-Runs
                 </button>
               </div>
-              <button onClick={view === "auto-runs" ? fetchAutoRuns : fetchInbox} className="p-2 rounded-lg bg-black/5 hover:bg-black/10 text-foreground transition-all" title="Refresh" aria-label="Refresh">
+              <button onClick={view === "auto-runs" ? fetchAutoRuns : fetchInbox} className="p-2 rounded-lg bg-black/5 hover:bg-black/10 text-text-primary transition-all" title="Refresh" aria-label="Refresh">
                 <RefreshCw size={14} className={loading || autoRunsLoading ? "animate-spin" : ""} aria-hidden="true" />
               </button>
               {view === "inbox" && (
-                <button onClick={() => setShowArchived(!showArchived)} className={`px-3 py-1.5 rounded-lg text-xs text-foreground transition-all ${showArchived ? "bg-black/15" : "bg-black/5 hover:bg-black/10"}`}>
+                <button onClick={() => setShowArchived(!showArchived)} className={`px-3 py-1.5 rounded-lg text-xs text-text-primary transition-all ${showArchived ? "bg-black/15" : "bg-black/5 hover:bg-black/10"}`}>
                   <Archive size={12} className="inline mr-1" /> {showArchived ? "Viewing Archive" : "Archive"}
                 </button>
               )}
@@ -613,7 +613,7 @@ export default function InboxPage() {
         {view === "inbox" && (<>
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -626,7 +626,7 @@ export default function InboxPage() {
               </button>
             )}
           </div>
-          <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs transition-all ${showFilters ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-[rgba(0,0,0,0.04)] text-muted hover:text-text-primary"}`}>
+          <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs transition-all ${showFilters ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-[rgba(0,0,0,0.04)] text-text-muted hover:text-text-primary"}`}>
             <SlidersHorizontal size={12} /> Filters
             {(filterStarred || filterUnread || filterPinned) && <span className="w-1.5 h-1.5 rounded-full bg-brand-accent" />}
           </button>
@@ -729,7 +729,7 @@ export default function InboxPage() {
         {/* Center: Item List */}
         <div className={`flex-1 flex flex-col overflow-hidden min-w-0 ${selectedItem ? "hidden lg:flex" : ""}`}>
           {/* Select all header */}
-          <div className="flex items-center gap-2 pb-2 border-b border-border mb-1 shrink-0">
+          <div className="flex items-center gap-2 pb-2 border-b border-border-subtle mb-1 shrink-0">
             <button
               onClick={selectAll}
               className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
@@ -738,7 +738,7 @@ export default function InboxPage() {
             >
               {selectedIds.size === filtered.length && filtered.length > 0 && <Check size={10} className="text-black" />}
             </button>
-            <span className="text-[10px] text-muted">{filtered.length} items</span>
+            <span className="text-[10px] text-text-muted">{filtered.length} items</span>
           </div>
 
           {/* Items */}
@@ -810,20 +810,20 @@ export default function InboxPage() {
                           {item.title}
                         </span>
                       </div>
-                      <p className="text-[10px] text-muted truncate">{item.preview}</p>
+                      <p className="text-[10px] text-text-muted truncate">{item.preview}</p>
                       <div className="flex items-center gap-2 mt-1">
                         <StatusPill status={item.status} />
                         {item.tags.slice(0, 2).map(t => (
-                          <span key={t} className="text-[8px] px-1 py-0.5 rounded bg-[rgba(0,0,0,0.05)] text-muted capitalize">{t}</span>
+                          <span key={t} className="text-[8px] px-1 py-0.5 rounded bg-[rgba(0,0,0,0.05)] text-text-muted capitalize">{t}</span>
                         ))}
                       </div>
                     </div>
 
                     {/* Time & actions */}
                     <div className="shrink-0 text-right">
-                      <p className="text-[10px] text-muted">{timeAgo(item.date)}</p>
+                      <p className="text-[10px] text-text-muted">{timeAgo(item.date)}</p>
                       <div className="flex items-center gap-0.5 mt-1 opacity-0 group-hover:opacity-100 transition-all">
-                        <button onClick={e => { e.stopPropagation(); togglePin(item.id); }} className="p-1 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-text-primary transition-all" title={item.pinned ? "Unpin" : "Pin"}>
+                        <button onClick={e => { e.stopPropagation(); togglePin(item.id); }} className="p-1 rounded hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-text-primary transition-all" title={item.pinned ? "Unpin" : "Pin"}>
                           {item.pinned ? <PinOff size={10} /> : <Pin size={10} />}
                         </button>
                         <button onClick={e => { e.stopPropagation(); archiveItem(item.id); }} className="p-1 rounded hover:bg-[rgba(0,0,0,0.06)] text-[#6B7280] hover:text-red-600 transition-all" title="Archive">
@@ -842,18 +842,18 @@ export default function InboxPage() {
         {selectedItem && (
           <div className="w-full lg:w-[420px] shrink-0 flex flex-col overflow-hidden border-l border-[rgba(0,0,0,0.08)] pl-4">
             {/* Detail Header */}
-            <div className="flex items-start justify-between pb-3 border-b border-border mb-3 shrink-0">
+            <div className="flex items-start justify-between pb-3 border-b border-border-subtle mb-3 shrink-0">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <span className={`${getCategoryConfig(selectedItem.type).color}`}>
                     {getCategoryConfig(selectedItem.type).icon}
                   </span>
-                  <span className="text-[10px] text-muted uppercase tracking-wider">{getCategoryConfig(selectedItem.type).label}</span>
+                  <span className="text-[10px] text-text-muted uppercase tracking-wider">{getCategoryConfig(selectedItem.type).label}</span>
                 </div>
                 <h2 className="text-sm font-bold text-text-primary leading-snug">{selectedItem.title}</h2>
                 <div className="flex items-center gap-2 mt-1.5">
                   <StatusPill status={selectedItem.status} />
-                  <span className="text-[10px] text-muted">{new Date(selectedItem.date).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}</span>
+                  <span className="text-[10px] text-text-muted">{new Date(selectedItem.date).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}</span>
                 </div>
               </div>
               <button onClick={() => setSelectedItem(null)} className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-[#6B7280] hover:text-[#374151] transition-all lg:block hidden">
@@ -865,7 +865,7 @@ export default function InboxPage() {
             </div>
 
             {/* Detail Actions */}
-            <div className="flex items-center gap-1.5 pb-3 border-b border-border mb-3 shrink-0 flex-wrap">
+            <div className="flex items-center gap-1.5 pb-3 border-b border-border-subtle mb-3 shrink-0 flex-wrap">
               <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => copyContent(selectedItem)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-xs transition-all">
                 {copied === selectedItem.id ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
                 {copied === selectedItem.id ? "Copied" : "Copy"}
@@ -890,24 +890,24 @@ export default function InboxPage() {
 
             {/* Tags */}
             {selectedItem.tags.length > 0 && (
-              <div className="flex items-center gap-1.5 flex-wrap pb-3 mb-3 border-b border-border shrink-0">
-                <Tag size={10} className="text-muted" />
+              <div className="flex items-center gap-1.5 flex-wrap pb-3 mb-3 border-b border-border-subtle shrink-0">
+                <Tag size={10} className="text-text-muted" />
                 {selectedItem.tags.map(t => (
-                  <span key={t} className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-muted capitalize border border-[rgba(0,0,0,0.08)]">{t}</span>
+                  <span key={t} className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-text-muted capitalize border border-[rgba(0,0,0,0.08)]">{t}</span>
                 ))}
-                <span className="text-[9px] text-muted ml-1">Source: {selectedItem.source}</span>
+                <span className="text-[9px] text-text-muted ml-1">Source: {selectedItem.source}</span>
               </div>
             )}
 
             {/* Metadata cards */}
             {Object.keys(selectedItem.metadata).filter(k => selectedItem.metadata[k]).length > 0 && (
-              <div className="grid grid-cols-2 gap-2 pb-3 mb-3 border-b border-border shrink-0">
+              <div className="grid grid-cols-2 gap-2 pb-3 mb-3 border-b border-border-subtle shrink-0">
                 {Object.entries(selectedItem.metadata)
                   .filter(([, v]) => v && typeof v !== "object")
                   .slice(0, 6)
                   .map(([key, val]) => (
                     <div key={key} className="px-2.5 py-2 rounded-lg bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)]">
-                      <p className="text-[8px] text-muted uppercase tracking-wider mb-0.5">{key.replace(/_/g, " ")}</p>
+                      <p className="text-[8px] text-text-muted uppercase tracking-wider mb-0.5">{key.replace(/_/g, " ")}</p>
                       <p className="text-[10px] text-[rgba(0,0,0,0.65)] truncate">{String(val)}</p>
                     </div>
                   ))}
@@ -917,7 +917,7 @@ export default function InboxPage() {
             {/* Content body */}
             <div className="flex-1 overflow-y-auto">
               <div className="text-xs text-[rgba(0,0,0,0.65)] whitespace-pre-wrap leading-relaxed bg-[rgba(0,0,0,0.03)] rounded-lg p-4 border border-[rgba(0,0,0,0.06)] min-h-[200px]">
-                {selectedItem.content || <span className="text-muted italic">No content body available</span>}
+                {selectedItem.content || <span className="text-text-muted italic">No content body available</span>}
               </div>
             </div>
           </div>
@@ -934,9 +934,9 @@ export default function InboxPage() {
             </div>
           ) : autoRuns.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <Zap size={36} className="text-muted/30 mb-3" />
-              <p className="text-sm text-muted font-medium">No automated runs yet</p>
-              <p className="text-[10px] text-muted mt-1">Configure auto-run in Lead Finder to see activity here.</p>
+              <Zap size={36} className="text-text-muted/30 mb-3" />
+              <p className="text-sm text-text-muted font-medium">No automated runs yet</p>
+              <p className="text-[10px] text-text-muted mt-1">Configure auto-run in Lead Finder to see activity here.</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -968,21 +968,21 @@ export default function InboxPage() {
                   >
                     {/* Icon */}
                     <div className="mt-0.5 w-8 h-8 rounded-lg bg-[rgba(0,0,0,0.05)] flex items-center justify-center shrink-0">
-                      {iconMap[run.type] || <Zap size={14} className="text-muted" />}
+                      {iconMap[run.type] || <Zap size={14} className="text-text-muted" />}
                     </div>
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
                         <span className="text-xs font-medium text-text-primary truncate">{run.description}</span>
-                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium capitalize ${statusColors[run.status] || "bg-[rgba(0,0,0,0.06)] text-muted"}`}>
+                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium capitalize ${statusColors[run.status] || "bg-[rgba(0,0,0,0.06)] text-text-muted"}`}>
                           {run.status === "running" && <Play size={8} className="mr-0.5" />}
                           {run.status}
                         </span>
                       </div>
-                      <p className="text-[10px] text-muted truncate">{run.results_summary}</p>
+                      <p className="text-[10px] text-text-muted truncate">{run.results_summary}</p>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-[9px] text-muted/60 capitalize flex items-center gap-1">
+                        <span className="text-[9px] text-text-muted/60 capitalize flex items-center gap-1">
                           <Target size={8} /> {run.type}
                         </span>
                       </div>
@@ -990,7 +990,7 @@ export default function InboxPage() {
 
                     {/* Timestamp */}
                     <div className="shrink-0 text-right">
-                      <p className="text-[10px] text-muted flex items-center gap-1">
+                      <p className="text-[10px] text-text-muted flex items-center gap-1">
                         <Clock size={9} /> {timeStr}
                       </p>
                     </div>
@@ -1027,7 +1027,7 @@ export default function InboxPage() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-[rgba(0,0,0,0.85)]">{overlayItem.source}</p>
-                    <p className="text-[10px] text-muted truncate">
+                    <p className="text-[10px] text-text-muted truncate">
                       {getCategoryConfig(overlayItem.type).label} &middot; {new Date(overlayItem.date).toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}
                     </p>
                   </div>
@@ -1036,7 +1036,7 @@ export default function InboxPage() {
                 <div className="flex items-center gap-2 mt-2">
                   <StatusPill status={overlayItem.status} />
                   {overlayItem.tags.map(t => (
-                    <span key={t} className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-muted capitalize border border-[rgba(0,0,0,0.08)]">{t}</span>
+                    <span key={t} className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-text-muted capitalize border border-[rgba(0,0,0,0.08)]">{t}</span>
                   ))}
                 </div>
               </div>
@@ -1058,7 +1058,7 @@ export default function InboxPage() {
                     .slice(0, 6)
                     .map(([key, val]) => (
                       <div key={key} className="px-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)]">
-                        <p className="text-[9px] text-muted uppercase tracking-wider mb-0.5">{key.replace(/_/g, " ")}</p>
+                        <p className="text-[9px] text-text-muted uppercase tracking-wider mb-0.5">{key.replace(/_/g, " ")}</p>
                         <p className="text-xs text-[#374151] truncate">{String(val)}</p>
                       </div>
                     ))}
@@ -1067,7 +1067,7 @@ export default function InboxPage() {
 
               {/* Full message body */}
               <div className="text-sm text-[rgba(0,0,0,0.65)] whitespace-pre-wrap leading-relaxed bg-[rgba(0,0,0,0.03)] rounded-xl p-5 border border-[rgba(0,0,0,0.06)] min-h-[200px]">
-                {overlayItem.content || <span className="text-muted italic">No content body available</span>}
+                {overlayItem.content || <span className="text-text-muted italic">No content body available</span>}
               </div>
 
               {/* Inline Reply */}

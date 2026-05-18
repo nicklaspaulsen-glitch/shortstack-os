@@ -54,18 +54,18 @@ export default function AccountSettings({
   return (
     <div className="space-y-4 max-w-2xl">
       {/* Profile — Nickname & Avatar */}
-      <div className="card" id="profile-section">
-        <h2 className="section-header flex items-center gap-2">
+      <div className="glass rounded-xl p-4" id="profile-section">
+        <h2 className="flex items-center gap-2">
           <Settings size={14} className="text-[#2563EB]" /> Profile
         </h2>
-        <p className="text-[10px] text-muted mb-3">Customize how you appear in the sidebar and across the app</p>
+        <p className="text-[10px] text-text-muted mb-3">Customize how you appear in the sidebar and across the app</p>
         <div className="flex items-start gap-4">
           <div className="relative group">
             {profile?.avatar_url ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={profile.avatar_url} alt="" className="w-16 h-16 rounded-xl object-cover border border-border" />
+              <img src={profile.avatar_url} alt="" className="w-16 h-16 rounded-xl object-cover border border-border-subtle" />
             ) : (
-              <div className="w-16 h-16 rounded-xl bg-[rgba(59,130,246,0.08)] border border-border flex items-center justify-center">
+              <div className="w-16 h-16 rounded-xl bg-[rgba(59,130,246,0.08)] border border-border-subtle flex items-center justify-center">
                 <span className="text-[#2563EB] text-xl font-bold">{(profile?.nickname || profile?.full_name)?.charAt(0) || "?"}</span>
               </div>
             )}
@@ -98,7 +98,7 @@ export default function AccountSettings({
           </div>
           <div className="flex-1 space-y-2">
             <div>
-              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Display Name</label>
+              <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Display Name</label>
               <input
                 type="text"
                 value={nickname}
@@ -106,12 +106,12 @@ export default function AccountSettings({
                 placeholder={profile?.full_name || "Your name"}
                 className="input w-full text-xs"
               />
-              <p className="text-[9px] text-muted/70 mt-1 flex items-center gap-1">
+              <p className="text-[9px] text-text-muted/70 mt-1 flex items-center gap-1">
                 <CheckCircle2 size={8} /> Auto-saves as you type
               </p>
             </div>
-            <div className="pt-2 border-t border-border/30 flex items-center gap-2">
-              <span className="text-[9px] text-muted/60">or save manually</span>
+            <div className="pt-2 border-t border-border-subtle/30 flex items-center gap-2">
+              <span className="text-[9px] text-text-muted/60">or save manually</span>
               <button
                 disabled={savingProfile}
                 onClick={async () => {
@@ -145,15 +145,15 @@ export default function AccountSettings({
 
       {/* Subscription — agency plan management */}
       {profile?.role === "admin" && (
-        <div className="card">
-          <h2 className="section-header flex items-center gap-2">
+        <div className="glass rounded-xl p-4">
+          <h2 className="flex items-center gap-2">
             <CreditCard size={14} className="text-[#2563EB]" /> Subscription
           </h2>
-          <p className="text-[10px] text-muted mb-3">Manage your Trinity plan</p>
+          <p className="text-[10px] text-text-muted mb-3">Manage your Trinity plan</p>
           {(() => {
             const plan = getPlanConfig(profile?.plan_tier);
             return (
-              <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border-subtle">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${plan.color}18` }}>
                     <Zap size={14} style={{ color: plan.color }} />
@@ -166,7 +166,7 @@ export default function AccountSettings({
                         Active
                       </span>
                     </div>
-                    <p className="text-[10px] text-muted mt-0.5">
+                    <p className="text-[10px] text-text-muted mt-0.5">
                       ${plan.price_monthly.toLocaleString("en-US")}/mo
                       {plan.max_clients === -1 ? " — Unlimited clients" : ` — Up to ${plan.max_clients} clients`}
                     </p>
@@ -206,11 +206,11 @@ export default function AccountSettings({
 
       {/* Desktop App Settings — only show in Electron */}
       {typeof window !== "undefined" && !!(window as unknown as { electronAPI?: unknown }).electronAPI && (
-        <div className="card">
-          <h2 className="section-header flex items-center gap-2">
+        <div className="glass rounded-xl p-4">
+          <h2 className="flex items-center gap-2">
             <Monitor size={14} className="text-[#2563EB]" /> Desktop App
           </h2>
-          <p className="text-[10px] text-muted mb-3">Settings for the Trinity desktop application</p>
+          <p className="text-[10px] text-text-muted mb-3">Settings for the Trinity desktop application</p>
           <div className="space-y-2">
             {[
               { key: "ss_auto_startup", label: "Auto-Start on Login", desc: "Launch Trinity when your computer starts" },
@@ -218,17 +218,17 @@ export default function AccountSettings({
             ].map(setting => {
               const isEnabled = typeof window !== "undefined" && safeGet(setting.key) === "true";
               return (
-                <div key={setting.key} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border">
+                <div key={setting.key} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border-subtle">
                   <div>
                     <p className="text-xs font-medium">{setting.label}</p>
-                    <p className="text-[10px] text-muted">{setting.desc}</p>
+                    <p className="text-[10px] text-text-muted">{setting.desc}</p>
                   </div>
                   <button onClick={() => {
                     const next = !isEnabled;
                     safeSet(setting.key, next ? "true" : "false");
                     toast.success(`${setting.label} ${next ? "enabled" : "disabled"}`);
                   }}
-                    className={`w-10 h-5 rounded-full transition-colors ${isEnabled ? "bg-[#2563EB]" : "bg-surface-light border border-border"}`}>
+                    className={`w-10 h-5 rounded-full transition-colors ${isEnabled ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
                     <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${isEnabled ? "translate-x-5" : "translate-x-0.5"}`} />
                   </button>
                 </div>
@@ -239,8 +239,8 @@ export default function AccountSettings({
       )}
 
       {/* Display & Zoom */}
-      <div className="card">
-        <h2 className="section-header flex items-center gap-2">
+      <div className="glass rounded-xl p-4">
+        <h2 className="flex items-center gap-2">
           <Settings size={14} className="text-[#2563EB]" /> Display
         </h2>
         <div className="space-y-3">
@@ -248,7 +248,7 @@ export default function AccountSettings({
             <div className="flex items-center justify-between mb-1">
               <div>
                 <p className="text-xs font-medium">Interface Zoom</p>
-                <p className="text-[10px] text-muted">Make everything smaller or larger</p>
+                <p className="text-[10px] text-text-muted">Make everything smaller or larger</p>
               </div>
               <span className="text-xs font-mono text-[#2563EB]">{typeof window !== "undefined" ? Math.round((parseFloat(document.documentElement.style.zoom || "1")) * 100) : 100}%</span>
             </div>
@@ -257,16 +257,16 @@ export default function AccountSettings({
                 const label = Math.round(parseFloat(zoom) * 100) + "%";
                 return (
                   <button key={zoom} onClick={() => { document.documentElement.style.zoom = zoom; safeSet("ss-zoom", zoom); forceRerender(); toast.success(`Zoom: ${label}`); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === zoom || (!safeGet("ss-zoom") && zoom === "1") ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-[#2563EB]" : "border-border text-muted hover:text-foreground"}`}>{label}</button>
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === zoom || (!safeGet("ss-zoom") && zoom === "1") ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-[#2563EB]" : "border-border-subtle text-text-muted hover:text-text-primary"}`}>{label}</button>
                 );
               })}
             </div>
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
+          <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border-subtle">
             <div>
               <p className="text-xs font-medium">Compact Sidebar</p>
-              <p className="text-[10px] text-muted">Collapse sidebar to icons only</p>
+              <p className="text-[10px] text-text-muted">Collapse sidebar to icons only</p>
             </div>
             <button onClick={() => {
               const current = safeGet("ss-sidebar-collapsed") === "true";
@@ -274,15 +274,15 @@ export default function AccountSettings({
               toast.success(current ? "Sidebar expanded" : "Sidebar collapsed");
               window.dispatchEvent(new Event("storage"));
             }}
-              className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-sidebar-collapsed") === "true" ? "bg-[#2563EB]" : "bg-surface-light border border-border"}`}>
+              className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-sidebar-collapsed") === "true" ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
               <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-sidebar-collapsed") === "true" ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
+          <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border-subtle">
             <div>
               <p className="text-xs font-medium">Dark Mode</p>
-              <p className="text-[10px] text-muted">Switch between light and dark appearance</p>
+              <p className="text-[10px] text-text-muted">Switch between light and dark appearance</p>
             </div>
             <button onClick={() => {
               const currentTheme = safeGet("ss-theme") || "nordic";
@@ -293,15 +293,15 @@ export default function AccountSettings({
               forceRerender();
               toast.success(isCurrentlyLight ? "Dark mode enabled" : "Light mode enabled");
             }}
-              className={`w-10 h-5 rounded-full transition-all ${(() => { const t = safeGet("ss-theme") || "nordic"; return t !== "nordic" && t !== "light"; })() ? "bg-[#2563EB]" : "bg-surface-light border border-border"}`}>
+              className={`w-10 h-5 rounded-full transition-all ${(() => { const t = safeGet("ss-theme") || "nordic"; return t !== "nordic" && t !== "light"; })() ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
               <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${(() => { const t = safeGet("ss-theme") || "nordic"; return t !== "nordic" && t !== "light"; })() ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
+          <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border-subtle">
             <div>
               <p className="text-xs font-medium">Animations</p>
-              <p className="text-[10px] text-muted">Card hover effects, transitions, fades</p>
+              <p className="text-[10px] text-text-muted">Card hover effects, transitions, fades</p>
             </div>
             <button onClick={() => {
               const current = safeGet("ss-animations") === "false";
@@ -310,7 +310,7 @@ export default function AccountSettings({
               else document.documentElement.classList.remove("reduce-motion");
               toast.success(current ? "Animations enabled" : "Animations disabled");
             }}
-              className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-animations") !== "false" ? "bg-[#2563EB]" : "bg-surface-light border border-border"}`}>
+              className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-animations") !== "false" ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
               <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-animations") !== "false" ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
           </div>
@@ -318,29 +318,29 @@ export default function AccountSettings({
       </div>
 
       {/* Sound Effects */}
-      <div className="card">
-        <h2 className="section-header flex items-center gap-2">
-          {sfxEnabled ? <Volume2 size={14} className="text-[#2563EB]" /> : <VolumeX size={14} className="text-muted" />}
+      <div className="glass rounded-xl p-4">
+        <h2 className="flex items-center gap-2">
+          {sfxEnabled ? <Volume2 size={14} className="text-[#2563EB]" /> : <VolumeX size={14} className="text-text-muted" />}
           Sound Effects
         </h2>
-        <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
+        <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border-subtle">
           <div>
             <p className="text-xs font-medium">UI Sound Effects</p>
-            <p className="text-[10px] text-muted">Click sounds, notifications, success/error tones</p>
+            <p className="text-[10px] text-text-muted">Click sounds, notifications, success/error tones</p>
           </div>
           <button onClick={toggleSfx}
-            className={`w-10 h-5 rounded-full transition-all ${sfxEnabled ? "bg-[#2563EB]" : "bg-surface-light border border-border"}`}>
+            className={`w-10 h-5 rounded-full transition-all ${sfxEnabled ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
             <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${sfxEnabled ? "translate-x-5" : "translate-x-0.5"}`} />
           </button>
         </div>
       </div>
 
       {/* Widget Visibility */}
-      <div className="card">
-        <h2 className="section-header flex items-center gap-2">
+      <div className="glass rounded-xl p-4">
+        <h2 className="flex items-center gap-2">
           <Bot size={14} className="text-[#2563EB]" /> Floating Widgets
         </h2>
-        <p className="text-[10px] text-muted mb-3">Show or hide the floating assistant bubbles. You can also drag them to any position.</p>
+        <p className="text-[10px] text-text-muted mb-3">Show or hide the floating assistant bubbles. You can also drag them to any position.</p>
         <div className="space-y-2">
           {[
             { key: "hide_voice_bubble", label: "Voice Assistant Bubble", desc: "The 'Hey Nicklas' gold bubble" },
@@ -348,17 +348,17 @@ export default function AccountSettings({
           ].map(widget => {
             const isHidden = typeof window !== "undefined" && localStorage.getItem(widget.key) === "true";
             return (
-              <div key={widget.key} className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
+              <div key={widget.key} className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border-subtle">
                 <div>
                   <p className="text-xs font-medium">{widget.label}</p>
-                  <p className="text-[10px] text-muted">{widget.desc}</p>
+                  <p className="text-[10px] text-text-muted">{widget.desc}</p>
                 </div>
                 <button onClick={() => {
                   const next = !isHidden;
                   localStorage.setItem(widget.key, next ? "true" : "false");
                   toast.success(next ? `${widget.label} hidden — refresh to apply` : `${widget.label} visible — refresh to apply`);
                 }}
-                  className={`w-10 h-5 rounded-full transition-all ${!isHidden ? "bg-[#2563EB]" : "bg-surface-light border border-border"}`}>
+                  className={`w-10 h-5 rounded-full transition-all ${!isHidden ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
                   <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${!isHidden ? "translate-x-5" : "translate-x-0.5"}`} />
                 </button>
               </div>
@@ -368,11 +368,11 @@ export default function AccountSettings({
       </div>
 
       {/* Color Theme */}
-      <div className="card">
-        <h2 className="section-header flex items-center gap-2">
+      <div className="glass rounded-xl p-4">
+        <h2 className="flex items-center gap-2">
           <Palette size={14} className="text-[#2563EB]" /> Color Theme
         </h2>
-        <p className="text-[10px] text-muted mb-3">10 color schemes to match your style</p>
+        <p className="text-[10px] text-text-muted mb-3">10 color schemes to match your style</p>
         <div className="grid grid-cols-5 gap-2">
           {[
             { id: "nordic", name: "Nordic", bg: "#FAFAF7", surface: "#FFFFFF", accent: "#C9A84C", text: "#374151", desc: "Default" },
@@ -397,12 +397,12 @@ export default function AccountSettings({
                 toast.success(`${theme.name} theme applied`);
               }}
                 className={`p-2.5 rounded-lg border transition-all text-center ${
-                  isActive ? "border-[rgba(59,130,246,0.4)] ring-2 ring-[rgba(59,130,246,0.2)] bg-surface-light" : "border-border hover:border-[rgba(59,130,246,0.25)]"
+                  isActive ? "border-[rgba(59,130,246,0.4)] ring-2 ring-[rgba(59,130,246,0.2)] bg-surface-light" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
                 }`}
               >
                 <div className="flex items-center justify-center gap-0.5 mb-1.5">
-                  <div className="w-4 h-4 rounded-full border border-border" style={{ background: theme.bg }} />
-                  <div className="w-4 h-4 rounded-full border border-border" style={{ background: theme.accent }} />
+                  <div className="w-4 h-4 rounded-full border border-border-subtle" style={{ background: theme.bg }} />
+                  <div className="w-4 h-4 rounded-full border border-border-subtle" style={{ background: theme.accent }} />
                 </div>
                 <p className="text-[9px] font-bold">{theme.name}</p>
                 {isActive && <p className="text-[7px] text-[#2563EB] mt-0.5">Active</p>}
@@ -413,11 +413,11 @@ export default function AccountSettings({
       </div>
 
       {/* Layout Options */}
-      <div className="card">
-        <h2 className="section-header flex items-center gap-2">
+      <div className="glass rounded-xl p-4">
+        <h2 className="flex items-center gap-2">
           <Settings size={14} className="text-[#2563EB]" /> Layout &amp; Density
         </h2>
-        <p className="text-[10px] text-muted mb-3">Customize how compact or spacious the interface feels</p>
+        <p className="text-[10px] text-text-muted mb-3">Customize how compact or spacious the interface feels</p>
         <div className="space-y-4">
           <div>
             <p className="text-xs font-medium mb-2">Sidebar Style</p>
@@ -435,10 +435,10 @@ export default function AccountSettings({
                     toast.success(`${style.name} sidebar applied`);
                   }}
                     className={`p-3 rounded-lg border text-center transition-all ${
-                      current === style.id ? "border-[rgba(59,130,246,0.4)] ring-2 ring-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.08)]" : "border-border"
+                      current === style.id ? "border-[rgba(59,130,246,0.4)] ring-2 ring-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.08)]" : "border-border-subtle"
                     }`}>
                     <p className="text-[10px] font-bold">{style.name}</p>
-                    <p className="text-[8px] text-muted">{style.desc}</p>
+                    <p className="text-[8px] text-text-muted">{style.desc}</p>
                   </button>
                 );
               })}
@@ -463,10 +463,10 @@ export default function AccountSettings({
                     toast.success(`Font size: ${fs.name}`);
                   }}
                     className={`p-2.5 rounded-lg border text-center transition-all ${
-                      current === fs.id ? "border-[rgba(59,130,246,0.4)] ring-2 ring-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.08)]" : "border-border"
+                      current === fs.id ? "border-[rgba(59,130,246,0.4)] ring-2 ring-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.08)]" : "border-border-subtle"
                     }`}>
                     <p style={{ fontSize: fs.size }} className="font-bold">Aa</p>
-                    <p className="text-[8px] text-muted">{fs.name}</p>
+                    <p className="text-[8px] text-text-muted">{fs.name}</p>
                   </button>
                 );
               })}

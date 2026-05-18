@@ -171,16 +171,16 @@ export default function ClientSocialsPage() {
 
   if (loading) {
     return (
-      <MotionPage className="p-6 flex items-center justify-center min-h-[60vh]"><Loader size={20} className="animate-spin text-muted" /></MotionPage>
+      <MotionPage className="p-6 flex items-center justify-center min-h-[60vh]"><Loader size={20} className="animate-spin text-text-muted" /></MotionPage>
     );
   }
 
   if (!clientId) {
     return (
       <div className="p-6 flex flex-col items-center justify-center min-h-[60vh] text-center">
-        <Link2 size={32} className="text-muted/30 mb-3" />
+        <Link2 size={32} className="text-text-muted/30 mb-3" />
         <h2 className="text-sm font-semibold mb-1">No Client Profile Found</h2>
-        <p className="text-xs text-muted max-w-xs">
+        <p className="text-xs text-text-muted max-w-xs">
           Your account is not linked to a client profile yet. Please complete onboarding or contact your account manager.
         </p>
       </div>
@@ -205,21 +205,21 @@ export default function ClientSocialsPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="card flex items-center gap-3 py-3">
+        <div className="glass rounded-xl p-4 flex items-center gap-3 py-3">
           <Check size={14} className="text-emerald-400" />
           <div>
             <p className="text-lg font-bold text-text-primary">{accounts.filter((a) => a.is_active).length}</p>
             <p className="text-[9px] text-text-muted uppercase tracking-wider">Connected</p>
           </div>
         </div>
-        <div className="card flex items-center gap-3 py-3">
+        <div className="glass rounded-xl p-4 flex items-center gap-3 py-3">
           <MessageSquare size={14} className="text-blue-400" />
           <div>
             <p className="text-lg font-bold text-text-primary">{accounts.filter((a) => a.is_active && PLATFORMS.find((p) => p.id === a.platform)?.dm).length}</p>
             <p className="text-[9px] text-text-muted uppercase tracking-wider">DM Enabled</p>
           </div>
         </div>
-        <div className="card flex items-center gap-3 py-3">
+        <div className="glass rounded-xl p-4 flex items-center gap-3 py-3">
           <Globe size={14} className="text-blue-400" />
           <div>
             <p className="text-lg font-bold text-text-primary">{PLATFORMS.length - accounts.filter((a) => a.is_active).length}</p>
@@ -306,7 +306,7 @@ export default function ClientSocialsPage() {
       </div>
 
       {/* Security note */}
-      <div className="card bg-blue-500/[0.10] border-blue-500/[0.20]">
+      <div className="glass rounded-xl p-4 bg-blue-500/[0.10] border-blue-500/[0.20]">
         <p className="text-[10px] text-blue-400 flex items-center gap-1.5 mb-1">
           <Shield size={11} /> Secure OAuth Connection
         </p>

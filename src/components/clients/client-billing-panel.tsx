@@ -206,21 +206,21 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
 
   if (loadingStatus) {
     return (
-      <div className="card flex items-center gap-2 animate-pulse">
-        <Loader2 size={14} className="animate-spin text-muted" />
-        <p className="text-xs text-muted">Checking Stripe connection...</p>
+      <div className="glass rounded-xl p-4 flex items-center gap-2 animate-pulse">
+        <Loader2 size={14} className="animate-spin text-text-muted" />
+        <p className="text-xs text-text-muted">Checking Stripe connection...</p>
       </div>
     );
   }
 
   if (!status?.connected) {
     return (
-      <div className="card border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]">
+      <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]">
         <div className="flex items-start gap-3">
           <DollarSign size={18} className="text-[#2563EB] shrink-0 mt-0.5" />
           <div className="flex-1">
             <h3 className="text-sm font-semibold">Connect Stripe to bill this client</h3>
-            <p className="text-[10px] text-muted mt-1">
+            <p className="text-[10px] text-text-muted mt-1">
               Connect your own Stripe account once, then send invoices and create payment
               links for any client — all money lands directly in your Stripe balance.
             </p>
@@ -242,12 +242,12 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
   return (
     <div className="space-y-5">
       {!fullyOnboarded && (
-        <div className="card border-warning/30 bg-warning/[0.05]">
+        <div className="glass rounded-xl p-4 border-warning/30 bg-warning/[0.05]">
           <div className="flex items-start gap-2.5">
             <AlertTriangle size={14} className="text-warning shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="text-xs font-semibold text-warning">Finish Stripe onboarding</p>
-              <p className="text-[10px] text-muted mt-0.5">
+              <p className="text-[10px] text-text-muted mt-0.5">
                 Your connected Stripe account isn&apos;t fully verified yet. {chargesEnabled ? "You can create charges but payouts may be paused." : "You can't accept charges until onboarding completes."}
               </p>
             </div>
@@ -262,11 +262,11 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
       )}
 
       {/* ── Create Payment Link ────────────────────────────── */}
-      <div className="card">
-        <h3 className="section-header flex items-center gap-2">
+      <div className="glass rounded-xl p-4">
+        <h3 className="flex items-center gap-2">
           <Link2 size={14} className="text-[#2563EB]" /> Create Payment Link
         </h3>
-        <p className="text-[10px] text-muted mb-3">
+        <p className="text-[10px] text-text-muted mb-3">
           Generate a Stripe-hosted checkout URL you can paste anywhere — DMs, email, SMS, proposal docs.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -305,26 +305,26 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
       </div>
 
       {/* ── Past payment links ────────────────────────────── */}
-      <div className="card">
-        <h3 className="section-header">Payment Links</h3>
+      <div className="glass rounded-xl p-4">
+        <h3 className="">Payment Links</h3>
         {loadingLinks ? (
-          <div className="text-xs text-muted">Loading...</div>
+          <div className="text-xs text-text-muted">Loading...</div>
         ) : links.length === 0 ? (
-          <p className="text-xs text-muted py-3">No payment links yet</p>
+          <p className="text-xs text-text-muted py-3">No payment links yet</p>
         ) : (
           <div className="space-y-2">
             {links.map((link) => (
-              <div key={link.id} className="p-3 rounded-xl border border-border bg-surface-light/30 flex items-center gap-3">
+              <div key={link.id} className="p-3 rounded-xl border border-border-subtle bg-surface-light/30 flex items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium truncate">{link.product_name || "Payment"}</p>
-                  <p className="text-[9px] text-muted font-mono truncate">{link.url}</p>
+                  <p className="text-[9px] text-text-muted font-mono truncate">{link.url}</p>
                 </div>
                 <span className="text-sm font-bold text-[#2563EB] shrink-0">
                   {(link.amount_cents / 100).toFixed(2)} {link.currency.toUpperCase()}
                 </span>
                 <button
                   onClick={() => copyUrl(link.url)}
-                  className="text-xs p-2 rounded-lg hover:bg-surface-light text-muted hover:text-foreground"
+                  className="text-xs p-2 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary"
                   aria-label="Copy URL"
                 >
                   <Copy size={12} />
@@ -333,7 +333,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs p-2 rounded-lg hover:bg-surface-light text-muted hover:text-foreground"
+                  className="text-xs p-2 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary"
                   aria-label="Open checkout"
                 >
                   <ExternalLink size={12} />
@@ -345,11 +345,11 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
       </div>
 
       {/* ── Send Invoice ──────────────────────────────────── */}
-      <div className="card">
-        <h3 className="section-header flex items-center gap-2">
+      <div className="glass rounded-xl p-4">
+        <h3 className="flex items-center gap-2">
           <Receipt size={14} className="text-[#2563EB]" /> Send Invoice
         </h3>
-        <p className="text-[10px] text-muted mb-3">
+        <p className="text-[10px] text-text-muted mb-3">
           Stripe will email the client a hosted invoice page. Payment lands in your account.
         </p>
         <div className="space-y-2 mb-3">
@@ -382,7 +382,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
               {invoiceItems.length > 1 && (
                 <button
                   onClick={() => setInvoiceItems(invoiceItems.filter((_, j) => j !== i))}
-                  className="text-xs p-2 rounded-lg text-muted hover:text-danger"
+                  className="text-xs p-2 rounded-lg text-text-muted hover:text-danger"
                   aria-label="Remove line"
                 >
                   <Trash2 size={12} />
@@ -400,7 +400,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
 
         <div className="grid grid-cols-2 gap-2 mb-3">
           <div>
-            <label className="text-[10px] text-muted block mb-1">Net days until due</label>
+            <label className="text-[10px] text-text-muted block mb-1">Net days until due</label>
             <input
               type="number"
               min="1"
@@ -411,7 +411,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
             />
           </div>
           <div>
-            <label className="text-[10px] text-muted block mb-1">Memo (shown on invoice)</label>
+            <label className="text-[10px] text-text-muted block mb-1">Memo (shown on invoice)</label>
             <input
               type="text"
               value={invoiceMemo}
@@ -432,19 +432,19 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
       </div>
 
       {/* ── Past invoices ─────────────────────────────────── */}
-      <div className="card">
-        <h3 className="section-header">Client Invoices (via your Stripe)</h3>
+      <div className="glass rounded-xl p-4">
+        <h3 className="">Client Invoices (via your Stripe)</h3>
         {loadingInvoices ? (
-          <div className="text-xs text-muted">Loading...</div>
+          <div className="text-xs text-text-muted">Loading...</div>
         ) : invoices.length === 0 ? (
-          <p className="text-xs text-muted py-3">No invoices sent yet</p>
+          <p className="text-xs text-text-muted py-3">No invoices sent yet</p>
         ) : (
           <div className="space-y-2">
             {invoices.map((inv) => (
               <div
                 key={inv.id}
                 className={`p-3 rounded-xl border flex items-center gap-3 ${
-                  inv.status === "paid" ? "bg-success/[0.04] border-success/20" : "bg-surface-light/30 border-border"
+                  inv.status === "paid" ? "bg-success/[0.04] border-success/20" : "bg-surface-light/30 border-border-subtle"
                 }`}
               >
                 <div className="flex-1 min-w-0">
@@ -452,7 +452,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
                     {inv.status === "paid" && <CheckCircle2 size={10} className="inline text-success mr-1" />}
                     {inv.agency_stripe_invoice_id}
                   </p>
-                  <p className="text-[9px] text-muted">
+                  <p className="text-[9px] text-text-muted">
                     {inv.due_date ? `Due ${new Date(inv.due_date).toLocaleDateString()}` : ""}
                     {inv.paid_at ? ` · Paid ${new Date(inv.paid_at).toLocaleDateString()}` : ""}
                   </p>
@@ -463,7 +463,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
                       ? "bg-success/10 text-success"
                       : inv.status === "open"
                       ? "bg-[rgba(59,130,246,0.08)] text-[#2563EB]"
-                      : "bg-surface-light text-muted"
+                      : "bg-surface-light text-text-muted"
                   }`}
                 >
                   {inv.status}
@@ -476,7 +476,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
                     href={inv.hosted_invoice_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs p-2 rounded-lg hover:bg-surface-light text-muted hover:text-foreground"
+                    className="text-xs p-2 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary"
                     aria-label="Open hosted invoice"
                   >
                     <ExternalLink size={12} />

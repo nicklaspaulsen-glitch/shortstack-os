@@ -82,7 +82,7 @@ export default function AgentStatusCards() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
-          <span className="text-[10px] text-muted font-semibold uppercase tracking-wider">AI Agents</span>
+          <span className="text-[10px] text-text-muted font-semibold uppercase tracking-wider">AI Agents</span>
         </div>
         <Link href="/dashboard/agent-supervisor" className="text-[9px] text-[#2563EB] hover:text-[#3B82F6]">
           {activeCount}/{agents.length} active — View All
@@ -94,10 +94,10 @@ export default function AgentStatusCards() {
           <div key={agent.id} className="relative group shrink-0" title={`${agent.name}: ${agent.lastAction}`}>
             <div className={`flex flex-col items-center p-2 rounded-xl border transition-all duration-300 w-[60px] ${
               agent.status === "active"
-                ? "border-border/30 bg-surface-light/30"
+                ? "border-border-subtle/30 bg-surface-light/30"
                 : agent.status === "error"
                 ? "border-red-500/20 bg-red-500/5"
-                : "border-border/10 bg-surface/50 opacity-50"
+                : "border-border-subtle/10 bg-surface/50 opacity-50"
             } hover:border-[rgba(59,130,246,0.2)] hover:opacity-100`}>
               {/* 3D Agent Head */}
               <div className="relative mb-1">
@@ -119,16 +119,16 @@ export default function AgentStatusCards() {
                 }`} />
               </div>
               <span className="text-[7px] font-bold truncate w-full text-center">{agent.name}</span>
-              <span className="text-[6px] text-muted truncate w-full text-center">
+              <span className="text-[6px] text-text-muted truncate w-full text-center">
                 {agent.actionsToday > 0 ? `${agent.actionsToday} today` : agent.role}
               </span>
             </div>
 
             {/* Hover tooltip */}
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block z-50 w-36">
-              <div className="bg-surface border border-border/30 rounded-lg p-2 shadow-lg text-center">
-                <p className="text-[9px] font-semibold text-foreground">{agent.name} — {agent.role}</p>
-                <p className="text-[8px] text-muted mt-0.5 line-clamp-2">{agent.lastAction}</p>
+              <div className="bg-surface border border-border-subtle/30 rounded-lg p-2 shadow-lg text-center">
+                <p className="text-[9px] font-semibold text-text-primary">{agent.name} — {agent.role}</p>
+                <p className="text-[8px] text-text-muted mt-0.5 line-clamp-2">{agent.lastAction}</p>
                 {agent.actionsToday > 0 && (
                   <p className="text-[8px] text-success mt-0.5">{agent.actionsToday} actions today</p>
                 )}

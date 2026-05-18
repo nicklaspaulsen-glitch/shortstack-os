@@ -166,14 +166,14 @@ export default function AffiliateDetailPage() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center justify-center p-20 text-muted"><Loader2 className="animate-spin" size={20} /></MotionPage>
+      <MotionPage className="flex items-center justify-center p-20 text-text-muted"><Loader2 className="animate-spin" size={20} /></MotionPage>
     );
   }
 
   if (!affiliate) {
     return (
-      <div className=" border border-dashed border-border bg-card/40 p-12 text-center">
-        <p className="text-sm text-muted">Affiliate not found.</p>
+      <div className=" border border-dashed border-border-subtle bg-card/40 p-12 text-center">
+        <p className="text-sm text-text-muted">Affiliate not found.</p>
         <Link href="/dashboard/affiliates" className="text-brand-accent underline">
           Back to affiliates
         </Link>
@@ -187,7 +187,7 @@ export default function AffiliateDetailPage() {
     <div className="space-y-6">
       <Link
         href="/dashboard/affiliates"
-        className="inline-flex items-center gap-2 text-sm text-muted hover:text-foreground"
+        className="inline-flex items-center gap-2 text-sm text-text-muted hover:text-text-primary"
       >
         <ArrowLeft size={14} /> All affiliates
       </Link>
@@ -258,15 +258,15 @@ export default function AffiliateDetailPage() {
         />
       </div>
 
-      <div className=" border border-border bg-card/40 p-5 space-y-3">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">
+      <div className=" border border-border-subtle bg-card/40 p-5 space-y-3">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted">
           Referral link
         </h3>
         <div className="flex gap-2 items-center">
           <input
             value={refLink}
             readOnly
-            className="flex-1 rounded-lg bg-muted/10 border border-border px-3 py-2 text-sm font-mono"
+            className="flex-1 rounded-lg bg-muted/10 border border-border-subtle px-3 py-2 text-sm font-mono"
           />
           <button
             onClick={copyRefLink}
@@ -275,7 +275,7 @@ export default function AffiliateDetailPage() {
             <Copy size={14} /> Copy
           </button>
         </div>
-        <div className="text-xs text-muted">
+        <div className="text-xs text-text-muted">
           Share this link. Clicks are attributed for the program's cookie window;
           a signup that follows credits this affiliate. Stripe-paid subscriptions
           create pending commissions automatically.
@@ -283,28 +283,28 @@ export default function AffiliateDetailPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className=" border border-border bg-card/40 p-5 space-y-3">
+        <div className=" border border-border-subtle bg-card/40 p-5 space-y-3">
           <h3 className="font-semibold">Recent referrals</h3>
           {referrals.length === 0 ? (
-            <p className="text-xs text-muted">No referrals yet.</p>
+            <p className="text-xs text-text-muted">No referrals yet.</p>
           ) : (
             <div className="space-y-2 max-h-[420px] overflow-y-auto">
               {referrals.map((r) => (
                 <div
                   key={r.id}
-                  className="flex justify-between gap-3 text-xs border-b border-border last:border-0 py-2"
+                  className="flex justify-between gap-3 text-xs border-b border-border-subtle last:border-0 py-2"
                 >
                   <span className="truncate">
                     {r.referred_email ?? "(anonymous click)"}
                   </span>
-                  <span className="text-muted whitespace-nowrap">{fmtDate(r.created_at)}</span>
+                  <span className="text-text-muted whitespace-nowrap">{fmtDate(r.created_at)}</span>
                   <span
                     className={`font-semibold capitalize ${
                       r.status === "subscribed"
                         ? "text-success"
                         : r.status === "signed_up"
                         ? "text-blue-400"
-                        : "text-muted"
+                        : "text-text-muted"
                     }`}
                   >
                     {r.status.replace("_", " ")}
@@ -315,28 +315,28 @@ export default function AffiliateDetailPage() {
           )}
         </div>
 
-        <div className=" border border-border bg-card/40 p-5 space-y-3">
+        <div className=" border border-border-subtle bg-card/40 p-5 space-y-3">
           <h3 className="font-semibold">Commissions</h3>
           {commissions.length === 0 ? (
-            <p className="text-xs text-muted">No commissions yet.</p>
+            <p className="text-xs text-text-muted">No commissions yet.</p>
           ) : (
             <div className="space-y-2 max-h-[420px] overflow-y-auto">
               {commissions.map((c) => (
                 <div
                   key={c.id}
-                  className="flex justify-between gap-3 text-xs border-b border-border last:border-0 py-2"
+                  className="flex justify-between gap-3 text-xs border-b border-border-subtle last:border-0 py-2"
                 >
                   <span className="font-mono">
                     {fmtCents(c.amount_cents, c.currency)}
                   </span>
-                  <span className="text-muted">{fmtDate(c.created_at)}</span>
+                  <span className="text-text-muted">{fmtDate(c.created_at)}</span>
                   <span
                     className={`font-semibold capitalize ${
                       c.status === "paid"
                         ? "text-success"
                         : c.status === "pending"
                         ? "text-warning"
-                        : "text-muted"
+                        : "text-text-muted"
                     }`}
                   >
                     {c.status}

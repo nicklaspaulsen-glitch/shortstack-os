@@ -205,7 +205,7 @@ export default function MailSetupPage() {
   );
 
   return (
-    <MotionPage className="min-h-screen bg-background text-foreground">{/* -- Mail Setup command strip -- */}
+    <MotionPage className="min-h-screen bg-background text-text-primary">{/* -- Mail Setup command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">MAIL SETUP</p>
@@ -236,16 +236,16 @@ export default function MailSetupPage() {
                   </div>
 
                   {loading ? (
-                    <div className="flex items-center gap-2 text-sm text-muted">
+                    <div className="flex items-center gap-2 text-sm text-text-muted">
                       <Loader size={14} className="animate-spin" /> Loading…
                     </div>
                   ) : domains.length === 0 ? (
-                    <div className="rounded-xl border border-dashed border-border/50 glass p-10 text-center">
-                      <Mail size={28} className="mx-auto mb-3 text-muted" />
+                    <div className="rounded-xl border border-dashed border-border-subtle/50 glass p-10 text-center">
+                      <Mail size={28} className="mx-auto mb-3 text-text-muted" />
                       <h3 className="mb-1 text-base font-semibold">No custom domains yet</h3>
-                      <p className="mx-auto mb-4 max-w-md text-sm text-muted">
+                      <p className="mx-auto mb-4 max-w-md text-sm text-text-muted">
                         Add your first subdomain to send email from your own brand. Outbound messages
-                        will use <span className="font-mono text-foreground">yourname@mail.yourdomain.com</span> instead of the shared ShortStack address.
+                        will use <span className="font-mono text-text-primary">yourname@mail.yourdomain.com</span> instead of the shared ShortStack address.
                       </p>
                       <button
                         onClick={() => {
@@ -279,13 +279,13 @@ export default function MailSetupPage() {
                       <div className="mb-4 flex items-center justify-between">
                         <div>
                           <h3 className="text-sm font-semibold">DNS records for <span className="font-mono">{selected.domain}</span></h3>
-                          <p className="text-[11px] text-muted">
+                          <p className="text-[11px] text-text-muted">
                             Add each record to your DNS provider exactly as shown, then click Verify.
                           </p>
                         </div>
                         <button
                           onClick={() => setSelected(null)}
-                          className="text-xs text-muted hover:text-foreground"
+                          className="text-xs text-text-muted hover:text-text-primary"
                         >
                           Close
                         </button>
@@ -331,17 +331,17 @@ export default function MailSetupPage() {
                                 ? "bg-brand-accent text-white"
                                 : active
                                   ? "bg-[rgba(59,130,246,0.08)] text-brand-accent ring-2 ring-[rgba(59,130,246,0.4)]"
-                                  : "bg-surface-light text-muted"
+                                  : "bg-surface-light text-text-muted"
                             }`}
                           >
                             {done ? <Check size={12} /> : n}
                           </div>
                           <span
-                            className={`text-[11px] ${active ? "text-foreground" : "text-muted"}`}
+                            className={`text-[11px] ${active ? "text-text-primary" : "text-text-muted"}`}
                           >
                             {label}
                           </span>
-                          {n < 3 && <div className="ml-1 flex-1 h-px bg-border/60" />}
+                          {n < 3 && <div className="ml-1 flex-1 h-px bg-border-subtle/60" />}
                         </div>
                       );
                     })}
@@ -350,12 +350,12 @@ export default function MailSetupPage() {
                   {step === 1 && (
                     <div className="glass rounded-xl p-6">
                       <h2 className="mb-1 text-lg font-semibold">Pick a subdomain</h2>
-                      <p className="mb-4 text-sm text-muted">
-                        Recommended pattern: <span className="font-mono text-foreground">mail.yourdomain.com</span>
+                      <p className="mb-4 text-sm text-text-muted">
+                        Recommended pattern: <span className="font-mono text-text-primary">mail.yourdomain.com</span>
                         — separates marketing email from your root domain&apos;s reputation.
                       </p>
 
-                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-muted">
+                      <label className="mb-1 block text-[10px] uppercase tracking-wider text-text-muted">
                         Subdomain
                       </label>
                       <input
@@ -363,7 +363,7 @@ export default function MailSetupPage() {
                         value={newDomain}
                         onChange={(e) => setNewDomain(e.target.value)}
                         placeholder="mail.yourdomain.com"
-                        className="mb-1 w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 font-mono text-sm placeholder:text-muted"
+                        className="mb-1 w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 font-mono text-sm placeholder:text-text-muted"
                         autoFocus
                       />
                       {newDomain && !validDomain && (
@@ -387,7 +387,7 @@ export default function MailSetupPage() {
                       <div className="mt-5 flex justify-between">
                         <button
                           onClick={() => setMode("list")}
-                          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted hover:text-foreground"
+                          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-text-muted hover:text-text-primary"
                         >
                           <ArrowLeft size={14} /> Cancel
                         </button>
@@ -405,11 +405,11 @@ export default function MailSetupPage() {
                   {step === 2 && (
                     <div className="glass rounded-xl p-6">
                       <h2 className="mb-1 text-lg font-semibold">Confirm</h2>
-                      <p className="mb-5 text-sm text-muted">
+                      <p className="mb-5 text-sm text-text-muted">
                         Ready to register this domain with Resend?
                       </p>
 
-                      <div className="mb-5 space-y-3 rounded-lg border border-border/40 bg-background/40 p-4">
+                      <div className="mb-5 space-y-3 rounded-lg border border-border-subtle/40 bg-background/40 p-4">
                         <Row label="Domain" value={<span className="font-mono font-semibold">{newDomain}</span>} />
                         <Row label="Provider" value="Resend" />
                         <Row label="Cost" value="Free (uses your existing Resend plan)" />
@@ -428,7 +428,7 @@ export default function MailSetupPage() {
                         <button
                           onClick={() => setStep(1)}
                           disabled={submitting}
-                          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-muted hover:text-foreground disabled:opacity-40"
+                          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-text-muted hover:text-text-primary disabled:opacity-40"
                         >
                           <ArrowLeft size={14} /> Back
                         </button>
@@ -466,8 +466,8 @@ export default function MailSetupPage() {
                         onCopy={copyRecord}
                       />
 
-                      <div className="mt-5 rounded-lg border border-border/40 bg-background/40 p-4 text-[12px] text-muted">
-                        <p className="mb-1 font-semibold text-foreground">Adding records in…</p>
+                      <div className="mt-5 rounded-lg border border-border-subtle/40 bg-background/40 p-4 text-[12px] text-text-muted">
+                        <p className="mb-1 font-semibold text-text-primary">Adding records in…</p>
                         <ul className="ml-4 list-disc space-y-0.5">
                           <li>
                             <strong>GoDaddy:</strong> Domains → your domain → DNS → Add new record
@@ -511,7 +511,7 @@ export default function MailSetupPage() {
                         </button>
                       </div>
 
-                      <p className="mt-3 text-[11px] text-muted">
+                      <p className="mt-3 text-[11px] text-text-muted">
                         DNS changes typically propagate in 5–30 minutes. You can close this page and come back —
                         the domain will be in your list with its current status.
                       </p>
@@ -526,8 +526,8 @@ export default function MailSetupPage() {
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex items-start justify-between gap-4">
-      <span className="text-[11px] uppercase tracking-wider text-muted">{label}</span>
-      <span className="text-right text-sm text-foreground">{value}</span>
+      <span className="text-[11px] uppercase tracking-wider text-text-muted">{label}</span>
+      <span className="text-right text-sm text-text-primary">{value}</span>
     </div>
   );
 }
@@ -559,11 +559,11 @@ function DomainRow({
         : "⏳ Pending";
   return (
     <div className="flex items-center gap-3 glass rounded-xl p-3">
-      <Globe size={18} className="shrink-0 text-muted" />
+      <Globe size={18} className="shrink-0 text-text-muted" />
       <div className="min-w-0 flex-1">
         <p className="font-mono text-sm font-semibold">{domain.domain}</p>
         {domain.created_at && (
-          <p className="text-[11px] text-muted">Added {new Date(domain.created_at).toLocaleDateString()}</p>
+          <p className="text-[11px] text-text-muted">Added {new Date(domain.created_at).toLocaleDateString()}</p>
         )}
       </div>
       <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${statusColor}`}>
@@ -610,7 +610,7 @@ function DnsRecordList({
 }) {
   if (!records || records.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-border/50 p-6 text-center text-sm text-muted">
+      <div className="rounded-lg border border-dashed border-border-subtle/50 p-6 text-center text-sm text-text-muted">
         No DNS records returned — try verifying to refresh.
       </div>
     );
@@ -632,16 +632,16 @@ function DnsRecordList({
                 {r.type}
               </span>
               {r.priority !== undefined && (
-                <span className="text-[10px] text-muted">Priority: {r.priority}</span>
+                <span className="text-[10px] text-text-muted">Priority: {r.priority}</span>
               )}
             </div>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-[120px_1fr_auto]">
               <div>
-                <p className="text-[10px] uppercase text-muted">Name / Host</p>
+                <p className="text-[10px] uppercase text-text-muted">Name / Host</p>
                 <p className="truncate font-mono text-[12px]">{r.name}</p>
               </div>
               <div className="min-w-0">
-                <p className="text-[10px] uppercase text-muted">Value</p>
+                <p className="text-[10px] uppercase text-text-muted">Value</p>
                 <p className="truncate font-mono text-[12px]" title={r.value}>
                   {r.value}
                 </p>

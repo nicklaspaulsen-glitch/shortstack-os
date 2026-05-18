@@ -38,7 +38,7 @@ export default function TrinitySettings({ ttsSupported, muted, speaking, onToggl
         title={muted ? "Unmute Trinity's voice" : "Mute Trinity's voice"}
         className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
           muted
-            ? "bg-surface-light text-muted hover:text-[#2563EB]"
+            ? "bg-surface-light text-text-muted hover:text-[#2563EB]"
             : speaking
             ? "bg-[rgba(59,130,246,0.15)] text-[#2563EB] animate-pulse"
             : "bg-surface-light text-[#2563EB] hover:bg-[rgba(59,130,246,0.08)]"

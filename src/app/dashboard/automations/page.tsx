@@ -254,7 +254,7 @@ export default function AutomationsPage() {
                         <div className="flex items-center gap-2 shrink-0">
                           <Link
                             href={`/dashboard/workflows`}
-                            className="text-xs text-text-secondary hover:text-text-primary px-2 py-1 rounded border border-border-subtle hover:border-border transition-colors"
+                            className="text-xs text-text-secondary hover:text-text-primary px-2 py-1 rounded border border-border-subtle hover:border-border-subtle transition-colors"
                           >
                             Edit
                           </Link>

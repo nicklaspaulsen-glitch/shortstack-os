@@ -150,7 +150,7 @@ export default function ConnectModal({
         aria-modal="true"
         aria-labelledby={titleId}
         aria-describedby={descId}
-        className="relative w-full max-w-md mx-4  border border-border bg-surface text-foreground shadow-2xl shadow-black/50 overflow-hidden"
+        className="relative w-full max-w-md mx-4  border border-border-subtle bg-surface text-text-primary shadow-2xl shadow-black/50 overflow-hidden"
       >
         {/* Top gold/blue gradient bar — echoes <PageHero> aesthetic without
          *  the full hero block. The same horizontal motion-feel comes from
@@ -166,7 +166,7 @@ export default function ConnectModal({
 
         {/* Header row: ShortStack mark left, close (X) right. */}
         <div className="flex items-center justify-between px-5 pt-4">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">
             <Logo size={20} variant="gold" />
             <span>{BRAND.company_name}</span>
           </div>
@@ -174,7 +174,7 @@ export default function ConnectModal({
             type="button"
             onClick={onCancel}
             aria-label="Close dialog"
-            className="rounded-md p-1 text-muted hover:text-foreground hover:bg-surface-light transition-colors"
+            className="rounded-md p-1 text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors"
           >
             <X size={16} />
           </button>
@@ -185,7 +185,7 @@ export default function ConnectModal({
           {/* Centered integration logo / avatar */}
           <div className="flex justify-center">
             <div
-              className="w-16 h-16  flex items-center justify-center bg-surface-light border border-border/40 overflow-hidden"
+              className="w-16 h-16  flex items-center justify-center bg-surface-light border border-border-subtle/40 overflow-hidden"
               style={{
                 boxShadow:
                   "0 1px 0 rgba(255,255,255,1) inset, 0 4px 12px rgba(0,0,0,0.08)",
@@ -223,14 +223,14 @@ export default function ConnectModal({
           >
             {computedHeading}
           </h2>
-          <p className="mt-1 text-center text-xs text-muted font-mono">
+          <p className="mt-1 text-center text-xs text-text-muted font-mono">
             {integrationId}
           </p>
 
           {description && (
             <p
               id={descId}
-              className="mt-3 text-center text-sm text-muted"
+              className="mt-3 text-center text-sm text-text-muted"
             >
               {description}
             </p>
@@ -240,9 +240,9 @@ export default function ConnectModal({
           {scopesDescription.length > 0 && (
             <div
               id={!description ? descId : undefined}
-              className="mt-5 rounded-xl border border-border/40 bg-surface-light/50 p-4"
+              className="mt-5 rounded-xl border border-border-subtle/40 bg-surface-light/50 p-4"
             >
-              <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted mb-3">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-text-muted mb-3">
                 Permissions you&apos;re granting
               </div>
               <ul className="space-y-2">
@@ -258,7 +258,7 @@ export default function ConnectModal({
                     >
                       <Check size={10} strokeWidth={3} />
                     </span>
-                    <span className="text-foreground/90">{scope}</span>
+                    <span className="text-text-primary/90">{scope}</span>
                   </li>
                 ))}
               </ul>
@@ -270,7 +270,7 @@ export default function ConnectModal({
             <button
               type="button"
               onClick={onCancel}
-              className="px-4 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-foreground hover:bg-surface-light transition-colors"
+              className="px-4 py-2 rounded-lg text-sm font-medium text-text-primary/80 hover:text-text-primary hover:bg-surface-light transition-colors"
             >
               Cancel
             </button>
@@ -289,7 +289,7 @@ export default function ConnectModal({
             </button>
           </div>
 
-          <p className="mt-3 text-center text-[11px] text-muted">
+          <p className="mt-3 text-center text-[11px] text-text-muted">
             You&apos;ll be redirected to {integrationName} to confirm.
           </p>
         </div>

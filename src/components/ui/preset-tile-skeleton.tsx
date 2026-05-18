@@ -5,7 +5,7 @@ import { Skeleton } from "./skeleton";
 /** Shimmer skeleton card that matches a typical preset grid tile aspect ratio. */
 export function PresetTileSkeleton() {
   return (
-    <div className="rounded-lg border border-border/50 bg-surface-light/30 p-3 space-y-2">
+    <div className="rounded-lg border border-border-subtle/50 bg-surface-light/30 p-3 space-y-2">
       <Skeleton className="aspect-video w-full rounded-md" />
       <div className="space-y-1.5">
         <Skeleton className="h-3 w-3/4" />
@@ -29,7 +29,7 @@ export function PresetGridSkeleton({ count = 6 }: { count?: number }) {
 /** Skeleton for a list-style audio row. */
 export function AudioRowSkeleton() {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-border/50 bg-surface-light/30 p-3">
+    <div className="flex items-center gap-3 rounded-lg border border-border-subtle/50 bg-surface-light/30 p-3">
       <Skeleton className="w-10 h-10 rounded-full shrink-0" />
       <div className="flex-1 space-y-1.5">
         <Skeleton className="h-3 w-2/3" />

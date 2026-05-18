@@ -40,7 +40,7 @@ export default function DataTable({
         <tbody>
           {data.length === 0 ? (
             <tr>
-              <td colSpan={columns.length} className="text-center py-8 text-muted">
+              <td colSpan={columns.length} className="text-center py-8 text-text-muted">
                 {emptyMessage}
               </td>
             </tr>

@@ -50,7 +50,7 @@ export default function ClientSupportPage() {
   }
 
   return (
-    <MotionPage className="fade-in space-y-5"><div>
+    <MotionPage className="space-y-5"><div>
               <h1 className="page-header mb-0 flex items-center gap-2"><MessageSquare size={18} className="text-blue-400" /> Support</h1>
               <p className="text-xs text-text-muted mt-0.5">Chat with your AI assistant or contact your account manager</p>
             </div><div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -126,8 +126,8 @@ export default function ClientSupportPage() {
 
               {/* Contact info */}
               <div className="space-y-3">
-                <div className="card">
-                  <h3 className="section-header">Contact Your Team</h3>
+                <div className="glass rounded-xl p-4">
+                  <h3 className="">Contact Your Team</h3>
                   <div className="space-y-3">
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 bg-blue-500/[0.10] rounded-lg flex items-center justify-center">
@@ -159,7 +159,7 @@ export default function ClientSupportPage() {
                   </div>
                 </div>
 
-                <div className="card bg-blue-500/[0.10] border-blue-500/[0.20]">
+                <div className="glass rounded-xl p-4 bg-blue-500/[0.10] border-blue-500/[0.20]">
                   <div className="flex items-center gap-2 mb-2">
                     <Bot size={14} className="text-blue-400" />
                     <span className="text-xs font-semibold text-text-primary">AI Assistant</span>

@@ -159,23 +159,23 @@ export default function ClientChatWidget() {
 
   return (
     <Draggable defaultX={typeof window !== "undefined" ? window.innerWidth - 400 : 600} defaultY={typeof window !== "undefined" ? window.innerHeight - 540 : 200} storageKey="chat_panel">
-    <div className="w-[380px] h-[520px] bg-surface border border-border  shadow-2xl shadow-black/50 flex flex-col overflow-hidden fade-in">
+    <div className="w-[380px] h-[520px] bg-surface border border-border-subtle  shadow-2xl shadow-black/50 flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="bg-surface-light px-4 py-3 flex items-center justify-between border-b border-border">
+      <div className="bg-surface-light px-4 py-3 flex items-center justify-between border-b border-border-subtle">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-full flex items-center justify-center">
             <Image src="/icons/shortstack-logo.svg" alt="Trinity" width={20} height={20} />
           </div>
           <div>
-            <p className="text-sm font-medium text-foreground">Trinity AI</p>
+            <p className="text-sm font-medium text-text-primary">Trinity AI</p>
             <p className="text-[10px] text-success">Online</p>
           </div>
         </div>
         <div className="flex gap-1">
-          <button onClick={() => setIsOpen(false)} className="p-1 rounded hover:bg-border text-muted hover:text-foreground transition-colors">
+          <button onClick={() => setIsOpen(false)} className="p-1 rounded hover:bg-border text-text-muted hover:text-text-primary transition-colors">
             <Minimize2 size={14} />
           </button>
-          <button onClick={() => setIsOpen(false)} className="p-1 rounded hover:bg-border text-muted hover:text-foreground transition-colors">
+          <button onClick={() => setIsOpen(false)} className="p-1 rounded hover:bg-border text-text-muted hover:text-text-primary transition-colors">
             <X size={14} />
           </button>
         </div>
@@ -188,7 +188,7 @@ export default function ClientChatWidget() {
             <div className={`max-w-[80%]  px-3.5 py-2.5 ${
               msg.role === "user"
                 ? "bg-[#2563EB] text-white rounded-br-sm"
-                : "bg-surface-light text-foreground rounded-bl-sm"
+                : "bg-surface-light text-text-primary rounded-bl-sm"
             }`}>
               <p className="text-sm leading-relaxed">{msg.content}</p>
             </div>
@@ -213,7 +213,7 @@ export default function ClientChatWidget() {
         <div className="px-4 pb-2 flex flex-wrap gap-1.5">
           {["My tasks", "Invoice status", "Content progress", "How are my ads?"].map(q => (
             <button key={q} onClick={() => { setInput(q); }}
-              className="text-[10px] bg-surface-light px-2.5 py-1 rounded-full text-muted hover:text-foreground hover:bg-border transition-colors">
+              className="text-[10px] bg-surface-light px-2.5 py-1 rounded-full text-text-muted hover:text-text-primary hover:bg-border-subtle transition-colors">
               {q}
             </button>
           ))}
@@ -221,14 +221,14 @@ export default function ClientChatWidget() {
       )}
 
       {/* Input */}
-      <div className="p-3 border-t border-border">
+      <div className="p-3 border-t border-border-subtle">
         <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="flex gap-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask Trinity anything..."
-            className="flex-1 bg-surface-light border border-border rounded-full px-4 py-2 text-sm text-foreground placeholder-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
+            className="flex-1 bg-surface-light border border-border-subtle rounded-full px-4 py-2 text-sm text-text-primary placeholder-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
             disabled={sending}
           />
           <button type="submit" disabled={sending || !input.trim()}

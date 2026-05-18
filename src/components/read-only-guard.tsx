@@ -22,7 +22,7 @@ export default function ActionGuard({ children, fallback }: { children: ReactNod
       <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
         <div className="text-center px-3">
           <Download size={16} className="text-[#2563EB] mx-auto mb-1" />
-          <p className="text-xs text-foreground">Install the app to edit</p>
+          <p className="text-xs text-text-primary">Install the app to edit</p>
         </div>
       </div>
     </div>
@@ -45,7 +45,7 @@ export function BrowserModeBanner() {
         <Download size={16} className="text-[#2563EB]" />
         <p className="text-sm">
           <span className="text-[#2563EB] font-medium">View-only mode.</span>
-          <span className="text-muted"> Install Trinity as an app to make changes.</span>
+          <span className="text-text-muted"> Install Trinity as an app to make changes.</span>
         </p>
       </div>
       <button

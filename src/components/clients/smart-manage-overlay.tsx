@@ -156,22 +156,22 @@ export default function SmartManageOverlay({
       />
 
       {/* Sheet — slides in from the right */}
-      <div className="relative w-full max-w-md h-full bg-surface border-l border-border/50 shadow-2xl shadow-black/50 overflow-y-auto fade-in">
-        <div className="sticky top-0 z-10 bg-surface/95 backdrop-blur-sm border-b border-border/30 px-5 py-3.5 flex items-center justify-between">
+      <div className="relative w-full max-w-md h-full bg-surface border-l border-border-subtle/50 shadow-2xl shadow-black/50 overflow-y-auto">
+        <div className="sticky top-0 z-10 bg-surface/95 backdrop-blur-sm border-b border-border-subtle/30 px-5 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center">
               <Sparkles size={14} className="text-[#2563EB]" />
             </div>
             <div>
               <h2 className="text-sm font-semibold">Smart Manage</h2>
-              <p className="text-[10px] text-muted">
+              <p className="text-[10px] text-text-muted">
                 {clientName ? `Trinity for ${clientName}` : "Trinity suggestions"}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors"
+            className="p-1 rounded-md hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors"
             aria-label="Close"
           >
             <X size={16} />
@@ -181,13 +181,13 @@ export default function SmartManageOverlay({
         <div className="p-5 space-y-3">
           {loading && (
             <>
-              <div className="flex items-center gap-2 text-muted text-xs">
+              <div className="flex items-center gap-2 text-text-muted text-xs">
                 <Loader2 size={12} className="animate-spin" /> Trinity is analyzing this client...
               </div>
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
-                  className="h-24 rounded-xl border border-border bg-surface-light/40 animate-pulse"
+                  className="h-24 rounded-xl border border-border-subtle bg-surface-light/40 animate-pulse"
                 />
               ))}
             </>
@@ -200,7 +200,7 @@ export default function SmartManageOverlay({
           )}
 
           {!loading && !error && suggestions.length === 0 && (
-            <div className="rounded-xl border border-border bg-surface-light/40 p-5 text-center text-xs text-muted">
+            <div className="rounded-xl border border-border-subtle bg-surface-light/40 p-5 text-center text-xs text-text-muted">
               Nothing urgent for this client right now.
             </div>
           )}
@@ -221,7 +221,7 @@ export default function SmartManageOverlay({
                       ? "border-danger/30 bg-danger/[0.04]"
                       : state === "todo"
                         ? "border-warning/30 bg-warning/[0.04]"
-                        : "border-border bg-surface-light/40 hover:border-[rgba(59,130,246,0.25)]"
+                        : "border-border-subtle bg-surface-light/40 hover:border-[rgba(59,130,246,0.25)]"
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -229,10 +229,10 @@ export default function SmartManageOverlay({
                     <Icon size={14} className="text-[#2563EB]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-foreground leading-tight">
+                    <p className="text-xs font-bold text-text-primary leading-tight">
                       {s.label}
                     </p>
-                    <p className="text-[11px] text-muted mt-1 leading-snug">
+                    <p className="text-[11px] text-text-muted mt-1 leading-snug">
                       {s.reason}
                     </p>
                     {s.estimated_impact && (
@@ -244,7 +244,7 @@ export default function SmartManageOverlay({
                 </div>
 
                 <div className="flex items-center justify-between mt-3">
-                  <span className="text-[9px] text-muted font-mono uppercase tracking-wider">
+                  <span className="text-[9px] text-text-muted font-mono uppercase tracking-wider">
                     {s.action.replace(/_/g, " ")}
                   </span>
                   <button

@@ -246,7 +246,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
           state={sending ? "thinking" : listening ? "listening" : "idle"}
         />
         <div className={`mt-3 transition-all ${active ? "opacity-80" : "opacity-100"}`}>
-          <p className="text-[10px] uppercase tracking-[0.22em] text-muted flex items-center gap-1.5 justify-center">
+          <p className="text-[10px] uppercase tracking-[0.22em] text-text-muted flex items-center gap-1.5 justify-center">
             <Sparkles size={10} className="text-[#2563EB]" />
             Trinity
           </p>
@@ -254,7 +254,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
             {active ? "Trinity is with you" : `Hey ${firstName || "there"}, I can help you with:`}
           </h2>
           {!active && (
-            <p className="text-xs text-muted mt-1 max-w-md mx-auto">
+            <p className="text-xs text-text-muted mt-1 max-w-md mx-auto">
               Ask anything about your business — leads, revenue, content, outreach, tasks. I see it all and can take action.
             </p>
           )}
@@ -294,7 +294,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
               rows={1}
               placeholder="Ask Trinity anything about your business..."
               disabled={sending}
-              className="w-full resize-none bg-transparent px-4 py-3 pr-12 text-sm placeholder:text-muted/70 focus:outline-none"
+              className="w-full resize-none bg-transparent px-4 py-3 pr-12 text-sm placeholder:text-text-muted/70 focus:outline-none"
               style={{ maxHeight: 120 }}
             />
             {/* Mic button — lazy-loaded; only users who need voice ship this chunk */}
@@ -319,7 +319,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
           <TrinitySuggestions suggestions={suggestions} onPick={handleSuggestionPick} />
         )}
         {active && (
-          <div className="flex items-center justify-between mt-2 max-w-2xl mx-auto text-[10px] text-muted/80">
+          <div className="flex items-center justify-between mt-2 max-w-2xl mx-auto text-[10px] text-text-muted/80">
             <button
               onClick={() => {
                 setMessages([]);

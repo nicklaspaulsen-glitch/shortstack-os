@@ -39,12 +39,12 @@ export default function QuickCreateFab() {
     <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2">
       {/* Expanded actions */}
       {open && (
-        <div className="flex flex-col items-end gap-1.5 fade-in">
+        <div className="flex flex-col items-end gap-1.5">
           {ACTIONS.map((a) => (
             <button
               key={a.label}
               onClick={() => { router.push(a.href); setOpen(false); }}
-              className="flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full bg-surface border border-border shadow-md hover:border-[rgba(59,130,246,0.3)] hover:shadow-lg transition-all group"
+              className="flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full bg-surface border border-border-subtle shadow-md hover:border-[rgba(59,130,246,0.3)] hover:shadow-lg transition-all group"
             >
               <span className={`${a.color}`}>{a.icon}</span>
               <span className="text-[11px] font-medium group-hover:text-[#2563EB] transition-colors">{a.label}</span>
@@ -59,7 +59,7 @@ export default function QuickCreateFab() {
         onClick={() => setOpen(o => !o)}
         className={`w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all ${
           open
-            ? "bg-surface border border-border text-muted hover:text-foreground"
+            ? "bg-surface border border-border-subtle text-text-muted hover:text-text-primary"
             : "bg-gradient-to-br from-[#2563EB] to-[rgba(59,130,246,0.8)] text-white hover:scale-110"
         }`}
         style={open ? {} : { boxShadow: "0 8px 24px -4px rgba(201,168,76,0.55)" }}

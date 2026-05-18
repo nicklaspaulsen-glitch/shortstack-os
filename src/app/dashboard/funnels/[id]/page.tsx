@@ -276,7 +276,7 @@ export default function FunnelCanvasPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => router.push("/dashboard/funnels")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border text-text-muted hover:text-white text-sm transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border-subtle text-text-muted hover:text-white text-sm transition-colors"
             >
               <ArrowLeft size={14} />
               Back
@@ -354,7 +354,7 @@ export default function FunnelCanvasPage() {
                       onClick={() => openPanel(step)}
                     >
                       {/* Step number */}
-                      <div className="absolute -top-3 -left-1 w-5 h-5 rounded-full glass border border-border flex items-center justify-center text-[10px] font-bold">
+                      <div className="absolute -top-3 -left-1 w-5 h-5 rounded-full glass border border-border-subtle flex items-center justify-center text-[10px] font-bold">
                         {idx + 1}
                       </div>
 
@@ -526,7 +526,7 @@ export default function FunnelCanvasPage() {
                   return (
                     <div key={step.id}>
                       <div className="flex items-center gap-3">
-                        <div className="shrink-0 w-6 h-6 rounded-full glass border border-border flex items-center justify-center text-[10px] font-bold">
+                        <div className="shrink-0 w-6 h-6 rounded-full glass border border-border-subtle flex items-center justify-center text-[10px] font-bold">
                           {idx + 1}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -571,7 +571,7 @@ export default function FunnelCanvasPage() {
             onClick={() => setPanelOpen(false)}
           />
           {/* Drawer */}
-          <div className="fixed right-0 top-0 bottom-0 z-50 w-80 glass border-l border-border flex flex-col shadow-2xl">
+          <div className="fixed right-0 top-0 bottom-0 z-50 w-80 glass border-l border-border-subtle flex flex-col shadow-2xl">
             <div className="flex items-center justify-between px-5 py-4 border-b border-black/[0.08]">
               <div className="flex items-center gap-2">
                 <Pencil size={15} className="text-purple-600" />

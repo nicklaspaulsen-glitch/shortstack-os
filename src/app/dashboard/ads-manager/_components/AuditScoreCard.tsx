@@ -208,7 +208,7 @@ function FailCheckItem({ check }: { check: FailingCheck }) {
       </button>
       {expanded && (
         <div className="px-3 pb-3 space-y-2 border-t border-current/20 pt-2 mt-0">
-          <p className="text-muted leading-relaxed">{check.description}</p>
+          <p className="text-text-muted leading-relaxed">{check.description}</p>
           <div className="flex items-start gap-1.5 text-brand-accent/80">
             <Info size={11} className="mt-0.5 flex-shrink-0" />
             <span className="leading-relaxed">{check.recommendation}</span>

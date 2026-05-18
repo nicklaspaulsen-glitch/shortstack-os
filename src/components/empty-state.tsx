@@ -20,7 +20,7 @@ export default function EmptyState({
   onAction,
 }: EmptyStateProps) {
   return (
-    <div className="pop-fade relative flex flex-col items-center justify-center text-center py-16 px-6 border border-dashed border-border bg-gradient-to-b from-[rgba(59,130,246,0.02)] to-transparent overflow-hidden">
+    <div className="pop-fade relative flex flex-col items-center justify-center text-center py-16 px-6 border border-dashed border-border-subtle bg-gradient-to-b from-[rgba(59,130,246,0.02)] to-transparent overflow-hidden">
       {/* Background pattern */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.03]"
@@ -38,8 +38,8 @@ export default function EmptyState({
         <div className="w-14 h-14 bg-[rgba(59,130,246,0.08)] flex items-center justify-center mb-4 text-[#2563EB]">
           {icon}
         </div>
-        <h3 className="text-sm font-semibold text-foreground mb-1">{title}</h3>
-        <p className="text-xs text-muted max-w-xs">{description}</p>
+        <h3 className="text-sm font-semibold text-text-primary mb-1">{title}</h3>
+        <p className="text-xs text-text-muted max-w-xs">{description}</p>
 
         {actionLabel && (actionHref || onAction) && (
           actionHref ? (

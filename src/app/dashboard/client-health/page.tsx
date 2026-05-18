@@ -156,7 +156,7 @@ export default function ClientHealthPage() {
   ];
 
   return (
-    <MotionPage className="fade-in space-y-5">{/* -- Client Health Monitor command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Client Health Monitor command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">CLIENT HEALTH</p>
@@ -209,7 +209,7 @@ export default function ClientHealthPage() {
               {tabs.map(t => (
                 <button key={t.id} onClick={() => setActiveTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border ${
-                    activeTab === t.id ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)] text-brand-accent font-medium" : "border-border text-muted hover:text-foreground"
+                    activeTab === t.id ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)] text-brand-accent font-medium" : "border-border-subtle text-text-muted hover:text-text-primary"
                   }`}>
                   <t.icon size={12} /> {t.label}
                 </button>
@@ -224,13 +224,13 @@ export default function ClientHealthPage() {
                   <div className="flex items-end gap-1 h-24">
                     {HEALTH_HISTORY.map((m, i) => (
                       <div key={m.month} className="flex-1 flex flex-col items-center gap-1">
-                        <span className="text-[8px] text-muted">{m.avg}%</span>
+                        <span className="text-[8px] text-text-muted">{m.avg}%</span>
                         <div className="w-full rounded-t" style={{
                           height: `${m.avg}%`,
                           background: i === HEALTH_HISTORY.length - 1 ? "rgba(200,168,85,0.4)" : "rgba(200,168,85,0.15)",
                           border: i === HEALTH_HISTORY.length - 1 ? "1px solid rgba(200,168,85,0.3)" : "none",
                         }} />
-                        <span className="text-[8px] text-muted">{m.month}</span>
+                        <span className="text-[8px] text-text-muted">{m.month}</span>
                       </div>
                     ))}
                   </div>
@@ -242,7 +242,7 @@ export default function ClientHealthPage() {
                     {(["all", "critical", "warning", "healthy"] as const).map(f => (
                       <button key={f} onClick={() => setFilter(f)}
                         className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${
-                          filter === f ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent font-medium" : "border-border text-muted hover:text-foreground"
+                          filter === f ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent font-medium" : "border-border-subtle text-text-muted hover:text-text-primary"
                         }`}>
                         {f === "all" ? `All (${clients.length})` :
                          f === "critical" ? `Critical (${criticalCount})` :
@@ -251,7 +251,7 @@ export default function ClientHealthPage() {
                       </button>
                     ))}
                   </div>
-                  <select value={sort} onChange={e => setSort(e.target.value as typeof sort)} className="text-[10px] py-1 px-2 rounded-lg border border-border bg-surface text-foreground">
+                  <select value={sort} onChange={e => setSort(e.target.value as typeof sort)} className="text-[10px] py-1 px-2 rounded-lg border border-border-subtle bg-surface text-text-primary">
                     <option value="health">Sort: Health (worst first)</option>
                     <option value="mrr">Sort: MRR (highest)</option>
                     <option value="name">Sort: Name (A-Z)</option>
@@ -294,35 +294,35 @@ export default function ClientHealthPage() {
                               <span className="flex items-center text-[8px] text-red-400"><TrendingDown size={8} /> {client.trend}%</span>
                             ) : null}
                           </div>
-                          <p className="text-[10px] text-muted">{client.contact_name} &middot; Last contact: {client.last_contact}</p>
+                          <p className="text-[10px] text-text-muted">{client.contact_name} &middot; Last contact: {client.last_contact}</p>
                         </div>
                         <div className="hidden md:flex items-center gap-4 shrink-0">
                           <div className="text-center">
-                            <p className="text-[8px] text-muted uppercase">MRR</p>
+                            <p className="text-[8px] text-text-muted uppercase">MRR</p>
                             <p className="text-xs font-bold font-mono">${client.mrr.toLocaleString()}</p>
                           </div>
                           <div className="text-center">
-                            <p className="text-[8px] text-muted uppercase">Tasks</p>
+                            <p className="text-[8px] text-text-muted uppercase">Tasks</p>
                             <p className="text-xs font-bold font-mono">{client.tasks_done}/{client.tasks_total}</p>
                           </div>
                           <div className="text-center">
-                            <p className="text-[8px] text-muted uppercase">NPS</p>
+                            <p className="text-[8px] text-text-muted uppercase">NPS</p>
                             <p className={`text-xs font-bold font-mono ${client.nps >= 8 ? "text-green-400" : client.nps >= 6 ? "text-yellow-400" : "text-red-400"}`}>{client.nps}</p>
                           </div>
                           <div className="text-center">
-                            <p className="text-[8px] text-muted uppercase">Engage</p>
+                            <p className="text-[8px] text-text-muted uppercase">Engage</p>
                             <p className="text-xs font-bold font-mono">{client.engagement}%</p>
                           </div>
                         </div>
-                        <ChevronRight size={14} className={`text-muted transition-transform ${selectedClient?.id === client.id ? "rotate-90" : ""}`} />
+                        <ChevronRight size={14} className={`text-text-muted transition-transform ${selectedClient?.id === client.id ? "rotate-90" : ""}`} />
                       </div>
 
                       {/* Progress bar */}
                       {client.tasks_total > 0 && (
-                        <div className="mt-3 pt-2 border-t border-border/20">
+                        <div className="mt-3 pt-2 border-t border-border-subtle/20">
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-[8px] text-muted">Task Progress</span>
-                            <span className="text-[8px] text-muted">{Math.round((client.tasks_done / client.tasks_total) * 100)}%</span>
+                            <span className="text-[8px] text-text-muted">Task Progress</span>
+                            <span className="text-[8px] text-text-muted">{Math.round((client.tasks_done / client.tasks_total) * 100)}%</span>
                           </div>
                           <div className="w-full bg-black/5 rounded-full h-1.5 overflow-hidden">
                             <div className="h-full rounded-full transition-all" style={{
@@ -336,7 +336,7 @@ export default function ClientHealthPage() {
 
                       {/* Expanded detail panel */}
                       {selectedClient?.id === client.id && (
-                        <div className="mt-3 pt-3 border-t border-border/20 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="mt-3 pt-3 border-t border-border-subtle/20 grid grid-cols-1 md:grid-cols-3 gap-4">
                           {/* Risk Factors */}
                           <div>
                             <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><ShieldAlert size={10} className="text-red-400" /> Risk Factors</h4>
@@ -361,7 +361,7 @@ export default function ClientHealthPage() {
                                 <div key={i} className="flex-1 rounded-t bg-[rgba(59,130,246,0.12)]" style={{ height: `${(v / Math.max(...client.revenue_trend)) * 100}%` }} />
                               ))}
                             </div>
-                            <p className="text-[9px] text-muted mt-1">Last 6 months MRR</p>
+                            <p className="text-[9px] text-text-muted mt-1">Last 6 months MRR</p>
                           </div>
 
                           {/* Action Recommendations */}
@@ -369,7 +369,7 @@ export default function ClientHealthPage() {
                             <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><Lightbulb size={10} className="text-brand-accent" /> Recommendations</h4>
                             <div className="space-y-1">
                               {(RECOMMENDATIONS[client.health_score < 50 ? "critical" : client.health_score < 75 ? "warning" : "healthy"] || []).slice(0, 3).map((r, i) => (
-                                <div key={i} className="text-[10px] text-muted flex items-start gap-1">
+                                <div key={i} className="text-[10px] text-text-muted flex items-start gap-1">
                                   <Target size={9} className="shrink-0 mt-0.5 text-brand-accent" /> {r}
                                 </div>
                               ))}
@@ -381,9 +381,9 @@ export default function ClientHealthPage() {
                   ))}
 
                   {filtered.length === 0 && (
-                    <div className="rounded-xl border border-border text-center py-12">
-                      <Users size={24} className="text-muted mx-auto mb-2" />
-                      <p className="text-sm text-muted">No clients match this filter</p>
+                    <div className="rounded-xl border border-border-subtle text-center py-12">
+                      <Users size={24} className="text-text-muted mx-auto mb-2" />
+                      <p className="text-sm text-text-muted">No clients match this filter</p>
                     </div>
                   )}
                 </motion.div>
@@ -394,7 +394,7 @@ export default function ClientHealthPage() {
                   <h3 className="text-sm font-semibold mb-1 flex items-center gap-2">
                     <Zap size={14} className="text-brand-accent" /> Health Score Algorithm
                   </h3>
-                  <p className="text-xs text-muted mb-4">The health score is calculated as a weighted average of these factors (0-100 scale).</p>
+                  <p className="text-xs text-text-muted mb-4">The health score is calculated as a weighted average of these factors (0-100 scale).</p>
                   <div className="space-y-3">
                     {ALGORITHM_WEIGHTS.map(w => (
                       <div key={w.factor}>
@@ -405,7 +405,7 @@ export default function ClientHealthPage() {
                         <div className="w-full bg-black/5 rounded-full h-2 overflow-hidden">
                           <div className="h-full rounded-full bg-[rgba(59,130,246,0.40)]" style={{ width: `${w.weight}%` }} />
                         </div>
-                        <p className="text-[9px] text-muted mt-0.5">{w.description}</p>
+                        <p className="text-[9px] text-text-muted mt-0.5">{w.description}</p>
                       </div>
                     ))}
                   </div>
@@ -419,15 +419,15 @@ export default function ClientHealthPage() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-[10px]">
                       <thead>
-                        <tr className="border-b border-border">
-                          <th className="text-left py-2 text-muted font-medium">Client</th>
-                          <th className="text-center py-2 text-muted font-medium">Tasks</th>
-                          <th className="text-center py-2 text-muted font-medium">Invoices</th>
-                          <th className="text-center py-2 text-muted font-medium">Engage</th>
-                          <th className="text-center py-2 text-muted font-medium">Contact</th>
-                          <th className="text-center py-2 text-muted font-medium">Content</th>
-                          <th className="text-center py-2 text-muted font-medium">NPS</th>
-                          <th className="text-center py-2 text-muted font-medium">Total</th>
+                        <tr className="border-b border-border-subtle">
+                          <th className="text-left py-2 text-text-muted font-medium">Client</th>
+                          <th className="text-center py-2 text-text-muted font-medium">Tasks</th>
+                          <th className="text-center py-2 text-text-muted font-medium">Invoices</th>
+                          <th className="text-center py-2 text-text-muted font-medium">Engage</th>
+                          <th className="text-center py-2 text-text-muted font-medium">Contact</th>
+                          <th className="text-center py-2 text-text-muted font-medium">Content</th>
+                          <th className="text-center py-2 text-text-muted font-medium">NPS</th>
+                          <th className="text-center py-2 text-text-muted font-medium">Total</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -435,13 +435,13 @@ export default function ClientHealthPage() {
                           const taskScore = c.tasks_total > 0 ? Math.round((c.tasks_done / c.tasks_total) * 100) : 50;
                           const invoiceScore = c.invoices_pending === 0 ? 100 : c.invoices_pending === 1 ? 50 : 20;
                           return (
-                            <tr key={c.id} className="border-b border-border/30">
+                            <tr key={c.id} className="border-b border-border-subtle/30">
                               <td className="py-2 font-medium">{c.business_name}</td>
                               <td className={`text-center py-2 ${taskScore >= 75 ? "text-green-400" : taskScore >= 50 ? "text-yellow-400" : "text-red-400"}`}>{taskScore}</td>
                               <td className={`text-center py-2 ${invoiceScore >= 75 ? "text-green-400" : invoiceScore >= 50 ? "text-yellow-400" : "text-red-400"}`}>{invoiceScore}</td>
                               <td className={`text-center py-2 ${c.engagement >= 75 ? "text-green-400" : c.engagement >= 50 ? "text-yellow-400" : "text-red-400"}`}>{c.engagement}</td>
-                              <td className="text-center py-2 text-muted">{c.last_contact}</td>
-                              <td className="text-center py-2 text-muted">{c.content_count}</td>
+                              <td className="text-center py-2 text-text-muted">{c.last_contact}</td>
+                              <td className="text-center py-2 text-text-muted">{c.content_count}</td>
                               <td className={`text-center py-2 ${c.nps >= 8 ? "text-green-400" : c.nps >= 6 ? "text-yellow-400" : "text-red-400"}`}>{c.nps}</td>
                               <td className={`text-center py-2 font-bold ${getHealthColor(c.health_score)}`}>{c.health_score}</td>
                             </tr>
@@ -482,9 +482,9 @@ export default function ClientHealthPage() {
                               "bg-blue-400/10 text-blue-400"
                             }`}>{alert.type}</span>
                           </div>
-                          <p className="text-[10px] text-muted mt-0.5">{alert.message}</p>
+                          <p className="text-[10px] text-text-muted mt-0.5">{alert.message}</p>
                         </div>
-                        <span className="text-[9px] text-muted shrink-0">{alert.time}</span>
+                        <span className="text-[9px] text-text-muted shrink-0">{alert.time}</span>
                       </div>
                     ))}
                   </div>
@@ -499,13 +499,13 @@ export default function ClientHealthPage() {
                     {clients.sort((a, b) => new Date(a.last_contact).getTime() - new Date(b.last_contact).getTime()).map(c => {
                       const daysSince = Math.floor((new Date().getTime() - new Date(c.last_contact).getTime()) / 86400000);
                       return (
-                        <div key={c.id} className="flex items-center justify-between p-2 rounded-lg border border-border">
+                        <div key={c.id} className="flex items-center justify-between p-2 rounded-lg border border-border-subtle">
                           <div className="flex items-center gap-2">
                             <div className={`w-2 h-2 rounded-full ${daysSince <= 3 ? "bg-green-400" : daysSince <= 7 ? "bg-yellow-400" : "bg-red-400"}`} />
                             <span className="text-xs font-medium">{c.business_name}</span>
                           </div>
                           <div className="flex items-center gap-3">
-                            <span className="text-[10px] text-muted">{c.last_contact}</span>
+                            <span className="text-[10px] text-text-muted">{c.last_contact}</span>
                             <span className={`text-[10px] font-mono ${daysSince <= 3 ? "text-green-400" : daysSince <= 7 ? "text-yellow-400" : "text-red-400"}`}>
                               {daysSince}d ago
                             </span>
@@ -529,7 +529,7 @@ export default function ClientHealthPage() {
                       <div className="text-center">
                         {tile.icon}
                         <p className={`text-3xl font-bold font-mono ${tile.color}`}>{tile.value}</p>
-                        <p className="text-[10px] text-muted">{tile.label}</p>
+                        <p className="text-[10px] text-text-muted">{tile.label}</p>
                       </div>
                     </PrismPanel>
                   ))}
@@ -543,10 +543,10 @@ export default function ClientHealthPage() {
                       const count = clients.filter(c => c.nps === i).length;
                       return (
                         <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                          {count > 0 && <span className="text-[8px] text-muted">{count}</span>}
+                          {count > 0 && <span className="text-[8px] text-text-muted">{count}</span>}
                           <div className={`w-full rounded-t ${i >= 9 ? "bg-green-400/40" : i >= 7 ? "bg-yellow-400/40" : "bg-red-400/40"}`}
                             style={{ height: count > 0 ? `${(count / clients.length) * 100}%` : "2px", minHeight: "2px" }} />
-                          <span className="text-[8px] text-muted">{i}</span>
+                          <span className="text-[8px] text-text-muted">{i}</span>
                         </div>
                       );
                     })}
@@ -567,23 +567,23 @@ export default function ClientHealthPage() {
                   ) : (
                     <div className="space-y-3">
                       <div>
-                        <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Client</label>
-                        <select value={surveyClient} onChange={e => setSurveyClient(e.target.value)} className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground">
+                        <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1">Client</label>
+                        <select value={surveyClient} onChange={e => setSurveyClient(e.target.value)} className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs text-text-primary">
                           <option value="">Select client...</option>
                           {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">NPS Score (0-10)</label>
+                        <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1">NPS Score (0-10)</label>
                         <div className="flex items-center gap-2">
                           <input type="range" min={0} max={10} value={surveyScore} onChange={e => setSurveyScore(Number(e.target.value))} className="flex-1" />
                           <span className={`text-lg font-bold font-mono ${surveyScore >= 9 ? "text-green-400" : surveyScore >= 7 ? "text-yellow-400" : "text-red-400"}`}>{surveyScore}</span>
                         </div>
                       </div>
                       <div>
-                        <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Feedback</label>
+                        <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1">Feedback</label>
                         <textarea value={surveyFeedback} onChange={e => setSurveyFeedback(e.target.value)}
-                          className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-20" placeholder="Any additional feedback..." />
+                          className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs text-text-primary h-20" placeholder="Any additional feedback..." />
                       </div>
                       <button onClick={() => { if (surveyClient) setSurveySubmitted(true); }}
                         className="px-4 py-2 rounded-lg bg-brand-accent text-white text-xs font-semibold">
@@ -607,7 +607,7 @@ export default function ClientHealthPage() {
                           height: `${m.avg}%`,
                           background: i === HEALTH_HISTORY.length - 1 ? "rgba(200,168,85,0.5)" : "rgba(200,168,85,0.2)",
                         }} />
-                        <span className="text-[9px] text-muted">{m.month}</span>
+                        <span className="text-[9px] text-text-muted">{m.month}</span>
                       </div>
                     ))}
                   </div>

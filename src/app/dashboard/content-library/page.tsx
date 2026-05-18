@@ -445,15 +445,15 @@ export default function ContentLibraryPage() {
 
   if (loading) {
     return (
-      <MotionPage className="fade-in flex items-center justify-center py-20"><div className="text-center">
+      <MotionPage className="flex items-center justify-center py-20"><div className="text-center">
                   <Loader size={24} className="animate-spin text-brand-accent mx-auto mb-3" />
-                  <p className="text-sm text-muted">Loading content library...</p>
+                  <p className="text-sm text-text-muted">Loading content library...</p>
                 </div></MotionPage>
     );
   }
 
   return (
-    <div className="fade-in space-y-6">
+    <div className="space-y-6">
       {/* -- Content Library command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -481,7 +481,7 @@ export default function ContentLibraryPage() {
       </div>
 
       {/* Rolling preview of example content */}
-      <div className="relative  overflow-hidden border border-border bg-surface-light/30 py-6">
+      <div className="relative  overflow-hidden border border-border-subtle bg-surface-light/30 py-6">
         <div className="absolute inset-0 pointer-events-none">
           <RollingPreview
             items={CONTENT_LIBRARY_PREVIEW_FALLBACK}
@@ -495,10 +495,10 @@ export default function ContentLibraryPage() {
           <p className="text-[11px] uppercase tracking-widest text-[rgba(59,130,246,0.8)] font-semibold">
             Content library
           </p>
-          <h3 className="text-lg font-bold text-foreground mt-1">
+          <h3 className="text-lg font-bold text-text-primary mt-1">
             Every asset, every client, one searchable vault
           </h3>
-          <p className="text-xs text-muted max-w-md mx-auto mt-1">
+          <p className="text-xs text-text-muted max-w-md mx-auto mt-1">
             Images, videos, audio, docs and brand kits � tagged, versioned
             and ready to drop into any campaign.
           </p>
@@ -521,13 +521,13 @@ export default function ContentLibraryPage() {
         {uploading ? (
           <div className="flex items-center justify-center gap-2">
             <Loader size={18} className="animate-spin text-brand-accent" />
-            <span className="text-sm text-muted">Uploading files...</span>
+            <span className="text-sm text-text-muted">Uploading files...</span>
           </div>
         ) : (
           <>
-            <Upload size={24} className={`mx-auto mb-2 ${dragging ? "text-brand-accent" : "text-muted"}`} />
-            <p className="text-xs text-muted">Drop files here or click to upload</p>
-            <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV � up to 100 MB</p>
+            <Upload size={24} className={`mx-auto mb-2 ${dragging ? "text-brand-accent" : "text-text-muted"}`} />
+            <p className="text-xs text-text-muted">Drop files here or click to upload</p>
+            <p className="text-[10px] text-text-muted mt-1">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV � up to 100 MB</p>
           </>
         )}
       </div>
@@ -557,7 +557,7 @@ export default function ContentLibraryPage() {
             </div>
           )}
           {collections.length === 0 && !showNewCollection ? (
-            <p className="text-xs text-muted text-center py-4">No collections yet. Create one to organize your assets.</p>
+            <p className="text-xs text-text-muted text-center py-4">No collections yet. Create one to organize your assets.</p>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
               {collections.map(c => (
@@ -570,7 +570,7 @@ export default function ContentLibraryPage() {
                 >
                   <button
                     onClick={e => { e.stopPropagation(); deleteCollection(c.id); }}
-                    className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-all text-muted hover:text-red-400"
+                    className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-all text-text-muted hover:text-red-400"
                   >
                     <X size={12} />
                   </button>
@@ -578,7 +578,7 @@ export default function ContentLibraryPage() {
                     <FolderOpen size={14} className={`text-${c.color}-400`} />
                   </div>
                   <p className="text-xs font-semibold truncate">{c.name}</p>
-                  <p className="text-[10px] text-muted">{c.assetCount} assets</p>
+                  <p className="text-[10px] text-text-muted">{c.assetCount} assets</p>
                 </div>
               ))}
             </div>
@@ -595,7 +595,7 @@ export default function ContentLibraryPage() {
               key={c.key}
               onClick={() => setCategory(c.key)}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${
-                category === c.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "bg-black/5 text-muted hover:text-text-primary border border-black/10"
+                category === c.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "bg-black/5 text-text-muted hover:text-text-primary border border-black/10"
               }`}
             >
               {c.icon} {c.label}
@@ -607,7 +607,7 @@ export default function ContentLibraryPage() {
 
         {/* Search */}
         <div className="relative">
-          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
+          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
           <input
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
@@ -633,10 +633,10 @@ export default function ContentLibraryPage() {
 
         {/* View Toggle */}
         <div className="flex bg-black/5 rounded-lg p-0.5">
-          <button onClick={() => setViewMode("grid")} className={`p-1.5 rounded ${viewMode === "grid" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-muted"}`}>
+          <button onClick={() => setViewMode("grid")} className={`p-1.5 rounded ${viewMode === "grid" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-text-muted"}`}>
             <Grid size={14} />
           </button>
-          <button onClick={() => setViewMode("list")} className={`p-1.5 rounded ${viewMode === "list" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-muted"}`}>
+          <button onClick={() => setViewMode("list")} className={`p-1.5 rounded ${viewMode === "list" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-text-muted"}`}>
             <List size={14} />
           </button>
         </div>
@@ -645,7 +645,7 @@ export default function ContentLibraryPage() {
       {/* Bulk Actions */}
       {selectedAssets.size > 0 && (
         <div className="glass rounded-xl p-4 flex items-center gap-3 border border-[rgba(0,0,0,0.12)]">
-          <button onClick={selectAll} className="text-xs text-muted hover:text-text-primary flex items-center gap-1">
+          <button onClick={selectAll} className="text-xs text-text-muted hover:text-text-primary flex items-center gap-1">
             <CheckSquare size={14} /> {selectedAssets.size} selected
           </button>
           <div className="flex-1" />
@@ -662,7 +662,7 @@ export default function ContentLibraryPage() {
           <button onClick={bulkDelete} className="text-xs text-red-400 hover:text-red-600 flex items-center gap-1">
             <Trash2 size={12} /> Delete
           </button>
-          <button onClick={() => setSelectedAssets(new Set())} className="text-xs text-muted hover:text-text-primary" aria-label="Clear selection">
+          <button onClick={() => setSelectedAssets(new Set())} className="text-xs text-text-muted hover:text-text-primary" aria-label="Clear selection">
             <X size={14} />
           </button>
         </div>
@@ -705,7 +705,7 @@ export default function ContentLibraryPage() {
                 onClick={e => { e.stopPropagation(); toggleSelect(asset.id); }}
                 className="absolute top-2 left-2 z-10 opacity-0 group-hover:opacity-100 transition-all"
               >
-                {selectedAssets.has(asset.id) ? <CheckSquare size={14} className="text-brand-accent" /> : <Square size={14} className="text-muted" />}
+                {selectedAssets.has(asset.id) ? <CheckSquare size={14} className="text-brand-accent" /> : <Square size={14} className="text-text-muted" />}
               </button>
 
               {/* Star */}
@@ -713,7 +713,7 @@ export default function ContentLibraryPage() {
                 onClick={e => { e.stopPropagation(); toggleStar(asset.id); }}
                 className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-all"
               >
-                <Star size={14} className={asset.starred ? "fill-[#2563EB] text-brand-accent" : "text-muted"} />
+                <Star size={14} className={asset.starred ? "fill-[#2563EB] text-brand-accent" : "text-text-muted"} />
               </button>
 
               {/* Thumbnail */}
@@ -735,13 +735,13 @@ export default function ContentLibraryPage() {
               </div>
 
               <p className="text-xs font-medium truncate">{asset.name}</p>
-              <p className="text-[10px] text-muted">{asset.size} {asset.dimensions !== "N/A" ? `- ${asset.dimensions}` : ""}</p>
+              <p className="text-[10px] text-text-muted">{asset.size} {asset.dimensions !== "N/A" ? `- ${asset.dimensions}` : ""}</p>
               <div className="flex flex-wrap gap-1 mt-1.5">
                 {asset.tags.slice(0, 2).map(t => (
-                  <span key={t} className="px-1.5 py-0.5 rounded bg-black/5 text-[9px] text-muted">{t}</span>
+                  <span key={t} className="px-1.5 py-0.5 rounded bg-black/5 text-[9px] text-text-muted">{t}</span>
                 ))}
                 {asset.tags.length > 2 && (
-                  <span className="px-1.5 py-0.5 rounded bg-black/5 text-[9px] text-muted">+{asset.tags.length - 2}</span>
+                  <span className="px-1.5 py-0.5 rounded bg-black/5 text-[9px] text-text-muted">+{asset.tags.length - 2}</span>
                 )}
               </div>
             </motion.div>
@@ -757,13 +757,13 @@ export default function ContentLibraryPage() {
               <tr className="border-b border-black/10">
                 <th className="text-left p-2 w-8">
                   <button onClick={selectAll}>
-                    {selectedAssets.size === filteredAssets.length ? <CheckSquare size={14} className="text-brand-accent" /> : <Square size={14} className="text-muted" />}
+                    {selectedAssets.size === filteredAssets.length ? <CheckSquare size={14} className="text-brand-accent" /> : <Square size={14} className="text-text-muted" />}
                   </button>
                 </th>
-                <th className="text-left p-2 text-[10px] text-muted uppercase tracking-wider">Name</th>
-                <th className="text-left p-2 text-[10px] text-muted uppercase tracking-wider">Type</th>
-                <th className="text-left p-2 text-[10px] text-muted uppercase tracking-wider">Size</th>
-                <th className="text-left p-2 text-[10px] text-muted uppercase tracking-wider">Date</th>
+                <th className="text-left p-2 text-[10px] text-text-muted uppercase tracking-wider">Name</th>
+                <th className="text-left p-2 text-[10px] text-text-muted uppercase tracking-wider">Type</th>
+                <th className="text-left p-2 text-[10px] text-text-muted uppercase tracking-wider">Size</th>
+                <th className="text-left p-2 text-[10px] text-text-muted uppercase tracking-wider">Date</th>
                 <th className="p-2 w-20"></th>
               </tr>
             </thead>
@@ -780,7 +780,7 @@ export default function ContentLibraryPage() {
                 >
                   <td className="p-2">
                     <button onClick={() => toggleSelect(asset.id)}>
-                      {selectedAssets.has(asset.id) ? <CheckSquare size={14} className="text-brand-accent" /> : <Square size={14} className="text-muted" />}
+                      {selectedAssets.has(asset.id) ? <CheckSquare size={14} className="text-brand-accent" /> : <Square size={14} className="text-text-muted" />}
                     </button>
                   </td>
                   <td className="p-2">
@@ -790,21 +790,21 @@ export default function ContentLibraryPage() {
                         <p className="text-xs font-medium">{asset.name}</p>
                         <div className="flex gap-1 mt-0.5">
                           {asset.tags.slice(0, 3).map(t => (
-                            <span key={t} className="px-1 py-0 rounded bg-black/5 text-[9px] text-muted">{t}</span>
+                            <span key={t} className="px-1 py-0 rounded bg-black/5 text-[9px] text-text-muted">{t}</span>
                           ))}
                         </div>
                       </div>
                     </div>
                   </td>
-                  <td className="p-2 text-xs text-muted capitalize">{asset.type}</td>
-                  <td className="p-2 text-xs text-muted">{asset.size}</td>
-                  <td className="p-2 text-xs text-muted">{asset.uploadDate}</td>
+                  <td className="p-2 text-xs text-text-muted capitalize">{asset.type}</td>
+                  <td className="p-2 text-xs text-text-muted">{asset.size}</td>
+                  <td className="p-2 text-xs text-text-muted">{asset.uploadDate}</td>
                   <td className="p-2">
                     <div className="flex items-center gap-1">
-                      <button onClick={() => setPreviewAsset(asset)} className="text-muted hover:text-text-primary">
+                      <button onClick={() => setPreviewAsset(asset)} className="text-text-muted hover:text-text-primary">
                         <Eye size={14} />
                       </button>
-                      <button onClick={() => deleteAsset(asset.id)} className="text-muted hover:text-red-400">
+                      <button onClick={() => deleteAsset(asset.id)} className="text-text-muted hover:text-red-400">
                         <Trash2 size={14} />
                       </button>
                     </div>
@@ -854,7 +854,7 @@ export default function ContentLibraryPage() {
           <div className="glass rounded-xl p-4 max-w-lg w-full" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-bold">{previewAsset.name}</h3>
-              <button onClick={() => { setPreviewAsset(null); setEditText(null); }} className="text-muted hover:text-text-primary" aria-label="Close asset preview"><X size={16} /></button>
+              <button onClick={() => { setPreviewAsset(null); setEditText(null); }} className="text-text-muted hover:text-text-primary" aria-label="Close asset preview"><X size={16} /></button>
             </div>
             <div className={`w-full aspect-video rounded-lg mb-4 flex items-center justify-center overflow-hidden ${TYPE_BG[previewAsset.type]}`}>
               {previewAsset.type === "image" && previewAsset.url ? (
@@ -867,31 +867,31 @@ export default function ContentLibraryPage() {
               ) : (
                 <div className="text-center">
                   <div className="scale-[3] mb-6">{TYPE_ICON[previewAsset.type]}</div>
-                  <p className="text-xs text-muted mt-2">{previewAsset.type.toUpperCase()} Preview</p>
+                  <p className="text-xs text-text-muted mt-2">{previewAsset.type.toUpperCase()} Preview</p>
                 </div>
               )}
             </div>
             <div className="grid grid-cols-2 gap-3 text-xs mb-4">
               <div>
-                <p className="text-[10px] text-muted uppercase tracking-wider">Size</p>
+                <p className="text-[10px] text-text-muted uppercase tracking-wider">Size</p>
                 <p>{previewAsset.size}</p>
               </div>
               <div>
-                <p className="text-[10px] text-muted uppercase tracking-wider">Dimensions</p>
+                <p className="text-[10px] text-text-muted uppercase tracking-wider">Dimensions</p>
                 <p>{previewAsset.dimensions}</p>
               </div>
               <div>
-                <p className="text-[10px] text-muted uppercase tracking-wider">Type</p>
+                <p className="text-[10px] text-text-muted uppercase tracking-wider">Type</p>
                 <p className="capitalize">{previewAsset.type}</p>
               </div>
               <div>
-                <p className="text-[10px] text-muted uppercase tracking-wider">Uploaded</p>
+                <p className="text-[10px] text-text-muted uppercase tracking-wider">Uploaded</p>
                 <p>{previewAsset.uploadDate}</p>
               </div>
             </div>
             {previewAsset.tags.length > 0 && (
               <div className="mb-3">
-                <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Tags</p>
+                <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Tags</p>
                 <div className="flex flex-wrap gap-1">
                   {previewAsset.tags.map(t => (
                     <span key={t} className="px-2 py-0.5 rounded-full bg-black/10 text-[10px]">{t}</span>
@@ -915,7 +915,7 @@ export default function ContentLibraryPage() {
                       value={editText}
                       onChange={e => setEditText(e.target.value)}
                       rows={4}
-                      className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border text-xs text-foreground resize-y focus:outline-none focus:border-[rgba(59,130,246,0.5)]"
+                      className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border-subtle text-xs text-text-primary resize-y focus:outline-none focus:border-[rgba(59,130,246,0.5)]"
                       autoFocus
                     />
                     <div className="flex gap-2">

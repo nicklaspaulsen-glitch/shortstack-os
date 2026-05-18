@@ -203,18 +203,18 @@ export default function AIVideoPage() {
             onChange={e => setPrompt(e.target.value)}
             placeholder="e.g., Golden retriever running through a field of sunflowers at sunset, cinematic warm lighting, slow tracking shot"
             rows={4}
-            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
             autoFocus
           />
           <div>
-            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Quick start</p>
+            <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">Quick start</p>
             <div className="flex flex-wrap gap-1.5">
               {PROMPT_CATEGORIES.map((cat) => (
                 <button
                   key={cat.label}
                   type="button"
                   onClick={() => setPrompt(cat.prompt)}
-                  className="inline-flex items-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-white/[0.05] hover:border-border px-3 py-1.5 rounded-full border border-border/50 transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-[11px] text-text-muted hover:text-text-primary bg-surface-light hover:bg-white/[0.05] hover:border-border-subtle px-3 py-1.5 rounded-full border border-border-subtle/50 transition-all cursor-pointer"
                 >
                   <span className="text-[10px] leading-none">{cat.icon}</span>
                   {cat.label}
@@ -239,7 +239,7 @@ export default function AIVideoPage() {
               className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all ${
                 aspectRatio === ar.id
                   ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.08)]"
-                  : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                  : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
               }`}
             >
               <div
@@ -249,7 +249,7 @@ export default function AIVideoPage() {
               />
               <div className="text-center">
                 <p className="text-sm font-semibold">{ar.id}</p>
-                <p className="text-[10px] text-muted">{ar.label}</p>
+                <p className="text-[10px] text-text-muted">{ar.label}</p>
               </div>
             </button>
           ))}
@@ -282,7 +282,7 @@ export default function AIVideoPage() {
                                         ? "border-[rgba(59,130,246,0.25)] bg-surface-light/40 opacity-60 cursor-not-allowed"
                                         : numFrames === opt.f
                                           ? "border-brand-accent bg-[rgba(59,130,246,0.08)]"
-                                          : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                                          : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
                                     }`}
                                   >
                                     {locked && (
@@ -291,7 +291,7 @@ export default function AIVideoPage() {
                                       </span>
                                     )}
                                     <p className="text-sm font-bold">{opt.label}</p>
-                                    <p className="text-[9px] text-muted">{opt.sub}</p>
+                                    <p className="text-[9px] text-text-muted">{opt.sub}</p>
                                   </button>
                                   </MotionPage>
               );
@@ -315,21 +315,21 @@ export default function AIVideoPage() {
       icon: <Sparkles size={18} />,
       component: (
         <div className="space-y-3">
-          <div className="card bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.2)]">
+          <div className="glass rounded-xl p-4 bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.2)]">
             <p className="text-[10px] uppercase tracking-wider text-brand-accent font-semibold mb-2">Your prompt</p>
-            <p className="text-sm text-foreground leading-relaxed">{prompt || <span className="text-muted italic">(no prompt set)</span>}</p>
-            <div className="grid grid-cols-2 gap-3 mt-4 pt-3 border-t border-border/50">
+            <p className="text-sm text-text-primary leading-relaxed">{prompt || <span className="text-text-muted italic">(no prompt set)</span>}</p>
+            <div className="grid grid-cols-2 gap-3 mt-4 pt-3 border-t border-border-subtle/50">
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-muted">Aspect</p>
+                <p className="text-[9px] uppercase tracking-wider text-text-muted">Aspect</p>
                 <p className="text-xs font-semibold">{aspectRatio}</p>
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-wider text-muted">Duration</p>
+                <p className="text-[9px] uppercase tracking-wider text-text-muted">Duration</p>
                 <p className="text-xs font-semibold">~{(numFrames / 24).toFixed(1)}s ({numFrames} frames)</p>
               </div>
             </div>
           </div>
-          <p className="text-[11px] text-muted text-center">
+          <p className="text-[11px] text-text-muted text-center">
             Want finer control? Flip to <span className="text-brand-accent font-semibold">Advanced mode</span> at the top.
           </p>
         </div>
@@ -588,7 +588,7 @@ export default function AIVideoPage() {
   }
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="space-y-5">
             {/* AI Video command strip (slim editorial header, no PageHero) */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -691,7 +691,7 @@ export default function AIVideoPage() {
                     key={cat.label}
                     type="button"
                     onClick={() => setPrompt(cat.prompt)}
-                    className="inline-flex items-center gap-1.5 text-[11px] text-white/40 hover:text-white/80 px-3 py-1.5 rounded-full border border-border-subtle hover:border-border hover:bg-white/[0.05] transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-[11px] text-white/40 hover:text-white/80 px-3 py-1.5 rounded-full border border-border-subtle hover:border-border-subtle hover:bg-white/[0.05] transition-all cursor-pointer"
                   >
                     <span className="text-[10px] leading-none">{cat.icon}</span>
                     {cat.label}
@@ -852,7 +852,7 @@ export default function AIVideoPage() {
                       const capped = Number.isFinite(maxFrames) ? Math.min(raw, maxFrames) : raw;
                       setNumFrames(capped);
                     }}
-                    className="input w-full text-xs bg-surface-light border-border"
+                    className="input w-full text-xs bg-surface-light border-border-subtle"
                   />
                   <p className="text-[9px] text-text-muted mt-1">~{(numFrames / 24).toFixed(1)}s @ 24fps</p>
                 </div>
@@ -861,7 +861,7 @@ export default function AIVideoPage() {
                   <input
                     type="number" min={1} max={20} step={0.5} value={guidanceScale}
                     onChange={e => setGuidanceScale(parseFloat(e.target.value) || 7.5)}
-                    className="input w-full text-xs bg-surface-light border-border"
+                    className="input w-full text-xs bg-surface-light border-border-subtle"
                   />
                   <p className="text-[9px] text-text-muted mt-1">Higher = stricter prompt adherence</p>
                 </div>
@@ -1032,16 +1032,16 @@ export default function AIVideoPage() {
       {/* Guided-mode result preview (preserved) */}
       {!advancedMode && results.length > 0 && (
         <div className="space-y-3">
-          <h2 className="section-header flex items-center gap-2">
+          <h2 className="flex items-center gap-2">
             <Film size={14} className="text-brand-accent" /> Your generated videos
           </h2>
           {results.slice(0, 3).map(result => (
-            <div key={result.id} className="card">
+            <div key={result.id} className="glass rounded-xl p-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium mb-1 line-clamp-2">{result.prompt}</p>
                   <div className="flex items-center gap-2">
-                    <span className="text-[8px] bg-surface-light text-muted px-1.5 py-0.5 rounded">{result.aspect_ratio}</span>
+                    <span className="text-[8px] bg-surface-light text-text-muted px-1.5 py-0.5 rounded">{result.aspect_ratio}</span>
                     {result.status === "generating" && (
                       <span className="text-[8px] text-brand-accent flex items-center gap-1">
                         <ProgressRing progress={progress} size={10} /> {Math.round(progress)}%

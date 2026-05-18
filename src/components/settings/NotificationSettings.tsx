@@ -25,21 +25,21 @@ export default function NotificationSettings() {
 
   return (
     <div className="space-y-4">
-      <div className="card">
-        <h3 className="section-header">Telegram Notifications</h3>
+      <div className="glass rounded-xl p-4">
+        <h3 className="">Telegram Notifications</h3>
         <div className="space-y-3 text-sm">
           {events.map((n, i) => (
-            <div key={i} className="flex items-center justify-between py-2 border-b border-border0 last:border-0">
+            <div key={i} className="flex items-center justify-between py-2 border-b border-border-subtle0 last:border-0">
               <span>{n.event}</span>
-              <span className={n.enabled ? "text-success" : "text-muted"}>{n.enabled ? "On" : "Off"}</span>
+              <span className={n.enabled ? "text-success" : "text-text-muted"}>{n.enabled ? "On" : "Off"}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="card">
-        <h3 className="section-header">Slack Notifications</h3>
-        <p className="text-sm text-muted">Same events sent to #shortstack-alerts channel in Slack</p>
+      <div className="glass rounded-xl p-4">
+        <h3 className="">Slack Notifications</h3>
+        <p className="text-sm text-text-muted">Same events sent to #shortstack-alerts channel in Slack</p>
       </div>
     </div>
   );

@@ -105,7 +105,7 @@ function statusColor(s: string): string {
   if (s === "scheduled") return "text-blue-400 bg-blue-400/10 border-blue-400/20";
   if (s === "failed") return "text-red-400 bg-red-400/10 border-red-400/20";
   if (s === "ready_to_publish") return "text-amber-400 bg-amber-400/10 border-amber-400/20";
-  return "text-muted bg-surface-light border-border";
+  return "text-text-muted bg-surface-light border-border-subtle";
 }
 
 function statusLabel(s: string): string {
@@ -130,7 +130,7 @@ function sentimentBadge(s: string | undefined) {
   if (sentiment === "negative") {
     return <span className="text-[9px] px-1.5 py-0.5 rounded bg-red-400/10 text-red-400 border border-red-400/20 flex items-center gap-1"><ThumbsDown size={9} /> Negative</span>;
   }
-  return <span className="text-[9px] px-1.5 py-0.5 rounded bg-surface-light text-muted border border-border">Neutral</span>;
+  return <span className="text-[9px] px-1.5 py-0.5 rounded bg-surface-light text-text-muted border border-border-subtle">Neutral</span>;
 }
 
 function urgencyColor(u: string): string {
@@ -341,14 +341,14 @@ export default function ContentPlanPage() {
             className={`w-full text-left p-3.5 rounded-xl border transition-all ${
               wizardClientId === ""
                 ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.1)]"
-                : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
             }`}
           >
             <p className="text-sm font-semibold">No client (plan for yourself)</p>
-            <p className="text-[10px] text-muted mt-0.5">Posts won&apos;t be linked to a client profile.</p>
+            <p className="text-[10px] text-text-muted mt-0.5">Posts won&apos;t be linked to a client profile.</p>
           </button>
           {clients.length === 0 ? (
-            <p className="text-[11px] text-muted text-center py-4">
+            <p className="text-[11px] text-text-muted text-center py-4">
               No clients yet. Add one from the Clients page to scope plans to them.
             </p>
           ) : (
@@ -363,7 +363,7 @@ export default function ContentPlanPage() {
                                     className={`w-full text-left p-3.5 rounded-xl border transition-all ${
                                       selected
                                         ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.1)]"
-                                        : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                                        : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
                                     }`}
                                   >
                                     <p className="text-sm font-semibold">{c.business_name}</p>
@@ -383,7 +383,7 @@ export default function ContentPlanPage() {
       component: (
         <div className="space-y-4">
           <div>
-            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Goal</p>
+            <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">Goal</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {([
                 { id: "awareness" as const, label: "Awareness" },
@@ -400,7 +400,7 @@ export default function ContentPlanPage() {
                     className={`p-3 rounded-xl border text-center text-sm font-semibold transition-all ${
                       sel
                         ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent shadow-lg shadow-[rgba(59,130,246,0.1)]"
-                        : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                        : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
                     }`}
                   >
                     {g.label}
@@ -410,7 +410,7 @@ export default function ContentPlanPage() {
             </div>
           </div>
           <div>
-            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Duration</p>
+            <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">Duration</p>
             <div className="grid grid-cols-3 gap-2">
               {([
                 { id: 7 as const, label: "1 week" },
@@ -426,7 +426,7 @@ export default function ContentPlanPage() {
                     className={`p-3 rounded-xl border text-center text-sm font-semibold transition-all ${
                       sel
                         ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent shadow-lg shadow-[rgba(59,130,246,0.1)]"
-                        : "border-border hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                        : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
                     }`}
                   >
                     {d.label}
@@ -436,7 +436,7 @@ export default function ContentPlanPage() {
             </div>
           </div>
           <div>
-            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Posts per week (per platform)</p>
+            <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">Posts per week (per platform)</p>
             <input
               type="range"
               min={1}
@@ -445,10 +445,10 @@ export default function ContentPlanPage() {
               onChange={e => setWizardPostsPerWeek(parseInt(e.target.value, 10) || 3)}
               className="w-full accent-blue-600"
             />
-            <p className="text-[11px] text-muted mt-1">{wizardPostsPerWeek}ï¿½ per week</p>
+            <p className="text-[11px] text-text-muted mt-1">{wizardPostsPerWeek}ï¿½ per week</p>
           </div>
           <div>
-            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Platforms</p>
+            <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">Platforms</p>
             <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
               {["instagram", "tiktok", "youtube", "linkedin", "facebook", "twitter"].map(p => {
                 const sel = wizardPlatforms.includes(p);
@@ -464,7 +464,7 @@ export default function ContentPlanPage() {
                     className={`p-2 rounded-lg border text-[11px] font-medium capitalize transition-all ${
                       sel
                         ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent"
-                        : "border-border text-muted hover:text-foreground"
+                        : "border-border-subtle text-text-muted hover:text-text-primary"
                     }`}
                   >
                     {p}
@@ -483,22 +483,22 @@ export default function ContentPlanPage() {
       description: "We'll draft a full calendar of posts across the selected platforms. You can edit every post in Advanced mode.",
       icon: <Wand2 size={18} />,
       component: (
-        <div className="card bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.2)] space-y-2">
+        <div className="glass rounded-xl p-4 bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.2)] space-y-2">
           <div className="flex items-center gap-2 text-sm">
             <Target size={14} className="text-brand-accent" />
             <span className="font-semibold capitalize">{wizardGoal}</span>
-            <span className="text-muted">ï¿½</span>
+            <span className="text-text-muted">ï¿½</span>
             <span>{wizardDuration === 7 ? "1 week" : wizardDuration === 30 ? "1 month" : "1 quarter"}</span>
-            <span className="text-muted">ï¿½</span>
+            <span className="text-text-muted">ï¿½</span>
             <span>{wizardPostsPerWeek}ï¿½ per week</span>
           </div>
-          <div className="text-[11px] text-muted">
-            Platforms: <span className="text-foreground capitalize">{wizardPlatforms.join(", ") || "(none)"}</span>
+          <div className="text-[11px] text-text-muted">
+            Platforms: <span className="text-text-primary capitalize">{wizardPlatforms.join(", ") || "(none)"}</span>
           </div>
           {wizardClientId && (
-            <div className="text-[11px] text-muted">
+            <div className="text-[11px] text-text-muted">
               Client:{" "}
-              <span className="text-foreground">
+              <span className="text-text-primary">
                 {clients.find(c => c.id === wizardClientId)?.business_name || "ï¿½"}
               </span>
             </div>
@@ -527,7 +527,7 @@ export default function ContentPlanPage() {
   /* -------------- Render -------------- */
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="space-y-5">
       {/* -- Content Plan command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
@@ -571,7 +571,7 @@ export default function ContentPlanPage() {
                 key={s}
                 onClick={() => setStatusFilter(s)}
                 className={`px-3.5 py-2 text-xs rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
-                  statusFilter === s ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
+                  statusFilter === s ? "bg-brand-accent text-white font-medium" : "text-text-muted hover:text-text-primary"
                 }`}
               >
                 {statusFilter === s && statusIcon(s === "needs_review" ? "ready_to_publish" : s === "posted" ? "published" : s)}
@@ -586,7 +586,7 @@ export default function ContentPlanPage() {
           {/* Platform Filter Chips + View Toggle */}
           <div className="flex flex-wrap items-center gap-3 justify-between">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <Filter size={12} className="text-muted" />
+              <Filter size={12} className="text-text-muted" />
               {([
                 { id: "all" as PlatformFilter, label: "All" },
                 { id: "instagram" as PlatformFilter, label: "Instagram", icon: <InstagramIcon size={12} /> },
@@ -602,7 +602,7 @@ export default function ContentPlanPage() {
                   className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] border transition-all ${
                     platformFilter === p.id
                       ? "bg-[rgba(59,130,246,0.12)] border-[rgba(59,130,246,0.4)] text-brand-accent"
-                      : "bg-surface-light border-border text-muted hover:text-foreground hover:border-[rgba(59,130,246,0.2)]"
+                      : "bg-surface-light border-border-subtle text-text-muted hover:text-text-primary hover:border-[rgba(59,130,246,0.2)]"
                   }`}
                 >
                   {p.icon} {p.label}
@@ -620,7 +620,7 @@ export default function ContentPlanPage() {
                   key={v.id}
                   onClick={() => setViewMode(v.id)}
                   className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[10px] transition-all ${
-                    viewMode === v.id ? "bg-brand-accent text-white font-medium" : "text-muted hover:text-foreground"
+                    viewMode === v.id ? "bg-brand-accent text-white font-medium" : "text-text-muted hover:text-text-primary"
                   }`}
                 >
                   {v.icon} {v.label}
@@ -632,9 +632,9 @@ export default function ContentPlanPage() {
           {/* Bulk actions bar */}
           {selectedIds.size > 0 && (
             <div className="flex items-center justify-between flex-wrap gap-2 card py-2.5 px-3.5 border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]">
-              <div className="flex items-center gap-3 text-[11px] text-foreground">
+              <div className="flex items-center gap-3 text-[11px] text-text-primary">
                 <span className="font-medium">{selectedIds.size} selected</span>
-                <button onClick={clearSelection} className="text-muted hover:text-foreground text-[10px]">Clear</button>
+                <button onClick={clearSelection} className="text-text-muted hover:text-text-primary text-[10px]">Clear</button>
               </div>
               <div className="flex items-center gap-1.5">
                 <button
@@ -726,13 +726,13 @@ export default function ContentPlanPage() {
               <button
                 onClick={loadInsights}
                 disabled={insightsLoading}
-                className="text-[10px] text-muted hover:text-brand-accent transition-colors flex items-center gap-1 disabled:opacity-40"
+                className="text-[10px] text-text-muted hover:text-brand-accent transition-colors flex items-center gap-1 disabled:opacity-40"
               >
                 {insightsLoading ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />}
                 Refresh
               </button>
             </div>
-            <p className="text-[10px] text-muted">
+            <p className="text-[10px] text-text-muted">
               AI analysis of your recent posts, trending topics in your niche, and thumbnail suggestions.
             </p>
           </PrismPanel>
@@ -744,9 +744,9 @@ export default function ContentPlanPage() {
             loading={insightsLoading}
           >
             {(insights?.top_performing || []).map((t, i) => (
-              <div key={i} className="p-2 rounded-lg border border-border bg-surface-light">
+              <div key={i} className="p-2 rounded-lg border border-border-subtle bg-surface-light">
                 <div className="flex items-center justify-between gap-2 mb-1">
-                  <span className="text-[11px] font-medium text-foreground truncate flex items-center gap-1.5">
+                  <span className="text-[11px] font-medium text-text-primary truncate flex items-center gap-1.5">
                     {PLATFORM_ICON[t.platform.toLowerCase()] || null}
                     {t.title}
                   </span>
@@ -754,7 +754,7 @@ export default function ContentPlanPage() {
                     {t.engagement_score}
                   </span>
                 </div>
-                <p className="text-[9px] text-muted leading-relaxed">{t.why}</p>
+                <p className="text-[9px] text-text-muted leading-relaxed">{t.why}</p>
               </div>
             ))}
           </InsightSection>
@@ -766,14 +766,14 @@ export default function ContentPlanPage() {
             loading={insightsLoading}
           >
             {(insights?.trending_topics || []).map((t, i) => (
-              <div key={i} className="p-2 rounded-lg border border-border bg-surface-light">
+              <div key={i} className="p-2 rounded-lg border border-border-subtle bg-surface-light">
                 <div className="flex items-center justify-between gap-2 mb-1">
-                  <span className="text-[11px] font-medium text-foreground truncate">{t.topic}</span>
+                  <span className="text-[11px] font-medium text-text-primary truncate">{t.topic}</span>
                   <span className={`text-[9px] px-1.5 py-0.5 rounded-full border ${urgencyColor(t.urgency)}`}>
                     {t.urgency}
                   </span>
                 </div>
-                <p className="text-[9px] text-muted leading-relaxed mb-1">{t.why_trending}</p>
+                <p className="text-[9px] text-text-muted leading-relaxed mb-1">{t.why_trending}</p>
                 <p className="text-[9px] text-brand-accent">{t.content_angle}</p>
               </div>
             ))}
@@ -786,13 +786,13 @@ export default function ContentPlanPage() {
             loading={insightsLoading}
           >
             {(insights?.needs_attention || []).map((t, i) => (
-              <div key={i} className="p-2 rounded-lg border border-border bg-surface-light">
+              <div key={i} className="p-2 rounded-lg border border-border-subtle bg-surface-light">
                 <div className="flex items-center gap-1.5 mb-1">
                   {PLATFORM_ICON[t.platform.toLowerCase()] || null}
-                  <span className="text-[11px] font-medium text-foreground truncate">{t.title}</span>
+                  <span className="text-[11px] font-medium text-text-primary truncate">{t.title}</span>
                 </div>
                 <p className="text-[9px] text-red-400 leading-relaxed mb-0.5">{t.reason}</p>
-                <p className="text-[9px] text-muted">Fix: {t.action}</p>
+                <p className="text-[9px] text-text-muted">Fix: {t.action}</p>
               </div>
             ))}
           </InsightSection>
@@ -804,9 +804,9 @@ export default function ContentPlanPage() {
             loading={insightsLoading}
           >
             {(insights?.thumbnail_suggestions || []).map((t, i) => (
-              <div key={i} className="p-2 rounded-lg border border-border bg-surface-light">
-                <p className="text-[11px] font-medium text-foreground truncate mb-1">{t.title}</p>
-                <p className="text-[9px] text-muted leading-relaxed mb-0.5">Issue: {t.current_issue}</p>
+              <div key={i} className="p-2 rounded-lg border border-border-subtle bg-surface-light">
+                <p className="text-[11px] font-medium text-text-primary truncate mb-1">{t.title}</p>
+                <p className="text-[9px] text-text-muted leading-relaxed mb-0.5">Issue: {t.current_issue}</p>
                 <p className="text-[9px] text-blue-400 leading-relaxed">Try: {t.suggestion}</p>
               </div>
             ))}
@@ -841,16 +841,16 @@ function InsightSection({
   const hasItems = childArray.filter(Boolean).length > 0;
   return (
     <PrismPanel padding="px-6 py-4">
-      <h4 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2 text-foreground">
+      <h4 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2 text-text-primary">
         {icon} {title}
       </h4>
       <div className="space-y-2">
         {loading ? (
-          <p className="text-[10px] text-muted italic">Analyzing...</p>
+          <p className="text-[10px] text-text-muted italic">Analyzing...</p>
         ) : hasItems ? (
           children
         ) : (
-          <p className="text-[10px] text-muted italic">{emptyText}</p>
+          <p className="text-[10px] text-text-muted italic">{emptyText}</p>
         )}
       </div>
     </PrismPanel>
@@ -881,12 +881,12 @@ function PostGrid({
           onClick={() => onOpen(p)}
         >
           {/* Thumbnail area */}
-          <div className="relative aspect-video rounded-lg overflow-hidden mb-2.5 bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-pink-500/10 border border-border/50 flex items-center justify-center">
+          <div className="relative aspect-video rounded-lg overflow-hidden mb-2.5 bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-pink-500/10 border border-border-subtle/50 flex items-center justify-center">
             {p.thumbnail_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={p.thumbnail_url} alt={p.title} className="w-full h-full object-cover" />
             ) : (
-              <div className="text-muted/60 text-[10px] flex flex-col items-center gap-1 p-2 text-center">
+              <div className="text-text-muted/60 text-[10px] flex flex-col items-center gap-1 p-2 text-center">
                 {PLATFORM_ICON[p.platform.toLowerCase()] || null}
                 <span className="line-clamp-2">{p.thumbnail_idea || p.title}</span>
               </div>
@@ -912,20 +912,20 @@ function PostGrid({
 
           {/* Title + status */}
           <div className="flex items-start justify-between gap-2 mb-1.5">
-            <p className="text-[12px] font-semibold text-foreground line-clamp-2 flex-1">{p.title}</p>
+            <p className="text-[12px] font-semibold text-text-primary line-clamp-2 flex-1">{p.title}</p>
             <span className={`text-[9px] px-1.5 py-0.5 rounded-full border flex items-center gap-1 flex-shrink-0 ${statusColor(p.status)}`}>
               {statusIcon(p.status)} {statusLabel(p.status)}
             </span>
           </div>
 
           {/* Date */}
-          <p className="text-[10px] text-muted mb-2 flex items-center gap-1.5">
+          <p className="text-[10px] text-text-muted mb-2 flex items-center gap-1.5">
             <Calendar size={9} />
             {p.posted_at ? `Posted ${formatDate(p.posted_at)}` : p.scheduled_at ? `Scheduled ${formatDate(p.scheduled_at)} ï¿½ ${formatTime(p.scheduled_at)}` : "No date"}
           </p>
 
           {/* Engagement */}
-          <div className="flex items-center gap-3 text-[10px] text-muted border-t border-border pt-2">
+          <div className="flex items-center gap-3 text-[10px] text-text-muted border-t border-border-subtle pt-2">
             <span className="flex items-center gap-1"><Heart size={10} /> {formatNum(p.likes)}</span>
             <span className="flex items-center gap-1"><MessageSquare size={10} /> {formatNum(p.comments)}</span>
             <span className="flex items-center gap-1"><Share2 size={10} /> {formatNum(p.shares)}</span>
@@ -959,8 +959,8 @@ function PostList({
     <div className="glass rounded-xl p-0 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-[11px]">
-          <thead className="bg-surface-light border-b border-border">
-            <tr className="text-left text-muted">
+          <thead className="bg-surface-light border-b border-border-subtle">
+            <tr className="text-left text-text-muted">
               <th className="py-2 px-3 w-8">
                 <input
                   type="checkbox"
@@ -987,7 +987,7 @@ function PostList({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.04 }}
                 onClick={() => onOpen(p)}
-                className={`border-b border-border/50 cursor-pointer hover:bg-surface-light ${
+                className={`border-b border-border-subtle/50 cursor-pointer hover:bg-surface-light ${
                   selectedIds.has(p.id) ? "bg-[rgba(59,130,246,0.05)]" : idx % 2 ? "bg-surface/40" : ""
                 }`}
               >
@@ -1000,10 +1000,10 @@ function PostList({
                   />
                 </td>
                 <td className="py-2 px-3">
-                  <p className="font-medium text-foreground line-clamp-1">{p.title}</p>
+                  <p className="font-medium text-text-primary line-clamp-1">{p.title}</p>
                 </td>
                 <td className="py-2 px-3">
-                  <span className="flex items-center gap-1.5 text-muted">
+                  <span className="flex items-center gap-1.5 text-text-muted">
                     {PLATFORM_ICON[p.platform.toLowerCase()] || null}
                     {platformLabel(p.platform)}
                   </span>
@@ -1013,17 +1013,17 @@ function PostList({
                     {statusIcon(p.status)} {statusLabel(p.status)}
                   </span>
                 </td>
-                <td className="py-2 px-3 text-muted">
+                <td className="py-2 px-3 text-text-muted">
                   {p.posted_at ? formatDate(p.posted_at) : p.scheduled_at ? formatDate(p.scheduled_at) : "ï¿½"}
                 </td>
-                <td className="py-2 px-3 text-muted">{formatNum(p.likes)}</td>
-                <td className="py-2 px-3 text-muted">{formatNum(p.comments)}</td>
-                <td className="py-2 px-3 text-muted">{formatNum(p.shares)}</td>
-                <td className="py-2 px-3 text-muted max-w-[220px]">
+                <td className="py-2 px-3 text-text-muted">{formatNum(p.likes)}</td>
+                <td className="py-2 px-3 text-text-muted">{formatNum(p.comments)}</td>
+                <td className="py-2 px-3 text-text-muted">{formatNum(p.shares)}</td>
+                <td className="py-2 px-3 text-text-muted max-w-[220px]">
                   {insightMap[p.id] ? (
                     <span className="text-[10px] text-brand-accent line-clamp-2">{insightMap[p.id]}</span>
                   ) : (
-                    <span className="text-[10px] text-muted/50">ï¿½</span>
+                    <span className="text-[10px] text-text-muted/50">ï¿½</span>
                   )}
                 </td>
               </motion.tr>
@@ -1073,14 +1073,14 @@ function PostCalendar({
     <div className="glass rounded-xl" style={{ padding: "1.25rem 1.5rem" }}>
       {/* Calendar header */}
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+        <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
           <Calendar size={14} className="text-brand-accent" /> {monthLabel}
         </h3>
         <div className="flex items-center gap-1">
-          <button onClick={onPrev} className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground">
+          <button onClick={onPrev} className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary">
             <ChevronLeft size={14} />
           </button>
-          <button onClick={onNext} className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground">
+          <button onClick={onNext} className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary">
             <ChevronRight size={14} />
           </button>
         </div>
@@ -1089,7 +1089,7 @@ function PostCalendar({
       {/* Weekday row */}
       <div className="grid grid-cols-7 gap-1 mb-1">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(d => (
-          <div key={d} className="text-[9px] uppercase tracking-wide text-muted text-center py-1">{d}</div>
+          <div key={d} className="text-[9px] uppercase tracking-wide text-text-muted text-center py-1">{d}</div>
         ))}
       </div>
 
@@ -1107,13 +1107,13 @@ function PostCalendar({
                 c.date
                   ? isToday
                     ? "border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.05)]"
-                    : "border-border bg-surface-light/40"
+                    : "border-border-subtle bg-surface-light/40"
                   : "border-transparent"
               }`}
             >
               {c.date && (
                 <div className="flex items-start justify-between">
-                  <span className={`text-[10px] ${isToday ? "text-brand-accent font-semibold" : "text-muted"}`}>
+                  <span className={`text-[10px] ${isToday ? "text-brand-accent font-semibold" : "text-text-muted"}`}>
                     {c.date.getDate()}
                   </span>
                   {c.posts.length > 0 && (
@@ -1136,7 +1136,7 @@ function PostCalendar({
                     }`}
                   />
                 ))}
-                {c.posts.length > 4 && <span className="text-[8px] text-muted">+{c.posts.length - 4}</span>}
+                {c.posts.length > 4 && <span className="text-[8px] text-text-muted">+{c.posts.length - 4}</span>}
               </div>
             </div>
           );
@@ -1144,7 +1144,7 @@ function PostCalendar({
       </div>
 
       {/* Legend */}
-      <div className="mt-3 flex items-center gap-4 text-[9px] text-muted flex-wrap">
+      <div className="mt-3 flex items-center gap-4 text-[9px] text-text-muted flex-wrap">
         <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" /> Posted</span>
         <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-400 inline-block" /> Scheduled</span>
         <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block" /> Draft / Needs review</span>
@@ -1202,12 +1202,12 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
       <div className="space-y-4">
         {/* Top row: thumbnail + meta */}
         <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-4">
-          <div className="aspect-video rounded-lg overflow-hidden bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-pink-500/10 border border-border/50 flex items-center justify-center">
+          <div className="aspect-video rounded-lg overflow-hidden bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-pink-500/10 border border-border-subtle/50 flex items-center justify-center">
             {post.thumbnail_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={post.thumbnail_url} alt={post.title} className="w-full h-full object-cover" />
             ) : (
-              <div className="text-muted/60 text-[10px] p-3 text-center flex flex-col items-center gap-1.5">
+              <div className="text-text-muted/60 text-[10px] p-3 text-center flex flex-col items-center gap-1.5">
                 {PLATFORM_ICON[post.platform.toLowerCase()] || null}
                 <span>{post.thumbnail_idea || "No thumbnail"}</span>
               </div>
@@ -1215,7 +1215,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
           </div>
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="flex items-center gap-1.5 text-[11px] text-muted">
+              <span className="flex items-center gap-1.5 text-[11px] text-text-muted">
                 {PLATFORM_ICON[post.platform.toLowerCase()] || null} {platformLabel(post.platform)}
               </span>
               <span className={`text-[10px] px-1.5 py-0.5 rounded-full border flex items-center gap-1 ${statusColor(post.status)}`}>
@@ -1232,7 +1232,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
                 </a>
               )}
             </div>
-            <p className="text-[11px] text-muted flex items-center gap-1.5">
+            <p className="text-[11px] text-text-muted flex items-center gap-1.5">
               <Calendar size={10} />
               {post.posted_at
                 ? `Posted ${formatDate(post.posted_at)} at ${formatTime(post.posted_at)}`
@@ -1242,7 +1242,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
             </p>
 
             {/* Engagement block */}
-            <div className="grid grid-cols-4 gap-2 border-t border-border/50 pt-2">
+            <div className="grid grid-cols-4 gap-2 border-t border-border-subtle/50 pt-2">
               <Stat label="Likes" value={formatNum(post.likes)} icon={<Heart size={12} />} />
               <Stat label="Comments" value={formatNum(post.comments)} icon={<MessageSquare size={12} />} />
               <Stat label="Shares" value={formatNum(post.shares)} icon={<Share2 size={12} />} />
@@ -1254,8 +1254,8 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
         {/* Caption */}
         {post.caption && (
           <div>
-            <h4 className="text-[11px] font-semibold mb-1 text-muted uppercase tracking-wide">Caption</h4>
-            <p className="text-[12px] text-foreground whitespace-pre-wrap leading-relaxed border border-border/50 rounded-lg p-3 bg-surface-light/40 max-h-40 overflow-y-auto">
+            <h4 className="text-[11px] font-semibold mb-1 text-text-muted uppercase tracking-wide">Caption</h4>
+            <p className="text-[12px] text-text-primary whitespace-pre-wrap leading-relaxed border border-border-subtle/50 rounded-lg p-3 bg-surface-light/40 max-h-40 overflow-y-auto">
               {post.caption}
             </p>
           </div>
@@ -1263,21 +1263,21 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
 
         {/* Top comments */}
         <div>
-          <h4 className="text-[11px] font-semibold mb-2 text-muted uppercase tracking-wide flex items-center gap-1.5">
+          <h4 className="text-[11px] font-semibold mb-2 text-text-muted uppercase tracking-wide flex items-center gap-1.5">
             <MessageSquare size={11} /> Top {Math.max(topComments.length, 1)} comment{topComments.length === 1 ? "" : "s"}
           </h4>
           {topComments.length === 0 ? (
-            <p className="text-[10px] text-muted italic">No comments surfaced yet.</p>
+            <p className="text-[10px] text-text-muted italic">No comments surfaced yet.</p>
           ) : (
             <div className="space-y-1.5">
               {topComments.slice(0, 5).map((c, i) => (
-                <div key={i} className="p-2.5 rounded-lg border border-border bg-surface-light/40">
+                <div key={i} className="p-2.5 rounded-lg border border-border-subtle bg-surface-light/40">
                   <div className="flex items-start justify-between gap-2 mb-1">
-                    <p className="text-[11px] text-foreground flex-1">{c.text}</p>
+                    <p className="text-[11px] text-text-primary flex-1">{c.text}</p>
                     {sentimentBadge(c.sentiment)}
                   </div>
                   {typeof c.likes === "number" && c.likes > 0 && (
-                    <p className="text-[9px] text-muted flex items-center gap-1"><Heart size={9} /> {formatNum(c.likes)}</p>
+                    <p className="text-[9px] text-text-muted flex items-center gap-1"><Heart size={9} /> {formatNum(c.likes)}</p>
                   )}
                 </div>
               ))}
@@ -1286,9 +1286,9 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
         </div>
 
         {/* AI analysis */}
-        <div className="card border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)]">
+        <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)]">
           <div className="flex items-center justify-between mb-2">
-            <h4 className="text-[11px] font-semibold flex items-center gap-1.5 text-foreground">
+            <h4 className="text-[11px] font-semibold flex items-center gap-1.5 text-text-primary">
               <Sparkles size={12} className="text-brand-accent" /> AI analysis
             </h4>
             <button
@@ -1301,23 +1301,23 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
             </button>
           </div>
           {ai ? (
-            <div className="text-[11px] text-foreground space-y-1">
+            <div className="text-[11px] text-text-primary space-y-1">
               {ai.lift_pct != null && (
                 <p className={ai.lift_pct >= 0 ? "text-emerald-400" : "text-red-400"}>
                   {ai.lift_pct >= 0 ? `+${ai.lift_pct}%` : `${ai.lift_pct}%`} vs your baseline
                 </p>
               )}
-              <p className="text-muted leading-relaxed">{ai.summary}</p>
+              <p className="text-text-muted leading-relaxed">{ai.summary}</p>
             </div>
           ) : (
-            <p className="text-[10px] text-muted italic">Click Analyze to generate an AI breakdown for this post.</p>
+            <p className="text-[10px] text-text-muted italic">Click Analyze to generate an AI breakdown for this post.</p>
           )}
         </div>
 
         {/* Actions ï¿½ per-post actions are still being wired to dedicated API
             routes; for now, surface a friendly "coming soon" instead of
             silently doing nothing on click. */}
-        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/50">
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border-subtle/50">
           <button
             onClick={() => toast("Edit-in-modal is coming soon ï¿½ open the post page to edit", { icon: "??" })}
             className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5"
@@ -1364,8 +1364,8 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
 function Stat({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
   return (
     <div className="glass rounded-lg text-center" style={{ padding: "0.5rem" }}>
-      <div className="text-[10px] text-muted flex items-center justify-center gap-1 mb-0.5">{icon} {label}</div>
-      <div className="text-sm font-semibold text-foreground">{value}</div>
+      <div className="text-[10px] text-text-muted flex items-center justify-center gap-1 mb-0.5">{icon} {label}</div>
+      <div className="text-sm font-semibold text-text-primary">{value}</div>
     </div>
   );
 }

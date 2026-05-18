@@ -165,10 +165,10 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
             <Inbox size={16} className="text-emerald-600" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-foreground">
+            <h2 className="text-base font-bold text-text-primary">
               Mailbox Planner
             </h2>
-            <p className="text-[12px] text-muted">
+            <p className="text-[12px] text-text-muted">
               Pick the mailboxes for this client. Set up everything in one go —
               MX, SPF, DKIM, SMTP credentials.
             </p>
@@ -177,13 +177,13 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
 
         {/* Client picker */}
         <div className="mb-4">
-          <label className="block text-[10.5px] uppercase tracking-wider text-muted font-semibold mb-1.5">
+          <label className="block text-[10.5px] uppercase tracking-wider text-text-muted font-semibold mb-1.5">
             For which client?
           </label>
           <select
             value={forClient}
             onChange={(e) => setForClient(e.target.value)}
-            className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-400/40"
+            className="w-full bg-card border border-border-subtle rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-400/40"
           >
             <option value="">— Pick a client —</option>
             {clients.map((c) => (
@@ -197,12 +197,12 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
         {/* Mailbox grid */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[10.5px] uppercase tracking-wider text-muted font-semibold">
+            <p className="text-[10.5px] uppercase tracking-wider text-text-muted font-semibold">
               Pick mailboxes
             </p>
             <button
               onClick={() => setShowAdvanced((v) => !v)}
-              className="text-[11px] text-muted hover:text-foreground"
+              className="text-[11px] text-text-muted hover:text-text-primary"
             >
               {showAdvanced ? "Show popular only" : "Show all 7 options"}
             </button>
@@ -233,11 +233,11 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
                         : "rgba(255,255,255,0.04)",
                     }}
                   >
-                    <Icon size={14} className={isOn ? "text-emerald-600" : "text-muted"} />
+                    <Icon size={14} className={isOn ? "text-emerald-600" : "text-text-muted"} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-[13px] font-bold text-foreground">
+                      <span className="text-[13px] font-bold text-text-primary">
                         {t.label}
                       </span>
                       {t.popular && (
@@ -258,7 +258,7 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
                         ${t.cost}/mo
                       </span>
                     </div>
-                    <p className="text-[10.5px] text-muted leading-relaxed">
+                    <p className="text-[10.5px] text-text-muted leading-relaxed">
                       {t.description}
                     </p>
                   </div>
@@ -276,7 +276,7 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
                     {isOn ? (
                       <Check size={11} className="text-emerald-700" />
                     ) : (
-                      <Plus size={11} className="text-muted" />
+                      <Plus size={11} className="text-text-muted" />
                     )}
                   </div>
                 </button>
@@ -296,7 +296,7 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
             }}
           >
             <div className="flex items-center justify-between mb-2">
-              <p className="text-[11px] uppercase tracking-wider text-muted font-semibold">
+              <p className="text-[11px] uppercase tracking-wider text-text-muted font-semibold">
                 Monthly cost
               </p>
               <p
@@ -311,7 +311,7 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
                 ${totalMonthly.toFixed(2)}/mo
               </p>
             </div>
-            <p className="text-[11px] text-muted">
+            <p className="text-[11px] text-text-muted">
               {selected.size} mailbox{selected.size === 1 ? "" : "es"}
               {clientName ? ` for ${clientName}` : ""} · billed monthly via your
               Stripe subscription · cancel any time.
@@ -342,7 +342,7 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
           <ArrowRight size={14} />
         </button>
 
-        <p className="text-[10px] text-muted/80 mt-2 text-center">
+        <p className="text-[10px] text-text-muted/80 mt-2 text-center">
           Includes MX + SPF + DKIM auto-configuration, SMTP credentials, and
           inbox routing into Conversations.
         </p>

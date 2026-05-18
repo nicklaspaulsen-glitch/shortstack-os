@@ -134,7 +134,7 @@ export default function Notifications() {
       {/* Bell trigger */}
       <button
         onClick={() => setOpen(!open)}
-        className="relative p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface-light/50 transition-all"
+        className="relative p-2 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light/50 transition-all"
       >
         <Bell size={16} />
         {unreadCount > 0 && (
@@ -152,9 +152,9 @@ export default function Notifications() {
             className="fixed inset-0 z-40 lg:hidden"
             onClick={() => setOpen(false)}
           />
-          <div className="absolute right-0 top-full mt-2 z-50 w-80 bg-surface border border-border/50 rounded-xl shadow-2xl shadow-black/50 fade-in overflow-hidden">
+          <div className="absolute right-0 top-full mt-2 z-50 w-80 bg-surface border border-border-subtle/50 rounded-xl shadow-2xl shadow-black/50 overflow-hidden">
             {/* Header */}
-            <div className="px-4 py-2.5 border-b border-border/20 flex items-center justify-between">
+            <div className="px-4 py-2.5 border-b border-border-subtle/20 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Bell size={13} className="text-[#2563EB]" />
                 <span className="text-xs font-semibold">Notifications</span>
@@ -176,7 +176,7 @@ export default function Notifications() {
                 {notifications.length > 0 && (
                   <button
                     onClick={clearAll}
-                    className="text-muted hover:text-danger ml-2"
+                    className="text-text-muted hover:text-danger ml-2"
                   >
                     <Trash2 size={12} />
                   </button>
@@ -188,8 +188,8 @@ export default function Notifications() {
             <div className="max-h-[380px] overflow-y-auto">
               {notifications.length === 0 ? (
                 <div className="py-8 text-center">
-                  <Bell size={20} className="mx-auto mb-2 text-muted/30" />
-                  <p className="text-[10px] text-muted">
+                  <Bell size={20} className="mx-auto mb-2 text-text-muted/30" />
+                  <p className="text-[10px] text-text-muted">
                     No notifications yet
                   </p>
                 </div>
@@ -201,13 +201,13 @@ export default function Notifications() {
                       markRead(n.id);
                       if (n.link) window.location.href = n.link;
                     }}
-                    className={`w-full text-left px-4 py-2.5 border-b border-border/10 hover:bg-surface-light/30 transition-colors flex items-start gap-2.5 ${
+                    className={`w-full text-left px-4 py-2.5 border-b border-border-subtle/10 hover:bg-surface-light/30 transition-colors flex items-start gap-2.5 ${
                       !n.read ? "bg-[rgba(59,130,246,0.05)]" : ""
                     }`}
                   >
                     <div className="mt-0.5 shrink-0">
                       {TYPE_ICONS[n.type] || (
-                        <Bell size={14} className="text-muted" />
+                        <Bell size={14} className="text-text-muted" />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -215,7 +215,7 @@ export default function Notifications() {
                         <p
                           className={`text-xs font-medium truncate ${
                             !n.read
-                              ? "text-foreground"
+                              ? "text-text-primary"
                               : "text-muted-light"
                           }`}
                         >
@@ -226,11 +226,11 @@ export default function Notifications() {
                         )}
                       </div>
                       {n.message && (
-                        <p className="text-[10px] text-muted truncate mt-0.5">
+                        <p className="text-[10px] text-text-muted truncate mt-0.5">
                           {n.message}
                         </p>
                       )}
-                      <p className="text-[9px] text-muted/60 mt-0.5">
+                      <p className="text-[9px] text-text-muted/60 mt-0.5">
                         {formatRelativeTime(n.created_at)}
                       </p>
                     </div>
@@ -240,7 +240,7 @@ export default function Notifications() {
             </div>
 
             {/* Footer — View all link */}
-            <div className="px-4 py-2 border-t border-border/20">
+            <div className="px-4 py-2 border-t border-border-subtle/20">
               <Link
                 href="/dashboard/notifications"
                 onClick={() => setOpen(false)}

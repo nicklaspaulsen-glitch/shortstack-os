@@ -144,7 +144,7 @@ export default function ProfilePage() {
   const avatarUrl = profile?.avatar_url;
 
   return (
-    <MotionPage className="fade-in space-y-5 max-w-2xl">{/* -- Profile command strip -- */}
+    <MotionPage className="space-y-5 max-w-2xl">{/* -- Profile command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">YOUR PROFILE</p>
@@ -162,9 +162,9 @@ export default function ProfilePage() {
                 <div className="relative group">
                   {avatarUrl ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={avatarUrl} alt="" className="w-20 h-20 rounded-full object-cover border-2 border-border" />
+                    <img src={avatarUrl} alt="" className="w-20 h-20 rounded-full object-cover border-2 border-border-subtle" />
                   ) : (
-                    <div className="w-20 h-20 rounded-full flex items-center justify-center border-2 border-border" style={{ background: "color-mix(in srgb, var(--color-accent) 12%, transparent)" }}>
+                    <div className="w-20 h-20 rounded-full flex items-center justify-center border-2 border-border-subtle" style={{ background: "color-mix(in srgb, var(--color-accent) 12%, transparent)" }}>
                       <span className="text-3xl font-bold text-brand-accent">{displayName.charAt(0)}</span>
                     </div>
                   )}
@@ -184,11 +184,11 @@ export default function ProfilePage() {
                 <div className="flex-1">
                   <p className="text-lg font-bold">{displayName}</p>
                   {form.username && (
-                    <p className="text-sm text-muted flex items-center gap-1">
+                    <p className="text-sm text-text-muted flex items-center gap-1">
                       <AtSign size={12} />{form.username}
                     </p>
                   )}
-                  <p className="text-xs text-muted mt-0.5 capitalize">{profile?.role === "admin" ? "Founder" : (profile?.role?.replace("_", " ") || "Admin")} &middot; {form.email}</p>
+                  <p className="text-xs text-text-muted mt-0.5 capitalize">{profile?.role === "admin" ? "Founder" : (profile?.role?.replace("_", " ") || "Admin")} &middot; {form.email}</p>
                 </div>
               </div>
               </div>
@@ -200,16 +200,16 @@ export default function ProfilePage() {
               whileHover={{ y: -4, scale: 1.01 }}
             >
             <div className="p-5 space-y-3">
-              <h2 className="section-header flex items-center gap-2">
+              <h2 className="flex items-center gap-2">
                 <AtSign size={14} className="text-brand-accent" /> Identity
               </h2>
-              <p className="text-[10px] text-muted -mt-2 mb-2">Your username is unique and permanent. Your nickname is what others see.</p>
+              <p className="text-[10px] text-text-muted -mt-2 mb-2">Your username is unique and permanent. Your nickname is what others see.</p>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Username *</label>
+                  <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Username *</label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted text-sm">@</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-sm">@</span>
                     <input
                       value={form.username}
                       onChange={e => handleUsernameChange(e.target.value)}
@@ -218,7 +218,7 @@ export default function ProfilePage() {
                     />
                     <span className="absolute right-2.5 top-1/2 -translate-y-1/2">
                       {checkingUsername ? (
-                        <Loader size={12} className="text-muted animate-spin" />
+                        <Loader size={12} className="text-text-muted animate-spin" />
                       ) : usernameAvailable === true ? (
                         <Check size={12} className="text-success" />
                       ) : usernameAvailable === false ? (
@@ -226,17 +226,17 @@ export default function ProfilePage() {
                       ) : null}
                     </span>
                   </div>
-                  <p className="text-[9px] text-muted mt-1">Lowercase, numbers, dots, dashes. Min 3 chars.</p>
+                  <p className="text-[9px] text-text-muted mt-1">Lowercase, numbers, dots, dashes. Min 3 chars.</p>
                 </div>
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Nickname</label>
+                  <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Nickname</label>
                   <input
                     value={form.nickname}
                     onChange={e => setForm({ ...form, nickname: e.target.value })}
                     className="input w-full"
                     placeholder="Display name"
                   />
-                  <p className="text-[9px] text-muted mt-1">Shown to others. Can be anything.</p>
+                  <p className="text-[9px] text-text-muted mt-1">Shown to others. Can be anything.</p>
                 </div>
               </div>
 
@@ -254,22 +254,22 @@ export default function ProfilePage() {
               whileHover={{ y: -4, scale: 1.01 }}
             >
             <div className="p-5 space-y-3">
-              <h2 className="section-header">Personal Information</h2>
+              <h2 className="">Personal Information</h2>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Full Name</label>
+                  <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Full Name</label>
                   <input value={form.full_name} onChange={e => setForm({ ...form, full_name: e.target.value })} className="input w-full" />
                 </div>
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Email</label>
+                  <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Email</label>
                   <input value={form.email} disabled className="input w-full opacity-50 cursor-not-allowed" />
                 </div>
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Phone</label>
+                  <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Phone</label>
                   <input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="input w-full" placeholder="+45 12345678" />
                 </div>
                 <div>
-                  <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Timezone</label>
+                  <label className="block text-[10px] text-text-muted mb-1 font-semibold uppercase tracking-wider">Timezone</label>
                   <select value={form.timezone} onChange={e => setForm({ ...form, timezone: e.target.value })} className="input w-full">
                     <option value="Europe/Copenhagen">Europe/Copenhagen</option>
                     <option value="America/New_York">America/New York</option>
@@ -295,7 +295,7 @@ export default function ProfilePage() {
               whileHover={{ y: -4, scale: 1.01 }}
             >
             <div className="p-5 space-y-3">
-              <h2 className="section-header flex items-center gap-2"><Key size={14} className="text-brand-accent" /> Change Password</h2>
+              <h2 className="flex items-center gap-2"><Key size={14} className="text-brand-accent" /> Change Password</h2>
               <div className="space-y-2">
                 <input type="password" value={password.new} onChange={e => setPassword({ ...password, new: e.target.value })}
                   className="input w-full" placeholder="New password (min 6 characters)" />

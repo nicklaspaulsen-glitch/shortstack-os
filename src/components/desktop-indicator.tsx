@@ -35,7 +35,7 @@ export default function DesktopIndicator({ collapsed }: { collapsed?: boolean })
     <>
       <button
         onClick={() => setOpen(true)}
-        className={`w-full flex items-center gap-2 rounded-xl text-[10px] text-muted hover:text-emerald-400 hover:bg-emerald-500/5 transition-colors ${
+        className={`w-full flex items-center gap-2 rounded-xl text-[10px] text-text-muted hover:text-emerald-400 hover:bg-emerald-500/5 transition-colors ${
           collapsed ? "justify-center py-1.5 px-1" : "px-2.5 py-[6px] my-[1px]"
         }`}
         title="Desktop app detected — click for details"
@@ -49,15 +49,15 @@ export default function DesktopIndicator({ collapsed }: { collapsed?: boolean })
 
       {open && (
         <div
-          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 fade-in"
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={() => setOpen(false)}
         >
           <div
-            className="bg-surface border border-border  shadow-2xl w-full max-w-md overflow-hidden"
+            className="bg-surface border border-border-subtle  shadow-2xl w-full max-w-md overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+            <div className="px-4 py-3 border-b border-border-subtle flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Sparkles size={14} className="text-emerald-400" />
                 <h3 className="text-sm font-semibold">
@@ -67,7 +67,7 @@ export default function DesktopIndicator({ collapsed }: { collapsed?: boolean })
               </div>
               <button
                 onClick={() => setOpen(false)}
-                className="p-1 text-muted hover:text-foreground"
+                className="p-1 text-text-muted hover:text-text-primary"
               >
                 <X size={14} />
               </button>
@@ -75,7 +75,7 @@ export default function DesktopIndicator({ collapsed }: { collapsed?: boolean })
 
             {/* Feature list */}
             <div className="p-4 space-y-3">
-              <p className="text-[11px] text-muted leading-relaxed">
+              <p className="text-[11px] text-text-muted leading-relaxed">
                 Running ShortStack as a native app unlocks these extras
                 on top of everything the web dashboard does:
               </p>
@@ -115,8 +115,8 @@ export default function DesktopIndicator({ collapsed }: { collapsed?: boolean })
               />
             </div>
 
-            <div className="px-4 py-2.5 border-t border-border bg-surface-light/30">
-              <p className="text-[10px] text-muted text-center">
+            <div className="px-4 py-2.5 border-t border-border-subtle bg-surface-light/30">
+              <p className="text-[10px] text-text-muted text-center">
                 Web users get everything except these five extras.
               </p>
             </div>
@@ -140,10 +140,10 @@ function FeatureRow({
     <div className="flex items-start gap-2.5">
       <div className="mt-0.5 shrink-0">{icon}</div>
       <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-semibold text-foreground leading-tight">
+        <p className="text-[11px] font-semibold text-text-primary leading-tight">
           {title}
         </p>
-        <p className="text-[10px] text-muted leading-relaxed mt-0.5">{body}</p>
+        <p className="text-[10px] text-text-muted leading-relaxed mt-0.5">{body}</p>
       </div>
     </div>
   );

@@ -384,7 +384,7 @@ export default function PixelOffice() {
 
   return (
     <div className="space-y-2">
-      <div className=" overflow-hidden border border-border/30 bg-[#080c14]">
+      <div className=" overflow-hidden border border-border-subtle/30 bg-[#080c14]">
         <canvas
           ref={canvasRef}
           width={620}
@@ -398,21 +398,21 @@ export default function PixelOffice() {
 
       {/* Live Activity Log */}
       {logs.length > 0 && (
-        <div className="card p-3">
+        <div className="glass rounded-xl p-3">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-[9px] text-muted uppercase tracking-[0.15em] font-bold flex items-center gap-1.5">
+            <h3 className="text-[9px] text-text-muted uppercase tracking-[0.15em] font-bold flex items-center gap-1.5">
               <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
               HQ Activity Log
             </h3>
-            <span className="text-[7px] text-muted/40">Live</span>
+            <span className="text-[7px] text-text-muted/40">Live</span>
           </div>
           <div className="space-y-0.5 max-h-[120px] overflow-y-auto">
             {logs.slice(0, 8).map((log, i) => (
               <div key={i} className="flex items-center gap-2 py-0.5">
                 <div className="w-1 h-1 rounded-full shrink-0" style={{ background: log.color }} />
                 <span className="text-[8px] font-bold shrink-0" style={{ color: log.color }}>{log.agent}</span>
-                <span className="text-[8px] text-muted/60 truncate flex-1">{log.action}</span>
-                <span className="text-[7px] text-muted/30 shrink-0">{log.time}</span>
+                <span className="text-[8px] text-text-muted/60 truncate flex-1">{log.action}</span>
+                <span className="text-[7px] text-text-muted/30 shrink-0">{log.time}</span>
               </div>
             ))}
           </div>

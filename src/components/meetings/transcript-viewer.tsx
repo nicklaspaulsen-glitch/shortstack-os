@@ -24,12 +24,12 @@ function formatTs(seconds: number): string {
 }
 
 function speakerColor(speaker?: string): string {
-  if (!speaker) return "text-muted";
+  if (!speaker) return "text-text-muted";
   // Stable hue from speaker label — two-speaker case gets gold + blue.
   if (/1/.test(speaker)) return "text-[#2563EB]";
   if (/2/.test(speaker)) return "text-blue-400";
   if (/3/.test(speaker)) return "text-purple-400";
-  return "text-muted";
+  return "text-text-muted";
 }
 
 export default function TranscriptViewer({ segments, fallbackRaw, currentTime = 0, onSeek }: Props) {
@@ -44,7 +44,7 @@ export default function TranscriptViewer({ segments, fallbackRaw, currentTime = 
 
   if (!segments.length) {
     return (
-      <div className="text-[11px] text-muted whitespace-pre-wrap leading-relaxed">
+      <div className="text-[11px] text-text-muted whitespace-pre-wrap leading-relaxed">
         {fallbackRaw || "Transcript not available yet."}
       </div>
     );
@@ -64,14 +64,14 @@ export default function TranscriptViewer({ segments, fallbackRaw, currentTime = 
               active ? "bg-[rgba(59,130,246,0.08)] ring-1 ring-[rgba(59,130,246,0.3)]" : "hover:bg-white/[0.03]"
             }`}
           >
-            <span className="flex-shrink-0 text-[10px] font-mono text-muted w-12 pt-0.5">
+            <span className="flex-shrink-0 text-[10px] font-mono text-text-muted w-12 pt-0.5">
               {formatTs(seg.start)}
             </span>
             <span className="flex-1 text-[11px] leading-relaxed">
               {seg.speaker && (
                 <span className={`font-semibold ${colorClass} mr-1.5`}>{seg.speaker}:</span>
               )}
-              <span className="text-foreground">{seg.text}</span>
+              <span className="text-text-primary">{seg.text}</span>
             </span>
           </button>
         );

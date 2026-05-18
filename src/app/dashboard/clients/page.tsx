@@ -814,7 +814,7 @@ export default function ClientsPage() {
           {/* Search + Controls Row */}
           <div className="flex items-center gap-3 flex-wrap">
             <div className="relative flex-1 max-w-md">
-              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
               <input
                 type="text"
                 placeholder="Search clients..."
@@ -835,7 +835,7 @@ export default function ClientsPage() {
 
             {/* Feature 11: Sort Options */}
             <div className="tab-pill-strip">
-              <span className="text-[10px] text-muted px-1.5">Sort:</span>
+              <span className="text-[10px] text-text-muted px-1.5">Sort:</span>
               {([
                 { field: "business_name" as SortField, label: "Name" },
                 { field: "mrr" as SortField, label: "MRR" },
@@ -882,9 +882,9 @@ export default function ClientsPage() {
 
           {/* Activity quick-filter chips */}
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-[10px] text-muted">Quick:</span>
+            <span className="text-[10px] text-text-muted">Quick:</span>
             {([
-              { key: "all" as const, label: "All", color: "bg-surface text-muted" },
+              { key: "all" as const, label: "All", color: "bg-surface text-text-muted" },
               { key: "recent" as const, label: "Active this week", color: "bg-success/10 text-success border-success/30" },
               { key: "stale" as const, label: "Stale>30d", color: "bg-warning/10 text-warning border-warning/30" },
             ]).map(chip => (
@@ -894,7 +894,7 @@ export default function ClientsPage() {
                 className={`text-[10px] px-2 py-1 rounded-full border transition-all ${
                   activityFilter === chip.key
                     ? chip.color + " border"
-                    : "bg-surface text-muted border-border hover:border-[rgba(59,130,246,0.30)]"
+                    : "bg-surface text-text-muted border-border-subtle hover:border-[rgba(59,130,246,0.30)]"
                 }`}
 >
                 {chip.label}
@@ -904,10 +904,10 @@ export default function ClientsPage() {
 
           {/* Feature 9: Advanced Filters Panel */}
           {showFilters && (
-            <div className="card p-3">
+            <div className="glass rounded-xl p-3">
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                 <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Status</label>
+                  <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Status</label>
                   <select value={filterStatus} onChange={e => setFilterStatus(e.target.value as typeof filterStatus)}
                     className="input w-full text-xs">
                     <option value="all">All</option>
@@ -916,7 +916,7 @@ export default function ClientsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Industry</label>
+                  <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Industry</label>
                   <select value={filterIndustry} onChange={e => setFilterIndustry(e.target.value)}
                     className="input w-full text-xs">
                     <option value="">All Industries</option>
@@ -926,17 +926,17 @@ export default function ClientsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">MRR Min</label>
+                  <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">MRR Min</label>
                   <input type="number" value={filterMrrMin} onChange={e => setFilterMrrMin(e.target.value)}
                     placeholder="$0" className="input w-full text-xs" />
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">MRR Max</label>
+                  <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">MRR Max</label>
                   <input type="number" value={filterMrrMax} onChange={e => setFilterMrrMax(e.target.value)}
                     placeholder="No limit" className="input w-full text-xs" />
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Tag</label>
+                  <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">Tag</label>
                   <select value={filterTag} onChange={e => setFilterTag(e.target.value)}
                     className="input w-full text-xs">
                     <option value="">All Tags</option>
@@ -946,8 +946,8 @@ export default function ClientsPage() {
                   </select>
                 </div>
               </div>
-              <div className="flex items-center justify-between mt-3 pt-2 border-t border-border">
-                <span className="text-[10px] text-muted">{filteredClients.length} clients matched</span>
+              <div className="flex items-center justify-between mt-3 pt-2 border-t border-border-subtle">
+                <span className="text-[10px] text-text-muted">{filteredClients.length} clients matched</span>
                 <button onClick={() => { setFilterIndustry(""); setFilterStatus("all"); setFilterTag(""); setFilterMrrMin(""); setFilterMrrMax(""); }}
                   className="text-[10px] text-brand-accent hover:underline">Clear all filters</button>
               </div>
@@ -956,7 +956,7 @@ export default function ClientsPage() {
 
           {/* Feature 4: Bulk Actions Bar */}
           {selectedClients.size> 0 && (
-            <div className="card p-2.5 flex items-center gap-3 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.20)] flex-wrap">
+            <div className="glass rounded-xl p-2.5 flex items-center gap-3 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.20)] flex-wrap">
               <span className="text-xs font-medium">{selectedClients.size} selected</span>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <button onClick={() => handleBulkAction("email")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
@@ -978,7 +978,7 @@ export default function ClientsPage() {
                   <XCircle size={10} /> Delete
                 </button>
               </div>
-              <button onClick={() => setSelectedClients(new Set())} className="text-[10px] text-muted hover:text-foreground ml-auto">
+              <button onClick={() => setSelectedClients(new Set())} className="text-[10px] text-text-muted hover:text-text-primary ml-auto">
                 Clear selection
               </button>
             </div>
@@ -1027,7 +1027,7 @@ export default function ClientsPage() {
                 <div className="absolute top-3 left-3" onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border hover:border-[rgba(59,130,246,0.40)]"
+                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border-subtle hover:border-[rgba(59,130,246,0.40)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
@@ -1037,7 +1037,7 @@ export default function ClientsPage() {
                 <div className="absolute top-3 right-3" onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleCompare(c.id)}
                     className={`text-[9px] px-1.5 py-0.5 rounded transition-all ${
-                      compareClients.includes(c.id) ? "bg-brand-accent/10 text-brand-accent" : "text-muted hover:text-foreground"
+                      compareClients.includes(c.id) ? "bg-brand-accent/10 text-brand-accent" : "text-text-muted hover:text-text-primary"
                     }`}>
                     <Columns size={10} />
                   </button>
@@ -1071,9 +1071,9 @@ export default function ClientsPage() {
                         {statusStyles.label}
                       </span>
                     </div>
-                    <p className="text-[10px] text-muted">{c.contact_name}</p>
+                    <p className="text-[10px] text-text-muted">{c.contact_name}</p>
                     {isFeatured && c.industry && (
-                      <p className="text-[10px] text-muted mt-0.5">{c.industry}</p>
+                      <p className="text-[10px] text-text-muted mt-0.5">{c.industry}</p>
                     )}
                     {/* Revenue + industry chips on compact cards */}
                     {!isFeatured && (
@@ -1113,16 +1113,16 @@ export default function ClientsPage() {
                 {/* Stats grid � bordered editorial layout */}
                 <div className="grid grid-cols-3 gap-0 mb-3 rounded-lg border border-border-subtle overflow-hidden">
                   <div className="px-3 py-2 flex flex-col gap-0.5">
-                    <p className="text-[9px] text-muted uppercase tracking-[0.1em]">MRR</p>
+                    <p className="text-[9px] text-text-muted uppercase tracking-[0.1em]">MRR</p>
                     <p className="text-xs font-bold text-brand-accent">{formatCurrency(c.mrr)}</p>
                   </div>
                   <div className="px-3 py-2 flex flex-col gap-0.5 border-x border-border-subtle">
-                    <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Paid</p>
+                    <p className="text-[9px] text-text-muted uppercase tracking-[0.1em]">Paid</p>
                     <p className="text-xs font-bold text-text-primary">{formatCurrency(revenue.totalPaid)}</p>
                   </div>
                   <div className="px-3 py-2 flex flex-col gap-0.5">
-                    <p className="text-[9px] text-muted uppercase tracking-[0.1em]">Owed</p>
-                    <p className={`text-xs font-bold ${revenue.outstanding> 0 ? "text-[#F59E0B]" : "text-muted"}`}>
+                    <p className="text-[9px] text-text-muted uppercase tracking-[0.1em]">Owed</p>
+                    <p className={`text-xs font-bold ${revenue.outstanding> 0 ? "text-[#F59E0B]" : "text-text-muted"}`}>
                       {formatCurrency(revenue.outstanding)}
                     </p>
                   </div>
@@ -1131,7 +1131,7 @@ export default function ClientsPage() {
                 {/* Feature 13: Onboarding Progress */}
                 <div className="mb-3">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[9px] text-muted">Onboarding</span>
+                    <span className="text-[9px] text-text-muted">Onboarding</span>
                     <span className="text-[9px] font-mono font-medium">{onboarding}%</span>
                   </div>
                   <div className="h-1.5 bg-surface-light rounded-full overflow-hidden">
@@ -1141,7 +1141,7 @@ export default function ClientsPage() {
                 </div>
 
                 {/* Feature 7: Contract status + Feature 14: Next action + last-active */}
-                <div className="flex items-center justify-between text-[10px] border-t border-border pt-2">
+                <div className="flex items-center justify-between text-[10px] border-t border-border-subtle pt-2">
                   <div className="flex items-center gap-1.5">
                     {contractInfo.warning ? (
                       <span className="text-warning flex items-center gap-0.5"><AlertTriangle size={10} /> {contractInfo.daysLeft}d left</span>
@@ -1161,7 +1161,7 @@ export default function ClientsPage() {
                         </span>
                       );
                     })()}
-                    <span className={`flex items-center gap-0.5 ${nextAction.urgent ? "text-warning" : "text-muted"}`}>
+                    <span className={`flex items-center gap-0.5 ${nextAction.urgent ? "text-warning" : "text-text-muted"}`}>
                       {nextAction.action}
                     </span>
                   </div>
@@ -1228,7 +1228,7 @@ export default function ClientsPage() {
 
       {/* Enhanced Table View */}
       {tab === "clients" && viewMode === "table" && filteredClients.length === 0 && (
-        <div className="card">
+        <div className="glass rounded-xl p-4">
           <EmptyState
             type="no-clients"
             title={clients.length === 0 ? "No clients yet" : "No clients match your filters"}
@@ -1247,7 +1247,7 @@ export default function ClientsPage() {
             columns={[
               { key: "select", label: (
                 <button onClick={selectAllClients} className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                  selectedClients.size === filteredClients.length && filteredClients.length> 0 ? "bg-brand-accent border-brand-accent text-white" : "border-border hover:border-[rgba(59,130,246,0.40)]"
+                  selectedClients.size === filteredClients.length && filteredClients.length> 0 ? "bg-brand-accent border-brand-accent text-white" : "border-border-subtle hover:border-[rgba(59,130,246,0.40)]"
                 }`}>
                   {selectedClients.size === filteredClients.length && filteredClients.length> 0 && <Check size={10} />}
                 </button>
@@ -1255,7 +1255,7 @@ export default function ClientsPage() {
                 <div onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border hover:border-[rgba(59,130,246,0.40)]"
+                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border-subtle hover:border-[rgba(59,130,246,0.40)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
@@ -1284,7 +1284,7 @@ export default function ClientsPage() {
                             style={{ background: t.color + "18", color: t.color }}>{t.label}</span>
                         ))}
                       </div>
-                      <p className="text-xs text-muted">{c.contact_name}</p>
+                      <p className="text-xs text-text-muted">{c.contact_name}</p>
                     </div>
                   </div>
                 );
@@ -1335,14 +1335,14 @@ export default function ClientsPage() {
                     <div className="w-10 bg-surface-light rounded-full h-1.5">
                       <div className={`h-full rounded-full ${pct>= 100 ? "bg-success" : "bg-brand-accent"}`} style={{ width: `${pct}%` }} />
                     </div>
-                    <span className="text-[10px] text-muted">{pct}%</span>
+                    <span className="text-[10px] text-text-muted">{pct}%</span>
                   </div>
                 );
               }},
               { key: "next_action", label: "Next Action", render: (c: Client) => {
                 const action = getNextAction(c);
                 return (
-                  <span className={`text-[10px] flex items-center gap-1 ${action.urgent ? "text-warning font-medium" : "text-muted"}`}>
+                  <span className={`text-[10px] flex items-center gap-1 ${action.urgent ? "text-warning font-medium" : "text-text-muted"}`}>
                     {action.urgent ? <AlertTriangle size={9} /> : <Clock size={9} />}
                     {action.action}
                   </span>
@@ -1361,7 +1361,7 @@ export default function ClientsPage() {
                 else label = `${Math.floor(diffDays / 365)}y ago`;
                 const fresh = diffDays < 7;
                 return (
-                  <span className={`text-[10px] ${fresh ? "text-success" : "text-muted"}`}>
+                  <span className={`text-[10px] ${fresh ? "text-success" : "text-text-muted"}`}>
                     {label}
                   </span>
                 );
@@ -1369,25 +1369,25 @@ export default function ClientsPage() {
               { key: "actions", label: "", render: (c: Client) => (
                 <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
                   {/* Feature 2: Quick Actions */}
-                  <button onClick={() => window.open(`mailto:${c.email}`)} className="p-1 rounded hover:bg-surface-light text-muted hover:text-foreground transition-colors" title="Email">
+                  <button onClick={() => window.open(`mailto:${c.email}`)} className="p-1 rounded hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors" title="Email">
                     <Mail size={12} />
                   </button>
-                  <button onClick={() => c.phone && window.open(`tel:${c.phone}`)} className="p-1 rounded hover:bg-surface-light text-muted hover:text-foreground transition-colors" title="Call">
+                  <button onClick={() => c.phone && window.open(`tel:${c.phone}`)} className="p-1 rounded hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors" title="Call">
                     <Phone size={12} />
                   </button>
-                  <button onClick={() => setShowTagModal(c.id)} className="p-1 rounded hover:bg-surface-light text-muted hover:text-foreground transition-colors" title="Tags">
+                  <button onClick={() => setShowTagModal(c.id)} className="p-1 rounded hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors" title="Tags">
                     <Tag size={12} />
                   </button>
-                  <button onClick={() => { setEditingNote(c.id); setNoteText(clientNotes[c.id] || ""); }} className="p-1 rounded hover:bg-surface-light text-muted hover:text-foreground transition-colors" title="Notes">
+                  <button onClick={() => { setEditingNote(c.id); setNoteText(clientNotes[c.id] || ""); }} className="p-1 rounded hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors" title="Notes">
                     <StickyNote size={12} />
                   </button>
                   <button onClick={() => toggleCompare(c.id)}
-                    className={`p-1 rounded hover:bg-surface-light transition-colors ${compareClients.includes(c.id) ? "text-brand-accent" : "text-muted hover:text-foreground"}`} title="Compare">
+                    className={`p-1 rounded hover:bg-surface-light transition-colors ${compareClients.includes(c.id) ? "text-brand-accent" : "text-text-muted hover:text-text-primary"}`} title="Compare">
                     <Columns size={12} />
                   </button>
                   {/* Feature 5: Expand row for activity timeline */}
                   <button onClick={() => setExpandedRow(expandedRow === c.id ? null : c.id)}
-                    className="p-1 rounded hover:bg-surface-light text-muted hover:text-foreground transition-colors" title="Activity">
+                    className="p-1 rounded hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors" title="Activity">
                     {expandedRow === c.id ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
                   </button>
                 </div>
@@ -1426,7 +1426,7 @@ export default function ClientsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                   {/* Activity Timeline */}
                   <div>
-                    <h4 className="text-[10px] text-muted uppercase tracking-wider mb-2">Recent Activity</h4>
+                    <h4 className="text-[10px] text-text-muted uppercase tracking-wider mb-2">Recent Activity</h4>
                     <div className="space-y-2">
                       {[
                         { action: "Invoice sent", time: "2 hours ago", icon: <FileText size={10} className="text-info" /> },
@@ -1437,7 +1437,7 @@ export default function ClientsPage() {
                         <div key={i} className="flex items-center gap-2 text-[10px]">
                           <div className="w-5 h-5 rounded-full bg-surface flex items-center justify-center shrink-0">{item.icon}</div>
                           <span className="flex-1">{item.action}</span>
-                          <span className="text-muted">{item.time}</span>
+                          <span className="text-text-muted">{item.time}</span>
                         </div>
                       ))}
                     </div>
@@ -1445,22 +1445,22 @@ export default function ClientsPage() {
 
                   {/* Revenue Breakdown */}
                   <div>
-                    <h4 className="text-[10px] text-muted uppercase tracking-wider mb-2">Revenue Breakdown</h4>
+                    <h4 className="text-[10px] text-text-muted uppercase tracking-wider mb-2">Revenue Breakdown</h4>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted">Monthly Recurring</span>
+                        <span className="text-text-muted">Monthly Recurring</span>
                         <span className="font-bold text-brand-accent">{formatCurrency(revenue.mrr)}/mo</span>
                       </div>
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted">Total Paid</span>
+                        <span className="text-text-muted">Total Paid</span>
                         <span className="font-bold text-success">{formatCurrency(revenue.totalPaid)}</span>
                       </div>
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted">Outstanding</span>
-                        <span className={`font-bold ${revenue.outstanding> 0 ? "text-danger" : "text-muted"}`}>{formatCurrency(revenue.outstanding)}</span>
+                        <span className="text-text-muted">Outstanding</span>
+                        <span className={`font-bold ${revenue.outstanding> 0 ? "text-danger" : "text-text-muted"}`}>{formatCurrency(revenue.outstanding)}</span>
                       </div>
-                      <div className="flex items-center justify-between text-xs border-t border-border pt-2">
-                        <span className="text-muted">Est. Lifetime Value</span>
+                      <div className="flex items-center justify-between text-xs border-t border-border-subtle pt-2">
+                        <span className="text-text-muted">Est. Lifetime Value</span>
                         <span className="font-bold">{formatCurrency(revenue.mrr * 18)}</span>
                       </div>
                     </div>
@@ -1468,7 +1468,7 @@ export default function ClientsPage() {
 
                   {/* Notes */}
                   <div>
-                    <h4 className="text-[10px] text-muted uppercase tracking-wider mb-2">Notes</h4>
+                    <h4 className="text-[10px] text-text-muted uppercase tracking-wider mb-2">Notes</h4>
                     {note ? (
                       <div className="text-xs bg-surface rounded-lg p-2.5">
                         <p>{note}</p>
@@ -1477,7 +1477,7 @@ export default function ClientsPage() {
                       </div>
                     ) : (
                       <button onClick={() => { setEditingNote(expandedRow); setNoteText(""); }}
-                        className="text-xs text-muted hover:text-foreground flex items-center gap-1">
+                        className="text-xs text-text-muted hover:text-text-primary flex items-center gap-1">
                         <Plus size={12} /> Add a note
                       </button>
                     )}
@@ -1558,21 +1558,21 @@ export default function ClientsPage() {
               const hasSub = !!client.stripe_subscription_id;
 
               return (
-                <div key={client.id} className="card p-4">
+                <div key={client.id} className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between flex-wrap gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${
-                        hasSub ? "bg-success/10 text-success" : hasStripe ? "bg-warning/10 text-warning" : "bg-surface-light text-muted"
+                        hasSub ? "bg-success/10 text-success" : hasStripe ? "bg-warning/10 text-warning" : "bg-surface-light text-text-muted"
                       }`}>
                         {hasSub ? <Zap size={14} /> : <CreditCard size={14} />}
                       </div>
                       <div className="min-w-0">
                         <p className="font-medium text-sm truncate">{client.business_name}</p>
-                        <div className="flex items-center gap-2 text-[10px] text-muted">
+                        <div className="flex items-center gap-2 text-[10px] text-text-muted">
                           {hasStripe ? (
                             <span className="text-success flex items-center gap-0.5"><span className="w-1.5 h-1.5 rounded-full bg-success inline-block" /> Stripe connected</span>
                           ) : (
-                            <span className="text-muted flex items-center gap-0.5"><span className="w-1.5 h-1.5 rounded-full bg-muted inline-block" /> No Stripe</span>
+                            <span className="text-text-muted flex items-center gap-0.5"><span className="w-1.5 h-1.5 rounded-full bg-muted inline-block" /> No Stripe</span>
                           )}
                           {hasSub && <span className="text-brand-accent">Subscribed</span>}
                           {client.mrr> 0 && <span>{formatCurrency(client.mrr)}/mo</span>}
@@ -1582,11 +1582,11 @@ export default function ClientsPage() {
 
                     <div className="flex items-center gap-3 text-xs">
                       <div className="text-right hidden md:block">
-                        <p className="text-muted text-[10px]">Total Paid</p>
+                        <p className="text-text-muted text-[10px]">Total Paid</p>
                         <p className="font-medium">{formatCurrency(paidTotal)}</p>
                       </div>
                       <div className="text-right hidden md:block">
-                        <p className="text-muted text-[10px]">Invoices</p>
+                        <p className="text-text-muted text-[10px]">Invoices</p>
                         <p className="font-medium">{clientInvoices.length}</p>
                       </div>
 
@@ -1620,7 +1620,7 @@ export default function ClientsPage() {
               );
             })}
             {activeClients.length === 0 && (
-              <div className="card p-8 text-center text-muted text-sm">No active clients</div>
+              <div className="glass rounded-xl p-8 text-center text-text-muted text-sm">No active clients</div>
             )}
           </div>
         </div>
@@ -1631,31 +1631,31 @@ export default function ClientsPage() {
         <form onSubmit={(e) => { e.preventDefault(); addClient(new FormData(e.currentTarget)); }} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="client-business-name" className="block text-sm text-muted mb-1">Business Name *</label>
+              <label htmlFor="client-business-name" className="block text-sm text-text-muted mb-1">Business Name *</label>
               <input id="client-business-name" name="business_name" className="input w-full" required />
             </div>
             <div>
-              <label htmlFor="client-contact-name" className="block text-sm text-muted mb-1">Contact Name *</label>
+              <label htmlFor="client-contact-name" className="block text-sm text-text-muted mb-1">Contact Name *</label>
               <input id="client-contact-name" name="contact_name" className="input w-full" required />
             </div>
             <div>
-              <label htmlFor="client-email" className="block text-sm text-muted mb-1">Email *</label>
+              <label htmlFor="client-email" className="block text-sm text-text-muted mb-1">Email *</label>
               <input id="client-email" name="email" type="email" className="input w-full" required />
             </div>
             <div>
-              <label htmlFor="client-phone" className="block text-sm text-muted mb-1">Phone</label>
+              <label htmlFor="client-phone" className="block text-sm text-text-muted mb-1">Phone</label>
               <input id="client-phone" name="phone" className="input w-full" />
             </div>
             <div>
-              <label htmlFor="client-website" className="block text-sm text-muted mb-1">Website</label>
+              <label htmlFor="client-website" className="block text-sm text-text-muted mb-1">Website</label>
               <input id="client-website" name="website" className="input w-full" />
             </div>
             <div>
-              <label htmlFor="client-industry" className="block text-sm text-muted mb-1">Industry</label>
+              <label htmlFor="client-industry" className="block text-sm text-text-muted mb-1">Industry</label>
               <input id="client-industry" name="industry" className="input w-full" />
             </div>
             <div>
-              <label htmlFor="client-package-tier" className="block text-sm text-muted mb-1">Package Tier</label>
+              <label htmlFor="client-package-tier" className="block text-sm text-text-muted mb-1">Package Tier</label>
               <select id="client-package-tier" name="package_tier" className="input w-full">
                 <option value="">Select...</option>
                 <option value="Starter">Starter</option>
@@ -1664,12 +1664,12 @@ export default function ClientsPage() {
               </select>
             </div>
             <div>
-              <label htmlFor="client-mrr" className="block text-sm text-muted mb-1">MRR ($)</label>
+              <label htmlFor="client-mrr" className="block text-sm text-text-muted mb-1">MRR ($)</label>
               <input id="client-mrr" name="mrr" type="number" step="0.01" className="input w-full" />
             </div>
           </div>
           <div>
-            <label htmlFor="client-services" className="block text-sm text-muted mb-1">Services (comma separated)</label>
+            <label htmlFor="client-services" className="block text-sm text-text-muted mb-1">Services (comma separated)</label>
             <input id="client-services" name="services" className="input w-full" placeholder="Social Media, Ads, Website" />
           </div>
           <div className="flex justify-end gap-3 pt-4">
@@ -1690,34 +1690,34 @@ export default function ClientsPage() {
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div>
-                <p className="text-xs text-muted">Contact</p>
+                <p className="text-xs text-text-muted">Contact</p>
                 <p className="font-medium">{selectedClient.contact_name}</p>
               </div>
               <div>
-                <p className="text-xs text-muted">Email</p>
+                <p className="text-xs text-text-muted">Email</p>
                 <p>{selectedClient.email}</p>
               </div>
               <div>
-                <p className="text-xs text-muted">Phone</p>
+                <p className="text-xs text-text-muted">Phone</p>
                 <p>{selectedClient.phone || "-"}</p>
               </div>
               <div>
-                <p className="text-xs text-muted">Package</p>
+                <p className="text-xs text-text-muted">Package</p>
                 <p className="text-brand-accent font-medium">{selectedClient.package_tier || "-"}</p>
               </div>
               <div>
-                <p className="text-xs text-muted">MRR</p>
+                <p className="text-xs text-text-muted">MRR</p>
                 <p className="font-bold">{formatCurrency(selectedClient.mrr)}</p>
               </div>
               <div>
-                <p className="text-xs text-muted">Health Score</p>
+                <p className="text-xs text-text-muted">Health Score</p>
                 <p className={selectedClient.health_score> 75 ? "text-success" : selectedClient.health_score> 50 ? "text-warning" : "text-danger"}>
                   {selectedClient.health_score}%
                 </p>
               </div>
             </div>
             <div>
-              <p className="text-xs text-muted mb-2">Services</p>
+              <p className="text-xs text-text-muted mb-2">Services</p>
               <div className="flex flex-wrap gap-2">
                 {(selectedClient.services || []).map((s, i) => (
                   <span key={i} className="badge bg-brand-accent/10 text-brand-accent">{s}</span>
@@ -1725,12 +1725,12 @@ export default function ClientsPage() {
               </div>
             </div>
             <div>
-              <p className="text-xs text-muted mb-2">Contract Status</p>
+              <p className="text-xs text-text-muted mb-2">Contract Status</p>
               <StatusBadge status={selectedClient.contract_status} />
             </div>
             {/* Stripe Billing */}
             <div className="pt-2">
-              <p className="text-xs text-muted mb-2">Billing</p>
+              <p className="text-xs text-text-muted mb-2">Billing</p>
               <div className="flex flex-wrap gap-2">
                 {!selectedClient.stripe_customer_id ? (
                   <button onClick={() => syncStripeCustomer(selectedClient.id)}
@@ -1766,7 +1766,7 @@ export default function ClientsPage() {
               </div>
             </div>
 
-            <div className="flex gap-3 pt-4 border-t border-border">
+            <div className="flex gap-3 pt-4 border-t border-border-subtle">
               <button onClick={() => { setSelectedClient(null); setShowInviteModal(selectedClient); }}
                 className={`flex items-center gap-2 ${selectedClient.profile_id ? "btn-secondary" : "btn-primary"}`}>
                 <UserPlus size={16} /> {selectedClient.profile_id ? "Reset Password" : "Give Portal Access"}
@@ -1830,25 +1830,25 @@ export default function ClientsPage() {
               toast.error(data.error || "Failed");
             }
           }} className="space-y-4">
-            <p className="text-sm text-muted">
+            <p className="text-sm text-text-muted">
               {showInviteModal.profile_id
                 ? <>Update password for <span className="text-brand-accent font-medium">{showInviteModal.business_name}</span>. They already have portal access.</>
                 : <>Create a login for <span className="text-brand-accent font-medium">{showInviteModal.business_name}</span> so they can access their portal.</>
               }
             </p>
             <div>
-              <label className="block text-sm text-muted mb-1">Full Name *</label>
+              <label className="block text-sm text-text-muted mb-1">Full Name *</label>
               <input name="full_name" className="input w-full" defaultValue={showInviteModal.contact_name} required />
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">Email *</label>
+              <label className="block text-sm text-text-muted mb-1">Email *</label>
               <input name="email" type="email" className="input w-full" defaultValue={showInviteModal.email} required />
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">Password *</label>
+              <label className="block text-sm text-text-muted mb-1">Password *</label>
               <input name="password" type="text" className="input w-full" placeholder="Set their initial password" required minLength={6} />
             </div>
-            <div className="bg-surface-light rounded-lg p-3 text-xs text-muted">
+            <div className="bg-surface-light rounded-lg p-3 text-xs text-text-muted">
               The client will be able to log in at shortstack.work and see: their active services, task checklist, invoices, contracts, and deliverables.
             </div>
             <div className="flex justify-end gap-3">
@@ -1877,29 +1877,29 @@ export default function ClientsPage() {
             );
             setShowSubscribeModal(null);
           }} className="space-y-4">
-            <p className="text-sm text-muted">
+            <p className="text-sm text-text-muted">
               Set up recurring billing for <span className="text-brand-accent font-medium">{showSubscribeModal.business_name}</span>.
               This creates a Stripe Checkout link you can send to the client.
             </p>
             <div>
-              <label className="block text-sm text-muted mb-1">Amount (USD) *</label>
+              <label className="block text-sm text-text-muted mb-1">Amount (USD) *</label>
               <input name="amount" type="number" step="0.01" min="1" className="input w-full"
                 defaultValue={showSubscribeModal.mrr || ""} placeholder="e.g. 1500" required />
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">Description</label>
+              <label className="block text-sm text-text-muted mb-1">Description</label>
               <input name="description" className="input w-full"
                 defaultValue={`${showSubscribeModal.business_name} � ${showSubscribeModal.package_tier || "Growth"} Package`}
                 placeholder="Service description shown on invoice" />
             </div>
             <div>
-              <label className="block text-sm text-muted mb-1">Billing Interval</label>
+              <label className="block text-sm text-text-muted mb-1">Billing Interval</label>
               <select name="interval" className="input w-full">
                 <option value="month">Monthly</option>
                 <option value="year">Yearly</option>
               </select>
             </div>
-            <div className="bg-surface-light rounded-lg p-3 text-xs text-muted">
+            <div className="bg-surface-light rounded-lg p-3 text-xs text-text-muted">
               A Stripe Checkout link will be generated and copied to your clipboard. Send it to the client to complete payment setup.
             </div>
             <div className="flex justify-end gap-3">
@@ -1920,7 +1920,7 @@ export default function ClientsPage() {
           const currentTags = clientTags[showTagModal] || [];
           return (
             <div className="space-y-4">
-              <p className="text-sm text-muted">
+              <p className="text-sm text-text-muted">
                 Assign tags to <span className="text-brand-accent font-medium">{client?.business_name}</span>
               </p>
               <div className="flex flex-wrap gap-2">
@@ -1929,7 +1929,7 @@ export default function ClientsPage() {
                   return (
                     <button key={tag.label} onClick={() => toggleTag(showTagModal, tag)}
                       className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all border ${
-                        isActive ? "border-transparent" : "border-border hover:border-[rgba(59,130,246,0.25)]"
+                        isActive ? "border-transparent" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
                       }`}
                       style={isActive ? { background: tag.color + "22", color: tag.color, borderColor: tag.color + "44" } : {}}>
                       {isActive && <Check size={10} className="inline mr-1" />}
@@ -1939,8 +1939,8 @@ export default function ClientsPage() {
                 })}
               </div>
               {currentTags.length> 0 && (
-                <div className="pt-2 border-t border-border">
-                  <p className="text-[10px] text-muted mb-2">Active tags:</p>
+                <div className="pt-2 border-t border-border-subtle">
+                  <p className="text-[10px] text-text-muted mb-2">Active tags:</p>
                   <div className="flex flex-wrap gap-1.5">
                     {currentTags.map(t => (
                       <span key={t.label} className="text-xs px-2 py-0.5 rounded-full flex items-center gap-1"
@@ -1968,7 +1968,7 @@ export default function ClientsPage() {
           const client = clients.find(c => c.id === editingNote);
           return (
             <div className="space-y-4">
-              <p className="text-sm text-muted">
+              <p className="text-sm text-text-muted">
                 Notes for <span className="text-brand-accent font-medium">{client?.business_name}</span>
               </p>
               <textarea
@@ -1994,8 +1994,8 @@ export default function ClientsPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-2 text-[10px] text-muted font-medium uppercase tracking-wider w-32">Metric</th>
+                <tr className="border-b border-border-subtle">
+                  <th className="text-left py-2 text-[10px] text-text-muted font-medium uppercase tracking-wider w-32">Metric</th>
                   {compareClients.map(id => {
                     const c = clients.find(cl => cl.id === id);
                     return (
@@ -2026,8 +2026,8 @@ export default function ClientsPage() {
                   const nums = row.getNum ? clientObjs.map(c => row.getNum!(c)) : [];
                   const bestVal = nums.length> 0 ? Math.max(...nums) : -1;
                   return (
-                    <tr key={row.label} className="border-b border-border/50">
-                      <td className="py-2 text-muted font-medium">{row.label}</td>
+                    <tr key={row.label} className="border-b border-border-subtle/50">
+                      <td className="py-2 text-text-muted font-medium">{row.label}</td>
                       {clientObjs.map((c) => {
                         const val = row.getValue(c);
                         const isBest = row.getNum && row.getNum(c) === bestVal && nums.filter(n => n === bestVal).length === 1;
@@ -2045,7 +2045,7 @@ export default function ClientsPage() {
           </div>
           <div className="flex justify-between items-center pt-2">
             <button onClick={() => { setCompareClients([]); setShowCompareModal(false); }}
-              className="text-xs text-muted hover:text-foreground">Clear comparison</button>
+              className="text-xs text-text-muted hover:text-text-primary">Clear comparison</button>
             <button onClick={() => setShowCompareModal(false)} className="btn-primary text-sm">Done</button>
           </div>
         </div>

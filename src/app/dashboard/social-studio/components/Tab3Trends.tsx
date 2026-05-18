@@ -49,7 +49,7 @@ export default function Tab3Trends() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-border/40 bg-surface p-4 space-y-3">
+      <div className="rounded-xl border border-border-subtle/40 bg-surface p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles size={14} className="text-brand-accent" />
@@ -59,7 +59,7 @@ export default function Tab3Trends() {
             type="button"
             onClick={() => fetchTrends(niche)}
             disabled={loading}
-            className="text-[10px] inline-flex items-center gap-1 text-muted hover:text-foreground disabled:opacity-50"
+            className="text-[10px] inline-flex items-center gap-1 text-text-muted hover:text-text-primary disabled:opacity-50"
           >
             <RefreshCcw size={10} className={loading ? "animate-spin" : ""} />
             Refresh
@@ -74,7 +74,7 @@ export default function Tab3Trends() {
               className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${
                 niche === n
                   ? "bg-[rgba(59,130,246,0.12)] border-[rgba(59,130,246,0.3)] text-brand-accent"
-                  : "border-border/40 text-muted hover:bg-elevated"
+                  : "border-border-subtle/40 text-text-muted hover:bg-elevated"
               }`}
             >
               {n}
@@ -87,26 +87,26 @@ export default function Tab3Trends() {
             value={customNiche}
             onChange={(e) => setCustomNiche(e.target.value)}
             placeholder="Or type your own niche..."
-            className="flex-1 px-3 py-1.5 rounded-md bg-elevated border border-border/40 text-sm"
+            className="flex-1 px-3 py-1.5 rounded-md bg-elevated border border-border-subtle/40 text-sm"
           />
           <button
             type="button"
             onClick={onApplyCustomNiche}
             disabled={!customNiche.trim()}
-            className="px-3 py-1.5 rounded-md text-xs border border-border/40 hover:bg-elevated disabled:opacity-50"
+            className="px-3 py-1.5 rounded-md text-xs border border-border-subtle/40 hover:bg-elevated disabled:opacity-50"
           >
             Apply
           </button>
         </div>
       </div>
 
-      <div className="rounded-xl border border-border/40 bg-surface p-4">
+      <div className="rounded-xl border border-border-subtle/40 bg-surface p-4">
         <div className="flex items-center gap-2 mb-3">
           <Hash size={14} className="text-brand-accent" />
           <h3 className="text-sm font-semibold tracking-tight">Trending hashtags by platform</h3>
         </div>
         {loading && !data ? (
-          <div className="flex items-center justify-center py-6 text-xs text-muted">
+          <div className="flex items-center justify-center py-6 text-xs text-text-muted">
             <Loader2 size={12} className="animate-spin mr-2" />
             Pulling trends…
           </div>
@@ -116,16 +116,16 @@ export default function Tab3Trends() {
               const tags = data?.hashtags_by_platform[platform as SocialPlatform] ?? [];
               if (tags.length === 0) return null;
               return (
-                <div key={platform} className="rounded-lg border border-border/40 bg-elevated p-3">
+                <div key={platform} className="rounded-lg border border-border-subtle/40 bg-elevated p-3">
                   <div className="flex items-center justify-between mb-2">
                     <PlatformChip platform={platform} />
-                    <span className="text-[10px] text-muted">{tags.length} tags</span>
+                    <span className="text-[10px] text-text-muted">{tags.length} tags</span>
                   </div>
                   <div className="flex flex-wrap gap-1">
                     {tags.map((t, i) => (
                       <span
                         key={`${t}-${i}`}
-                        className="text-[10px] px-1.5 py-0.5 rounded bg-surface border border-border/30"
+                        className="text-[10px] px-1.5 py-0.5 rounded bg-surface border border-border-subtle/30"
                       >
                         {t}
                       </span>
@@ -138,13 +138,13 @@ export default function Tab3Trends() {
         )}
       </div>
 
-      <div className="rounded-xl border border-border/40 bg-surface p-4">
+      <div className="rounded-xl border border-border-subtle/40 bg-surface p-4">
         <div className="flex items-center gap-2 mb-3">
           <Lightbulb size={14} className="text-brand-accent" />
           <h3 className="text-sm font-semibold tracking-tight">Content ideas for this week</h3>
         </div>
         {loading && !data ? (
-          <div className="flex items-center justify-center py-6 text-xs text-muted">
+          <div className="flex items-center justify-center py-6 text-xs text-text-muted">
             <Loader2 size={12} className="animate-spin mr-2" />
             Generating fresh ideas…
           </div>
@@ -153,15 +153,15 @@ export default function Tab3Trends() {
             {(data?.ideas ?? []).map((idea: ContentIdea, i) => (
               <div
                 key={`${idea.title}-${i}`}
-                className="rounded-lg border border-border/40 bg-elevated p-3 hover:border-[rgba(59,130,246,0.3)] transition-all"
+                className="rounded-lg border border-border-subtle/40 bg-elevated p-3 hover:border-[rgba(59,130,246,0.3)] transition-all"
               >
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <h4 className="text-sm font-medium leading-snug flex-1">{idea.title}</h4>
-                  <span className="text-[10px] uppercase tracking-wider text-muted whitespace-nowrap">
+                  <span className="text-[10px] uppercase tracking-wider text-text-muted whitespace-nowrap">
                     {idea.format}
                   </span>
                 </div>
-                <p className="text-xs text-muted leading-relaxed">{idea.hook}</p>
+                <p className="text-xs text-text-muted leading-relaxed">{idea.hook}</p>
                 <div className="flex flex-wrap gap-1 mt-2">
                   {idea.platforms.map((p) => <PlatformChip key={p} platform={p} />)}
                 </div>

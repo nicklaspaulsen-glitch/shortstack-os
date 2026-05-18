@@ -108,15 +108,15 @@ export function NewTaskModal({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.96 }}
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
-            className="relative w-full max-w-lg bg-surface  border border-border shadow-2xl"
+            className="relative w-full max-w-lg bg-surface  border border-border-subtle shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between p-5 border-b border-border">
+            <div className="flex items-center justify-between p-5 border-b border-border-subtle">
               <h3 className="text-lg font-semibold">New task</h3>
               <button
                 type="button"
                 onClick={onClose}
-                className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-fg transition-colors"
+                className="p-1.5 rounded-md hover:bg-surface-light text-text-muted hover:text-fg transition-colors"
                 aria-label="Close"
               >
                 <X size={16} />
@@ -125,7 +125,7 @@ export function NewTaskModal({
 
             <form onSubmit={handleSubmit} className="p-5 space-y-4">
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wider text-muted mb-1.5">
+                <label className="block text-xs font-medium uppercase tracking-wider text-text-muted mb-1.5">
                   Title
                 </label>
                 <input
@@ -133,34 +133,34 @@ export function NewTaskModal({
                   autoFocus
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[rgba(59,130,246,0.4)] focus:outline-none text-sm"
+                  className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border-subtle focus:border-[rgba(59,130,246,0.4)] focus:outline-none text-sm"
                   placeholder="Edit the launch video"
                   maxLength={280}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wider text-muted mb-1.5">
+                <label className="block text-xs font-medium uppercase tracking-wider text-text-muted mb-1.5">
                   Description
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={3}
-                  className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[rgba(59,130,246,0.4)] focus:outline-none text-sm resize-none"
+                  className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border-subtle focus:border-[rgba(59,130,246,0.4)] focus:outline-none text-sm resize-none"
                   placeholder="Optional context — links, requirements, references..."
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium uppercase tracking-wider text-muted mb-1.5">
+                  <label className="block text-xs font-medium uppercase tracking-wider text-text-muted mb-1.5">
                     Type
                   </label>
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value as TaskType)}
-                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[rgba(59,130,246,0.4)] focus:outline-none text-sm"
+                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border-subtle focus:border-[rgba(59,130,246,0.4)] focus:outline-none text-sm"
                   >
                     {TASK_TYPES.map((t) => (
                       <option key={t} value={t}>
@@ -170,13 +170,13 @@ export function NewTaskModal({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium uppercase tracking-wider text-muted mb-1.5">
+                  <label className="block text-xs font-medium uppercase tracking-wider text-text-muted mb-1.5">
                     Priority
                   </label>
                   <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[rgba(59,130,246,0.4)] focus:outline-none text-sm"
+                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border-subtle focus:border-[rgba(59,130,246,0.4)] focus:outline-none text-sm"
                   >
                     {TASK_PRIORITIES.map((p) => (
                       <option key={p} value={p}>
@@ -189,13 +189,13 @@ export function NewTaskModal({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium uppercase tracking-wider text-muted mb-1.5">
+                  <label className="block text-xs font-medium uppercase tracking-wider text-text-muted mb-1.5">
                     Client
                   </label>
                   <select
                     value={clientId}
                     onChange={(e) => setClientId(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[rgba(59,130,246,0.4)] focus:outline-none text-sm"
+                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border-subtle focus:border-[rgba(59,130,246,0.4)] focus:outline-none text-sm"
                   >
                     <option value="">No client</option>
                     {clients.map((c) => (
@@ -206,13 +206,13 @@ export function NewTaskModal({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium uppercase tracking-wider text-muted mb-1.5">
+                  <label className="block text-xs font-medium uppercase tracking-wider text-text-muted mb-1.5">
                     Assignee
                   </label>
                   <select
                     value={assigneeId}
                     onChange={(e) => setAssigneeId(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[rgba(59,130,246,0.4)] focus:outline-none text-sm"
+                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border-subtle focus:border-[rgba(59,130,246,0.4)] focus:outline-none text-sm"
                   >
                     <option value="">Unassigned</option>
                     {members.map((m) => (
@@ -225,14 +225,14 @@ export function NewTaskModal({
               </div>
 
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wider text-muted mb-1.5">
+                <label className="block text-xs font-medium uppercase tracking-wider text-text-muted mb-1.5">
                   Due date
                 </label>
                 <input
                   type="date"
                   value={dueAt}
                   onChange={(e) => setDueAt(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border focus:border-[rgba(59,130,246,0.4)] focus:outline-none text-sm"
+                  className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border-subtle focus:border-[rgba(59,130,246,0.4)] focus:outline-none text-sm"
                 />
               </div>
 
@@ -246,7 +246,7 @@ export function NewTaskModal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-3 py-1.5 rounded-lg text-sm text-muted hover:text-fg hover:bg-surface-light transition-colors"
+                  className="px-3 py-1.5 rounded-lg text-sm text-text-muted hover:text-fg hover:bg-surface-light transition-colors"
                 >
                   Cancel
                 </button>

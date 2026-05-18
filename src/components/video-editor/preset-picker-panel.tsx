@@ -405,23 +405,23 @@ export function PresetPickerPanel({
   return (
     <aside
       data-preset-picker-panel
-      className={`fixed right-0 top-0 h-screen w-[420px] max-w-[90vw] z-40 flex flex-col border-l border-border bg-surface/95 backdrop-blur-md shadow-2xl ${className}`}
+      className={`fixed right-0 top-0 h-screen w-[420px] max-w-[90vw] z-40 flex flex-col border-l border-border-subtle bg-surface/95 backdrop-blur-md shadow-2xl ${className}`}
       role="complementary"
       aria-label="Preset Picker"
     >
       {/* Header */}
-      <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-border bg-surface-light/30">
+      <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-border-subtle bg-surface-light/30">
         <div className="flex items-center gap-2">
           <Wand2 size={14} className="text-[#2563EB]" />
           <span className="text-xs font-semibold">Preset Picker</span>
-          <span className="text-[9px] text-muted hidden sm:inline">
+          <span className="text-[9px] text-text-muted hidden sm:inline">
             Cmd/Ctrl+K
           </span>
         </div>
         <button
           type="button"
           onClick={() => onOpenChange(false)}
-          className="p-1 rounded hover:bg-surface-light text-muted hover:text-foreground"
+          className="p-1 rounded hover:bg-surface-light text-text-muted hover:text-text-primary"
           aria-label="Close preset picker"
         >
           <X size={13} />
@@ -429,7 +429,7 @@ export function PresetPickerPanel({
       </div>
 
       {/* Tabs */}
-      <div className="flex flex-wrap gap-1 px-2 py-1.5 border-b border-border bg-surface/50">
+      <div className="flex flex-wrap gap-1 px-2 py-1.5 border-b border-border-subtle bg-surface/50">
         <TabBtn id="sfx" current={tab} onSelect={setTab} icon={<Volume2 size={11} />} label="SFX" count={SFX_LIBRARY.length} />
         <TabBtn id="music" current={tab} onSelect={setTab} icon={<Music size={11} />} label="Music" count={MUSIC_LIBRARY.length} />
         <TabBtn id="vfx" current={tab} onSelect={setTab} icon={<Wand2 size={11} />} label="VFX" count={EFFECTS_LIBRARY.length} />
@@ -440,11 +440,11 @@ export function PresetPickerPanel({
       </div>
 
       {/* Search */}
-      <div className="px-2 py-2 border-b border-border">
+      <div className="px-2 py-2 border-b border-border-subtle">
         <div className="relative">
           <Search
             size={11}
-            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted"
+            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted"
           />
           <input
             type="search"
@@ -458,8 +458,8 @@ export function PresetPickerPanel({
 
       {/* Recently used strip — shows last 3 applied presets with clock icon */}
       {recentPresets.length > 0 && (
-        <div className="px-2 pt-1.5 pb-1 border-b border-border bg-surface/30">
-          <p className="text-[8.5px] uppercase tracking-[0.14em] text-muted mb-1 font-medium">
+        <div className="px-2 pt-1.5 pb-1 border-b border-border-subtle bg-surface/30">
+          <p className="text-[8.5px] uppercase tracking-[0.14em] text-text-muted mb-1 font-medium">
             Recently used
           </p>
           <div className="flex flex-wrap gap-1">
@@ -469,7 +469,7 @@ export function PresetPickerPanel({
                 type="button"
                 onClick={() => fireDrop(r.kind, r.id, r.payload)}
                 title={`Re-apply ${r.label} (${r.kind})`}
-                className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border border-border hover:border-[rgba(255,255,255,0.4)] hover:bg-[rgba(255,255,255,0.07)] text-muted hover:text-foreground transition-all cursor-pointer"
+                className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full border border-border-subtle hover:border-[rgba(255,255,255,0.4)] hover:bg-[rgba(255,255,255,0.07)] text-text-muted hover:text-text-primary transition-all cursor-pointer"
               >
                 {/* Clock icon — inline SVG to avoid adding another lucide import */}
                 <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -477,7 +477,7 @@ export function PresetPickerPanel({
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
                 <span className="max-w-[80px] truncate">{r.label}</span>
-                <span className="text-[8px] text-muted/60">{r.kind}</span>
+                <span className="text-[8px] text-text-muted/60">{r.kind}</span>
               </button>
             ))}
           </div>
@@ -576,7 +576,7 @@ export function PresetPickerPanel({
       </div>
 
       {/* Footer hint */}
-      <div className="border-t border-border bg-surface-light/20 px-3 py-1.5 text-[9px] text-muted flex items-center justify-between">
+      <div className="border-t border-border-subtle bg-surface-light/20 px-3 py-1.5 text-[9px] text-text-muted flex items-center justify-between">
         <span>Drag to timeline</span>
         <span>
           <Heart size={9} className="inline mb-[1px]" /> Double-click to pin
@@ -615,7 +615,7 @@ function TabBtn({
           ? highlight ? "text-[#2563EB]" : "text-[#2563EB]"
           : highlight
             ? "text-[rgba(59,130,246,0.7)] hover:bg-surface-light hover:text-[#2563EB]"
-            : "text-muted hover:bg-surface-light hover:text-foreground"
+            : "text-text-muted hover:bg-surface-light hover:text-text-primary"
       }`}
       aria-pressed={active}
     >
@@ -683,7 +683,7 @@ function Chip({
       type="button"
       onClick={onClick}
       className={`relative rounded-full px-2 py-0.5 text-[9px] transition-colors cursor-pointer ${
-        active ? "text-foreground" : "text-muted hover:text-foreground"
+        active ? "text-text-primary" : "text-text-muted hover:text-text-primary"
       }`}
     >
       {active && layoutId && (
@@ -725,7 +725,7 @@ function FavStar({
         onToggle();
       }}
       className={`rounded p-1 transition ${
-        isFav ? "text-[#2563EB]" : "text-muted hover:text-[#2563EB]"
+        isFav ? "text-[#2563EB]" : "text-text-muted hover:text-[#2563EB]"
       } ${className}`}
       title={isFav ? "Unpin from Favourites" : "Pin to Favourites"}
     >
@@ -844,7 +844,7 @@ function MusicTab({
   return (
     <>
       <Chips options={moods} value={filter} onChange={setFilter} />
-      <div className="mb-2 flex items-center gap-2 text-[9px] text-muted">
+      <div className="mb-2 flex items-center gap-2 text-[9px] text-text-muted">
         <span>BPM</span>
         <input
           type="number"
@@ -982,7 +982,7 @@ function EffectTile({
       draggable
       onDragStart={onDragStart}
       onDoubleClick={onToggleFav}
-      className="group relative rounded-md border border-border/50 bg-surface-light/30 p-1.5 hover:border-[rgba(59,130,246,0.4)] transition cursor-grab active:cursor-grabbing"
+      className="group relative rounded-md border border-border-subtle/50 bg-surface-light/30 p-1.5 hover:border-[rgba(59,130,246,0.4)] transition cursor-grab active:cursor-grabbing"
     >
       <div
         className="aspect-video rounded overflow-hidden bg-gradient-to-br from-amber-500/40 via-rose-500/40 to-indigo-500/40 relative"
@@ -1118,7 +1118,7 @@ function TransitionTile({
       draggable
       onDragStart={onDragStart}
       onDoubleClick={onToggleFav}
-      className="group relative rounded-md border border-border/50 bg-surface-light/30 p-1.5 hover:border-[rgba(59,130,246,0.4)] transition cursor-grab active:cursor-grabbing"
+      className="group relative rounded-md border border-border-subtle/50 bg-surface-light/30 p-1.5 hover:border-[rgba(59,130,246,0.4)] transition cursor-grab active:cursor-grabbing"
     >
       <button
         type="button"
@@ -1133,7 +1133,7 @@ function TransitionTile({
         >
           B
         </div>
-        <span className="relative z-10 rounded bg-black/60 px-1 py-0.5 text-[7px] text-foreground">
+        <span className="relative z-10 rounded bg-black/60 px-1 py-0.5 text-[7px] text-text-primary">
           {playing ? "…" : "demo"}
         </span>
       </button>
@@ -1145,7 +1145,7 @@ function TransitionTile({
           onToggle={onToggleFav}
         />
       </div>
-      <p className="text-[8px] text-muted">
+      <p className="text-[8px] text-text-muted">
         {transition.category} · {transition.duration_ms}ms
       </p>
       <button
@@ -1260,7 +1260,7 @@ function BrollTile({
       onDoubleClick={onToggleFav}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
-      className="group relative rounded-md border border-border/50 bg-surface-light/30 p-1.5 hover:border-[rgba(59,130,246,0.4)] transition cursor-grab active:cursor-grabbing"
+      className="group relative rounded-md border border-border-subtle/50 bg-surface-light/30 p-1.5 hover:border-[rgba(59,130,246,0.4)] transition cursor-grab active:cursor-grabbing"
     >
       <div className="aspect-video rounded overflow-hidden bg-black relative">
         {showVideo ? (
@@ -1299,7 +1299,7 @@ function BrollTile({
           onToggle={onToggleFav}
         />
       </div>
-      <p className="text-[8px] text-muted">
+      <p className="text-[8px] text-text-muted">
         {candidate.provider || "stock"}
         {candidate.duration_sec ? ` · ${candidate.duration_sec}s` : ""}
       </p>
@@ -1379,12 +1379,12 @@ function FontTab({
             draggable
             onDragStart={startDrag(f.id, f)}
             onDoubleClick={() => onToggleFav(f.id)}
-            className="rounded-md border border-border/50 bg-surface-light/30 p-2 hover:border-[rgba(59,130,246,0.4)] transition cursor-grab active:cursor-grabbing"
+            className="rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(59,130,246,0.4)] transition cursor-grab active:cursor-grabbing"
           >
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0 flex-1">
                 <p className="text-[10px] font-semibold truncate">{f.family}</p>
-                <p className="text-[8px] text-muted uppercase tracking-wide">
+                <p className="text-[8px] text-text-muted uppercase tracking-wide">
                   {f.category} · {f.weight.join("/")}
                 </p>
               </div>
@@ -1496,7 +1496,7 @@ function FavouritesTab({
 
   if (items.length === 0) {
     return (
-      <div className="rounded-md border border-dashed border-border/50 p-6 text-center text-[10px] text-muted">
+      <div className="rounded-md border border-dashed border-border-subtle/50 p-6 text-center text-[10px] text-text-muted">
         Double-click any preset to pin it here.
       </div>
     );
@@ -1583,12 +1583,12 @@ function FavouritesTab({
               draggable
               onDragStart={startDrag("vfx", fx.id, { name: fx.name, category: fx.category })}
               onDoubleClick={() => onToggleFav("vfx", fx.id)}
-              className="flex items-center gap-2 rounded-md border border-border/50 bg-surface-light/30 p-2 hover:border-[rgba(59,130,246,0.4)]"
+              className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(59,130,246,0.4)]"
             >
               <Wand2 size={12} className="text-[#2563EB]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{fx.name}</p>
-                <p className="text-[8px] text-muted">VFX · {fx.category}</p>
+                <p className="text-[8px] text-text-muted">VFX · {fx.category}</p>
               </div>
               <button
                 type="button"
@@ -1609,12 +1609,12 @@ function FavouritesTab({
               draggable
               onDragStart={startDrag("transition", t.id, { name: t.name, category: t.category, duration_ms: t.duration_ms })}
               onDoubleClick={() => onToggleFav("transition", t.id)}
-              className="flex items-center gap-2 rounded-md border border-border/50 bg-surface-light/30 p-2 hover:border-[rgba(59,130,246,0.4)]"
+              className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(59,130,246,0.4)]"
             >
               <Scissors size={12} className="text-[#2563EB]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{t.name}</p>
-                <p className="text-[8px] text-muted">Transition · {t.category}</p>
+                <p className="text-[8px] text-text-muted">Transition · {t.category}</p>
               </div>
               <button
                 type="button"
@@ -1635,12 +1635,12 @@ function FavouritesTab({
               draggable
               onDragStart={startDrag("font", f.id, { family: f.family, url: f.url })}
               onDoubleClick={() => onToggleFav("font", f.id)}
-              className="flex items-center gap-2 rounded-md border border-border/50 bg-surface-light/30 p-2 hover:border-[rgba(59,130,246,0.4)]"
+              className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(59,130,246,0.4)]"
             >
               <TypeIcon size={12} className="text-[#2563EB]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{f.family}</p>
-                <p className="text-[8px] text-muted">Font · {f.category}</p>
+                <p className="text-[8px] text-text-muted">Font · {f.category}</p>
               </div>
               <button
                 type="button"
@@ -1658,12 +1658,12 @@ function FavouritesTab({
           return (
             <div
               key={`broll-${b.id}`}
-              className="flex items-center gap-2 rounded-md border border-border/50 bg-surface-light/30 p-2"
+              className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2"
             >
               <Film size={12} className="text-[#2563EB]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{b.label}</p>
-                <p className="text-[8px] text-muted">B-roll · pinned</p>
+                <p className="text-[8px] text-text-muted">B-roll · pinned</p>
               </div>
               <FavStar favId={favKey("broll", b.id)} favs={favs} onToggle={() => onToggleFav("broll", b.id)} />
             </div>
@@ -1750,9 +1750,9 @@ function AudioRow({
       onDragStart={onDragStart}
       onDoubleClick={onDoubleClick}
       data-preset-item-id={id}
-      className="flex items-center gap-2 rounded-md border border-border/50 bg-surface-light/30 p-1.5 hover:border-[rgba(59,130,246,0.4)] cursor-grab active:cursor-grabbing"
+      className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-1.5 hover:border-[rgba(59,130,246,0.4)] cursor-grab active:cursor-grabbing"
     >
-      <GripVertical size={10} className="text-muted shrink-0" />
+      <GripVertical size={10} className="text-text-muted shrink-0" />
       <button
         type="button"
         onClick={toggle}
@@ -1770,12 +1770,12 @@ function AudioRow({
       </button>
       <div className="flex-1 min-w-0">
         <p className="truncate text-[10px] font-semibold">{title}</p>
-        <p className="truncate text-[8px] text-muted">{sub}</p>
+        <p className="truncate text-[8px] text-text-muted">{sub}</p>
       </div>
       <button
         type="button"
         onClick={onAdd}
-        className="shrink-0 rounded bg-surface-light/80 p-1 text-muted hover:text-[#2563EB]"
+        className="shrink-0 rounded bg-surface-light/80 p-1 text-text-muted hover:text-[#2563EB]"
         title="Add to timeline"
       >
         <Check size={11} />
@@ -1789,7 +1789,7 @@ function AudioRow({
 
 function Empty({ label }: { label: string }) {
   return (
-    <div className="rounded-md border border-dashed border-border/40 p-6 text-center text-[10px] text-muted">
+    <div className="rounded-md border border-dashed border-border-subtle/40 p-6 text-center text-[10px] text-text-muted">
       No {label} match that search.
     </div>
   );

@@ -225,7 +225,7 @@ export default function ClientLeadEnginePage() {
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-success";
     if (score >= 50) return "text-brand-accent";
-    return "text-muted";
+    return "text-text-muted";
   };
 
   return (
@@ -235,7 +235,7 @@ export default function ClientLeadEnginePage() {
                   <Sparkles size={20} className="text-brand-accent" />
                   AI Lead Engine
                 </h1>
-                <p className="text-xs text-muted mt-1">Find, score, and reach high-value prospects instantly</p>
+                <p className="text-xs text-text-muted mt-1">Find, score, and reach high-value prospects instantly</p>
               </div>
               <div className="flex items-center gap-2">
                 {selectedLeads.size > 0 && (
@@ -287,7 +287,7 @@ export default function ClientLeadEnginePage() {
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Score</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.avgScore}%</p>
               </motion.div>
-            </div>{/* Search Bar — The Engine */}<div className="card border-[rgba(59,130,246,0.2)]">
+            </div>{/* Search Bar — The Engine */}<div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.2)]">
               <div className="flex items-center gap-2 mb-3">
                 <Zap size={14} className="text-brand-accent" />
                 <span className="text-xs font-semibold">Find New Leads</span>
@@ -295,7 +295,7 @@ export default function ClientLeadEnginePage() {
 
               <div className="flex gap-2">
                 <div className="flex-1 relative">
-                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                   <input
                     type="text"
                     value={niche}
@@ -309,7 +309,7 @@ export default function ClientLeadEnginePage() {
                   </datalist>
                 </div>
                 <div className="flex-1 relative">
-                  <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                  <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                   <input
                     type="text"
                     value={location}
@@ -340,20 +340,20 @@ export default function ClientLeadEnginePage() {
               {/* Filters toggle */}
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground mt-2 transition-colors"
+                className="flex items-center gap-1 text-[10px] text-text-muted hover:text-text-primary mt-2 transition-colors"
               >
                 <Filter size={10} /> Advanced Filters <ChevronDown size={10} className={`transition-transform ${showFilters ? "rotate-180" : ""}`} />
               </button>
 
               {showFilters && (
-                <div className="grid grid-cols-4 gap-3 mt-3 pt-3 border-t border-border">
+                <div className="grid grid-cols-4 gap-3 mt-3 pt-3 border-t border-border-subtle">
                   <div>
-                    <label className="text-[9px] text-muted uppercase block mb-1">Max Results</label>
+                    <label className="text-[9px] text-text-muted uppercase block mb-1">Max Results</label>
                     <input type="number" value={maxResults} onChange={(e) => setMaxResults(+e.target.value)}
                       className="input w-full text-xs" min={5} max={100} />
                   </div>
                   <div>
-                    <label className="text-[9px] text-muted uppercase block mb-1">Min Rating</label>
+                    <label className="text-[9px] text-text-muted uppercase block mb-1">Min Rating</label>
                     <select value={minRating} onChange={(e) => setMinRating(+e.target.value)} className="input w-full text-xs">
                       <option value={0}>Any</option>
                       <option value={3}>3+ Stars</option>
@@ -363,12 +363,12 @@ export default function ClientLeadEnginePage() {
                   </div>
                   <label className="flex items-center gap-2 cursor-pointer pt-4">
                     <input type="checkbox" checked={requirePhone} onChange={(e) => setRequirePhone(e.target.checked)}
-                      className="w-3.5 h-3.5 rounded border-border" />
+                      className="w-3.5 h-3.5 rounded border-border-subtle" />
                     <span className="text-[10px]">Has Phone</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer pt-4">
                     <input type="checkbox" checked={requireEmail} onChange={(e) => setRequireEmail(e.target.checked)}
-                      className="w-3.5 h-3.5 rounded border-border" />
+                      className="w-3.5 h-3.5 rounded border-border-subtle" />
                     <span className="text-[10px]">Has Email</span>
                   </label>
                 </div>
@@ -387,28 +387,28 @@ export default function ClientLeadEnginePage() {
                   <Phone size={11} /> Call All
                 </button>
               </div>
-            )}{/* Leads Table */}<div className="card p-0 overflow-hidden">
+            )}{/* Leads Table */}<div className="glass rounded-xl p-0 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="border-b border-border bg-surface-light">
+                    <tr className="border-b border-border-subtle bg-surface-light">
                       <th className="px-3 py-2.5 text-left">
                         <input type="checkbox" checked={selectedLeads.size === leads.length && leads.length > 0}
-                          onChange={selectAll} className="w-3.5 h-3.5 rounded border-border" />
+                          onChange={selectAll} className="w-3.5 h-3.5 rounded border-border-subtle" />
                       </th>
-                      <th className="px-3 py-2.5 text-left text-[9px] uppercase tracking-wider text-muted font-semibold">Business</th>
-                      <th className="px-3 py-2.5 text-left text-[9px] uppercase tracking-wider text-muted font-semibold">Contact</th>
-                      <th className="px-3 py-2.5 text-left text-[9px] uppercase tracking-wider text-muted font-semibold">Location</th>
-                      <th className="px-3 py-2.5 text-center text-[9px] uppercase tracking-wider text-muted font-semibold">Rating</th>
-                      <th className="px-3 py-2.5 text-center text-[9px] uppercase tracking-wider text-muted font-semibold">Score</th>
-                      <th className="px-3 py-2.5 text-center text-[9px] uppercase tracking-wider text-muted font-semibold">Status</th>
-                      <th className="px-3 py-2.5 text-center text-[9px] uppercase tracking-wider text-muted font-semibold">Socials</th>
-                      <th className="px-3 py-2.5 text-right text-[9px] uppercase tracking-wider text-muted font-semibold">Actions</th>
+                      <th className="px-3 py-2.5 text-left text-[9px] uppercase tracking-wider text-text-muted font-semibold">Business</th>
+                      <th className="px-3 py-2.5 text-left text-[9px] uppercase tracking-wider text-text-muted font-semibold">Contact</th>
+                      <th className="px-3 py-2.5 text-left text-[9px] uppercase tracking-wider text-text-muted font-semibold">Location</th>
+                      <th className="px-3 py-2.5 text-center text-[9px] uppercase tracking-wider text-text-muted font-semibold">Rating</th>
+                      <th className="px-3 py-2.5 text-center text-[9px] uppercase tracking-wider text-text-muted font-semibold">Score</th>
+                      <th className="px-3 py-2.5 text-center text-[9px] uppercase tracking-wider text-text-muted font-semibold">Status</th>
+                      <th className="px-3 py-2.5 text-center text-[9px] uppercase tracking-wider text-text-muted font-semibold">Socials</th>
+                      <th className="px-3 py-2.5 text-right text-[9px] uppercase tracking-wider text-text-muted font-semibold">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {loading ? (
-                      <tr><td colSpan={9} className="text-center py-12 text-muted">
+                      <tr><td colSpan={9} className="text-center py-12 text-text-muted">
                         <Loader size={16} className="animate-spin mx-auto mb-2" /> Loading leads...
                       </td></tr>
                     ) : error ? (
@@ -417,7 +417,7 @@ export default function ClientLeadEnginePage() {
                         <button onClick={fetchExistingLeads} className="text-[10px] text-brand-accent hover:text-[#3B82F6] underline">Try again</button>
                       </td></tr>
                     ) : leads.length === 0 ? (
-                      <tr><td colSpan={9} className="text-center py-12 text-muted">
+                      <tr><td colSpan={9} className="text-center py-12 text-text-muted">
                         <Sparkles size={20} className="mx-auto mb-2 text-[rgba(59,130,246,0.4)]" />
                         <p className="text-xs">No leads yet. Use the search above to find prospects.</p>
                       </td></tr>
@@ -425,40 +425,40 @@ export default function ClientLeadEnginePage() {
                       leads.map((lead) => {
                         const score = lead.lead_score || 50;
                         return (
-                          <tr key={lead.id} className="border-b border-border/50 hover:bg-surface-light/50 transition-colors">
+                          <tr key={lead.id} className="border-b border-border-subtle/50 hover:bg-surface-light/50 transition-colors">
                             <td className="px-3 py-2.5">
                               <input type="checkbox" checked={selectedLeads.has(lead.id)}
-                                onChange={() => toggleLead(lead.id)} className="w-3.5 h-3.5 rounded border-border" />
+                                onChange={() => toggleLead(lead.id)} className="w-3.5 h-3.5 rounded border-border-subtle" />
                             </td>
                             <td className="px-3 py-2.5">
-                              <p className="font-medium text-foreground">{lead.business_name}</p>
-                              <p className="text-[10px] text-muted">{lead.industry || lead.source}</p>
+                              <p className="font-medium text-text-primary">{lead.business_name}</p>
+                              <p className="text-[10px] text-text-muted">{lead.industry || lead.source}</p>
                             </td>
                             <td className="px-3 py-2.5">
                               <div className="space-y-0.5">
                                 {lead.email && (
-                                  <p className="text-[10px] text-muted flex items-center gap-1">
+                                  <p className="text-[10px] text-text-muted flex items-center gap-1">
                                     <Mail size={9} className="text-info" /> {lead.email}
                                   </p>
                                 )}
                                 {lead.phone && (
-                                  <p className="text-[10px] text-muted flex items-center gap-1">
+                                  <p className="text-[10px] text-text-muted flex items-center gap-1">
                                     <Phone size={9} className="text-success" /> {lead.phone}
                                   </p>
                                 )}
                                 {!lead.email && !lead.phone && (
-                                  <span className="text-[10px] text-muted/50">No contact info</span>
+                                  <span className="text-[10px] text-text-muted/50">No contact info</span>
                                 )}
                               </div>
                             </td>
-                            <td className="px-3 py-2.5 text-[10px] text-muted">{lead.city || lead.address || "—"}</td>
+                            <td className="px-3 py-2.5 text-[10px] text-text-muted">{lead.city || lead.address || "—"}</td>
                             <td className="px-3 py-2.5 text-center">
                               {lead.google_rating ? (
                                 <span className="flex items-center justify-center gap-0.5 text-[10px]">
                                   <Star size={10} className="text-brand-accent fill-[#2563EB]" /> {lead.google_rating}
-                                  <span className="text-muted">({lead.review_count})</span>
+                                  <span className="text-text-muted">({lead.review_count})</span>
                                 </span>
-                              ) : <span className="text-muted text-[10px]">—</span>}
+                              ) : <span className="text-text-muted text-[10px]">—</span>}
                             </td>
                             <td className="px-3 py-2.5 text-center">
                               <span className={`text-[11px] font-bold ${getScoreColor(score)}`}>{score}</span>
@@ -469,7 +469,7 @@ export default function ClientLeadEnginePage() {
                                 lead.status === "contacted" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
                                 lead.status === "replied" ? "bg-success/10 text-success" :
                                 lead.status === "booked" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
-                                "bg-surface-light text-muted"
+                                "bg-surface-light text-text-muted"
                               }`}>
                                 {lead.status}
                               </span>
@@ -486,19 +486,19 @@ export default function ClientLeadEnginePage() {
                               <div className="flex items-center justify-end gap-1">
                                 {lead.email && (
                                   <button onClick={() => { setSelectedLeads(new Set([lead.id])); bulkAction("email"); }}
-                                    className="p-1.5 rounded-lg hover:bg-info/10 text-muted hover:text-info transition-colors" title="Send Email">
+                                    className="p-1.5 rounded-lg hover:bg-info/10 text-text-muted hover:text-info transition-colors" title="Send Email">
                                     <Mail size={12} />
                                   </button>
                                 )}
                                 {lead.phone && (
                                   <button onClick={() => { setSelectedLeads(new Set([lead.id])); bulkAction("call"); }}
-                                    className="p-1.5 rounded-lg hover:bg-success/10 text-muted hover:text-success transition-colors" title="Call">
+                                    className="p-1.5 rounded-lg hover:bg-success/10 text-text-muted hover:text-success transition-colors" title="Call">
                                     <Phone size={12} />
                                   </button>
                                 )}
                                 {lead.website && (
                                   <a href={lead.website} target="_blank" rel="noopener noreferrer"
-                                    className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground transition-colors" title="Website">
+                                    className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors" title="Website">
                                     <Globe size={12} />
                                   </a>
                                 )}

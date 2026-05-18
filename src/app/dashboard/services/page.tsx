@@ -69,7 +69,7 @@ function ServiceForm({
         value={value.description} onChange={(e) => onChange({ ...value, description: e.target.value })} />
       <div className="flex items-center gap-2">
         <button type="button" onClick={() => onChange({ ...value, include_in_proposals: !value.include_in_proposals })}
-          className={`text-sm flex items-center gap-1.5 ${value.include_in_proposals ? "text-green-400" : "text-muted"}`}>
+          className={`text-sm flex items-center gap-1.5 ${value.include_in_proposals ? "text-green-400" : "text-text-muted"}`}>
           {value.include_in_proposals ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
           Include in proposals
         </button>
@@ -213,9 +213,9 @@ export default function ServicesPage() {
               </div>
             )}{loading ? <TableSkeleton rows={5} /> : services.length === 0 ? (
               <div className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center">
-                <Package size={40} className="text-muted opacity-30" />
+                <Package size={40} className="text-text-muted opacity-30" />
                 <p className="text-[#374151] font-semibold">No services yet</p>
-                <p className="text-muted text-sm max-w-xs">Build your productized service library to speed up proposals and invoices.</p>
+                <p className="text-text-muted text-sm max-w-xs">Build your productized service library to speed up proposals and invoices.</p>
                 <button onClick={() => setShowCreate(true)}
                   className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
                   <Plus size={15} /> Add first service
@@ -225,7 +225,7 @@ export default function ServicesPage() {
               <div className="glass rounded-xl overflow-hidden">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-[rgba(0,0,0,0.06)] text-muted text-xs">
+                    <tr className="border-b border-[rgba(0,0,0,0.06)] text-text-muted text-xs">
                       <th className="text-left px-4 py-3 font-medium">Service</th>
                       <th className="text-right px-4 py-3 font-medium hidden sm:table-cell">Price</th>
                       <th className="text-center px-4 py-3 font-medium hidden md:table-cell">Status</th>
@@ -246,29 +246,29 @@ export default function ServicesPage() {
                         <motion.tr key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className={`hover:bg-[rgba(0,0,0,0.02)] transition-colors group ${!s.is_active ? "opacity-50" : ""}`}>
                           <td className="px-4 py-3">
                             <p className="text-[#374151] font-medium">{s.name}</p>
-                            {s.description && <p className="text-muted text-xs mt-0.5 line-clamp-1">{s.description}</p>}
+                            {s.description && <p className="text-text-muted text-xs mt-0.5 line-clamp-1">{s.description}</p>}
                           </td>
                           <td className="px-4 py-3 text-right text-[#374151] font-medium hidden sm:table-cell">
                             {formatPrice(s.price_cents, s.billing_interval)}
                           </td>
                           <td className="px-4 py-3 text-center hidden md:table-cell">
                             <button onClick={() => handleToggleActive(s)}
-                              className={`text-xs px-2 py-0.5 rounded-full border ${s.is_active ? "border-green-500/40 text-green-400 bg-green-500/10" : "border-[rgba(0,0,0,0.08)] text-muted"}`}>
+                              className={`text-xs px-2 py-0.5 rounded-full border ${s.is_active ? "border-green-500/40 text-green-400 bg-green-500/10" : "border-[rgba(0,0,0,0.08)] text-text-muted"}`}>
                               {s.is_active ? "Active" : "Inactive"}
                             </button>
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity justify-end">
                               <button onClick={() => { setEditId(s.id); setEditForm(serviceToForm(s)); }}
-                                className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#374151]" title="Edit">
+                                className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-[#374151]" title="Edit">
                                 <Pencil size={13} />
                               </button>
                               <button onClick={() => handleDuplicate(s)} disabled={duplicating === s.id}
-                                className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-muted hover:text-[#374151]" title="Duplicate">
+                                className="p-1.5 rounded hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-[#374151]" title="Duplicate">
                                 {duplicating === s.id ? <Loader2 size={13} className="animate-spin" /> : <Copy size={13} />}
                               </button>
                               <button onClick={() => handleDelete(s.id)} disabled={deleting === s.id}
-                                className="p-1.5 rounded hover:bg-red-500/20 text-muted hover:text-red-400" title="Delete">
+                                className="p-1.5 rounded hover:bg-red-500/20 text-text-muted hover:text-red-400" title="Delete">
                                 {deleting === s.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
                               </button>
                             </div>

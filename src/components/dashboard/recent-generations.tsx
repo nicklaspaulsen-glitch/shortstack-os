@@ -62,7 +62,7 @@ export default function RecentGenerations() {
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-sm font-semibold flex items-center gap-2">
           <Sparkles size={14} className="text-[#2563EB]" /> Recent AI Generations
-          <span className="text-[9px] text-muted font-normal bg-[rgba(59,130,246,0.08)] text-[#2563EB] px-2 py-0.5 rounded-full">
+          <span className="text-[9px] text-text-muted font-normal bg-[rgba(59,130,246,0.08)] text-[#2563EB] px-2 py-0.5 rounded-full">
             Latest
           </span>
         </h2>
@@ -83,9 +83,9 @@ export default function RecentGenerations() {
         </div>
       ) : items.length === 0 ? (
         <div className="text-center py-8">
-          <Sparkles size={28} className="mx-auto mb-2 text-muted/30" />
-          <p className="text-xs text-muted font-medium mb-1">No generations yet</p>
-          <p className="text-[10px] text-muted max-w-xs mx-auto mb-3">
+          <Sparkles size={28} className="mx-auto mb-2 text-text-muted/30" />
+          <p className="text-xs text-text-muted font-medium mb-1">No generations yet</p>
+          <p className="text-[10px] text-text-muted max-w-xs mx-auto mb-3">
             Use any AI tool in Trinity and your output will land here.
           </p>
           <Link
@@ -103,7 +103,7 @@ export default function RecentGenerations() {
               <Link
                 key={item.id}
                 href={item.href}
-                className="shrink-0 w-44 group rounded-xl border border-border bg-surface hover:border-[rgba(59,130,246,0.25)] hover:shadow-md transition-all overflow-hidden"
+                className="shrink-0 w-44 group rounded-xl border border-border-subtle bg-surface hover:border-[rgba(59,130,246,0.25)] hover:shadow-md transition-all overflow-hidden"
               >
                 {/* Thumbnail */}
                 <div className={`relative h-24 w-full bg-gradient-to-br ${meta.gradient} flex items-center justify-center overflow-hidden`}>
@@ -128,7 +128,7 @@ export default function RecentGenerations() {
                   <p className="text-[11px] font-semibold truncate group-hover:text-[#2563EB] transition-colors">
                     {item.title.length > 40 ? `${item.title.slice(0, 40)}…` : item.title}
                   </p>
-                  <p className="text-[9px] text-muted mt-0.5">{timeAgo(item.created_at)}</p>
+                  <p className="text-[9px] text-text-muted mt-0.5">{timeAgo(item.created_at)}</p>
                 </div>
               </Link>
             );

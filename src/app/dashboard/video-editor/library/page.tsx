@@ -97,29 +97,29 @@ export default function PresetLibraryPage() {
     MUSIC_LIBRARY.length;
 
   return (
-    <MotionPage className="min-h-screen bg-background text-foreground"><div className="mx-auto max-w-[1400px] px-6 py-8">
+    <MotionPage className="min-h-screen bg-background text-text-primary"><div className="mx-auto max-w-[1400px] px-6 py-8">
               {/* Header */}
               <div className="mb-6 flex items-center justify-between gap-4">
                 <div>
                   <button
                     onClick={() => router.push("/dashboard/video-editor")}
-                    className="mb-2 flex items-center gap-1 text-xs text-muted hover:text-foreground transition"
+                    className="mb-2 flex items-center gap-1 text-xs text-text-muted hover:text-text-primary transition"
                   >
                     <ArrowLeft size={13} /> Back to Video Editor
                   </button>
                   <h1 className="text-2xl font-semibold">Preset Library</h1>
-                  <p className="text-sm text-muted">
+                  <p className="text-sm text-text-muted">
                     Try every font, transition, effect, sound, and track before
                     dropping it into a project.
                   </p>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-muted">
+                <div className="flex items-center gap-2 text-xs text-text-muted">
                   <span>{totalPresets} presets</span>
                 </div>
               </div>
 
               {/* Tabs */}
-              <div className="mb-4 flex flex-wrap gap-1 rounded-lg border border-border/50 bg-surface-light/30 p-1">
+              <div className="mb-4 flex flex-wrap gap-1 rounded-lg border border-border-subtle/50 bg-surface-light/30 p-1">
                 <TabButton
                   id="fonts"
                   active={tab}
@@ -311,14 +311,14 @@ function TabButton({
       className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium transition ${
         isActive
           ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
-          : "text-muted hover:text-foreground hover:bg-surface-light/60"
+          : "text-text-muted hover:text-text-primary hover:bg-surface-light/60"
       }`}
     >
       {icon}
       <span>{label}</span>
       <span
         className={`rounded px-1.5 py-0.5 text-[10px] ${
-          isActive ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light text-muted"
+          isActive ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light text-text-muted"
         }`}
       >
         {count}
@@ -345,7 +345,7 @@ function CategoryChips({
         className={`rounded-full px-2.5 py-1 text-[11px] transition ${
           active === "all"
             ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]"
-            : "bg-surface-light/60 text-muted hover:text-foreground border border-transparent"
+            : "bg-surface-light/60 text-text-muted hover:text-text-primary border border-transparent"
         }`}
       >
         All
@@ -357,7 +357,7 @@ function CategoryChips({
           className={`rounded-full px-2.5 py-1 text-[11px] transition ${
             active === c
               ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]"
-              : "bg-surface-light/60 text-muted hover:text-foreground border border-transparent"
+              : "bg-surface-light/60 text-text-muted hover:text-text-primary border border-transparent"
           }`}
         >
           {c}
@@ -464,25 +464,25 @@ function FontCard({
   onEdit: () => void;
 }) {
   return (
-    <div className="group rounded-lg border border-border/50 bg-surface-light/30 p-3 transition hover:border-[rgba(59,130,246,0.4)]">
+    <div className="group rounded-lg border border-border-subtle/50 bg-surface-light/30 p-3 transition hover:border-[rgba(59,130,246,0.4)]">
       <div className="mb-2 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate text-xs font-semibold">{font.family}</p>
-          <p className="text-[10px] uppercase tracking-wide text-muted">
+          <p className="text-[10px] uppercase tracking-wide text-text-muted">
             {font.category} · {font.weight.join("/")}
           </p>
         </div>
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onEdit}
-            className="rounded bg-surface-light/80 p-1 text-muted hover:text-brand-accent transition"
+            className="rounded bg-surface-light/80 p-1 text-text-muted hover:text-brand-accent transition"
             title="Edit example"
           >
             <ExternalLink size={12} />
           </button>
           <button
             onClick={onCopy}
-            className="rounded bg-surface-light/80 p-1 text-muted hover:text-foreground transition"
+            className="rounded bg-surface-light/80 p-1 text-text-muted hover:text-text-primary transition"
             title="Copy font id"
           >
             {copied ? <Check size={12} /> : <Copy size={12} />}
@@ -497,7 +497,7 @@ function FontCard({
       </p>
       <div className="mt-2 flex flex-wrap gap-1">
         {font.useCases.slice(0, 3).map((u) => (
-          <span key={u} className="rounded bg-surface-light px-1.5 py-0.5 text-[9px] text-muted">
+          <span key={u} className="rounded bg-surface-light px-1.5 py-0.5 text-[9px] text-text-muted">
             {u}
           </span>
         ))}
@@ -599,25 +599,25 @@ function TransitionCard({
   }, [transition.category]);
 
   return (
-    <div className="rounded-lg border border-border/50 bg-surface-light/30 p-3 transition hover:border-[rgba(59,130,246,0.4)]">
+    <div className="rounded-lg border border-border-subtle/50 bg-surface-light/30 p-3 transition hover:border-[rgba(59,130,246,0.4)]">
       <div className="mb-2 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate text-xs font-semibold">{transition.name}</p>
-          <p className="text-[10px] uppercase tracking-wide text-muted">
+          <p className="text-[10px] uppercase tracking-wide text-text-muted">
             {transition.category} · {transition.duration_ms}ms
           </p>
         </div>
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onEdit}
-            className="rounded bg-surface-light/80 p-1 text-muted hover:text-brand-accent transition"
+            className="rounded bg-surface-light/80 p-1 text-text-muted hover:text-brand-accent transition"
             title="Edit example"
           >
             <ExternalLink size={12} />
           </button>
           <button
             onClick={onCopy}
-            className="shrink-0 rounded bg-surface-light/80 p-1 text-muted hover:text-foreground"
+            className="shrink-0 rounded bg-surface-light/80 p-1 text-text-muted hover:text-text-primary"
             title="Copy transition id"
           >
             {copied ? <Check size={12} /> : <Copy size={12} />}
@@ -627,11 +627,11 @@ function TransitionCard({
 
       <button
         onClick={runDemo}
-        className="group relative mb-2 flex aspect-video w-full items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-[#1F2937] to-[#0F172A] text-[10px] text-muted"
+        className="group relative mb-2 flex aspect-video w-full items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-[#1F2937] to-[#0F172A] text-[10px] text-text-muted"
       >
         <div
           key={k}
-          className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[rgba(59,130,246,0.3)] to-red-500/30 text-xs font-semibold text-foreground ${
+          className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[rgba(59,130,246,0.3)] to-red-500/30 text-xs font-semibold text-text-primary ${
             playing ? animClass : "opacity-70"
           }`}
         >
@@ -642,7 +642,7 @@ function TransitionCard({
         </span>
       </button>
 
-      <p className="text-[11px] text-muted">{transition.description}</p>
+      <p className="text-[11px] text-text-muted">{transition.description}</p>
     </div>
   );
 }
@@ -728,23 +728,23 @@ function EffectCard({
   }, [effect.category]);
 
   return (
-    <div className="rounded-lg border border-border/50 bg-surface-light/30 p-3 transition hover:border-[rgba(59,130,246,0.4)]">
+    <div className="rounded-lg border border-border-subtle/50 bg-surface-light/30 p-3 transition hover:border-[rgba(59,130,246,0.4)]">
       <div className="mb-2 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate text-xs font-semibold">{effect.name}</p>
-          <p className="text-[10px] uppercase tracking-wide text-muted">{effect.category}</p>
+          <p className="text-[10px] uppercase tracking-wide text-text-muted">{effect.category}</p>
         </div>
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onEdit}
-            className="rounded bg-surface-light/80 p-1 text-muted hover:text-brand-accent transition"
+            className="rounded bg-surface-light/80 p-1 text-text-muted hover:text-brand-accent transition"
             title="Edit example"
           >
             <ExternalLink size={12} />
           </button>
           <button
             onClick={onCopy}
-            className="shrink-0 rounded bg-surface-light/80 p-1 text-muted hover:text-foreground"
+            className="shrink-0 rounded bg-surface-light/80 p-1 text-text-muted hover:text-text-primary"
             title="Copy effect id"
           >
             {copied ? <Check size={12} /> : <Copy size={12} />}
@@ -763,14 +763,14 @@ function EffectCard({
         </div>
       </div>
 
-      <p className="mb-1.5 text-[11px] text-muted">{effect.description}</p>
+      <p className="mb-1.5 text-[11px] text-text-muted">{effect.description}</p>
 
       {effect.paramHints && effect.paramHints.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {effect.paramHints.slice(0, 4).map((p, i) => (
             <span
               key={i}
-              className="rounded bg-surface-light px-1.5 py-0.5 text-[9px] text-muted"
+              className="rounded bg-surface-light px-1.5 py-0.5 text-[9px] text-text-muted"
               title={`${p.type}${p.min !== undefined ? ` ${p.min}-${p.max}` : ""}`}
             >
               {p.name}
@@ -976,7 +976,7 @@ function AudioCard({
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-border/50 bg-surface-light/30 p-3 transition hover:border-[rgba(59,130,246,0.4)]">
+    <div className="flex items-center gap-3 rounded-lg border border-border-subtle/50 bg-surface-light/30 p-3 transition hover:border-[rgba(59,130,246,0.4)]">
       <button
         onClick={toggle}
         disabled={error}
@@ -993,11 +993,11 @@ function AudioCard({
       </button>
       <div className="min-w-0 flex-1">
         <p className="truncate text-xs font-semibold">{title}</p>
-        <p className="truncate text-[10px] text-muted">{sub}</p>
+        <p className="truncate text-[10px] text-text-muted">{sub}</p>
         {tags.length > 0 && (
           <div className="mt-1 flex flex-wrap gap-1">
             {tags.slice(0, 3).map((t, i) => (
-              <span key={i} className="rounded bg-surface-light px-1.5 py-0.5 text-[9px] text-muted">
+              <span key={i} className="rounded bg-surface-light px-1.5 py-0.5 text-[9px] text-text-muted">
                 {t}
               </span>
             ))}
@@ -1011,7 +1011,7 @@ function AudioCard({
       </div>
       <button
         onClick={onCopy}
-        className="shrink-0 rounded bg-surface-light/80 p-1.5 text-muted hover:text-foreground"
+        className="shrink-0 rounded bg-surface-light/80 p-1.5 text-text-muted hover:text-text-primary"
         title="Copy id"
       >
         {copied ? <Check size={12} /> : <Copy size={12} />}

@@ -218,7 +218,7 @@ export default function VoiceCloneDetailPage() {
       <div className="flex items-center gap-2 shrink-0">
         <Link
                   href="/dashboard/voice-studio"
-                  className="flex items-center gap-2 rounded-lg border border-border bg-black/5 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-black/5"
+                  className="flex items-center gap-2 rounded-lg border border-border-subtle bg-black/5 px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-black/5"
                 >
                   <ArrowLeft size={12} /> Back to studio
                 </Link>
