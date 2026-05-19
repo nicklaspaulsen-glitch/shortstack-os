@@ -50,6 +50,41 @@ import { MotionPage } from "@/components/motion/motion-page";
 import SmartBar from "@/components/ui/smart-bar";
 import CreatorIntelligence from "@/components/ui/creator-intelligence";
 
+// ── Headline Quality Scorer ───────────────────────────────────────────────
+// Pure fn — no deps. Scores thumbnail text content for CTR potential 0-100.
+function headlineScore(text: string): { score: number; label: string; color: string; tips: string[] } {
+  const t = text.toLowerCase().trim();
+  const words = t.split(/\s+/).filter(Boolean);
+  const tips: string[] = [];
+  let score = 0;
+
+  // Word count sweet spot: 2-6 words is ideal for thumbnails
+  if (words.length >= 2 && words.length <= 6) score += 25;
+  else if (words.length === 1) { score += 10; tips.push("Too short — add 1-2 power words"); }
+  else if (words.length > 6) { score += 10; tips.push("Too many words — trim to 6 max"); }
+
+  // Numbers (specificity signal: "5 secrets", "10x faster")
+  if (/\d/.test(text)) score += 20;
+  else tips.push("Add a number for specificity (e.g. '3 mistakes')");
+
+  // Power / emotion words
+  if (/\b(secret|never|stop|truth|mistake|shocking|viral|exposed|revealed|finally|alone|warning|critical|free|instant|proven|guaranteed|huge)\b/.test(t)) score += 20;
+  else tips.push("Add a power word (secret, never, truth, exposed…)");
+
+  // All-caps signals emphasis (common thumbnail style)
+  const capRatio = (text.match(/[A-Z]/g)?.length ?? 0) / Math.max(text.replace(/\s/g, "").length, 1);
+  if (capRatio > 0.5) score += 15;
+  else tips.push("Use CAPS for emphasis");
+
+  // Question or "How to" format
+  if (/^(how|why|what|can|will|does|is|are|should|\bwhy\b|\bhow\b)/.test(t) || t.includes("?")) score += 20;
+
+  score = Math.min(100, score);
+  const label = score >= 75 ? "High CTR" : score >= 50 ? "Decent" : score >= 30 ? "Weak" : "Needs work";
+  const color = score >= 75 ? "#22C55E" : score >= 50 ? "#F59E0B" : "#EF4444";
+  return { score, label, color, tips: tips.slice(0, 2) };
+}
+
 // Electron hint — the preload script sets window.electron. We check for
 // truthy at runtime to decide whether to show the native picker.
 // Shape comes from the shared ambient declaration at src/types/electron.d.ts.
@@ -935,6 +970,29 @@ export default function ThumbnailEditorProPage() {
                 }}
               />
 
+              {/* Headline Quality badge — shows when text layers exist */}
+              {(() => {
+                const textLayers = state.layers.filter(l => l.type === "text" && (l as { text?: string }).text?.trim());
+                if (textLayers.length === 0) return null;
+                const combined = textLayers.map(l => (l as { text?: string }).text ?? "").join(" | ");
+                const hs = headlineScore(combined);
+                return (
+                  <div className="mx-2 mb-1 px-3 py-2 rounded-xl border border-border-subtle bg-surface-light/60">
+                    <div className="flex items-center justify-between">
+                      <p className="text-[8px] uppercase tracking-wider text-text-muted font-medium">Headline CTR</p>
+                      <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: `${hs.color}22`, color: hs.color }}>
+                        {hs.score} · {hs.label}
+                      </span>
+                    </div>
+                    <div className="mt-1 h-1 rounded-full bg-white/5 overflow-hidden">
+                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${hs.score}%`, background: hs.color, opacity: 0.75 }} />
+                    </div>
+                    {hs.tips.length > 0 && (
+                      <p className="text-[7.5px] text-text-muted mt-1 leading-snug">{hs.tips[0]}</p>
+                    )}
+                  </div>
+                );
+              })()}
               <LayersPanel {...layersProps} />
               <HistoryPanel
                 history={history}
