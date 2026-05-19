@@ -26,6 +26,14 @@ import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 import PageAgent from "@/components/ui/page-agent";
 import SmartBar from "@/components/ui/smart-bar";
+import dynamic from "next/dynamic";
+
+// Lazy-load Remotion player — browser-only, heavy (~200 KB), only needed
+// when a user clicks "Preview overlay" on a completed video.
+const RemotionOverlayPlayer = dynamic(
+  () => import("@/components/video-editor/remotion-overlay-player"),
+  { ssr: false, loading: () => <div className="h-64 flex items-center justify-center text-text-muted text-xs"><Loader2 size={14} className="animate-spin mr-2" /> Loading preview…</div> },
+);
 
 const PROMPT_IDEAS = [
   "A golden retriever running through a field of sunflowers at sunset, cinematic lighting",
@@ -153,6 +161,9 @@ export default function AIVideoPage() {
   const [results, setResults] = useState<GenerationResult[]>([]);
   const [progress, setProgress] = useState(0);
   const [advancedOpen, setAdvancedOpen] = useState(false);
+  // Remotion overlay preview — tracks which completed video is being previewed
+  const [overlayPreviewId, setOverlayPreviewId] = useState<string | null>(null);
+  const [overlayTitle, setOverlayTitle] = useState("");
 
   // -- Tier-based max video length (preserved from original) --
   const planTier = profile?.plan_tier ?? "Starter";
@@ -616,7 +627,7 @@ export default function AIVideoPage() {
       {/* Scorecard strip */}
       <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
         <motion.div
-          className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
+          className="col-span-2 lg:col-span-1 glass-card-heavy rounded-2xl p-5 flex items-center gap-4"
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
         >
@@ -628,7 +639,7 @@ export default function AIVideoPage() {
           </div>
         </motion.div>
         <motion.div
-          className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
+          className="glass-card rounded-2xl p-5 flex flex-col justify-center"
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
         >
@@ -637,7 +648,7 @@ export default function AIVideoPage() {
           <p className="text-[11px] text-text-muted mt-1.5">current plan</p>
         </motion.div>
         <motion.div
-          className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
+          className="glass-card rounded-2xl p-5 flex flex-col justify-center"
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
         >
@@ -1026,6 +1037,26 @@ export default function AIVideoPage() {
                                 : <Image size={10} />}
                               Thumb
                             </button>
+                            <button
+                              title="Preview with brand overlay in Remotion"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (overlayPreviewId === result.id) {
+                                  setOverlayPreviewId(null);
+                                } else {
+                                  setOverlayPreviewId(result.id);
+                                  setOverlayTitle(result.prompt.slice(0, 80));
+                                  // Scroll to preview panel
+                                  setTimeout(() => {
+                                    document.getElementById("remotion-preview-panel")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                  }, 150);
+                                }
+                              }}
+                              className={`flex items-center gap-1 transition-colors ${overlayPreviewId === result.id ? "text-brand-accent" : "hover:text-brand-accent"}`}
+                            >
+                              <Layers size={10} />
+                              Overlay
+                            </button>
                           </div>
                         )}
                       </div>
@@ -1125,7 +1156,73 @@ export default function AIVideoPage() {
         </div>
       )}
 
-      {/* Setup / GPU env note � admin-only; clients should never see env-var names */}
+      {/* Remotion overlay preview panel — shown when a completed video has overlay selected */}
+      <AnimatePresence>
+        {overlayPreviewId && (() => {
+          const previewResult = results.find(r => r.id === overlayPreviewId && r.url);
+          if (!previewResult?.url) return null;
+          return (
+            <motion.div
+              id="remotion-preview-panel"
+              key="remotion-preview"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+              className="overflow-hidden"
+            >
+              <div className="glass-card rounded-2xl p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-text-muted mb-0.5">Remotion Overlay Preview</p>
+                    <p className="text-xs text-text-secondary line-clamp-1">{previewResult.prompt}</p>
+                  </div>
+                  <button
+                    onClick={() => setOverlayPreviewId(null)}
+                    className="text-text-muted hover:text-text-primary transition-colors p-1 rounded-lg hover:bg-white/[0.05]"
+                    aria-label="Close overlay preview"
+                  >
+                    <ChevronDown size={14} />
+                  </button>
+                </div>
+
+                {/* Overlay title editor */}
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={overlayTitle}
+                    onChange={e => setOverlayTitle(e.target.value)}
+                    placeholder="Overlay title text (leave blank for none)"
+                    className="flex-1 px-3 py-2 rounded-xl bg-surface-light border border-border-subtle text-xs focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)] transition-all"
+                  />
+                  <span className="text-[9px] text-text-muted whitespace-nowrap">Shown as text overlay</span>
+                </div>
+
+                {/* Remotion Player */}
+                <div className="flex justify-center">
+                  <RemotionOverlayPlayer
+                    videoUrl={previewResult.url}
+                    title={overlayTitle}
+                    captionText={previewResult.prompt.slice(0, 120)}
+                    brandColor="#3B82F6"
+                    aspectRatio={previewResult.aspect_ratio as "9:16" | "16:9" | "1:1"}
+                    playerHeight={previewResult.aspect_ratio === "9:16" ? 400 : 260}
+                    controls
+                    autoPlay={false}
+                  />
+                </div>
+
+                <p className="text-[9px] text-text-muted text-center">
+                  Browser preview only. Server export requires a self-hosted Remotion worker &mdash; see{" "}
+                  <code className="text-text-secondary/70 bg-white/[0.05] px-1 py-0.5 rounded text-[8px]">/api/video/remotion-render</code>.
+                </p>
+              </div>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
+
+      {/* Setup / GPU env note� admin-only; clients should never see env-var names */}
       {advancedMode && isPlatformAdmin && (
         <div className="flex items-center gap-2 text-[9px] text-text-primary/35 px-1">
           <Zap size={10} />
