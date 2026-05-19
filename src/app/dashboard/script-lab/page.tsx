@@ -2627,14 +2627,33 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
 
           {activeScript.ab_variations && (
             <div className="glass rounded-xl p-4">
-              <h3 className="flex items-center gap-2"><RefreshCw size={12} className="text-warning" /> A/B Hook Variations</h3>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="flex items-center gap-2 mb-0"><RefreshCw size={12} className="text-warning" /> A/B Hook Variations</h3>
+                <p className="text-[8px] text-text-muted">Scored by hook quality</p>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {activeScript.ab_variations.map((v, i) => (
-                  <div key={i} className="p-2.5 rounded-xl border border-border-subtle bg-surface-light">
-                    <p className="text-[11px] font-medium italic mb-1">&ldquo;{v.hook_alt}&rdquo;</p>
-                    <p className="text-[9px] text-text-muted">{v.why}</p>
-                  </div>
-                ))}
+                {activeScript.ab_variations.map((v, i) => {
+                  const qs = hookQualityScore({ text: v.hook_alt, type: "variation" });
+                  return (
+                    <div key={i} className="p-2.5 rounded-xl border border-border-subtle bg-surface-light">
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <p className="text-[11px] font-medium italic flex-1">&ldquo;{v.hook_alt}&rdquo;</p>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: `${qs.color}22`, color: qs.color }}>
+                            {qs.score}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => copyToClipboard(v.hook_alt)}
+                            title="Copy this hook"
+                            className="text-text-muted hover:text-text-primary cursor-pointer"
+                          ><Copy size={9} /></button>
+                        </div>
+                      </div>
+                      <p className="text-[9px] text-text-muted">{v.why}</p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
