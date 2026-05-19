@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   Globe, Sparkles, Layout, Eye, Pencil, Trash2, Copy, Rocket,
@@ -703,6 +703,31 @@ export default function LandingPagesPage() {
     toast.success("Deployed successfully!", { id: "deploy" });
   };
 
+  type BriefSignal = { id: string; label: string; tip: string; pass: boolean };
+
+  const briefReadinessSignals = useMemo((): BriefSignal[] => {
+    const hasName = bizInfo.name.trim().length >= 2;
+    const hasIndustry = bizInfo.industry.trim().length >= 2;
+    const descWords = bizInfo.description.trim().split(/\s+/).filter(Boolean).length;
+    const hasDescription = descWords >= 15;
+    const hasAudience = bizInfo.targetAudience.trim().length >= 3;
+    const hasBenefits = bizInfo.benefits.length >= 1;
+    const hasCta = bizInfo.ctaText.trim().length >= 2;
+    return [
+      { id: "name",     label: "Name",      tip: "Enter your business name so the AI can reference it in the page copy",        pass: hasName },
+      { id: "industry", label: "Industry",  tip: "Add your industry so the AI picks matching imagery and tone",                  pass: hasIndustry },
+      { id: "desc",     label: "Brief",     tip: "Write ≥15 words describing your business and value proposition",               pass: hasDescription },
+      { id: "audience", label: "Audience",  tip: "Describe your target audience — the AI tailors the copy to them",              pass: hasAudience },
+      { id: "benefits", label: "Benefits",  tip: "Add at least one key benefit — these become your features section",            pass: hasBenefits },
+      { id: "cta",      label: "CTA",       tip: "Set a CTA button label (Get Started, Book a Call…) so the hero has a hook",   pass: hasCta },
+    ];
+  }, [bizInfo]);
+
+  const briefReadinessScore = useMemo(() => {
+    const passing = briefReadinessSignals.filter((s) => s.pass).length;
+    return Math.round((passing / briefReadinessSignals.length) * 100);
+  }, [briefReadinessSignals]);
+
   const getScheme = () => COLOR_SCHEMES.find(c => c.id === bizInfo.colorScheme) || COLOR_SCHEMES[0];
 
   const filteredPages = pages.filter(p =>
@@ -1222,6 +1247,63 @@ export default function LandingPagesPage() {
                   <span className="text-xs text-text-muted">Click to upload your logo (PNG, SVG)</span>
                   <span className="text-[10px] text-text-muted/50">Max 2MB</span>
                 </div>
+              </div>
+
+              {/* Brief Readiness Score */}
+              <div className="rounded-lg p-3"
+                style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1.5">
+                    <TrendingUp size={11} className="text-brand-accent" />
+                    <span className="text-[11px] font-semibold text-text-primary">Brief Readiness</span>
+                  </div>
+                  <div
+                    className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold tabular-nums"
+                    style={{
+                      background: briefReadinessScore >= 71 ? "rgba(34,197,94,0.12)" : briefReadinessScore >= 43 ? "rgba(245,158,11,0.12)" : "rgba(239,68,68,0.12)",
+                      color: briefReadinessScore >= 71 ? "#4ade80" : briefReadinessScore >= 43 ? "#fbbf24" : "#f87171",
+                    }}
+                  >
+                    {briefReadinessScore}
+                    <span className="font-normal opacity-60 ml-0.5">/ 100</span>
+                  </div>
+                </div>
+                <div className="w-full rounded-full overflow-hidden mb-2" style={{ height: "1.5px", background: "rgba(99,146,255,0.10)" }}>
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${briefReadinessScore}%`,
+                      background: briefReadinessScore >= 71 ? "linear-gradient(90deg,#22c55e,#4ade80)" : briefReadinessScore >= 43 ? "linear-gradient(90deg,#f59e0b,#fbbf24)" : "linear-gradient(90deg,#ef4444,#f87171)",
+                    }}
+                  />
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {briefReadinessSignals.map((sig) => (
+                    <div
+                      key={sig.id}
+                      title={sig.tip}
+                      className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium cursor-default border ${
+                        sig.pass
+                          ? "bg-[rgba(34,197,94,0.10)] border-[rgba(34,197,94,0.25)] text-green-400"
+                          : "bg-elevated border-border-subtle/30 text-text-muted"
+                      }`}
+                    >
+                      <span className="text-[8px]">{sig.pass ? "✓" : "–"}</span>
+                      {sig.label}
+                    </div>
+                  ))}
+                </div>
+                {(() => {
+                  const firstFail = briefReadinessSignals.find((s) => !s.pass);
+                  return firstFail ? (
+                    <p className="mt-2 text-[10px] text-text-muted leading-relaxed">
+                      <span className="font-medium text-text-secondary">Tip: </span>
+                      {firstFail.tip}
+                    </p>
+                  ) : (
+                    <p className="mt-2 text-[10px] text-green-400">Brief complete — AI has everything it needs to build your page.</p>
+                  );
+                })()}
               </div>
 
               {/* Generate Button */}
