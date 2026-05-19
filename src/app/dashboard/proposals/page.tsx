@@ -22,6 +22,7 @@ import {
   Send,
   DollarSign,
   Loader,
+  TrendingUp,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
@@ -368,6 +369,48 @@ function NewProposalForm({
 
   const canSubmit = title.trim() && clientName.trim() && amount.trim();
 
+  type ProposalSignal = { id: string; label: string; tip: string; pass: boolean };
+
+  const proposalSignals = useMemo((): ProposalSignal[] => {
+    const s = summary.trim();
+    if (!s) return [];
+
+    // Scope: summary names a deliverable or service category
+    const scopeRe = /\b(content|posts?|video|ads?|campaigns?|management|strategy|design|development|seo|social media|email|copywriting|branding|website|landing page|funnel|marketing|consulting|audit)\b/i;
+    const hasScope = scopeRe.test(s);
+
+    // Timeline: mentions a timeframe or duration
+    const timeRe = /\b(\d+\s*(day|week|month|quarter|year)s?|monthly|weekly|quarterly|annually|ongoing|per month|deadline|by [A-Z][a-z]+|within|timeline|deliverable|schedule)\b/i;
+    const hasTimeline = timeRe.test(s);
+
+    // Value prop: outcome-oriented language (why they should say yes)
+    const valueRe = /\b(grow|increase|generate|drive|boost|improve|results?|roi|revenue|leads?|traffic|conversions?|engagement|reach|exposure|performance|scale|reduce|save)\b/i;
+    const hasValueProp = valueRe.test(s);
+
+    // Concise: substantive but readable
+    const charLen = s.length;
+    const isConcise = charLen >= 50 && charLen <= 400;
+
+    // Strong title: ≥ 3 words and > 10 chars (describes the engagement)
+    const t = title.trim();
+    const titleWords = t.split(/\s+/).filter(Boolean).length;
+    const hasStrongTitle = titleWords >= 3 && t.length > 10;
+
+    return [
+      { id: "scope",    label: "Scope",    tip: "Name the services: social media, ads, SEO, design…",                    pass: hasScope },
+      { id: "timeline", label: "Timeline", tip: "Include a duration or timeframe (3 months, monthly, by June…)",          pass: hasTimeline },
+      { id: "value",    label: "Outcome",  tip: "State what the client gains — leads, traffic, revenue growth",           pass: hasValueProp },
+      { id: "concise",  label: "Concise",  tip: "50–400 chars — enough to sell, short enough for a busy executive",       pass: isConcise },
+      { id: "title",    label: "Title",    tip: "Proposal title should be ≥ 3 words describing the engagement type",      pass: hasStrongTitle },
+    ];
+  }, [summary, title]);
+
+  const proposalScore = useMemo(() => {
+    if (proposalSignals.length === 0) return 0;
+    const passing = proposalSignals.filter((s) => s.pass).length;
+    return Math.round((passing / proposalSignals.length) * 100);
+  }, [proposalSignals]);
+
   function submit() {
     if (!canSubmit) return;
     setSubmitting(true);
@@ -478,6 +521,54 @@ function NewProposalForm({
           />
         </div>
       </div>
+
+      {/* Proposal Strength Panel */}
+      {proposalSignals.length > 0 && (
+        <div className="mt-3 rounded-lg p-3"
+          style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-1.5">
+              <TrendingUp size={10} style={{ color: proposalScore >= 80 ? "#4ade80" : proposalScore >= 50 ? "#fbbf24" : "#f87171" }} />
+              <span className="text-[9px] font-semibold tracking-wide" style={{ color: "#A8A8B2" }}>Proposal Strength</span>
+            </div>
+            <span className="text-[10px] font-bold tabular-nums"
+              style={{ color: proposalScore >= 80 ? "#4ade80" : proposalScore >= 50 ? "#fbbf24" : "#f87171" }}>
+              {proposalScore}%
+            </span>
+          </div>
+          <div className="h-[1.5px] rounded-full mb-2 overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+            <div className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${proposalScore}%`,
+                background: proposalScore >= 80
+                  ? "linear-gradient(90deg,#16a34a,#4ade80)"
+                  : proposalScore >= 50
+                    ? "linear-gradient(90deg,#d97706,#fbbf24)"
+                    : "linear-gradient(90deg,#dc2626,#f87171)",
+              }} />
+          </div>
+          <div className="flex flex-wrap gap-1 mb-2">
+            {proposalSignals.map((s) => (
+              <span key={s.id} title={s.tip}
+                className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-medium cursor-default select-none"
+                style={{
+                  background: s.pass ? "rgba(74,222,128,0.10)" : "rgba(255,255,255,0.05)",
+                  color: s.pass ? "#4ade80" : "#6b7280",
+                  border: `1px solid ${s.pass ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.08)"}`,
+                }}>
+                <span style={{ fontSize: "7px" }}>{s.pass ? "✓" : "–"}</span>
+                {s.label}
+              </span>
+            ))}
+          </div>
+          <p className="text-[8.5px] leading-relaxed" style={{ color: "#6b7280" }}>
+            {(() => {
+              const first = proposalSignals.find((s) => !s.pass);
+              return first ? first.tip : "Compelling summary — scope, timeline, and value are all clear.";
+            })()}
+          </p>
+        </div>
+      )}
 
       <div className="mt-4 flex items-center justify-end gap-2">
         <button
