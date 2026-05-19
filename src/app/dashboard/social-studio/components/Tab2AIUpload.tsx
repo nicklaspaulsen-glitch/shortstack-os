@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useMemo } from "react";
 import {
   Sparkles,
   UploadCloud,
@@ -10,6 +10,7 @@ import {
   Send,
   RefreshCcw,
   Image as ImageIcon,
+  TrendingUp,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { ALL_PLATFORMS, PLATFORM_META } from "@/lib/social-studio/constants";
@@ -322,6 +323,53 @@ export default function Tab2AIUpload() {
     }
   };
 
+  type PostStrengthSignal = { id: string; label: string; tip: string; pass: boolean };
+
+  const postStrengthSignals = useMemo((): PostStrengthSignal[] | null => {
+    if (!suggestions) return null;
+    const repPlatform = suggestions.platforms_recommended.find((p) => edits[p]?.enabled) ?? null;
+    if (!repPlatform) return null;
+    const e = edits[repPlatform];
+    if (!e) return null;
+
+    const captionText = e.captionText.trim();
+    const firstLine = captionText.split(/\n/)[0].trim();
+    const firstWordCount = firstLine.split(/\s+/).filter(Boolean).length;
+
+    const hookRe = /\b(stop|secret|truth|never|mistake|wrong|realize|admit|expose|reveal|shocking|warning|hidden|most people|don't|won't|actually|you need|are you|did you|do you|number one)\b/i;
+    const hasHook = hookRe.test(firstLine) || firstWordCount <= 10 || firstLine.includes("?");
+
+    const ctaRe = /\b(follow|save|share|comment|tap|click|subscribe|dm|tag|link in bio|send this|bookmark|repost|like|drop a|tell me|let me know|check out|grab|join)\b/i;
+    const hasCta = ctaRe.test(captionText);
+
+    const hashtagCount = e.hashtags.length + (captionText.match(/#\w+/g) ?? []).length;
+    const hasHashtags = hashtagCount >= 1 && hashtagCount <= 15;
+
+    const captionLen = captionText.length;
+    const hasLength = captionLen >= 50 && captionLen <= 2200;
+
+    // Emoji detection without /u flag (tsconfig has no explicit ES6+ target).
+    // Covers BMP symbol blocks + surrogate-pair encoded emoji (U+1F000–U+1FAFF).
+    const hasEmoji = /[☀-➿⌀-⏿⬀-⯿]|[\uD83C-\uD83E][\uDC00-\uDFFF]/.test(captionText);
+
+    const isScheduled = !!e.scheduledAt;
+
+    return [
+      { id: "hook",      label: "Hook",       tip: "Opening line ≤10 words, a question, or a curiosity-trigger phrase",  pass: hasHook },
+      { id: "cta",       label: "CTA",        tip: "Caption includes a clear call to action (follow, save, share…)",     pass: hasCta },
+      { id: "hashtags",  label: "Hashtags",   tip: "1–15 hashtags — enough for reach without looking spammy",            pass: hasHashtags },
+      { id: "length",    label: "Length",     tip: "Caption is 50–2,200 chars — substantial but easy to read",           pass: hasLength },
+      { id: "emoji",     label: "Emoji",      tip: "At least one emoji adds personality and stops the scroll",           pass: hasEmoji },
+      { id: "scheduled", label: "Scheduled",  tip: "Timed to AI-suggested peak hours for maximum reach",                 pass: isScheduled },
+    ];
+  }, [suggestions, edits]);
+
+  const postStrengthScore = useMemo(() => {
+    if (!postStrengthSignals) return 0;
+    const passing = postStrengthSignals.filter((s) => s.pass).length;
+    return Math.round((passing / postStrengthSignals.length) * 100);
+  }, [postStrengthSignals]);
+
   return (
     <div className="space-y-6">
       <div
@@ -464,6 +512,66 @@ export default function Tab2AIUpload() {
                   );
                 })}
               </div>
+            </div>
+          )}
+
+          {/* ── Post Strength Score ── */}
+          {postStrengthSignals && (
+            <div className="rounded-xl border border-border-subtle/40 bg-surface p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <TrendingUp size={13} className="text-brand-accent" />
+                  <span className="text-xs font-semibold text-text-primary">Post Strength</span>
+                </div>
+                <div
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold tabular-nums"
+                  style={{
+                    background: postStrengthScore >= 71 ? "rgba(34,197,94,0.12)" : postStrengthScore >= 43 ? "rgba(245,158,11,0.12)" : "rgba(239,68,68,0.12)",
+                    color: postStrengthScore >= 71 ? "#4ade80" : postStrengthScore >= 43 ? "#fbbf24" : "#f87171",
+                  }}
+                >
+                  {postStrengthScore}
+                  <span className="font-normal opacity-60 ml-0.5">/ 100</span>
+                </div>
+              </div>
+              <div className="w-full h-1.5 rounded-full mb-3 overflow-hidden bg-elevated">
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{
+                    width: `${postStrengthScore}%`,
+                    background: postStrengthScore >= 71 ? "linear-gradient(90deg,#22c55e,#4ade80)" : postStrengthScore >= 43 ? "linear-gradient(90deg,#f59e0b,#fbbf24)" : "linear-gradient(90deg,#ef4444,#f87171)",
+                  }}
+                />
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {postStrengthSignals.map((sig) => (
+                  <div
+                    key={sig.id}
+                    title={sig.tip}
+                    className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium cursor-default border ${
+                      sig.pass
+                        ? "bg-[rgba(34,197,94,0.10)] border-[rgba(34,197,94,0.25)] text-green-400"
+                        : "bg-elevated border-border-subtle/30 text-text-muted"
+                    }`}
+                  >
+                    <span className="text-[8px]">{sig.pass ? "✓" : "–"}</span>
+                    {sig.label}
+                  </div>
+                ))}
+              </div>
+              {(() => {
+                const firstFail = postStrengthSignals.find((s) => !s.pass);
+                return firstFail ? (
+                  <p className="mt-2.5 text-[10px] text-text-muted leading-relaxed">
+                    <span className="font-medium text-text-secondary">Tip: </span>
+                    {firstFail.tip}
+                  </p>
+                ) : (
+                  <p className="mt-2.5 text-[10px] text-green-400">
+                    All signals passing — this post is optimised for reach.
+                  </p>
+                );
+              })()}
             </div>
           )}
 
