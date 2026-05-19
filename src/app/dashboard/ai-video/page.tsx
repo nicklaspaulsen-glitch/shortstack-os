@@ -158,6 +158,26 @@ const DEVICE_FRAMES: Record<string, JSX.Element> = {
   ),
 };
 
+// --- Intent wizard data ---
+const INTENT_GOALS = [
+  { id: "sell",      label: "Sell",        emoji: "💰", phrase: "persuasive product reveal, conversion-focused, direct gaze, value proposition" },
+  { id: "entertain", label: "Entertain",   emoji: "🎭", phrase: "unexpected reaction moment, playful energy, eye-catching visual surprise" },
+  { id: "inform",    label: "Inform",      emoji: "💡", phrase: "clear demonstration, bold data point, confident explainer framing" },
+  { id: "brand",     label: "Build brand", emoji: "⭐", phrase: "sleek brand moment, premium atmosphere, aspirational lifestyle shot" },
+];
+const INTENT_SUBJECTS = [
+  { id: "person",  label: "Person",  emoji: "👤", phrase: "close-up face with strong eye contact" },
+  { id: "product", label: "Product", emoji: "📦", phrase: "hero product shot on dark reflective surface" },
+  { id: "place",   label: "Place",   emoji: "🏔", phrase: "wide cinematic establishing shot" },
+  { id: "concept", label: "Concept", emoji: "✨", phrase: "dynamic abstract motion, flowing particles" },
+];
+const INTENT_FEELINGS = [
+  { id: "inspired", label: "Inspired", emoji: "🚀", phrase: "golden sunrise light, triumphant upward energy, bright warm tones" },
+  { id: "urgent",   label: "Urgent",   emoji: "⚡", phrase: "high-contrast red accent, forward lean posture, motion blur" },
+  { id: "amused",   label: "Amused",   emoji: "😂", phrase: "vibrant pop colors, playful composition, lighthearted fun" },
+  { id: "curious",  label: "Curious",  emoji: "🤔", phrase: "mysterious lighting, unresolved tension, intriguing partial reveal" },
+];
+
 interface GenerationResult {
   id: string;
   prompt: string;
@@ -250,6 +270,39 @@ export default function AIVideoPage() {
     } catch {}
   }, []);
 
+  // Seed from Script Lab "Generate clip" action
+  useEffect(() => {
+    try {
+      const seedPrompt = sessionStorage.getItem("ss-video-seed-prompt");
+      const seedStyle  = sessionStorage.getItem("ss-video-seed-style");
+      const seedAspect = sessionStorage.getItem("ss-video-seed-aspect");
+      if (seedPrompt) {
+        setPrompt(seedPrompt);
+        sessionStorage.removeItem("ss-video-seed-prompt");
+      }
+      if (seedStyle) {
+        setStyle(seedStyle);
+        sessionStorage.removeItem("ss-video-seed-style");
+      }
+      if (seedAspect) {
+        setAspectRatio(seedAspect);
+        sessionStorage.removeItem("ss-video-seed-aspect");
+      }
+      if (seedPrompt) {
+        toast("Seeded from your script", { icon: "🎬", duration: 3000 });
+      }
+    } catch {
+      // sessionStorage unavailable in some contexts
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Intent wizard state
+  const [intentOpen, setIntentOpen] = useState(false);
+  const [intentGoal, setIntentGoal] = useState("");
+  const [intentSubject, setIntentSubject] = useState("");
+  const [intentFeeling, setIntentFeeling] = useState("");
+
   // Face swap mode
   const [faceSwapMode, setFaceSwapMode] = useState(false);
   const [faceSwapImage, setFaceSwapImage] = useState<string | null>(null);
@@ -335,6 +388,20 @@ export default function AIVideoPage() {
   const [advancedMode, setAdvancedMode] = useAdvancedMode("ai-video");
   const [guidedStep, setGuidedStep] = useState(0);
 
+  function buildIntentPrompt() {
+    const goal    = INTENT_GOALS.find(g => g.id === intentGoal);
+    const subject = INTENT_SUBJECTS.find(s => s.id === intentSubject);
+    const feeling = INTENT_FEELINGS.find(f => f.id === intentFeeling);
+    return [
+      goal?.phrase,
+      subject?.phrase,
+      feeling?.phrase,
+      aspectRatio === "9:16"
+        ? "vertical 9:16 framing optimized for mobile feed"
+        : "cinematic widescreen composition",
+    ].filter(Boolean).join(", ");
+  }
+
   const guidedSteps: WizardStepDef[] = [
     {
       id: "prompt",
@@ -344,6 +411,65 @@ export default function AIVideoPage() {
       canProceed: prompt.trim().length > 0,
       component: (
         <div className="space-y-3">
+          {/* Intent Wizard — collapsible */}
+          <div>
+            <button
+              type="button"
+              onClick={() => setIntentOpen(o => !o)}
+              className="flex items-center gap-2 text-[11px] text-text-muted hover:text-text-primary transition-all w-full text-left cursor-pointer"
+            >
+              <Target size={11} className="text-brand-accent" />
+              <span>Not sure where to start?</span>
+              <span className="text-brand-accent font-semibold ml-1">Use intent wizard</span>
+              <ChevronDown size={10} className={`ml-auto transition-transform duration-220 ${intentOpen ? "rotate-180" : ""}`} />
+            </button>
+            {intentOpen && (
+              <div className="mt-2 rounded-xl border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.03)] p-3 space-y-3">
+                <div>
+                  <p className="text-[9px] uppercase tracking-wider text-text-muted font-semibold mb-1.5">1. What&apos;s the goal?</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {INTENT_GOALS.map(g => (
+                      <button key={g.id} type="button" onClick={() => setIntentGoal(g.id)}
+                        className={`flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border transition-all cursor-pointer ${intentGoal === g.id ? "border-brand-accent bg-[rgba(59,130,246,0.12)] text-text-primary" : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.3)]"}`}>
+                        <span>{g.emoji}</span> {g.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-[9px] uppercase tracking-wider text-text-muted font-semibold mb-1.5">2. Main subject?</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {INTENT_SUBJECTS.map(s => (
+                      <button key={s.id} type="button" onClick={() => setIntentSubject(s.id)}
+                        className={`flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border transition-all cursor-pointer ${intentSubject === s.id ? "border-brand-accent bg-[rgba(59,130,246,0.12)] text-text-primary" : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.3)]"}`}>
+                        <span>{s.emoji}</span> {s.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-[9px] uppercase tracking-wider text-text-muted font-semibold mb-1.5">3. Viewer should feel?</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {INTENT_FEELINGS.map(f => (
+                      <button key={f.id} type="button" onClick={() => setIntentFeeling(f.id)}
+                        className={`flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border transition-all cursor-pointer ${intentFeeling === f.id ? "border-brand-accent bg-[rgba(59,130,246,0.12)] text-text-primary" : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.3)]"}`}>
+                        <span>{f.emoji}</span> {f.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {intentGoal && intentSubject && intentFeeling && (
+                  <button
+                    type="button"
+                    onClick={() => { setPrompt(buildIntentPrompt()); setIntentOpen(false); }}
+                    className="w-full flex items-center justify-center gap-2 text-[11px] font-semibold text-white py-2 rounded-xl bg-brand-accent hover:bg-[#2563EB] transition-all cursor-pointer"
+                  >
+                    <Sparkles size={11} /> Build prompt from answers
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
           <div className="relative">
             <textarea
               value={prompt}

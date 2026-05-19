@@ -173,6 +173,50 @@ export default function AiFirstStarter({
   const [busy, setBusy] = useState(false);
   const [options, setOptions] = useState<Array<{ url: string; idx: number }>>([]);
   const [pickedIdx, setPickedIdx] = useState<number | null>(null);
+  const [ctrs, setCtrs] = useState<Record<number, number | null>>({});
+  const [winnerTip, setWinnerTip] = useState<string | null>(null);
+
+  const analyzeCtrs = async (wins: Array<{ url: string; idx: number }>) => {
+    const initial: Record<number, number | null> = {};
+    wins.forEach(w => { initial[w.idx] = null; });
+    setCtrs(initial);
+    setWinnerTip(null);
+
+    const results = await Promise.allSettled(
+      wins.map(({ url, idx }) =>
+        fetch("/api/thumbnail/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image_url: url }),
+        })
+          .then(r => r.json())
+          .then((data: { ok: boolean; predicted_ctr?: number; improvement_suggestions?: string[] }) => ({
+            idx,
+            ctr: data.ok ? (data.predicted_ctr ?? 0) : 0,
+            tip: data.ok ? (data.improvement_suggestions?.[0] ?? null) : null,
+          }))
+      )
+    );
+
+    const final: Record<number, number> = {};
+    let bestIdx = -1;
+    let bestCtr = -1;
+    let bestTip: string | null = null;
+
+    for (const res of results) {
+      if (res.status === "fulfilled") {
+        final[res.value.idx] = res.value.ctr;
+        if (res.value.ctr > bestCtr) {
+          bestCtr = res.value.ctr;
+          bestIdx = res.value.idx;
+          bestTip = res.value.tip;
+        }
+      }
+    }
+    void bestIdx; // tracked via ctrs map — direct idx compare in render
+    setCtrs(final);
+    if (bestTip) setWinnerTip(bestTip);
+  };
 
   const generate = async (overridePrompt?: string) => {
     const p = (overridePrompt ?? prompt).trim();
@@ -183,6 +227,8 @@ export default function AiFirstStarter({
     if (overridePrompt) setPrompt(overridePrompt);
     setBusy(true);
     setOptions([]);
+    setCtrs({});
+    setWinnerTip(null);
     try {
       // Generate 4 in parallel — each call hits our existing FLUX/SDXL/DALL-E
       // image-gen route. We add subtle prompt variation per call so the 4
@@ -230,6 +276,8 @@ export default function AiFirstStarter({
         if (wins.length < 4) {
           toast(`${wins.length}/4 options generated`, { icon: "⚠️" });
         }
+        // Fire CTR analysis in background — no await so UI updates progressively
+        void analyzeCtrs(wins);
       }
     } catch (err) {
       toast.error(`Generation failed: ${(err as Error).message}`);
@@ -416,6 +464,21 @@ export default function AiFirstStarter({
                         Edit this →
                       </span>
                     </div>
+                    {/* CTR analyzing indicator */}
+                    {ctrs[opt.idx] === null && Object.keys(ctrs).length > 0 && (
+                      <div className="absolute top-2 right-2 z-10 text-[8px] text-neutral-400 bg-black/60 px-1.5 py-0.5 rounded-full animate-pulse pointer-events-none">
+                        CTR…
+                      </div>
+                    )}
+                    {/* BEST CTR winner badge */}
+                    {typeof ctrs[opt.idx] === "number" && (() => {
+                      const vals = Object.values(ctrs).filter((v): v is number => typeof v === "number");
+                      return vals.length > 0 && ctrs[opt.idx] === Math.max(...vals);
+                    })() && (
+                      <div className="absolute top-2 left-2 z-10 flex items-center gap-1 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-amber-400 text-black pointer-events-none">
+                        ★ BEST CTR {ctrs[opt.idx]}
+                      </div>
+                    )}
                     {picked && (
                       <div
                         className="absolute inset-0 flex items-center justify-center"
@@ -428,10 +491,18 @@ export default function AiFirstStarter({
                 );
               })}
             </div>
+            {winnerTip && (
+              <p className="mt-2 text-[10px] text-amber-300 flex items-start gap-1.5">
+                <span className="mt-0.5 shrink-0">💡</span>
+                <span>Top tip: {winnerTip}</span>
+              </p>
+            )}
             <button
               onClick={() => {
                 setOptions([]);
                 setPickedIdx(null);
+                setCtrs({});
+                setWinnerTip(null);
               }}
               className="mt-4 text-[11.5px] text-neutral-400 hover:text-white transition flex items-center gap-1.5"
             >

@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
@@ -256,7 +257,26 @@ const TOPIC_PRESETS: Record<string, string[]> = {
   ],
 };
 
+// --- B-roll bridge helpers ---
+function emotionToStyle(emotion: string): string {
+  const e = emotion.toLowerCase();
+  if (/excit|joy|fun|happ|playful|entertain/.test(e)) return "animated";
+  if (/inspir|motivat|triumph|uplift/.test(e)) return "dreamy";
+  if (/urgent|fear|danger|intense|power|anger/.test(e)) return "cinematic";
+  if (/nostalgic|retro|vintage|classic/.test(e)) return "vintage";
+  if (/trust|authorit|profession|calm/.test(e)) return "realistic";
+  return "cinematic";
+}
+
+function platformToAspect(platform: string): string {
+  const p = platform.toLowerCase();
+  if (/tiktok|reel|short|instagram/.test(p)) return "9:16";
+  if (/youtube|linkedin|facebook/.test(p)) return "16:9";
+  return "9:16";
+}
+
 export default function ScriptLabPage() {
+  const router = useRouter();
   useAuth();
   const { clientId: managedClientId } = useManagedClient();
   const [clients, setClients] = useState<Array<{ id: string; business_name: string; industry: string }>>([]);
@@ -1004,6 +1024,18 @@ export default function ScriptLabPage() {
   function copyToClipboard(text: string) {
     navigator.clipboard.writeText(text);
     toast.success("Copied!");
+  }
+
+  function seedVideoFromSection(section: { visual_direction: string; emotion: string; dialogue: string }) {
+    try {
+      const seedPrompt = section.visual_direction || section.dialogue.slice(0, 150);
+      sessionStorage.setItem("ss-video-seed-prompt", seedPrompt);
+      sessionStorage.setItem("ss-video-seed-style", emotionToStyle(section.emotion));
+      sessionStorage.setItem("ss-video-seed-aspect", platformToAspect(config.platform));
+    } catch {
+      // sessionStorage unavailable in some contexts
+    }
+    router.push("/dashboard/ai-video");
   }
 
   function getWordCount(): number {
@@ -2404,7 +2436,19 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                       <span className="text-[9px] font-bold text-brand-accent">{section.name}</span>
                       <span className="text-[8px] text-text-muted font-mono">{section.duration}</span>
                     </div>
-                    <span className="text-[8px] text-text-muted italic">{section.emotion}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[8px] text-text-muted italic">{section.emotion}</span>
+                      {section.visual_direction && (
+                        <button
+                          type="button"
+                          onClick={() => seedVideoFromSection(section)}
+                          className="inline-flex items-center gap-0.5 text-[8px] text-brand-accent hover:text-white bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.18)] border border-[rgba(59,130,246,0.2)] px-1.5 py-0.5 rounded-full transition-all cursor-pointer"
+                          title={`Generate clip: ${section.visual_direction}`}
+                        >
+                          <Film size={8} /> Clip
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <div className="p-3 space-y-1.5">
                     <p className="text-[11px] leading-relaxed">{section.dialogue}</p>
