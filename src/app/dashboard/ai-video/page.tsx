@@ -35,6 +35,12 @@ const RemotionOverlayPlayer = dynamic(
   { ssr: false, loading: () => <div className="h-64 flex items-center justify-center text-text-muted text-xs"><Loader2 size={14} className="animate-spin mr-2" /> Loading preview…</div> },
 );
 
+// Lazy-load template picker — only shown in advanced mode.
+const TemplatePicker = dynamic(
+  () => import("@/components/video-editor/template-picker"),
+  { ssr: false },
+);
+
 const PROMPT_IDEAS = [
   "A golden retriever running through a field of sunflowers at sunset, cinematic lighting",
   "Drone shot of ocean waves crashing on a rocky coast, slow motion, 4K",
@@ -161,6 +167,9 @@ export default function AIVideoPage() {
   const [results, setResults] = useState<GenerationResult[]>([]);
   const [progress, setProgress] = useState(0);
   const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [templatesOpen, setTemplatesOpen] = useState(false);
+  // Brand color for templates (can be overridden per-template in the picker)
+  const [brandColor] = useState("#3B82F6");
   // Remotion overlay preview — tracks which completed video is being previewed
   const [overlayPreviewId, setOverlayPreviewId] = useState<string | null>(null);
   const [overlayTitle, setOverlayTitle] = useState("");
@@ -903,7 +912,45 @@ export default function AIVideoPage() {
             )}
           </div>
 
-          {/* GALLERY � fullbleed thumbs, no card chrome */}
+          {/* ─── HTML Templates (HyperFrames-style short-form cards) ─── */}
+          <div>
+            <button
+              onClick={() => setTemplatesOpen(v => !v)}
+              className="flex items-center gap-1.5 text-[11px] text-text-muted hover:text-text-primary transition-colors px-1"
+            >
+              {templatesOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+              Text templates
+              <span className="text-text-muted ml-1 text-[10px]">— Headline · Listicle · Quote</span>
+            </button>
+            <AnimatePresence initial={false}>
+              {templatesOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-3">
+                    <TemplatePicker
+                      brandColor={brandColor}
+                      bgColor="#020711"
+                      onSelect={(html, templateId) => {
+                        const blob = new Blob([html], { type: "text/html" });
+                        const url = URL.createObjectURL(blob);
+                        window.open(url, "_blank", "noopener");
+                        setTimeout(() => URL.revokeObjectURL(url), 30_000);
+                        toast.success("Template preview opened — use a screen recorder to capture it");
+                        void templateId;
+                      }}
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* GALLERY� fullbleed thumbs, no card chrome */}
           {results.length === 0 ? (
             <div className="text-center py-16 text-text-muted">
               <Film size={28} strokeWidth={1} className="mx-auto mb-3 opacity-50" />
