@@ -19,6 +19,7 @@ import {
   Headphones,
   RefreshCw,
   Search,
+  Star,
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -868,18 +869,51 @@ function inferGender(preset: VoiceClone): "female" | "male" | "neutral" {
 const PRESET_CATEGORIES = ["all", "warm", "authoritative", "youthful", "narrator", "casual", "british"] as const;
 type PresetCategory = (typeof PRESET_CATEGORIES)[number];
 
+// Use-case tags displayed on cards + use for filter chips.
+const USE_CASE_TAGS: Record<string, string[]> = {
+  warm:          ["Cold calls", "Voicemails"],
+  authoritative: ["Sales pitches", "Boardroom"],
+  youthful:      ["Social media", "Ads"],
+  narrator:      ["Video narration", "Training"],
+  casual:        ["DMs", "Podcasts"],
+  british:       ["Premium content", "Corporate"],
+};
+
+function presetUseCases(category: string): string[] {
+  return USE_CASE_TAGS[category] ?? [];
+}
+
 function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; loading?: boolean; onRefresh?: () => void }) {
   const [categoryFilter, setCategoryFilter] = useState<PresetCategory>("all");
   const [langFilter, setLangFilter] = useState<string>("all");
   const [genderFilter, setGenderFilter] = useState<"all" | "female" | "male">("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [previewOnly, setPreviewOnly] = useState(false);
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const [favorites, setFavorites] = useState<Set<string>>(() => {
+    if (typeof window === "undefined") return new Set<string>();
+    try {
+      const raw = localStorage.getItem("ss-voice-favorites");
+      return raw ? new Set<string>(JSON.parse(raw) as string[]) : new Set<string>();
+    } catch { return new Set<string>(); }
+  });
+
+  const toggleFavorite = useCallback((id: string) => {
+    setFavorites((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      try { localStorage.setItem("ss-voice-favorites", JSON.stringify(Array.from(next))); } catch { /* noop */ }
+      return next;
+    });
+  }, []);
+
   const resetFilters = useCallback(() => {
     setCategoryFilter("all");
     setLangFilter("all");
     setGenderFilter("all");
     setSearchQuery("");
     setPreviewOnly(false);
+    setFavoritesOnly(false);
   }, []);
   // Persist preview audio URLs and custom test texts across tab switches.
   // Seeded from consent_evidence.preview_url so presets with stored ElevenLabs
@@ -913,16 +947,24 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
 
   const filtered = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    return presets.filter((p) => {
-      const cat = (p.consent_evidence?.category as string) || "preset";
-      if (categoryFilter !== "all" && cat !== categoryFilter) return false;
-      if (langFilter !== "all" && (p.language || "en") !== langFilter) return false;
-      if (genderFilter !== "all" && inferGender(p) !== genderFilter) return false;
-      if (previewOnly && !p.consent_evidence?.preview_url) return false;
-      if (q && !`${p.label} ${p.description ?? ""}`.toLowerCase().includes(q)) return false;
-      return true;
-    });
-  }, [presets, categoryFilter, langFilter, genderFilter, searchQuery, previewOnly]);
+    return presets
+      .filter((p) => {
+        const cat = (p.consent_evidence?.category as string) || "preset";
+        if (categoryFilter !== "all" && cat !== categoryFilter) return false;
+        if (langFilter !== "all" && (p.language || "en") !== langFilter) return false;
+        if (genderFilter !== "all" && inferGender(p) !== genderFilter) return false;
+        if (previewOnly && !p.consent_evidence?.preview_url) return false;
+        if (favoritesOnly && !favorites.has(p.id)) return false;
+        if (q && !`${p.label} ${p.description ?? ""}`.toLowerCase().includes(q)) return false;
+        return true;
+      })
+      .sort((a, b) => {
+        // Starred presets float to the top; otherwise preserve original order.
+        const aFav = favorites.has(a.id) ? 0 : 1;
+        const bFav = favorites.has(b.id) ? 0 : 1;
+        return aFav - bFav;
+      });
+  }, [presets, categoryFilter, langFilter, genderFilter, searchQuery, previewOnly, favoritesOnly, favorites]);
 
   if (loading) {
     return (
@@ -988,6 +1030,20 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
           >
             <Play size={9} />
             Instant
+          </button>
+          <button
+            type="button"
+            onClick={() => setFavoritesOnly((v) => !v)}
+            title="Show only starred presets"
+            className={[
+              "flex-shrink-0 flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-medium transition-colors duration-150 cursor-pointer",
+              favoritesOnly
+                ? "border border-white/[0.15] bg-white/[0.06] text-yellow-400"
+                : "border border-border-subtle bg-white/[0.02] text-[#71717A] hover:text-text-primary hover:bg-white/[0.05]",
+            ].join(" ")}
+          >
+            <Star size={9} fill={favoritesOnly ? "currentColor" : "none"} />
+            Starred{favorites.size > 0 && <span className="tabular-nums">({favorites.size})</span>}
           </button>
         </div>
         {/* Gender row */}
@@ -1081,6 +1137,8 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
                 onTextChanged={(text) => setTextCache((prev) => ({ ...prev, [p.id]: text }))}
                 onSaved={onRefresh}
                 featured={index === 0 && filtered.length >= 3}
+                favorited={favorites.has(p.id)}
+                onToggleFavorite={() => toggleFavorite(p.id)}
               />
             </motion.div>
           ))}
@@ -1102,9 +1160,13 @@ interface PresetCardProps {
   onSaved?: () => void;
   /** First card in a filtered set — gets a "Featured" badge and shadow uplift. */
   featured?: boolean;
+  /** Whether this preset is starred by the user. */
+  favorited?: boolean;
+  /** Called when the star button is toggled. */
+  onToggleFavorite?: () => void;
 }
 
-function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged, onSaved, featured }: PresetCardProps) {
+function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged, onSaved, featured, favorited, onToggleFavorite }: PresetCardProps) {
   const [testing, setTesting] = useState(false);
   const [testUrl, setTestUrl] = useState<string | null>(cachedUrl);
   const [error, setError] = useState<string | null>(null);
@@ -1205,6 +1267,19 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             <Mic size={16} />
           </div>
           <div className="flex items-center gap-1.5 flex-wrap justify-end">
+            {onToggleFavorite && (
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); onToggleFavorite(); }}
+                title={favorited ? "Remove from favorites" : "Add to favorites"}
+                className={[
+                  "flex items-center justify-center w-5 h-5 transition-colors duration-150 cursor-pointer",
+                  favorited ? "text-yellow-400" : "text-[#52525B] hover:text-yellow-400",
+                ].join(" ")}
+              >
+                <Star size={12} fill={favorited ? "currentColor" : "none"} />
+              </button>
+            )}
             {featured && (
               <span className="text-[10px] font-semibold bg-[rgba(59,130,246,0.1)] text-brand-accent px-2 py-0.5 rounded-full uppercase tracking-wide">
                 Featured
@@ -1229,6 +1304,22 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
         {preset.description && (
           <p className="mt-1 text-xs text-[#71717A] leading-relaxed">{preset.description}</p>
         )}
+        {(() => {
+          const tags = presetUseCases(category);
+          if (tags.length === 0) return null;
+          return (
+            <div className="mt-1.5 flex flex-wrap gap-1">
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded px-1.5 py-0.5 text-[9px] font-medium border border-border-subtle bg-white/[0.03] text-[#52525B]"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          );
+        })()}
         {!testUrl && !editMode && (
           <button
             type="button"
