@@ -304,6 +304,158 @@ function hookQualityScore(hook: { text: string; type: string }): { score: number
   return { score, label, color };
 }
 
+type HookPlatformFit = { fit: "ideal" | "good" | "mismatch"; tip: string };
+interface HookArchetypeResult {
+  label: string;
+  description: string;
+  platformFit: Record<string, HookPlatformFit>;
+}
+
+function detectHookArchetype(hook: { text: string; type: string }): HookArchetypeResult {
+  const t = hook.text.toLowerCase();
+
+  if (/\b(stop|never|everyone.*wrong|wrong about|shouldn't|contrary|unpopular|hot take|controversial|against conventional|most people)\b/.test(t)) {
+    return { label: "Contrarian", description: "Challenges conventional wisdom to create cognitive dissonance",
+      platformFit: {
+        tiktok: { fit: "ideal", tip: "Lead with the contradiction before the qualifier — no preamble" },
+        instagram: { fit: "good", tip: "Add a specific credential or result to back the claim" },
+        youtube: { fit: "good", tip: "State the pushback early — comments drive the algorithm" },
+        linkedin: { fit: "ideal", tip: "Drives LinkedIn shares — add a data point to bolster it" },
+        twitter: { fit: "ideal", tip: "Post as a thread opener for max reach on X" },
+        facebook: { fit: "good", tip: "Triggers debate engagement in groups — keep it respectful" },
+        podcast: { fit: "mismatch", tip: "Soften to a reframe rather than a direct attack" },
+        email: { fit: "good", tip: "A/B test vs curiosity-gap as subject line" },
+      },
+    };
+  }
+  if (/\b(secret|nobody tells|hidden|truth about|real reason|what.*really|they don't want|you weren't taught)\b/.test(t) ||
+      (/\b(why|reason|how)\b/.test(t) && /\b(actually|really|truth|lie|myth|never told)\b/.test(t))) {
+    return { label: "Curiosity Gap", description: "Teases withheld information the viewer must watch to get",
+      platformFit: {
+        tiktok: { fit: "ideal", tip: "Delay the payoff past 30 s — build suspense to boost completion" },
+        instagram: { fit: "ideal", tip: "Pair with a 'save this' CTA to boost distribution" },
+        youtube: { fit: "ideal", tip: "Pair with a thumbnail that also withholds the answer" },
+        linkedin: { fit: "good", tip: "Works when the secret ties to a career or business outcome" },
+        twitter: { fit: "good", tip: "Promise the answer in the last tweet of your thread" },
+        facebook: { fit: "good", tip: "Keep the payoff satisfying — FB rewards share-worthy reveals" },
+        podcast: { fit: "ideal", tip: "Perfect audio hook — state the gap in the first 10 seconds" },
+        email: { fit: "ideal", tip: "Top-performing email subject archetype — use it often" },
+      },
+    };
+  }
+  if (/\?$/.test(t.trim()) || /^(what|how|why|did|have|are|is|can|do|would|could|should|ever|has)\b/.test(t.trim()) || hook.type === "question") {
+    return { label: "Question Hook", description: "Gets viewers mentally engaged by answering internally",
+      platformFit: {
+        tiktok: { fit: "good", tip: "Make it hyper-specific — 'Have you ever...' beats generic questions" },
+        instagram: { fit: "good", tip: "Add an on-screen text cue that mirrors the question" },
+        youtube: { fit: "ideal", tip: "Questions boost comment rate — strong for Shorts" },
+        linkedin: { fit: "good", tip: "Make the question professional and persona-specific" },
+        twitter: { fit: "ideal", tip: "Add a 2-option poll to amplify engagement" },
+        facebook: { fit: "good", tip: "Opinionated questions prime the comment algorithm" },
+        podcast: { fit: "ideal", tip: "Opens a conversational loop — answer it immediately with your take" },
+        email: { fit: "good", tip: "Pair with a one-word subject line for inbox pattern-interrupt" },
+      },
+    };
+  }
+  if (/\b(if you (are|love|hate|use|do|have|own|run|work|want)|for (anyone|people|those) who|every (agency|founder|coach|creator|freelancer|marketer|business owner)|you.*probably|attention:\s)/i.test(t)) {
+    return { label: "Identity Poke", description: "Names a specific audience so they feel 'this is about me'",
+      platformFit: {
+        tiktok: { fit: "ideal", tip: "TikTok amplifies niche identity — go as specific as possible" },
+        instagram: { fit: "ideal", tip: "Strong niche targeting improves saves and shares on Reels" },
+        youtube: { fit: "good", tip: "Works — but YouTube also rewards broad appeal, widen slightly" },
+        linkedin: { fit: "good", tip: "Works when it names a job title or specific pain point" },
+        twitter: { fit: "good", tip: "Add 'RT if you…' to turn the identity poke into a signal" },
+        facebook: { fit: "mismatch", tip: "Broaden the identifier — FB rewards wider reach content" },
+        podcast: { fit: "good", tip: "State the listener persona explicitly — they will lean in" },
+        email: { fit: "ideal", tip: "Segment + identity match = highest open-rate combination" },
+      },
+    };
+  }
+  if (/\b(clients|results|\d+,?\d* (people|clients|users|subscribers|businesses|students|creators)|made.*\$|earned|generated|grew|built.*in)|(\$[\d,]+)/.test(t)) {
+    return { label: "Social Proof", description: "Leads with results to earn viewer trust immediately",
+      platformFit: {
+        tiktok: { fit: "good", tip: "Show the number big on-screen — visual proof reinforces audio" },
+        instagram: { fit: "good", tip: "Carousel performs better for social proof — hook → breakdown" },
+        youtube: { fit: "good", tip: "Add a thumbnail screenshot of the proof for massive CTR lift" },
+        linkedin: { fit: "ideal", tip: "Add the exact metric and timeframe — specificity wins" },
+        twitter: { fit: "good", tip: "Attach a screenshot — proof-plus-visual wins on X" },
+        facebook: { fit: "ideal", tip: "FB responds extremely well to specific numbers" },
+        podcast: { fit: "mismatch", tip: "Lead with the struggle before the result — pivot to story hook" },
+        email: { fit: "good", tip: "Numbers in subject lines improve open rate consistently" },
+      },
+    };
+  }
+  if (/\b(before|limited|deadline|last chance|expiring|warning|hurry|today only|closing|going away|removed|banned|shutting down)\b/.test(t)) {
+    return { label: "Urgency / FOMO", description: "Creates time pressure or fear of missing out",
+      platformFit: {
+        tiktok: { fit: "mismatch", tip: "TikTok viewers are skeptical of artificial urgency — reframe as exclusivity" },
+        instagram: { fit: "mismatch", tip: "Use sparingly — Instagram has high FOMO-hook fatigue" },
+        youtube: { fit: "good", tip: "Works if the urgency is genuine (algorithm change, platform news)" },
+        linkedin: { fit: "mismatch", tip: "LinkedIn penalizes urgency/scarcity language — pivot to authority" },
+        twitter: { fit: "good", tip: "Breaking-news style urgency works well on X for trending topics" },
+        facebook: { fit: "good", tip: "FB ad audiences respond to urgency — keep the claim specific" },
+        podcast: { fit: "mismatch", tip: "Replace with curiosity or a story hook" },
+        email: { fit: "ideal", tip: "Email is the ideal urgency channel — pair with a countdown timer" },
+      },
+    };
+  }
+  if (/\b(more.*less|less.*more|harder.*easier|simple.*complex|more you.*less you|paradox|counterintuitive|backwards|weird (trick|way|reason)|opposite of what)\b/.test(t)) {
+    return { label: "Paradox", description: "A counterintuitive statement that stops the scroll and forces re-reads",
+      platformFit: {
+        tiktok: { fit: "ideal", tip: "One of the highest-performing TikTok archetypes — keep it punchy" },
+        instagram: { fit: "ideal", tip: "Paradox + text overlay on first frame = strong stop-scroll combo" },
+        youtube: { fit: "ideal", tip: "Counter-intuitive thumbnails drive massive CTR on YouTube" },
+        linkedin: { fit: "ideal", tip: "Counter-intuitive professional advice drives LinkedIn shares" },
+        twitter: { fit: "ideal", tip: "Paradox statements are extremely viral on X" },
+        facebook: { fit: "good", tip: "Add an 'agree?' question to spark comments" },
+        podcast: { fit: "good", tip: "State it boldly then unpack — listeners love an intellectual flip" },
+        email: { fit: "good", tip: "Makes opening unavoidable — strong subject-line archetype" },
+      },
+    };
+  }
+  if (/\b(years? ago|the day|when i|that moment|i was|i had|it all started|my journey|the time when|true story|confession|i used to)\b/.test(t)) {
+    return { label: "Story Hook", description: "Opens a narrative loop that the viewer must keep watching to close",
+      platformFit: {
+        tiktok: { fit: "good", tip: "Keep the setup to 3 s max on TikTok — get to the tension fast" },
+        instagram: { fit: "good", tip: "Story hooks perform better in the caption for Reels" },
+        youtube: { fit: "ideal", tip: "YouTube Shorts loves story arcs — promise the resolution early" },
+        linkedin: { fit: "ideal", tip: "Personal story hooks are LinkedIn's top-performing format" },
+        twitter: { fit: "good", tip: "Personal story threads generate strong retention on X" },
+        facebook: { fit: "ideal", tip: "Story is Facebook's strongest organic format — lean in fully" },
+        podcast: { fit: "ideal", tip: "Open mid-scene for maximum tension in audio" },
+        email: { fit: "good", tip: "Narrative emails get high read time — strong first line is critical" },
+      },
+    };
+  }
+  if (/\b(how to|step|in \d+ (days|weeks|hours|minutes|steps)|simple (way|trick|method|hack)|easy|quick|fast(est)?|3-step|5-step|\d+-step)\b/.test(t)) {
+    return { label: "How-To Tease", description: "Promises a specific actionable outcome to attract solution-seekers",
+      platformFit: {
+        tiktok: { fit: "good", tip: "Tease the result not the steps — outcome-first beats process-first" },
+        instagram: { fit: "ideal", tip: "How-to Reels drive saves (the #1 Instagram ranking signal)" },
+        youtube: { fit: "ideal", tip: "Shorts thrives on quick how-to — add on-screen text for the payoff" },
+        linkedin: { fit: "good", tip: "Career/business how-to works extremely well on LinkedIn" },
+        twitter: { fit: "good", tip: "Number the steps in your thread — numbered tweets get saved" },
+        facebook: { fit: "good", tip: "How-to content performs consistently in Facebook groups" },
+        podcast: { fit: "good", tip: "Promise the framework in your hook, deliver it as a numbered list" },
+        email: { fit: "ideal", tip: "How-to subject lines have industry-high open rates — use them freely" },
+      },
+    };
+  }
+  // Fallback — Bold Claim
+  return { label: "Bold Claim", description: "Opens with a strong declarative statement that demands verification",
+    platformFit: {
+      tiktok: { fit: "ideal", tip: "Deliver the claim in the first 1–2 s with matching on-screen text" },
+      instagram: { fit: "ideal", tip: "Bold claim + strong thumbnail = irresistible Reels scroll-stop" },
+      youtube: { fit: "good", tip: "Pair the claim with your most compelling proof point immediately" },
+      linkedin: { fit: "good", tip: "Add a specific metric or result to substantiate it" },
+      twitter: { fit: "good", tip: "Bold opening tweets get bookmarked — deliver on it in the thread" },
+      facebook: { fit: "ideal", tip: "FB ad audiences respond strongly to bold declarative hooks" },
+      podcast: { fit: "good", tip: "State the bold claim then pivot to your evidence or story" },
+      email: { fit: "good", tip: "A/B test bold claim vs curiosity-gap as your subject line" },
+    },
+  };
+}
+
 export default function ScriptLabPage() {
   const router = useRouter();
   useAuth();
@@ -2506,6 +2658,32 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 </div>
                 <p className="text-xs font-medium italic">&ldquo;{activeScript.hook.text}&rdquo;</p>
                 <p className="text-[9px] text-text-muted mt-1">{activeScript.hook.why_it_works}</p>
+                {/* Hook archetype detector + platform-fit badge */}
+                {(() => {
+                  const arch = detectHookArchetype(activeScript.hook);
+                  const platform = config.platform as string;
+                  const pf = arch.platformFit[platform] ?? { fit: "good" as const, tip: "Analyze your hook against your specific platform goals" };
+                  const fitColors: Record<string, string> = { ideal: "#22C55E", good: "#3B82F6", mismatch: "#EF4444" };
+                  const fitLabels: Record<string, string> = { ideal: "Ideal fit", good: "Good fit", mismatch: "Platform mismatch" };
+                  const fitColor = fitColors[pf.fit];
+                  return (
+                    <div className="mt-2 pt-2 border-t border-border-subtle/50 space-y-1.5">
+                      <div className="flex items-center flex-wrap gap-1.5">
+                        <span className="text-[8px] text-text-muted">Archetype:</span>
+                        <span className="text-[8px] font-medium px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.1)] text-[#60A5FA] border border-[rgba(59,130,246,0.2)]">
+                          {arch.label}
+                        </span>
+                        <span className="text-[8px] text-text-muted hidden sm:inline">{arch.description}</span>
+                      </div>
+                      <div className="flex items-start gap-1.5">
+                        <span className="shrink-0 text-[8px] font-medium px-1.5 py-0.5 rounded-full" style={{ background: `${fitColor}15`, color: fitColor, border: `1px solid ${fitColor}30` }}>
+                          {fitLabels[pf.fit]}
+                        </span>
+                        <p className="text-[8px] text-text-muted leading-tight">{pf.tip}</p>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
           </div>
