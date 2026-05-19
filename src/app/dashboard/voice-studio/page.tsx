@@ -20,6 +20,7 @@ import {
   RefreshCw,
   Search,
   Star,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -915,6 +916,15 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
     setPreviewOnly(false);
     setFavoritesOnly(false);
   }, []);
+
+  // ── Batch pre-warm ────────────────────────────────────────────────────────
+  // Iterates through all presets that lack a cached preview URL and generates
+  // one via the test endpoint. Sequential (not parallel) to respect ElevenLabs
+  // rate limits. Non-fatal: a failed preset is skipped, generation continues.
+  const [preWarmActive, setPreWarmActive] = useState(false);
+  const [preWarmDone, setPreWarmDone] = useState(0);
+  const [preWarmTotal, setPreWarmTotal] = useState(0);
+
   // Persist preview audio URLs and custom test texts across tab switches.
   // Seeded from consent_evidence.preview_url so presets with stored ElevenLabs
   // preview URLs play instantly without requiring a live TTS API call.
@@ -939,6 +949,42 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
       return changed ? next : prev;
     });
   }, [presets]);
+
+  // Number of presets that still need a preview URL generated.
+  const preWarmGapCount = useMemo(
+    () => presets.filter((p) => !previewCache[p.id]).length,
+    [presets, previewCache],
+  );
+
+  // Sequentially generate preview audio for all gapped presets.
+  const preWarmAll = useCallback(async () => {
+    const gaps = presets.filter((p) => !previewCache[p.id]);
+    if (gaps.length === 0 || preWarmActive) return;
+    setPreWarmActive(true);
+    setPreWarmDone(0);
+    setPreWarmTotal(gaps.length);
+    for (const p of gaps) {
+      try {
+        const res = await fetch(`/api/voice/clones/${p.id}/test`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: TEST_PROMPT_DEFAULT }),
+        });
+        if (res.ok) {
+          const data = (await res.json()) as { r2_url?: string };
+          const url = data.r2_url;
+          if (typeof url === "string" && url) {
+            // Functional update so we don't close over a stale cache snapshot.
+            setPreviewCache((prev) => ({ ...prev, [p.id]: url }));
+          }
+        }
+      } catch (err) {
+        console.error("[voice-studio/pre-warm] failed for preset", p.id, err);
+      }
+      setPreWarmDone((n) => n + 1);
+    }
+    setPreWarmActive(false);
+  }, [presets, previewCache, preWarmActive]);
 
   const languages = useMemo(() => {
     const langs = new Set(presets.map((p) => p.language || "en").filter(Boolean));
@@ -1045,6 +1091,37 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             <Star size={9} fill={favoritesOnly ? "currentColor" : "none"} />
             Starred{favorites.size > 0 && <span className="tabular-nums">({favorites.size})</span>}
           </button>
+          {/* Pre-warm: generate preview audio for all presets missing a cached URL */}
+          {preWarmGapCount > 0 && (
+            <button
+              type="button"
+              onClick={preWarmAll}
+              disabled={preWarmActive}
+              title={
+                preWarmActive
+                  ? `Generating previews… ${preWarmDone}/${preWarmTotal}`
+                  : `Pre-generate audio for ${preWarmGapCount} preset${preWarmGapCount !== 1 ? "s" : ""} without instant preview`
+              }
+              className={[
+                "flex-shrink-0 flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-medium transition-colors duration-150",
+                preWarmActive
+                  ? "border border-brand-accent/30 bg-brand-accent/10 text-brand-accent cursor-wait"
+                  : "border border-border-subtle bg-white/[0.02] text-[#71717A] hover:text-[#D4FF00] hover:bg-white/[0.05] cursor-pointer",
+              ].join(" ")}
+            >
+              {preWarmActive ? (
+                <>
+                  <Loader2 size={9} className="animate-spin" />
+                  <span className="tabular-nums">{preWarmDone}/{preWarmTotal}</span>
+                </>
+              ) : (
+                <>
+                  <Zap size={9} />
+                  <span className="tabular-nums">{preWarmGapCount}</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
         {/* Gender row */}
         <div className="flex flex-wrap items-center gap-2">
