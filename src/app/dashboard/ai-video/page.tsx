@@ -446,6 +446,31 @@ export default function AIVideoPage() {
     }
   };
 
+  // Instant client-side virality signal scanner (zero API cost, updates as user types)
+  const viralSignals = useMemo(() => {
+    const t = prompt.toLowerCase();
+    const words = t.trim().split(/\s+/).filter(Boolean);
+    const wc = words.length;
+    return [
+      { label: "Emotional language",          present: /\b(love|fear|hope|shock|joy|anger|pain|stunning|heartbreaking|powerful|incredible|inspired|scared|hate|obsessed|transform|destroy|failed|succeeded|beautiful|horrifying|breathtaking)\b/.test(t) },
+      { label: "Human subject visible",       present: /\b(person|face|man|woman|child|people|crowd|eyes|hand|portrait|human|girl|boy|baby|figure|silhouette|close.up of .*(face|eye|hand|lips))\b/.test(t) },
+      { label: "Strong motion or action",     present: /\b(running|flying|falling|spinning|dancing|jumping|exploding|crashing|racing|diving|soaring|rushing|transform|burst|sweep|reveal|streaming|pouring|colliding)\b/.test(t) },
+      { label: "Visual contrast or drama",    present: /\b(contrast|bright|dark|shadow|dramatic|spotlight|gleaming|glowing|blazing|silhouette|rim light|neon|vivid|deep black|chiaroscuro|harsh light)\b/.test(t) },
+      { label: "Close-up or texture detail",  present: /\b(close.up|extreme close|macro|tight shot|texture|micro|shallow depth|bokeh|focus pull|detail shot)\b/.test(t) },
+      { label: "Clear narrative moment",      present: /\b(reveal|discover|transform|journey|moment|beginning|ending|realiz|emergence|unfold|shift|turning point|awakening)\b/.test(t) },
+      { label: "Visual style specified",      present: style !== "" },
+      { label: "Vertical format (9:16)",      present: aspectRatio === "9:16" },
+      { label: "Optimal length (15–60 words)", present: wc >= 15 && wc <= 60 },
+      { label: "Unique concept detail",       present: wc >= 10 && (new Set(words).size / Math.max(wc, 1)) > 0.48 },
+    ] as Array<{ label: string; present: boolean }>;
+  }, [prompt, style, aspectRatio]);
+
+  const instantViralScore = useMemo(() => {
+    if (!prompt.trim()) return 0;
+    const presentCount = viralSignals.filter((s) => s.present).length;
+    return Math.round((presentCount / viralSignals.length) * 100);
+  }, [viralSignals, prompt]);
+
   // Prompt enhancement
   const [enhancing, setEnhancing] = useState(false);
   const enhancePrompt = async () => {
@@ -1196,6 +1221,45 @@ export default function AIVideoPage() {
                     </button>
                   )}
                   <button type="button" onClick={() => { setBatchQueue([]); setBatchQueueIdx(0); }} className="text-[9px] text-text-muted hover:text-text-primary cursor-pointer px-1">✕</button>
+                </div>
+              </div>
+            )}
+
+            {/* Instant virality signal scanner — zero-latency client-side feedback */}
+            {prompt.trim().length > 8 && (
+              <div className="mt-3 px-3 py-2 rounded-xl bg-[rgba(16,185,129,0.04)] border border-[rgba(16,185,129,0.1)]">
+                <div className="flex items-center justify-between mb-1.5">
+                  <p className="text-[8px] uppercase tracking-wider text-text-muted font-medium flex items-center gap-1">
+                    <TrendingUp size={7} className="text-[#10B981]" /> Signal scan
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <div className="h-1 w-16 rounded-full bg-white/[0.06]">
+                      <div
+                        className="h-full rounded-full transition-all duration-300"
+                        style={{
+                          width: `${instantViralScore}%`,
+                          background: instantViralScore >= 70 ? "#10B981" : instantViralScore >= 50 ? "#F59E0B" : "#EF4444",
+                        }}
+                      />
+                    </div>
+                    <span
+                      className="text-[9px] font-bold tabular-nums w-7 text-right"
+                      style={{ color: instantViralScore >= 70 ? "#10B981" : instantViralScore >= 50 ? "#F59E0B" : "#EF4444" }}
+                    >
+                      {instantViralScore}%
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-x-3 gap-y-0.5">
+                  {viralSignals.map((sig) => (
+                    <span
+                      key={sig.label}
+                      className={["text-[7.5px] flex items-center gap-0.5 transition-colors duration-150", sig.present ? "text-[#10B981]" : "text-text-muted/40"].join(" ")}
+                    >
+                      <span className="text-[8px]">{sig.present ? "✓" : "○"}</span>
+                      {sig.label}
+                    </span>
+                  ))}
                 </div>
               </div>
             )}
