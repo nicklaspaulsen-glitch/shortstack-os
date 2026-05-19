@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import {
@@ -11,7 +11,7 @@ import {
   Layout, Megaphone, BookOpen,
   Briefcase, Gift, Zap, Copy, Check, X,
   ArrowUp, ArrowDown, Loader2,
-  Newspaper, Wand2, FileText,
+  Newspaper, Wand2, FileText, TrendingUp,
 } from "lucide-react";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
@@ -588,6 +588,40 @@ export default function NewsletterPage() {
     },
   ];
 
+  /* --------- SEND READINESS SCORER --------- */
+  type NLSignal = { id: string; label: string; tip: string; pass: boolean };
+
+  const sendReadinessSignals = useMemo((): NLSignal[] => {
+    const hasSubject = subject.trim().length >= 5;
+    const subjectAngleRe = /\b(\d+|\bhow\b|\bwhy\b|\bwhat\b|\bbest\b|\btop\b|\bnew\b|\bjust\b|\bthis week\b|\bbreaking\b|\b\?\b)/i;
+    const hasCompellingSubject = hasSubject && (subjectAngleRe.test(subject) || subject.includes("?") || /\d/.test(subject));
+    const heroBlock = blocks.find(b => b.type === "hero" || b.type === "image");
+    const hasVisual = !!heroBlock;
+    const textWords = blocks
+      .filter(b => b.type === "text")
+      .map(b => (b.content.body || "").trim().split(/\s+/).filter(Boolean).length)
+      .reduce((a, n) => a + n, 0);
+    const hasSubstantialBody = textWords >= 30;
+    const hasCta = blocks.some(b => b.type === "button");
+    const footerBlock = blocks.find(b => b.type === "footer");
+    const hasUnsubscribe =
+      !!footerBlock ||
+      blocks.some(b => b.type === "text" && /\b(unsubscribe|opt.?out|manage preferences)\b/i.test(b.content.body || ""));
+    return [
+      { id: "subject",   label: "Subject",    tip: "Add a subject line — without it the newsletter won't send",                        pass: hasSubject },
+      { id: "compelling",label: "Compelling",  tip: "Add a number, question, or 'this week / just launched' hook to lift open rates",  pass: hasCompellingSubject },
+      { id: "visual",    label: "Visual",      tip: "Add a hero or image block — emails with visuals get 42% higher click rates",       pass: hasVisual },
+      { id: "body",      label: "Body copy",   tip: "Write ≥30 words across your text blocks — short emails feel thin",                 pass: hasSubstantialBody },
+      { id: "cta",       label: "CTA button",  tip: "Add a button block — every newsletter needs one clear action to take",             pass: hasCta },
+      { id: "footer",    label: "Opt-out",     tip: "Add a footer or mention 'unsubscribe' — required by CAN-SPAM / GDPR",             pass: hasUnsubscribe },
+    ];
+  }, [subject, blocks]);
+
+  const sendReadinessScore = useMemo(() => {
+    const passing = sendReadinessSignals.filter((s) => s.pass).length;
+    return Math.round((passing / sendReadinessSignals.length) * 100);
+  }, [sendReadinessSignals]);
+
   /* --------- RENDER --------- */
   return (
     <div className="space-y-5">
@@ -956,27 +990,83 @@ export default function NewsletterPage() {
               </button>
             </div>
 
-            {/* Block count summary */}
-            <div className="glass rounded-xl p-4">
-              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-text-muted">Builder Stats</h3>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="text-center p-2 rounded bg-surface-light">
-                  <p className="text-sm font-bold text-brand-accent">{blocks.length}</p>
-                  <p className="text-[8px] text-text-muted">Blocks</p>
+            {/* Send Readiness Scorer */}
+            <div
+              className="rounded-xl p-3"
+              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-1.5">
+                  <TrendingUp size={11} className="text-brand-accent" />
+                  <span className="text-[11px] font-semibold text-text-primary">Send Readiness</span>
                 </div>
-                <div className="text-center p-2 rounded bg-surface-light">
-                  <p className="text-sm font-bold">{blocks.filter(b => b.type === "text").length}</p>
-                  <p className="text-[8px] text-text-muted">Text Sections</p>
-                </div>
-                <div className="text-center p-2 rounded bg-surface-light">
-                  <p className="text-sm font-bold">{blocks.filter(b => b.type === "image").length}</p>
-                  <p className="text-[8px] text-text-muted">Images</p>
-                </div>
-                <div className="text-center p-2 rounded bg-surface-light">
-                  <p className="text-sm font-bold">{blocks.filter(b => b.type === "button").length}</p>
-                  <p className="text-[8px] text-text-muted">CTAs</p>
+                <div
+                  className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold tabular-nums"
+                  style={{
+                    background:
+                      sendReadinessScore >= 71
+                        ? "rgba(34,197,94,0.12)"
+                        : sendReadinessScore >= 43
+                        ? "rgba(245,158,11,0.12)"
+                        : "rgba(239,68,68,0.12)",
+                    color:
+                      sendReadinessScore >= 71
+                        ? "#4ade80"
+                        : sendReadinessScore >= 43
+                        ? "#fbbf24"
+                        : "#f87171",
+                  }}
+                >
+                  {sendReadinessScore}
+                  <span className="font-normal opacity-60 ml-0.5">/ 100</span>
                 </div>
               </div>
+              <div
+                className="w-full rounded-full overflow-hidden mb-2"
+                style={{ height: "1.5px", background: "rgba(99,146,255,0.10)" }}
+              >
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{
+                    width: `${sendReadinessScore}%`,
+                    background:
+                      sendReadinessScore >= 71
+                        ? "linear-gradient(90deg,#22c55e,#4ade80)"
+                        : sendReadinessScore >= 43
+                        ? "linear-gradient(90deg,#f59e0b,#fbbf24)"
+                        : "linear-gradient(90deg,#ef4444,#f87171)",
+                  }}
+                />
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {sendReadinessSignals.map((sig) => (
+                  <div
+                    key={sig.id}
+                    title={sig.tip}
+                    className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium cursor-default border ${
+                      sig.pass
+                        ? "bg-[rgba(34,197,94,0.10)] border-[rgba(34,197,94,0.25)] text-green-400"
+                        : "bg-elevated border-border-subtle/30 text-text-muted"
+                    }`}
+                  >
+                    <span className="text-[8px]">{sig.pass ? "✓" : "–"}</span>
+                    {sig.label}
+                  </div>
+                ))}
+              </div>
+              {(() => {
+                const firstFail = sendReadinessSignals.find((s) => !s.pass);
+                return firstFail ? (
+                  <p className="mt-2 text-[10px] text-text-muted leading-relaxed">
+                    <span className="font-medium text-text-secondary">Tip: </span>
+                    {firstFail.tip}
+                  </p>
+                ) : (
+                  <p className="mt-2 text-[10px] text-green-400">
+                    Newsletter is ready to send.
+                  </p>
+                );
+              })()}
             </div>
 
             {/* Quick links */}
