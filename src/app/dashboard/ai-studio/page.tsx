@@ -280,7 +280,7 @@ export default function AIStudioPage() {
         {/* Wizard image results � inline strip above the workspace */}
         {wizardImages.length > 0 && (
           <motion.div
-            className="glass mb-5 p-4"
+            className="glass-card mb-5 p-4"
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
           >
             <div className="flex items-center justify-between mb-3">
@@ -315,7 +315,7 @@ export default function AIStudioPage() {
           <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
             {/* Jobs Run focal tile */}
             <motion.div
-              className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
+              className="col-span-2 lg:col-span-1 glass-card-heavy rounded-2xl p-5 flex items-center gap-4"
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
             >
@@ -328,7 +328,7 @@ export default function AIStudioPage() {
             </motion.div>
             {/* Completed support tile */}
             <motion.div
-              className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
+              className="glass-card rounded-2xl p-5 flex flex-col justify-center"
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
             >
@@ -342,7 +342,7 @@ export default function AIStudioPage() {
             </motion.div>
             {/* Active Tool support tile */}
             <motion.div
-              className="glass rounded-2xl p-5 flex flex-col justify-center shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
+              className="glass-card rounded-2xl p-5 flex flex-col justify-center"
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
             >
@@ -385,7 +385,7 @@ export default function AIStudioPage() {
         <div className={`grid grid-cols-1 gap-3 items-start ${history.length > 0 ? "md:grid-cols-[240px_1fr_188px]" : "md:grid-cols-[240px_1fr]"}`}>
 
           {/* Left: vertical tool list */}
-          <div className="glass overflow-hidden">
+          <div className="glass-card overflow-hidden">
             <div className="px-3 pt-3 pb-1">
               <p className="text-[8px] uppercase tracking-[0.2em] text-text-muted font-semibold px-1 mb-2">Tools</p>
             </div>

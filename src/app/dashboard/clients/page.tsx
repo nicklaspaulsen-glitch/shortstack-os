@@ -722,7 +722,7 @@ export default function ClientsPage() {
         <div className="grid grid-cols-2 lg:grid-cols-[5fr_2fr_2fr_2fr] gap-3">
           {/* MRR focal tile */}
           <motion.div
-            className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
+            className="col-span-2 lg:col-span-1 glass-card-heavy rounded-2xl p-5 flex items-center gap-4"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
@@ -741,7 +741,7 @@ export default function ClientsPage() {
 
           {/* Support tile: Total Clients */}
           <motion.div
-            className="glass rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
+            className="glass-card rounded-2xl p-4 flex flex-col justify-between"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
@@ -757,7 +757,7 @@ export default function ClientsPage() {
 
           {/* Support tile: Active */}
           <motion.div
-            className="glass rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
+            className="glass-card rounded-2xl p-4 flex flex-col justify-between"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
@@ -774,7 +774,7 @@ export default function ClientsPage() {
             const atRiskCount = clients.filter(c => c.health_score < 40).length;
             return (
               <motion.div
-                className="glass rounded-2xl p-4 flex flex-col justify-between shadow-[0_2px_16px_rgba(0,0,0,0.35)]"
+                className="glass-card rounded-2xl p-4 flex flex-col justify-between"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}

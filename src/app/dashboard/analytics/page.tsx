@@ -50,7 +50,7 @@ function InsightPanel({
   icon: React.ReactNode; label: string; badge?: React.ReactNode; children: React.ReactNode;
 }) {
   return (
-    <div className="glass rounded-xl border border-border-subtle overflow-hidden flex flex-col">
+    <div className="glass-card overflow-hidden flex flex-col">
       <div className="flex items-center gap-2 px-5 pt-4 pb-3 border-b border-border-subtle">
         <span className="text-text-muted">{icon}</span>
         <span className="font-display text-xs font-semibold text-text-secondary tracking-[-0.005em] uppercase tracking-[0.08em]">{label}</span>
@@ -515,10 +515,7 @@ export default function AnalyticsPage() {
 
           {/* -- Zone 1: Command Strip -------------------------------------- */}
           <motion.div
-            className="glass relative overflow-hidden rounded-xl"
-            style={{
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,1), 0 4px 20px -4px rgba(0,0,0,0.10), 0 0 48px -12px rgba(59,130,246,0.14)",
-            }}
+            className="glass-card-heavy relative overflow-hidden rounded-xl"
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
@@ -630,7 +627,7 @@ export default function AnalyticsPage() {
 >
 
             {/* Lead velocity area chart */}
-            <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-4">
+            <div className="glass-card rounded-xl px-6 pt-5 pb-4">
               <div className="flex items-start justify-between mb-4">
                 <SectionHeader
                   eyebrow="Acquisition"
@@ -669,7 +666,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Lead sources */}
-            <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-5">
+            <div className="glass-card rounded-xl px-6 pt-5 pb-5">
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-text-muted">Channels</p>
               <SectionHeader heading="Lead" accent="Sources" as="h2" className="mb-5" />
               {leadsBySource.length === 0 ? (
@@ -718,7 +715,7 @@ export default function AnalyticsPage() {
 >
 
             {/* Conversion funnel */}
-            <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-5">
+            <div className="glass-card rounded-xl px-6 pt-5 pb-5">
               <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-text-muted">Sales Pipeline</p>
               <SectionHeader heading="Conversion" accent="Funnel" as="h2" className="mb-5" />
               <div className="space-y-3">
@@ -773,7 +770,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Outreach performance */}
-            <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-4">
+            <div className="glass-card rounded-xl px-6 pt-5 pb-4">
               <SectionHeader eyebrow="Engagement" heading="Outreach" accent="Performance" as="h2" className="mb-4" />
               {outreachByDay.length === 0 ? (
                 <div className="h-48 flex items-center justify-center text-[11px] text-text-muted">
@@ -999,7 +996,7 @@ export default function AnalyticsPage() {
           </motion.div>
 
           {/* -- Zone 6: Real-time activity feed ---------------------------- */}
-          <div className="glass rounded-xl border border-border-subtle px-6 pt-5 pb-5">
+          <div className="glass-card rounded-xl px-6 pt-5 pb-5">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <SectionHeader eyebrow="Live Stream" heading="Real-time" accent="Activity" as="h2" />
