@@ -21,6 +21,7 @@ import {
   Search,
   Star,
   Zap,
+  TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -1278,6 +1279,47 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
     }
   }, [editMode]);
 
+  type TtsSignal = { id: string; label: string; tip: string; pass: boolean };
+
+  const ttsQualitySignals = useMemo((): TtsSignal[] => {
+    const text = testText.trim();
+    if (!text) return [];
+
+    // Complete: ends with sentence-ending punctuation
+    const isComplete = /[.!?]$/.test(text);
+
+    // Length: substantive but not a marathon take
+    const charLen = text.length;
+    const goodLength = charLen >= 10 && charLen <= 250;
+
+    // No glitch chars: symbols TTS engines mangle (& % @ # standalone slash)
+    // Using [A-Z] range checks — no /u flag needed, safe at ES3 target
+    const glitchRe = /[&@#]|\bvs\.?\s|\bw\/\b|\/[a-z]/i;
+    const noGlitchChars = !glitchRe.test(text);
+
+    // No shout-caps: all-uppercase words ≥ 4 letters get spelled out by TTS
+    const shoutRe = /\b[A-Z]{4,}\b/;
+    const noShoutCaps = !shoutRe.test(text);
+
+    // Natural flow: has at least one pause marker OR sentence is ≤ 12 words
+    const wordCount = text.split(/\s+/).filter(Boolean).length;
+    const hasPause = /[,;:\-–—]/.test(text) || wordCount <= 12;
+
+    return [
+      { id: "complete",  label: "Complete",   tip: "End with . ! or ? so TTS delivers a clean, confident stop",             pass: isComplete },
+      { id: "length",    label: "Length",     tip: "10–250 chars — short enough for a clean take, long enough to judge",     pass: goodLength },
+      { id: "clean",     label: "Clean",      tip: "Remove & @ # and slashes — TTS reads symbols awkwardly or skips them",   pass: noGlitchChars },
+      { id: "nocaps",    label: "No Shout",   tip: "Avoid ALL-CAPS words ≥ 4 letters — TTS spells each letter individually", pass: noShoutCaps },
+      { id: "flow",      label: "Flow",       tip: "Add a comma or dash for a natural breathing pause in longer phrases",    pass: hasPause },
+    ];
+  }, [testText]);
+
+  const ttsQualityScore = useMemo(() => {
+    if (ttsQualitySignals.length === 0) return 0;
+    const passing = ttsQualitySignals.filter((s) => s.pass).length;
+    return Math.round((passing / ttsQualitySignals.length) * 100);
+  }, [ttsQualitySignals]);
+
   const onTest = useCallback(async () => {
     setTesting(true);
     setError(null);
@@ -1483,6 +1525,53 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                     </span>
                   </div>
                 ))}
+              </div>
+            )}
+            {/* TTS Readability panel — visible while editing */}
+            {ttsQualitySignals.length > 0 && (
+              <div className="rounded-lg p-2"
+                style={{ background: "rgba(19,24,39,0.55)", border: "1px solid rgba(59,130,246,0.10)" }}>
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-1">
+                    <TrendingUp size={8} style={{ color: ttsQualityScore >= 80 ? "#4ade80" : ttsQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
+                    <span className="text-[8px] font-semibold tracking-wide" style={{ color: "#71717A" }}>TTS READY</span>
+                  </div>
+                  <span className="text-[9px] font-bold tabular-nums"
+                    style={{ color: ttsQualityScore >= 80 ? "#4ade80" : ttsQualityScore >= 50 ? "#fbbf24" : "#f87171" }}>
+                    {ttsQualityScore}%
+                  </span>
+                </div>
+                <div className="h-[1px] rounded-full mb-1.5 overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                  <div className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${ttsQualityScore}%`,
+                      background: ttsQualityScore >= 80
+                        ? "linear-gradient(90deg,#16a34a,#4ade80)"
+                        : ttsQualityScore >= 50
+                          ? "linear-gradient(90deg,#d97706,#fbbf24)"
+                          : "linear-gradient(90deg,#dc2626,#f87171)",
+                    }} />
+                </div>
+                <div className="flex flex-wrap gap-1 mb-1.5">
+                  {ttsQualitySignals.map((s) => (
+                    <span key={s.id} title={s.tip}
+                      className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[8px] font-medium cursor-default select-none"
+                      style={{
+                        background: s.pass ? "rgba(74,222,128,0.10)" : "rgba(255,255,255,0.04)",
+                        color: s.pass ? "#4ade80" : "#52525B",
+                        border: `1px solid ${s.pass ? "rgba(74,222,128,0.22)" : "rgba(255,255,255,0.07)"}`,
+                      }}>
+                      <span style={{ fontSize: "6px" }}>{s.pass ? "✓" : "–"}</span>
+                      {s.label}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-[8px] leading-relaxed" style={{ color: "#52525B" }}>
+                  {(() => {
+                    const first = ttsQualitySignals.find((s) => !s.pass);
+                    return first ? first.tip : "Phrase looks TTS-ready — clean and natural.";
+                  })()}
+                </p>
               </div>
             )}
             <div className="flex items-center justify-between">
