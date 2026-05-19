@@ -87,9 +87,12 @@ test.describe("Website Builder", () => {
 
     await page.waitForTimeout(500);
 
-    // Wizard or modal should appear
+    // Wizard or modal should appear.
+    // CinematicWizard renders title="Website Builder" in the top bar and
+    // "What kind of business is this for?" as the first step h2 —
+    // the regex must match at least one of the actual visible strings.
     const wizardVisible = await page
-      .getByText(/tell us about|your business|step 1|wizard/i)
+      .getByText(/tell us about|your business|step 1|wizard|website builder|what kind of business/i)
       .first()
       .isVisible({ timeout: 3000 })
       .catch(() => false);
