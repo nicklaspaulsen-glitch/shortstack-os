@@ -2628,6 +2628,84 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             );
           })()}
 
+          {/* Pacing Timeline — WPS bar chart per section, click to scroll to section */}
+          {(() => {
+            const secs = activeScript.script.sections;
+            if (secs.length === 0) return null;
+            const pacings = secs.map((s) => sectionPacing(s));
+            const maxWps = Math.max(...pacings.map((p) => p.wps), 4.0);
+            const chartH = 52;
+            const optLow = 1.8;
+            const optHigh = 3.2;
+            const toPct = (wps: number) => Math.min(100, (wps / maxWps) * 100);
+            return (
+              <div className="rounded-xl border border-border-subtle bg-surface-light/40 px-4 py-3">
+                <p className="text-[9px] uppercase tracking-wider font-medium text-text-muted flex items-center gap-1.5 mb-2.5">
+                  <Activity size={9} className="text-brand-accent" /> Pacing Timeline
+                  <span className="text-[7px] text-text-muted font-normal normal-case tracking-normal ml-1">click bar to jump to section</span>
+                </p>
+                {/* Bar chart */}
+                <div className="relative" style={{ height: chartH + 20 }}>
+                  {/* Optimal-zone shaded band */}
+                  <div
+                    className="absolute left-0 right-0 pointer-events-none"
+                    style={{
+                      bottom: `${20 + (toPct(optLow) / 100) * chartH}px`,
+                      height: `${((toPct(optHigh) - toPct(optLow)) / 100) * chartH}px`,
+                      background: "rgba(34,197,94,0.07)",
+                      borderTop: "1px solid rgba(34,197,94,0.25)",
+                      borderBottom: "1px solid rgba(34,197,94,0.25)",
+                    }}
+                  />
+                  {/* Bars */}
+                  <div className="absolute left-0 right-0 bottom-5 flex items-end gap-[2px]" style={{ height: chartH }}>
+                    {pacings.map((p, i) => {
+                      const barH = Math.max(4, (toPct(p.wps) / 100) * chartH);
+                      return (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() =>
+                            document.getElementById(`section-${i}`)?.scrollIntoView({ behavior: "smooth", block: "nearest" })
+                          }
+                          className="flex-1 rounded-t-sm transition-opacity duration-150 hover:opacity-100 cursor-pointer"
+                          style={{ height: barH, background: p.color, opacity: 0.65 }}
+                          title={`${secs[i].name} — ${p.wps} w/s · ${p.label}`}
+                        />
+                      );
+                    })}
+                  </div>
+                  {/* Section name labels */}
+                  <div className="absolute left-0 right-0 bottom-0 h-5 flex items-end pb-0.5">
+                    {secs.map((s, i) => (
+                      <p key={i} className="flex-1 text-[6px] text-text-muted truncate text-center leading-tight">{s.name}</p>
+                    ))}
+                  </div>
+                </div>
+                {/* Legend */}
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5">
+                  <div className="flex items-center gap-1">
+                    <div className="w-2.5 h-2 rounded-sm bg-[#22C55E]/20 border border-[#22C55E]/30" />
+                    <span className="text-[7px] text-text-muted">Optimal 1.8–3.2 w/s</span>
+                  </div>
+                  {(
+                    [
+                      { color: "#6B7280", label: "Sparse" },
+                      { color: "#F59E0B", label: "Slow / Fast" },
+                      { color: "#22C55E", label: "Good" },
+                      { color: "#EF4444", label: "Too fast" },
+                    ] as Array<{ color: string; label: string }>
+                  ).map(({ color, label }) => (
+                    <div key={label} className="flex items-center gap-1">
+                      <div className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
+                      <span className="text-[7px] text-text-muted">{label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Full script sections */}
           <div className="glass rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
@@ -2637,7 +2715,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             </div>
             <div className="space-y-1">
               {activeScript.script.sections.map((section, i) => (
-                <div key={i} className="rounded-xl border border-border-subtle overflow-hidden">
+                <div key={i} id={`section-${i}`} className="rounded-xl border border-border-subtle overflow-hidden">
                   <div className="flex items-center justify-between px-3 py-1.5 bg-surface-light">
                     <div className="flex items-center gap-2">
                       <span className="text-[9px] font-bold text-brand-accent">{section.name}</span>
