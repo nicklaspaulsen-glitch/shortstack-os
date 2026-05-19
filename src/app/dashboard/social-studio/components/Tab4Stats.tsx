@@ -30,9 +30,9 @@ const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 function intensityColor(v: number): string {
   if (v <= 0) return "rgba(161,161,170,0.05)";
-  // Map 0..1 onto a soft gold ramp.
+  // Map 0..1 onto the brand blue accent ramp.
   const alpha = 0.1 + v * 0.7;
-  return `rgba(201, 168, 76, ${alpha.toFixed(3)})`;
+  return `rgba(59, 130, 246, ${alpha.toFixed(3)})`;
 }
 
 export default function Tab4Stats() {

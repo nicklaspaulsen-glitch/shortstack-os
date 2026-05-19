@@ -25,6 +25,83 @@ type DroppedAsset =
   | { kind: "text"; text: string }
   | null;
 
+/** Lightweight visual mockup of what the post looks like per platform. */
+function PostPreviewCard({
+  platform,
+  asset,
+  caption,
+  hashtags,
+}: {
+  platform: SocialPlatform;
+  asset: DroppedAsset;
+  caption: string;
+  hashtags: string[];
+}) {
+  const meta = PLATFORM_META[platform];
+  const isVertical = platform === "tiktok";
+  const mediaUrl = asset && (asset.kind === "image" || asset.kind === "video") ? asset.url : null;
+  const isVideo = asset?.kind === "video";
+
+  return (
+    <div
+      className="rounded-xl border overflow-hidden text-xs"
+      style={{ borderColor: `${meta.color}30` }}
+    >
+      {/* Platform header */}
+      <div
+        className="flex items-center gap-2 px-3 py-2"
+        style={{ background: `${meta.color}10` }}
+      >
+        <span className="font-medium" style={{ color: meta.color }}>{meta.label}</span>
+        <span className="ml-auto text-[10px] text-text-muted opacity-60">Preview</span>
+      </div>
+
+      {/* Media area */}
+      {mediaUrl ? (
+        <div
+          className="relative bg-black overflow-hidden"
+          style={{ aspectRatio: isVertical ? "9/16" : "16/9", maxHeight: 160 }}
+        >
+          {isVideo ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-white/[0.04]">
+              <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                <span className="text-white text-sm pl-0.5">▶</span>
+              </div>
+            </div>
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={mediaUrl}
+              alt="Post media preview"
+              className="w-full h-full object-cover"
+              style={{ maxHeight: 160 }}
+            />
+          )}
+        </div>
+      ) : (
+        <div
+          className="flex items-center justify-center text-text-muted text-[10px] py-6 bg-white/[0.02]"
+        >
+          No media
+        </div>
+      )}
+
+      {/* Caption preview */}
+      <div className="px-3 py-2.5 space-y-1">
+        <p className="text-[11px] text-text-secondary line-clamp-3 leading-relaxed">
+          {caption || <span className="italic opacity-40">No caption yet</span>}
+        </p>
+        {hashtags.length > 0 && (
+          <p className="text-[10px] opacity-50 line-clamp-1" style={{ color: meta.color }}>
+            {hashtags.slice(0, 5).join(" ")}
+            {hashtags.length > 5 && ` +${hashtags.length - 5}`}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /** Per-platform editor state — caption pick + edited hashtag list + chosen iso. */
 interface PlatformEdit {
   enabled: boolean;
@@ -367,6 +444,28 @@ export default function Tab2AIUpload() {
               ))}
             </div>
           </div>
+
+          {/* Platform post previews — visual mockups before committing */}
+          {ALL_PLATFORMS.filter((p) => suggestions.platforms_recommended.includes(p) && edits[p]?.enabled).length > 0 && (
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-text-muted mb-2">Post previews</p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                {ALL_PLATFORMS.filter((p) => suggestions.platforms_recommended.includes(p) && edits[p]?.enabled).map((platform) => {
+                  const e = edits[platform];
+                  if (!e) return null;
+                  return (
+                    <PostPreviewCard
+                      key={platform}
+                      platform={platform}
+                      asset={asset}
+                      caption={e.captionText}
+                      hashtags={e.hashtags}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {ALL_PLATFORMS.filter((p) => suggestions.platforms_recommended.includes(p)).map((platform) => {

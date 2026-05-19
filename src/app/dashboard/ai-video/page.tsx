@@ -89,6 +89,45 @@ const MODELS = [
   { id: "dreamy",    name: "Dreamy",    sub: "Soft, ethereal",   icon: Wand2,   preview: "linear-gradient(90deg,#A18CD1 0%,#FBC2EB 50%,#A1C4FD 100%)" },
 ];
 
+/** OSS model backends — exposed in advanced mode. All route to /api/video/render;
+ *  the backend field is passed as model_backend and the server picks the right
+ *  RunPod endpoint. "higgsfield" is the default (current production). */
+const MODEL_BACKENDS = [
+  {
+    id: "higgsfield",
+    name: "Higgsfield",
+    badge: "Default",
+    badgeColor: "#3B82F6",
+    specs: "Highest quality · 4K · 90s max",
+    note: null,
+  },
+  {
+    id: "wan2",
+    name: "Wan 2.1",
+    badge: "OSS",
+    badgeColor: "#10B981",
+    specs: "Excellent quality · 8GB VRAM · MIT",
+    note: "via RunPod",
+  },
+  {
+    id: "ltx",
+    name: "LTX-Video",
+    badge: "Fastest",
+    badgeColor: "#F59E0B",
+    specs: "Real-time 30fps · Lowest cost",
+    note: "via RunPod",
+  },
+  {
+    id: "hunyuan",
+    name: "HunyuanVideo",
+    badge: "Best arch",
+    badgeColor: "#8B5CF6",
+    specs: "13B · Transformer-VAE · Highest VRAM",
+    note: "via RunPod",
+  },
+] as const;
+type ModelBackendId = (typeof MODEL_BACKENDS)[number]["id"];
+
 const ASPECTS = [
   { id: "9:16", label: "Vertical", w: 36, h: 60 },
   { id: "16:9", label: "Landscape", w: 64, h: 36 },
@@ -173,6 +212,8 @@ export default function AIVideoPage() {
   // Remotion overlay preview — tracks which completed video is being previewed
   const [overlayPreviewId, setOverlayPreviewId] = useState<string | null>(null);
   const [overlayTitle, setOverlayTitle] = useState("");
+  // OSS model backend selector (advanced mode only)
+  const [modelBackend, setModelBackend] = useState<ModelBackendId>("higgsfield");
 
   // -- Tier-based max video length (preserved from original) --
   const planTier = profile?.plan_tier ?? "Starter";
@@ -207,6 +248,30 @@ export default function AIVideoPage() {
     } catch {}
   }, []);
 
+  // Prompt enhancement
+  const [enhancing, setEnhancing] = useState(false);
+  const enhancePrompt = async () => {
+    if (!prompt.trim() || enhancing) return;
+    setEnhancing(true);
+    try {
+      const res = await fetch("/api/ai/enhance-video-prompt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: prompt.trim(), style }),
+      });
+      if (!res.ok) throw new Error("Enhancement failed");
+      const data = await res.json() as { enhanced?: string; error?: string };
+      if (data.enhanced) {
+        setPrompt(data.enhanced);
+        toast.success("Prompt enhanced");
+      }
+    } catch {
+      toast.error("Could not enhance prompt");
+    } finally {
+      setEnhancing(false);
+    }
+  };
+
   // Guided Mode (in-page wizard) ? Advanced Mode (Higgsfield-style hero)
   const [advancedMode, setAdvancedMode] = useAdvancedMode("ai-video");
   const [guidedStep, setGuidedStep] = useState(0);
@@ -220,14 +285,27 @@ export default function AIVideoPage() {
       canProceed: prompt.trim().length > 0,
       component: (
         <div className="space-y-3">
-          <textarea
-            value={prompt}
-            onChange={e => setPrompt(e.target.value)}
-            placeholder="e.g., Golden retriever running through a field of sunflowers at sunset, cinematic warm lighting, slow tracking shot"
-            rows={4}
-            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
-            autoFocus
-          />
+          <div className="relative">
+            <textarea
+              value={prompt}
+              onChange={e => setPrompt(e.target.value)}
+              placeholder="e.g., Golden retriever running through a field of sunflowers at sunset, cinematic warm lighting, slow tracking shot"
+              rows={4}
+              className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
+              autoFocus
+            />
+            {prompt.trim() && (
+              <button
+                type="button"
+                onClick={enhancePrompt}
+                disabled={enhancing}
+                className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1 text-[10px] text-[#60A5FA] hover:text-white bg-[rgba(59,130,246,0.1)] hover:bg-[rgba(59,130,246,0.2)] border border-[rgba(59,130,246,0.2)] px-2.5 py-1 rounded-full transition-all disabled:opacity-50 cursor-pointer"
+              >
+                {enhancing ? <Loader2 size={10} className="animate-spin" /> : <Wand2 size={10} />}
+                {enhancing ? "Enhancing…" : "Enhance ✨"}
+              </button>
+            )}
+          </div>
           <div>
             <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1.5 font-semibold">Quick start</p>
             <div className="flex flex-wrap gap-1.5">
@@ -482,6 +560,7 @@ export default function AIVideoPage() {
           higgsfield_mode: true,
           num_frames: numFrames,
           guidance_scale: guidanceScale,
+          model_backend: modelBackend,
         }),
       });
 
@@ -735,7 +814,7 @@ export default function AIVideoPage() {
               </div>
             )}
 
-            {/* Prompt textarea � the real star */}
+            {/* Prompt textarea — the real star */}
             <textarea
               value={prompt}
               onChange={e => setPrompt(e.target.value)}
@@ -744,7 +823,60 @@ export default function AIVideoPage() {
               autoFocus
             />
 
-            {/* Bottom rail � model picker + aspect picker + generate button */}
+            {/* Enhance button — visible when prompt has content */}
+            {prompt.trim() && (
+              <div className="mt-2 flex justify-end">
+                <button
+                  type="button"
+                  onClick={enhancePrompt}
+                  disabled={enhancing}
+                  className="inline-flex items-center gap-1.5 text-[11px] text-[#60A5FA] hover:text-white bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.18)] border border-[rgba(59,130,246,0.2)] hover:border-[rgba(59,130,246,0.4)] px-3 py-1.5 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  {enhancing ? (
+                    <Loader2 size={11} className="animate-spin" />
+                  ) : (
+                    <Wand2 size={11} />
+                  )}
+                  {enhancing ? "Enhancing…" : "Enhance ✨"}
+                </button>
+              </div>
+            )}
+
+            {/* OSS model backend selector — compact chip strip */}
+            <div className="mt-5">
+              <p className="text-[9px] uppercase tracking-[0.18em] text-text-muted mb-2 font-medium">AI backend</p>
+              <div className="flex flex-wrap gap-2">
+                {MODEL_BACKENDS.map(b => (
+                  <button
+                    key={b.id}
+                    type="button"
+                    onClick={() => setModelBackend(b.id)}
+                    className={[
+                      "inline-flex flex-col items-start gap-0.5 px-3 py-2 rounded-lg border text-left transition-all cursor-pointer",
+                      modelBackend === b.id
+                        ? "border-[rgba(59,130,246,0.5)] bg-[rgba(59,130,246,0.1)] text-text-primary"
+                        : "border-border-subtle bg-white/[0.03] text-text-muted hover:text-text-primary hover:border-border-strong hover:bg-white/[0.06]",
+                    ].join(" ")}
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <span className="text-[11px] font-semibold">{b.name}</span>
+                      <span
+                        className="text-[8px] font-bold px-1.5 py-0.5 rounded-full"
+                        style={{ background: `${b.badgeColor}22`, color: b.badgeColor }}
+                      >
+                        {b.badge}
+                      </span>
+                    </span>
+                    <span className="text-[9px] opacity-60 leading-tight">{b.specs}</span>
+                    {b.note && (
+                      <span className="text-[8px] opacity-40">{b.note}</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom rail — model picker + aspect picker + generate button */}
             <div className="mt-7 flex items-end justify-between flex-wrap gap-5">
               <div className="flex items-end gap-5 flex-wrap">
                 {/* Model picker � icon-first, compact */}
