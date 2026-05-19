@@ -275,6 +275,35 @@ function platformToAspect(platform: string): string {
   return "9:16";
 }
 
+// --- Emotion arc + hook quality helpers ---
+function emotionIntensity(emotion: string): number {
+  const e = emotion.toLowerCase();
+  if (/excit|hype|electric|fire|rage|panic|shock|alarm|erupt|frenzy/.test(e)) return 92;
+  if (/enthusias|energet|amped|pumped|triumph|bold|confid|power|force|inspir/.test(e)) return 75;
+  if (/happy|joy|fun|playful|positive|uplift|hopeful|motiv|connect|celebrat/.test(e)) return 60;
+  if (/calm|neutral|profession|thought|reflect|curious|wonder/.test(e)) return 45;
+  if (/nostalgic|melanchol|serious|somber|tender|soft|quiet/.test(e)) return 30;
+  if (/fear|dread|tense|anxiet|vulner|hesit|lost|alone/.test(e)) return 20;
+  return 50;
+}
+
+function hookQualityScore(hook: { text: string; type: string }): { score: number; label: string; color: string } {
+  let score = 0;
+  const text = hook.text.toLowerCase();
+  const words = text.trim().split(/\s+/);
+  if (words.length >= 8 && words.length <= 25) score += 20;
+  else if (words.length >= 5) score += 10;
+  if (/^(what|how|why|did|have|are|is|can|do|would|could|should|ever|has)\b/.test(text.trim()) || hook.type === "question") score += 20;
+  if (/\b(secret|reveal|discover|truth|never|always|stop|proven|simple|now|finally|everyone|nobody|only|shocking|surprising|incredible|urgent|fastest|worst|best)\b/.test(text)) score += 20;
+  if (/\d/.test(text)) score += 15;
+  if (/\b(hate|love|fear|scared|obsessed|addicted|changed|transform|destroy|crush|failed|succeeded|mistake|wrong)\b/.test(text)) score += 15;
+  if (/^(curiosity|question|contrarian|pattern.interrupt)$/.test(hook.type.toLowerCase())) score += 10;
+  score = Math.min(100, score);
+  const label = score >= 80 ? "Strong" : score >= 60 ? "Good" : score >= 40 ? "Fair" : "Weak";
+  const color = score >= 80 ? "#22C55E" : score >= 60 ? "#3B82F6" : score >= 40 ? "#F59E0B" : "#EF4444";
+  return { score, label, color };
+}
+
 export default function ScriptLabPage() {
   const router = useRouter();
   useAuth();
@@ -2412,6 +2441,14 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   <p className="text-[9px] text-brand-accent uppercase tracking-wider font-medium">The Hook</p>
                   <div className="flex items-center gap-2">
                     <span className="text-[8px] bg-surface-light px-1.5 py-0.5 rounded">{activeScript.hook.type}</span>
+                    {(() => {
+                      const qs = hookQualityScore(activeScript.hook);
+                      return (
+                        <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: `${qs.color}22`, color: qs.color }}>
+                          {qs.score} · {qs.label}
+                        </span>
+                      );
+                    })()}
                     <button onClick={() => copyToClipboard(activeScript.hook.text)}><Copy size={10} className="text-text-muted hover:text-text-primary" /></button>
                   </div>
                 </div>
@@ -2420,6 +2457,57 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               </div>
             </div>
           </div>
+
+          {/* Emotion Arc — SVG sparkline across all sections */}
+          {activeScript.script.sections.length > 1 && (() => {
+            const intensities = activeScript.script.sections.map(s => emotionIntensity(s.emotion));
+            const maxVal = Math.max(...intensities);
+            const minVal = Math.min(...intensities);
+            const range = maxVal - minVal || 1;
+            const W = 280; const H = 36;
+            const pts = intensities.map((v, i) => {
+              const x = (i / (intensities.length - 1)) * W;
+              const y = H - ((v - minVal) / range) * H * 0.78 - H * 0.1;
+              return { x, y };
+            });
+            const pathD = pts.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x},${p.y}`).join(" ");
+            const fillD = `${pathD} L ${W},${H} L 0,${H} Z`;
+            const peakIdx = intensities.indexOf(maxVal);
+            return (
+              <div className="glass rounded-xl px-4 py-3 border border-border-subtle">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-[9px] uppercase tracking-wider text-text-muted font-medium flex items-center gap-1.5">
+                    <Activity size={9} className="text-brand-accent" /> Emotion Arc
+                  </p>
+                  <p className="text-[8px] text-text-muted">
+                    Peak: <span className="text-text-secondary font-medium">{activeScript.script.sections[peakIdx]?.name}</span>
+                    <span className="ml-1 text-text-muted">({maxVal})</span>
+                  </p>
+                </div>
+                <svg width="100%" viewBox={`-2 0 ${W + 4} ${H + 6}`} className="overflow-visible">
+                  <defs>
+                    <linearGradient id="arc-fill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.22" />
+                      <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.02" />
+                    </linearGradient>
+                  </defs>
+                  <path d={fillD} fill="url(#arc-fill)" />
+                  <path d={pathD} stroke="#3B82F6" strokeWidth="1.5" fill="none" strokeLinejoin="round" strokeLinecap="round" />
+                  {pts.map((p, i) => (
+                    <g key={i}>
+                      <circle cx={p.x} cy={p.y} r={i === peakIdx ? 4 : 2.5} fill={i === peakIdx ? "#60A5FA" : "#3B82F6"} />
+                      {i === peakIdx && <circle cx={p.x} cy={p.y} r={7} fill="none" stroke="#60A5FA" strokeWidth="0.8" opacity="0.45" />}
+                    </g>
+                  ))}
+                </svg>
+                <div className="flex justify-between mt-1">
+                  {activeScript.script.sections.map((s, i) => (
+                    <p key={i} className="text-[7px] text-text-muted truncate text-center" style={{ maxWidth: `${Math.floor(100 / activeScript.script.sections.length)}%` }}>{s.name}</p>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Full script sections */}
           <div className="glass rounded-xl p-4">

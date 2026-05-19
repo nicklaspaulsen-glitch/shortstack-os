@@ -178,6 +178,40 @@ const INTENT_FEELINGS = [
   { id: "curious",  label: "Curious",  emoji: "🤔", phrase: "mysterious lighting, unresolved tension, intriguing partial reveal" },
 ];
 
+// --- Style Vault: 24 battle-tested prompts across 6 content categories ---
+const STYLE_VAULT: Array<{ id: string; cat: string; label: string; prompt: string }> = [
+  // Educational
+  { id: "sv-edu-1",    cat: "Educational", label: "Explainer Whiteboard",    prompt: "Crisp whiteboard-style video, clean white background, hand-drawn diagrams appearing in real time, warm neutral light, confident narrating voice energy, clear typography callouts." },
+  { id: "sv-edu-2",    cat: "Educational", label: "Cinematic Documentary",   prompt: "Documentary-style B-roll, handheld 4K camera, natural ambient light, subject interview cross-cut with illustrative cutaways, subtle film grain, neutral color grade." },
+  { id: "sv-edu-3",    cat: "Educational", label: "Screen Tutorial",         prompt: "Clean screen-recording aesthetic, cursor highlight effect, zoomed callout boxes, clean sans-serif annotation overlays, professional desktop setup in background, soft ambient key light." },
+  { id: "sv-edu-4",    cat: "Educational", label: "Data-Driven Breakdown",   prompt: "Bold animated data visualization, rising bar charts, number counters, dark background with neon accent lines, authoritative presentation energy, Bloomberg-style motion graphics." },
+  // Entertainment
+  { id: "sv-ent-1",    cat: "Entertainment", label: "Viral Reaction",        prompt: "Genuine reaction video, split-screen composition, real-time emotional response, expressive facial close-ups, chaotic natural lighting, energetic fast cuts." },
+  { id: "sv-ent-2",    cat: "Entertainment", label: "Challenge Hook",        prompt: "Jump-cut challenge format, bold caption overlay, high-energy music beat-sync, saturated colors, crowd or peer-pressure social proof element, 9:16 vertical fill." },
+  { id: "sv-ent-3",    cat: "Entertainment", label: "Comedy Skit",           prompt: "Situational comedy, two-character dialogue, over-the-shoulder cuts, exaggerated comic timing, warm practical lighting, relatable everyday setting." },
+  { id: "sv-ent-4",    cat: "Entertainment", label: "Cinematic Meme",        prompt: "Cinematic meme format, theatrical slow motion moment, dramatic orchestral music implied, low-angle heroic framing, film-look color grade, ironic juxtaposition." },
+  // Testimonials
+  { id: "sv-test-1",   cat: "Testimonials",  label: "Raw Testimonial",       prompt: "Authentic talking-head testimonial, casual home or office environment, shallow depth-of-field portrait, warm window light, nervous-but-honest energy, no teleprompter feel." },
+  { id: "sv-test-2",   cat: "Testimonials",  label: "Before & After",        prompt: "Split-screen before-after transformation, neutral background, clinical bright light, side-by-side comparison, progress metric callouts, honest unfiltered expression." },
+  { id: "sv-test-3",   cat: "Testimonials",  label: "Social Proof Montage",  prompt: "Quick-cut montage of five different people endorsing, varied backgrounds, diverse demographics, each 3-second cut with animated quote overlay, upbeat subtle music bed." },
+  { id: "sv-test-4",   cat: "Testimonials",  label: "Case Study Walk-through", prompt: "Professional case study narrative, animated results dashboard appearing, calm confident presenter, neutral background with brand color accent, metric highlight animations." },
+  // Product
+  { id: "sv-prod-1",   cat: "Product",       label: "Hero Product Reveal",   prompt: "Dark studio product reveal, single product emerging from black, dramatic upward key light, slow rotation, premium metallic reflections, cinematic rack focus." },
+  { id: "sv-prod-2",   cat: "Product",       label: "Lifestyle In Use",      prompt: "Natural-light lifestyle setting, product being used in real context, 4K slow-motion detail shots, warm home environment, aspirational but achievable everyday vibe." },
+  { id: "sv-prod-3",   cat: "Product",       label: "Unboxing ASMR",         prompt: "Close-up unboxing, crisp packaging sounds implied, shallow DOF on product, white table surface, natural side lighting, clean minimal composition, satisfying reveal moment." },
+  { id: "sv-prod-4",   cat: "Product",       label: "Problem → Solution",    prompt: "Frustrated person shot (problem), product appears, satisfied expression (solution), simple two-act structure, clear cause-effect visual contrast, friendly approachable tone." },
+  // Motivational
+  { id: "sv-mot-1",    cat: "Motivational",  label: "Sunrise Epic",          prompt: "Sweeping landscape at golden hour, silhouette figure against sky, slow push-in drone move, triumphant orchestral energy implied, text burns in serif font, cinematic scope." },
+  { id: "sv-mot-2",    cat: "Motivational",  label: "Grind Culture",         prompt: "Dark gym or hustle workspace, high-contrast hard lighting, sweat and effort close-ups, fast-cut tempo, bold sans-serif affirmations, raw unpolished energy, deep bass feel." },
+  { id: "sv-mot-3",    cat: "Motivational",  label: "Quiet Discipline",      prompt: "Minimalist quiet scene, person in focused solitary work, soft morning window light, slow deliberate cuts, contemplative mood, understated strength, no hype no noise." },
+  { id: "sv-mot-4",    cat: "Motivational",  label: "Origin Story",          prompt: "Personal origin story format, childhood photos implied, humble beginning b-roll, emotional confessional talking head, warm desaturated flashback tone, journey arc narrative." },
+  // Social Proof / Brand
+  { id: "sv-brand-1",  cat: "Brand",         label: "Premium Brand Film",    prompt: "High-fashion brand film aesthetic, wide lens anamorphic flare, moody desaturated color grade, slow model walk, architectural setting, luxury product integration, aspirational silence." },
+  { id: "sv-brand-2",  cat: "Brand",         label: "Behind the Scenes",     prompt: "Authentic BTS documentary feel, candid team moments, handheld B-roll, warm golden workshop light, craft and process revealed, genuine laughter and expertise visible." },
+  { id: "sv-brand-3",  cat: "Brand",         label: "Brand Manifesto",       prompt: "Manifesto video, black screen with single word reveals, bold typographic animation, voice-over building to crescendo, montage of community or product in action, rallying emotional close." },
+  { id: "sv-brand-4",  cat: "Brand",         label: "Community Story",       prompt: "User-generated feel, multiple real people sharing moments, colorful diverse environments, upbeat optimistic score, movement and energy, brand subtly present throughout." },
+];
+
 interface GenerationResult {
   id: string;
   prompt: string;
@@ -302,6 +336,11 @@ export default function AIVideoPage() {
   const [intentGoal, setIntentGoal] = useState("");
   const [intentSubject, setIntentSubject] = useState("");
   const [intentFeeling, setIntentFeeling] = useState("");
+
+  // Style Vault
+  const [styleVaultOpen, setStyleVaultOpen] = useState(false);
+  const [styleVaultCat, setStyleVaultCat] = useState<string | null>(null);
+  const vaultCats = Array.from(new Set(STYLE_VAULT.map(s => s.cat)));
 
   // Face swap mode
   const [faceSwapMode, setFaceSwapMode] = useState(false);
@@ -1098,6 +1137,58 @@ export default function AIVideoPage() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* ── Style Vault ────────────────────────────────────── */}
+            <div className="mt-4">
+              <button
+                type="button"
+                onClick={() => setStyleVaultOpen(v => !v)}
+                className="flex items-center gap-1.5 text-[10px] text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+              >
+                <Layers size={10} className={styleVaultOpen ? "text-brand-accent" : ""} />
+                Style Vault
+                <span className="text-[8px] text-text-muted opacity-60">24 proven prompts</span>
+                <ChevronDown size={10} className={`transition-transform ${styleVaultOpen ? "rotate-180 text-brand-accent" : ""}`} />
+              </button>
+              {styleVaultOpen && (
+                <div className="mt-2 rounded-xl border border-border-subtle bg-[rgba(13,17,32,0.5)] overflow-hidden">
+                  {/* Category tabs */}
+                  <div className="flex gap-0 border-b border-border-subtle overflow-x-auto">
+                    <button
+                      type="button"
+                      onClick={() => setStyleVaultCat(null)}
+                      className={["text-[9px] px-3 py-2 whitespace-nowrap transition-colors cursor-pointer", styleVaultCat === null ? "text-brand-accent border-b border-brand-accent -mb-px bg-[rgba(59,130,246,0.05)]" : "text-text-muted hover:text-text-primary"].join(" ")}
+                    >All</button>
+                    {vaultCats.map(cat => (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => setStyleVaultCat(c => c === cat ? null : cat)}
+                        className={["text-[9px] px-3 py-2 whitespace-nowrap transition-colors cursor-pointer", styleVaultCat === cat ? "text-brand-accent border-b border-brand-accent -mb-px bg-[rgba(59,130,246,0.05)]" : "text-text-muted hover:text-text-primary"].join(" ")}
+                      >{cat}</button>
+                    ))}
+                  </div>
+                  {/* Style grid */}
+                  <div className="grid grid-cols-2 gap-px bg-border-subtle">
+                    {STYLE_VAULT.filter(s => styleVaultCat === null || s.cat === styleVaultCat).map(style => (
+                      <button
+                        key={style.id}
+                        type="button"
+                        onClick={() => {
+                          setPrompt(style.prompt);
+                          setStyleVaultOpen(false);
+                          toast(`Applied: ${style.label}`, { icon: "🎬", duration: 2000 });
+                        }}
+                        className="group bg-[rgba(13,17,32,0.9)] hover:bg-[rgba(59,130,246,0.06)] text-left px-3 py-2 transition-colors cursor-pointer"
+                      >
+                        <p className="text-[10px] font-medium text-text-secondary group-hover:text-text-primary transition-colors">{style.label}</p>
+                        <p className="text-[8px] text-text-muted mt-0.5 line-clamp-2 leading-relaxed">{style.prompt}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* ── Face Swap Mode ────────────────────────────────────── */}

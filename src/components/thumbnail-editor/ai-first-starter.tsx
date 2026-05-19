@@ -175,6 +175,7 @@ export default function AiFirstStarter({
   const [pickedIdx, setPickedIdx] = useState<number | null>(null);
   const [ctrs, setCtrs] = useState<Record<number, number | null>>({});
   const [winnerTip, setWinnerTip] = useState<string | null>(null);
+  const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
 
   const analyzeCtrs = async (wins: Array<{ url: string; idx: number }>) => {
     const initial: Record<number, number | null> = {};
@@ -497,12 +498,62 @@ export default function AiFirstStarter({
                 <span>Top tip: {winnerTip}</span>
               </p>
             )}
+
+            {/* Mobile Preview — 320×180px simulation */}
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={() => setMobilePreviewOpen(v => !v)}
+                className="flex items-center gap-1.5 text-[10px] text-neutral-500 hover:text-neutral-200 transition-colors"
+              >
+                <span className="text-[9px]">📱</span>
+                Mobile preview{" "}
+                <span className="text-[8px] opacity-60">(320×180 YouTube mobile size)</span>
+                <span className="text-[9px]">{mobilePreviewOpen ? "▲" : "▼"}</span>
+              </button>
+              {mobilePreviewOpen && (
+                <div className="mt-2 rounded-xl border border-neutral-800 bg-neutral-900/60 p-3">
+                  <p className="text-[9px] text-neutral-500 mb-2">
+                    Thumbnails scaled to 320×180px — readability at glance distance on a phone
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {options.map(opt => {
+                      const vals = Object.values(ctrs).filter((v): v is number => typeof v === "number");
+                      const isBest = vals.length > 0 && typeof ctrs[opt.idx] === "number" && ctrs[opt.idx] === Math.max(...vals);
+                      return (
+                        <div key={opt.idx} className="relative">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={opt.url}
+                            alt={`Mobile preview ${opt.idx + 1}`}
+                            width={160}
+                            height={90}
+                            className="rounded object-cover block"
+                            style={{ width: 160, height: 90 }}
+                          />
+                          {isBest && (
+                            <div className="absolute top-1 left-1 text-[7px] font-bold px-1 py-0.5 rounded bg-amber-400 text-black leading-none">
+                              BEST
+                            </div>
+                          )}
+                          <p className="text-[7px] text-neutral-500 mt-0.5 text-center">
+                            Option {opt.idx + 1}{typeof ctrs[opt.idx] === "number" ? ` · CTR ${ctrs[opt.idx]}` : ""}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+
             <button
               onClick={() => {
                 setOptions([]);
                 setPickedIdx(null);
                 setCtrs({});
                 setWinnerTip(null);
+                setMobilePreviewOpen(false);
               }}
               className="mt-4 text-[11.5px] text-neutral-400 hover:text-white transition flex items-center gap-1.5"
             >
