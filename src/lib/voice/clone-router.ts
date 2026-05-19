@@ -322,6 +322,13 @@ export interface SynthesizeOptions {
   agencyOwnerId: string;
   format?: "mp3" | "wav";
   speed?: number;
+  /**
+   * ElevenLabs voice settings — only applied for preset/elevenlabs providers.
+   * Values out of [0, 1] are clamped silently.
+   */
+  stability?: number;
+  similarityBoost?: number;
+  style?: number;
   /** Default true — disable to force a fresh render. */
   cache?: boolean;
   /** Telemetry label (dialer / voicemail / sms_voice / dm_voice / preview). */
@@ -365,7 +372,10 @@ export async function synthesize(
 
   const format = opts.format || "mp3";
   const speed = opts.speed ?? 1.0;
-  const textHash = hashText(text, format, speed);
+  const stability = opts.stability;
+  const similarityBoost = opts.similarityBoost;
+  const style = opts.style;
+  const textHash = hashText(text, format, speed, stability, similarityBoost, style);
 
   // Cache lookup.
   if (opts.cache !== false) {
@@ -393,7 +403,7 @@ export async function synthesize(
 
   // Render.
   const cloneRow = clone as VoiceCloneRow;
-  const rendered = await renderClone(cloneRow, text, format, speed);
+  const rendered = await renderClone(cloneRow, text, format, speed, stability, similarityBoost, style);
 
   // Upload to R2.
   const r2Key = `voice-renders/${cloneRow.agency_owner_id}/${cloneRow.id}/${textHash}.${format}`;
@@ -435,7 +445,13 @@ async function renderClone(
   text: string,
   format: "mp3" | "wav",
   speed: number,
+  stability?: number,
+  similarityBoost?: number,
+  style?: number,
 ): Promise<RenderResult> {
+  // Helper: clamp a voice setting to [0, 1].
+  const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+
   // Preset → ElevenLabs synth with the preset's voice id.
   if (clone.provider === "preset") {
     const slug = clone.provider_voice_id;
@@ -453,6 +469,9 @@ async function renderClone(
       voiceId: elevenId,
       text,
       outputFormat: format === "wav" ? "pcm_44100" : "mp3_44100_128",
+      stability: stability !== undefined ? clamp01(stability) : undefined,
+      similarityBoost: similarityBoost !== undefined ? clamp01(similarityBoost) : undefined,
+      style: style !== undefined ? clamp01(style) : undefined,
     });
     return {
       audio: result.audio,
@@ -469,6 +488,9 @@ async function renderClone(
       voiceId: clone.provider_voice_id,
       text,
       outputFormat: format === "wav" ? "pcm_44100" : "mp3_44100_128",
+      stability: stability !== undefined ? clamp01(stability) : undefined,
+      similarityBoost: similarityBoost !== undefined ? clamp01(similarityBoost) : undefined,
+      style: style !== undefined ? clamp01(style) : undefined,
     });
     return {
       audio: result.audio,
@@ -502,10 +524,20 @@ async function renderClone(
   throw new Error(`Unknown clone provider: ${clone.provider}`);
 }
 
-function hashText(text: string, format: string, speed: number): string {
+function hashText(
+  text: string,
+  format: string,
+  speed: number,
+  stability?: number,
+  similarityBoost?: number,
+  style?: number,
+): string {
+  // Include voice settings in the hash so different presets with the same text
+  // get distinct cache entries when the caller overrides stability/similarity/style.
+  const voiceKey = `${stability ?? "d"}|${similarityBoost ?? "d"}|${style ?? "d"}`;
   return crypto
     .createHash("sha256")
-    .update(`${format}|${speed}|${text}`)
+    .update(`${format}|${speed}|${voiceKey}|${text}`)
     .digest("hex")
     .slice(0, 32);
 }

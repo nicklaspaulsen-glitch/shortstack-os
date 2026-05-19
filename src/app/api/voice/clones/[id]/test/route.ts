@@ -12,6 +12,10 @@ interface RouteContext {
 
 interface TestBody {
   text?: string;
+  /** ElevenLabs-specific voice settings. Ignored for RunPod providers. */
+  stability?: number;
+  similarityBoost?: number;
+  style?: number;
 }
 
 /**
@@ -79,6 +83,12 @@ export async function POST(request: NextRequest, context: RouteContext) {
       text,
       agencyOwnerId: ownerId,
       context: "test_playback",
+      // Forward optional voice-setting overrides from the UI.
+      ...(body.stability !== undefined && { stability: body.stability }),
+      ...(body.similarityBoost !== undefined && { similarityBoost: body.similarityBoost }),
+      ...(body.style !== undefined && { style: body.style }),
+      // Force fresh render when voice settings are customised (bypass cache).
+      cache: body.stability === undefined && body.similarityBoost === undefined && body.style === undefined,
     });
     return NextResponse.json({
       r2_url: result.r2Url,

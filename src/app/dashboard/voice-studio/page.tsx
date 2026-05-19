@@ -1175,6 +1175,10 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
   const [isHovering, setIsHovering] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  // Voice-settings overrides (ElevenLabs/preset only) — shown in edit mode.
+  const [stability, setStability] = useState(0.70);
+  const [similarityBoost, setSimilarityBoost] = useState(0.80);
+  const [styleExag, setStyleExag] = useState(0.0);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   // Keep previous audio URL while re-generating so the player doesn't vanish.
@@ -1201,11 +1205,20 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
     setTesting(true);
     setError(null);
     // Don't wipe testUrl here — keep the old audio until the new one arrives.
+    const isElevenProvider = preset.provider === "preset" || preset.provider === "elevenlabs";
     try {
       const res = await fetch(`/api/voice/clones/${preset.id}/test`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: testText.trim() || TEST_PROMPT_DEFAULT }),
+        body: JSON.stringify({
+          text: testText.trim() || TEST_PROMPT_DEFAULT,
+          // Only forward voice settings for ElevenLabs-backed voices.
+          ...(isElevenProvider && {
+            stability,
+            similarityBoost,
+            style: styleExag,
+          }),
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `Test failed (${res.status})`);
@@ -1367,6 +1380,34 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               placeholder="Type what you want the voice to say…"
               className="w-full rounded-lg border border-border-subtle bg-white/[0.06] px-3 py-2 text-xs text-text-primary placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50 resize-none"
             />
+            {/* Voice-settings sliders — ElevenLabs/preset only */}
+            {(preset.provider === "preset" || preset.provider === "elevenlabs") && (
+              <div className="space-y-1.5 pt-1 pb-0.5">
+                {(
+                  [
+                    { label: "Clarity", hint: "stability", val: stability, set: setStability, min: 0, max: 1, step: 0.05 },
+                    { label: "Match", hint: "similarity", val: similarityBoost, set: setSimilarityBoost, min: 0, max: 1, step: 0.05 },
+                    { label: "Style", hint: "exaggeration", val: styleExag, set: setStyleExag, min: 0, max: 0.5, step: 0.05 },
+                  ] as Array<{ label: string; hint: string; val: number; set: (v: number) => void; min: number; max: number; step: number }>
+                ).map(({ label, hint, val, set, min, max, step }) => (
+                  <div key={hint} className="flex items-center gap-2">
+                    <span className="w-11 shrink-0 text-[9px] font-medium text-[#71717A]">{label}</span>
+                    <input
+                      type="range"
+                      min={min}
+                      max={max}
+                      step={step}
+                      value={val}
+                      onChange={(e) => set(parseFloat(e.target.value))}
+                      className="flex-1 h-1 cursor-pointer accent-[#3B82F6]"
+                    />
+                    <span className="w-6 shrink-0 text-right text-[9px] tabular-nums text-[#52525B]">
+                      {val.toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-[#71717A]">{testText.length}/300</span>
