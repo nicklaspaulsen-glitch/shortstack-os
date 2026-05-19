@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   Send,
@@ -12,6 +12,7 @@ import {
   Loader2,
   CheckCircle,
   Clock,
+  TrendingUp,
 } from "lucide-react";
 import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
@@ -189,6 +190,35 @@ export default function ColdEmailPage() {
     }
   }
 
+  /* --------- TEMPLATE SEED QUALITY SCORER --------- */
+  type SeedSignal = { id: string; label: string; tip: string; pass: boolean };
+
+  const seedQualitySignals = useMemo((): SeedSignal[] => {
+    const raw = templateSeed.trim();
+    if (!raw) return [];
+    const hasToken = /\{\{[^}]+\}\}/.test(raw);
+    const hasValueProp = /\b(help|improve|grow|save|increase|results?|clients?|customers?|close|book|schedule|turn|without|faster|easier)\b/i.test(raw);
+    const ctaRe = /\b(worth|quick chat|call|book|schedule|reply|interested|open to|thoughts?|connect|let me know|free|available)\b/i;
+    const hasCta = ctaRe.test(raw);
+    const wordCount = raw.split(/\s+/).filter(Boolean).length;
+    const isConcise = wordCount >= 10 && wordCount <= 80;
+    const spamRe = /\b(FREE|WINNER|PRIZE|ACT NOW|LIMITED TIME|GUARANTEED|URGENT|CLICK HERE|BEST PRICE|LOWEST RATE)\b/;
+    const noSpam = !spamRe.test(raw);
+    return [
+      { id: "token",  label: "Tokens",      tip: "Include {{first_name}} or {{personal_hook}} — personalisation doubles reply rates",  pass: hasToken },
+      { id: "value",  label: "Value first", tip: "Lead with what you help with ('we help X achieve Y') before any ask",                pass: hasValueProp },
+      { id: "cta",    label: "Soft CTA",    tip: "End with a low-friction ask ('worth a quick chat?', 'open to connecting?')",          pass: hasCta },
+      { id: "length", label: "Concise",     tip: "Keep the seed 10–80 words — short templates generate more natural-sounding copy",     pass: isConcise },
+      { id: "nospam", label: "No spam",     tip: "Avoid ALL-CAPS phrases like 'LIMITED TIME' — spam filters catch them in generated mail", pass: noSpam },
+    ];
+  }, [templateSeed]);
+
+  const seedQualityScore = useMemo(() => {
+    if (!seedQualitySignals.length) return 0;
+    const passing = seedQualitySignals.filter((s) => s.pass).length;
+    return Math.round((passing / seedQualitySignals.length) * 100);
+  }, [seedQualitySignals]);
+
   return (
     <MotionPage className="space-y-5">{/* -- AI Cold Email command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
@@ -276,6 +306,87 @@ export default function ColdEmailPage() {
                     max={5}
                   />
                 </div>
+
+                {/* Template Seed Quality Scorer */}
+                {seedQualitySignals.length > 0 && (
+                  <div
+                    className="rounded-lg p-2.5"
+                    style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-1.5">
+                        <TrendingUp size={11} className="text-brand-accent" />
+                        <span className="text-[11px] font-semibold text-text-primary">Seed Quality</span>
+                      </div>
+                      <div
+                        className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold tabular-nums"
+                        style={{
+                          background:
+                            seedQualityScore >= 80
+                              ? "rgba(34,197,94,0.12)"
+                              : seedQualityScore >= 50
+                              ? "rgba(245,158,11,0.12)"
+                              : "rgba(239,68,68,0.12)",
+                          color:
+                            seedQualityScore >= 80
+                              ? "#4ade80"
+                              : seedQualityScore >= 50
+                              ? "#fbbf24"
+                              : "#f87171",
+                        }}
+                      >
+                        {seedQualityScore}
+                        <span className="font-normal opacity-60 ml-0.5">/ 100</span>
+                      </div>
+                    </div>
+                    <div
+                      className="w-full rounded-full overflow-hidden mb-2"
+                      style={{ height: "1.5px", background: "rgba(99,146,255,0.10)" }}
+                    >
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${seedQualityScore}%`,
+                          background:
+                            seedQualityScore >= 80
+                              ? "linear-gradient(90deg,#22c55e,#4ade80)"
+                              : seedQualityScore >= 50
+                              ? "linear-gradient(90deg,#f59e0b,#fbbf24)"
+                              : "linear-gradient(90deg,#ef4444,#f87171)",
+                        }}
+                      />
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {seedQualitySignals.map((sig) => (
+                        <div
+                          key={sig.id}
+                          title={sig.tip}
+                          className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium cursor-default border ${
+                            sig.pass
+                              ? "bg-[rgba(34,197,94,0.10)] border-[rgba(34,197,94,0.25)] text-green-400"
+                              : "bg-elevated border-border-subtle/30 text-text-muted"
+                          }`}
+                        >
+                          <span className="text-[8px]">{sig.pass ? "✓" : "–"}</span>
+                          {sig.label}
+                        </div>
+                      ))}
+                    </div>
+                    {(() => {
+                      const firstFail = seedQualitySignals.find((s) => !s.pass);
+                      return firstFail ? (
+                        <p className="mt-2 text-[10px] text-text-muted leading-relaxed">
+                          <span className="font-medium text-text-secondary">Tip: </span>
+                          {firstFail.tip}
+                        </p>
+                      ) : (
+                        <p className="mt-2 text-[10px] text-green-400">
+                          Strong seed — the AI has everything it needs to write high-converting emails.
+                        </p>
+                      );
+                    })()}
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
