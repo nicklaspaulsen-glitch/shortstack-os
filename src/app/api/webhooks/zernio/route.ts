@@ -158,5 +158,52 @@ export async function POST(request: NextRequest) {
     }).catch((err) => console.warn("[voice-capture/zernio]", err));
   }
 
+  // ── Lead Pipeline qualification ───────────────────────────────────────────
+  // If the sender matches a lead in the voice-outreach pipeline, route the
+  // message to the AI qualification agent (fire-and-forget).
+  if (senderHandle && payload.text && ownerId) {
+    const { data: pipelineLead } = await supabase
+      .from("lead_pipeline")
+      .select("id, stage")
+      .eq("owner_id", ownerId)
+      .eq("platform", "instagram")
+      .ilike("handle", senderHandle)
+      .not("stage", "in", '("dead","converted")')
+      .limit(1)
+      .maybeSingle();
+
+    if (pipelineLead?.id) {
+      // Update stage to "replied" if still at outreach_sent
+      if (pipelineLead.stage === "outreach_sent") {
+        await supabase
+          .from("lead_pipeline")
+          .update({ stage: "replied", last_reply_at: new Date().toISOString() })
+          .eq("id", pipelineLead.id);
+      }
+
+      // Fire qualification agent asynchronously — don't block the webhook response
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
+      const webhookKey = process.env.WEBHOOK_SECRET || "";
+      fetch(`${appUrl}/api/leadgen/qualify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-webhook-key": webhookKey,
+        },
+        body: JSON.stringify({
+          lead_id: pipelineLead.id,
+          message: payload.text,
+          attachments: (payload.attachments || []).map((a) => ({
+            url: a.url,
+            type: a.type,
+            filename: a.filename,
+          })),
+        }),
+      }).catch((err) =>
+        console.warn("[zernio-webhook] leadgen qualify trigger failed:", err),
+      );
+    }
+  }
+
   return NextResponse.json({ ok: true });
 }

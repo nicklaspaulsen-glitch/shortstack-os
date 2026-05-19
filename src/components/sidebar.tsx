@@ -156,6 +156,7 @@ const navItems: NavItem[] = [
   { label: "Community",        href: "/dashboard/community",         icon: <NavIcon3D name="Users"           size={16} />, roles: ["admin", "team_member", "client"],          settingsOnly: true },
   { label: "Reports",          href: "/dashboard/reports",           icon: <NavIcon3D name="FileText"        size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Outreach",         href: "/dashboard/outreach-hub",      icon: <NavIcon3D name="Send"            size={16} />, roles: ["admin"],                                   settingsOnly: true },
+  { label: "Lead Pipeline",    href: "/dashboard/leadgen-pipeline",  icon: <NavIcon3D name="Kanban"          size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Lead Finder",      href: "/dashboard/scraper",           icon: <NavIcon3D name="Search"          size={16} />, roles: ["admin", "team_member"],                    settingsOnly: true },
   { label: "AI Caller",        href: "/dashboard/eleven-agents",     icon: <NavIcon3D name="Phone"           size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Dialer",           href: "/dashboard/dialer",            icon: <NavIcon3D name="Phone"           size={16} />, roles: ["admin", "team_member"],                    settingsOnly: true },
