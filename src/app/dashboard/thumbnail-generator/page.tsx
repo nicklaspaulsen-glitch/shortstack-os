@@ -48,6 +48,7 @@ import StockPhotosPanel from "@/components/thumbnail-editor/stock-photos-panel";
 import type { StockPhoto } from "@/lib/integrations/stock-photos";
 import { MotionPage } from "@/components/motion/motion-page";
 import SmartBar from "@/components/ui/smart-bar";
+import CreatorIntelligence from "@/components/ui/creator-intelligence";
 
 // Electron hint — the preload script sets window.electron. We check for
 // truthy at runtime to decide whether to show the native picker.
@@ -1058,6 +1059,24 @@ export default function ThumbnailEditorProPage() {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Creator Intelligence — floating panel, bottom-center-left (right of CTR button) */}
+            <CreatorIntelligence
+              context="thumbnail"
+              variant="floating"
+              className="bottom-4 left-36"
+              platform="youtube"
+              onApply={(idea) => {
+                const textLayer = createTextLayer(idea.title.toUpperCase(), {
+                  x: Math.round(state.canvasWidth / 2 - 240),
+                  y: 60,
+                  width: 480,
+                  height: 90,
+                });
+                commit({ type: "ADD_LAYER", layer: textLayer }, `Creator idea: ${idea.title}`);
+                toast.success("Idea title added to canvas — adjust font and colour to taste!");
+              }}
+            />
 
             <AIFillDialog
               open={aiFillOpen}

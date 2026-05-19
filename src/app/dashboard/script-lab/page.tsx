@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { useManagedClient } from "@/lib/use-managed-client";
@@ -25,6 +25,8 @@ import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 import { MotionPage } from "@/components/motion/motion-page";
 import PageAgent from "@/components/ui/page-agent";
+import CreatorIntelligence from "@/components/ui/creator-intelligence";
+import type { CreatorStyle } from "@/lib/ai/creator-styles";
 
 // Example "phone mockup" script cards used in the landing state marquee.
 // Each card shows 2-3 lines of a sample script opener � just enough to
@@ -287,6 +289,7 @@ export default function ScriptLabPage() {
     platform: "instagram",
   });
 
+  const [creatorIdeasOpen, setCreatorIdeasOpen] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [researching, setResearching] = useState(false);
   const [rewriting, setRewriting] = useState(false);
@@ -1499,6 +1502,65 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
  />
                 </div>
               </div>
+              {/* Creator Intelligence — collapsible idea engine above topic field */}
+              <div className="mb-1">
+                <button
+                  type="button"
+                  onClick={() => setCreatorIdeasOpen((o) => !o)}
+                  className="flex items-center gap-1.5 text-[10px] font-medium mb-2 transition-colors cursor-pointer"
+                  style={{ color: creatorIdeasOpen ? "#60A5FA" : "#6B7280" }}
+                >
+                  <TrendingUp size={10} />
+                  Get creator-style ideas
+                  <span style={{ fontSize: 8, opacity: 0.7 }}>{creatorIdeasOpen ? "▲" : "▼"}</span>
+                </button>
+                <AnimatePresence>
+                  {creatorIdeasOpen && (
+                    <motion.div
+                      key="creator-ideas-script"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.18, ease: [0.32, 0.72, 0, 1] }}
+                      className="overflow-hidden mb-3"
+                    >
+                      <CreatorIntelligence
+                        context="script"
+                        variant="inline"
+                        currentTopic={config.topic}
+                        platform={config.platform as "youtube" | "tiktok" | "instagram" | "twitter" | "linkedin" | undefined}
+                        onApply={(idea, creator: CreatorStyle) => {
+                          // Map creator tone to nearest TONES entry
+                          const TONE_MAP: Record<string, string> = {
+                            challenger: "controversial",
+                            "tech-minimalist": "professional",
+                            "science-explorer": "educational",
+                            "raw-motivator": "bold",
+                            "authentic-vlogger": "conversational",
+                            transformation: "storytelling",
+                            "finance-authority": "authoritative",
+                            "story-driven": "storytelling",
+                            culinary: "casual",
+                            gaming: "casual",
+                            documentary: "authoritative",
+                            productivity: "professional",
+                          };
+                          const mappedTone = TONE_MAP[creator.id] ?? "storytelling";
+                          setConfig((prev) => ({
+                            ...prev,
+                            topic: idea.title,
+                            viral_reference: `${idea.angle}: ${idea.hook}`,
+                            tone: mappedTone,
+                          }));
+                          setCreatorIdeasOpen(false);
+                          toast.success(`${creator.emoji} Idea applied — topic, hook & tone set!`);
+                        }}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="block text-[9px] text-text-muted uppercase tracking-wider">Topic *</label>

@@ -27,6 +27,7 @@ import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 import PageAgent from "@/components/ui/page-agent";
 import SmartBar from "@/components/ui/smart-bar";
+import CreatorIntelligence from "@/components/ui/creator-intelligence";
 import dynamic from "next/dynamic";
 
 // Lazy-load Remotion player — browser-only, heavy (~200 KB), only needed
@@ -277,6 +278,7 @@ export default function AIVideoPage() {
   };
 
   // Viral prediction
+  const [creatorIdeasOpen, setCreatorIdeasOpen] = useState(false);
   const [viralPredicting, setViralPredicting] = useState(false);
   const [viralResult, setViralResult] = useState<{
     viral_score: number;
@@ -871,6 +873,44 @@ export default function AIVideoPage() {
                 ))}
               </div>
             )}
+
+            {/* Creator Intelligence — collapsible idea generator above prompt */}
+            <div className="mb-3">
+              <button
+                type="button"
+                onClick={() => setCreatorIdeasOpen((o) => !o)}
+                className="flex items-center gap-1.5 text-[10px] font-medium mb-2 transition-colors cursor-pointer"
+                style={{ color: creatorIdeasOpen ? "#60A5FA" : "#6B7280" }}
+              >
+                <TrendingUp size={10} />
+                Get creator-style ideas
+                <span style={{ fontSize: 8, opacity: 0.7 }}>{creatorIdeasOpen ? "▲" : "▼"}</span>
+              </button>
+              <AnimatePresence>
+                {creatorIdeasOpen && (
+                  <motion.div
+                    key="creator-ideas-ai-video"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.18, ease: [0.32, 0.72, 0, 1] }}
+                    className="overflow-hidden mb-3"
+                  >
+                    <CreatorIntelligence
+                      context="ai-video"
+                      variant="inline"
+                      currentTopic={prompt}
+                      platform="youtube"
+                      onApply={(idea) => {
+                        setPrompt(idea.hook);
+                        setCreatorIdeasOpen(false);
+                        toast.success("Hook applied to prompt!");
+                      }}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* Prompt textarea — the real star */}
             <textarea
