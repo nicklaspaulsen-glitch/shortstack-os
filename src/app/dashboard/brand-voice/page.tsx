@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
@@ -10,7 +10,7 @@ import {
   AlertCircle, CheckCircle, Type, Shield,
   ChevronDown, ChevronRight, Search, Wand2,
   FileText, Users, Star, Loader, Eye,
-  ThumbsUp, ThumbsDown, Volume2, Palette
+  ThumbsUp, ThumbsDown, Volume2, Palette, TrendingUp
 } from "lucide-react";
 import toast from "react-hot-toast";
 import EmptyState from "@/components/empty-state";
@@ -262,6 +262,35 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
     { key: "checker" as const, label: "Voice Checker", icon: <CheckCircle size={14} /> },
   ];
 
+  type VoiceProfileSignal = { id: string; label: string; tip: string; pass: boolean };
+
+  const profileCompletenessSignals = useMemo((): VoiceProfileSignal[] => {
+    if (!profile) return [];
+    const hasSamples = profile.samples.length >= 1;
+    const corpusWords = profile.samples
+      .map(s => s.trim().split(/\s+/).filter(Boolean).length)
+      .reduce((a, n) => a + n, 0);
+    const hasCorpus = corpusWords >= 200;
+    const hasDos = profile.dos.length >= 2;
+    const hasDonts = profile.donts.length >= 2;
+    const hasVocab = profile.approvedTerms.length >= 1 || profile.bannedWords.length >= 1;
+    const hasGuidelines = profile.guidelines.trim().length >= 20;
+    return [
+      { id: "samples",    label: "Samples",    tip: "Add at least 1 writing sample — samples teach the AI your brand's unique voice",                                                pass: hasSamples },
+      { id: "corpus",     label: `≥200 words`, tip: `Reach 200 total sample words to unlock the AI voice humanizer (current: ${corpusWords} words)`,                               pass: hasCorpus },
+      { id: "dos",        label: "Do rules",   tip: "Add ≥2 do guidelines in the Samples & Rules tab to sharpen voice alignment",                                                   pass: hasDos },
+      { id: "donts",      label: "Don'ts",     tip: "Add ≥2 don't rules — restrictions are as important as positive guidelines",                                                    pass: hasDonts },
+      { id: "vocab",      label: "Vocabulary", tip: "Add approved terms or banned words in the Vocabulary tab — improves voice checker accuracy",                                   pass: hasVocab },
+      { id: "guidelines", label: "Guidelines", tip: "Generate or write AI guidelines — the system prompt uses these to inject voice into every output",                             pass: hasGuidelines },
+    ];
+  }, [profile]);
+
+  const profileCompletenessScore = useMemo(() => {
+    if (!profileCompletenessSignals.length) return 0;
+    const passing = profileCompletenessSignals.filter((s) => s.pass).length;
+    return Math.round((passing / profileCompletenessSignals.length) * 100);
+  }, [profileCompletenessSignals]);
+
   return (
     <MotionPage className="space-y-6"><AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />{/* -- Brand Voice Manager command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
@@ -510,6 +539,67 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                             <p className="text-xs text-text-muted">Click Generate to create AI voice guidelines based on your samples and settings.</p>
                           )}
                         </div>
+
+                        {/* Profile Completeness Scorer */}
+                        {profileCompletenessSignals.length > 0 && (
+                          <div
+                            className="rounded-lg p-2.5"
+                            style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}
+                          >
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-1.5">
+                                <TrendingUp size={11} className="text-brand-accent" />
+                                <span className="text-[11px] font-semibold text-text-primary">Profile Strength</span>
+                              </div>
+                              <div
+                                className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold tabular-nums"
+                                style={{
+                                  background: profileCompletenessScore >= 71 ? "rgba(34,197,94,0.12)" : profileCompletenessScore >= 43 ? "rgba(245,158,11,0.12)" : "rgba(239,68,68,0.12)",
+                                  color: profileCompletenessScore >= 71 ? "#4ade80" : profileCompletenessScore >= 43 ? "#fbbf24" : "#f87171",
+                                }}
+                              >
+                                {profileCompletenessScore}
+                                <span className="font-normal opacity-60 ml-0.5">/ 100</span>
+                              </div>
+                            </div>
+                            <div className="w-full rounded-full overflow-hidden mb-2" style={{ height: "1.5px", background: "rgba(99,146,255,0.10)" }}>
+                              <div
+                                className="h-full rounded-full transition-all duration-500"
+                                style={{
+                                  width: `${profileCompletenessScore}%`,
+                                  background: profileCompletenessScore >= 71 ? "linear-gradient(90deg,#22c55e,#4ade80)" : profileCompletenessScore >= 43 ? "linear-gradient(90deg,#f59e0b,#fbbf24)" : "linear-gradient(90deg,#ef4444,#f87171)",
+                                }}
+                              />
+                            </div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {profileCompletenessSignals.map((sig) => (
+                                <div
+                                  key={sig.id}
+                                  title={sig.tip}
+                                  className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium cursor-default border ${
+                                    sig.pass
+                                      ? "bg-[rgba(34,197,94,0.10)] border-[rgba(34,197,94,0.25)] text-green-400"
+                                      : "bg-elevated border-border-subtle/30 text-text-muted"
+                                  }`}
+                                >
+                                  <span className="text-[8px]">{sig.pass ? "✓" : "–"}</span>
+                                  {sig.label}
+                                </div>
+                              ))}
+                            </div>
+                            {(() => {
+                              const firstFail = profileCompletenessSignals.find((s) => !s.pass);
+                              return firstFail ? (
+                                <p className="mt-2 text-[10px] text-text-muted leading-relaxed">
+                                  <span className="font-medium text-text-secondary">Tip: </span>
+                                  {firstFail.tip}
+                                </p>
+                              ) : (
+                                <p className="mt-2 text-[10px] text-green-400">Profile complete — the AI voice humanizer is fully armed for this brand.</p>
+                              );
+                            })()}
+                          </div>
+                        )}
                       </div>
                     )}
 
