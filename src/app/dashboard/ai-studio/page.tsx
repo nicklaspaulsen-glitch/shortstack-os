@@ -8,7 +8,7 @@ import {
   Wand2, Zap, Copy, Palette, AlertTriangle,
   ArrowUpRight, FileAudio, Brain,
   Target, Edit3, Type as TypeIcon, Ratio, Loader2,
-  Heart, MoreHorizontal, Search, ChevronDown,
+  Heart, MoreHorizontal, Search, ChevronDown, TrendingUp,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -1102,6 +1102,40 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
     (historySearch === "" || (j.meta?.prompt as string | undefined)?.toLowerCase().includes(historySearch.toLowerCase()))
   );
 
+  type PromptSignal = { id: string; label: string; tip: string; pass: boolean };
+
+  const promptQualitySignals = useMemo((): PromptSignal[] => {
+    const words = prompt.trim().split(/\s+/).filter(Boolean);
+
+    const hasLength = words.length >= 12;
+
+    const styleRe = /\b(photorealistic|cinematic|oil painting|watercolor|sketch|anime|digital art|3d render|illustration|minimalist|modern|vintage|abstract|surreal|dramatic|editorial|impressionist|neon|steampunk)\b/i;
+    const hasStyle = !!style || styleRe.test(prompt);
+
+    const lightingRe = /\b(lighting|light|lit|golden hour|neon|glow|shadows|backlit|rim light|studio lighting|natural light|soft light|volumetric|overcast|misty|fog|dusk|dawn|sunset|sunrise|night)\b/i;
+    const hasLighting = lightingRe.test(prompt);
+
+    const framingRe = /\b(close.?up|wide shot|medium shot|aerial|macro|bokeh|depth of field|portrait|overhead|bird.?s.?eye|isometric|side view|front.?facing|full body|headshot|centered|angle)\b/i;
+    const hasFraming = framingRe.test(prompt);
+
+    const qualityRe = /\b(4k|8k|uhd|ultra.?detailed|hyperrealistic|high.?quality|professional|sharp focus|award.?winning|masterpiece|octane|unreal|cinematic|studio quality|intricate)\b/i;
+    const hasQuality = qualityRe.test(prompt);
+
+    return [
+      { id: "length",   label: "Detail",    tip: "Use ≥12 words — more specificity produces better results",             pass: hasLength },
+      { id: "style",    label: "Style",     tip: "Add an art style or pick one in the Style panel above",                pass: hasStyle },
+      { id: "lighting", label: "Lighting",  tip: "Mention lighting, atmosphere, or time of day for mood",                pass: hasLighting },
+      { id: "framing",  label: "Framing",   tip: "Specify shot type or composition (close-up, wide, overhead…)",         pass: hasFraming },
+      { id: "quality",  label: "Quality",   tip: "Add quality tags like 'cinematic', '4K', 'highly detailed'",           pass: hasQuality },
+    ];
+  }, [prompt, style]);
+
+  const promptQualityScore = useMemo(() => {
+    if (!prompt.trim()) return 0;
+    const passing = promptQualitySignals.filter((s) => s.pass).length;
+    return Math.round((passing / promptQualitySignals.length) * 100);
+  }, [promptQualitySignals, prompt]);
+
   return (
     <div className="flex gap-4 items-stretch min-h-[560px]">
       {/* ---- LEFT: Controls sidebar ---- */}
@@ -1238,6 +1272,63 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
           {processing ? <Loader size={13} className="animate-spin" /> : <Sparkles size={13} />}
           {processing ? "Generating..." : "Generate Image"}
         </motion.button>
+
+        {/* ── Prompt Quality Score ── */}
+        {prompt.trim().length > 0 && (
+          <div
+            className="rounded-xl p-3"
+            style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                <TrendingUp size={11} className="text-blue-400" />
+                <span className="text-[10px] font-semibold text-text-secondary">Prompt quality</span>
+              </div>
+              <span
+                className="text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded-full"
+                style={{
+                  background: promptQualityScore >= 80 ? "rgba(34,197,94,0.12)" : promptQualityScore >= 50 ? "rgba(245,158,11,0.12)" : "rgba(239,68,68,0.12)",
+                  color: promptQualityScore >= 80 ? "#4ade80" : promptQualityScore >= 50 ? "#fbbf24" : "#f87171",
+                }}
+              >
+                {promptQualityScore}
+              </span>
+            </div>
+            <div className="w-full h-1 rounded-full mb-2 overflow-hidden bg-white/[0.06]">
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${promptQualityScore}%`,
+                  background: promptQualityScore >= 80 ? "linear-gradient(90deg,#22c55e,#4ade80)" : promptQualityScore >= 50 ? "linear-gradient(90deg,#f59e0b,#fbbf24)" : "linear-gradient(90deg,#ef4444,#f87171)",
+                }}
+              />
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {promptQualitySignals.map((sig) => (
+                <div
+                  key={sig.id}
+                  title={sig.tip}
+                  className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-medium cursor-default border ${
+                    sig.pass
+                      ? "bg-[rgba(34,197,94,0.10)] border-[rgba(34,197,94,0.25)] text-green-400"
+                      : "bg-white/[0.04] border-white/[0.08] text-text-muted"
+                  }`}
+                >
+                  <span className="text-[7px]">{sig.pass ? "✓" : "–"}</span>
+                  {sig.label}
+                </div>
+              ))}
+            </div>
+            {(() => {
+              const firstFail = promptQualitySignals.find((s) => !s.pass);
+              return firstFail && (
+                <p className="mt-1.5 text-[9px] text-text-muted leading-relaxed">
+                  {firstFail.tip}
+                </p>
+              );
+            })()}
+          </div>
+        )}
       </div>
 
       {/* ---- CENTER: Cinematic preview canvas ---- */}
