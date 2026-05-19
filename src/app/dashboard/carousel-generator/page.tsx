@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   Sparkles, Download, Copy, Check, Loader, ChevronLeft, ChevronRight,
   Palette, Type, Layers, Wand2, LayoutGrid, Zap, Edit3, RotateCcw,
   BookOpen, List, MessageCircle, Lightbulb, HelpCircle, X,
-  Image as ImageIcon,
+  Image as ImageIcon, TrendingUp,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
@@ -602,6 +602,70 @@ export default function CarouselGeneratorPage() {
     const amount = 320;
     scrollRef.current.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
   }, []);
+
+  /* ── Carousel quality scorer ──────────────────────────────────────────────
+   * Zero-API, useMemo-derived quality signals evaluated against the current
+   * slide deck. Runs synchronously on every slide update — no fetch involved.
+   * Each signal represents a documented carousel best practice for feed
+   * engagement (hook-curiosity gap, CTA clarity, headline brevity, etc.).
+   * Score = passing_signals / total_signals * 100.
+   * ─────────────────────────────────────────────────────────────────────── */
+  type QualitySignal = { id: string; label: string; tip: string; pass: boolean };
+
+  const carouselQualitySignals = useMemo((): QualitySignal[] => {
+    if (slides.length === 0) return [];
+
+    const first = slides[0];
+    const last = slides[slides.length - 1];
+    const middle = slides.slice(1, -1);
+
+    // Signal 1 — Hook: slide 1 headline has curiosity-gap words OR is ≤7 words (punchy)
+    const hookRe = /\b(stop|secret|truth|never|mistake|wrong|realize|admit|expose|reveal|shocking|warning|hidden|most people|don't|won't|actually)\b/i;
+    const firstWordCount = first.headline.trim().split(/\s+/).length;
+    const hasHook = hookRe.test(first.headline) || firstWordCount <= 7;
+
+    // Signal 2 — CTA: final slide contains an action directive
+    const ctaRe = /\b(follow|save|share|comment|tap|click|subscribe|dm|tag|swipe up|link in bio|send this|bookmark|repost|like)\b/i;
+    const hasCta = ctaRe.test(last.headline) || ctaRe.test(last.body);
+
+    // Signal 3 — Brevity: middle slide headlines average ≤8 words
+    const avgMiddleWords =
+      middle.length > 0
+        ? middle.reduce((sum, s) => sum + s.headline.trim().split(/\s+/).length, 0) / middle.length
+        : firstWordCount;
+    const hasBrevity = avgMiddleWords <= 8;
+
+    // Signal 4 — Length: ≥5 slides for good feed engagement depth
+    const hasLength = slides.length >= 5;
+
+    // Signal 5 — Filled: every slide body is substantive (≥15 chars)
+    const hasAllBodies = slides.every((s) => s.body.trim().length >= 15);
+
+    // Signal 6 — Swipe nudge: slide 1 body prompts the viewer to continue
+    const swipeRe = /\b(swipe|→|read on|keep going|next slide|scroll|keep reading|👉|➡️|more inside)\b/i;
+    const hasSwipe = swipeRe.test(first.body);
+
+    // Signal 7 — Value density: at least one middle slide body ≥60 chars
+    const hasValueDensity =
+      middle.some((s) => s.body.trim().length >= 60) ||
+      (slides.length <= 2 && first.body.trim().length >= 60);
+
+    return [
+      { id: "hook",    label: "Hook",        tip: "Slide 1 headline creates curiosity or is short and punchy",    pass: hasHook },
+      { id: "cta",     label: "CTA",         tip: "Final slide has a clear call to action",                        pass: hasCta },
+      { id: "brevity", label: "Brevity",     tip: "Middle slide headlines avg ≤8 words — easy to scan",            pass: hasBrevity },
+      { id: "length",  label: "5+ slides",   tip: "Longer carousels drive more saves and reach",                   pass: hasLength },
+      { id: "bodies",  label: "Filled",      tip: "Every slide has at least 15 chars of body text",                pass: hasAllBodies },
+      { id: "swipe",   label: "Swipe nudge", tip: "Slide 1 body prompts the viewer to keep swiping",              pass: hasSwipe },
+      { id: "value",   label: "Value",       tip: "At least one slide gives detailed, substantive information",    pass: hasValueDensity },
+    ];
+  }, [slides]);
+
+  const carouselQualityScore = useMemo(() => {
+    if (carouselQualitySignals.length === 0) return 0;
+    const passing = carouselQualitySignals.filter((s) => s.pass).length;
+    return Math.round((passing / carouselQualitySignals.length) * 100);
+  }, [carouselQualitySignals]);
 
   return (
     <MotionPage className="max-w-7xl mx-auto animate-fade-in"><CarouselWizard
@@ -1374,6 +1438,106 @@ export default function CarouselGeneratorPage() {
                             </motion.div>
                           );
                         })}
+                      </div>
+
+                      {/* ── Carousel Quality Score ── */}
+                      <div
+                        className="mt-5 rounded-xl p-4"
+                        style={{
+                          background: "var(--color-surface-light)",
+                          border: "1px solid var(--color-border)",
+                        }}
+                      >
+                        {/* Header row */}
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <TrendingUp size={13} className="text-brand-accent" />
+                            <span className="text-xs font-semibold text-text-primary">Carousel Quality</span>
+                          </div>
+                          {/* Score pill */}
+                          <div
+                            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold"
+                            style={{
+                              background:
+                                carouselQualityScore >= 71
+                                  ? "color-mix(in srgb, #22c55e 12%, transparent)"
+                                  : carouselQualityScore >= 43
+                                  ? "color-mix(in srgb, #f59e0b 12%, transparent)"
+                                  : "color-mix(in srgb, #ef4444 12%, transparent)",
+                              color:
+                                carouselQualityScore >= 71
+                                  ? "#4ade80"
+                                  : carouselQualityScore >= 43
+                                  ? "#fbbf24"
+                                  : "#f87171",
+                            }}
+                          >
+                            <span className="tabular-nums">{carouselQualityScore}</span>
+                            <span className="font-normal opacity-70">/ 100</span>
+                          </div>
+                        </div>
+
+                        {/* Progress bar */}
+                        <div
+                          className="w-full h-1.5 rounded-full mb-3 overflow-hidden"
+                          style={{ background: "var(--color-border)" }}
+                        >
+                          <div
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{
+                              width: `${carouselQualityScore}%`,
+                              background:
+                                carouselQualityScore >= 71
+                                  ? "linear-gradient(90deg, #22c55e, #4ade80)"
+                                  : carouselQualityScore >= 43
+                                  ? "linear-gradient(90deg, #f59e0b, #fbbf24)"
+                                  : "linear-gradient(90deg, #ef4444, #f87171)",
+                            }}
+                          />
+                        </div>
+
+                        {/* Signal pills */}
+                        <div className="flex flex-wrap gap-1.5">
+                          {carouselQualitySignals.map((sig) => (
+                            <div
+                              key={sig.id}
+                              title={sig.tip}
+                              className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium cursor-default"
+                              style={{
+                                background: sig.pass
+                                  ? "color-mix(in srgb, #22c55e 10%, transparent)"
+                                  : "color-mix(in srgb, var(--color-muted) 8%, transparent)",
+                                border: sig.pass
+                                  ? "1px solid color-mix(in srgb, #22c55e 25%, transparent)"
+                                  : "1px solid var(--color-border)",
+                                color: sig.pass ? "#4ade80" : "var(--color-muted)",
+                              }}
+                            >
+                              <span
+                                className="text-[8px]"
+                                style={{ color: sig.pass ? "#4ade80" : "var(--color-muted)" }}
+                              >
+                                {sig.pass ? "✓" : "–"}
+                              </span>
+                              {sig.label}
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Tip for lowest-hanging fruit */}
+                        {(() => {
+                          const firstFail = carouselQualitySignals.find((s) => !s.pass);
+                          return firstFail ? (
+                            <p className="mt-2.5 text-[10px] text-text-muted leading-relaxed">
+                              <span className="font-medium" style={{ color: "var(--color-muted)" }}>Tip: </span>
+                              {firstFail.tip}
+                            </p>
+                          ) : (
+                            <p className="mt-2.5 text-[10px]" style={{ color: "#4ade80" }}>
+                              All signals passing — this carousel is optimised for engagement.
+                            </p>
+                          );
+                        })()}
                       </div>
 
                       {/* Slide list (text view for quick editing) */}
