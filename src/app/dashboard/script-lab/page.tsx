@@ -2538,6 +2538,64 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             );
           })()}
 
+          {/* Visual Density panel — cinematic completeness health check */}
+          {(() => {
+            const secs = activeScript.script.sections;
+            const total = secs.length;
+            const withVisual = secs.filter(s => s.visual_direction?.trim()).length;
+            const withOverlay = secs.filter(s => s.text_overlay?.trim()).length;
+            const withEmotion = secs.filter(s => s.emotion?.trim() && s.emotion.toLowerCase() !== "neutral").length;
+            const totalWords = secs.reduce((a, s) => a + s.dialogue.trim().split(/\s+/).filter(Boolean).length, 0);
+            const avgPace = secs.length > 0
+              ? Math.round((secs.reduce((a, s) => a + sectionPacing(s).wps, 0) / secs.length) * 10) / 10
+              : 0;
+            const visualPct = total > 0 ? Math.round((withVisual / total) * 100) : 0;
+            const overlayPct = total > 0 ? Math.round((withOverlay / total) * 100) : 0;
+            const emotionPct = total > 0 ? Math.round((withEmotion / total) * 100) : 0;
+            const overallScore = Math.round((visualPct * 0.45 + overlayPct * 0.25 + emotionPct * 0.30));
+            const scoreColor = overallScore >= 75 ? "#22C55E" : overallScore >= 50 ? "#F59E0B" : "#EF4444";
+            const scoreLabel = overallScore >= 75 ? "Cinema-ready" : overallScore >= 50 ? "Needs work" : "Visual gap";
+            return (
+              <div className="rounded-xl border border-border-subtle bg-surface-light/40 px-4 py-3">
+                <div className="flex items-center justify-between mb-2.5">
+                  <p className="text-[9px] uppercase tracking-wider font-medium text-text-muted flex items-center gap-1.5">
+                    <Clapperboard size={9} className="text-brand-accent" /> Visual Density
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[8px] font-bold px-2 py-0.5 rounded-full" style={{ background: `${scoreColor}18`, color: scoreColor }}>
+                      {overallScore} · {scoreLabel}
+                    </span>
+                    <span className="text-[8px] text-text-muted">{totalWords}w · {avgPace}w/s avg</span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { label: "B-roll cues", count: withVisual, pct: visualPct, color: "#3B82F6", tip: "Sections with visual direction" },
+                    { label: "Text overlays", count: withOverlay, pct: overlayPct, color: "#8B5CF6", tip: "Sections with on-screen text" },
+                    { label: "Emotion set", count: withEmotion, pct: emotionPct, color: "#EC4899", tip: "Sections with non-neutral emotion" },
+                  ].map(m => (
+                    <div key={m.label} title={m.tip}>
+                      <div className="flex items-center justify-between mb-0.5">
+                        <span className="text-[8px] text-text-muted">{m.label}</span>
+                        <span className="text-[8px] font-medium" style={{ color: m.color }}>{m.count}/{total}</span>
+                      </div>
+                      <div className="h-1 rounded-full bg-white/5 overflow-hidden">
+                        <div className="h-full rounded-full transition-all duration-500" style={{ width: `${m.pct}%`, background: m.color, opacity: 0.8 }} />
+                      </div>
+                      <p className="text-[7px] text-text-muted mt-0.5">{m.pct}%</p>
+                    </div>
+                  ))}
+                </div>
+                {visualPct < 60 && (
+                  <p className="text-[8px] text-amber-400/80 mt-2 flex items-center gap-1">
+                    <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 3.5l8.5 15.5H3.5L12 5.5zm-1 5v5h2v-5h-2zm0 7v2h2v-2h-2z"/></svg>
+                    {total - withVisual} section{total - withVisual !== 1 ? "s" : ""} missing B-roll cues — add visual direction for better clip generation
+                  </p>
+                )}
+              </div>
+            );
+          })()}
+
           {/* Full script sections */}
           <div className="glass rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
