@@ -182,6 +182,127 @@ function TemplateCard({ template, onChange, onDelete, context }: {
     return Math.round((passing / emailQualitySignals.length) * 100);
   }, [emailQualitySignals]);
 
+  // ── SMS quality scorer ────────────────────────────────────────────────
+  const smsQualitySignals = useMemo((): EmailSignal[] | null => {
+    if (!context.toLowerCase().includes("sms")) return null;
+    const raw = template.content.trim();
+    if (!raw) return null;
+
+    // Under 160 chars: standard single SMS segment
+    const isShort = raw.length <= 160;
+
+    // Opt-out clause: compliance requirement
+    const hasOptOut = /\b(stop|opt.?out|unsubscribe|reply stop)\b/i.test(raw);
+
+    // Personalisation via placeholder
+    const hasPersonalization = /\{\{[^}]+\}\}/.test(raw);
+
+    // CTA: clear ask
+    const ctaRe = /\b(call|reply|click|visit|schedule|book|check out|tap|grab|sign up|dm|text back)\b/i;
+    const hasCta = ctaRe.test(raw);
+
+    // No spam-trigger ALL-CAPS keywords
+    const spamRe = /\b(FREE|WINNER|PRIZE|ACT NOW|LIMITED TIME|GUARANTEED|CONGRATULATIONS|URGENT)\b/;
+    const noSpam = !spamRe.test(raw);
+
+    return [
+      { id: "short",    label: "≤160 chars",  tip: "Keep body under 160 chars to send as a single message segment",     pass: isShort },
+      { id: "optout",   label: "Opt-out",     tip: "Include 'Reply STOP' — required by TCPA for compliant SMS",           pass: hasOptOut },
+      { id: "personal", label: "Personal",    tip: "Use {{variable}} so the message feels 1-to-1, not broadcast",         pass: hasPersonalization },
+      { id: "cta",      label: "CTA",         tip: "Include a clear action (call, reply, click, book…)",                  pass: hasCta },
+      { id: "nospam",   label: "No Spam",     tip: "Avoid ALL-CAPS trigger words — they route messages to spam filters",  pass: noSpam },
+    ];
+  }, [context, template.content]);
+
+  const smsQualityScore = useMemo(() => {
+    if (!smsQualitySignals) return 0;
+    const passing = smsQualitySignals.filter((s) => s.pass).length;
+    return Math.round((passing / smsQualitySignals.length) * 100);
+  }, [smsQualitySignals]);
+
+  // ── DM quality scorer ─────────────────────────────────────────────────
+  const dmQualitySignals = useMemo((): EmailSignal[] | null => {
+    if (!context.toLowerCase().includes("dm")) return null;
+    const raw = template.content.trim();
+    if (!raw) return null;
+
+    // Hook: opens with a question, observation, or curiosity trigger — not a company pitch
+    const firstLine = raw.split(/\n/)[0].trim();
+    const companyPitchRe = /^(hi|hey|hello|i'm|i am|we are|we're|my name|i work|i wanted)/i;
+    const hasHook = !companyPitchRe.test(firstLine) || firstLine.includes("?");
+
+    // Short: DMs must be scannable
+    const wordCount = raw.split(/\s+/).filter(Boolean).length;
+    const isShort = wordCount <= 80;
+
+    // Personalised via placeholder
+    const hasPersonalization = /\{\{[^}]+\}\}/.test(raw);
+
+    // Value first: mentions benefit before asking anything
+    const valueRe = /\b(help|improve|grow|save|increase|results?|clients?|customers?|noticed|saw|checked|congrats|loved)\b/i;
+    const hasValue = valueRe.test(raw);
+
+    // CTA: ends with a question or low-friction ask
+    const lastLine = [...raw.split(/\n/)].reverse().find(l => l.trim()) ?? "";
+    const hasCta = lastLine.includes("?") || /\b(reply|let me know|open to|interested|available|thoughts?|connect)\b/i.test(lastLine);
+
+    return [
+      { id: "hook",     label: "Hook",        tip: "Don't open with 'Hi, I'm X from Y' — lead with an observation or question", pass: hasHook },
+      { id: "short",    label: "≤80 words",   tip: "Keep DMs under 80 words — readers bail on paragraphs in their inbox",        pass: isShort },
+      { id: "personal", label: "Personal",    tip: "Use {{variable}} placeholders so it reads like a genuine 1:1 message",        pass: hasPersonalization },
+      { id: "value",    label: "Value first", tip: "Lead with what you noticed or can help with, before making any ask",          pass: hasValue },
+      { id: "cta",      label: "CTA",         tip: "Close with a question or soft ask to keep the conversation open",             pass: hasCta },
+    ];
+  }, [context, template.content]);
+
+  const dmQualityScore = useMemo(() => {
+    if (!dmQualitySignals) return 0;
+    const passing = dmQualitySignals.filter((s) => s.pass).length;
+    return Math.round((passing / dmQualitySignals.length) * 100);
+  }, [dmQualitySignals]);
+
+  // ── Call script scorer ────────────────────────────────────────────────
+  const callQualitySignals = useMemo((): EmailSignal[] | null => {
+    if (!context.toLowerCase().includes("call")) return null;
+    const raw = template.content.trim();
+    if (!raw) return null;
+
+    // Has CONTEXT/INFO block with lead variables for AI to fill
+    const hasContext = /\bCONTEXT\b|CONTEXT:/i.test(raw) || /\{\{[^}]+\}\}/.test(raw);
+
+    // Opener avoids "I'd like to tell you about" — uses situation or question
+    const opener = raw.split(/\n/).slice(0, 5).join(" ");
+    const badOpener = /i'd like to|i want to|i'm calling to offer|we provide|we offer|i wanted to reach/i;
+    const goodOpener = /\?|do you|are you|is this|have you|quick question|i noticed|i saw|just checking/i;
+    const hasGoodOpener = !badOpener.test(opener) || goodOpener.test(opener);
+
+    // Objection handling: script addresses pushback
+    const objectionRe = /\b(not interested|busy|call back|no thanks|wrong time|already have|not right now|bad time|if.*busy|if.*not)\b/i;
+    const hasObjections = objectionRe.test(raw);
+
+    // CTA: ends with a calendar/meeting close
+    const ctaRe = /\b(schedule|book|calendar|15.?min|30.?min|quick call|demo|follow.?up|best time|next week|tomorrow|available)\b/i;
+    const hasCta = ctaRe.test(raw);
+
+    // Brevity: call scripts should be ≤ 350 words
+    const wordCount = raw.split(/\s+/).filter(Boolean).length;
+    const isBrief = wordCount <= 350;
+
+    return [
+      { id: "context",    label: "Lead info",  tip: "Include a CONTEXT block or {{variables}} so the AI personalises each call", pass: hasContext },
+      { id: "opener",     label: "Opener",     tip: "Avoid 'I'd like to tell you about us' — open with a situation question",    pass: hasGoodOpener },
+      { id: "objections", label: "Objections", tip: "Handle 'not interested', 'busy', 'call back' — don't let the call die",     pass: hasObjections },
+      { id: "cta",        label: "Book CTA",   tip: "Close by asking for a specific slot or a quick follow-up call",              pass: hasCta },
+      { id: "brief",      label: "Concise",    tip: "Keep the script under 350 words — focus on booking, not presenting",        pass: isBrief },
+    ];
+  }, [context, template.content]);
+
+  const callQualityScore = useMemo(() => {
+    if (!callQualitySignals) return 0;
+    const passing = callQualitySignals.filter((s) => s.pass).length;
+    return Math.round((passing / callQualitySignals.length) * 100);
+  }, [callQualitySignals]);
+
   function copyContent() {
     navigator.clipboard.writeText(template.content);
     setCopied(true);
@@ -275,6 +396,135 @@ function TemplateCard({ template, onChange, onDelete, context }: {
                   return first
                     ? first.tip
                     : "Strong cold email — clear, personal, and actionable.";
+                })()}
+              </p>
+            </div>
+          )}
+          {/* SMS Quality Panel */}
+          {smsQualitySignals !== null && (
+            <div className="rounded-lg p-2.5 mt-1"
+              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-1.5">
+                  <TrendingUp size={9} style={{ color: smsQualityScore >= 80 ? "#4ade80" : smsQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
+                  <span className="text-[9px] font-semibold" style={{ color: "#A8A8B2" }}>SMS Quality</span>
+                </div>
+                <span className="text-[10px] font-bold tabular-nums"
+                  style={{ color: smsQualityScore >= 80 ? "#4ade80" : smsQualityScore >= 50 ? "#fbbf24" : "#f87171" }}>
+                  {smsQualityScore}%
+                </span>
+              </div>
+              <div className="h-[1.5px] rounded-full mb-2 overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                <div className="h-full rounded-full transition-all duration-500"
+                  style={{
+                    width: `${smsQualityScore}%`,
+                    background: smsQualityScore >= 80 ? "linear-gradient(90deg,#16a34a,#4ade80)" : smsQualityScore >= 50 ? "linear-gradient(90deg,#d97706,#fbbf24)" : "linear-gradient(90deg,#dc2626,#f87171)",
+                  }} />
+              </div>
+              <div className="flex flex-wrap gap-1 mb-2">
+                {smsQualitySignals.map((s) => (
+                  <span key={s.id} title={s.tip}
+                    className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-medium cursor-default select-none"
+                    style={{
+                      background: s.pass ? "rgba(74,222,128,0.10)" : "rgba(255,255,255,0.05)",
+                      color: s.pass ? "#4ade80" : "#6b7280",
+                      border: `1px solid ${s.pass ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.08)"}`,
+                    }}>
+                    <span style={{ fontSize: "7px" }}>{s.pass ? "✓" : "–"}</span>
+                    {s.label}
+                  </span>
+                ))}
+              </div>
+              <p className="text-[8.5px] leading-relaxed" style={{ color: "#6b7280" }}>
+                {(() => {
+                  const first = smsQualitySignals.find((s) => !s.pass);
+                  return first ? first.tip : "Compliant, personal, and clear — ready to send.";
+                })()}
+              </p>
+            </div>
+          )}
+          {/* DM Quality Panel */}
+          {dmQualitySignals !== null && (
+            <div className="rounded-lg p-2.5 mt-1"
+              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-1.5">
+                  <TrendingUp size={9} style={{ color: dmQualityScore >= 80 ? "#4ade80" : dmQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
+                  <span className="text-[9px] font-semibold" style={{ color: "#A8A8B2" }}>DM Quality</span>
+                </div>
+                <span className="text-[10px] font-bold tabular-nums"
+                  style={{ color: dmQualityScore >= 80 ? "#4ade80" : dmQualityScore >= 50 ? "#fbbf24" : "#f87171" }}>
+                  {dmQualityScore}%
+                </span>
+              </div>
+              <div className="h-[1.5px] rounded-full mb-2 overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                <div className="h-full rounded-full transition-all duration-500"
+                  style={{
+                    width: `${dmQualityScore}%`,
+                    background: dmQualityScore >= 80 ? "linear-gradient(90deg,#16a34a,#4ade80)" : dmQualityScore >= 50 ? "linear-gradient(90deg,#d97706,#fbbf24)" : "linear-gradient(90deg,#dc2626,#f87171)",
+                  }} />
+              </div>
+              <div className="flex flex-wrap gap-1 mb-2">
+                {dmQualitySignals.map((s) => (
+                  <span key={s.id} title={s.tip}
+                    className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-medium cursor-default select-none"
+                    style={{
+                      background: s.pass ? "rgba(74,222,128,0.10)" : "rgba(255,255,255,0.05)",
+                      color: s.pass ? "#4ade80" : "#6b7280",
+                      border: `1px solid ${s.pass ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.08)"}`,
+                    }}>
+                    <span style={{ fontSize: "7px" }}>{s.pass ? "✓" : "–"}</span>
+                    {s.label}
+                  </span>
+                ))}
+              </div>
+              <p className="text-[8.5px] leading-relaxed" style={{ color: "#6b7280" }}>
+                {(() => {
+                  const first = dmQualitySignals.find((s) => !s.pass);
+                  return first ? first.tip : "Genuine, value-first DM that earns a reply.";
+                })()}
+              </p>
+            </div>
+          )}
+          {/* Call Script Quality Panel */}
+          {callQualitySignals !== null && (
+            <div className="rounded-lg p-2.5 mt-1"
+              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-1.5">
+                  <TrendingUp size={9} style={{ color: callQualityScore >= 80 ? "#4ade80" : callQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
+                  <span className="text-[9px] font-semibold" style={{ color: "#A8A8B2" }}>Script Quality</span>
+                </div>
+                <span className="text-[10px] font-bold tabular-nums"
+                  style={{ color: callQualityScore >= 80 ? "#4ade80" : callQualityScore >= 50 ? "#fbbf24" : "#f87171" }}>
+                  {callQualityScore}%
+                </span>
+              </div>
+              <div className="h-[1.5px] rounded-full mb-2 overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                <div className="h-full rounded-full transition-all duration-500"
+                  style={{
+                    width: `${callQualityScore}%`,
+                    background: callQualityScore >= 80 ? "linear-gradient(90deg,#16a34a,#4ade80)" : callQualityScore >= 50 ? "linear-gradient(90deg,#d97706,#fbbf24)" : "linear-gradient(90deg,#dc2626,#f87171)",
+                  }} />
+              </div>
+              <div className="flex flex-wrap gap-1 mb-2">
+                {callQualitySignals.map((s) => (
+                  <span key={s.id} title={s.tip}
+                    className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-medium cursor-default select-none"
+                    style={{
+                      background: s.pass ? "rgba(74,222,128,0.10)" : "rgba(255,255,255,0.05)",
+                      color: s.pass ? "#4ade80" : "#6b7280",
+                      border: `1px solid ${s.pass ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.08)"}`,
+                    }}>
+                    <span style={{ fontSize: "7px" }}>{s.pass ? "✓" : "–"}</span>
+                    {s.label}
+                  </span>
+                ))}
+              </div>
+              <p className="text-[8.5px] leading-relaxed" style={{ color: "#6b7280" }}>
+                {(() => {
+                  const first = callQualitySignals.find((s) => !s.pass);
+                  return first ? first.tip : "Well-structured script — opener, objections, and close all covered.";
                 })()}
               </p>
             </div>
