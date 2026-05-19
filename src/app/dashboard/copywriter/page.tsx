@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   PenTool, Sparkles, FileText, Globe, Mail, MessageSquare,
   ShoppingBag, Megaphone, Copy, BookmarkPlus, Loader, Clock,
   Wand2, ChevronRight, Trash2, RotateCcw, Sliders,
   Hash, Users, Target, Type, Layers,
-  CheckCircle, Star, Zap, BookOpen, X, Plus
+  CheckCircle, Star, Zap, BookOpen, X, Plus, TrendingUp
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Pen } from "lucide-react";
@@ -1049,6 +1049,33 @@ export default function CopywriterPage() {
     }
   }, [audience]);
 
+  type BriefSignal = { id: string; label: string; tip: string; pass: boolean };
+
+  const contentBriefSignals = useMemo((): BriefSignal[] => {
+    const topicWords = topic.trim().split(/\s+/).filter(Boolean).length;
+    const hasTopicDetail = topicWords >= 10;
+    const hasAudience = audience.trim().length >= 3;
+    const hasKeywords = keywords.trim().length >= 2;
+    const angleRe = /\b(\d+|\bhow\b|\bwhy\b|\bwhat\b|\bbest\b|\btop\b|\bultimate\b|\bcomplete\b|\bguide\b|\bstrategy\b|\bsecret\b|\bstep\b|\btips?\b|\?)(\b|$)/i;
+    const hasAngle = angleRe.test(topic);
+    const shortTypes: ContentType[] = ["social", "ad"];
+    const longTypes: ContentType[] = ["blog", "landing", "email", "product"];
+    const isWordCountFit = (shortTypes.includes(contentType) && wordCount <= 300) ||
+      (longTypes.includes(contentType) && wordCount >= 200);
+    return [
+      { id: "detail",   label: "Detail",    tip: "Write ≥10 words in the brief — specificity is the #1 output quality driver",  pass: hasTopicDetail },
+      { id: "angle",    label: "Angle",     tip: "Add a number, question, or hook (e.g. '5 ways to…', 'Why most…')",            pass: hasAngle },
+      { id: "audience", label: "Audience",  tip: "Fill in who this is for — copy written for everyone converts nobody",          pass: hasAudience },
+      { id: "keywords", label: "Keywords",  tip: "Add focus keywords so the AI works them naturally into the copy",              pass: hasKeywords },
+      { id: "length",   label: "Length fit", tip: shortTypes.includes(contentType) ? "Ads/social should be ≤300 words for punch" : "Long-form needs ≥200 words to be substantial", pass: isWordCountFit },
+    ];
+  }, [topic, audience, keywords, contentType, wordCount]);
+
+  const contentBriefScore = useMemo(() => {
+    const passing = contentBriefSignals.filter((s) => s.pass).length;
+    return topic.trim() ? Math.round((passing / contentBriefSignals.length) * 100) : 0;
+  }, [contentBriefSignals, topic]);
+
   return (
     <MotionPage className="p-6 max-w-7xl mx-auto space-y-6">{/* -- AI Copywriter command strip -- */}
             <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4 mb-6">
@@ -1457,6 +1484,87 @@ export default function CopywriterPage() {
                       <span className="text-[8px] text-text-muted">2000</span>
                     </div>
                   </div>
+
+                  {/* Content Brief Quality Scorer */}
+                  {topic.trim() && (
+                    <div
+                      className="rounded-lg p-2.5"
+                      style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-1.5">
+                          <TrendingUp size={11} className="text-brand-accent" />
+                          <span className="text-[11px] font-semibold text-text-primary">Content Brief</span>
+                        </div>
+                        <div
+                          className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold tabular-nums"
+                          style={{
+                            background:
+                              contentBriefScore >= 80
+                                ? "rgba(34,197,94,0.12)"
+                                : contentBriefScore >= 50
+                                ? "rgba(245,158,11,0.12)"
+                                : "rgba(239,68,68,0.12)",
+                            color:
+                              contentBriefScore >= 80
+                                ? "#4ade80"
+                                : contentBriefScore >= 50
+                                ? "#fbbf24"
+                                : "#f87171",
+                          }}
+                        >
+                          {contentBriefScore}
+                          <span className="font-normal opacity-60 ml-0.5">/ 100</span>
+                        </div>
+                      </div>
+                      <div
+                        className="w-full rounded-full overflow-hidden mb-2"
+                        style={{ height: "1.5px", background: "rgba(99,146,255,0.10)" }}
+                      >
+                        <div
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${contentBriefScore}%`,
+                            background:
+                              contentBriefScore >= 80
+                                ? "linear-gradient(90deg,#22c55e,#4ade80)"
+                                : contentBriefScore >= 50
+                                ? "linear-gradient(90deg,#f59e0b,#fbbf24)"
+                                : "linear-gradient(90deg,#ef4444,#f87171)",
+                          }}
+                        />
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {contentBriefSignals.map((sig) => (
+                          <div
+                            key={sig.id}
+                            title={sig.tip}
+                            className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium cursor-default border ${
+                              sig.pass
+                                ? "bg-[rgba(34,197,94,0.10)] border-[rgba(34,197,94,0.25)] text-green-400"
+                                : "bg-elevated border-border-subtle/30 text-text-muted"
+                            }`}
+                          >
+                            <span className="text-[8px]">{sig.pass ? "✓" : "–"}</span>
+                            {sig.label}
+                          </div>
+                        ))}
+                      </div>
+                      {(() => {
+                        const firstFail = contentBriefSignals.find((s) => !s.pass);
+                        return firstFail ? (
+                          <p className="mt-2 text-[10px] text-text-muted leading-relaxed">
+                            <span className="font-medium text-text-secondary">Tip: </span>
+                            {firstFail.tip}
+                          </p>
+                        ) : (
+                          <p className="mt-2 text-[10px] text-green-400">
+                            Brief complete — AI has all the context it needs to write great copy.
+                          </p>
+                        );
+                      })()}
+                    </div>
+                  )}
 
                   {/* Generate Button */}
                   <motion.button
