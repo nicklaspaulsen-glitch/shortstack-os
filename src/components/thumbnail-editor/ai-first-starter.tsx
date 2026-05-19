@@ -169,7 +169,15 @@ export default function AiFirstStarter({
   width = 1280,
   height = 720,
 }: Props) {
-  const [prompt, setPrompt] = useState("");
+  const [prompt, setPrompt] = useState(() => {
+    // Seed from Script Lab "Make thumbnail" bridge
+    if (typeof window === "undefined") return "";
+    try {
+      const seeded = sessionStorage.getItem("ss-thumb-ai-prompt");
+      if (seeded) { sessionStorage.removeItem("ss-thumb-ai-prompt"); return seeded; }
+    } catch { /* noop */ }
+    return "";
+  });
   const [busy, setBusy] = useState(false);
   const [options, setOptions] = useState<Array<{ url: string; idx: number }>>([]);
   const [pickedIdx, setPickedIdx] = useState<number | null>(null);

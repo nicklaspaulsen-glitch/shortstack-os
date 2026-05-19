@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { useManagedClient } from "@/lib/use-managed-client";
 import {
-  Sparkles, Film, Camera,
+  Sparkles, Film, Camera, Image as ImageIcon,
   Search, Loader, Copy, Zap, Target, MessageSquare,
   ArrowRight, RefreshCw, Eye, CheckCircle, Clock,
   Download, FileText, Wand2, BookOpen,
@@ -1065,6 +1065,35 @@ export default function ScriptLabPage() {
       // sessionStorage unavailable in some contexts
     }
     router.push("/dashboard/ai-video");
+  }
+
+  function seedThumbnailFromSection(section: { visual_direction: string; name: string; dialogue: string }) {
+    try {
+      const baseText = section.visual_direction || section.dialogue.slice(0, 120);
+      const seedPrompt = `Thumbnail for "${activeScript?.title ?? "video"}" — ${baseText}. Bold typography, high contrast, attention-grabbing.`;
+      sessionStorage.setItem("ss-thumb-ai-prompt", seedPrompt);
+      // Skip the AI-first starter directly to the prompt (already seeded)
+      sessionStorage.removeItem("thumbnail-ai-starter-skipped");
+    } catch { /* noop */ }
+    router.push("/dashboard/thumbnail-generator");
+  }
+
+  /** Parse "0-5s", "5s", "10-15s" → seconds (returns end value or single value) */
+  function parseDurationSeconds(dur: string): number {
+    const nums = dur.match(/\d+/g)?.map(Number) ?? [];
+    if (nums.length >= 2) return nums[1];
+    if (nums.length === 1) return nums[0];
+    return 5; // fallback
+  }
+
+  function sectionPacing(section: { dialogue: string; duration: string }): { wps: number; label: string; color: string } {
+    const words = section.dialogue.trim().split(/\s+/).filter(Boolean).length;
+    const secs = parseDurationSeconds(section.duration) || 1;
+    const wps = words / secs;
+    // Speaking pace benchmarks: 2.0-3.0 wps = good for social (150-180 wpm)
+    const label = wps < 1.0 ? "Sparse" : wps < 1.8 ? "Slow" : wps <= 3.2 ? "Good" : wps <= 4.0 ? "Fast" : "Too fast";
+    const color = wps < 1.0 ? "#6B7280" : wps < 1.8 ? "#F59E0B" : wps <= 3.2 ? "#22C55E" : wps <= 4.0 ? "#F59E0B" : "#EF4444";
+    return { wps: Math.round(wps * 10) / 10, label, color };
   }
 
   function getWordCount(): number {
@@ -2523,6 +2552,15 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                     <div className="flex items-center gap-2">
                       <span className="text-[9px] font-bold text-brand-accent">{section.name}</span>
                       <span className="text-[8px] text-text-muted font-mono">{section.duration}</span>
+                      {/* Pacing badge */}
+                      {(() => {
+                        const p = sectionPacing(section);
+                        return (
+                          <span className="text-[7px] font-medium px-1 py-0.5 rounded" style={{ background: `${p.color}18`, color: p.color }}>
+                            {p.wps}w/s · {p.label}
+                          </span>
+                        );
+                      })()}
                     </div>
                     <div className="flex items-center gap-1.5">
                       <span className="text-[8px] text-text-muted italic">{section.emotion}</span>
@@ -2536,6 +2574,14 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                           <Film size={8} /> Clip
                         </button>
                       )}
+                      <button
+                        type="button"
+                        onClick={() => seedThumbnailFromSection(section)}
+                        className="inline-flex items-center gap-0.5 text-[8px] text-[#A78BFA] hover:text-white bg-[rgba(139,92,246,0.08)] hover:bg-[rgba(139,92,246,0.18)] border border-[rgba(139,92,246,0.2)] px-1.5 py-0.5 rounded-full transition-all cursor-pointer"
+                        title="Open AI Thumbnail Generator with this section's visual direction"
+                      >
+                        <ImageIcon size={8} /> Thumb
+                      </button>
                     </div>
                   </div>
                   <div className="p-3 space-y-1.5">
