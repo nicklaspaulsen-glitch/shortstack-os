@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   PhoneCall, Mail, MessageSquare, Send, Settings,
@@ -14,7 +14,7 @@ import {
   Dumbbell, Scissors, HardHat, Shield, Calculator,
   Monitor, Briefcase, Factory, ShoppingCart, Package,
   GraduationCap, Store, Layers,
-  CircleDot, Activity, FileText
+  CircleDot, Activity, FileText, TrendingUp,
 } from "lucide-react";
 import {
   InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon,
@@ -130,6 +130,58 @@ function TemplateCard({ template, onChange, onDelete, context }: {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  type EmailSignal = { id: string; label: string; tip: string; pass: boolean };
+
+  const emailQualitySignals = useMemo((): EmailSignal[] | null => {
+    if (!context.includes("email")) return null;
+    const raw = template.content.trim();
+    if (!raw) return null;
+
+    // Subject line: first line begins with "Subject:" and subject text ≤ 10 words
+    const lines = raw.split(/\n/);
+    const subjectLine = lines[0].trim();
+    const hasSubject = /^subject\s*:/i.test(subjectLine);
+    const subjectWords = subjectLine.replace(/^subject\s*:\s*/i, "").trim().split(/\s+/).filter(Boolean).length;
+    const goodSubject = hasSubject && subjectWords >= 1 && subjectWords <= 10;
+
+    // Personalisation: at least one {{variable}} placeholder
+    const hasPersonalization = /\{\{[^}]+\}\}/.test(raw);
+
+    // Value prop: mentions measurable benefit or outcome
+    const valueRe = /\b(help|improve|grow|save|increase|reduce|boost|generate|drive|double|scale|results?|roi|revenue|leads?|clients?|customers?|conversions?)\b/i;
+    const hasValueProp = valueRe.test(raw);
+
+    // CTA: ends with a question or contains explicit next-step language
+    const bodyLines = lines.slice(hasSubject ? 1 : 0);
+    const lastNonEmpty = [...bodyLines].reverse().find(l => l.trim().length > 0) ?? "";
+    const ctaRe = /\b(reply|respond|schedule|book|call|chat|connect|available|free|quick|15.?min|30.?min|time|calendar|let me know|open to|interested|would you|do you|can we|worth)\b/i;
+    const hasCta = lastNonEmpty.includes("?") || ctaRe.test(raw);
+
+    // Brevity: body under 180 words (cold emails should be skimmable)
+    const bodyText = bodyLines.join(" ").trim();
+    const wordCount = bodyText.split(/\s+/).filter(Boolean).length;
+    const isBrief = wordCount > 0 && wordCount <= 180;
+
+    // Social proof: numbers, %, client/customer references, or testimonial language
+    const proofRe = /\b(\d+[\+%]?|clients?|customers?|businesses|agencies|brands|helped|working with|portfolio|case stud|testimonial|results?|review)\b/i;
+    const hasSocialProof = proofRe.test(raw);
+
+    return [
+      { id: "subject",   label: "Subject",    tip: "Start with 'Subject:' and keep it ≤ 10 words — curiosity beats length",  pass: goodSubject },
+      { id: "personal",  label: "Personal",   tip: "Use {{variable}} placeholders so each send feels 1-to-1",                pass: hasPersonalization },
+      { id: "value",     label: "Value",      tip: "Name a specific benefit or outcome (grow, save, generate…)",             pass: hasValueProp },
+      { id: "cta",       label: "CTA",        tip: "End with a low-friction question or clear next step",                    pass: hasCta },
+      { id: "brief",     label: "Brief",      tip: "Body under 180 words — cold emails get read if they're quick",           pass: isBrief },
+      { id: "proof",     label: "Proof",      tip: "Drop a number, result, or client reference to build instant credibility", pass: hasSocialProof },
+    ];
+  }, [context, template.content]);
+
+  const emailQualityScore = useMemo(() => {
+    if (!emailQualitySignals) return 0;
+    const passing = emailQualitySignals.filter((s) => s.pass).length;
+    return Math.round((passing / emailQualitySignals.length) * 100);
+  }, [emailQualitySignals]);
+
   function copyContent() {
     navigator.clipboard.writeText(template.content);
     setCopied(true);
@@ -178,6 +230,55 @@ function TemplateCard({ template, onChange, onDelete, context }: {
             <AIEnhanceButton value={template.content} context={context}
               onResult={v => onChange({ ...template, content: v })} />
           </div>
+          {/* Cold Email Quality Panel */}
+          {emailQualitySignals !== null && (
+            <div className="rounded-lg p-2.5 mt-1"
+              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-1.5">
+                  <TrendingUp size={9} style={{ color: emailQualityScore >= 71 ? "#4ade80" : emailQualityScore >= 43 ? "#fbbf24" : "#f87171" }} />
+                  <span className="text-[9px] font-semibold" style={{ color: "#A8A8B2" }}>Email Quality</span>
+                </div>
+                <span className="text-[10px] font-bold tabular-nums"
+                  style={{ color: emailQualityScore >= 71 ? "#4ade80" : emailQualityScore >= 43 ? "#fbbf24" : "#f87171" }}>
+                  {emailQualityScore}%
+                </span>
+              </div>
+              <div className="h-[1.5px] rounded-full mb-2 overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                <div className="h-full rounded-full transition-all duration-500"
+                  style={{
+                    width: `${emailQualityScore}%`,
+                    background: emailQualityScore >= 71
+                      ? "linear-gradient(90deg,#16a34a,#4ade80)"
+                      : emailQualityScore >= 43
+                        ? "linear-gradient(90deg,#d97706,#fbbf24)"
+                        : "linear-gradient(90deg,#dc2626,#f87171)",
+                  }} />
+              </div>
+              <div className="flex flex-wrap gap-1 mb-2">
+                {emailQualitySignals.map((s) => (
+                  <span key={s.id} title={s.tip}
+                    className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-medium cursor-default select-none"
+                    style={{
+                      background: s.pass ? "rgba(74,222,128,0.10)" : "rgba(255,255,255,0.05)",
+                      color: s.pass ? "#4ade80" : "#6b7280",
+                      border: `1px solid ${s.pass ? "rgba(74,222,128,0.25)" : "rgba(255,255,255,0.08)"}`,
+                    }}>
+                    <span style={{ fontSize: "7px" }}>{s.pass ? "✓" : "–"}</span>
+                    {s.label}
+                  </span>
+                ))}
+              </div>
+              <p className="text-[8.5px] leading-relaxed" style={{ color: "#6b7280" }}>
+                {(() => {
+                  const first = emailQualitySignals.find((s) => !s.pass);
+                  return first
+                    ? first.tip
+                    : "Strong cold email — clear, personal, and actionable.";
+                })()}
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>
