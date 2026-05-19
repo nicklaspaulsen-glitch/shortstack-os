@@ -342,6 +342,24 @@ export default function AIVideoPage() {
   const [styleVaultCat, setStyleVaultCat] = useState<string | null>(null);
   const vaultCats = Array.from(new Set(STYLE_VAULT.map(s => s.cat)));
 
+  // Prompt history — last 5 prompts persisted to localStorage
+  const [promptHistory, setPromptHistory] = useState<string[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = localStorage.getItem("ss-aivideo-prompt-history");
+      return raw ? (JSON.parse(raw) as string[]) : [];
+    } catch { return []; }
+  });
+  function savePromptToHistory(p: string) {
+    const trimmed = p.trim();
+    if (!trimmed || trimmed.length < 12) return;
+    setPromptHistory(prev => {
+      const next = [trimmed, ...prev.filter(h => h !== trimmed)].slice(0, 5);
+      try { localStorage.setItem("ss-aivideo-prompt-history", JSON.stringify(next)); } catch { /* noop */ }
+      return next;
+    });
+  }
+
   // Face swap mode
   const [faceSwapMode, setFaceSwapMode] = useState(false);
   const [faceSwapImage, setFaceSwapImage] = useState<string | null>(null);
@@ -754,6 +772,7 @@ export default function AIVideoPage() {
     }
     setGenerating(true);
     setProgress(0);
+    savePromptToHistory(prompt);
 
     const progressInterval = setInterval(() => {
       setProgress(prev => Math.min(prev + Math.random() * 5, 90));
@@ -1076,6 +1095,29 @@ export default function AIVideoPage() {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Prompt history chips — last 5 prompts, visible when textarea is empty */}
+            {!prompt && promptHistory.length > 0 && (
+              <div className="mb-3">
+                <p className="text-[9px] text-text-muted mb-1.5 flex items-center gap-1">
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+                  Recent prompts
+                </p>
+                <div className="flex flex-col gap-1">
+                  {promptHistory.map((h, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setPrompt(h)}
+                      className="text-left text-[10px] text-text-secondary hover:text-text-primary px-2.5 py-1.5 rounded-lg border border-border-subtle hover:border-[rgba(99,146,255,0.3)] hover:bg-white/[0.04] transition-all cursor-pointer truncate"
+                      title={h}
+                    >
+                      {h.length > 90 ? h.slice(0, 90) + "…" : h}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Prompt textarea — the real star */}
             <textarea
