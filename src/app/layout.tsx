@@ -157,6 +157,13 @@ export default function RootLayout({
             </filter>
           </defs>
         </svg>
+        {/* Prism ambient orbs — fixed gradient blobs, z-index:-20, zero JS per frame.
+            Blue + indigo blobs drift slowly behind ALL dashboard content,
+            giving the whole app the "metallic glass OS" depth. Low opacity
+            ensures WCAG text contrast is not affected. */}
+        <div className="prism-orb prism-orb-1" aria-hidden />
+        <div className="prism-orb prism-orb-2" aria-hidden />
+        <div className="prism-orb prism-orb-3" aria-hidden />
         <GrainOverlay />
         <ScrollIndicator height={2} color="#3B82F6" />
         {/* Global cursor trail — blue pixel squares, subtle 8px blocks, max 20 squares */}

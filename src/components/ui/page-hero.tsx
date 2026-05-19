@@ -291,25 +291,49 @@ export default function PageHero({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
         style={{
-          background: `linear-gradient(135deg, rgba(2,7,17,0.92) 0%, rgba(13,17,32,0.88) 100%)`,
-          backdropFilter: "blur(24px) saturate(1.6)",
-          WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-          borderBottom: "1px solid rgba(59,130,246,0.12)",
+          background: `linear-gradient(135deg, rgba(2,7,17,0.95) 0%, rgba(8,12,28,0.92) 50%, rgba(13,17,40,0.90) 100%)`,
+          backdropFilter: "blur(36px) saturate(2.2)",
+          WebkitBackdropFilter: "blur(36px) saturate(2.2)",
+          borderBottom: "1px solid rgba(59,130,246,0.16)",
           boxShadow: [
-            "inset 0 1px 0 rgba(255,255,255,0.06)",
-            "inset 0 0 0 1px rgba(59,130,246,0.06)",
-            `inset 0 0 40px 0 ${sectionTint}`,
-            "0 1px 3px rgba(0,0,0,0.30)",
-            "0 4px 16px -4px rgba(0,0,0,0.40)",
-            "0 0 48px -12px rgba(59,130,246,0.12)",
+            "inset 0 1px 0 rgba(255,255,255,0.08)",
+            "inset 0 0 0 1px rgba(59,130,246,0.08)",
+            `inset 0 0 60px 0 ${sectionTint}`,
+            "0 1px 3px rgba(0,0,0,0.35)",
+            "0 4px 20px -4px rgba(0,0,0,0.45)",
+            "0 0 80px -16px rgba(59,130,246,0.18)",
           ].join(", "),
         }}
       >
-        {/* Top-edge gradient accent line */}
+        {/* Top-edge gradient accent line — wider, brighter metallic sweep */}
         <div
           className="absolute top-0 left-0 right-0 h-px pointer-events-none"
           style={{
-            background: "linear-gradient(90deg, transparent 0%, rgba(59,130,246,0.55) 20%, rgba(59,130,246,0.40) 60%, rgba(99,102,241,0.25) 85%, transparent 100%)",
+            background: "linear-gradient(90deg, transparent 0%, rgba(59,130,246,0.72) 15%, rgba(96,165,250,0.60) 45%, rgba(99,102,241,0.42) 75%, transparent 100%)",
+          }}
+          aria-hidden
+        />
+
+        {/* Ambient glass orbs — subtle metallic depth behind the hero surface */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            width: "45%", height: "200%",
+            top: "-50%", left: "-5%",
+            background: "radial-gradient(ellipse, rgba(59,130,246,0.07) 0%, transparent 70%)",
+            filter: "blur(20px)",
+            animation: "blobDrift1 30s ease-in-out infinite",
+          }}
+          aria-hidden
+        />
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            width: "35%", height: "200%",
+            top: "-50%", right: "8%",
+            background: "radial-gradient(ellipse, rgba(99,102,241,0.06) 0%, transparent 70%)",
+            filter: "blur(16px)",
+            animation: "blobDrift3 36s ease-in-out infinite",
           }}
           aria-hidden
         />
@@ -355,7 +379,7 @@ export default function PageHero({
               </motion.p>
             )}
             <motion.h1
-              className="font-display text-[clamp(1.05rem,0.90rem+0.55vw,1.38rem)] font-bold text-text-primary leading-[1.12] tracking-[-0.025em] truncate"
+              className="font-display text-[clamp(1.12rem,0.94rem+0.65vw,1.52rem)] font-bold text-text-primary leading-[1.12] tracking-[-0.025em] truncate"
               initial={{ opacity: 0, x: -6 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.22, delay: 0.05, ease: [0.32, 0.72, 0, 1] }}
