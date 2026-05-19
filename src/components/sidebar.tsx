@@ -234,7 +234,7 @@ const navItems: NavItem[] = [
   { label: "Discord",          href: "/dashboard/discord",           icon: <NavIcon3D name="MessageSquare"   size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Notion",           href: "/dashboard/notion-sync",       icon: <NavIcon3D name="FileText"        size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Competitors",      href: "/dashboard/competitive-monitor", icon: <NavIcon3D name="Target"        size={16} />, roles: ["admin"],                                   settingsOnly: true },
-  { label: "Telegram",         href: "/dashboard/telegram-bot",      icon: <NavIcon3D name="Bot"             size={16} />, roles: ["admin"],                                   settingsOnly: true },
+  { label: "Telegram",         href: "/dashboard/telegram",          icon: <NavIcon3D name="Bot"             size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Webhooks",         href: "/dashboard/webhooks",          icon: <NavIcon3D name="Webhook"         size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "API Keys",         href: "/dashboard/api/keys",          icon: <NavIcon3D name="Key"             size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "API Webhooks",     href: "/dashboard/api/webhooks",      icon: <NavIcon3D name="Webhook"         size={16} />, roles: ["admin"],                                   settingsOnly: true },

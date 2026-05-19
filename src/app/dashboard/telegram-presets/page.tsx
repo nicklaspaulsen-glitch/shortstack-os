@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-// Telegram presets merged into Telegram Bot page — use /dashboard/telegram-bot
+// Canonical URL is /dashboard/telegram
 export default function TelegramPresetsRedirect() {
-  redirect("/dashboard/telegram-bot");
+  redirect("/dashboard/telegram");
 }
