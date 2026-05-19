@@ -337,6 +337,35 @@ export default function AIVideoPage() {
   const [intentSubject, setIntentSubject] = useState("");
   const [intentFeeling, setIntentFeeling] = useState("");
 
+  // Batch queue from Script Lab "Queue all clips" action
+  const [batchQueue, setBatchQueue] = useState<Array<{ prompt: string; style: string; aspect: string; label: string }>>([]);
+  const [batchQueueIdx, setBatchQueueIdx] = useState(0);
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("ss-video-batch-queue");
+      if (raw) {
+        sessionStorage.removeItem("ss-video-batch-queue");
+        const queue = JSON.parse(raw) as Array<{ prompt: string; style: string; aspect: string; label: string }>;
+        if (Array.isArray(queue) && queue.length > 1) {
+          setBatchQueue(queue);
+          setBatchQueueIdx(0);
+          toast(`${queue.length} clips queued from Script Lab`, { icon: "🎬", duration: 4000 });
+        }
+      }
+    } catch { /* noop */ }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  function loadNextBatchClip() {
+    const next = batchQueueIdx + 1;
+    if (next >= batchQueue.length) { setBatchQueue([]); setBatchQueueIdx(0); return; }
+    const clip = batchQueue[next];
+    setPrompt(clip.prompt);
+    setStyle(clip.style);
+    setAspectRatio(clip.aspect);
+    setBatchQueueIdx(next);
+    toast.success(`Loaded clip ${next + 1}/${batchQueue.length}: ${clip.label}`);
+  }
+
   // Style Vault
   const [styleVaultOpen, setStyleVaultOpen] = useState(false);
   const [styleVaultCat, setStyleVaultCat] = useState<string | null>(null);
@@ -1144,6 +1173,30 @@ export default function AIVideoPage() {
                   )}
                   {enhancing ? "Enhancing…" : "Enhance ✨"}
                 </button>
+              </div>
+            )}
+
+            {/* Batch queue banner — shows when clips queued from Script Lab */}
+            {batchQueue.length > 1 && (
+              <div className="mt-3 flex items-center justify-between px-3 py-2 rounded-xl border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.06)]">
+                <div className="flex items-center gap-2">
+                  <Film size={10} className="text-brand-accent" />
+                  <p className="text-[10px] text-text-secondary">
+                    <span className="font-medium text-text-primary">{batchQueueIdx + 1}/{batchQueue.length}</span> — {batchQueue[batchQueueIdx]?.label ?? "Clip"}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {batchQueueIdx + 1 < batchQueue.length && (
+                    <button
+                      type="button"
+                      onClick={loadNextBatchClip}
+                      className="text-[9px] font-medium text-brand-accent hover:text-white px-2.5 py-1 rounded-full border border-[rgba(59,130,246,0.3)] hover:bg-[rgba(59,130,246,0.15)] transition-all cursor-pointer"
+                    >
+                      Next clip →
+                    </button>
+                  )}
+                  <button type="button" onClick={() => { setBatchQueue([]); setBatchQueueIdx(0); }} className="text-[9px] text-text-muted hover:text-text-primary cursor-pointer px-1">✕</button>
+                </div>
               </div>
             )}
 

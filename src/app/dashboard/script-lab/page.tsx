@@ -1067,6 +1067,29 @@ export default function ScriptLabPage() {
     router.push("/dashboard/ai-video");
   }
 
+  /** Batch queue: writes all sections with visual direction to sessionStorage as a JSON
+   *  array so AI Video can iterate and pre-fill a queue. Falls back gracefully if >=1 section. */
+  function seedAllSectionsToVideoQueue() {
+    if (!activeScript) return;
+    const eligible = activeScript.script.sections.filter(s => s.visual_direction?.trim() || s.dialogue?.trim());
+    if (eligible.length === 0) { toast.error("No sections to queue"); return; }
+    try {
+      const queue = eligible.map(s => ({
+        prompt: s.visual_direction || s.dialogue.slice(0, 150),
+        style: emotionToStyle(s.emotion),
+        aspect: platformToAspect(config.platform),
+        label: s.name,
+      }));
+      sessionStorage.setItem("ss-video-batch-queue", JSON.stringify(queue));
+      // Also seed the first item for immediate use
+      sessionStorage.setItem("ss-video-seed-prompt", queue[0].prompt);
+      sessionStorage.setItem("ss-video-seed-style", queue[0].style);
+      sessionStorage.setItem("ss-video-seed-aspect", queue[0].aspect);
+    } catch { /* noop */ }
+    toast.success(`${eligible.length} clips queued for AI Video`);
+    router.push("/dashboard/ai-video");
+  }
+
   function seedThumbnailFromSection(section: { visual_direction: string; name: string; dialogue: string }) {
     try {
       const baseText = section.visual_direction || section.dialogue.slice(0, 120);
@@ -2592,6 +2615,15 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                     {total - withVisual} section{total - withVisual !== 1 ? "s" : ""} missing B-roll cues — add visual direction for better clip generation
                   </p>
                 )}
+                <div className="mt-2.5 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={seedAllSectionsToVideoQueue}
+                    className="inline-flex items-center gap-1 text-[9px] font-medium text-brand-accent hover:text-white bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.18)] border border-[rgba(59,130,246,0.2)] px-3 py-1.5 rounded-full transition-all cursor-pointer"
+                  >
+                    <Film size={9} /> Queue all {total} clips → AI Video
+                  </button>
+                </div>
               </div>
             );
           })()}
