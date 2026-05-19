@@ -9,6 +9,7 @@ import {
   Clock, Monitor, Zap, Layers,
   Wand2, Palette, Camera, Music, Type, Lock,
   ChevronDown, ChevronRight, AlertCircle, Edit3, Loader2, Image,
+  TrendingUp, Upload, UserCircle, X, Target,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
@@ -81,12 +82,12 @@ const PROMPT_CATEGORIES = [
 // Changing the "style" here adjusts the downstream prompt enhancement, it does
 // NOT change the actual model endpoint (that still goes through /api/video/render).
 const MODELS = [
-  { id: "cinematic", name: "Cinematic", sub: "Film-like grade", icon: Film,    preview: "linear-gradient(90deg,#0d0d14 0%,#1a2340 40%,#3d5a7a 70%,#8fa8be 100%)" },
-  { id: "realistic", name: "Realistic", sub: "Documentary",     icon: Camera,  preview: "linear-gradient(90deg,#2d1e12 0%,#6b4226 40%,#b5855a 70%,#d4a96a 100%)" },
-  { id: "animated",  name: "Animated",  sub: "3D / Pixar",      icon: Palette, preview: "linear-gradient(90deg,#4158D0 0%,#C850C0 50%,#FFCC70 100%)" },
-  { id: "anime",     name: "Anime",     sub: "Japanese",         icon: Sparkles,preview: "linear-gradient(90deg,#5665E9 0%,#9251AE 40%,#F95B8E 100%)" },
-  { id: "vintage",   name: "Vintage",   sub: "Film grain",       icon: Layers,  preview: "linear-gradient(90deg,#2C1810 0%,#7A3D1A 40%,#C4832A 70%,#E8C875 100%)" },
-  { id: "dreamy",    name: "Dreamy",    sub: "Soft, ethereal",   icon: Wand2,   preview: "linear-gradient(90deg,#A18CD1 0%,#FBC2EB 50%,#A1C4FD 100%)" },
+  { id: "cinematic", name: "Cinematic", sub: "Film-like grade", icon: Film,    preview: "linear-gradient(90deg,#0d0d14 0%,#1a2340 40%,#3d5a7a 70%,#8fa8be 100%)", viralScore: 78, ctrTier: "high"   as const },
+  { id: "realistic", name: "Realistic", sub: "Documentary",     icon: Camera,  preview: "linear-gradient(90deg,#2d1e12 0%,#6b4226 40%,#b5855a 70%,#d4a96a 100%)", viralScore: 71, ctrTier: "medium" as const },
+  { id: "animated",  name: "Animated",  sub: "3D / Pixar",      icon: Palette, preview: "linear-gradient(90deg,#4158D0 0%,#C850C0 50%,#FFCC70 100%)",              viralScore: 85, ctrTier: "high"   as const },
+  { id: "anime",     name: "Anime",     sub: "Japanese",         icon: Sparkles,preview: "linear-gradient(90deg,#5665E9 0%,#9251AE 40%,#F95B8E 100%)",              viralScore: 89, ctrTier: "high"   as const },
+  { id: "vintage",   name: "Vintage",   sub: "Film grain",       icon: Layers,  preview: "linear-gradient(90deg,#2C1810 0%,#7A3D1A 40%,#C4832A 70%,#E8C875 100%)", viralScore: 62, ctrTier: "medium" as const },
+  { id: "dreamy",    name: "Dreamy",    sub: "Soft, ethereal",   icon: Wand2,   preview: "linear-gradient(90deg,#A18CD1 0%,#FBC2EB 50%,#A1C4FD 100%)",              viralScore: 74, ctrTier: "high"   as const },
 ];
 
 /** OSS model backends — exposed in advanced mode. All route to /api/video/render;
@@ -247,6 +248,62 @@ export default function AIVideoPage() {
       if (!seen) setWizardOpen(true);
     } catch {}
   }, []);
+
+  // Face swap mode
+  const [faceSwapMode, setFaceSwapMode] = useState(false);
+  const [faceSwapImage, setFaceSwapImage] = useState<string | null>(null);
+  const [faceSwapUploading, setFaceSwapUploading] = useState(false);
+
+  const handleFaceSwapUpload = async (file: File) => {
+    setFaceSwapUploading(true);
+    try {
+      await new Promise<void>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const src = ev.target?.result as string;
+          if (!src) { reject(new Error("Empty file")); return; }
+          setFaceSwapImage(src);
+          resolve();
+        };
+        reader.onerror = () => reject(new Error("Read failed"));
+        reader.readAsDataURL(file);
+      });
+      toast.success("Face photo loaded");
+    } catch {
+      toast.error("Could not load face photo");
+    } finally {
+      setFaceSwapUploading(false);
+    }
+  };
+
+  // Viral prediction
+  const [viralPredicting, setViralPredicting] = useState(false);
+  const [viralResult, setViralResult] = useState<{
+    viral_score: number;
+    ctr_estimate: string;
+    strengths: string[];
+    suggestions: string[];
+  } | null>(null);
+
+  const predictViral = async () => {
+    if (!prompt.trim() || viralPredicting) return;
+    setViralPredicting(true);
+    setViralResult(null);
+    try {
+      const res = await fetch("/api/ai/predict-viral", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: prompt.trim(), style, aspect_ratio: aspectRatio, face_swap: faceSwapMode }),
+      });
+      if (!res.ok) throw new Error("Prediction failed");
+      const data = await res.json() as typeof viralResult;
+      setViralResult(data);
+    } catch {
+      toast.error("Could not predict viral potential");
+    } finally {
+      setViralPredicting(false);
+    }
+  };
 
   // Prompt enhancement
   const [enhancing, setEnhancing] = useState(false);
@@ -561,6 +618,7 @@ export default function AIVideoPage() {
           num_frames: numFrames,
           guidance_scale: guidanceScale,
           model_backend: modelBackend,
+          ...(faceSwapMode && faceSwapImage ? { face_swap_image: faceSwapImage } : {}),
         }),
       });
 
@@ -876,6 +934,56 @@ export default function AIVideoPage() {
               </div>
             </div>
 
+            {/* ── Face Swap Mode ────────────────────────────────────── */}
+            <div className="mt-5 flex items-start gap-4 flex-wrap">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => { setFaceSwapMode(v => !v); if (faceSwapMode) setFaceSwapImage(null); }}
+                  className={[
+                    "flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-full border transition-all cursor-pointer",
+                    faceSwapMode
+                      ? "border-[rgba(139,92,246,0.5)] bg-[rgba(139,92,246,0.12)] text-[#A78BFA]"
+                      : "border-border-subtle bg-white/[0.03] text-text-muted hover:text-text-primary hover:border-border-strong",
+                  ].join(" ")}
+                >
+                  <UserCircle size={12} />
+                  Face Swap
+                  {faceSwapMode && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(139,92,246,0.2)] text-[#C4B5FD]">ON</span>}
+                </button>
+                {faceSwapMode && faceSwapImage && (
+                  <div className="flex items-center gap-1.5">
+                    <div
+                      className="w-6 h-6 rounded-full border border-[rgba(139,92,246,0.4)] bg-cover bg-center shrink-0"
+                      style={{ backgroundImage: `url(${faceSwapImage})` }}
+                    />
+                    <span className="text-[9px] text-[#A78BFA]">Face loaded</span>
+                    <button type="button" onClick={() => setFaceSwapImage(null)} className="text-text-muted hover:text-text-primary cursor-pointer"><X size={10} /></button>
+                  </div>
+                )}
+              </div>
+              {faceSwapMode && !faceSwapImage && (
+                <label className="flex items-center gap-1.5 text-[11px] text-text-muted hover:text-text-primary border border-border-subtle hover:border-border-strong bg-white/[0.03] hover:bg-white/[0.06] px-3 py-1.5 rounded-full cursor-pointer transition-all">
+                  {faceSwapUploading ? <Loader2 size={11} className="animate-spin" /> : <Upload size={11} />}
+                  {faceSwapUploading ? "Loading…" : "Upload face photo"}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="sr-only"
+                    disabled={faceSwapUploading}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) await handleFaceSwapUpload(file);
+                      e.target.value = "";
+                    }}
+                  />
+                </label>
+              )}
+              {faceSwapMode && (
+                <p className="text-[9px] text-text-muted self-center">Upload a clear front-facing portrait. The AI will swap it into generated faces.</p>
+              )}
+            </div>
+
             {/* Bottom rail — model picker + aspect picker + generate button */}
             <div className="mt-7 flex items-end justify-between flex-wrap gap-5">
               <div className="flex items-end gap-5 flex-wrap">
@@ -912,6 +1020,16 @@ export default function AIVideoPage() {
                             <p className="text-[10px] font-medium">{m.name}</p>
                             <p className="text-[8.5px] opacity-60">{m.sub}</p>
                           </div>
+                          {/* CTR / viral score badge */}
+                          <span
+                            className="text-[7px] font-bold px-1.5 py-0.5 rounded-full mt-0.5"
+                            style={{
+                              background: m.ctrTier === "high" ? "rgba(16,185,129,0.18)" : "rgba(245,158,11,0.18)",
+                              color: m.ctrTier === "high" ? "#10B981" : "#F59E0B",
+                            }}
+                          >
+                            {m.viralScore}% viral
+                          </span>
                         </button>
                       );
                     })}
@@ -940,25 +1058,111 @@ export default function AIVideoPage() {
                 </div>
               </div>
 
-              {/* Generate � big, gold, pulsing */}
-              <button
-                onClick={generateVideo}
-                disabled={generating || !prompt.trim()}
-                className="hf-generate flex items-center gap-2.5 shrink-0"
-              >
-                {generating ? (
-                  <>
-                    <ProgressRing progress={progress} size={18} />
-                    <span>{Math.round(progress)}%</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles size={18} strokeWidth={2.25} />
-                    <span>Generate</span>
-                  </>
+              {/* Generate + Predict viral — stacked CTA group */}
+              <div className="flex flex-col items-end gap-2">
+                <button
+                  onClick={generateVideo}
+                  disabled={generating || !prompt.trim()}
+                  className="hf-generate flex items-center gap-2.5 shrink-0"
+                >
+                  {generating ? (
+                    <>
+                      <ProgressRing progress={progress} size={18} />
+                      <span>{Math.round(progress)}%</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles size={18} strokeWidth={2.25} />
+                      <span>Generate</span>
+                    </>
+                  )}
+                </button>
+                {prompt.trim() && (
+                  <button
+                    type="button"
+                    onClick={predictViral}
+                    disabled={viralPredicting}
+                    className="inline-flex items-center gap-1.5 text-[10px] text-[#10B981] hover:text-white bg-[rgba(16,185,129,0.08)] hover:bg-[rgba(16,185,129,0.18)] border border-[rgba(16,185,129,0.2)] hover:border-[rgba(16,185,129,0.4)] px-3 py-1.5 rounded-full transition-all disabled:opacity-50 cursor-pointer"
+                  >
+                    {viralPredicting ? <Loader2 size={10} className="animate-spin" /> : <TrendingUp size={10} />}
+                    {viralPredicting ? "Analysing…" : "Predict viral potential"}
+                  </button>
                 )}
-              </button>
+              </div>
             </div>
+
+            {/* ── Viral prediction result panel ────────────────────── */}
+            <AnimatePresence>
+              {viralResult && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-5 pt-5 border-t border-border-subtle">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <TrendingUp size={13} className="text-[#10B981]" />
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-text-muted">Viral Prediction</p>
+                      </div>
+                      <button type="button" onClick={() => setViralResult(null)} className="text-text-muted hover:text-text-primary cursor-pointer"><X size={12} /></button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 mb-4">
+                      {/* Viral score */}
+                      <div className="bg-[rgba(16,185,129,0.06)] border border-[rgba(16,185,129,0.15)] rounded-xl p-3">
+                        <p className="text-[8px] uppercase tracking-wider text-[#10B981] mb-1 font-medium">Viral Score</p>
+                        <div className="flex items-end gap-1.5">
+                          <p className="font-display text-3xl font-bold text-[#10B981] tabular-nums">{viralResult.viral_score}</p>
+                          <p className="text-[10px] text-[#10B981] opacity-60 mb-1">/100</p>
+                        </div>
+                        {/* Score bar */}
+                        <div className="mt-2 h-1 rounded-full bg-white/[0.06]">
+                          <div
+                            className="h-full rounded-full"
+                            style={{
+                              width: `${viralResult.viral_score}%`,
+                              background: viralResult.viral_score >= 80 ? "#10B981" : viralResult.viral_score >= 60 ? "#F59E0B" : "#EF4444",
+                            }}
+                          />
+                        </div>
+                      </div>
+                      {/* CTR estimate */}
+                      <div className="bg-[rgba(59,130,246,0.06)] border border-[rgba(59,130,246,0.15)] rounded-xl p-3">
+                        <p className="text-[8px] uppercase tracking-wider text-brand-accent mb-1 font-medium flex items-center gap-1"><Target size={8} /> Est. CTR</p>
+                        <p className="font-display text-3xl font-bold text-brand-accent tabular-nums">{viralResult.ctr_estimate}</p>
+                        <p className="text-[9px] text-text-muted mt-1">click-through rate</p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <p className="text-[8px] uppercase tracking-wider text-[#10B981] mb-2 font-medium">Strengths</p>
+                        <ul className="space-y-1">
+                          {viralResult.strengths.map((s, i) => (
+                            <li key={i} className="flex items-start gap-1.5 text-[10px] text-text-secondary">
+                              <span className="text-[#10B981] mt-0.5 shrink-0">✓</span>
+                              {s}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <p className="text-[8px] uppercase tracking-wider text-[#F59E0B] mb-2 font-medium">Improve</p>
+                        <ul className="space-y-1">
+                          {viralResult.suggestions.map((s, i) => (
+                            <li key={i} className="flex items-start gap-1.5 text-[10px] text-text-secondary">
+                              <span className="text-[#F59E0B] mt-0.5 shrink-0">→</span>
+                              {s}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Full-width progress bar � only visible during generation */}

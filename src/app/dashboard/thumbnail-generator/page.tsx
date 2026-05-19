@@ -14,7 +14,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import toast from "react-hot-toast";
 import type {
   BlendMode,
@@ -669,6 +669,197 @@ export default function ThumbnailEditorProPage() {
   // callback refs on every render.
   void flattenHistory;
 
+  // ── CTR Presets panel ─────────────────────────────────────────────────
+  const [ctrPresetsOpen, setCtrPresetsOpen] = useState(false);
+
+  /** CTR-optimised thumbnail style presets derived from TikTok + YouTube CTR research. */
+  const CTR_PRESETS = [
+    {
+      id: "face_close_up",
+      name: "Face Close-Up",
+      ctr: "8–10%",
+      tier: "top",
+      desc: "Big face + contrast text = highest click rate",
+      apply: () => {
+        const textLayer = createTextLayer("YOUR TITLE", {
+          x: state.canvasWidth * 0.05,
+          y: state.canvasHeight * 0.70,
+          width: state.canvasWidth * 0.9,
+          height: state.canvasHeight * 0.22,
+        });
+        commit({ type: "ADD_LAYER", layer: { ...textLayer, fontSize: 80, fontWeight: 900, color: "#FFFFFF", strokeColor: "#000000", strokeWidth: 4, shadowColor: "rgba(0,0,0,0.7)", shadowBlur: 12, shadowOffsetX: 0, shadowOffsetY: 4 } as typeof textLayer }, "Preset: Face Close-Up");
+      },
+    },
+    {
+      id: "bold_number",
+      name: "Bold Number",
+      ctr: "7–9%",
+      tier: "top",
+      desc: "\"TOP 10\" listicle style drives curiosity",
+      apply: () => {
+        const numLayer = createTextLayer("TOP 10", {
+          x: state.canvasWidth * 0.05,
+          y: state.canvasHeight * 0.05,
+          width: state.canvasWidth * 0.9,
+          height: state.canvasHeight * 0.40,
+        });
+        const subLayer = createTextLayer("REASONS WHY...", {
+          x: state.canvasWidth * 0.05,
+          y: state.canvasHeight * 0.50,
+          width: state.canvasWidth * 0.9,
+          height: state.canvasHeight * 0.18,
+        });
+        commit({ type: "ADD_LAYER", layer: { ...numLayer, fontSize: 160, fontWeight: 900, color: "#FFDD00", strokeColor: "#000000", strokeWidth: 8 } as typeof numLayer }, "Number");
+        commit({ type: "ADD_LAYER", layer: { ...subLayer, fontSize: 48, fontWeight: 700, color: "#FFFFFF" } as typeof subLayer }, "Preset: Bold Number");
+      },
+    },
+    {
+      id: "arrow_callout",
+      name: "Arrow Callout",
+      ctr: "6–8%",
+      tier: "high",
+      desc: "Red arrow pointing at subject = MrBeast CTR formula",
+      apply: () => {
+        const arrowBg = createShapeLayer("ellipse", {
+          x: state.canvasWidth * 0.60,
+          y: state.canvasHeight * 0.10,
+          width: 80,
+          height: 80,
+        });
+        const textLayer = createTextLayer("LOOK!", {
+          x: state.canvasWidth * 0.05,
+          y: state.canvasHeight * 0.60,
+          width: state.canvasWidth * 0.50,
+          height: state.canvasHeight * 0.25,
+        });
+        commit({ type: "ADD_LAYER", layer: { ...arrowBg, fill: "#EF4444", stroke: "#B91C1C", strokeWidth: 3 } as typeof arrowBg }, "Arrow BG");
+        commit({ type: "ADD_LAYER", layer: { ...textLayer, fontSize: 96, fontWeight: 900, color: "#EF4444", strokeColor: "#000000", strokeWidth: 5 } as typeof textLayer }, "Preset: Arrow Callout");
+      },
+    },
+    {
+      id: "before_after",
+      name: "Before / After",
+      ctr: "6–8%",
+      tier: "high",
+      desc: "Transformation split — tutorial & transformation content",
+      apply: () => {
+        const divider = createShapeLayer("rect", {
+          x: state.canvasWidth / 2 - 3,
+          y: 0,
+          width: 6,
+          height: state.canvasHeight,
+        });
+        const beforeLabel = createTextLayer("BEFORE", {
+          x: state.canvasWidth * 0.02,
+          y: state.canvasHeight * 0.04,
+          width: state.canvasWidth * 0.45,
+          height: state.canvasHeight * 0.14,
+        });
+        const afterLabel = createTextLayer("AFTER", {
+          x: state.canvasWidth * 0.52,
+          y: state.canvasHeight * 0.04,
+          width: state.canvasWidth * 0.45,
+          height: state.canvasHeight * 0.14,
+        });
+        commit({ type: "ADD_LAYER", layer: { ...divider, fill: "#FFFFFF", stroke: "transparent" } as typeof divider }, "Divider");
+        commit({ type: "ADD_LAYER", layer: { ...beforeLabel, fontSize: 52, fontWeight: 900, color: "#EF4444", strokeColor: "#000000", strokeWidth: 3 } as typeof beforeLabel }, "Before");
+        commit({ type: "ADD_LAYER", layer: { ...afterLabel, fontSize: 52, fontWeight: 900, color: "#10B981", strokeColor: "#000000", strokeWidth: 3 } as typeof afterLabel }, "Preset: Before/After");
+      },
+    },
+    {
+      id: "high_contrast",
+      name: "High Contrast",
+      ctr: "5–7%",
+      tier: "high",
+      desc: "OLED dark + white + accent. Gaming & tech content",
+      apply: () => {
+        const bgRect = createShapeLayer("rect", {
+          x: 0,
+          y: 0,
+          width: state.canvasWidth,
+          height: state.canvasHeight,
+        });
+        const headline = createTextLayer("THIS CHANGES EVERYTHING", {
+          x: state.canvasWidth * 0.04,
+          y: state.canvasHeight * 0.30,
+          width: state.canvasWidth * 0.92,
+          height: state.canvasHeight * 0.40,
+        });
+        commit({ type: "ADD_LAYER", layer: { ...bgRect, fill: "#020711", stroke: "transparent" } as typeof bgRect }, "Dark BG");
+        commit({ type: "ADD_LAYER", layer: { ...headline, fontSize: 84, fontWeight: 900, color: "#FFFFFF", strokeColor: "#3B82F6", strokeWidth: 2 } as typeof headline }, "Preset: High Contrast");
+      },
+    },
+    {
+      id: "shock_expression",
+      name: "Shock Expression",
+      ctr: "5–7%",
+      tier: "high",
+      desc: "OMG + massive text. Maximum emotional reaction",
+      apply: () => {
+        const exclaim = createTextLayer("OMG!!", {
+          x: state.canvasWidth * 0.02,
+          y: state.canvasHeight * 0.02,
+          width: state.canvasWidth * 0.96,
+          height: state.canvasHeight * 0.35,
+        });
+        const sub = createTextLayer("I CAN'T BELIEVE THIS...", {
+          x: state.canvasWidth * 0.04,
+          y: state.canvasHeight * 0.62,
+          width: state.canvasWidth * 0.92,
+          height: state.canvasHeight * 0.22,
+        });
+        commit({ type: "ADD_LAYER", layer: { ...exclaim, fontSize: 180, fontWeight: 900, color: "#FFDD00", strokeColor: "#B45309", strokeWidth: 8, shadowColor: "rgba(0,0,0,0.8)", shadowBlur: 20 } as typeof exclaim }, "Shock text");
+        commit({ type: "ADD_LAYER", layer: { ...sub, fontSize: 56, fontWeight: 800, color: "#FFFFFF", strokeColor: "#000000", strokeWidth: 3 } as typeof sub }, "Preset: Shock Expression");
+      },
+    },
+    {
+      id: "curiosity_gap",
+      name: "Curiosity Gap",
+      ctr: "5–7%",
+      tier: "high",
+      desc: "Unfinished reveal — compels clicking to find out",
+      apply: () => {
+        const hook = createTextLayer("The secret they\ndon't want you to know...", {
+          x: state.canvasWidth * 0.05,
+          y: state.canvasHeight * 0.20,
+          width: state.canvasWidth * 0.90,
+          height: state.canvasHeight * 0.60,
+        });
+        commit({ type: "ADD_LAYER", layer: { ...hook, fontSize: 72, fontWeight: 800, color: "#FFFFFF", lineHeight: 1.2, shadowColor: "rgba(0,0,0,0.7)", shadowBlur: 16 } as typeof hook }, "Preset: Curiosity Gap");
+      },
+    },
+    {
+      id: "color_pop",
+      name: "Color Pop",
+      ctr: "4–6%",
+      tier: "medium",
+      desc: "Single saturated background + bold white text",
+      apply: () => {
+        const bg = createShapeLayer("rect", {
+          x: 0,
+          y: 0,
+          width: state.canvasWidth,
+          height: state.canvasHeight,
+        });
+        const headline = createTextLayer("YOUR HOOK\nHERE", {
+          x: state.canvasWidth * 0.06,
+          y: state.canvasHeight * 0.15,
+          width: state.canvasWidth * 0.88,
+          height: state.canvasHeight * 0.70,
+        });
+        commit({ type: "ADD_LAYER", layer: { ...bg, fill: "#7C3AED", stroke: "transparent" } as typeof bg }, "Color BG");
+        commit({ type: "ADD_LAYER", layer: { ...headline, fontSize: 100, fontWeight: 900, color: "#FFFFFF", lineHeight: 1.15 } as typeof headline }, "Preset: Color Pop");
+      },
+    },
+  ] as const;
+
+  type CtrPreset = typeof CTR_PRESETS[number];
+
+  const tierColor = (tier: CtrPreset["tier"]) =>
+    tier === "top" ? { bg: "rgba(16,185,129,0.14)", text: "#10B981" }
+      : tier === "high" ? { bg: "rgba(59,130,246,0.14)", text: "#60A5FA" }
+      : { bg: "rgba(245,158,11,0.14)", text: "#F59E0B" };
+
   return (
     <MotionPage>
             <motion.div
@@ -758,6 +949,114 @@ export default function ThumbnailEditorProPage() {
               style={{ pointerEvents: "auto" }}
             >
               <SmartBar context="thumbnail" />
+            </div>
+
+            {/* CTR Presets — floating panel, bottom-left */}
+            <div className="absolute bottom-4 left-4 z-40" style={{ pointerEvents: "auto" }}>
+              {/* Toggle button */}
+              <button
+                onClick={() => setCtrPresetsOpen((o) => !o)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg border transition-all duration-150"
+                style={{
+                  background: ctrPresetsOpen ? "rgba(59,130,246,0.22)" : "rgba(13,17,32,0.90)",
+                  borderColor: ctrPresetsOpen ? "#3B82F6" : "rgba(99,146,255,0.22)",
+                  color: ctrPresetsOpen ? "#60A5FA" : "#A8A8B2",
+                  backdropFilter: "blur(12px)",
+                }}
+              >
+                <span style={{ fontSize: 11 }}>⚡</span>
+                CTR Presets
+                <span style={{ fontSize: 9, opacity: 0.6 }}>{ctrPresetsOpen ? "▼" : "▲"}</span>
+              </button>
+
+              {/* Expandable panel — slides up above the button */}
+              <AnimatePresence>
+                {ctrPresetsOpen && (
+                  <motion.div
+                    key="ctr-panel"
+                    initial={{ opacity: 0, y: 12, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                    transition={{ duration: 0.18, ease: [0.32, 0.72, 0, 1] }}
+                    className="absolute bottom-10 left-0 w-72 rounded-xl border shadow-2xl overflow-hidden"
+                    style={{
+                      background: "rgba(13,17,32,0.96)",
+                      borderColor: "rgba(99,146,255,0.18)",
+                      backdropFilter: "blur(20px)",
+                    }}
+                  >
+                    {/* Header */}
+                    <div
+                      className="px-3 py-2.5 border-b flex items-center justify-between"
+                      style={{ borderColor: "rgba(99,146,255,0.12)" }}
+                    >
+                      <div>
+                        <p className="text-[11px] font-bold text-white tracking-wide">CTR PRESETS</p>
+                        <p className="text-[9px]" style={{ color: "#4A4A5A" }}>
+                          YouTube + TikTok click-rate formulas
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => setCtrPresetsOpen(false)}
+                        className="text-[10px] px-1.5 py-0.5 rounded"
+                        style={{ color: "#4A4A5A", background: "rgba(255,255,255,0.04)" }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+
+                    {/* Preset list — scrollable */}
+                    <div className="overflow-y-auto" style={{ maxHeight: 340 }}>
+                      {CTR_PRESETS.map((preset) => {
+                        const tc = tierColor(preset.tier);
+                        return (
+                          <button
+                            key={preset.id}
+                            onClick={() => {
+                              preset.apply();
+                              setCtrPresetsOpen(false);
+                            }}
+                            className="w-full flex items-start gap-2.5 px-3 py-2.5 text-left transition-colors duration-100 border-b"
+                            style={{
+                              borderColor: "rgba(99,146,255,0.08)",
+                              background: "transparent",
+                            }}
+                            onMouseEnter={(e) => {
+                              (e.currentTarget as HTMLButtonElement).style.background = "rgba(59,130,246,0.06)";
+                            }}
+                            onMouseLeave={(e) => {
+                              (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+                            }}
+                          >
+                            {/* CTR badge */}
+                            <div
+                              className="mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold"
+                              style={{ background: tc.bg, color: tc.text, minWidth: 44, textAlign: "center" }}
+                            >
+                              {preset.ctr}
+                            </div>
+                            {/* Text */}
+                            <div className="min-w-0">
+                              <p className="text-[11px] font-semibold text-white leading-tight">{preset.name}</p>
+                              <p className="text-[9px] leading-tight mt-0.5" style={{ color: "#4A4A5A" }}>
+                                {preset.desc}
+                              </p>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Footer hint */}
+                    <div
+                      className="px-3 py-2 text-[9px]"
+                      style={{ color: "#4A4A5A", background: "rgba(255,255,255,0.02)" }}
+                    >
+                      Adds text + shape layers — adjust colours & font to match your brand
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             <AIFillDialog
