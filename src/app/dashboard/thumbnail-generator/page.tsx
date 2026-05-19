@@ -47,6 +47,7 @@ import AiFirstStarter from "@/components/thumbnail-editor/ai-first-starter";
 import StockPhotosPanel from "@/components/thumbnail-editor/stock-photos-panel";
 import type { StockPhoto } from "@/lib/integrations/stock-photos";
 import { MotionPage } from "@/components/motion/motion-page";
+import SmartBar from "@/components/ui/smart-bar";
 
 // Electron hint — the preload script sets window.electron. We check for
 // truthy at runtime to decide whether to show the native picker.
@@ -749,6 +750,14 @@ export default function ThumbnailEditorProPage() {
                 onUndo={onUndo}
                 onRedo={onRedo}
               />
+            </div>
+
+            {/* AI Director — floating CTR formula panel, bottom-right */}
+            <div
+              className="absolute bottom-4 right-4 z-40 w-72"
+              style={{ pointerEvents: "auto" }}
+            >
+              <SmartBar context="thumbnail" />
             </div>
 
             <AIFillDialog

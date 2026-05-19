@@ -36,6 +36,8 @@ import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { useQuotaWall } from "@/components/billing/quota-wall";
 import Modal from "@/components/ui/modal";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
+import PageAgent from "@/components/ui/page-agent";
+import SmartBar from "@/components/ui/smart-bar";
 import { VIDEO_PRESETS, VIDEO_PRESET_CATEGORIES } from "@/lib/presets";
 import { ADS_PRESET } from "@/lib/video-presets/ads";
 import { getMaxReferenceFile, formatBytes } from "@/lib/plan-config";
@@ -3381,7 +3383,15 @@ export default function VideoEditorPage() {
                 <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">Video Editor</h1>
               </div>
               <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
-            </div>{/* Guided Mode � 5-step "4-year-old friendly" flow */}{!advancedMode && (
+            </div>
+
+            {/* Competitive Intelligence + AI Director strips */}
+            <div className="px-1 mb-2 space-y-2">
+              <PageAgent context="video-editor" />
+              <SmartBar context="video-editor" />
+            </div>
+
+            {/* Guided Mode � 5-step "4-year-old friendly" flow */}{!advancedMode && (
               <Wizard
                 steps={[
                   {

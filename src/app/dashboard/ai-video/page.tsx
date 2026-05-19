@@ -25,6 +25,7 @@ import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 import PageAgent from "@/components/ui/page-agent";
+import SmartBar from "@/components/ui/smart-bar";
 
 const PROMPT_IDEAS = [
   "A golden retriever running through a field of sunflowers at sunset, cinematic lighting",
@@ -602,6 +603,14 @@ export default function AIVideoPage() {
       {/* Competitive Intelligence strip */}
       <div className="px-1 mb-2">
         <PageAgent context="video-gen" />
+      </div>
+
+      {/* AI Director — viral formats, structure templates, CTR scoring */}
+      <div className="px-1 mb-2">
+        <SmartBar
+          context="video-gen"
+          onUseFormat={(fmt) => setPrompt(fmt)}
+        />
       </div>
 
       {/* Scorecard strip */}
