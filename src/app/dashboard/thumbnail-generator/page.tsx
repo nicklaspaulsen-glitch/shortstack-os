@@ -20,7 +20,9 @@ import type {
   BlendMode,
   CanvasPreset,
   EditorState,
+  ImageLayer,
   Layer,
+  TextLayer,
   ToolId,
   HistoryState,
 } from "@/lib/thumbnail-editor/types";
@@ -705,6 +707,44 @@ export default function ThumbnailEditorProPage() {
   // callback refs on every render.
   void flattenHistory;
 
+  // ── Composition / contrast analyser ──────────────────────────────────────
+  // Zero-API, layer-structure-based. Derives composition quality signals from
+  // the layer list in real time — no canvas pixel data required.
+  const compositionSignals = useMemo(() => {
+    const layers = state.layers;
+    const textLayers = layers.filter((l): l is TextLayer => l.type === "text" && !!(l as TextLayer).text?.trim());
+    const imageLayers = layers.filter((l): l is ImageLayer => l.type === "image");
+    const shapeLayers = layers.filter((l) => l.type === "shape");
+    const visibleCount = layers.filter((l) => l.visible).length;
+    const canvasH = state.canvasHeight;
+    const canvasArea = state.canvasWidth * state.canvasHeight;
+
+    // Text y-midpoint in upper or lower rule-of-thirds zone (not dead centre)
+    const textInThirds = textLayers.some((l) => {
+      const yMid = l.y + l.height / 2;
+      const ratio = yMid / canvasH;
+      return ratio < 0.38 || ratio > 0.62;
+    });
+
+    // Background: at least one image that covers >55% of canvas area
+    const hasBgCoverage = imageLayers.some((l) => l.width * l.height > canvasArea * 0.55);
+
+    return [
+      { label: "Headline text present",         present: textLayers.length > 0 },
+      { label: "Photo or image layer",           present: imageLayers.length > 0 },
+      { label: "Visual depth (3+ layers)",       present: visibleCount >= 3 },
+      { label: "Text in rule-of-thirds zone",    present: textInThirds },
+      { label: "Accent or shape element",        present: shapeLayers.length > 0 },
+      { label: "Background fills canvas",        present: hasBgCoverage },
+    ] as Array<{ label: string; present: boolean }>;
+  }, [state.layers, state.canvasWidth, state.canvasHeight]);
+
+  const compositionScore = useMemo(() => {
+    if (state.layers.length === 0) return 0;
+    const hits = compositionSignals.filter((s) => s.present).length;
+    return Math.round((hits / compositionSignals.length) * 100);
+  }, [compositionSignals, state.layers]);
+
   // ── CTR Presets panel ─────────────────────────────────────────────────
   const [ctrPresetsOpen, setCtrPresetsOpen] = useState(false);
 
@@ -993,6 +1033,35 @@ export default function ThumbnailEditorProPage() {
                   </div>
                 );
               })()}
+              {/* Composition analyser — layer-structure based, zero API cost */}
+              {state.layers.length > 0 && (
+                <div className="mx-2 mb-1 px-3 py-2 rounded-xl border border-border-subtle bg-surface-light/60">
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-[8px] uppercase tracking-wider text-text-muted font-medium">Composition</p>
+                    <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full" style={{
+                      background: compositionScore >= 70 ? "rgba(34,197,94,0.14)" : compositionScore >= 45 ? "rgba(245,158,11,0.14)" : "rgba(239,68,68,0.14)",
+                      color: compositionScore >= 70 ? "#22C55E" : compositionScore >= 45 ? "#F59E0B" : "#EF4444",
+                    }}>
+                      {compositionScore}%
+                    </span>
+                  </div>
+                  <div className="h-1 rounded-full bg-white/5 overflow-hidden">
+                    <div className="h-full rounded-full transition-all duration-500" style={{
+                      width: `${compositionScore}%`,
+                      background: compositionScore >= 70 ? "#22C55E" : compositionScore >= 45 ? "#F59E0B" : "#EF4444",
+                      opacity: 0.7,
+                    }} />
+                  </div>
+                  <div className="mt-1.5 flex flex-col gap-0.5">
+                    {compositionSignals.map((sig) => (
+                      <span key={sig.label} className={["text-[7.5px] flex items-center gap-1 transition-colors duration-150", sig.present ? "text-[#22C55E]" : "text-text-muted/50"].join(" ")}>
+                        <span className="shrink-0 text-[8px]">{sig.present ? "✓" : "○"}</span>
+                        {sig.label}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
               <LayersPanel {...layersProps} />
               <HistoryPanel
                 history={history}
