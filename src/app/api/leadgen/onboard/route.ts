@@ -8,41 +8,60 @@ export const dynamic = "force-dynamic";
 /**
  * POST /api/leadgen/onboard
  *
- * After a deal is closed, the AI collects platform credentials/logins from the
- * lead via DM conversation. Called by n8n on each inbound reply during the
- * onboarding stage.
+ * After a lead's payment is confirmed, the AI collects social media login
+ * credentials via DM, creates a managed Zernio profile, stores only the
+ * resulting zernio_profile_id (NEVER the password), then fires
+ * /api/leadgen/generate-content to begin content work.
+ *
+ * SECURITY:
+ *   - Plain-text password is used once to call Zernio, then discarded.
+ *   - Password is redacted from message_history before DB write.
+ *   - Only zernio_profile_id persists in the DB.
  *
  * Auth: session bearer OR x-webhook-key + owner_id
  *
  * Body:
  *   lead_id           string   — lead_pipeline.id
- *   inbound_message?  string   — latest message from the lead (if this is
- *                               a reply; omit to send the opening ask)
- *   mark_complete?    boolean  — force-mark onboarding complete (manual override)
- *   owner_id?         string   — required if using webhook auth
+ *   inbound_message?  string   — reply from lead (omit to send opening message)
+ *   mark_complete?    boolean  — force-mark complete (manual override)
+ *   owner_id?         string   — required for webhook auth
  */
 
-const ONBOARDING_SYSTEM = `You are a friendly agency onboarding assistant collecting access credentials
-from a new client via Instagram DM. Be conversational, brief (3 sentences max per message),
-and friendly. You are collecting:
-1. Their Instagram username (you probably already have it)
-2. Whether they want to connect Meta Ads Manager (yes/no — just need their email for an invite)
-3. Whether they want to connect TikTok for Business (yes/no)
-4. Their preferred working email/contact
+const ONBOARDING_SYSTEM = `You are a friendly agency onboarding assistant collecting social media account
+access from a new paying client via Instagram DM. Be brief (3 sentences max), warm, and clear.
 
-Extract whatever they provide. When you have all required info OR the client says they're done,
-output a JSON block at the end of your message like:
-<collected>{"instagram_username":"...","meta_ads_email":"...","tiktok_connected":false,"contact_email":"..."}</collected>
-If not enough info yet, omit the block and just send a friendly follow-up question.`;
+You need to collect:
+1. The platform they want you to manage first (Instagram assumed; ask if they want TikTok too)
+2. Their account EMAIL (the login email for the platform)
+3. Their account PASSWORD — explicitly reassure them it is only used to connect their account
+   securely and is never stored after the connection is made
 
-const OPENING_MESSAGE = `Hey! Now that we're working together, I just need a few quick things to get your account set up 🙌
+Rules:
+- Ask ONE piece of information at a time.
+- Always reassure on security when asking for the password.
+- Once you have email + password for a platform, output a JSON block at the end of your message:
+  <collected>{"platform":"instagram","email":"...","password":"...","tiktok":false}</collected>
+  If TikTok was requested, include a second block for tiktok.
+- After outputting <collected>, say: "Perfect — connecting your account now! I'll be back shortly."
+- If the client says "not now" or refuses, output: SKIP`;
 
-1. We'll use your @handle for posts (already have it)
-2. Do you want to connect your Meta Ads account? If yes, just drop your email and I'll send an invite
-3. TikTok for Business — want to link it? Just say yes/no
-4. Best email to reach you on?
+const OPENING_MESSAGE = `Hey! Payment confirmed — welcome aboard! 🎉
 
-You can answer all at once or one by one, totally fine!`;
+To get started managing your account, I need to connect it. This is quick:
+
+1. What's the **email** you use to log in to Instagram?
+2. What's your **password**?
+
+Your credentials are used only to securely connect your account and are never stored after setup. You can change your password afterwards if you prefer.`;
+
+type MessageEntry = { role: string; content: string; ts: string };
+
+type CollectedBlock = {
+  platform: string;
+  email: string;
+  password: string;
+  tiktok?: boolean;
+};
 
 export async function POST(request: NextRequest) {
   const webhookKey = request.headers.get("x-webhook-key");
@@ -54,10 +73,13 @@ export async function POST(request: NextRequest) {
   if (webhookKey && expectedKey && webhookKey === expectedKey) {
     body = await request.json();
     ownerId = (body.owner_id as string) ?? null;
-    if (!ownerId) return NextResponse.json({ error: "owner_id required for webhook auth" }, { status: 400 });
+    if (!ownerId)
+      return NextResponse.json({ error: "owner_id required for webhook auth" }, { status: 400 });
   } else {
     const authSupabase = createServerSupabase();
-    const { data: { user } } = await authSupabase.auth.getUser();
+    const {
+      data: { user },
+    } = await authSupabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     ownerId = user.id;
     body = await request.json();
@@ -85,33 +107,31 @@ export async function POST(request: NextRequest) {
 
   // Manual complete override
   if (mark_complete) {
-    await supabase.from("lead_pipeline").update({
-      stage: "scripting",
-      onboarding_complete: true,
-    }).eq("id", lead_id);
+    await supabase
+      .from("lead_pipeline")
+      .update({ stage: "scripting", onboarding_complete: true })
+      .eq("id", lead_id);
     return NextResponse.json({ ok: true, stage: "scripting", complete: true });
   }
 
-  // If no inbound message → send opening message
+  // No inbound → send opening message
   if (!inbound_message) {
-    // Transition to onboarding
-    const history = (row.message_history as Array<{ role: string; content: string; ts: string }>) || [];
-    const newHistory = [...history, { role: "assistant", content: OPENING_MESSAGE, ts: new Date().toISOString() }];
-
-    await supabase.from("lead_pipeline").update({
-      stage: "onboarding",
-      message_history: newHistory,
-    }).eq("id", lead_id);
-
-    // Fire DM via Zernio
+    const history = (row.message_history as MessageEntry[]) || [];
+    const newHistory: MessageEntry[] = [
+      ...history,
+      { role: "assistant", content: OPENING_MESSAGE, ts: new Date().toISOString() },
+    ];
+    await supabase
+      .from("lead_pipeline")
+      .update({ stage: "onboarding", message_history: newHistory })
+      .eq("id", lead_id);
     await sendDM(row.platform, row.handle, OPENING_MESSAGE);
-
     return NextResponse.json({ ok: true, stage: "onboarding", message: OPENING_MESSAGE });
   }
 
-  // Process inbound reply through AI
-  const history = (row.message_history as Array<{ role: string; content: string; ts: string }>) || [];
-  const updatedHistory = [
+  // Process inbound reply
+  const history = (row.message_history as MessageEntry[]) || [];
+  const updatedHistory: MessageEntry[] = [
     ...history,
     { role: "user", content: inbound_message, ts: new Date().toISOString() },
   ];
@@ -123,8 +143,10 @@ export async function POST(request: NextRequest) {
   const result = await callLLMTraced({
     taskType: "agentic_reasoning",
     systemPrompt: ONBOARDING_SYSTEM,
-    userPrompt: `Conversation so far:\n${conversationText}\n\nCurrent onboarding data collected: ${JSON.stringify(row.onboarding_data)}`,
-    maxTokens: 300,
+    userPrompt: `Conversation:\n${conversationText}\n\nCurrent data: ${JSON.stringify(
+      row.onboarding_data,
+    )}`,
+    maxTokens: 400,
     forceModel: "claude-haiku-4-5",
     surface: "leadgen_onboard",
     subject: { kind: "lead", id: lead_id, agencyOwnerId: ownerId },
@@ -132,39 +154,115 @@ export async function POST(request: NextRequest) {
     channel: "dm",
   });
 
-  const aiReply = result.text;
+  const aiReply: string = result.text;
 
-  // Extract <collected> block if present
-  let onboardingData = row.onboarding_data as Record<string, unknown> || {};
-  let complete = false;
-  const collectedMatch = aiReply.match(/<collected>([\s\S]*?)<\/collected>/);
-  if (collectedMatch) {
-    try {
-      const parsed = JSON.parse(collectedMatch[1]);
-      onboardingData = { ...onboardingData, ...parsed };
-      complete = true;
-    } catch { /* ignore parse errors */ }
+  // Check for SKIP token
+  if (aiReply.toUpperCase().includes("SKIP")) {
+    const cleanSkip =
+      aiReply.replace(/SKIP/gi, "").trim() ||
+      "No problem! We can connect your account whenever you're ready. Just message me.";
+    await supabase
+      .from("lead_pipeline")
+      .update({ message_history: updatedHistory, last_reply_at: new Date().toISOString() })
+      .eq("id", lead_id);
+    await sendDM(row.platform, row.handle, cleanSkip);
+    return NextResponse.json({ ok: true, stage: row.stage, skipped: true });
   }
 
-  // Clean reply — strip the <collected> block from what we send to the lead
+  // Extract <collected> credential blocks using matchAll (no exec needed)
+  const collectedBlocks: CollectedBlock[] = [];
+  const matches = Array.from(aiReply.matchAll(/<collected>([\s\S]*?)<\/collected>/g));
+  for (const m of matches) {
+    try {
+      const parsed = JSON.parse(m[1]) as CollectedBlock;
+      if (parsed.email && parsed.password) collectedBlocks.push(parsed);
+    } catch {
+      /* ignore parse errors */
+    }
+  }
+
+  // Strip <collected> blocks from what the lead sees and what we store in history
   const cleanReply = aiReply.replace(/<collected>[\s\S]*?<\/collected>/g, "").trim();
 
-  const finalHistory = [...updatedHistory, { role: "assistant", content: cleanReply, ts: new Date().toISOString() }];
+  let onboardingData = (row.onboarding_data as Record<string, unknown>) || {};
+  let complete = false;
+  let zernioProfileId: string | null = null;
+
+  if (collectedBlocks.length > 0) {
+    const primary = collectedBlocks[0];
+
+    // Create Zernio managed profile — password used here and nowhere else
+    const profileResult = await createZernioProfile({
+      platform: primary.platform,
+      email: primary.email,
+      password: primary.password,
+      ownerRef: ownerId,
+    });
+
+    if (profileResult.ok) {
+      zernioProfileId = profileResult.profile_id;
+      onboardingData = {
+        ...onboardingData,
+        platforms_connected: [primary.platform],
+        tiktok: collectedBlocks.some((b) => b.tiktok) || Boolean(primary.tiktok),
+        zernio_profile_id: zernioProfileId,
+        account_email: primary.email, // email only — password NOT stored
+      };
+      complete = true;
+    } else {
+      console.error("[leadgen/onboard] Zernio profile creation failed:", profileResult.error);
+      // Redact passwords from history even on failure, then ask lead to retry
+      const safeHistory = redactHistoryPasswords(
+        [...updatedHistory, { role: "assistant", content: cleanReply, ts: new Date().toISOString() }],
+        collectedBlocks,
+      );
+      await supabase
+        .from("lead_pipeline")
+        .update({ message_history: safeHistory, last_reply_at: new Date().toISOString() })
+        .eq("id", lead_id);
+      const retryMsg =
+        "Hmm, I had trouble connecting your account. Could you double-check your email and password and try again?";
+      await sendDM(row.platform, row.handle, retryMsg);
+      return NextResponse.json({ ok: false, stage: "onboarding", retry: true });
+    }
+  }
+
+  // Redact passwords before persisting conversation history
+  const safeHistory = redactHistoryPasswords(
+    [...updatedHistory, { role: "assistant", content: cleanReply, ts: new Date().toISOString() }],
+    collectedBlocks,
+  );
 
   const updatePayload: Record<string, unknown> = {
-    message_history: finalHistory,
+    message_history: safeHistory,
     onboarding_data: onboardingData,
     last_reply_at: new Date().toISOString(),
   };
+
   if (complete) {
     updatePayload.stage = "scripting";
     updatePayload.onboarding_complete = true;
+    if (zernioProfileId) updatePayload.zernio_profile_id = zernioProfileId;
   }
 
   await supabase.from("lead_pipeline").update(updatePayload).eq("id", lead_id);
 
-  // Send reply via Zernio
   if (cleanReply) await sendDM(row.platform, row.handle, cleanReply);
+
+  // After successful credential collection → fire content generation
+  if (complete) {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
+    fetch(`${appUrl}/api/leadgen/generate-content`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-webhook-key": process.env.WEBHOOK_SECRET || "",
+      },
+      body: JSON.stringify({ lead_id }),
+    }).catch((err) =>
+      console.warn("[leadgen/onboard] generate-content trigger failed:", err),
+    );
+  }
 
   return NextResponse.json({
     ok: true,
@@ -175,10 +273,11 @@ export async function POST(request: NextRequest) {
   });
 }
 
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
 async function sendDM(platform: string, handle: string, message: string): Promise<void> {
   const zernioKey = process.env.ZERNIO_API_KEY;
   if (!zernioKey) return;
-
   try {
     await fetch("https://api.zernio.com/v1/dm/send", {
       method: "POST",
@@ -188,4 +287,64 @@ async function sendDM(platform: string, handle: string, message: string): Promis
   } catch (err) {
     console.error("[leadgen/onboard] Zernio DM send failed:", err);
   }
+}
+
+type ZernioProfileResult =
+  | { ok: true; profile_id: string }
+  | { ok: false; error: string };
+
+async function createZernioProfile(opts: {
+  platform: string;
+  email: string;
+  password: string;
+  ownerRef: string;
+}): Promise<ZernioProfileResult> {
+  const zernioKey = process.env.ZERNIO_API_KEY;
+  if (!zernioKey) return { ok: false, error: "ZERNIO_API_KEY not configured" };
+
+  try {
+    const res = await fetch("https://api.zernio.com/v1/profiles", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": zernioKey,
+      },
+      body: JSON.stringify({
+        platform: opts.platform,
+        email: opts.email,
+        password: opts.password,
+        owner_ref: opts.ownerRef,
+      }),
+    });
+
+    if (!res.ok) {
+      const txt = await res.text().catch(() => "");
+      return { ok: false, error: `Zernio HTTP ${res.status}: ${txt}` };
+    }
+
+    const json = (await res.json()) as { id?: string; profile_id?: string };
+    const profileId = json.id || json.profile_id;
+    if (!profileId) return { ok: false, error: "No profile_id in Zernio response" };
+
+    return { ok: true, profile_id: profileId };
+  } catch (err) {
+    return { ok: false, error: err instanceof Error ? err.message : "unknown error" };
+  }
+}
+
+/** Redact known plain-text passwords from all messages in a history array */
+function redactHistoryPasswords(
+  history: MessageEntry[],
+  blocks: CollectedBlock[],
+): MessageEntry[] {
+  const passwords = blocks.map((b) => b.password).filter(Boolean);
+  if (passwords.length === 0) return history;
+
+  return history.map((entry) => ({
+    ...entry,
+    content: passwords.reduce((txt, pw) => {
+      // Use split/join to avoid needing a RegExp with the password as pattern
+      return txt.split(pw).join("[REDACTED]");
+    }, entry.content),
+  }));
 }

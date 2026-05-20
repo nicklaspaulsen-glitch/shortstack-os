@@ -282,21 +282,24 @@ Output ONLY valid JSON with only the fields you can confidently identify from th
     })
     .eq("id", lead_id);
 
-  // If just qualified, fire off content generation asynchronously
+  // If just qualified, fire payment link — lead must pay before content work starts.
+  // Fire-and-forget so this doesn't block the DM reply.
   if (newStage === "qualified" && lead.stage !== "qualified") {
-    // Fire-and-forget — don't await to avoid DM reply latency
-    fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work"}/api/leadgen/generate-content`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-webhook-key": process.env.WEBHOOK_SECRET || "",
-        },
-        body: JSON.stringify({ lead_id }),
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
+    fetch(`${appUrl}/api/leadgen/payment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-webhook-key": process.env.WEBHOOK_SECRET || "",
       },
-    ).catch((err) =>
-      console.warn("[leadgen/qualify] generate-content trigger failed:", err),
+      body: JSON.stringify({
+        lead_id,
+        owner_id: lead.owner_id,
+        amount: Number(process.env.LEADGEN_DEFAULT_PRICE) || 500,
+        currency: "usd",
+      }),
+    }).catch((err) =>
+      console.warn("[leadgen/qualify] payment trigger failed:", err),
     );
   }
 

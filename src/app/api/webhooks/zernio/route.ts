@@ -158,50 +158,117 @@ export async function POST(request: NextRequest) {
     }).catch((err) => console.warn("[voice-capture/zernio]", err));
   }
 
-  // ── Lead Pipeline qualification ───────────────────────────────────────────
-  // If the sender matches a lead in the voice-outreach pipeline, route the
-  // message to the AI qualification agent (fire-and-forget).
-  if (senderHandle && payload.text && ownerId) {
+  // ── Lead Pipeline routing ─────────────────────────────────────────────────
+  // Match the sender to a lead in the pipeline and route based on their stage.
+  if (senderHandle && ownerId) {
     const { data: pipelineLead } = await supabase
       .from("lead_pipeline")
-      .select("id, stage")
+      .select("id, stage, owner_id")
       .eq("owner_id", ownerId)
       .eq("platform", "instagram")
       .ilike("handle", senderHandle)
-      .not("stage", "in", '("dead","converted")')
+      .not("stage", "in", '("dead","converted","closed","delivered")')
       .limit(1)
       .maybeSingle();
 
     if (pipelineLead?.id) {
-      // Update stage to "replied" if still at outreach_sent
-      if (pipelineLead.stage === "outreach_sent") {
-        await supabase
-          .from("lead_pipeline")
-          .update({ stage: "replied", last_reply_at: new Date().toISOString() })
-          .eq("id", pipelineLead.id);
-      }
-
-      // Fire qualification agent asynchronously — don't block the webhook response
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
       const webhookKey = process.env.WEBHOOK_SECRET || "";
-      fetch(`${appUrl}/api/leadgen/qualify`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-webhook-key": webhookKey,
-        },
-        body: JSON.stringify({
-          lead_id: pipelineLead.id,
-          message: payload.text,
-          attachments: (payload.attachments || []).map((a) => ({
-            url: a.url,
-            type: a.type,
-            filename: a.filename,
-          })),
-        }),
-      }).catch((err) =>
-        console.warn("[zernio-webhook] leadgen qualify trigger failed:", err),
-      );
+      const stage = pipelineLead.stage as string;
+
+      // ── Early stages: outreach_sent / replied / qualifying / qualified ──
+      // Route to AI qualification agent
+      if (
+        ["outreach_sent", "replied", "qualifying", "qualified",
+         "payment_sent", "payment_received"].includes(stage) &&
+        payload.text
+      ) {
+        // Advance to "replied" on first inbound
+        if (stage === "outreach_sent") {
+          await supabase
+            .from("lead_pipeline")
+            .update({ stage: "replied", last_reply_at: new Date().toISOString() })
+            .eq("id", pipelineLead.id);
+        }
+
+        fetch(`${appUrl}/api/leadgen/qualify`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-webhook-key": webhookKey },
+          body: JSON.stringify({
+            lead_id: pipelineLead.id,
+            message: payload.text,
+            attachments: (payload.attachments || []).map((a) => ({
+              url: a.url,
+              type: a.type,
+              filename: a.filename,
+            })),
+          }),
+        }).catch((err) =>
+          console.warn("[zernio-webhook] leadgen qualify trigger failed:", err),
+        );
+      }
+
+      // ── Onboarding stage: collecting credentials ───────────────────────
+      else if (stage === "onboarding" && payload.text) {
+        fetch(`${appUrl}/api/leadgen/onboard`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-webhook-key": webhookKey },
+          body: JSON.stringify({
+            lead_id: pipelineLead.id,
+            owner_id: pipelineLead.owner_id,
+            inbound_message: payload.text,
+          }),
+        }).catch((err) =>
+          console.warn("[zernio-webhook] leadgen onboard trigger failed:", err),
+        );
+      }
+
+      // ── Scripting stage: waiting for footage ───────────────────────────
+      // Route to footage processor when the lead sends a video attachment
+      // (or a text message indicating they want AI-generated content)
+      else if (stage === "scripting") {
+        const hasVideoAttachment = (payload.attachments || []).some((a) => {
+          if (a.type && a.type.startsWith("video/")) return true;
+          const ext =
+            (a.filename ?? "").split(".").pop()?.toLowerCase() ??
+            a.url.split(".").pop()?.split("?")[0].toLowerCase() ??
+            "";
+          return ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(ext);
+        });
+
+        const isAiRequest =
+          payload.text &&
+          /ai generat|generate|create.*video|make.*video/i.test(payload.text);
+
+        if (hasVideoAttachment || isAiRequest) {
+          const videoAttachment = (payload.attachments || []).find((a) => {
+            if (a.type && a.type.startsWith("video/")) return true;
+            const ext =
+              (a.filename ?? "").split(".").pop()?.toLowerCase() ??
+              a.url.split(".").pop()?.split("?")[0].toLowerCase() ??
+              "";
+            return ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(ext);
+          });
+
+          const needsThumbnail =
+            payload.text ? /thumbnail/i.test(payload.text) : false;
+
+          fetch(`${appUrl}/api/leadgen/process-footage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "x-webhook-key": webhookKey },
+            body: JSON.stringify({
+              lead_id: pipelineLead.id,
+              owner_id: pipelineLead.owner_id,
+              footage_url: videoAttachment?.url || "",
+              needs_thumbnail: needsThumbnail,
+              brief: payload.text || "",
+              attachments: payload.attachments || [],
+            }),
+          }).catch((err) =>
+            console.warn("[zernio-webhook] leadgen process-footage trigger failed:", err),
+          );
+        }
+      }
     }
   }
 

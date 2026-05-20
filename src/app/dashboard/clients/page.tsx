@@ -1070,6 +1070,15 @@ export default function ClientsPage() {
                         <span className={`w-1 h-1 rounded-full ${statusStyles.dot}`} aria-hidden="true" />
                         {statusStyles.label}
                       </span>
+                      {/* Zernio social connection badge */}
+                      {c.zernio_profile_id ? (
+                        <span
+                          className="inline-flex items-center gap-0.5 text-[7px] px-1.5 py-0.5 rounded-full font-bold bg-brand-accent/10 text-brand-accent border border-brand-accent/20 tracking-wide"
+                          title={`Zernio connected · ${c.zernio_profile_id}`}
+                        >
+                          <Zap size={6} /> SOCIAL
+                        </span>
+                      ) : null}
                     </div>
                     <p className="text-[10px] text-text-muted">{c.contact_name}</p>
                     {isFeatured && c.industry && (
@@ -1283,6 +1292,15 @@ export default function ClientsPage() {
                           <span key={t.label} className="text-[8px] px-1 py-0 rounded-full font-medium"
                             style={{ background: t.color + "18", color: t.color }}>{t.label}</span>
                         ))}
+                        {/* Zernio connection badge */}
+                        {c.zernio_profile_id ? (
+                          <span
+                            className="inline-flex items-center gap-0.5 text-[8px] px-1.5 py-0.5 rounded-full font-medium bg-brand-accent/10 text-brand-accent border border-brand-accent/20"
+                            title={`Zernio connected · ${c.zernio_profile_id}`}
+                          >
+                            <Zap size={7} /> Social
+                          </span>
+                        ) : null}
                       </div>
                       <p className="text-xs text-text-muted">{c.contact_name}</p>
                     </div>

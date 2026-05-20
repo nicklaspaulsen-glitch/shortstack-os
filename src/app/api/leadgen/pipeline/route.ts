@@ -61,7 +61,10 @@ export async function GET(request: NextRequest) {
 
 const ALLOWED_STAGES = new Set([
   "outreach_pending", "outreach_sent", "replied",
-  "qualifying", "qualified", "content_ready", "converted", "dead",
+  "qualifying", "qualified",
+  "payment_sent", "payment_received",
+  "onboarding", "scripting",
+  "content_ready", "converted", "closed", "dead",
 ]);
 
 export async function PATCH(request: NextRequest) {
