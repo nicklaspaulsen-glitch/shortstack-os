@@ -29,8 +29,8 @@ import {
   PieChart,
   Plug,
 } from "lucide-react";
-import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
+import PageHero from "@/components/ui/page-hero";
 
 // Code-split the panels — only the active tab loads. Each panel has its
 // own data fetching, so this also avoids waterfall fetches at page load.
@@ -96,37 +96,42 @@ export default function AdsManagerPage() {
   const activeTab = TABS.find((t) => t.id === tab);
 
   return (
-    <MotionPage className="space-y-6">{/* -- Ads Manager command strip -- */}
-    <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
-      <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">ADS MANAGER</p>
-        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Ads Manager</h1>
+    <MotionPage className="space-y-6">
+      <PageHero
+        title="Ads Manager"
+        subtitle="Unified campaign control across Meta, Google, and TikTok"
+        eyebrow="ADS MANAGER"
+        icon={<Megaphone size={18} />}
+        gradient="blue"
+      />
+
+      {/* Tabs */}
+      <div className="tab-pill-strip flex-wrap">
+        {TABS.map((t, i) => {
+          const Icon = t.icon;
+          const isActive = t.id === tab;
+          return (
+            <motion.button
+              key={t.id}
+              type="button"
+              onClick={() => setTab(t.id)}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.18, delay: i * 0.05 }}
+              whileTap={{ scale: 0.97 }}
+              className={`tab-pill flex items-center gap-2${isActive ? " active" : ""}`}
+              aria-current={isActive ? "page" : undefined}
+              title={t.description}
+            >
+              <Icon size={14} />
+              {t.label}
+            </motion.button>
+          );
+        })}
       </div>
-    </div>{/* Tabs */}<PrismPanel padding="px-2 py-1" className="flex flex-wrap gap-1">
-              {TABS.map((t, i) => {
-                const Icon = t.icon;
-                const isActive = t.id === tab;
-                return (
-                  <motion.button
-                    key={t.id}
-                    onClick={() => setTab(t.id)}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.06 }}
-                    className={`inline-flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border-b-2 -mb-px transition-colors ${
-                      isActive
-                        ? "border-brand-accent text-brand-accent bg-[rgba(59,130,246,0.08)]"
-                        : "border-transparent text-text-muted hover:text-text"
-                    }`}
-                  >
-                    <Icon size={14} />
-                    {t.label}
-                  </motion.button>
-                );
-              })}
-            </PrismPanel>{activeTab && (
-              <p className="text-xs text-text-muted -mt-2">{activeTab.description}</p>
-            )}{/* Tab content */}<motion.div
+      {activeTab && (
+        <p className="text-xs text-text-muted -mt-2 px-1">{activeTab.description}</p>
+      )}{/* Tab content */}<motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}

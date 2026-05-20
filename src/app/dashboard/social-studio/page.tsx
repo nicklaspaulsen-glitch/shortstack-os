@@ -11,6 +11,7 @@ import Tab4Stats from "./components/Tab4Stats";
 import Tab5TopCommenters from "./components/Tab5TopCommenters";
 import { MotionPage } from "@/components/motion/motion-page";
 import PageAgent from "@/components/ui/page-agent";
+import PageHero from "@/components/ui/page-hero";
 import CreatorIntelligence, { type CreatorIdea } from "@/components/ui/creator-intelligence";
 import type { CreatorStyle } from "@/lib/ai/creator-styles";
 import toast from "react-hot-toast";
@@ -47,13 +48,13 @@ export default function SocialStudioPage() {
 
   return (
     <MotionPage className="space-y-6">
-      {/* -- Social Studio command strip -- */}
-      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
-        <div className="min-w-0">
-          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">POST STUDIO</p>
-          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Social Studio</h1>
-        </div>
-      </div>
+      <PageHero
+        title="Social Studio"
+        subtitle="Plan, schedule, and automate your content across every platform"
+        eyebrow="POST STUDIO"
+        icon={<Megaphone size={18} />}
+        gradient="blue"
+      />
 
       <div className="tab-pill-strip flex-wrap">
         {TABS.map((t, index) => {

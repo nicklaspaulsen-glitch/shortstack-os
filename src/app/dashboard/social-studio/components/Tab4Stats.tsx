@@ -106,16 +106,18 @@ export default function Tab4Stats() {
         <div style={{ width: "100%", height: 280 }}>
           <ResponsiveContainer>
             <AreaChart data={weeklyForChart} margin={{ top: 8, right: 16, left: -8, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-              <XAxis dataKey="label" tick={{ fontSize: 10, fill: "rgba(255,255,255,0.5)" }} />
-              <YAxis tick={{ fontSize: 10, fill: "rgba(255,255,255,0.5)" }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,146,255,0.08)" />
+              <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#4A4A5A" }} tickLine={false} />
+              <YAxis tick={{ fontSize: 10, fill: "#4A4A5A" }} tickLine={false} axisLine={false} />
               <Tooltip
                 contentStyle={{
-                  background: "rgba(15,15,15,0.95)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "rgba(13,17,32,0.95)",
+                  border: "1px solid rgba(99,146,255,0.18)",
                   borderRadius: 8,
                   fontSize: 11,
+                  color: "#F0F0F4",
                 }}
+                labelStyle={{ color: "#A8A8B2" }}
               />
               <Legend wrapperStyle={{ fontSize: 10 }} />
               {ALL_PLATFORMS.map((p) => (
