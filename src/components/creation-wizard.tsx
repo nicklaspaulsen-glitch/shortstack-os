@@ -359,7 +359,7 @@ export default function CreationWizard({
       // wiping existing user input when the API fails or returns partial data.
       setData(prev => mergeNonEmpty(prev, patch));
     } catch (err) {
-      console.error("AI helper failed:", err);
+      console.error("[CreationWizard] AI helper failed:", err);
     } finally {
       setAiLoading(false);
     }

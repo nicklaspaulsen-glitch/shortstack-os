@@ -326,7 +326,7 @@ export default function ImageWizard({
       setEditedNegative(built.negative_prompt);
       setPhase("review");
     } catch (err) {
-      console.error(err);
+      console.error("[ImageWizard] prompt build failed:", err);
       toast.error("Failed to build prompt — check your connection");
     } finally {
       setIsBuilding(false);
@@ -398,7 +398,7 @@ export default function ImageWizard({
       onComplete?.(imgs);
       toast.success(`${imgs.length} image${imgs.length > 1 ? "s" : ""} ready`);
     } catch (err) {
-      console.error(err);
+      console.error("[ImageWizard] generation failed:", err);
       toast.error("Generation failed");
       setPhase("review");
     } finally {
@@ -472,7 +472,7 @@ export default function ImageWizard({
       onComplete?.(imgs);
       toast.success(`${imgs.length}-slide carousel ready`);
     } catch (err) {
-      console.error(err);
+      console.error("[ImageWizard] carousel generation failed:", err);
       toast.error("Generation failed");
       setPhase("review");
     } finally {

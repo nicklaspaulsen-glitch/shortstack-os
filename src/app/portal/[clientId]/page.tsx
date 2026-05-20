@@ -192,7 +192,7 @@ export default function ClientPortalDashboard({
       const json = await res.json();
       setTasks(json.tasks || []);
     } catch (err) {
-      console.error(err);
+      console.error("[client-portal] tasks load failed:", err);
     } finally {
       setTasksLoading(false);
     }
@@ -206,7 +206,7 @@ export default function ClientPortalDashboard({
       const json = await res.json();
       setContentItems(json.items || []);
     } catch (err) {
-      console.error(err);
+      console.error("[client-portal] content load failed:", err);
     } finally {
       setContentLoading(false);
     }
@@ -220,7 +220,7 @@ export default function ClientPortalDashboard({
       const json = await res.json();
       setInvoices(json.invoices || []);
     } catch (err) {
-      console.error(err);
+      console.error("[client-portal] invoices load failed:", err);
     } finally {
       setInvoicesLoading(false);
     }
@@ -237,7 +237,7 @@ export default function ClientPortalDashboard({
         setSenderRole(json.role);
       }
     } catch (err) {
-      console.error(err);
+      console.error("[client-portal] messages load failed:", err);
     } finally {
       setMessagesLoading(false);
     }
