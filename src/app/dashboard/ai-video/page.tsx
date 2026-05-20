@@ -1118,7 +1118,7 @@ export default function AIVideoPage() {
                 type="button"
                 onClick={() => setCreatorIdeasOpen((o) => !o)}
                 className="flex items-center gap-1.5 text-[10px] font-medium mb-2 transition-colors cursor-pointer"
-                style={{ color: creatorIdeasOpen ? "#60A5FA" : "#6B7280" }}
+                style={{ color: creatorIdeasOpen ? "#60A5FA" : "#4A4A5A" }}
               >
                 <TrendingUp size={10} />
                 Get creator-style ideas
@@ -2026,7 +2026,7 @@ export default function AIVideoPage() {
         <div className="flex items-center gap-2 text-[9px] text-text-primary/35 px-1">
           <Zap size={10} />
           <span>
-            GPU rendering requires <code className="text-text-primary/55 bg-[rgba(0,0,0,0.05)] px-1 py-0.5 rounded">HIGGSFIELD_URL</code> + <code className="text-text-primary/55 bg-[rgba(0,0,0,0.05)] px-1 py-0.5 rounded">RUNPOD_API_KEY</code>. Without them, you&apos;ll get a scene plan instead.
+            GPU rendering requires <code className="text-text-primary/55 bg-[rgba(99,146,255,0.08)] px-1 py-0.5 rounded">HIGGSFIELD_URL</code> + <code className="text-text-primary/55 bg-[rgba(99,146,255,0.08)] px-1 py-0.5 rounded">RUNPOD_API_KEY</code>. Without them, you&apos;ll get a scene plan instead.
           </span>
         </div>
       )}
