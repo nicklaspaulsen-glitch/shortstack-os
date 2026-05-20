@@ -44,10 +44,10 @@ const SUGGESTION_ICONS: Record<SuggestionRow["suggestion_type"], typeof Sparkles
 };
 
 const SUGGESTION_COLORS: Record<SuggestionRow["suggestion_type"], string> = {
-  reallocate: "text-blue-700 border-blue-500/40 bg-blue-500/10",
-  pause: "text-amber-700 border-amber-500/40 bg-amber-500/10",
-  scale: "text-emerald-700 border-emerald-500/40 bg-emerald-500/10",
-  optimize_creative: "text-purple-700 border-purple-500/40 bg-purple-500/10",
+  reallocate: "text-blue-400 border-blue-500/40 bg-blue-500/10",
+  pause: "text-amber-400 border-amber-500/40 bg-amber-500/10",
+  scale: "text-emerald-400 border-emerald-500/40 bg-emerald-500/10",
+  optimize_creative: "text-purple-400 border-purple-500/40 bg-purple-500/10",
 };
 
 export default function InsightsPanel() {
@@ -163,7 +163,7 @@ export default function InsightsPanel() {
         </div>
 
         {suggestions.length === 0 ? (
-          <div className="text-sm text-[#6B7280] py-6 text-center">
+          <div className="text-sm text-text-muted py-6 text-center">
             No pending suggestions. Click Generate to analyze the last 30 days
             of campaign data and surface optimisation recs.
           </div>
@@ -208,13 +208,13 @@ export default function InsightsPanel() {
                     <div className="flex flex-col gap-1 flex-shrink-0">
                       <button
                         onClick={() => void decide(s.id, "accept")}
-                        className="inline-flex items-center gap-1 rounded border border-emerald-500/40 bg-emerald-500/10 px-2 py-1 text-[11px] text-emerald-700 hover:bg-emerald-500/20"
+                        className="inline-flex items-center gap-1 rounded border border-emerald-500/40 bg-emerald-500/10 px-2 py-1 text-[11px] text-emerald-400 hover:bg-emerald-500/20 transition-colors"
                       >
                         <Check size={11} /> Apply
                       </button>
                       <button
                         onClick={() => void decide(s.id, "reject")}
-                        className="inline-flex items-center gap-1 rounded border border-black/[0.06] bg-black/[0.04] px-2 py-1 text-[11px] text-[#6B7280] hover:bg-black/[0.08]"
+                        className="inline-flex items-center gap-1 rounded border border-border-subtle bg-[rgba(99,146,255,0.04)] px-2 py-1 text-[11px] text-text-muted hover:bg-[rgba(99,146,255,0.08)] transition-colors"
                       >
                         <X size={11} /> Dismiss
                       </button>
@@ -260,32 +260,34 @@ function PlatformLineChart({
   const empty = data.length === 0 || data.every((d) => !d.meta && !d.google && !d.tiktok);
   return (
     <div className="glass rounded-lg p-4">
-      <h4 className="text-xs uppercase tracking-wide text-[#6B7280] mb-3">{title}</h4>
+      <h4 className="text-xs uppercase tracking-wide text-text-muted mb-3">{title}</h4>
       {empty ? (
-        <div className="text-xs text-[#6B7280] py-8 text-center">No data yet.</div>
+        <div className="text-xs text-text-muted py-8 text-center">No data yet.</div>
       ) : (
         <ResponsiveContainer width="100%" height={180}>
           <LineChart data={data} margin={{ top: 5, right: 5, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,146,255,0.08)" />
             <XAxis
               dataKey="date"
-              tick={{ fontSize: 9, fill: "rgba(0,0,0,0.4)" }}
+              tick={{ fontSize: 9, fill: "#4A4A5A" }}
               tickLine={false}
               tickFormatter={(d: string) => d.slice(5)}
             />
             <YAxis
-              tick={{ fontSize: 9, fill: "rgba(0,0,0,0.4)" }}
+              tick={{ fontSize: 9, fill: "#4A4A5A" }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => formatY(Number(v))}
             />
             <Tooltip
               contentStyle={{
-                background: "rgba(255,255,255,0.98)",
-                border: "1px solid rgba(0,0,0,0.08)",
+                background: "rgba(13,17,32,0.95)",
+                border: "1px solid rgba(99,146,255,0.18)",
                 borderRadius: 6,
                 fontSize: 11,
+                color: "#F0F0F4",
               }}
+              labelStyle={{ color: "#A8A8B2" }}
             />
             <Legend wrapperStyle={{ fontSize: 10, paddingTop: 4 }} />
             <Line

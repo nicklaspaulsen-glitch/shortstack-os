@@ -132,30 +132,30 @@ export default function OverviewPanel() {
           return (
             <div
               key={p}
-              className="rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-4"
-              style={{ borderLeftColor: PLATFORM_COLORS[p], borderLeftWidth: 3 }}
+              className="glass-panel rounded-lg p-4 overflow-hidden"
+              style={{ borderTopColor: PLATFORM_COLORS[p], borderTopWidth: 2 }}
             >
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-3">
                 <PlatformBadge platform={p} />
                 <span className="text-[11px] text-text-muted">{pp.campaigns} active</span>
               </div>
-              <div className="text-2xl font-semibold mb-1">
+              <div className="text-2xl font-semibold font-display mb-1">
                 {fmtCurrency(pp.spend)}
               </div>
               <div className="flex gap-3 text-[11px] text-text-muted">
                 <span>
-                  CTR: <span className="text-text">{pp.ctr.toFixed(2)}%</span>
+                  CTR: <span className="text-text-primary">{pp.ctr.toFixed(2)}%</span>
                 </span>
                 <span>
                   ROAS:{" "}
-                  <span className="text-text">
+                  <span className="text-text-primary">
                     {pp.roas !== null ? `${pp.roas.toFixed(2)}x` : "-"}
                   </span>
                 </span>
               </div>
               {!hasData && (
-                <div className="mt-2 text-[11px] text-text-muted/70">
-                  No spend yet - connect or sync.
+                <div className="mt-2 text-[11px] text-text-muted/60">
+                  No spend yet — connect or sync.
                 </div>
               )}
             </div>
@@ -163,7 +163,7 @@ export default function OverviewPanel() {
         })}
       </div>
 
-      <div className="rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-4">
+      <div className="glass-panel rounded-lg p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-medium">Last 30 days spend</h3>
           <span className="text-[11px] text-text-muted">
@@ -172,7 +172,7 @@ export default function OverviewPanel() {
         </div>
         {dailySeries.length === 0 ? (
           <div className="text-sm text-text-muted py-8 text-center">
-            No daily metrics in cache yet. The nightly cron at /api/cron/refresh-ads-metrics
+            No daily metrics yet. The nightly cron at /api/cron/refresh-ads-metrics
             populates this once you have connected accounts.
           </div>
         ) : (
@@ -180,36 +180,38 @@ export default function OverviewPanel() {
             <AreaChart data={dailySeries} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="spendGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#2563EB" stopOpacity={0.4} />
-                  <stop offset="100%" stopColor="#2563EB" stopOpacity={0} />
+                  <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.35} />
+                  <stop offset="100%" stopColor="#3B82F6" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,146,255,0.08)" />
               <XAxis
                 dataKey="date"
-                tick={{ fontSize: 10, fill: "#9CA3AF" }}
+                tick={{ fontSize: 10, fill: "#4A4A5A" }}
                 tickLine={false}
                 tickFormatter={(d: string) => d.slice(5)}
               />
               <YAxis
-                tick={{ fontSize: 10, fill: "#9CA3AF" }}
+                tick={{ fontSize: 10, fill: "#4A4A5A" }}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(v: number) => `$${v}`}
               />
               <Tooltip
                 contentStyle={{
-                  background: "rgba(255,255,255,0.97)",
-                  border: "1px solid rgba(0,0,0,0.10)",
+                  background: "rgba(13,17,32,0.95)",
+                  border: "1px solid rgba(99,146,255,0.18)",
                   borderRadius: 6,
                   fontSize: 12,
+                  color: "#F0F0F4",
                 }}
-                formatter={(value) => fmtCurrency(Number(value))}
+                labelStyle={{ color: "#A8A8B2" }}
+                formatter={(value) => [fmtCurrency(Number(value)), "Spend"]}
               />
               <Area
                 type="monotone"
                 dataKey="spend"
-                stroke="#2563EB"
+                stroke="#3B82F6"
                 strokeWidth={2}
                 fill="url(#spendGradient)"
               />
@@ -218,8 +220,8 @@ export default function OverviewPanel() {
         )}
       </div>
 
-      <div className="rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] overflow-hidden">
-        <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.06)]">
+      <div className="glass-panel rounded-lg overflow-hidden">
+        <div className="px-4 py-3 border-b border-border-subtle">
           <h3 className="text-sm font-medium">Top 5 campaigns by spend</h3>
         </div>
         {topCampaigns.length === 0 ? (
@@ -228,7 +230,7 @@ export default function OverviewPanel() {
           </div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="text-[11px] uppercase tracking-wide text-text-muted bg-[rgba(0,0,0,0.02)]">
+            <thead className="text-[11px] uppercase tracking-wide text-text-muted bg-[rgba(99,146,255,0.04)]">
               <tr>
                 <th className="text-left px-4 py-2 font-medium">Campaign</th>
                 <th className="text-left px-4 py-2 font-medium">Platform</th>
@@ -239,18 +241,18 @@ export default function OverviewPanel() {
             </thead>
             <tbody>
               {topCampaigns.map((c) => (
-                <tr key={c.id} className="border-t border-[rgba(0,0,0,0.06)]">
-                  <td className="px-4 py-2 truncate max-w-xs">{c.name}</td>
-                  <td className="px-4 py-2">
+                <tr key={c.id} className="border-t border-border-subtle hover:bg-[rgba(99,146,255,0.03)] transition-colors">
+                  <td className="px-4 py-2.5 truncate max-w-xs text-text-primary">{c.name}</td>
+                  <td className="px-4 py-2.5">
                     <PlatformBadge platform={c.platform} />
                   </td>
-                  <td className="px-4 py-2 text-right tabular-nums">
+                  <td className="px-4 py-2.5 text-right tabular-nums text-text-primary">
                     {fmtCurrency(c.spend)}
                   </td>
-                  <td className="px-4 py-2 text-right tabular-nums">
+                  <td className="px-4 py-2.5 text-right tabular-nums text-text-primary">
                     {c.roas !== null ? `${c.roas.toFixed(2)}x` : "-"}
                   </td>
-                  <td className="px-4 py-2 capitalize text-text-muted">{c.status}</td>
+                  <td className="px-4 py-2.5 capitalize text-text-muted">{c.status}</td>
                 </tr>
               ))}
             </tbody>

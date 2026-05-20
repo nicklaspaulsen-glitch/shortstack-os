@@ -1723,7 +1723,7 @@ export default function AIVideoPage() {
                   <motion.div
                     key={result.id}
                     className={`hf-thumb rounded-xl ${aspectClass} group`}
-                    style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
+                    style={{ background: "rgba(13,17,32,0.85)", border: "1px solid rgba(99,146,255,0.12)" }}
                     variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] } } }}
                     whileHover={{ y: -4, scale: 1.02 }}
                   >
@@ -1746,14 +1746,14 @@ export default function AIVideoPage() {
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-black via-zinc-950 to-black">
                         {result.status === "generating" && (
-                          <div className="flex flex-col items-center gap-2 text-[#6B7280]">
+                          <div className="flex flex-col items-center gap-2 text-text-muted">
                             <ProgressRing progress={progress} size={28} />
                             <p className="text-[10px] font-light">{Math.round(progress)}%</p>
                           </div>
                         )}
                         {result.status === "plan" && (
-                          <div className="text-center px-3 text-[#6B7280]">
-                            <Sparkles size={16} className="mx-auto mb-1.5 text-[rgba(59,130,246,0.7)]" />
+                          <div className="text-center px-3 text-text-muted">
+                            <Sparkles size={16} className="mx-auto mb-1.5 text-brand-accent/70" />
                             <p className="text-[10px] font-light">Plan ready</p>
                           </div>
                         )}
@@ -1789,7 +1789,7 @@ export default function AIVideoPage() {
                             <a
                               href={result.url}
                               download
-                              className="flex items-center gap-1 hover:text-[#374151] transition-colors"
+                              className="flex items-center gap-1 hover:text-text-primary transition-colors"
                               onClick={e => e.stopPropagation()}
                             >
                               <Download size={10} /> Save

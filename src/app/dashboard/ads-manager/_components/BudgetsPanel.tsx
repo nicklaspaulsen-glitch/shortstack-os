@@ -122,7 +122,7 @@ export default function BudgetsPanel() {
         <div className="glass rounded-lg p-4">
           <h3 className="text-sm font-medium mb-3">Current allocation</h3>
           {current.length === 0 ? (
-            <div className="text-sm text-[#6B7280] py-12 text-center">
+            <div className="text-sm text-text-muted py-12 text-center">
               No active daily-budget campaigns yet.
             </div>
           ) : (
@@ -157,7 +157,7 @@ export default function BudgetsPanel() {
             )}
           </div>
           {!suggested || suggested.length === 0 ? (
-            <div className="text-sm text-[#6B7280] py-12 text-center">
+            <div className="text-sm text-text-muted py-12 text-center">
               No reallocation suggestion yet. Visit the Insights tab and click
               Generate to ask Claude for one.
             </div>
@@ -170,7 +170,7 @@ export default function BudgetsPanel() {
                 ))}
               </div>
               {rationale && (
-                <div className="mt-3 pt-3 border-t border-black/[0.06] text-xs text-[#6B7280] leading-relaxed">
+                <div className="mt-3 pt-3 border-t border-border-subtle text-xs text-text-muted leading-relaxed">
                   {rationale}
                 </div>
               )}
@@ -193,7 +193,7 @@ function AllocationPie({ slices }: { slices: AllocationSlice[] }) {
           nameKey="platform"
           innerRadius={50}
           outerRadius={75}
-          stroke="rgba(0,0,0,0.4)"
+          stroke="transparent"
         >
           {slices.map((s: AllocationSlice) => (
             <Cell key={s.platform} fill={PLATFORM_COLORS[s.platform]} />
@@ -201,11 +201,13 @@ function AllocationPie({ slices }: { slices: AllocationSlice[] }) {
         </Pie>
         <Tooltip
           contentStyle={{
-            background: "rgba(255,255,255,0.98)",
-            border: "1px solid rgba(0,0,0,0.08)",
+            background: "rgba(13,17,32,0.95)",
+            border: "1px solid rgba(99,146,255,0.18)",
             borderRadius: 6,
             fontSize: 11,
+            color: "#F0F0F4",
           }}
+          labelStyle={{ color: "#A8A8B2" }}
           formatter={(v) => `$${Number(v).toFixed(2)}/day`}
         />
         <Legend
@@ -229,7 +231,7 @@ function AllocationLegendRow({ slice }: { slice: AllocationSlice }) {
         />
         {PLATFORM_LABELS[slice.platform]}
       </span>
-      <span className="tabular-nums text-[#6B7280]">
+      <span className="tabular-nums text-text-muted">
         {fmtCurrency(slice.amount)} / day · {slice.pct.toFixed(1)}%
       </span>
     </div>

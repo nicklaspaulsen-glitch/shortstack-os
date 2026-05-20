@@ -77,35 +77,35 @@ const GRADE_STYLES: Record<
   },
   B: {
     ring: "border-emerald-500",
-    text: "text-emerald-700",
+    text: "text-emerald-400",
     bg: "bg-emerald-500/10",
     label: "Good",
   },
   C: {
     ring: "border-amber-500",
-    text: "text-amber-700",
+    text: "text-amber-400",
     bg: "bg-amber-500/10",
     label: "Fair",
   },
   D: {
     ring: "border-orange-500",
-    text: "text-orange-700",
+    text: "text-orange-400",
     bg: "bg-orange-500/10",
     label: "Poor",
   },
   F: {
     ring: "border-red-500",
-    text: "text-red-700",
+    text: "text-red-400",
     bg: "bg-red-500/10",
     label: "Critical",
   },
 };
 
 const SEVERITY_COLOR: Record<Severity, string> = {
-  critical: "text-red-700 border-red-500/40 bg-red-500/10",
-  high: "text-orange-700 border-orange-500/40 bg-orange-500/10",
-  medium: "text-amber-700 border-amber-500/40 bg-amber-400/10",
-  low: "text-slate-600 border-slate-500/30 bg-slate-500/10",
+  critical: "text-red-400 border-red-500/40 bg-red-500/10",
+  high: "text-orange-400 border-orange-500/40 bg-orange-500/10",
+  medium: "text-amber-400 border-amber-500/40 bg-amber-400/10",
+  low: "text-slate-400 border-slate-500/30 bg-slate-500/10",
 };
 
 const SEVERITY_DOT: Record<Severity, string> = {
@@ -141,7 +141,7 @@ function GradeCircle({
       <span className={`text-lg font-bold leading-none ${s.text}`}>
         {grade}
       </span>
-      <span className="text-[9px] text-[#6B7280] leading-tight">{score}</span>
+      <span className="text-[9px] text-text-muted leading-tight">{score}</span>
     </div>
   );
 }
@@ -168,16 +168,16 @@ function CategoryBar({
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-[10px] text-[#6B7280] w-20 flex-shrink-0 capitalize">
+      <span className="text-[10px] text-text-muted w-20 flex-shrink-0 capitalize">
         {label}
       </span>
-      <div className="flex-1 h-1 rounded-full bg-black/[0.06]">
+      <div className="flex-1 h-1 rounded-full bg-[rgba(99,146,255,0.12)]">
         <div
           className={`h-full rounded-full ${color} transition-all duration-500`}
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="text-[10px] text-[#6B7280] w-8 text-right">
+      <span className="text-[10px] text-text-muted w-8 text-right">
         {pct}%
       </span>
     </div>
@@ -198,7 +198,7 @@ function FailCheckItem({ check }: { check: FailingCheck }) {
           className={`mt-1 flex-shrink-0 w-1.5 h-1.5 rounded-full ${SEVERITY_DOT[check.severity]}`}
         />
         <span className="flex-1 font-medium leading-snug">{check.name}</span>
-        <span className="flex-shrink-0 mt-0.5 text-[#6B7280]">
+        <span className="flex-shrink-0 mt-0.5 text-text-muted">
           {expanded ? (
             <ChevronUp size={12} />
           ) : (
@@ -254,17 +254,17 @@ export default function AuditScoreCard() {
   // ── Loading skeleton ────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="rounded-lg border border-black/[0.06] bg-black/[0.02] p-4 animate-pulse">
+      <div className="glass-panel rounded-lg p-4 animate-pulse">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-14 h-14 rounded-full bg-black/[0.04]" />
+          <div className="w-14 h-14 rounded-full bg-[rgba(99,146,255,0.06)]" />
           <div className="space-y-2">
-            <div className="h-3 w-32 bg-black/[0.04] rounded" />
-            <div className="h-2 w-48 bg-black/[0.04] rounded" />
+            <div className="h-3 w-32 bg-[rgba(99,146,255,0.06)] rounded" />
+            <div className="h-2 w-48 bg-[rgba(99,146,255,0.06)] rounded" />
           </div>
         </div>
         <div className="space-y-2">
           {["structure", "tracking", "bidding"].map((k) => (
-            <div key={k} className="h-2 bg-black/[0.04] rounded" />
+            <div key={k} className="h-2 bg-[rgba(99,146,255,0.06)] rounded" />
           ))}
         </div>
       </div>
@@ -308,7 +308,7 @@ export default function AuditScoreCard() {
               onClick={() => void load(true)}
               disabled={refreshing}
               title="Re-run audit"
-              className="text-[#6B7280] hover:text-[#111827] transition-colors"
+              className="text-text-muted hover:text-text-primary transition-colors"
             >
               <RefreshCw
                 size={12}
@@ -320,19 +320,19 @@ export default function AuditScoreCard() {
           {/* Severity summary pills */}
           <div className="flex items-center gap-3 flex-wrap">
             {score.criticalIssues.length > 0 && (
-              <span className="flex items-center gap-1 text-[11px] text-red-700">
+              <span className="flex items-center gap-1 text-[11px] text-red-400">
                 <AlertTriangle size={10} />
                 {score.criticalIssues.length} Critical
               </span>
             )}
             {score.highIssues.length > 0 && (
-              <span className="flex items-center gap-1 text-[11px] text-orange-700">
+              <span className="flex items-center gap-1 text-[11px] text-orange-400">
                 <AlertTriangle size={10} />
                 {score.highIssues.length} High
               </span>
             )}
             {score.mediumIssues.length > 0 && (
-              <span className="flex items-center gap-1 text-[11px] text-amber-700">
+              <span className="flex items-center gap-1 text-[11px] text-amber-400">
                 <AlertTriangle size={10} />
                 {score.mediumIssues.length} Medium
               </span>
@@ -342,7 +342,7 @@ export default function AuditScoreCard() {
                 All checks passing
               </span>
             )}
-            <span className="text-[10px] text-[#6B7280] ml-auto">
+            <span className="text-[10px] text-text-muted ml-auto">
               {score.total} checks evaluated
             </span>
           </div>
@@ -368,7 +368,7 @@ export default function AuditScoreCard() {
       {/* Failing checks */}
       {failingChecks.length > 0 && (
         <div className="space-y-2">
-          <p className="text-[10px] uppercase tracking-wide text-[#6B7280]">
+          <p className="text-[10px] uppercase tracking-wide text-text-muted">
             Issues to fix
           </p>
           <ul className="space-y-1.5">
@@ -379,7 +379,7 @@ export default function AuditScoreCard() {
           {failingChecks.length > 4 && (
             <button
               onClick={() => setShowAll((v) => !v)}
-              className="w-full text-[11px] text-[#6B7280] hover:text-[#111827] transition-colors text-center py-1"
+              className="w-full text-[11px] text-text-muted hover:text-text-primary transition-colors text-center py-1"
             >
               {showAll
                 ? "Show fewer"
