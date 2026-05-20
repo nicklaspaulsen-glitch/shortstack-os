@@ -44,7 +44,26 @@ const nextConfig = {
   //    function bundle regardless of import chain, keeping us under
   //    Vercel's 250MB function ceiling.
   experimental: {
-    serverComponentsExternalPackages: ["playwright-core", "puppeteer-core", "jsdom"],
+    // playwright-core / puppeteer-core / jsdom: webpack can't parse their
+    // internal .ttf/.html assets when bundling server components.
+    //
+    // @remotion/bundler pulls in @rspack/core (native .node binary) and
+    // esbuild (a .d.ts declaration file) that webpack 5 cannot parse:
+    //   "Module parse failed: Unexpected character ''" (.node)
+    //   "Module parse failed: Unexpected token" (.d.ts)
+    // Marking them as server-external leaves them as runtime require()s so
+    // webpack never tries to parse or bundle those files.
+    serverComponentsExternalPackages: [
+      "playwright-core",
+      "puppeteer-core",
+      "jsdom",
+      "@remotion/bundler",
+      "@remotion/renderer",
+      "@remotion/core",
+      "@rspack/core",
+      "@rspack/binding",
+      "esbuild",
+    ],
     outputFileTracingExcludes: {
       "*": [
         "node_modules/electron/**",
