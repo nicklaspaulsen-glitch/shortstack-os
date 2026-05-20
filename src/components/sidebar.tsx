@@ -147,7 +147,8 @@ const navItems: NavItem[] = [
   // ── Manage ──
   { label: "CRM",          href: "/dashboard/crm",             icon: <NavIcon3D name="Users"      size={16} />, roles: ["admin", "team_member"], section: "Manage", tier: 2 },
   { label: "Invoices",     href: "/dashboard/invoices",        icon: <NavIcon3D name="Receipt"    size={16} />, roles: ["admin"],                                   tier: 2 },
-  { label: "Agent Office", href: "/dashboard/agent-office",    icon: <NavIcon3D name="UsersRound" size={16} />, roles: ["admin", "team_member"],                  tier: 2 },
+  { label: "Agent Office",  href: "/dashboard/agent-office",   icon: <NavIcon3D name="UsersRound" size={16} />, roles: ["admin", "team_member"],                  tier: 2 },
+  { label: "Agent Command", href: "/dashboard/agent-command", icon: <NavIcon3D name="Bot"        size={16} />, roles: ["admin"],                                   tier: 2 },
   { label: "N8N",          href: "/dashboard/n8n",             icon: <NavIcon3D name="Webhook"    size={16} />, roles: ["admin"],                                   tier: 2 },
   { label: "Integrations", href: "/dashboard/integrations-hub",icon: <NavIcon3D name="Plug"       size={16} />, roles: ["admin"],                                   tier: 2 },
 
