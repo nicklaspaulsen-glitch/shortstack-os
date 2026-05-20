@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { callLLMTraced } from "@/lib/ai/llm-router";
 
 // n8n Workflow Creator — AI designs and deploys workflows to n8n
-// Set N8N_BASE_URL and N8N_API_KEY in env vars
+// Set N8N_URL and N8N_API_KEY in env vars (N8N_URL is shared with
+// /api/n8n/workflows — do NOT use N8N_BASE_URL, which was a naming
+// inconsistency fixed on May 20).
 //
 // SECURITY (Apr 26): role-gated to match /api/n8n/workflows/* siblings.
 // AI-generated workflows still hit a shared n8n instance — clients
@@ -24,30 +27,27 @@ export async function POST(request: NextRequest) {
 
   const { description, client_id } = await request.json();
 
-  const n8nUrl = process.env.N8N_BASE_URL;
+  // Standardized to N8N_URL — same var used by /api/n8n/workflows/route.ts
+  const n8nUrl = process.env.N8N_URL;
   const n8nKey = process.env.N8N_API_KEY;
-  const apiKey = process.env.ANTHROPIC_API_KEY;
 
-  if (!apiKey) return NextResponse.json({ error: "AI not configured" }, { status: 500 });
-
-  // Step 1: AI designs the n8n workflow JSON
+  // Step 1: AI designs the n8n workflow JSON via shared LLM router
+  // Uses callLLMTraced so the call is visible in Langfuse + benefits
+  // from Mem0 memory if the owner has prior workflow context.
+  // humanize: false because the output must be parseable JSON.
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 2000,
-        system: `You are an n8n workflow automation expert. Design n8n workflows as valid JSON that can be imported directly. Use real n8n node types (n8n-nodes-base.httpRequest, n8n-nodes-base.if, n8n-nodes-base.set, etc).`,
-        messages: [{
-          role: "user",
-          content: `Design an n8n workflow for: ${description}. Return valid n8n workflow JSON with nodes and connections. Include a manual trigger node.`,
-        }],
-      }),
+    const llmResult = await callLLMTraced({
+      surface: "n8n_workflow_design",
+      taskType: "agentic_reasoning",
+      userId: user.id,
+      context: "/api/n8n/create-workflow",
+      humanize: false,
+      systemPrompt: `You are an n8n workflow automation expert. Design n8n workflows as valid JSON that can be imported directly. Use real n8n node types (n8n-nodes-base.httpRequest, n8n-nodes-base.if, n8n-nodes-base.set, etc). Return ONLY valid JSON — no explanation, no markdown, no code fences.`,
+      userPrompt: `Design an n8n workflow for: ${description}. Return valid n8n workflow JSON with nodes and connections. Include a manual trigger node.`,
+      maxTokens: 4000,
     });
 
-    const data = await res.json();
-    const text = data.content?.[0]?.text || "";
+    const text = llmResult.text || "";
     const jsonMatch = text.match(/\{[\s\S]*\}/);
 
     let workflow = null;
@@ -80,12 +80,13 @@ export async function POST(request: NextRequest) {
       } catch (err) { console.error("[n8n/create-workflow] deploy/activate failed:", err); }
     }
 
-    // Log
+    // Log — status "pending" when designed but not yet deployed;
+    // "completed" when live on n8n.
     await supabase.from("trinity_log").insert({
       action_type: "automation",
       description: `n8n workflow designed: ${description.substring(0, 80)}`,
       client_id: client_id || null,
-      status: deployed ? "completed" : "completed",
+      status: deployed ? "completed" : "pending",
       result: { deployed, n8n_id: n8nId, workflow_nodes: workflow?.nodes?.length || 0 },
     });
 
@@ -94,7 +95,9 @@ export async function POST(request: NextRequest) {
       workflow,
       deployed,
       n8n_id: n8nId,
-      message: deployed ? "Workflow deployed and active on n8n!" : "Workflow designed. Add N8N_BASE_URL and N8N_API_KEY to deploy automatically.",
+      message: deployed
+        ? "Workflow deployed and active on n8n!"
+        : "Workflow designed. Add N8N_URL and N8N_API_KEY to deploy automatically.",
     });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
