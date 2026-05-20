@@ -20,7 +20,40 @@ async function n8nFetch(path: string, options?: RequestInit) {
   return res.json();
 }
 
-// GET — list all n8n workflows (admin sees all, clients see only theirs)
+// ── Types for n8n API responses ───────────────────────────────────────────────
+
+interface N8NWorkflowRaw {
+  id: string;
+  name: string;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+  tags?: Array<{ id?: string; name: string }>;
+  nodes?: Array<{ type: string; [key: string]: unknown }>;
+}
+
+interface N8NExecutionRaw {
+  id: string;
+  workflowId: string;
+  finished: boolean;
+  mode: string;
+  startedAt: string;
+  stoppedAt?: string;
+  status?: string;
+}
+
+function normaliseStatus(
+  raw?: string,
+): "success" | "error" | "running" | "waiting" | undefined {
+  if (!raw) return undefined;
+  if (raw === "success") return "success";
+  if (raw === "error" || raw === "crashed" || raw === "failed") return "error";
+  if (raw === "running" || raw === "new") return "running";
+  if (raw === "waiting") return "waiting";
+  return undefined;
+}
+
+// GET — list all n8n workflows with last-execution status (admin/operators only)
 export async function GET(_request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
@@ -35,31 +68,62 @@ export async function GET(_request: NextRequest) {
 
   try {
     const data = await n8nFetch("/workflows?limit=100");
-    let workflows = data.data || [];
+    let workflows: N8NWorkflowRaw[] = data.data || [];
 
     // Clients only see workflows tagged with their client ID
     if (profile?.role === "client" && profile?.client_id) {
-      workflows = workflows.filter((w: Record<string, unknown>) => {
-        const tags = (w.tags as Array<{ name: string }>) || [];
-        const name = (w.name as string) || "";
+      workflows = workflows.filter((w) => {
+        const tags = w.tags || [];
+        const name = w.name || "";
         return (
           tags.some((t) => t.name === profile.client_id) ||
-          name.toLowerCase().includes(profile.client_id.toLowerCase())
+          name.toLowerCase().includes((profile.client_id as string).toLowerCase())
         );
       });
     }
 
+    // Best-effort: fetch recent 100 executions in one shot, group by workflowId
+    // so each workflow row can show its last-run status without N+1 queries.
+    const executionsMap: Record<string, N8NExecutionRaw> = {};
+    try {
+      const execData = await n8nFetch("/executions?limit=100&includeData=false");
+      const execs: N8NExecutionRaw[] = Array.isArray(execData)
+        ? execData
+        : (execData.data ?? []);
+      // Executions are returned newest-first; first match per workflowId = latest
+      for (const exec of execs) {
+        const wid = String(exec.workflowId);
+        if (!executionsMap[wid]) executionsMap[wid] = exec;
+      }
+    } catch {
+      // Non-fatal — page gracefully shows "No runs" when lastExecution is null
+    }
+
     return NextResponse.json({
       success: true,
-      workflows: workflows.map((w: Record<string, unknown>) => ({
-        id: w.id,
-        name: w.name,
-        active: w.active,
-        createdAt: w.createdAt,
-        updatedAt: w.updatedAt,
-        tags: (w.tags as Array<{ name: string }>) || [],
-        nodes: ((w.nodes as Array<unknown>) || []).length,
-      })),
+      workflows: workflows.map((w) => {
+        const rawExec = executionsMap[String(w.id)] ?? null;
+        return {
+          id: w.id,
+          name: w.name,
+          active: w.active,
+          createdAt: w.createdAt,
+          updatedAt: w.updatedAt,
+          tags: w.tags || [],
+          nodes: (w.nodes || []).map((n) => ({ type: n.type })),
+          lastExecution: rawExec
+            ? {
+                id: String(rawExec.id),
+                workflowId: String(rawExec.workflowId),
+                finished: rawExec.finished,
+                mode: rawExec.mode,
+                startedAt: rawExec.startedAt,
+                stoppedAt: rawExec.stoppedAt,
+                status: normaliseStatus(rawExec.status),
+              }
+            : null,
+        };
+      }),
     });
   } catch {
     return NextResponse.json({
