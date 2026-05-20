@@ -4,30 +4,11 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Mic,
-  MessageSquare,
-  CheckCircle,
-  FileText,
-  TrendingUp,
-  XCircle,
-  ChevronRight,
-  AtSign,
-  Send,
-  RefreshCw,
-  Loader2,
-  Clock,
-  User,
-  Briefcase,
-  DollarSign,
-  Target,
-  Eye,
-  X,
-  ChevronDown,
-  ChevronUp,
-  Paperclip,
-  Zap,
-  AlertCircle,
-  Users,
+  Mic, MessageSquare, CheckCircle, FileText, TrendingUp, XCircle,
+  ChevronRight, AtSign, Send, RefreshCw, Loader2, Clock, User, Briefcase,
+  DollarSign, Target, Eye, X, ChevronDown, ChevronUp, Paperclip, Zap,
+  AlertCircle, Users, Play, CreditCard, Package, HandshakeIcon, BookOpen,
+  Scissors, Star,
 } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -40,7 +21,12 @@ type Stage =
   | "qualifying"
   | "qualified"
   | "content_ready"
-  | "converted"
+  | "closed"
+  | "onboarding"
+  | "scripting"
+  | "editing"
+  | "payment_sent"
+  | "delivered"
   | "dead";
 
 interface LeadInfo {
@@ -52,12 +38,13 @@ interface LeadInfo {
   goals?: string;
   contact_email?: string;
   has_files?: boolean;
+  pain_points?: string;
 }
 
 interface MessageEntry {
   role: "assistant" | "user";
   content: string;
-  timestamp: string;
+  ts: string;
 }
 
 interface FileRecord {
@@ -66,6 +53,17 @@ interface FileRecord {
   type?: string;
   size?: number;
   uploaded_at?: string;
+}
+
+interface ScriptItem {
+  id: string;
+  type: "long_form" | "short_form" | "ad";
+  title: string;
+  hook: string;
+  script: string;
+  duration_estimate: string;
+  platform: string;
+  status: "draft" | "approved" | "revision_requested";
 }
 
 interface GeneratedContent {
@@ -92,90 +90,82 @@ interface Lead {
   notes: string | null;
   created_at: string;
   updated_at: string;
+  // New autonomous fields
+  message_history?: MessageEntry[];
+  closed_at?: string | null;
+  deal_value_estimate?: number | null;
+  meeting_requested?: boolean;
+  onboarding_complete?: boolean;
+  scripts?: ScriptItem[] | null;
+  scripts_approved?: boolean;
+  stripe_payment_link?: string | null;
+  payment_amount?: number | null;
+  payment_sent_at?: string | null;
+  payment_received_at?: string | null;
+  delivered_at?: string | null;
 }
 
 // ── Stage configuration ────────────────────────────────────────────────────
 
-const PIPELINE_STAGES: { stage: Stage; label: string; color: string; bg: string; border: string; icon: React.ReactNode }[] = [
-  {
-    stage: "outreach_sent",
-    label: "Outreach Sent",
-    color: "#60A5FA",
-    bg: "rgba(59,130,246,0.08)",
-    border: "rgba(59,130,246,0.22)",
-    icon: <Mic size={13} />,
-  },
-  {
-    stage: "replied",
-    label: "Replied",
-    color: "#A78BFA",
-    bg: "rgba(139,92,246,0.08)",
-    border: "rgba(139,92,246,0.22)",
-    icon: <MessageSquare size={13} />,
-  },
-  {
-    stage: "qualifying",
-    label: "Qualifying",
-    color: "#FBBF24",
-    bg: "rgba(251,191,36,0.08)",
-    border: "rgba(251,191,36,0.22)",
-    icon: <Target size={13} />,
-  },
-  {
-    stage: "qualified",
-    label: "Qualified",
-    color: "#34D399",
-    bg: "rgba(52,211,153,0.08)",
-    border: "rgba(52,211,153,0.22)",
-    icon: <CheckCircle size={13} />,
-  },
-  {
-    stage: "content_ready",
-    label: "Content Ready",
-    color: "#F472B6",
-    bg: "rgba(244,114,182,0.08)",
-    border: "rgba(244,114,182,0.22)",
-    icon: <FileText size={13} />,
-  },
-  {
-    stage: "converted",
-    label: "Converted",
-    color: "#10B981",
-    bg: "rgba(16,185,129,0.08)",
-    border: "rgba(16,185,129,0.22)",
-    icon: <TrendingUp size={13} />,
-  },
+interface StageConfig {
+  stage: Stage;
+  label: string;
+  color: string;
+  bg: string;
+  border: string;
+  icon: React.ReactNode;
+  phase: "outreach" | "deal" | "production" | "done";
+}
+
+const PIPELINE_STAGES: StageConfig[] = [
+  { stage: "outreach_sent",  label: "Outreach Sent", color: "#60A5FA", bg: "rgba(59,130,246,0.08)",   border: "rgba(59,130,246,0.22)",   icon: <Mic size={13} />,          phase: "outreach" },
+  { stage: "replied",        label: "Replied",        color: "#A78BFA", bg: "rgba(139,92,246,0.08)",   border: "rgba(139,92,246,0.22)",   icon: <MessageSquare size={13} />, phase: "outreach" },
+  { stage: "qualifying",     label: "Qualifying",     color: "#FBBF24", bg: "rgba(251,191,36,0.08)",   border: "rgba(251,191,36,0.22)",   icon: <Target size={13} />,        phase: "outreach" },
+  { stage: "qualified",      label: "Qualified",      color: "#34D399", bg: "rgba(52,211,153,0.08)",   border: "rgba(52,211,153,0.22)",   icon: <CheckCircle size={13} />,   phase: "deal" },
+  { stage: "content_ready",  label: "Pitch Ready",    color: "#F472B6", bg: "rgba(244,114,182,0.08)",  border: "rgba(244,114,182,0.22)",  icon: <FileText size={13} />,      phase: "deal" },
+  { stage: "closed",         label: "Closed",         color: "#10B981", bg: "rgba(16,185,129,0.08)",   border: "rgba(16,185,129,0.22)",   icon: <HandshakeIcon size={13} />, phase: "deal" },
+  { stage: "onboarding",     label: "Onboarding",     color: "#FB923C", bg: "rgba(251,146,60,0.08)",   border: "rgba(251,146,60,0.22)",   icon: <User size={13} />,          phase: "production" },
+  { stage: "scripting",      label: "Scripting",      color: "#E879F9", bg: "rgba(232,121,249,0.08)",  border: "rgba(232,121,249,0.22)",  icon: <BookOpen size={13} />,      phase: "production" },
+  { stage: "editing",        label: "Editing",        color: "#38BDF8", bg: "rgba(56,189,248,0.08)",   border: "rgba(56,189,248,0.22)",   icon: <Scissors size={13} />,      phase: "production" },
+  { stage: "payment_sent",   label: "Payment Sent",   color: "#FDE68A", bg: "rgba(253,230,138,0.08)",  border: "rgba(253,230,138,0.22)",  icon: <CreditCard size={13} />,    phase: "production" },
+  { stage: "delivered",      label: "Delivered",      color: "#86EFAC", bg: "rgba(134,239,172,0.08)",  border: "rgba(134,239,172,0.22)",  icon: <Package size={13} />,       phase: "done" },
 ];
 
-const DEAD_STAGE = {
-  stage: "dead" as Stage,
-  label: "Dead",
-  color: "#6B7280",
-  bg: "rgba(107,114,128,0.06)",
-  border: "rgba(107,114,128,0.16)",
-  icon: <XCircle size={13} />,
+const DEAD_STAGE: StageConfig = {
+  stage: "dead", label: "Dead", color: "#6B7280", bg: "rgba(107,114,128,0.06)", border: "rgba(107,114,128,0.16)", icon: <XCircle size={13} />, phase: "outreach",
 };
 
-function getStageConfig(stage: Stage) {
+const PHASE_LABELS: Record<string, { label: string; color: string }> = {
+  outreach:   { label: "Outreach",   color: "#60A5FA" },
+  deal:       { label: "Deal",       color: "#10B981" },
+  production: { label: "Production", color: "#E879F9" },
+  done:       { label: "Done",       color: "#86EFAC" },
+};
+
+function getStageConfig(stage: Stage): StageConfig {
   return PIPELINE_STAGES.find((s) => s.stage === stage) ?? DEAD_STAGE;
 }
 
 function platformIcon(platform: string) {
   if (platform === "instagram") return <AtSign size={11} />;
-  if (platform === "telegram") return <Send size={11} />;
+  if (platform === "telegram")  return <Send size={11} />;
   return <Zap size={11} />;
 }
 
-function relativeTime(iso: string | null): string {
+function relativeTime(iso: string | null | undefined): string {
   if (!iso) return "—";
   const diff = Date.now() - new Date(iso).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "just now";
+  if (mins < 1)  return "just now";
   if (mins < 60) return `${mins}m ago`;
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  const days = Math.floor(hrs / 24);
-  return `${days}d ago`;
+  if (hrs < 24)  return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
+}
+
+function fmtUsd(n: number | null | undefined): string {
+  if (n == null) return "";
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
 }
 
 // ── Lead detail panel ──────────────────────────────────────────────────────
@@ -189,9 +179,7 @@ function LeadDetailPanel({
   onClose: () => void;
   onStageChange: (id: string, stage: Stage) => void;
 }) {
-  const [tab, setTab] = useState<"conversation" | "content" | "files">(
-    "conversation",
-  );
+  const [tab, setTab] = useState<"conversation" | "scripts" | "content" | "files">("conversation");
   const [updatingStage, setUpdatingStage] = useState(false);
   const [showStagePicker, setShowStagePicker] = useState(false);
   const cfg = getStageConfig(lead.stage);
@@ -208,9 +196,7 @@ function LeadDetailPanel({
           body: JSON.stringify({ lead_id: lead.id, stage: newStage }),
         });
         onStageChange(lead.id, newStage);
-      } catch {
-        // soft fail
-      } finally {
+      } catch { /* soft fail */ } finally {
         setUpdatingStage(false);
       }
     },
@@ -218,10 +204,11 @@ function LeadDetailPanel({
   );
 
   const tabs = [
-    { key: "conversation" as const, label: "Conversation" },
-    { key: "content" as const, label: "Content", disabled: !lead.generated_content },
-    { key: "files" as const, label: `Files (${(lead.files ?? []).length})` },
-  ];
+    { key: "conversation" as const, label: "Chat" },
+    { key: "scripts" as const,      label: `Scripts (${(lead.scripts ?? []).length})`, hidden: !lead.scripts?.length },
+    { key: "content" as const,      label: "Content", hidden: !lead.generated_content },
+    { key: "files" as const,        label: `Files (${(lead.files ?? []).length})` },
+  ].filter((t) => !t.hidden);
 
   return (
     <motion.div
@@ -250,10 +237,13 @@ function LeadDetailPanel({
             {lead.display_name ?? lead.handle}
           </div>
           <div className="flex items-center gap-1.5 mt-0.5">
-            <span className="text-text-muted" style={{ color: cfg.color }}>
-              {platformIcon(lead.platform)}
-            </span>
+            <span style={{ color: cfg.color }}>{platformIcon(lead.platform)}</span>
             <span className="text-xs text-text-muted">@{lead.handle}</span>
+            {lead.deal_value_estimate && (
+              <span className="ml-1 text-xs font-semibold" style={{ color: "#10B981" }}>
+                {fmtUsd(lead.deal_value_estimate)}
+              </span>
+            )}
           </div>
         </div>
 
@@ -263,11 +253,7 @@ function LeadDetailPanel({
             onClick={() => setShowStagePicker((v) => !v)}
             disabled={updatingStage}
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all"
-            style={{
-              background: cfg.bg,
-              color: cfg.color,
-              border: `1px solid ${cfg.border}`,
-            }}
+            style={{ background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.border}` }}
           >
             {updatingStage ? <Loader2 size={11} className="animate-spin" /> : cfg.icon}
             <span>{cfg.label}</span>
@@ -276,16 +262,10 @@ function LeadDetailPanel({
           <AnimatePresence>
             {showStagePicker && (
               <motion.div
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
+                initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.14 }}
-                className="absolute right-0 top-full mt-1.5 w-44 z-50 rounded-xl overflow-hidden"
-                style={{
-                  background: "rgba(13,17,32,0.98)",
-                  border: "1px solid rgba(99,146,255,0.16)",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
-                }}
+                className="absolute right-0 top-full mt-1.5 w-48 z-50 rounded-xl overflow-hidden"
+                style={{ background: "rgba(13,17,32,0.98)", border: "1px solid rgba(99,146,255,0.16)", boxShadow: "0 8px 32px rgba(0,0,0,0.6)" }}
               >
                 {[...PIPELINE_STAGES, DEAD_STAGE].map((s) => (
                   <button
@@ -310,7 +290,7 @@ function LeadDetailPanel({
       </div>
 
       {/* Lead info summary */}
-      {(info.name || info.business_type || info.challenge || info.budget) && (
+      {(info.name ?? info.business_type ?? info.challenge ?? info.budget ?? lead.payment_amount) && (
         <div className="px-5 py-3 border-b border-border-subtle flex-shrink-0">
           <div className="grid grid-cols-2 gap-2">
             {info.name && (
@@ -322,9 +302,7 @@ function LeadDetailPanel({
             {(info.business_type ?? info.niche) && (
               <div className="flex items-center gap-1.5">
                 <Briefcase size={11} className="text-text-muted flex-shrink-0" />
-                <span className="text-xs text-text-secondary truncate">
-                  {info.business_type ?? info.niche}
-                </span>
+                <span className="text-xs text-text-secondary truncate">{info.business_type ?? info.niche}</span>
               </div>
             )}
             {info.challenge && (
@@ -333,10 +311,18 @@ function LeadDetailPanel({
                 <span className="text-xs text-text-secondary truncate">{info.challenge}</span>
               </div>
             )}
-            {info.budget && (
+            {lead.payment_amount && (
               <div className="flex items-center gap-1.5">
                 <DollarSign size={11} className="text-text-muted flex-shrink-0" />
-                <span className="text-xs text-text-secondary truncate">{info.budget}</span>
+                <span className="text-xs font-semibold truncate" style={{ color: lead.payment_received_at ? "#10B981" : "#FDE68A" }}>
+                  {fmtUsd(lead.payment_amount)} {lead.payment_received_at ? "✓ paid" : "pending"}
+                </span>
+              </div>
+            )}
+            {lead.scripts_approved && (
+              <div className="flex items-center gap-1.5">
+                <Star size={11} className="flex-shrink-0" style={{ color: "#E879F9" }} />
+                <span className="text-xs text-text-secondary truncate">Scripts approved</span>
               </div>
             )}
           </div>
@@ -348,12 +334,11 @@ function LeadDetailPanel({
         {tabs.map((t) => (
           <button
             key={t.key}
-            onClick={() => !t.disabled && setTab(t.key)}
-            disabled={t.disabled}
-            className="py-3 px-1 mr-5 text-xs font-medium border-b-2 transition-colors"
+            onClick={() => setTab(t.key)}
+            className="py-3 px-1 mr-5 text-xs font-medium border-b-2 transition-colors whitespace-nowrap"
             style={{
               borderColor: tab === t.key ? "#3B82F6" : "transparent",
-              color: tab === t.key ? "#60A5FA" : t.disabled ? "rgba(160,160,176,0.35)" : "#A8A8B2",
+              color: tab === t.key ? "#60A5FA" : "#A8A8B2",
             }}
           >
             {t.label}
@@ -363,35 +348,23 @@ function LeadDetailPanel({
 
       {/* Tab content */}
       <div className="flex-1 overflow-y-auto min-h-0">
-        {tab === "conversation" && (
-          <ConversationTab lead={lead} />
-        )}
-        {tab === "content" && lead.generated_content && (
-          <ContentTab content={lead.generated_content} />
-        )}
-        {tab === "files" && (
-          <FilesTab files={lead.files ?? []} />
-        )}
+        {tab === "conversation" && <ConversationTab lead={lead} />}
+        {tab === "scripts" && <ScriptsTab scripts={lead.scripts ?? []} />}
+        {tab === "content" && lead.generated_content && <ContentTab content={lead.generated_content} />}
+        {tab === "files" && <FilesTab files={lead.files ?? []} />}
       </div>
 
-      {/* Timestamps footer */}
+      {/* Footer */}
       <div className="px-5 py-3 border-t border-border-subtle flex items-center justify-between flex-shrink-0">
-        <span className="text-xs text-text-muted">
-          Outreach: {relativeTime(lead.outreach_sent_at)}
-        </span>
-        <span className="text-xs text-text-muted">
-          Last reply: {relativeTime(lead.last_reply_at)}
-        </span>
+        <span className="text-xs text-text-muted">Outreach: {relativeTime(lead.outreach_sent_at)}</span>
+        <span className="text-xs text-text-muted">Reply: {relativeTime(lead.last_reply_at)}</span>
       </div>
     </motion.div>
   );
 }
 
 function ConversationTab({ lead }: { lead: Lead }) {
-  const raw = lead as unknown as { message_history?: MessageEntry[] };
-  const history: MessageEntry[] = Array.isArray(raw.message_history)
-    ? raw.message_history
-    : [];
+  const history: MessageEntry[] = Array.isArray(lead.message_history) ? lead.message_history : [];
 
   if (!history.length) {
     return (
@@ -405,23 +378,13 @@ function ConversationTab({ lead }: { lead: Lead }) {
   return (
     <div className="p-4 flex flex-col gap-2">
       {history.map((m, i) => (
-        <div
-          key={i}
-          className={`flex ${m.role === "assistant" ? "justify-start" : "justify-end"}`}
-        >
+        <div key={i} className={`flex ${m.role === "assistant" ? "justify-start" : "justify-end"}`}>
           <div
             className="max-w-[82%] px-3 py-2 rounded-2xl text-xs leading-relaxed"
             style={
               m.role === "assistant"
-                ? {
-                    background: "rgba(59,130,246,0.10)",
-                    color: "#E0E0EA",
-                    border: "1px solid rgba(59,130,246,0.18)",
-                  }
-                : {
-                    background: "rgba(255,255,255,0.07)",
-                    color: "#C0C0CC",
-                  }
+                ? { background: "rgba(59,130,246,0.10)", color: "#E0E0EA", border: "1px solid rgba(59,130,246,0.18)" }
+                : { background: "rgba(255,255,255,0.07)", color: "#C0C0CC" }
             }
           >
             {m.content}
@@ -432,23 +395,70 @@ function ConversationTab({ lead }: { lead: Lead }) {
   );
 }
 
+function ScriptsTab({ scripts }: { scripts: ScriptItem[] }) {
+  const [open, setOpen] = useState<string | null>(scripts[0]?.id ?? null);
+
+  if (!scripts.length) {
+    return (
+      <div className="flex flex-col items-center justify-center h-32 text-text-muted">
+        <BookOpen size={20} className="mb-2 opacity-40" />
+        <span className="text-xs">No scripts yet</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-4 flex flex-col gap-2">
+      {scripts.map((s) => {
+        const statusColor = s.status === "approved" ? "#10B981" : s.status === "revision_requested" ? "#F87171" : "#A8A8B2";
+        return (
+          <div key={s.id} className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(99,146,255,0.12)" }}>
+            <button
+              onClick={() => setOpen(open === s.id ? null : s.id)}
+              className="w-full flex items-center gap-2 px-4 py-2.5 text-xs hover:bg-white/5 transition-colors"
+            >
+              <span className="font-medium text-text-secondary flex-1 text-left truncate">{s.title}</span>
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full" style={{ background: "rgba(99,146,255,0.08)", color: statusColor }}>
+                {s.status}
+              </span>
+              <span className="text-[9px] text-text-muted ml-1">{s.duration_estimate}</span>
+              {open === s.id ? <ChevronUp size={11} className="text-text-muted flex-shrink-0" /> : <ChevronDown size={11} className="text-text-muted flex-shrink-0" />}
+            </button>
+            <AnimatePresence>
+              {open === s.id && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.18 }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-4 pb-4 pt-2 border-t border-border-subtle">
+                    <p className="text-[10px] text-text-muted mb-2 font-medium uppercase tracking-wide">Hook</p>
+                    <p className="text-xs text-text-secondary mb-3 leading-relaxed">{s.hook}</p>
+                    <p className="text-[10px] text-text-muted mb-2 font-medium uppercase tracking-wide">Script</p>
+                    <p className="text-xs text-text-secondary leading-relaxed whitespace-pre-wrap max-h-40 overflow-y-auto">{s.script}</p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function ContentTab({ content }: { content: GeneratedContent }) {
   const [open, setOpen] = useState<string | null>("brief");
-
   const sections = [
-    { key: "brief", label: "Brief", body: content.brief },
-    { key: "ad_copy", label: "Ad Copy", body: content.ad_copy },
-    { key: "email_subject", label: "Email Subject", body: content.email_subject },
+    { key: "brief",         label: "Brief",          body: content.brief },
+    { key: "ad_copy",       label: "Ad Copy",        body: content.ad_copy },
+    { key: "email_subject", label: "Email Subject",  body: content.email_subject },
   ];
 
   return (
     <div className="p-4 flex flex-col gap-2">
       {sections.map((s) => (
-        <div
-          key={s.key}
-          className="rounded-xl overflow-hidden"
-          style={{ border: "1px solid rgba(99,146,255,0.12)" }}
-        >
+        <div key={s.key} className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(99,146,255,0.12)" }}>
           <button
             onClick={() => setOpen(open === s.key ? null : s.key)}
             className="w-full flex items-center justify-between px-4 py-2.5 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors"
@@ -459,82 +469,38 @@ function ContentTab({ content }: { content: GeneratedContent }) {
           <AnimatePresence>
             {open === s.key && (
               <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
+                initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.18 }}
                 className="overflow-hidden"
               >
-                <p className="px-4 pb-3 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-2.5">
-                  {s.body}
-                </p>
+                <p className="px-4 pb-3 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-2.5">{s.body}</p>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
       ))}
-
       {content.captions.length > 0 && (
         <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(99,146,255,0.12)" }}>
           <button
             onClick={() => setOpen(open === "captions" ? null : "captions")}
             className="w-full flex items-center justify-between px-4 py-2.5 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors"
           >
-            Instagram Captions ({content.captions.length})
+            Captions ({content.captions.length})
             {open === "captions" ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
           </button>
           <AnimatePresence>
             {open === "captions" && (
               <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.18 }}
-                className="overflow-hidden border-t border-border-subtle"
+                initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.18 }} className="overflow-hidden border-t border-border-subtle"
               >
                 <div className="p-4 flex flex-col gap-3">
                   {content.captions.map((c, i) => (
                     <p key={i} className="text-xs text-text-secondary leading-relaxed py-2 border-b border-border-subtle last:border-0">
-                      <span className="text-text-muted mr-1.5">{i + 1}.</span>
-                      {c}
+                      <span className="text-text-muted mr-1.5">{i + 1}.</span>{c}
                     </p>
                   ))}
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      )}
-
-      {content.hook_ideas.length > 0 && (
-        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(99,146,255,0.12)" }}>
-          <button
-            onClick={() => setOpen(open === "hooks" ? null : "hooks")}
-            className="w-full flex items-center justify-between px-4 py-2.5 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors"
-          >
-            Hook Ideas ({content.hook_ideas.length})
-            {open === "hooks" ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-          </button>
-          <AnimatePresence>
-            {open === "hooks" && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.18 }}
-                className="overflow-hidden border-t border-border-subtle"
-              >
-                <ul className="p-4 flex flex-col gap-2">
-                  {content.hook_ideas.map((h, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <span className="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-semibold flex-shrink-0 mt-0.5"
-                        style={{ background: "rgba(59,130,246,0.12)", color: "#60A5FA" }}>
-                        {i + 1}
-                      </span>
-                      <span className="text-xs text-text-secondary leading-relaxed">{h}</span>
-                    </li>
-                  ))}
-                </ul>
               </motion.div>
             )}
           </AnimatePresence>
@@ -557,17 +523,12 @@ function FilesTab({ files }: { files: FileRecord[] }) {
     <div className="p-4 flex flex-col gap-2">
       {files.map((f, i) => (
         <a
-          key={i}
-          href={f.url}
-          target="_blank"
-          rel="noreferrer"
+          key={i} href={f.url} target="_blank" rel="noreferrer"
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5 transition-colors group"
           style={{ border: "1px solid rgba(99,146,255,0.10)" }}
         >
           <Paperclip size={12} className="text-text-muted flex-shrink-0" />
-          <span className="text-xs text-text-secondary truncate flex-1">
-            {f.filename ?? f.url.split("/").pop() ?? "File"}
-          </span>
+          <span className="text-xs text-text-secondary truncate flex-1">{f.filename ?? f.url.split("/").pop() ?? "File"}</span>
           <ChevronRight size={11} className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
         </a>
       ))}
@@ -577,16 +538,9 @@ function FilesTab({ files }: { files: FileRecord[] }) {
 
 // ── Lead card ──────────────────────────────────────────────────────────────
 
-function LeadCard({
-  lead,
-  onClick,
-}: {
-  lead: Lead;
-  onClick: () => void;
-}) {
+function LeadCard({ lead, onClick }: { lead: Lead; onClick: () => void }) {
   const cfg = getStageConfig(lead.stage);
   const name = lead.display_name ?? lead.handle;
-  const initials = name.slice(0, 2).toUpperCase();
   const info = lead.lead_info ?? {};
 
   return (
@@ -599,17 +553,14 @@ function LeadCard({
       transition={{ duration: 0.18 }}
       onClick={onClick}
       className="w-full text-left p-3 rounded-xl mb-2 transition-all group relative"
-      style={{
-        background: "rgba(13,17,32,0.7)",
-        border: `1px solid rgba(99,146,255,0.10)`,
-      }}
+      style={{ background: "rgba(13,17,32,0.7)", border: "1px solid rgba(99,146,255,0.10)" }}
     >
       <div className="flex items-start gap-2.5">
         <div
           className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0"
           style={{ background: cfg.bg, color: cfg.color }}
         >
-          {initials}
+          {name.slice(0, 2).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 mb-0.5">
@@ -619,34 +570,31 @@ function LeadCard({
             </span>
           </div>
           {(info.business_type ?? info.niche) && (
-            <p className="text-[10px] text-text-muted truncate">
-              {info.business_type ?? info.niche}
-            </p>
+            <p className="text-[10px] text-text-muted truncate">{info.business_type ?? info.niche}</p>
           )}
         </div>
-        <Eye
-          size={11}
-          className="text-text-muted opacity-0 group-hover:opacity-60 transition-opacity flex-shrink-0 mt-0.5"
-        />
+        <Eye size={11} className="text-text-muted opacity-0 group-hover:opacity-60 transition-opacity flex-shrink-0 mt-0.5" />
       </div>
 
-      {/* Footer meta */}
       <div className="flex items-center justify-between mt-2 pt-2 border-t border-border-subtle">
         <div className="flex items-center gap-1 text-[10px] text-text-muted">
           <Clock size={9} />
           {relativeTime(lead.last_reply_at ?? lead.outreach_sent_at)}
         </div>
         <div className="flex items-center gap-1.5">
-          {(lead.files ?? []).length > 0 && (
-            <span className="flex items-center gap-0.5 text-[10px] text-text-muted">
-              <Paperclip size={9} />
-              {(lead.files ?? []).length}
+          {lead.payment_amount && (
+            <span className="text-[10px] font-semibold" style={{ color: lead.payment_received_at ? "#10B981" : "#FDE68A" }}>
+              {fmtUsd(lead.payment_amount)}
             </span>
           )}
-          {lead.generated_content && (
-            <span className="text-[9px] px-1.5 py-0.5 rounded-full font-medium"
-              style={{ background: "rgba(244,114,182,0.12)", color: "#F472B6" }}>
-              content
+          {(lead.files ?? []).length > 0 && (
+            <span className="flex items-center gap-0.5 text-[10px] text-text-muted">
+              <Paperclip size={9} />{(lead.files ?? []).length}
+            </span>
+          )}
+          {lead.scripts_approved && (
+            <span className="text-[9px] px-1.5 py-0.5 rounded-full font-medium" style={{ background: "rgba(232,121,249,0.12)", color: "#E879F9" }}>
+              scripts ✓
             </span>
           )}
         </div>
@@ -662,38 +610,29 @@ function KanbanColumn({
   leads,
   onLeadClick,
 }: {
-  cfg: typeof PIPELINE_STAGES[number];
+  cfg: StageConfig;
   leads: Lead[];
   onLeadClick: (lead: Lead) => void;
 }) {
   return (
     <div
       className="flex flex-col rounded-2xl overflow-hidden flex-shrink-0"
-      style={{
-        width: 220,
-        background: "rgba(13,17,32,0.5)",
-        border: "1px solid rgba(99,146,255,0.08)",
-      }}
+      style={{ width: 200, background: "rgba(13,17,32,0.5)", border: "1px solid rgba(99,146,255,0.08)" }}
     >
-      {/* Column header */}
       <div
         className="flex items-center gap-2 px-3 py-2.5 border-b"
         style={{ borderColor: "rgba(99,146,255,0.08)", background: cfg.bg }}
       >
         <span style={{ color: cfg.color }}>{cfg.icon}</span>
-        <span className="text-xs font-semibold tracking-tight" style={{ color: cfg.color }}>
-          {cfg.label}
-        </span>
+        <span className="text-xs font-semibold tracking-tight flex-1" style={{ color: cfg.color }}>{cfg.label}</span>
         <span
-          className="ml-auto text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center"
+          className="text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
           style={{ background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.border}` }}
         >
           {leads.length}
         </span>
       </div>
-
-      {/* Cards */}
-      <div className="flex-1 p-2 overflow-y-auto" style={{ maxHeight: "calc(100vh - 240px)" }}>
+      <div className="flex-1 p-2 overflow-y-auto" style={{ maxHeight: "calc(100vh - 260px)" }}>
         <AnimatePresence>
           {leads.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-8 text-text-muted opacity-40">
@@ -711,41 +650,90 @@ function KanbanColumn({
   );
 }
 
+// ── Phase section ──────────────────────────────────────────────────────────
+
+function PhaseSection({
+  phase,
+  stageCfgs,
+  leadsByStage,
+  onLeadClick,
+  collapsed,
+  onToggle,
+}: {
+  phase: string;
+  stageCfgs: StageConfig[];
+  leadsByStage: Map<Stage, Lead[]>;
+  onLeadClick: (lead: Lead) => void;
+  collapsed: boolean;
+  onToggle: () => void;
+}) {
+  const { label, color } = PHASE_LABELS[phase] ?? { label: phase, color: "#A8A8B2" };
+  const total = stageCfgs.reduce((sum, s) => sum + (leadsByStage.get(s.stage)?.length ?? 0), 0);
+
+  return (
+    <div className="mb-4">
+      <button
+        onClick={onToggle}
+        className="flex items-center gap-2 mb-2 px-1 group"
+      >
+        <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color }}>{label}</span>
+        <span className="text-[10px] text-text-muted">({total})</span>
+        {collapsed ? <ChevronRight size={11} className="text-text-muted" /> : <ChevronDown size={11} className="text-text-muted" />}
+      </button>
+      <AnimatePresence>
+        {!collapsed && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="flex gap-3"
+          >
+            {stageCfgs.map((cfg) => (
+              <KanbanColumn
+                key={cfg.stage}
+                cfg={cfg}
+                leads={leadsByStage.get(cfg.stage) ?? []}
+                onLeadClick={onLeadClick}
+              />
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 // ── Stats bar ──────────────────────────────────────────────────────────────
 
 function StatsBar({ leads }: { leads: Lead[] }) {
   const stats = useMemo(() => {
-    const total = leads.length;
-    const qualified = leads.filter((l) =>
-      ["qualified", "content_ready", "converted"].includes(l.stage),
-    ).length;
-    const contentReady = leads.filter((l) => l.stage === "content_ready").length;
-    const converted = leads.filter((l) => l.stage === "converted").length;
-    const convRate = total > 0 ? Math.round((converted / total) * 100) : 0;
-    return { total, qualified, contentReady, converted, convRate };
+    const active = leads.filter((l) => l.stage !== "dead");
+    const closed  = leads.filter((l) => ["closed","onboarding","scripting","editing","payment_sent","delivered"].includes(l.stage));
+    const revenue = leads.filter((l) => l.payment_received_at).reduce((s, l) => s + (l.payment_amount ?? 0), 0);
+    const pending = leads.filter((l) => l.stage === "payment_sent").reduce((s, l) => s + (l.payment_amount ?? 0), 0);
+    const convRate = active.length > 0 ? Math.round((closed.length / active.length) * 100) : 0;
+    return { total: active.length, closed: closed.length, delivered: leads.filter((l) => l.stage === "delivered").length, revenue, pending, convRate };
   }, [leads]);
 
   const items = [
-    { label: "Total", value: stats.total, color: "#A8A8B2" },
-    { label: "Qualified", value: stats.qualified, color: "#34D399" },
-    { label: "Content Ready", value: stats.contentReady, color: "#F472B6" },
-    { label: "Converted", value: stats.converted, color: "#10B981" },
-    { label: "Conv. Rate", value: `${stats.convRate}%`, color: "#3B82F6" },
+    { label: "Active",    value: stats.total,                  color: "#A8A8B2" },
+    { label: "Closed",    value: stats.closed,                 color: "#10B981" },
+    { label: "Delivered", value: stats.delivered,              color: "#86EFAC" },
+    { label: "Revenue",   value: fmtUsd(stats.revenue) || "—", color: "#3B82F6" },
+    { label: "Pending",   value: fmtUsd(stats.pending) || "—", color: "#FDE68A" },
+    { label: "Conv %",    value: `${stats.convRate}%`,          color: "#E879F9" },
   ];
 
   return (
-    <div className="flex items-center gap-0 mb-5 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(99,146,255,0.10)" }}>
+    <div className="flex items-center mb-5 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(99,146,255,0.10)" }}>
       {items.map((item, i) => (
         <div
           key={item.label}
           className="flex-1 px-4 py-3 flex flex-col items-center"
-          style={{
-            borderRight: i < items.length - 1 ? "1px solid rgba(99,146,255,0.08)" : "none",
-          }}
+          style={{ borderRight: i < items.length - 1 ? "1px solid rgba(99,146,255,0.08)" : "none" }}
         >
-          <span className="text-lg font-display font-bold" style={{ color: item.color }}>
-            {item.value}
-          </span>
+          <span className="text-base font-display font-bold" style={{ color: item.color }}>{item.value}</span>
           <span className="text-[10px] text-text-muted mt-0.5">{item.label}</span>
         </div>
       ))}
@@ -755,15 +743,22 @@ function StatsBar({ leads }: { leads: Lead[] }) {
 
 // ── Main page ──────────────────────────────────────────────────────────────
 
+const PHASES: Array<{ phase: string; stages: Stage[] }> = [
+  { phase: "outreach",   stages: ["outreach_sent", "replied", "qualifying"] },
+  { phase: "deal",       stages: ["qualified", "content_ready", "closed"] },
+  { phase: "production", stages: ["onboarding", "scripting", "editing", "payment_sent"] },
+  { phase: "done",       stages: ["delivered"] },
+];
+
 export default function LeadgenPipelinePage() {
   const supabase = createClient();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
-  const [stageFilter, setStageFilter] = useState<Stage | "all">("all");
   const [refreshing, setRefreshing] = useState(false);
   const [showDead, setShowDead] = useState(false);
+  const [collapsedPhases, setCollapsedPhases] = useState<Set<string>>(new Set(["done"]));
 
   const fetchLeads = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
@@ -778,8 +773,7 @@ export default function LeadgenPipelinePage() {
       const data = (await res.json()) as { leads: Lead[] };
       setLeads(data.leads ?? []);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Unknown error";
-      setError(msg);
+      setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -789,14 +783,9 @@ export default function LeadgenPipelinePage() {
   useEffect(() => {
     void fetchLeads();
 
-    // Realtime subscription on lead_pipeline changes
     const channel = supabase
       .channel("leadgen_pipeline_changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "lead_pipeline" },
-        () => { void fetchLeads(true); },
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "lead_pipeline" }, () => { void fetchLeads(true); })
       .subscribe();
 
     return () => { void supabase.removeChannel(channel); };
@@ -807,22 +796,27 @@ export default function LeadgenPipelinePage() {
     setSelectedLead((prev) => (prev?.id === id ? { ...prev, stage } : prev));
   }, []);
 
-  // Build kanban columns from leads
-  const columns = useMemo(() => {
-    const active = leads.filter((l) => l.stage !== "dead");
-    const filtered =
-      stageFilter === "all" ? active : active.filter((l) => l.stage === stageFilter);
+  const togglePhase = useCallback((phase: string) => {
+    setCollapsedPhases((prev) => {
+      const next = new Set(prev);
+      if (next.has(phase)) next.delete(phase);
+      else next.add(phase);
+      return next;
+    });
+  }, []);
 
-    return PIPELINE_STAGES.map((cfg) => ({
-      cfg,
-      leads: filtered.filter((l) => l.stage === cfg.stage),
-    }));
-  }, [leads, stageFilter]);
+  const activeLeads = useMemo(() => leads.filter((l) => l.stage !== "dead"), [leads]);
+  const deadLeads   = useMemo(() => leads.filter((l) => l.stage === "dead"),  [leads]);
 
-  const deadLeads = useMemo(
-    () => leads.filter((l) => l.stage === "dead"),
-    [leads],
-  );
+  const leadsByStage = useMemo(() => {
+    const map = new Map<Stage, Lead[]>();
+    for (const cfg of PIPELINE_STAGES) map.set(cfg.stage, []);
+    for (const lead of activeLeads) {
+      const arr = map.get(lead.stage);
+      if (arr) arr.push(lead);
+    }
+    return map;
+  }, [activeLeads]);
 
   if (loading) {
     return (
@@ -840,15 +834,11 @@ export default function LeadgenPipelinePage() {
   return (
     <MotionPage>
       <div className="p-6 pb-2 min-w-0">
-        {/* Page header */}
+        {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div>
-            <h1 className="font-display text-2xl font-bold text-text-primary tracking-tight">
-              Lead Pipeline
-            </h1>
-            <p className="text-sm text-text-muted mt-1">
-              Voice outreach → AI qualification → content generation
-            </p>
+            <h1 className="font-display text-2xl font-bold text-text-primary tracking-tight">Lead Pipeline</h1>
+            <p className="text-sm text-text-muted mt-1">Autonomous outreach → qualify → close → deliver</p>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -866,60 +856,33 @@ export default function LeadgenPipelinePage() {
         {error && (
           <div className="flex items-center gap-2 px-4 py-3 rounded-xl mb-4 text-sm text-red-400"
             style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.18)" }}>
-            <AlertCircle size={14} className="flex-shrink-0" />
-            {error}
+            <AlertCircle size={14} className="flex-shrink-0" />{error}
           </div>
         )}
 
-        {/* Stats bar */}
         <StatsBar leads={leads} />
-
-        {/* Stage filter pills */}
-        <div className="flex items-center gap-1.5 flex-wrap mb-5">
-          <button
-            onClick={() => setStageFilter("all")}
-            className="px-3 py-1 rounded-full text-xs font-medium transition-all"
-            style={
-              stageFilter === "all"
-                ? { background: "rgba(59,130,246,0.15)", color: "#60A5FA", border: "1px solid rgba(59,130,246,0.3)" }
-                : { background: "rgba(255,255,255,0.04)", color: "#A8A8B2", border: "1px solid rgba(99,146,255,0.10)" }
-            }
-          >
-            All
-          </button>
-          {PIPELINE_STAGES.map((s) => (
-            <button
-              key={s.stage}
-              onClick={() => setStageFilter(s.stage)}
-              className="px-3 py-1 rounded-full text-xs font-medium transition-all"
-              style={
-                stageFilter === s.stage
-                  ? { background: s.bg, color: s.color, border: `1px solid ${s.border}` }
-                  : { background: "rgba(255,255,255,0.04)", color: "#A8A8B2", border: "1px solid rgba(99,146,255,0.10)" }
-              }
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
       </div>
 
-      {/* Kanban board */}
+      {/* Kanban — scrollable, phase-grouped */}
       <div className="px-6 overflow-x-auto pb-6">
-        <div className="flex gap-3 min-w-max">
-          {columns.map(({ cfg, leads: colLeads }) => (
-            <KanbanColumn
-              key={cfg.stage}
-              cfg={cfg}
-              leads={colLeads}
+        {PHASES.map(({ phase, stages }) => {
+          const cfgs = PIPELINE_STAGES.filter((s) => stages.includes(s.stage));
+          return (
+            <PhaseSection
+              key={phase}
+              phase={phase}
+              stageCfgs={cfgs}
+              leadsByStage={leadsByStage}
               onLeadClick={setSelectedLead}
+              collapsed={collapsedPhases.has(phase)}
+              onToggle={() => togglePhase(phase)}
             />
-          ))}
-        </div>
+          );
+        })}
 
         {/* Dead leads accordion */}
         {deadLeads.length > 0 && (
-          <div className="mt-4 max-w-full">
+          <div className="mt-2">
             <button
               onClick={() => setShowDead((v) => !v)}
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-text-muted hover:text-text-secondary transition-colors mb-2"
@@ -932,19 +895,12 @@ export default function LeadgenPipelinePage() {
             <AnimatePresence>
               {showDead && (
                 <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="overflow-hidden"
+                  initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }} className="overflow-hidden"
                 >
                   <div className="flex flex-wrap gap-2">
                     {deadLeads.map((lead) => (
-                      <LeadCard
-                        key={lead.id}
-                        lead={lead}
-                        onClick={() => setSelectedLead(lead)}
-                      />
+                      <LeadCard key={lead.id} lead={lead} onClick={() => setSelectedLead(lead)} />
                     ))}
                   </div>
                 </motion.div>
@@ -958,11 +914,8 @@ export default function LeadgenPipelinePage() {
       <AnimatePresence>
         {selectedLead && (
           <>
-            {/* Backdrop */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               transition={{ duration: 0.18 }}
               className="fixed inset-0 z-30 bg-black/30 backdrop-blur-[2px]"
               onClick={() => setSelectedLead(null)}

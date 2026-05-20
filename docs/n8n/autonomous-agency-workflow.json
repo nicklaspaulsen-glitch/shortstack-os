@@ -1,0 +1,543 @@
+{
+  "name": "ShortStack — Autonomous Agency Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "hours", "minutesInterval": 4 }]
+        }
+      },
+      "id": "trigger-schedule",
+      "name": "Every 4 Hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SHORTSTACK_URL}}/api/leadgen/pipeline",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "stage", "value": "qualified" },
+            { "name": "limit", "value": "20" }
+          ]
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "fetch-qualified-leads",
+      "name": "Fetch Qualified Leads",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 300],
+      "credentials": { "httpHeaderAuth": { "id": "1", "name": "ShortStack Webhook Key" } }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Filter to leads whose pain points mention ads or content\nconst leads = $input.item.json.leads || [];\nconst filtered = leads.filter(l => {\n  const info = JSON.stringify(l.lead_info || {}).toLowerCase();\n  const notes = (l.notes || '').toLowerCase();\n  return info.includes('ad') || info.includes('content') || \n         info.includes('video') || info.includes('social') ||\n         notes.includes('ad') || notes.includes('content');\n});\nreturn filtered.map(l => ({ json: l }));"
+      },
+      "id": "filter-ads-content-pain",
+      "name": "Filter: Ads/Content Pain Points",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [{ "value1": "={{$json.outreach_sent_at}}", "operation": "isEmpty" }]
+        }
+      },
+      "id": "check-not-yet-contacted",
+      "name": "Not Yet Contacted?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [880, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SHORTSTACK_URL}}/api/leadgen/voice-outreach",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [{ "name": "x-webhook-key", "value": "={{$env.SHORTSTACK_WEBHOOK_SECRET}}" }]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "lead_ids", "value": "=[\"={{$json.id}}\"]" },
+            { "name": "owner_id", "value": "={{$env.SHORTSTACK_OWNER_ID}}" },
+            { "name": "voice_clone_id", "value": "={{$env.ELEVENLABS_VOICE_ID}}" },
+            { "name": "message_template", "value": "Hey {{name}}! I noticed you're in {{niche}} — I help creators like you grow with ads and content that actually convert. Mind if I share what's been working? 👋" }
+          ]
+        }
+      },
+      "id": "send-voice-dm",
+      "name": "Send Voice DM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1100, 200],
+      "credentials": {}
+    },
+    {
+      "parameters": { "amount": 2, "unit": "days" },
+      "id": "wait-for-reply-1",
+      "name": "Wait 2 Days for Reply",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1100, 400]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SHORTSTACK_WEBHOOK_URL}}/api/webhooks/zernio",
+        "httpMethod": "POST",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "inbound-dm-webhook",
+      "name": "Inbound DM from Zernio",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [220, 600],
+      "webhookId": "zernio-inbound-dm"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Route the inbound DM based on the lead's current stage\nconst body = $input.item.json;\nconst stage = body.pipeline_stage || 'unknown';\nreturn [{ json: { ...body, routing_stage: stage } }];"
+      },
+      "id": "route-by-stage",
+      "name": "Route by Stage",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 600]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            { "conditions": { "string": [{ "value1": "={{$json.routing_stage}}", "value2": "outreach_sent", "operation": "equals" }] }, "output": 0 },
+            { "conditions": { "string": [{ "value1": "={{$json.routing_stage}}", "value2": "qualifying", "operation": "equals" }] }, "output": 1 },
+            { "conditions": { "string": [{ "value1": "={{$json.routing_stage}}", "value2": "qualified", "operation": "equals" }] }, "output": 2 },
+            { "conditions": { "string": [{ "value1": "={{$json.routing_stage}}", "value2": "closed", "operation": "equals" }] }, "output": 3 },
+            { "conditions": { "string": [{ "value1": "={{$json.routing_stage}}", "value2": "onboarding", "operation": "equals" }] }, "output": 4 },
+            { "conditions": { "string": [{ "value1": "={{$json.routing_stage}}", "value2": "scripting", "operation": "equals" }] }, "output": 5 }
+          ]
+        },
+        "fallbackOutput": 6
+      },
+      "id": "stage-switch",
+      "name": "Stage Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [660, 600]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SHORTSTACK_URL}}/api/leadgen/qualify",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "x-webhook-key", "value": "={{$env.SHORTSTACK_WEBHOOK_SECRET}}" }] },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "lead_id", "value": "={{$json.pipeline_lead_id}}" },
+            { "name": "message", "value": "={{$json.message_text}}" },
+            { "name": "owner_id", "value": "={{$env.SHORTSTACK_OWNER_ID}}" }
+          ]
+        }
+      },
+      "id": "qualify-lead",
+      "name": "Run AI Qualification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [880, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Check if AI declared the lead qualified or agreed\nconst result = $input.item.json;\nconst qualified = result.qualified === true;\nconst agreed = (result.stage === 'qualified') || \n               /agreed|let'?s? do it|yes please|sounds good/i.test(result.ai_reply || '');\nreturn [{ json: { ...result, should_close: agreed, should_qualify: qualified } }];"
+      },
+      "id": "check-qualification-result",
+      "name": "Check: Agreed to Work?",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1100, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [{ "value1": "={{$json.should_close}}", "value2": true, "operation": "equals" }]
+        }
+      },
+      "id": "if-agreed",
+      "name": "Lead Agreed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1320, 500]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SHORTSTACK_URL}}/api/leadgen/close",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "x-webhook-key", "value": "={{$env.SHORTSTACK_WEBHOOK_SECRET}}" }] },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "lead_id", "value": "={{$json.lead_id}}" },
+            { "name": "outcome", "value": "agreed" },
+            { "name": "owner_id", "value": "={{$env.SHORTSTACK_OWNER_ID}}" },
+            { "name": "notify_telegram", "value": true }
+          ]
+        }
+      },
+      "id": "close-deal",
+      "name": "Close Deal + Telegram Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1540, 400]
+    },
+    {
+      "parameters": { "amount": 1, "unit": "hours" },
+      "id": "wait-before-onboard",
+      "name": "Wait 1 Hour",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1760, 400]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SHORTSTACK_URL}}/api/leadgen/onboard",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "x-webhook-key", "value": "={{$env.SHORTSTACK_WEBHOOK_SECRET}}" }] },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "lead_id", "value": "={{$json.lead_id}}" },
+            { "name": "owner_id", "value": "={{$env.SHORTSTACK_OWNER_ID}}" }
+          ]
+        }
+      },
+      "id": "start-onboarding",
+      "name": "Start Onboarding (Ask for Logins)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1980, 400]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SHORTSTACK_URL}}/api/leadgen/onboard",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "x-webhook-key", "value": "={{$env.SHORTSTACK_WEBHOOK_SECRET}}" }] },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "lead_id", "value": "={{$json.pipeline_lead_id}}" },
+            { "name": "inbound_message", "value": "={{$json.message_text}}" },
+            { "name": "owner_id", "value": "={{$env.SHORTSTACK_OWNER_ID}}" }
+          ]
+        }
+      },
+      "id": "handle-onboarding-reply",
+      "name": "Handle Onboarding Reply",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [880, 680]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [{ "value1": "={{$json.complete}}", "value2": true, "operation": "equals" }]
+        }
+      },
+      "id": "onboarding-complete",
+      "name": "Onboarding Complete?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1100, 680]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SHORTSTACK_URL}}/api/leadgen/scripts",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "x-webhook-key", "value": "={{$env.SHORTSTACK_WEBHOOK_SECRET}}" }] },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "lead_id", "value": "={{$json.lead_id}}" },
+            { "name": "phase", "value": "ask" },
+            { "name": "owner_id", "value": "={{$env.SHORTSTACK_OWNER_ID}}" }
+          ]
+        }
+      },
+      "id": "ask-video-ideas",
+      "name": "Ask: What Videos Do You Want?",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1320, 620]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SHORTSTACK_URL}}/api/leadgen/scripts",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "x-webhook-key", "value": "={{$env.SHORTSTACK_WEBHOOK_SECRET}}" }] },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "lead_id", "value": "={{$json.pipeline_lead_id}}" },
+            { "name": "phase", "value": "={{$json.routing_stage === 'scripting' && $json.scripts_count > 0 ? 'reply' : 'generate'}}" },
+            { "name": "inbound_message", "value": "={{$json.message_text}}" },
+            { "name": "owner_id", "value": "={{$env.SHORTSTACK_OWNER_ID}}" }
+          ]
+        }
+      },
+      "id": "handle-scripting-reply",
+      "name": "Generate / Update Scripts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [880, 820]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [{ "value1": "={{$json.stage}}", "value2": "editing", "operation": "equals" }]
+        }
+      },
+      "id": "scripts-approved",
+      "name": "Scripts Approved?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1100, 820]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SHORTSTACK_URL}}/api/video/render",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "x-webhook-key", "value": "={{$env.SHORTSTACK_WEBHOOK_SECRET}}" }] },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "lead_pipeline_id", "value": "={{$json.lead_id}}" },
+            { "name": "owner_id", "value": "={{$env.SHORTSTACK_OWNER_ID}}" },
+            { "name": "auto_mode", "value": true }
+          ]
+        }
+      },
+      "id": "queue-video-editing",
+      "name": "Queue Video Editing",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1320, 760]
+    },
+    {
+      "parameters": { "amount": 30, "unit": "minutes" },
+      "id": "wait-for-video",
+      "name": "Wait 30 Min for Video",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1540, 760]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SHORTSTACK_URL}}/api/leadgen/payment",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "x-webhook-key", "value": "={{$env.SHORTSTACK_WEBHOOK_SECRET}}" }] },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "lead_id", "value": "={{$json.lead_id}}" },
+            { "name": "amount", "value": "={{$json.deal_value_estimate || 1500}}" },
+            { "name": "description", "value": "Content creation package — scripts + videos + thumbnails" },
+            { "name": "owner_id", "value": "={{$env.SHORTSTACK_OWNER_ID}}" }
+          ]
+        }
+      },
+      "id": "send-payment-link",
+      "name": "Send Stripe Payment Link",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1760, 760]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SHORTSTACK_URL}}/api/webhooks/stripe",
+        "httpMethod": "POST",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "stripe-payment-webhook",
+      "name": "Stripe: payment.success",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [220, 960],
+      "webhookId": "stripe-payment-success"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract lead_pipeline_id from Stripe webhook metadata\nconst event = $input.item.json;\nconst metadata = event?.data?.object?.metadata || {};\nconst leadId = metadata.lead_pipeline_id;\nif (!leadId) return [];\nreturn [{ json: { lead_id: leadId, payment_intent_id: event?.data?.object?.id } }];"
+      },
+      "id": "extract-lead-from-stripe",
+      "name": "Extract Lead ID from Stripe",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 960]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SHORTSTACK_URL}}/api/leadgen/pipeline",
+        "method": "PATCH",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "x-webhook-key", "value": "={{$env.SHORTSTACK_WEBHOOK_SECRET}}" }] },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "lead_id", "value": "={{$json.lead_id}}" },
+            { "name": "stage", "value": "delivering" },
+            { "name": "owner_id", "value": "={{$env.SHORTSTACK_OWNER_ID}}" }
+          ]
+        }
+      },
+      "id": "mark-payment-received",
+      "name": "Mark Payment Received",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [660, 960]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SHORTSTACK_URL}}/api/leadgen/deliver",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "x-webhook-key", "value": "={{$env.SHORTSTACK_WEBHOOK_SECRET}}" }] },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "lead_id", "value": "={{$json.lead_id}}" },
+            { "name": "deliverable_urls", "value": "=[]" },
+            { "name": "owner_id", "value": "={{$env.SHORTSTACK_OWNER_ID}}" }
+          ]
+        }
+      },
+      "id": "deliver-work",
+      "name": "Deliver Work via DM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [880, 960]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Reset lead to start new cycle — bump back to qualified for re-engagement\nreturn [{ json: { lead_id: $input.item.json.lead_id, reset: true } }];"
+      },
+      "id": "rinse-repeat",
+      "name": "Rinse & Repeat → Queue Next Project",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1100, 960]
+    }
+  ],
+  "connections": {
+    "Every 4 Hours": {
+      "main": [[{ "node": "Fetch Qualified Leads", "type": "main", "index": 0 }]]
+    },
+    "Fetch Qualified Leads": {
+      "main": [[{ "node": "Filter: Ads/Content Pain Points", "type": "main", "index": 0 }]]
+    },
+    "Filter: Ads/Content Pain Points": {
+      "main": [[{ "node": "Not Yet Contacted?", "type": "main", "index": 0 }]]
+    },
+    "Not Yet Contacted?": {
+      "main": [
+        [{ "node": "Send Voice DM", "type": "main", "index": 0 }],
+        [{ "node": "Wait 2 Days for Reply", "type": "main", "index": 0 }]
+      ]
+    },
+    "Inbound DM from Zernio": {
+      "main": [[{ "node": "Route by Stage", "type": "main", "index": 0 }]]
+    },
+    "Route by Stage": {
+      "main": [[{ "node": "Stage Router", "type": "main", "index": 0 }]]
+    },
+    "Stage Router": {
+      "main": [
+        [{ "node": "Run AI Qualification", "type": "main", "index": 0 }],
+        [{ "node": "Run AI Qualification", "type": "main", "index": 0 }],
+        [{ "node": "Run AI Qualification", "type": "main", "index": 0 }],
+        [{ "node": "Handle Onboarding Reply", "type": "main", "index": 0 }],
+        [{ "node": "Handle Onboarding Reply", "type": "main", "index": 0 }],
+        [{ "node": "Generate / Update Scripts", "type": "main", "index": 0 }]
+      ]
+    },
+    "Run AI Qualification": {
+      "main": [[{ "node": "Check: Agreed to Work?", "type": "main", "index": 0 }]]
+    },
+    "Check: Agreed to Work?": {
+      "main": [[{ "node": "Lead Agreed?", "type": "main", "index": 0 }]]
+    },
+    "Lead Agreed?": {
+      "main": [
+        [{ "node": "Close Deal + Telegram Alert", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "Close Deal + Telegram Alert": {
+      "main": [[{ "node": "Wait 1 Hour", "type": "main", "index": 0 }]]
+    },
+    "Wait 1 Hour": {
+      "main": [[{ "node": "Start Onboarding (Ask for Logins)", "type": "main", "index": 0 }]]
+    },
+    "Handle Onboarding Reply": {
+      "main": [[{ "node": "Onboarding Complete?", "type": "main", "index": 0 }]]
+    },
+    "Onboarding Complete?": {
+      "main": [
+        [{ "node": "Ask: What Videos Do You Want?", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "Generate / Update Scripts": {
+      "main": [[{ "node": "Scripts Approved?", "type": "main", "index": 0 }]]
+    },
+    "Scripts Approved?": {
+      "main": [
+        [{ "node": "Queue Video Editing", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "Queue Video Editing": {
+      "main": [[{ "node": "Wait 30 Min for Video", "type": "main", "index": 0 }]]
+    },
+    "Wait 30 Min for Video": {
+      "main": [[{ "node": "Send Stripe Payment Link", "type": "main", "index": 0 }]]
+    },
+    "Stripe: payment.success": {
+      "main": [[{ "node": "Extract Lead ID from Stripe", "type": "main", "index": 0 }]]
+    },
+    "Extract Lead ID from Stripe": {
+      "main": [[{ "node": "Mark Payment Received", "type": "main", "index": 0 }]]
+    },
+    "Mark Payment Received": {
+      "main": [[{ "node": "Deliver Work via DM", "type": "main", "index": 0 }]]
+    },
+    "Deliver Work via DM": {
+      "main": [[{ "node": "Rinse & Repeat → Queue Next Project", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "shortstack-autonomous"
+  },
+  "tags": [{ "name": "autonomous" }, { "name": "leadgen" }, { "name": "agency" }]
+}
