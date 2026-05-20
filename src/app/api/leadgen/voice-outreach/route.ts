@@ -135,6 +135,12 @@ export async function POST(request: NextRequest) {
       .select("id")
       .single();
 
+    // Notify the owner so they know a lead is waiting (not silently queued).
+    await notifyTelegram(
+      `⏳ Lead queued (no voice clone): @${handle.replace(/^@/, "")} on ${platform}\n` +
+      `Configure a voice clone at /dashboard/voice-studio to send voice DMs automatically.`,
+    );
+
     return NextResponse.json({
       ok: false,
       queued: true,
@@ -208,4 +214,15 @@ export async function POST(request: NextRequest) {
     stage,
     reason: dmResult.reason || null,
   });
+}
+
+async function notifyTelegram(msg: string): Promise<void> {
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  if (!chatId || !botToken) return;
+  await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: chatId, text: msg }),
+  }).catch(() => {});
 }

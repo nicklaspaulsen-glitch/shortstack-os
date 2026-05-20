@@ -87,9 +87,8 @@ export default function WorkflowsPage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [testMode, setTestMode] = useState(false);
 
-  // Analytics data
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [workflowAnalytics] = useState({
+  // Analytics data — populated lazily from /api/n8n/executions when the tab is opened.
+  const [workflowAnalytics, setWorkflowAnalytics] = useState({
     totalRuns: 0,
     successRate: 0,
     avgDuration: "--",
@@ -100,9 +99,8 @@ export default function WorkflowsPage() {
     savedHours: 0,
   });
 
-  // Run history detail
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [runHistory] = useState<{ id: string; workflow: string; status: "success" | "failed"; duration: string; steps: number; timestamp: string; error?: string }[]>([]);
+  // Run history detail — populated by fetchN8nAnalytics
+  const [runHistory, setRunHistory] = useState<{ id: string; workflow: string; status: "success" | "failed"; duration: string; steps: number; timestamp: string; error?: string }[]>([]);
 
   // Error handling
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -130,6 +128,15 @@ export default function WorkflowsPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, n8nFetched]);
 
+  const [analyticsFetched, setAnalyticsFetched] = useState(false);
+  useEffect(() => {
+    if (tab === "analytics" && !analyticsFetched) {
+      setAnalyticsFetched(true);
+      fetchN8nAnalytics();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab, analyticsFetched]);
+
   async function fetchN8n() {
     setN8nLoading(true);
     try {
@@ -141,6 +148,22 @@ export default function WorkflowsPage() {
       toast.error("Couldn't load n8n workflows");
     }
     setN8nLoading(false);
+  }
+
+  async function fetchN8nAnalytics() {
+    try {
+      const res = await fetch("/api/n8n/executions?limit=50");
+      const data = await res.json();
+      if (!data.available) return; // n8n not configured — keep zeros
+      if (data.analytics) {
+        setWorkflowAnalytics(prev => ({ ...prev, ...data.analytics }));
+      }
+      if (Array.isArray(data.runHistory)) {
+        setRunHistory(data.runHistory);
+      }
+    } catch (err) {
+      console.error("[workflows] fetchN8nAnalytics failed:", err);
+    }
   }
 
   async function toggleN8nWorkflow(id: string, active: boolean) {
@@ -298,6 +321,33 @@ export default function WorkflowsPage() {
     setPrompt(description);
     setTab("builder");
     setShowCreate(true);
+  }
+
+  async function installPresetToN8n(preset: WorkflowPreset) {
+    const description = `${preset.name}: ${preset.description}. Trigger: ${preset.trigger}. Steps: ${preset.steps.join(" → ")}`;
+    const t = toast.loading(`Deploying "${preset.name}" to n8n…`);
+    try {
+      const res = await fetch("/api/n8n/create-workflow", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ description }),
+      });
+      const data = await res.json();
+      toast.dismiss(t);
+      if (data.deployed) {
+        toast.success(`"${preset.name}" deployed to n8n!`);
+        // Refresh the n8n tab next time it's visited
+        setN8nFetched(false);
+      } else if (data.workflow) {
+        toast("Workflow designed but not deployed — add N8N_URL + N8N_API_KEY to deploy automatically.", { icon: "⚠️" });
+      } else {
+        toast.error(data.error || "Deploy failed");
+      }
+    } catch (err) {
+      toast.dismiss(t);
+      console.error("[workflows] installPresetToN8n failed:", err);
+      toast.error("Network error");
+    }
   }
 
   function exportWorkflowsJson() {
@@ -630,10 +680,18 @@ export default function WorkflowsPage() {
                               <span key={tag} className="text-[7px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{tag}</span>
                             ))}
                           </div>
-                          <button onClick={() => applyPreset(preset)}
-                            className="btn-secondary text-[9px] py-1 px-2.5 flex items-center gap-1 shrink-0">
-                            Use <ChevronRight size={9} />
-                          </button>
+                          <div className="flex items-center gap-1 shrink-0">
+                            <button onClick={() => applyPreset(preset)}
+                              className="btn-secondary text-[9px] py-1 px-2.5 flex items-center gap-1">
+                              Use <ChevronRight size={9} />
+                            </button>
+                            <button
+                              onClick={() => installPresetToN8n(preset)}
+                              title="Deploy this preset directly to n8n"
+                              className="btn-ghost text-[9px] py-1 px-2 flex items-center gap-1 text-brand-accent hover:text-[#60A5FA]">
+                              <Upload size={9} /> n8n
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </motion.div>
@@ -796,8 +854,7 @@ export default function WorkflowsPage() {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {n8nWorkflows.map((w) => (
-                      <div key={w.id} className="card-hover p-4 relative overflow-hidden">
-                        <div className={`absolute top-0 left-0 w-1 h-full ${w.active ? "bg-success" : "bg-muted/30"}`} />
+                      <div key={w.id} className={`card-hover p-4 relative overflow-hidden border ${w.active ? "border-success/25" : "border-border-subtle"}`}>
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${w.active ? "bg-success/10" : "bg-surface-light"}`}>
