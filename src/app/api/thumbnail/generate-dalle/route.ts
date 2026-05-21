@@ -31,10 +31,24 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 60; // Image gen can take up to 20–30 s for hd
 
+// Comprehensive YouTube thumbnail quality formula — trained on MrBeast,
+// Jordan Welch, Jeff Nippard, Alex Hormozi, Logan Paul, Grizzy, Pezzy
+// and other top creators. Applied when enhancePrompt=true.
 const THUMBNAIL_PROMPT_PREFIX =
-  "A high-contrast, visually striking YouTube thumbnail. " +
-  "Bold colors, strong composition, photorealistic. " +
-  "Eye-catching, professional. Subject: ";
+  "Professional YouTube thumbnail, 1280×720 pixels (16:9). " +
+  "COMPOSITION: Subject offset to rule-of-thirds, never dead-center. " +
+  "If a person is present, face fills at least 35% of the frame. " +
+  "EMOTION: Maximum expressive emotion — shock, ecstasy, raw intensity, or extreme curiosity. " +
+  "Subtle expressions are invisible at mobile scale; go bigger. " +
+  "LIGHTING: Cinematic dramatic studio lighting with deep shadows and vivid rim-light separation. " +
+  "No flat or ambient-only lighting. Hard light preferred. " +
+  "COLOR: Hyper-saturated vivid palette. Never washed out, never pastel. " +
+  "High contrast between subject and background. Dark backgrounds use deep blacks (#0a0a0a–#1c1c2e) with a single punchy accent color. " +
+  "TYPOGRAPHY (if included): 2–5 words max, bold condensed sans-serif (Impact or Bebas Neue weight), " +
+  "thick black stroke 4px+, color chosen for maximum contrast. Must be legible at 320×180 mobile preview size. " +
+  "QUALITY: Photorealistic, 8K detail, professional photography or premium digital art. " +
+  "Not stock photo aesthetic. Not corporate. Not advertisement. Viral YouTube creator energy. " +
+  "Subject: ";
 
 export async function POST(req: NextRequest) {
   // Auth check — only authenticated agency users can call this

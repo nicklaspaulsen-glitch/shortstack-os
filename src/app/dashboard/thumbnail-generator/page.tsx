@@ -43,7 +43,7 @@ import ToolsPalette from "@/components/thumbnail-editor/tools-palette";
 import EditorCanvas from "@/components/thumbnail-editor/canvas";
 import LayersPanel from "@/components/thumbnail-editor/layers-panel";
 import TopBar from "@/components/thumbnail-editor/top-bar";
-import AIFillDialog, { type AIModelOption } from "@/components/thumbnail-editor/ai-fill-dialog";
+import AIFillDialog, { type AIModelOption, type AIStyleOption } from "@/components/thumbnail-editor/ai-fill-dialog";
 import HistoryPanel from "@/components/thumbnail-editor/history-panel";
 import AiFirstStarter from "@/components/thumbnail-editor/ai-first-starter";
 import StockPhotosPanel from "@/components/thumbnail-editor/stock-photos-panel";
@@ -87,6 +87,20 @@ function headlineScore(text: string): { score: number; label: string; color: str
   return { score, label, color, tips: tips.slice(0, 2) };
 }
 
+// Creator style DNA — prepended to the user prompt in Text→Layer when a
+// style is selected. Mirrors the map in ai-first-starter for consistency.
+const CREATOR_STYLE_DNA: Record<string, string> = {
+  none: "",
+  mrbeast: "MrBeast YouTube style: electric yellow #FFE600 + cobalt blue palette, multiple shocked expressions, prize or challenge element visible, Impact font thick black outline 4px+, hyper-saturated energy —",
+  "jordan-welch": "Jordan Welch commentary style: near-black background, face left 40%, bold minimal white condensed text right, dark premium minimalism —",
+  "jeff-nippard": "Jeff Nippard fitness science style: athletic physique, blue-white scientific layout, gym setting, research data callout, sharp authoritative photography —",
+  "alex-hormozi": "Alex Hormozi style: pure black background, intense direct-gaze face fills left half, bold white condensed headline, aggressive minimalism, zero decoration —",
+  "logan-paul": "Logan Paul style: cinematic high-budget quality, dramatic intense expression, red-white palette, Hollywood lighting, extreme energy —",
+  grizzy: "Grizzy comedy style: bright warm colors, exaggerated funny face, relatable scenario, bold comedy text, infectious positive energy —",
+  pezzy: "Pezzy commentary style: intense reaction, dark moody background, bold all-caps confrontational text, high contrast, raw authentic energy —",
+  finance: "Finance YouTube style: premium setting, chart or money visual, green-gold palette, authoritative expression, bold dollar figure headline, polished wealthy aesthetic —",
+};
+
 // Electron hint — the preload script sets window.electron. We check for
 // truthy at runtime to decide whether to show the native picker.
 // Shape comes from the shared ambient declaration at src/types/electron.d.ts.
@@ -111,6 +125,8 @@ export default function ThumbnailEditorProPage() {
   const [aiBusy, setAIBusy] = useState(false);
   // Model picker for Text→Layer — defaults to DALL-E 3 (highest quality)
   const [modelChoice, setModelChoice] = useState<"flux" | "dall-e-3" | "gpt-image-1">("dall-e-3");
+  // Creator style DNA injected into Text→Layer prompts
+  const [creatorStyleChoice, setCreatorStyleChoice] = useState<string>("none");
   const [hasElectron, setHasElectron] = useState(false);
   // AI-first starter — overlay shown when canvas is empty and user hasn't
   // explicitly skipped (Pikzel-AI-style entry per apr27 backlog).
@@ -543,7 +559,14 @@ export default function ThumbnailEditorProPage() {
   }, [commit]);
 
   const runTextToLayer = useCallback(
-    async (prompt: string) => {
+    async (rawPrompt: string) => {
+      // Prepend creator style DNA if one is selected — gives DALL-E the
+      // creator-specific visual language before the user's subject.
+      const styleDna = creatorStyleChoice !== "none"
+        ? (CREATOR_STYLE_DNA[creatorStyleChoice] ?? "")
+        : "";
+      const prompt = styleDna ? `${styleDna} ${rawPrompt}` : rawPrompt;
+
       setAIBusy(true);
       try {
         let url: string | undefined;
@@ -631,7 +654,7 @@ export default function ThumbnailEditorProPage() {
         setAIBusy(false);
       }
     },
-    [state.canvasWidth, state.canvasHeight, commit, modelChoice],
+    [state.canvasWidth, state.canvasHeight, commit, modelChoice, creatorStyleChoice],
   );
 
   // ── Stock photos ───────────────────────────────────────────────────────
@@ -992,6 +1015,18 @@ export default function ThumbnailEditorProPage() {
     },
   ] as const satisfies AIModelOption[];
 
+  const CREATOR_STYLE_OPTIONS: AIStyleOption[] = [
+    { id: "none", label: "Auto" },
+    { id: "mrbeast", label: "MrBeast", badge: "Viral", badgeColor: "#F59E0B" },
+    { id: "jordan-welch", label: "Welch", badge: "Commentary", badgeColor: "#6366F1" },
+    { id: "jeff-nippard", label: "Nippard", badge: "Fitness", badgeColor: "#10B981" },
+    { id: "alex-hormozi", label: "Hormozi", badge: "Business", badgeColor: "#3B82F6" },
+    { id: "logan-paul", label: "Logan", badge: "Drama", badgeColor: "#EF4444" },
+    { id: "grizzy", label: "Grizzy", badge: "Comedy", badgeColor: "#F97316" },
+    { id: "pezzy", label: "Pezzy", badge: "Reaction", badgeColor: "#8B5CF6" },
+    { id: "finance", label: "Finance", badge: "Money", badgeColor: "#059669" },
+  ];
+
   const tierColor = (tier: CtrPreset["tier"]) =>
     tier === "top" ? { bg: "rgba(16,185,129,0.14)", text: "#10B981" }
       : tier === "high" ? { bg: "rgba(59,130,246,0.14)", text: "#60A5FA" }
@@ -1294,11 +1329,14 @@ export default function ThumbnailEditorProPage() {
               onModelChange={(id) =>
                 setModelChoice(id as typeof modelChoice)
               }
+              styleOptions={CREATOR_STYLE_OPTIONS}
+              styleChoice={creatorStyleChoice}
+              onStyleChange={setCreatorStyleChoice}
               presetSuggestions={[
-                "MrBeast thumbnail, shocked face, dramatic lighting",
-                "cinematic cyberpunk cityscape, neon glow, rain",
-                "bold colorful pop-art style, extreme contrast",
-                "tutorial thumbnail, clean flat lay, bright lighting",
+                "shocked face revealing massive prize, dramatic lighting",
+                "dark minimal commentary, bold white text, black bg",
+                "athletic physique transformation, cinematic gym lighting",
+                "cinematic travel vista, golden hour, wide angle scale",
               ]}
             />
 
