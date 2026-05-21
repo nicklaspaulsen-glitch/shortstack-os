@@ -7,6 +7,7 @@ import {
   safeJsonParse,
   getResponseText,
 } from "@/lib/ai/claude-helpers";
+import { getPageTrainingPrompt } from "@/lib/ai/page-training";
 
 type ComposeMode = "write" | "improve" | "shorten" | "lengthen" | "tone";
 type ComposeTone = "professional" | "friendly" | "casual" | "urgent" | "persuasive";
@@ -69,6 +70,8 @@ export async function POST(request: NextRequest) {
     .single();
   const limited = checkAiRateLimit(user.id, profile?.plan_tier);
   if (limited) return limited;
+
+  const trainingPrompt = await getPageTrainingPrompt(authSupabase, user.id, "email");
 
   let body: ComposeInput;
   try {
@@ -167,6 +170,9 @@ JSON only.`;
           text: SYSTEM_PROMPT,
           cache_control: { type: "ephemeral" },
         },
+        ...(trainingPrompt
+          ? [{ type: "text" as const, text: trainingPrompt }]
+          : []),
       ],
       messages: [{ role: "user", content: userPrompt }],
     });
