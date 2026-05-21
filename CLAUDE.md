@@ -222,35 +222,33 @@ The visual foundation is locked. Authoritative source:
 mirrors the same hex values via `tailwind.config.ts`; CSS variables in
 `src/app/globals.css` mirror them again at `:root`.
 
-Direction: **Dark OLED × Glassmorphic × Blue Accent** (May 16 Higgsfield overhaul).
-`:root` is now deep navy OLED dark by default. Light theme available via
-`[data-theme="light"]` / `.theme-light`. The dark frosted glass aesthetic
-applies globally — pill buttons, glass panels, split-pane layouts.
+Direction: **Dark OLED × Glassmorphic × Chartreuse Lime Accent** (May 21 ZIP design install).
+`:root` is deep matte-black OLED. Light theme via `[data-theme="light"]` / `.theme-light`.
+Glass aesthetic applies globally — pill buttons, glass panels, split-pane layouts.
+Ambient orb blobs (`.ambient`) render behind all content.
 
 ### Locked color palette — dark theme (`:root`, the default)
-- **Brand accent: BLUE** `#3B82F6` — primary accent on dark OLED surfaces.
-  Three variants: `#3B82F6` (primary), `#60A5FA` (hover/soft),
-  `#2563EB` (dim/pressed). Do **not** introduce red/gold/amber/lime accents.
-- **Surfaces (dark OLED):** OLED matte-black base with navy glass panels.
-  `--bg-base #020711` (Trinity matte-black), `--bg-surface-1 #0D1120` (panels),
-  `--bg-surface-2 #131827` (hover/raised). Previous base `#0D1120` is now
-  surface-1 — all solid `bg-[#0D1120]` fills must use `#020711` instead.
-- **Borders:** `--border-subtle rgba(99,146,255,0.10)` /
-  `--border-strong rgba(99,146,255,0.22)` (blue-tinted for depth).
-- **Text:** `--text-primary #F0F0F4`, `--text-secondary #A8A8B2`,
-  `--text-muted #4A4A5A`.
-- **Glass tokens:** `--glass-bg rgba(13,17,32,0.85)` (surface-1 at 85% opacity),
-  `--glass-blur blur(16px) saturate(160%)`. Glass overlays with `backdrop-blur`
-  intentionally use `rgba(13,17,32,...)` — do NOT change those to base `#020711`.
-  Use `.glass-panel` utility class for frosted containers.
-- **Pill buttons:** `.btn-pill` (filled blue) / `.btn-pill-ghost` (outlined).
+- **Brand accent: LIME** `#D4FF00` (`oklch(0.88 0.18 130)`) — primary accent on dark surfaces.
+  Three variants: `#D4FF00` (primary), `#E8FF4D` (hover/soft), `#AACC00` (dim/pressed).
+  Do **not** introduce blue/purple as primary accents. Indigo `#6366F1` is the link/secondary only.
+- **Surfaces (dark OLED):** `--bg-base #020711` (Trinity matte-black), `--bg-surface-1 #0D1120` (panels),
+  `--bg-surface-2 #131827` (hover/raised).
+- **Borders:** `--border-subtle rgba(212,255,0,0.08)` /
+  `--border-strong rgba(212,255,0,0.18)` (lime-tinted).
+- **Text:** `--text-primary #F0F0F4`, `--text-secondary #A8A8B2`, `--text-muted #4A4A5A`.
+- **Glass tokens:** `--glass-bg rgba(13,17,32,0.85)`, `--glass-blur blur(16px) saturate(160%)`.
+  `--glass-border-inner rgba(212,255,0,0.14)`, `--glass-glow` lime-tinted shadow.
+  Use `.glass-panel` utility for frosted containers.
+- **Pill buttons:** `.btn-pill` (filled lime) / `.btn-pill-ghost` (outlined).
   Tab strips: `.tab-pill-strip` + `.tab-pill` + `.tab-pill.active`.
-- **Accent alias:** `--brand-lime` is a back-compat alias that resolves
-  to `#3B82F6` on dark. Do not use it in new code.
+- **Accent alias:** `--brand-lime` is canonical (= `#D4FF00`). Use `bg-brand-accent` /
+  `text-brand-accent` / `border-brand-accent` in new code.
 
 ### Font stack (locked)
 - **Satoshi** — display only (page titles, hero numbers, big counters).
   Use the `font-display` class.
+- **Manrope** — OS/UI chrome: numeric displays, badge labels, dashboard counters.
+  Use the `font-ui` Tailwind class or `.font-ui` CSS class.
 - **Inter** — body, labels, tables, default. Set on `<body>`.
 - **Bodoni Moda** — *reserved* for hero/marketing one-off statements
   only. Never set as body. Use the `font-editorial` class. The
@@ -286,18 +284,19 @@ pointer-events: none. The component itself is server-safe.
 
 ### Existing color names (back-compat shim)
 The 100+ pages still use the original Tailwind class names. Those stay
-registered in `tailwind.config.ts` and now point to the blue brand accent:
-- `text-gold-*` / `bg-gold-*` / `border-gold-*` → blue brand scale
-- `text-amber-*` / `bg-amber-*` / `border-amber-*` → blue brand scale
+registered in `tailwind.config.ts` and now point to the lime brand accent:
+- `text-gold-*` / `bg-gold-*` / `border-gold-*` → lime brand scale (#D4FF00 family)
+- `text-amber-*` / `bg-amber-*` / `border-amber-*` → lime brand scale
+- `text-lime-*` / `bg-lime-*` / `border-lime-*` → lime brand scale (canonical)
 - `text-purple-*` / `bg-purple-*` / `border-purple-*` → charcoal/plum scale
-- `text-indigo-*` / `bg-indigo-*` / `border-indigo-*` → blue brand scale
-- `bg-brand-lime` / `text-brand-lime` / `border-brand-lime` → blue brand scale
+- `text-indigo-*` / `bg-indigo-*` / `border-indigo-*` → real indigo scale (#6366F1)
+- `bg-brand-lime` / `text-brand-lime` / `border-brand-lime` → canonical lime #D4FF00
 
 For **new code**, reference the canonical brand-foundation classes
 (`bg-brand-accent`, `border-border-subtle`, `text-text-primary`, etc.) or
-import `tokens` from `@/lib/brand/tokens` (`tokens.brand.accent = "#2563EB"`).
-Do not introduce new uses of the legacy `gold`/`amber`/`purple`/`lime`
-shade names.
+import `tokens` from `@/lib/brand/tokens` (`tokens.brand.accent = "#D4FF00"`).
+`gold` and `amber` class names still work but resolve to lime — avoid adding
+new uses; prefer `lime` or `brand-accent`.
 
 ## What NOT to do without asking the user
 
