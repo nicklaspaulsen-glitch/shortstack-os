@@ -7,6 +7,13 @@
 import { useEffect, useState } from "react";
 import { Loader2, Sparkles, X } from "lucide-react";
 
+export interface AIModelOption {
+  id: string;
+  label: string;
+  badge?: string;
+  badgeColor?: string;
+}
+
 interface AIFillDialogProps {
   open: boolean;
   title: string;
@@ -17,6 +24,10 @@ interface AIFillDialogProps {
   onClose: () => void;
   onSubmit: (prompt: string) => void | Promise<void>;
   presetSuggestions?: string[];
+  /** Optional model picker — only shown when `modelOptions` is provided */
+  modelOptions?: AIModelOption[];
+  modelChoice?: string;
+  onModelChange?: (id: string) => void;
 }
 
 export default function AIFillDialog({
@@ -29,6 +40,9 @@ export default function AIFillDialog({
   onClose,
   onSubmit,
   presetSuggestions,
+  modelOptions,
+  modelChoice,
+  onModelChange,
 }: AIFillDialogProps) {
   const [prompt, setPrompt] = useState("");
 
@@ -74,6 +88,49 @@ export default function AIFillDialog({
         </div>
 
         <div className="p-4 space-y-3">
+          {/* Model selector — only rendered when modelOptions is provided */}
+          {modelOptions && modelOptions.length > 0 && onModelChange && (
+            <div>
+              <div className="text-xs text-neutral-400 mb-1.5">Model</div>
+              <div className="flex gap-1.5 flex-wrap">
+                {modelOptions.map((m) => {
+                  const active = modelChoice === m.id;
+                  return (
+                    <button
+                      key={m.id}
+                      type="button"
+                      onClick={() => onModelChange(m.id)}
+                      className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border transition-all duration-100"
+                      style={{
+                        background: active
+                          ? "rgba(59,130,246,0.18)"
+                          : "rgba(255,255,255,0.04)",
+                        borderColor: active
+                          ? "#3B82F6"
+                          : "rgba(99,146,255,0.18)",
+                        color: active ? "#93C5FD" : "#A8A8B2",
+                      }}
+                    >
+                      {m.label}
+                      {m.badge && (
+                        <span
+                          className="px-1 py-px rounded text-[9px] font-bold leading-none"
+                          style={{
+                            background: m.badgeColor
+                              ? `${m.badgeColor}22`
+                              : "rgba(59,130,246,0.14)",
+                            color: m.badgeColor ?? "#60A5FA",
+                          }}
+                        >
+                          {m.badge}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           <textarea
             autoFocus
             value={prompt}

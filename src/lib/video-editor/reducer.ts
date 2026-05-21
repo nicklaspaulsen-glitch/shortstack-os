@@ -48,9 +48,12 @@ const MUTATING: EditorAction["type"][] = [
   "TRIM_CLIP",
   "SPLIT_CLIP",
   "DELETE_CLIP",
+  "SPEED_CLIP",
+  "RENAME_CLIP",
   "ADD_KEYFRAME",
   "REMOVE_KEYFRAME",
   "SET_TRANSITION",
+  "ADD_TRACK",
   "REPLACE_CLIPS",
 ];
 
@@ -146,6 +149,34 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
         clips: deleteClip(state.clips, action.id, action.ripple === true),
         selection: state.selection.filter((s) => s !== action.id),
       };
+
+    case "SPEED_CLIP": {
+      // Adjusts the clip's timeline duration so the perceived time stretches or
+      // compresses correctly: duration_new = duration_old * (old_speed / new_speed)
+      const clip = state.clips.find((c) => c.id === action.id);
+      if (!clip) return state;
+      const oldSpeed = clip.speed ?? 1;
+      const newDuration = Math.max(50, clip.duration * (oldSpeed / action.speed));
+      return {
+        ...state,
+        clips: state.clips.map((c) =>
+          c.id === action.id ? { ...c, speed: action.speed, duration: newDuration } : c
+        ),
+      };
+    }
+
+    case "RENAME_CLIP":
+      return {
+        ...state,
+        clips: state.clips.map((c) =>
+          c.id === action.id ? { ...c, label: action.label } : c
+        ),
+      };
+
+    case "ADD_TRACK":
+      // Prevent duplicate ids
+      if (state.tracks.find((t) => t.id === action.track.id)) return state;
+      return { ...state, tracks: [...state.tracks, action.track] };
 
     case "ADD_KEYFRAME": {
       return {

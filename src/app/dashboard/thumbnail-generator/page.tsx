@@ -43,7 +43,7 @@ import ToolsPalette from "@/components/thumbnail-editor/tools-palette";
 import EditorCanvas from "@/components/thumbnail-editor/canvas";
 import LayersPanel from "@/components/thumbnail-editor/layers-panel";
 import TopBar from "@/components/thumbnail-editor/top-bar";
-import AIFillDialog from "@/components/thumbnail-editor/ai-fill-dialog";
+import AIFillDialog, { type AIModelOption } from "@/components/thumbnail-editor/ai-fill-dialog";
 import HistoryPanel from "@/components/thumbnail-editor/history-panel";
 import AiFirstStarter from "@/components/thumbnail-editor/ai-first-starter";
 import StockPhotosPanel from "@/components/thumbnail-editor/stock-photos-panel";
@@ -109,6 +109,8 @@ export default function ThumbnailEditorProPage() {
   const [textToLayerOpen, setTextToLayerOpen] = useState(false);
   const [stockPhotosOpen, setStockPhotosOpen] = useState(false);
   const [aiBusy, setAIBusy] = useState(false);
+  // Model picker for Text→Layer — defaults to DALL-E 3 (highest quality)
+  const [modelChoice, setModelChoice] = useState<"flux" | "dall-e-3" | "gpt-image-1">("dall-e-3");
   const [hasElectron, setHasElectron] = useState(false);
   // AI-first starter — overlay shown when canvas is empty and user hasn't
   // explicitly skipped (Pikzel-AI-style entry per apr27 backlog).
@@ -544,32 +546,69 @@ export default function ThumbnailEditorProPage() {
     async (prompt: string) => {
       setAIBusy(true);
       try {
-        // Reuse the existing thumbnail generate route — it's the same
-        // FLUX worker, just without a mask. The route returns a finished
-        // image URL that we add as a new layer.
-        const res = await fetch("/api/thumbnail/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            prompt,
-            platform: "youtube",
-            style: "youtube_classic",
-            mood: "dramatic",
-            variations: 1,
-            width: state.canvasWidth,
-            height: state.canvasHeight,
-          }),
-        });
-        const data = (await res.json()) as {
-          images?: { url: string }[];
-          url?: string;
-          error?: string;
-        };
-        if (data.error) {
-          toast.error(data.error);
-          return;
+        let url: string | undefined;
+
+        if (modelChoice === "flux") {
+          // ── FLUX worker (existing endpoint, free) ────────────────────────
+          const res = await fetch("/api/thumbnail/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              prompt,
+              platform: "youtube",
+              style: "youtube_classic",
+              mood: "dramatic",
+              variations: 1,
+              width: state.canvasWidth,
+              height: state.canvasHeight,
+            }),
+          });
+          const data = (await res.json()) as {
+            images?: { url: string }[];
+            url?: string;
+            error?: string;
+          };
+          if (data.error) { toast.error(data.error); return; }
+          url = data.images?.[0]?.url ?? data.url;
+        } else {
+          // ── OpenAI image models (DALL-E 3 or gpt-image-1) ──────────────
+          const dalleSize =
+            state.canvasWidth > state.canvasHeight
+              ? "1792x1024"
+              : state.canvasWidth < state.canvasHeight
+                ? "1024x1792"
+                : "1024x1024";
+          const res = await fetch("/api/thumbnail/generate-dalle", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              prompt,
+              model: modelChoice,          // "dall-e-3" | "gpt-image-1"
+              size: dalleSize,
+              quality: "hd",
+              style: "vivid",
+              n: 1,
+              enhancePrompt: true,
+            }),
+          });
+          const data = (await res.json()) as {
+            urls?: string[];
+            error?: string;
+            estimatedCostUsd?: number;
+          };
+          if (!res.ok || data.error) {
+            toast.error(data.error ?? "DALL-E generation failed");
+            return;
+          }
+          url = data.urls?.[0];
+          if (data.estimatedCostUsd) {
+            toast.success(
+              `Image generated ($${data.estimatedCostUsd.toFixed(3)})`,
+              { duration: 3000 },
+            );
+          }
         }
-        const url = data.images?.[0]?.url || data.url;
+
         if (!url) {
           toast.error("No image returned");
           return;
@@ -582,7 +621,7 @@ export default function ThumbnailEditorProPage() {
           name: `AI: ${prompt.slice(0, 24)}`,
         });
         commit({ type: "ADD_LAYER", layer }, "Text → Layer");
-        toast.success("AI layer added");
+        if (modelChoice === "flux") toast.success("AI layer added");
         setTextToLayerOpen(false);
       } catch (err) {
         toast.error(
@@ -592,7 +631,7 @@ export default function ThumbnailEditorProPage() {
         setAIBusy(false);
       }
     },
-    [state.canvasWidth, state.canvasHeight, commit],
+    [state.canvasWidth, state.canvasHeight, commit, modelChoice],
   );
 
   // ── Stock photos ───────────────────────────────────────────────────────
@@ -931,6 +970,28 @@ export default function ThumbnailEditorProPage() {
 
   type CtrPreset = typeof CTR_PRESETS[number];
 
+  // AI model options for the Text→Layer dialog
+  const TEXT_TO_LAYER_MODELS: AIModelOption[] = [
+    {
+      id: "dall-e-3",
+      label: "DALL-E 3",
+      badge: "$0.12",
+      badgeColor: "#F59E0B",
+    },
+    {
+      id: "gpt-image-1",
+      label: "gpt-image-1",
+      badge: "$0.04",
+      badgeColor: "#10B981",
+    },
+    {
+      id: "flux",
+      label: "FLUX",
+      badge: "free",
+      badgeColor: "#6366F1",
+    },
+  ] as const satisfies AIModelOption[];
+
   const tierColor = (tier: CtrPreset["tier"]) =>
     tier === "top" ? { bg: "rgba(16,185,129,0.14)", text: "#10B981" }
       : tier === "high" ? { bg: "rgba(59,130,246,0.14)", text: "#60A5FA" }
@@ -1228,6 +1289,11 @@ export default function ThumbnailEditorProPage() {
               busy={aiBusy}
               onClose={() => setTextToLayerOpen(false)}
               onSubmit={runTextToLayer}
+              modelOptions={TEXT_TO_LAYER_MODELS}
+              modelChoice={modelChoice}
+              onModelChange={(id) =>
+                setModelChoice(id as typeof modelChoice)
+              }
               presetSuggestions={[
                 "MrBeast thumbnail, shocked face, dramatic lighting",
                 "cinematic cyberpunk cityscape, neon glow, rain",

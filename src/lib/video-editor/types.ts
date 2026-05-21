@@ -78,6 +78,13 @@ export interface Clip {
   transitionOut?: Transition;
   /** Arbitrary caption/title style id. */
   styleId?: string;
+  /**
+   * Playback rate multiplier. 1 = normal, 0.5 = slow-mo, 2 = 2× speed.
+   * Affects how `sourceIn` advances relative to the global timeline.
+   * The clip's timeline `duration` already encodes the stretched time,
+   * so duration = original_media_duration / speed.
+   */
+  speed?: number;
 }
 
 export interface EditorState {
@@ -102,6 +109,8 @@ export type EditorAction =
   | { type: "TRIM_CLIP"; id: string; start: number; duration: number; sourceIn?: number }
   | { type: "SPLIT_CLIP"; id: string; atMs: number }
   | { type: "DELETE_CLIP"; id: string; ripple?: boolean }
+  | { type: "SPEED_CLIP"; id: string; speed: number }
+  | { type: "RENAME_CLIP"; id: string; label: string }
   | { type: "ADD_KEYFRAME"; clipId: string; property: KeyframeableProperty; keyframe: Keyframe }
   | { type: "REMOVE_KEYFRAME"; clipId: string; property: KeyframeableProperty; frame: number }
   | { type: "SET_TRANSITION"; clipId: string; side: "in" | "out"; transition: Transition }
@@ -111,6 +120,7 @@ export type EditorAction =
   | { type: "SET_MARKER_OUT"; ms: number | null }
   | { type: "SET_ZOOM"; pixelsPerSecond: number }
   | { type: "SET_TRACK_FLAG"; trackId: string; flag: "muted" | "solo" | "hidden" | "locked"; value: boolean }
+  | { type: "ADD_TRACK"; track: Track }
   | { type: "REPLACE_CLIPS"; clips: Clip[] }
   | { type: "UNDO" }
   | { type: "REDO" };
