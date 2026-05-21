@@ -193,7 +193,7 @@ export default function LlmCostsDashboard() {
           <button
             onClick={load}
             disabled={refreshing}
-            className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-white/5 hover:bg-white/8 disabled:opacity-50"
           >
             <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
             Refresh

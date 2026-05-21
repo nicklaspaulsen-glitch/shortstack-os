@@ -30,7 +30,7 @@ interface ApiKeyRow {
 const SCOPE_PILLS: Record<Scope, string> = {
   read: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]",
   write: "bg-yellow-500/10 text-yellow-700 border-yellow-500/30",
-  admin: "bg-red-500/10 text-red-600 border-red-500/30",
+  admin: "bg-red-500/10 text-red-400 border-red-500/30",
 };
 
 function timeAgo(iso: string | null): string {
@@ -171,7 +171,7 @@ export default function ApiKeysPage() {
                     <p className="text-[10px] text-text-muted mb-2">
                       We hash and forget. You will not see this string again.
                     </p>
-                    <div className="flex items-center gap-2 bg-[rgba(0,0,0,0.04)] rounded-lg px-3 py-2 font-mono text-[11px]">
+                    <div className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-2 font-mono text-[11px]">
                       <span className="truncate flex-1">{justCreatedKey}</span>
                       <button
                         onClick={copyKey}
@@ -354,7 +354,7 @@ export default function ApiKeysPage() {
                 <Shield size={12} className="text-brand-accent" />
                 <h3 className="text-xs font-semibold">Using your key</h3>
               </div>
-              <pre className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)] rounded-lg p-3 text-[10px] font-mono text-brand-accent overflow-x-auto">
+              <pre className="bg-white/5 border border-white/8 rounded-lg p-3 text-[10px] font-mono text-brand-accent overflow-x-auto">
       {`curl https://app.shortstack.work/api/v1/leads \\
   -H "Authorization: Bearer ss_live_your_key_here"`}
               </pre>

@@ -448,7 +448,7 @@ export default function BillingPage() {
                         </>
                       )}
                       </div>
-                      <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: "rgba(0,0,0,0.08)" }} />
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: "rgba(255,255,255,0.08)" }} />
                     </motion.div>
                   );
                 })}

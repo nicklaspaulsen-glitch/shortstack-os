@@ -115,10 +115,10 @@ function ScoreBadge({ score }: { score: number | null }) {
   const value = score ?? 0;
   const tone =
     value >= 80
-      ? "bg-emerald-500/15 text-emerald-700 border-emerald-500/30"
+      ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
       : value >= 60
-        ? "bg-amber-500/15 text-amber-700 border-amber-500/30"
-        : "bg-rose-500/15 text-rose-700 border-rose-500/30";
+        ? "bg-amber-500/15 text-amber-400 border-amber-500/30"
+        : "bg-rose-500/15 text-rose-400 border-rose-500/30";
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${tone}`}
@@ -243,7 +243,7 @@ export default function CoachPage() {
                 <Loader2 className="h-4 w-4 animate-spin" /> Loading analyses�
               </div>
             )}{error && !loading && (
-              <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-700">
+              <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-400">
                 {error}
               </div>
             )}{/* -- RECENT CALLS -- */}{!loading && tab === "recent" && data && (
@@ -428,10 +428,10 @@ export default function CoachPage() {
                             <td className="px-4 py-3 text-right">
                               <ScoreBadge score={entry.avg_score} />
                             </td>
-                            <td className="px-4 py-3 text-right text-emerald-700">
+                            <td className="px-4 py-3 text-right text-emerald-400">
                               {entry.best_score}
                             </td>
-                            <td className="px-4 py-3 text-right text-rose-700">
+                            <td className="px-4 py-3 text-right text-rose-400">
                               {entry.worst_score}
                             </td>
                           </motion.tr>

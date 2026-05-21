@@ -653,7 +653,7 @@ export default function AnalyticsPage() {
                       <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.05)" vertical={false} />
                       <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#6F6D7A" }} axisLine={false} tickLine={false} />
                       <YAxis tick={{ fontSize: 9, fill: "#6F6D7A" }} axisLine={false} tickLine={false} width={28} />
-                      <Tooltip {...TT} cursor={{ stroke: "rgba(0,0,0,0.12)", strokeDasharray: "2 4" }} />
+                      <Tooltip {...TT} cursor={{ stroke: "rgba(255,255,255,0.20)", strokeDasharray: "2 4" }} />
                       <Area
                         type="monotone" dataKey="count" name="Leads"
                         stroke="#D4FF00" strokeWidth={1.5}
@@ -1186,7 +1186,7 @@ export default function AnalyticsPage() {
                     </div>
                     <span
                       className="text-[10px] font-bold shrink-0"
-                      style={{ color: client.risk === "high" ? "#D97706" : client.risk === "medium" ? "#D4FF00" : "rgba(0,0,0,0.35)", fontVariantNumeric: "tabular-nums" }}
+                      style={{ color: client.risk === "high" ? "#D97706" : client.risk === "medium" ? "#D4FF00" : "rgba(255,255,255,0.35)", fontVariantNumeric: "tabular-nums" }}
                     >
                       {client.score}%
                     </span>

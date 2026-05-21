@@ -2455,7 +2455,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border-subtle rounded-xl p-6 text-center cursor-pointer hover:border-[rgba(0,0,0,0.3)] transition-all">
+            className="border-2 border-dashed border-border-subtle rounded-xl p-6 text-center cursor-pointer hover:border-[rgba(212,255,0,0.30)] transition-all">
             <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
             <Layers size={24} className="mx-auto mb-2 text-text-muted" />
             <p className="text-xs text-text-primary font-medium">
