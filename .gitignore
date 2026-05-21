@@ -54,6 +54,9 @@ supabase/.temp/
 
 # Windows path-encoded tsc-out junk (from Windows path escaping bug)
 C:Claudetsc-*.txt
+# Dev server log files that sometimes land in repo root
+*dev-server.log
+playwright-results.txt
 
 # Desktop installers (too big for Vercel — host on Cloudflare R2 / GitHub Releases)
 # Keep manifest.json + README tracked so the page has metadata + docs.
