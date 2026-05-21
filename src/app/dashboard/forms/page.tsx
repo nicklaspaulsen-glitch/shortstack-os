@@ -162,7 +162,7 @@ export default function FormsPage() {
   const [tab, setTab] = useState<FormTab>("builder");
   const [forms, setForms] = useState<LeadForm[]>([]);
   const [activeForm, setActiveForm] = useState<LeadForm | null>(null);
-  const [, setShowEmbedCode] = useState(false);
+  const [showEmbedCode, setShowEmbedCode] = useState(false);
   const [ratingHover, setRatingHover] = useState(0);
   const [previewValues, setPreviewValues] = useState<Record<string, string>>({});
   const [conditionEditorFieldId, setConditionEditorFieldId] = useState<string | null>(null);
@@ -877,7 +877,71 @@ export default function FormsPage() {
                   </div>
                 </div>
               </div>
-            )}</MotionPage>
+            )}
+
+      {/* Embed Code Modal */}
+      <Modal isOpen={showEmbedCode} onClose={() => setShowEmbedCode(false)} title="Embed Form" size="lg">
+        {activeForm && (
+          <div className="space-y-4">
+            <p className="text-xs text-text-secondary">Copy one of the snippets below to embed <strong>{activeForm.name}</strong> on any website or landing page.</p>
+
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-text-muted mb-1.5 flex items-center gap-1.5">
+                <Code size={10} /> Script Embed <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-brand-accent/10 text-brand-accent">Recommended</span>
+              </p>
+              <div className="relative rounded-lg border p-3" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+                <code className="text-[10px] text-brand-accent break-all pr-8 block">
+                  {`<script src="https://app.shortstack.work/embed/form.js" data-form-id="${activeForm.id}"></script>`}
+                </code>
+                <button
+                  onClick={() => { navigator.clipboard.writeText(`<script src="https://app.shortstack.work/embed/form.js" data-form-id="${activeForm.id}"></script>`); toast.success("Script tag copied!"); }}
+                  className="absolute top-2 right-2 p-1.5 rounded hover:bg-white/8 text-text-muted hover:text-text-primary transition-colors"
+                  aria-label="Copy script tag"
+                >
+                  <Copy size={12} />
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-text-muted mb-1.5 flex items-center gap-1.5">
+                <Globe size={10} /> iFrame Embed
+              </p>
+              <div className="relative rounded-lg border p-3" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+                <code className="text-[10px] text-brand-accent break-all pr-8 block">
+                  {`<iframe src="https://app.shortstack.work/f/${activeForm.id}" width="100%" height="600" frameborder="0" style="border:none;"></iframe>`}
+                </code>
+                <button
+                  onClick={() => { navigator.clipboard.writeText(`<iframe src="https://app.shortstack.work/f/${activeForm.id}" width="100%" height="600" frameborder="0" style="border:none;"></iframe>`); toast.success("iFrame code copied!"); }}
+                  className="absolute top-2 right-2 p-1.5 rounded hover:bg-white/8 text-text-muted hover:text-text-primary transition-colors"
+                  aria-label="Copy iFrame code"
+                >
+                  <Copy size={12} />
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-text-muted mb-1.5 flex items-center gap-1.5">
+                <Link2 size={10} /> Direct Link
+              </p>
+              <div className="flex items-center gap-2 rounded-lg border p-3" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
+                <span className="text-[10px] text-brand-accent flex-1 truncate">
+                  {`https://app.shortstack.work/f/${activeForm.id}`}
+                </span>
+                <button
+                  onClick={() => { navigator.clipboard.writeText(`https://app.shortstack.work/f/${activeForm.id}`); toast.success("Link copied!"); }}
+                  className="flex-shrink-0 p-1.5 rounded hover:bg-white/8 text-text-muted hover:text-text-primary transition-colors"
+                  aria-label="Copy direct link"
+                >
+                  <Copy size={12} />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
+    </MotionPage>
   );
 }
 

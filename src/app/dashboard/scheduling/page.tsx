@@ -82,7 +82,7 @@ const LOCATION_OPTIONS = [
 ];
 
 const COLOR_OPTIONS = [
-  "#2563EB", "#2563EB", "#2563EB", "#8b5cf6", "#f59e0b", "#ef4444", "#ec4899", "#FF5252",
+  "#D4FF00", "#10B981", "#2563EB", "#8b5cf6", "#f59e0b", "#ef4444", "#ec4899", "#FF5252",
 ];
 
 /* ------------------------------------------------------------------ */
@@ -528,7 +528,7 @@ export default function SchedulingPage() {
             </div>
             {showEmailPreview && (
               <div className="mt-3 rounded-xl bg-[#FAFAFB] p-5 text-text-primary text-xs">
-                <p className="font-bold text-base mb-2" style={{ color: "#2563EB" }}>ShortStack Creative</p>
+                <p className="font-bold text-base mb-2" style={{ color: "#D4FF00" }}>ShortStack Creative</p>
                 <p className="mb-3">Hi <strong>[Client Name]</strong>,</p>
                 <p className="mb-2">Your <strong>[Meeting Type]</strong> has been confirmed!</p>
                 <div className="bg-white/5 rounded-lg p-3 mb-3">
