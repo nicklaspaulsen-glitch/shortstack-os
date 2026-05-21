@@ -613,7 +613,7 @@ export default function OutreachLogsPage() {
                       ].map(p => (
                         <button key={p.val} onClick={() => { setPlatformFilter(p.val); setPage(1); }}
                           className={`text-[10px] px-2 py-1.5 rounded-lg flex items-center gap-1 ${
-                            platformFilter === p.val ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
+                            platformFilter === p.val ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-border-subtle hover:border-border-subtle"
                           }`}>{p.icon} {p.label}</button>
                       ))}
                     </div>
@@ -627,7 +627,7 @@ export default function OutreachLogsPage() {
                       <option value="interested">Interested</option>
                       <option value="not_interested">Not Interested</option>
                     </select>
-                    <div className="flex items-center gap-1 border border-[rgba(0,0,0,0.06)] rounded-lg">
+                    <div className="flex items-center gap-1 border border-border-subtle rounded-lg">
                       <button onClick={() => setViewMode("compact")}
                         className={`p-1.5 rounded-l-lg ${viewMode === "compact" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted"}`}>
                         <LayoutList size={14} />
@@ -669,7 +669,7 @@ export default function OutreachLogsPage() {
                     {(dateFrom || dateTo) && (
                       <button
                         onClick={() => { setDateFrom(""); setDateTo(""); setPage(1); }}
-                        className="text-[10px] px-2 py-1 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-text-muted flex items-center gap-1"
+                        className="text-[10px] px-2 py-1 rounded-lg bg-white/5 hover:bg-white/8 text-text-muted flex items-center gap-1"
                       >
                         <X size={9} /> Clear
                       </button>
@@ -691,7 +691,7 @@ export default function OutreachLogsPage() {
                           <div className="absolute top-full left-0 mt-1 bg-surface border border-border-subtle rounded-lg p-1 shadow-xl z-20 min-w-[160px]">
                             {DM_PLATFORMS.map(p => (
                               <button key={p.id} onClick={() => handleBulkOutreach("dm", p.id)}
-                                className="w-full text-left flex items-center gap-2 px-3 py-2 text-xs hover:bg-[rgba(0,0,0,0.03)] rounded-md">
+                                className="w-full text-left flex items-center gap-2 px-3 py-2 text-xs hover:bg-white/4 rounded-md">
                                 {p.icon} {p.label}
                               </button>
                             ))}
@@ -738,7 +738,7 @@ export default function OutreachLogsPage() {
                           <tr className="border-b border-border-subtle text-[9px] text-text-muted uppercase tracking-wider">
                             <th className="p-2.5 w-8">
                               <button onClick={toggleAll} className={`w-4 h-4 rounded border flex items-center justify-center ${
-                                allSelected ? "bg-brand-accent border-brand-accent" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(59,130,246,0.25)]"
+                                allSelected ? "bg-brand-accent border-brand-accent" : "border-white/15 hover:border-[rgba(59,130,246,0.25)]"
                               }`}>{allSelected && <Check size={10} className="text-black" />}</button>
                             </th>
                             <th className="p-2.5 text-left w-8">Ch</th>
@@ -761,11 +761,11 @@ export default function OutreachLogsPage() {
                                 onClick={() => openDetail(entry)}
                                 className={`border-b border-border-subtle/50 text-[11px] transition-colors cursor-pointer ${
                                   isActive ? "bg-[rgba(59,130,246,0.05)] border-l-2 border-l-[#2563EB]" :
-                                  isSelected ? "bg-[rgba(59,130,246,0.05)]" : "hover:bg-[rgba(0,0,0,0.04)]"
+                                  isSelected ? "bg-[rgba(59,130,246,0.05)]" : "hover:bg-white/5"
                                 }`}>
                                 <td className="p-2.5" onClick={e => e.stopPropagation()}>
                                   <button onClick={() => toggleOne(entry.id)} className={`w-4 h-4 rounded border flex items-center justify-center ${
-                                    isSelected ? "bg-brand-accent border-brand-accent" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(59,130,246,0.25)]"
+                                    isSelected ? "bg-brand-accent border-brand-accent" : "border-white/15 hover:border-[rgba(59,130,246,0.25)]"
                                   }`}>{isSelected && <Check size={10} className="text-black" />}</button>
                                 </td>
                                 <td className="p-2.5">{PLATFORM_ICON[entry.platform] || <Mail size={13} className="text-text-muted" />}</td>
@@ -782,7 +782,7 @@ export default function OutreachLogsPage() {
                                   ) : entry.message_text?.substring(0, 80) || "�"}
                                 </td>
                                 <td className="p-2.5 text-center">
-                                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[entry.status] || "bg-[rgba(0,0,0,0.04)] text-text-muted"}`}>
+                                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[entry.status] || "bg-white/5 text-text-muted"}`}>
                                     {entry.status}
                                   </span>
                                 </td>
@@ -818,11 +818,11 @@ export default function OutreachLogsPage() {
                               isSelected ? "bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)]" :
                               entry.status === "replied" || entry.status === "interested" ? "bg-green-400/[0.02] border-green-400/10" :
                               entry.status === "failed" || entry.status === "bounced" ? "bg-red-400/[0.02] border-red-400/10" :
-                              "bg-surface-light border-border-subtle hover:border-[rgba(0,0,0,0.08)]"
+                              "bg-surface-light border-border-subtle hover:border-border-subtle"
                             }`}>
                             <div className="flex items-center gap-3">
                               <button onClick={e => { e.stopPropagation(); toggleOne(entry.id); }} className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center ${
-                                isSelected ? "bg-brand-accent border-brand-accent" : "border-[rgba(0,0,0,0.10)] hover:border-[rgba(59,130,246,0.25)]"
+                                isSelected ? "bg-brand-accent border-brand-accent" : "border-white/15 hover:border-[rgba(59,130,246,0.25)]"
                               }`}>{isSelected && <Check size={10} className="text-black" />}</button>
 
                               <div className="flex-shrink-0">{PLATFORM_ICON[entry.platform] || <Mail size={13} className="text-text-muted" />}</div>
@@ -831,7 +831,7 @@ export default function OutreachLogsPage() {
                                 <div className="flex items-center gap-2">
                                   <span className={`w-2 h-2 rounded-full flex-shrink-0 ${getSentimentColor(entry.status)}`} />
                                   <p className="text-xs font-medium truncate">{entry.business_name || "Unknown"}</p>
-                                  <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-text-muted capitalize">{entry.platform}</span>
+                                  <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 text-text-muted capitalize">{entry.platform}</span>
                                   {entry.reply_text && <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-green-400/10 text-green-400">replied</span>}
                                 </div>
                                 <p className="text-[10px] text-text-muted truncate mt-0.5">
@@ -842,7 +842,7 @@ export default function OutreachLogsPage() {
                               </div>
 
                               <div className="flex items-center gap-2 flex-shrink-0">
-                                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[entry.status] || "bg-[rgba(0,0,0,0.04)] text-text-muted"}`}>
+                                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${STATUS_STYLE[entry.status] || "bg-white/5 text-text-muted"}`}>
                                   {entry.status}
                                 </span>
                                 <div className="text-right">
@@ -877,7 +877,7 @@ export default function OutreachLogsPage() {
                           return (
                             <button key={pageNum} onClick={() => setPage(pageNum)}
                               className={`text-xs px-2.5 py-1.5 rounded-md min-w-[32px] ${
-                                page === pageNum ? "bg-brand-accent text-white font-medium" : "text-text-muted hover:text-text-primary hover:bg-[rgba(0,0,0,0.03)]"
+                                page === pageNum ? "bg-brand-accent text-white font-medium" : "text-text-muted hover:text-text-primary hover:bg-white/4"
                               }`}>{pageNum}</button>
                           );
                         })}
@@ -914,8 +914,8 @@ export default function OutreachLogsPage() {
                           <span className={`w-1.5 h-1.5 rounded-full ${getSentimentColor(detailEntry.status)}`} />
                           <span className={STATUS_STYLE[detailEntry.status]?.split(" ")[1] || "text-text-muted"}>{detailEntry.status}</span>
                         </span>
-                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-text-muted capitalize">{detailEntry.platform}</span>
-                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-text-muted">
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-text-muted capitalize">{detailEntry.platform}</span>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-text-muted">
                           {new Date(detailEntry.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
                         </span>
                       </div>
@@ -933,7 +933,7 @@ export default function OutreachLogsPage() {
                               className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${
                                 detailEntry.status === tag.status
                                   ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent font-medium"
-                                  : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.06)] text-text-muted hover:border-[rgba(0,0,0,0.10)] hover:text-text-primary"
+                                  : "bg-white/5 border-border-subtle text-text-muted hover:border-white/15 hover:text-text-primary"
                               }`}
                             >
                               <span>{tag.emoji}</span> {tag.label}
@@ -945,7 +945,7 @@ export default function OutreachLogsPage() {
                       {/* Quick actions */}
                       <div className="flex gap-1">
                         {detailEntry.recipient_handle && (
-                          <button onClick={() => copyText(detailEntry.recipient_handle)} className="text-[9px] px-2 py-1 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] flex items-center gap-1">
+                          <button onClick={() => copyText(detailEntry.recipient_handle)} className="text-[9px] px-2 py-1 rounded-lg bg-white/5 hover:bg-white/8 flex items-center gap-1">
                             <Copy size={9} /> Copy
                           </button>
                         )}
@@ -1014,7 +1014,7 @@ export default function OutreachLogsPage() {
                                   <div className="bg-surface-light rounded-lg p-2.5 space-y-1.5">
                                     <p className="text-[8px] text-text-muted uppercase tracking-wider">Speaking Time</p>
                                     <div className="flex items-center gap-2">
-                                      <div className="flex-1 h-1.5 bg-[rgba(0,0,0,0.04)] rounded-full overflow-hidden">
+                                      <div className="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden">
                                         <div className="h-full bg-brand-accent rounded-full" style={{ width: `${agentPct}%` }} />
                                       </div>
                                       <span className="text-[8px] text-brand-accent">{agentPct}% AI</span>
@@ -1033,7 +1033,7 @@ export default function OutreachLogsPage() {
                                   if (line.role === "system") {
                                     return (
                                       <div key={i} className="text-center">
-                                        <span className="text-[8px] text-text-muted italic px-2 py-0.5 rounded bg-[rgba(0,0,0,0.04)]">
+                                        <span className="text-[8px] text-text-muted italic px-2 py-0.5 rounded bg-white/5">
                                           {line.timestamp !== undefined ? `[${formatTimestamp(line.timestamp)}] ` : ""}{line.message}
                                         </span>
                                       </div>
@@ -1132,7 +1132,7 @@ export default function OutreachLogsPage() {
                                           <ArrowRight size={8} className="text-brand-accent" />
                                           <span className="font-medium text-brand-accent">Sent</span>
                                         </span>
-                                        <span className={`px-1.5 py-0.5 rounded-full ${STATUS_STYLE[te.status] || "bg-[rgba(0,0,0,0.04)] text-text-muted"}`}>{te.status}</span>
+                                        <span className={`px-1.5 py-0.5 rounded-full ${STATUS_STYLE[te.status] || "bg-white/5 text-text-muted"}`}>{te.status}</span>
                                         <span>{new Date(te.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
                                       </div>
                                       {te.message_text?.startsWith("Subject:") && (
@@ -1277,7 +1277,7 @@ export default function OutreachLogsPage() {
                     { icon: <ThumbsDown size={20} className="mx-auto mb-2 text-red-400" />, value: stats.failed, label: "Failed/Bounced", color: "text-red-400" },
                     { icon: <Calendar size={20} className="mx-auto mb-2 text-blue-400" />, value: stats.total, label: "All Time Total", color: "text-blue-400" },
                   ].map((tile, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 + i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center spotlight-card" style={{ background: "rgba(0,0,0,0.03)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(0,0,0,0.10)" }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
+                    <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 + i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center spotlight-card" style={{ background: "rgba(13,17,32,0.7)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(212,255,0,0.08)" }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                       <div className="p-4">
                         {tile.icon}
                         <p className={`text-xl font-bold ${tile.color}`}>{tile.value}</p>
@@ -1328,7 +1328,7 @@ export default function OutreachLogsPage() {
                             <span className="text-[8px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 flex items-center gap-1">
                               <Wifi size={8} /> Active
                             </span>
-                            <button onClick={() => copyText(num.phone_number)} className="p-1 hover:bg-[rgba(0,0,0,0.03)] rounded">
+                            <button onClick={() => copyText(num.phone_number)} className="p-1 hover:bg-white/4 rounded">
                               <Copy size={10} className="text-text-muted" />
                             </button>
                           </div>
@@ -1535,7 +1535,7 @@ export default function OutreachLogsPage() {
                         return (
                           <button key={pl.id} onClick={() => toggleScrapePlatform(pl.id)}
                             className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-all ${
-                              active ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
+                              active ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle hover:border-border-subtle"
                             }`}>
                             {pl.icon} {pl.label}
                             {active && <Check size={10} className="ml-0.5" />}
@@ -1567,7 +1567,7 @@ export default function OutreachLogsPage() {
                       <div className="flex flex-wrap gap-1 mt-1.5">
                         {["Dentist","Med Spa","Plumber","HVAC","Roofing","Real Estate","Restaurant","Gym/Fitness","Salon/Barber","Auto Repair","Chiropractor","Lawyer","Accountant","Landscaping","Cleaning Services","Photography","Pet Services","Home Services"].filter((p: string) => !config.scrape_niches.includes(p)).slice(0, 10).map((preset: string) => (
                           <button key={preset} onClick={() => addTag("scrape_niches", preset)}
-                            className="text-[9px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-text-muted hover:bg-[rgba(0,0,0,0.06)] hover:text-text-primary transition-colors">
+                            className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-text-muted hover:bg-white/8 hover:text-text-primary transition-colors">
                             + {preset}
                           </button>
                         ))}
@@ -1630,7 +1630,7 @@ export default function OutreachLogsPage() {
                         ] as { key: "require_phone" | "require_website"; label: string }[]).map(f => (
                           <div key={f.key} className="flex items-center gap-2">
                             <button onClick={() => setConfig(c => ({ ...c, scrape_filters: { ...c.scrape_filters, [f.key]: !c.scrape_filters[f.key] } }))}
-                              className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${config.scrape_filters[f.key] ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.06)]"}`}>
+                              className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${config.scrape_filters[f.key] ? "bg-brand-accent" : "bg-white/8"}`}>
                               <div className={`w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${config.scrape_filters[f.key] ? "translate-x-3" : "translate-x-0"}`} />
                             </button>
                             <span className="text-[10px] text-text-muted">{f.label}</span>
@@ -1702,7 +1702,7 @@ export default function OutreachLogsPage() {
                               <button onClick={() => setConfig(c => ({
                                 ...c,
                                 platforms: { ...c.platforms, [p]: { ...plat, enabled: !plat.enabled } }
-                              }))} className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${plat.enabled ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.06)]"}`}>
+                              }))} className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${plat.enabled ? "bg-brand-accent" : "bg-white/8"}`}>
                                 <div className={`w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${plat.enabled ? "translate-x-3" : "translate-x-0"}`} />
                               </button>
                               <span className="flex items-center gap-1 text-[10px] flex-1 capitalize">{PLATFORM_ICON[p]} {p}</span>
@@ -1766,7 +1766,7 @@ export default function OutreachLogsPage() {
                       ].map(s => (
                         <button key={s.val} onClick={() => setConfig(c => ({ ...c, message_style: s.val }))}
                           className={`text-left px-3 py-2 rounded-lg border transition-all ${
-                            config.message_style === s.val ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.08)]"
+                            config.message_style === s.val ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle hover:border-border-subtle"
                           }`}>
                           <p className="text-xs font-medium">{s.label}</p>
                           <p className="text-[9px] opacity-70">{s.desc}</p>
@@ -1784,10 +1784,10 @@ export default function OutreachLogsPage() {
                       { key: "exclude_contacted", label: "Exclude already contacted", desc: "Skip leads you have reached out to before" },
                       { key: "pause_on_reply", label: "Pause sequence on reply", desc: "Stop automated follow-ups when prospect replies" },
                     ].map(item => (
-                      <div key={item.key} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light hover:bg-[rgba(0,0,0,0.04)] transition-colors">
+                      <div key={item.key} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light hover:bg-white/5 transition-colors">
                         <button onClick={() => setConfig(c => ({ ...c, [item.key]: !(c[item.key as keyof typeof c]) }))}
                           className={`w-8 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${
-                            config[item.key as keyof typeof config] ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.06)]"
+                            config[item.key as keyof typeof config] ? "bg-brand-accent" : "bg-white/8"
                           }`}>
                           <div className={`w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${
                             config[item.key as keyof typeof config] ? "translate-x-4" : "translate-x-0"
@@ -1798,7 +1798,7 @@ export default function OutreachLogsPage() {
                           <p className="text-[9px] text-text-muted">{item.desc}</p>
                         </div>
                         <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
-                          config[item.key as keyof typeof config] ? "bg-green-400/10 text-green-400" : "bg-[rgba(0,0,0,0.04)] text-text-muted"
+                          config[item.key as keyof typeof config] ? "bg-green-400/10 text-green-400" : "bg-white/5 text-text-muted"
                         }`}>{config[item.key as keyof typeof config] ? "On" : "Off"}</span>
                       </div>
                     ))}
@@ -1908,7 +1908,7 @@ export default function OutreachLogsPage() {
                   )}
 
                   {!senderStats && (
-                    <div className="flex items-center gap-2 p-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)]">
+                    <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white/5 border border-border-subtle">
                       <Building2 size={12} className="text-text-muted" />
                       <p className="text-[10px] text-text-muted">Sender stats will appear here once the API is connected.</p>
                     </div>
@@ -2016,7 +2016,7 @@ export default function OutreachLogsPage() {
                                 {cells.map((day, i) => (
                                   <div key={i} className={`relative flex flex-col items-center justify-center h-6 rounded text-[9px]
                               ${!day ? "" : ""}
-                              ${day && isPast(day) ? "text-text-muted" : "text-[#6B7280]"}
+                              ${day && isPast(day) ? "text-text-muted" : "text-text-muted"}
                               ${day === todayDate ? "ring-1 ring-[rgba(59,130,246,0.6)] bg-[rgba(59,130,246,0.08)] font-bold text-brand-accent" : ""}
                             `}>
                                     {day && <span>{day}</span>}
@@ -2024,7 +2024,7 @@ export default function OutreachLogsPage() {
                                       <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-brand-accent" />
                                     )}
                                     {day && isScheduled(day) && isPast(day) && (
-                                      <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-[rgba(0,0,0,0.06)]" />
+                                      <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-white/8" />
                                     )}
                                   </div>
                                 ))}
@@ -2049,7 +2049,7 @@ export default function OutreachLogsPage() {
                       })()}
                     </>
                   ) : (
-                    <div className="flex items-center gap-2 p-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)]">
+                    <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white/5 border border-border-subtle">
                       <Radar size={12} className="text-text-muted animate-pulse" />
                       <p className="text-[10px] text-text-muted">Loading auto-run schedule...</p>
                     </div>
@@ -2155,13 +2155,13 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
   const sentimentColor =
     analysis.sentiment === "positive" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
     analysis.sentiment === "negative" ? "text-red-400 bg-red-500/10 border-red-500/20" :
-    analysis.sentiment === "no_reply" ? "text-text-muted bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)]" :
+    analysis.sentiment === "no_reply" ? "text-text-muted bg-white/5 border-border-subtle" :
     "text-brand-accent bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)]";
 
   const urgencyColor =
     analysis.urgency === "high" ? "text-red-400 bg-red-500/10" :
     analysis.urgency === "medium" ? "text-brand-accent bg-[rgba(59,130,246,0.08)]" :
-    "text-text-muted bg-[rgba(0,0,0,0.04)]";
+    "text-text-muted bg-white/5";
 
   return (
     <div className="rounded-lg border border-[rgba(59,130,246,0.2)] bg-gradient-to-br from-[rgba(59,130,246,0.06)] to-transparent p-3 space-y-3">
@@ -2251,7 +2251,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
           <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">Topics</p>
           <div className="flex flex-wrap gap-1">
             {analysis.topics.slice(0, 6).map((t, i) => (
-              <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-text-muted">
+              <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-text-muted">
                 #{t}
               </span>
             ))}

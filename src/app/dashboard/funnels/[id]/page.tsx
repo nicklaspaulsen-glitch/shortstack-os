@@ -69,7 +69,7 @@ const STEP_TYPE_COLORS: Record<string, { bg: string; border: string; text: strin
 
 function getStepColor(type: string) {
   return STEP_TYPE_COLORS[type] ?? {
-    bg: "bg-zinc-500/10", border: "border-zinc-500/30", text: "text-[#6B7280]", dot: "bg-zinc-400",
+    bg: "bg-zinc-500/10", border: "border-zinc-500/30", text: "text-text-muted", dot: "bg-zinc-400",
   };
 }
 
@@ -300,7 +300,7 @@ export default function FunnelCanvasPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 bg-black/[0.04] border border-black/[0.08] rounded-lg p-1 w-fit">
+      <div className="flex items-center gap-1 bg-black/[0.04] border border-border-subtle rounded-lg p-1 w-fit">
         {(["builder", "analytics"] as const).map((tab) => (
           <button
             key={tab}
@@ -319,7 +319,7 @@ export default function FunnelCanvasPage() {
           <Globe size={15} className="text-emerald-700 shrink-0" />
           <div className="flex-1 min-w-0">
             <span className="text-emerald-700 text-sm font-medium">Funnel is live — </span>
-            <span className="text-[#6B7280] text-sm font-mono break-all">
+            <span className="text-text-muted text-sm font-mono break-all">
               {typeof window !== "undefined" ? window.location.origin : ""}/f/{funnel.id}/1
             </span>
           </div>
@@ -339,7 +339,7 @@ export default function FunnelCanvasPage() {
       {activeTab === "builder" && (
         <div className="space-y-4">
           {/* Canvas — horizontal step chain */}
-          <div className="bg-[#F8FAFC] border border-black/[0.06] rounded-xl p-6 overflow-x-auto">
+          <div className="bg-white/5 border border-black/[0.06] rounded-xl p-6 overflow-x-auto">
             <div className="flex items-start gap-0 min-w-max">
               {steps.map((step, idx) => {
                 const sc = getStepColor(step.step_type);
@@ -365,11 +365,11 @@ export default function FunnelCanvasPage() {
                       </div>
 
                       {/* Title */}
-                      <div className="text-[#111827] text-sm font-semibold leading-tight mb-2">{step.title}</div>
+                      <div className="text-text-primary text-sm font-semibold leading-tight mb-2">{step.title}</div>
 
                       {/* Linked page */}
                       {linkedPage && (
-                        <div className="flex items-center gap-1 text-[#6B7280] text-[10px] mb-2">
+                        <div className="flex items-center gap-1 text-text-muted text-[10px] mb-2">
                           <Link2 size={9} />
                           <span className="truncate">{linkedPage.name}</span>
                         </div>
@@ -379,11 +379,11 @@ export default function FunnelCanvasPage() {
                       {stepAnalytics && (
                         <div className="grid grid-cols-2 gap-1 mt-2">
                           <div className="bg-black/[0.06] rounded p-1 text-center">
-                            <div className="text-[#111827] text-xs font-bold">{stepAnalytics.views}</div>
+                            <div className="text-text-primary text-xs font-bold">{stepAnalytics.views}</div>
                             <div className="text-text-muted text-[9px]">views</div>
                           </div>
                           <div className="bg-black/[0.06] rounded p-1 text-center">
-                            <div className={`text-xs font-bold ${stepAnalytics.conversion_rate >= 20 ? "text-emerald-700" : "text-[#6B7280]"}`}>
+                            <div className={`text-xs font-bold ${stepAnalytics.conversion_rate >= 20 ? "text-emerald-400" : "text-text-muted"}`}>
                               {stepAnalytics.conversion_rate}%
                             </div>
                             <div className="text-text-muted text-[9px]">conv.</div>
@@ -392,11 +392,11 @@ export default function FunnelCanvasPage() {
                       )}
 
                       {/* Reorder buttons */}
-                      <div className="flex items-center justify-between mt-3 pt-2 border-t border-black/[0.08]">
+                      <div className="flex items-center justify-between mt-3 pt-2 border-t border-border-subtle">
                         <button
                           onClick={(e) => { e.stopPropagation(); void moveStep(step.id, "left"); }}
                           disabled={idx === 0}
-                          className="p-1 rounded hover:bg-black/[0.06] text-text-muted hover:text-[#374151] disabled:opacity-20 transition-colors"
+                          className="p-1 rounded hover:bg-white/8 text-text-muted hover:text-text-secondary disabled:opacity-20 transition-colors"
                         >
                           <ChevronLeft size={12} />
                         </button>
@@ -409,7 +409,7 @@ export default function FunnelCanvasPage() {
                         <button
                           onClick={(e) => { e.stopPropagation(); void moveStep(step.id, "right"); }}
                           disabled={idx === steps.length - 1}
-                          className="p-1 rounded hover:bg-black/[0.06] text-text-muted hover:text-[#374151] disabled:opacity-20 transition-colors"
+                          className="p-1 rounded hover:bg-white/8 text-text-muted hover:text-text-secondary disabled:opacity-20 transition-colors"
                         >
                           <ChevronRight size={12} />
                         </button>
@@ -427,12 +427,12 @@ export default function FunnelCanvasPage() {
               })}
 
               {/* Add Step button */}
-              {steps.length > 0 && <div className="flex items-center px-1"><ArrowRight size={18} className="text-[#D1D5DB]" /></div>}
+              {steps.length > 0 && <div className="flex items-center px-1"><ArrowRight size={18} className="text-text-muted" /></div>}
               <div className="flex items-center">
                 {!addingStep ? (
                   <button
                     onClick={() => setAddingStep(true)}
-                    className="w-44 h-full min-h-[120px] rounded-xl border-2 border-dashed border-black/[0.08] hover:border-purple-500/40 flex flex-col items-center justify-center gap-2 text-text-muted hover:text-purple-600 transition-all"
+                    className="w-44 h-full min-h-[120px] rounded-xl border-2 border-dashed border-border-subtle hover:border-purple-500/40 flex flex-col items-center justify-center gap-2 text-text-muted hover:text-purple-600 transition-all"
                   >
                     <Plus size={20} />
                     <span className="text-sm font-medium">Add Step</span>
@@ -445,12 +445,12 @@ export default function FunnelCanvasPage() {
                       onChange={(e) => setNewStepTitle(e.target.value)}
                       onKeyDown={(e) => { if (e.key === "Enter") void addStep(); if (e.key === "Escape") setAddingStep(false); }}
                       placeholder="Step title"
-                      className="w-full px-3 py-2 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none"
+                      className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted/60 outline-none"
                     />
                     <select
                       value={newStepType}
                       onChange={(e) => setNewStepType(e.target.value as StepType)}
-                      className="w-full px-3 py-2 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm outline-none"
+                      className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm outline-none"
                     >
                       {STEP_TYPES.map((t) => (
                         <option key={t.value} value={t.value}>{t.label}</option>
@@ -460,7 +460,7 @@ export default function FunnelCanvasPage() {
                       <button onClick={() => void addStep()} className="flex-1 py-1.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-white text-xs font-semibold transition-colors">
                         Add
                       </button>
-                      <button onClick={() => setAddingStep(false)} className="px-3 py-1.5 rounded-lg border border-black/[0.08] text-[#6B7280] text-xs transition-colors">
+                      <button onClick={() => setAddingStep(false)} className="px-3 py-1.5 rounded-lg border border-border-subtle text-text-muted text-xs transition-colors">
                         Cancel
                       </button>
                     </div>
@@ -471,7 +471,7 @@ export default function FunnelCanvasPage() {
           </div>
 
           {steps.length === 0 && (
-            <div className="text-center py-12 text-[#6B7280] text-sm">
+            <div className="text-center py-12 text-text-muted text-sm">
               No steps yet — click &quot;Add Step&quot; to build your funnel.
             </div>
           )}
@@ -510,9 +510,9 @@ export default function FunnelCanvasPage() {
 
           {/* Step-by-step funnel visualization */}
           <div className="glass rounded-xl p-6 space-y-4">
-            <h3 className="text-[#111827] font-semibold text-base">Step-by-Step Funnel</h3>
+            <h3 className="text-text-primary font-semibold text-base">Step-by-Step Funnel</h3>
             {steps.length === 0 ? (
-              <p className="text-[#6B7280] text-sm">Add steps to see analytics.</p>
+              <p className="text-text-muted text-sm">Add steps to see analytics.</p>
             ) : (
               <div className="space-y-3">
                 {steps.map((step, idx) => {
@@ -530,9 +530,9 @@ export default function FunnelCanvasPage() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-[#111827] text-sm font-medium truncate">{step.title}</span>
+                            <span className="text-text-primary text-sm font-medium truncate">{step.title}</span>
                             <div className="flex items-center gap-3 text-xs shrink-0 ml-2">
-                              <span className="text-[#6B7280]">{views.toLocaleString()} views</span>
+                              <span className="text-text-muted">{views.toLocaleString()} views</span>
                               <span className={sa?.conversion_rate && sa.conversion_rate >= 20 ? "text-emerald-700 font-semibold" : "text-text-muted"}>
                                 {sa?.conversion_rate ?? 0}% conv.
                               </span>
@@ -550,7 +550,7 @@ export default function FunnelCanvasPage() {
                         </div>
                       </div>
                       {idx < steps.length - 1 && (
-                        <div className="ml-9 border-l border-dashed border-black/[0.08] h-3" />
+                        <div className="ml-9 border-l border-dashed border-border-subtle h-3" />
                       )}
                     </div>
                   );
@@ -571,32 +571,32 @@ export default function FunnelCanvasPage() {
           />
           {/* Drawer */}
           <div className="fixed right-0 top-0 bottom-0 z-50 w-80 glass border-l border-border-subtle flex flex-col shadow-2xl">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-black/[0.08]">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle">
               <div className="flex items-center gap-2">
                 <Pencil size={15} className="text-purple-600" />
-                <span className="text-[#111827] font-semibold text-sm">Edit Step</span>
+                <span className="text-text-primary font-semibold text-sm">Edit Step</span>
               </div>
-              <button onClick={() => setPanelOpen(false)} className="text-text-muted hover:text-[#374151] transition-colors">
+              <button onClick={() => setPanelOpen(false)} className="text-text-muted hover:text-text-secondary transition-colors">
                 <X size={16} />
               </button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-5 space-y-5">
               <div>
-                <label className="block text-xs text-[#6B7280] font-medium mb-1.5">Step Title</label>
+                <label className="block text-xs text-text-muted font-medium mb-1.5">Step Title</label>
                 <input
                   value={panelTitle}
                   onChange={(e) => setPanelTitle(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm outline-none focus:border-[rgba(59,130,246,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm outline-none focus:border-[rgba(59,130,246,0.25)]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-[#6B7280] font-medium mb-1.5">Step Type</label>
+                <label className="block text-xs text-text-muted font-medium mb-1.5">Step Type</label>
                 <select
                   value={panelType}
                   onChange={(e) => setPanelType(e.target.value as StepType)}
-                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm outline-none focus:border-[rgba(59,130,246,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm outline-none focus:border-[rgba(59,130,246,0.25)]"
                 >
                   {STEP_TYPES.map((t) => (
                     <option key={t.value} value={t.value}>{t.label}</option>
@@ -605,13 +605,13 @@ export default function FunnelCanvasPage() {
               </div>
 
               <div>
-                <label className="block text-xs text-[#6B7280] font-medium mb-1.5">
+                <label className="block text-xs text-text-muted font-medium mb-1.5">
                   <span className="flex items-center gap-1"><Link2 size={11} /> Linked Landing Page</span>
                 </label>
                 <select
                   value={panelPageId}
                   onChange={(e) => setPanelPageId(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm outline-none focus:border-[rgba(59,130,246,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm outline-none focus:border-[rgba(59,130,246,0.25)]"
                 >
                   <option value="">— None —</option>
                   {pages.map((p) => (
@@ -624,29 +624,29 @@ export default function FunnelCanvasPage() {
               </div>
 
               <div>
-                <label className="block text-xs text-[#6B7280] font-medium mb-1.5">Button Text</label>
+                <label className="block text-xs text-text-muted font-medium mb-1.5">Button Text</label>
                 <input
                   value={panelButtonText}
                   onChange={(e) => setPanelButtonText(e.target.value)}
                   placeholder="e.g. Yes, I Want Access!"
-                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(59,130,246,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted/60 outline-none focus:border-[rgba(59,130,246,0.25)]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-[#6B7280] font-medium mb-1.5">Redirect URL (override)</label>
+                <label className="block text-xs text-text-muted font-medium mb-1.5">Redirect URL (override)</label>
                 <input
                   value={panelRedirectUrl}
                   onChange={(e) => setPanelRedirectUrl(e.target.value)}
                   placeholder="https://…"
-                  className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(59,130,246,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted/60 outline-none focus:border-[rgba(59,130,246,0.25)]"
                 />
               </div>
 
               {/* Analytics for this step */}
               {analyticsMap.get(selectedStep.id) && (
-                <div className="bg-[#F8FAFC] border border-black/[0.06] rounded-lg p-3 space-y-2">
-                  <div className="text-[#6B7280] text-xs font-semibold uppercase tracking-widest">Step Stats</div>
+                <div className="bg-white/5 border border-black/[0.06] rounded-lg p-3 space-y-2">
+                  <div className="text-text-muted text-xs font-semibold uppercase tracking-widest">Step Stats</div>
                   {(() => {
                     const sa = analyticsMap.get(selectedStep.id)!;
                     return (
@@ -658,7 +658,7 @@ export default function FunnelCanvasPage() {
                           { label: "Drop-off", value: `${sa.dropoff_pct}%` },
                         ].map((s) => (
                           <div key={s.label} className="bg-black/[0.06] rounded p-2">
-                            <div className="text-[#111827] text-sm font-bold">{s.value}</div>
+                            <div className="text-text-primary text-sm font-bold">{s.value}</div>
                             <div className="text-text-muted text-[10px]">{s.label}</div>
                           </div>
                         ))}
@@ -669,7 +669,7 @@ export default function FunnelCanvasPage() {
               )}
             </div>
 
-            <div className="p-5 border-t border-black/[0.08] flex gap-2">
+            <div className="p-5 border-t border-border-subtle flex gap-2">
               <button
                 onClick={savePanel}
                 disabled={saving}

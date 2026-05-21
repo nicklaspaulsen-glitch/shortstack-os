@@ -499,26 +499,26 @@ export default function InboxPage() {
   /* -- Status badge -- */
   const StatusPill = ({ status }: { status: string }) => {
     const colors: Record<string, string> = {
-      draft: "bg-[rgba(0,0,0,0.06)] text-[#6B7280]",
-      sent: "bg-blue-500/15 text-blue-700",
-      delivered: "bg-blue-500/15 text-blue-700",
-      read: "bg-emerald-500/15 text-emerald-700",
-      unread: "bg-amber-500/15 text-amber-700",
-      replied: "bg-emerald-500/15 text-emerald-700",
-      approved: "bg-emerald-500/15 text-emerald-700",
-      pending: "bg-amber-500/15 text-amber-700",
-      completed: "bg-emerald-500/15 text-emerald-700",
-      failed: "bg-red-500/15 text-red-700",
-      signed: "bg-emerald-500/15 text-emerald-700",
-      expired: "bg-red-500/15 text-red-700",
-      published: "bg-emerald-500/15 text-emerald-700",
-      scheduled: "bg-cyan-500/15 text-cyan-700",
-      idea: "bg-yellow-500/15 text-yellow-700",
+      draft: "bg-white/8 text-text-muted",
+      sent: "bg-blue-500/15 text-blue-400",
+      delivered: "bg-blue-500/15 text-blue-400",
+      read: "bg-emerald-500/15 text-emerald-400",
+      unread: "bg-amber-500/15 text-amber-400",
+      replied: "bg-emerald-500/15 text-emerald-400",
+      approved: "bg-emerald-500/15 text-emerald-400",
+      pending: "bg-amber-500/15 text-amber-400",
+      completed: "bg-emerald-500/15 text-emerald-400",
+      failed: "bg-red-500/15 text-red-400",
+      signed: "bg-emerald-500/15 text-emerald-400",
+      expired: "bg-red-500/15 text-red-400",
+      published: "bg-emerald-500/15 text-emerald-400",
+      scheduled: "bg-cyan-500/15 text-cyan-400",
+      idea: "bg-yellow-500/15 text-yellow-400",
       scripted: "bg-blue-500/15 text-blue-700",
     };
     return (
       <MotionPage>
-                <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium capitalize ${colors[status] || "bg-[rgba(0,0,0,0.06)] text-text-muted"}`}>
+                <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium capitalize ${colors[status] || "bg-white/8 text-text-muted"}`}>
                 {status}
               </span>
               </MotionPage>
@@ -620,22 +620,22 @@ export default function InboxPage() {
               className="input text-xs pl-9 w-full glass rounded-lg"
             />
             {search && (
-              <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#374151]">
+              <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary">
                 <X size={12} />
               </button>
             )}
           </div>
-          <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs transition-all ${showFilters ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-[rgba(0,0,0,0.04)] text-text-muted hover:text-text-primary"}`}>
+          <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs transition-all ${showFilters ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-white/5 text-text-muted hover:text-text-primary"}`}>
             <SlidersHorizontal size={12} /> Filters
             {(filterStarred || filterUnread || filterPinned) && <span className="w-1.5 h-1.5 rounded-full bg-brand-accent" />}
           </button>
           {/* Sort buttons */}
-          <div className="flex items-center gap-0.5 bg-[rgba(0,0,0,0.04)] rounded-lg p-0.5">
+          <div className="flex items-center gap-0.5 bg-white/5 rounded-lg p-0.5">
             {([["date", "Date"], ["title", "Name"], ["type", "Type"]] as [SortField, string][]).map(([field, label]) => (
               <button
                 key={field}
                 onClick={() => toggleSort(field)}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded text-[10px] font-medium transition-all ${sortField === field ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-[#6B7280] hover:text-[#374151]"}`}
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded text-[10px] font-medium transition-all ${sortField === field ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted hover:text-text-secondary"}`}
               >
                 {label}
                 {sortField === field && (sortDir === "desc" ? <ArrowDown size={10} /> : <ArrowUp size={10} />)}
@@ -655,13 +655,13 @@ export default function InboxPage() {
               <button
                 key={f.key}
                 onClick={f.toggle}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${f.active ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "bg-[rgba(0,0,0,0.04)] text-[#6B7280] hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"}`}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${f.active ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "bg-white/5 text-text-muted hover:text-text-secondary border border-border-subtle"}`}
               >
                 {f.icon} {f.label}
               </button>
             ))}
             {(filterStarred || filterUnread || filterPinned) && (
-              <button onClick={() => { setFilterStarred(false); setFilterUnread(false); setFilterPinned(false); }} className="text-[10px] text-[#6B7280] hover:text-[#374151] ml-1">
+              <button onClick={() => { setFilterStarred(false); setFilterUnread(false); setFilterPinned(false); }} className="text-[10px] text-text-muted hover:text-text-secondary ml-1">
                 Clear all
               </button>
             )}
@@ -673,10 +673,10 @@ export default function InboxPage() {
           <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)]">
             <span className="text-xs text-brand-accent font-medium">{selectedIds.size} selected</span>
             <div className="flex items-center gap-1 ml-auto">
-              <button onClick={bulkMarkRead} className="px-2 py-1 text-[10px] rounded bg-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.08)] text-text-primary transition-all">Mark Read</button>
-              <button onClick={bulkStar} className="px-2 py-1 text-[10px] rounded bg-[rgba(0,0,0,0.05)] hover:bg-[rgba(0,0,0,0.08)] text-text-primary transition-all">Star</button>
+              <button onClick={bulkMarkRead} className="px-2 py-1 text-[10px] rounded bg-white/6 hover:bg-white/10 text-text-primary transition-all">Mark Read</button>
+              <button onClick={bulkStar} className="px-2 py-1 text-[10px] rounded bg-white/6 hover:bg-white/10 text-text-primary transition-all">Star</button>
               <button onClick={bulkArchive} className="px-2 py-1 text-[10px] rounded bg-red-500/20 hover:bg-red-500/30 text-red-400 transition-all">Archive</button>
-              <button onClick={() => setSelectedIds(new Set())} className="px-2 py-1 text-[10px] text-[#6B7280] hover:text-[#374151] transition-all">Cancel</button>
+              <button onClick={() => setSelectedIds(new Set())} className="px-2 py-1 text-[10px] text-text-muted hover:text-text-secondary transition-all">Cancel</button>
             </div>
           </div>
         )}
@@ -693,7 +693,7 @@ export default function InboxPage() {
               key={c.key}
               onClick={() => { setCategory(c.key); setSelectedItem(null); }}
               className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all ${
-                category === c.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "text-[#6B7280] hover:text-[#374151] hover:bg-[rgba(0,0,0,0.04)]"
+                category === c.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "text-text-muted hover:text-text-secondary hover:bg-white/5"
               }`}
             >
               <div className="flex items-center gap-2">
@@ -701,7 +701,7 @@ export default function InboxPage() {
                 <span className="font-medium">{c.label}</span>
               </div>
               {categoryCounts[c.key] > 0 && (
-                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${category === c.key ? "bg-[rgba(59,130,246,0.14)] text-brand-accent" : "bg-[rgba(0,0,0,0.06)] text-[#6B7280]"}`}>
+                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${category === c.key ? "bg-[rgba(59,130,246,0.14)] text-brand-accent" : "bg-white/8 text-text-muted"}`}>
                   {categoryCounts[c.key]}
                 </span>
               )}
@@ -716,7 +716,7 @@ export default function InboxPage() {
               key={c.key}
               onClick={() => { setCategory(c.key); setSelectedItem(null); }}
               className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] whitespace-nowrap transition-all ${
-                category === c.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "bg-[rgba(0,0,0,0.04)] text-[#6B7280]"
+                category === c.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "bg-white/5 text-text-muted"
               }`}
             >
               {c.icon} {c.label}
@@ -732,7 +732,7 @@ export default function InboxPage() {
             <button
               onClick={selectAll}
               className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                selectedIds.size === filtered.length && filtered.length > 0 ? "bg-brand-accent border-brand-accent" : "border-[rgba(0,0,0,0.15)] hover:border-[rgba(0,0,0,0.3)]"
+                selectedIds.size === filtered.length && filtered.length > 0 ? "bg-brand-accent border-brand-accent" : "border-white/20 hover:border-white/40"
               }`}
             >
               {selectedIds.size === filtered.length && filtered.length > 0 && <Check size={10} className="text-black" />}
@@ -762,15 +762,15 @@ export default function InboxPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
+                    whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
                     onClick={() => openItem(item)}
                     className={`group flex items-start gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
                       selectedItem?.id === item.id
                         ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)]"
                         : isSelected
-                        ? "bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)]"
+                        ? "bg-white/8 border border-border-subtle"
                         : !item.read
-                        ? "bg-[rgba(0,0,0,0.03)] border border-transparent"
+                        ? "bg-white/4 border border-transparent"
                         : "border border-transparent"
                     }`}
                   >
@@ -778,7 +778,7 @@ export default function InboxPage() {
                     <button
                       onClick={e => { e.stopPropagation(); toggleSelect(item.id); }}
                       className={`mt-0.5 w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                        isSelected ? "bg-brand-accent border-brand-accent" : "border-[rgba(0,0,0,0.15)] opacity-0 group-hover:opacity-100"
+                        isSelected ? "bg-brand-accent border-brand-accent" : "border-white/20 opacity-0 group-hover:opacity-100"
                       }`}
                     >
                       {isSelected && <Check size={10} className="text-black" />}
@@ -791,7 +791,7 @@ export default function InboxPage() {
                     >
                       {item.starred
                         ? <Star size={14} className="text-yellow-400 fill-yellow-400" />
-                        : <Star size={14} className="text-[rgba(0,0,0,0.15)] group-hover:text-[rgba(0,0,0,0.3)] transition-colors" />
+                        : <Star size={14} className="text-white/20 group-hover:text-white/40 transition-colors" />
                       }
                     </button>
 
@@ -805,7 +805,7 @@ export default function InboxPage() {
                       <div className="flex items-center gap-2 mb-0.5">
                         {item.pinned && <Pin size={10} className="text-brand-accent shrink-0" />}
                         {!item.read && <span className="w-1.5 h-1.5 rounded-full bg-brand-accent shrink-0" />}
-                        <span className={`text-xs truncate ${!item.read ? "font-semibold text-text-primary" : "text-[rgba(0,0,0,0.65)]"}`}>
+                        <span className={`text-xs truncate ${!item.read ? "font-semibold text-text-primary" : "text-text-secondary"}`}>
                           {item.title}
                         </span>
                       </div>
@@ -813,7 +813,7 @@ export default function InboxPage() {
                       <div className="flex items-center gap-2 mt-1">
                         <StatusPill status={item.status} />
                         {item.tags.slice(0, 2).map(t => (
-                          <span key={t} className="text-[8px] px-1 py-0.5 rounded bg-[rgba(0,0,0,0.05)] text-text-muted capitalize">{t}</span>
+                          <span key={t} className="text-[8px] px-1 py-0.5 rounded bg-white/6 text-text-muted capitalize">{t}</span>
                         ))}
                       </div>
                     </div>
@@ -822,10 +822,10 @@ export default function InboxPage() {
                     <div className="shrink-0 text-right">
                       <p className="text-[10px] text-text-muted">{timeAgo(item.date)}</p>
                       <div className="flex items-center gap-0.5 mt-1 opacity-0 group-hover:opacity-100 transition-all">
-                        <button onClick={e => { e.stopPropagation(); togglePin(item.id); }} className="p-1 rounded hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-text-primary transition-all" title={item.pinned ? "Unpin" : "Pin"}>
+                        <button onClick={e => { e.stopPropagation(); togglePin(item.id); }} className="p-1 rounded hover:bg-white/8 text-text-muted hover:text-text-primary transition-all" title={item.pinned ? "Unpin" : "Pin"}>
                           {item.pinned ? <PinOff size={10} /> : <Pin size={10} />}
                         </button>
-                        <button onClick={e => { e.stopPropagation(); archiveItem(item.id); }} className="p-1 rounded hover:bg-[rgba(0,0,0,0.06)] text-[#6B7280] hover:text-red-600 transition-all" title="Archive">
+                        <button onClick={e => { e.stopPropagation(); archiveItem(item.id); }} className="p-1 rounded hover:bg-white/8 text-text-muted hover:text-red-600 transition-all" title="Archive">
                           <Archive size={10} />
                         </button>
                       </div>
@@ -839,7 +839,7 @@ export default function InboxPage() {
 
         {/* Right: Detail Panel */}
         {selectedItem && (
-          <div className="w-full lg:w-[420px] shrink-0 flex flex-col overflow-hidden border-l border-[rgba(0,0,0,0.08)] pl-4">
+          <div className="w-full lg:w-[420px] shrink-0 flex flex-col overflow-hidden border-l border-border-subtle pl-4">
             {/* Detail Header */}
             <div className="flex items-start justify-between pb-3 border-b border-border-subtle mb-3 shrink-0">
               <div className="min-w-0 flex-1">
@@ -855,30 +855,30 @@ export default function InboxPage() {
                   <span className="text-[10px] text-text-muted">{new Date(selectedItem.date).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}</span>
                 </div>
               </div>
-              <button onClick={() => setSelectedItem(null)} className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-[#6B7280] hover:text-[#374151] transition-all lg:block hidden">
+              <button onClick={() => setSelectedItem(null)} className="p-1.5 rounded-lg hover:bg-white/8 text-text-muted hover:text-text-secondary transition-all lg:block hidden">
                 <X size={14} />
               </button>
-              <button onClick={() => setSelectedItem(null)} className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-[#6B7280] hover:text-[#374151] transition-all lg:hidden">
+              <button onClick={() => setSelectedItem(null)} className="p-1.5 rounded-lg hover:bg-white/8 text-text-muted hover:text-text-secondary transition-all lg:hidden">
                 <ChevronRight size={14} />
               </button>
             </div>
 
             {/* Detail Actions */}
             <div className="flex items-center gap-1.5 pb-3 border-b border-border-subtle mb-3 shrink-0 flex-wrap">
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => copyContent(selectedItem)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-xs transition-all">
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => copyContent(selectedItem)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/8 text-xs transition-all">
                 {copied === selectedItem.id ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
                 {copied === selectedItem.id ? "Copied" : "Copy"}
               </motion.button>
               {selectedItem.downloadable && (
-                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => downloadItem(selectedItem)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-xs transition-all">
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => downloadItem(selectedItem)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/8 text-xs transition-all">
                   <Download size={12} /> Download
                 </motion.button>
               )}
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => toggleStar(selectedItem.id)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-xs transition-all">
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => toggleStar(selectedItem.id)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/8 text-xs transition-all">
                 {selectedItem.starred ? <Star size={12} className="text-yellow-400 fill-yellow-400" /> : <Star size={12} />}
                 {selectedItem.starred ? "Unstar" : "Star"}
               </motion.button>
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => togglePin(selectedItem.id)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-xs transition-all">
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => togglePin(selectedItem.id)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/8 text-xs transition-all">
                 {selectedItem.pinned ? <PinOff size={12} /> : <Pin size={12} />}
                 {selectedItem.pinned ? "Unpin" : "Pin"}
               </motion.button>
@@ -892,7 +892,7 @@ export default function InboxPage() {
               <div className="flex items-center gap-1.5 flex-wrap pb-3 mb-3 border-b border-border-subtle shrink-0">
                 <Tag size={10} className="text-text-muted" />
                 {selectedItem.tags.map(t => (
-                  <span key={t} className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-text-muted capitalize border border-[rgba(0,0,0,0.08)]">{t}</span>
+                  <span key={t} className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-text-muted capitalize border border-border-subtle">{t}</span>
                 ))}
                 <span className="text-[9px] text-text-muted ml-1">Source: {selectedItem.source}</span>
               </div>
@@ -905,9 +905,9 @@ export default function InboxPage() {
                   .filter(([, v]) => v && typeof v !== "object")
                   .slice(0, 6)
                   .map(([key, val]) => (
-                    <div key={key} className="px-2.5 py-2 rounded-lg bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)]">
+                    <div key={key} className="px-2.5 py-2 rounded-lg bg-white/4 border border-border-subtle">
                       <p className="text-[8px] text-text-muted uppercase tracking-wider mb-0.5">{key.replace(/_/g, " ")}</p>
-                      <p className="text-[10px] text-[rgba(0,0,0,0.65)] truncate">{String(val)}</p>
+                      <p className="text-[10px] text-text-secondary truncate">{String(val)}</p>
                     </div>
                   ))}
               </div>
@@ -915,7 +915,7 @@ export default function InboxPage() {
 
             {/* Content body */}
             <div className="flex-1 overflow-y-auto">
-              <div className="text-xs text-[rgba(0,0,0,0.65)] whitespace-pre-wrap leading-relaxed bg-[rgba(0,0,0,0.03)] rounded-lg p-4 border border-[rgba(0,0,0,0.06)] min-h-[200px]">
+              <div className="text-xs text-text-secondary whitespace-pre-wrap leading-relaxed bg-white/4 rounded-lg p-4 border border-border-subtle min-h-[200px]">
                 {selectedItem.content || <span className="text-text-muted italic">No content body available</span>}
               </div>
             </div>
@@ -962,11 +962,11 @@ export default function InboxPage() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.18, delay: index * 0.04 }}
-                    whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
-                    className="flex items-start gap-3 px-4 py-3 rounded-lg glass-md border border-[rgba(0,0,0,0.06)] transition-colors"
+                    whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
+                    className="flex items-start gap-3 px-4 py-3 rounded-lg glass-md border border-border-subtle transition-colors"
                   >
                     {/* Icon */}
-                    <div className="mt-0.5 w-8 h-8 rounded-lg bg-[rgba(0,0,0,0.05)] flex items-center justify-center shrink-0">
+                    <div className="mt-0.5 w-8 h-8 rounded-lg bg-white/6 flex items-center justify-center shrink-0">
                       {iconMap[run.type] || <Zap size={14} className="text-text-muted" />}
                     </div>
 
@@ -974,7 +974,7 @@ export default function InboxPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
                         <span className="text-xs font-medium text-text-primary truncate">{run.description}</span>
-                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium capitalize ${statusColors[run.status] || "bg-[rgba(0,0,0,0.06)] text-text-muted"}`}>
+                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium capitalize ${statusColors[run.status] || "bg-white/8 text-text-muted"}`}>
                           {run.status === "running" && <Play size={8} className="mr-0.5" />}
                           {run.status}
                         </span>
@@ -1016,7 +1016,7 @@ export default function InboxPage() {
             onClick={e => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="flex items-start justify-between px-6 pt-5 pb-4 border-b border-[rgba(0,0,0,0.08)] shrink-0">
+            <div className="flex items-start justify-between px-6 pt-5 pb-4 border-b border-border-subtle shrink-0">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2.5 mb-2">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${getCategoryConfig(overlayItem.type).bg}`}>
@@ -1025,7 +1025,7 @@ export default function InboxPage() {
                     </span>
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-[rgba(0,0,0,0.85)]">{overlayItem.source}</p>
+                    <p className="text-sm font-semibold text-text-primary">{overlayItem.source}</p>
                     <p className="text-[10px] text-text-muted truncate">
                       {getCategoryConfig(overlayItem.type).label} &middot; {new Date(overlayItem.date).toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}
                     </p>
@@ -1035,13 +1035,13 @@ export default function InboxPage() {
                 <div className="flex items-center gap-2 mt-2">
                   <StatusPill status={overlayItem.status} />
                   {overlayItem.tags.map(t => (
-                    <span key={t} className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] text-text-muted capitalize border border-[rgba(0,0,0,0.08)]">{t}</span>
+                    <span key={t} className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-text-muted capitalize border border-border-subtle">{t}</span>
                   ))}
                 </div>
               </div>
               <button
                 onClick={closeOverlay}
-                className="ml-4 p-2 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] transition-all shrink-0"
+                className="ml-4 p-2 rounded-lg bg-white/5 hover:bg-white/10 text-text-muted hover:text-text-secondary transition-all shrink-0"
               >
                 <X size={18} />
               </button>
@@ -1056,16 +1056,16 @@ export default function InboxPage() {
                     .filter(([, v]) => v && typeof v !== "object")
                     .slice(0, 6)
                     .map(([key, val]) => (
-                      <div key={key} className="px-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)]">
+                      <div key={key} className="px-3 py-2.5 rounded-lg bg-white/4 border border-border-subtle">
                         <p className="text-[9px] text-text-muted uppercase tracking-wider mb-0.5">{key.replace(/_/g, " ")}</p>
-                        <p className="text-xs text-[#374151] truncate">{String(val)}</p>
+                        <p className="text-xs text-text-secondary truncate">{String(val)}</p>
                       </div>
                     ))}
                 </div>
               )}
 
               {/* Full message body */}
-              <div className="text-sm text-[rgba(0,0,0,0.65)] whitespace-pre-wrap leading-relaxed bg-[rgba(0,0,0,0.03)] rounded-xl p-5 border border-[rgba(0,0,0,0.06)] min-h-[200px]">
+              <div className="text-sm text-text-secondary whitespace-pre-wrap leading-relaxed bg-white/4 rounded-xl p-5 border border-border-subtle min-h-[200px]">
                 {overlayItem.content || <span className="text-text-muted italic">No content body available</span>}
               </div>
 
@@ -1077,13 +1077,13 @@ export default function InboxPage() {
                       value={replyText}
                       onChange={e => setReplyText(e.target.value)}
                       placeholder="Type your reply... (saved as a draft — send flows per channel)"
-                      className="w-full bg-transparent text-sm text-[#374151] placeholder-[#9CA3AF] px-4 py-3 resize-none focus:outline-none min-h-[120px]"
+                      className="w-full bg-transparent text-sm text-text-secondary placeholder-[#9CA3AF] px-4 py-3 resize-none focus:outline-none min-h-[120px]"
                       autoFocus
                     />
-                    <div className="flex items-center justify-between px-4 py-2.5 border-t border-[rgba(0,0,0,0.06)]">
+                    <div className="flex items-center justify-between px-4 py-2.5 border-t border-border-subtle">
                       <button
                         onClick={() => { setShowReply(false); setReplyText(""); }}
-                        className="text-[10px] text-[#6B7280] hover:text-[#374151] transition-all"
+                        className="text-[10px] text-text-muted hover:text-text-secondary transition-all"
                       >
                         Cancel
                       </button>
@@ -1099,7 +1099,7 @@ export default function InboxPage() {
                           setReplyText("");
                         }}
                         disabled={!replyText.trim()}
-                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-brand-accent hover:bg-[#3B82F6] text-white text-xs font-semibold transition-all disabled:opacity-50"
+                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-brand-accent hover:bg-blue-600 text-white text-xs font-semibold transition-all disabled:opacity-50"
                       >
                         <Send size={12} /> Copy Draft
                       </button>
@@ -1110,7 +1110,7 @@ export default function InboxPage() {
             </div>
 
             {/* Modal Footer - Action Buttons */}
-            <div className="flex items-center gap-2 px-6 py-4 border-t border-[rgba(0,0,0,0.08)] shrink-0">
+            <div className="flex items-center gap-2 px-6 py-4 border-t border-border-subtle shrink-0">
               <button
                 onClick={() => setShowReply(!showReply)}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium transition-all ${
@@ -1126,7 +1126,7 @@ export default function InboxPage() {
                   copyContent(overlayItem);
                   toast.success("Content copied � ready to forward");
                 }}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.65)] hover:text-text-primary text-xs font-medium transition-all border border-[rgba(0,0,0,0.08)]"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/8 text-text-secondary hover:text-text-primary text-xs font-medium transition-all border border-border-subtle"
               >
                 <Forward size={14} /> Forward
               </button>
@@ -1136,7 +1136,7 @@ export default function InboxPage() {
                   archiveItem(overlayItem.id);
                   closeOverlay();
                 }}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.65)] hover:text-text-primary text-xs font-medium transition-all border border-[rgba(0,0,0,0.08)]"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/8 text-text-secondary hover:text-text-primary text-xs font-medium transition-all border border-border-subtle"
               >
                 <Archive size={14} /> Archive
               </button>

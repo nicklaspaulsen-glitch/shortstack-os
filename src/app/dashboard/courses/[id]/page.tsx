@@ -355,7 +355,7 @@ export default function CourseBuilderPage() {
 
   if (!course) {
     return (
-      <div className="flex items-center justify-center py-24 text-[#6B7280]">
+      <div className="flex items-center justify-center py-24 text-text-muted">
         Course not found
       </div>
     );
@@ -376,7 +376,7 @@ export default function CourseBuilderPage() {
             {saving && <Loader2 size={14} className="text-text-muted animate-spin" />}
             <Link
               href="/dashboard/courses"
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[#374151] rounded-lg text-sm transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/8 text-text-secondary rounded-lg text-sm transition-colors"
             >
               <ArrowLeft size={14} />
               Back
@@ -385,7 +385,7 @@ export default function CourseBuilderPage() {
               className={`text-xs px-2 py-0.5 rounded-full ${
                 course.status === "published"
                   ? "bg-green-500/20 text-green-700"
-                  : "bg-[rgba(0,0,0,0.06)] text-[#6B7280]"
+                  : "bg-white/8 text-text-muted"
               }`}
             >
               {course.status}
@@ -397,7 +397,7 @@ export default function CourseBuilderPage() {
       <div className="flex flex-1 max-w-[1600px] mx-auto w-full px-4 py-6 gap-4">
         {/* ── LEFT: Module tree ── */}
         <aside className="w-72 flex-shrink-0 flex flex-col gap-3">
-          <div className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-xl p-3 flex-1 overflow-y-auto max-h-[calc(100vh-220px)]">
+          <div className="bg-white/5 border border-border-subtle rounded-xl p-3 flex-1 overflow-y-auto max-h-[calc(100vh-220px)]">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Curriculum</span>
               <button
@@ -439,9 +439,9 @@ export default function CourseBuilderPage() {
         {/* ── CENTER: Lesson editor ── */}
         <main className="flex-1 min-w-0">
           {selectedLesson ? (
-            <div className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-xl p-5">
+            <div className="bg-white/5 border border-border-subtle rounded-xl p-5">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-[#111827]">Lesson Editor</h2>
+                <h2 className="font-semibold text-text-primary">Lesson Editor</h2>
                 <button
                   onClick={() => { triggerLessonSave(); void saveLessonNow(); }}
                   disabled={saving}
@@ -455,7 +455,7 @@ export default function CourseBuilderPage() {
               <div className="space-y-4">
                 {/* Title */}
                 <div>
-                  <label className="block text-xs text-[#6B7280] mb-1">Lesson title</label>
+                  <label className="block text-xs text-text-muted mb-1">Lesson title</label>
                   <input
                     value={lessonTitle}
                     onChange={e => { setLessonTitle(e.target.value); triggerLessonSave(); }}
@@ -465,7 +465,7 @@ export default function CourseBuilderPage() {
 
                 {/* Content type */}
                 <div>
-                  <label className="block text-xs text-[#6B7280] mb-1">Content type</label>
+                  <label className="block text-xs text-text-muted mb-1">Content type</label>
                   <div className="flex gap-2">
                     {(["video","text","quiz","file"] as const).map(t => (
                       <button
@@ -474,7 +474,7 @@ export default function CourseBuilderPage() {
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs capitalize transition-colors ${
                           lessonType === t
                             ? "bg-brand-accent text-white"
-                            : "bg-[rgba(0,0,0,0.04)] text-[#6B7280] hover:bg-[rgba(0,0,0,0.06)]"
+                            : "bg-white/5 text-text-muted hover:bg-white/8"
                         }`}
                       >
                         {CONTENT_TYPE_ICON[t]}
@@ -487,7 +487,7 @@ export default function CourseBuilderPage() {
                 {/* URL (for video/file) */}
                 {(lessonType === "video" || lessonType === "file") && (
                   <div>
-                    <label className="block text-xs text-[#6B7280] mb-1">
+                    <label className="block text-xs text-text-muted mb-1">
                       {lessonType === "video" ? "Video URL (YouTube, Vimeo, direct)" : "File URL"}
                     </label>
                     <input
@@ -502,7 +502,7 @@ export default function CourseBuilderPage() {
                 {/* Body (for text/quiz) */}
                 {(lessonType === "text" || lessonType === "quiz") && (
                   <div>
-                    <label className="block text-xs text-[#6B7280] mb-1">
+                    <label className="block text-xs text-text-muted mb-1">
                       {lessonType === "quiz" ? "Quiz description / instructions" : "Lesson content (markdown)"}
                     </label>
                     <textarea
@@ -518,7 +518,7 @@ export default function CourseBuilderPage() {
                 {/* Duration + drip + free preview */}
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-xs text-[#6B7280] mb-1">Duration (seconds)</label>
+                    <label className="block text-xs text-text-muted mb-1">Duration (seconds)</label>
                     <input
                       type="number"
                       value={lessonDuration}
@@ -528,7 +528,7 @@ export default function CourseBuilderPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-[#6B7280] mb-1">Drip delay (days)</label>
+                    <label className="block text-xs text-text-muted mb-1">Drip delay (days)</label>
                     <input
                       type="number"
                       value={lessonDrip}
@@ -538,7 +538,7 @@ export default function CourseBuilderPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-[#6B7280] mb-1">Free preview</label>
+                    <label className="block text-xs text-text-muted mb-1">Free preview</label>
                     <div className="flex items-center h-[38px]">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -547,7 +547,7 @@ export default function CourseBuilderPage() {
                           onChange={e => { setLessonFreePreview(e.target.checked); triggerLessonSave(); }}
                           className="accent-purple-500"
                         />
-                        <span className="text-sm text-[#374151]">Enabled</span>
+                        <span className="text-sm text-text-secondary">Enabled</span>
                       </label>
                     </div>
                   </div>
@@ -555,7 +555,7 @@ export default function CourseBuilderPage() {
               </div>
             </div>
           ) : (
-            <div className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-xl h-full flex items-center justify-center text-text-muted">
+            <div className="bg-white/5 border border-border-subtle rounded-xl h-full flex items-center justify-center text-text-muted">
               <div className="text-center">
                 <BookOpen size={40} className="mx-auto mb-3 opacity-30" />
                 <p className="text-sm">Select a lesson to edit</p>
@@ -567,11 +567,11 @@ export default function CourseBuilderPage() {
 
         {/* ── RIGHT: Settings panel ── */}
         <aside className="w-72 flex-shrink-0">
-          <div className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-xl p-4 space-y-4">
-            <h3 className="font-semibold text-[#111827] text-sm">Course Settings</h3>
+          <div className="bg-white/5 border border-border-subtle rounded-xl p-4 space-y-4">
+            <h3 className="font-semibold text-text-primary text-sm">Course Settings</h3>
 
             <div>
-              <label className="block text-xs text-[#6B7280] mb-1">Title</label>
+              <label className="block text-xs text-text-muted mb-1">Title</label>
               <input
                 value={settingsTitle}
                 onChange={e => setSettingsTitle(e.target.value)}
@@ -580,7 +580,7 @@ export default function CourseBuilderPage() {
             </div>
 
             <div>
-              <label className="block text-xs text-[#6B7280] mb-1">Description</label>
+              <label className="block text-xs text-text-muted mb-1">Description</label>
               <textarea
                 value={settingsDesc}
                 onChange={e => setSettingsDesc(e.target.value)}
@@ -597,13 +597,13 @@ export default function CourseBuilderPage() {
                   onChange={e => setSettingsIsFree(e.target.checked)}
                   className="accent-purple-500"
                 />
-                <span className="text-sm text-[#374151]">Free course</span>
+                <span className="text-sm text-text-secondary">Free course</span>
               </label>
             </div>
 
             {!settingsIsFree && (
               <div>
-                <label className="block text-xs text-[#6B7280] mb-1">Price ($)</label>
+                <label className="block text-xs text-text-muted mb-1">Price ($)</label>
                 <input
                   type="number"
                   value={settingsPrice}
@@ -614,7 +614,7 @@ export default function CourseBuilderPage() {
             )}
 
             <div>
-              <label className="block text-xs text-[#6B7280] mb-1">Access type</label>
+              <label className="block text-xs text-text-muted mb-1">Access type</label>
               <select
                 value={settingsAccess}
                 onChange={e => setSettingsAccess(e.target.value as typeof settingsAccess)}
@@ -627,7 +627,7 @@ export default function CourseBuilderPage() {
             </div>
 
             <div>
-              <label className="block text-xs text-[#6B7280] mb-1">Status</label>
+              <label className="block text-xs text-text-muted mb-1">Status</label>
               <div className="flex gap-2">
                 {(["draft","published"] as const).map(s => (
                   <button
@@ -635,8 +635,8 @@ export default function CourseBuilderPage() {
                     onClick={() => setSettingsStatus(s)}
                     className={`flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-xs capitalize transition-colors ${
                       settingsStatus === s
-                        ? s === "published" ? "bg-green-600 text-white" : "bg-[rgba(0,0,0,0.08)] text-[#374151]"
-                        : "bg-[rgba(0,0,0,0.04)] text-text-muted hover:bg-[rgba(0,0,0,0.06)]"
+                        ? s === "published" ? "bg-green-600 text-white" : "bg-white/10 text-text-secondary"
+                        : "bg-white/5 text-text-muted hover:bg-white/8"
                     }`}
                   >
                     {s === "published" ? <Eye size={11} /> : <EyeOff size={11} />}
@@ -655,13 +655,13 @@ export default function CourseBuilderPage() {
               Save Settings
             </button>
 
-            <hr className="border-[rgba(0,0,0,0.08)]" />
+            <hr className="border-border-subtle" />
 
             {/* Enroll client */}
             <div>
               <button
                 onClick={() => setShowEnrollPanel(!showEnrollPanel)}
-                className="w-full flex items-center justify-between text-sm text-[#374151] hover:text-[#111827] transition-colors"
+                className="w-full flex items-center justify-between text-sm text-text-secondary hover:text-text-primary transition-colors"
               >
                 <span className="flex items-center gap-1.5">
                   <Users size={14} />
@@ -696,14 +696,14 @@ export default function CourseBuilderPage() {
               )}
             </div>
 
-            <hr className="border-[rgba(0,0,0,0.08)]" />
+            <hr className="border-border-subtle" />
 
             {/* Portal link note */}
             <div className="bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] rounded-lg p-3">
-              <p className="text-xs text-[#374151] mb-2">
+              <p className="text-xs text-text-secondary mb-2">
                 Students access their courses at:
               </p>
-              <code className="block text-xs text-brand-accent bg-[rgba(0,0,0,0.04)] rounded px-2 py-1 break-all">
+              <code className="block text-xs text-brand-accent bg-white/5 rounded px-2 py-1 break-all">
                 /portal/[slug]/courses
               </code>
               <button
@@ -749,7 +749,7 @@ function ModuleItem({
   return (
     <div className="rounded-lg overflow-hidden">
       {/* Module header */}
-      <div className="group flex items-center gap-1 px-2 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] rounded-lg cursor-pointer transition-colors">
+      <div className="group flex items-center gap-1 px-2 py-1.5 bg-white/5 hover:bg-white/8 rounded-lg cursor-pointer transition-colors">
         <GripVertical size={12} className="text-[#D1D5DB] flex-shrink-0" />
         <button
           onClick={onToggle}
@@ -760,7 +760,7 @@ function ModuleItem({
           ) : (
             <ChevronRight size={13} className="text-text-muted flex-shrink-0" />
           )}
-          <span className="text-sm font-medium text-[#111827] truncate">{mod.title}</span>
+          <span className="text-sm font-medium text-text-primary truncate">{mod.title}</span>
           <span className="ml-auto text-xs text-text-muted flex-shrink-0">
             {lessons.length}
           </span>
@@ -813,7 +813,7 @@ function LessonItem({
   return (
     <div
       className={`group flex items-center gap-1.5 px-2 py-1.5 rounded-lg cursor-pointer transition-colors ${
-        selected ? "bg-[rgba(59,130,246,0.10)] border border-[rgba(59,130,246,0.25)]" : "hover:bg-[rgba(0,0,0,0.04)]"
+        selected ? "bg-[rgba(59,130,246,0.10)] border border-[rgba(59,130,246,0.25)]" : "hover:bg-white/5"
       }`}
     >
       <GripVertical size={11} className="text-[#D1D5DB] flex-shrink-0" />
@@ -821,7 +821,7 @@ function LessonItem({
         <span className={`flex-shrink-0 ${selected ? "text-brand-accent" : "text-text-muted"}`}>
           {CONTENT_TYPE_ICON[lesson.content_type]}
         </span>
-        <span className={`text-xs truncate ${selected ? "text-[#111827]" : "text-[#374151]"}`}>
+        <span className={`text-xs truncate ${selected ? "text-text-primary" : "text-text-secondary"}`}>
           {lesson.title}
         </span>
         {lesson.drip_delay_days > 0 && (
