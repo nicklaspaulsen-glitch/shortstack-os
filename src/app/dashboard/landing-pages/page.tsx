@@ -977,8 +977,8 @@ export default function LandingPagesPage() {
 
       {!advancedMode && (
         <div className="flex flex-col items-center justify-center py-24 gap-6">
-          <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center">
-            <FileText className="w-8 h-8 text-blue-400" />
+          <div className="w-16 h-16 rounded-2xl bg-[rgba(212,255,0,0.10)] flex items-center justify-center">
+            <FileText className="w-8 h-8 text-brand-accent" />
           </div>
           <div className="text-center max-w-sm">
             <h3 className="text-xl font-semibold text-white mb-2">Build a landing page</h3>
@@ -986,7 +986,7 @@ export default function LandingPagesPage() {
           </div>
           <button
             onClick={() => setWizardOpen(true)}
-            className="btn-pill px-6 py-3 bg-blue-500 hover:bg-blue-400 text-white font-medium transition-colors flex items-center gap-2"
+            className="btn-pill px-6 py-3 bg-brand-accent hover:bg-[#E8FF4D] text-black font-medium transition-colors flex items-center gap-2"
           >
             <Sparkles className="w-4 h-4" />
             Create landing page
@@ -1347,7 +1347,7 @@ export default function LandingPagesPage() {
             <h2 className="text-lg font-bold text-text-primary">Generated Pages</h2>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-              <input value={pageSearch} onChange={e => setPageSearch(e.target.value)} placeholder="Search pages..." className="glass rounded-lg pl-9 pr-4 py-2 text-sm text-text-primary w-64 focus:border-indigo-500/40 focus:outline-none" />
+              <input value={pageSearch} onChange={e => setPageSearch(e.target.value)} placeholder="Search pages..." className="glass rounded-lg pl-9 pr-4 py-2 text-sm text-text-primary w-64 focus:border-brand-accent/40 focus:outline-none" />
             </div>
           </div>
 
@@ -1511,7 +1511,7 @@ export default function LandingPagesPage() {
                 transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Unique Visitors</p>
-                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-purple-600 tabular-nums">{EMPTY_ANALYTICS.uniqueVisitors.toLocaleString()}</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{EMPTY_ANALYTICS.uniqueVisitors.toLocaleString()}</p>
                 <p className="text-[11px] text-text-muted mt-1.5">distinct sessions</p>
               </motion.div>
               <motion.div
@@ -1531,7 +1531,7 @@ export default function LandingPagesPage() {
                 transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg. Time</p>
-                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-cyan-600 tabular-nums">{EMPTY_ANALYTICS.avgTime}</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-secondary tabular-nums">{EMPTY_ANALYTICS.avgTime}</p>
                 <p className="text-[11px] text-text-muted mt-1.5">on page</p>
               </motion.div>
               <motion.div
