@@ -295,7 +295,7 @@ export default function PhoneSetupPage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         usage ? (
-                  <div className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-black/5 px-2.5 py-1.5 text-[10px] text-text-primary">
+                  <div className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-white/5 px-2.5 py-1.5 text-[10px] text-text-primary">
                     <Phone size={11} />
                     <span>
                       <span className="font-semibold">{phoneUsed}</span>
@@ -614,7 +614,7 @@ export default function PhoneSetupPage() {
                     />
                   </div>
 
-                  <div className="mb-5 flex items-start gap-2 rounded-lg bg-amber-500/10 p-3 text-[11px] text-amber-700">
+                  <div className="mb-5 flex items-start gap-2 rounded-lg bg-amber-500/10 p-3 text-[11px] text-amber-400">
                     <AlertTriangle size={13} className="mt-0.5 shrink-0" />
                     <p>
                       This is a real purchase against your Twilio account. The number stays yours

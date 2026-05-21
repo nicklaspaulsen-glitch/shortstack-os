@@ -404,7 +404,7 @@ export default function DomainsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <div className="flex items-center gap-2">
                   {usage && (
-                    <div className="flex items-center gap-1.5 text-[10px] text-text-primary bg-black/5 border border-border-subtle px-2.5 py-1.5 rounded-lg">
+                    <div className="flex items-center gap-1.5 text-[10px] text-text-primary bg-white/5 border border-border-subtle px-2.5 py-1.5 rounded-lg">
                       <Globe size={11} />
                       <span>
                         <span className="font-semibold">{domainsOwned}</span>
@@ -413,7 +413,7 @@ export default function DomainsPage() {
                       </span>
                     </div>
                   )}
-                  <div className="flex items-center gap-1.5 text-[10px] text-text-primary bg-black/5 border border-border-subtle px-2 py-1 rounded-lg">
+                  <div className="flex items-center gap-1.5 text-[10px] text-text-primary bg-white/5 border border-border-subtle px-2 py-1 rounded-lg">
                     <GoDaddyIcon size={12} /> GoDaddy
                     <span className="opacity-40">·</span>
                     <VercelIcon size={12} /> Vercel
@@ -421,10 +421,10 @@ export default function DomainsPage() {
                 </div>
       </div>
     </div>{/* Who-pays clarity banner — agencies pass domain costs to clients, so
-                make it unambiguous on a page where a miscommunication = a chargeback. */}<div className="flex flex-wrap items-start gap-2 rounded-xl border border-blue-500/25 bg-blue-500/5 p-3 text-[11px] text-blue-700">
-              <Info size={13} className="mt-0.5 shrink-0 text-blue-600" />
+                make it unambiguous on a page where a miscommunication = a chargeback. */}<div className="flex flex-wrap items-start gap-2 rounded-xl border border-blue-500/25 bg-blue-500/5 p-3 text-[11px] text-blue-400">
+              <Info size={13} className="mt-0.5 shrink-0 text-blue-400" />
               <div className="flex-1 min-w-0">
-                <span className="font-semibold text-blue-800">Who pays?</span>{" "}
+                <span className="font-semibold text-blue-300">Who pays?</span>{" "}
                 <span>
                   Domain purchases charge <span className="font-semibold">your</span> Stripe-linked card.
                   Most agencies rebill the client (monthly: our yearly-retail price divided by 12 + $4
@@ -696,24 +696,24 @@ export default function DomainsPage() {
                           dedicated /dashboard/mail-setup page so the user can
                           copy-paste DNS records or trigger a re-verify. */}
                       {(d.resend_status === "verifying" || d.resend_status === "pending") && (
-                        <div className="mt-2 px-3 py-2 rounded-lg bg-blue-500/5 border border-blue-500/25 text-[10px] text-blue-700 flex items-center gap-2 flex-wrap">
+                        <div className="mt-2 px-3 py-2 rounded-lg bg-blue-500/5 border border-blue-500/25 text-[10px] text-blue-400 flex items-center gap-2 flex-wrap">
                           <Mail size={11} />
                           <span>DNS records are propagating — this usually takes a few minutes.</span>
                           <a
                             href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
-                            className="ml-auto inline-flex items-center gap-1 text-blue-600 hover:text-blue-800"
+                            className="ml-auto inline-flex items-center gap-1 text-blue-400 hover:text-blue-300"
                           >
                             View records <ArrowUpRight size={10} />
                           </a>
                         </div>
                       )}
                       {d.resend_status === "failed" && d.resend_last_error && (
-                        <div className="mt-2 px-3 py-2 rounded-lg bg-red-500/5 border border-red-500/20 text-[10px] text-red-700 flex items-start gap-2">
+                        <div className="mt-2 px-3 py-2 rounded-lg bg-red-500/5 border border-red-500/20 text-[10px] text-red-400 flex items-start gap-2">
                           <MailWarning size={11} className="mt-0.5 shrink-0" />
                           <span className="break-all flex-1">{d.resend_last_error}</span>
                           <a
                             href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
-                            className="shrink-0 inline-flex items-center gap-1 text-red-600 hover:text-red-800"
+                            className="shrink-0 inline-flex items-center gap-1 text-red-400 hover:text-red-300"
                           >
                             Debug <ArrowUpRight size={10} />
                           </a>

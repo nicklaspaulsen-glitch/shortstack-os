@@ -387,7 +387,7 @@ export default function ReportsPage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button onClick={fetchData}
-                  className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black/10 border border-border-subtle text-text-primary font-medium hover:bg-black/15 transition-all">
+                  className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/10 border border-border-subtle text-text-primary font-medium hover:bg-white/15 transition-all">
                   <RefreshCw size={12} /> Refresh
                 </button>
       </div>
@@ -428,7 +428,7 @@ export default function ReportsPage() {
                 transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Clients Covered</p>
-                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-600 tabular-nums">{uniqueClients}</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">{uniqueClients}</p>
                 <p className="text-[11px] text-text-muted mt-1.5">in reports</p>
               </motion.div>
             </div>
@@ -694,7 +694,7 @@ export default function ReportsPage() {
                           initial={{ opacity: 0, x: -8 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.18, delay: index * 0.04 }}
-                          whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                          whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
                         >
                           <button
                             onClick={() => setExpandedReport(expandedReport === report.id ? null : report.id)}

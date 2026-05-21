@@ -107,7 +107,7 @@ export default function ProductionPage() {
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Content Production</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <button onClick={() => setShowSubmit(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
+        <button onClick={() => setShowSubmit(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1.5">
                   <Plus size={12} /> New Request
                 </button>
       </div>
@@ -138,7 +138,7 @@ export default function ProductionPage() {
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
                 className="glass rounded-2xl p-5">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Hours</p>
-                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-600 tabular-nums">{totalActual.toFixed(1)}h</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">{totalActual.toFixed(1)}h</p>
               </motion.div>
             </div>{/* Filters */}<div className="flex gap-2 flex-wrap">
               <select value={filterClient} onChange={e => setFilterClient(e.target.value)} className="input text-xs">
@@ -398,7 +398,7 @@ export default function ProductionPage() {
                           <div className="grid grid-cols-2 gap-1">
                             {item.checklist.map((task, idx) => (
                               <button key={idx} onClick={() => toggleChecklist(item.id, idx)}
-                                className="flex items-center gap-1.5 text-[10px] p-1 rounded hover:bg-[rgba(0,0,0,0.03)]">
+                                className="flex items-center gap-1.5 text-[10px] p-1 rounded hover:bg-white/4">
                                 <CheckCircle size={10} className={task.done ? "text-emerald-400" : "text-text-muted/30"} />
                                 <span className={task.done ? "line-through text-text-muted" : ""}>{task.task}</span>
                               </button>

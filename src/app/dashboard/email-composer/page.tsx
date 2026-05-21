@@ -855,7 +855,7 @@ export default function EmailComposerPage() {
               <>
                 <button
                   onClick={() => setWizardOpen(true)}
-                  className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-brand-accent hover:bg-[#3B82F6] text-white shadow-lg shadow-[#2563EB]/30 hover:shadow-[#2563EB]/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                  className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-[#0D1120] shadow-lg shadow-brand-accent/20 hover:shadow-brand-accent/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
 >
                   <Sparkles size={12} className="animate-pulse" />
                   New with AI
@@ -863,11 +863,11 @@ export default function EmailComposerPage() {
                 </button>
                 <button
                   onClick={() => { setEmail({ to: "", subject: "", body: "", fromName: email.fromName, fromEmail: email.fromEmail, replyTo: email.replyTo }); setActiveTab("compose"); toast.success("Blank email ready"); }}
-                  className="px-3 py-1.5 rounded-lg bg-transparent border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/5 transition-all flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-lg bg-transparent border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/5 transition-all flex items-center gap-1.5"
 >
                   <Plus size={12} /> Blank
                 </button>
-                <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={aiWriting}>
+                <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5" disabled={aiWriting}>
                   {aiWriting ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} AI Write
                 </button>
                 <button onClick={handleAiImprove} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={aiImproving}>
@@ -879,7 +879,7 @@ export default function EmailComposerPage() {
                 <button
                   onClick={() => handleSend()}
                   disabled={sending}
-                  className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
 >
                   {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />} {sending ? "Sending..." : "Send"}
                 </button>
@@ -997,7 +997,7 @@ export default function EmailComposerPage() {
                     </p>
                     <Link
                       href="/dashboard/integrations-hub"
-                      className="text-[10px] px-2 py-1 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-700 hover:bg-amber-400/25 transition-all font-semibold"
+                      className="text-[10px] px-2 py-1 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-400 hover:bg-amber-400/25 transition-all font-semibold"
 >
                       Connect Gmail
                     </Link>
@@ -1010,7 +1010,7 @@ export default function EmailComposerPage() {
                     </p>
                     <Link
                       href="/dashboard/integrations-hub"
-                      className="text-[10px] px-2 py-1 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-700 hover:bg-amber-400/25 transition-all font-semibold"
+                      className="text-[10px] px-2 py-1 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-400 hover:bg-amber-400/25 transition-all font-semibold"
 >
                       Connect Outlook
                     </Link>
@@ -1230,7 +1230,7 @@ export default function EmailComposerPage() {
                   className="flex items-start gap-3 glass rounded-2xl p-5">
                   <div>
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">SPAM SCORE</p>
-                    <p className={`font-display text-3xl font-bold tracking-[-0.03em] tabular-nums ${spamScore >= 80 ? "text-emerald-600" : "text-amber-600"}`}>{spamScore}%</p>
+                    <p className={`font-display text-3xl font-bold tracking-[-0.03em] tabular-nums ${spamScore >= 80 ? "text-emerald-400" : "text-amber-400"}`}>{spamScore}%</p>
                     <p className="text-[11px] text-text-muted mt-1.5">{spamScore >= 80 ? "Safe to send" : "Review suggestions"}</p>
                   </div>
                 </motion.div>

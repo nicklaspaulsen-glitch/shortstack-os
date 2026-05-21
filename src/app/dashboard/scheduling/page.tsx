@@ -272,13 +272,13 @@ export default function SchedulingPage() {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <>
-            <div className="flex items-center gap-1.5 text-[10px] bg-black/5 text-text-primary px-2.5 py-1 rounded-md border border-border-subtle">
+            <div className="flex items-center gap-1.5 text-[10px] bg-white/5 text-text-primary px-2.5 py-1 rounded-md border border-border-subtle">
               <Globe size={10} /><span className="font-medium">{detectedTimezone.split(" ")[0].split("/")[1]}</span>
             </div>
-            <button onClick={() => setShowLinkGen(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
+            <button onClick={() => setShowLinkGen(true)} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5">
               <Link2 size={12} /> Get Booking Link
             </button>
-            <button onClick={() => setShowCreateModal(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
+            <button onClick={() => setShowCreateModal(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1.5">
               <Plus size={12} /> New Meeting Type
             </button>
           </>
@@ -723,7 +723,7 @@ export default function SchedulingPage() {
                 <p className="text-[10px] text-text-muted">Automatically add buffer between back-to-back meetings</p>
               </div>
               <button onClick={() => setAutoBuffer(!autoBuffer)}
-                className={`w-10 h-5 rounded-full transition-all relative ${autoBuffer ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.06)]"}`}>
+                className={`w-10 h-5 rounded-full transition-all relative ${autoBuffer ? "bg-brand-accent" : "bg-white/8"}`}>
                 <div className="w-4 h-4 rounded-full bg-white absolute top-0.5 transition-all" style={{ left: autoBuffer ? 22 : 2 }} />
               </button>
             </div>
