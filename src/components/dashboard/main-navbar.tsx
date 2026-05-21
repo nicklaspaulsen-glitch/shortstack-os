@@ -211,9 +211,9 @@ function IconCircle({
         size={16}
         aria-hidden
         style={{
-          color: active ? "#60A5FA" : "#6B7280",
+          color: active ? "#D4FF00" : "#6B7280",
           transition: "color 150ms, filter 150ms",
-          filter: active ? "drop-shadow(0 0 4px rgba(96,165,250,0.60))" : "none",
+          filter: active ? "drop-shadow(0 0 4px rgba(212,255,0,0.60))" : "none",
         }}
         className={!active ? "group-hover:!text-[#A8A8B2]" : ""}
       />
@@ -279,7 +279,7 @@ function SectionDropdown({
           border: active
             ? "1px solid rgba(212,255,0,0.22)"
             : "1px solid rgba(255,255,255,0.06)",
-          color: active ? "#60A5FA" : open ? "#C8C8D4" : "#7A7F9A",
+          color: active ? "#D4FF00" : open ? "#C8C8D4" : "#7A7F9A",
           boxShadow: active
             ? "0 0 8px rgba(212,255,0,0.10), inset 0 1px 0 rgba(255,255,255,0.08)"
             : "inset 0 1px 0 rgba(255,255,255,0.04)",
@@ -333,18 +333,18 @@ function SectionDropdown({
                   className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12px] group outline-none focus-visible:ring-1 focus-visible:ring-[rgba(212,255,0,0.5)]"
                   style={{
                     background: itemActive ? "rgba(212,255,0,0.12)" : "transparent",
-                    color: itemActive ? "#60A5FA" : "#8A8FA8",
+                    color: itemActive ? "#D4FF00" : "#8A8FA8",
                     transition: "all 120ms",
                   }}
                   onMouseEnter={(e) => {
                     const el = e.currentTarget as HTMLElement;
                     if (!itemActive) el.style.background = "rgba(255,255,255,0.05)";
-                    el.style.color = itemActive ? "#60A5FA" : "#C8C8D4";
+                    el.style.color = itemActive ? "#D4FF00" : "#C8C8D4";
                   }}
                   onMouseLeave={(e) => {
                     const el = e.currentTarget as HTMLElement;
                     el.style.background = itemActive ? "rgba(212,255,0,0.12)" : "transparent";
-                    el.style.color = itemActive ? "#60A5FA" : "#8A8FA8";
+                    el.style.color = itemActive ? "#D4FF00" : "#8A8FA8";
                   }}
                 >
                   <span
@@ -361,7 +361,7 @@ function SectionDropdown({
                     <item.Icon
                       size={11}
                       aria-hidden
-                      style={{ color: itemActive ? "#60A5FA" : "#4A4A5A" }}
+                      style={{ color: itemActive ? "#D4FF00" : "#4A4A5A" }}
                     />
                   </span>
                   {item.label}
@@ -445,7 +445,7 @@ function MobileDrawer({
                     className="flex items-center gap-3 px-3 py-2.5 rounded-xl mb-0.5"
                     style={{
                       background: active ? "rgba(212,255,0,0.12)" : "transparent",
-                      color: active ? "#60A5FA" : "#7A7F9A",
+                      color: active ? "#D4FF00" : "#7A7F9A",
                       transition: "all 120ms",
                     }}
                   >
@@ -475,7 +475,7 @@ function MobileDrawer({
                 <div key={section.key} className="px-3 py-2">
                   <p
                     className="text-[9px] font-semibold uppercase tracking-[0.14em] px-2 mb-1.5"
-                    style={{ color: sectionActive ? "#60A5FA" : "#4A4A5A" }}
+                    style={{ color: sectionActive ? "#D4FF00" : "#4A4A5A" }}
                   >
                     {section.label}
                   </p>
@@ -489,7 +489,7 @@ function MobileDrawer({
                         className="flex items-center gap-3 px-3 py-2 rounded-xl mb-0.5"
                         style={{
                           background: active ? "rgba(212,255,0,0.12)" : "transparent",
-                          color: active ? "#60A5FA" : "#7A7F9A",
+                          color: active ? "#D4FF00" : "#7A7F9A",
                           transition: "all 120ms",
                         }}
                       >
@@ -533,7 +533,7 @@ function PlanBadge({
       className="hidden md:flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full"
       style={{
         background: isFounder ? "rgba(245,158,11,0.10)" : "rgba(212,255,0,0.10)",
-        color: isFounder ? "#F59E0B" : "#60A5FA",
+        color: isFounder ? "#F59E0B" : "#D4FF00",
         border: `1px solid ${isFounder ? "rgba(245,158,11,0.18)" : "rgba(212,255,0,0.18)"}`,
       }}
     >
@@ -713,7 +713,7 @@ export default function MainNavbar() {
                   border: "1px solid rgba(212,255,0,0.22)",
                 }}
               >
-                <span className="text-[#60A5FA] text-[10px] font-bold font-display leading-none">
+                <span className="text-[#D4FF00] text-[10px] font-bold font-display leading-none">
                   {(
                     (profile as { nickname?: string; full_name?: string } | null)?.nickname ||
                     (profile as { nickname?: string; full_name?: string } | null)?.full_name

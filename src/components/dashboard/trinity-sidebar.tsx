@@ -142,7 +142,7 @@ function ItemBadge({ text }: { text: string }) {
         padding: "1px 5px",
         borderRadius: 4,
         background: isHot ? "rgba(239,68,68,0.12)" : "rgba(212,255,0,0.12)",
-        color: isHot ? "#F87171" : "#60A5FA",
+        color: isHot ? "#F87171" : "#D4FF00",
         border: `1px solid ${isHot ? "rgba(239,68,68,0.20)" : "rgba(212,255,0,0.20)"}`,
         marginLeft: "auto",
         flexShrink: 0,
@@ -232,7 +232,7 @@ function NavItem({
             padding: "1px 5px",
             borderRadius: 10,
             background: "rgba(212,255,0,0.15)",
-            color: "#60A5FA",
+            color: "#D4FF00",
             marginLeft: "auto",
           }}
         >

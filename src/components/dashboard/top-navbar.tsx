@@ -258,7 +258,7 @@ export default function TopNavbar() {
             style={{
               background: "rgba(212,255,0,0.07)",
               borderColor: "rgba(212,255,0,0.20)",
-              color: "#2563EB",
+              color: "#D4FF00",
             }}
             title="Open Trinity quick prompt"
           >

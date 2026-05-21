@@ -47,7 +47,7 @@ export default function QuickCreateFab() {
               className="flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full bg-surface border border-border-subtle shadow-md hover:border-[rgba(212,255,0,0.3)] hover:shadow-lg transition-all group"
             >
               <span className={`${a.color}`}>{a.icon}</span>
-              <span className="text-[11px] font-medium group-hover:text-[#2563EB] transition-colors">{a.label}</span>
+              <span className="text-[11px] font-medium group-hover:text-[#D4FF00] transition-colors">{a.label}</span>
             </button>
           ))}
         </div>
@@ -60,7 +60,7 @@ export default function QuickCreateFab() {
         className={`w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all ${
           open
             ? "bg-surface border border-border-subtle text-text-muted hover:text-text-primary"
-            : "bg-gradient-to-br from-[#2563EB] to-[rgba(212,255,0,0.8)] text-white hover:scale-110"
+            : "bg-gradient-to-br from-[#D4FF00] to-[#AACC00] text-[#020711] hover:scale-110"
         }`}
         style={open ? {} : { boxShadow: "0 8px 24px -4px rgba(212,255,0,0.55)" }}
       >

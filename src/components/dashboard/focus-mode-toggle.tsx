@@ -33,7 +33,7 @@ export function FocusModeToggle({ focus, onToggle }: { focus: boolean; onToggle:
       title={focus ? "Exit focus mode" : "Enter focus mode"}
       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[11px] font-medium transition-all ${
         focus
-          ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.3)] text-[#2563EB] shadow-[0_0_18px_-4px_rgba(212,255,0,0.4)]"
+          ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.3)] text-[#D4FF00] shadow-[0_0_18px_-4px_rgba(212,255,0,0.4)]"
           : "bg-surface border-border-subtle text-text-muted hover:border-[rgba(212,255,0,0.2)] hover:text-text-primary"
       }`}
     >
