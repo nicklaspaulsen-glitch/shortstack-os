@@ -1568,7 +1568,7 @@ export default function LandingPagesPage() {
                   return (
                     <div key={i} className="flex-1 flex flex-col items-center gap-1">
                       <span className="text-[10px] text-text-muted">{v.toLocaleString()}</span>
-                      <div className="w-full rounded-t-md relative group" style={{ height: `${h}%`, background: `linear-gradient(180deg, #2563EB 0%, #2563EB40 100%)` }}>
+                      <div className="w-full rounded-t-md relative group" style={{ height: `${h}%`, background: `linear-gradient(180deg, #D4FF00 0%, rgba(212,255,0,0.25) 100%)` }}>
                         <div className="absolute inset-0 bg-[rgba(212,255,0,0.12)] opacity-0 group-hover:opacity-100 transition-opacity rounded-t-md" />
                       </div>
                       <span className="text-[10px] text-text-muted">{days[i]}</span>
@@ -1582,7 +1582,7 @@ export default function LandingPagesPage() {
                 <svg viewBox="0 0 700 100" className="absolute -top-40 left-0 w-full h-40 pointer-events-none" preserveAspectRatio="none">
                   <polyline
                     fill="none"
-                    stroke="#2563EB"
+                    stroke="#D4FF00"
                     strokeWidth="2"
                     strokeLinejoin="round"
                     points={EMPTY_ANALYTICS.dailyViews.map((v, i) => {
@@ -1596,7 +1596,7 @@ export default function LandingPagesPage() {
                     const max = Math.max(...EMPTY_ANALYTICS.dailyViews, 1);
                     const x = (i / (EMPTY_ANALYTICS.dailyViews.length - 1 || 1)) * 680 + 10;
                     const y = 95 - (v / max) * 90;
-                    return <circle key={i} cx={x} cy={y} r="3" fill="#2563EB" />;
+                    return <circle key={i} cx={x} cy={y} r="3" fill="#D4FF00" />;
                   })}
                 </svg>
               </div>
@@ -1617,7 +1617,7 @@ export default function LandingPagesPage() {
                       <span className="text-xs text-brand-accent font-semibold">{src.pct}%</span>
                     </div>
                     <div className="w-full h-2 bg-surface-light rounded-full overflow-hidden">
-                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${src.pct}%`, background: "linear-gradient(90deg, #2563EB, #2563EB80)" }} />
+                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${src.pct}%`, background: "linear-gradient(90deg, #D4FF00, rgba(212,255,0,0.5))" }} />
                     </div>
                   </div>
                 ))}

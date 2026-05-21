@@ -783,9 +783,9 @@ export default function FormsPage() {
                   <h2 className="flex items-center gap-2"><BarChart3 size={13} className="text-brand-accent" /> Form Funnel</h2>
                   <div className="flex items-end gap-4 h-40 justify-center">
                     {[
-                      { label: "Views", value: 0, color: "#2563EB" },
+                      { label: "Views", value: 0, color: "#D4FF00" },
                       { label: "Starts", value: 0, color: "#8b5cf6" },
-                      { label: "Completions", value: 0, color: "#2563EB" },
+                      { label: "Completions", value: 0, color: "#D4FF00" },
                     ].map(item => {
                       const maxVal = Math.max(1, ...[0, 0, 0]);
                       return (

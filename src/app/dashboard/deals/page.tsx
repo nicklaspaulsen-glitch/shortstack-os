@@ -34,7 +34,7 @@ interface Deal {
 }
 
 const STAGES = [
-  { key: "prospect", label: "Prospect", color: "#1D4ED8" },
+  { key: "prospect", label: "Prospect", color: "#D4FF00" },
   { key: "qualified", label: "Qualified", color: "#7c3aed" },
   { key: "proposal_sent", label: "Proposal Sent", color: "#d97706" },
   { key: "negotiation", label: "Negotiation", color: "#ea580c" },

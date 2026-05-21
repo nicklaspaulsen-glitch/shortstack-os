@@ -62,7 +62,7 @@ const STYLES: { id: CarouselStyle; name: string; desc: string; preview: string; 
   { id: "minimalist", name: "Minimalist", desc: "Clean & elegant", preview: "linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%)", text: "#1a1a1a" },
   { id: "bold", name: "Bold", desc: "High impact", preview: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)", text: "#ffffff" },
   { id: "corporate", name: "Corporate", desc: "Professional", preview: "linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%)", text: "#ffffff" },
-  { id: "playful", name: "Playful", desc: "Fun & vibrant", preview: "linear-gradient(135deg, #3B82F6 0%, #ffa06b 100%)", text: "#ffffff" },
+  { id: "playful", name: "Playful", desc: "Fun & vibrant", preview: "linear-gradient(135deg, #A78BFA 0%, #ffa06b 100%)", text: "#ffffff" },
   { id: "dark", name: "Dark", desc: "Premium feel", preview: "linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%)", text: "#ffffff" },
   { id: "gradient", name: "Gradient", desc: "Modern vibes", preview: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", text: "#ffffff" },
 ];
