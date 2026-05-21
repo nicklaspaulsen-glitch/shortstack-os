@@ -3,6 +3,7 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import { generateAdCopy } from "@/lib/ads/ai-engine";
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
+import { getPageTrainingPrompt } from "@/lib/ai/page-training";
 
 // POST — Generate 5 AI ad copy variations via Anthropic API
 export async function POST(request: NextRequest) {
@@ -19,6 +20,8 @@ export async function POST(request: NextRequest) {
     .single();
   const limited = checkAiRateLimit(user.id, profile?.plan_tier);
   if (limited) return limited;
+
+  const trainingPrompt = await getPageTrainingPrompt(authSupabase, user.id, "ads");
 
   try {
     const supabase = createServiceClient();
@@ -60,6 +63,7 @@ export async function POST(request: NextRequest) {
       targetAudience: target_audience,
       offer,
       tone,
+      trainingPrompt: trainingPrompt || undefined,
     });
 
     return NextResponse.json({ success: true, adCopy: result });

@@ -125,31 +125,23 @@ const navItems: NavItem[] = [
   { label: "Clients",    href: "/dashboard/clients",   icon: <NavIcon3D name="Users"           size={16} />, roles: ["admin", "team_member"], tier: 1 },
   { label: "Analytics",  href: "/dashboard/analytics", icon: <NavIcon3D name="BarChart3"       size={16} />, roles: ["admin"],                tier: 1 },
 
-  // ── Intelligence ──
-  { label: "Enemy Tracker", href: "/dashboard/enemy-tracker",       icon: <NavIcon3D name="Eye"    size={16} />, roles: ["admin", "team_member"], section: "Intelligence", tier: 2 },
-  { label: "Competitors",   href: "/dashboard/competitive-monitor", icon: <NavIcon3D name="Target" size={16} />, roles: ["admin"],                                        tier: 2 },
-
-  // ── Content (short-form video + AI creation) ──
-  { label: "AI Video Gen", href: "/dashboard/ai-video",            icon: <NavIcon3D name="Film"      size={16} />, roles: ["admin", "founder", "agency", "team_member"], section: "Content", tier: 2 },
+  // ── Create (video + AI content creation) ──
+  { label: "AI Video",     href: "/dashboard/ai-video",            icon: <NavIcon3D name="Film"      size={16} />, roles: ["admin", "founder", "agency", "team_member"], section: "Create", tier: 2 },
   { label: "Video Editor", href: "/dashboard/video-editor",        icon: <NavIcon3D name="Film"      size={16} />, roles: ["admin", "founder", "agency", "team_member"],                   tier: 2 },
   { label: "Thumbnails",   href: "/dashboard/thumbnail-generator", icon: <NavIcon3D name="ImageIcon" size={16} />, roles: ["admin", "team_member"],                                       tier: 2 },
   { label: "AI Studio",    href: "/dashboard/ai-studio",           icon: <NavIcon3D name="Sparkles"  size={16} />, roles: ["admin", "team_member"],                                       tier: 2 },
-  { label: "Script Lab",   href: "/dashboard/script-lab",          icon: <NavIcon3D name="Sparkles"  size={16} />, roles: ["admin", "team_member"],                                       tier: 2 },
 
-  // ── Social ──
-  { label: "Social Manager", href: "/dashboard/social-manager",  icon: <NavIcon3D name="Share2"     size={16} />, roles: ["admin", "team_member"], section: "Social", tier: 2 },
-  { label: "Content Hub",    href: "/dashboard/content-library", icon: <NavIcon3D name="FolderOpen"  size={16} />, roles: ["admin", "team_member"],                  tier: 2 },
-  { label: "Websites",       href: "/dashboard/websites",         icon: <NavIcon3D name="Globe"      size={16} />, roles: ["admin", "team_member"],                  tier: 2 },
+  // ── Reach ──
+  { label: "Social",   href: "/dashboard/social-manager",  icon: <NavIcon3D name="Share2" size={16} />, roles: ["admin", "team_member"], section: "Reach", tier: 2 },
+  { label: "Websites", href: "/dashboard/websites",         icon: <NavIcon3D name="Globe"  size={16} />, roles: ["admin", "team_member"],                  tier: 2 },
 
-  // ── Ads ──
-  { label: "Ads Manager", href: "/dashboard/ads-manager", icon: <NavIcon3D name="Target" size={16} />, roles: ["admin"], section: "Ads", tier: 2 },
+  // ── Revenue ──
+  { label: "Ads",      href: "/dashboard/ads-manager", icon: <NavIcon3D name="Target"  size={16} />, roles: ["admin"],                section: "Revenue", tier: 2 },
+  { label: "CRM",      href: "/dashboard/crm",         icon: <NavIcon3D name="Users"   size={16} />, roles: ["admin", "team_member"],                    tier: 2 },
+  { label: "Invoices", href: "/dashboard/invoices",    icon: <NavIcon3D name="Receipt" size={16} />, roles: ["admin"],                                   tier: 2 },
 
-  // ── Manage ──
-  { label: "CRM",          href: "/dashboard/crm",             icon: <NavIcon3D name="Users"      size={16} />, roles: ["admin", "team_member"], section: "Manage", tier: 2 },
-  { label: "Invoices",     href: "/dashboard/invoices",        icon: <NavIcon3D name="Receipt"    size={16} />, roles: ["admin"],                                   tier: 2 },
-  { label: "Agent Office",  href: "/dashboard/agent-office",   icon: <NavIcon3D name="UsersRound" size={16} />, roles: ["admin", "team_member"],                  tier: 2 },
-  { label: "Agent Command", href: "/dashboard/agent-command", icon: <NavIcon3D name="Bot"        size={16} />, roles: ["admin"],                                   tier: 2 },
-  { label: "N8N",          href: "/dashboard/n8n",             icon: <NavIcon3D name="Webhook"    size={16} />, roles: ["admin"],                                   tier: 2 },
+  // ── Operate ──
+  { label: "Agents",       href: "/dashboard/agent-office",    icon: <NavIcon3D name="UsersRound" size={16} />, roles: ["admin", "team_member"], section: "Operate", tier: 2 },
   { label: "Integrations", href: "/dashboard/integrations-hub",icon: <NavIcon3D name="Plug"       size={16} />, roles: ["admin"],                                   tier: 2 },
 
   // ── Settings / Admin ──
@@ -249,6 +241,13 @@ const navItems: NavItem[] = [
   { label: "Public Status",      href: "/dashboard/admin/status",       icon: <NavIcon3D name="Activity"        size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Admin Hub",          href: "/dashboard/admin",              icon: <NavIcon3D name="ShieldCheck"     size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "System Status",      href: "/dashboard/system-status",      icon: <NavIcon3D name="ShieldCheck"     size={16} />, roles: ["admin"],                                   settingsOnly: true },
+  // ── Promoted from tier-2 (still reachable from /dashboard/settings hub) ──
+  { label: "Enemy Tracker",   href: "/dashboard/enemy-tracker",       icon: <NavIcon3D name="Eye"        size={16} />, roles: ["admin", "team_member"], settingsOnly: true },
+  { label: "Competitors",     href: "/dashboard/competitive-monitor", icon: <NavIcon3D name="Target"     size={16} />, roles: ["admin"],                settingsOnly: true },
+  { label: "Script Lab",      href: "/dashboard/script-lab",          icon: <NavIcon3D name="Sparkles"   size={16} />, roles: ["admin", "team_member"], settingsOnly: true },
+  { label: "Content Hub",     href: "/dashboard/content-library",     icon: <NavIcon3D name="FolderOpen" size={16} />, roles: ["admin", "team_member"], settingsOnly: true },
+  { label: "Agent Command",   href: "/dashboard/agent-command",       icon: <NavIcon3D name="Bot"        size={16} />, roles: ["admin"],                settingsOnly: true },
+  { label: "N8N",             href: "/dashboard/n8n",                 icon: <NavIcon3D name="Webhook"    size={16} />, roles: ["admin"],                settingsOnly: true },
 
   // ── Client Portal (unchanged) ──
   { label: "Overview",      href: "/dashboard/portal",              icon: <NavIcon3D name="LayoutDashboard" size={16} />, roles: ["client"] },
@@ -504,6 +503,10 @@ export default function Sidebar() {
 
   const filteredNav = navItems.filter((item) => {
     if (!userRole || !item.roles.includes(userRole)) return false;
+    // settingsOnly items are NEVER rendered in the sidebar — they live only on
+    // the /dashboard/settings hub page. This was the root cause of all 60+
+    // hidden pages appearing in the nav (tier: undefined passes the tier===4 check).
+    if (item.settingsOnly) return false;
     // Apply user-level enable list only for admin/team_member (client portal is untouched).
     if ((userRole === "admin" || userRole === "team_member") && enabledHrefs && enabledHrefs.length > 0) {
       if (!enabledHrefs.includes(item.href)) return false;

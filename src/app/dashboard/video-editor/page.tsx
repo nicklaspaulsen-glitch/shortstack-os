@@ -66,6 +66,7 @@ import {
 import FootageBadge, { type FootageType } from "@/components/video-editor/footage-badge";
 import SafeThumb from "@/components/safe-thumb";
 import { PremiereEditor } from "@/components/video-editor/premiere-editor";
+import PageTrainingPanel from "@/components/ui/page-training-panel";
 
 // UI caption-style id ? server-accepted id. Server accepts only 6 styles
 // (see src/app/api/video/auto-edit/captions/route.ts:36-43). Everything else
@@ -7845,6 +7846,7 @@ export default function VideoEditorPage() {
                 toast.success(`Font applied: ${font.family}`);
               }}
             />
+            <PageTrainingPanel pageKey="script" pageLabel="Video Editor" />
             </>
             )}</MotionPage>
   );

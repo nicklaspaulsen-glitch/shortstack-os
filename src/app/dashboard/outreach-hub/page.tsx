@@ -26,6 +26,7 @@ import { PrismPanel } from "@/components/prism";
 import { useQuotaWall } from "@/components/billing/quota-wall";
 import ErrorBoundary from "@/components/error-boundary";
 import { MotionPage } from "@/components/motion/motion-page";
+import PageTrainingPanel from "@/components/ui/page-training-panel";
 
 /* -- Types -- */
 type MainTab = "campaigns" | "sequences" | "templates" | "analytics" | "settings";
@@ -2425,6 +2426,7 @@ export default function OutreachHubPage() {
 
             <PageAI pageName="Outreach Hub" context="outreach campaigns, lead finder, B2B/B2C targeting, sequence builder, cold call scripts, SMS templates, email templates, social DM templates, AI settings, analytics, campaign management, industry targeting"
               suggestions={["Help me create a restaurant outreach campaign", "What sequence works best for B2B?", "Generate 5 SMS follow-up variations", "What tone works best for LinkedIn DMs?"]} />
+            <PageTrainingPanel pageKey="crm-followup" pageLabel="Outreach Hub" />
             </ErrorBoundary></MotionPage>
   );
 }

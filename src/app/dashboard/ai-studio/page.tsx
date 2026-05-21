@@ -16,6 +16,7 @@ import { tabSwitch } from "@/components/motion/motion-page";
 import { staggerContainerFast, fadeUp } from "@/lib/motion-variants";
 
 import { MotionPage } from "@/components/motion/motion-page";
+import PageTrainingPanel from "@/components/ui/page-training-panel";
 import ImageWizard from "@/components/image-wizard";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
@@ -592,6 +593,10 @@ export default function AIStudioPage() {
           setActiveTool("image-gen");
         }}
       />
+      {/* AI training config for AI Studio */}
+      <div className="px-1 pb-2">
+        <PageTrainingPanel pageKey="ai-video" pageLabel="AI Studio" />
+      </div>
     </MotionPage>
   );
 }
@@ -2564,9 +2569,9 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Layers size={16} className="text-cyan-400" />
+        <Layers size={16} className="text-brand-accent" />
         <h2 className="text-sm font-bold text-text-primary">Batch Image Generation</h2>
-        <span className="text-[9px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded-full">FLUX / SDXL</span>
+        <span className="text-[9px] bg-[rgba(59,130,246,0.10)] text-brand-accent px-2 py-0.5 rounded-full">FLUX / SDXL</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -2587,7 +2592,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
           </div>
 
           <button onClick={() => setPrompts(prev => [...prev, ""])} disabled={prompts.length >= 50}
-            className="text-[10px] text-cyan-400 hover:underline flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed">
+            className="text-[10px] text-brand-accent hover:underline flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed">
             + Add prompt (max 50)
           </button>
 

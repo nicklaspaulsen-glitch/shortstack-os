@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import { callLLMTraced, type LLMTaskType } from "@/lib/ai/llm-router";
+import { getPageTrainingPrompt } from "@/lib/ai/page-training";
 
 // Map content type to a router task. Long-form pieces (blog, landing) get
 // Sonnet quality; short snippets stay on Haiku-tier routing.
@@ -81,6 +82,8 @@ export async function POST(request: NextRequest) {
   const limited = checkAiRateLimit(user.id, profile?.plan_tier);
   if (limited) return limited;
 
+  const trainingPrompt = await getPageTrainingPrompt(authSupabase, user.id, "copy");
+
   try {
     const { type, topic, tone, audience, keywords, wordCount } =
       await request.json();
@@ -102,7 +105,7 @@ export async function POST(request: NextRequest) {
 
     const systemPrompt = `${config.systemPrompt}
 
-CRITICAL: Return well-formatted markdown content only. No code fences wrapping the entire output.`;
+CRITICAL: Return well-formatted markdown content only. No code fences wrapping the entire output.${trainingPrompt ? `\n\n${trainingPrompt}` : ""}`;
 
     const prompt = `Generate ${config.label} content based on the following brief:
 

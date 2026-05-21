@@ -25,31 +25,31 @@ export const tokens = {
     muted: "#A1A1AA",
   },
   brand: {
-    /** The brand accent — PRISM BLUE. Sharp, distinctive.
+    /** The brand accent — CHARTREUSE LIME. Electrifying, distinctive.
      *  Three variants:
-     *    accent     — #2563EB — AA on white surfaces
-     *    accentSoft — #3B82F6 — hover / highlight on light
-     *    accentDim  — #1D4ED8 — deep blue for emphasis */
-    accent: "#2563EB",
-    accentSoft: "#3B82F6",
-    accentDim: "#1D4ED8",
-    accentGlow: "rgba(37, 99, 235, 0.2)",
+     *    accent     — #D4FF00 — strong lime on dark OLED surfaces
+     *    accentSoft — #E8FF4D — hover / highlight
+     *    accentDim  — #AACC00 — deep lime for pressed/emphasis */
+    accent: "#D4FF00",
+    accentSoft: "#E8FF4D",
+    accentDim: "#AACC00",
+    accentGlow: "rgba(212, 255, 0, 0.2)",
 
-    lime: "#2563EB",
-    limeSoft: "#3B82F6",
-    limeDim: "#1D4ED8",
-    limeGlow: "rgba(37, 99, 235, 0.2)",
+    lime: "#D4FF00",
+    limeSoft: "#E8FF4D",
+    limeDim: "#AACC00",
+    limeGlow: "rgba(212, 255, 0, 0.2)",
 
     /** Editorial complement — light neutral surface. */
     plum: "#F0F0F4",
     plumHover: "#E4E4E7",
 
-    indigo: "#2563EB",
+    indigo: "#6366F1",
   },
   status: {
     success: "#7FE5B8",
     warning: "#FFC062",
-    error: "#3B82F6",
+    error: "#F26063",
   },
   motion: {
     standard: "220ms cubic-bezier(0.32, 0.72, 0, 1)",
@@ -131,15 +131,15 @@ export const tokenRgb = {
   textPrimary: "240 240 244",
   textSecondary: "168 168 178",
   textMuted: "74 74 90",
-  brandAccent: "37 99 235",
-  brandAccentSoft: "59 130 246",
-  brandAccentDim: "29 78 216",
-  brandLime: "37 99 235",       // legacy alias (= accent)
-  brandLimeSoft: "59 130 246",  // legacy alias (= accentSoft)
-  brandLimeDim: "29 78 216",    // legacy alias (= accentDim)
+  brandAccent: "212 255 0",
+  brandAccentSoft: "232 255 77",
+  brandAccentDim: "170 204 0",
+  brandLime: "212 255 0",       // legacy alias (= accent)
+  brandLimeSoft: "232 255 77",  // legacy alias (= accentSoft)
+  brandLimeDim: "170 204 0",    // legacy alias (= accentDim)
   brandPlum: "228 228 231",      // #E4E4E7 — light neutral surface
   brandPlumHover: "212 212 216", // #D4D4D8
-  brandIndigo: "37 99 235",
+  brandIndigo: "99 102 241",
   statusSuccess: "127 229 184",
   statusWarning: "255 192 98",
   statusError: "242 96 99",

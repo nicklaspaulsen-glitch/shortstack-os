@@ -43,13 +43,14 @@ import ToolsPalette from "@/components/thumbnail-editor/tools-palette";
 import EditorCanvas from "@/components/thumbnail-editor/canvas";
 import LayersPanel from "@/components/thumbnail-editor/layers-panel";
 import TopBar from "@/components/thumbnail-editor/top-bar";
-import AIFillDialog from "@/components/thumbnail-editor/ai-fill-dialog";
+import AIFillDialog, { type AIModelOption, type AIStyleOption } from "@/components/thumbnail-editor/ai-fill-dialog";
 import HistoryPanel from "@/components/thumbnail-editor/history-panel";
 import AiFirstStarter from "@/components/thumbnail-editor/ai-first-starter";
 import StockPhotosPanel from "@/components/thumbnail-editor/stock-photos-panel";
 import type { StockPhoto } from "@/lib/integrations/stock-photos";
 import { MotionPage } from "@/components/motion/motion-page";
 import SmartBar from "@/components/ui/smart-bar";
+import PageTrainingPanel from "@/components/ui/page-training-panel";
 import CreatorIntelligence from "@/components/ui/creator-intelligence";
 
 // ── Headline Quality Scorer ───────────────────────────────────────────────
@@ -87,6 +88,20 @@ function headlineScore(text: string): { score: number; label: string; color: str
   return { score, label, color, tips: tips.slice(0, 2) };
 }
 
+// Creator style DNA — prepended to the user prompt in Text→Layer when a
+// style is selected. Mirrors the map in ai-first-starter for consistency.
+const CREATOR_STYLE_DNA: Record<string, string> = {
+  none: "",
+  mrbeast: "MrBeast YouTube style: electric yellow #FFE600 + cobalt blue palette, multiple shocked expressions, prize or challenge element visible, Impact font thick black outline 4px+, hyper-saturated energy —",
+  "jordan-welch": "Jordan Welch commentary style: near-black background, face left 40%, bold minimal white condensed text right, dark premium minimalism —",
+  "jeff-nippard": "Jeff Nippard fitness science style: athletic physique, blue-white scientific layout, gym setting, research data callout, sharp authoritative photography —",
+  "alex-hormozi": "Alex Hormozi style: pure black background, intense direct-gaze face fills left half, bold white condensed headline, aggressive minimalism, zero decoration —",
+  "logan-paul": "Logan Paul style: cinematic high-budget quality, dramatic intense expression, red-white palette, Hollywood lighting, extreme energy —",
+  grizzy: "Grizzy comedy style: bright warm colors, exaggerated funny face, relatable scenario, bold comedy text, infectious positive energy —",
+  pezzy: "Pezzy commentary style: intense reaction, dark moody background, bold all-caps confrontational text, high contrast, raw authentic energy —",
+  finance: "Finance YouTube style: premium setting, chart or money visual, green-gold palette, authoritative expression, bold dollar figure headline, polished wealthy aesthetic —",
+};
+
 // Electron hint — the preload script sets window.electron. We check for
 // truthy at runtime to decide whether to show the native picker.
 // Shape comes from the shared ambient declaration at src/types/electron.d.ts.
@@ -109,6 +124,10 @@ export default function ThumbnailEditorProPage() {
   const [textToLayerOpen, setTextToLayerOpen] = useState(false);
   const [stockPhotosOpen, setStockPhotosOpen] = useState(false);
   const [aiBusy, setAIBusy] = useState(false);
+  // Model picker for Text→Layer — defaults to DALL-E 3 (highest quality)
+  const [modelChoice, setModelChoice] = useState<"flux" | "dall-e-3" | "gpt-image-1">("dall-e-3");
+  // Creator style DNA injected into Text→Layer prompts
+  const [creatorStyleChoice, setCreatorStyleChoice] = useState<string>("none");
   const [hasElectron, setHasElectron] = useState(false);
   // AI-first starter — overlay shown when canvas is empty and user hasn't
   // explicitly skipped (Pikzel-AI-style entry per apr27 backlog).
@@ -541,35 +560,79 @@ export default function ThumbnailEditorProPage() {
   }, [commit]);
 
   const runTextToLayer = useCallback(
-    async (prompt: string) => {
+    async (rawPrompt: string) => {
+      // Prepend creator style DNA if one is selected — gives DALL-E the
+      // creator-specific visual language before the user's subject.
+      const styleDna = creatorStyleChoice !== "none"
+        ? (CREATOR_STYLE_DNA[creatorStyleChoice] ?? "")
+        : "";
+      const prompt = styleDna ? `${styleDna} ${rawPrompt}` : rawPrompt;
+
       setAIBusy(true);
       try {
-        // Reuse the existing thumbnail generate route — it's the same
-        // FLUX worker, just without a mask. The route returns a finished
-        // image URL that we add as a new layer.
-        const res = await fetch("/api/thumbnail/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            prompt,
-            platform: "youtube",
-            style: "youtube_classic",
-            mood: "dramatic",
-            variations: 1,
-            width: state.canvasWidth,
-            height: state.canvasHeight,
-          }),
-        });
-        const data = (await res.json()) as {
-          images?: { url: string }[];
-          url?: string;
-          error?: string;
-        };
-        if (data.error) {
-          toast.error(data.error);
-          return;
+        let url: string | undefined;
+
+        if (modelChoice === "flux") {
+          // ── FLUX worker (existing endpoint, free) ────────────────────────
+          const res = await fetch("/api/thumbnail/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              prompt,
+              platform: "youtube",
+              style: "youtube_classic",
+              mood: "dramatic",
+              variations: 1,
+              width: state.canvasWidth,
+              height: state.canvasHeight,
+            }),
+          });
+          const data = (await res.json()) as {
+            images?: { url: string }[];
+            url?: string;
+            error?: string;
+          };
+          if (data.error) { toast.error(data.error); return; }
+          url = data.images?.[0]?.url ?? data.url;
+        } else {
+          // ── OpenAI image models (DALL-E 3 or gpt-image-1) ──────────────
+          const dalleSize =
+            state.canvasWidth > state.canvasHeight
+              ? "1792x1024"
+              : state.canvasWidth < state.canvasHeight
+                ? "1024x1792"
+                : "1024x1024";
+          const res = await fetch("/api/thumbnail/generate-dalle", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              prompt,
+              model: modelChoice,          // "dall-e-3" | "gpt-image-1"
+              size: dalleSize,
+              quality: "hd",
+              style: "vivid",
+              n: 1,
+              enhancePrompt: true,
+            }),
+          });
+          const data = (await res.json()) as {
+            urls?: string[];
+            error?: string;
+            estimatedCostUsd?: number;
+          };
+          if (!res.ok || data.error) {
+            toast.error(data.error ?? "DALL-E generation failed");
+            return;
+          }
+          url = data.urls?.[0];
+          if (data.estimatedCostUsd) {
+            toast.success(
+              `Image generated ($${data.estimatedCostUsd.toFixed(3)})`,
+              { duration: 3000 },
+            );
+          }
         }
-        const url = data.images?.[0]?.url || data.url;
+
         if (!url) {
           toast.error("No image returned");
           return;
@@ -582,7 +645,7 @@ export default function ThumbnailEditorProPage() {
           name: `AI: ${prompt.slice(0, 24)}`,
         });
         commit({ type: "ADD_LAYER", layer }, "Text → Layer");
-        toast.success("AI layer added");
+        if (modelChoice === "flux") toast.success("AI layer added");
         setTextToLayerOpen(false);
       } catch (err) {
         toast.error(
@@ -592,7 +655,7 @@ export default function ThumbnailEditorProPage() {
         setAIBusy(false);
       }
     },
-    [state.canvasWidth, state.canvasHeight, commit],
+    [state.canvasWidth, state.canvasHeight, commit, modelChoice, creatorStyleChoice],
   );
 
   // ── Stock photos ───────────────────────────────────────────────────────
@@ -931,6 +994,40 @@ export default function ThumbnailEditorProPage() {
 
   type CtrPreset = typeof CTR_PRESETS[number];
 
+  // AI model options for the Text→Layer dialog
+  const TEXT_TO_LAYER_MODELS: AIModelOption[] = [
+    {
+      id: "dall-e-3",
+      label: "DALL-E 3",
+      badge: "$0.12",
+      badgeColor: "#F59E0B",
+    },
+    {
+      id: "gpt-image-1",
+      label: "gpt-image-1",
+      badge: "$0.04",
+      badgeColor: "#10B981",
+    },
+    {
+      id: "flux",
+      label: "FLUX",
+      badge: "free",
+      badgeColor: "#6366F1",
+    },
+  ] as const satisfies AIModelOption[];
+
+  const CREATOR_STYLE_OPTIONS: AIStyleOption[] = [
+    { id: "none", label: "Auto" },
+    { id: "mrbeast", label: "MrBeast", badge: "Viral", badgeColor: "#F59E0B" },
+    { id: "jordan-welch", label: "Welch", badge: "Commentary", badgeColor: "#6366F1" },
+    { id: "jeff-nippard", label: "Nippard", badge: "Fitness", badgeColor: "#10B981" },
+    { id: "alex-hormozi", label: "Hormozi", badge: "Business", badgeColor: "#3B82F6" },
+    { id: "logan-paul", label: "Logan", badge: "Drama", badgeColor: "#EF4444" },
+    { id: "grizzy", label: "Grizzy", badge: "Comedy", badgeColor: "#F97316" },
+    { id: "pezzy", label: "Pezzy", badge: "Reaction", badgeColor: "#8B5CF6" },
+    { id: "finance", label: "Finance", badge: "Money", badgeColor: "#059669" },
+  ];
+
   const tierColor = (tier: CtrPreset["tier"]) =>
     tier === "top" ? { bg: "rgba(16,185,129,0.14)", text: "#10B981" }
       : tier === "high" ? { bg: "rgba(59,130,246,0.14)", text: "#60A5FA" }
@@ -1228,11 +1325,19 @@ export default function ThumbnailEditorProPage() {
               busy={aiBusy}
               onClose={() => setTextToLayerOpen(false)}
               onSubmit={runTextToLayer}
+              modelOptions={TEXT_TO_LAYER_MODELS}
+              modelChoice={modelChoice}
+              onModelChange={(id) =>
+                setModelChoice(id as typeof modelChoice)
+              }
+              styleOptions={CREATOR_STYLE_OPTIONS}
+              styleChoice={creatorStyleChoice}
+              onStyleChange={setCreatorStyleChoice}
               presetSuggestions={[
-                "MrBeast thumbnail, shocked face, dramatic lighting",
-                "cinematic cyberpunk cityscape, neon glow, rain",
-                "bold colorful pop-art style, extreme contrast",
-                "tutorial thumbnail, clean flat lay, bright lighting",
+                "shocked face revealing massive prize, dramatic lighting",
+                "dark minimal commentary, bold white text, black bg",
+                "athletic physique transformation, cinematic gym lighting",
+                "cinematic travel vista, golden hour, wide angle scale",
               ]}
             />
 
@@ -1282,6 +1387,7 @@ export default function ThumbnailEditorProPage() {
               />
             )}
           </motion.div>
+          <PageTrainingPanel pageKey="thumbnail" pageLabel="Thumbnail Generator" />
           </MotionPage>
   );
 }

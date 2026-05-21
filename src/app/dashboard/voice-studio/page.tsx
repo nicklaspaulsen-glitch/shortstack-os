@@ -922,6 +922,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   // Iterates through all presets that lack a cached preview URL and generates
   // one via the test endpoint. Sequential (not parallel) to respect ElevenLabs
   // rate limits. Non-fatal: a failed preset is skipped, generation continues.
+  const autoPreWarmFiredRef = useRef(false);
   const [preWarmActive, setPreWarmActive] = useState(false);
   const [preWarmDone, setPreWarmDone] = useState(0);
   const [preWarmTotal, setPreWarmTotal] = useState(0);
@@ -986,6 +987,17 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
     }
     setPreWarmActive(false);
   }, [presets, previewCache, preWarmActive]);
+
+  // Auto-trigger pre-warm once after presets load if there are gaps.
+  // The 1 500ms delay lets the initial paint finish before API calls begin.
+  // `autoPreWarmFiredRef` prevents re-triggering on subsequent re-renders.
+  useEffect(() => {
+    if (autoPreWarmFiredRef.current) return;
+    if (presets.length === 0 || preWarmGapCount === 0) return;
+    autoPreWarmFiredRef.current = true;
+    const timer = setTimeout(() => { void preWarmAll(); }, 1500);
+    return () => clearTimeout(timer);
+  }, [presets.length, preWarmGapCount, preWarmAll]);
 
   const languages = useMemo(() => {
     const langs = new Set(presets.map((p) => p.language || "en").filter(Boolean));
@@ -1672,7 +1684,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             {saved ? "Saved" : "Use"}
           </button>
         </div>
-        {error && <p className="mt-2 text-xs text-[#3B82F6]">{error}</p>}
+        {error && <p className="mt-2 text-xs text-rose-400">{error}</p>}
       </div>
     </div>
   );

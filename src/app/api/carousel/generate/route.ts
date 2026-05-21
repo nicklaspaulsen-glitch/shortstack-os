@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
+import { getPageTrainingPrompt } from "@/lib/ai/page-training";
 
 interface SlideContent {
   slideNumber: number;
@@ -28,6 +29,8 @@ export async function POST(request: NextRequest) {
     .single();
   const limited = checkAiRateLimit(user.id, profile?.plan_tier);
   if (limited) return limited;
+
+  const trainingPrompt = await getPageTrainingPrompt(supabase, user.id, "carousel");
 
   const body: CarouselRequest = await request.json();
   const { topic, slideCount, style, template, brandColors } = body;
@@ -74,7 +77,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
         max_tokens: 2000,
-        system: `You are a social media content strategist who creates viral carousel content for Instagram and LinkedIn. You write concise, high-impact slide content optimized for engagement and saves. Every carousel should hook on slide 1, deliver value in the middle, and end with a strong CTA.`,
+        system: `You are a social media content strategist who creates viral carousel content for Instagram and LinkedIn. You write concise, high-impact slide content optimized for engagement and saves. Every carousel should hook on slide 1, deliver value in the middle, and end with a strong CTA.${trainingPrompt ? `\n\n${trainingPrompt}` : ""}`,
         messages: [{
           role: "user",
           content: `Create a ${slideCount}-slide carousel about: "${topic}"

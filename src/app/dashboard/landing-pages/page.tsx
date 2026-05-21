@@ -22,6 +22,7 @@ import { GeneratingRiveIcon, LiveRiveIcon } from "@/components/ui/rive-status-ic
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
 import { MotionPage } from "@/components/motion/motion-page";
+import PageTrainingPanel from "@/components/ui/page-training-panel";
 
 /* ------------------------------------------------------------------
    TYPES
@@ -1648,6 +1649,8 @@ export default function LandingPagesPage() {
           "How should I structure my pricing tiers?",
         ]}
       />
+      {/* AI training config for landing page generation */}
+      <PageTrainingPanel pageKey="websites" pageLabel="Landing Pages" />
     </div>
   );
 }

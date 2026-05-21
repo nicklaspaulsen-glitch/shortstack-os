@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { anthropic, MODEL_HAIKU, getResponseText, safeJsonParse } from "@/lib/ai/claude-helpers";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
+import { getPageTrainingPrompt } from "@/lib/ai/page-training";
 
 // Keep in sync with thumbnail/generate/route.ts — each FLUX render costs
 // ~1000 "tokens" in the plan-tier budget.
@@ -92,7 +93,7 @@ function buildFluxTxt2ImgWorkflow(opts: {
   };
 }
 
-async function generateTitleAndPrompt(topic: string, style: string): Promise<TitleAiPayload | null> {
+async function generateTitleAndPrompt(topic: string, style: string, trainingPrompt?: string): Promise<TitleAiPayload | null> {
   try {
     const resp = await anthropic.messages.create({
       model: MODEL_HAIKU,
@@ -100,7 +101,8 @@ async function generateTitleAndPrompt(topic: string, style: string): Promise<Tit
       temperature: 0.8,
       system:
         "You are a viral YouTube creative director. Given a topic and visual style, produce JSON only — " +
-        "no preamble, no markdown fences, just the JSON object.",
+        "no preamble, no markdown fences, just the JSON object." +
+        (trainingPrompt ? `\n\n${trainingPrompt}` : ""),
       messages: [
         {
           role: "user",
@@ -212,8 +214,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "ANTHROPIC_API_KEY not configured" }, { status: 503 });
   }
 
+  const trainingPrompt = await getPageTrainingPrompt(supabase, user.id, "thumbnail");
+
   // Step A — title + overlay + FLUX prompt
-  const ai = await generateTitleAndPrompt(topic, style);
+  const ai = await generateTitleAndPrompt(topic, style, trainingPrompt || undefined);
   if (!ai) {
     return NextResponse.json(
       { ok: false, error: "Title AI failed — could not parse JSON response from Claude" },

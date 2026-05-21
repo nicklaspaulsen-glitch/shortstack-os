@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { anthropic, MODEL_SONNET, getResponseText, safeJsonParse } from "@/lib/ai/claude-helpers";
+import { getPageTrainingPrompt } from "@/lib/ai/page-training";
 
 /**
  * Claude-powered website generator.
@@ -73,6 +74,8 @@ export async function POST(request: NextRequest) {
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json({ error: "ANTHROPIC_API_KEY not configured" }, { status: 500 });
   }
+
+  const trainingPrompt = await getPageTrainingPrompt(supabase, user.id, "websites");
 
   const body = await request.json();
   const { project_id, client_id, answers = {} } = body as {
@@ -158,11 +161,16 @@ Generate index.html, styles.css, script.js. Include hero animations, benefit-dri
     const response = await anthropic.messages.create({
       model: MODEL_SONNET,
       max_tokens: 16000,
-      system: [{
-        type: "text",
-        text: SYSTEM_PROMPT,
-        cache_control: { type: "ephemeral" },
-      }],
+      system: [
+        {
+          type: "text",
+          text: SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" },
+        },
+        ...(trainingPrompt
+          ? [{ type: "text" as const, text: trainingPrompt }]
+          : []),
+      ],
       messages: [{ role: "user", content: userPrompt }],
     });
 

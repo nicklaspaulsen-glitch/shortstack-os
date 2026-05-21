@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getPageTrainingPrompt } from "@/lib/ai/page-training";
 
 // AI Email Template Generator — Creates professional emails for any client situation
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const trainingPrompt = await getPageTrainingPrompt(supabase, user.id, "email");
 
   const { template_type, client_name, custom_context } = await request.json();
 
@@ -34,7 +37,7 @@ export async function POST(request: NextRequest) {
     body: JSON.stringify({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 1000,
-      system: "You are writing emails on behalf of ShortStack digital marketing agency. Be professional, warm, and concise. Return JSON with: subject, body (HTML formatted with <p>, <br>, <strong> tags), plain_text (same content without HTML).",
+      system: `You are writing emails on behalf of ShortStack digital marketing agency. Be professional, warm, and concise. Return JSON with: subject, body (HTML formatted with <p>, <br>, <strong> tags), plain_text (same content without HTML).${trainingPrompt ? `\n\n${trainingPrompt}` : ""}`,
       messages: [{ role: "user", content: prompt }],
     }),
   });

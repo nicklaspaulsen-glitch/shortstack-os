@@ -9,6 +9,7 @@ import {
   getResponseText,
   safeJsonParse,
 } from "@/lib/ai/claude-helpers";
+import { getPageTrainingPrompt } from "@/lib/ai/page-training";
 
 /**
  * POST /api/thumbnail/analyze
@@ -108,6 +109,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const trainingPrompt = await getPageTrainingPrompt(supabase, user.id, "thumbnail");
+
   let body: AnalyzeInput;
   try {
     body = (await request.json()) as AnalyzeInput;
@@ -146,7 +149,8 @@ export async function POST(request: NextRequest) {
     "composition (how the subject fills the frame and guides the eye), dominant colors (3-5 hex codes), " +
     "whether there is text overlay and its position/legibility, the subject's primary emotion, a predicted " +
     "click-through-rate on a 0-100 scale based on how this would perform at 320x180 in a YouTube feed, " +
-    "and 3-5 concrete improvement suggestions. Output JSON only — no markdown, no preamble.";
+    "and 3-5 concrete improvement suggestions. Output JSON only — no markdown, no preamble." +
+    (trainingPrompt ? `\n\n${trainingPrompt}` : "");
 
   let parsed: AnalysisPayload | null = null;
   let tokensUsed = 0;

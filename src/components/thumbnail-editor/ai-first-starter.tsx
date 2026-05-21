@@ -52,115 +52,143 @@ interface ThumbnailTemplate {
   prompt: string;
 }
 
+// Creator-archetype templates — each prompt is already tuned to a proven
+// YouTube style. Clicking one generates a pro-grade thumbnail instantly.
 const THUMBNAIL_TEMPLATES: ThumbnailTemplate[] = [
   {
-    id: "yt-drama",
-    label: "YouTube Drama",
+    id: "mrbeast-challenge",
+    label: "MrBeast Challenge",
     aspect: "16:9",
-    emoji: "😱",
-    gradient: "from-red-700 to-orange-500",
-    textColor: "#fff",
-    prompt: "Bold YouTube thumbnail. Close-up shocked face, huge impactful bold red text, arrow pointing right, dark dramatic background with orange lighting.",
-  },
-  {
-    id: "tiktok-challenge",
-    label: "TikTok Challenge",
-    aspect: "9:16",
-    emoji: "🕺",
-    gradient: "from-fuchsia-600 to-pink-400",
-    textColor: "#fff",
-    prompt: "Vertical TikTok thumbnail. Energetic pose mid-dance, neon pink and purple gradient background, bold lowercase sans-serif headline at top, confetti particles.",
-  },
-  {
-    id: "podcast-cover",
-    label: "Podcast Cover",
-    aspect: "1:1",
-    emoji: "🎙️",
-    gradient: "from-slate-800 to-indigo-900",
-    textColor: "#c8a855",
-    prompt: "Square podcast cover art. Professional headshot on right, bold show name in serif font on left, deep navy background, subtle microphone graphic, clean minimal layout.",
-  },
-  {
-    id: "tech-tutorial",
-    label: "Tech Tutorial",
-    aspect: "16:9",
-    emoji: "💻",
-    gradient: "from-sky-600 to-cyan-400",
-    textColor: "#fff",
-    prompt: "Clean tech tutorial thumbnail. Dark code editor screenshot, bright cyan accent, bold how-to headline, laptop or monitor graphic, professional and modern.",
-  },
-  {
-    id: "fitness-motivation",
-    label: "Fitness Before/After",
-    aspect: "9:16",
-    emoji: "💪",
-    gradient: "from-emerald-600 to-lime-400",
+    emoji: "🏆",
+    gradient: "from-yellow-400 to-amber-500",
     textColor: "#0b0d12",
-    prompt: "Fitness transformation thumbnail. Split before-and-after portrait, bold green RESULTS text overlay, athletic background, high-contrast dramatic lighting.",
+    prompt: "MrBeast-style YouTube thumbnail. Multiple people with extreme open-mouth shock expressions, electric yellow #FFE600 and cobalt blue color palette, bold Impact-font text 'LAST TO LEAVE WINS $1,000,000' with thick 4px black outline, hyper-saturated vivid colors, massive prize visible, dramatic rim lighting, viral high-energy composition.",
   },
   {
-    id: "recipe-reveal",
-    label: "Recipe Reveal",
+    id: "jordan-welch",
+    label: "Jordan Welch Drop",
     aspect: "16:9",
-    emoji: "🍽️",
-    gradient: "from-amber-600 to-yellow-400",
-    textColor: "#0b0d12",
-    prompt: "Food recipe thumbnail. Extreme close-up of a finished dish with steam, warm golden bokeh background, handwritten-style font showing dish name, appetizing and vibrant.",
-  },
-  {
-    id: "travel-vlog",
-    label: "Travel Vlog",
-    aspect: "16:9",
-    emoji: "✈️",
-    gradient: "from-blue-500 to-teal-400",
+    emoji: "🎯",
+    gradient: "from-neutral-900 to-neutral-700",
     textColor: "#fff",
-    prompt: "Cinematic travel thumbnail. Wide landscape aerial photo, vlogger silhouette in foreground, clean bold location name typography, golden-hour warm tones.",
+    prompt: "Jordan Welch commentary-style YouTube thumbnail. Creator face on left 40% of frame with calm confident analytical expression, very dark near-black background #0a0a10, bold white ultra-condensed sans-serif text on the right 'THE TRUTH', minimal premium dark atmosphere, no clutter, sophisticated and authoritative.",
   },
   {
-    id: "finance-tips",
-    label: "Finance Tips",
+    id: "jeff-nippard",
+    label: "Jeff Nippard Science",
+    aspect: "16:9",
+    emoji: "🔬",
+    gradient: "from-blue-700 to-cyan-500",
+    textColor: "#fff",
+    prompt: "Jeff Nippard fitness science YouTube thumbnail. Lean athletic physique with clear muscle definition, clean blue-white scientific research-aesthetic layout, professional gym environment, data callout overlay showing percentage, sharp crisp professional photography, authoritative educational design.",
+  },
+  {
+    id: "alex-hormozi",
+    label: "Alex Hormozi",
+    aspect: "16:9",
+    emoji: "💼",
+    gradient: "from-neutral-950 to-neutral-800",
+    textColor: "#fff",
+    prompt: "Alex Hormozi business YouTube thumbnail. Matte pure black background, intense direct-gaze face filling left half of frame, bold white condensed headline text on right '$100M SECRET', single powerful value statement, absolutely zero decorative elements, aggressive premium minimalism, confrontational energy.",
+  },
+  {
+    id: "logan-paul",
+    label: "Logan Paul Drama",
+    aspect: "16:9",
+    emoji: "🎬",
+    gradient: "from-red-700 to-red-500",
+    textColor: "#fff",
+    prompt: "Logan Paul YouTube thumbnail. Cinematic high-budget Hollywood production quality, dramatically intense emotional facial expression, bold red and white color scheme, deep dramatic shadows with vivid rim lighting, extreme high energy, premium $5M production value aesthetic.",
+  },
+  {
+    id: "grizzy",
+    label: "Grizzy Comedy",
+    aspect: "16:9",
+    emoji: "😂",
+    gradient: "from-orange-400 to-yellow-300",
+    textColor: "#0b0d12",
+    prompt: "Grizzy-style comedy YouTube thumbnail. Warm bright cheerful color palette, exaggerated wide-eyed surprised or hysterically funny face, relatable everyday scenario in background, large bold comedy-weight text, infectious positive high energy, wide lens perspective, warm golden lighting.",
+  },
+  {
+    id: "pezzy",
+    label: "Pezzy Reaction",
+    aspect: "16:9",
+    emoji: "😤",
+    gradient: "from-zinc-900 to-zinc-700",
+    textColor: "#fff",
+    prompt: "Pezzy commentary-style YouTube thumbnail. Bold intense reaction face with wide eyes, dark moody gradient background, large all-caps confrontational bold text making a strong statement, very high contrast, raw authentic street energy, direct viewer confrontation.",
+  },
+  {
+    id: "finance-reveal",
+    label: "Finance Reveal",
     aspect: "16:9",
     emoji: "💰",
-    gradient: "from-green-800 to-emerald-500",
-    textColor: "#c8a855",
-    prompt: "Finance / money thumbnail. Rising chart graphic, dollar bills or coins, bold MONEY headline, dark professional background, gold accents, authoritative clean layout.",
+    gradient: "from-emerald-900 to-green-700",
+    textColor: "#d4b44a",
+    prompt: "Finance YouTube thumbnail. Professional person in premium setting, rising stock chart or cash stack visual, deep rich green and gold premium palette, confident authoritative expression, bold '$10,000/month' figure in headline, clean polished wealthy aesthetic, trust signals.",
   },
   {
-    id: "gaming-highlight",
-    label: "Gaming Highlight",
-    aspect: "16:9",
-    emoji: "🎮",
-    gradient: "from-purple-700 to-pink-500",
-    textColor: "#fff",
-    prompt: "Gaming highlight thumbnail. Screenshot of intense game moment, neon purple and pink glow effects, player name and EPIC PLAY text, controller graphic, high-energy.",
-  },
-  {
-    id: "business-coaching",
-    label: "Business Coaching",
-    aspect: "16:9",
-    emoji: "🚀",
-    gradient: "from-slate-700 to-blue-600",
-    textColor: "#fff",
-    prompt: "Business coaching thumbnail. Professional headshot, confident pose, large bold value statement, clean white and navy layout, authority and trust signals, minimal.",
-  },
-  {
-    id: "music-release",
-    label: "Music Release",
-    aspect: "1:1",
-    emoji: "🎵",
-    gradient: "from-violet-700 to-fuchsia-500",
-    textColor: "#fff",
-    prompt: "Square music release cover. Abstract artistic background with light trails, artist silhouette, album title in large elegant typography, dark moody atmosphere.",
-  },
-  {
-    id: "real-estate",
-    label: "Real Estate Tour",
-    aspect: "16:9",
-    emoji: "🏡",
-    gradient: "from-orange-500 to-amber-300",
+    id: "fitness-transform",
+    label: "Fitness Transform",
+    aspect: "9:16",
+    emoji: "💪",
+    gradient: "from-orange-600 to-amber-400",
     textColor: "#0b0d12",
-    prompt: "Real estate YouTube thumbnail. Beautiful exterior house photo at golden hour, bold price or location text overlay, realtor logo corner, professional and inviting.",
+    prompt: "Fitness transformation vertical YouTube thumbnail. Dramatic split before-and-after with extreme physical change, bold impactful 'TRANSFORMATION' text, hard gym lighting with deep shadows, high-contrast athletic photography, motivated intense expression, orange and amber energy.",
   },
+  {
+    id: "tech-breakdown",
+    label: "Tech Breakdown",
+    aspect: "16:9",
+    emoji: "⚡",
+    gradient: "from-sky-700 to-blue-500",
+    textColor: "#fff",
+    prompt: "Tech review or breakdown YouTube thumbnail. Sleek premium product hero shot, electric blue accent lighting, bold clean sans-serif text overlay, dark premium background, technical precision aesthetic, sharp modern photography, premium unboxing energy.",
+  },
+  {
+    id: "mrbeast-extreme",
+    label: "Extreme Challenge",
+    aspect: "16:9",
+    emoji: "🌋",
+    gradient: "from-orange-600 to-red-700",
+    textColor: "#fff",
+    prompt: "MrBeast extreme challenge YouTube thumbnail. Epic scale environment, multiple people with extreme fear or total amazement expressions, giant bold text 'I SURVIVED', photorealistic dangerous or spectacular scenario, ultra-wide cinematic angle, hyper-dramatic lighting, massive scale composition.",
+  },
+  {
+    id: "adventure-vlog",
+    label: "Adventure Vlog",
+    aspect: "16:9",
+    emoji: "🌄",
+    gradient: "from-indigo-600 to-purple-700",
+    textColor: "#fff",
+    prompt: "Adventure vlog cinematic YouTube thumbnail. Dramatic wide-angle landscape vista showing massive scale, vlogger face or silhouette in extreme environment, golden hour or blue hour cinematic lighting, bold location name in clean typography, overwhelming sense of wonder and scale, premium production quality.",
+  },
+];
+
+// Creator style DNA — prepended to custom prompts when a style chip is active.
+// Kept intentionally compact so it stacks cleanly before the user's subject.
+const CREATOR_STYLE_DNA_MAP: Record<string, string> = {
+  none: "",
+  mrbeast: "MrBeast YouTube style: electric yellow #FFE600 + cobalt blue palette, multiple shocked expressions, prize or challenge element, Impact font thick black outline 4px+, hyper-saturated energy —",
+  "jordan-welch": "Jordan Welch commentary style: near-black background, face left 40%, bold minimal white condensed text right, dark premium minimalism —",
+  "jeff-nippard": "Jeff Nippard fitness science style: athletic physique, blue-white scientific layout, gym setting, research callout, sharp authoritative photography —",
+  "alex-hormozi": "Alex Hormozi style: pure black background, intense direct-gaze face fills left half, bold white condensed headline, aggressive minimalism, zero decoration —",
+  "logan-paul": "Logan Paul style: cinematic high-budget quality, dramatic intense expression, red-white palette, Hollywood lighting, extreme energy —",
+  grizzy: "Grizzy comedy style: bright warm colors, exaggerated funny face, relatable scenario, bold comedy text, infectious positive energy —",
+  pezzy: "Pezzy commentary style: intense reaction, dark moody background, bold all-caps confrontational text, high contrast, raw street energy —",
+  finance: "Finance YouTube style: premium setting, chart or money visual, green-gold palette, authoritative expression, bold dollar figure headline, polished wealthy aesthetic —",
+};
+
+const CREATOR_CHIPS = [
+  { id: "none", label: "Auto" },
+  { id: "mrbeast", label: "MrBeast" },
+  { id: "jordan-welch", label: "Welch" },
+  { id: "jeff-nippard", label: "Nippard" },
+  { id: "alex-hormozi", label: "Hormozi" },
+  { id: "logan-paul", label: "Logan" },
+  { id: "grizzy", label: "Grizzy" },
+  { id: "pezzy", label: "Pezzy" },
+  { id: "finance", label: "Finance" },
 ];
 
 export default function AiFirstStarter({
@@ -178,6 +206,7 @@ export default function AiFirstStarter({
     } catch { /* noop */ }
     return "";
   });
+  const [activeCreatorStyle, setActiveCreatorStyle] = useState<string>("none");
   const [busy, setBusy] = useState(false);
   const [options, setOptions] = useState<Array<{ url: string; idx: number }>>([]);
   const [pickedIdx, setPickedIdx] = useState<number | null>(null);
@@ -228,7 +257,13 @@ export default function AiFirstStarter({
   };
 
   const generate = async (overridePrompt?: string) => {
-    const p = (overridePrompt ?? prompt).trim();
+    // Template clicks pass overridePrompt — use as-is (creator DNA already baked in).
+    // Custom prompts get the active creator style DNA prepended.
+    const base = overridePrompt ?? prompt;
+    const styleDna = !overridePrompt && activeCreatorStyle !== "none"
+      ? CREATOR_STYLE_DNA_MAP[activeCreatorStyle] ?? ""
+      : "";
+    const p = (styleDna ? `${styleDna} ${base}` : base).trim();
     if (!p) {
       toast.error("Describe your thumbnail first");
       return;
@@ -368,6 +403,37 @@ export default function AiFirstStarter({
             disabled={busy}
             className="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white placeholder:text-neutral-600 focus:outline-none focus:border-amber-400/40 resize-none disabled:opacity-60"
           />
+        </div>
+
+        {/* Creator style chips — active style is injected into custom prompts */}
+        <div className="mb-3">
+          <p className="text-[9px] uppercase tracking-wider text-neutral-600 mb-1.5">
+            Creator style
+          </p>
+          <div className="flex flex-wrap gap-1">
+            {CREATOR_CHIPS.map((chip) => {
+              const active = activeCreatorStyle === chip.id;
+              return (
+                <button
+                  key={chip.id}
+                  type="button"
+                  onClick={() => setActiveCreatorStyle(chip.id)}
+                  className="px-2 py-0.5 rounded-full text-[10.5px] font-medium border transition-all duration-100"
+                  style={{
+                    background: active
+                      ? "rgba(200,168,85,0.18)"
+                      : "rgba(255,255,255,0.04)",
+                    borderColor: active
+                      ? "rgba(200,168,85,0.5)"
+                      : "rgba(255,255,255,0.08)",
+                    color: active ? "#c8a855" : "#6b6b7b",
+                  }}
+                >
+                  {chip.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Template library grid — 12 clickable visual cards */}

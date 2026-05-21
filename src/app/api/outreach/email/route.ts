@@ -5,6 +5,7 @@ import { allocateEmailSenders, recordEmailSend, getMinDelay, type EmailSender } 
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
 import { captureVoiceSample } from "@/lib/ai/voice-profile";
+import { getPageTrainingPrompt } from "@/lib/ai/page-training";
 import nodemailer from "nodemailer";
 
 // Cold email outreach — AI-personalized emails sent to scraped leads
@@ -16,6 +17,8 @@ export async function POST(request: NextRequest) {
 
   const ownerId = await getEffectiveOwnerId(supabase, user.id);
   if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  const trainingPrompt = await getPageTrainingPrompt(supabase, user.id, "crm-followup");
 
   const { lead_ids, subject_template, body_template, from_name, batch_size } = await request.json();
   // Cap batch size to prevent abuse
@@ -91,7 +94,7 @@ export async function POST(request: NextRequest) {
           body: JSON.stringify({
             model: "claude-haiku-4-5-20251001",
             max_tokens: 400,
-            system: `You are writing a cold outreach email for ShortStack digital marketing agency. Write personalized, short emails (under 150 words). No fluff. Get to the point. Be genuine and helpful. Include a clear CTA (book a call). Sign off as: ${from_name || "The ShortStack Team"}`,
+            system: `You are writing a cold outreach email for ShortStack digital marketing agency. Write personalized, short emails (under 150 words). No fluff. Get to the point. Be genuine and helpful. Include a clear CTA (book a call). Sign off as: ${from_name || "The ShortStack Team"}${trainingPrompt ? `\n\n${trainingPrompt}` : ""}`,
             messages: [{
               role: "user",
               content: `Write a cold email to ${lead.owner_name || "the owner"} of "${lead.business_name}" (${lead.industry || "local business"} in ${lead.city || "their area"}). They have ${lead.review_count || 0} Google reviews${lead.google_rating ? ` and a ${lead.google_rating} rating` : ""}. ${lead.website ? `Website: ${lead.website}` : "No website found."}\n\nReturn JSON: {"subject":"...","body":"..."}`,

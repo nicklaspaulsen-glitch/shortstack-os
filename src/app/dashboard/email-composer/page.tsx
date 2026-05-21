@@ -20,6 +20,7 @@ import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/c
 import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
+import PageTrainingPanel from "@/components/ui/page-training-panel";
 
 interface SubjectVariant {
   subject: string;
@@ -1605,6 +1606,8 @@ export default function EmailComposerPage() {
         </div>
       )}
       </>)}
+      {/* AI training config for Email Composer */}
+      <PageTrainingPanel pageKey="email" pageLabel="Email Composer" />
     </div>
   );
 }

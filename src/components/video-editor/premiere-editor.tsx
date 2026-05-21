@@ -37,6 +37,11 @@ import {
   Sparkles,
   SlidersHorizontal,
   Download,
+  LibraryBig,
+  Repeat,
+  Type,
+  Plus,
+  ChevronDown,
 } from "lucide-react";
 import {
   historyReducer,
@@ -53,6 +58,7 @@ import { PremiereTimeline, msToTc } from "./premiere-timeline";
 import { Waveform } from "./waveform";
 import { AiPanel } from "./ai-panel";
 import { EffectsPanel } from "./effects-panel";
+import { SfxVfxBrollPanel } from "./sfx-vfx-broll-panel";
 import { ElectronBar } from "./electron-bar";
 
 const KEY_REPEAT_MS = 33; // ~1 frame @ 30fps
@@ -78,7 +84,9 @@ export function PremiereEditor({
   );
   const state = history.present;
   const [playing, setPlaying] = useState(false);
-  const [panel, setPanel] = useState<"ai" | "effects">("ai");
+  const [looping, setLooping] = useState(false);
+  const [panel, setPanel] = useState<"ai" | "effects" | "assets">("ai");
+  const [addTrackMenuOpen, setAddTrackMenuOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const lastTickRef = useRef<number>(0);
@@ -133,7 +141,7 @@ export function PremiereEditor({
     } as React.CSSProperties;
   }, [activeVideoClip, state.playhead]);
 
-  /* ─── Transport loop ───────────────────────────────────────── */
+  /* ─── Transport loop (with optional loop-region wrap) ──────── */
   useEffect(() => {
     if (!playing) {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -144,7 +152,19 @@ export function PremiereEditor({
     const tick = (now: number) => {
       const dt = now - lastTickRef.current;
       lastTickRef.current = now;
-      dispatch({ type: "SET_PLAYHEAD", ms: state.playhead + dt });
+      // Loop region: if looping + both markers set + playhead past markerOut → wrap to markerIn
+      const nextMs = state.playhead + dt;
+      if (
+        looping &&
+        state.markerIn !== null &&
+        state.markerOut !== null &&
+        state.markerOut > state.markerIn &&
+        nextMs >= state.markerOut
+      ) {
+        dispatch({ type: "SET_PLAYHEAD", ms: state.markerIn });
+      } else {
+        dispatch({ type: "SET_PLAYHEAD", ms: nextMs });
+      }
       rafRef.current = requestAnimationFrame(tick);
     };
     rafRef.current = requestAnimationFrame(tick);
@@ -153,7 +173,7 @@ export function PremiereEditor({
       rafRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playing]);
+  }, [playing, looping, state.markerIn, state.markerOut]);
 
   /* ─── Sync HTMLVideoElement to the active clip ─────────────── */
   useEffect(() => {
@@ -286,6 +306,66 @@ export function PremiereEditor({
     }
   };
 
+  /* ─── Selected clip helpers ─────────────────────────────────── */
+  const selectedClip = state.selection.length === 1
+    ? state.clips.find((c) => c.id === state.selection[0]) ?? null
+    : null;
+
+  const setSpeed = useCallback(
+    (speed: number) => {
+      if (!selectedClip) return;
+      dispatch({ type: "SPEED_CLIP", id: selectedClip.id, speed });
+    },
+    [selectedClip]
+  );
+
+  /* ─── Add caption at playhead ────────────────────────────────── */
+  const addCaption = useCallback(() => {
+    const capTrack = state.tracks.find((t) => t.kind === "caption");
+    if (!capTrack) { toast("No caption track", { icon: "ℹ" }); return; }
+    const id = `cap-${Date.now().toString(36)}`;
+    dispatch({
+      type: "ADD_CLIP",
+      clip: {
+        id,
+        trackId: capTrack.id,
+        start: state.playhead,
+        duration: 4000,
+        label: "New caption",
+        color: capTrack.accent,
+        text: "Your text here",
+      },
+    });
+    toast.success("Caption added — double-click to edit");
+  }, [state.tracks, state.playhead]);
+
+  /* ─── Close Add Track menu on outside click ─────────────────── */
+  useEffect(() => {
+    if (!addTrackMenuOpen) return;
+    const close = () => setAddTrackMenuOpen(false);
+    window.addEventListener("pointerdown", close, { capture: true });
+    return () => window.removeEventListener("pointerdown", close, { capture: true });
+  }, [addTrackMenuOpen]);
+
+  /* ─── Add track ──────────────────────────────────────────────── */
+  const addTrack = useCallback(
+    (kind: "video" | "audio" | "caption") => {
+      const prefix = kind === "video" ? "V" : kind === "audio" ? "A" : "C";
+      const accent =
+        kind === "video" ? "#8B5CF6" : kind === "audio" ? "#F59E0B" : "#22D3EE";
+      const existing = state.tracks.filter((t) => t.kind === kind);
+      const n = existing.length + 1;
+      const id = `${kind[0]}${n}-${Date.now().toString(36)}`;
+      dispatch({
+        type: "ADD_TRACK",
+        track: { id, label: `${prefix}${n}`, kind, accent },
+      });
+      setAddTrackMenuOpen(false);
+      toast.success(`${prefix}${n} track added`);
+    },
+    [state.tracks]
+  );
+
   /* ─── Peaks renderer for audio clips ───────────────────────── */
   const renderPeaks = useCallback((clip: Clip, widthPx: number, heightPx: number) => (
     <Waveform peaks={clip.peaks} widthPx={widthPx} heightPx={heightPx} accent={clip.color || "#F59E0B"} />
@@ -367,6 +447,55 @@ export function PremiereEditor({
               {msToTc(state.playhead, state.fps)} / {msToTc(totalMs, state.fps)}
             </span>
 
+            {/* ── In/Out + Loop ───────────────────────────────────── */}
+            <div className="flex items-center gap-px ml-1">
+              <button
+                type="button"
+                onClick={() =>
+                  dispatch({
+                    type: state.markerIn !== null ? "SET_MARKER_IN" : "SET_MARKER_IN",
+                    ms: state.markerIn !== null ? null : state.playhead,
+                  })
+                }
+                onContextMenu={(e) => { e.preventDefault(); dispatch({ type: "SET_MARKER_IN", ms: null }); }}
+                className={`px-1.5 py-1 rounded text-[10px] font-mono font-bold transition-colors ${
+                  state.markerIn !== null
+                    ? "bg-emerald-500/20 text-emerald-400"
+                    : "hover:bg-neutral-800 text-neutral-500"
+                }`}
+                title="Set In (I) — right-click to clear"
+              >
+                I{state.markerIn !== null ? `·${msToTc(state.markerIn, state.fps).slice(3, 8)}` : ""}
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  dispatch({ type: "SET_MARKER_OUT", ms: state.markerOut !== null ? null : state.playhead })
+                }
+                onContextMenu={(e) => { e.preventDefault(); dispatch({ type: "SET_MARKER_OUT", ms: null }); }}
+                className={`px-1.5 py-1 rounded text-[10px] font-mono font-bold transition-colors ${
+                  state.markerOut !== null
+                    ? "bg-rose-500/20 text-rose-400"
+                    : "hover:bg-neutral-800 text-neutral-500"
+                }`}
+                title="Set Out (O) — right-click to clear"
+              >
+                O{state.markerOut !== null ? `·${msToTc(state.markerOut, state.fps).slice(3, 8)}` : ""}
+              </button>
+              <button
+                type="button"
+                onClick={() => setLooping((v) => !v)}
+                className={`p-1.5 rounded transition-colors ${
+                  looping && state.markerIn !== null && state.markerOut !== null
+                    ? "text-cyan-400 bg-cyan-500/15"
+                    : "text-neutral-500 hover:bg-neutral-800"
+                }`}
+                title="Loop In→Out region"
+              >
+                <Repeat size={13} />
+              </button>
+            </div>
+
             <div className="flex-1" />
 
             <button
@@ -429,6 +558,73 @@ export function PremiereEditor({
               <ZoomIn size={14} />
             </button>
 
+            {/* ── Speed selector (contextual — selected clip only) ── */}
+            {selectedClip && (
+              <>
+                <div className="w-px h-4 bg-neutral-700 mx-1" />
+                <div className="flex items-center gap-px">
+                  {([0.25, 0.5, 1, 1.5, 2] as const).map((s) => {
+                    const active = Math.abs((selectedClip.speed ?? 1) - s) < 0.01;
+                    return (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setSpeed(s)}
+                        className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-medium transition-colors ${
+                          active
+                            ? "bg-blue-500/25 text-blue-300 border border-blue-500/50"
+                            : "text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300"
+                        }`}
+                        title={`Set speed to ${s}×`}
+                      >
+                        {s}×
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+            {/* ── Add Caption at playhead ───────────────────────────── */}
+            <div className="w-px h-4 bg-neutral-700 mx-1" />
+            <button
+              type="button"
+              onClick={addCaption}
+              className="flex items-center gap-1 px-2 py-1 rounded hover:bg-neutral-800 text-neutral-400 hover:text-neutral-200 text-[11px] transition-colors"
+              title="Add caption clip at playhead"
+            >
+              <Type size={12} />
+              <span>Caption</span>
+            </button>
+
+            {/* ── Add Track dropdown ────────────────────────────────── */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setAddTrackMenuOpen((v) => !v)}
+                className="flex items-center gap-0.5 px-2 py-1 rounded hover:bg-neutral-800 text-neutral-400 hover:text-neutral-200 text-[11px] transition-colors"
+                title="Add new track"
+              >
+                <Plus size={12} />
+                <span>Track</span>
+                <ChevronDown size={10} className={`transition-transform ${addTrackMenuOpen ? "rotate-180" : ""}`} />
+              </button>
+              {addTrackMenuOpen && (
+                <div className="absolute right-0 bottom-full mb-1 bg-neutral-900 border border-neutral-700 rounded-lg shadow-xl py-1 min-w-[110px] z-50">
+                  {(["video", "audio", "caption"] as const).map((kind) => (
+                    <button
+                      key={kind}
+                      type="button"
+                      onClick={() => { addTrack(kind); setAddTrackMenuOpen(false); }}
+                      className="w-full text-left px-3 py-1.5 text-[11px] text-neutral-300 hover:bg-neutral-800 capitalize transition-colors"
+                    >
+                      {kind === "video" ? "🎬" : kind === "audio" ? "🎵" : "💬"} {kind.charAt(0).toUpperCase() + kind.slice(1)} track
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <ElectronBar
               onFilesImported={(paths) => {
                 const v1 = state.tracks.find((t) => t.kind === "video");
@@ -464,13 +660,13 @@ export function PremiereEditor({
           </div>
         </div>
 
-        {/* Right dock: AI | Effects */}
+        {/* Right dock: AI | Effects | Assets */}
         <div className="flex flex-col">
           <div className="flex border-l border-b border-neutral-800 bg-neutral-900">
             <button
               type="button"
               onClick={() => setPanel("ai")}
-              className={`flex-1 flex items-center justify-center gap-1 text-[11px] px-3 py-1.5 border-r border-neutral-800 ${
+              className={`flex-1 flex items-center justify-center gap-1 text-[11px] px-2 py-1.5 border-r border-neutral-800 ${
                 panel === "ai" ? "bg-neutral-800 text-amber-300" : "text-neutral-400 hover:text-white"
               }`}
             >
@@ -479,17 +675,30 @@ export function PremiereEditor({
             <button
               type="button"
               onClick={() => setPanel("effects")}
-              className={`flex-1 flex items-center justify-center gap-1 text-[11px] px-3 py-1.5 ${
+              className={`flex-1 flex items-center justify-center gap-1 text-[11px] px-2 py-1.5 border-r border-neutral-800 ${
                 panel === "effects" ? "bg-neutral-800 text-amber-300" : "text-neutral-400 hover:text-white"
               }`}
             >
-              <SlidersHorizontal size={11} /> Effects
+              <SlidersHorizontal size={11} /> FX
+            </button>
+            <button
+              type="button"
+              onClick={() => setPanel("assets")}
+              className={`flex-1 flex items-center justify-center gap-1 text-[11px] px-2 py-1.5 ${
+                panel === "assets" ? "bg-neutral-800 text-blue-400" : "text-neutral-400 hover:text-white"
+              }`}
+            >
+              <LibraryBig size={11} /> Assets
             </button>
           </div>
-          {panel === "ai" ? (
+          {panel === "ai" && (
             <AiPanel state={state} dispatch={dispatch as (a: EditorAction) => void} />
-          ) : (
+          )}
+          {panel === "effects" && (
             <EffectsPanel state={state} dispatch={dispatch as (a: EditorAction) => void} />
+          )}
+          {panel === "assets" && (
+            <SfxVfxBrollPanel state={state} dispatch={dispatch as (a: EditorAction) => void} />
           )}
         </div>
       </div>

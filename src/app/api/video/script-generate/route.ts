@@ -8,6 +8,7 @@ import {
   safeJsonParse,
   getResponseText,
 } from "@/lib/ai/claude-helpers";
+import { getPageTrainingPrompt } from "@/lib/ai/page-training";
 
 interface ScriptGenerateInput {
   topic: string;
@@ -95,6 +96,8 @@ export async function POST(request: NextRequest) {
   const limited = checkAiRateLimit(user.id, profile?.plan_tier);
   if (limited) return limited;
 
+  const trainingPrompt = await getPageTrainingPrompt(authSupabase, user.id, "script");
+
   let body: ScriptGenerateInput;
   try {
     body = (await request.json()) as ScriptGenerateInput;
@@ -154,6 +157,9 @@ Tight, engaging, retention-optimized. JSON only.`;
           text: SYSTEM_PROMPT,
           cache_control: { type: "ephemeral" },
         },
+        ...(trainingPrompt
+          ? [{ type: "text" as const, text: trainingPrompt }]
+          : []),
       ],
       messages: [{ role: "user", content: userPrompt }],
     });
