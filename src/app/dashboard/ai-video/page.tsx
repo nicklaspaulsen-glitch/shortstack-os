@@ -2055,7 +2055,7 @@ export default function AIVideoPage() {
                     videoUrl={previewResult.url}
                     title={overlayTitle}
                     captionText={previewResult.prompt.slice(0, 120)}
-                    brandColor="#3B82F6"
+                    brandColor={brandColor}
                     aspectRatio={previewResult.aspect_ratio as "9:16" | "16:9" | "1:1"}
                     playerHeight={previewResult.aspect_ratio === "9:16" ? 400 : 260}
                     controls

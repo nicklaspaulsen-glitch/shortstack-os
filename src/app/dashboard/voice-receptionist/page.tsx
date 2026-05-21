@@ -1178,7 +1178,7 @@ function CalendarIntegrationCard() {
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Link
               href="/dashboard/calendar"
-              className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-500 px-3 py-2 text-[11.5px] font-semibold text-white hover:bg-indigo-500/90"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent text-[#020711] px-3 py-2 text-[11.5px] font-semibold hover:bg-[#E8FF4D]"
             >
               <CalendarIcon size={12} /> Connect calendar
             </Link>
@@ -1243,12 +1243,12 @@ function QuotaCard({
             <div
               className={`h-full transition-all ${
                 quota.isUnlimited
-                  ? "bg-indigo-500"
+                  ? "bg-brand-accent"
                   : quota.pct >= 100
                     ? "bg-rose-500"
                     : quota.pct >= 80
                       ? "bg-amber-400"
-                      : "bg-indigo-500"
+                      : "bg-brand-accent"
               }`}
               style={{
                 width: quota.isUnlimited
