@@ -126,8 +126,8 @@ interface RHStatCardProps {
   value: string | number;
   sub: string;
   pct: number;
-  change: string;
-  changeUp: boolean;
+  change?: string;
+  changeUp?: boolean;
   color: string;
   icon: React.ElementType;
 }
@@ -194,27 +194,29 @@ function RHStatCard({
         >
           <Icon size={20} style={{ color }} />
         </div>
-        <span
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 3,
-            padding: "3px 9px",
-            borderRadius: 99,
-            background: changeUp
-              ? "rgba(34,197,94,0.12)"
-              : "rgba(248,113,113,0.12)",
-            border: `1px solid ${
-              changeUp ? "rgba(34,197,94,0.25)" : "rgba(248,113,113,0.25)"
-            }`,
-            fontSize: 11,
-            fontWeight: 700,
-            color: changeUp ? "#22C55E" : "#F87171",
-          }}
-        >
-          {changeUp && <TrendingUp size={10} />}
-          {change}
-        </span>
+        {change && (
+          <span
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 3,
+              padding: "3px 9px",
+              borderRadius: 99,
+              background: changeUp
+                ? "rgba(34,197,94,0.12)"
+                : "rgba(248,113,113,0.12)",
+              border: `1px solid ${
+                changeUp ? "rgba(34,197,94,0.25)" : "rgba(248,113,113,0.25)"
+              }`,
+              fontSize: 11,
+              fontWeight: 700,
+              color: changeUp ? "#22C55E" : "#F87171",
+            }}
+          >
+            {changeUp && <TrendingUp size={10} />}
+            {change}
+          </span>
+        )}
       </div>
 
       {/* Number + label */}
@@ -276,48 +278,42 @@ function RHStatCard({
   );
 }
 
-// ─── Pipeline Board ───────────────────────────────────────────────────────────
+// ─── Pipeline Board (live Supabase data) ─────────────────────────────────────
 
-interface PipelineStage {
+interface LiveStage {
   id: string;
   label: string;
   color: string;
   count: number;
-  contacts: string[];
 }
 
-const PIPELINE_STAGES: PipelineStage[] = [
-  {
-    id: "new",
-    label: "New Lead",
-    color: "#60A5FA",
-    count: 8,
-    contacts: ["Sarah Johnson", "Mike Thompson", "Emma Williams"],
-  },
-  {
-    id: "contacted",
-    label: "Contacted",
-    color: "#A78BFA",
-    count: 5,
-    contacts: ["John Davies", "Lisa Martinez", "Tom Kim"],
-  },
-  {
-    id: "proposal",
-    label: "Proposal Sent",
-    color: "#F59E0B",
-    count: 3,
-    contacts: ["Amy Rodriguez", "Brad Peterson"],
-  },
-  {
-    id: "won",
-    label: "Closed Won",
-    color: "#22C55E",
-    count: 12,
-    contacts: ["Dan Foster", "Eva Singh", "Frank Gomez"],
-  },
+const STAGE_META: LiveStage[] = [
+  { id: "new",          label: "New",        color: "#60A5FA", count: 0 },
+  { id: "called",       label: "Contacted",  color: "#A78BFA", count: 0 },
+  { id: "replied",      label: "Replied",    color: "#F59E0B", count: 0 },
+  { id: "booked",       label: "Booked",     color: "#22C55E", count: 0 },
 ];
 
 function PipelineBoard() {
+  const [stages, setStages] = useState<LiveStage[]>(STAGE_META);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const db = createSupabaseClient();
+    Promise.all(
+      STAGE_META.map((s) =>
+        db.from("leads").select("id", { count: "exact", head: true }).eq("status", s.id)
+      )
+    ).then((results) => {
+      setStages(
+        STAGE_META.map((s, i) => ({ ...s, count: results[i].count ?? 0 }))
+      );
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+
+  const total = stages.reduce((sum, s) => sum + s.count, 0);
+
   return (
     <div
       style={{
@@ -347,11 +343,26 @@ function PipelineBoard() {
               letterSpacing: "0.06em",
             }}
           >
-            Pipeline Overview
+            Lead Pipeline
           </span>
+          {!loading && (
+            <span
+              style={{
+                padding: "1px 7px",
+                borderRadius: 99,
+                background: "rgba(212,255,0,0.08)",
+                border: "1px solid rgba(212,255,0,0.18)",
+                fontSize: 11,
+                fontWeight: 700,
+                color: "#D4FF00",
+              }}
+            >
+              {total} total
+            </span>
+          )}
         </div>
         <Link
-          href="/dashboard/crm"
+          href="/dashboard/leads"
           style={{
             fontSize: 11,
             color: "var(--sidebar-icon-active)",
@@ -361,11 +372,11 @@ function PipelineBoard() {
             gap: 3,
           }}
         >
-          Full CRM <ArrowUpRight size={11} />
+          All leads <ArrowUpRight size={11} />
         </Link>
       </div>
 
-      {/* Kanban columns */}
+      {/* Stage columns */}
       <div
         style={{
           display: "grid",
@@ -373,140 +384,138 @@ function PipelineBoard() {
           gap: 14,
         }}
       >
-        {PIPELINE_STAGES.map((stage) => (
-          <div key={stage.id}>
-            {/* Stage label + count */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: 8,
-              }}
+        {stages.map((stage) => {
+          const barPct = total > 0 ? (stage.count / total) * 100 : 0;
+          return (
+            <Link
+              key={stage.id}
+              href={`/dashboard/leads?status=${stage.id}`}
+              style={{ textDecoration: "none" }}
             >
-              <span
-                style={{ fontSize: 12, fontWeight: 600, color: stage.color }}
-              >
-                {stage.label}
-              </span>
-              <span
-                style={{
-                  padding: "1px 8px",
-                  borderRadius: 99,
-                  background: `${stage.color}18`,
-                  border: `1px solid ${stage.color}30`,
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: stage.color,
-                }}
-              >
-                {stage.count}
-              </span>
-            </div>
-
-            {/* Accent bar */}
-            <div
-              style={{
-                height: 3,
-                borderRadius: 2,
-                background: stage.color,
-                opacity: 0.3,
-                marginBottom: 10,
-              }}
-            />
-
-            {/* Contact chips */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {stage.contacts.map((c, i) => (
+              <div>
+                {/* Stage label + count */}
                 <div
-                  key={i}
                   style={{
-                    padding: "7px 10px",
-                    borderRadius: 8,
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid var(--sidebar-border)",
-                    fontSize: 12,
-                    color: "var(--sidebar-text-primary)",
-                    cursor: "pointer",
-                    transition: "border-color 150ms ease, background 150ms ease",
-                    whiteSpace: "nowrap",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: 8,
+                  }}
+                >
+                  <span style={{ fontSize: 12, fontWeight: 600, color: stage.color }}>
+                    {stage.label}
+                  </span>
+                  <span
+                    style={{
+                      padding: "1px 8px",
+                      borderRadius: 99,
+                      background: `${stage.color}18`,
+                      border: `1px solid ${stage.color}30`,
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: stage.color,
+                    }}
+                  >
+                    {loading ? "…" : stage.count}
+                  </span>
+                </div>
+
+                {/* Proportional bar */}
+                <div
+                  style={{
+                    height: 4,
+                    borderRadius: 2,
+                    background: "var(--sidebar-border)",
                     overflow: "hidden",
-                    textOverflow: "ellipsis",
+                    marginBottom: 10,
                   }}
                 >
-                  {c}
+                  <div
+                    style={{
+                      height: "100%",
+                      width: loading ? "0%" : `${barPct}%`,
+                      background: stage.color,
+                      borderRadius: 2,
+                      transition: "width 600ms cubic-bezier(0.32,0.72,0,1)",
+                    }}
+                  />
                 </div>
-              ))}
-              {stage.count > stage.contacts.length && (
-                <div
+
+                {/* Go-to hint */}
+                <p
                   style={{
-                    padding: "5px 10px",
-                    borderRadius: 8,
-                    border: `1px dashed ${stage.color}40`,
                     fontSize: 11,
-                    color: stage.color,
-                    textAlign: "center",
-                    cursor: "pointer",
+                    color: "var(--sidebar-text-secondary)",
+                    margin: 0,
                   }}
                 >
-                  +{stage.count - stage.contacts.length} more
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
+                  {loading ? "" : stage.count === 0 ? "none yet" : `${stage.count} lead${stage.count === 1 ? "" : "s"}`}
+                </p>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-// ─── New Enquiries ────────────────────────────────────────────────────────────
+// ─── New Enquiries (live Supabase data) ──────────────────────────────────────
 
-interface Enquiry {
-  initials: string;
-  name: string;
-  service: string;
-  time: string;
+interface RecentLead {
+  id: string;
+  business_name: string | null;
+  source: string | null;
+  scraped_at: string;
   status: string;
-  color: string;
+  lead_score: number | null;
 }
 
-const ENQUIRIES: Enquiry[] = [
-  {
-    initials: "SJ",
-    name: "Sarah Johnson",
-    service: "Social Media Package",
-    time: "2m ago",
-    status: "NEW",
-    color: "#60A5FA",
-  },
-  {
-    initials: "MT",
-    name: "Mike Thompson",
-    service: "SEO Audit",
-    time: "15m ago",
-    status: "PENDING",
-    color: "#A78BFA",
-  },
-  {
-    initials: "EW",
-    name: "Emma Williams",
-    service: "PPC Campaign",
-    time: "1h ago",
-    status: "REVIEW",
-    color: "#F59E0B",
-  },
-  {
-    initials: "JD",
-    name: "John Davies",
-    service: "Email Marketing",
-    time: "3h ago",
-    status: "NEW",
-    color: "#22C55E",
-  },
-];
+const STATUS_COLORS: Record<string, string> = {
+  new: "#60A5FA",
+  called: "#A78BFA",
+  replied: "#F59E0B",
+  booked: "#22C55E",
+  converted: "#D4FF00",
+  closed_won: "#D4FF00",
+};
+
+function timeAgo(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return "just now";
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
+}
+
+function initials(name: string | null): string {
+  if (!name) return "?";
+  return name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? "")
+    .join("");
+}
 
 function NewEnquiries() {
+  const [leads, setLeads] = useState<RecentLead[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const db = createSupabaseClient();
+    db.from("leads")
+      .select("id, business_name, source, scraped_at, status, lead_score")
+      .order("scraped_at", { ascending: false })
+      .limit(5)
+      .then(({ data }: { data: RecentLead[] | null }) => {
+        setLeads(data ?? []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
   return (
     <div
       style={{
@@ -536,7 +545,7 @@ function NewEnquiries() {
               letterSpacing: "0.06em",
             }}
           >
-            New Enquiries
+            Recent Leads
           </span>
         </div>
         <Link
@@ -555,156 +564,176 @@ function NewEnquiries() {
       </div>
 
       {/* Cards */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        {ENQUIRIES.map((e) => (
-          <div
-            key={e.name}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: "10px 12px",
-              borderRadius: 10,
-              background: "rgba(255,255,255,0.025)",
-              border: "1px solid var(--sidebar-border)",
-              cursor: "pointer",
-              transition: "border-color 150ms ease, background 150ms ease",
-            }}
-          >
-            {/* Avatar */}
+      {loading ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {[1, 2, 3].map((i) => (
             <div
+              key={i}
               style={{
-                width: 36,
-                height: 36,
-                borderRadius: "50%",
-                background: `${e.color}18`,
-                border: `1.5px solid ${e.color}35`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 12,
-                fontWeight: 700,
-                color: e.color,
-                flexShrink: 0,
+                height: 56,
+                borderRadius: 10,
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid var(--sidebar-border)",
+                animation: "pulse 1.5s ease-in-out infinite",
               }}
-            >
-              {e.initials}
-            </div>
+            />
+          ))}
+        </div>
+      ) : leads.length === 0 ? (
+        <div
+          style={{
+            padding: "24px 16px",
+            textAlign: "center",
+            color: "var(--sidebar-text-secondary)",
+            fontSize: 13,
+          }}
+        >
+          No leads yet.{" "}
+          <Link href="/dashboard/leads" style={{ color: "var(--sidebar-icon-active)" }}>
+            Add your first
+          </Link>
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {leads.map((lead) => {
+            const color = STATUS_COLORS[lead.status] ?? "#60A5FA";
+            const ini = initials(lead.business_name);
+            return (
+              <Link
+                key={lead.id}
+                href="/dashboard/leads"
+                style={{ textDecoration: "none" }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    padding: "10px 12px",
+                    borderRadius: 10,
+                    background: "rgba(255,255,255,0.025)",
+                    border: "1px solid var(--sidebar-border)",
+                    cursor: "pointer",
+                    transition: "border-color 150ms ease, background 150ms ease",
+                  }}
+                >
+                  {/* Avatar */}
+                  <div
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      background: `${color}18`,
+                      border: `1.5px solid ${color}35`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {ini}
+                  </div>
 
-            {/* Info */}
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: "var(--sidebar-text-primary)",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {e.name}
-              </p>
-              <p
-                style={{
-                  margin: "1px 0 0",
-                  fontSize: 11,
-                  color: "var(--sidebar-text-secondary)",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {e.service}
-              </p>
-            </div>
+                  {/* Info */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: 13,
+                        fontWeight: 600,
+                        color: "var(--sidebar-text-primary)",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {lead.business_name ?? "Unnamed lead"}
+                    </p>
+                    <p
+                      style={{
+                        margin: "1px 0 0",
+                        fontSize: 11,
+                        color: "var(--sidebar-text-secondary)",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {lead.source ?? "Direct"}
+                    </p>
+                  </div>
 
-            {/* Status + time */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-                gap: 3,
-                flexShrink: 0,
-              }}
-            >
-              <span
-                style={{
-                  padding: "2px 7px",
-                  borderRadius: 99,
-                  background: `${e.color}18`,
-                  fontSize: 10,
-                  fontWeight: 700,
-                  color: e.color,
-                  letterSpacing: "0.04em",
-                }}
-              >
-                {e.status}
-              </span>
-              <span
-                style={{ fontSize: 10, color: "var(--sidebar-text-secondary)" }}
-              >
-                {e.time}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
+                  {/* Status + time */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                      gap: 3,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <span
+                      style={{
+                        padding: "2px 7px",
+                        borderRadius: 99,
+                        background: `${color}18`,
+                        fontSize: 10,
+                        fontWeight: 700,
+                        color,
+                        letterSpacing: "0.04em",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {lead.status}
+                    </span>
+                    <span style={{ fontSize: 10, color: "var(--sidebar-text-secondary)" }}>
+                      {timeAgo(lead.scraped_at)}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
 
-// ─── Follow-ups ───────────────────────────────────────────────────────────────
+// ─── Stale Leads — untouched leads needing follow-up ─────────────────────────
 
-interface FollowUp {
-  client: string;
-  action: string;
-  priority: "HIGH" | "MEDIUM" | "LOW";
-  due: string;
+interface StaleLead {
+  id: string;
+  business_name: string | null;
+  source: string | null;
+  scraped_at: string;
+  lead_score: number | null;
 }
 
-const FOLLOWUP_COLOR: Record<string, string> = {
-  HIGH: "#F87171",
-  MEDIUM: "#F59E0B",
-  LOW: "#60A5FA",
-};
-
-const FOLLOWUPS: FollowUp[] = [
-  {
-    client: "Acme Corp",
-    action: "Send proposal follow-up email",
-    priority: "HIGH",
-    due: "Overdue",
-  },
-  {
-    client: "Brand Co",
-    action: "Review content calendar",
-    priority: "MEDIUM",
-    due: "Today",
-  },
-  {
-    client: "Growth Labs",
-    action: "Invoice overdue follow-up",
-    priority: "HIGH",
-    due: "Overdue",
-  },
-  {
-    client: "StartupX",
-    action: "Monthly check-in call",
-    priority: "LOW",
-    due: "This week",
-  },
-  {
-    client: "Blue Ocean",
-    action: "Campaign performance review",
-    priority: "MEDIUM",
-    due: "Friday",
-  },
-];
-
 function FollowUps() {
+  const [stale, setStale] = useState<StaleLead[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const db = createSupabaseClient();
+    const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    db.from("leads")
+      .select("id, business_name, source, scraped_at, lead_score")
+      .eq("status", "new")
+      .lt("scraped_at", cutoff)
+      .order("scraped_at", { ascending: true })
+      .limit(5)
+      .then(({ data }: { data: StaleLead[] | null }) => {
+        setStale(data ?? []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
   return (
     <div
       style={{
@@ -734,111 +763,158 @@ function FollowUps() {
               letterSpacing: "0.06em",
             }}
           >
-            Follow-ups
+            Needs Follow-up
           </span>
         </div>
-        <span
-          style={{
-            padding: "2px 8px",
-            borderRadius: 99,
-            background: "rgba(248,113,113,0.12)",
-            border: "1px solid rgba(248,113,113,0.25)",
-            fontSize: 11,
-            fontWeight: 700,
-            color: "#F87171",
-          }}
-        >
-          2 overdue
-        </span>
+        {!loading && stale.length > 0 && (
+          <span
+            style={{
+              padding: "2px 8px",
+              borderRadius: 99,
+              background: "rgba(248,113,113,0.12)",
+              border: "1px solid rgba(248,113,113,0.25)",
+              fontSize: 11,
+              fontWeight: 700,
+              color: "#F87171",
+            }}
+          >
+            {stale.length} untouched
+          </span>
+        )}
+        {!loading && stale.length === 0 && (
+          <Link
+            href="/dashboard/leads"
+            style={{
+              fontSize: 11,
+              color: "var(--sidebar-icon-active)",
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              gap: 3,
+            }}
+          >
+            View leads <ArrowUpRight size={11} />
+          </Link>
+        )}
       </div>
 
       {/* List */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {FOLLOWUPS.map((f, i) => {
-          const color = FOLLOWUP_COLOR[f.priority];
-          const isOverdue = f.due === "Overdue";
-          const isToday = f.due === "Today";
-          return (
+      {loading ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {[1, 2, 3].map((i) => (
             <div
               key={i}
               style={{
-                display: "flex",
-                alignItems: "flex-start",
-                gap: 10,
-                padding: "10px 12px",
+                height: 52,
                 borderRadius: 10,
-                background: "rgba(255,255,255,0.025)",
-                border: `1px solid ${isOverdue ? "rgba(248,113,113,0.18)" : "var(--sidebar-border)"}`,
-                cursor: "pointer",
-                transition: "border-color 150ms ease",
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid var(--sidebar-border)",
+                animation: "pulse 1.5s ease-in-out infinite",
               }}
-            >
-              {/* Priority badge */}
-              <span
-                style={{
-                  padding: "2px 7px",
-                  borderRadius: 6,
-                  background: `${color}14`,
-                  border: `1px solid ${color}30`,
-                  fontSize: 10,
-                  fontWeight: 700,
-                  color,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.04em",
-                  flexShrink: 0,
-                  marginTop: 1,
-                  lineHeight: 1.6,
-                }}
-              >
-                {f.priority}
-              </span>
-
-              {/* Content */}
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p
+            />
+          ))}
+        </div>
+      ) : stale.length === 0 ? (
+        <div
+          style={{
+            padding: "24px 16px",
+            textAlign: "center",
+          }}
+        >
+          <p style={{ margin: 0, fontSize: 13, color: "var(--sidebar-text-primary)", fontWeight: 600 }}>
+            All caught up
+          </p>
+          <p style={{ margin: "4px 0 0", fontSize: 11, color: "var(--sidebar-text-secondary)" }}>
+            No leads have been waiting more than 24 hours.
+          </p>
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {stale.map((lead) => {
+            const ageH = Math.floor((Date.now() - new Date(lead.scraped_at).getTime()) / 3600000);
+            const isOld = ageH >= 48;
+            return (
+              <Link key={lead.id} href="/dashboard/leads" style={{ textDecoration: "none" }}>
+                <div
                   style={{
-                    margin: 0,
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: "var(--sidebar-text-primary)",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 10,
+                    padding: "10px 12px",
+                    borderRadius: 10,
+                    background: "rgba(255,255,255,0.025)",
+                    border: `1px solid ${isOld ? "rgba(248,113,113,0.18)" : "var(--sidebar-border)"}`,
+                    cursor: "pointer",
+                    transition: "border-color 150ms ease",
                   }}
                 >
-                  {f.client}
-                </p>
-                <p
-                  style={{
-                    margin: "2px 0 0",
-                    fontSize: 11,
-                    color: "var(--sidebar-text-secondary)",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {f.action}
-                </p>
-              </div>
+                  {/* Age badge */}
+                  <span
+                    style={{
+                      padding: "2px 7px",
+                      borderRadius: 6,
+                      background: isOld ? "rgba(248,113,113,0.12)" : "rgba(245,158,11,0.12)",
+                      border: `1px solid ${isOld ? "rgba(248,113,113,0.25)" : "rgba(245,158,11,0.25)"}`,
+                      fontSize: 10,
+                      fontWeight: 700,
+                      color: isOld ? "#F87171" : "#F59E0B",
+                      flexShrink: 0,
+                      marginTop: 1,
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {ageH >= 24 * 2 ? `${Math.floor(ageH / 24)}d` : `${ageH}h`}
+                  </span>
 
-              {/* Due label */}
-              <span
-                style={{
-                  fontSize: 11,
-                  fontWeight: isOverdue || isToday ? 700 : 400,
-                  color: isOverdue
-                    ? "#F87171"
-                    : isToday
-                    ? "#F59E0B"
-                    : "var(--sidebar-text-secondary)",
-                  flexShrink: 0,
-                  marginTop: 1,
-                }}
-              >
-                {f.due}
-              </span>
-            </div>
-          );
-        })}
-      </div>
+                  {/* Content */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: 13,
+                        fontWeight: 600,
+                        color: "var(--sidebar-text-primary)",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {lead.business_name ?? "Unnamed lead"}
+                    </p>
+                    <p
+                      style={{
+                        margin: "2px 0 0",
+                        fontSize: 11,
+                        color: "var(--sidebar-text-secondary)",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {lead.source ?? "Direct"} · no action yet
+                    </p>
+                  </div>
+
+                  {/* Score if available */}
+                  {lead.lead_score !== null && (
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "#D4FF00",
+                        flexShrink: 0,
+                        marginTop: 1,
+                      }}
+                    >
+                      {lead.lead_score}
+                    </span>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -878,8 +954,6 @@ function AgencyDashboard() {
       value: stats?.clients ?? "—",
       sub: "total registered",
       pct: stats ? Math.min(Math.round((stats.clients / 50) * 100), 100) : 60,
-      change: "+12%",
-      changeUp: true,
       color: "#14B8A6",
       icon: Users,
     },
@@ -888,8 +962,6 @@ function AgencyDashboard() {
       value: stats?.leads ?? "—",
       sub: "in pipeline",
       pct: stats ? Math.min(Math.round((stats.leads / 100) * 100), 100) : 75,
-      change: "+8%",
-      changeUp: true,
       color: "#A78BFA",
       icon: Target,
     },
@@ -900,8 +972,6 @@ function AgencyDashboard() {
       pct: stats
         ? Math.min(Math.round((stats.workflows / 20) * 100), 100)
         : 45,
-      change: "+3",
-      changeUp: true,
       color: "#F97316",
       icon: Zap,
     },

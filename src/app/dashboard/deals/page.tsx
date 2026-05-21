@@ -200,18 +200,18 @@ export default function DealsPage() {
             <Plus size={13} /> New Deal
           </button>
         </div>
-      </div>{/* Stats Row � collapsible (state persists) */}<CollapsibleStats
+      </div>{/* Stats Row — collapsible (state persists) */}<CollapsibleStats
               storageKey="deals"
               icon={<BarChart3 size={14} className="text-brand-accent" />}
               title="Deal Stats"
               summary={
                 <>
                   <span>Pipe <span className="text-brand-accent font-semibold">{formatCurrency(totalPipeline)}</span></span>
-                  <span className="opacity-30">�</span>
-                  <span>Won <span className="text-emerald-700 font-semibold">{formatCurrency(wonValue)}</span></span>
-                  <span className="opacity-30">�</span>
+                  <span className="opacity-30" aria-hidden>·</span>
+                  <span>Won <span className="text-emerald-400 font-semibold">{formatCurrency(wonValue)}</span></span>
+                  <span className="opacity-30" aria-hidden>·</span>
                   <span>Win <span className="text-blue-400 font-semibold">{winRate}%</span></span>
-                  <span className="opacity-30">�</span>
+                  <span className="opacity-30" aria-hidden>·</span>
                   <span>Avg <span className="text-brand-accent font-semibold">{formatCurrency(avgDealSize)}</span></span>
                 </>
               }
@@ -223,7 +223,6 @@ export default function DealsPage() {
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                     <div>
                       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Pipeline Value</p>
                       <p className="font-display text-3xl font-bold tracking-[-0.03em] text-brand-accent tabular-nums">{formatCurrency(totalPipeline)}</p>
@@ -236,7 +235,7 @@ export default function DealsPage() {
                     transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Won</p>
-                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-700 tabular-nums">{formatCurrency(wonValue)}</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">{formatCurrency(wonValue)}</p>
                     <p className="text-[11px] text-text-muted mt-1.5">closed won</p>
                   </motion.div>
                   <motion.div
@@ -245,7 +244,7 @@ export default function DealsPage() {
                     transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Lost</p>
-                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-rose-700 tabular-nums">{formatCurrency(lostValue)}</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-rose-400 tabular-nums">{formatCurrency(lostValue)}</p>
                     <p className="text-[11px] text-text-muted mt-1.5">closed lost</p>
                   </motion.div>
                 </div>
@@ -256,7 +255,7 @@ export default function DealsPage() {
                     transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Weighted</p>
-                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-purple-600 tabular-nums">{formatCurrency(Math.round(weightedPipeline))}</p>
+                    <p className="font-display text-2xl font-bold tracking-[-0.02em] text-indigo-400 tabular-nums">{formatCurrency(Math.round(weightedPipeline))}</p>
                     <p className="text-[11px] text-text-muted mt-1.5">probability-adj.</p>
                   </motion.div>
                   <motion.div
@@ -558,7 +557,7 @@ export default function DealsPage() {
                   })}
                 </motion.div>
 
-                {/* Stage Automation � starter rule templates */}
+                {/* Stage Automation — starter rule templates */}
                 <PrismPanel padding="p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                     <ArrowRight size={14} className="text-brand-accent" /> Deal Stage Automation
@@ -605,7 +604,7 @@ export default function DealsPage() {
                         <motion.div
                           key={i}
                           whileHover={{ y: -2 }}
-                          onClick={() => toast("Contract templates coming soon � needs API")}
+                          onClick={() => toast("Contract templates coming soon — needs API")}
                           className="flex items-center justify-between p-3 rounded-lg hover:border-border-subtle transition-all cursor-pointer border border-border-subtle" style={{ background: "rgba(255,255,255,0.05)" }}
 >
                           <div className="flex items-center gap-2">
@@ -640,7 +639,7 @@ export default function DealsPage() {
                         {["Content", "Ads", "SEO", "Web", "Email", "AI"].map(s => (
                           <button
                             key={s}
-                            onClick={() => toast(`${s} service selection coming soon � needs proposal builder`)}
+                            onClick={() => toast(`${s} service selection coming soon — needs proposal builder`)}
                             className="text-[9px] px-2 py-1 rounded border border-border-subtle hover:border-[#1D4ED8]/30 hover:bg-brand-accent/80/5 text-text-muted hover:text-brand-accent transition-all"
 >{s}</button>
                         ))}
@@ -648,7 +647,7 @@ export default function DealsPage() {
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        onClick={() => toast("Proposal PDF generation coming soon � needs API")}
+                        onClick={() => toast("Proposal PDF generation coming soon — needs API")}
                         className="btn-primary w-full text-xs flex items-center justify-center gap-1.5"
 >
                         <Zap size={12} /> Generate Proposal PDF

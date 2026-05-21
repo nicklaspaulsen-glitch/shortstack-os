@@ -24,10 +24,10 @@ export default function DialerPage() {
   const [activeTab, setActiveTab] = useState<Tab>("Power Dialer");
 
   return (
-    <MotionPage className="min-h-screen pb-12 bg-[#F3F6FA]">{/* -- Dialer command strip -- */}
+    <MotionPage className="min-h-screen pb-12">{/* -- Dialer command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AI DIALER</p>
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Voice &amp; Messaging</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Dialer</h1>
       </div>
     </div><div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">

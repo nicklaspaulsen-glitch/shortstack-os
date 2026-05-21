@@ -115,7 +115,7 @@ export default function AutomationsPage() {
     <MotionPage className="space-y-6">{/* -- Automations command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AUTOMATION ENGINE</p>
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Trigger &amp; Orchestrate</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Automations</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
@@ -143,7 +143,6 @@ export default function AutomationsPage() {
     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
   >
-    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
     <div>
       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Automations</p>
       <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{workflows.length}</p>
@@ -174,7 +173,7 @@ export default function AutomationsPage() {
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Search automations�"
+                placeholder="Search automations…"
                 className="w-full glass rounded-lg pl-8 pr-3 py-2 text-text-primary text-sm focus:outline-none focus:border-indigo-500/50"
               />
             </div>{loading ? (
@@ -185,12 +184,12 @@ export default function AutomationsPage() {
               </div>
             ) : filtered.length === 0 ? (
               <EmptyState
-                type="no-campaigns"
+                type="no-content"
                 title={search ? "No automations found" : "No automations yet"}
                 description={
                   search
                     ? "Try a different search term."
-                    : "Build workflows that run automatically � trigger actions on new leads, replies, form fills, and more."
+                    : "Build workflows that run automatically — trigger actions on new leads, replies, form fills, and more."
                 }
                 action={
                   !search ? (
