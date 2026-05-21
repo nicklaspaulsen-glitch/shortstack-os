@@ -180,7 +180,7 @@ function IconCircle({
       title={label}
       aria-label={label}
       aria-current={active ? "page" : undefined}
-      className="group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl shrink-0 outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6]/60"
+      className="group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl shrink-0 outline-none focus-visible:ring-1 focus-visible:ring-[rgba(212,255,0,0.5)]"
       style={{
         background: active
           ? "rgba(212,255,0,0.16)"
@@ -222,7 +222,7 @@ function IconCircle({
         <span
           aria-hidden
           className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
-          style={{ background: "#3B82F6", boxShadow: "0 0 4px rgba(212,255,0,0.80)" }}
+          style={{ background: "#D4FF00", boxShadow: "0 0 4px rgba(212,255,0,0.80)" }}
         />
       )}
       {/* Tooltip */}
@@ -269,7 +269,7 @@ function SectionDropdown({
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-haspopup="true"
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-medium outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6]/60 cursor-pointer"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-medium outline-none focus-visible:ring-1 focus-visible:ring-[rgba(212,255,0,0.5)] cursor-pointer"
         style={{
           background: active
             ? "rgba(212,255,0,0.12)"
@@ -330,7 +330,7 @@ function SectionDropdown({
                   href={item.href}
                   onClick={() => setOpen(false)}
                   role="menuitem"
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12px] group outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6]/60"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12px] group outline-none focus-visible:ring-1 focus-visible:ring-[rgba(212,255,0,0.5)]"
                   style={{
                     background: itemActive ? "rgba(212,255,0,0.12)" : "transparent",
                     color: itemActive ? "#60A5FA" : "#8A8FA8",
@@ -369,7 +369,7 @@ function SectionDropdown({
                     <span
                       aria-hidden
                       className="ml-auto w-1 h-1 rounded-full shrink-0"
-                      style={{ background: "#3B82F6", boxShadow: "0 0 4px rgba(212,255,0,0.70)" }}
+                      style={{ background: "#D4FF00", boxShadow: "0 0 4px rgba(212,255,0,0.70)" }}
                     />
                   )}
                 </Link>
@@ -548,14 +548,14 @@ function NavLogo() {
   return (
     <Link
       href="/dashboard"
-      className="hidden lg:flex items-center gap-2 shrink-0 mr-1 group outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6]/60 rounded-xl"
+      className="hidden lg:flex items-center gap-2 shrink-0 mr-1 group outline-none focus-visible:ring-1 focus-visible:ring-[rgba(212,255,0,0.6)] rounded-xl"
       aria-label="ShortStack Dashboard"
     >
       <span
-        className="relative flex items-center justify-center w-8 h-8 rounded-xl text-white font-bold text-[12px] font-display overflow-hidden shrink-0"
+        className="relative flex items-center justify-center w-8 h-8 rounded-xl text-[#020711] font-bold text-[12px] font-display overflow-hidden shrink-0"
         style={{
           background:
-            "linear-gradient(135deg, #3B82F6 0%, #2563EB 60%, #1D4ED8 100%)",
+            "linear-gradient(135deg, #D4FF00 0%, #AACC00 60%, #88AA00 100%)",
           boxShadow:
             "0 0 0 1px rgba(212,255,0,0.30), 0 2px 10px rgba(212,255,0,0.40), inset 0 1px 0 rgba(255,255,255,0.18)",
           transition: "box-shadow 200ms, transform 200ms",
