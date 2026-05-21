@@ -85,17 +85,17 @@ export default function ClientReportsPage() {
       <div className="glass rounded-xl p-4">
         <div className="flex items-center justify-between mb-2">
           <h2 className="mb-0">Project Progress</h2>
-          <span className="text-[10px] font-mono text-blue-400">{stats.tasksCompleted}/{stats.totalTasks} tasks</span>
+          <span className="text-[10px] font-mono text-brand-accent">{stats.tasksCompleted}/{stats.totalTasks} tasks</span>
         </div>
-        <div className="w-full bg-white/[0.10] rounded-full h-2.5">
-          <div className="bg-blue-500 rounded-full h-2.5 transition-all" style={{ width: `${completionRate}%` }} />
+        <div className="w-full bg-white/10 rounded-full h-2.5">
+          <div className="bg-brand-accent rounded-full h-2.5 transition-all" style={{ width: `${completionRate}%` }} />
         </div>
       </div>
 
       {/* Activity log */}
       <div className="glass rounded-xl p-4">
         <h2 className="flex items-center gap-2">
-          <Calendar size={13} className="text-blue-400" /> Activity Log
+          <Calendar size={13} className="text-brand-accent" /> Activity Log
         </h2>
         <div className="space-y-2 max-h-[400px] overflow-y-auto">
           {recentActions.length === 0 ? (
@@ -103,8 +103,8 @@ export default function ClientReportsPage() {
           ) : (
             recentActions.map((a, i) => (
               <div key={i} className="flex items-start gap-2.5 py-2 border-b border-border-subtle last:border-0">
-                <div className="w-6 h-6 bg-blue-500/[0.10] rounded-md flex items-center justify-center shrink-0 mt-0.5">
-                  <Zap size={10} className="text-blue-400" />
+                <div className="w-6 h-6 bg-brand-accent/10 rounded-md flex items-center justify-center shrink-0 mt-0.5">
+                  <Zap size={10} className="text-brand-accent" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs text-text-secondary">{a.description as string}</p>

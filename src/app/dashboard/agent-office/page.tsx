@@ -229,7 +229,7 @@ export default function AgentOfficePage() {
             <div className="flex items-center rounded-lg border border-border-subtle bg-white/5 p-0.5">
               <button
                 onClick={() => setViewMode("kumo")}
-                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "kumo" ? "bg-blue-600 text-white shadow" : "text-text-muted hover:text-text-muted"}`}
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "kumo" ? "bg-brand-accent text-[#020711] shadow" : "text-text-muted hover:text-text-secondary"}`}
                 title="2D Pixel view"
               >
                 <LayoutGrid size={10} />
@@ -237,7 +237,7 @@ export default function AgentOfficePage() {
               </button>
               <button
                 onClick={() => setViewMode("3d")}
-                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "3d" ? "bg-blue-600 text-white shadow" : "text-text-muted hover:text-text-muted"}`}
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "3d" ? "bg-brand-accent text-[#020711] shadow" : "text-text-muted hover:text-text-secondary"}`}
                 title="3D Scene view"
               >
                 <Boxes size={10} />

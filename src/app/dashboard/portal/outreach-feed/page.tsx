@@ -68,14 +68,7 @@ export default function ClientOutreachFeedPage() {
         className="glass rounded-xl border border-border-subtle px-6 py-5 sm:py-6"
       >
         <div className="flex items-start gap-3">
-          <div
-            className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center"
-            style={{
-              background: "rgba(59,130,246,0.10)",
-              border: "1px solid rgba(59,130,246,0.20)",
-              color: "#2563EB",
-            }}
-          >
+          <div className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center bg-[rgba(99,102,241,0.10)] border border-[rgba(99,102,241,0.20)] text-indigo-400">
             <MessagesSquare size={22} />
           </div>
           <div className="min-w-0">

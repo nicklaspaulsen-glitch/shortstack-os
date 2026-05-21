@@ -114,17 +114,17 @@ const STATUS_TABS: { key: CRMStatus | "all"; label: string }[] = [
 ];
 
 const STATUS_COLORS: Record<string, string> = {
-  new: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  new: "bg-[rgba(99,102,241,0.10)] text-indigo-400 border-[rgba(99,102,241,0.20)]",
   contacted: "bg-amber-500/10 text-amber-400 border-amber-500/20",
   called: "bg-amber-500/10 text-amber-400 border-amber-500/20",
   replied: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
   booked: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  converted: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]",
+  converted: "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.20)]",
   not_interested: "bg-red-500/10 text-red-400 border-red-500/20",
 };
 
 const OUTREACH_STATUS_COLORS: Record<string, string> = {
-  sent: "text-blue-400", delivered: "text-blue-400", replied: "text-emerald-400",
+  sent: "text-indigo-400", delivered: "text-indigo-400", replied: "text-emerald-400",
   no_reply: "text-text-muted", bounced: "text-red-400", failed: "text-red-400", pending: "text-amber-400",
 };
 
@@ -900,7 +900,7 @@ export default function CRMPage() {
                 </h1>
               </div>
               {stats.total> 0 && (
-                <span className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.15)] text-[10px] font-medium text-brand-accent">
+                <span className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.15)] text-[10px] font-medium text-brand-accent">
                   <span className="w-1.5 h-1.5 rounded-full bg-brand-accent/80 animate-pulse" />
                   {stats.total} leads
                 </span>
@@ -925,7 +925,7 @@ export default function CRMPage() {
                       { label: "Avg Score", value: stats.avgScore, icon: Target, color: "text-brand-accent", suffix: "/100" },
                       { label: "Reply Rate", value: `${stats.replyRate}%`, icon: MessageCircle, color: "text-emerald-400" },
                       { label: "Conv. Rate", value: `${stats.convRate}%`, icon: TrendingUp, color: "text-purple-400" },
-                      { label: "Outreach Sent", value: stats.totalOutreach, icon: Send, color: "text-blue-400" },
+                      { label: "Outreach Sent", value: stats.totalOutreach, icon: Send, color: "text-indigo-400" },
                       { label: "With Email", value: stats.withEmail, icon: Mail, color: "text-amber-400" },
                       { label: "With Phone", value: stats.withPhone, icon: Phone, color: "text-emerald-400" },
                       { label: "Stale Leads", value: stats.stale, icon: AlertTriangle, color: stats.stale> 0 ? "text-red-400" : "text-text-muted" },
@@ -965,7 +965,7 @@ export default function CRMPage() {
             <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex items-center justify-between flex-wrap gap-2 py-2 -mx-1 px-1">
               <div className="flex items-center gap-2 flex-wrap">
                 {hasActiveFilters && (
-                  <span className="text-[8px] px-2 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] flex items-center gap-1">
+                  <span className="text-[8px] px-2 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.18)] flex items-center gap-1">
                     <Filter size={8} /> Filtered
                     <button onClick={() => setFilters(DEFAULT_FILTERS)} className="hover:text-red-400" aria-label="Clear filters"><X size={8} /></button>
                   </span>
@@ -1040,7 +1040,7 @@ export default function CRMPage() {
                     e.target.value = "";
                   }} />
                 </label>
-                <button onClick={() => setShowBuyCredits(true)} className="flex items-center gap-1 px-2 py-1.5 rounded-lg border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)] hover:bg-[rgba(59,130,246,0.08)] transition-all">
+                <button onClick={() => setShowBuyCredits(true)} className="flex items-center gap-1 px-2 py-1.5 rounded-lg border border-[rgba(212,255,0,0.18)] bg-[rgba(212,255,0,0.05)] hover:bg-[rgba(212,255,0,0.08)] transition-all">
                   <Coins size={11} className="text-brand-accent" />
                   <span className="text-[9px] font-medium text-brand-accent">{emailCredits}</span>
                 </button>
@@ -1056,7 +1056,7 @@ export default function CRMPage() {
                 <Bookmark size={10} className="text-text-muted shrink-0" />
                 {savedSegments.map(seg => (
                   <button key={seg.id} onClick={() => loadSegment(seg)}
-                    className="text-[8px] px-2 py-1 rounded-full border border-border-subtle bg-surface-light hover:border-[rgba(59,130,246,0.2)] hover:text-brand-accent transition-all whitespace-nowrap flex items-center gap-1">
+                    className="text-[8px] px-2 py-1 rounded-full border border-border-subtle bg-surface-light hover:border-[rgba(212,255,0,0.20)] hover:text-brand-accent transition-all whitespace-nowrap flex items-center gap-1">
                     {seg.name}
                     <span role="button" onClick={(e) => { e.stopPropagation(); deleteSegment(seg.id); }}
                       className="hover:text-red-400 cursor-pointer"><X size={7} /></span>
@@ -1074,7 +1074,7 @@ export default function CRMPage() {
                 <span className="text-[9px] text-text-muted font-medium w-full">Toggle Columns:</span>
                 {columns.filter(c => c.key !== "select" && c.key !== "expand").map(col => (
                   <button key={col.key} onClick={() => setColumns(prev => prev.map(c => c.key === col.key ? { ...c, visible: !c.visible } : c))}
-                    className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${col.visible ? "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border-subtle text-text-muted"}`}>
+                    className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${col.visible ? "border-[rgba(212,255,0,0.20)] bg-[rgba(212,255,0,0.08)] text-brand-accent" : "border-border-subtle text-text-muted"}`}>
                     {col.visible ? <Eye size={9} /> : <EyeOff size={9} />} {col.label}
                   </button>
                 ))}
@@ -1144,7 +1144,7 @@ export default function CRMPage() {
                             { val: false, label: "No" },
                           ].map(o => (
                             <button key={String(o.val)} onClick={() => setFilters(prev => ({ ...prev, [f.key]: o.val }))}
-                              className={`px-1.5 py-0.5 ${filters[f.key] === o.val ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted"}`}>
+                              className={`px-1.5 py-0.5 ${filters[f.key] === o.val ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" : "text-text-muted"}`}>
                               {o.label}
                             </button>
                           ))}
@@ -1160,7 +1160,7 @@ export default function CRMPage() {
                           { val: false, label: "Active Only" },
                         ].map(o => (
                           <button key={String(o.val)} onClick={() => setFilters(prev => ({ ...prev, isStale: o.val }))}
-                            className={`px-2 py-1 ${filters.isStale === o.val ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted"}`}>
+                            className={`px-2 py-1 ${filters.isStale === o.val ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" : "text-text-muted"}`}>
                             {o.label}
                           </button>
                         ))}
@@ -1255,7 +1255,7 @@ export default function CRMPage() {
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`tab-pill${activeTab === t.key ? " active" : ""} flex items-center gap-1`}>
                   {t.label}
-                  <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${activeTab === t.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-surface-light text-text-muted"}`}>
+                  <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${activeTab === t.key ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : "bg-surface-light text-text-muted"}`}>
                     {statusCounts[t.key] || 0}
                   </span>
                 </button>
@@ -1263,14 +1263,14 @@ export default function CRMPage() {
             </div>
 
             {/* -- Bulk Actions Bar -- */}
-            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${selectedIds.size> 0 ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.12)]" : "bg-surface-light/20 border-transparent"}`}>
+            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${selectedIds.size> 0 ? "bg-[rgba(212,255,0,0.05)] border-[rgba(212,255,0,0.12)]" : "bg-surface-light/20 border-transparent"}`}>
               {selectedIds.size> 0 ? (
                 <>
                   <span className="text-[9px] text-brand-accent font-medium shrink-0">{selectedIds.size} selected</span>
                   <div className="flex items-center gap-1 flex-wrap">
-                    <button onClick={() => bulkAction("email")} className="text-[8px] px-2 py-1 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] transition-all flex items-center gap-1"><Mail size={9} /> Email All</button>
+                    <button onClick={() => bulkAction("email")} className="text-[8px] px-2 py-1 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] transition-all flex items-center gap-1"><Mail size={9} /> Email All</button>
                     <button onClick={() => bulkAction("sms")} className="text-[8px] px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all flex items-center gap-1"><MessageSquare size={9} /> SMS All</button>
-                    <button onClick={() => bulkAction("call")} className="text-[8px] px-2 py-1 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all flex items-center gap-1"><PhoneCall size={9} /> Call All</button>
+                    <button onClick={() => bulkAction("call")} className="text-[8px] px-2 py-1 rounded-lg bg-[rgba(99,102,241,0.10)] text-indigo-400 hover:bg-[rgba(99,102,241,0.15)] transition-all flex items-center gap-1"><PhoneCall size={9} /> Call All</button>
                     <div className="relative">
                       <button onClick={() => setShowBulkStatusMenu(!showBulkStatusMenu)} className="text-[8px] px-2 py-1 rounded-lg bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 transition-all flex items-center gap-1">
                         <Tag size={9} /> Mark As <ChevronDown size={7} />
@@ -1341,7 +1341,7 @@ export default function CRMPage() {
                             return (
                               <React.Fragment key={lead.id}>
                                 <motion.tr
-                                  className={`border-b border-border-subtle/50 cursor-pointer ${isExpanded ? "bg-surface-light/20" : ""} ${selected ? "bg-[rgba(59,130,246,0.05)]" : ""}`}
+                                  className={`border-b border-border-subtle/50 cursor-pointer ${isExpanded ? "bg-surface-light/20" : ""} ${selected ? "bg-[rgba(212,255,0,0.04)]" : ""}`}
                                   initial={{ opacity: 0, x: -8 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ duration: 0.18, delay: index * 0.04 }}
@@ -1446,7 +1446,7 @@ export default function CRMPage() {
                                       <td key={col.key} className={`px-2 ${dPy}`} onClick={e => e.stopPropagation()}>
                                         <div className="flex items-center gap-0.5">
                                           <button onClick={() => sendAction(lead, "email")} disabled={!lead.email || actionLoading === `${lead.id}-email`}
-                                            className="text-[8px] p-1 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] disabled:opacity-30 transition-all" title="Email">
+                                            className="text-[8px] p-1 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-30 transition-all" title="Email">
                                             <Mail size={10} />
                                           </button>
                                           <button onClick={() => sendAction(lead, "sms")} disabled={!lead.phone || actionLoading === `${lead.id}-sms`}
@@ -1454,7 +1454,7 @@ export default function CRMPage() {
                                             <MessageSquare size={10} />
                                           </button>
                                           <button onClick={() => sendAction(lead, "call")} disabled={!lead.phone || actionLoading === `${lead.id}-call`}
-                                            className="text-[8px] p-1 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-30 transition-all" title="Call">
+                                            className="text-[8px] p-1 rounded-lg bg-[rgba(99,102,241,0.10)] text-indigo-400 hover:bg-[rgba(99,102,241,0.15)] disabled:opacity-30 transition-all" title="Call">
                                             <Phone size={10} />
                                           </button>
                                         </div>
@@ -1493,7 +1493,7 @@ export default function CRMPage() {
                                               <div className="flex items-center gap-1 shrink-0 pt-0.5">
                                                 {e.platform === "email" ? <Mail size={10} className="text-brand-accent" /> :
                                                  e.platform === "call" ? <Phone size={10} className="text-green-400" /> :
-                                                 <MessageSquare size={10} className="text-blue-400" />}
+                                                 <MessageSquare size={10} className="text-indigo-400" />}
                                                 <span className={`text-[8px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-text-muted"}`}>{e.status}</span>
                                               </div>
                                               <p className="flex-1 text-text-muted truncate">{e.message_text}</p>
@@ -1527,7 +1527,7 @@ export default function CRMPage() {
                       return (
                         <motion.div
                           key={lead.id}
-                          className={`glass rounded-xl border spotlight-card ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-[rgba(59,130,246,0.25)]" : "border-border-subtle"}`}
+                          className={`glass rounded-xl border spotlight-card ${density === "dense" ? "p-2 space-y-1.5" : "p-3 space-y-2"} cursor-pointer ${selectedIds.has(lead.id) ? "border-[rgba(212,255,0,0.25)]" : "border-border-subtle"}`}
                           initial={{ opacity: 0, x: -8 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.18, delay: index * 0.04 }}
@@ -1587,9 +1587,9 @@ export default function CRMPage() {
                           <div className="flex items-center justify-between pt-1 border-t border-border-subtle/50">
                             <span className={`text-[8px] px-2 py-0.5 rounded-full border ${STATUS_COLORS[lead.status] || STATUS_COLORS.new}`}>{lead.status}</span>
                             <div className="flex items-center gap-0.5" onClick={e => e.stopPropagation()}>
-                              <button onClick={() => sendAction(lead, "email")} disabled={!lead.email} className="p-1 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] disabled:opacity-30" aria-label="Send email"><Mail size={9} /></button>
+                              <button onClick={() => sendAction(lead, "email")} disabled={!lead.email} className="p-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-30" aria-label="Send email"><Mail size={9} /></button>
                               <button onClick={() => sendAction(lead, "sms")} disabled={!lead.phone} className="p-1 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30" aria-label="Send SMS"><MessageSquare size={9} /></button>
-                              <button onClick={() => sendAction(lead, "call")} disabled={!lead.phone} className="p-1 rounded bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-30" aria-label="Call lead"><Phone size={9} /></button>
+                              <button onClick={() => sendAction(lead, "call")} disabled={!lead.phone} className="p-1 rounded bg-[rgba(99,102,241,0.10)] text-indigo-400 hover:bg-[rgba(99,102,241,0.15)] disabled:opacity-30" aria-label="Call lead"><Phone size={9} /></button>
                             </div>
                           </div>
                         </motion.div>
@@ -1729,11 +1729,11 @@ export default function CRMPage() {
                     {/* Quick actions */}
                     <div className="flex items-center gap-1">
                       <button onClick={() => sendAction(detailLead, "email")} disabled={!detailLead.email}
-                        className="flex-1 text-[9px] py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] disabled:opacity-30 flex items-center justify-center gap-1"><Mail size={10} /> Email</button>
+                        className="flex-1 text-[9px] py-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-30 flex items-center justify-center gap-1"><Mail size={10} /> Email</button>
                       <button onClick={() => sendAction(detailLead, "sms")} disabled={!detailLead.phone}
                         className="flex-1 text-[9px] py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30 flex items-center justify-center gap-1"><MessageSquare size={10} /> SMS</button>
                       <button onClick={() => sendAction(detailLead, "call")} disabled={!detailLead.phone}
-                        className="flex-1 text-[9px] py-1.5 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-30 flex items-center justify-center gap-1"><Phone size={10} /> Call</button>
+                        className="flex-1 text-[9px] py-1.5 rounded-lg bg-[rgba(99,102,241,0.10)] text-indigo-400 hover:bg-[rgba(99,102,241,0.15)] disabled:opacity-30 flex items-center justify-center gap-1"><Phone size={10} /> Call</button>
                     </div>
                     {/* Tags */}
                     <div>
@@ -1763,7 +1763,7 @@ export default function CRMPage() {
                       <div className="flex gap-1 mb-2">
                         <input value={noteInput} onChange={e => setNoteInput(e.target.value)} placeholder="Add a note..."
                           className="input text-[9px] px-2 py-1 flex-1" onKeyDown={e => { if (e.key === "Enter") addNote(detailLead.id); }} />
-                        <button onClick={() => addNote(detailLead.id)} className="text-[9px] px-2 py-1 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)]"><Plus size={10} /></button>
+                        <button onClick={() => addNote(detailLead.id)} className="text-[9px] px-2 py-1 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)]"><Plus size={10} /></button>
                       </div>
                       <div className="space-y-1 max-h-24 overflow-y-auto">
                         {(leadNotes[detailLead.id] || []).map(note => (
@@ -1851,7 +1851,7 @@ export default function CRMPage() {
                       const actionLabels: Record<string, { label: string; icon: typeof Mail; color: string }> = {
                         send_sms: { label: "Send SMS", icon: MessageSquare, color: "text-emerald-400" },
                         send_email: { label: "Send Email", icon: Mail, color: "text-brand-accent" },
-                        ai_call: { label: "AI Cold Call", icon: PhoneCall, color: "text-blue-400" },
+                        ai_call: { label: "AI Cold Call", icon: PhoneCall, color: "text-indigo-400" },
                         update_status: { label: "Update Status", icon: Tag, color: "text-purple-400" },
                         add_tag: { label: "Add Tag", icon: Hash, color: "text-pink-400" },
                         notify: { label: "Notify Team", icon: Bell, color: "text-amber-400" },
@@ -1860,7 +1860,7 @@ export default function CRMPage() {
                       const ActionIcon = action.icon;
                       const isEditing = editingAutomationId === rule.id;
                       return (
-                        <div key={rule.id} className={`rounded-xl border p-4 transition-all ${rule.enabled ? "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)]" : "border-border-subtle bg-surface-light/50 opacity-60"}`}>
+                        <div key={rule.id} className={`rounded-xl border p-4 transition-all ${rule.enabled ? "border-[rgba(212,255,0,0.18)] bg-[rgba(212,255,0,0.04)]" : "border-border-subtle bg-surface-light/50 opacity-60"}`}>
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2 flex-1 min-w-0">
                               <ActionIcon size={14} className={action.color} />
@@ -1934,7 +1934,7 @@ export default function CRMPage() {
                       );
                     })}
                     <button onClick={addAutomation}
-                      className="w-full text-[10px] py-2 rounded-xl border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-all flex items-center justify-center gap-1">
+                      className="w-full text-[10px] py-2 rounded-xl border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(212,255,0,0.20)] transition-all flex items-center justify-center gap-1">
                       <Plus size={11} /> New Rule
                     </button>
                   </div>
@@ -1973,7 +1973,7 @@ export default function CRMPage() {
                       { amount: 10000, price: "$199", per: "$0.020" },
                     ].map(tier => (
                       <button key={tier.amount} onClick={() => { setEmailCredits(p => p + tier.amount); setShowBuyCredits(false); toast.success(`Added ${tier.amount} credits`); }}
-                        className={`relative flex items-center justify-between p-4 rounded-xl border transition-all hover:scale-[1.02] ${tier.popular ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border-subtle bg-surface-light hover:border-[rgba(59,130,246,0.2)]"}`}>
+                        className={`relative flex items-center justify-between p-4 rounded-xl border transition-all hover:scale-[1.02] ${tier.popular ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)]" : "border-border-subtle bg-surface-light hover:border-[rgba(212,255,0,0.18)]"}`}>
                         {tier.popular && <span className="absolute -top-2 left-4 text-[8px] px-2 py-0.5 rounded-full bg-brand-accent text-[#020711] font-bold">BEST VALUE</span>}
                         <div className="text-left">
                           <span className="text-sm font-bold">{tier.amount.toLocaleString()}</span> <span className="text-[10px] text-text-muted">credits</span>

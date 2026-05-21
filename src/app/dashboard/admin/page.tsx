@@ -78,8 +78,8 @@ export default function AdminIndexPage() {
               className="glass rounded-xl p-5 flex gap-4 items-start relative overflow-hidden hover:border-border-strong transition-colors group block spotlight-card"
               onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
             >
-              <span className="mt-0.5 flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(59,130,246,0.08)" }}>
-                <Icon className="w-4 h-4" style={{ color: "#2563EB" }} />
+              <span className="mt-0.5 flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-[rgba(99,102,241,0.10)]">
+                <Icon className="w-4 h-4 text-indigo-400" />
               </span>
               <div>
                 <p className="font-medium text-text-primary group-hover:text-brand-accent transition-colors">

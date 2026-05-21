@@ -280,7 +280,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
       {/* -- data.template.display_name command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
-          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">DATA.TEMPLATE.DISPLAY_NAME</p>
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Industry Vertical</p>
           <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">{data.template.display_name}</h1>
         </div>
       </div>
@@ -320,7 +320,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
                   onClick={() => toggle(m.key)}
                   className={`text-left rounded-xl p-4 border transition-colors ${
                     isSel
-                      ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.30)]"
+                      ? "bg-[rgba(212,255,0,0.06)] border-[rgba(212,255,0,0.25)]"
                       : "bg-white/4 border-white/10 hover:bg-white/8"
                   }`}
                 >
@@ -418,7 +418,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
               type="button"
               onClick={handleApply}
               disabled={applying || selected.size === 0}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 text-black font-medium hover:bg-emerald-400 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-accent text-[#020711] font-medium hover:bg-brand-accent/80 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {applying ? (
                 <>
