@@ -37,7 +37,7 @@ interface NavPill {
 /** "Create" row — content production tools */
 const CREATE_PILLS: NavPill[] = [
   { label: "Studio",      href: "/dashboard/ai-studio",      icon: Layers },
-  { label: "Thumbs",      href: "/dashboard/thumbnail",      icon: Image,    badge: "42" },
+  { label: "Thumbs",      href: "/dashboard/thumbnail-generator", icon: Image, badge: "42" },
   { label: "Video",       href: "/dashboard/ai-video",       icon: Film },
   { label: "Editor",      href: "/dashboard/video-editor",   icon: Scissors },
   { label: "Social",      href: "/dashboard/social-studio",  icon: Share2,   badge: "11" },
@@ -46,7 +46,7 @@ const CREATE_PILLS: NavPill[] = [
 
 /** "System" row — business infrastructure */
 const SYSTEM_PILLS: NavPill[] = [
-  { label: "Library",     href: "/dashboard/media-library",  icon: FolderOpen },
+  { label: "Library",     href: "/dashboard/content-library", icon: FolderOpen },
   { label: "Comments",    href: "/dashboard/conversations",  icon: MessageSquare, badge: "4" },
   { label: "Brand kit",   href: "/dashboard/brand-kit",      icon: Palette },
   { label: "Automations", href: "/dashboard/automations",    icon: Zap,          badge: "5" },
@@ -148,11 +148,11 @@ export default function GlassTopNav() {
         {/* Brand */}
         <Link href="/dashboard" className="gtn-brand" aria-label="ShortStack dashboard home">
           <span className="gtn-brand-logo" aria-hidden="true">
-            {/* Stack glyph — 3 stacked trapezoids */}
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-              <path d="M2 15.5 L11 10.5 L20 15.5 L11 20.5 Z" fill="#D4FF00" opacity="0.9"/>
-              <path d="M4 10.5 L11 6 L18 10.5 L11 15 Z" fill="#D4FF00" opacity="0.65"/>
-              <path d="M6 5.5 L11 2 L16 5.5 L11 9 Z" fill="#D4FF00" opacity="0.4"/>
+            {/* Original ShortStack mark — 3-tier stacked lens/pillow glyph */}
+            <svg width="22" height="22" viewBox="0 0 256 256" fill="none">
+              <path d="M 56 72 Q 56 50 84 50 Q 128 42 172 50 Q 200 50 200 72 Q 200 94 172 94 Q 128 102 84 94 Q 56 94 56 72 Z" fill="#D4FF00" opacity="0.4"/>
+              <path d="M 56 128 Q 56 106 84 106 Q 128 98 172 106 Q 200 106 200 128 Q 200 150 172 150 Q 128 158 84 150 Q 56 150 56 128 Z" fill="#D4FF00" opacity="0.65"/>
+              <path d="M 56 184 Q 56 162 84 162 Q 128 154 172 162 Q 200 162 200 184 Q 200 206 172 206 Q 128 214 84 206 Q 56 206 56 184 Z" fill="#D4FF00" opacity="0.9"/>
             </svg>
           </span>
           <span className="gtn-brand-name">
