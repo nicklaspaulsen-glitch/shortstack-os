@@ -29,12 +29,12 @@ interface Funnel {
 const STATUS_CONFIG: Record<FunnelStatus, { label: string; color: string; icon: React.ReactNode }> = {
   draft: {
     label: "Draft",
-    color: "text-amber-700 bg-amber-500/10 border-amber-500/20",
+    color: "text-amber-400 bg-amber-500/10 border-amber-500/20",
     icon: <Clock size={11} />,
   },
   published: {
     label: "Published",
-    color: "text-emerald-700 bg-emerald-500/10 border-emerald-500/20",
+    color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
     icon: <CheckCircle2 size={11} />,
   },
   archived: {

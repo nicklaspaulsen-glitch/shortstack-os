@@ -58,13 +58,13 @@ const STEP_TYPES: { value: StepType; label: string }[] = [
 ];
 
 const STEP_TYPE_COLORS: Record<string, { bg: string; border: string; text: string; dot: string }> = {
-  "opt-in":   { bg: "bg-blue-500/10",    border: "border-blue-500/30",    text: "text-blue-700",    dot: "bg-blue-500" },
+  "opt-in":   { bg: "bg-blue-500/10",    border: "border-blue-500/30",    text: "text-blue-400",    dot: "bg-blue-500" },
   "thank-you":{ bg: "bg-emerald-500/10", border: "border-emerald-500/30", text: "text-emerald-400", dot: "bg-emerald-500" },
-  vsl:        { bg: "bg-purple-500/10",  border: "border-purple-500/30",  text: "text-purple-700",  dot: "bg-purple-500" },
+  vsl:        { bg: "bg-purple-500/10",  border: "border-purple-500/30",  text: "text-purple-400",  dot: "bg-purple-500" },
   checkout:   { bg: "bg-amber-500/10",   border: "border-amber-500/30",   text: "text-amber-400",   dot: "bg-amber-500" },
-  upsell:     { bg: "bg-pink-500/10",    border: "border-pink-500/30",    text: "text-pink-700",    dot: "bg-pink-500" },
-  downsell:   { bg: "bg-orange-500/10",  border: "border-orange-500/30",  text: "text-orange-700",  dot: "bg-orange-500" },
-  webinar:    { bg: "bg-cyan-500/10",    border: "border-cyan-500/30",    text: "text-cyan-700",    dot: "bg-cyan-500" },
+  upsell:     { bg: "bg-pink-500/10",    border: "border-pink-500/30",    text: "text-pink-400",    dot: "bg-pink-500" },
+  downsell:   { bg: "bg-orange-500/10",  border: "border-orange-500/30",  text: "text-orange-400",  dot: "bg-orange-500" },
+  webinar:    { bg: "bg-cyan-500/10",    border: "border-cyan-500/30",    text: "text-cyan-400",    dot: "bg-cyan-500" },
 };
 
 function getStepColor(type: string) {
@@ -457,7 +457,7 @@ export default function FunnelCanvasPage() {
                       ))}
                     </select>
                     <div className="flex gap-2">
-                      <button onClick={() => void addStep()} className="flex-1 py-1.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-white text-xs font-semibold transition-colors">
+                      <button onClick={() => void addStep()} className="flex-1 py-1.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-[#020711] text-xs font-semibold transition-colors">
                         Add
                       </button>
                       <button onClick={() => setAddingStep(false)} className="px-3 py-1.5 rounded-lg border border-border-subtle text-text-muted text-xs transition-colors">
@@ -673,7 +673,7 @@ export default function FunnelCanvasPage() {
               <button
                 onClick={savePanel}
                 disabled={saving}
-                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-white font-semibold text-sm transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] font-semibold text-sm transition-colors"
               >
                 <Save size={14} />
                 {saving ? "Saving…" : "Save Step"}

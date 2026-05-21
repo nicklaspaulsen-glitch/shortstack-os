@@ -391,11 +391,11 @@ export default function DialerTab() {
   return (
     <div className="space-y-6">
       {tokenError && (
-        <div className="flex items-start gap-3 rounded-lg border border-amber-500/30 bg-amber-50 p-4 text-sm text-amber-700">
+        <div className="flex items-start gap-3 rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-400">
           <AlertTriangle size={18} className="mt-0.5 flex-shrink-0" />
           <div>
             <div className="font-medium">Voice not ready</div>
-            <div className="mt-1 text-amber-700/80">{tokenError}</div>
+            <div className="mt-1 text-amber-400/80">{tokenError}</div>
           </div>
         </div>
       )}
@@ -419,7 +419,7 @@ export default function DialerTab() {
       </div>
 
       {/* Voice clone selector + TCPA disclosure for cold calls. */}
-      <div className="rounded-xl border border-amber-500/20 bg-amber-50 p-4">
+      <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-4">
         <div className="flex flex-wrap items-center gap-4">
           <VoicePicker
             value={selectedVoiceId}
@@ -486,7 +486,7 @@ export default function DialerTab() {
                     key={c.id}
                     className={`flex items-center justify-between rounded-lg px-2 py-1.5 text-xs ${
                       i === currentIndex
-                        ? "bg-orange-500/15 text-orange-700"
+                        ? "bg-orange-500/15 text-orange-400"
                         : "text-text-secondary hover:bg-white/5"
                     }`}
                   >
@@ -541,7 +541,7 @@ export default function DialerTab() {
                   <div className="text-right">
                     <CallStatusBadge status={callStatus} />
                     {callStatus === "in_progress" && (
-                      <div className="mt-2 font-mono text-lg text-orange-700">
+                      <div className="mt-2 font-mono text-lg text-orange-400">
                         {formatDuration(callDuration)}
                       </div>
                     )}
@@ -643,12 +643,12 @@ function CallStatusBadge({ status }: { status: CallStatus }) {
     idle: { label: "Idle", cls: "bg-white/8 text-text-muted" },
     connecting: {
       label: "Connecting",
-      cls: "bg-amber-500/15 text-amber-700",
+      cls: "bg-amber-500/15 text-amber-400",
       icon: <Loader2 size={12} className="animate-spin" />,
     },
     ringing: {
       label: "Ringing",
-      cls: "bg-amber-500/15 text-amber-700",
+      cls: "bg-amber-500/15 text-amber-400",
       icon: <Loader2 size={12} className="animate-spin" />,
     },
     in_progress: {
@@ -656,7 +656,7 @@ function CallStatusBadge({ status }: { status: CallStatus }) {
       cls: "bg-emerald-500/15 text-emerald-400",
     },
     ended: { label: "Ended", cls: "bg-white/8 text-text-muted" },
-    failed: { label: "Failed", cls: "bg-rose-500/15 text-rose-700" },
+    failed: { label: "Failed", cls: "bg-rose-500/15 text-rose-400" },
   };
   const { label, cls, icon } = map[status];
   return (

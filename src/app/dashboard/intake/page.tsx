@@ -705,7 +705,7 @@ function FieldEditor({
         >
           <ChevronDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
         </button>
-        <button onClick={onRemove} className="text-text-muted hover:text-red-700 transition-colors">
+        <button onClick={onRemove} className="text-text-muted hover:text-red-400 transition-colors">
           <X size={14} />
         </button>
       </div>

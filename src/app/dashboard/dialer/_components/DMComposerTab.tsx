@@ -265,7 +265,7 @@ export default function DMComposerTab() {
             type="button"
             onClick={sendDm}
             disabled={sending || !handle.trim() || !message.trim()}
-            className="ml-auto flex items-center gap-2 rounded-lg bg-orange-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-black/[0.04] disabled:text-text-muted"
+            className="ml-auto flex items-center gap-2 rounded-lg bg-orange-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-white/4 disabled:text-text-muted"
           >
             {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
             Send DM
@@ -276,8 +276,8 @@ export default function DMComposerTab() {
           <div
             className={`mt-3 flex items-start gap-2 rounded-lg border p-3 text-sm ${
               resultBanner.ok
-                ? "border-emerald-500/30 bg-emerald-50 text-emerald-700"
-                : "border-rose-500/30 bg-rose-50 text-rose-700"
+                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                : "border-rose-500/30 bg-rose-500/10 text-rose-400"
             }`}
           >
             {resultBanner.ok ? <CheckCircle size={16} /> : <AlertTriangle size={16} />}

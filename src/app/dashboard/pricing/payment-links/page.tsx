@@ -128,7 +128,7 @@ export default function PaymentLinksPage() {
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => router.push("/dashboard/pricing")}
-            className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/5 border border-border-subtle text-text-primary hover:bg-black/10"
+            className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-white/5 border border-border-subtle text-text-primary hover:bg-white/10"
           >
             <ArrowLeft size={12} /> Pricing
           </button>

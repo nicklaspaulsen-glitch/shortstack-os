@@ -1573,7 +1573,7 @@ export default function CopywriterPage() {
                     whileTap={{ scale: 0.97 }}
                     onClick={handleGenerate}
                     disabled={generating || !topic.trim()}
-                    className="w-full py-3 rounded-xl font-semibold text-sm text-white flex items-center justify-center gap-2 transition-all disabled:opacity-40 bg-gradient-to-r from-[#2563EB] to-violet-500 shadow-lg shadow-[#2563EB]/25 hover:shadow-[#2563EB]/40"
+                    className="w-full py-3 rounded-xl font-semibold text-sm text-[#020711] flex items-center justify-center gap-2 transition-all disabled:opacity-40 bg-brand-accent hover:bg-brand-accent/90 shadow-lg shadow-[rgba(212,255,0,0.15)] hover:shadow-[rgba(212,255,0,0.30)]"
                   >
                     {generating ? (
                       <>

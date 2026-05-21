@@ -14,11 +14,11 @@ import { MotionPage } from "@/components/motion/motion-page";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const PLATFORM_ICONS: Record<string, React.ReactNode> = {
-  instagram: <Camera size={10} className="text-pink-700" />,
+  instagram: <Camera size={10} className="text-pink-400" />,
   tiktok: <Film size={10} className="text-text-secondary" />,
-  facebook: <Send size={10} className="text-blue-700" />,
+  facebook: <Send size={10} className="text-blue-400" />,
   youtube: <Film size={10} className="text-red-400" />,
-  linkedin: <Globe size={10} className="text-blue-700" />,
+  linkedin: <Globe size={10} className="text-blue-400" />,
 };
 
 export default function ContentCalendarPage() {

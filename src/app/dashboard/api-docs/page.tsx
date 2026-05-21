@@ -277,7 +277,7 @@ export default function ApiDocsPage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <div className="flex items-center gap-2 text-[10px] text-white">
-                  <span className="px-2 py-1 bg-black/5 rounded border border-border-subtle">v2.4.0</span>
+                  <span className="px-2 py-1 bg-white/5 rounded border border-border-subtle">v2.4.0</span>
                   <span>{totalEndpoints} endpoints</span>
                 </div>
       </div>

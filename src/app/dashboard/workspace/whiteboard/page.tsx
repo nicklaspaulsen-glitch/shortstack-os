@@ -266,7 +266,7 @@ function PresenceStrip({ users, loading }: PresenceStripProps) {
           <span className="text-xs font-semibold uppercase tracking-wider text-text-muted">
             Online now
           </span>
-          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
             {users.length}
           </span>
         </div>

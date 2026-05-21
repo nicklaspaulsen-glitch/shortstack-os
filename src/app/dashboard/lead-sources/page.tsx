@@ -242,7 +242,7 @@ export default function LeadSourcesPage() {
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-1">
                               <button onClick={() => handleUpdate(s.id)} disabled={saving}
-                                className="p-1.5 rounded hover:bg-green-100 text-green-700">
+                                className="p-1.5 rounded hover:bg-green-500/10 text-green-400">
                                 {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />}
                               </button>
                               <button onClick={() => setEditId(null)} className="p-1.5 rounded hover:bg-white/5 text-text-muted">

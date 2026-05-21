@@ -219,9 +219,9 @@ export default function ElevenAgentsPage() {
   };
 
   const sentimentColors: Record<string, string> = {
-    positive: "text-green-700",
-    neutral: "text-amber-700",
-    negative: "text-red-700",
+    positive: "text-green-400",
+    neutral: "text-amber-400",
+    negative: "text-red-400",
   };
 
   function toggleAgent(id: string) {
@@ -282,7 +282,7 @@ export default function ElevenAgentsPage() {
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
                 className="glass rounded-2xl p-5">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Success Rate</p>
-                <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${avgSuccessRate >= 30 ? "text-green-700" : "text-amber-600"}`}>{avgSuccessRate}%</p>
+                <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${avgSuccessRate >= 30 ? "text-green-400" : "text-amber-400"}`}>{avgSuccessRate}%</p>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
                 className="glass rounded-2xl p-5">
@@ -457,7 +457,7 @@ export default function ElevenAgentsPage() {
                         </div>
                         <div className="grid grid-cols-3 gap-2 text-[9px] text-text-muted">
                           <div><span className="block text-[8px] uppercase">Calls</span><span className="text-text-primary font-mono">{agent.callsToday}</span></div>
-                          <div><span className="block text-[8px] uppercase">Success</span><span className={`font-mono ${agent.successRate >= 30 ? "text-green-700" : "text-amber-700"}`}>{agent.successRate}%</span></div>
+                          <div><span className="block text-[8px] uppercase">Success</span><span className={`font-mono ${agent.successRate >= 30 ? "text-green-400" : "text-amber-400"}`}>{agent.successRate}%</span></div>
                           <div><span className="block text-[8px] uppercase">Avg Time</span><span className="text-text-primary font-mono">{formatDuration(agent.avgDuration)}</span></div>
                         </div>
                       </div>
@@ -802,8 +802,8 @@ export default function ElevenAgentsPage() {
                   ))}
                   <div className="p-3 rounded-lg border border-amber-500/30 bg-amber-500/10">
                     <div className="flex items-center gap-2 mb-1">
-                      <AlertTriangle size={12} className="text-amber-700" />
-                      <span className="text-[10px] font-semibold text-amber-700">Important</span>
+                      <AlertTriangle size={12} className="text-amber-400" />
+                      <span className="text-[10px] font-semibold text-amber-400">Important</span>
                     </div>
                     <p className="text-[10px] text-text-muted">Ensure all AI voice agents comply with local and federal regulations. Always disclose that the call is from an AI system when required by law.</p>
                   </div>

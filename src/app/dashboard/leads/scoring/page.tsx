@@ -544,7 +544,7 @@ export default function LeadScoringPage() {
         <>
                   <Link
                     href="/dashboard/leads"
-                    className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all"
+                    className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all"
                   >
                     Back to Leads
                   </Link>

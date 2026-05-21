@@ -662,9 +662,9 @@ function FileCard(props: FileCardProps) {
       type="button"
       onContextMenu={(e) => onContextMenu(e, file)}
       onDoubleClick={() => onDoubleClick(file)}
-      className="group flex flex-col text-left glass rounded-lg hover:bg-[#F8FAFC] hover:border-[rgba(59,130,246,0.3)] transition overflow-hidden"
+      className="group flex flex-col text-left glass rounded-lg hover:bg-white/8 hover:border-[rgba(59,130,246,0.3)] transition overflow-hidden"
     >
-      <div className="aspect-square w-full bg-[#F8FAFC] flex items-center justify-center text-text-muted overflow-hidden">
+      <div className="aspect-square w-full bg-white/5 flex items-center justify-center text-text-muted overflow-hidden">
         {isImage ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

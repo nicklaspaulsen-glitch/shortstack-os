@@ -380,7 +380,7 @@ export default function DealsPage() {
                                     <button
                                       aria-label={`Delete deal: ${deal.title}`}
                                       onClick={(e) => { e.stopPropagation(); handleDelete(deal.id); }}
-                                      className="text-[7px] px-1.5 py-0.5 rounded bg-rose-50 text-rose-400 border border-rose-200">
+                                      className="text-[7px] px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-200">
                                       Delete
                                     </button>
                                   </div>

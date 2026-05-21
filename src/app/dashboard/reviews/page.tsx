@@ -79,7 +79,7 @@ const SOURCES = ["Google", "Yelp", "Trustpilot", "Facebook", "G2", "Other"];
 const STATUS_STYLES: Record<Review["status"], { label: string; tint: string }> = {
   new: { label: "New", tint: "bg-[rgba(59,130,246,0.08)] text-brand-accent" },
   replied: { label: "Replied", tint: "bg-[rgba(59,130,246,0.08)] text-brand-accent" },
-  resolved: { label: "Resolved", tint: "bg-emerald-500/15 text-emerald-700" },
+  resolved: { label: "Resolved", tint: "bg-emerald-500/15 text-emerald-400" },
 };
 
 const DEFAULT_TEMPLATE =
@@ -436,7 +436,7 @@ function ReviewRequests() {
               {configs.map((cfg, idx) => (
                 <motion.div key={cfg.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl p-4">
                   <div className="flex items-start gap-3">
-                    <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${cfg.enabled ? "bg-emerald-500/15 text-emerald-700" : "bg-surface-light/60 text-text-muted"}`}>
+                    <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${cfg.enabled ? "bg-emerald-500/15 text-emerald-400" : "bg-surface-light/60 text-text-muted"}`}>
                       <Send size={14} />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -444,7 +444,7 @@ function ReviewRequests() {
                         <span className="text-sm font-semibold">{PLATFORM_LABELS[cfg.platform] || cfg.platform}</span>
                         <span className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-text-muted">{CHANNEL_LABELS[cfg.channel] || cfg.channel}</span>
                         <span className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-text-muted flex items-center gap-1"><Clock size={9} /> {cfg.delay_minutes}m delay</span>
-                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${cfg.enabled ? "bg-emerald-500/15 text-emerald-700" : "bg-muted/10 text-text-muted"}`}>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${cfg.enabled ? "bg-emerald-500/15 text-emerald-400" : "bg-muted/10 text-text-muted"}`}>
                           {cfg.enabled ? "Enabled" : "Disabled"}
                         </span>
                       </div>
@@ -454,7 +454,7 @@ function ReviewRequests() {
                     <div className="flex shrink-0 flex-col items-end gap-1">
                       <button
                         onClick={() => toggleEnabled(cfg)}
-                        className={`rounded px-2.5 py-1 text-[11px] font-medium transition ${cfg.enabled ? "bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.14)]" : "bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/25"}`}
+                        className={`rounded px-2.5 py-1 text-[11px] font-medium transition ${cfg.enabled ? "bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.14)]" : "bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25"}`}
                       >
                         {cfg.enabled ? "Disable" : "Enable"}
                       </button>
@@ -466,7 +466,7 @@ function ReviewRequests() {
                       </button>
                       <button
                         onClick={() => deleteConfig(cfg.id)}
-                        className="rounded bg-rose-500/10 px-2 py-1 text-rose-700 hover:bg-rose-500/20"
+                        className="rounded bg-rose-500/10 px-2 py-1 text-rose-400 hover:bg-rose-500/20"
                         aria-label="Delete config"
                       >
                         <Trash2 size={11} />
@@ -552,7 +552,7 @@ function ReviewRequests() {
                       <td className="px-4 py-3 capitalize">{row.channel}</td>
                       <td className="px-4 py-3 capitalize">{(row.config as { platform?: string } | null)?.platform || "—"}</td>
                       <td className="px-4 py-3">
-                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${row.status === "sent" ? "bg-emerald-500/15 text-emerald-700" : "bg-rose-500/15 text-rose-700"}`}>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${row.status === "sent" ? "bg-emerald-500/15 text-emerald-400" : "bg-rose-500/15 text-rose-400"}`}>
                           {row.status}
                         </span>
                       </td>
@@ -739,7 +739,7 @@ function ReviewCard({
   return (
     <div className={`rounded-lg border bg-surface-light/20 transition hover:border-[rgba(59,130,246,0.4)] ${critical ? "border-rose-500/30" : "border-border-subtle/50"}`}>
       <div className="flex items-start gap-3 p-4">
-        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${critical ? "bg-rose-500/15 text-rose-700" : "bg-[rgba(59,130,246,0.08)] text-brand-accent"}`}>
+        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${critical ? "bg-rose-500/15 text-rose-400" : "bg-[rgba(59,130,246,0.08)] text-brand-accent"}`}>
           <Star size={16} />
         </div>
         <div className="min-w-0 flex-1">
@@ -774,9 +774,9 @@ function ReviewCard({
             <button onClick={() => setReplying(true)} className="inline-flex items-center gap-1 rounded bg-[rgba(59,130,246,0.08)] px-2.5 py-1.5 text-[11px] text-brand-accent hover:bg-[rgba(59,130,246,0.14)]"><MessageSquare size={11} /> Reply</button>
           )}
           {review.status !== "resolved" && review.reply && !replying && (
-            <button onClick={onResolve} className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-2.5 py-1.5 text-[11px] text-emerald-700 hover:bg-emerald-500/25" title="Mark as resolved"><CheckCircle2 size={11} /> Resolve</button>
+            <button onClick={onResolve} className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-2.5 py-1.5 text-[11px] text-emerald-400 hover:bg-emerald-500/25" title="Mark as resolved"><CheckCircle2 size={11} /> Resolve</button>
           )}
-          <button onClick={onDelete} className="rounded bg-rose-500/10 px-2 py-1.5 text-rose-700 hover:bg-rose-500/20" title="Delete" aria-label="Delete review"><Trash2 size={11} /></button>
+          <button onClick={onDelete} className="rounded bg-rose-500/10 px-2 py-1.5 text-rose-400 hover:bg-rose-500/20" title="Delete" aria-label="Delete review"><Trash2 size={11} /></button>
         </div>
       </div>
     </div>

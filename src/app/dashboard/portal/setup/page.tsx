@@ -16,7 +16,7 @@ const SOCIAL_PLATFORMS = [
   { id: "facebook", name: "Facebook", icon: <Globe size={24} />, color: "text-blue-500" },
   { id: "tiktok", name: "TikTok", icon: <Hash size={24} />, color: "text-text-primary" },
   { id: "youtube", name: "YouTube", icon: <Video size={24} />, color: "text-red-500" },
-  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={24} />, color: "text-blue-700" },
+  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={24} />, color: "text-blue-400" },
   { id: "twitter", name: "X (Twitter)", icon: <AtSign size={24} />, color: "text-text-primary" },
 ];
 

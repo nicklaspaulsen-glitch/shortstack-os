@@ -207,7 +207,7 @@ export default function SelfTestDashboard() {
             <button
               onClick={load}
               disabled={refreshing || running}
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/5 border border-border-subtle text-text-primary hover:bg-black/10 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-white/5 border border-border-subtle text-text-primary hover:bg-white/10 disabled:opacity-50"
             >
               <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
               {refreshing ? "Loading…" : "Refresh"}

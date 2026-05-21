@@ -368,7 +368,7 @@ export default function NewSmartInvoicePage() {
                       </span>
                       <button
                         onClick={() => removeItem(i)}
-                        className="col-span-1 text-right text-text-muted hover:text-rose-700"
+                        className="col-span-1 text-right text-text-muted hover:text-rose-400"
                       >
                         <Trash2 size={11} />
                       </button>

@@ -6,12 +6,12 @@ export default function DashboardLoading() {
         <div className="flex items-center gap-4">
           <div className="w-14 h-14  bg-[rgba(59,130,246,0.08)] animate-pulse" />
           <div className="flex-1 space-y-2">
-            <div className="h-6 w-64 bg-black/[0.06] rounded-lg animate-pulse" />
-            <div className="h-3 w-48 bg-black/[0.06] rounded animate-pulse" />
+            <div className="h-6 w-64 bg-white/8 rounded-lg animate-pulse" />
+            <div className="h-3 w-48 bg-white/8 rounded animate-pulse" />
           </div>
           <div className="hidden md:flex gap-2">
-            <div className="h-8 w-24 bg-black/[0.06] rounded-lg animate-pulse" />
-            <div className="h-8 w-20 bg-black/[0.06] rounded-lg animate-pulse" />
+            <div className="h-8 w-24 bg-white/8 rounded-lg animate-pulse" />
+            <div className="h-8 w-20 bg-white/8 rounded-lg animate-pulse" />
           </div>
         </div>
       </div>

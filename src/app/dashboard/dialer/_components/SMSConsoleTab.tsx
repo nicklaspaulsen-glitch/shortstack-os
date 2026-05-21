@@ -378,8 +378,8 @@ export default function SMSConsoleTab() {
 
               {/* Voice MMS toggle — synthesises body via voice clone + sends MMS audio. */}
               {mode === "single" && (
-                <div className="mt-3 rounded-lg border border-amber-500/20 bg-amber-50 p-3">
-                  <label className="flex items-center gap-2 text-xs font-medium text-amber-700">
+                <div className="mt-3 rounded-lg border border-amber-500/20 bg-amber-500/10 p-3">
+                  <label className="flex items-center gap-2 text-xs font-medium text-amber-400">
                     <input
                       type="checkbox"
                       checked={voiceMode}
@@ -397,7 +397,7 @@ export default function SMSConsoleTab() {
                         surface="sms"
                         compact
                       />
-                      <p className="mt-2 text-[11px] text-amber-600">
+                      <p className="mt-2 text-[11px] text-amber-400">
                         We&apos;ll synthesise the message above with the chosen voice
                         and send it as an audio MMS. Some carriers reject MMS audio
                         — when that happens we send the text as a fallback.
@@ -442,7 +442,7 @@ export default function SMSConsoleTab() {
                 className={`mt-3 flex items-start gap-2 rounded-lg border p-3 text-sm ${
                   resultBanner.ok
                     ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-400"
-                    : "border-rose-500/30 bg-rose-50 text-rose-700"
+                    : "border-rose-500/30 bg-rose-500/10 text-rose-400"
                 }`}
               >
                 {resultBanner.ok ? <CheckCircle size={16} /> : <AlertTriangle size={16} />}

@@ -238,7 +238,7 @@ function HubSetupInner() {
 
       <div className="glass rounded-xl p-4 bg-blue-500/5 border-blue-500/25 flex items-start gap-2">
         <Info size={14} className="text-blue-600 mt-0.5 shrink-0" />
-        <div className="text-[11px] text-blue-700">
+        <div className="text-[11px] text-blue-400">
           <p className="font-semibold mb-1">What happens next</p>
           <p className="text-blue-600 leading-relaxed">
             Clicking Launch starts all {enabledCount} services in parallel. You&apos;ll land on a

@@ -286,7 +286,7 @@ function ServiceDoneDetail({
     return (
       <div className="mt-3 pt-3 border-t border-border-subtle/60 space-y-2">
         {sandbox && (
-          <div className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-700 flex items-center gap-2">
+          <div className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-400 flex items-center gap-2">
             <AlertTriangle size={11} /> Sandbox — DNS not written to GoDaddy OTE. Works on production.
           </div>
         )}
@@ -372,7 +372,7 @@ function ServiceDoneDetail({
           </button>
         </div>
         {manual && (
-          <div className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-700">
+          <div className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-400">
             <ShieldCheck size={11} className="inline mr-1" />
             Manual DNS still required — add CNAME <code className="font-mono">portal → {cnameTarget}</code> to the zone.
           </div>

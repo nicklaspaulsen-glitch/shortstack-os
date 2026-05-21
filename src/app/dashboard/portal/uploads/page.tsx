@@ -249,7 +249,7 @@ export default function ClientUploadsPage() {
         </div>
         <div className="glass rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Film size={14} className="text-purple-700" />
+            <Film size={14} className="text-purple-400" />
             <span className="text-[9px] text-text-muted uppercase tracking-wider">Content</span>
           </div>
           <p className="text-2xl font-bold font-mono">{analytics.totalContent}</p>

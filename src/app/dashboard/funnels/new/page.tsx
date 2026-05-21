@@ -91,12 +91,12 @@ const TEMPLATES: FunnelTemplate[] = [
 ];
 
 const STEP_TYPE_COLORS: Record<string, string> = {
-  "opt-in": "bg-blue-500/10 text-blue-700 border-blue-500/20",
-  "thank-you": "bg-emerald-500/10 text-emerald-700 border-emerald-500/20",
-  vsl: "bg-purple-500/10 text-purple-700 border-purple-500/20",
-  checkout: "bg-amber-500/10 text-amber-700 border-amber-500/20",
-  upsell: "bg-pink-500/10 text-pink-700 border-pink-500/20",
-  downsell: "bg-orange-500/10 text-orange-700 border-orange-500/20",
+  "opt-in": "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  "thank-you": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  vsl: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+  checkout: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  upsell: "bg-pink-500/10 text-pink-400 border-pink-500/20",
+  downsell: "bg-orange-500/10 text-orange-400 border-orange-500/20",
   webinar: "bg-cyan-500/10 text-cyan-700 border-cyan-500/20",
 };
 
@@ -210,10 +210,10 @@ export default function NewFunnelPage() {
                     {/* Blank option */}
                     <button
                       onClick={() => setSelectedTemplate(null)}
-                      className={`text-left p-4 rounded-lg border transition-all ${!selectedTemplate ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]" : "border-black/[0.06] hover:border-black/[0.12] bg-[#F8FAFC]"}`}
+                      className={`text-left p-4 rounded-lg border transition-all ${!selectedTemplate ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]" : "border-white/8 hover:border-white/15 bg-white/5"}`}
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-8 rounded-md bg-black/[0.04] border border-black/[0.08] flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-md bg-white/4 border border-white/10 flex items-center justify-center">
                           <Plus size={15} className="text-text-muted" />
                         </div>
                         <span className="text-text-primary text-sm font-semibold">Blank</span>
@@ -225,7 +225,7 @@ export default function NewFunnelPage() {
                       <button
                         key={tpl.id}
                         onClick={() => setSelectedTemplate(tpl)}
-                        className={`text-left p-4 rounded-lg border transition-all ${selectedTemplate?.id === tpl.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]" : "border-black/[0.06] hover:border-black/[0.12] bg-[#F8FAFC]"}`}
+                        className={`text-left p-4 rounded-lg border transition-all ${selectedTemplate?.id === tpl.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]" : "border-white/8 hover:border-white/15 bg-white/5"}`}
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <div className={`w-8 h-8 rounded-md border flex items-center justify-center ${tpl.color}`}>
@@ -252,7 +252,7 @@ export default function NewFunnelPage() {
                       if (!name.trim()) { toast.error("Enter a funnel name"); return; }
                       setStep(2);
                     }}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-white font-semibold text-sm transition-colors"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-semibold text-sm transition-colors"
                   >
                     Review Steps
                     <ChevronRight size={15} />
@@ -287,7 +287,7 @@ export default function NewFunnelPage() {
                     <div className="flex items-center gap-2 overflow-x-auto pb-2">
                       {selectedTemplate.steps.map((s, idx) => (
                         <div key={idx} className="flex items-center gap-2 shrink-0">
-                          <div className="bg-[#F8FAFC] border border-black/[0.06] rounded-lg px-4 py-3 min-w-[120px]">
+                          <div className="bg-white/5 border border-white/8 rounded-lg px-4 py-3 min-w-[120px]">
                             <div className="text-text-muted text-[10px] font-bold uppercase tracking-widest mb-1">
                               Step {idx + 1}
                             </div>

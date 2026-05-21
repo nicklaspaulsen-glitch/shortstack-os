@@ -547,9 +547,9 @@ function DomainRow({
 }) {
   const statusColor =
     domain.status === "verified"
-      ? "bg-emerald-500/15 text-emerald-700 border-emerald-500/30"
+      ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
       : domain.status === "failed"
-        ? "bg-rose-500/15 text-rose-700 border-rose-500/30"
+        ? "bg-rose-500/15 text-rose-400 border-rose-500/30"
         : "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]";
   const statusLabel =
     domain.status === "verified"
@@ -588,7 +588,7 @@ function DomainRow({
         )}
         <button
           onClick={onDelete}
-          className="rounded bg-rose-500/10 px-2 py-1 text-[11px] text-rose-700 hover:bg-rose-500/20"
+          className="rounded bg-rose-500/10 px-2 py-1 text-[11px] text-rose-400 hover:bg-rose-500/20"
           title="Remove domain"
           aria-label="Remove domain"
         >

@@ -151,7 +151,7 @@ export default function ForecastPage() {
       </div>
     </div>{loading ? <TableSkeleton rows={8} /> : error ? (
               <PrismPanel padding="p-8" className="flex flex-col items-center gap-3 text-center">
-                <AlertCircle size={32} className="text-red-700" />
+                <AlertCircle size={32} className="text-red-400" />
                 <p className="text-text-primary font-semibold">Failed to load deals</p>
                 <p className="text-text-muted text-sm">{error}</p>
                 <motion.button
@@ -307,7 +307,7 @@ export default function ForecastPage() {
                                     ? new Date(d.expected_close_date).toLocaleDateString()
                                     : "�"}
                                 </td>
-                                <td className="px-4 py-3 text-right text-blue-700 hidden md:table-cell">
+                                <td className="px-4 py-3 text-right text-blue-400 hidden md:table-cell">
                                   {fmt(d.value * d.probability / 100)}
                                 </td>
                               </motion.tr>

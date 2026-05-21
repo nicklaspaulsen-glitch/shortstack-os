@@ -582,15 +582,15 @@ export default function DomainsPage() {
                               </span>
                               {/* Resend mail badge — one per status */}
                               {d.resend_status === "verified" ? (
-                                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-green-500/10 text-green-700 border-green-500/30 flex items-center gap-1">
+                                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-green-500/10 text-green-400 border-green-500/30 flex items-center gap-1">
                                   <MailCheck size={9} /> Mail verified
                                 </span>
                               ) : d.resend_status === "verifying" || d.resend_status === "pending" ? (
-                                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-blue-500/10 text-blue-700 border-blue-500/30 flex items-center gap-1">
+                                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-blue-500/10 text-blue-400 border-blue-500/30 flex items-center gap-1">
                                   <Mail size={9} /> Mail verifying
                                 </span>
                               ) : d.resend_status === "failed" ? (
-                                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-red-500/10 text-red-700 border-red-500/30 flex items-center gap-1">
+                                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-red-500/10 text-red-400 border-red-500/30 flex items-center gap-1">
                                   <MailWarning size={9} /> Mail failed
                                 </span>
                               ) : (
@@ -618,7 +618,7 @@ export default function DomainsPage() {
                           {!d.resend_status && (
                             <button
                               onClick={() => setupMail(d)}
-                              className="text-[10px] px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/25 text-blue-700 hover:bg-blue-500/20 flex items-center gap-1"
+                              className="text-[10px] px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/25 text-blue-400 hover:bg-blue-500/20 flex items-center gap-1"
                             >
                               <Mail size={10} /> Set up mail
                             </button>
@@ -626,7 +626,7 @@ export default function DomainsPage() {
                           {(d.resend_status === "verifying" || d.resend_status === "pending") && (
                             <button
                               onClick={() => refreshMailStatus(d)}
-                              className="text-[10px] px-2.5 py-1 rounded-lg border border-blue-500/25 text-blue-700 hover:bg-blue-500/10 flex items-center gap-1"
+                              className="text-[10px] px-2.5 py-1 rounded-lg border border-blue-500/25 text-blue-400 hover:bg-blue-500/10 flex items-center gap-1"
                             >
                               <RefreshCw size={10} /> Check status
                             </button>
@@ -634,7 +634,7 @@ export default function DomainsPage() {
                           {d.resend_status === "failed" && (
                             <button
                               onClick={() => setupMail(d)}
-                              className="text-[10px] px-2.5 py-1 rounded-lg border border-red-500/30 text-red-700 hover:bg-red-500/10 flex items-center gap-1"
+                              className="text-[10px] px-2.5 py-1 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 flex items-center gap-1"
                             >
                               <RefreshCw size={10} /> Retry mail
                             </button>
@@ -681,12 +681,12 @@ export default function DomainsPage() {
 
                       {/* Resend mail-status hints */}
                       {d.resend_status === "verified" && (
-                        <div className="mt-2 px-3 py-2 rounded-lg bg-green-500/5 border border-green-500/20 text-[10px] text-green-700 flex items-center gap-2 flex-wrap">
+                        <div className="mt-2 px-3 py-2 rounded-lg bg-green-500/5 border border-green-500/20 text-[10px] text-green-400 flex items-center gap-2 flex-wrap">
                           <MailCheck size={11} />
                           <span>Client can now send from <span className="font-mono">anything@{d.domain}</span></span>
                           <a
                             href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
-                            className="ml-auto inline-flex items-center gap-1 text-green-600 hover:text-green-800"
+                            className="ml-auto inline-flex items-center gap-1 text-green-400 hover:text-green-300"
                           >
                             Open in Mail Setup <ArrowUpRight size={10} />
                           </a>

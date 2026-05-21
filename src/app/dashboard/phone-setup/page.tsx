@@ -694,7 +694,7 @@ export default function PhoneSetupPage() {
                     <Row
                       label="Phone"
                       value={
-                        <span className="font-mono text-base font-semibold text-emerald-700">
+                        <span className="font-mono text-base font-semibold text-emerald-400">
                           {purchaseResult.phone_number}
                         </span>
                       }
@@ -794,7 +794,7 @@ function PipelineStep({ label, active, done }: { label: string; active: boolean;
       <span
         className={
           done
-            ? "text-emerald-700"
+            ? "text-emerald-400"
             : active
               ? "text-text-primary"
               : "text-text-muted opacity-60"

@@ -384,7 +384,7 @@ export default function CourseBuilderPage() {
             <span
               className={`text-xs px-2 py-0.5 rounded-full ${
                 course.status === "published"
-                  ? "bg-green-500/20 text-green-700"
+                  ? "bg-green-500/20 text-green-400"
                   : "bg-white/8 text-text-muted"
               }`}
             >

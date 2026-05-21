@@ -152,7 +152,7 @@ function LineItemsEditor({
           <input className="input w-24 text-sm h-8" placeholder="$0.00" type="number" min={0}
             value={item.unit_price} onChange={(e) => updateItem(i, { unit_price: parseFloat(e.target.value) || 0 })} />
           <button type="button" onClick={() => removeItem(i)} disabled={items.length === 1}
-            className="p-1.5 text-text-muted hover:text-rose-700 disabled:opacity-30 mt-0.5"><X size={14} /></button>
+            className="p-1.5 text-text-muted hover:text-rose-400 disabled:opacity-30 mt-0.5"><X size={14} /></button>
         </div>
       ))}
       <button type="button" onClick={addItem}
@@ -390,7 +390,7 @@ export default function InvoiceTemplatesPage() {
                           <Pencil size={14} />
                         </button>
                         <button onClick={() => handleDelete(t.id)} disabled={deleting === t.id}
-                          className="p-1.5 rounded hover:bg-rose-50 text-text-muted hover:text-rose-700" title="Delete">
+                          className="p-1.5 rounded hover:bg-rose-500/10 text-text-muted hover:text-rose-400" title="Delete">
                           {deleting === t.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                         </button>
                       </div>
