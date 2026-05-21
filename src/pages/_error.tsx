@@ -2,15 +2,15 @@ import { NextPageContext } from "next";
 
 function Error({ statusCode }: { statusCode?: number }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", fontFamily: "system-ui, sans-serif" }}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", fontFamily: "system-ui, sans-serif", background: "#020711" }}>
       <div style={{ textAlign: "center" }}>
-        <h1 style={{ fontSize: "3rem", fontWeight: 700, margin: 0, color: "#c8a855" }}>
+        <h1 style={{ fontSize: "3rem", fontWeight: 700, margin: 0, color: "#D4FF00" }}>
           {statusCode || "Error"}
         </h1>
-        <p style={{ color: "#888", marginTop: "0.5rem" }}>
+        <p style={{ color: "#A8A8B2", marginTop: "0.5rem" }}>
           {statusCode === 404 ? "Page not found" : "Something went wrong"}
         </p>
-        <a href="/dashboard" style={{ color: "#c8a855", fontSize: "0.875rem", marginTop: "1rem", display: "inline-block" }}>
+        <a href="/dashboard" style={{ color: "#D4FF00", fontSize: "0.875rem", marginTop: "1rem", display: "inline-block" }}>
           Go to Dashboard
         </a>
       </div>

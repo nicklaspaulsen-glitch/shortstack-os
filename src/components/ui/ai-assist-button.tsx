@@ -126,11 +126,11 @@ export function AiAssistButton({
         style={{
           background: busy
             ? "rgba(168,85,247,0.18)"
-            : "rgba(200,168,85,0.10)",
+            : "rgba(212,255,0,0.10)",
           border: busy
             ? "1px solid rgba(168,85,247,0.35)"
-            : "1px solid rgba(200,168,85,0.25)",
-          color: busy ? "#d8b4fe" : "#c8a855",
+            : "1px solid rgba(212,255,0,0.25)",
+          color: busy ? "#d8b4fe" : "#D4FF00",
         }}
         title={busy ? "Click to stop" : "Generate with AI"}
       >
@@ -158,7 +158,7 @@ export function AiAssistButton({
         >
           <div className="p-3">
             <div className="flex items-center gap-2 mb-2.5">
-              <Sparkles size={11} style={{ color: "#c8a855" }} />
+              <Sparkles size={11} style={{ color: "#D4FF00" }} />
               <p className="text-[11px] font-bold text-text-primary">
                 AI Assist
               </p>
@@ -184,9 +184,9 @@ export function AiAssistButton({
                 className="flex-1 px-3 py-1.5 rounded-md text-[11px] font-bold transition flex items-center justify-center gap-1.5"
                 style={{
                   background:
-                    "linear-gradient(135deg, rgba(200,168,85,0.2), rgba(200,168,85,0.08))",
-                  border: "1px solid rgba(200,168,85,0.35)",
-                  color: "#e2c878",
+                    "linear-gradient(135deg, rgba(212,255,0,0.2), rgba(212,255,0,0.08))",
+                  border: "1px solid rgba(212,255,0,0.35)",
+                  color: "#D4FF00",
                 }}
               >
                 <Sparkles size={10} /> Generate

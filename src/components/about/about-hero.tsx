@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-const GOLD = "#c8a855";
+const GOLD = "#D4FF00";
 
 export default function AboutHero() {
   return (
@@ -25,7 +25,7 @@ export default function AboutHero() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 0%, rgba(200,168,85,0.1) 0%, transparent 60%)",
+            "radial-gradient(ellipse at 50% 0%, rgba(212,255,0,0.1) 0%, transparent 60%)",
         }}
       />
 
@@ -36,8 +36,8 @@ export default function AboutHero() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6"
           style={{
-            background: "rgba(200,168,85,0.08)",
-            border: "1px solid rgba(200,168,85,0.15)",
+            background: "rgba(212,255,0,0.08)",
+            border: "1px solid rgba(212,255,0,0.15)",
             color: GOLD,
           }}
         >
@@ -51,7 +51,7 @@ export default function AboutHero() {
           className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05]"
           style={{
             background:
-              "linear-gradient(135deg, #ffffff 0%, #c8a855 55%, #ffffff 100%)",
+              "linear-gradient(135deg, #ffffff 0%, #D4FF00 55%, #ffffff 100%)",
             backgroundSize: "200% auto",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",

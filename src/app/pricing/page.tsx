@@ -132,7 +132,7 @@ export default function PricingPage() {
         {/* Hero */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4" style={{ letterSpacing: "-0.03em" }}>
-            The AI operating system<br /><span style={{ color: "#c8a855" }}>for agencies</span>
+            The AI operating system<br /><span style={{ color: "#D4FF00" }}>for agencies</span>
           </h1>
           <p className="text-text-muted text-lg max-w-xl mx-auto mb-8">
             Run your entire agency with AI. Lead gen, content, social, video, design, outreach, reporting — all in one platform.
@@ -156,12 +156,12 @@ export default function PricingPage() {
             return (
               <div key={plan.key} className=" p-5 relative flex flex-col"
                 style={{
-                  background: plan.popular ? "rgba(200,168,85,0.04)" : "rgba(255,255,255,0.02)",
-                  border: `1px solid ${plan.popular ? "rgba(200,168,85,0.2)" : "rgba(255,255,255,0.05)"}`,
-                  ...(plan.popular ? { boxShadow: "0 0 0 2px rgba(200,168,85,0.3)" } : {}),
+                  background: plan.popular ? "rgba(212,255,0,0.04)" : "rgba(255,255,255,0.02)",
+                  border: `1px solid ${plan.popular ? "rgba(212,255,0,0.2)" : "rgba(255,255,255,0.05)"}`,
+                  ...(plan.popular ? { boxShadow: "0 0 0 2px rgba(212,255,0,0.3)" } : {}),
                 }}>
                 {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-[9px] font-bold px-3 py-1 rounded-full" style={{ background: "#c8a855", color: "#000" }}>
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-[9px] font-bold px-3 py-1 rounded-full" style={{ background: "#D4FF00", color: "#000" }}>
                     Most Popular
                   </div>
                 )}
@@ -199,7 +199,7 @@ export default function PricingPage() {
                     plan.popular ? "text-black" : "text-white"
                   }`}
                   style={{
-                    background: plan.popular ? "linear-gradient(135deg, #c8a855, #b89840)" : "rgba(255,255,255,0.06)",
+                    background: plan.popular ? "linear-gradient(135deg, #D4FF00, #AACC00)" : "rgba(255,255,255,0.06)",
                     border: plan.popular ? "none" : "1px solid rgba(255,255,255,0.08)",
                   }}>
                   {plan.cta} <ArrowRight size={12} />
@@ -214,7 +214,7 @@ export default function PricingPage() {
           <p className="text-gray-500 text-sm mb-2">14-day free trial on all plans. Cancel anytime.</p>
           <p className="text-gray-600 text-xs mb-5">Not sure which plan? <Link href="/book" className="text-text-muted hover:text-white underline underline-offset-2 transition-colors">Book a free strategy call</Link> and we&apos;ll help you decide.</p>
           <Link href="/login" className="inline-flex items-center gap-2 text-sm font-medium px-6 py-3 rounded-xl transition-all hover:opacity-90"
-            style={{ background: "linear-gradient(135deg, #c8a855, #b89840)", color: "#0b0d12" }}>
+            style={{ background: "linear-gradient(135deg, #D4FF00, #AACC00)", color: "#0b0d12" }}>
             Get Started Now <ArrowRight size={14} />
           </Link>
         </div>

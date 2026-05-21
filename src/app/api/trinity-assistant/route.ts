@@ -924,7 +924,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
                 user_id: ctx.ownerId,
                 name: "Trinity Inbox",
                 icon: "sparkles",
-                color: "#c8a855",
+                color: "#D4FF00",
               })
               .select("id")
               .single();

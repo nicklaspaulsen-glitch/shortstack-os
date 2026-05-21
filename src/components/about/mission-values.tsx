@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Compass, Zap, Heart } from "lucide-react";
 
-const GOLD = "#c8a855";
+const GOLD = "#D4FF00";
 
 const values = [
   {
@@ -25,7 +25,7 @@ const values = [
 
 export default function MissionValues() {
   return (
-    <section className="py-16 md:py-24 px-6" style={{ background: "rgba(200,168,85,0.02)" }}>
+    <section className="py-16 md:py-24 px-6" style={{ background: "rgba(212,255,0,0.02)" }}>
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -75,8 +75,8 @@ export default function MissionValues() {
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
                   style={{
-                    background: "rgba(200,168,85,0.1)",
-                    border: "1px solid rgba(200,168,85,0.2)",
+                    background: "rgba(212,255,0,0.1)",
+                    border: "1px solid rgba(212,255,0,0.2)",
                     color: GOLD,
                   }}
                 >

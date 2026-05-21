@@ -103,7 +103,7 @@ function getProgressGlow(pct: number): string {
   if (pct >= 90) return "shadow-[0_0_12px_rgba(248,113,113,0.5)]";
   if (pct >= 75) return "shadow-[0_0_12px_rgba(251,146,60,0.4)]";
   if (pct >= 50) return "shadow-[0_0_12px_rgba(251,191,36,0.4)]";
-  return "shadow-[0_0_12px_rgba(200,168,85,0.4)]";
+  return "shadow-[0_0_12px_rgba(212,255,0,0.35)]";
 }
 
 function formatActionType(t: string): string {

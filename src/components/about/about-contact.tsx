@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Mail, MessageCircle } from "lucide-react";
 
-const GOLD = "#c8a855";
+const GOLD = "#D4FF00";
 const GOLD_LIGHT = "#e4c876";
 
 export default function AboutContact() {
@@ -46,8 +46,8 @@ export default function AboutContact() {
             <div
               className="w-12 h-12 rounded-lg flex items-center justify-center"
               style={{
-                background: "rgba(200,168,85,0.1)",
-                border: "1px solid rgba(200,168,85,0.2)",
+                background: "rgba(212,255,0,0.1)",
+                border: "1px solid rgba(212,255,0,0.2)",
                 color: GOLD,
               }}
             >
@@ -69,8 +69,8 @@ export default function AboutContact() {
             whileHover={{ y: -3 }}
             className="rounded-xl p-6 flex items-center gap-4"
             style={{
-              background: `linear-gradient(135deg, rgba(200,168,85,0.08), rgba(228,200,118,0.02))`,
-              border: "1px solid rgba(200,168,85,0.2)",
+              background: `linear-gradient(135deg, rgba(212,255,0,0.08), rgba(228,200,118,0.02))`,
+              border: "1px solid rgba(212,255,0,0.2)",
             }}
           >
             <div

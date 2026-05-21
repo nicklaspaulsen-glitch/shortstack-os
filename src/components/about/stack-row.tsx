@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-const GOLD = "#c8a855";
+const GOLD = "#D4FF00";
 
 /**
  * Tech logos rendered as text badges so we don't ship 3rd-party marks.

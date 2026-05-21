@@ -244,8 +244,8 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
                         <span
                           className="text-[8.5px] font-bold uppercase tracking-wider px-1 py-0.5 rounded"
                           style={{
-                            background: "rgba(200,168,85,0.14)",
-                            color: "#e2c878",
+                            background: "rgba(212,255,0,0.14)",
+                            color: "#E8FF4D",
                           }}
                         >
                           Popular
@@ -303,7 +303,7 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
                 className="text-2xl font-extrabold"
                 style={{
                   background:
-                    "linear-gradient(135deg, #c8a855, #e2c878)",
+                    "linear-gradient(135deg, #D4FF00, #E8FF4D)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}

@@ -63,7 +63,7 @@ export default function PublicBookingPage() {
         {step === "select" && (
           <div className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
             <h2 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-              <Calendar size={14} className="text-[#2563EB]" /> Select a Date
+              <Calendar size={14} className="text-[#D4FF00]" /> Select a Date
             </h2>
             <div className="grid grid-cols-5 gap-2 mb-5">
               {dates.map(d => {
@@ -72,8 +72,8 @@ export default function PublicBookingPage() {
                 return (
                   <button key={dateStr} onClick={() => setSelectedDate(dateStr)}
                     className={`p-2 rounded-lg text-center transition-all ${
-                      isSelected ? "bg-[#2563EB]/10 border-[#2563EB]/30 text-[#2563EB]" : "border-white/[0.05] text-text-muted hover:text-white"
-                    }`} style={{ border: `1px solid ${isSelected ? "rgba(200,168,85,0.3)" : "rgba(255,255,255,0.05)"}` }}>
+                      isSelected ? "bg-[rgba(212,255,0,0.10)] border-[rgba(212,255,0,0.30)] text-[#D4FF00]" : "border-white/[0.05] text-text-muted hover:text-white"
+                    }`} style={{ border: `1px solid ${isSelected ? "rgba(212,255,0,0.3)" : "rgba(255,255,255,0.05)"}` }}>
                     <p className="text-[9px] uppercase">{d.toLocaleDateString("en-US", { weekday: "short" })}</p>
                     <p className="text-lg font-bold">{d.getDate()}</p>
                     <p className="text-[8px]">{d.toLocaleDateString("en-US", { month: "short" })}</p>
@@ -85,14 +85,14 @@ export default function PublicBookingPage() {
             {selectedDate && (
               <>
                 <h2 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                  <Clock size={14} className="text-[#2563EB]" /> Select a Time
+                  <Clock size={14} className="text-[#D4FF00]" /> Select a Time
                 </h2>
                 <div className="grid grid-cols-4 gap-2 mb-5">
                   {TIME_SLOTS.map(time => (
                     <button key={time} onClick={() => setSelectedTime(time)}
                       className={`py-2 rounded-lg text-xs font-medium transition-all ${
-                        selectedTime === time ? "bg-[#2563EB]/10 text-[#2563EB] border-[#2563EB]/30" : "text-text-muted hover:text-white border-white/[0.05]"
-                      }`} style={{ border: `1px solid ${selectedTime === time ? "rgba(200,168,85,0.3)" : "rgba(255,255,255,0.05)"}` }}>
+                        selectedTime === time ? "bg-[rgba(212,255,0,0.10)] text-[#D4FF00] border-[rgba(212,255,0,0.30)]" : "text-text-muted hover:text-white border-white/[0.05]"
+                      }`} style={{ border: `1px solid ${selectedTime === time ? "rgba(212,255,0,0.3)" : "rgba(255,255,255,0.05)"}` }}>
                       {time}
                     </button>
                   ))}
@@ -113,11 +113,11 @@ export default function PublicBookingPage() {
         {step === "form" && (
           <div className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
             <div className="flex items-center gap-2 mb-4 pb-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-              <Video size={14} className="text-[#2563EB]" />
+              <Video size={14} className="text-[#D4FF00]" />
               <span className="text-xs text-text-muted">
                 {new Date(selectedDate).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })} at {selectedTime}
               </span>
-              <button onClick={() => setStep("select")} className="text-[10px] text-[#2563EB] ml-auto">Change</button>
+              <button onClick={() => setStep("select")} className="text-[10px] text-[#D4FF00] ml-auto">Change</button>
             </div>
 
             <div className="space-y-3">

@@ -108,8 +108,8 @@ export default function AiWorkflowHero({
       className="relative  p-5 md:p-6 overflow-hidden"
       style={{
         background:
-          "linear-gradient(135deg, rgba(200,168,85,0.06), rgba(200,168,85,0.02))",
-        border: "1px solid rgba(200,168,85,0.2)",
+          "linear-gradient(135deg, rgba(212,255,0,0.06), rgba(212,255,0,0.02))",
+        border: "1px solid rgba(212,255,0,0.2)",
       }}
     >
       {/* Ambient gold glow */}
@@ -117,7 +117,7 @@ export default function AiWorkflowHero({
         className="absolute -top-20 -right-20 w-72 h-72 rounded-full pointer-events-none blur-3xl opacity-40"
         style={{
           background:
-            "radial-gradient(circle, rgba(200,168,85,0.18) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(212,255,0,0.18) 0%, transparent 70%)",
         }}
       />
 
@@ -127,11 +127,11 @@ export default function AiWorkflowHero({
             className="w-10 h-10 rounded-xl flex items-center justify-center"
             style={{
               background:
-                "linear-gradient(135deg, rgba(200,168,85,0.18), rgba(200,168,85,0.04))",
-              border: "1px solid rgba(200,168,85,0.3)",
+                "linear-gradient(135deg, rgba(212,255,0,0.18), rgba(212,255,0,0.04))",
+              border: "1px solid rgba(212,255,0,0.3)",
             }}
           >
-            <Sparkles size={16} style={{ color: "#c8a855" }} />
+            <Sparkles size={16} style={{ color: "#D4FF00" }} />
           </div>
           <div>
             <h2 className="text-base font-bold text-text-primary">
@@ -177,7 +177,7 @@ export default function AiWorkflowHero({
             disabled={generating || !prompt.trim()}
             className="flex-1 sm:flex-none px-5 py-2 rounded-lg text-sm font-bold transition disabled:opacity-50 flex items-center justify-center gap-2"
             style={{
-              background: "linear-gradient(135deg, #c8a855, #b89840)",
+              background: "linear-gradient(135deg, #D4FF00, #AACC00)",
               color: "#0b0d12",
             }}
           >
@@ -240,8 +240,8 @@ export default function AiWorkflowHero({
                   onClick={() => generate(r)}
                   className="text-[11px] font-medium px-3 py-1.5 rounded-md transition truncate max-w-[300px]"
                   style={{
-                    background: "rgba(200,168,85,0.06)",
-                    border: "1px solid rgba(200,168,85,0.2)",
+                    background: "rgba(212,255,0,0.06)",
+                    border: "1px solid rgba(212,255,0,0.2)",
                     color: "#e2c878",
                   }}
                   title={r}

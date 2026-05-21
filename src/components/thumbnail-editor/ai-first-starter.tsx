@@ -348,7 +348,7 @@ export default function AiFirstStarter({
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full pointer-events-none blur-3xl opacity-25"
         style={{
           background:
-            "radial-gradient(circle, rgba(200,168,85,0.18) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(212,255,0,0.18) 0%, transparent 70%)",
         }}
       />
 
@@ -357,7 +357,7 @@ export default function AiFirstStarter({
         style={{
           background:
             "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)",
-          border: "1px solid rgba(200,168,85,0.18)",
+          border: "1px solid rgba(212,255,0,0.18)",
           boxShadow: "0 20px 80px rgba(0,0,0,0.5)",
         }}
       >
@@ -376,11 +376,11 @@ export default function AiFirstStarter({
             className="w-11 h-11 rounded-xl flex items-center justify-center"
             style={{
               background:
-                "linear-gradient(135deg, rgba(200,168,85,0.18), rgba(200,168,85,0.04))",
-              border: "1px solid rgba(200,168,85,0.3)",
+                "linear-gradient(135deg, rgba(212,255,0,0.18), rgba(212,255,0,0.04))",
+              border: "1px solid rgba(212,255,0,0.3)",
             }}
           >
-            <Sparkles size={18} style={{ color: "#c8a855" }} />
+            <Sparkles size={18} style={{ color: "#D4FF00" }} />
           </div>
           <div>
             <h2 className="text-lg font-bold text-white">
@@ -421,12 +421,12 @@ export default function AiFirstStarter({
                   className="px-2 py-0.5 rounded-full text-[10.5px] font-medium border transition-all duration-100"
                   style={{
                     background: active
-                      ? "rgba(200,168,85,0.18)"
+                      ? "rgba(212,255,0,0.18)"
                       : "rgba(255,255,255,0.04)",
                     borderColor: active
-                      ? "rgba(200,168,85,0.5)"
+                      ? "rgba(212,255,0,0.5)"
                       : "rgba(255,255,255,0.08)",
-                    color: active ? "#c8a855" : "#6b6b7b",
+                    color: active ? "#D4FF00" : "#6b6b7b",
                   }}
                 >
                   {chip.label}
@@ -478,9 +478,9 @@ export default function AiFirstStarter({
             className="w-full py-3 rounded-xl text-sm font-bold transition disabled:opacity-50 flex items-center justify-center gap-2"
             style={{
               background:
-                "linear-gradient(135deg, #c8a855, #b89840)",
+                "linear-gradient(135deg, #D4FF00, #AACC00)",
               color: "#0b0d12",
-              boxShadow: "0 8px 24px rgba(200,168,85,0.3)",
+              boxShadow: "0 8px 24px rgba(212,255,0,0.3)",
             }}
           >
             {busy ? (
@@ -511,10 +511,10 @@ export default function AiFirstStarter({
                     className="group relative rounded-xl overflow-hidden transition-all hover:-translate-y-0.5"
                     style={{
                       border: picked
-                        ? "2px solid #c8a855"
+                        ? "2px solid #D4FF00"
                         : "2px solid rgba(255,255,255,0.06)",
                       boxShadow: picked
-                        ? "0 0 24px rgba(200,168,85,0.4)"
+                        ? "0 0 24px rgba(212,255,0,0.4)"
                         : undefined,
                     }}
                   >
@@ -532,7 +532,7 @@ export default function AiFirstStarter({
                       <span
                         className="text-xs font-bold px-3 py-1.5 rounded-md"
                         style={{
-                          background: "rgba(200,168,85,0.95)",
+                          background: "rgba(212,255,0,0.95)",
                           color: "#0b0d12",
                         }}
                       >

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-const GOLD = "#c8a855";
+const GOLD = "#D4FF00";
 
 export default function FounderStory() {
   return (

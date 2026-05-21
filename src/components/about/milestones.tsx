@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
-const GOLD = "#c8a855";
+const GOLD = "#D4FF00";
 const GOLD_LIGHT = "#e4c876";
 
 const milestones = [
@@ -55,7 +55,7 @@ function Milestone({ m, i }: { m: (typeof milestones)[number]; i: number }) {
           className="w-4 h-4 rounded-full flex-shrink-0 z-10"
           style={{
             background: `linear-gradient(135deg, ${GOLD}, ${GOLD_LIGHT})`,
-            boxShadow: `0 0 0 4px rgba(200,168,85,0.1)`,
+            boxShadow: `0 0 0 4px rgba(212,255,0,0.1)`,
           }}
         />
         {!isLast && (

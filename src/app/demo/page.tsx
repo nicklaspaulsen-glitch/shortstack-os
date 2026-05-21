@@ -38,7 +38,7 @@ export default function DemoPage() {
           <div className="flex items-center gap-4">
             <Link href="/pricing" className="text-xs text-text-muted hover:text-white">Pricing</Link>
             <Link href="/login" className="text-xs px-4 py-2 rounded-lg font-medium text-black"
-              style={{ background: "linear-gradient(135deg, #c8a855, #b89840)" }}>
+              style={{ background: "linear-gradient(135deg, #D4FF00, #AACC00)" }}>
               Login
             </Link>
           </div>
@@ -47,19 +47,19 @@ export default function DemoPage() {
         {/* Hero */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6 text-xs"
-            style={{ background: "rgba(200,168,85,0.08)", color: "#c8a855", border: "1px solid rgba(200,168,85,0.15)" }}>
+            style={{ background: "rgba(212,255,0,0.08)", color: "#D4FF00", border: "1px solid rgba(212,255,0,0.15)" }}>
             <Zap size={12} /> AI-Powered Agency OS
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4" style={{ letterSpacing: "-0.04em", lineHeight: 1.1 }}>
             Run your entire agency<br />
-            <span style={{ color: "#c8a855" }}>on autopilot</span>
+            <span style={{ color: "#D4FF00" }}>on autopilot</span>
           </h1>
           <p className="text-lg text-text-muted max-w-2xl mx-auto mb-8">
             20 AI agents work around the clock — scraping leads, sending outreach, creating content, managing clients, and closing deals. All while you sleep.
           </p>
           <div className="flex items-center justify-center gap-4">
             <Link href="/book" className="px-8 py-3 rounded-xl font-semibold text-sm text-black flex items-center gap-2"
-              style={{ background: "linear-gradient(135deg, #c8a855, #b89840)" }}>
+              style={{ background: "linear-gradient(135deg, #D4FF00, #AACC00)" }}>
               Start Free Trial <ArrowRight size={14} />
             </Link>
             <Link href="/pricing" className="px-8 py-3 rounded-xl text-sm font-medium text-gray-300"
@@ -98,11 +98,11 @@ export default function DemoPage() {
         </div>
 
         {/* CTA */}
-        <div className="text-center mb-8 p-8 " style={{ background: "rgba(200,168,85,0.04)", border: "1px solid rgba(200,168,85,0.1)" }}>
+        <div className="text-center mb-8 p-8 " style={{ background: "rgba(212,255,0,0.04)", border: "1px solid rgba(212,255,0,0.1)" }}>
           <h2 className="text-xl font-bold text-white mb-2">Ready to automate your agency?</h2>
           <p className="text-sm text-text-muted mb-6">Book a free strategy call and see how ShortStack can transform your business.</p>
           <Link href="/book" className="inline-flex items-center gap-2 px-8 py-3 rounded-xl font-semibold text-sm text-black"
-            style={{ background: "linear-gradient(135deg, #c8a855, #b89840)" }}>
+            style={{ background: "linear-gradient(135deg, #D4FF00, #AACC00)" }}>
             Book Free Strategy Call <ArrowRight size={14} />
           </Link>
         </div>
