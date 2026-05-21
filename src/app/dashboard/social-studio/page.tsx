@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Megaphone, Calendar, Sparkles, Lightbulb, BarChart3, Users, TrendingUp } from "lucide-react";
+import { Calendar, Sparkles, Lightbulb, BarChart3, Users, TrendingUp, Plus } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import Tab1Calendar from "./components/Tab1Calendar";
 import Tab2AIUpload from "./components/Tab2AIUpload";
@@ -11,7 +11,6 @@ import Tab4Stats from "./components/Tab4Stats";
 import Tab5TopCommenters from "./components/Tab5TopCommenters";
 import { MotionPage } from "@/components/motion/motion-page";
 import PageAgent from "@/components/ui/page-agent";
-import PageHero from "@/components/ui/page-hero";
 import CreatorIntelligence, { type CreatorIdea } from "@/components/ui/creator-intelligence";
 import type { CreatorStyle } from "@/lib/ai/creator-styles";
 import toast from "react-hot-toast";
@@ -48,13 +47,53 @@ export default function SocialStudioPage() {
 
   return (
     <MotionPage className="space-y-6">
-      <PageHero
-        title="Social Studio"
-        subtitle="Plan, schedule, and automate your content across every platform"
-        eyebrow="POST STUDIO"
-        icon={<Megaphone size={18} />}
-        gradient="blue"
+      {/* ── blue top rail ───────────────────────────────────────────────── */}
+      <div
+        className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+        style={{ background: "linear-gradient(90deg, transparent 0%, #1D4ED8 30%, #3B82F6 50%, #1D4ED8 70%, transparent 100%)" }}
       />
+
+      {/* ── Social Studio command strip ──────────────────────────────────── */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0 flex items-center gap-3">
+          <div>
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+              Post Studio
+            </p>
+            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+              Social Studio
+            </h1>
+          </div>
+
+          {/* Platform indicators */}
+          <div className="hidden sm:flex items-center gap-1.5 ml-1">
+            {(["IG", "TK", "FB", "YT"] as const).map((p, i) => (
+              <span
+                key={p}
+                className="text-[10px] font-medium w-6 h-6 rounded-full flex items-center justify-center leading-none"
+                style={{
+                  background: ["#E1306C22","#69C9D022","#1877F222","#FF000022"][i],
+                  color: ["#E1306C","#69C9D0","#1877F2","#FF0000"][i],
+                  border: `1px solid ${["#E1306C","#69C9D0","#1877F2","#FF0000"][i]}40`,
+                }}
+              >
+                {p}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Quick schedule CTA */}
+        <motion.button
+          type="button"
+          onClick={() => setTab("ai-upload")}
+          whileTap={{ scale: 0.97 }}
+          className="btn-pill flex items-center gap-1.5 text-xs py-1.5 px-3 shrink-0"
+        >
+          <Plus size={12} />
+          Schedule
+        </motion.button>
+      </div>
 
       <div className="tab-pill-strip flex-wrap">
         {TABS.map((t, index) => {

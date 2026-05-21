@@ -91,11 +91,14 @@ animation is driven by **real Supabase realtime events** — never canned.
   ~100 of them. Sidebar entries in `src/components/sidebar.tsx`.
 - All client portal pages under `src/app/dashboard/portal/*/page.tsx`.
   Simpler aesthetic by design — keep them lighter than agency pages.
-- **Shared `<PageHero>`** at `src/components/ui/page-hero.tsx` is on
-  every dashboard page (gold/blue/purple/green/sunset/ocean gradients).
-  Has motion polish: orbit-glow blobs, sparkle particles for
-  premium-feel surfaces. **Use it for any new page** — don't roll your
-  own header.
+- **Slim editorial header** is the standard for every dashboard page
+  (May 2026 EditorialBento overhaul, zero PageHero uses remaining).
+  Pattern: a `flex items-center justify-between` strip with a 1px blue
+  top-rail gradient, `font-editorial` italic eyebrow (Bodoni Moda), and
+  `font-display` bold h1 (Satoshi). See `analytics/page.tsx` lines
+  ~390–460 for the canonical template. `PageHero` at
+  `src/components/ui/page-hero.tsx` is kept for reference only — do NOT
+  use it for new pages.
 - **Shared `<StatCard>`** at `src/components/ui/stat-card.tsx`. Use for
   any number-display tile.
 - **`<AdvancedToggle>`** + `useAdvancedMode("page-key")` from
@@ -207,9 +210,9 @@ voice-injection + AI-tell stripping. Pass `humanize: false` for JSON outputs.
   (fail-closed 503 if the secret env var is missing). Pattern: see
   `/api/webhooks/resend/route.ts` (Svix) and
   `/api/webhooks/elevenlabs/route.ts` (HMAC).
-- **`page.tsx` files use `<PageHero>`** unless intentionally simpler
-  (Conversations is a 3-pane Gmail-style inbox; portal pages are
-  intentionally lighter).
+- **`page.tsx` files use the slim editorial header** (see Sidebar /
+  page architecture above). Portal pages are intentionally lighter
+  (no header strip). Conversations uses a 3-pane Gmail-style layout.
 - **No `<img>` for new images** — use `next/image`. Existing `<img>`
   tags are deferred for a future perf pass.
 - **No `: any`** in new code. Use `unknown` + narrowing, or define a
