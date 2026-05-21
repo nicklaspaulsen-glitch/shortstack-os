@@ -24,6 +24,7 @@ import { callAnthropic, ANTHROPIC_MODEL_IDS } from "./providers/anthropic";
 import { callOpenRouter, OPENROUTER_MODELS } from "./providers/openrouter";
 import { callOpenAI, OPENAI_MODELS } from "./providers/openai";
 import { callRunpodLLM } from "./providers/runpod-llm";
+import { callOllama } from "./providers/ollama";
 import { reportError } from "@/lib/observability/error-reporter";
 import { structuredLog } from "@/lib/observability/structured-log";
 import type {
@@ -68,7 +69,7 @@ export interface LLMRequest {
 
 export interface LLMResponse {
   text: string;
-  /** Provider key — "anthropic" | "openrouter" | "openai" | "runpod-llm". */
+  /** Provider key — "anthropic" | "openrouter" | "openai" | "runpod-llm" | "ollama". */
   provider: string;
   model: string;
   inputTokens: number;
@@ -151,6 +152,8 @@ async function invokeProvider(
       return callOpenAI(model, args);
     case "runpod-llm":
       return callRunpodLLM(args);
+    case "ollama":
+      return callOllama(model, args);
     default:
       throw new Error(`[llm-router] Unknown provider in spec: ${spec}`);
   }

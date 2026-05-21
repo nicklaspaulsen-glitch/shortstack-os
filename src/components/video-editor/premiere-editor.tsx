@@ -37,6 +37,7 @@ import {
   Sparkles,
   SlidersHorizontal,
   Download,
+  LibraryBig,
 } from "lucide-react";
 import {
   historyReducer,
@@ -53,6 +54,7 @@ import { PremiereTimeline, msToTc } from "./premiere-timeline";
 import { Waveform } from "./waveform";
 import { AiPanel } from "./ai-panel";
 import { EffectsPanel } from "./effects-panel";
+import { SfxVfxBrollPanel } from "./sfx-vfx-broll-panel";
 import { ElectronBar } from "./electron-bar";
 
 const KEY_REPEAT_MS = 33; // ~1 frame @ 30fps
@@ -78,7 +80,7 @@ export function PremiereEditor({
   );
   const state = history.present;
   const [playing, setPlaying] = useState(false);
-  const [panel, setPanel] = useState<"ai" | "effects">("ai");
+  const [panel, setPanel] = useState<"ai" | "effects" | "assets">("ai");
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const lastTickRef = useRef<number>(0);
@@ -464,13 +466,13 @@ export function PremiereEditor({
           </div>
         </div>
 
-        {/* Right dock: AI | Effects */}
+        {/* Right dock: AI | Effects | Assets */}
         <div className="flex flex-col">
           <div className="flex border-l border-b border-neutral-800 bg-neutral-900">
             <button
               type="button"
               onClick={() => setPanel("ai")}
-              className={`flex-1 flex items-center justify-center gap-1 text-[11px] px-3 py-1.5 border-r border-neutral-800 ${
+              className={`flex-1 flex items-center justify-center gap-1 text-[11px] px-2 py-1.5 border-r border-neutral-800 ${
                 panel === "ai" ? "bg-neutral-800 text-amber-300" : "text-neutral-400 hover:text-white"
               }`}
             >
@@ -479,17 +481,30 @@ export function PremiereEditor({
             <button
               type="button"
               onClick={() => setPanel("effects")}
-              className={`flex-1 flex items-center justify-center gap-1 text-[11px] px-3 py-1.5 ${
+              className={`flex-1 flex items-center justify-center gap-1 text-[11px] px-2 py-1.5 border-r border-neutral-800 ${
                 panel === "effects" ? "bg-neutral-800 text-amber-300" : "text-neutral-400 hover:text-white"
               }`}
             >
-              <SlidersHorizontal size={11} /> Effects
+              <SlidersHorizontal size={11} /> FX
+            </button>
+            <button
+              type="button"
+              onClick={() => setPanel("assets")}
+              className={`flex-1 flex items-center justify-center gap-1 text-[11px] px-2 py-1.5 ${
+                panel === "assets" ? "bg-neutral-800 text-blue-400" : "text-neutral-400 hover:text-white"
+              }`}
+            >
+              <LibraryBig size={11} /> Assets
             </button>
           </div>
-          {panel === "ai" ? (
+          {panel === "ai" && (
             <AiPanel state={state} dispatch={dispatch as (a: EditorAction) => void} />
-          ) : (
+          )}
+          {panel === "effects" && (
             <EffectsPanel state={state} dispatch={dispatch as (a: EditorAction) => void} />
+          )}
+          {panel === "assets" && (
+            <SfxVfxBrollPanel state={state} dispatch={dispatch as (a: EditorAction) => void} />
           )}
         </div>
       </div>

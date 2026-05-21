@@ -83,12 +83,16 @@ const PROMPT_CATEGORIES = [
 // Changing the "style" here adjusts the downstream prompt enhancement, it does
 // NOT change the actual model endpoint (that still goes through /api/video/render).
 const MODELS = [
-  { id: "cinematic", name: "Cinematic", sub: "Film-like grade", icon: Film,    preview: "linear-gradient(90deg,#0d0d14 0%,#1a2340 40%,#3d5a7a 70%,#8fa8be 100%)", viralScore: 78, ctrTier: "high"   as const },
-  { id: "realistic", name: "Realistic", sub: "Documentary",     icon: Camera,  preview: "linear-gradient(90deg,#2d1e12 0%,#6b4226 40%,#b5855a 70%,#d4a96a 100%)", viralScore: 71, ctrTier: "medium" as const },
-  { id: "animated",  name: "Animated",  sub: "3D / Pixar",      icon: Palette, preview: "linear-gradient(90deg,#4158D0 0%,#C850C0 50%,#FFCC70 100%)",              viralScore: 85, ctrTier: "high"   as const },
-  { id: "anime",     name: "Anime",     sub: "Japanese",         icon: Sparkles,preview: "linear-gradient(90deg,#5665E9 0%,#9251AE 40%,#F95B8E 100%)",              viralScore: 89, ctrTier: "high"   as const },
-  { id: "vintage",   name: "Vintage",   sub: "Film grain",       icon: Layers,  preview: "linear-gradient(90deg,#2C1810 0%,#7A3D1A 40%,#C4832A 70%,#E8C875 100%)", viralScore: 62, ctrTier: "medium" as const },
-  { id: "dreamy",    name: "Dreamy",    sub: "Soft, ethereal",   icon: Wand2,   preview: "linear-gradient(90deg,#A18CD1 0%,#FBC2EB 50%,#A1C4FD 100%)",              viralScore: 74, ctrTier: "high"   as const },
+  { id: "cinematic",   name: "Cinematic",   sub: "Film-like grade",   icon: Film,    preview: "linear-gradient(90deg,#0d0d14 0%,#1a2340 40%,#3d5a7a 70%,#8fa8be 100%)",   viralScore: 78, ctrTier: "high"   as const },
+  { id: "realistic",  name: "Realistic",   sub: "Documentary",        icon: Camera,  preview: "linear-gradient(90deg,#2d1e12 0%,#6b4226 40%,#b5855a 70%,#d4a96a 100%)",   viralScore: 71, ctrTier: "medium" as const },
+  { id: "animated",   name: "Animated",    sub: "3D / Pixar",         icon: Palette, preview: "linear-gradient(90deg,#4158D0 0%,#C850C0 50%,#FFCC70 100%)",               viralScore: 85, ctrTier: "high"   as const },
+  { id: "anime",      name: "Anime",       sub: "Japanese",           icon: Sparkles,preview: "linear-gradient(90deg,#5665E9 0%,#9251AE 40%,#F95B8E 100%)",               viralScore: 89, ctrTier: "high"   as const },
+  { id: "vintage",    name: "Vintage",     sub: "Film grain",         icon: Layers,  preview: "linear-gradient(90deg,#2C1810 0%,#7A3D1A 40%,#C4832A 70%,#E8C875 100%)",   viralScore: 62, ctrTier: "medium" as const },
+  { id: "dreamy",     name: "Dreamy",      sub: "Soft, ethereal",     icon: Wand2,   preview: "linear-gradient(90deg,#A18CD1 0%,#FBC2EB 50%,#A1C4FD 100%)",               viralScore: 74, ctrTier: "high"   as const },
+  { id: "hyper-real", name: "Hyper-Real",  sub: "Photorealistic CGI", icon: TrendingUp, preview: "linear-gradient(90deg,#0F2027 0%,#203A43 50%,#2C5364 100%)",            viralScore: 82, ctrTier: "high"   as const },
+  { id: "cyberpunk",  name: "Cyberpunk",   sub: "Neon dystopian",     icon: Zap,     preview: "linear-gradient(90deg,#0a0010 0%,#1a003a 30%,#6a00b8 60%,#ff007a 100%)",   viralScore: 91, ctrTier: "high"   as const },
+  { id: "horror",     name: "Horror",      sub: "Dark, atmospheric",  icon: Target,  preview: "linear-gradient(90deg,#0a0000 0%,#1a0000 40%,#4a0000 70%,#8a0000 100%)",   viralScore: 77, ctrTier: "medium" as const },
+  { id: "nature-doc", name: "Nature Doc",  sub: "BBC Earth style",    icon: Camera,  preview: "linear-gradient(90deg,#0a1a00 0%,#1a3a00 40%,#4a8a20 70%,#a0cc60 100%)",   viralScore: 68, ctrTier: "medium" as const },
 ];
 
 /** OSS model backends — exposed in advanced mode. All route to /api/video/render;
@@ -125,6 +129,22 @@ const MODEL_BACKENDS = [
     badge: "Best arch",
     badgeColor: "#8B5CF6",
     specs: "13B · Transformer-VAE · Highest VRAM",
+    note: "via RunPod",
+  },
+  {
+    id: "kling",
+    name: "Kling AI",
+    badge: "NEW",
+    badgeColor: "#F43F5E",
+    specs: "5-second HD clips · Photorealistic motion · Kling 2.0",
+    note: "via Kling API",
+  },
+  {
+    id: "flux-i2v",
+    name: "FLUX Image→Video",
+    badge: "I2V",
+    badgeColor: "#06B6D4",
+    specs: "Image-to-video · FLUX.1 core · Consistent subjects",
     note: "via RunPod",
   },
 ] as const;
@@ -270,6 +290,9 @@ export default function AIVideoPage() {
   const [overlayTitle, setOverlayTitle] = useState("");
   // OSS model backend selector (advanced mode only)
   const [modelBackend, setModelBackend] = useState<ModelBackendId>("higgsfield");
+  // Image-to-video source image URL (used when flux-i2v or kling is selected)
+  const [i2vSourceImageUrl, setI2vSourceImageUrl] = useState<string>("");
+  const isI2vMode = modelBackend === "flux-i2v";
 
   // -- Tier-based max video length (preserved from original) --
   const planTier = profile?.plan_tier ?? "Starter";
@@ -859,6 +882,7 @@ export default function AIVideoPage() {
           guidance_scale: guidanceScale,
           model_backend: modelBackend,
           ...(faceSwapMode && faceSwapImage ? { face_swap_image: faceSwapImage } : {}),
+          ...(isI2vMode && i2vSourceImageUrl ? { i2v_source_image: i2vSourceImageUrl } : {}),
         }),
       });
 
@@ -1297,6 +1321,35 @@ export default function AIVideoPage() {
                 ))}
               </div>
             </div>
+
+            {/* ── Image-to-Video source (only for flux-i2v) ──────── */}
+            {isI2vMode && (
+              <div className="mt-4 rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-3">
+                <p className="text-[10px] font-medium text-cyan-400 mb-1.5 flex items-center gap-1.5">
+                  <Image size={11} /> Source image for FLUX I2V
+                </p>
+                <p className="text-[9px] text-text-muted mb-2 leading-relaxed">
+                  Paste a public image URL or upload to your media library first.
+                  The video will animate this image according to your prompt.
+                </p>
+                <input
+                  type="url"
+                  placeholder="https://your-image-url.com/photo.jpg"
+                  value={i2vSourceImageUrl}
+                  onChange={(e) => setI2vSourceImageUrl(e.target.value)}
+                  className="w-full bg-bg-surface-1 border border-border-subtle rounded-lg px-3 py-2 text-[11px] text-text-primary placeholder-text-muted outline-none focus:border-cyan-500/60 transition-colors"
+                />
+                {i2vSourceImageUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={i2vSourceImageUrl}
+                    alt="I2V source preview"
+                    className="mt-2 w-full h-24 object-cover rounded-lg border border-border-subtle"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                  />
+                )}
+              </div>
+            )}
 
             {/* ── Style Vault ────────────────────────────────────── */}
             <div className="mt-4">
