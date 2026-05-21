@@ -174,7 +174,7 @@ export default function AutomationsPage() {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search automations…"
-                className="w-full glass rounded-lg pl-8 pr-3 py-2 text-text-primary text-sm focus:outline-none focus:border-indigo-500/50"
+                className="w-full glass rounded-lg pl-8 pr-3 py-2 text-text-primary text-sm focus:outline-none focus:border-brand-accent/50"
               />
             </div>{loading ? (
               <div className="space-y-3">

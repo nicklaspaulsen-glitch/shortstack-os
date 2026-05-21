@@ -183,12 +183,6 @@ export default function SystemStatusPage() {
   }
 
   const { groups, summary, checked_at } = data;
-  const bannerGradient: "purple" | "sunset" | "blue" = summary.ready_to_launch
-    ? "purple"
-    : summary.blockers > 0
-      ? "sunset"
-      : "blue";
-
   return (
     <div className="max-w-5xl mx-auto space-y-5">
       {/* -- System Status command strip -- */}

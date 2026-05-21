@@ -122,7 +122,7 @@ export default function DangerZonePage() {
               className="glass rounded-xl p-4"
               style={{
                 borderColor: "rgba(242, 96, 99, 0.30)",
-                background: "linear-gradient(180deg, color-mix(in srgb, #3B82F6 6%, transparent) 0%, transparent 60%)",
+                background: "linear-gradient(180deg, rgba(212,255,0,0.06) 0%, transparent 60%)",
               }}
             >
               <div className="flex items-start gap-4">

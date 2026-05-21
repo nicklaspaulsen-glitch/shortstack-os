@@ -983,7 +983,7 @@ export default function WebsitesPage() {
               <div className="flex items-end justify-between flex-wrap gap-2">
                 <div>
                   <h2 className="text-sm font-semibold flex items-center gap-2">
-                    <Category size={16} variant="Bulk" color="#3B82F6" />
+                    <Category size={16} variant="Bulk" color="#D4FF00" />
                     Pick a niche. Ship in 30 seconds.
                   </h2>
                   <p className="text-[11px] text-text-muted mt-0.5">
