@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerSupabase } from "@/lib/supabase/server";
+import {
+  createServerSupabase,
+  createServiceClient,
+} from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { synthesize } from "@/lib/voice/clone-router";
 
@@ -64,7 +67,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
   // bounce. Presets are visible to everyone via the read-everyone policy.
   const { data: clone } = await supabase
     .from("voice_clones")
-    .select("id, status")
+    .select("id, status, owner_subject_kind, consent_evidence")
     .eq("id", cloneId)
     .maybeSingle();
   if (!clone) {
@@ -77,6 +80,11 @@ export async function POST(request: NextRequest, context: RouteContext) {
     );
   }
 
+  const usingDefaultSettings =
+    body.stability === undefined &&
+    body.similarityBoost === undefined &&
+    body.style === undefined;
+
   try {
     const result = await synthesize({
       cloneId,
@@ -88,8 +96,38 @@ export async function POST(request: NextRequest, context: RouteContext) {
       ...(body.similarityBoost !== undefined && { similarityBoost: body.similarityBoost }),
       ...(body.style !== undefined && { style: body.style }),
       // Force fresh render when voice settings are customised (bypass cache).
-      cache: body.stability === undefined && body.similarityBoost === undefined && body.style === undefined,
+      cache: usingDefaultSettings,
     });
+
+    // Persist the generated URL as the preset's canonical preview URL so
+    // subsequent page loads can seed the preview cache instantly (no re-gen).
+    // Only runs for preset clones using default voice settings so the stored
+    // URL reflects a neutral, representative sample rather than a custom phrase.
+    if (
+      usingDefaultSettings &&
+      clone.owner_subject_kind === "preset" &&
+      result.r2Url
+    ) {
+      const evidence = (clone.consent_evidence ?? {}) as Record<string, unknown>;
+      if (!evidence.preview_url) {
+        // Fire-and-forget — a failure here must never block the response.
+        createServiceClient()
+          .from("voice_clones")
+          .update({
+            consent_evidence: { ...evidence, preview_url: result.r2Url },
+          })
+          .eq("id", cloneId)
+          .then(({ error }) => {
+            if (error) {
+              console.error(
+                "[voice/clones/test] preview_url persist failed:",
+                error.message,
+              );
+            }
+          });
+      }
+    }
+
     return NextResponse.json({
       r2_url: result.r2Url,
       duration_seconds: result.durationSeconds,
