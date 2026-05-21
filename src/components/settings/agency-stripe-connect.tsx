@@ -44,7 +44,7 @@ export default function AgencyStripeConnect() {
       const data = await res.json();
       setAccount(data.connected ? data.account : null);
     } catch (err) {
-      console.error(err);
+      console.error("[agency-stripe-connect] status load failed:", err);
       setAccount(null);
     } finally {
       setLoading(false);

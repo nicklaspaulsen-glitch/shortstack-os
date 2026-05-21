@@ -294,7 +294,7 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
             toast.success("Topic suggested!");
             return { topic: suggestion };
           } catch (err) {
-            console.error(err);
+            console.error("[carousel-generator] topic suggestion failed:", err);
             toast.error("Topic suggestion failed");
             return {};
           }
@@ -375,7 +375,7 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
             toast.success("Content direction drafted!");
             return { contentDirection: direction };
           } catch (err) {
-            console.error(err);
+            console.error("[carousel-generator] content direction failed:", err);
             toast.error("Content direction failed");
             return {};
           }

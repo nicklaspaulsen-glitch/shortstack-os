@@ -26,6 +26,11 @@ import {
   Receipt,
   AlertCircle,
   Loader2,
+  PlusCircle,
+  Megaphone,
+  ExternalLink,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -130,6 +135,34 @@ type Message = {
   read_at: string | null;
 };
 
+type WorkRequest = {
+  id: string;
+  service_type: string;
+  brief: string;
+  urgency: string;
+  budget_hint: string | null;
+  proposal_text: string | null;
+  proposal_price: number | null;
+  proposal_deliverables: { item: string; eta_days: number }[] | null;
+  proposal_status: string;
+  proposal_sent_at: string | null;
+  stripe_payment_link: string | null;
+  paid_at: string | null;
+  delivered_at: string | null;
+  created_at: string;
+};
+
+type Announcement = {
+  id: string;
+  title: string;
+  body: string;
+  type: string;
+  cta_label: string | null;
+  cta_url: string | null;
+  pinned: boolean;
+  published_at: string;
+};
+
 /* ══════════════════════════════════════════════════════════════════
    PAGE COMPONENT
    ══════════════════════════════════════════════════════════════════ */
@@ -163,6 +196,18 @@ export default function ClientPortalDashboard({
 
   const [notificationsOpen, setNotificationsOpen] = useState(false);
 
+  const [workRequests, setWorkRequests] = useState<WorkRequest[]>([]);
+  const [workRequestsLoading, setWorkRequestsLoading] = useState(true);
+  const [requestFormVisible, setRequestFormVisible] = useState(false);
+  const [requestBrief, setRequestBrief] = useState("");
+  const [requestServiceType, setRequestServiceType] = useState("other");
+  const [requestUrgency, setRequestUrgency] = useState("standard");
+  const [requestSubmitting, setRequestSubmitting] = useState(false);
+  const [expandedProposalId, setExpandedProposalId] = useState<string | null>(null);
+
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [announcementsLoading, setAnnouncementsLoading] = useState(true);
+
   const chatEndRef = useRef<HTMLDivElement>(null);
   const chatInputRef = useRef<HTMLInputElement>(null);
 
@@ -192,7 +237,7 @@ export default function ClientPortalDashboard({
       const json = await res.json();
       setTasks(json.tasks || []);
     } catch (err) {
-      console.error(err);
+      console.error("[client-portal] tasks load failed:", err);
     } finally {
       setTasksLoading(false);
     }
@@ -206,7 +251,7 @@ export default function ClientPortalDashboard({
       const json = await res.json();
       setContentItems(json.items || []);
     } catch (err) {
-      console.error(err);
+      console.error("[client-portal] content load failed:", err);
     } finally {
       setContentLoading(false);
     }
@@ -220,7 +265,7 @@ export default function ClientPortalDashboard({
       const json = await res.json();
       setInvoices(json.invoices || []);
     } catch (err) {
-      console.error(err);
+      console.error("[client-portal] invoices load failed:", err);
     } finally {
       setInvoicesLoading(false);
     }
@@ -237,9 +282,37 @@ export default function ClientPortalDashboard({
         setSenderRole(json.role);
       }
     } catch (err) {
-      console.error(err);
+      console.error("[client-portal] messages load failed:", err);
     } finally {
       setMessagesLoading(false);
+    }
+  }, [clientId]);
+
+  const loadWorkRequests = useCallback(async () => {
+    try {
+      setWorkRequestsLoading(true);
+      const res = await fetch(`/api/portal/${clientId}/work-requests`, { cache: "no-store" });
+      if (!res.ok) throw new Error("Failed to load");
+      const json = await res.json();
+      setWorkRequests(json.requests || []);
+    } catch (err) {
+      console.error("[client-portal] work-requests load failed:", err);
+    } finally {
+      setWorkRequestsLoading(false);
+    }
+  }, [clientId]);
+
+  const loadAnnouncements = useCallback(async () => {
+    try {
+      setAnnouncementsLoading(true);
+      const res = await fetch(`/api/portal/${clientId}/announcements`, { cache: "no-store" });
+      if (!res.ok) throw new Error("Failed to load");
+      const json = await res.json();
+      setAnnouncements(json.announcements || []);
+    } catch (err) {
+      console.error("[client-portal] announcements load failed:", err);
+    } finally {
+      setAnnouncementsLoading(false);
     }
   }, [clientId]);
 
@@ -248,7 +321,9 @@ export default function ClientPortalDashboard({
     loadTasks();
     loadContent();
     loadInvoices();
-  }, [loadOverview, loadTasks, loadContent, loadInvoices]);
+    loadWorkRequests();
+    loadAnnouncements();
+  }, [loadOverview, loadTasks, loadContent, loadInvoices, loadWorkRequests, loadAnnouncements]);
 
   /* ── Auto-scroll chat to bottom ── */
   useEffect(() => {
@@ -355,6 +430,36 @@ export default function ClientPortalDashboard({
       loadContent();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not update");
+    }
+  }
+
+  async function handleSubmitRequest() {
+    if (!requestBrief.trim() || requestSubmitting) return;
+    setRequestSubmitting(true);
+    try {
+      const res = await fetch(`/api/portal/${clientId}/work-requests`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          service_type: requestServiceType,
+          brief: requestBrief.trim(),
+          urgency: requestUrgency,
+        }),
+      });
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({ error: "Failed" }));
+        throw new Error(json.error || "Failed to submit");
+      }
+      toast.success("Request sent! We'll prepare a proposal within 24 hours.");
+      setRequestBrief("");
+      setRequestServiceType("other");
+      setRequestUrgency("standard");
+      setRequestFormVisible(false);
+      loadWorkRequests();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not submit request");
+    } finally {
+      setRequestSubmitting(false);
     }
   }
 
@@ -579,6 +684,62 @@ export default function ClientPortalDashboard({
           </button>
         </div>
       </div>
+
+      {/* ═══════════════ ANNOUNCEMENTS ═══════════════ */}
+      {!announcementsLoading && announcements.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Megaphone size={14} className="text-[#2563EB]" />
+            <h2 className="text-sm font-semibold text-text-primary uppercase tracking-wider">
+              From your agency
+            </h2>
+            {announcements.some((a) => a.pinned) && (
+              <span className="text-[9px] bg-[rgba(59,130,246,0.08)] text-[#2563EB] border border-[rgba(59,130,246,0.2)] px-1.5 py-0.5 rounded-full font-medium">
+                Pinned update
+              </span>
+            )}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {announcements.slice(0, 4).map((ann) => (
+              <div
+                key={ann.id}
+                className={`glass rounded-xl p-4 space-y-2 ${ann.pinned ? "border-[rgba(59,130,246,0.3)]" : ""}`}
+              >
+                <div className="flex items-start gap-2">
+                  <div className="p-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.1)] shrink-0">
+                    <Megaphone size={12} className="text-[#2563EB]" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <p className="text-xs font-semibold text-text-primary leading-snug">
+                        {ann.title}
+                      </p>
+                      <span className="text-[9px] text-text-muted bg-surface-light px-1.5 py-0.5 rounded capitalize">
+                        {ann.type.replace(/_/g, " ")}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-text-muted mt-1 leading-relaxed line-clamp-3">
+                      {ann.body}
+                    </p>
+                  </div>
+                </div>
+                {ann.cta_label && ann.cta_url && (
+                  <a
+                    href={ann.cta_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-1 text-[11px] text-[#2563EB] hover:text-[rgba(59,130,246,0.8)] font-medium transition-colors"
+                  >
+                    {ann.cta_label}
+                    <ExternalLink size={10} />
+                  </a>
+                )}
+                <p className="text-[9px] text-text-muted">{formatDate(ann.published_at)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ═══════════════ QUICK STATS ═══════════════ */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 stagger-2">
@@ -987,6 +1148,229 @@ export default function ClientPortalDashboard({
             onClick={() => handleQuickAction("Request Revision")}
           />
         </div>
+      </div>
+
+      {/* ═══════════════ REQUEST MORE WORK ═══════════════ */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Rocket size={14} className="text-[#3B82F6]" />
+            <h2 className="text-sm font-semibold text-text-primary uppercase tracking-wider">
+              Request More Work
+            </h2>
+          </div>
+          <button
+            onClick={() => setRequestFormVisible(!requestFormVisible)}
+            className="flex items-center gap-1.5 text-[11px] font-medium text-[#3B82F6] hover:text-[#60A5FA] transition-colors"
+          >
+            <PlusCircle size={13} />
+            New Request
+          </button>
+        </div>
+
+        {/* Inline request form */}
+        {requestFormVisible && (
+          <div className="glass-panel rounded-xl p-4 border border-border-subtle space-y-3">
+            <p className="text-xs text-text-secondary">
+              Tell us what you need and we'll prepare a detailed proposal within 24 hours.
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="text-[11px] text-text-muted uppercase tracking-wider font-medium">
+                  Service Type
+                </label>
+                <select
+                  value={requestServiceType}
+                  onChange={(e) => setRequestServiceType(e.target.value)}
+                  className="w-full bg-surface border border-border-subtle rounded-lg px-3 py-2 text-xs text-text-primary focus:outline-none focus:ring-1 focus:ring-[#3B82F6]"
+                >
+                  <option value="social_media">Social Media</option>
+                  <option value="ads">Paid Ads</option>
+                  <option value="website">Website / Landing Page</option>
+                  <option value="video">Video Editing</option>
+                  <option value="seo">SEO</option>
+                  <option value="email">Email Marketing</option>
+                  <option value="branding">Branding / Design</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div className="space-y-1">
+                <label className="text-[11px] text-text-muted uppercase tracking-wider font-medium">
+                  Urgency
+                </label>
+                <select
+                  value={requestUrgency}
+                  onChange={(e) => setRequestUrgency(e.target.value)}
+                  className="w-full bg-surface border border-border-subtle rounded-lg px-3 py-2 text-xs text-text-primary focus:outline-none focus:ring-1 focus:ring-[#3B82F6]"
+                >
+                  <option value="standard">Standard (1–2 weeks)</option>
+                  <option value="priority">Priority (3–5 days)</option>
+                  <option value="urgent">Urgent (1–2 days)</option>
+                </select>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <label className="text-[11px] text-text-muted uppercase tracking-wider font-medium">
+                Brief
+              </label>
+              <textarea
+                value={requestBrief}
+                onChange={(e) => setRequestBrief(e.target.value)}
+                placeholder="Describe what you need — goals, deliverables, references, any relevant context…"
+                rows={4}
+                className="w-full bg-surface border border-border-subtle rounded-lg px-3 py-2 text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-[#3B82F6] resize-none"
+              />
+            </div>
+            <div className="flex items-center justify-end gap-2">
+              <button
+                onClick={() => {
+                  setRequestFormVisible(false);
+                  setRequestBrief("");
+                  setRequestServiceType("other");
+                  setRequestUrgency("standard");
+                }}
+                className="text-xs text-text-muted hover:text-text-primary transition-colors px-3 py-1.5"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmitRequest}
+                disabled={!requestBrief.trim() || requestSubmitting}
+                className="flex items-center gap-1.5 btn-pill text-xs px-4 py-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {requestSubmitting ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : (
+                  <Send size={12} />
+                )}
+                {requestSubmitting ? "Sending…" : "Send Request"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Previous requests */}
+        {workRequestsLoading ? (
+          <div className="flex items-center gap-2 text-xs text-text-muted py-2">
+            <Loader2 size={12} className="animate-spin" /> Loading requests…
+          </div>
+        ) : workRequests.length === 0 ? (
+          <div className="glass-panel rounded-xl p-6 text-center border border-border-subtle">
+            <Rocket size={20} className="text-text-muted/40 mx-auto mb-2" />
+            <p className="text-xs text-text-muted">No requests yet. Ready to grow?</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {workRequests.map((req) => (
+              <div key={req.id} className="glass-panel rounded-xl border border-border-subtle overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex-shrink-0">
+                      {req.paid_at ? (
+                        <CheckCircle size={14} className="text-emerald-400" />
+                      ) : req.proposal_status === "sent" ? (
+                        <Clock size={14} className="text-[#3B82F6]" />
+                      ) : req.proposal_status === "generating" ? (
+                        <Loader2 size={14} className="animate-spin text-text-muted" />
+                      ) : (
+                        <Clock size={14} className="text-text-muted" />
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-medium text-text-primary truncate capitalize">
+                        {req.service_type.replace(/_/g, " ")}
+                      </p>
+                      <p className="text-[11px] text-text-muted truncate">{req.brief}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0 ml-3">
+                    <span
+                      className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
+                        req.paid_at
+                          ? "bg-emerald-500/15 text-emerald-400"
+                          : req.proposal_status === "sent"
+                          ? "bg-[#3B82F6]/15 text-[#3B82F6]"
+                          : req.proposal_status === "generating"
+                          ? "bg-surface text-text-muted"
+                          : "bg-surface text-text-muted"
+                      }`}
+                    >
+                      {req.paid_at
+                        ? "Paid"
+                        : req.proposal_status === "sent"
+                        ? "Proposal Ready"
+                        : req.proposal_status === "generating"
+                        ? "Preparing…"
+                        : "Pending"}
+                    </span>
+                    {req.proposal_status === "sent" && !req.paid_at && (
+                      <button
+                        onClick={() =>
+                          setExpandedProposalId(
+                            expandedProposalId === req.id ? null : req.id
+                          )
+                        }
+                        className="text-text-muted hover:text-text-primary transition-colors"
+                        aria-label={expandedProposalId === req.id ? "Collapse proposal" : "Expand proposal"}
+                      >
+                        {expandedProposalId === req.id ? (
+                          <ChevronUp size={14} />
+                        ) : (
+                          <ChevronDown size={14} />
+                        )}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Expanded proposal */}
+                {expandedProposalId === req.id && req.proposal_status === "sent" && (
+                  <div className="border-t border-border-subtle px-4 py-3 space-y-3">
+                    {req.proposal_text && (
+                      <p className="text-xs text-text-secondary leading-relaxed">
+                        {req.proposal_text}
+                      </p>
+                    )}
+                    {req.proposal_price !== null && (
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] text-text-muted">Investment:</span>
+                        <span className="text-sm font-semibold text-text-primary">
+                          {formatCurrency(req.proposal_price)}
+                        </span>
+                      </div>
+                    )}
+                    {req.proposal_deliverables && req.proposal_deliverables.length > 0 && (
+                      <div className="space-y-1">
+                        <p className="text-[11px] text-text-muted uppercase tracking-wider font-medium">
+                          Deliverables
+                        </p>
+                        <ul className="space-y-1">
+                          {req.proposal_deliverables.map((d, i) => (
+                            <li key={i} className="flex items-center justify-between text-xs">
+                              <span className="text-text-secondary">{d.item}</span>
+                              <span className="text-text-muted">{d.eta_days}d</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {req.stripe_payment_link && (
+                      <a
+                        href={req.stripe_payment_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 btn-pill w-full text-xs py-2 mt-1"
+                      >
+                        <ExternalLink size={12} />
+                        Approve & Pay
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ═══════════════ CHAT WIDGET ═══════════════ */}
