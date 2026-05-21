@@ -16,6 +16,7 @@ import { tabSwitch } from "@/components/motion/motion-page";
 import { staggerContainerFast, fadeUp } from "@/lib/motion-variants";
 
 import { MotionPage } from "@/components/motion/motion-page";
+import PageTrainingPanel from "@/components/ui/page-training-panel";
 import ImageWizard from "@/components/image-wizard";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
@@ -592,6 +593,10 @@ export default function AIStudioPage() {
           setActiveTool("image-gen");
         }}
       />
+      {/* AI training config for AI Studio */}
+      <div className="px-1 pb-2">
+        <PageTrainingPanel pageKey="ai-video" pageLabel="AI Studio" />
+      </div>
     </MotionPage>
   );
 }

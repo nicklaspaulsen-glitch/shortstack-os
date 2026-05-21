@@ -25,6 +25,7 @@ import {
   Plus, X, Check
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageTrainingPanel from "@/components/ui/page-training-panel";
 import PageAI from "@/components/page-ai";
 import Modal from "@/components/ui/modal";
 import { PrismPanel } from "@/components/prism";
@@ -860,6 +861,9 @@ export default function SocialManagerPage() {
               </button>
             </div>
 
+            {/* Weekly plan AI training */}
+            <PageTrainingPanel pageKey="weekly-plan" pageLabel="Weekly Plan" />
+
             {/* Weekly grid */}
             <div className="grid grid-cols-7 gap-2">
               {days.map((day, i) => {
@@ -1102,6 +1106,7 @@ export default function SocialManagerPage() {
 
       {/* Config / Autopilot Settings */}
       {tab === "config" && (
+        <div className="space-y-5">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Content Generation Settings */}
           <div className="glass rounded-xl p-5 space-y-4">
@@ -1260,6 +1265,9 @@ export default function SocialManagerPage() {
               </ol>
             </div>
           </div>
+        </div>
+        {/* AI training config for this feature page */}
+        <PageTrainingPanel pageKey="social" pageLabel="Social Posts" />
         </div>
       )}
       {/* ========== AI TOOLS TAB ========== */}

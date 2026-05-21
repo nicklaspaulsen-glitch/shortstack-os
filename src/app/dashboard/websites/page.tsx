@@ -24,6 +24,7 @@ import { createClient } from "@/lib/supabase/client";
 import CreationWizard, { CinematicWizard, type WizardStep } from "@/components/creation-wizard";
 import { VercelIcon, GoDaddyIcon } from "@/components/ui/platform-icons";
 import { MotionPage } from "@/components/motion/motion-page";
+import PageTrainingPanel from "@/components/ui/page-training-panel";
 
 // Spline — browser-only (no SSR), lazy-loaded only when needed
 const Spline = dynamic(() => import("@splinetool/react-spline"), {
@@ -1505,7 +1506,10 @@ export default function WebsitesPage() {
                 onCycleChange={setBillingCycle}
                 onSubscribe={subscribe}
               />
-            )}</MotionPage>
+            )}
+            {/* AI training config for website generation */}
+            <PageTrainingPanel pageKey="websites" pageLabel="Websites" />
+          </MotionPage>
   );
 }
 

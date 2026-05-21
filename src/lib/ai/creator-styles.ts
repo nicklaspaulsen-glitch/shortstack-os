@@ -21,7 +21,13 @@ export type PageContext =
   | "script"
   | "social"
   | "carousel"
-  | "copy";
+  | "copy"
+  | "websites"
+  | "ads"
+  | "email"
+  | "proposals"
+  | "crm-followup"
+  | "weekly-plan";
 
 export interface CreatorStyle {
   id: string;
@@ -91,6 +97,18 @@ export const CREATOR_STYLES: CreatorStyle[] = [
         "Open with the challenge/stakes immediately. Cut between multiple sub-stories. End with emotional payoff. Every 45 seconds must have a new hook to retain viewers.",
       social:
         "Caption: bold claim + curiosity gap + CTA. No long setup. Lead with the result.",
+      websites:
+        "Homepage copy: explosive headline with a big promise or impossible claim. Sub-headline amplifies the stakes. CTA button copy must feel like a dare ('Join the challenge', 'Prove me wrong'). Use numbers and extremes throughout.",
+      ads:
+        "Ad headline: lead with a number or impossible-sounding result. 'We spent $1M testing this — here's what works.' Short punchy body. CTA triggers curiosity or FOMO.",
+      email:
+        "Subject line: bold claim or controversy. Body opens with the result, then reveals the story. One CTA. High energy, no padding.",
+      proposals:
+        "Open with the client's biggest missed opportunity in numbers. Make the gap feel urgent. ROI projection upfront. Bold guarantee or challenge statement at the end.",
+      "crm-followup":
+        "Short, direct message. Reference something specific (their challenge, last interaction). One clear next step. High-energy but not pushy. Make them feel like they're missing out.",
+      "weekly-plan":
+        "Plan content that escalates: start with a teaser/challenge post Monday, build to a reveal or result by Friday. Each day's hook must be stronger than the day before. Include at least one giveaway or challenge angle.",
     },
   },
   {
@@ -128,6 +146,18 @@ export const CREATOR_STYLES: CreatorStyle[] = [
         "Structure: hook claim → credentials/context → feature deep-dive → pros and cons → final verdict. Voice stays measured and confident throughout.",
       social:
         "Caption: 1-sentence verdict + key spec or data point. Clean, no hype. Let the photo carry the emotion.",
+      websites:
+        "Homepage copy: clean, precise headline stating the key benefit. No superlatives. Sub-headline adds one specific proof point. Minimal words, maximum clarity. CTA is direct ('Get the review', 'See the specs').",
+      ads:
+        "Ad headline: state the product and one objective differentiator. Body: 2 lines max, one proof point. CTA: simple action verb + benefit ('See why it's the best').",
+      email:
+        "Subject: precise and specific — name the product and the finding. Body: clean structure, one spec or comparison per section. No filler. Sign off with a verdict sentence.",
+      proposals:
+        "Proposal structure: precise scope → specific deliverables with measurable outcomes → timeline with milestones → investment. No padding. Every claim has a metric or example.",
+      "crm-followup":
+        "Clean, professional follow-up. Reference the exact topic discussed. One question or one clear next action. No filler phrases. Signed off with calm confidence.",
+      "weekly-plan":
+        "Plan a structured review or comparison series: one product/feature per day. Monday: overview. Tuesday: deep-dive. Wednesday: comparison. Thursday: verdict. Friday: FAQ or 'is it worth it?' post.",
     },
   },
   {
@@ -165,6 +195,18 @@ export const CREATOR_STYLES: CreatorStyle[] = [
         "Structure: reveal the result first → set up the question → build up the experiment → explain the mechanism → connect to everyday life → callback to the opening.",
       social:
         "Caption: state the counterintuitive fact + 'here's why' tease. No full explanation — create the itch.",
+      websites:
+        "Homepage copy: open with a mind-bending question or counterintuitive claim ('Most people believe X. They're wrong.'). Explain the surprising truth in 2 sentences. CTA triggers intellectual curiosity.",
+      ads:
+        "Ad headline: pose a question that challenges what the audience thinks they know. Body: the surprising answer in one sentence. CTA: 'Find out why' or 'See the experiment'.",
+      email:
+        "Subject: a counterintuitive claim or question. Body: walk through the discovery like an experiment. Include one tangible result or 'aha' moment. End with a curiosity-driven CTA.",
+      proposals:
+        "Open with an insight the client hasn't considered — a data point or trend that reframes their challenge. Structure the proposal like a scientific argument: hypothesis → evidence → recommended solution.",
+      "crm-followup":
+        "Reference a surprising insight or stat related to their industry. Frame the follow-up as sharing a discovery. Ask a curiosity-triggering question that makes them want to reply.",
+      "weekly-plan":
+        "Plan a 'myth-busting week': Monday debunks a common belief, Tuesday reveals the real data, Wednesday runs the experiment, Thursday shows the results, Friday answers viewer questions.",
     },
   },
   {
@@ -202,6 +244,18 @@ export const CREATOR_STYLES: CreatorStyle[] = [
         "Open with the problem statement that challenges the viewer's current behavior. Three examples/proof points. One clear action step. Call to accountability.",
       social:
         "Caption: 2–3 short punchy sentences. Problem → truth → action. No hashtag spam. End with a direct question to the reader.",
+      websites:
+        "Homepage copy: brutal opening that calls out the visitor's biggest mistake or excuse. No softening. Sub-headline states the fix. CTA is a direct command ('Stop wasting time. Start here.').",
+      ads:
+        "Ad headline: call out the problem or the excuse directly. Body: the solution in one sentence. CTA: strong imperative ('Stop doing X. Do this instead.').",
+      email:
+        "Subject: direct challenge or uncomfortable truth. Body: 3 short paragraphs — the problem, why they're stuck, the action. No warm-up. End with a one-sentence challenge.",
+      proposals:
+        "Open by naming the client's biggest mistake or missed opportunity. Be direct about the gap. Proposal is structured as: current reality → the hard truth → the solution → what happens if they don't act.",
+      "crm-followup":
+        "Direct and brief. No pleasantries. Reference the exact gap or problem they mentioned. Give one concrete action they can take today. End with a direct question.",
+      "weekly-plan":
+        "Plan a confrontational content week: Monday calls out a myth, Tuesday is 'stop doing X', Wednesday is the hard truth about their niche, Thursday is a tough love success story, Friday is a direct challenge to the audience.",
     },
   },
   {
@@ -239,6 +293,18 @@ export const CREATOR_STYLES: CreatorStyle[] = [
         "Open in the middle of an action or emotion. No scripted intro. First-person voice. Include a personal anecdote. End with a genuine reflection.",
       social:
         "Caption: lowercase, conversational. Write like a text to a friend. Include a genuine question at the end.",
+      websites:
+        "Homepage copy: warm, personal opening ('hey, I'm [name] and...'). Conversational tone throughout. Address the visitor directly. CTA feels like an invitation, not a command. Include a genuine personal anecdote.",
+      ads:
+        "Ad copy: conversational, first-person. 'I tried everything until I found this.' Relatable situation → discovery → invitation. CTA: soft and friendly ('come check it out').",
+      email:
+        "Subject: personal and lowercase. Body reads like a message from a friend — use contractions, be real. One personal story. One ask. Feels like it wasn't mass-sent.",
+      proposals:
+        "Warm, personal opening. Acknowledge how you found them or what caught your attention. Structure as a conversation, not a document. Make them feel known, not just pitched.",
+      "crm-followup":
+        "Personal, short, genuine. Reference something specific from your last interaction. Keep it casual. Ask a real question you actually want to know the answer to.",
+      "weekly-plan":
+        "Plan a 'come along with me' week: every post invites the audience into a real moment. Monday: behind the scenes. Tuesday: a lesson from a mistake. Wednesday: 'what I'm working on'. Thursday: a candid Q&A. Friday: personal reflection.",
     },
   },
   {
@@ -282,6 +348,18 @@ export const CREATOR_STYLES: CreatorStyle[] = [
         "Structure: reveal ending → rewind to start → day-by-day or step-by-step progression → obstacles → final transformation moment → takeaways.",
       social:
         "Caption: lead with the result number or metric. Include the journey timeline. End with 'full story in the video.'",
+      websites:
+        "Homepage copy: show the transformation clearly — describe the before state the visitor is in, then the after state they want. Include a specific result or metric. CTA triggers aspiration ('Start your transformation').",
+      ads:
+        "Ad: before state (pain) → after state (result) → proof metric. Visual should be a before/after split. CTA: 'See how they did it' or 'Get the same result'.",
+      email:
+        "Subject: a before/after result with a timeframe. Body: someone's real transformation story. Numbers throughout. End with 'you can do this too' + CTA.",
+      proposals:
+        "Frame the proposal as a transformation journey: where the client is now → where they'll be in [X months] with specific metrics. Include a case study of a similar client's transformation.",
+      "crm-followup":
+        "Reference where they were when you last spoke. Acknowledge any progress. Show them what the next milestone looks like. Make them want to continue the journey.",
+      "weekly-plan":
+        "30-day challenge week: Monday kick-off post with the goal, daily check-in updates, Thursday mid-point reveal, Friday results teaser leading to a full reveal next Monday.",
     },
   },
   {
@@ -320,6 +398,18 @@ export const CREATOR_STYLES: CreatorStyle[] = [
         "Structure: state the result/number → credentials/context → exact breakdown (step by step) → what went wrong → key insight → action plan for viewers.",
       social:
         "Caption: lead with the number. Short bullet breakdown. End with 'DM me [keyword] for the full breakdown.'",
+      websites:
+        "Homepage copy: lead with a specific revenue or result number. Sub-headline adds context. Break down the service like a financial statement — inputs, outputs, ROI. CTA is evidence-based ('See the numbers').",
+      ads:
+        "Ad headline: a specific dollar amount, percentage, or time metric. Body: brief proof + methodology. CTA: 'Get the breakdown' or 'See my exact strategy'.",
+      email:
+        "Subject: a specific number result. Body: transparent breakdown of how it was achieved. Include actual metrics, not vague claims. End with a clear ROI calculation for the reader.",
+      proposals:
+        "Lead with the ROI calculation. Break down costs, expected returns, and timeline with specifics. Include a risk section. Close with an evidence-based case for acting now vs. waiting.",
+      "crm-followup":
+        "Reference a specific number from their situation. Frame the next step in terms of ROI or risk of inaction. Keep it short, analytical, and evidence-based.",
+      "weekly-plan":
+        "Income/results transparency week: Monday shares a specific metric, Tuesday breaks down the methodology, Wednesday addresses a common mistake with data, Thursday shares a loss/failure with numbers, Friday is a recap with lessons and an action plan.",
     },
   },
   {
@@ -357,6 +447,18 @@ export const CREATOR_STYLES: CreatorStyle[] = [
         "Structure: in medias res opening → context setup → obstacle 1 → near failure → obstacle 2 → breakthrough → resolution → lesson/callback.",
       social:
         "Caption: tell the start of the story but cut off at the tension point. 'Watch until the end to see what happened.'",
+      websites:
+        "Homepage copy: open in the middle of a story — the moment of peak tension. 'We almost lost everything, then we found this.' Rewind to context. CTA carries narrative tension ('Hear the full story').",
+      ads:
+        "Ad: a micro-story arc — one sentence of tension, one of resolution. 'We had 48 hours to save the campaign. Here's what worked.' CTA: 'See the full story'.",
+      email:
+        "Subject: an unresolved tension. Body: open in the middle of the story. Build to a cliffhanger before the CTA. The email should feel like the trailer for a longer story.",
+      proposals:
+        "Frame as a journey: the client's current challenge is the 'inciting incident'. The proposal is the roadmap through obstacles to resolution. Include a case study structured as a story arc with a clear climax and resolution.",
+      "crm-followup":
+        "Open with a story hook related to their situation. Create a cliffhanger that makes them want to reply. Make the next meeting sound like 'the next chapter'.",
+      "weekly-plan":
+        "Story arc week: Monday opens the story (a problem or mission), each day advances the arc with new developments, Friday delivers the resolution or revelation — but teases a new chapter for next week.",
     },
   },
   {
@@ -394,6 +496,18 @@ export const CREATOR_STYLES: CreatorStyle[] = [
         "Structure: finished dish reveal → ingredient list → technique breakdown → the secret step → final plating → tasting reaction.",
       social:
         "Caption: name the dish + one key ingredient or technique. 'Recipe in bio' or 'Comment RECIPE for the full guide.'",
+      websites:
+        "Homepage copy: sensory-rich opening that makes the reader hungry for the solution. Use warm, inviting language. List the 'ingredients' of the offer. CTA feels like an invitation to a table.",
+      ads:
+        "Ad: open with the finished result (the 'dish'), describe one secret ingredient or technique, invite them to learn how. Warm, appetite-triggering language.",
+      email:
+        "Subject: a recipe-style promise ('The exact 3-step process for...'). Body structured like a recipe — ingredients, method, result. Warm and instructional tone. End with the 'taste test' CTA.",
+      proposals:
+        "Present the proposal as a recipe: ingredients (deliverables), method (process), expected result (outcome). Warm, approachable language that makes working together feel enjoyable.",
+      "crm-followup":
+        "Warm and personal. Reference something specific from your last conversation, like a chef noting a guest's preference. Offer one helpful tip or resource. Make them feel looked after.",
+      "weekly-plan":
+        "Technique week: each day focuses on one skill or secret. Monday: the ingredient that changes everything. Tuesday: the technique most people skip. Wednesday: a comparison (with vs. without). Thursday: a client success with this technique. Friday: a beginner's guide.",
     },
   },
   {
@@ -432,6 +546,18 @@ export const CREATOR_STYLES: CreatorStyle[] = [
         "Open with the clip/moment. React live. Add commentary/analysis. Include viewer challenge or question.",
       social:
         "Caption: short reaction + clip link. Use the community's language. Tag relevant accounts.",
+      websites:
+        "Homepage copy: explosive energy from the first word. Use community language and insider references. CTA should feel like joining a squad. Include social proof from the community (numbers, testimonials with usernames).",
+      ads:
+        "Ad: high-energy, uses community slang or memes (if applicable). 'If you know, you know.' Reaction-style hook. CTA: 'Join the community' or 'See what everyone's talking about'.",
+      email:
+        "Subject: reaction-style or referencing a community moment. Body: conversational, energetic, feels like a Discord message. Include community participation element. Short and punchy.",
+      proposals:
+        "Community-focused framing. Show how you'll help them build a loyal audience that shows up repeatedly. Use engagement metrics and community size as ROI indicators.",
+      "crm-followup":
+        "Energetic and direct. Reference a recent win, piece of content, or community moment. Make them feel like part of the inner circle.",
+      "weekly-plan":
+        "Community engagement week: Monday posts a challenge, Tuesday showcases a community member's result, Wednesday is a reaction/response to a trending topic, Thursday runs a poll or Q&A, Friday announces next week's challenge.",
     },
   },
   {
@@ -470,6 +596,18 @@ export const CREATOR_STYLES: CreatorStyle[] = [
         "Structure: provocative thesis → on-the-ground context → historical background → multiple perspectives → the real answer → what this means for us.",
       social:
         "Caption: state the counterintuitive finding. 2 sentences. Link to the full piece.",
+      websites:
+        "Homepage copy: a thesis statement that challenges conventional wisdom. Understated, authoritative. Sub-headline adds one specific proof or data point. CTA is intellectual: 'Read the full investigation' or 'Watch the documentary'.",
+      ads:
+        "Ad: investigative tone. 'Nobody is talking about this.' One sentence of setup, one sentence of the finding. Muted, serious aesthetic. CTA: 'Watch the investigation'.",
+      email:
+        "Subject: a counterintuitive claim stated as fact. Body: structured like a documentary — context, evidence, implication. Serious tone. End with 'the full story is here'.",
+      proposals:
+        "Research-driven framing. Open with an industry-wide insight they haven't considered. Back every claim with data or sources. Structure the proposal as an investigative brief: situation → evidence → recommended course of action.",
+      "crm-followup":
+        "Reference an industry trend or data point relevant to their business. Frame your outreach as sharing an important finding. Invite them to 'go deeper' with a meeting or call.",
+      "weekly-plan":
+        "Investigation week: Monday sets up the thesis, Tuesday presents the evidence, Wednesday explores the counterargument, Thursday reveals the expert perspective, Friday delivers the verdict and implications.",
     },
   },
   {
@@ -507,6 +645,18 @@ export const CREATOR_STYLES: CreatorStyle[] = [
         "Structure: time-saving claim → why most people fail at this → the system (numbered steps) → personal results → the one thing to start today.",
       social:
         "Caption: lead with the insight or technique name. Numbered list of 3 key points. End with 'the full breakdown is in the video.'",
+      websites:
+        "Homepage copy: system-first. Open with the specific outcome, then name the methodology. Clean numbered value proposition. CTA is evidence-based: 'Get the system' or 'See how it works'.",
+      ads:
+        "Ad: state the time or result saved. 'From 8 hours to 2. Here's the system.' Body: one key efficiency insight. CTA: 'Get the framework' or 'Steal my system'.",
+      email:
+        "Subject: a specific time-saving or result claim. Body: structured breakdown with numbered steps. Include one personal experiment result. End with a single actionable step CTA.",
+      proposals:
+        "Present as a system with clear inputs and outputs. Include a workflow diagram or numbered process. Show exactly how time and effort are reduced. Back with case study metrics.",
+      "crm-followup":
+        "Efficient and respectful of their time. One sentence of context, one insight or resource relevant to their situation, one clear next action. Never more than 5 sentences.",
+      "weekly-plan":
+        "System-building week: Monday introduces the framework, Tuesday covers step 1 with a practical example, Wednesday covers step 2, Thursday shows the system in action, Friday is a complete checklist or template post.",
     },
   },
 ];

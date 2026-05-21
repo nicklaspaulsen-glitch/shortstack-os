@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
+import { getPageTrainingPrompt } from "@/lib/ai/page-training";
 
 // AI Social Media Post Batch Generator — Creates a week's worth of posts for a client
 export async function POST(request: NextRequest) {
@@ -13,6 +14,9 @@ export async function POST(request: NextRequest) {
   if (limited) return limited;
 
   const { client_id, num_posts, platforms, topics, tone } = await request.json();
+
+  // Load per-page training config — injected into system prompt if set
+  const trainingPrompt = await getPageTrainingPrompt(supabase, user.id, "social");
 
   let clientName = "ShortStack";
   let industry = "marketing";
@@ -31,7 +35,7 @@ export async function POST(request: NextRequest) {
     body: JSON.stringify({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 4000,
-      system: `You are a social media strategist for ${clientName} (${industry}). Create engaging, platform-optimized posts. Return valid JSON only.`,
+      system: `You are a social media strategist for ${clientName} (${industry}). Create engaging, platform-optimized posts. Return valid JSON only.${trainingPrompt ? `\n\n${trainingPrompt}` : ""}`,
       messages: [{ role: "user", content: `Generate ${num_posts || 7} social media posts for ${clientName}.
 Platforms: ${(platforms || ["instagram", "facebook", "tiktok"]).join(", ")}
 Industry: ${industry}
