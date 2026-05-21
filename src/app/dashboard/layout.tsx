@@ -29,6 +29,7 @@ const TrinitySidebar = dynamic(() => import("@/components/dashboard/trinity-side
 const TopNavbar = dynamic(() => import("@/components/dashboard/top-navbar"), { ssr: false });
 // Glass shell — new triple-stack top nav replacing left sidebar
 const GlassTopNav = dynamic(() => import("@/components/navigation/glass-top-nav"), { ssr: false });
+const GlassSubNav = dynamic(() => import("@/components/navigation/glass-sub-nav"), { ssr: false });
 const BottomWidget = dynamic(() => import("@/components/navigation/bottom-widget"), { ssr: false });
 const DashboardAmbient3D = dynamic(() => import("@/components/brand/dashboard-ambient-3d"), { ssr: false });
 const DashboardBackground = dynamic(() => import("@/components/brand/dashboard-background"), { ssr: false });
@@ -357,15 +358,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* ① Triple-stack glass top navigation */}
         <GlassTopNav />
 
-        {/* ② Thin breadcrumb sub-nav (kept for breadcrumbs + Trinity prompt) */}
+        {/* ② Route-aware sub-nav: breadcrumb + tabs + filter chips */}
+        <GlassSubNav />
+
+        {/* ③ Legacy top-navbar (Trinity prompt / breadcrumb fallback) */}
         <TopNavbar />
 
-        {/* ③ Mobile drawer (hidden on lg+) */}
+        {/* ④ Mobile drawer (hidden on lg+) */}
         <div className="lg:hidden" aria-hidden="true">
           <MainNavbar />
         </div>
 
-        {/* ④ Main content — full-width, no sidebar offset */}
+        {/* ⑤ Main content — full-width, no sidebar offset */}
         <main id="main" className="flex-1 min-w-0 overflow-x-hidden">
           {/* Managed client banner (Electron desktop only) */}
           <ManagedClientBanner />

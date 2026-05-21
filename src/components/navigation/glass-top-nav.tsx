@@ -5,15 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
-  Users,
   BarChart3,
-  Sparkles,
   Film,
   Image,
   Share2,
-  Globe,
-  Target,
-  Plug,
   Settings,
   Zap,
   Search,
@@ -21,13 +16,12 @@ import {
   ChevronRight,
   Moon,
   Sun,
-  Bot,
   MessageSquare,
-  Mic,
-  BriefcaseBusiness,
   Wand2,
-  PenLine,
-  DollarSign,
+  Layers,
+  Scissors,
+  FolderOpen,
+  Palette,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
@@ -42,21 +36,20 @@ interface NavPill {
 
 /** "Create" row — content production tools */
 const CREATE_PILLS: NavPill[] = [
-  { label: "AI Studio",   href: "/dashboard/ai-studio",      icon: Sparkles },
-  { label: "Thumbnails",  href: "/dashboard/thumbnail",      icon: Image },
-  { label: "AI Video",    href: "/dashboard/ai-video",       icon: Film },
-  { label: "Social",      href: "/dashboard/social-studio",  icon: Share2 },
-  { label: "Websites",    href: "/dashboard/websites",       icon: Globe },
-  { label: "Copywriter",  href: "/dashboard/copywriter",     icon: PenLine },
+  { label: "Studio",      href: "/dashboard/ai-studio",      icon: Layers },
+  { label: "Thumbs",      href: "/dashboard/thumbnail",      icon: Image,    badge: "42" },
+  { label: "Video",       href: "/dashboard/ai-video",       icon: Film },
+  { label: "Editor",      href: "/dashboard/video-editor",   icon: Scissors },
+  { label: "Social",      href: "/dashboard/social-studio",  icon: Share2,   badge: "11" },
+  { label: "Stats",       href: "/dashboard/analytics",      icon: BarChart3 },
 ];
 
 /** "System" row — business infrastructure */
 const SYSTEM_PILLS: NavPill[] = [
-  { label: "Clients",     href: "/dashboard/clients",        icon: Users },
-  { label: "CRM",         href: "/dashboard/crm",            icon: BriefcaseBusiness },
-  { label: "Outreach",    href: "/dashboard/outreach-hub",   icon: MessageSquare },
-  { label: "Automations", href: "/dashboard/automations",    icon: Zap },
-  { label: "Integrations",href: "/dashboard/integrations-hub", icon: Plug },
+  { label: "Library",     href: "/dashboard/media-library",  icon: FolderOpen },
+  { label: "Comments",    href: "/dashboard/conversations",  icon: MessageSquare, badge: "4" },
+  { label: "Brand kit",   href: "/dashboard/brand-kit",      icon: Palette },
+  { label: "Automations", href: "/dashboard/automations",    icon: Zap,          badge: "5" },
   { label: "Settings",    href: "/dashboard/settings",       icon: Settings },
 ];
 
