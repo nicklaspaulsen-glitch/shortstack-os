@@ -69,10 +69,10 @@ const RESOURCE_META: Array<{
   accent: string;
   suffix?: string;
 }> = [
-  { key: "emails", label: "Emails", icon: <Mail size={14} />, accent: "#2563EB" },
+  { key: "emails", label: "Emails", icon: <Mail size={14} />, accent: "#D4FF00" },
   { key: "tokens", label: "AI Tokens", icon: <Bot size={14} />, accent: "#a855f7" },
-  { key: "clients", label: "Active Clients", icon: <Users size={14} />, accent: "#2563EB" },
-  { key: "sms", label: "SMS Sent", icon: <Smartphone size={14} />, accent: "#3B82F6" },
+  { key: "clients", label: "Active Clients", icon: <Users size={14} />, accent: "#6366F1" },
+  { key: "sms", label: "SMS Sent", icon: <Smartphone size={14} />, accent: "#10B981" },
   { key: "call_minutes", label: "Call Minutes", icon: <Phone size={14} />, accent: "#ef4444", suffix: "min" },
 ];
 

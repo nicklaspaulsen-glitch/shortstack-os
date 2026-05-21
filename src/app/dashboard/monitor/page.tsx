@@ -153,7 +153,7 @@ export default function MonitorPage() {
             </motion.div>{/* Summary counts */}<div className="grid grid-cols-3 gap-3">
               {[
                 { label: "Healthy", count: annotated.filter(s => s.computedStatus === "healthy").length, cls: "text-emerald-400", bar: "from-emerald-500 to-emerald-400" },
-                { label: "Degraded", count: annotated.filter(s => s.computedStatus === "degraded").length, cls: "text-brand-accent", bar: "from-[#2563EB] to-[#3B82F6]" },
+                { label: "Degraded", count: annotated.filter(s => s.computedStatus === "degraded").length, cls: "text-brand-accent", bar: "from-brand-accent/70 to-brand-accent/40" },
                 { label: "Down", count: annotated.filter(s => s.computedStatus === "down").length, cls: "text-red-400", bar: "from-red-500 to-red-400" },
               ].map(({ label, count, cls, bar }, i) => (
                 <motion.div

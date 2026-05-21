@@ -103,7 +103,7 @@ const MODEL_BACKENDS = [
     id: "higgsfield",
     name: "Higgsfield",
     badge: "Default",
-    badgeColor: "#3B82F6",
+    badgeColor: "#D4FF00",
     specs: "Highest quality · 4K · 90s max",
     note: null,
   },
@@ -1650,7 +1650,7 @@ export default function AIVideoPage() {
                   </div>
                   <div className="h-1 rounded-full bg-white/[0.06] overflow-hidden">
                     <motion.div
-                      className="h-full rounded-full bg-gradient-to-r from-[#2563EB] to-[#3B82F6]"
+                      className="h-full rounded-full bg-gradient-to-r from-brand-accent/80 to-brand-accent"
                       animate={{ width: `${progress}%` }}
                       transition={{ duration: 0.8, ease: "easeOut" }}
                     />

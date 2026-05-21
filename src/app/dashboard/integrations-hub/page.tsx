@@ -347,12 +347,8 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
               href={integration.configUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold px-3 py-2 rounded-lg text-white transition-all"
-              style={{
-                background: "#2563EB",
-                boxShadow:
-                  "0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 10px -3px rgba(204,36,36,0.3)",
-              }}
+              className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold px-3 py-2 rounded-lg bg-brand-accent text-[#020711] hover:bg-[#E8FF4D] transition-all"
+              style={{ boxShadow: "0 4px 10px -3px rgba(212,255,0,0.25)" }}
             >
               <ExternalLink size={11} />
               {isZernio ? "Open Zernio" : "Get API Key"}

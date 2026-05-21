@@ -839,13 +839,13 @@ export default function CompetitiveMonitorPage() {
                       { name: "AgencyFlow", share: 22, color: "#2563EB" },
                       { name: "MarketMind AI", share: 18, color: "#8b5cf6" },
                       { name: "SocialSpark", share: 15, color: "#f59e0b" },
-                      { name: "Trinity (You)", share: 12, color: "#2563EB" },
+                      { name: "Trinity (You)", share: 12, color: "#D4FF00" },
                       { name: "ClientPulse", share: 10, color: "#ec4899" },
                       { name: "ContentEngine", share: 8, color: "#2563EB" },
                       { name: "Others", share: 15, color: "#64748b" },
                     ].map((item, i) => (
                       <div key={i} className="flex items-center gap-3">
-                        <div className="w-32 text-xs text-right truncate" style={{ color: item.name.includes("You") ? "#2563EB" : undefined }}>
+                        <div className="w-32 text-xs text-right truncate" style={{ color: item.name.includes("You") ? "#D4FF00" : undefined }}>
                           {item.name.includes("You") ? <strong>{item.name}</strong> : item.name}
                         </div>
                         <div className="flex-1 bg-surface-light rounded-full h-5 overflow-hidden">

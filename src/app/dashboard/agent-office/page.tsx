@@ -247,7 +247,7 @@ export default function AgentOfficePage() {
             <StatTile icon={<Phone size={11} />} label="Calls today" value={snapshot?.stats.callsToday ?? "—"} accent="#5e5bff" />
             <StatTile icon={<Users size={11} />} label="Leads scored" value={snapshot?.stats.leadsScored ?? "—"} accent="#7fe5b8" />
             <StatTile icon={<Mail size={11} />} label="Emails sent" value={snapshot?.stats.emailsSent ?? "—"} accent="#ff8a4c" />
-            <StatTile icon={<Activity size={11} />} label="Trinity actions" value={snapshot?.stats.proposalsExecuted ?? "—"} accent="#3B82F6" />
+            <StatTile icon={<Activity size={11} />} label="Trinity actions" value={snapshot?.stats.proposalsExecuted ?? "—"} accent="#D4FF00" />
             <StatTile icon={<BarChart3 size={11} />} label="Posts published" value={snapshot?.stats.contentPosted ?? "—"} accent="#ffc062" />
           </div>
         </div>

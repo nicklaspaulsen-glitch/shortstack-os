@@ -105,10 +105,10 @@ export default function AdsManagerPage() {
 
   return (
     <MotionPage className="space-y-6">
-      {/* ── blue top rail ───────────────────────────────────────────────── */}
+      {/* ── brand accent top rail ───────────────────────────────────────── */}
       <div
         className="absolute top-0 left-0 right-0 h-px pointer-events-none"
-        style={{ background: "linear-gradient(90deg, transparent 0%, #1D4ED8 30%, #3B82F6 50%, #1D4ED8 70%, transparent 100%)" }}
+        style={{ background: "linear-gradient(90deg, transparent 0%, rgba(212,255,0,0.5) 30%, rgba(212,255,0,0.8) 50%, rgba(212,255,0,0.5) 70%, transparent 100%)" }}
       />
 
       {/* ── Ads Manager command strip ────────────────────────────────────── */}

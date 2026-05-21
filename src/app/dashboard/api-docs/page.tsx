@@ -351,7 +351,7 @@ export default function ApiDocsPage() {
                       className="input flex-1 text-xs py-2 font-mono" placeholder="/api/clients" />
                     <button onClick={simulateRequest} disabled={explorerLoading}
                       className="px-4 py-2 bg-[rgba(212,255,0,0.08)] text-brand-accent text-xs font-medium rounded-lg border border-[rgba(212,255,0,0.2)] hover:bg-[rgba(212,255,0,0.12)] transition-all disabled:opacity-50 flex items-center gap-1.5">
-                      {explorerLoading ? <div className="w-3 h-3 border-2 border-[rgba(212,255,0,0.2)] border-t-[#2563EB] rounded-full animate-spin" /> : <Play size={12} />}
+                      {explorerLoading ? <div className="w-3 h-3 border-2 border-[rgba(212,255,0,0.2)] border-t-brand-accent rounded-full animate-spin" /> : <Play size={12} />}
                       Send
                     </button>
                   </div>

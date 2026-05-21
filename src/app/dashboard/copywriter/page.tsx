@@ -87,9 +87,9 @@ const CONTENT_TYPES: {
   icon: typeof FileText;
   color: string;
 }[] = [
-  { id: "blog", label: "Blog Post", description: "SEO-optimized articles", icon: FileText, color: "#3B82F6" },
+  { id: "blog", label: "Blog Post", description: "SEO-optimized articles", icon: FileText, color: "#D4FF00" },
   { id: "landing", label: "Landing Page", description: "High-converting page copy", icon: Globe, color: "#FF5252" },
-  { id: "email", label: "Email Campaign", description: "Drip sequences & blasts", icon: Mail, color: "#3B82F6" },
+  { id: "email", label: "Email Campaign", description: "Drip sequences & blasts", icon: Mail, color: "#6366F1" },
   { id: "social", label: "Social Media", description: "Captions & post copy", icon: MessageSquare, color: "#f472b6" },
   { id: "product", label: "Product Description", description: "E-commerce copy", icon: ShoppingBag, color: "#fbbf24" },
   { id: "ad", label: "Ad Headlines", description: "Meta, Google & TikTok ads", icon: Megaphone, color: "#fb923c" },
@@ -108,7 +108,7 @@ const TEMPLATES: Template[] = [
     id: "t1", name: "SaaS Launch Blog", description: "Product launch announcement blog post",
     type: "blog", topic: "Announcing [Product] - The all-in-one platform for [Industry]",
     tone: "professional", audience: "SaaS founders and CTOs", keywords: "launch, platform, productivity, automation",
-    wordCount: 800, icon: Zap, color: "#3B82F6",
+    wordCount: 800, icon: Zap, color: "#D4FF00",
   },
   {
     id: "t2", name: "Lead Gen Landing Page", description: "Free trial / demo signup page",
@@ -120,7 +120,7 @@ const TEMPLATES: Template[] = [
     id: "t3", name: "Welcome Email Sequence", description: "Onboarding drip campaign (3 emails)",
     type: "email", topic: "Welcome to [Product] - Here's how to get started and see results in 7 days",
     tone: "casual", audience: "New signups who just created an account", keywords: "welcome, getting started, first steps, success",
-    wordCount: 500, icon: Mail, color: "#3B82F6",
+    wordCount: 500, icon: Mail, color: "#6366F1",
   },
   {
     id: "t4", name: "Agency Case Study Social", description: "Client success story for social",
@@ -144,7 +144,7 @@ const TEMPLATES: Template[] = [
     id: "t7", name: "Thought Leadership Article", description: "Industry trends deep-dive",
     type: "blog", topic: "The future of [Industry]: 5 trends reshaping [Topic] in 2026",
     tone: "professional", audience: "Industry professionals and decision-makers", keywords: "trends, innovation, future, strategy",
-    wordCount: 1200, icon: BookOpen, color: "#3B82F6",
+    wordCount: 1200, icon: BookOpen, color: "#D4FF00",
   },
   {
     id: "t8", name: "Re-engagement Email", description: "Win-back campaign for churned users",

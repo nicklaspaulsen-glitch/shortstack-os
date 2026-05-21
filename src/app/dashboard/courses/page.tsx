@@ -164,7 +164,7 @@ export default function CoursesPage() {
           <button
             onClick={handleCreate}
             disabled={creating}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-[#020711] text-sm font-semibold transition-colors"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent hover:bg-[#E8FF4D] text-[#020711] text-sm font-semibold transition-colors"
           >
             {creating ? <Loader2 size={14} className="animate-spin" /> : <Plus size={15} />}
             Create Course
