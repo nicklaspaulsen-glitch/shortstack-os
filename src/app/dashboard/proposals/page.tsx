@@ -28,6 +28,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import EmptyState from "@/components/ui/empty-state";
 import { MotionPage } from "@/components/motion/motion-page";
+import PageTrainingPanel from "@/components/ui/page-training-panel";
 
 interface Proposal {
   id: string;
@@ -262,7 +263,12 @@ export default function ProposalsPage() {
                   </li>
                 </ul>
               </div>
-            </div></MotionPage>
+            </div>
+            {/* AI training config for Proposals */}
+            <div className="mx-auto max-w-5xl px-6 pb-10">
+              <PageTrainingPanel pageKey="proposals" pageLabel="Proposals" />
+            </div>
+          </MotionPage>
   );
 }
 
