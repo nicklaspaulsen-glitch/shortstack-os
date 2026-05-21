@@ -220,7 +220,7 @@ export default function VoiceStudioPage() {
                 flex: "0 0 auto",
                 width: 2.5,
                 height: `${4 + ((i * 7 + i % 11) % 13)}px`,
-                background: "#3B82F6",
+                background: "#D4FF00",
                 borderRadius: "1px 1px 0 0",
                 opacity: 0.05 + (i % 6) * 0.012,
                 animation: `waveBar ${1.5 + (i % 7) * 0.2}s ease-in-out infinite`,
@@ -519,7 +519,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
 }
 
 // Decorative static waveform bars — sits in right portion of audio track cards
-function VoiceWaveformBg({ color = "#3B82F6", opacity = 0.07 }: { color?: string; opacity?: number }) {
+function VoiceWaveformBg({ color = "#D4FF00", opacity = 0.07 }: { color?: string; opacity?: number }) {
   const bars = [3, 7, 11, 5, 15, 9, 13, 6, 17, 10, 8, 14, 4, 12, 7, 16, 5, 11, 8, 13, 6, 10, 15, 7, 12];
   return (
     <div
@@ -618,7 +618,7 @@ function CloneRow({
 
   // Status drives the left accent + waveform tint
   const statusColors = {
-    training: "#3B82F6",
+    training: "#D4FF00",
     ready: "#10B981",
     failed: "#F43F5E",
   } as const;
@@ -626,8 +626,7 @@ function CloneRow({
 
   return (
     <div
-      className="relative overflow-hidden rounded-xl bg-[rgba(13,17,32,0.85)] border border-border-subtle transition-all duration-220 hover:border-[rgba(99,146,255,0.22)] hover:shadow-[0_4px_24px_rgba(0,0,0,0.18)]"
-      style={{ borderLeft: `2px solid ${accentColor}` }}
+      className="relative overflow-hidden rounded-xl bg-[rgba(13,17,32,0.85)] border border-border-subtle transition-all duration-220 hover:border-[rgba(212,255,0,0.22)] hover:shadow-[0_4px_24px_rgba(0,0,0,0.18)]"
     >
       {/* Decorative waveform in right half */}
       <VoiceWaveformBg color={accentColor} opacity={clone.status === "ready" ? 0.07 : 0.04} />
@@ -667,7 +666,7 @@ function CloneRow({
         {/* Audio section */}
         <div className="mt-3">
           {clone.status === "training" && (
-            <div className="flex items-center gap-2 py-2 px-3 rounded-lg border border-[rgba(59,130,246,0.15)] bg-[rgba(59,130,246,0.04)]">
+            <div className="flex items-center gap-2 py-2 px-3 rounded-lg border border-[rgba(212,255,0,0.12)] bg-[rgba(212,255,0,0.04)]">
               <Loader2 size={12} className="animate-spin text-brand-accent flex-shrink-0" />
               <span className="text-xs text-text-secondary">Training your voice clone...</span>
             </div>
@@ -680,7 +679,7 @@ function CloneRow({
           )}
           {clone.status === "ready" && (
             testUrl ? (
-              <div className="rounded-lg border border-[rgba(59,130,246,0.18)] bg-[rgba(59,130,246,0.05)] py-2 px-1">
+              <div className="rounded-lg border border-[rgba(212,255,0,0.12)] bg-[rgba(212,255,0,0.04)] py-2 px-1">
                 <AudioPlayer src={testUrl} />
               </div>
             ) : (
@@ -688,7 +687,7 @@ function CloneRow({
                 type="button"
                 onClick={onTest}
                 disabled={testing}
-                className="w-full group flex items-center gap-3 py-2.5 px-3 rounded-lg border border-dashed border-border-subtle hover:border-[rgba(59,130,246,0.3)] hover:bg-[rgba(59,130,246,0.03)] transition-colors duration-150 disabled:opacity-40 cursor-pointer"
+                className="w-full group flex items-center gap-3 py-2.5 px-3 rounded-lg border border-dashed border-border-subtle hover:border-[rgba(212,255,0,0.25)] hover:bg-[rgba(212,255,0,0.03)] transition-colors duration-150 disabled:opacity-40 cursor-pointer"
               >
                 <div className="flex items-end gap-[2px] h-5 flex-shrink-0" aria-hidden="true">
                   {[5, 9, 6, 13, 7, 11, 4, 10].map((h, i) => (
@@ -697,7 +696,7 @@ function CloneRow({
                       style={{
                         width: 2,
                         height: h,
-                        background: "#3B82F6",
+                        background: "#D4FF00",
                         borderRadius: 1,
                         transformOrigin: "bottom",
                         animation: `waveBar ${0.6 + (i % 4) * 0.12}s ease-in-out infinite`,
@@ -751,7 +750,7 @@ function CloneRow({
 
 function StatusChip({ status }: { status: VoiceClone["status"] }) {
   const map = {
-    training: { cls: "bg-[rgba(59,130,246,0.10)] text-brand-accent", label: "Training" },
+    training: { cls: "bg-[rgba(212,255,0,0.10)] text-brand-accent", label: "Training" },
     ready: { cls: "bg-emerald-500/15 text-emerald-400", label: "Ready" },
     failed: { cls: "bg-rose-500/15 text-rose-400", label: "Failed" },
   };
@@ -828,7 +827,7 @@ function AudioPlayer({ src, autoPlay = false }: { src: string; autoPlay?: boolea
         aria-valuemax={100}
         aria-valuenow={Math.round(progress * 100)}
         tabIndex={0}
-        className="flex-1 relative h-[3px] rounded-full bg-[rgba(59,130,246,0.15)] overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#2563EB]/50"
+        className="flex-1 relative h-[3px] rounded-full bg-[rgba(212,255,0,0.10)] overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-accent/50"
         onClick={(e) => {
           const a = audioRef.current;
           if (!a || !a.duration) return;
@@ -843,7 +842,7 @@ function AudioPlayer({ src, autoPlay = false }: { src: string; autoPlay?: boolea
         }}
       >
         <div
-          className="absolute left-0 top-0 h-full rounded-full bg-[#3B82F6]"
+          className="absolute left-0 top-0 h-full rounded-full bg-brand-accent"
           style={{ width: `${progress * 100}%`, transition: "width 100ms linear" }}
         />
       </div>
@@ -1070,7 +1069,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search presets..."
-              className="rounded-lg w-full border border-border-subtle bg-white/[0.03] py-1.5 pl-8 pr-3 text-xs text-text-primary placeholder-[#A1A1AA] focus:outline-none focus:border-brand-accent/40 focus:ring-1 focus:ring-[#1D4ED8]/30"
+              className="rounded-lg w-full border border-border-subtle bg-white/[0.03] py-1.5 pl-8 pr-3 text-xs text-text-primary placeholder-[#A1A1AA] focus:outline-none focus:border-brand-accent/40 focus:ring-1 focus:ring-brand-accent/30"
             />
           </div>
           <span className="flex-shrink-0 rounded-full border border-border-subtle bg-white/[0.03] px-2.5 py-1 text-[10px] font-medium text-[#71717A] tabular-nums">
@@ -1165,8 +1164,8 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
                   key={c}
                   type="button"
                   onClick={() => setCategoryFilter(c)}
-                  className="relative rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/60"
-                  style={{ color: isActive ? "#1D4ED8" : "#52525B" }}
+                  className="relative rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/60"
+                  style={{ color: isActive ? "#D4FF00" : "#52525B" }}
                 >
                   {isActive && (
                     <motion.span
@@ -1186,7 +1185,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             <select
               value={langFilter}
               onChange={(e) => setLangFilter(e.target.value)}
-              className="flex-shrink-0 rounded-lg border border-border-subtle bg-white/[0.03] px-2 py-1 text-xs text-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50 cursor-pointer"
+              className="flex-shrink-0 rounded-lg border border-border-subtle bg-white/[0.03] px-2 py-1 text-xs text-[#71717A] focus:outline-none focus:ring-1 focus:ring-brand-accent/50 cursor-pointer"
             >
               {languages.map((l) => (
                 <option key={l} value={l} className="bg-white">
@@ -1388,7 +1387,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
   return (
     <div
       className={`glass group flex flex-col rounded-xl cursor-pointer overflow-hidden transition-all duration-200 min-h-[220px] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] spotlight-card`}
-      style={{ border: featured ? "1px solid rgba(59,130,246,0.40)" : "1px solid rgba(99,146,255,0.12)"}}
+      style={{ border: featured ? "1px solid rgba(212,255,0,0.35)" : "1px solid rgba(212,255,0,0.10)"}}
       onMouseMove={(e) => {
         const rect = e.currentTarget.getBoundingClientRect();
         e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
@@ -1425,7 +1424,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               </button>
             )}
             {featured && (
-              <span className="text-[10px] font-semibold bg-[rgba(59,130,246,0.1)] text-brand-accent px-2 py-0.5 rounded-full uppercase tracking-wide">
+              <span className="text-[10px] font-semibold bg-[rgba(212,255,0,0.10)] text-brand-accent px-2 py-0.5 rounded-full uppercase tracking-wide">
                 Featured
               </span>
             )}
@@ -1470,7 +1469,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             onClick={() => { if (!testing) onTest(); }}
             disabled={testing}
             aria-label={testing ? "Generating preview..." : "Click to preview this voice"}
-            className="mt-3 w-full flex flex-col items-center gap-1.5 py-3 rounded-lg border border-dashed border-border-subtle bg-white/[0.02] hover:border-[rgba(59,130,246,0.30)] hover:bg-[rgba(59,130,246,0.04)] transition-colors duration-200 cursor-pointer disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#2563EB]/40 group/play"
+            className="mt-3 w-full flex flex-col items-center gap-1.5 py-3 rounded-lg border border-dashed border-border-subtle bg-white/[0.02] hover:border-[rgba(212,255,0,0.25)] hover:bg-[rgba(212,255,0,0.03)] transition-colors duration-200 cursor-pointer disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-accent/40 group/play"
           >
             {/* waveform bars - animate when hovering or generating */}
             <div className="flex items-end justify-center gap-[2px] h-6 opacity-40 group-hover/play:opacity-80 transition-opacity duration-200" aria-hidden="true">
@@ -1480,7 +1479,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                   style={{
                     width: 2.5,
                     height: h,
-                    background: "#2563EB",
+                    background: "#D4FF00",
                     borderRadius: 2,
                     transformOrigin: "bottom",
                     animation: isHovering || testing
@@ -1509,7 +1508,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               rows={3}
               maxLength={300}
               placeholder="Type what you want the voice to say…"
-              className="w-full rounded-lg border border-border-subtle bg-white/[0.06] px-3 py-2 text-xs text-text-primary placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/50 resize-none"
+              className="w-full rounded-lg border border-border-subtle bg-white/[0.06] px-3 py-2 text-xs text-text-primary placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-brand-accent/50 resize-none"
             />
             {/* Voice-settings sliders — ElevenLabs/preset only */}
             {(preset.provider === "preset" || preset.provider === "elevenlabs") && (
@@ -1530,7 +1529,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                       step={step}
                       value={val}
                       onChange={(e) => set(parseFloat(e.target.value))}
-                      className="flex-1 h-1 cursor-pointer accent-[#3B82F6]"
+                      className="flex-1 h-1 cursor-pointer accent-[#D4FF00]"
                     />
                     <span className="w-6 shrink-0 text-right text-[9px] tabular-nums text-[#52525B]">
                       {val.toFixed(2)}
@@ -1542,7 +1541,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             {/* TTS Readability panel — visible while editing */}
             {ttsQualitySignals.length > 0 && (
               <div className="rounded-lg p-2"
-                style={{ background: "rgba(19,24,39,0.55)", border: "1px solid rgba(59,130,246,0.10)" }}>
+                style={{ background: "rgba(19,24,39,0.55)", border: "1px solid rgba(212,255,0,0.08)" }}>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-1">
                     <TrendingUp size={8} style={{ color: ttsQualityScore >= 80 ? "#4ade80" : ttsQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
@@ -1629,7 +1628,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               <button
                 type="button"
                 onClick={() => setEditMode(true)}
-                className="flex-shrink-0 rounded border border-border-subtle bg-white/[0.03] px-2 py-0.5 text-[11px] text-[#71717A] hover:border-[#1D4ED8]/40 hover:text-brand-accent transition-colors duration-150 cursor-pointer"
+                className="flex-shrink-0 rounded border border-border-subtle bg-white/[0.03] px-2 py-0.5 text-[11px] text-[#71717A] hover:border-brand-accent/40 hover:text-brand-accent transition-colors duration-150 cursor-pointer"
                 aria-label="Edit test phrase"
               >
                 Edit
@@ -1641,7 +1640,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
 
         {/* Audio player - shown above actions; kept visible while re-generating */}
         {(testUrl || (testing && prevUrlRef.current)) && (
-          <div className="relative mt-3 rounded-lg border border-[rgba(59,130,246,0.18)] bg-[rgba(59,130,246,0.05)] py-2 px-1">
+          <div className="relative mt-3 rounded-lg border border-[rgba(212,255,0,0.12)] bg-[rgba(212,255,0,0.04)] py-2 px-1">
             <AudioPlayer src={testUrl ?? prevUrlRef.current ?? ""} />
             {testing && (
               <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-white/[0.06]">
@@ -1756,7 +1755,7 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
                 )}
               </div>
               {isOpen && audioUrl && (
-                <div className="mt-3 rounded-lg border border-[rgba(59,130,246,0.18)] bg-[rgba(59,130,246,0.05)] py-2 px-1">
+                <div className="mt-3 rounded-lg border border-[rgba(212,255,0,0.12)] bg-[rgba(212,255,0,0.04)] py-2 px-1">
                   <AudioPlayer src={audioUrl} autoPlay />
                 </div>
               )}
