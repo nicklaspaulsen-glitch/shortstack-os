@@ -4,9 +4,9 @@ import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { formatCurrency, formatRelativeTime } from "@/lib/utils";
 import {
-  BarChart3, Users, DollarSign, Zap, Film, Phone, MessageSquare, ArrowUp,
+  BarChart3, DollarSign, Zap, Film, Phone, ArrowUp,
   TrendingUp, AlertTriangle, Target, Trophy, Calendar, Download, Activity,
-  Flame, Star, Clock, CheckCircle
+  Flame, Star, CheckCircle
 } from "lucide-react";
 import {
   AreaChart, Area, LineChart, Line,

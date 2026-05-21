@@ -118,7 +118,7 @@ interface StageConfig {
 }
 
 const PIPELINE_STAGES: StageConfig[] = [
-  { stage: "outreach_sent",  label: "Outreach Sent", color: "#60A5FA", bg: "rgba(212,255,0,0.08)",   border: "rgba(212,255,0,0.22)",   icon: <Mic size={13} />,          phase: "outreach" },
+  { stage: "outreach_sent",  label: "Outreach Sent", color: "#A78BFA", bg: "rgba(212,255,0,0.08)",   border: "rgba(212,255,0,0.22)",   icon: <Mic size={13} />,          phase: "outreach" },
   { stage: "replied",        label: "Replied",        color: "#A78BFA", bg: "rgba(139,92,246,0.08)",   border: "rgba(139,92,246,0.22)",   icon: <MessageSquare size={13} />, phase: "outreach" },
   { stage: "qualifying",     label: "Qualifying",     color: "#FBBF24", bg: "rgba(251,191,36,0.08)",   border: "rgba(251,191,36,0.22)",   icon: <Target size={13} />,        phase: "outreach" },
   { stage: "qualified",      label: "Qualified",      color: "#34D399", bg: "rgba(52,211,153,0.08)",   border: "rgba(52,211,153,0.22)",   icon: <CheckCircle size={13} />,   phase: "deal" },
@@ -136,7 +136,7 @@ const DEAD_STAGE: StageConfig = {
 };
 
 const PHASE_LABELS: Record<string, { label: string; color: string }> = {
-  outreach:   { label: "Outreach",   color: "#60A5FA" },
+  outreach:   { label: "Outreach",   color: "#A78BFA" },
   deal:       { label: "Deal",       color: "#10B981" },
   production: { label: "Production", color: "#E879F9" },
   done:       { label: "Done",       color: "#86EFAC" },
@@ -720,7 +720,7 @@ function StatsBar({ leads }: { leads: Lead[] }) {
     { label: "Active",    value: stats.total,                  color: "#A8A8B2" },
     { label: "Closed",    value: stats.closed,                 color: "#10B981" },
     { label: "Delivered", value: stats.delivered,              color: "#86EFAC" },
-    { label: "Revenue",   value: fmtUsd(stats.revenue) || "—", color: "#3B82F6" },
+    { label: "Revenue",   value: fmtUsd(stats.revenue) || "—", color: "#34D399" },
     { label: "Pending",   value: fmtUsd(stats.pending) || "—", color: "#FDE68A" },
     { label: "Conv %",    value: `${stats.convRate}%`,          color: "#E879F9" },
   ];

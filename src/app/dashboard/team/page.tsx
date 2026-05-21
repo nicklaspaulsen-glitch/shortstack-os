@@ -804,7 +804,7 @@ export default function TeamPage() {
                             type="checkbox"
                             checked={!!createForm[p.key as keyof typeof createForm]}
                             onChange={e => setCreateForm({ ...createForm, [p.key]: e.target.checked })}
-                            className="accent-blue-600"
+                            className="accent-[#D4FF00]"
  />
                           <span className="text-[10px]">{p.label}</span>
                         </label>
@@ -1018,7 +1018,7 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
                   type="checkbox"
                   checked={perms[p.key as keyof typeof perms]}
                   onChange={e => setPerms({ ...perms, [p.key]: e.target.checked })}
-                  className="accent-blue-600"
+                  className="accent-[#D4FF00]"
  />
                 <span className="text-[10px]">{p.label}</span>
               </label>

@@ -141,7 +141,7 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
     cvr: "Avg 4.2% CVR",
     avgLaunch: "3 min to live",
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop",
-    accent: "from-blue-600/70 to-indigo-500/70",
+    accent: "from-violet-600/70 to-indigo-500/70",
     preset: {
       business_type: "saas",
       style_vibe: "minimal-clean",
@@ -312,7 +312,7 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
     cvr: "Avg 3.4% CVR",
     avgLaunch: "4 min to live",
     image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=600&h=400&fit=crop",
-    accent: "from-blue-600/70 to-cyan-500/70",
+    accent: "from-teal-600/70 to-cyan-500/70",
     preset: {
       business_type: "saas",
       style_vibe: "dark-cinematic",
@@ -554,7 +554,7 @@ export default function WebsitesPage() {
           { value: "playful-fun", label: "Playful & Fun", description: "Gen Z brands", preview: "bg-gradient-to-br from-pink-400 via-yellow-300 to-purple-400" },
           { value: "dark-cinematic", label: "Dark & Cinematic", description: "Tech / gaming", preview: "bg-gradient-to-br from-slate-900 via-purple-900 to-black" },
           { value: "pastel-soft", label: "Pastel & Soft", description: "Wellness / beauty", preview: "bg-gradient-to-br from-pink-200 via-rose-200 to-sky-200" },
-          { value: "corporate-pro", label: "Corporate Pro", description: "B2B / legal", preview: "bg-gradient-to-br from-blue-900 via-slate-800 to-blue-700" },
+          { value: "corporate-pro", label: "Corporate Pro", description: "B2B / legal", preview: "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700" },
           { value: "editorial", label: "Editorial Magazine", description: "Blog / content", preview: "bg-gradient-to-br from-stone-200 via-stone-300 to-stone-500" },
         ],
       },
