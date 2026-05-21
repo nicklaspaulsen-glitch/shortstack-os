@@ -10,6 +10,7 @@ import {
   safeJsonParse,
 } from "@/lib/ai/claude-helpers";
 import { THUMBNAIL_STYLES } from "@/lib/thumbnail-styles";
+import { getPageTrainingPrompt } from "@/lib/ai/page-training";
 
 /**
  * POST /api/thumbnail/smart-variants
@@ -79,6 +80,7 @@ function styleCatalog(): string {
 async function planStyles(
   prompt: string,
   count: number,
+  trainingPrompt?: string,
 ): Promise<PlannedStyle[] | null> {
   if (!process.env.ANTHROPIC_API_KEY) return null;
   const systemPrompt =
@@ -86,7 +88,8 @@ async function planStyles(
     "pick N DIFFERENT styles (one per variant) from the catalog that together " +
     "give the creator a spread of takes on the same idea: a safe pick, a " +
     "bolder pick, a cinematic/moody pick, and something unexpected. " +
-    "Output JSON only — no markdown.";
+    "Output JSON only — no markdown." +
+    (trainingPrompt ? `\n\n${trainingPrompt}` : "");
 
   try {
     const resp = await anthropic.messages.create({
@@ -217,6 +220,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const trainingPrompt = await getPageTrainingPrompt(supabase, user.id, "thumbnail");
+
   let body: SmartVariantsInput;
   try {
     body = (await request.json()) as SmartVariantsInput;
@@ -238,7 +243,7 @@ export async function POST(request: NextRequest) {
   const dims = PLATFORM_SIZES[platform] || { width: 1280, height: 720 };
 
   // Plan style variants.
-  const planned = (await planStyles(prompt, count)) || [];
+  const planned = (await planStyles(prompt, count, trainingPrompt || undefined)) || [];
   const fallbackStyleIds = ["youtube_classic", "cinematic", "dark_moody", "bold_text", "minimal", "news_breaking"].slice(
     0,
     count,
