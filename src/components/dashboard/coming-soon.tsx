@@ -113,7 +113,7 @@ export function ComingSoon({
       <div className="flex items-center justify-between">
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1.5 text-[11px] text-text-muted hover:text-[#2563EB] transition-colors"
+          className="inline-flex items-center gap-1.5 text-[11px] text-text-muted hover:text-[#D4FF00] transition-colors"
         >
           <ArrowLeft size={12} />
           Back to dashboard
@@ -185,7 +185,7 @@ export function ComingSoon({
             style={{
               background: "rgba(255,255,255,0.07)",
               border: "1px solid rgba(255,255,255,0.15)",
-              color: "#60A5FA",
+              color: "#D4FF00",
               boxShadow:
                 "0 4px 12px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.1) inset",
             }}
@@ -231,7 +231,7 @@ export function ComingSoon({
         {/* What's coming */}
         <div className="lg:col-span-2 card !p-5">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-7 h-7 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center text-[#2563EB]">
+            <div className="w-7 h-7 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center text-[#D4FF00]">
               <Hammer size={14} />
             </div>
             <div>
@@ -251,7 +251,7 @@ export function ComingSoon({
               >
                 <CheckCircle2
                   size={15}
-                  className="text-[#2563EB] shrink-0 mt-0.5"
+                  className="text-[#D4FF00] shrink-0 mt-0.5"
                   strokeWidth={2.2}
                 />
                 <span>{feat}</span>
@@ -263,7 +263,7 @@ export function ComingSoon({
         {/* Waitlist panel */}
         <div className="glass rounded-xl !p-5 flex flex-col">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-7 h-7 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center text-[#2563EB]">
+            <div className="w-7 h-7 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center text-[#D4FF00]">
               <Bell size={14} />
             </div>
             <div>
@@ -305,9 +305,9 @@ export function ComingSoon({
               <button
                 type="submit"
                 disabled={submitting}
-                className="mt-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-[12px] font-semibold text-white transition-all hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0"
+                className="mt-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-[12px] font-semibold text-[#020711] transition-all hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0"
                 style={{
-                  background: "var(--color-accent, #3B82F6)",
+                  background: "linear-gradient(135deg, #D4FF00, #AACC00)",
                   boxShadow: "0 1px 3px rgba(212,255,0,0.25)",
                 }}
               >
@@ -353,7 +353,7 @@ export function ComingSoon({
                 </span>
                 <ArrowRight
                   size={14}
-                  className="text-text-muted group-hover:text-[#2563EB] group-hover:translate-x-0.5 transition-all shrink-0"
+                  className="text-text-muted group-hover:text-[#D4FF00] group-hover:translate-x-0.5 transition-all shrink-0"
                 />
               </Link>
             ))}

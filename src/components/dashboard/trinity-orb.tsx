@@ -247,7 +247,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
         />
         <div className={`mt-3 transition-all ${active ? "opacity-80" : "opacity-100"}`}>
           <p className="text-[10px] uppercase tracking-[0.22em] text-text-muted flex items-center gap-1.5 justify-center">
-            <Sparkles size={10} className="text-[#2563EB]" />
+            <Sparkles size={10} className="text-[#D4FF00]" />
             Trinity
           </p>
           <h2 className={`font-bold tracking-tight mt-1 ${active ? "text-sm" : "text-xl sm:text-2xl"}`}>
@@ -307,7 +307,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
           <button
             type="submit"
             disabled={sending || !input.trim()}
-            className="h-[46px] px-4  bg-[#2563EB] text-white font-semibold text-xs flex items-center gap-1.5 hover:bg-[#1D4ED8] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            className="h-[46px] px-4 bg-[#D4FF00] text-[#020711] font-semibold text-xs flex items-center gap-1.5 hover:bg-[#AACC00] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
             {sending ? <Loader size={14} className="animate-spin" /> : <Send size={14} />}
             <span className="hidden sm:inline">Send</span>
@@ -325,7 +325,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
                 setMessages([]);
                 setConversationId(null);
               }}
-              className="hover:text-[#2563EB] transition-colors"
+              className="hover:text-[#D4FF00] transition-colors"
             >
               New conversation
             </button>

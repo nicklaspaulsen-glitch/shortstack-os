@@ -49,7 +49,7 @@ const METRIC_ICONS: Record<DashboardMetricKey, LucideIcon> = {
 
 const METRIC_ACCENT: Record<DashboardMetricKey, string> = {
   clients: "text-emerald-400",
-  mrr: "text-[#2563EB]",
+  mrr: "text-[#D4FF00]",
   outreach: "text-indigo-400",
   leads: "text-emerald-400",
   views: "text-purple-400",
@@ -58,14 +58,14 @@ const METRIC_ACCENT: Record<DashboardMetricKey, string> = {
   content_pieces: "text-purple-400",
   listings: "text-indigo-400",
   showings: "text-emerald-400",
-  closings: "text-[#2563EB]",
+  closings: "text-[#D4FF00]",
   sessions_booked: "text-emerald-400",
-  revenue: "text-[#2563EB]",
+  revenue: "text-[#D4FF00]",
   churn: "text-red-400",
   signups: "text-emerald-400",
   activations: "text-indigo-400",
   orders: "text-emerald-400",
-  aov: "text-[#2563EB]",
+  aov: "text-[#D4FF00]",
   conversion: "text-purple-400",
   tasks_done: "text-emerald-400",
 };
@@ -119,7 +119,7 @@ export default function PersonalizedMetrics({ userType: providedType }: Props) {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
-            <Sparkles size={13} className="text-[#2563EB]" />
+            <Sparkles size={13} className="text-[#D4FF00]" />
           </div>
           <div>
             <p className="text-xs font-bold text-text-primary">
@@ -132,7 +132,7 @@ export default function PersonalizedMetrics({ userType: providedType }: Props) {
         </div>
         <Link
           href="/dashboard/settings"
-          className="text-[10px] text-text-muted hover:text-[#2563EB] transition-colors"
+          className="text-[10px] text-text-muted hover:text-[#D4FF00] transition-colors"
         >
           Customize
         </Link>
@@ -141,7 +141,7 @@ export default function PersonalizedMetrics({ userType: providedType }: Props) {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {meta.dashboardMetrics.map((key) => {
           const Icon = METRIC_ICONS[key] || Activity;
-          const accent = METRIC_ACCENT[key] || "text-[#2563EB]";
+          const accent = METRIC_ACCENT[key] || "text-[#D4FF00]";
           const label = METRIC_LABELS[key]?.label ?? key;
           const hint = METRIC_LABELS[key]?.hint ?? "";
           return (

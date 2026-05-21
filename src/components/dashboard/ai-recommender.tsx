@@ -164,8 +164,8 @@ export default function AiRecommender() {
         onClick={handleOpen}
         className={`group relative w-full md:w-auto  overflow-hidden transition-all hover-lift ${
           hasCached
-            ? "bg-gradient-to-r from-[#2563EB] via-[#3B82F6] to-[#2563EB] shadow-lg shadow-[rgba(212,255,0,0.4)]"
-            : "bg-gradient-to-r from-[#2563EB] to-[#3B82F6] shadow-lg shadow-[rgba(212,255,0,0.3)]"
+            ? "bg-gradient-to-r from-[#D4FF00] via-[#E8FF4D] to-[#D4FF00] shadow-lg shadow-[rgba(212,255,0,0.4)]"
+            : "bg-gradient-to-r from-[#D4FF00] to-[#AACC00] shadow-lg shadow-[rgba(212,255,0,0.3)]"
         }`}
       >
         {/* Glow pulse */}
@@ -210,7 +210,7 @@ export default function AiRecommender() {
               </div>
               <div className="relative flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12  bg-gradient-to-br from-[#2563EB] to-[#3B82F6] flex items-center justify-center shadow-lg shadow-[rgba(212,255,0,0.3)]">
+                  <div className="w-12 h-12  bg-gradient-to-br from-[#D4FF00] to-[#AACC00] flex items-center justify-center shadow-lg shadow-[rgba(212,255,0,0.3)]">
                     <Sparkles size={22} className="text-black" />
                   </div>
                   <div>
@@ -229,7 +229,7 @@ export default function AiRecommender() {
             {/* Strategy banner */}
             {theme && (
               <div className="mx-6 mt-4 p-3 rounded-xl bg-gradient-to-r from-[rgba(212,255,0,0.05)] to-[rgba(212,255,0,0.03)] border border-[rgba(212,255,0,0.2)] flex items-start gap-3">
-                <TrendingUp size={14} className="text-[#2563EB] shrink-0 mt-0.5" />
+                <TrendingUp size={14} className="text-[#D4FF00] shrink-0 mt-0.5" />
                 <div className="flex-1">
                   <p className="text-[11px] font-semibold text-text-primary">{theme}</p>
                   {priorityFocus && <p className="text-[10px] text-text-muted mt-0.5">💡 {priorityFocus}</p>}
@@ -237,7 +237,7 @@ export default function AiRecommender() {
                 <button
                   onClick={() => generate(true)}
                   disabled={loading}
-                  className="shrink-0 text-[10px] text-text-muted hover:text-[#2563EB] flex items-center gap-1 transition-colors"
+                  className="shrink-0 text-[10px] text-text-muted hover:text-[#D4FF00] flex items-center gap-1 transition-colors"
                 >
                   <RefreshCw size={10} className={loading ? "animate-spin" : ""} /> Different ideas
                 </button>
@@ -248,7 +248,7 @@ export default function AiRecommender() {
             <div className="flex-1 overflow-y-auto p-6">
               {loading && recommendations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-3">
-                  <Loader2 size={32} className="animate-spin text-[#2563EB]" />
+                  <Loader2 size={32} className="animate-spin text-[#D4FF00]" />
                   <p className="text-xs text-text-muted">AI is analyzing your business...</p>
                   <p className="text-[10px] text-text-muted/70 max-w-md text-center">
                     Checking your recent activity, business type, goals, and what would move the needle most.
@@ -257,7 +257,7 @@ export default function AiRecommender() {
               ) : recommendations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-4">
                   <div className="w-16 h-16  bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
-                    <Sparkles size={28} className="text-[#2563EB]" />
+                    <Sparkles size={28} className="text-[#D4FF00]" />
                   </div>
                   <div className="text-center">
                     <p className="text-sm font-semibold mb-1">Ready when you are</p>
@@ -310,7 +310,7 @@ export default function AiRecommender() {
             {showSchedule && (
               <div className="px-6 py-4 border-t border-border-subtle bg-[rgba(212,255,0,0.03)]">
                 <div className="flex items-start gap-3 mb-3">
-                  <Clock size={14} className="text-[#2563EB] shrink-0 mt-0.5" />
+                  <Clock size={14} className="text-[#D4FF00] shrink-0 mt-0.5" />
                   <div className="flex-1">
                     <p className="text-xs font-semibold">Auto-run recommendations</p>
                     <p className="text-[10px] text-text-muted">AI regenerates fresh ideas on a schedule so you always have what to do next.</p>
@@ -320,7 +320,7 @@ export default function AiRecommender() {
                       type="checkbox"
                       checked={schedule.enabled}
                       onChange={e => saveSchedule({ ...schedule, enabled: e.target.checked })}
-                      className="accent-[#2563EB]"
+                      className="accent-[#D4FF00]"
                     />
                     <span className="text-[10px]">{schedule.enabled ? "On" : "Off"}</span>
                   </label>
@@ -336,7 +336,7 @@ export default function AiRecommender() {
                             onClick={() => saveSchedule({ ...schedule, frequency: f })}
                             className={`text-[10px] px-2.5 py-1 rounded-full border ${
                               schedule.frequency === f
-                                ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)] text-[#2563EB]"
+                                ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)] text-[#D4FF00]"
                                 : "bg-surface-light border-border-subtle text-text-muted"
                             }`}
                           >
@@ -358,7 +358,7 @@ export default function AiRecommender() {
                           type="checkbox"
                           checked={schedule.auto_execute_top_pick}
                           onChange={e => saveSchedule({ ...schedule, auto_execute_top_pick: e.target.checked })}
-                          className="accent-[#2563EB]"
+                          className="accent-[#D4FF00]"
                         />
                         Auto-execute top pick
                       </label>
@@ -398,7 +398,7 @@ function RecommendationCard({ rec, index }: { rec: Recommendation; index: number
       <div className="p-4 space-y-2.5">
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2 flex-1 min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-[rgba(212,255,0,0.08)] text-[#2563EB] flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-[rgba(212,255,0,0.08)] text-[#D4FF00] flex items-center justify-center shrink-0">
               {icon}
             </div>
             <div className="min-w-0 flex-1">
@@ -429,7 +429,7 @@ function RecommendationCard({ rec, index }: { rec: Recommendation; index: number
         )}
 
         <div className="flex items-start gap-1.5 pt-1">
-          <Zap size={10} className="text-[#2563EB] shrink-0 mt-0.5" />
+          <Zap size={10} className="text-[#D4FF00] shrink-0 mt-0.5" />
           <p className="text-[10px] text-[rgba(212,255,0,0.8)] leading-relaxed italic">{rec.reason}</p>
         </div>
 
@@ -439,7 +439,7 @@ function RecommendationCard({ rec, index }: { rec: Recommendation; index: number
           </span>
           <Link
             href={rec.action_href}
-            className="flex items-center gap-1 text-[11px] font-semibold text-[#2563EB] hover:text-[#3B82F6] transition-colors"
+            className="flex items-center gap-1 text-[11px] font-semibold text-[#D4FF00] hover:text-[#E8FF4D] transition-colors"
           >
             Start <ArrowRight size={10} />
           </Link>
