@@ -123,7 +123,7 @@ export default function SocialManagerPage() {
   const [connectModalOpen, setConnectModalOpen] = useState(false);
   const [connectingPlatform, setConnectingPlatform] = useState<string | null>(null);
   const [confirmPlatform, setConfirmPlatform] = useState<typeof SUPPORTED_PLATFORMS[number] | null>(null);
-  const [zernioConfigured, setZernioConfigured] = useState(true);
+  const [zernioConfigured, setZernioConfigured] = useState(false);
   const [disconnectingId, setDisconnectingId] = useState<string | null>(null);
   const supabase = createClient();
 
@@ -680,7 +680,6 @@ export default function SocialManagerPage() {
             {/* Focal tile — Published */}
             <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
               className="flex items-start gap-3 glass rounded-2xl p-5 shadow-[0_2px_16px_rgba(0,0,0,0.35)]">
-              <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Published</p>
                 <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{recentPosts.length}</p>

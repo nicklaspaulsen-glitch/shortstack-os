@@ -195,7 +195,7 @@ export default function ServicesPage() {
     <MotionPage className="space-y-6">{/* -- Service Catalog command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">SERVICES</p>
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Service Catalog</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Service Catalog</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">

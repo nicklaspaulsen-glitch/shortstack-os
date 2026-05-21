@@ -208,7 +208,7 @@ export default function MailSetupPage() {
     <MotionPage className="min-h-screen bg-background text-text-primary">{/* -- Mail Setup command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">MAIL SETUP</p>
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Email Setup</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Mail Setup</h1>
       </div>
     </div><div className="mx-auto max-w-5xl px-6 pb-10 space-y-6">

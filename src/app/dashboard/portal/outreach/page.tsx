@@ -195,7 +195,6 @@ export default function ClientOutreachPage() {
             </div>{/* Stats */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
                 className="flex items-start gap-3 bg-white/[0.06] border border-border-subtle rounded-2xl p-5 shadow-[0_2px_16px_rgba(0,0,0,0.35)]">
-                <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                 <div>
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Sent</p>
                   <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{stats.sent}</p>

@@ -533,7 +533,7 @@ export default function InboxPage() {
         {/* -- Inbox command strip -- */}
         <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
           <div className="min-w-0">
-            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">INBOX</p>
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Message Center</p>
             <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Inbox</h1>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -572,7 +572,6 @@ export default function InboxPage() {
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Messages</p>
                 <p className="font-display text-3xl font-bold tracking-[-0.03em] text-brand-accent tabular-nums">{stats.total}</p>

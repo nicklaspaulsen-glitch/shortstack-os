@@ -214,7 +214,6 @@ export default function DiscordPage() {
           transition={{ delay: 0.04, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
           className="flex items-start gap-3 glass rounded-2xl p-5"
         >
-          <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
           <div>
             <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Bot Status</p>
             <p className="font-display text-3xl font-bold tracking-[-0.03em] text-green-500 tabular-nums">Online</p>
@@ -714,7 +713,6 @@ export default function DiscordPage() {
               transition={{ delay: 0.04, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
               className="flex items-start gap-3 glass rounded-2xl p-5"
             >
-              <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Messages Today</p>
                 <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">—</p>
@@ -1003,7 +1001,6 @@ export default function DiscordPage() {
                 transition={{ delay: 0.04, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
                 className="flex items-start gap-3 glass rounded-2xl p-5"
               >
-                <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                 <div>
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Messages/Day</p>
                   <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">0</p>

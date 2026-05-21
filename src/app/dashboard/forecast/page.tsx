@@ -146,7 +146,7 @@ export default function ForecastPage() {
     <MotionPage className="space-y-6">{/* -- Revenue Forecast command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">REVENUE FORECAST</p>
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Pipeline Projection</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Revenue Forecast</h1>
       </div>
     </div>{loading ? <TableSkeleton rows={8} /> : error ? (
@@ -174,7 +174,6 @@ export default function ForecastPage() {
                     transition={{ delay: 0.04, duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
                     className="flex items-start gap-3 glass rounded-2xl p-5"
                   >
-                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                     <div>
                       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Weighted Pipeline</p>
                       <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{fmt(totalPipeline)}</p>

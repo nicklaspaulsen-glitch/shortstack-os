@@ -1498,7 +1498,6 @@ export default function LandingPagesPage() {
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
               >
-                <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                 <div>
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Views</p>
                   <p className="font-display text-3xl font-bold tracking-[-0.03em] text-brand-accent tabular-nums">{EMPTY_ANALYTICS.views.toLocaleString()}</p>

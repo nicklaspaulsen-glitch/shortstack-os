@@ -479,7 +479,7 @@ export default function FinancialsPage() {
     <MotionPage className="space-y-5">{/* Hero Header */}{/* -- Financials command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">FINANCIALS</p>
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Financial Overview</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Financials</h1>
       </div>
     </div><div className="flex items-center justify-end">
@@ -527,7 +527,6 @@ export default function FinancialsPage() {
                     transition={{ duration: 0.35, delay: 0.04 }}
                     className="flex items-start gap-3 glass rounded-2xl p-5"
                   >
-                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                     <div className="min-w-0">
                       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">MRR</p>
                       <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{formatCurrency(totalMRR)}</p>
@@ -574,7 +573,6 @@ export default function FinancialsPage() {
                     transition={{ duration: 0.35, delay: 0.29 }}
                     className="flex items-start gap-3 glass rounded-2xl p-5"
                   >
-                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                     <div className="min-w-0">
                       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly Expenses</p>
                       <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{formatCurrency(totalMonthlyExpenses)}</p>
@@ -730,7 +728,6 @@ export default function FinancialsPage() {
                     transition={{ duration: 0.35, delay: 0.04 }}
                     className="flex items-start gap-3 glass rounded-2xl p-5"
                   >
-                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                     <div className="min-w-0">
                       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly Total</p>
                       <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{formatCurrency(totalMonthlyExpenses)}</p>
@@ -911,7 +908,6 @@ export default function FinancialsPage() {
                     transition={{ duration: 0.35, delay: 0.04 }}
                     className="flex items-start gap-3 glass rounded-2xl p-5"
                   >
-                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                     <div className="min-w-0">
                       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly Spend</p>
                       <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{formatCurrency(totalMonthlySubs)}</p>
@@ -1071,7 +1067,6 @@ export default function FinancialsPage() {
                     transition={{ duration: 0.35, delay: 0.04 }}
                     className="flex items-start gap-3 glass rounded-2xl p-5"
                   >
-                    <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                     <div className="min-w-0">
                       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Overdue</p>
                       <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{formatCurrency(invoiceTotals.overdue)}</p>

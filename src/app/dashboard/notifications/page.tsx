@@ -299,7 +299,7 @@ export default function NotificationsPage() {
     <MotionPage className="space-y-6">{/* -- Notifications command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">NOTIFICATIONS</p>
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Alerts &amp; Updates</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Notifications</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">

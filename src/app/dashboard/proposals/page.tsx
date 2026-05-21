@@ -128,7 +128,7 @@ export default function ProposalsPage() {
     <MotionPage className="min-h-screen bg-background text-text-primary">{/* -- Proposals command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">PROPOSAL STUDIO</p>
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Client Proposals</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Proposals</h1>
       </div>
     </div><div className="mx-auto max-w-5xl space-y-5 px-6 pb-10 pt-5">
@@ -145,7 +145,6 @@ export default function ProposalsPage() {
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                   <div>
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Value</p>
                     <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{`$${stats.total.toLocaleString()}`}</p>

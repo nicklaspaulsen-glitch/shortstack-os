@@ -131,7 +131,7 @@ export default function WorkflowLibraryPage() {
     <MotionPage className="min-h-screen bg-[#F3F6FA] text-[#111827]">{/* -- Workflow Library command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">WORKFLOW LIBRARY</p>
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Templates &amp; Blueprints</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Workflow Library</h1>
       </div>
     </div><div className="mx-auto max-w-6xl px-6 py-8">

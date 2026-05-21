@@ -147,7 +147,6 @@ export default function GenerationsPage() {
           transition={{ delay: 0.04, duration: 0.36 }}
           className="flex items-start gap-3 glass rounded-2xl p-5"
         >
-          <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
           <div>
             <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Items</p>
             <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{total}</p>

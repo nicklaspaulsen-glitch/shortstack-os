@@ -157,7 +157,6 @@ export default function SubaccountsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.04, duration: 0.3 }}
               >
-                <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                 <div>
                   <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly Recurring Revenue</p>
                   <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{formatMrr(stats.mrr_cents)}</p>

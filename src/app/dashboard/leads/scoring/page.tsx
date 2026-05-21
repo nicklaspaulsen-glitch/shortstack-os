@@ -537,7 +537,7 @@ export default function LeadScoringPage() {
     <MotionPage className="space-y-4">{/* -- AI Lead Scoring command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">LEAD SCORING</p>
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Score Models</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">AI Lead Scoring</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
@@ -606,7 +606,6 @@ export default function LeadScoringPage() {
                   transition={{ duration: 0.22, delay: 0.04 }}
                   className="flex items-start gap-3 glass rounded-2xl p-5"
                 >
-                  <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
                   <div>
                     <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Hot</p>
                     <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{counts.hot}</p>

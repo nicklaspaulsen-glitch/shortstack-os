@@ -147,7 +147,7 @@ export default function BrowserTasksPage() {
     <MotionPage className="space-y-6">{/* -- AI Browser Tasks command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">AI BROWSER TASKS</p>
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Autonomous Browser</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">AI Browser Tasks</h1>
       </div>
     </div>{/* New task card */}<div className="glass rounded-xl p-5">

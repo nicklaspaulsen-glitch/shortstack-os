@@ -36,8 +36,8 @@ interface Invoice {
 const INVOICE_TEMPLATES: { id: string; name: string; description: string; sections: string[] }[] = [];
 
 const formatCurrency = (amount: number, currency: string = "USD") => {
-  if (currency === "EUR") return `�${amount.toLocaleString()}`;
-  if (currency === "GBP") return `�${amount.toLocaleString()}`;
+  if (currency === "EUR") return `€${amount.toLocaleString()}`;
+  if (currency === "GBP") return `£${amount.toLocaleString()}`;
   return `$${amount.toLocaleString()}`;
 };
 
@@ -72,7 +72,7 @@ export default function InvoicesPage() {
         if (cancelled) return;
         if (error) {
           console.error("[invoices] fetch error:", error);
-          toast.error("Couldn't load invoices � try refreshing.");
+          toast.error("Couldn't load invoices — try refreshing.");
           setInvoicesData([]);
         } else {
           const mapped: Invoice[] = (data || []).map((row: Record<string, unknown>) => {
@@ -100,7 +100,7 @@ export default function InvoicesPage() {
       } catch (err) {
         if (!cancelled) {
           console.error("[invoices] fetch error:", err);
-          toast.error("Couldn't load invoices � try refreshing.");
+          toast.error("Couldn't load invoices — try refreshing.");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -136,7 +136,7 @@ export default function InvoicesPage() {
     <MotionPage className="space-y-5">{/* Hero Header */}{/* -- Invoices command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">INVOICING</p>
+        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Billing &amp; Invoices</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Invoices</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
@@ -160,7 +160,7 @@ export default function InvoicesPage() {
                 </div>
       </div>
     </div>{/* Loading note */}{loading && (
-              <p className="text-[11px] text-text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices�</p>
+              <p className="text-[11px] text-text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices…</p>
             )}{/* Stats */}<div className="space-y-3 mb-4">
   <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3">
     <motion.div
@@ -168,7 +168,6 @@ export default function InvoicesPage() {
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
       <div>
         <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Collected</p>
         <p className="font-display text-3xl font-bold tracking-[-0.03em] text-emerald-400 tabular-nums">{formatCurrency(totalPaid)}</p>
@@ -364,8 +363,8 @@ export default function InvoicesPage() {
                           <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Currency</label>
                           <select value={selectedCurrency} onChange={e => setSelectedCurrency(e.target.value)} className="input w-full text-xs">
                             <option value="USD">USD ($)</option>
-                            <option value="EUR">EUR (�)</option>
-                            <option value="GBP">GBP (�)</option>
+                            <option value="EUR">EUR (€)</option>
+                            <option value="GBP">GBP (£)</option>
                             <option value="SEK">SEK (kr)</option>
                           </select>
                         </div>
@@ -517,7 +516,7 @@ export default function InvoicesPage() {
                         </div>
                         <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/20">Active</span>
                         <button
-                          onClick={() => toast("Pause recurring from the Stripe customer portal � use Billing ? Manage subscription.", { icon: "??", duration: 6000 })}
+                          onClick={() => toast("Pause recurring from the Stripe customer portal — use Billing ? Manage subscription.", { icon: "??", duration: 6000 })}
                           className="text-[9px] text-text-muted hover:text-rose-400">Pause</button>
                       </div>
                     </motion.div>
