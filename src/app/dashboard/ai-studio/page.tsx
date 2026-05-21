@@ -865,7 +865,7 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
 
       {/* ── Utility Tools ─────────────────────────────────────── */}
       <div>
-        <SectionLabel label="Utility" color="#475569" />
+        <SectionLabel label="Utility" color="var(--text-muted)" />
         <div className="grid grid-cols-2 gap-3">
           <SmallTile tool={trainLora} delay={0.08} />
           <SmallTile tool={batchGen} delay={0.13} />

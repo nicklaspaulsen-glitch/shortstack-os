@@ -312,7 +312,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
                   href="https://zernio.com/dashboard"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#5E5BFF] underline underline-offset-2"
+                  className="text-indigo-400 underline underline-offset-2"
                 >
                   zernio.com/dashboard
                 </a>

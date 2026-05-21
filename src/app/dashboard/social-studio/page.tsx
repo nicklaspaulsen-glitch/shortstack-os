@@ -181,8 +181,7 @@ export default function SocialStudioPage() {
                 {lastApplied.idea.hashtags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-[9px] px-1.5 py-0.5 rounded"
-                    style={{ background: "rgba(99,146,255,0.10)", color: "#A8A8B2" }}
+                    className="text-[9px] px-1.5 py-0.5 rounded text-text-secondary bg-white/5"
                   >
                     #{tag}
                   </span>
