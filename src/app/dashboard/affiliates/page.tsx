@@ -148,11 +148,6 @@ function commissionLabel(p: Pick<Program, "commission_type" | "commission_value"
     : `${p.commission_value}% recurring`;
 }
 
-const SHARE_BASE =
-  typeof window !== "undefined"
-    ? window.location.origin
-    : "https://app.shortstack.work";
-
 // ── Page ─────────────────────────────────────────────────────────────────────
 type TabKey = "programs" | "affiliates" | "referrals" | "payouts";
 

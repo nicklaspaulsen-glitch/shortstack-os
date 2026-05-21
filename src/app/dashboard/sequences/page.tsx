@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
-import { ListOrdered } from "lucide-react";
 import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 

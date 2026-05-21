@@ -10,7 +10,6 @@ import {
   CheckCircle, Star, Zap, BookOpen, X, Plus, TrendingUp
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { Pen } from "lucide-react";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";

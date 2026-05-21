@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
 import {
-  FileBarChart,
   Users,
   Calendar,
   ListChecks,

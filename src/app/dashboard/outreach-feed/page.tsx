@@ -13,7 +13,6 @@
  * client-id filtered).
  */
 
-import { MessagesSquare } from "lucide-react";
 import OutreachFeedClient from "@/components/outreach/outreach-feed-client";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";

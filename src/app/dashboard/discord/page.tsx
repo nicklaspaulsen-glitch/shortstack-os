@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Hash, Users, MessageSquare, Volume2, Server, Shield,
-  Zap, Terminal, BarChart3, UserCheck, Globe,
-  Calendar, Code, Link, Megaphone, Trash2, Plus, Check,
-  Copy, TrendingUp, AlertTriangle, Edit3,
+  Users, MessageSquare, Server, Shield,
+  Zap, Terminal, BarChart3,
+  Calendar, Code, Link, Megaphone, Plus,
+  Copy, TrendingUp, AlertTriangle,
   Search, Send, Smile, LogIn, Bell, Sparkles, ExternalLink, Unlink, Loader, Bot
 } from "lucide-react";
 import toast from "react-hot-toast";

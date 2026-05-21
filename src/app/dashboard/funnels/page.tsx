@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
 import {
   Plus, Eye, Search,
@@ -47,7 +46,6 @@ const STATUS_CONFIG: Record<FunnelStatus, { label: string; color: string; icon: 
 type FilterTab = "all" | FunnelStatus;
 
 export default function FunnelsPage() {
-  const supabase = createClient();
   const router = useRouter();
   const [funnels, setFunnels] = useState<Funnel[]>([]);
   const [loading, setLoading] = useState(true);
