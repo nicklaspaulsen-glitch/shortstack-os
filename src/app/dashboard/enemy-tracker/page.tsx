@@ -1364,8 +1364,8 @@ function DetailPanel({
             onClick={handleGenerateVersion}
             className="flex items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-xs font-semibold col-span-2 transition-all hover:brightness-110"
             style={{
-              background: "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)",
-              color: "#fff",
+              background: "linear-gradient(135deg, #D4FF00 0%, #AACC00 100%)",
+              color: "#020711",
             }}
           >
             <Wand2 className="w-3.5 h-3.5" />
@@ -1522,7 +1522,7 @@ export default function EnemyTrackerPage() {
                     if (e.key === "Escape") setAddingCompetitor(false);
                   }}
                   placeholder="@handle"
-                  className="w-full text-xs bg-white/[0.06] border border-white/10 rounded-lg px-2.5 py-1.5 text-white placeholder:text-white/30 outline-none focus:border-indigo-500/50"
+                  className="w-full text-xs bg-white/[0.06] border border-white/10 rounded-lg px-2.5 py-1.5 text-white placeholder:text-white/30 outline-none focus:border-brand-accent/50"
                 />
               </div>
             )}

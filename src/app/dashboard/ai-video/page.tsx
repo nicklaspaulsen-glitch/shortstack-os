@@ -284,7 +284,7 @@ export default function AIVideoPage() {
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [templatesOpen, setTemplatesOpen] = useState(false);
   // Brand color for templates (can be overridden per-template in the picker)
-  const [brandColor] = useState("#3B82F6");
+  const [brandColor] = useState("#D4FF00");
   // Remotion overlay preview — tracks which completed video is being previewed
   const [overlayPreviewId, setOverlayPreviewId] = useState<string | null>(null);
   const [overlayTitle, setOverlayTitle] = useState("");

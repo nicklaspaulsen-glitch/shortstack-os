@@ -1020,14 +1020,14 @@ export default function EmailComposerPage() {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">To</label>
-                  <input value={email.to} onChange={e => setEmail({ ...email, to: e.target.value })} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Recipient email or select from list..." />
+                  <input value={email.to} onChange={e => setEmail({ ...email, to: e.target.value })} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all" placeholder="Recipient email or select from list..." />
                 </div>
                 <div>
                   <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">From name</label>
                   <input
                     value={email.fromName}
                     onChange={e => setEmail({ ...email, fromName: e.target.value })}
-                    className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all"
                     placeholder="e.g. Nicklas at ShortStack"
  />
                 </div>
@@ -1039,13 +1039,13 @@ export default function EmailComposerPage() {
                     type="email"
                     value={email.fromEmail}
                     onChange={e => setEmail({ ...email, fromEmail: e.target.value })}
-                    className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all"
+                    className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all"
                     placeholder="growth@yourdomain.com (uses verified domain if blank)"
  />
                 </div>
                 <div>
                   <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Reply-To</label>
-                  <input value={email.replyTo} onChange={e => setEmail({ ...email, replyTo: e.target.value })} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="replies@yourdomain.com" />
+                  <input value={email.replyTo} onChange={e => setEmail({ ...email, replyTo: e.target.value })} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all" placeholder="replies@yourdomain.com" />
                 </div>
               </div>
             </motion.div>
@@ -1053,7 +1053,7 @@ export default function EmailComposerPage() {
             {/* Subject + AI Subject Line Generator */}
             <div className="relative">
               <input value={email.subject} onChange={e => setEmail({ ...email, subject: e.target.value })}
-                className="w-full text-sm font-medium pr-24 rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Subject line..." />
+                className="w-full text-sm font-medium pr-24 rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all" placeholder="Subject line..." />
               <button onClick={handleSubjectIdeas} disabled={loadingVariants}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition-all flex items-center gap-1">
                 {loadingVariants ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />} AI Ideas
@@ -1135,11 +1135,11 @@ export default function EmailComposerPage() {
             {/* Body Editor / HTML Source */}
             {showHtml ? (
               <textarea value={`<html><body><p>${email.body.replace(/\n/g, "</p><p>")}</p></body></html>`}
-                className="w-full text-xs font-mono leading-relaxed rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" style={{ minHeight: 300, resize: "vertical" }}
+                className="w-full text-xs font-mono leading-relaxed rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all" style={{ minHeight: 300, resize: "vertical" }}
                 readOnly />
             ) : (
               <textarea value={email.body} onChange={e => setEmail({ ...email, body: e.target.value })}
-                className="w-full text-sm leading-relaxed rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" style={{ minHeight: 300, resize: "vertical" }}
+                className="w-full text-sm leading-relaxed rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all" style={{ minHeight: 300, resize: "vertical" }}
                 placeholder="Write your email here..." />
             )}
 
@@ -1441,11 +1441,11 @@ export default function EmailComposerPage() {
               <div className="space-y-3">
                 <div>
                   <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Date & Time</label>
-                  <input type="datetime-local" value={scheduledTime} onChange={e => setScheduledTime(e.target.value)} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" />
+                  <input type="datetime-local" value={scheduledTime} onChange={e => setScheduledTime(e.target.value)} className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all" />
                 </div>
                 <div>
                   <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Timezone</label>
-                  <select className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all">
+                  <select className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all">
                     <option>America/New_York (ET)</option>
                     <option>America/Chicago (CT)</option>
                     <option>America/Los_Angeles (PT)</option>
@@ -1574,12 +1574,12 @@ export default function EmailComposerPage() {
               
 >
               <h4 className="text-xs font-semibold">Edit Signature</h4>
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Full Name" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Title" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Phone" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Email" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Website" defaultValue="" />
-              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Calendar link" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all" placeholder="Full Name" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all" placeholder="Title" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all" placeholder="Phone" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all" placeholder="Email" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all" placeholder="Website" defaultValue="" />
+              <input className="w-full text-xs rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all" placeholder="Calendar link" defaultValue="" />
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}

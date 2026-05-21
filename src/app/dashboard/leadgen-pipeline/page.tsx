@@ -337,8 +337,8 @@ function LeadDetailPanel({
             onClick={() => setTab(t.key)}
             className="py-3 px-1 mr-5 text-xs font-medium border-b-2 transition-colors whitespace-nowrap"
             style={{
-              borderColor: tab === t.key ? "#3B82F6" : "transparent",
-              color: tab === t.key ? "#60A5FA" : "#A8A8B2",
+              borderColor: tab === t.key ? "#D4FF00" : "transparent",
+              color: tab === t.key ? "#D4FF00" : "#A8A8B2",
             }}
           >
             {t.label}
