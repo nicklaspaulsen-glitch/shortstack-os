@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
-  Bot, Send, History, CheckCircle, XCircle,
+  Send, History, CheckCircle, XCircle,
   BarChart3, Shield, ArrowRight,
   Layers, Star, Eye
 } from "lucide-react";

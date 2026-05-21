@@ -1030,7 +1030,7 @@ export default function ThumbnailEditorProPage() {
 
   const tierColor = (tier: CtrPreset["tier"]) =>
     tier === "top" ? { bg: "rgba(16,185,129,0.14)", text: "#10B981" }
-      : tier === "high" ? { bg: "rgba(212,255,0,0.14)", text: "#60A5FA" }
+      : tier === "high" ? { bg: "rgba(212,255,0,0.14)", text: "#D4FF00" }
       : { bg: "rgba(245,158,11,0.14)", text: "#F59E0B" };
 
   return (
@@ -1184,8 +1184,8 @@ export default function ThumbnailEditorProPage() {
                 className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg border transition-all duration-150"
                 style={{
                   background: ctrPresetsOpen ? "rgba(212,255,0,0.22)" : "rgba(13,17,32,0.90)",
-                  borderColor: ctrPresetsOpen ? "#3B82F6" : "rgba(99,146,255,0.22)",
-                  color: ctrPresetsOpen ? "#60A5FA" : "#A8A8B2",
+                  borderColor: ctrPresetsOpen ? "rgba(212,255,0,0.5)" : "rgba(99,146,255,0.22)",
+                  color: ctrPresetsOpen ? "#D4FF00" : "#A8A8B2",
                   backdropFilter: "blur(12px)",
                 }}
               >

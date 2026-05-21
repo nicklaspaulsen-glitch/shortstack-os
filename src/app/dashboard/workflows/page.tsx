@@ -688,7 +688,7 @@ export default function WorkflowsPage() {
                             <button
                               onClick={() => installPresetToN8n(preset)}
                               title="Deploy this preset directly to n8n"
-                              className="btn-ghost text-[9px] py-1 px-2 flex items-center gap-1 text-brand-accent hover:text-[#60A5FA]">
+                              className="btn-ghost text-[9px] py-1 px-2 flex items-center gap-1 text-brand-accent hover:text-[#E8FF4D]">
                               <Upload size={9} /> n8n
                             </button>
                           </div>

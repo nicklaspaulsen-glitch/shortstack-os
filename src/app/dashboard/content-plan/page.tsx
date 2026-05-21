@@ -443,7 +443,7 @@ export default function ContentPlanPage() {
               max={7}
               value={wizardPostsPerWeek}
               onChange={e => setWizardPostsPerWeek(parseInt(e.target.value, 10) || 3)}
-              className="w-full accent-blue-600"
+              className="w-full accent-[#D4FF00]"
             />
             <p className="text-[11px] text-text-muted mt-1">{wizardPostsPerWeek}ï¿½ per week</p>
           </div>
@@ -900,7 +900,7 @@ function PostGrid({
                 type="checkbox"
                 checked={selectedIds.has(p.id)}
                 onChange={() => onSelect(p.id)}
-                className="accent-blue-600 w-3 h-3"
+                className="accent-[#D4FF00] w-3 h-3"
               />
             </label>
             {/* Platform badge */}
@@ -966,7 +966,7 @@ function PostList({
                   type="checkbox"
                   onChange={onSelectAll}
                   checked={selectedIds.size > 0 && selectedIds.size === posts.length}
-                  className="accent-blue-600"
+                  className="accent-[#D4FF00]"
                 />
               </th>
               <th className="py-2 px-3">Title</th>
@@ -996,7 +996,7 @@ function PostList({
                     type="checkbox"
                     checked={selectedIds.has(p.id)}
                     onChange={() => onSelect(p.id)}
-                    className="accent-blue-600"
+                    className="accent-[#D4FF00]"
                   />
                 </td>
                 <td className="py-2 px-3">

@@ -4,8 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
   Webhook,
-  Play,
-  Pause,
   RefreshCw,
   ExternalLink,
   Clock,
@@ -195,7 +193,7 @@ function WorkflowRow({ wf }: { wf: WorkflowWithExecution }) {
           href={`${process.env.NEXT_PUBLIC_N8N_URL ?? ""}/workflow/${wf.id}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-xs text-brand-accent hover:text-[#60A5FA] transition-colors opacity-0 group-hover:opacity-100"
+          className="inline-flex items-center gap-1 text-xs text-brand-accent hover:text-[#E8FF4D] transition-colors opacity-0 group-hover:opacity-100"
         >
           Open
           <ChevronRight size={12} />

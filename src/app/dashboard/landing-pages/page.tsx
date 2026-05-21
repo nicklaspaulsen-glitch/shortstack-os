@@ -6,21 +6,18 @@ import {
   Globe, Sparkles, Layout, Eye, Pencil, Trash2, Copy, Rocket,
   ChevronUp, ChevronDown, EyeOff, RotateCcw, Plus, X, Check,
   ArrowRight, Monitor, Shield, Clock, BarChart3, Users,
-  Timer, TrendingUp, Search,
+  TrendingUp, Search,
   Building2, UtensilsCrossed, Home, Dumbbell, ShoppingBag,
   Briefcase, CalendarDays, GripVertical,
-  Mail, FileText, Upload, Target, Megaphone,
+  Mail, FileText, Upload, Megaphone,
   Image as ImageIcon,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
-import { LayoutTemplate } from "lucide-react";
 import PageAI from "@/components/page-ai";
 import { AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
-import CreationWizard, { CinematicWizard, type WizardStep } from "@/components/creation-wizard";
-import { GeneratingRiveIcon, LiveRiveIcon } from "@/components/ui/rive-status-icon";
+import { CinematicWizard, type WizardStep } from "@/components/creation-wizard";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
-import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
 import { MotionPage } from "@/components/motion/motion-page";
 import PageTrainingPanel from "@/components/ui/page-training-panel";
 

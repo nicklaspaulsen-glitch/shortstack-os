@@ -5,7 +5,7 @@ import { motion, type Variants } from "framer-motion";
 import { useManagedClient } from "@/lib/use-managed-client";
 import {
   DollarSign, Plus, TrendingUp, TrendingDown, Target,
-  Clock, Award, FileText, Calculator, BarChart3,
+  Clock, FileText, Calculator, BarChart3,
   ChevronRight, Star, Zap, AlertTriangle, CheckCircle,
   Calendar, ArrowRight, Shield, Loader2, CreditCard
 } from "lucide-react";

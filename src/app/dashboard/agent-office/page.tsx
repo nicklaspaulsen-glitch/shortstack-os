@@ -25,7 +25,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { Sparkles, Activity, Users, Phone, Mail, BarChart3, Boxes, LayoutGrid } from "lucide-react";
+import { Activity, Users, Phone, Mail, BarChart3, Boxes, LayoutGrid } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { AGENTS, AGENT_BY_KEY } from "@/lib/pixel-office/agents";
 import type { AgentAction } from "@/lib/pixel-office/event-mapper";

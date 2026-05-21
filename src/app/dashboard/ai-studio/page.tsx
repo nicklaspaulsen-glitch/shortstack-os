@@ -13,7 +13,6 @@ import {
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { tabSwitch } from "@/components/motion/motion-page";
-import { staggerContainerFast, fadeUp } from "@/lib/motion-variants";
 
 import { MotionPage } from "@/components/motion/motion-page";
 import PageTrainingPanel from "@/components/ui/page-training-panel";
