@@ -274,7 +274,7 @@ export default function ActivityLogPage() {
                       const config = TYPE_CONFIG[log.type] || { icon: <Activity size={12} />, color: "text-text-muted", label: log.type };
                       return (
                         <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="group">
-                          <div className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-[rgba(0,0,0,0.03)] transition-colors border-b border-border-subtle cursor-pointer"
+                          <div className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-white/4 transition-colors border-b border-border-subtle cursor-pointer"
                             onClick={() => setExpandedLog(expandedLog === log.id ? null : log.id)}>
                             <div className={`mt-0.5 shrink-0 ${config.color}`}>{config.icon}</div>
                             <div className="flex-1 min-w-0">
@@ -340,7 +340,7 @@ export default function ActivityLogPage() {
                           const intensity = count / maxHeat;
                           return (
                             <div key={hour} className="aspect-square rounded-sm" title={`${day} ${hour}:00 - ${count} events`}
-                              style={{ background: count > 0 ? `rgba(201, 168, 76, ${intensity * 0.8 + 0.1})` : "rgba(0,0,0,0.03)" }} />
+                              style={{ background: count > 0 ? `rgba(201, 168, 76, ${intensity * 0.8 + 0.1})` : "rgba(255,255,255,0.04)" }} />
                           );
                         })}
                       </div>
@@ -367,7 +367,7 @@ export default function ActivityLogPage() {
                     const types: Record<string, number> = {};
                     logs.filter(l => l.user === user).forEach(l => { types[l.type] = (types[l.type] || 0) + 1; });
                     return (
-                      <motion.div key={user} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                      <motion.div key={user} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                         <div className="flex items-center gap-3 mb-2">
                           <div className="w-8 h-8 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-xs font-bold text-brand-accent">{user[0]}</div>
                           <div className="flex-1">
@@ -402,7 +402,7 @@ export default function ActivityLogPage() {
                 ) : (
                 <div className="space-y-2">
                   {logs.filter(l => l.beforeValue !== undefined || l.afterValue !== undefined).map((log, idx) => (
-                    <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                    <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                       <div className="flex items-center justify-between mb-2">
                         <p className="text-xs font-semibold">{log.details}</p>
                         <span className="text-[9px] text-text-muted">{new Date(log.timestamp).toLocaleString()}</span>
@@ -450,7 +450,7 @@ export default function ActivityLogPage() {
                   ) : (
                     <div className="space-y-2">
                       {logs.filter(l => l.type === "login").map((log, idx) => (
-                        <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl flex items-center gap-3 p-2.5" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                        <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl flex items-center gap-3 p-2.5" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                           <Key size={12} className={log.action === "failed_login" ? "text-red-400" : "text-emerald-400"} />
                           <div className="flex-1">
                             <p className="text-xs font-medium">{log.user} - {log.details}</p>

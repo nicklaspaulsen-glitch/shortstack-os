@@ -236,7 +236,7 @@ export default function AuditPage() {
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.36 }}
                 className="glass rounded-2xl p-5">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Failures</p>
-                <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${stats.failed > 0 ? "text-red-600" : "text-emerald-700"}`}>{stats.failed}</p>
+                <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${stats.failed > 0 ? "text-red-400" : "text-emerald-400"}`}>{stats.failed}</p>
               </motion.div>
               {/* Support tile: Sensitive */}
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.36 }}
@@ -248,7 +248,7 @@ export default function AuditPage() {
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.36 }}
                 className="glass rounded-2xl p-5">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Alerts</p>
-                <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${stats.unresolvedAlerts > 0 ? "text-red-600" : "text-emerald-700"}`}>{stats.unresolvedAlerts}</p>
+                <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${stats.unresolvedAlerts > 0 ? "text-red-400" : "text-emerald-400"}`}>{stats.unresolvedAlerts}</p>
               </motion.div>
             </div>{/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1 w-fit flex-wrap">
               {TABS.map(t => (
@@ -387,28 +387,28 @@ export default function AuditPage() {
                           className="text-text-muted hover:text-text-primary"><X size={14} /></button>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                        <div className="p-2.5 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                           <p className="text-[8px] text-text-muted uppercase">Timestamp</p>
                           <p className="text-[10px] font-mono mt-0.5">{e.timestamp}</p>
                         </div>
-                        <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                        <div className="p-2.5 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                           <p className="text-[8px] text-text-muted uppercase">User</p>
                           <p className="text-[10px] font-medium mt-0.5">{e.user}</p>
                         </div>
-                        <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                        <div className="p-2.5 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                           <p className="text-[8px] text-text-muted uppercase">Action</p>
                           <p className={`text-[10px] font-medium mt-0.5 ${style.color}`}>{style.label}</p>
                         </div>
-                        <div className="p-2.5 rounded-xl" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                        <div className="p-2.5 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                           <p className="text-[8px] text-text-muted uppercase">IP Address</p>
                           <p className="text-[10px] font-mono mt-0.5">{e.ip}</p>
                         </div>
                       </div>
-                      <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                      <div className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                         <p className="text-[8px] text-text-muted uppercase mb-1">Full Details</p>
                         <p className="text-[10px]">{e.details}</p>
                       </div>
-                      <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                      <div className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                         <p className="text-[8px] text-text-muted uppercase mb-1">Resource</p>
                         <p className="text-[10px] font-medium">{e.resource}</p>
                       </div>
@@ -453,7 +453,7 @@ export default function AuditPage() {
                           </div>
                           <button
                             onClick={() => resolveAlert(alert.id)}
-                            className="text-[9px] px-2.5 py-1 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.10)] transition-colors font-medium shrink-0">
+                            className="text-[9px] px-2.5 py-1 rounded-lg bg-white/8 hover:bg-white/12 transition-colors font-medium shrink-0">
                             Resolve
                           </button>
                         </div>
@@ -470,7 +470,7 @@ export default function AuditPage() {
                       <p className="text-xs text-text-muted text-center py-6">No resolved alerts yet.</p>
                     )}
                     {alerts.filter(a => a.resolved).map(alert => (
-                      <div key={alert.id} className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                      <div key={alert.id} className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                         <div className="flex items-center gap-3">
                           <CheckCircle size={12} className="text-emerald-400 shrink-0" />
                           <div className="flex-1 min-w-0">
@@ -511,7 +511,7 @@ export default function AuditPage() {
                           { label: "Data Exports (7d)", value: dataExports, color: "text-brand-accent" },
                           { label: "Unique IPs (7d)", value: uniqueIps, color: "text-brand-accent" },
                         ].map((s, i) => (
-                          <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl p-3 text-center" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                          <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="rounded-xl p-3 text-center" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                             <p className="text-[9px] text-text-muted uppercase">{s.label}</p>
                             <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
                           </motion.div>
@@ -542,18 +542,18 @@ export default function AuditPage() {
                     <p className="text-[10px] text-text-muted">Audit logs older than {retentionDays} days will be automatically archived and removed from the active view.</p>
 
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-                      <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                      <div className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                         <p className="text-[9px] text-text-muted uppercase">Active Entries</p>
                         <p className="text-lg font-bold text-brand-accent mt-0.5">{entries.length}</p>
                       </div>
-                      <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                      <div className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                         <p className="text-[9px] text-text-muted uppercase">Storage Used</p>
                         {/* Rough estimate: ~200 bytes/entry; exact size comes from backend once wired. */}
                         <p className="text-lg font-bold text-brand-accent mt-0.5">
                           {entries.length > 0 ? `${(entries.length * 0.2).toFixed(1)} KB` : "0 KB"}
                         </p>
                       </div>
-                      <div className="rounded-xl p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                      <div className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                         <p className="text-[9px] text-text-muted uppercase">Archived</p>
                         <p className="text-lg font-bold text-text-muted mt-0.5">0</p>
                       </div>
@@ -569,7 +569,7 @@ export default function AuditPage() {
                       { stage: "Archived", desc: `${retentionDays} - ${retentionDays * 2} days`, status: "Compressed storage, on-demand access", color: "text-brand-accent" },
                       { stage: "Deleted", desc: `After ${retentionDays * 2} days`, status: "Permanently removed", color: "text-red-400" },
                     ].map((item, i) => (
-                      <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="rounded-xl flex items-center gap-3 p-3" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                      <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }} className="rounded-xl flex items-center gap-3 p-3" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                         <div className={`w-2 h-2 rounded-full ${item.color === "text-emerald-400" ? "bg-emerald-400" : item.color === "text-brand-accent" ? "bg-brand-accent" : "bg-red-400"}`} />
                         <div className="flex-1">
                           <p className={`text-[10px] font-semibold ${item.color}`}>{item.stage}</p>
@@ -624,7 +624,7 @@ export default function AuditPage() {
                       {uniqueUsers.map(u => <option key={u} value={u}>{u}</option>)}
                     </select>
                   </div>
-                  <div className="rounded-xl p-3 text-[10px] text-text-muted" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}>
+                  <div className="rounded-xl p-3 text-[10px] text-text-muted" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                     Estimated export size: <span className="font-bold text-brand-accent">{exportFiltered.length} entries</span> ({(exportFiltered.length * 0.2).toFixed(1)} KB)
                   </div>
                   <div className="flex gap-2">

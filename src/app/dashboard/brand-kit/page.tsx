@@ -390,7 +390,7 @@ export default function BrandKitPage() {
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && scrapeBrand()}
-                        className="rounded-lg w-full pl-9 py-2.5 text-sm bg-transparent focus:outline-none focus:ring-1 focus:ring-brand-accent/40 placeholder:text-text-muted" style={{ border: "1px solid rgba(0,0,0,0.10)" }}
+                        className="rounded-lg w-full pl-9 py-2.5 text-sm bg-transparent focus:outline-none focus:ring-1 focus:ring-brand-accent/40 placeholder:text-text-muted" style={{ border: "1px solid rgba(212,255,0,0.12)" }}
                         disabled={loading}
  />
                     </div>
@@ -757,7 +757,7 @@ export default function BrandKitPage() {
                 <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                   <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
                     <ImageIcon size={14} className="text-brand-accent" /> Extracted Images
-                    <span className="text-[10px] text-text-muted bg-[rgba(0,0,0,0.04)] px-1.5 py-0.5 rounded">{brand.images.length}</span>
+                    <span className="text-[10px] text-text-muted bg-white/5 px-1.5 py-0.5 rounded">{brand.images.length}</span>
                   </h3>
                   {brand.images.length === 0 ? (
                     <p className="text-xs text-text-muted text-center py-8">No images found on the page.</p>
@@ -847,7 +847,7 @@ export default function BrandKitPage() {
                           <div className={`p-2 rounded-lg ${
                             selectedPreset === preset.id && generating
                               ? "bg-[rgba(59,130,246,0.12)] text-brand-accent"
-                              : "bg-[rgba(0,0,0,0.04)] text-text-muted group-hover:text-brand-accent"
+                              : "bg-white/5 text-text-muted group-hover:text-brand-accent"
                           } transition-colors`}>
                             {selectedPreset === preset.id && generating ? <Loader size={16} className="animate-spin" /> : preset.icon}
                           </div>

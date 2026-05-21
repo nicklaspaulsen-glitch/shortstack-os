@@ -380,7 +380,7 @@ export default function DealsPage() {
                                     <button
                                       aria-label={`Delete deal: ${deal.title}`}
                                       onClick={(e) => { e.stopPropagation(); handleDelete(deal.id); }}
-                                      className="text-[7px] px-1.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200">
+                                      className="text-[7px] px-1.5 py-0.5 rounded bg-rose-50 text-rose-400 border border-rose-200">
                                       Delete
                                     </button>
                                   </div>
@@ -416,7 +416,7 @@ export default function DealsPage() {
                       <motion.div key={i} variants={fadeUp} className="glass rounded-lg p-3 text-center border border-[rgba(255,255,255,0.08)]">
                         <p className="text-[9px] text-text-muted mb-1">{v.stage}</p>
                         <p className="text-sm font-bold">{v.avg}</p>
-                        <p className={`text-[8px] flex items-center justify-center gap-0.5 ${v.trend === "faster" ? "text-emerald-700" : "text-rose-700"}`}>
+                        <p className={`text-[8px] flex items-center justify-center gap-0.5 ${v.trend === "faster" ? "text-emerald-400" : "text-rose-400"}`}>
                           {v.trend === "faster" ? <TrendingDown size={8} /> : <TrendingUp size={8} />} {v.trend}
                         </p>
                       </motion.div>
@@ -453,9 +453,9 @@ export default function DealsPage() {
                   animate="show"
 >
                   {[
-                    { label: "Conservative", value: formatCurrency(Math.round(weightedPipeline * 0.6)), sub: "60% of weighted pipeline", color: "text-rose-700", bar: "bg-gradient-to-r from-red-500 to-rose-500" },
+                    { label: "Conservative", value: formatCurrency(Math.round(weightedPipeline * 0.6)), sub: "60% of weighted pipeline", color: "text-rose-400", bar: "bg-gradient-to-r from-red-500 to-rose-500" },
                     { label: "Most Likely", value: formatCurrency(Math.round(weightedPipeline)), sub: "Weighted probability", color: "text-brand-accent", bar: "bg-gradient-to-r from-indigo-500 to-violet-500" },
-                    { label: "Best Case", value: formatCurrency(totalPipeline), sub: "100% close rate", color: "text-emerald-700", bar: "bg-gradient-to-r from-green-500 to-emerald-500" },
+                    { label: "Best Case", value: formatCurrency(totalPipeline), sub: "100% close rate", color: "text-emerald-400", bar: "bg-gradient-to-r from-green-500 to-emerald-500" },
                   ].map((card, i) => (
                     <PrismPanel key={i} padding="p-5" className="text-center" delay={i * 0.06}>
                       <p className="text-[10px] text-text-muted mb-1 uppercase font-semibold">{card.label}</p>
@@ -478,14 +478,14 @@ export default function DealsPage() {
                   {/* Win Reasons */}
                   <PrismPanel padding="p-4">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                      <CheckCircle size={14} className="text-emerald-700" /> Win Factors
+                      <CheckCircle size={14} className="text-emerald-400" /> Win Factors
                     </h3>
                     <div className="text-center py-8 text-text-muted text-xs">No win data yet.</div>
                   </PrismPanel>
                   {/* Loss Reasons */}
                   <PrismPanel padding="p-4" delay={0.06}>
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                      <AlertTriangle size={14} className="text-rose-700" /> Loss Reasons
+                      <AlertTriangle size={14} className="text-rose-400" /> Loss Reasons
                     </h3>
                     <div className="text-center py-8 text-text-muted text-xs">No loss data yet.</div>
                   </PrismPanel>
@@ -516,7 +516,7 @@ export default function DealsPage() {
                     const daysSinceUpdate = Math.floor((Date.now() - new Date(deal.updated_at).getTime()) / 86400000);
                     const amt = Number(deal.value);
                     const score = Math.round(deal.probability * 0.4 + (amt> 3000 ? 30 : 15) + (daysSinceUpdate < 5 ? 20 : 5));
-                    const scoreColor = score>= 70 ? "text-emerald-700" : score>= 40 ? "text-amber-600" : "text-rose-700";
+                    const scoreColor = score>= 70 ? "text-emerald-400" : score>= 40 ? "text-amber-400" : "text-rose-400";
                     const scoreBg = score>= 70 ? "bg-green-400" : score>= 40 ? "bg-yellow-400" : "bg-red-400";
                     return (
                       <motion.div
@@ -670,7 +670,7 @@ export default function DealsPage() {
                   {[
                     { label: "This Month", value: formatCurrency(Math.round(wonValue * 0.15)), sub: `15% of ${formatCurrency(wonValue)} closed`, color: "text-brand-accent", bar: "bg-gradient-to-r from-indigo-500 to-violet-500" },
                     { label: "Projected", value: formatCurrency(Math.round(weightedPipeline * 0.15)), sub: "Based on weighted pipeline", color: "text-purple-400", bar: "bg-gradient-to-r from-purple-500 to-pink-500" },
-                    { label: "YTD Earnings", value: formatCurrency(0), sub: "No data yet", color: "text-emerald-700", bar: "bg-gradient-to-r from-green-500 to-emerald-500" },
+                    { label: "YTD Earnings", value: formatCurrency(0), sub: "No data yet", color: "text-emerald-400", bar: "bg-gradient-to-r from-green-500 to-emerald-500" },
                   ].map((card, i) => (
                     <PrismPanel key={i} padding="p-5" className="text-center" delay={i * 0.06}>
                       <p className="text-[10px] text-text-muted uppercase mb-1">{card.label}</p>
@@ -710,7 +710,7 @@ export default function DealsPage() {
                             <span className="font-medium truncate">{deal.title}</span>
                             <span>{formatCurrency(amt)}</span>
                             <span className="text-brand-accent">{(rate * 100).toFixed(0)}%</span>
-                            <span className="font-bold text-emerald-700">{formatCurrency(commission)}</span>
+                            <span className="font-bold text-emerald-400">{formatCurrency(commission)}</span>
                             <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
                               deal.stage === "closed_won" ? "bg-emerald-400/10 text-emerald-400 border border-emerald-400/20" : "bg-amber-400/10 text-amber-400 border border-amber-400/20"
                             }`}>{deal.stage === "closed_won" ? "Paid" : "Pending"}</span>

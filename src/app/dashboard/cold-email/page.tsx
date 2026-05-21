@@ -68,12 +68,12 @@ const DEPTH_COPY: Record<Depth, { label: string; desc: string; cost: string }> =
 };
 
 const STATUS_PILLS: Record<JobRow["status"], string> = {
-  pending: "bg-[rgba(0,0,0,0.06)] text-[#6B7280] border-[rgba(0,0,0,0.10)]",
+  pending: "bg-white/8 text-text-muted border-white/15",
   researching: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]",
   generating: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]",
-  sending: "bg-amber-500/15 text-amber-700 border-amber-500/30",
-  completed: "bg-green-500/15 text-green-700 border-green-500/30",
-  failed: "bg-red-500/15 text-red-700 border-red-500/30",
+  sending: "bg-amber-500/15 text-amber-400 border-amber-500/30",
+  completed: "bg-green-500/15 text-green-400 border-green-500/30",
+  failed: "bg-red-500/15 text-red-400 border-red-500/30",
 };
 
 
@@ -248,7 +248,7 @@ export default function ColdEmailPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22 }}
                 className="glass rounded-xl p-4 space-y-3"
-                style={{ borderColor: "rgba(0,0,0,0.12)" }}
+                style={{ borderColor: "rgba(212,255,0,0.12)" }}
               >
                 <div className="flex items-center gap-2">
                   <Sparkles size={13} className="text-brand-accent" />
@@ -474,7 +474,7 @@ export default function ColdEmailPage() {
                       initial={{ opacity: 0, x: -8 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.04 }}
-                      whileHover={{ backgroundColor: "rgba(0,0,0,0.05)" }}
+                      whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
                       className="relative p-4 space-y-3 border-b border-black/[0.05] last:border-0"
                     >
                       {/* Rainbow top bar (first item only decorative, per-card via absolute) */}
@@ -548,7 +548,7 @@ export default function ColdEmailPage() {
                             Sent {j.sent_count} � Failed {j.failed_count}
                           </span>
                         </div>
-                        <div className="h-1.5 bg-[rgba(0,0,0,0.06)] rounded-full overflow-hidden">
+                        <div className="h-1.5 bg-white/8 rounded-full overflow-hidden">
                           <div
                             className="h-full transition-all"
                             style={{
