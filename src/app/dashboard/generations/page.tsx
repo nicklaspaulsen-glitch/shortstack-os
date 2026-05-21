@@ -132,7 +132,7 @@ export default function GenerationsPage() {
         </div>
         <button
           onClick={fetchGenerations}
-          className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] text-text-primary text-xs font-medium hover:bg-[rgba(0,0,0,0.09)] transition-all"
+          className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/8 border border-white/10 text-text-primary text-xs font-medium hover:bg-white/10 transition-all"
         >
           <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
         </button>
@@ -201,7 +201,7 @@ export default function GenerationsPage() {
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all ${
                     category === c.key
                       ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] font-medium"
-                      : "bg-black/4 text-text-muted hover:text-text-primary hover:bg-black/8 border border-transparent"
+                      : "bg-white/5 text-text-muted hover:text-text-primary hover:bg-white/8 border border-transparent"
                   }`}
                 >
                   <span className={category === c.key ? "text-brand-accent" : c.color}>{c.icon}</span>
@@ -264,7 +264,7 @@ export default function GenerationsPage() {
                         <div className="shrink-0 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
                           <button
                             onClick={() => copyContent(gen)}
-                            className="p-1.5 rounded-lg hover:bg-black/6 text-text-muted hover:text-text-primary transition-all"
+                            className="p-1.5 rounded-lg hover:bg-white/8 text-text-muted hover:text-text-primary transition-all"
                             title="Copy content"
                           >
                             <Copy size={13} />
@@ -291,14 +291,14 @@ export default function GenerationsPage() {
                   <button
                     onClick={() => setPage(p => Math.max(1, p - 1))}
                     disabled={page <= 1}
-                    className="px-3 py-1 rounded-lg bg-black/4 hover:bg-black/8 text-xs text-text-muted hover:text-text-primary disabled:opacity-30 transition-all"
+                    className="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/8 text-xs text-text-muted hover:text-text-primary disabled:opacity-30 transition-all"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => setPage(p => p + 1)}
                     disabled={!hasMore}
-                    className="px-3 py-1 rounded-lg bg-black/4 hover:bg-black/8 text-xs text-text-muted hover:text-text-primary disabled:opacity-30 transition-all"
+                    className="px-3 py-1 rounded-lg bg-white/5 hover:bg-white/8 text-xs text-text-muted hover:text-text-primary disabled:opacity-30 transition-all"
                   >
                     Next
                   </button>

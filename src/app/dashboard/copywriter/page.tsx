@@ -1097,23 +1097,23 @@ export default function CopywriterPage() {
                     </button>
                     <button
                       onClick={() => { setOutput(""); setTopic(""); setKeywords(""); toast.success("Blank canvas ready"); }}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border-subtle text-text-primary hover:bg-black/5 transition-all"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border-subtle text-text-primary hover:bg-white/5 transition-all"
                     >
                       <Plus size={13} /> Blank
                     </button>
                     <button
                       onClick={() => setShowTemplates(!showTemplates)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border-subtle text-text-primary hover:bg-black/10 transition-all"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/5 border border-border-subtle text-text-primary hover:bg-white/10 transition-all"
                     >
                       <Layers size={13} /> Templates
                     </button>
                     <button
                       onClick={() => setShowHistory(!showHistory)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 border border-border-subtle text-text-primary hover:bg-black/10 transition-all"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/5 border border-border-subtle text-text-primary hover:bg-white/10 transition-all"
                     >
                       <Clock size={13} /> History
                       {history.length > 0 && (
-                        <span className="ml-1 text-[9px] bg-black/10 px-1.5 py-0.5 rounded-full font-semibold">{history.length}</span>
+                        <span className="ml-1 text-[9px] bg-white/10 px-1.5 py-0.5 rounded-full font-semibold">{history.length}</span>
                       )}
                     </button>
                   </>
@@ -1359,7 +1359,7 @@ export default function CopywriterPage() {
                           className={`text-left p-2.5 rounded-xl border transition-all ${
                             active
                               ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.06)]"
-                              : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.02)] hover:bg-[rgba(0,0,0,0.04)]"
+                              : "border-border-subtle bg-white/3 hover:bg-white/5"
                           }`}
                         >
                           <div className="flex items-center gap-2">

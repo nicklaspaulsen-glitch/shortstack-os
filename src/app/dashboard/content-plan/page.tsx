@@ -539,7 +539,7 @@ export default function ContentPlanPage() {
           {advancedMode && (
             <button
               onClick={() => { loadPosts(); loadInsights(); }}
-              className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#52525B] font-medium hover:bg-[rgba(0,0,0,0.08)] transition-all"
+              className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-muted font-medium hover:bg-white/8 transition-all"
             >
               <RefreshCw size={12} /> Refresh
             </button>
@@ -576,7 +576,7 @@ export default function ContentPlanPage() {
               >
                 {statusFilter === s && statusIcon(s === "needs_review" ? "ready_to_publish" : s === "posted" ? "published" : s)}
                 {s === "needs_review" ? "Needs Review" : s.charAt(0).toUpperCase() + s.slice(1)}
-                <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-black/10">
+                <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-white/10">
                   {counts[s]}
                 </span>
               </button>

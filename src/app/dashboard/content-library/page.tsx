@@ -463,10 +463,10 @@ export default function ContentLibraryPage() {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <>
-            <button onClick={() => setShowCollections(!showCollections)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-black/20 text-text-primary text-xs font-medium hover:bg-black/15 transition-all flex items-center gap-1">
+            <button onClick={() => setShowCollections(!showCollections)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-text-primary text-xs font-medium hover:bg-white/15 transition-all flex items-center gap-1">
               <Layers size={14} /> Collections
             </button>
-            <label className="px-3 py-1.5 rounded-lg bg-black/10 border border-black/20 text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1 cursor-pointer">
+            <label className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1 cursor-pointer">
               <Upload size={14} /> Upload
               <input
                 ref={fileInputRef}
@@ -601,7 +601,7 @@ export default function ContentLibraryPage() {
               key={c.key}
               onClick={() => setCategory(c.key)}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${
-                category === c.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "bg-black/5 text-text-muted hover:text-text-primary border border-black/10"
+                category === c.key ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "bg-white/5 text-text-muted hover:text-text-primary border border-white/10"
               }`}
             >
               {c.icon} {c.label}
@@ -638,7 +638,7 @@ export default function ContentLibraryPage() {
         </button>
 
         {/* View Toggle */}
-        <div className="flex bg-black/5 rounded-lg p-0.5">
+        <div className="flex bg-white/5 rounded-lg p-0.5">
           <button onClick={() => setViewMode("grid")} className={`p-1.5 rounded ${viewMode === "grid" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-text-muted"}`}>
             <Grid size={14} />
           </button>
@@ -744,10 +744,10 @@ export default function ContentLibraryPage() {
               <p className="text-[10px] text-text-muted">{asset.size} {asset.dimensions !== "N/A" ? `- ${asset.dimensions}` : ""}</p>
               <div className="flex flex-wrap gap-1 mt-1.5">
                 {asset.tags.slice(0, 2).map(t => (
-                  <span key={t} className="px-1.5 py-0.5 rounded bg-black/5 text-[9px] text-text-muted">{t}</span>
+                  <span key={t} className="px-1.5 py-0.5 rounded bg-white/5 text-[9px] text-text-muted">{t}</span>
                 ))}
                 {asset.tags.length > 2 && (
-                  <span className="px-1.5 py-0.5 rounded bg-black/5 text-[9px] text-text-muted">+{asset.tags.length - 2}</span>
+                  <span className="px-1.5 py-0.5 rounded bg-white/5 text-[9px] text-text-muted">+{asset.tags.length - 2}</span>
                 )}
               </div>
             </motion.div>
@@ -760,7 +760,7 @@ export default function ContentLibraryPage() {
         <div className="glass rounded-xl overflow-hidden">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-black/10">
+              <tr className="border-b border-white/10">
                 <th className="text-left p-2 w-8">
                   <button onClick={selectAll}>
                     {selectedAssets.size === filteredAssets.length ? <CheckSquare size={14} className="text-brand-accent" /> : <Square size={14} className="text-text-muted" />}
@@ -780,7 +780,7 @@ export default function ContentLibraryPage() {
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.04 }}
-                  className={`border-b border-black/5 hover:bg-black/5 transition-colors ${
+                  className={`border-b border-white/5 hover:bg-white/5 transition-colors ${
                     selectedAssets.has(asset.id) ? "bg-[rgba(59,130,246,0.05)]" : ""
                   }`}
                 >
@@ -796,7 +796,7 @@ export default function ContentLibraryPage() {
                         <p className="text-xs font-medium">{asset.name}</p>
                         <div className="flex gap-1 mt-0.5">
                           {asset.tags.slice(0, 3).map(t => (
-                            <span key={t} className="px-1 py-0 rounded bg-black/5 text-[9px] text-text-muted">{t}</span>
+                            <span key={t} className="px-1 py-0 rounded bg-white/5 text-[9px] text-text-muted">{t}</span>
                           ))}
                         </div>
                       </div>
@@ -899,7 +899,7 @@ export default function ContentLibraryPage() {
                 <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Tags</p>
                 <div className="flex flex-wrap gap-1">
                   {previewAsset.tags.map(t => (
-                    <span key={t} className="px-2 py-0.5 rounded-full bg-black/10 text-[10px]">{t}</span>
+                    <span key={t} className="px-2 py-0.5 rounded-full bg-white/10 text-[10px]">{t}</span>
                   ))}
                 </div>
               </div>

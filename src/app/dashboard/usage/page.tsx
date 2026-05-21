@@ -236,14 +236,14 @@ export default function UsagePage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <>
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border-subtle bg-black/10 text-text-primary text-xs font-medium">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border-subtle bg-white/10 text-text-primary text-xs font-medium">
                     <Shield size={12} />
                     {planConfig.badge_label} Plan
                   </div>
                   <button
                     onClick={fetchData}
                     disabled={loading}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border-subtle bg-black/5 text-text-primary text-xs hover:bg-black/10 transition-all"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border-subtle bg-white/5 text-text-primary text-xs hover:bg-white/10 transition-all"
                   >
                     <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
                     Refresh

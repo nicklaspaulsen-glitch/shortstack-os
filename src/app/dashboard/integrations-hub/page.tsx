@@ -630,7 +630,7 @@ export default function IntegrationsHubPage() {
                     void fetchHealthStatuses();
                   }}
                   disabled={loadingConnections}
-                  className="flex items-center gap-1.5 text-[10px] bg-black/5 border border-border-subtle text-text-primary px-2.5 py-1 rounded-md hover:bg-black/10 transition-all disabled:opacity-50"
+                  className="flex items-center gap-1.5 text-[10px] bg-white/5 border border-border-subtle text-text-primary px-2.5 py-1 rounded-md hover:bg-white/10 transition-all disabled:opacity-50"
                 >
                   <RefreshCw
                     size={10}
