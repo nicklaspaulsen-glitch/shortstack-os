@@ -502,7 +502,58 @@ export const TEMPLATES: WorkflowTemplate[] = [
     estimated_setup_minutes: 3,
   },
 
-  // ── 12. Refund issued → log + apology ─────────────────────────────────────
+  // ── 13. Full client acquisition pipeline ─────────────────────────────────
+  {
+    id: "full-client-acquisition",
+    name: "Full client acquisition pipeline (AI-autonomous)",
+    description:
+      "End-to-end autonomous lifecycle: scores a new lead, drafts the first-touch outreach, generates a proposal, tracks through to payment, then kicks off delivery. Each stage waits for real-world events (acceptance, payment) before advancing. Human review is surfaced as Trinity actions — not forced automation.",
+    category: "sales",
+    version: 1,
+    trigger: { type: "lead.created", config: {} },
+    steps: [
+      {
+        type: "pipeline.advance",
+        label: "Score + classify lead (AI)",
+        params: { action: "advance" },
+      },
+      {
+        type: "wait",
+        label: "Score propagation buffer",
+        params: { minutes: 5 },
+      },
+      {
+        type: "pipeline.advance",
+        label: "Draft first-touch outreach (AI)",
+        params: { action: "advance" },
+      },
+      {
+        type: "wait",
+        label: "Await owner approval of outreach",
+        params: { days: 1 },
+      },
+      {
+        type: "pipeline.advance",
+        label: "Draft proposal (AI)",
+        params: { action: "advance" },
+      },
+      {
+        type: "wait",
+        label: "Await proposal acceptance",
+        params: { days: 7 },
+      },
+      {
+        type: "pipeline.advance",
+        label: "Advance on payment confirmed",
+        params: { action: "advance" },
+      },
+    ],
+    required_integrations: ["anthropic"],
+    estimated_setup_minutes: 2,
+    vertical_tags: ["agency", "freelance", "consulting", "marketing"],
+  },
+
+  // ── 14. Refund issued → log + apology ────────────────────────────────────
   {
     id: "refund-acknowledgment",
     name: "Refund issued → log + apology email",
