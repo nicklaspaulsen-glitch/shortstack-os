@@ -3440,3 +3440,451 @@ body {
   }
 }
 
+
+
+/* ═══════════ GLASS TOP NAV SHELL ═══════════
+ * Triple-stack glass navigation bar — replaces left sidebar.
+ * Stretches full-width at top of every dashboard page.
+ * Rows: 1=brand+search+utils, 2=create tools, 3=system tools.
+ * Design source: ShortStack OS reference (May 2026).
+ * ─────────────────────────────────────────── */
+
+.glass-top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  /* Glass base */
+  background: rgba(10, 12, 26, 0.88);
+  backdrop-filter: blur(28px) saturate(200%) brightness(1.04);
+  -webkit-backdrop-filter: blur(28px) saturate(200%) brightness(1.04);
+  border-bottom: 1px solid rgba(212, 255, 0, 0.10);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.04) inset,
+    0 4px 32px -8px rgba(0, 0, 0, 0.60),
+    0 0 80px -30px rgba(212, 255, 0, 0.08);
+  padding: 0 16px;
+}
+
+/* Each row is a horizontal flex strip */
+.gtn-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 38px;
+  padding: 4px 0;
+}
+
+/* Separator lines between rows */
+.gtn-row-1 {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  min-height: 44px;
+}
+.gtn-row-2 {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.gtn-row-3 {
+  min-height: 36px;
+}
+
+/* ── Brand ── */
+.gtn-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  shrink: 0;
+  flex-shrink: 0;
+}
+.gtn-brand-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.gtn-brand-name {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  flex-shrink: 0;
+}
+.gtn-brand-main {
+  font-family: 'Satoshi', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.03em;
+  color: #F0F0F4;
+  line-height: 1;
+}
+.gtn-brand-sub {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(212, 255, 0, 0.55);
+  line-height: 1;
+}
+
+/* ── Search ── */
+.gtn-search {
+  flex: 1;
+  max-width: 340px;
+  margin: 0 8px;
+}
+.gtn-search-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: all 150ms ease;
+  font-family: inherit;
+}
+.gtn-search-btn:hover,
+.gtn-search-btn.gtn-search-open {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(212, 255, 0, 0.18);
+}
+.gtn-search-icon {
+  color: rgba(240, 240, 244, 0.40);
+  flex-shrink: 0;
+}
+.gtn-search-placeholder {
+  font-size: 11px;
+  color: rgba(240, 240, 244, 0.35);
+  flex: 1;
+  text-align: left;
+}
+.gtn-search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 11px;
+  color: #F0F0F4;
+  caret-color: #D4FF00;
+  font-family: inherit;
+}
+.gtn-search-kbd {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: rgba(240, 240, 244, 0.30);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 4px;
+  padding: 1px 4px;
+  flex-shrink: 0;
+}
+
+/* ── Utilities (right side of row 1) ── */
+.gtn-utilities {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.gtn-util-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(240, 240, 244, 0.50);
+  cursor: pointer;
+  transition: all 150ms ease;
+  text-decoration: none;
+}
+.gtn-util-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #F0F0F4;
+}
+.gtn-util-btn.gtn-util-active {
+  background: rgba(212, 255, 0, 0.08);
+  border-color: rgba(212, 255, 0, 0.20);
+  color: #D4FF00;
+}
+
+/* Notification bell + dot */
+.gtn-notif {
+  position: relative;
+}
+.gtn-notif-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #D4FF00;
+  border: 1.5px solid rgba(10, 12, 26, 0.95);
+  animation: notifPulse 2s ease-in-out infinite;
+}
+@keyframes notifPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.8); }
+}
+
+/* Avatar chip */
+.gtn-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(212, 255, 0, 0.15);
+  border: 1px solid rgba(212, 255, 0, 0.28);
+  color: #D4FF00;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  font-family: 'Satoshi', 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 150ms ease;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+.gtn-avatar:hover {
+  background: rgba(212, 255, 0, 0.22);
+  border-color: rgba(212, 255, 0, 0.40);
+}
+
+/* ── Pill strips (rows 2 & 3) ── */
+.gtn-pills {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* Fade out at right edge */
+  mask-image: linear-gradient(90deg, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, black 85%, transparent 100%);
+}
+.gtn-pills::-webkit-scrollbar { display: none; }
+
+/* ── Quickbar (right side of rows 2 & 3) ── */
+.gtn-quickbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 8px;
+}
+
+/* Primary action button */
+.gtn-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #D4FF00;
+  color: #020711;
+  border: 1px solid #D4FF00;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 150ms ease;
+  white-space: nowrap;
+}
+.gtn-action-btn:hover {
+  background: #E8FF4D;
+  border-color: #E8FF4D;
+}
+
+/* Ghost variant */
+.gtn-action-btn.gtn-action-ghost {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.10);
+  color: rgba(240, 240, 244, 0.75);
+}
+.gtn-action-btn.gtn-action-ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #F0F0F4;
+}
+
+/* Status chip */
+.gtn-status-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em;
+  color: rgba(212, 255, 0, 0.70);
+  background: rgba(212, 255, 0, 0.06);
+  border: 1px solid rgba(212, 255, 0, 0.15);
+}
+.gtn-status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #D4FF00;
+  animation: notifPulse 3s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * CORNER WIDGET — bottom-left fixed account chip
+ * ────────────────────────────────────────────────────────────────────── */
+
+.corner-widget {
+  position: fixed;
+  bottom: 18px;
+  left: 18px;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 8px 8px;
+  border-radius: 12px;
+  background: rgba(10, 12, 26, 0.92);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow:
+    0 0 0 1px rgba(212, 255, 0, 0.06) inset,
+    0 8px 24px -4px rgba(0, 0, 0, 0.60),
+    0 2px 8px -2px rgba(0, 0, 0, 0.40);
+  transition: all 200ms ease;
+}
+.corner-widget:hover {
+  border-color: rgba(212, 255, 0, 0.14);
+  box-shadow:
+    0 0 0 1px rgba(212, 255, 0, 0.10) inset,
+    0 8px 32px -4px rgba(0, 0, 0, 0.70),
+    0 0 40px -20px rgba(212, 255, 0, 0.12);
+}
+
+.corner-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(212, 255, 0, 0.15);
+  border: 1px solid rgba(212, 255, 0, 0.28);
+  color: #D4FF00;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: 'Satoshi', 'Inter', sans-serif;
+  flex-shrink: 0;
+}
+
+.corner-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.corner-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: #F0F0F4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+.corner-role {
+  font-size: 9.5px;
+  color: rgba(240, 240, 244, 0.42);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.corner-cog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  color: rgba(240, 240, 244, 0.38);
+  text-decoration: none;
+  transition: all 150ms ease;
+  flex-shrink: 0;
+}
+.corner-cog:hover {
+  color: #D4FF00;
+  background: rgba(212, 255, 0, 0.08);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * SHELL LAYOUT OVERHAUL — top-nav replaces left sidebar
+ * main-content sits below the sticky nav, full-width, no left margin
+ * ────────────────────────────────────────────────────────────────────── */
+
+/* When the glass shell is active, reset the left sidebar offset */
+.glass-shell-active .lg\:ml-\[220px\] {
+  margin-left: 0 !important;
+}
+
+/* Content area padding adjustment — less left pad since no sidebar */
+.glass-shell-active .p-4 {
+  padding: 16px 20px 32px 20px;
+}
+.glass-shell-active .lg\:p-6 {
+  padding: 20px 28px 40px 28px;
+}
+
+/* Add bottom clearance so corner widget doesn't overlap content */
+.glass-shell-active main {
+  padding-bottom: 72px;
+}
+
+/* Mobile: hide corner widget below md breakpoint */
+@media (max-width: 767px) {
+  .corner-widget {
+    display: none;
+  }
+  .glass-top-nav {
+    padding: 0 12px;
+  }
+  .gtn-brand-sub {
+    display: none;
+  }
+  .gtn-search {
+    max-width: 160px;
+  }
+  .gtn-utilities .gtn-util-btn:not(.gtn-notif):not(:last-child) {
+    display: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * SIDEBAR HIDE — hide TrinitySidebar when glass shell is active.
+ * Applied via .glass-shell-active on the root wrapper.
+ * ────────────────────────────────────────────────────────────────────── */
+.glass-shell-active [class*="trinity-sidebar"],
+.glass-shell-active [class*="TrinitySidebar"],
+.glass-shell-active aside[aria-label*="sidebar"],
+.glass-shell-active aside[aria-label*="navigation"],
+.glass-shell-active nav[aria-label*="sidebar"],
+.glass-shell-active nav[aria-label*="Trinity"] {
+  display: none !important;
+}

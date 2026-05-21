@@ -24,8 +24,12 @@ import toast from "react-hot-toast";
 
 // Lazy-load overlay/modal components — not needed on initial render
 const MainNavbar = dynamic(() => import("@/components/dashboard/main-navbar"), { ssr: false });
+// TrinitySidebar kept for fallback/mobile but hidden when GlassTopNav is active
 const TrinitySidebar = dynamic(() => import("@/components/dashboard/trinity-sidebar"), { ssr: false });
 const TopNavbar = dynamic(() => import("@/components/dashboard/top-navbar"), { ssr: false });
+// Glass shell — new triple-stack top nav replacing left sidebar
+const GlassTopNav = dynamic(() => import("@/components/navigation/glass-top-nav"), { ssr: false });
+const BottomWidget = dynamic(() => import("@/components/navigation/bottom-widget"), { ssr: false });
 const DashboardAmbient3D = dynamic(() => import("@/components/brand/dashboard-ambient-3d"), { ssr: false });
 const DashboardBackground = dynamic(() => import("@/components/brand/dashboard-background"), { ssr: false });
 const ClientChatWidget = dynamic(() => import("@/components/client-chat-widget"), { ssr: false });
@@ -338,51 +342,39 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <QuotaWallProvider>
       <SkipToContent />
-      {/* Apr 28 v6: ambient 3D background. Floating teal shapes drift
-          behind every dashboard page (similar to landing-page hero
-          treatment). pointer-events-none + -z-10 means it never blocks
-          UI. Auto-disabled on prefers-reduced-motion + togglable via
-          `data-ambient="off"` on <html> for video-editor / AI-studio
-          where every paint frame matters. */}
       {/* CSS animated mesh gradient blobs — zero JS per frame, pure compositor */}
       <DashboardBackground />
       <DashboardAmbient3D />
-      {/* Volectra-style aurora light bleed — deep blue/indigo radial fixed at
-          viewport top. Signals premium OLED depth. Dark theme only (CSS hides
-          it on light). pointer-events: none, z-1, CSS-only breathing. */}
+      {/* Aurora light bleed — deep blue/indigo radial fixed at viewport top */}
       <div className="dashboard-aurora" aria-hidden="true" />
-      {/* `bg-background/85` instead of opaque `bg-background` lets the
-          ambient 3D shapes peek through at 15% intensity — atmospheric
-          but doesn't fight content readability. */}
-      <div className="flex min-h-screen bg-background/40 relative">
 
-        {/* Left sidebar navigation — Trinity OS 2.0 design */}
-        <TrinitySidebar
-          mobileOpen={mobileSidebarOpen}
-          onMobileClose={() => setMobileSidebarOpen(false)}
-        />
+      {/* ── Glass Shell — top-nav replaces left sidebar ────────────────────
+          glass-shell-active enables CSS that hides TrinitySidebar and
+          removes the lg:ml-[220px] offset from <main>.
+          ──────────────────────────────────────────────────────────────── */}
+      <div className="glass-shell-active flex flex-col min-h-screen bg-background/40 relative">
 
-        {/* Keep MainNavbar available for components that depend on it
-            (command palette, mobile drawer) — rendered off-screen via
-            its own aria-hidden when not triggered. Hidden visually on lg+. */}
-        <div className="lg:hidden">
+        {/* ① Triple-stack glass top navigation */}
+        <GlassTopNav />
+
+        {/* ② Thin breadcrumb sub-nav (kept for breadcrumbs + Trinity prompt) */}
+        <TopNavbar />
+
+        {/* ③ Mobile drawer (hidden on lg+) */}
+        <div className="lg:hidden" aria-hidden="true">
           <MainNavbar />
         </div>
 
-        <main id="main" className="flex-1 min-w-0 overflow-x-hidden lg:ml-[220px]">
-          {/* Left sidebar is 220px fixed — lg:ml-[220px] clears it */}
-
-          {/* Managed client banner */}
+        {/* ④ Main content — full-width, no sidebar offset */}
+        <main id="main" className="flex-1 min-w-0 overflow-x-hidden">
+          {/* Managed client banner (Electron desktop only) */}
           <ManagedClientBanner />
 
-          {/* Sub-nav — breadcrumbs + Trinity Cmd+K + contextual section pills */}
-          <TopNavbar />
-
-          {/* Zoom reset pill — appears bottom-right when Ctrl+scroll zoom is active */}
+          {/* Zoom reset pill */}
           {zoom !== 100 && (
             <button
               onClick={() => setZoom(100)}
-              className="fixed bottom-4 right-4 z-50 text-[10px] font-mono px-2.5 py-1 rounded-lg transition-colors"
+              className="fixed bottom-4 right-20 z-50 text-[10px] font-mono px-2.5 py-1 rounded-lg transition-colors"
               style={{
                 background: "rgba(13,17,32,0.92)",
                 border: "1px solid rgba(99,146,255,0.15)",
@@ -393,13 +385,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </button>
           )}
 
-          {/* Page content — Apr 28: "stagger-shatter" entry transition
-              retired (user described as "weird flicker"). Replaced with
-              a single soft on mount, no exit animation. New
-              pages just appear. Faster perceived load + no layout
-              jitter. Honors prefers-reduced-motion via the underlying
-              `.page-soft-enter` keyframe. */}
-          <div className="p-4 lg:p-6 pb-8">
+          <div className="px-5 py-4 lg:px-8 lg:py-6 pb-20">
             <ErrorBoundary>
               <PageTransition>
                 {children}
@@ -407,6 +393,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </ErrorBoundary>
           </div>
         </main>
+
+        {/* ⑤ Corner account chip */}
+        <BottomWidget />
+
+        {/* Global overlays */}
         <VoiceAssistant />
         <ClientChatWidget />
         <OnboardingTour onComplete={() => {}} />
@@ -414,13 +405,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <KeyboardShortcuts />
         <QuickAdd />
         <ClientContextPill />
-        {/* Admin-only floating token-usage ring (self-gates on role) */}
         <TokenUsageWidget />
-        {/* Desktop-only: mirror unread notifications count to OS tray */}
         <DesktopBadge />
-        {/* Chrome extension bridge pill — feature-detected (only shows if extension has ever connected) */}
         <ExtensionBridgePill />
-
       </div>
     </QuotaWallProvider>
   );
