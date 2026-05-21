@@ -46,7 +46,7 @@ function PieChart({ slices }: { slices: { id: string; label: string; value: numb
 
   return (
     <motion.div className="glass rounded-xl p-5 space-y-4 spotlight-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
-      <p className="text-sm font-semibold text-[#111827]">Leads by Source</p>
+      <p className="text-sm font-semibold text-text-primary">Leads by Source</p>
       <div className="flex flex-col sm:flex-row items-center gap-6">
         <div
           className="rounded-full shrink-0"
@@ -56,8 +56,8 @@ function PieChart({ slices }: { slices: { id: string; label: string; value: numb
           {segments.map((s) => (
             <div key={s.id} className="flex items-center gap-2 text-xs">
               <span className="inline-block rounded-full w-3 h-3 shrink-0" style={{ background: s.color }} />
-              <span className="text-[#374151] truncate max-w-[140px]">{s.label}</span>
-              <span className="text-[#6B7280] ml-auto shrink-0">{s.value} ({s.pct.toFixed(0)}%)</span>
+              <span className="text-text-secondary truncate max-w-[140px]">{s.label}</span>
+              <span className="text-text-muted ml-auto shrink-0">{s.value} ({s.pct.toFixed(0)}%)</span>
             </div>
           ))}
         </div>
@@ -164,7 +164,7 @@ export default function LeadSourcesPage() {
       </div>
     </div>{pieSlices.length > 0 && <PieChart slices={pieSlices} />}{showCreate && (
               <motion.div className="glass rounded-xl p-5 space-y-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-                <p className="font-semibold text-[#111827] text-sm">New Source</p>
+                <p className="font-semibold text-text-primary text-sm">New Source</p>
                 <div className="flex flex-wrap gap-3">
                   <input className="input flex-1 min-w-[160px] text-sm" placeholder="Source name (e.g. Google Ads)"
                     value={form.source_name} onChange={(e) => setForm({ ...form, source_name: e.target.value })}
@@ -175,10 +175,10 @@ export default function LeadSourcesPage() {
                   </select>
                 </div>
                 <div className="flex flex-wrap gap-2 items-center">
-                  <span className="text-xs text-[#6B7280]">Icon:</span>
+                  <span className="text-xs text-text-muted">Icon:</span>
                   {ICON_OPTIONS.map((ic) => (
                     <button key={ic} type="button" onClick={() => setForm({ ...form, icon: ic })}
-                      className={`text-lg p-1 rounded ${form.icon === ic ? "bg-[rgba(59,130,246,0.14)]" : "hover:bg-black/[0.04]"}`}>{ic}</button>
+                      className={`text-lg p-1 rounded ${form.icon === ic ? "bg-[rgba(59,130,246,0.14)]" : "hover:bg-white/5"}`}>{ic}</button>
                   ))}
                 </div>
                 <input className="input w-full text-sm" placeholder="Description (optional)"
@@ -197,8 +197,8 @@ export default function LeadSourcesPage() {
             )}{loading ? <TableSkeleton rows={5} /> : sources.length === 0 ? (
               <motion.div className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                 <Filter size={40} className="text-text-muted" />
-                <p className="text-[#111827] font-semibold">No lead sources yet</p>
-                <p className="text-[#6B7280] text-sm max-w-xs">Add your first source to start tracking where leads originate.</p>
+                <p className="text-text-primary font-semibold">No lead sources yet</p>
+                <p className="text-text-muted text-sm max-w-xs">Add your first source to start tracking where leads originate.</p>
                 <button onClick={() => setShowCreate(true)}
                   className="btn-primary flex items-center gap-2 text-sm px-4 py-2 rounded-lg mt-1">
                   <Plus size={15} /> Add first source
@@ -208,7 +208,7 @@ export default function LeadSourcesPage() {
               <motion.div className="glass rounded-xl overflow-hidden" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-black/[0.06] text-[#6B7280] text-xs">
+                    <tr className="border-b border-border-subtle text-text-muted text-xs">
                       <th className="text-left px-4 py-3 font-medium">Source</th>
                       <th className="text-left px-4 py-3 font-medium hidden sm:table-cell">Attribution</th>
                       <th className="text-right px-4 py-3 font-medium hidden md:table-cell">Leads</th>
@@ -245,7 +245,7 @@ export default function LeadSourcesPage() {
                                 className="p-1.5 rounded hover:bg-green-100 text-green-700">
                                 {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />}
                               </button>
-                              <button onClick={() => setEditId(null)} className="p-1.5 rounded hover:bg-black/[0.04] text-[#6B7280]">
+                              <button onClick={() => setEditId(null)} className="p-1.5 rounded hover:bg-white/5 text-text-muted">
                                 <X size={13} />
                               </button>
                             </div>
@@ -256,21 +256,21 @@ export default function LeadSourcesPage() {
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
                               <span className="text-lg">{s.icon ?? "🔍"}</span>
-                              <span className="text-[#111827] font-medium">{s.source_name}</span>
+                              <span className="text-text-primary font-medium">{s.source_name}</span>
                             </div>
                           </td>
-                          <td className="px-4 py-3 text-[#6B7280] hidden sm:table-cell text-xs">
+                          <td className="px-4 py-3 text-text-muted hidden sm:table-cell text-xs">
                             {(s.attribution_model ?? "last_touch").replace("_", " ")}
                           </td>
-                          <td className="px-4 py-3 text-right text-[#374151] hidden md:table-cell">{s.total_leads_attributed}</td>
-                          <td className="px-4 py-3 text-right text-[#6B7280] hidden md:table-cell">{s.total_revenue_cents ? fmt(s.total_revenue_cents) : "—"}</td>
+                          <td className="px-4 py-3 text-right text-text-secondary hidden md:table-cell">{s.total_leads_attributed}</td>
+                          <td className="px-4 py-3 text-right text-text-muted hidden md:table-cell">{s.total_revenue_cents ? fmt(s.total_revenue_cents) : "—"}</td>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button onClick={() => startEdit(s)} className="p-1.5 rounded hover:bg-black/[0.04] text-[#6B7280] hover:text-[#111827]">
+                              <button onClick={() => startEdit(s)} className="p-1.5 rounded hover:bg-white/5 text-text-muted hover:text-text-primary">
                                 <Pencil size={13} />
                               </button>
                               <button onClick={() => handleDelete(s.id)} disabled={deleting === s.id}
-                                className="p-1.5 rounded hover:bg-red-50 text-[#6B7280] hover:text-red-700">
+                                className="p-1.5 rounded hover:bg-red-500/10 text-text-muted hover:text-red-400">
                                 {deleting === s.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
                               </button>
                             </div>

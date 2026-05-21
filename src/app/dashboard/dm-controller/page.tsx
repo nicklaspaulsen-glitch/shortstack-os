@@ -544,7 +544,7 @@ export default function DMControllerPage() {
                     {running ? `Running · ${completed}/${totalDMs}` : "Paused"}
                   </div>
                   {running && (
-                    <button onClick={() => setRunning(false)} className="text-[10px] bg-red-500/20 border border-red-500/40 text-red-700 px-2.5 py-1 rounded-md hover:bg-red-500/30 transition-all flex items-center gap-1">
+                    <button onClick={() => setRunning(false)} className="text-[10px] bg-red-500/20 border border-red-500/40 text-red-400 px-2.5 py-1 rounded-md hover:bg-red-500/30 transition-all flex items-center gap-1">
                       <Pause size={10} /> Pause all
                     </button>
                   )}
@@ -676,7 +676,7 @@ export default function DMControllerPage() {
                       <button onClick={() => setConfig({ ...config, warmup: !config.warmup })}
                         className={cn(
                           "relative w-11 h-6 rounded-full transition-all",
-                          config.warmup ? "bg-orange-500" : "bg-[rgba(0,0,0,0.12)]"
+                          config.warmup ? "bg-orange-500" : "bg-white/15"
                         )}>
                         <span className={cn(
                           "absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all",
@@ -725,7 +725,7 @@ export default function DMControllerPage() {
                         {showVars && (
                           <div className="absolute right-0 top-full mt-1 z-30 w-48 card p-1 shadow-xl">
                             {VARIABLES.map(v => (
-                              <button key={v} onClick={() => insertVariable(v)} className="w-full text-left text-[10px] font-mono px-2 py-1.5 rounded hover:bg-[rgba(0,0,0,0.04)] text-text-primary">
+                              <button key={v} onClick={() => insertVariable(v)} className="w-full text-left text-[10px] font-mono px-2 py-1.5 rounded hover:bg-white/5 text-text-primary">
                                 {v}
                               </button>
                             ))}
@@ -753,15 +753,15 @@ export default function DMControllerPage() {
                     <h3 className="text-xs font-semibold mb-2 flex items-center gap-2">
                       <Eye size={12} className="text-brand-accent" /> Live Preview
                     </h3>
-                    <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] overflow-hidden">
-                      <div className="px-3 py-2 border-b border-[rgba(0,0,0,0.06)] flex items-center gap-2 bg-[rgba(0,0,0,0.04)]">
+                    <div className="rounded-xl border border-border-subtle bg-white/5 overflow-hidden">
+                      <div className="px-3 py-2 border-b border-border-subtle flex items-center gap-2 bg-white/5">
                         {platformIcon(config.platforms[0] || "instagram", 16)}
                         <span className="text-[10px] font-semibold">{platformName(config.platforms[0] || "instagram")}</span>
                         <span className="text-[9px] text-text-muted ml-auto">@{(config.niches[0] || "prospect").toLowerCase().replace(/\s+/g, "_")}_co</span>
                       </div>
                       <div className="p-3 space-y-2">
                         <div className="text-[9px] text-text-muted flex items-center gap-1"><Clock size={8} /> just now</div>
-                        <div className="max-w-[85%] px-3 py-2 rounded-bl-sm bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-[11px] leading-relaxed text-[#374151]">
+                        <div className="max-w-[85%] px-3 py-2 rounded-bl-sm bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-[11px] leading-relaxed text-text-secondary">
                           {previewText || <span className="text-text-muted italic">Your message will appear here…</span>}
                         </div>
                       </div>
@@ -784,7 +784,7 @@ export default function DMControllerPage() {
                       )}>{safety.score}</span>
                       <span className="text-[10px] text-text-muted pb-1 uppercase tracking-wider">{safety.rating}</span>
                     </div>
-                    <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-2 mb-3 overflow-hidden">
+                    <div className="w-full bg-white/8 rounded-full h-2 mb-3 overflow-hidden">
                       <div className={cn(
                         "h-full rounded-full transition-all",
                         safety.rating === "green" ? "bg-green-500" :
@@ -818,7 +818,7 @@ export default function DMControllerPage() {
                         <p>Est. time: {totalDMs === 0 ? "—" : `~${estimatedTime} min`}</p>
                       </div>
                       {running && (
-                        <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-2 mb-3 overflow-hidden">
+                        <div className="w-full bg-white/8 rounded-full h-2 mb-3 overflow-hidden">
                           <div className="h-full bg-brand-accent rounded-full transition-all" style={{ width: `${(completed / Math.max(totalDMs, 1)) * 100}%` }} />
                         </div>
                       )}
@@ -878,7 +878,7 @@ export default function DMControllerPage() {
                       return (
                         <div key={c.id} className="glass rounded-xl p-4 hover:border-[rgba(59,130,246,0.2)] transition-all">
                           <div className="flex items-start gap-3">
-                            <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)]">
+                            <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 border border-border-subtle">
                               {platform?.icon(22)}
                             </div>
                             <div className="flex-1 min-w-0">
@@ -894,7 +894,7 @@ export default function DMControllerPage() {
                                 <span className="flex items-center gap-1"><Clock size={9} /> {c.lastActivity}</span>
                               </div>
                               {/* Progress bar */}
-                              <div className="mt-2 w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 overflow-hidden">
+                              <div className="mt-2 w-full bg-white/8 rounded-full h-1.5 overflow-hidden">
                                 <div className="h-full bg-brand-accent rounded-full transition-all" style={{ width: `${progressPct}%` }} />
                               </div>
                             </div>
@@ -1066,7 +1066,7 @@ export default function DMControllerPage() {
                       onClick={() => { setOpenReplyId(r.id); setAiReplies(null); setAiReplyError(null); }}
                       className={cn(
                         "w-full text-left card p-3 transition-all",
-                        openReplyId === r.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]" : "hover:border-[rgba(0,0,0,0.14)]"
+                        openReplyId === r.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]" : "hover:border-white/20"
                       )}
                     >
                       <div className="flex items-start gap-2">
@@ -1100,11 +1100,11 @@ export default function DMControllerPage() {
 
                       {/* Conversation thread */}
                       <div className="space-y-2">
-                        <div className="max-w-[85%] px-3 py-2 rounded-bl-sm bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[11px] text-[#374151]">
+                        <div className="max-w-[85%] px-3 py-2 rounded-bl-sm bg-white/5 border border-border-subtle text-[11px] text-text-secondary">
                           <p className="text-[9px] text-text-muted mb-1">You</p>
                           {openReply.original}
                         </div>
-                        <div className="max-w-[85%] ml-auto px-3 py-2 rounded-br-sm bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-[11px] text-[#374151]">
+                        <div className="max-w-[85%] ml-auto px-3 py-2 rounded-br-sm bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-[11px] text-text-secondary">
                           <p className="text-[9px] text-brand-accent mb-1">{openReply.from}</p>
                           {openReply.full}
                         </div>
@@ -1127,7 +1127,7 @@ export default function DMControllerPage() {
                         {aiReplies && aiReplies.length > 0 ? (
                           <div className="space-y-2">
                             {aiReplies.map((r, i) => (
-                              <div key={i} className="p-3 rounded-lg border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] space-y-1.5">
+                              <div key={i} className="p-3 rounded-lg border border-border-subtle bg-white/5 space-y-1.5">
                                 <div className="flex items-center gap-1.5">
                                   <span className="text-[9px] uppercase tracking-wider text-purple-300 font-semibold">{r.tone}</span>
                                 </div>
@@ -1149,7 +1149,7 @@ export default function DMControllerPage() {
                       <div className="flex items-center gap-1.5 pt-2 border-t border-border-subtle">
                         <button
                           onClick={() => setInbox(ibx => ibx.map(x => x.id === openReply.id ? { ...x, status: "closed" } : x))}
-                          className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border-subtle hover:border-[rgba(0,0,0,0.14)] text-text-muted hover:text-text-primary flex items-center justify-center gap-1.5">
+                          className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-border-subtle hover:border-white/20 text-text-muted hover:text-text-primary flex items-center justify-center gap-1.5">
                           <CheckCircle size={10} /> Close
                         </button>
                         <button
@@ -1224,7 +1224,7 @@ export default function DMControllerPage() {
                             <span className="text-xs font-medium flex items-center gap-2">{p.icon(14)} {p.name}</span>
                             <span className="text-xs text-text-muted">{sent} sent · {replied} replies · {rate.toFixed(1)}%</span>
                           </div>
-                          <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-2 overflow-hidden">
+                          <div className="w-full bg-white/8 rounded-full h-2 overflow-hidden">
                             <div className="h-full rounded-full bg-brand-accent transition-all" style={{ width: `${Math.min(100, rate * 5)}%` }} />
                           </div>
                         </div>
@@ -1326,7 +1326,7 @@ export default function DMControllerPage() {
                             onClick={() => setRules(rs => rs.map(x => x.id === r.id ? { ...x, enabled: !x.enabled } : x))}
                             className={cn(
                               "relative w-10 h-5 rounded-full transition-all",
-                              r.enabled ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.12)]"
+                              r.enabled ? "bg-brand-accent" : "bg-white/15"
                             )}>
                             <span className={cn(
                               "absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all",
@@ -1367,7 +1367,7 @@ export default function DMControllerPage() {
                             {p.icon(16)}
                             <span className="text-xs font-semibold">{p.name}</span>
                           </div>
-                          <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 mb-1 overflow-hidden">
+                          <div className="w-full bg-white/8 rounded-full h-1.5 mb-1 overflow-hidden">
                             <div className={cn(
                               "h-full rounded-full",
                               usage > 70 ? "bg-red-500" : usage > 40 ? "bg-amber-500" : "bg-green-500"
@@ -1393,7 +1393,7 @@ export default function DMControllerPage() {
                             <span className="text-xs font-medium flex items-center gap-2">{p.icon(14)} {p.name}</span>
                             <span className="text-[10px] text-text-muted">Day {day} / 7</span>
                           </div>
-                          <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1.5 overflow-hidden">
+                          <div className="w-full bg-white/8 rounded-full h-1.5 overflow-hidden">
                             <div className="h-full rounded-full bg-orange-500" style={{ width: `${pct}%` }} />
                           </div>
                         </div>
@@ -1476,7 +1476,7 @@ export default function DMControllerPage() {
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {keywordBlacklist.map((kw, i) => (
-                      <span key={i} className="text-[10px] px-2.5 py-1 rounded-lg border border-red-400/30 bg-red-400/[0.04] text-red-600 flex items-center gap-1.5">
+                      <span key={i} className="text-[10px] px-2.5 py-1 rounded-lg border border-red-400/30 bg-red-400/5 text-red-400 flex items-center gap-1.5">
                         {kw}
                         <button onClick={() => setKeywordBlacklist(list => list.filter((_, idx) => idx !== i))} className="hover:text-red-400">
                           <X size={10} />
@@ -1550,7 +1550,7 @@ export default function DMControllerPage() {
                         <p className="text-xs text-text-muted mt-2">No activity. {running ? "Events will stream in real-time." : "Start a campaign to see live events."}</p>
                       </div>
                     ) : liveEvents.map(ev => (
-                      <div key={ev.id} className="flex items-center gap-2.5 p-2 rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.03)]">
+                      <div key={ev.id} className="flex items-center gap-2.5 p-2 rounded-lg border border-border-subtle bg-white/4">
                         <span className="text-[9px] font-mono text-text-muted shrink-0 w-16">{ev.at}</span>
                         <div className="shrink-0">{platformIcon(ev.platform, 12)}</div>
                         <LiveIcon kind={ev.kind} />
@@ -1637,7 +1637,7 @@ function Meter({ label, value }: { label: string; value: number }) {
         <span>{label}</span>
         <span className="font-mono">{Math.round(value)}</span>
       </div>
-      <div className="w-full bg-[rgba(0,0,0,0.06)] rounded-full h-1 overflow-hidden">
+      <div className="w-full bg-white/8 rounded-full h-1 overflow-hidden">
         <div className={cn("h-full rounded-full transition-all", bar)} style={{ width: `${Math.min(100, value)}%` }} />
       </div>
     </div>
@@ -1648,7 +1648,7 @@ function StatusBadge({ status }: { status: CampaignStatus }) {
   const cfg = {
     running: { cls: "bg-green-400/10 text-green-400 border-green-400/30", label: "Running" },
     paused:  { cls: "bg-amber-400/10 text-amber-400 border-amber-400/30", label: "Paused" },
-    draft:   { cls: "bg-[rgba(0,0,0,0.04)] text-text-muted border-[rgba(0,0,0,0.08)]", label: "Draft" },
+    draft:   { cls: "bg-white/5 text-text-muted border-border-subtle", label: "Draft" },
     done:    { cls: "bg-blue-400/10 text-blue-400 border-blue-400/30",    label: "Done" },
   }[status];
   return <span className={cn("text-[9px] px-2 py-0.5 rounded border", cfg.cls)}>{cfg.label}</span>;
@@ -1669,7 +1669,7 @@ function SentimentBadge({ sentiment }: { sentiment: InboxReply["sentiment"] }) {
     positive: { cls: "bg-green-400/10 text-green-400 border-green-400/30",  label: "Positive", icon: ThumbsUp    },
     negative: { cls: "bg-red-400/10 text-red-400 border-red-400/30",        label: "Negative", icon: ThumbsDown  },
     question: { cls: "bg-blue-400/10 text-blue-400 border-blue-400/30",     label: "Question", icon: MessageSquare},
-    neutral:  { cls: "bg-[rgba(0,0,0,0.04)] text-text-muted border-[rgba(0,0,0,0.08)]", label: "Neutral", icon: MinusCircle },
+    neutral:  { cls: "bg-white/5 text-text-muted border-border-subtle", label: "Neutral", icon: MinusCircle },
   }[sentiment];
   const Icon = cfg.icon;
   return <span className={cn("text-[9px] px-1.5 py-0.5 rounded border flex items-center gap-1", cfg.cls)}><Icon size={8} /> {cfg.label}</span>;
@@ -1678,7 +1678,7 @@ function SentimentBadge({ sentiment }: { sentiment: InboxReply["sentiment"] }) {
 function StatusChip({ status }: { status: InboxReply["status"] }) {
   const cfg = {
     new:          { cls: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]",            label: "New" },
-    closed:       { cls: "bg-[rgba(0,0,0,0.04)] text-text-muted border-[rgba(0,0,0,0.08)]", label: "Closed" },
+    closed:       { cls: "bg-white/5 text-text-muted border-border-subtle", label: "Closed" },
     handed_off:   { cls: "bg-blue-400/10 text-blue-400 border-blue-400/30",label: "Handed off" },
     needs_human:  { cls: "bg-amber-400/10 text-amber-400 border-amber-400/30", label: "Needs human" },
   }[status];

@@ -118,11 +118,11 @@ function formatTimestamp(seconds: number): string {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  objection: "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-[#374151]",
-  missed_question: "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-[#374151]",
-  positive_moment: "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-[#374151]",
-  risk: "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-[#374151]",
-  tone: "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-[#374151]",
+  objection: "border-indigo-500/25 bg-indigo-500/10 text-text-secondary",
+  missed_question: "border-indigo-500/25 bg-indigo-500/10 text-text-secondary",
+  positive_moment: "border-indigo-500/25 bg-indigo-500/10 text-text-secondary",
+  risk: "border-indigo-500/25 bg-indigo-500/10 text-text-secondary",
+  tone: "border-indigo-500/25 bg-indigo-500/10 text-text-secondary",
 };
 
 function isMeetingSource(s: unknown): s is MeetingSource {
@@ -208,7 +208,7 @@ export default function CoachAnalysisDetail() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center gap-2 text-[#6B7280] text-sm"><Loader2 className="h-4 w-4 animate-spin" />Loading analysis…
+      <MotionPage className="flex items-center gap-2 text-text-muted text-sm"><Loader2 className="h-4 w-4 animate-spin" />Loading analysis…
               </MotionPage>
     );
   }
@@ -229,7 +229,7 @@ export default function CoachAnalysisDetail() {
     <div className="space-y-6">
       <Link
         href="/dashboard/coach"
-        className="inline-flex items-center gap-1 text-sm text-[#6B7280] hover:text-[#111827]"
+        className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-text-primary"
       >
         <ArrowLeft className="h-4 w-4" /> Back to coach
       </Link>
@@ -256,9 +256,9 @@ export default function CoachAnalysisDetail() {
         {/* Transcript */}
         <div
           ref={transcriptRef}
-          className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-4 max-h-[70vh] overflow-y-auto"
+          className="rounded-xl border border-border-subtle bg-white/5 p-4 max-h-[70vh] overflow-y-auto"
         >
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#6B7280]">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-text-muted">
             Transcript
           </h2>
 
@@ -270,22 +270,22 @@ export default function CoachAnalysisDetail() {
                 source.messages.map((m) => (
                   <div
                     key={m.id}
-                    className="rounded-lg border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-3"
+                    className="rounded-lg border border-border-subtle bg-white/5 p-3"
                   >
                     {m.message_text && (
                       <div className="mb-2">
                         <div className="mb-1 text-[10px] uppercase tracking-wider text-brand-accent">
                           Rep • {m.sent_at ? new Date(m.sent_at).toLocaleString() : ""}
                         </div>
-                        <p className="whitespace-pre-wrap text-sm text-[#374151]">{m.message_text}</p>
+                        <p className="whitespace-pre-wrap text-sm text-text-secondary">{m.message_text}</p>
                       </div>
                     )}
                     {m.reply_text && (
                       <div>
-                        <div className="mb-1 text-[10px] uppercase tracking-wider text-[#6B7280]">
+                        <div className="mb-1 text-[10px] uppercase tracking-wider text-text-muted">
                           Prospect • {m.replied_at ? new Date(m.replied_at).toLocaleString() : ""}
                         </div>
-                        <p className="whitespace-pre-wrap text-sm text-[#374151]">{m.reply_text}</p>
+                        <p className="whitespace-pre-wrap text-sm text-text-secondary">{m.reply_text}</p>
                       </div>
                     )}
                   </div>
@@ -305,16 +305,16 @@ export default function CoachAnalysisDetail() {
                     data-ts={ts}
                     className={`rounded-md px-3 py-2 transition-colors ${
                       isActive
-                        ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)]"
+                        ? "bg-indigo-500/10 border border-indigo-500/25"
                         : "border border-transparent"
                     }`}
                   >
                     <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-text-muted">
                       <Clock className="h-3 w-3" />
                       <span className="font-mono">{formatTimestamp(seg.start)}</span>
-                      {seg.speaker && <span className="text-[#6B7280]">{seg.speaker}</span>}
+                      {seg.speaker && <span className="text-text-muted">{seg.speaker}</span>}
                     </div>
-                    <p className="mt-1 text-sm text-[#374151]">{seg.text}</p>
+                    <p className="mt-1 text-sm text-text-secondary">{seg.text}</p>
                   </div>
                 );
               })}
@@ -324,8 +324,8 @@ export default function CoachAnalysisDetail() {
 
         {/* Sidebar */}
         <div className="space-y-4">
-          <div className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-4">
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#6B7280]">
+          <div className="rounded-xl border border-border-subtle bg-white/5 p-4">
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-text-muted">
               Metrics
             </h3>
             <div className="grid grid-cols-2 gap-3 text-sm">
@@ -341,8 +341,8 @@ export default function CoachAnalysisDetail() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-4">
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#6B7280]">
+          <div className="rounded-xl border border-border-subtle bg-white/5 p-4">
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-text-muted">
               Insights ({analysis.insights.length})
             </h3>
             {analysis.insights.length === 0 ? (
@@ -371,7 +371,7 @@ export default function CoachAnalysisDetail() {
                           </span>
                         )}
                         {insight.severity && (
-                          <span className="ml-auto rounded-full border border-[rgba(0,0,0,0.10)] px-1.5 py-0.5 text-[9px] font-semibold">
+                          <span className="ml-auto rounded-full border border-white/15 px-1.5 py-0.5 text-[9px] font-semibold">
                             sev {insight.severity}
                           </span>
                         )}
@@ -384,8 +384,8 @@ export default function CoachAnalysisDetail() {
             )}
           </div>
 
-          <div className="rounded-xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] p-4">
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#6B7280]">
+          <div className="rounded-xl border border-border-subtle bg-white/5 p-4">
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-text-muted">
               Next actions ({analysis.next_actions.length})
             </h3>
             {analysis.next_actions.length === 0 ? (
@@ -399,7 +399,7 @@ export default function CoachAnalysisDetail() {
                       <button
                         type="button"
                         onClick={() => toggleDone(idx)}
-                        className={`flex w-full items-start gap-2 rounded-md border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-left text-sm transition-colors hover:bg-[rgba(0,0,0,0.06)] ${
+                        className={`flex w-full items-start gap-2 rounded-md border border-border-subtle bg-white/5 px-3 py-2 text-left text-sm transition-colors hover:bg-white/8 ${
                           done ? "opacity-50 line-through" : ""
                         }`}
                       >
@@ -409,9 +409,9 @@ export default function CoachAnalysisDetail() {
                           <Circle className="mt-0.5 h-4 w-4 shrink-0 text-text-muted" />
                         )}
                         <div>
-                          <span className="text-[#374151]">{action.text}</span>
+                          <span className="text-text-secondary">{action.text}</span>
                           {action.due && (
-                            <span className="ml-2 text-xs text-[#6B7280]">due {action.due}</span>
+                            <span className="ml-2 text-xs text-text-muted">due {action.due}</span>
                           )}
                         </div>
                       </button>
@@ -429,9 +429,9 @@ export default function CoachAnalysisDetail() {
 
 function Metric({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="rounded-md border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.04)] px-3 py-2">
+    <div className="rounded-md border border-border-subtle bg-white/5 px-3 py-2">
       <div className="text-[10px] uppercase tracking-wider text-text-muted">{label}</div>
-      <div className="mt-1 text-base font-semibold text-[#111827]">{value}</div>
+      <div className="mt-1 text-base font-semibold text-text-primary">{value}</div>
     </div>
   );
 }

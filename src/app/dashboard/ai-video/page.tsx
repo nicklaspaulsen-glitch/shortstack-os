@@ -596,7 +596,7 @@ export default function AIVideoPage() {
                   <button
                     type="button"
                     onClick={() => { setPrompt(buildIntentPrompt()); setIntentOpen(false); }}
-                    className="w-full flex items-center justify-center gap-2 text-[11px] font-semibold text-white py-2 rounded-xl bg-brand-accent hover:bg-[#2563EB] transition-all cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 text-[11px] font-semibold text-[#0D1120] py-2 rounded-xl bg-brand-accent hover:bg-brand-accent/80 transition-all cursor-pointer"
                   >
                     <Sparkles size={11} /> Build prompt from answers
                   </button>

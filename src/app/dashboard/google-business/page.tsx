@@ -154,7 +154,7 @@ export default function GoogleBusinessPage() {
                         <div key={r} className="flex items-center gap-2">
                           <span className="text-xs w-4 text-right">{r}</span>
                           <Star size={8} className="fill-yellow-400 text-yellow-400" />
-                          <div className="flex-1 bg-[rgba(0,0,0,0.06)] rounded-full h-2 overflow-hidden">
+                          <div className="flex-1 bg-white/8 rounded-full h-2 overflow-hidden">
                             <div className="h-full rounded-full bg-yellow-400" style={{ width: `${pct}%` }} />
                           </div>
                           <span className="text-[10px] text-text-muted w-10 text-right">{count} ({pct}%)</span>
@@ -263,7 +263,7 @@ export default function GoogleBusinessPage() {
                   </div>
                   <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
                     {Array.from({ length: 12 }).map((_, i) => (
-                      <div key={i} className="aspect-square rounded-lg bg-[rgba(0,0,0,0.04)] border border-border-subtle flex items-center justify-center">
+                      <div key={i} className="aspect-square rounded-lg bg-white/5 border border-border-subtle flex items-center justify-center">
                         <Image size={20} className="text-text-muted/20" />
                       </div>
                     ))}

@@ -58,7 +58,7 @@ const DEFAULT: WhiteLabelConfig = {
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-medium text-[#374151]">{label}</label>
+      <label className="text-sm font-medium text-text-secondary">{label}</label>
       {children}
       {hint && <p className="text-xs text-text-muted">{hint}</p>}
     </div>
@@ -72,7 +72,7 @@ function Input({ value, onChange, placeholder, type = "text" }: { value: string;
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full px-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm placeholder:text-text-muted focus:outline-none focus:border-brand-accent/50 transition-all"
+      className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-brand-accent/50 transition-all"
     />
   );
 }
@@ -232,7 +232,7 @@ export default function WhiteLabelPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowPreview(!showPreview)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.08)] text-[#374151] transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-white/8 hover:bg-white/10 text-text-secondary transition-all"
             >
               {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               {showPreview ? "Hide Preview" : "Preview"}
@@ -240,7 +240,7 @@ export default function WhiteLabelPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-brand-accent/90 text-black transition-all disabled:opacity-60"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save Settings
@@ -251,7 +251,7 @@ export default function WhiteLabelPage() {
 
       {showPreview && (
         <div
-          className="rounded-xl border border-[rgba(0,0,0,0.08)] p-5 overflow-hidden relative"
+          className="rounded-xl border border-border-subtle p-5 overflow-hidden relative"
           style={{ background: config.accent_color || "#1a1611" }}
         >
           <div className="flex items-center gap-4">
@@ -267,10 +267,10 @@ export default function WhiteLabelPage() {
               </div>
             )}
             <div>
-              <p className="text-[#111827] font-bold text-lg">
+              <p className="text-text-primary font-bold text-lg">
                 {config.brand_name || config.company_name || "Your Brand"}
               </p>
-              {config.tagline && <p className="text-[#6B7280] text-sm">{config.tagline}</p>}
+              {config.tagline && <p className="text-text-muted text-sm">{config.tagline}</p>}
             </div>
           </div>
           <p className="absolute top-3 right-4 text-[10px] text-text-muted uppercase tracking-widest">
@@ -325,20 +325,20 @@ export default function WhiteLabelPage() {
           <p className="text-xs font-semibold uppercase tracking-widest text-text-muted">Colors</p>
           <Field label="Primary Color" hint="Main accent color -- buttons, highlights">
             <div className="flex gap-3 items-center">
-              <input type="color" value={config.primary_color} onChange={(e) => set("primary_color", e.target.value)} className="w-10 h-10 rounded-lg cursor-pointer border border-[rgba(0,0,0,0.08)] bg-transparent" />
+              <input type="color" value={config.primary_color} onChange={(e) => set("primary_color", e.target.value)} className="w-10 h-10 rounded-lg cursor-pointer border border-border-subtle bg-transparent" />
               <Input value={config.primary_color} onChange={(v) => set("primary_color", v)} placeholder="#2563EB" />
             </div>
           </Field>
           <Field label="Background / Dark Color" hint="Used in hero gradients and dark surfaces">
             <div className="flex gap-3 items-center">
-              <input type="color" value={config.accent_color} onChange={(e) => set("accent_color", e.target.value)} className="w-10 h-10 rounded-lg cursor-pointer border border-[rgba(0,0,0,0.08)] bg-transparent" />
+              <input type="color" value={config.accent_color} onChange={(e) => set("accent_color", e.target.value)} className="w-10 h-10 rounded-lg cursor-pointer border border-border-subtle bg-transparent" />
               <Input value={config.accent_color} onChange={(v) => set("accent_color", v)} placeholder="#1a1611" />
             </div>
           </Field>
 
           <div className="flex items-center justify-between p-3 rounded-lg glass-md">
             <div>
-              <p className="text-sm text-[#111827] font-medium">Show Powered by ShortStack</p>
+              <p className="text-sm text-text-primary font-medium">Show Powered by ShortStack</p>
               <p className="text-xs text-text-muted">Display attribution in the footer</p>
             </div>
             <button onClick={() => set("show_powered_by", !config.show_powered_by)} className="shrink-0">
@@ -359,7 +359,7 @@ export default function WhiteLabelPage() {
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-text-muted">Custom Domain</p>
             {config.custom_domain && (
-              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${config.custom_domain_verified ? "bg-emerald-500/20 text-emerald-700" : "bg-[rgba(59,130,246,0.08)] text-brand-accent"}`}>
+              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${config.custom_domain_verified ? "bg-emerald-500/15 text-emerald-400" : "bg-indigo-500/10 text-brand-accent"}`}>
                 {config.custom_domain_verified ? "Verified" : "Awaiting DNS"}
               </span>
             )}
@@ -375,13 +375,13 @@ export default function WhiteLabelPage() {
                     value={domainInput}
                     onChange={(e) => setDomainInput(e.target.value)}
                     placeholder="app.youragency.com"
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm placeholder:text-text-muted focus:outline-none focus:border-brand-accent/50 transition-all"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-brand-accent/50 transition-all"
                   />
                 </div>
                 <button
                   onClick={handleAddDomain}
                   disabled={domainBusy || !domainInput.trim()}
-                  className="px-4 py-2.5 rounded-lg bg-brand-accent hover:bg-[#d4b55d] text-black text-sm font-semibold disabled:opacity-60 transition-all whitespace-nowrap"
+                  className="px-4 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/90 text-black text-sm font-semibold disabled:opacity-60 transition-all whitespace-nowrap"
                 >
                   {domainBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : "Attach"}
                 </button>
@@ -389,43 +389,43 @@ export default function WhiteLabelPage() {
             </Field>
           ) : (
             <>
-              <div className="flex items-center justify-between bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2.5">
+              <div className="flex items-center justify-between bg-white/5 border border-border-subtle rounded-lg px-3 py-2.5">
                 <div className="flex items-center gap-2">
                   <Globe className="w-4 h-4 text-text-muted" />
-                  <span className="font-mono text-[#111827] text-sm">{config.custom_domain}</span>
+                  <span className="font-mono text-text-primary text-sm">{config.custom_domain}</span>
                   {config.custom_domain_verified && (
-                    <a href={`https://${config.custom_domain}`} target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-[#374151]" aria-label="Open">
+                    <a href={`https://${config.custom_domain}`} target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-text-secondary" aria-label="Open">
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <button onClick={handleVerifyDomain} disabled={domainBusy} className="flex items-center gap-1 px-3 py-1.5 rounded-md bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.08)] text-[#374151] text-xs font-medium disabled:opacity-60">
+                  <button onClick={handleVerifyDomain} disabled={domainBusy} className="flex items-center gap-1 px-3 py-1.5 rounded-md bg-white/8 hover:bg-white/10 text-text-secondary text-xs font-medium disabled:opacity-60">
                     {domainBusy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
                     Verify
                   </button>
-                  <button onClick={handleRemoveDomain} disabled={domainBusy} className="p-1.5 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-600" title="Remove">
+                  <button onClick={handleRemoveDomain} disabled={domainBusy} className="p-1.5 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400" title="Remove">
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
 
               {!config.custom_domain_verified && (
-                <div className="rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] p-3 flex flex-col gap-2 text-xs">
-                  <p className="font-semibold text-[#374151] flex items-center gap-1.5">
+                <div className="rounded-lg bg-white/5 border border-border-subtle p-3 flex flex-col gap-2 text-xs">
+                  <p className="font-semibold text-text-secondary flex items-center gap-1.5">
                     <ShieldCheck className="w-3.5 h-3.5 text-brand-accent" />
                     Add these DNS records to your domain registrar:
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-mono text-[#6B7280]">
-                    <div className="bg-[rgba(0,0,0,0.04)] rounded px-2 py-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-mono text-text-muted">
+                    <div className="bg-white/5 rounded px-2 py-1">
                       <p className="text-text-muted text-[10px] uppercase">Type</p>
                       <p>{config.custom_domain.split(".").length > 2 ? "CNAME" : "A"}</p>
                     </div>
-                    <div className="bg-[rgba(0,0,0,0.04)] rounded px-2 py-1">
+                    <div className="bg-white/5 rounded px-2 py-1">
                       <p className="text-text-muted text-[10px] uppercase">Name</p>
                       <p>{config.custom_domain.split(".").length > 2 ? config.custom_domain.split(".")[0] : "@"}</p>
                     </div>
-                    <div className="bg-[rgba(0,0,0,0.04)] rounded px-2 py-1">
+                    <div className="bg-white/5 rounded px-2 py-1">
                       <p className="text-text-muted text-[10px] uppercase">Value</p>
                       <p>{config.custom_domain.split(".").length > 2 ? "cname.vercel-dns.com" : "76.76.21.21"}</p>
                     </div>
@@ -435,7 +435,7 @@ export default function WhiteLabelPage() {
               )}
 
               {config.custom_domain_verified && (
-                <div className="flex items-center gap-2 text-xs bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2 text-emerald-700">
+                <div className="flex items-center gap-2 text-xs bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2 text-emerald-400">
                   <CheckCircle2 className="w-4 h-4 shrink-0" />
                   Live with SSL. Your subaccounts can sign in at <span className="font-mono">https://{config.custom_domain}</span>.
                 </div>
@@ -456,7 +456,7 @@ export default function WhiteLabelPage() {
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest text-text-muted">Resell Billing</p>
             {stripeStatus && (
-              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${stripeStatus.fully_onboarded ? "bg-emerald-500/20 text-emerald-700" : stripeStatus.connected ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "bg-[rgba(0,0,0,0.06)] text-text-muted"}`}>
+              <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${stripeStatus.fully_onboarded ? "bg-emerald-500/15 text-emerald-400" : stripeStatus.connected ? "bg-indigo-500/10 text-brand-accent" : "bg-white/8 text-text-muted"}`}>
                 {stripeStatus.fully_onboarded ? "Stripe Connected" : stripeStatus.connected ? "Onboarding incomplete" : "Not connected"}
               </span>
             )}
@@ -464,7 +464,7 @@ export default function WhiteLabelPage() {
 
           <div className="flex items-center justify-between p-3 rounded-lg glass-md">
             <div>
-              <p className="text-sm text-[#111827] font-medium">Enable Reselling</p>
+              <p className="text-sm text-text-primary font-medium">Enable Reselling</p>
               <p className="text-xs text-text-muted">
                 Allow subaccounts to be billed via your Stripe Connect account. Requires Stripe Connect onboarded first.
               </p>
@@ -489,9 +489,9 @@ export default function WhiteLabelPage() {
                 step={5}
                 value={config.markup_percent}
                 onChange={(e) => set("markup_percent", Number(e.target.value) || 0)}
-                className="w-32 px-3 py-2 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm focus:outline-none focus:border-brand-accent/50"
+                className="w-32 px-3 py-2 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-brand-accent/50"
               />
-              <span className="text-[#6B7280] text-sm">%</span>
+              <span className="text-text-muted text-sm">%</span>
             </div>
           </Field>
 
@@ -522,7 +522,7 @@ export default function WhiteLabelPage() {
                   value={config.email_from_name}
                   onChange={(e) => set("email_from_name", e.target.value)}
                   placeholder="Acme Agency Team"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm placeholder:text-text-muted focus:outline-none focus:border-brand-accent/50 transition-all"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-brand-accent/50 transition-all"
                 />
               </div>
             </Field>
@@ -544,7 +544,7 @@ export default function WhiteLabelPage() {
                 onChange={(e) => set("login_text", e.target.value)}
                 placeholder="Welcome back! Sign in to manage your growth."
                 rows={3}
-                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[#111827] text-sm placeholder:text-text-muted focus:outline-none focus:border-brand-accent/50 transition-all resize-none"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-brand-accent/50 transition-all resize-none"
               />
             </div>
           </Field>
@@ -556,7 +556,7 @@ export default function WhiteLabelPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-brand-accent hover:bg-[#d4b55d] text-black transition-all disabled:opacity-60"
+          className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-brand-accent hover:bg-brand-accent/90 text-black transition-all disabled:opacity-60"
         >
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           Save White Label Settings

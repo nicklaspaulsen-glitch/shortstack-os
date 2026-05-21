@@ -54,7 +54,7 @@ interface Submission {
 // --- Score badge --------------------------------------------------------------
 
 function ScoreBadge({ score }: { score: number | null }) {
-  if (score === null) return <span className="text-[rgba(0,0,0,0.3)] text-xs">ï¿½</span>;
+  if (score === null) return <span className="text-text-muted text-xs">ï¿½</span>;
   const color =
     score >= 80 ? "#22c55e" :
     score >= 50 ? "#f59e0b" :
@@ -242,7 +242,7 @@ export default function IntakePage() {
   // --- Render -----------------------------------------------------------------
 
   return (
-    <MotionPage className="flex flex-col h-full min-h-screen bg-[#FAFAFB]">{/* -- Intake Forms command strip -- */}
+    <MotionPage className="flex flex-col h-full min-h-screen">{/* -- Intake Forms command strip -- */}
               <div className="flex items-center gap-4 px-4 py-3 sm:py-4 border-b border-border-subtle">
                 <div className="min-w-0">
                   <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Intake</p>
@@ -257,8 +257,8 @@ export default function IntakePage() {
                     onClick={() => setActiveTab(tab)}
                     className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
                       activeTab === tab
-                        ? "bg-[rgba(0,0,0,0.08)] text-brand-accent"
-                        : "text-[rgba(0,0,0,0.4)] hover:text-[rgba(0,0,0,0.7)]"
+                        ? "bg-white/10 text-brand-accent"
+                        : "text-text-muted hover:text-text-secondary"
                     }`}
                   >
                     {tab === "forms" ? "Forms" : "Submissions"}
@@ -278,7 +278,7 @@ export default function IntakePage() {
                     <select
                       value={selectedFormId ?? ""}
                       onChange={(e) => setSelectedFormId(e.target.value || null)}
-                      className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-[rgba(0,0,0,0.65)] text-xs rounded-lg px-2 py-1.5 outline-none"
+                      className="bg-white/5 border border-border-subtle text-text-secondary text-xs rounded-lg px-2 py-1.5 outline-none"
                     >
                       <option value="">All forms</option>
                       {forms.map((f) => (
@@ -294,16 +294,16 @@ export default function IntakePage() {
                 <div>
                   {loading ? (
                     <div className="flex items-center justify-center py-20">
-                      <Loader2 className="w-6 h-6 animate-spin text-[rgba(0,0,0,0.25)]" />
+                      <Loader2 className="w-6 h-6 animate-spin text-text-muted" />
                     </div>
                   ) : forms.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
-                      <div className="w-14 h-14  bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] flex items-center justify-center">
+                      <div className="w-14 h-14  bg-white/6 border border-border-subtle flex items-center justify-center">
                         <Zap size={22} className="text-brand-accent/60" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1">No intake forms yet</p>
-                        <p className="text-xs text-[rgba(0,0,0,0.3)] max-w-xs">
+                        <p className="text-sm font-medium text-text-secondary mb-1">No intake forms yet</p>
+                        <p className="text-xs text-text-muted max-w-xs">
                           Create a form to embed on your website or send to prospects. Claude will auto-qualify every submission.
                         </p>
                       </div>
@@ -337,8 +337,8 @@ export default function IntakePage() {
                                 <ChevronRight size={14} style={{ color: form.brand_color }} />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <h3 className="text-sm font-semibold text-[rgba(0,0,0,0.85)] truncate">{form.name}</h3>
-                                <p className="text-[10px] text-[rgba(0,0,0,0.35)] mt-0.5">
+                                <h3 className="text-sm font-semibold text-text-primary truncate">{form.name}</h3>
+                                <p className="text-[10px] text-text-muted mt-0.5">
                                   {form.fields.length} fields ï¿½ {form.ai_qualification ? "AI scoring on" : "No AI"}
                                 </p>
                               </div>
@@ -346,8 +346,8 @@ export default function IntakePage() {
                                 onClick={() => toggleActive(form)}
                                 className={`text-[10px] font-medium px-2 py-0.5 rounded-full border transition-all ${
                                   form.is_active
-                                    ? "text-green-700 border-green-700/30 bg-green-700/10"
-                                    : "text-[rgba(0,0,0,0.35)] border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)]"
+                                    ? "text-green-400 border-green-500/30 bg-green-500/10"
+                                    : "text-text-muted border-border-subtle bg-white/4"
                                 }`}
                               >
                                 {form.is_active ? "Live" : "Off"}
@@ -356,13 +356,13 @@ export default function IntakePage() {
 
                             {/* Embed URL */}
                             <div className="glass-md rounded-lg px-2.5 py-2 flex items-center gap-2">
-                              <span className="text-[10px] text-[rgba(0,0,0,0.35)] truncate flex-1 font-mono">{embedUrl}</span>
+                              <span className="text-[10px] text-text-muted truncate flex-1 font-mono">{embedUrl}</span>
                               <button
                                 onClick={() => {
                                   navigator.clipboard.writeText(embedUrl);
                                   toast.success("Link copied");
                                 }}
-                                className="text-[rgba(0,0,0,0.35)] hover:text-[rgba(0,0,0,0.5)] transition-colors flex-shrink-0"
+                                className="text-text-muted hover:text-text-secondary transition-colors flex-shrink-0"
                                 title="Copy link"
                               >
                                 <Copy size={12} />
@@ -371,7 +371,7 @@ export default function IntakePage() {
                                 href={embedUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="text-[rgba(0,0,0,0.35)] hover:text-[rgba(0,0,0,0.5)] transition-colors flex-shrink-0"
+                                className="text-text-muted hover:text-text-secondary transition-colors flex-shrink-0"
                                 title="Preview form"
                               >
                                 <ExternalLink size={12} />
@@ -382,7 +382,7 @@ export default function IntakePage() {
                             <div className="flex items-center gap-1">
                               <button
                                 onClick={() => openBuilder(form)}
-                                className="flex items-center gap-1 px-2.5 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.5)] text-xs rounded-lg transition-colors"
+                                className="flex items-center gap-1 px-2.5 py-1.5 bg-white/5 hover:bg-white/8 text-text-secondary text-xs rounded-lg transition-colors"
                               >
                                 <Settings size={11} />
                                 Edit
@@ -392,7 +392,7 @@ export default function IntakePage() {
                                   setSelectedFormId(form.id);
                                   setActiveTab("submissions");
                                 }}
-                                className="flex items-center gap-1 px-2.5 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.5)] text-xs rounded-lg transition-colors"
+                                className="flex items-center gap-1 px-2.5 py-1.5 bg-white/5 hover:bg-white/8 text-text-secondary text-xs rounded-lg transition-colors"
                               >
                                 <BarChart3 size={11} />
                                 Submissions
@@ -403,7 +403,7 @@ export default function IntakePage() {
                                   navigator.clipboard.writeText(iframeCode);
                                   toast.success("Embed code copied");
                                 }}
-                                className="flex items-center gap-1 px-2.5 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.5)] text-xs rounded-lg transition-colors"
+                                className="flex items-center gap-1 px-2.5 py-1.5 bg-white/5 hover:bg-white/8 text-text-secondary text-xs rounded-lg transition-colors"
                                 title="Copy iframe embed code"
                               >
                                 <Eye size={11} />
@@ -411,7 +411,7 @@ export default function IntakePage() {
                               </button>
                               <button
                                 onClick={() => deleteForm(form.id)}
-                                className="ml-auto flex items-center gap-1 px-2.5 py-1.5 hover:bg-red-50 text-[rgba(0,0,0,0.35)] hover:text-red-700 text-xs rounded-lg transition-colors"
+                                className="ml-auto flex items-center gap-1 px-2.5 py-1.5 hover:bg-red-500/10 text-text-muted hover:text-red-400 text-xs rounded-lg transition-colors"
                               >
                                 <Trash2 size={11} />
                               </button>
@@ -429,11 +429,11 @@ export default function IntakePage() {
                 <div>
                   {submissions.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 gap-3 text-center">
-                      <div className="w-12 h-12  bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)] flex items-center justify-center">
-                        <Users size={18} className="text-[rgba(0,0,0,0.25)]" />
+                      <div className="w-12 h-12  bg-white/4 border border-border-subtle flex items-center justify-center">
+                        <Users size={18} className="text-text-muted" />
                       </div>
-                      <p className="text-sm text-[rgba(0,0,0,0.4)]">No submissions yet</p>
-                      <p className="text-xs text-[rgba(0,0,0,0.25)] max-w-xs">
+                      <p className="text-sm text-text-muted">No submissions yet</p>
+                      <p className="text-xs text-text-muted max-w-xs">
                         Share your form link to start receiving qualified leads.
                       </p>
                     </div>
@@ -452,14 +452,14 @@ export default function IntakePage() {
                           >
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 flex-wrap">
-                                <span className="text-sm font-medium text-[rgba(0,0,0,0.65)] truncate">
+                                <span className="text-sm font-medium text-text-secondary truncate">
                                   {sub.contact_name ?? "Anonymous"}
                                 </span>
                                 {sub.contact_email && (
-                                  <span className="text-[10px] text-[rgba(0,0,0,0.35)]">{sub.contact_email}</span>
+                                  <span className="text-[10px] text-text-muted">{sub.contact_email}</span>
                                 )}
                               </div>
-                              <p className="text-[10px] text-[rgba(0,0,0,0.35)] mt-0.5">
+                              <p className="text-[10px] text-text-muted mt-0.5">
                                 {new Date(sub.created_at).toLocaleDateString()}
                                 {sub.ai_summary && ` ï¿½ ${sub.ai_summary.slice(0, 80)}ï¿½`}
                               </p>
@@ -485,47 +485,47 @@ export default function IntakePage() {
               <div className="space-y-5 max-h-[70vh] overflow-y-auto pr-1">
                 {/* Basic settings */}
                 <div className="space-y-3">
-                  <p className="text-[11px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Settings</p>
+                  <p className="text-[11px] font-medium text-text-muted uppercase tracking-widest">Settings</p>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs text-[rgba(0,0,0,0.5)]">Form name</label>
+                    <label className="text-xs text-text-secondary">Form name</label>
                     <input
                       value={bName}
                       onChange={(e) => setBName(e.target.value)}
-                      className="w-full glass rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none focus:border-brand-accent/50"
+                      className="w-full glass rounded-lg px-3 py-2 text-sm text-text-primary outline-none focus:border-brand-accent/50"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs text-[rgba(0,0,0,0.5)]">Welcome message</label>
+                    <label className="text-xs text-text-secondary">Welcome message</label>
                     <textarea
                       value={bWelcome}
                       onChange={(e) => setBWelcome(e.target.value)}
                       rows={2}
-                      className="w-full glass rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none focus:border-brand-accent/50 resize-none"
+                      className="w-full glass rounded-lg px-3 py-2 text-sm text-text-primary outline-none focus:border-brand-accent/50 resize-none"
                     />
                   </div>
 
                   <div className="flex items-center gap-4">
                     <div className="space-y-1.5 flex-1">
-                      <label className="text-xs text-[rgba(0,0,0,0.5)]">Brand color</label>
+                      <label className="text-xs text-text-secondary">Brand color</label>
                       <div className="flex items-center gap-2">
                         <input
                           type="color"
                           value={bColor}
                           onChange={(e) => setBColor(e.target.value)}
-                          className="w-9 h-9 rounded-lg border border-[rgba(0,0,0,0.08)] bg-transparent cursor-pointer"
+                          className="w-9 h-9 rounded-lg border border-border-subtle bg-transparent cursor-pointer"
                         />
                         <input
                           value={bColor}
                           onChange={(e) => setBColor(e.target.value)}
-                          className="flex-1 bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-sm text-[rgba(0,0,0,0.85)] outline-none font-mono"
+                          className="flex-1 bg-white/5 border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary outline-none font-mono"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-xs text-[rgba(0,0,0,0.5)]">AI scoring</label>
+                      <label className="text-xs text-text-secondary">AI scoring</label>
                       <button
                         onClick={() => setBAI((p) => !p)}
                         className={`relative w-11 h-6 rounded-full transition-colors ${bAI ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.10)]"}`}
@@ -537,13 +537,13 @@ export default function IntakePage() {
 
                   {bAI && (
                     <div className="space-y-1.5">
-                      <label className="text-xs text-[rgba(0,0,0,0.5)]">Custom AI prompt (optional ï¿½ leave blank to use default)</label>
+                      <label className="text-xs text-text-secondary">Custom AI prompt (optional ï¿½ leave blank to use default)</label>
                       <textarea
                         value={bPrompt}
                         onChange={(e) => setBPrompt(e.target.value)}
                         rows={3}
                         placeholder="You are an expert lead qualifier for [your business]ï¿½"
-                        className="w-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] rounded-lg px-3 py-2 text-xs text-[rgba(0,0,0,0.65)] placeholder:text-[rgba(0,0,0,0.25)] outline-none focus:border-brand-accent/50 resize-none font-mono"
+                        className="w-full bg-white/5 border border-border-subtle rounded-lg px-3 py-2 text-xs text-text-secondary placeholder:text-text-muted outline-none focus:border-brand-accent/50 resize-none font-mono"
                       />
                     </div>
                   )}
@@ -551,8 +551,8 @@ export default function IntakePage() {
 
                 {/* Fields */}
                 <div className="space-y-3">
-                  <p className="text-[11px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Fields</p>
-                  <p className="text-[10px] text-[rgba(0,0,0,0.35)]">Name, email, and phone are always collected. Add custom questions below.</p>
+                  <p className="text-[11px] font-medium text-text-muted uppercase tracking-widest">Fields</p>
+                  <p className="text-[10px] text-text-muted">Name, email, and phone are always collected. Add custom questions below.</p>
 
                   {bFields.map((field) => (
                     <FieldEditor
@@ -569,7 +569,7 @@ export default function IntakePage() {
                       <button
                         key={ft.value}
                         onClick={() => addField(ft.value)}
-                        className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.5)] text-xs rounded-lg transition-colors border border-[rgba(0,0,0,0.06)]"
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/5 hover:bg-white/8 text-text-secondary text-xs rounded-lg transition-colors border border-border-subtle"
                       >
                         {ft.icon}
                         {ft.label}
@@ -579,10 +579,10 @@ export default function IntakePage() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[rgba(0,0,0,0.06)] mt-4">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-border-subtle mt-4">
                 <button
                   onClick={() => setBuilderOpen(false)}
-                  className="px-4 py-2 text-sm text-[rgba(0,0,0,0.5)] hover:text-[rgba(0,0,0,0.65)] transition-colors"
+                  className="px-4 py-2 text-sm text-text-secondary hover:text-text-secondary transition-colors"
                 >
                   Cancel
                 </button>
@@ -600,10 +600,10 @@ export default function IntakePage() {
                 <div className="space-y-4 max-h-[65vh] overflow-y-auto pr-1">
                   <div className="flex items-center gap-3">
                     <div>
-                      <p className="text-sm font-semibold text-[rgba(0,0,0,0.85)]">{subDetail.contact_name ?? "Anonymous"}</p>
+                      <p className="text-sm font-semibold text-text-primary">{subDetail.contact_name ?? "Anonymous"}</p>
                       <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                        {subDetail.contact_email && <span className="text-[10px] text-[rgba(0,0,0,0.4)]">{subDetail.contact_email}</span>}
-                        {subDetail.contact_phone && <span className="text-[10px] text-[rgba(0,0,0,0.4)]">{subDetail.contact_phone}</span>}
+                        {subDetail.contact_email && <span className="text-[10px] text-text-muted">{subDetail.contact_email}</span>}
+                        {subDetail.contact_phone && <span className="text-[10px] text-text-muted">{subDetail.contact_phone}</span>}
                       </div>
                     </div>
                     <div className="ml-auto">
@@ -612,21 +612,21 @@ export default function IntakePage() {
                   </div>
 
                   {subDetail.ai_summary && (
-                    <div className="bg-[rgba(0,0,0,0.05)] border border-[rgba(0,0,0,0.10)] rounded-xl p-3">
+                    <div className="bg-white/6 border border-border-subtle rounded-xl p-3">
                       <p className="text-[10px] font-medium text-brand-accent mb-1.5 flex items-center gap-1">
                         <Sparkles size={10} /> AI Summary
                       </p>
-                      <p className="text-xs text-[rgba(0,0,0,0.65)] leading-relaxed">{subDetail.ai_summary}</p>
+                      <p className="text-xs text-text-secondary leading-relaxed">{subDetail.ai_summary}</p>
                     </div>
                   )}
 
                   {subDetail.ai_questions.length > 0 && (
                     <div className="space-y-2">
-                      <p className="text-[10px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Follow-up questions</p>
+                      <p className="text-[10px] font-medium text-text-muted uppercase tracking-widest">Follow-up questions</p>
                       {subDetail.ai_questions.map((q, i) => (
                         <div key={i} className="flex items-start gap-2">
                           <span className="text-[10px] font-bold text-brand-accent/60 mt-0.5">{i + 1}.</span>
-                          <p className="text-xs text-[rgba(0,0,0,0.5)] leading-relaxed">{q}</p>
+                          <p className="text-xs text-text-secondary leading-relaxed">{q}</p>
                         </div>
                       ))}
                     </div>
@@ -634,11 +634,11 @@ export default function IntakePage() {
 
                   {Object.keys(subDetail.responses).length > 0 && (
                     <div className="space-y-2">
-                      <p className="text-[10px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Responses</p>
+                      <p className="text-[10px] font-medium text-text-muted uppercase tracking-widest">Responses</p>
                       {Object.entries(subDetail.responses).map(([k, v]) => (
-                        <div key={k} className="bg-[rgba(0,0,0,0.03)] rounded-lg p-2.5">
-                          <p className="text-[10px] text-[rgba(0,0,0,0.35)] mb-0.5">{k}</p>
-                          <p className="text-xs text-[rgba(0,0,0,0.65)]">{String(v)}</p>
+                        <div key={k} className="bg-white/4 rounded-lg p-2.5">
+                          <p className="text-[10px] text-text-muted mb-0.5">{k}</p>
+                          <p className="text-xs text-text-secondary">{String(v)}</p>
                         </div>
                       ))}
                     </div>
@@ -646,7 +646,7 @@ export default function IntakePage() {
 
                   {/* Status */}
                   <div className="space-y-2">
-                    <p className="text-[10px] font-medium text-[rgba(0,0,0,0.35)] uppercase tracking-widest">Status</p>
+                    <p className="text-[10px] font-medium text-text-muted uppercase tracking-widest">Status</p>
                     <div className="flex flex-wrap gap-2">
                       {(Object.keys(STATUS_META) as Submission["status"][]).map((s) => {
                         const meta = STATUS_META[s];
@@ -688,47 +688,47 @@ function FieldEditor({
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)] rounded-xl overflow-hidden">
+    <div className="bg-white/4 border border-border-subtle rounded-xl overflow-hidden">
       <div className="flex items-center gap-2 px-3 py-2.5">
-        <span className="text-[10px] font-medium text-[rgba(0,0,0,0.35)] uppercase">
+        <span className="text-[10px] font-medium text-text-muted uppercase">
           {FIELD_TYPES.find((f) => f.value === field.type)?.label ?? field.type}
         </span>
         <input
           value={field.label}
           onChange={(e) => onChange({ label: e.target.value })}
-          className="flex-1 bg-transparent text-sm text-[rgba(0,0,0,0.65)] outline-none placeholder:text-[rgba(0,0,0,0.25)]"
+          className="flex-1 bg-transparent text-sm text-text-secondary outline-none placeholder:text-text-muted"
           placeholder="Field label"
         />
         <button
           onClick={() => setExpanded((p) => !p)}
-          className="text-[rgba(0,0,0,0.35)] hover:text-[rgba(0,0,0,0.5)] transition-colors"
+          className="text-text-muted hover:text-text-secondary transition-colors"
         >
           <ChevronDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
         </button>
-        <button onClick={onRemove} className="text-[rgba(0,0,0,0.25)] hover:text-red-700 transition-colors">
+        <button onClick={onRemove} className="text-text-muted hover:text-red-700 transition-colors">
           <X size={14} />
         </button>
       </div>
 
       {expanded && (
-        <div className="px-3 pb-3 space-y-2.5 border-t border-[rgba(0,0,0,0.06)] pt-2.5">
+        <div className="px-3 pb-3 space-y-2.5 border-t border-border-subtle pt-2.5">
           <div className="space-y-1">
-            <label className="text-[10px] text-[rgba(0,0,0,0.35)]">Placeholder</label>
+            <label className="text-[10px] text-text-muted">Placeholder</label>
             <input
               value={field.placeholder ?? ""}
               onChange={(e) => onChange({ placeholder: e.target.value })}
-              className="w-full bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)] rounded-lg px-2.5 py-1.5 text-xs text-[rgba(0,0,0,0.65)] outline-none"
+              className="w-full bg-white/4 border border-border-subtle rounded-lg px-2.5 py-1.5 text-xs text-text-secondary outline-none"
             />
           </div>
 
           {(field.type === "select" || field.type === "radio") && (
             <div className="space-y-1">
-              <label className="text-[10px] text-[rgba(0,0,0,0.35)]">Options (one per line)</label>
+              <label className="text-[10px] text-text-muted">Options (one per line)</label>
               <textarea
                 value={(field.options ?? []).join("\n")}
                 onChange={(e) => onChange({ options: e.target.value.split("\n").filter(Boolean) })}
                 rows={3}
-                className="w-full bg-[rgba(0,0,0,0.03)] border border-[rgba(0,0,0,0.06)] rounded-lg px-2.5 py-1.5 text-xs text-[rgba(0,0,0,0.65)] outline-none resize-none"
+                className="w-full bg-white/4 border border-border-subtle rounded-lg px-2.5 py-1.5 text-xs text-text-secondary outline-none resize-none"
               />
             </div>
           )}
@@ -740,7 +740,7 @@ function FieldEditor({
               onChange={(e) => onChange({ required: e.target.checked })}
               className="w-3.5 h-3.5 accent-[#2563EB]"
             />
-            <span className="text-xs text-[rgba(0,0,0,0.5)]">Required</span>
+            <span className="text-xs text-text-secondary">Required</span>
           </label>
         </div>
       )}
