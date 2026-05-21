@@ -30,7 +30,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Plug, Sparkles, RefreshCw, ExternalLink, Key } from "lucide-react";
 import toast from "react-hot-toast";
-import StatCard from "@/components/ui/stat-card";
 import ConnectModal from "@/components/integrations/connect-modal";
 import IntegrationCard, {
   type IntegrationCardData,

@@ -10,7 +10,6 @@ import {
   Activity, X, Search, Crown, Pencil,
   Settings, Lock, Unlock, Trash2, Key, Eye, EyeOff,
   AlertTriangle,
-  UsersRound,
 } from "lucide-react";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
