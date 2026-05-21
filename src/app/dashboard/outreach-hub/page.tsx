@@ -359,7 +359,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
                   <TrendingUp size={9} style={{ color: emailQualityScore >= 71 ? "#4ade80" : emailQualityScore >= 43 ? "#fbbf24" : "#f87171" }} />
-                  <span className="text-[9px] font-semibold" style={{ color: "#A8A8B2" }}>Email Quality</span>
+                  <span className="text-[9px] font-semibold text-text-secondary">Email Quality</span>
                 </div>
                 <span className="text-[10px] font-bold tabular-nums"
                   style={{ color: emailQualityScore >= 71 ? "#4ade80" : emailQualityScore >= 43 ? "#fbbf24" : "#f87171" }}>
@@ -408,7 +408,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
                   <TrendingUp size={9} style={{ color: smsQualityScore >= 80 ? "#4ade80" : smsQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
-                  <span className="text-[9px] font-semibold" style={{ color: "#A8A8B2" }}>SMS Quality</span>
+                  <span className="text-[9px] font-semibold text-text-secondary">SMS Quality</span>
                 </div>
                 <span className="text-[10px] font-bold tabular-nums"
                   style={{ color: smsQualityScore >= 80 ? "#4ade80" : smsQualityScore >= 50 ? "#fbbf24" : "#f87171" }}>
@@ -451,7 +451,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
                   <TrendingUp size={9} style={{ color: dmQualityScore >= 80 ? "#4ade80" : dmQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
-                  <span className="text-[9px] font-semibold" style={{ color: "#A8A8B2" }}>DM Quality</span>
+                  <span className="text-[9px] font-semibold text-text-secondary">DM Quality</span>
                 </div>
                 <span className="text-[10px] font-bold tabular-nums"
                   style={{ color: dmQualityScore >= 80 ? "#4ade80" : dmQualityScore >= 50 ? "#fbbf24" : "#f87171" }}>
@@ -494,7 +494,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
                   <TrendingUp size={9} style={{ color: callQualityScore >= 80 ? "#4ade80" : callQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
-                  <span className="text-[9px] font-semibold" style={{ color: "#A8A8B2" }}>Script Quality</span>
+                  <span className="text-[9px] font-semibold text-text-secondary">Script Quality</span>
                 </div>
                 <span className="text-[10px] font-bold tabular-nums"
                   style={{ color: callQualityScore >= 80 ? "#4ade80" : callQualityScore >= 50 ? "#fbbf24" : "#f87171" }}>

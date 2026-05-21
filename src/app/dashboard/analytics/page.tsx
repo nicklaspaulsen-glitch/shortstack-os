@@ -365,7 +365,7 @@ export default function AnalyticsPage() {
     switch (type) {
       case "lead": return <Zap size={10} style={{ color: "#D4FF00" }} />;
       case "payment": return <DollarSign size={10} style={{ color: "#10B981" }} />;
-      case "post": return <Film size={10} style={{ color: "#A8A8B2" }} />;
+      case "post": return <Film size={10} style={{ color: "var(--text-secondary)" }} />;
       case "deal": return <Trophy size={10} style={{ color: "#D4FF00" }} />;
       case "call": return <Phone size={10} style={{ color: "#6366F1" }} />;
       default: return <Activity size={10} style={{ color: "var(--text-muted)" }} />;

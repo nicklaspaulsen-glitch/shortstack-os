@@ -528,7 +528,7 @@ function NewProposalForm({
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-1.5">
               <TrendingUp size={10} style={{ color: proposalScore >= 80 ? "#4ade80" : proposalScore >= 50 ? "#fbbf24" : "#f87171" }} />
-              <span className="text-[9px] font-semibold tracking-wide" style={{ color: "#A8A8B2" }}>Proposal Strength</span>
+              <span className="text-[9px] font-semibold tracking-wide text-text-secondary">Proposal Strength</span>
             </div>
             <span className="text-[10px] font-bold tabular-nums"
               style={{ color: proposalScore >= 80 ? "#4ade80" : proposalScore >= 50 ? "#fbbf24" : "#f87171" }}>
