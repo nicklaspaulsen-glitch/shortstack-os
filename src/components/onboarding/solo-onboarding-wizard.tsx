@@ -271,11 +271,11 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
           <span className="text-[11px] text-text-muted font-medium">
             Step {stepIdx + 1} of {STEPS.length}
           </span>
-          <span className="text-[11px] font-bold text-[#2563EB]">{Math.round(progress)}%</span>
+          <span className="text-[11px] font-bold text-[#D4FF00]">{Math.round(progress)}%</span>
         </div>
         <div className="h-1.5 rounded-full bg-surface-light border border-border-subtle overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-[#2563EB] to-[#3B82F6] transition-all duration-500"
+            className="h-full bg-gradient-to-r from-[#D4FF00] to-[#AACC00] transition-all duration-500"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -286,7 +286,7 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
               onClick={() => i < stepIdx && setStepIdx(i)}
               className={`rounded-full transition-all duration-200 ${
                 i === stepIdx
-                  ? "w-6 h-1.5 bg-[#2563EB]"
+                  ? "w-6 h-1.5 bg-[#D4FF00]"
                   : i < stepIdx
                   ? "w-1.5 h-1.5 bg-[rgba(212,255,0,0.4)] hover:bg-[rgba(212,255,0,0.7)] cursor-pointer"
                   : "w-1.5 h-1.5 bg-border-subtle cursor-default"
@@ -399,7 +399,7 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
             {stepKey === "personalize" && (
               <button
                 onClick={next}
-                className="text-[11px] text-text-muted hover:text-[#2563EB] transition-colors px-3 py-2 font-medium"
+                className="text-[11px] text-text-muted hover:text-[#D4FF00] transition-colors px-3 py-2 font-medium"
               >
                 Skip for now
               </button>
@@ -407,7 +407,7 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
             <button
               onClick={next}
               disabled={!canAdvance()}
-              className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-bold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.2)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-gradient-to-r from-[#D4FF00] to-[#AACC00] text-white text-xs font-bold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.2)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Continue <ArrowRight size={13} />
             </button>
@@ -416,7 +416,7 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
           <button
             onClick={handleFinish}
             disabled={submitting}
-            className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-bold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.2)] transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-gradient-to-r from-[#D4FF00] to-[#AACC00] text-white text-xs font-bold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.2)] transition-all disabled:opacity-50"
           >
             {submitting ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
             {submitting ? "Setting up..." : "Finish & Enter Trinity"}
@@ -442,7 +442,7 @@ function StepUserType({
     <div>
       <div className="text-center mb-6">
         <div className="inline-flex w-14 h-14  bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] items-center justify-center mb-3">
-          <Sparkles size={24} className="text-[#2563EB]" />
+          <Sparkles size={24} className="text-[#D4FF00]" />
         </div>
         <h2 className="text-2xl font-bold mb-1">What best describes you?</h2>
         <p className="text-sm text-text-muted">We&apos;ll tailor Trinity to your business.</p>
@@ -457,20 +457,20 @@ function StepUserType({
               onClick={() => onPick(t.id)}
               className={`relative text-left p-4  border transition-all hover-lift ${
                 isSelected
-                  ? "border-[#2563EB] bg-[rgba(212,255,0,0.08)] shadow-[0_0_0_2px_rgba(212,255,0,0.18)]"
+                  ? "border-[#D4FF00] bg-[rgba(212,255,0,0.08)] shadow-[0_0_0_2px_rgba(212,255,0,0.18)]"
                   : "border-border-subtle bg-surface-light hover:border-[rgba(212,255,0,0.25)]"
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
                 <div
                   className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                    isSelected ? "bg-[rgba(212,255,0,0.12)] text-[#2563EB]" : "bg-surface-light text-text-muted"
+                    isSelected ? "bg-[rgba(212,255,0,0.12)] text-[#D4FF00]" : "bg-surface-light text-text-muted"
                   }`}
                 >
                   <Icon size={18} />
                 </div>
                 {isSelected && (
-                  <span className="ml-auto w-5 h-5 rounded-full bg-[#2563EB] flex items-center justify-center">
+                  <span className="ml-auto w-5 h-5 rounded-full bg-[#D4FF00] flex items-center justify-center">
                     <Check size={11} className="text-white" />
                   </span>
                 )}
@@ -501,11 +501,11 @@ function StepBusinessInfo({
   return (
     <div>
       <div className="mb-6">
-        <p className="text-[11px] uppercase tracking-widest text-[#2563EB] font-semibold mb-1">
+        <p className="text-[11px] uppercase tracking-widest text-[#D4FF00] font-semibold mb-1">
           {userTypeLabel}
         </p>
         <h2 className="text-2xl font-bold mb-1 flex items-center gap-2">
-          <Building2 size={22} className="text-[#2563EB]" /> Your business basics
+          <Building2 size={22} className="text-[#D4FF00]" /> Your business basics
         </h2>
         <p className="text-sm text-text-muted">
           We&apos;ll auto-fill everything we can from your website — skip it if you prefer.
@@ -522,7 +522,7 @@ function StepBusinessInfo({
             value={state.business_name}
             onChange={(e) => onChange("business_name", e.target.value)}
             placeholder="e.g. Northfield Collective"
-            className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all"
+            className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#D4FF00] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all"
           />
         </div>
 
@@ -537,7 +537,7 @@ function StepBusinessInfo({
               value={state.handle}
               onChange={(e) => onChange("handle", e.target.value.replace(/^@/, ""))}
               placeholder="yourbrand"
-              className="flex-1 px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all"
+              className="flex-1 px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#D4FF00] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all"
             />
           </div>
         </div>
@@ -582,11 +582,11 @@ function StepNiche({
   return (
     <div>
       <div className="mb-6">
-        <p className="text-[11px] uppercase tracking-widest text-[#2563EB] font-semibold mb-1">
+        <p className="text-[11px] uppercase tracking-widest text-[#D4FF00] font-semibold mb-1">
           {meta.label}
         </p>
         <h2 className="text-2xl font-bold mb-1 flex items-center gap-2">
-          <Target size={22} className="text-[#2563EB]" /> Your niche / focus
+          <Target size={22} className="text-[#D4FF00]" /> Your niche / focus
         </h2>
         <p className="text-sm text-text-muted">{meta.nichePrompt}</p>
       </div>
@@ -596,7 +596,7 @@ function StepNiche({
         onChange={(e) => onChange(e.target.value)}
         placeholder={meta.nichePrompt}
         rows={4}
-        className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all resize-none"
+        className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#D4FF00] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all resize-none"
       />
     </div>
   );
@@ -632,7 +632,7 @@ function StepAIQuestions({
       <div className="mb-6 flex items-start justify-between gap-3">
         <div>
           <h2 className="text-2xl font-bold mb-1 flex items-center gap-2">
-            <Sparkles size={22} className="text-[#2563EB]" /> {title}
+            <Sparkles size={22} className="text-[#D4FF00]" /> {title}
           </h2>
           <p className="text-sm text-text-muted">{description}</p>
         </div>
@@ -640,7 +640,7 @@ function StepAIQuestions({
           type="button"
           onClick={onRegenerate}
           disabled={loading}
-          className="text-[10px] text-text-muted hover:text-[#2563EB] transition-colors whitespace-nowrap disabled:opacity-40"
+          className="text-[10px] text-text-muted hover:text-[#D4FF00] transition-colors whitespace-nowrap disabled:opacity-40"
         >
           Regenerate
         </button>
@@ -648,7 +648,7 @@ function StepAIQuestions({
 
       {loading && (
         <div className="flex flex-col items-center gap-2 py-10">
-          <Loader2 size={22} className="animate-spin text-[#2563EB]" />
+          <Loader2 size={22} className="animate-spin text-[#D4FF00]" />
           <p className="text-xs text-text-muted">Personalizing questions for you...</p>
         </div>
       )}
@@ -701,7 +701,7 @@ function QuestionField({
                 onClick={() => onChange(sel ? arr.filter((v) => v !== opt) : [...arr, opt])}
                 className={`px-3 py-1.5 rounded-full text-[11px] border transition-all ${
                   sel
-                    ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.4)] text-[#2563EB]"
+                    ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.4)] text-[#D4FF00]"
                     : "bg-surface-light border-border-subtle text-text-muted hover:text-text-primary"
                 }`}
               >
@@ -726,7 +726,7 @@ function QuestionField({
           onChange={(e) => onChange(e.target.value)}
           placeholder={q.placeholder}
           rows={3}
-          className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all resize-none"
+          className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#D4FF00] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all resize-none"
         />
       </div>
     );
@@ -743,7 +743,7 @@ function QuestionField({
         value={(value as string) || ""}
         onChange={(e) => onChange(e.target.value)}
         placeholder={q.placeholder}
-        className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all"
+        className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#D4FF00] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all"
       />
     </div>
   );
@@ -772,7 +772,7 @@ function StepSidebar({
     <div>
       <div className="mb-5">
         <h2 className="text-2xl font-bold mb-1 flex items-center gap-2">
-          <Layers size={22} className="text-[#2563EB]" /> Build your sidebar
+          <Layers size={22} className="text-[#D4FF00]" /> Build your sidebar
         </h2>
         <p className="text-sm text-text-muted">
           Pick the tools that matter — we&apos;ll hide the rest. Click &quot;AI Recommended&quot; for a starter set tailored to you.
@@ -808,8 +808,8 @@ function StepPersonalize({
   return (
     <div>
       <div className="mb-5">
-        <h2 className="text-2xl font-bold mb-1 flex items-center gap-2 bg-gradient-to-r from-[#2563EB] to-[#3B82F6] bg-clip-text text-transparent">
-          <Sparkles size={22} className="text-[#2563EB]" /> Personalized for you
+        <h2 className="text-2xl font-bold mb-1 flex items-center gap-2 bg-gradient-to-r from-[#D4FF00] to-[#AACC00] bg-clip-text text-transparent">
+          <Sparkles size={22} className="text-[#D4FF00]" /> Personalized for you
         </h2>
         <p className="text-sm text-text-muted">
           Optional follow-up questions — your answers help us tune content generation and your AI copilot.
@@ -818,7 +818,7 @@ function StepPersonalize({
 
       {loading && (
         <div className="flex flex-col items-center gap-2 py-12 rounded-xl border border-[rgba(212,255,0,0.2)] bg-gradient-to-b from-[rgba(212,255,0,0.05)] to-transparent">
-          <Loader2 size={22} className="animate-spin text-[#2563EB]" />
+          <Loader2 size={22} className="animate-spin text-[#D4FF00]" />
           <p className="text-xs text-text-muted">Our AI is getting to know you...</p>
         </div>
       )}
@@ -834,7 +834,7 @@ function StepPersonalize({
           {questions.map((q) => (
             <div key={q.id} className="rounded-xl border border-border-subtle p-4 bg-surface-light/30">
               <label className="block text-xs font-semibold text-text-primary mb-1.5 flex items-start gap-1.5">
-                <Sparkles size={11} className="text-[#2563EB] mt-0.5 shrink-0" />
+                <Sparkles size={11} className="text-[#D4FF00] mt-0.5 shrink-0" />
                 <span>{q.question}</span>
               </label>
               {q.help_text && (
@@ -845,7 +845,7 @@ function StepPersonalize({
                 onChange={(e) => onChange({ ...answers, [q.id]: e.target.value })}
                 placeholder={q.placeholder}
                 rows={2}
-                className="w-full px-3 py-2.5 bg-surface-light border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all resize-none"
+                className="w-full px-3 py-2.5 bg-surface-light border border-border-subtle rounded-lg text-sm text-text-primary focus:outline-none focus:border-[#D4FF00] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all resize-none"
               />
             </div>
           ))}
@@ -874,13 +874,13 @@ function StepReady({
   return (
     <div className="text-center py-6">
       <div className="inline-flex w-20 h-20 rounded-3xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] items-center justify-center mb-4">
-        <CheckCircle2 size={36} className="text-[#2563EB]" />
+        <CheckCircle2 size={36} className="text-[#D4FF00]" />
       </div>
       <h2 className="text-2xl font-bold mb-2">You&apos;re all set!</h2>
       <p className="text-sm text-text-muted max-w-md mx-auto mb-6">
         Trinity is personalized for <span className="text-text-primary font-medium">{businessName}</span>. Your
-        dashboard will focus on <span className="text-[#2563EB] font-medium">{userTypeLabel}</span> metrics and your
-        sidebar has <span className="text-[#2563EB] font-medium">{enabledCount}</span> tools enabled.
+        dashboard will focus on <span className="text-[#D4FF00] font-medium">{userTypeLabel}</span> metrics and your
+        sidebar has <span className="text-[#D4FF00] font-medium">{enabledCount}</span> tools enabled.
       </p>
       <div className="grid grid-cols-3 gap-3 max-w-md mx-auto">
         {[
@@ -889,7 +889,7 @@ function StepReady({
           { icon: <Rocket size={18} />, label: "Ready to launch" },
         ].map((x) => (
           <div key={x.label} className="p-3 rounded-xl border border-border-subtle bg-surface-light/40">
-            <div className="text-[#2563EB] mb-1 inline-flex">{x.icon}</div>
+            <div className="text-[#D4FF00] mb-1 inline-flex">{x.icon}</div>
             <p className="text-[11px] font-medium text-text-primary">{x.label}</p>
           </div>
         ))}

@@ -311,7 +311,7 @@ export default function RollingPreview({
                     }}
                   />
                   {item.tag && (
-                    <span className="absolute bottom-1.5 left-1.5 text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-black/70 text-[#2563EB] border border-[rgba(212,255,0,0.3)] opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="absolute bottom-1.5 left-1.5 text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-black/70 text-[#D4FF00] border border-[rgba(212,255,0,0.3)] opacity-0 group-hover:opacity-100 transition-opacity">
                       {item.tag}
                     </span>
                   )}

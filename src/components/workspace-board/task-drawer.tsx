@@ -209,7 +209,7 @@ export function TaskDrawer({
                   <select
                     value={task.status}
                     onChange={(e) => onPatch({ status: e.target.value as TaskStatus })}
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#2563EB] focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#D4FF00] focus:outline-none text-sm"
                   >
                     <option value="backlog">Backlog</option>
                     <option value="in_progress">In Progress</option>
@@ -223,7 +223,7 @@ export function TaskDrawer({
                     onChange={(e) =>
                       onPatch({ priority: e.target.value as TaskPriority })
                     }
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#2563EB] focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#D4FF00] focus:outline-none text-sm"
                   >
                     {TASK_PRIORITIES.map((p) => (
                       <option key={p} value={p}>
@@ -236,7 +236,7 @@ export function TaskDrawer({
                   <select
                     value={task.type}
                     onChange={(e) => onPatch({ type: e.target.value as TaskType })}
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#2563EB] focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#D4FF00] focus:outline-none text-sm"
                   >
                     {TASK_TYPES.map((t) => (
                       <option key={t} value={t}>
@@ -256,7 +256,7 @@ export function TaskDrawer({
                           : null,
                       })
                     }
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#2563EB] focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#D4FF00] focus:outline-none text-sm"
                   />
                 </Field>
                 <Field label="Client">
@@ -265,7 +265,7 @@ export function TaskDrawer({
                     onChange={(e) =>
                       onPatch({ client_id: e.target.value || null })
                     }
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#2563EB] focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#D4FF00] focus:outline-none text-sm"
                   >
                     <option value="">No client</option>
                     {Object.values(clients).map((c) => (
@@ -281,7 +281,7 @@ export function TaskDrawer({
                     onChange={(e) =>
                       onPatch({ assignee_id: e.target.value || null })
                     }
-                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#2563EB] focus:outline-none text-sm"
+                    className="w-full px-2 py-1.5 rounded bg-surface-light border border-border-subtle focus:border-[#D4FF00] focus:outline-none text-sm"
                   >
                     <option value="">Unassigned</option>
                     {Object.values(members).map((m) => (
@@ -367,12 +367,12 @@ export function TaskDrawer({
                   }}
                   rows={2}
                   placeholder="Write a comment… (⌘+Enter to send)"
-                  className="flex-1 px-3 py-2 rounded-lg bg-surface-light border border-border-subtle focus:border-[#2563EB] focus:outline-none text-sm resize-none"
+                  className="flex-1 px-3 py-2 rounded-lg bg-surface-light border border-border-subtle focus:border-[#D4FF00] focus:outline-none text-sm resize-none"
                 />
                 <button
                   type="submit"
                   disabled={!draft.trim() || submittingComment}
-                  className="p-2 rounded-lg bg-[#2563EB] text-white hover:bg-[#1D4ED8] transition-colors disabled:opacity-40"
+                  className="p-2 rounded-lg bg-[#D4FF00] text-[#020711] hover:bg-[#AACC00] transition-colors disabled:opacity-40"
                   aria-label="Send"
                 >
                   <Send size={16} />
@@ -415,7 +415,7 @@ function CommentRow({
     : "?";
   return (
     <div className="flex gap-2.5">
-      <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold bg-[rgba(212,255,0,0.12)] text-[#2563EB] border border-[rgba(212,255,0,0.25)]">
+      <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold bg-[rgba(212,255,0,0.12)] text-[#D4FF00] border border-[rgba(212,255,0,0.25)]">
         {author?.avatar_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

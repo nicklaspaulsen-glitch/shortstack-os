@@ -500,7 +500,7 @@ export default function ClientPortalDashboard({
   function getStatusStyle(status: string) {
     const s = status.toLowerCase();
     if (s === "active" || s === "in_progress" || s === "todo" || s === "scheduled")
-      return "bg-[rgba(212,255,0,0.08)] text-[#2563EB] border-[rgba(212,255,0,0.2)]";
+      return "bg-[rgba(212,255,0,0.08)] text-[#D4FF00] border-[rgba(212,255,0,0.2)]";
     if (s === "review" || s === "ready_to_publish" || s === "editing" || s === "open")
       return "bg-info/10 text-info border-info/20";
     if (
@@ -519,7 +519,7 @@ export default function ClientPortalDashboard({
 
   function getProgressColor(progress: number) {
     if (progress >= 80) return "bg-success";
-    if (progress >= 50) return "bg-[#2563EB]";
+    if (progress >= 50) return "bg-[#D4FF00]";
     return "bg-info";
   }
 
@@ -581,7 +581,7 @@ export default function ClientPortalDashboard({
           >
             <Bell size={18} className="text-text-muted" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-[#2563EB] text-[10px] font-bold text-white px-1">
+              <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-[#D4FF00] text-[10px] font-bold text-[#020711] px-1">
                 {unreadCount}
               </span>
             )}
@@ -596,7 +596,7 @@ export default function ClientPortalDashboard({
                     setChatOpen(true);
                     setNotificationsOpen(false);
                   }}
-                  className="text-[11px] text-[#2563EB] hover:text-[rgba(212,255,0,0.8)] font-medium transition-colors"
+                  className="text-[11px] text-[#D4FF00] hover:text-[rgba(212,255,0,0.8)] font-medium transition-colors"
                 >
                   Open messages
                 </button>
@@ -615,7 +615,7 @@ export default function ClientPortalDashboard({
                         key={m.id}
                         className="flex items-start gap-3 px-4 py-3 border-b border-border-subtle/50 last:border-0 bg-[rgba(212,255,0,0.05)]"
                       >
-                        <div className="mt-1 w-2 h-2 rounded-full bg-[#2563EB] shrink-0" />
+                        <div className="mt-1 w-2 h-2 rounded-full bg-[#D4FF00] shrink-0" />
                         <div className="flex-1 min-w-0">
                           <p className="text-xs text-text-primary leading-snug line-clamp-2">
                             {m.body}
@@ -648,7 +648,7 @@ export default function ClientPortalDashboard({
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <div className="h-10 w-10 rounded-xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center">
-                <Sparkles size={18} className="text-[#2563EB]" />
+                <Sparkles size={18} className="text-[#D4FF00]" />
               </div>
               <div>
                 <p className="text-lg font-semibold text-text-primary">
@@ -689,12 +689,12 @@ export default function ClientPortalDashboard({
       {!announcementsLoading && announcements.length > 0 && (
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <Megaphone size={14} className="text-[#2563EB]" />
+            <Megaphone size={14} className="text-[#D4FF00]" />
             <h2 className="text-sm font-semibold text-text-primary uppercase tracking-wider">
               From your agency
             </h2>
             {announcements.some((a) => a.pinned) && (
-              <span className="text-[9px] bg-[rgba(212,255,0,0.08)] text-[#2563EB] border border-[rgba(212,255,0,0.2)] px-1.5 py-0.5 rounded-full font-medium">
+              <span className="text-[9px] bg-[rgba(212,255,0,0.08)] text-[#D4FF00] border border-[rgba(212,255,0,0.2)] px-1.5 py-0.5 rounded-full font-medium">
                 Pinned update
               </span>
             )}
@@ -707,7 +707,7 @@ export default function ClientPortalDashboard({
               >
                 <div className="flex items-start gap-2">
                   <div className="p-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.1)] shrink-0">
-                    <Megaphone size={12} className="text-[#2563EB]" />
+                    <Megaphone size={12} className="text-[#D4FF00]" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
@@ -728,7 +728,7 @@ export default function ClientPortalDashboard({
                     href={ann.cta_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-1 text-[11px] text-[#2563EB] hover:text-[rgba(212,255,0,0.8)] font-medium transition-colors"
+                    className="flex items-center gap-1 text-[11px] text-[#D4FF00] hover:text-[rgba(212,255,0,0.8)] font-medium transition-colors"
                   >
                     {ann.cta_label}
                     <ExternalLink size={10} />
@@ -793,14 +793,14 @@ export default function ClientPortalDashboard({
               <div key={project.id} className="glass rounded-xl p-4 group cursor-pointer">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-text-primary truncate group-hover:text-[#2563EB] transition-colors">
+                    <p className="text-sm font-semibold text-text-primary truncate group-hover:text-[#D4FF00] transition-colors">
                       {project.name}
                     </p>
                     <p className="text-[11px] text-text-muted mt-0.5">
                       {project.doneCount} / {project.taskCount} tasks complete
                     </p>
                   </div>
-                  <span className="badge border text-[10px] ml-2 shrink-0 bg-[rgba(212,255,0,0.08)] text-[#2563EB] border-[rgba(212,255,0,0.2)]">
+                  <span className="badge border text-[10px] ml-2 shrink-0 bg-[rgba(212,255,0,0.08)] text-[#D4FF00] border-[rgba(212,255,0,0.2)]">
                     Active
                   </span>
                 </div>
@@ -872,11 +872,11 @@ export default function ClientPortalDashboard({
                 >
                   <button
                     onClick={() => toggleTask(t)}
-                    className="mt-0.5 p-0.5 rounded-md text-text-muted hover:text-[#2563EB] transition-colors"
+                    className="mt-0.5 p-0.5 rounded-md text-text-muted hover:text-[#D4FF00] transition-colors"
                     aria-label={t.is_completed ? "Mark incomplete" : "Mark complete"}
                   >
                     {t.is_completed ? (
-                      <CheckSquare size={16} className="text-[#2563EB]" />
+                      <CheckSquare size={16} className="text-[#D4FF00]" />
                     ) : (
                       <Square size={16} />
                     )}
@@ -939,7 +939,7 @@ export default function ClientPortalDashboard({
                     <div
                       className={`w-2.5 h-2.5 rounded-full border-2 mt-1 ${
                         m.priority === "urgent" || m.priority === "high"
-                          ? "border-[#2563EB] bg-[rgba(212,255,0,0.18)]"
+                          ? "border-[#D4FF00] bg-[rgba(212,255,0,0.18)]"
                           : m.status === "review"
                           ? "border-info bg-info/30"
                           : "border-muted/40 bg-transparent"
@@ -1007,7 +1007,7 @@ export default function ClientPortalDashboard({
                 <div key={item.id} className="glass rounded-xl p-4 space-y-3">
                   <div className="flex items-start gap-3">
                     <div className="p-2 rounded-xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.1)] shrink-0">
-                      <Rocket size={14} className="text-[#2563EB]" />
+                      <Rocket size={14} className="text-[#D4FF00]" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-xs font-semibold text-text-primary leading-snug">
@@ -1084,7 +1084,7 @@ export default function ClientPortalDashboard({
                 }`}
               >
                 <div className="p-2 rounded-xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.1)] shrink-0">
-                  <Receipt size={14} className="text-[#2563EB]" />
+                  <Receipt size={14} className="text-[#D4FF00]" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold text-text-primary">
@@ -1106,7 +1106,7 @@ export default function ClientPortalDashboard({
                     href={inv.hostedUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[11px] text-[#2563EB] hover:text-[rgba(212,255,0,0.8)] font-medium ml-2"
+                    className="text-[11px] text-[#D4FF00] hover:text-[rgba(212,255,0,0.8)] font-medium ml-2"
                   >
                     View
                   </a>
@@ -1154,14 +1154,14 @@ export default function ClientPortalDashboard({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Rocket size={14} className="text-[#3B82F6]" />
+            <Rocket size={14} className="text-[#D4FF00]" />
             <h2 className="text-sm font-semibold text-text-primary uppercase tracking-wider">
               Request More Work
             </h2>
           </div>
           <button
             onClick={() => setRequestFormVisible(!requestFormVisible)}
-            className="flex items-center gap-1.5 text-[11px] font-medium text-[#3B82F6] hover:text-[#60A5FA] transition-colors"
+            className="flex items-center gap-1.5 text-[11px] font-medium text-[#D4FF00] hover:text-[#D4FF00] transition-colors"
           >
             <PlusCircle size={13} />
             New Request
@@ -1182,7 +1182,7 @@ export default function ClientPortalDashboard({
                 <select
                   value={requestServiceType}
                   onChange={(e) => setRequestServiceType(e.target.value)}
-                  className="w-full bg-surface border border-border-subtle rounded-lg px-3 py-2 text-xs text-text-primary focus:outline-none focus:ring-1 focus:ring-[#3B82F6]"
+                  className="w-full bg-surface border border-border-subtle rounded-lg px-3 py-2 text-xs text-text-primary focus:outline-none focus:ring-1 focus:ring-[#D4FF00]"
                 >
                   <option value="social_media">Social Media</option>
                   <option value="ads">Paid Ads</option>
@@ -1201,7 +1201,7 @@ export default function ClientPortalDashboard({
                 <select
                   value={requestUrgency}
                   onChange={(e) => setRequestUrgency(e.target.value)}
-                  className="w-full bg-surface border border-border-subtle rounded-lg px-3 py-2 text-xs text-text-primary focus:outline-none focus:ring-1 focus:ring-[#3B82F6]"
+                  className="w-full bg-surface border border-border-subtle rounded-lg px-3 py-2 text-xs text-text-primary focus:outline-none focus:ring-1 focus:ring-[#D4FF00]"
                 >
                   <option value="standard">Standard (1–2 weeks)</option>
                   <option value="priority">Priority (3–5 days)</option>
@@ -1218,7 +1218,7 @@ export default function ClientPortalDashboard({
                 onChange={(e) => setRequestBrief(e.target.value)}
                 placeholder="Describe what you need — goals, deliverables, references, any relevant context…"
                 rows={4}
-                className="w-full bg-surface border border-border-subtle rounded-lg px-3 py-2 text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-[#3B82F6] resize-none"
+                className="w-full bg-surface border border-border-subtle rounded-lg px-3 py-2 text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-[#D4FF00] resize-none"
               />
             </div>
             <div className="flex items-center justify-end gap-2">
@@ -1269,7 +1269,7 @@ export default function ClientPortalDashboard({
                       {req.paid_at ? (
                         <CheckCircle size={14} className="text-emerald-400" />
                       ) : req.proposal_status === "sent" ? (
-                        <Clock size={14} className="text-[#3B82F6]" />
+                        <Clock size={14} className="text-[#D4FF00]" />
                       ) : req.proposal_status === "generating" ? (
                         <Loader2 size={14} className="animate-spin text-text-muted" />
                       ) : (
@@ -1289,7 +1289,7 @@ export default function ClientPortalDashboard({
                         req.paid_at
                           ? "bg-emerald-500/15 text-emerald-400"
                           : req.proposal_status === "sent"
-                          ? "bg-[#3B82F6]/15 text-[#3B82F6]"
+                          ? "bg-[#D4FF00]/15 text-[#D4FF00]"
                           : req.proposal_status === "generating"
                           ? "bg-surface text-text-muted"
                           : "bg-surface text-text-muted"
@@ -1380,13 +1380,13 @@ export default function ClientPortalDashboard({
         className={`fixed bottom-6 right-6 z-40 p-3.5  shadow-elevated transition-all duration-300 ${
           chatOpen
             ? "bg-surface border border-border-subtle text-text-muted hover:text-text-primary scale-90"
-            : "bg-[#2563EB] text-white hover:bg-[#1D4ED8] scale-100"
+            : "bg-[#D4FF00] text-[#020711] hover:bg-[#AACC00] scale-100"
         }`}
         style={
           !chatOpen
             ? {
                 boxShadow:
-                  "0 4px 20px rgba(37, 99, 235, 0.3), 0 0 40px rgba(37, 99, 235, 0.1)",
+                  "0 4px 20px rgba(212, 255, 0, 0.3), 0 0 40px rgba(212, 255, 0, 0.1)",
               }
             : undefined
         }
@@ -1410,7 +1410,7 @@ export default function ClientPortalDashboard({
           >
             <div className="relative">
               <div className="h-9 w-9 rounded-xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center">
-                <MessageSquare size={16} className="text-[#2563EB]" />
+                <MessageSquare size={16} className="text-[#D4FF00]" />
               </div>
               <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-success rounded-full border-2 border-surface" />
             </div>
@@ -1453,7 +1453,7 @@ export default function ClientPortalDashboard({
                     <div
                       className={`max-w-[85%]  px-3.5 py-2.5 text-xs leading-relaxed ${
                         isMe
-                          ? "bg-[#2563EB] text-white rounded-br-md"
+                          ? "bg-[#D4FF00] text-[#020711] rounded-br-md"
                           : "bg-surface-light text-text-primary rounded-bl-md border border-border-subtle/50"
                       }`}
                     >
@@ -1490,7 +1490,7 @@ export default function ClientPortalDashboard({
                 disabled={!chatInput.trim() || chatSending}
                 className={`p-2.5 rounded-xl transition-all ${
                   chatInput.trim() && !chatSending
-                    ? "bg-[#2563EB] text-white hover:bg-[#1D4ED8]"
+                    ? "bg-[#D4FF00] text-[#020711] hover:bg-[#AACC00]"
                     : "bg-surface-light text-text-muted cursor-not-allowed"
                 }`}
               >
@@ -1531,7 +1531,7 @@ function QuickStat({
   loading?: boolean;
 }) {
   const colorMap: Record<string, string> = {
-    gold: "bg-[rgba(212,255,0,0.08)] text-[#2563EB] border-[rgba(212,255,0,0.2)]",
+    gold: "bg-[rgba(212,255,0,0.08)] text-[#D4FF00] border-[rgba(212,255,0,0.2)]",
     warning: "bg-warning/10 text-warning border-warning/20",
     info: "bg-info/10 text-info border-info/20",
     accent: "bg-accent/10 text-accent border-accent/20",
@@ -1580,7 +1580,7 @@ function QuickActionButton({
       className="glass rounded-xl p-4 text-left group cursor-pointer hover:border-[rgba(212,255,0,0.25)]"
     >
       <div className="flex items-center gap-2.5 mb-2">
-        <div className="p-2 rounded-xl bg-[rgba(212,255,0,0.08)] text-[#2563EB] border border-[rgba(212,255,0,0.1)] group-hover:bg-[rgba(212,255,0,0.12)] transition-colors">
+        <div className="p-2 rounded-xl bg-[rgba(212,255,0,0.08)] text-[#D4FF00] border border-[rgba(212,255,0,0.1)] group-hover:bg-[rgba(212,255,0,0.12)] transition-colors">
           {icon}
         </div>
         <p className="text-xs font-semibold text-text-primary">{label}</p>
@@ -1628,7 +1628,7 @@ function ErrorBlock({ message, onRetry }: { message: string; onRetry: () => void
       </div>
       <button
         onClick={onRetry}
-        className="text-[11px] text-[#2563EB] hover:text-[rgba(212,255,0,0.8)] font-medium"
+        className="text-[11px] text-[#D4FF00] hover:text-[rgba(212,255,0,0.8)] font-medium"
       >
         Retry
       </button>

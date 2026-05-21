@@ -111,11 +111,11 @@ function StepCard({ step, idx }: { step: Step; idx: number }) {
             border: "1px solid rgba(255,255,255,0.18)",
           }}
         >
-          <step.icon size={20} style={{ color: "#60A5FA" }} />
+          <step.icon size={20} style={{ color: "#D4FF00" }} />
         </div>
         <span
           className="text-3xl font-extrabold opacity-30 group-hover:opacity-60 transition-opacity"
-          style={{ color: "#3B82F6" }}
+          style={{ color: "#D4FF00" }}
         >
           {step.num}
         </span>
@@ -197,9 +197,9 @@ function StepVisual({ idx }: { idx: number }) {
         }}
       >
         {[
-          { Icon: Sparkles, label: "AI drafted 12 cold emails", color: "#60A5FA", delay: 0 },
-          { Icon: Phone, label: "AI booked 3 meetings", color: "#3B82F6", delay: 0.5 },
-          { Icon: Zap, label: "Lead enriched + scored", color: "#3B82F6", delay: 1 },
+          { Icon: Sparkles, label: "AI drafted 12 cold emails", color: "#D4FF00", delay: 0 },
+          { Icon: Phone, label: "AI booked 3 meetings", color: "#D4FF00", delay: 0.5 },
+          { Icon: Zap, label: "Lead enriched + scored", color: "#D4FF00", delay: 1 },
         ].map((item, i) => (
           <div
             key={i}
@@ -212,7 +212,7 @@ function StepVisual({ idx }: { idx: number }) {
           >
             <item.Icon size={11} style={{ color: item.color }} />
             <span className="flex-1 truncate">{item.label}</span>
-            <CheckCircle2 size={10} style={{ color: "#3B82F6" }} />
+            <CheckCircle2 size={10} style={{ color: "#D4FF00" }} />
           </div>
         ))}
         <style jsx>{`
@@ -257,7 +257,7 @@ function StepVisual({ idx }: { idx: number }) {
               height: `${h}%`,
               background:
                 i === 6
-                  ? "linear-gradient(180deg, #2563EB, #1D4ED8)"
+                  ? "linear-gradient(180deg, #D4FF00, #AACC00)"
                   : "rgba(255,255,255,0.25)",
               animation: "bar-grow 1.4s ease-out forwards",
               animationDelay: `${i * 0.08}s`,

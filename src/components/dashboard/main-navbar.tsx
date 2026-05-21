@@ -233,7 +233,7 @@ function IconCircle({
           transition: "opacity 120ms",
           background: "rgba(10,13,24,0.96)",
           color: "#A8A8B2",
-          border: "1px solid rgba(99,146,255,0.12)",
+          border: "1px solid rgba(212, 255, 0,0.12)",
           backdropFilter: "blur(12px)",
         }}
       >
@@ -314,11 +314,11 @@ function SectionDropdown({
               WebkitBackdropFilter: "blur(28px) saturate(200%)",
               /* top gradient highlight — glass edge */
               borderTop: "1px solid rgba(255,255,255,0.12)",
-              borderRight: "1px solid rgba(99,146,255,0.08)",
-              borderBottom: "1px solid rgba(99,146,255,0.08)",
-              borderLeft: "1px solid rgba(99,146,255,0.08)",
+              borderRight: "1px solid rgba(212, 255, 0,0.08)",
+              borderBottom: "1px solid rgba(212, 255, 0,0.08)",
+              borderLeft: "1px solid rgba(212, 255, 0,0.08)",
               boxShadow:
-                "0 8px 40px rgba(0,0,0,0.50), 0 0 0 1px rgba(99,146,255,0.08), " +
+                "0 8px 40px rgba(0,0,0,0.50), 0 0 0 1px rgba(212, 255, 0,0.08), " +
                 "inset 0 1px 0 rgba(255,255,255,0.06)",
             }}
           >
@@ -597,10 +597,10 @@ export default function MainNavbar() {
           WebkitBackdropFilter: "blur(24px) saturate(200%)",
           /* Glass edge: strong white highlight on top, subtle on sides */
           borderTop: "1px solid rgba(255,255,255,0.10)",
-          borderBottom: "1px solid rgba(99,146,255,0.08)",
+          borderBottom: "1px solid rgba(212, 255, 0,0.08)",
           /* Layered shadow: thin ambient + deeper glow */
           boxShadow:
-            "0 1px 0 rgba(99,146,255,0.06), " +
+            "0 1px 0 rgba(212, 255, 0,0.06), " +
             "0 4px 24px rgba(0,0,0,0.40), " +
             "0 0 0 1px rgba(255,255,255,0.04) inset",
         }}
@@ -627,7 +627,7 @@ export default function MainNavbar() {
           className="hidden lg:block w-px h-5 shrink-0 mx-1"
           style={{
             background:
-              "linear-gradient(to bottom, transparent, rgba(99,146,255,0.18), transparent)",
+              "linear-gradient(to bottom, transparent, rgba(212, 255, 0,0.18), transparent)",
           }}
           aria-hidden
         />
@@ -650,7 +650,7 @@ export default function MainNavbar() {
           className="hidden lg:block w-px h-5 shrink-0 mx-1"
           style={{
             background:
-              "linear-gradient(to bottom, transparent, rgba(99,146,255,0.18), transparent)",
+              "linear-gradient(to bottom, transparent, rgba(212, 255, 0,0.18), transparent)",
           }}
           aria-hidden
         />
@@ -692,7 +692,7 @@ export default function MainNavbar() {
             }
             className="shrink-0 rounded-full outline-none"
             style={{
-              boxShadow: "0 0 0 1px rgba(99,146,255,0.18), 0 0 8px rgba(212,255,0,0.08)",
+              boxShadow: "0 0 0 1px rgba(212, 255, 0,0.18), 0 0 8px rgba(212,255,0,0.08)",
               transition: "box-shadow 200ms",
             }}
           >
@@ -709,7 +709,7 @@ export default function MainNavbar() {
               <div
                 className="w-7 h-7 rounded-full flex items-center justify-center"
                 style={{
-                  background: "linear-gradient(135deg, rgba(212,255,0,0.20), rgba(37,99,235,0.10))",
+                  background: "linear-gradient(135deg, rgba(212,255,0,0.20), rgba(212, 255, 0,0.10))",
                   border: "1px solid rgba(212,255,0,0.22)",
                 }}
               >

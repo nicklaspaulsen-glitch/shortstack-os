@@ -158,7 +158,7 @@ function ChoiceBtn({
       onClick={onClick}
       className={`px-4 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 ${
         selected
-          ? "border-[#2563EB] bg-[rgba(212,255,0,0.08)] text-text-primary"
+          ? "border-[#D4FF00] bg-[rgba(212,255,0,0.08)] text-text-primary"
           : "border-border-subtle bg-surface-light text-text-muted hover:border-[rgba(212,255,0,0.4)] hover:text-text-primary"
       } ${className}`}
     >
@@ -183,12 +183,12 @@ function SelectCard({
       onClick={onClick}
       className={`relative text-left  p-4 border transition-all duration-200 ${
         selected
-          ? "border-[#2563EB] bg-[rgba(212,255,0,0.05)] shadow-[0_0_0_1px_rgba(212,255,0,0.25)]"
+          ? "border-[#D4FF00] bg-[rgba(212,255,0,0.05)] shadow-[0_0_0_1px_rgba(212,255,0,0.25)]"
           : "border-border-subtle bg-surface-light hover:border-[rgba(212,255,0,0.4)]"
       } ${className}`}
     >
       {selected && (
-        <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-[#2563EB] flex items-center justify-center">
+        <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-[#D4FF00] flex items-center justify-center">
           <Check size={11} className="text-white" />
         </span>
       )}
@@ -199,7 +199,7 @@ function SelectCard({
 
 function StepLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-xs font-semibold uppercase tracking-widest text-[#2563EB] mb-1">
+    <p className="text-xs font-semibold uppercase tracking-widest text-[#D4FF00] mb-1">
       {children}
     </p>
   );
@@ -362,11 +362,11 @@ export default function ClientOnboardingWizard({
           <div className="flex flex-col items-center text-center py-8 px-4">
             <div className="relative mb-8">
               <div className="w-20 h-20 rounded-3xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center breathe">
-                <Sparkles size={36} className="text-[#2563EB]" />
+                <Sparkles size={36} className="text-[#D4FF00]" />
               </div>
               <div className="absolute -inset-3 rounded-[2rem] bg-[rgba(212,255,0,0.04)] -z-10" />
             </div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#2563EB] mb-3">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#D4FF00] mb-3">
               Welcome to Trinity
             </p>
             <h1 className="text-3xl font-bold text-text-primary tracking-tight mb-4">
@@ -377,7 +377,7 @@ export default function ClientOnboardingWizard({
               <span className="text-text-primary font-medium">your business</span>.
             </p>
             <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border-subtle text-xs text-text-muted mb-10">
-              <Clock size={13} className="text-[#2563EB]" />
+              <Clock size={13} className="text-[#D4FF00]" />
               Takes about 5 minutes
             </div>
             <button onClick={next} className="btn-primary flex items-center gap-2 text-base px-8 py-3">
@@ -434,7 +434,7 @@ export default function ClientOnboardingWizard({
                       onClick={() => set("business_type", id)}
                       className="flex flex-col items-center gap-2 py-5"
                     >
-                      <Icon size={22} className={data.business_type === id ? "text-[#2563EB]" : "text-text-muted"} />
+                      <Icon size={22} className={data.business_type === id ? "text-[#D4FF00]" : "text-text-muted"} />
                       <span className="text-sm font-medium text-text-primary">{label}</span>
                     </SelectCard>
                   ))}
@@ -510,7 +510,7 @@ export default function ClientOnboardingWizard({
             <StepTitle>Goals & priorities</StepTitle>
             <StepSubtitle>
               Select your top 3 goals.{" "}
-              <span className={data.top_goals.length === 3 ? "text-[#2563EB] font-medium" : ""}>
+              <span className={data.top_goals.length === 3 ? "text-[#D4FF00] font-medium" : ""}>
                 {data.top_goals.length}/3 selected
               </span>
             </StepSubtitle>
@@ -544,7 +544,7 @@ export default function ClientOnboardingWizard({
                   >
                     <span className="text-sm font-medium text-text-primary leading-snug block pr-5">{goal}</span>
                     {sel && (
-                      <span className="mt-2 inline-block text-[10px] font-bold text-[#2563EB]">
+                      <span className="mt-2 inline-block text-[10px] font-bold text-[#D4FF00]">
                         #{data.top_goals.indexOf(goal) + 1}
                       </span>
                     )}
@@ -597,7 +597,7 @@ export default function ClientOnboardingWizard({
                     >
                       <AlertCircle
                         size={13}
-                        className={`mb-1.5 ${data.challenges.includes(c) ? "text-[#2563EB]" : "text-text-muted"}`}
+                        className={`mb-1.5 ${data.challenges.includes(c) ? "text-[#D4FF00]" : "text-text-muted"}`}
                       />
                       <span className="text-sm text-text-primary font-medium leading-snug block pr-5">{c}</span>
                     </SelectCard>
@@ -741,7 +741,7 @@ export default function ClientOnboardingWizard({
               <div>
                 <FieldLabel>
                   Brand personality — pick 3{" "}
-                  <span className={data.brand_personality.length === 3 ? "text-[#2563EB]" : "text-text-muted"}>
+                  <span className={data.brand_personality.length === 3 ? "text-[#D4FF00]" : "text-text-muted"}>
                     ({data.brand_personality.length}/3)
                   </span>
                 </FieldLabel>
@@ -772,7 +772,7 @@ export default function ClientOnboardingWizard({
                       >
                         <Palette
                           size={16}
-                          className={`mx-auto mb-2 ${sel ? "text-[#2563EB]" : "text-text-muted"}`}
+                          className={`mx-auto mb-2 ${sel ? "text-[#D4FF00]" : "text-text-muted"}`}
                         />
                         <span className="text-sm font-medium text-text-primary">{p}</span>
                       </SelectCard>
@@ -791,7 +791,7 @@ export default function ClientOnboardingWizard({
                       onClick={() => set("content_types", toggle(data.content_types, id))}
                       className="flex flex-col items-center gap-2 py-4"
                     >
-                      <Icon size={18} className={data.content_types.includes(id) ? "text-[#2563EB]" : "text-text-muted"} />
+                      <Icon size={18} className={data.content_types.includes(id) ? "text-[#D4FF00]" : "text-text-muted"} />
                       <span className="text-xs font-medium text-text-primary text-center">{label}</span>
                     </SelectCard>
                   ))}
@@ -901,22 +901,22 @@ export default function ClientOnboardingWizard({
                     onClick={() => set("has_google_business", true)}
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
                       data.has_google_business
-                        ? "border-[#2563EB] bg-[rgba(212,255,0,0.08)] text-text-primary"
+                        ? "border-[#D4FF00] bg-[rgba(212,255,0,0.08)] text-text-primary"
                         : "border-border-subtle bg-surface-light text-text-muted hover:border-[rgba(212,255,0,0.4)]"
                     }`}
                   >
-                    <Check size={14} className={data.has_google_business ? "text-[#2563EB]" : "text-text-muted"} />
+                    <Check size={14} className={data.has_google_business ? "text-[#D4FF00]" : "text-text-muted"} />
                     Yes, I have one
                   </button>
                   <button
                     onClick={() => set("has_google_business", false)}
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
                       !data.has_google_business
-                        ? "border-[#2563EB] bg-[rgba(212,255,0,0.08)] text-text-primary"
+                        ? "border-[#D4FF00] bg-[rgba(212,255,0,0.08)] text-text-primary"
                         : "border-border-subtle bg-surface-light text-text-muted hover:border-[rgba(212,255,0,0.4)]"
                     }`}
                   >
-                    <X size={14} className={!data.has_google_business ? "text-[#2563EB]" : "text-text-muted"} />
+                    <X size={14} className={!data.has_google_business ? "text-[#D4FF00]" : "text-text-muted"} />
                     Not yet
                   </button>
                 </div>
@@ -947,7 +947,7 @@ export default function ClientOnboardingWizard({
                             }
                             className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-all ${
                               data.social_accounts[id] === value
-                                ? "border-[#2563EB] bg-[rgba(212,255,0,0.08)] text-text-primary"
+                                ? "border-[#D4FF00] bg-[rgba(212,255,0,0.08)] text-text-primary"
                                 : "border-border-subtle text-text-muted hover:border-[rgba(212,255,0,0.25)]"
                             }`}
                           >
@@ -1047,7 +1047,7 @@ export default function ClientOnboardingWizard({
                     ) : (
                       <a
                         href="/integrations"
-                        className="flex items-center gap-1 text-[11px] font-medium text-[#2563EB] hover:text-[rgba(212,255,0,0.8)] shrink-0 transition-colors"
+                        className="flex items-center gap-1 text-[11px] font-medium text-[#D4FF00] hover:text-[rgba(212,255,0,0.8)] shrink-0 transition-colors"
                         onClick={(e) => {
                           e.preventDefault();
                           set("connected_accounts", [...data.connected_accounts, id]);
@@ -1153,7 +1153,7 @@ export default function ClientOnboardingWizard({
           <div className="text-center">
             <div className="relative inline-flex mb-6">
               <div className="w-20 h-20 rounded-3xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center">
-                <Zap size={36} className="text-[#2563EB]" />
+                <Zap size={36} className="text-[#D4FF00]" />
               </div>
               <div className="absolute -inset-4 rounded-[2.5rem] bg-[rgba(212,255,0,0.03)] -z-10 animate-pulse" />
             </div>
@@ -1175,7 +1175,7 @@ export default function ClientOnboardingWizard({
                 >
                   <div
                     className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
-                      i <= aiChecklistIndex ? "bg-[#2563EB] border-[#2563EB]" : "bg-transparent border-border-subtle"
+                      i <= aiChecklistIndex ? "bg-[#D4FF00] border-[#D4FF00]" : "bg-transparent border-border-subtle"
                     } border`}
                   >
                     {i <= aiChecklistIndex && <Check size={11} className="text-white" />}
@@ -1212,7 +1212,7 @@ export default function ClientOnboardingWizard({
               <button
                 onClick={() => set("ai_autopilot_daily", !data.ai_autopilot_daily)}
                 className={`relative w-10 h-6 rounded-full transition-colors duration-200 ${
-                  data.ai_autopilot_daily ? "bg-[#2563EB]" : "bg-border-subtle"
+                  data.ai_autopilot_daily ? "bg-[#D4FF00]" : "bg-border-subtle"
                 }`}
               >
                 <span
@@ -1242,11 +1242,11 @@ export default function ClientOnboardingWizard({
             <span className="text-xs text-text-muted font-medium">
               Step {step} of {TOTAL_STEPS}
             </span>
-            <span className="text-xs font-bold text-[#2563EB]">{Math.round(progress)}%</span>
+            <span className="text-xs font-bold text-[#D4FF00]">{Math.round(progress)}%</span>
           </div>
           <div className="h-1.5 bg-surface-light rounded-full overflow-hidden border border-border-subtle/30">
             <div
-              className="h-full bg-[#2563EB] rounded-full transition-all duration-500 ease-out"
+              className="h-full bg-[#D4FF00] rounded-full transition-all duration-500 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -1259,7 +1259,7 @@ export default function ClientOnboardingWizard({
                 onClick={() => i + 1 < step && goTo(i + 1)}
                 className={`rounded-full transition-all duration-300 ${
                   i + 1 === step
-                    ? "w-6 h-2 bg-[#2563EB]"
+                    ? "w-6 h-2 bg-[#D4FF00]"
                     : i + 1 < step
                     ? "w-2 h-2 bg-[rgba(212,255,0,0.4)] hover:bg-[rgba(212,255,0,0.7)] cursor-pointer"
                     : "w-2 h-2 bg-border-subtle cursor-default"

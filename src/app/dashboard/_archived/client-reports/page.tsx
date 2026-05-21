@@ -133,7 +133,7 @@ export default function ClientReportsPage() {
                   </p>
                   <Link
                     href="/dashboard/report-generator"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.14)] text-brand-accent text-sm font-medium transition-colors"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(212, 255, 0,0.08)] hover:bg-[rgba(212, 255, 0,0.14)] text-brand-accent text-sm font-medium transition-colors"
                   >
                     Go to Report Generator
                   </Link>
@@ -171,7 +171,7 @@ export default function ClientReportsPage() {
           <p className="text-[#6B7280] mb-2">No reports yet.</p>
           <Link
             href="/dashboard/report-generator"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.14)] text-brand-accent text-sm font-medium transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[rgba(212, 255, 0,0.08)] hover:bg-[rgba(212, 255, 0,0.14)] text-brand-accent text-sm font-medium transition-colors"
           >
             Generate your first report
           </Link>
@@ -197,7 +197,7 @@ export default function ClientReportsPage() {
                   className="w-full flex items-center justify-between px-5 py-4 hover:bg-[rgba(0,0,0,0.03)] transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-[rgba(212, 255, 0,0.08)] border border-[rgba(212, 255, 0,0.25)] flex items-center justify-center">
                       <FileText size={14} className="text-brand-accent" />
                     </div>
                     <div className="text-left">
@@ -257,7 +257,7 @@ export default function ClientReportsPage() {
                           <button
                             onClick={() => resendEmail(r.id)}
                             disabled={resending === r.id}
-                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.14)] text-brand-accent text-xs transition-colors disabled:opacity-50"
+                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[rgba(212, 255, 0,0.08)] hover:bg-[rgba(212, 255, 0,0.14)] text-brand-accent text-xs transition-colors disabled:opacity-50"
                           >
                             <Mail size={11} />
                             {resending === r.id ? "Sending…" : "Resend"}

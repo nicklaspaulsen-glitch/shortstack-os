@@ -26,14 +26,14 @@ export function CookieConsent() {
       <div className="bg-surface border border-border-subtle/40 rounded-lg p-4 shadow-xl backdrop-blur-sm">
         <p className="text-xs text-text-muted leading-relaxed mb-3">
           We use essential cookies for authentication and preferences. No tracking cookies.{" "}
-          <a href="/cookies" className="text-[#2563EB] hover:text-[#3B82F6] underline underline-offset-2">
+          <a href="/cookies" className="text-[#D4FF00] hover:text-[#D4FF00] underline underline-offset-2">
             Cookie Policy
           </a>
         </p>
         <div className="flex gap-2">
           <button
             onClick={accept}
-            className="flex-1 px-3 py-1.5 bg-[#2563EB]/10 text-[#2563EB] text-xs font-medium rounded border border-[#2563EB]/20 hover:bg-[#2563EB]/20 transition-colors"
+            className="flex-1 px-3 py-1.5 bg-[#D4FF00]/10 text-[#D4FF00] text-xs font-medium rounded border border-[#D4FF00]/20 hover:bg-[#D4FF00]/20 transition-colors"
           >
             Got it
           </button>

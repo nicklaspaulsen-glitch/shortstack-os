@@ -12,7 +12,7 @@ export default function TermsOfServicePage() {
         {/* Back link */}
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1 text-xs text-[#6B7280] hover:text-[#2563EB] mb-8 transition-colors"
+          className="inline-flex items-center gap-1 text-xs text-[#6B7280] hover:text-[#D4FF00] mb-8 transition-colors"
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
             <path d="M7.5 9L4.5 6l3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -54,7 +54,7 @@ export default function TermsOfServicePage() {
               You must register an account to use ShortStack. You agree to provide accurate, current,
               and complete information and to keep it up to date. You are responsible for safeguarding
               your login credentials and for all activity under your account. Notify us immediately at{" "}
-              <a href="mailto:growth@shortstack.work" className="text-[#2563EB] hover:text-[#1D4ED8]">
+              <a href="mailto:growth@shortstack.work" className="text-[#D4FF00] hover:text-[#AACC00]">
                 growth@shortstack.work
               </a>{" "}
               if you suspect unauthorized access.
@@ -121,7 +121,7 @@ export default function TermsOfServicePage() {
             <h2 className="text-sm font-semibold text-[#111827] mb-3">8. Data &amp; Privacy</h2>
             <p className="text-sm text-[#374151] leading-relaxed">
               Your use of the Service is subject to our{" "}
-              <Link href="/legal/privacy" className="text-[#2563EB] hover:text-[#1D4ED8]">
+              <Link href="/legal/privacy" className="text-[#D4FF00] hover:text-[#AACC00]">
                 Privacy Policy
               </Link>
               , which is incorporated into these Terms by reference. You are responsible for ensuring
@@ -204,7 +204,7 @@ export default function TermsOfServicePage() {
             <h2 className="text-sm font-semibold text-[#111827] mb-3">16. Contact</h2>
             <p className="text-sm text-[#374151] leading-relaxed">
               Questions about these Terms? Contact us at{" "}
-              <a href="mailto:growth@shortstack.work" className="text-[#2563EB] hover:text-[#1D4ED8]">
+              <a href="mailto:growth@shortstack.work" className="text-[#D4FF00] hover:text-[#AACC00]">
                 growth@shortstack.work
               </a>
               .
@@ -214,9 +214,9 @@ export default function TermsOfServicePage() {
 
         {/* Footer nav */}
         <div className="mt-8 pt-6 border-t border-[rgba(0,0,0,0.06)] flex flex-wrap gap-5 text-xs text-[#6B7280]">
-          <Link href="/legal/privacy" className="hover:text-[#2563EB] transition-colors">Privacy Policy</Link>
+          <Link href="/legal/privacy" className="hover:text-[#D4FF00] transition-colors">Privacy Policy</Link>
           <span className="font-medium text-[#111827]">Terms of Service</span>
-          <Link href="/legal/cookies" className="hover:text-[#2563EB] transition-colors">Cookie Policy</Link>
+          <Link href="/legal/cookies" className="hover:text-[#D4FF00] transition-colors">Cookie Policy</Link>
         </div>
         <p className="mt-4 text-[10px] text-text-muted">ShortStack Agency &middot; shortstack.work</p>
       </div>

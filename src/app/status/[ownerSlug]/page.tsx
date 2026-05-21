@@ -205,7 +205,7 @@ export default async function PublicStatusPage({
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em]"
-            style={{ color: "#3B82F6" }}
+            style={{ color: "#D4FF00" }}
           >
             {BRAND.product_name}
           </Link>
@@ -219,13 +219,13 @@ export default async function PublicStatusPage({
           <div
             className=" border p-6 flex items-center gap-4"
             style={{
-              borderColor: "rgba(37, 99, 235, 0.4)",
-              background: "rgba(37, 99, 235, 0.08)",
+              borderColor: "rgba(212, 255, 0, 0.4)",
+              background: "rgba(212, 255, 0, 0.08)",
             }}
           >
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
-              style={{ background: "rgba(37, 99, 235, 0.2)" }}
+              style={{ background: "rgba(212, 255, 0, 0.2)" }}
             >
               <span aria-hidden>OK</span>
             </div>
@@ -290,7 +290,7 @@ export default async function PublicStatusPage({
                 style={{
                   background:
                     d.status === "ok"
-                      ? "linear-gradient(180deg, rgba(37, 99, 235, 0.85), rgba(37, 99, 235, 0.55))"
+                      ? "linear-gradient(180deg, rgba(212, 255, 0, 0.85), rgba(212, 255, 0, 0.55))"
                       : "linear-gradient(180deg, rgba(234, 179, 8, 0.85), rgba(234, 179, 8, 0.55))",
                 }}
               />
@@ -344,7 +344,7 @@ export default async function PublicStatusPage({
                         style={{
                           background:
                             d.status === "ok"
-                              ? "rgba(37, 99, 235, 0.7)"
+                              ? "rgba(212, 255, 0, 0.7)"
                               : "rgba(234, 179, 8, 0.8)",
                         }}
                       />

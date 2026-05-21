@@ -27,7 +27,7 @@ export default function BrainLogo({ size = 32, className = "" }: BrainLogoProps)
       <defs>
         {/* Left hemisphere: blue → violet */}
         <linearGradient id="grad-left" x1="0" y1="0" x2="20" y2="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#60A5FA" />
+          <stop offset="0%" stopColor="#D4FF00" />
           <stop offset="55%" stopColor="#818CF8" />
           <stop offset="100%" stopColor="#A78BFA" />
         </linearGradient>

@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
       slug: resolvedSlug,
       description: description || null,
       logo_url: logo_url || null,
-      color_scheme: color_scheme || "#3B82F6",
+      color_scheme: color_scheme || "#D4FF00",
       is_default: !!is_default,
       is_active: true,
     })

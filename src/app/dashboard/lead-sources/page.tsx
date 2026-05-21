@@ -67,7 +67,7 @@ function PieChart({ slices }: { slices: { id: string; label: string; value: numb
 }
 
 const SLICE_COLORS = [
-  "#2563EB","#2563EB","#f59e0b","#8b5cf6","#ef4444",
+  "#D4FF00","#D4FF00","#f59e0b","#8b5cf6","#ef4444",
   "#FF5252","#84cc16","#ec4899","#f97316","#6b7280",
 ];
 

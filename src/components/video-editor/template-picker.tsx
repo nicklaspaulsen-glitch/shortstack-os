@@ -10,7 +10,7 @@
  * Usage:
  *   <TemplatePicker
  *     onSelect={(html, templateId) => void}
- *     brandColor="#3B82F6"
+ *     brandColor="#D4FF00"
  *   />
  */
 
@@ -63,7 +63,7 @@ const STATIC_TEMPLATES: TemplateMeta[] = [
       subheadline: "Supporting context in one short line",
       cta: "#shortstack",
       bgColor: "#020711",
-      accentColor: "#3B82F6",
+      accentColor: "#D4FF00",
       textColor: "#F0F0F4",
     },
   },
@@ -97,7 +97,7 @@ const STATIC_TEMPLATES: TemplateMeta[] = [
       attribution: "— Peter Drucker",
       tag: "#leadership",
       bgColor: "#020711",
-      accentColor: "#3B82F6",
+      accentColor: "#D4FF00",
       textColor: "#F0F0F4",
       quoteSize: "md",
     },
@@ -125,7 +125,7 @@ function PropEditor({
           {propKey.replace(/([A-Z])/g, " $1").trim()}
         </label>
         <textarea
-          className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(99,146,255,0.12)] rounded-lg px-3 py-2 text-sm text-text-primary resize-none focus:outline-none focus:border-brand-accent/40"
+          className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(212, 255, 0,0.12)] rounded-lg px-3 py-2 text-sm text-text-primary resize-none focus:outline-none focus:border-brand-accent/40"
           rows={3}
           value={(value as string[]).join("\n")}
           onChange={(e) => onChange(propKey, e.target.value.split("\n").filter(Boolean))}
@@ -145,7 +145,7 @@ function PropEditor({
           type="color"
           value={value}
           onChange={(e) => onChange(propKey, e.target.value)}
-          className="w-8 h-8 rounded cursor-pointer border border-[rgba(99,146,255,0.15)] bg-transparent"
+          className="w-8 h-8 rounded cursor-pointer border border-[rgba(212, 255, 0,0.15)] bg-transparent"
         />
         <span className="text-xs text-text-muted font-mono w-16">{value}</span>
       </div>
@@ -164,7 +164,7 @@ function PropEditor({
               className={`flex-1 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
                 value === size
                   ? "bg-brand-accent/20 border-brand-accent/40 text-brand-accent"
-                  : "bg-[rgba(255,255,255,0.03)] border-[rgba(99,146,255,0.10)] text-text-secondary hover:text-text-primary"
+                  : "bg-[rgba(255,255,255,0.03)] border-[rgba(212, 255, 0,0.10)] text-text-secondary hover:text-text-primary"
               }`}
             >
               {size.toUpperCase()}
@@ -181,7 +181,7 @@ function PropEditor({
         {propKey.replace(/([A-Z])/g, " $1").trim()}
       </label>
       <input
-        className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(99,146,255,0.12)] rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-brand-accent/40"
+        className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(212, 255, 0,0.12)] rounded-lg px-3 py-2 text-sm text-text-primary focus:outline-none focus:border-brand-accent/40"
         value={typeof value === "string" ? value : String(value ?? "")}
         onChange={(e) => onChange(propKey, e.target.value)}
       />
@@ -195,7 +195,7 @@ function PropEditor({
 
 export default function TemplatePicker({
   onSelect,
-  brandColor = "#3B82F6",
+  brandColor = "#D4FF00",
   bgColor = "#020711",
   className = "",
 }: TemplatePickerProps) {
@@ -265,7 +265,7 @@ export default function TemplatePicker({
               className={`relative flex flex-col rounded-xl overflow-hidden border transition-all text-left ${
                 selected?.id === t.id
                   ? "border-brand-accent/60 ring-1 ring-brand-accent/30"
-                  : "border-[rgba(99,146,255,0.12)] hover:border-[rgba(99,146,255,0.25)]"
+                  : "border-[rgba(212, 255, 0,0.12)] hover:border-[rgba(212, 255, 0,0.25)]"
               }`}
             >
               {/* Preview swatch */}
@@ -344,7 +344,7 @@ export default function TemplatePicker({
             <div className="flex gap-4 items-start">
               {/* Aspect-ratio-correct preview box */}
               <div
-                className="relative flex-shrink-0 rounded-xl overflow-hidden border border-[rgba(99,146,255,0.12)] bg-[#020711]"
+                className="relative flex-shrink-0 rounded-xl overflow-hidden border border-[rgba(212, 255, 0,0.12)] bg-[#020711]"
                 style={{ width: 120, height: 213 }} // 9:16 at 120px wide
               >
                 {previewHtml ? (
@@ -374,7 +374,7 @@ export default function TemplatePicker({
                 <button
                   onClick={handlePreview}
                   disabled={loading}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[rgba(99,146,255,0.08)] border border-[rgba(99,146,255,0.18)] text-sm font-medium text-text-primary hover:bg-[rgba(99,146,255,0.15)] transition-colors disabled:opacity-50"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[rgba(212, 255, 0,0.08)] border border-[rgba(212, 255, 0,0.18)] text-sm font-medium text-text-primary hover:bg-[rgba(212, 255, 0,0.15)] transition-colors disabled:opacity-50"
                 >
                   {loading ? (
                     <Loader2 size={14} className="animate-spin" />

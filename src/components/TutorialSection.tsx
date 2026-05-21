@@ -122,12 +122,12 @@ export default function TutorialSection({
                 className="relative flex flex-col gap-2 p-3 rounded-xl border border-border-subtle bg-surface-light/40 hover:border-[rgba(212,255,0,0.25)] transition-all"
               >
                 <div className="flex items-start gap-2">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[rgba(212,255,0,0.12)] text-[#2563EB] text-[11px] font-bold flex items-center justify-center border border-[rgba(212,255,0,0.25)]">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[rgba(212,255,0,0.12)] text-[#D4FF00] text-[11px] font-bold flex items-center justify-center border border-[rgba(212,255,0,0.25)]">
                     {step.number}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
-                      {Icon && <Icon size={12} className="text-[#2563EB] flex-shrink-0" />}
+                      {Icon && <Icon size={12} className="text-[#D4FF00] flex-shrink-0" />}
                       <h3 className="text-[11px] font-semibold text-text-primary truncate">
                         {step.title}
                       </h3>
@@ -165,7 +165,7 @@ export default function TutorialSection({
                       <div className="w-full aspect-video bg-gradient-to-br from-surface-light to-surface" />
                     )}
                     <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover/video:bg-black/50 transition-colors">
-                      <div className="w-8 h-8 rounded-full bg-[#2563EB] flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-[#D4FF00] flex items-center justify-center">
                         <Play size={14} className="text-white ml-0.5" />
                       </div>
                     </div>

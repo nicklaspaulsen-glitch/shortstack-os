@@ -40,9 +40,9 @@ function kindColor(kind: ScheduledItem["kind"]): string {
   // plumHover (#E4E4E7) was previously used for calendar — invisible on white.
   switch (kind) {
     case "post":
-      return tokens.brand.lime;         // #2563EB
+      return tokens.brand.lime;         // #D4FF00 (lime brand)
     case "meeting":
-      return tokens.brand.accentSoft;   // #3B82F6 — lighter blue
+      return tokens.brand.accentSoft;   // #E8FF4D (lime hover)
     case "calendar":
       return tokens.text.secondary;     // #52525B — neutral gray
     default:

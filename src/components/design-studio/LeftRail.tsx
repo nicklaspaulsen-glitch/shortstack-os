@@ -114,7 +114,7 @@ export default function LeftRail() {
             }}
             className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-[10px] transition-colors ${
               activeTab === t.id
-                ? "text-white border-b-2 border-[#3B82F6]"
+                ? "text-white border-b-2 border-[#D4FF00]"
                 : "text-gray-500 hover:text-gray-300"
             }`}
           >
@@ -166,7 +166,7 @@ export default function LeftRail() {
             <a
               href="/dashboard/white-label"
               target="_blank"
-              className="block text-xs text-[#3B82F6] hover:underline"
+              className="block text-xs text-[#D4FF00] hover:underline"
             >
               Configure White Label →
             </a>
@@ -179,7 +179,7 @@ export default function LeftRail() {
                     content: "Your Headline",
                     fontFamily: "Inter",
                     fontWeight: "800",
-                    color: "#3B82F6",
+                    color: "#D4FF00",
                     fontSize: 64,
                   });
                   addLayer(layer);
@@ -236,7 +236,7 @@ export default function LeftRail() {
             <button
               onClick={handleGenerate}
               disabled={generating || !prompt.trim() || !design}
-              className="w-full flex items-center justify-center gap-2 py-2 rounded bg-[#3B82F6] hover:bg-[#d4b35e] text-[#1a1a2e] text-xs font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 py-2 rounded bg-[#D4FF00] hover:bg-[#d4b35e] text-[#1a1a2e] text-xs font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {generating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
               {generating ? "Generating…" : "Generate"}

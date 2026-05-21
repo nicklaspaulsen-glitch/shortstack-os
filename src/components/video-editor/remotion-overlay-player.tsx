@@ -13,7 +13,7 @@
  *     videoUrl="https://..."
  *     title="Product launch"
  *     aspectRatio="9:16"
- *     brandColor="#3B82F6"
+ *     brandColor="#D4FF00"
  *     durationSeconds={5}
  *   />
  *
@@ -92,7 +92,7 @@ export default function RemotionOverlayPlayer({
   videoUrl,
   title = "",
   captionText = "",
-  brandColor = "#3B82F6",
+  brandColor = "#D4FF00",
   logoUrl,
   showIntro = false,
   showOutro = false,

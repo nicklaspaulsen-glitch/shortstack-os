@@ -119,8 +119,8 @@ export default function AIEnhanceButton({
 
   const baseClass =
     variant === "inline"
-      ? "text-[10px] px-2 py-1 rounded bg-[rgba(212,255,0,0.08)] text-[#2563EB] hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-30 flex items-center gap-1 transition-colors"
-      : "text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(212,255,0,0.08)] text-[#2563EB] hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-30 flex items-center gap-1 transition-all border border-[rgba(212,255,0,0.1)] hover:border-[rgba(212,255,0,0.2)]";
+      ? "text-[10px] px-2 py-1 rounded bg-[rgba(212,255,0,0.08)] text-[#D4FF00] hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-30 flex items-center gap-1 transition-colors"
+      : "text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(212,255,0,0.08)] text-[#D4FF00] hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-30 flex items-center gap-1 transition-all border border-[rgba(212,255,0,0.1)] hover:border-[rgba(212,255,0,0.2)]";
 
   return (
     <button

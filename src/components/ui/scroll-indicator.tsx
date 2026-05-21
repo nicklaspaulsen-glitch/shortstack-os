@@ -11,7 +11,7 @@
  *   <ScrollIndicator />
  *
  * Props:
- *   color      — CSS color string (default: brand blue #3B82F6)
+ *   color      — CSS color string (default: brand lime #D4FF00)
  *   height     — bar height in px (default: 2)
  *   zIndex     — stacking order (default: 100)
  *   smoothing  — spring config (default: { stiffness: 300, damping: 40 })
@@ -27,7 +27,7 @@ interface ScrollIndicatorProps {
 }
 
 export function ScrollIndicator({
-  color = "#3B82F6",
+  color = "#D4FF00",
   height = 2,
   zIndex = 100,
   smoothing = { stiffness: 300, damping: 40 },

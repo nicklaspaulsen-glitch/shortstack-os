@@ -114,10 +114,10 @@ function MicroStat({ icon, label, value, highlight = false }: MicroStatProps) {
         border: `1px solid ${highlight ? "rgba(212,255,0,0.2)" : "rgba(0,0,0,0.06)"}`,
       }}
     >
-      <span style={{ color: highlight ? "#2563EB" : "rgba(0,0,0,0.4)" }}>{icon}</span>
+      <span style={{ color: highlight ? "#D4FF00" : "rgba(0,0,0,0.4)" }}>{icon}</span>
       <span
         className="text-[11px] font-mono tabular-nums font-bold"
-        style={{ color: highlight ? "#2563EB" : "rgba(0,0,0,0.8)" }}
+        style={{ color: highlight ? "#D4FF00" : "rgba(0,0,0,0.8)" }}
       >
         {value}
       </span>

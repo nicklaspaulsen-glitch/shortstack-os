@@ -26,7 +26,7 @@ export default function ShapeLayer({ layer, isSelected, scale, onSelect }: Props
     cursor: "pointer",
     boxSizing: "border-box",
     outline: isSelected
-      ? `${Math.max(1, 2 / scale)}px solid #2563EB`
+      ? `${Math.max(1, 2 / scale)}px solid #D4FF00`
       : "none",
     outlineOffset: -1,
   };

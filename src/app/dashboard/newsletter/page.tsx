@@ -80,7 +80,7 @@ function defaultBlock(type: ContentBlock["type"]): ContentBlock {
     hero:    { imageUrl: "", headline: "Your Headline Here", subheadline: "Add a short supporting line." },
     text:    { body: "Write your content here. Click 'Write with AI' for instant copy." },
     image:   { url: "", alt: "Image description", caption: "" },
-    button:  { label: "Learn More", url: "#", color: "#2563EB" },
+    button:  { label: "Learn More", url: "#", color: "#D4FF00" },
     divider: {},
     footer:  { company: "ShortStack", address: "123 Agency St, Miami FL", unsubscribe: "#", twitter: "#", linkedin: "#", instagram: "#" },
   };
@@ -105,7 +105,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
         header, hero,
         { ...defaultBlock("text"), content: { body: "Hi there,\n\nHere's what we've been up to this month and what's coming next for your brand." } },
         { ...defaultBlock("text"), content: { body: "Share your latest service launch or internal update here." } },
-        { ...defaultBlock("button"), content: { label: "See What's New", url: "#", color: "#2563EB" } },
+        { ...defaultBlock("button"), content: { label: "See What's New", url: "#", color: "#D4FF00" } },
         footer,
       ];
     case "product_launch":
@@ -116,7 +116,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
         { ...defaultBlock("text"), content: { body: "We're thrilled to announce the launch of our newest product. Built from the ground up based on your feedback." } },
         defaultBlock("image"),
         { ...defaultBlock("text"), content: { body: "Key features:\n- Lightning-fast performance\n- AI-powered insights\n- Seamless integrations\n- Beautiful, intuitive design" } },
-        { ...defaultBlock("button"), content: { label: "Get Early Access", url: "#", color: "#2563EB" } },
+        { ...defaultBlock("button"), content: { label: "Get Early Access", url: "#", color: "#D4FF00" } },
         footer,
       ];
     case "weekly_digest":
@@ -127,7 +127,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
         { ...defaultBlock("text"), content: { body: "Top Story: Add your featured story here." } },
         defaultBlock("divider"),
         { ...defaultBlock("text"), content: { body: "Quick Wins This Week:\n- List your top wins and takeaways for the week" } },
-        { ...defaultBlock("button"), content: { label: "View Full Report", url: "#", color: "#2563EB" } },
+        { ...defaultBlock("button"), content: { label: "View Full Report", url: "#", color: "#D4FF00" } },
         footer,
       ];
     case "event_invite":
@@ -136,7 +136,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
       return [
         header, hero,
         { ...defaultBlock("text"), content: { body: "Join us for an exclusive digital marketing masterclass.\n\nDate: [add date]\nTime: [add time]\nLocation: [add location or Zoom link]\n\nLearn the latest strategies for scaling your business through paid media and organic growth." } },
-        { ...defaultBlock("button"), content: { label: "Reserve Your Spot", url: "#", color: "#2563EB" } },
+        { ...defaultBlock("button"), content: { label: "Reserve Your Spot", url: "#", color: "#D4FF00" } },
         { ...defaultBlock("text"), content: { body: "Seats are limited. Reserve yours today." } },
         footer,
       ];
@@ -149,7 +149,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
         defaultBlock("divider"),
         { ...defaultBlock("text"), content: { body: "The Results:\n- List the measurable outcomes you achieved\n- Add specific metrics here\n- Highlight the key wins" } },
         defaultBlock("image"),
-        { ...defaultBlock("button"), content: { label: "Read Full Case Study", url: "#", color: "#2563EB" } },
+        { ...defaultBlock("button"), content: { label: "Read Full Case Study", url: "#", color: "#D4FF00" } },
         footer,
       ];
     case "holiday_special":
@@ -382,7 +382,7 @@ export default function NewsletterPage() {
         case "image":
           return `<tr><td style="padding:12px 32px;text-align:center">${b.content.url ? `<img src="${b.content.url}" alt="${b.content.alt || ""}" style="max-width:100%;border-radius:8px"/>` : `<div style="height:160px;background:#f0eeea;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:13px">Image placeholder</div>`}${b.content.caption ? `<p style="font-size:11px;color:#9ca3af;margin-top:6px">${b.content.caption}</p>` : ""}</td></tr>`;
         case "button":
-          return `<tr><td style="padding:16px 32px;text-align:center"><a href="${b.content.url || "#"}" style="display:inline-block;padding:12px 28px;background:${b.content.color || "#2563EB"};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:14px">${b.content.label || "Click Here"}</a></td></tr>`;
+          return `<tr><td style="padding:16px 32px;text-align:center"><a href="${b.content.url || "#"}" style="display:inline-block;padding:12px 28px;background:${b.content.color || "#D4FF00"};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:14px">${b.content.label || "Click Here"}</a></td></tr>`;
         case "divider":
           return `<tr><td style="padding:8px 32px"><hr style="border:none;border-top:1px solid #e8e5e0;margin:0"/></td></tr>`;
         case "footer":
@@ -464,7 +464,7 @@ export default function NewsletterPage() {
         });
       const ctaBlock = {
         ...defaultBlock("button"),
-        content: { label: result.cta_text || "Read more", url: result.cta_url || "#", color: "#2563EB" },
+        content: { label: result.cta_text || "Read more", url: result.cta_url || "#", color: "#D4FF00" },
       };
       const footer = defaultBlock("footer");
       setBlocks([header, hero, ...sectionBlocks, ctaBlock, footer]);
@@ -862,7 +862,7 @@ export default function NewsletterPage() {
                       <div>
                         <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">Color</label>
                         <div className="flex gap-1.5">
-                          {["#2563EB", "#2563EB", "#2563EB", "#EF4444", "#8B5CF6", "#1a1a2e"].map(c => (
+                          {["#D4FF00", "#D4FF00", "#D4FF00", "#EF4444", "#8B5CF6", "#1a1a2e"].map(c => (
                             <button key={c} onClick={() => updateBlockContent(block.id, "color", c)}
                               className={`w-6 h-6 rounded-md border-2 transition-all ${block.content.color === c ? "border-white scale-110" : "border-transparent"}`}
                               style={{ background: c }}
@@ -1023,7 +1023,7 @@ export default function NewsletterPage() {
               </div>
               <div
                 className="w-full rounded-full overflow-hidden mb-2"
-                style={{ height: "1.5px", background: "rgba(99,146,255,0.10)" }}
+                style={{ height: "1.5px", background: "rgba(212, 255, 0,0.10)" }}
               >
                 <div
                   className="h-full rounded-full transition-all duration-500"
@@ -1201,7 +1201,7 @@ export default function NewsletterPage() {
                           <a
                             href={block.content.url || "#"}
                             className="inline-block py-3 px-7 rounded-lg text-white font-semibold text-sm no-underline"
-                            style={{ background: block.content.color || "#2563EB" }}
+                            style={{ background: block.content.color || "#D4FF00" }}
                           >
                             {block.content.label || "Click Here"}
                           </a>

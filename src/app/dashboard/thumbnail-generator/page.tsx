@@ -925,7 +925,7 @@ export default function ThumbnailEditorProPage() {
           height: state.canvasHeight * 0.40,
         });
         commit({ type: "ADD_LAYER", layer: { ...bgRect, fill: "#020711", stroke: "transparent" } as typeof bgRect }, "Dark BG");
-        commit({ type: "ADD_LAYER", layer: { ...headline, fontSize: 84, fontWeight: 900, color: "#FFFFFF", strokeColor: "#3B82F6", strokeWidth: 2 } as typeof headline }, "Preset: High Contrast");
+        commit({ type: "ADD_LAYER", layer: { ...headline, fontSize: 84, fontWeight: 900, color: "#FFFFFF", strokeColor: "#D4FF00", strokeWidth: 2 } as typeof headline }, "Preset: High Contrast");
       },
     },
     {
@@ -1184,7 +1184,7 @@ export default function ThumbnailEditorProPage() {
                 className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg border transition-all duration-150"
                 style={{
                   background: ctrPresetsOpen ? "rgba(212,255,0,0.22)" : "rgba(13,17,32,0.90)",
-                  borderColor: ctrPresetsOpen ? "rgba(212,255,0,0.5)" : "rgba(99,146,255,0.22)",
+                  borderColor: ctrPresetsOpen ? "rgba(212,255,0,0.5)" : "rgba(212, 255, 0,0.22)",
                   color: ctrPresetsOpen ? "#D4FF00" : "#A8A8B2",
                   backdropFilter: "blur(12px)",
                 }}
@@ -1206,14 +1206,14 @@ export default function ThumbnailEditorProPage() {
                     className="absolute bottom-10 left-0 w-72 rounded-xl border shadow-2xl overflow-hidden"
                     style={{
                       background: "rgba(13,17,32,0.96)",
-                      borderColor: "rgba(99,146,255,0.18)",
+                      borderColor: "rgba(212, 255, 0,0.18)",
                       backdropFilter: "blur(20px)",
                     }}
                   >
                     {/* Header */}
                     <div
                       className="px-3 py-2.5 border-b flex items-center justify-between"
-                      style={{ borderColor: "rgba(99,146,255,0.12)" }}
+                      style={{ borderColor: "rgba(212, 255, 0,0.12)" }}
                     >
                       <div>
                         <p className="text-[11px] font-bold text-white tracking-wide">CTR PRESETS</p>
@@ -1243,7 +1243,7 @@ export default function ThumbnailEditorProPage() {
                             }}
                             className="w-full flex items-start gap-2.5 px-3 py-2.5 text-left transition-colors duration-100 border-b"
                             style={{
-                              borderColor: "rgba(99,146,255,0.08)",
+                              borderColor: "rgba(212, 255, 0,0.08)",
                               background: "transparent",
                             }}
                             onMouseEnter={(e) => {

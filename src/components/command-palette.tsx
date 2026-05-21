@@ -35,11 +35,11 @@ type FlatItem =
 
 const RECORD_ICONS: Record<string, React.ReactNode> = {
   lead: <Zap size={14} className="text-amber-400" />,
-  client: <Building2 size={14} className="text-[#60A5FA]" />,
+  client: <Building2 size={14} className="text-[#D4FF00]" />,
   deal: <Briefcase size={14} className="text-emerald-400" />,
   content: <Film size={14} className="text-violet-400" />,
   team: <UserCheck size={14} className="text-slate-400" />,
-  action: <Bot size={14} className="text-[#60A5FA]" />,
+  action: <Bot size={14} className="text-[#D4FF00]" />,
 };
 
 export default function CommandPalette() {
@@ -244,14 +244,14 @@ export default function CommandPalette() {
             background: "rgba(9,13,24,0.95)",
             backdropFilter: "blur(20px) saturate(160%)",
             WebkitBackdropFilter: "blur(20px) saturate(160%)",
-            border: "1px solid rgba(99,146,255,0.22)",
-            boxShadow: "0 32px 72px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(99,146,255,0.08)",
+            border: "1px solid rgba(212, 255, 0,0.22)",
+            boxShadow: "0 32px 72px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(212, 255, 0,0.08)",
           }}
         >
           {/* Input row */}
           <div
             className="flex items-center gap-3 px-4 py-3.5"
-            style={{ borderBottom: "1px solid rgba(99,146,255,0.10)" }}
+            style={{ borderBottom: "1px solid rgba(212, 255, 0,0.10)" }}
           >
             <Search size={16} className="text-[#4A4A5A] shrink-0" />
             <input
@@ -264,7 +264,7 @@ export default function CommandPalette() {
             />
             {liveLoading && <Loader2 size={13} className="text-[#4A4A5A] animate-spin shrink-0" />}
             <kbd className="hidden sm:inline-flex text-[9px] text-[#4A4A5A] px-1.5 py-0.5 rounded font-mono"
-              style={{ background: "rgba(99,146,255,0.08)", border: "1px solid rgba(99,146,255,0.12)" }}>
+              style={{ background: "rgba(212, 255, 0,0.08)", border: "1px solid rgba(212, 255, 0,0.12)" }}>
               ESC
             </kbd>
           </div>
@@ -293,7 +293,7 @@ export default function CommandPalette() {
                       }}
                       onMouseLeave={() => {}}
                     >
-                      <span className={`shrink-0 ${isSelected ? "text-[#60A5FA]" : "text-[#4A4A5A]"}`}>
+                      <span className={`shrink-0 ${isSelected ? "text-[#D4FF00]" : "text-[#4A4A5A]"}`}>
                         {item.icon}
                       </span>
                       <div className="flex-1 min-w-0">
@@ -306,7 +306,7 @@ export default function CommandPalette() {
                       </div>
                       {isSelected && (
                         <kbd className="text-[8px] text-[#4A4A5A] px-1 py-0.5 rounded font-mono shrink-0"
-                          style={{ background: "rgba(99,146,255,0.08)", border: "1px solid rgba(99,146,255,0.12)" }}>
+                          style={{ background: "rgba(212, 255, 0,0.08)", border: "1px solid rgba(212, 255, 0,0.12)" }}>
                           ↵
                         </kbd>
                       )}
@@ -319,7 +319,7 @@ export default function CommandPalette() {
             {/* Live DB results */}
             {liveResults.length > 0 && (
               <>
-                <div className="mx-4 my-1.5" style={{ borderTop: "1px solid rgba(99,146,255,0.08)" }} />
+                <div className="mx-4 my-1.5" style={{ borderTop: "1px solid rgba(212, 255, 0,0.08)" }} />
                 <p className="text-[9px] text-[#4A4A5A] uppercase tracking-[0.18em] font-semibold px-4 pt-1.5 pb-1">
                   Records
                 </p>
@@ -345,7 +345,7 @@ export default function CommandPalette() {
                         <p className="text-[10px] text-[#4A4A5A] truncate">{r.subtitle}</p>
                       </div>
                       <span className="text-[9px] text-[#4A4A5A] px-1.5 py-0.5 rounded capitalize shrink-0"
-                        style={{ background: "rgba(99,146,255,0.08)", border: "1px solid rgba(99,146,255,0.10)" }}>
+                        style={{ background: "rgba(212, 255, 0,0.08)", border: "1px solid rgba(212, 255, 0,0.10)" }}>
                         {r.type}
                       </span>
                     </button>
@@ -364,7 +364,7 @@ export default function CommandPalette() {
 
           {/* Footer */}
           <div className="px-4 py-2 flex items-center justify-between"
-            style={{ borderTop: "1px solid rgba(99,146,255,0.08)" }}>
+            style={{ borderTop: "1px solid rgba(212, 255, 0,0.08)" }}>
             <div className="flex items-center gap-4 text-[9px] text-[#4A4A5A]">
               <span>↑↓ navigate</span>
               <span>↵ open</span>

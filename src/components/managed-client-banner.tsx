@@ -30,19 +30,19 @@ export default function ManagedClientBanner() {
     <div className="bg-[rgba(212,255,0,0.05)] border-b border-[rgba(212,255,0,0.08)]">
       <div className="flex items-center justify-between px-5 lg:px-6 h-9">
         <div className="flex items-center gap-2">
-          <UserCheck size={13} className="text-[#2563EB]" />
+          <UserCheck size={13} className="text-[#D4FF00]" />
           <span className="text-[10px] text-[rgba(212,255,0,0.8)] font-semibold uppercase tracking-wider">
             Managing
           </span>
           <ChevronRight size={10} className="text-[rgba(212,255,0,0.4)]" />
-          <span className="text-xs font-semibold text-[#2563EB]">
+          <span className="text-xs font-semibold text-[#D4FF00]">
             {managedClient.business_name}
           </span>
           <span className="text-[10px] text-text-muted ml-1">
             {managedClient.contact_name}
           </span>
           {managedClient.package_tier && (
-            <span className="text-[9px] bg-[rgba(212,255,0,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded font-medium ml-1">
+            <span className="text-[9px] bg-[rgba(212,255,0,0.08)] text-[#D4FF00] px-1.5 py-0.5 rounded font-medium ml-1">
               {managedClient.package_tier}
             </span>
           )}
@@ -55,8 +55,8 @@ export default function ManagedClientBanner() {
                 href={link.href}
                 className={`flex items-center gap-1 text-[9px] px-2 py-0.5 rounded transition-all ${
                   pathname === link.href
-                    ? "bg-[rgba(212,255,0,0.08)] text-[#2563EB] font-medium"
-                    : "text-text-muted hover:text-[#2563EB] hover:bg-[rgba(212,255,0,0.05)]"
+                    ? "bg-[rgba(212,255,0,0.08)] text-[#D4FF00] font-medium"
+                    : "text-text-muted hover:text-[#D4FF00] hover:bg-[rgba(212,255,0,0.05)]"
                 }`}
               >
                 {link.icon} {link.label}

@@ -67,7 +67,7 @@ Include sections: Scope of Work, Deliverables, Payment Terms, Term & Termination
     doc.on("end", () => resolve(Buffer.concat(chunks)));
     doc.on("error", reject);
 
-    const gold = "#3B82F6";
+    const gold = "#D4FF00";
     const dark = "#0a0a0a";
     const white = "#FFFFFF";
     const gray = "#888888";

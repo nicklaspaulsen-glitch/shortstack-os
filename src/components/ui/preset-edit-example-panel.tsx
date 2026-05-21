@@ -252,7 +252,7 @@ function VideoEditExample({
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="shrink-0 flex items-center gap-1.5 rounded-lg bg-[#2563EB] text-white px-4 py-2 text-sm font-semibold hover:bg-[#1D4ED8] disabled:opacity-60 transition"
+            className="shrink-0 flex items-center gap-1.5 rounded-lg bg-[#D4FF00] text-[#020711] px-4 py-2 text-sm font-semibold hover:bg-[#AACC00] disabled:opacity-60 transition"
           >
             {saving ? (
               <Loader size={13} className="animate-spin" />
@@ -370,7 +370,7 @@ function ThumbnailEditExample({
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="shrink-0 flex items-center gap-1.5 rounded-lg bg-[#2563EB] text-white px-4 py-2 text-sm font-semibold hover:bg-[#1D4ED8] disabled:opacity-60 transition"
+            className="shrink-0 flex items-center gap-1.5 rounded-lg bg-[#D4FF00] text-[#020711] px-4 py-2 text-sm font-semibold hover:bg-[#AACC00] disabled:opacity-60 transition"
           >
             {saving ? (
               <Loader size={13} className="animate-spin" />
@@ -506,7 +506,7 @@ function TelegramEditExample({
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="shrink-0 flex items-center gap-1.5 rounded-lg bg-[#2563EB] text-white px-4 py-2 text-sm font-semibold hover:bg-[#1D4ED8] disabled:opacity-60 transition"
+            className="shrink-0 flex items-center gap-1.5 rounded-lg bg-[#D4FF00] text-[#020711] px-4 py-2 text-sm font-semibold hover:bg-[#AACC00] disabled:opacity-60 transition"
           >
             {saving ? (
               <Loader size={13} className="animate-spin" />
@@ -526,7 +526,7 @@ function TelegramEditExample({
           <p className="text-xs text-text-muted font-medium">Fill in variables to preview</p>
           {vars.map((v) => (
             <div key={v} className="flex items-center gap-2">
-              <span className="text-[10px] text-[#2563EB] font-mono bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] rounded px-2 py-1 min-w-[110px] text-center shrink-0">
+              <span className="text-[10px] text-[#D4FF00] font-mono bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] rounded px-2 py-1 min-w-[110px] text-center shrink-0">
                 {`{{${v}}}`}
               </span>
               <input

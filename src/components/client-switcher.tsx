@@ -88,7 +88,7 @@ export default function ClientSwitcher() {
         onClick={() => setOpen(!open)}
         className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
           managedClient
-            ? "text-[#2563EB] bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] hover:bg-[rgba(212,255,0,0.08)]"
+            ? "text-[#D4FF00] bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] hover:bg-[rgba(212,255,0,0.08)]"
             : "text-text-muted hover:text-text-primary bg-surface-light/50 border border-border-subtle/50 hover:border-[rgba(212,255,0,0.2)]"
         }`}
       >
@@ -105,7 +105,7 @@ export default function ClientSwitcher() {
             {/* Header */}
             <div className="px-4 py-3 border-b border-border-subtle/30 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Users size={14} className="text-[#2563EB]" />
+                <Users size={14} className="text-[#D4FF00]" />
                 <span className="text-xs font-semibold">Client Switcher</span>
                 <span className="text-[10px] text-text-muted bg-surface-light px-1.5 py-0.5 rounded">{clients.length}</span>
               </div>
@@ -142,7 +142,7 @@ export default function ClientSwitcher() {
                       key={client.id}
                       onClick={() => selectClient(client)}
                       className={`w-full text-left px-3 py-2.5 border-b border-border-subtle/10 hover:bg-surface-light/50 transition-colors ${
-                        activeClient?.id === client.id ? "bg-[rgba(212,255,0,0.05)] border-l-2 border-l-[#2563EB]" : ""
+                        activeClient?.id === client.id ? "bg-[rgba(212,255,0,0.05)] border-l-2 border-l-[#D4FF00]" : ""
                       }`}
                     >
                       <div className="flex items-center justify-between">
@@ -156,7 +156,7 @@ export default function ClientSwitcher() {
                           ) : (
                             <div className="w-1.5 h-1.5 rounded-full bg-muted" />
                           )}
-                          <span className="text-[10px] font-mono text-[#2563EB]">{formatCurrency(client.mrr)}</span>
+                          <span className="text-[10px] font-mono text-[#D4FF00]">{formatCurrency(client.mrr)}</span>
                         </div>
                       </div>
                     </button>
@@ -173,7 +173,7 @@ export default function ClientSwitcher() {
                       <h3 className="text-xs font-semibold">{activeClient.business_name}</h3>
                       <p className="text-[10px] text-text-muted">{activeClient.contact_name} · {activeClient.industry}</p>
                       <div className="flex items-center gap-2 mt-1.5">
-                        <span className="text-[10px] bg-[rgba(212,255,0,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded font-medium">
+                        <span className="text-[10px] bg-[rgba(212,255,0,0.08)] text-[#D4FF00] px-1.5 py-0.5 rounded font-medium">
                           {activeClient.package_tier || "No tier"}
                         </span>
                         <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
@@ -189,7 +189,7 @@ export default function ClientSwitcher() {
                     <div className="grid grid-cols-2 gap-2">
                       <div className="bg-surface-light/50 rounded-lg p-2 border border-border-subtle/20">
                         <div className="flex items-center gap-1 mb-0.5">
-                          <DollarSign size={10} className="text-[#2563EB]" />
+                          <DollarSign size={10} className="text-[#D4FF00]" />
                           <span className="text-[9px] text-text-muted uppercase">MRR</span>
                         </div>
                         <p className="text-xs font-bold font-mono">{formatCurrency(activeClient.mrr)}</p>
@@ -203,7 +203,7 @@ export default function ClientSwitcher() {
                       </div>
                       <div className="bg-surface-light/50 rounded-lg p-2 border border-border-subtle/20">
                         <div className="flex items-center gap-1 mb-0.5">
-                          <FileText size={10} className="text-[#2563EB]" />
+                          <FileText size={10} className="text-[#D4FF00]" />
                           <span className="text-[9px] text-text-muted uppercase">Content</span>
                         </div>
                         <p className="text-xs font-bold font-mono">{activeClient.content_count}</p>

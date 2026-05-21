@@ -37,7 +37,7 @@ interface SpotlightCardProps extends HTMLAttributes<HTMLDivElement> {
 export function SpotlightCard({
   children,
   className,
-  spotlightColor = "rgba(59, 130, 246, 0.14)",
+  spotlightColor = "rgba(212, 255, 0, 0.14)",
   ...props
 }: SpotlightCardProps) {
   const divRef = useRef<HTMLDivElement>(null);
@@ -83,7 +83,7 @@ export function SpotlightCard({
 //     {children}
 //   </motion.div>
 
-export function useSpotlight(spotlightColor = "rgba(59, 130, 246, 0.14)") {
+export function useSpotlight(spotlightColor = "rgba(212, 255, 0, 0.14)") {
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [visible, setVisible] = useState(false);
 
@@ -459,7 +459,7 @@ interface PixelCursorTrailProps {
 export function PixelCursorTrail({
   blockSize = 10,
   trailLength = 30,
-  color = "#3B82F6",
+  color = "#D4FF00",
 }: PixelCursorTrailProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 

@@ -104,7 +104,7 @@ export default function IntakePage() {
   // Builder state
   const [bName, setBName] = useState("New Intake Form");
   const [bWelcome, setBWelcome] = useState("Tell us about your business and goals.");
-  const [bColor, setBColor] = useState("#2563EB");
+  const [bColor, setBColor] = useState("#D4FF00");
   const [bAI, setBAI] = useState(true);
   const [bPrompt, setBPrompt] = useState("");
   const [bFields, setBFields] = useState<FormField[]>([]);
@@ -152,7 +152,7 @@ export default function IntakePage() {
       setEditingForm(null);
       setBName("New Intake Form");
       setBWelcome("Tell us about your business and goals.");
-      setBColor("#2563EB");
+      setBColor("#D4FF00");
       setBAI(true);
       setBPrompt("");
       setBFields([]);

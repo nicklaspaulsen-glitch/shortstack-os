@@ -64,7 +64,7 @@ export default function ActionItems({ meetingId, initial }: Props) {
           <button
             onClick={() => toggle(i)}
             disabled={savingIdx === i}
-            className="flex-shrink-0 mt-0.5 text-text-muted hover:text-[#2563EB] transition-colors"
+            className="flex-shrink-0 mt-0.5 text-text-muted hover:text-[#D4FF00] transition-colors"
             aria-label={item.done ? "Mark not done" : "Mark done"}
           >
             {item.done ? (

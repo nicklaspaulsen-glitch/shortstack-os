@@ -104,7 +104,7 @@ function LogoDropZone({
         tabIndex={0}
         onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") inputRef.current?.click(); }}
         className={`relative flex items-center gap-4 p-4 rounded-xl border-2 border-dashed cursor-pointer transition-all ${
-          dragOver ? "border-[#2563EB] bg-[rgba(212,255,0,0.08)]" : "border-border-subtle hover:border-[rgba(212,255,0,0.4)] bg-surface-light/40"
+          dragOver ? "border-[#D4FF00] bg-[rgba(212,255,0,0.08)]" : "border-border-subtle hover:border-[rgba(212,255,0,0.4)] bg-surface-light/40"
         } ${uploading ? "opacity-60 pointer-events-none" : ""}`}
       >
         <div className="w-14 h-14 rounded-lg border border-border-subtle bg-surface flex items-center justify-center overflow-hidden shrink-0">
@@ -126,7 +126,7 @@ function LogoDropZone({
             </p>
           )}
         </div>
-        {uploading && <Loader2 size={16} className="text-[#2563EB] animate-spin shrink-0" />}
+        {uploading && <Loader2 size={16} className="text-[#D4FF00] animate-spin shrink-0" />}
         {logoUrl && !uploading && (
           <button
             type="button"
@@ -150,7 +150,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
       <div className="lg:col-span-2 space-y-4">
         <div className="glass rounded-xl p-4">
           <h3 className="flex items-center gap-2">
-            <Palette size={14} className="text-[#2563EB]" /> Branding
+            <Palette size={14} className="text-[#D4FF00]" /> Branding
           </h3>
           <p className="text-xs text-text-muted mb-4">Rebrand ShortStack as your own platform. Changes apply across the sidebar, login page, and client portal.</p>
 
@@ -191,9 +191,9 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
                 <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1">Primary Color</label>
                 <div className="flex items-center gap-2">
                   <input type="color" value={whiteLabel.primary_color} onChange={e => setWhiteLabel({ ...whiteLabel, primary_color: e.target.value })} className="w-10 h-10 rounded-lg border border-border-subtle cursor-pointer" style={{ padding: 2 }} />
-                  <input value={whiteLabel.primary_color} onChange={e => setWhiteLabel({ ...whiteLabel, primary_color: e.target.value })} className="input flex-1 text-sm font-mono" placeholder="#3B82F6" />
+                  <input value={whiteLabel.primary_color} onChange={e => setWhiteLabel({ ...whiteLabel, primary_color: e.target.value })} className="input flex-1 text-sm font-mono" placeholder="#D4FF00" />
                 </div>
-                <p className="text-[9px] text-text-muted mt-1">Replaces gold (#3B82F6) across buttons, links, active states</p>
+                <p className="text-[9px] text-text-muted mt-1">Replaces lime (#D4FF00) across buttons, links, active states</p>
               </div>
               <div>
                 <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1">Accent Color</label>
@@ -241,7 +241,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
                 <p className="text-[10px] text-text-muted">Display attribution footer in sidebar and client portal</p>
               </div>
               <button onClick={() => setWhiteLabel({ ...whiteLabel, show_powered_by: !whiteLabel.show_powered_by })}
-                className={`w-10 h-5 rounded-full transition-colors ${whiteLabel.show_powered_by ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
+                className={`w-10 h-5 rounded-full transition-colors ${whiteLabel.show_powered_by ? "bg-[#D4FF00]" : "bg-surface-light border border-border-subtle"}`}>
                 <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${whiteLabel.show_powered_by ? "translate-x-5" : "translate-x-0.5"}`} />
               </button>
             </div>
@@ -268,7 +268,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
                     }),
                   });
                   if (res.ok) {
-                    if (whiteLabel.primary_color && whiteLabel.primary_color !== "#3B82F6") {
+                    if (whiteLabel.primary_color && whiteLabel.primary_color !== "#D4FF00") {
                       document.documentElement.style.setProperty("--color-accent", whiteLabel.primary_color);
                       document.documentElement.style.setProperty("--wl-primary", whiteLabel.primary_color);
                     } else {
@@ -296,7 +296,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
             </button>
             <button
               onClick={() => {
-                setWhiteLabel({ company_name: "", logo_url: "", primary_color: "#3B82F6", accent_color: "#B8942F", favicon_url: "", login_text: "", show_powered_by: true, domain: "", support_email: "" });
+                setWhiteLabel({ company_name: "", logo_url: "", primary_color: "#D4FF00", accent_color: "#B8942F", favicon_url: "", login_text: "", show_powered_by: true, domain: "", support_email: "" });
                 toast.success("Reset to defaults — click Save to apply");
               }}
               className="btn-secondary text-xs flex items-center gap-2"
@@ -311,7 +311,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
       <div className="space-y-4">
         <div className="card-static">
           <h3 className="flex items-center gap-2">
-            <Eye size={14} className="text-[#2563EB]" /> Live Preview
+            <Eye size={14} className="text-[#D4FF00]" /> Live Preview
           </h3>
           <p className="text-[9px] text-text-muted mb-3">How your branding will appear</p>
 
@@ -323,7 +323,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
                 <img src={whiteLabel.logo_url} alt="" className="w-6 h-6 rounded object-contain" />
               ) : (
                 <div className="w-6 h-6 rounded bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
-                  <Palette size={10} style={{ color: whiteLabel.primary_color || "#3B82F6" }} />
+                  <Palette size={10} style={{ color: whiteLabel.primary_color || "#D4FF00" }} />
                 </div>
               )}
               <span className="text-xs font-bold truncate" style={{ color: "var(--color-foreground)" }}>
@@ -335,12 +335,12 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
                 <div key={item}
                   className="px-2.5 py-1.5 rounded-lg text-[10px] flex items-center gap-2"
                   style={i === 0 ? {
-                    color: whiteLabel.primary_color || "#3B82F6",
-                    background: `${whiteLabel.primary_color || "#3B82F6"}10`,
+                    color: whiteLabel.primary_color || "#D4FF00",
+                    background: `${whiteLabel.primary_color || "#D4FF00"}10`,
                     fontWeight: 600,
                   } : { color: "var(--color-muted)" }}
                 >
-                  <div className="w-3 h-3 rounded" style={i === 0 ? { background: `${whiteLabel.primary_color || "#3B82F6"}20` } : { background: "var(--color-border)" }} />
+                  <div className="w-3 h-3 rounded" style={i === 0 ? { background: `${whiteLabel.primary_color || "#D4FF00"}20` } : { background: "var(--color-border)" }} />
                   {item}
                 </div>
               ))}
@@ -356,10 +356,10 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
           <div className="mt-4 space-y-2">
             <p className="text-[9px] text-text-muted uppercase tracking-wider font-medium">Buttons</p>
             <div className="flex gap-2">
-              <span className="text-[10px] font-semibold px-3 py-1.5 rounded-lg text-white inline-block" style={{ background: whiteLabel.primary_color || "#3B82F6" }}>
+              <span className="text-[10px] font-semibold px-3 py-1.5 rounded-lg text-white inline-block" style={{ background: whiteLabel.primary_color || "#D4FF00" }}>
                 Primary
               </span>
-              <span className="text-[10px] font-medium px-3 py-1.5 rounded-lg border inline-block" style={{ borderColor: `${whiteLabel.primary_color || "#3B82F6"}40`, color: whiteLabel.primary_color || "#3B82F6" }}>
+              <span className="text-[10px] font-medium px-3 py-1.5 rounded-lg border inline-block" style={{ borderColor: `${whiteLabel.primary_color || "#D4FF00"}40`, color: whiteLabel.primary_color || "#D4FF00" }}>
                 Secondary
               </span>
             </div>
@@ -369,8 +369,8 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
           <div className="mt-4 space-y-2">
             <p className="text-[9px] text-text-muted uppercase tracking-wider font-medium">Accents</p>
             <div className="flex gap-2 items-center">
-              <div className="w-4 h-4 rounded-full" style={{ background: whiteLabel.primary_color || "#3B82F6" }} />
-              <span className="text-[10px] font-mono" style={{ color: whiteLabel.primary_color || "#3B82F6" }}>{whiteLabel.primary_color || "#3B82F6"}</span>
+              <div className="w-4 h-4 rounded-full" style={{ background: whiteLabel.primary_color || "#D4FF00" }} />
+              <span className="text-[10px] font-mono" style={{ color: whiteLabel.primary_color || "#D4FF00" }}>{whiteLabel.primary_color || "#D4FF00"}</span>
             </div>
             <div className="flex gap-2 items-center">
               <div className="w-4 h-4 rounded-full" style={{ background: whiteLabel.accent_color || "#B8942F" }} />

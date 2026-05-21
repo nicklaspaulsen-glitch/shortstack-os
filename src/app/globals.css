@@ -297,11 +297,11 @@ a[role="button"]:hover,
   --glass-radius: 16px;
   --glass-glow: 0 0 80px -20px rgba(212, 255, 0, 0.20);
 
-  /* ── Blue accent palette (replaces periwinkle on dark) ── */
-  --color-periwinkle: #3B82F6;
-  --color-periwinkle-soft: #60A5FA;
-  --color-periwinkle-bg: rgba(59, 130, 246, 0.09);
-  --color-periwinkle-border: rgba(59, 130, 246, 0.20);
+  /* ── Lime accent palette (brand primary on dark) ── */
+  --color-periwinkle: #D4FF00;
+  --color-periwinkle-soft: #E8FF4D;
+  --color-periwinkle-bg: rgba(212, 255, 0, 0.09);
+  --color-periwinkle-border: rgba(212, 255, 0, 0.20);
 
   /* ── Trinity Sidebar tokens (deep navy) ── */
   --sidebar-bg: rgba(4, 5, 13, 0.98);
@@ -498,13 +498,13 @@ a[role="button"]:hover,
   /* ── Trinity Sidebar tokens (light override) ── */
   --sidebar-bg: rgba(255, 255, 255, 0.98);
   --sidebar-border: rgba(156, 167, 222, 0.25);
-  --sidebar-border-active: rgba(37, 99, 235, 0.35);
-  --sidebar-item-bg: rgba(37, 99, 235, 0.05);
-  --sidebar-item-bg-active: rgba(37, 99, 235, 0.10);
+  --sidebar-border-active: rgba(212, 255, 0, 0.35);
+  --sidebar-item-bg: rgba(212, 255, 0, 0.05);
+  --sidebar-item-bg-active: rgba(212, 255, 0, 0.10);
   --sidebar-dropdown-bg: rgba(248, 250, 255, 0.98);
   --sidebar-text-primary: #0A0A0B;
   --sidebar-text-secondary: #6B7280;
-  --sidebar-icon-active: #2563EB;
+  --sidebar-icon-active: #D4FF00;
   --sidebar-icon-inactive: #9CA3AF;
 }
 
@@ -681,7 +681,7 @@ body {
     background: rgba(28, 35, 56, 0.92);
     border-color: rgba(255, 255, 255, 0.12);
     box-shadow:
-      0 0 0 1px rgba(59, 130, 246, 0.18),
+      0 0 0 1px rgba(212, 255, 0, 0.18),
       0 8px 32px rgba(0, 0, 0, 0.35),
       0 2px 8px rgba(0, 0, 0, 0.20);
     transform: translateY(-2px);
@@ -909,7 +909,7 @@ body {
   .tab-pill:hover { color: var(--text-primary, #F0F0F4); background: rgba(255,255,255,0.06); }
   .tab-pill[data-active="true"],
   .tab-pill.active {
-    background: var(--brand-accent, #3B82F6);
+    background: var(--brand-accent, #D4FF00);
     color: #ffffff;
     box-shadow: 0 2px 8px rgba(212,255,0,0.28);
   }
@@ -925,7 +925,7 @@ body {
     @apply outline-none;
     box-shadow:
       0 0 0 2px var(--color-background, #0D1120),
-      0 0 0 4px #3B82F6;
+      0 0 0 4px #D4FF00;
   }
 
   /* ═══════════ INPUTS ═══════════ */
@@ -933,7 +933,7 @@ body {
     @apply text-sm rounded-xl px-3.5 py-2.5;
     color: var(--color-text, #F0F0F4);
     background: rgba(19, 24, 39, 0.70);
-    border: 1px solid rgba(59, 130, 246, 0.18);
+    border: 1px solid rgba(212, 255, 0, 0.18);
     box-shadow:
       inset 0 1px 2px rgba(0,0,0,0.25),
       0 1px 0 rgba(255,255,255,0.04);
@@ -945,13 +945,13 @@ body {
   .input:focus,
   .input:focus-visible {
     @apply outline-none;
-    border-color: var(--color-accent, #3B82F6);
+    border-color: var(--color-accent, #D4FF00);
     background: rgba(28, 35, 56, 0.85);
     box-shadow:
       inset 0 1px 2px rgba(0,0,0,0.15),
       0 0 0 2px var(--color-background, #0D1120),
-      0 0 0 4px #3B82F6,
-      0 0 18px -4px rgba(59, 130, 246, 0.40);
+      0 0 0 4px #D4FF00,
+      0 0 18px -4px rgba(212, 255, 0, 0.40);
   }
 
   .badge {
@@ -973,18 +973,18 @@ body {
     transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .chip:hover {
-    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 55%, var(--color-accent, #3B82F6));
+    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 55%, var(--color-accent, #D4FF00));
     color: var(--color-foreground, #1A1A2E);
   }
 
   .pill {
     @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold;
-    background: color-mix(in srgb, var(--color-accent, #3B82F6) 10%, transparent);
-    color: var(--color-accent, #3B82F6);
-    border: 1px solid color-mix(in srgb, var(--color-accent, #3B82F6) 18%, transparent);
+    background: color-mix(in srgb, var(--color-accent, #D4FF00) 10%, transparent);
+    color: var(--color-accent, #D4FF00);
+    border: 1px solid color-mix(in srgb, var(--color-accent, #D4FF00) 18%, transparent);
     box-shadow:
       0 1px 0 rgba(255,255,255,0.04) inset,
-      0 0 12px -4px color-mix(in srgb, var(--color-accent, #3B82F6) 30%, transparent);
+      0 0 12px -4px color-mix(in srgb, var(--color-accent, #D4FF00) 30%, transparent);
   }
 
   /* ═══════════ STAT CARDS ═══════════ */
@@ -1015,7 +1015,7 @@ body {
       0 10px 28px -6px rgba(0,0,0,0.50);
   }
   .stat-card:hover {
-    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 50%, var(--color-accent, #3B82F6));
+    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 50%, var(--color-accent, #D4FF00));
     box-shadow:
       0 1px 0 rgba(255,255,255,0.08) inset,
       0 2px 4px rgba(0,0,0,0.15),
@@ -1176,7 +1176,7 @@ body {
   }
   :root[data-theme="dark"] .glass-indigo,
   .theme-dark .glass-indigo {
-    background: rgba(59,130,246,0.06);
+    background: rgba(212, 255, 0, 0.06);
     backdrop-filter: blur(16px) saturate(160%);
     -webkit-backdrop-filter: blur(16px) saturate(160%);
     border-color: rgba(59,130,246,0.20);
@@ -1272,8 +1272,8 @@ body {
     bottom: 10%;
     width: 3px;
     border-radius: 0 3px 3px 0;
-    background: var(--card-accent-color, var(--color-accent, #3B82F6));
-    box-shadow: 0 0 10px color-mix(in srgb, var(--card-accent-color, var(--color-accent, #3B82F6)) 40%, transparent);
+    background: var(--card-accent-color, var(--color-accent, #D4FF00));
+    box-shadow: 0 0 10px color-mix(in srgb, var(--card-accent-color, var(--color-accent, #D4FF00)) 40%, transparent);
     opacity: 0.9;
   }
   .card-accent::after {
@@ -1283,7 +1283,7 @@ body {
     background: linear-gradient(
       100deg,
       transparent 35%,
-      color-mix(in srgb, var(--card-accent-color, var(--color-accent, #3B82F6)) 15%, transparent) 50%,
+      color-mix(in srgb, var(--card-accent-color, var(--color-accent, #D4FF00)) 15%, transparent) 50%,
       transparent 65%
     );
     transform: translateX(-100%);
@@ -1294,8 +1294,8 @@ body {
     transform: translateX(100%);
   }
   /* Preset accent colors — override --card-accent-color or stack classes */
-  .card-accent-gold   { --card-accent-color: #2563EB; }
-  .card-accent-blue   { --card-accent-color: #2563EB; }
+  .card-accent-gold   { --card-accent-color: #D4FF00; }
+  .card-accent-blue   { --card-accent-color: #D4FF00; }
   .card-accent-green  { --card-accent-color: #22C55E; }
   .card-accent-purple { --card-accent-color: #A855F7; }
   .card-accent-warning{ --card-accent-color: #F59E0B; }
@@ -1347,14 +1347,14 @@ body {
 
   .sidebar-link-active {
     @apply relative flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold;
-    color: var(--color-accent, #3B82F6);
+    color: var(--color-accent, #D4FF00);
     background: linear-gradient(90deg,
-      color-mix(in srgb, var(--color-accent, #3B82F6) 14%, transparent) 0%,
-      color-mix(in srgb, var(--color-accent, #3B82F6) 6%, transparent) 100%);
-    border: 1px solid color-mix(in srgb, var(--color-accent, #3B82F6) 22%, transparent);
+      color-mix(in srgb, var(--color-accent, #D4FF00) 14%, transparent) 0%,
+      color-mix(in srgb, var(--color-accent, #D4FF00) 6%, transparent) 100%);
+    border: 1px solid color-mix(in srgb, var(--color-accent, #D4FF00) 22%, transparent);
     box-shadow:
       0 1px 0 rgba(255,255,255,0.04) inset,
-      0 0 16px color-mix(in srgb, var(--color-accent, #3B82F6) 10%, transparent);
+      0 0 16px color-mix(in srgb, var(--color-accent, #D4FF00) 10%, transparent);
   }
   .sidebar-link-active::before {
     content: '';
@@ -1365,8 +1365,8 @@ body {
     width: 3px;
     height: 60%;
     border-radius: 0 4px 4px 0;
-    background: var(--color-accent, #3B82F6);
-    box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent, #3B82F6) 60%, transparent);
+    background: var(--color-accent, #D4FF00);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent, #D4FF00) 60%, transparent);
   }
 
   /* ═══════════ SIDEBAR SECTION ANIMATIONS ═══════════ */
@@ -1537,8 +1537,8 @@ body {
   .tab-item-active {
     @apply tab-item;
     color: #FFFFFF;
-    background: var(--color-accent, #3B82F6);
-    box-shadow: 0 2px 8px color-mix(in srgb, var(--color-accent, #3B82F6) 30%, transparent);
+    background: var(--color-accent, #D4FF00);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--color-accent, #D4FF00) 30%, transparent);
   }
 
   .tab-item-inactive {
@@ -1571,11 +1571,11 @@ body {
   /* ═══════════ INTERACTIVE LINKS ═══════════ */
   .link-accent {
     @apply text-xs font-medium flex items-center gap-1;
-    color: var(--color-accent, #3B82F6);
+    color: var(--color-accent, #D4FF00);
     transition: all 0.2s ease;
   }
   .link-accent:hover {
-    color: color-mix(in srgb, var(--color-accent, #3B82F6) 80%, var(--color-foreground, #1A1A2E));
+    color: color-mix(in srgb, var(--color-accent, #D4FF00) 80%, var(--color-foreground, #1A1A2E));
     gap: 6px;
   }
 
@@ -1653,7 +1653,7 @@ body {
 
   /* Focus ring for accessibility */
   *:focus-visible {
-    outline: 2px solid var(--color-accent, #3B82F6);
+    outline: 2px solid var(--color-accent, #D4FF00);
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -2791,7 +2791,7 @@ body {
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
   box-shadow:
-    0 0 0 0 rgba(59, 130, 246, 0.40),
+    0 0 0 0 rgba(212, 255, 0, 0.40),
     0 8px 24px -6px rgba(37, 99, 235, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
   animation: hfBreathe 3s ease-in-out infinite;
@@ -2867,14 +2867,14 @@ body {
 }
 .hf-tile:hover {
   border-color: rgba(59, 130, 246, 0.35);
-  background: rgba(59, 130, 246, 0.06);
+  background: rgba(212, 255, 0, 0.06);
   color: rgba(255, 255, 255, 0.95);
 }
 .hf-tile[data-active="true"] {
-  border-color: rgba(37, 99, 235, 0.6);
-  background: rgba(37, 99, 235, 0.08);
-  color: #2563EB;
-  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2), 0 4px 16px -4px rgba(37, 99, 235, 0.25);
+  border-color: rgba(212, 255, 0, 0.6);
+  background: rgba(212, 255, 0, 0.08);
+  color: #D4FF00;
+  box-shadow: 0 0 0 1px rgba(212, 255, 0, 0.2), 0 4px 16px -4px rgba(212, 255, 0, 0.25);
 }
 
 /* Collapsible sidebar — expand on hover */
@@ -2948,8 +2948,8 @@ body {
   transition: all 0.2s ease;
 }
 .hf-tile[data-active="true"] .hf-aspect-frame {
-  border-color: #3B82F6;
-  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2), inset 0 0 12px rgba(59, 130, 246, 0.12);
+  border-color: #D4FF00;
+  box-shadow: 0 0 0 1px rgba(212, 255, 0, 0.2), inset 0 0 12px rgba(212, 255, 0, 0.12);
 }
 
 /* Reduced motion — kill breathing */
@@ -3159,7 +3159,7 @@ body {
  *     Period: 8s. Subtle — viewer shouldn't consciously notice it moving.
  *
  * Color story: deep indigo-to-blue radial, matching the brand accent
- * (#3B82F6 blue → #6366F1 indigo). On OLED screens the gradient
+ * (#D4FF00 lime → #6366F1 indigo). On OLED screens the gradient
  * disappears into true-black seamlessly below ~34% of the viewport.
  *
  * Reduced-motion: animation stripped, opacity locked at 50%.

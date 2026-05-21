@@ -24,7 +24,7 @@ type FormType = "lead" | "client" | "deal" | "note" | null;
 
 const ACTIONS = [
   { type: "lead"   as const, label: "+ Lead",   icon: Zap,       color: "#F59E0B" },
-  { type: "client" as const, label: "+ Client", icon: Users,     color: "#2563EB" },
+  { type: "client" as const, label: "+ Client", icon: Users,     color: "#D4FF00" },
   { type: "deal"   as const, label: "+ Deal",   icon: Briefcase, color: "#10B981" },
   { type: "note"   as const, label: "+ Note",   icon: StickyNote,color: "#8B5CF6" },
 ] as const;
@@ -194,7 +194,7 @@ export default function QuickAdd() {
         aria-label={expanded ? "Close quick add" : "Quick add (Shift+N)"}
         className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
         style={{
-          background: "#2563EB",
+          background: "#D4FF00",
           boxShadow: "0 4px 20px rgba(212,255,0,0.35), 0 1px 4px rgba(0,0,0,0.12)",
         }}
       >
@@ -269,7 +269,7 @@ export default function QuickAdd() {
                     placeholder="Write a note..."
                     rows={4}
                     autoFocus
-                    className="w-full text-sm text-[#111827] placeholder-[#9CA3AF] bg-[#F9FAFB] border border-[rgba(0,0,0,0.1)] rounded-xl px-3 py-2.5 outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.12)] resize-none transition-colors"
+                    className="w-full text-sm text-[#111827] placeholder-[#9CA3AF] bg-[#F9FAFB] border border-[rgba(0,0,0,0.1)] rounded-xl px-3 py-2.5 outline-none focus:border-[#D4FF00] focus:ring-2 focus:ring-[rgba(212,255,0,0.12)] resize-none transition-colors"
                   />
                   <SubmitBtn saving={saving} label="Save Note"  icon={<StickyNote size={13} />} onClick={saveNote}   />
                 </>
@@ -315,7 +315,7 @@ function FormInput({
       onChange={e => onChange(e.target.value)}
       placeholder={placeholder}
       autoFocus={autoFocus}
-      className="w-full text-sm text-[#111827] placeholder-[#9CA3AF] bg-[#F9FAFB] border border-[rgba(0,0,0,0.1)] rounded-xl px-3 py-2.5 outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.12)] transition-colors"
+      className="w-full text-sm text-[#111827] placeholder-[#9CA3AF] bg-[#F9FAFB] border border-[rgba(0,0,0,0.1)] rounded-xl px-3 py-2.5 outline-none focus:border-[#D4FF00] focus:ring-2 focus:ring-[rgba(212,255,0,0.12)] transition-colors"
     />
   );
 }
@@ -333,7 +333,7 @@ function SubmitBtn({
       onClick={onClick}
       disabled={saving}
       className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
-      style={{ background: "#2563EB" }}
+      style={{ background: "#D4FF00" }}
     >
       {saving ? <Loader2 size={13} className="animate-spin" /> : icon}
       {saving ? "Saving..." : label}

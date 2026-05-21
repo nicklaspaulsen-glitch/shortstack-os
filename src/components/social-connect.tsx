@@ -28,7 +28,7 @@ const PLATFORMS = [
   { id: "meta_ads", name: "Meta Ads", icon: <Megaphone size={16} />, color: "text-indigo-400", bg: "bg-indigo-400/10 border-indigo-400/20", urlPrefix: "", placeholder: "Ad Account ID" },
   { id: "tiktok_ads", name: "TikTok Ads", icon: <Megaphone size={16} />, color: "text-cyan-400", bg: "bg-cyan-400/10 border-cyan-400/20", urlPrefix: "", placeholder: "Advertiser ID" },
   { id: "x_twitter", name: "X (Twitter)", icon: <Hash size={16} />, color: "text-text-primary", bg: "bg-black/5 border-border-subtle", urlPrefix: "x.com/", placeholder: "@handle" },
-  { id: "website", name: "Website", icon: <Globe size={16} />, color: "text-[#2563EB]", bg: "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.2)]", urlPrefix: "", placeholder: "https://example.com" },
+  { id: "website", name: "Website", icon: <Globe size={16} />, color: "text-[#D4FF00]", bg: "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.2)]", urlPrefix: "", placeholder: "https://example.com" },
 ];
 
 // Platforms that have OAuth ready
@@ -147,7 +147,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Link2 size={14} className="text-[#2563EB]" />
+          <Link2 size={14} className="text-[#D4FF00]" />
           <h3 className="text-sm font-semibold">Connected Accounts</h3>
           <span className="text-[10px] text-text-muted bg-surface-light px-1.5 py-0.5 rounded">
             {accounts.filter(a => a.is_active).length}
@@ -168,7 +168,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
         <div className="text-center py-6 border border-dashed border-border-subtle/50 rounded-lg">
           <Link2 size={20} className="mx-auto mb-2 text-text-muted/50" />
           <p className="text-xs text-text-muted">No accounts linked yet</p>
-          <button onClick={() => setShowConnect(true)} className="text-[10px] text-[#2563EB] mt-1 hover:underline">
+          <button onClick={() => setShowConnect(true)} className="text-[10px] text-[#D4FF00] mt-1 hover:underline">
             Link first account
           </button>
         </div>
@@ -189,7 +189,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
                     {hasApi ? (
                       <span className="text-[8px] px-1 py-px rounded bg-success/10 text-success font-semibold uppercase tracking-wider">API</span>
                     ) : (
-                      <span className="text-[8px] px-1 py-px rounded bg-[rgba(212,255,0,0.08)] text-[#2563EB] font-semibold uppercase tracking-wider">Linked</span>
+                      <span className="text-[8px] px-1 py-px rounded bg-[rgba(212,255,0,0.08)] text-[#D4FF00] font-semibold uppercase tracking-wider">Linked</span>
                     )}
                   </div>
                 </div>
@@ -197,7 +197,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
                   {hasApi ? (
                     <div className="glow-dot bg-success text-success" />
                   ) : (
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#D4FF00]" />
                   )}
                   {/* Upgrade to OAuth if available and not yet connected via API */}
                   {!hasApi && OAUTH_PLATFORMS.includes(account.platform) && (
@@ -206,7 +206,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
                         const p = PLATFORMS.find(pl => pl.id === account.platform);
                         if (p) startOAuth(p);
                       }}
-                      className="p-1 rounded hover:bg-[rgba(212,255,0,0.08)] text-text-muted hover:text-[#2563EB] transition-colors"
+                      className="p-1 rounded hover:bg-[rgba(212,255,0,0.08)] text-text-muted hover:text-[#D4FF00] transition-colors"
                       title="Upgrade to API access"
                     >
                       <Zap size={12} />

@@ -561,7 +561,7 @@ export function Timeline({
               }
               onPlayPause?.();
             }}
-            className="text-text-primary hover:text-[#2563EB] transition-colors"
+            className="text-text-primary hover:text-[#D4FF00] transition-colors"
             aria-label={playing ? "Pause" : "Play"}
           >
             {playing ? <Pause size={14} /> : <Play size={14} />}
@@ -630,7 +630,7 @@ export function Timeline({
           type="button"
           onClick={() => setSnapOn((v) => !v)}
           className={`flex items-center gap-1 text-[9px] rounded px-2 py-1 border transition-colors ${
-            snapOn ? "border-[rgba(212,255,0,0.3)] bg-[rgba(212,255,0,0.08)] text-[#2563EB]" : "border-border-subtle text-text-muted hover:text-text-primary"
+            snapOn ? "border-[rgba(212,255,0,0.3)] bg-[rgba(212,255,0,0.08)] text-[#D4FF00]" : "border-border-subtle text-text-muted hover:text-text-primary"
           }`}
           title="Snap to 1-second grid, clip edges & playhead"
         >
@@ -671,7 +671,7 @@ export function Timeline({
             step={0.005}
             value={pxPerMs}
             onChange={(e) => setPxPerMs(Number(e.target.value))}
-            className="w-24 h-1 accent-[#2563EB]"
+            className="w-24 h-1 accent-[#D4FF00]"
             aria-label="Zoom"
           />
           <button
@@ -794,7 +794,7 @@ export function Timeline({
               const left = msToPx(clip.start);
               const width = Math.max(4, msToPx(clip.duration));
               const color =
-                clip.color || safeProject.tracks[trackIdx].accent || "#3B82F6";
+                clip.color || safeProject.tracks[trackIdx].accent || "#D4FF00";
               const isSelected = selectedIds.includes(clip.id);
 
               if (clip.isMarker) {
@@ -888,7 +888,7 @@ function ClipBlock({ clip, top, left, width, color, isSelected, onClick, onMouse
       data-role="clip"
       data-clip-id={clip.id}
       className={`absolute rounded-md overflow-hidden cursor-grab active:cursor-grabbing group ${
-        isSelected ? "ring-2 ring-[#2563EB]" : "ring-1 ring-black/20"
+        isSelected ? "ring-2 ring-[#D4FF00]" : "ring-1 ring-black/20"
       } ${clip.locked ? "opacity-70 cursor-not-allowed" : ""}`}
       style={{
         top,
@@ -947,7 +947,7 @@ function ClipMarker({ clip, top, left, color, isSelected, onClick, onMouseDown }
     <div
       data-role="clip"
       data-clip-id={clip.id}
-      className={`absolute cursor-pointer group ${isSelected ? "ring-2 ring-[#2563EB]" : ""}`}
+      className={`absolute cursor-pointer group ${isSelected ? "ring-2 ring-[#D4FF00]" : ""}`}
       style={{
         top,
         left: left - 1,

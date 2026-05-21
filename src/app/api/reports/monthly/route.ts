@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
     doc.on("end", () => resolve(Buffer.concat(chunks)));
     doc.on("error", reject);
 
-    const gold = "#3B82F6"; const dark = "#0a0a0a"; const white = "#FFFFFF"; const gray = "#888888";
+    const gold = "#D4FF00"; const dark = "#0a0a0a"; const white = "#FFFFFF"; const gray = "#888888";
     const pw = doc.page.width - 110;
     const month = new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" });
 

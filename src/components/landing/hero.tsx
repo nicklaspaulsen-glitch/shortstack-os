@@ -80,12 +80,12 @@ const STATS = [
 function DashboardMockup() {
   return (
     <div
-      className="relative w-full rounded-2xl overflow-hidden border border-[rgba(99,146,255,0.14)] shadow-[0_0_0_1px_rgba(99,146,255,0.06),0_24px_80px_rgba(0,0,0,0.6),0_0_120px_rgba(212,255,0,0.07)]"
+      className="relative w-full rounded-2xl overflow-hidden border border-[rgba(212, 255, 0,0.14)] shadow-[0_0_0_1px_rgba(212, 255, 0,0.06),0_24px_80px_rgba(0,0,0,0.6),0_0_120px_rgba(212,255,0,0.07)]"
       style={{ background: "rgba(13,17,32,0.92)", backdropFilter: "blur(24px)" }}
     >
       {/* Browser chrome */}
       <div
-        className="flex items-center gap-2 px-4 py-3 border-b border-[rgba(99,146,255,0.10)]"
+        className="flex items-center gap-2 px-4 py-3 border-b border-[rgba(212, 255, 0,0.10)]"
         style={{ background: "rgba(19,24,39,0.90)" }}
       >
         <span className="w-2.5 h-2.5 rounded-full bg-red-500/30" />
@@ -103,7 +103,7 @@ function DashboardMockup() {
       <div className="flex" style={{ minHeight: 360 }}>
         {/* Sidebar */}
         <div
-          className="flex flex-col gap-1 py-4 px-2 border-r border-[rgba(99,146,255,0.08)]"
+          className="flex flex-col gap-1 py-4 px-2 border-r border-[rgba(212, 255, 0,0.08)]"
           style={{ width: 48, background: "rgba(13,17,32,0.95)" }}
         >
           {[0.9, 0.5, 0.5, 0.5, 0.5, 0.5].map((op, i) => (
@@ -128,12 +128,12 @@ function DashboardMockup() {
               <div
                 key={label}
                 className="rounded-xl p-3"
-                style={{ background: "rgba(19,24,39,0.80)", border: "1px solid rgba(99,146,255,0.09)" }}
+                style={{ background: "rgba(19,24,39,0.80)", border: "1px solid rgba(212, 255, 0,0.09)" }}
               >
                 <div className="text-[10px] text-[#4A4A5A] mb-1.5">{label}</div>
                 <div
                   className="text-sm font-bold"
-                  style={{ color: i === 0 ? "#60A5FA" : "#A8A8B2" }}
+                  style={{ color: i === 0 ? "#D4FF00" : "#A8A8B2" }}
                 >
                   {["$14,280", "1,247", "38", "94"][i]}
                 </div>
@@ -142,7 +142,7 @@ function DashboardMockup() {
                     className="h-full rounded-full"
                     style={{
                       width: ["82%", "67%", "45%", "71%"][i],
-                      background: i === 0 ? "rgba(212,255,0,0.6)" : "rgba(99,146,255,0.25)",
+                      background: i === 0 ? "rgba(212,255,0,0.6)" : "rgba(212, 255, 0,0.25)",
                     }}
                   />
                 </div>
@@ -155,15 +155,15 @@ function DashboardMockup() {
             {/* Recent activity list */}
             <div
               className="rounded-xl p-3 flex flex-col gap-2"
-              style={{ background: "rgba(19,24,39,0.80)", border: "1px solid rgba(99,146,255,0.09)" }}
+              style={{ background: "rgba(19,24,39,0.80)", border: "1px solid rgba(212, 255, 0,0.09)" }}
             >
               <div className="text-[10px] text-[#4A4A5A] mb-1">Recent Activity</div>
               {[
-                { label: "New lead scored", time: "2m ago", color: "#60A5FA" },
+                { label: "New lead scored", time: "2m ago", color: "#D4FF00" },
                 { label: "Proposal accepted", time: "14m ago", color: "#34D399" },
                 { label: "AI call completed", time: "31m ago", color: "#A78BFA" },
                 { label: "Invoice paid", time: "1h ago", color: "#34D399" },
-                { label: "Content published", time: "2h ago", color: "#60A5FA" },
+                { label: "Content published", time: "2h ago", color: "#D4FF00" },
               ].map((item) => (
                 <div key={item.label} className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
@@ -178,7 +178,7 @@ function DashboardMockup() {
             {/* Sparkline chart */}
             <div
               className="rounded-xl p-3 flex flex-col"
-              style={{ background: "rgba(19,24,39,0.80)", border: "1px solid rgba(99,146,255,0.09)" }}
+              style={{ background: "rgba(19,24,39,0.80)", border: "1px solid rgba(212, 255, 0,0.09)" }}
             >
               <div className="text-[10px] text-[#4A4A5A] mb-2">Revenue this month</div>
               <div className="flex-1 relative flex items-end gap-1.5 px-1 pb-1">
@@ -278,7 +278,7 @@ export default function Hero() {
                 className="font-editorial not-italic"
                 style={{
                   fontStyle: "italic",
-                  color: "#60A5FA",
+                  color: "#D4FF00",
                   letterSpacing: "-0.01em",
                 }}
               >
@@ -337,7 +337,7 @@ export default function Hero() {
             <motion.div variants={ITEM} className="flex flex-col gap-3">
               <Link
                 href="/pricing"
-                className="relative inline-flex items-center justify-center gap-2.5 font-semibold text-[13px] h-11 px-6 rounded-[14px] bg-[#3B82F6] text-white border border-[rgba(96,165,250,0.40)] shadow-[0_0_0_1px_rgba(212,255,0,0.30),0_4px_20px_rgba(212,255,0,0.50),0_0_60px_rgba(212,255,0,0.18)] hover:bg-[#2563EB] hover:shadow-[0_0_0_1px_rgba(212,255,0,0.50),0_6px_28px_rgba(212,255,0,0.65),0_0_80px_rgba(212,255,0,0.28)] hover:-translate-y-0.5 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                className="relative inline-flex items-center justify-center gap-2.5 font-semibold text-[13px] h-11 px-6 rounded-[14px] bg-[#D4FF00] text-[#020711] border border-[rgba(212, 255, 0,0.40)] shadow-[0_0_0_1px_rgba(212,255,0,0.30),0_4px_20px_rgba(212,255,0,0.50),0_0_60px_rgba(212,255,0,0.18)] hover:bg-[#D4FF00] hover:shadow-[0_0_0_1px_rgba(212,255,0,0.50),0_6px_28px_rgba(212,255,0,0.65),0_0_80px_rgba(212,255,0,0.28)] hover:-translate-y-0.5 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)]"
               >
                 Start your 7-day free trial
                 <ArrowRight size={15} />
@@ -345,7 +345,7 @@ export default function Hero() {
 
               <Link
                 href="#features"
-                className="inline-flex items-center justify-center gap-2 font-medium text-[12px] h-9 px-4 rounded-[12px] bg-transparent text-[#A8A8B2] border border-[rgba(99,146,255,0.18)] hover:bg-[rgba(212,255,0,0.08)] hover:text-[#C8C8D4] hover:border-[rgba(99,146,255,0.32)] transition-all duration-200"
+                className="inline-flex items-center justify-center gap-2 font-medium text-[12px] h-9 px-4 rounded-[12px] bg-transparent text-[#A8A8B2] border border-[rgba(212, 255, 0,0.18)] hover:bg-[rgba(212,255,0,0.08)] hover:text-[#C8C8D4] hover:border-[rgba(212, 255, 0,0.32)] transition-all duration-200"
               >
                 See all features
                 <ChevronRight size={13} />

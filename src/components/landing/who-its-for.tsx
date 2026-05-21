@@ -80,7 +80,7 @@ export default function WhoItsFor() {
                   className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
                   style={{ background: "rgba(255,255,255,0.07)" }}
                 >
-                  <a.icon size={18} style={{ color: "#60A5FA" }} />
+                  <a.icon size={18} style={{ color: "#D4FF00" }} />
                 </div>
                 <h3 className="text-sm font-bold text-white mb-2">
                   {a.title}

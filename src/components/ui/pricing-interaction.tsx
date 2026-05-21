@@ -79,7 +79,7 @@ function PlanCard({
     >
       {/* Featured badge */}
       {plan.badge && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#2563EB] px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white shadow-[0_2px_8px_rgba(212,255,0,0.35)]">
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#D4FF00] px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-[#020711] shadow-[0_2px_8px_rgba(212,255,0,0.35)]">
           {plan.badge}
         </span>
       )}
@@ -112,7 +112,7 @@ function PlanCard({
             <span
               className={cn(
                 "mt-0.5 flex h-4.5 w-4.5 flex-shrink-0 items-center justify-center rounded-full",
-                plan.featured ? "bg-indigo-100 text-[#2563EB]" : "bg-[rgba(0,0,0,0.06)] text-text-secondary"
+                plan.featured ? "bg-indigo-100 text-[#D4FF00]" : "bg-[rgba(0,0,0,0.06)] text-text-secondary"
               )}
             >
               <Check className="h-3 w-3" strokeWidth={2.5} />
@@ -136,8 +136,8 @@ function PlanCard({
             isCurrent
               ? "bg-[rgba(0,0,0,0.05)] text-text-muted cursor-not-allowed"
               : plan.featured
-              ? "bg-[#2563EB] text-white shadow-[0_2px_8px_rgba(212,255,0,0.28)] hover:bg-[#1D4ED8] hover:shadow-[0_4px_16px_rgba(212,255,0,0.40)]"
-              : "bg-[rgba(0,0,0,0.05)] text-text-primary hover:bg-[rgba(212,255,0,0.08)] hover:text-[#2563EB]"
+              ? "bg-[#D4FF00] text-[#020711] shadow-[0_2px_8px_rgba(212,255,0,0.28)] hover:bg-[#AACC00] hover:shadow-[0_4px_16px_rgba(212,255,0,0.40)]"
+              : "bg-[rgba(0,0,0,0.05)] text-text-primary hover:bg-[rgba(212,255,0,0.08)] hover:text-[#D4FF00]"
           )}
         >
           {plan.featured && !isCurrent && <Zap className="h-4 w-4" />}
@@ -150,7 +150,7 @@ function PlanCard({
   if (plan.featured && !isCurrent) {
     return (
       <ShineBorder
-        color={["#2563EB", "#93C5FD", "#DBEAFE", "#818CF8", "#2563EB"]}
+        color={["#D4FF00", "#93C5FD", "#DBEAFE", "#818CF8", "#D4FF00"]}
         borderWidth={2}
         borderRadius="16px"
         background="transparent"

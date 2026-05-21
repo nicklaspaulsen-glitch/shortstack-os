@@ -171,7 +171,7 @@ function CategoryBar({
       <span className="text-[10px] text-text-muted w-20 flex-shrink-0 capitalize">
         {label}
       </span>
-      <div className="flex-1 h-1 rounded-full bg-[rgba(99,146,255,0.12)]">
+      <div className="flex-1 h-1 rounded-full bg-[rgba(212, 255, 0,0.12)]">
         <div
           className={`h-full rounded-full ${color} transition-all duration-500`}
           style={{ width: `${pct}%` }}
@@ -256,15 +256,15 @@ export default function AuditScoreCard() {
     return (
       <div className="glass-panel rounded-lg p-4 animate-pulse">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-14 h-14 rounded-full bg-[rgba(99,146,255,0.06)]" />
+          <div className="w-14 h-14 rounded-full bg-[rgba(212, 255, 0,0.06)]" />
           <div className="space-y-2">
-            <div className="h-3 w-32 bg-[rgba(99,146,255,0.06)] rounded" />
-            <div className="h-2 w-48 bg-[rgba(99,146,255,0.06)] rounded" />
+            <div className="h-3 w-32 bg-[rgba(212, 255, 0,0.06)] rounded" />
+            <div className="h-2 w-48 bg-[rgba(212, 255, 0,0.06)] rounded" />
           </div>
         </div>
         <div className="space-y-2">
           {["structure", "tracking", "bidding"].map((k) => (
-            <div key={k} className="h-2 bg-[rgba(99,146,255,0.06)] rounded" />
+            <div key={k} className="h-2 bg-[rgba(212, 255, 0,0.06)] rounded" />
           ))}
         </div>
       </div>

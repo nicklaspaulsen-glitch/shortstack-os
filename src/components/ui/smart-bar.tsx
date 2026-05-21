@@ -65,7 +65,7 @@ const VIDEO_FORMATS = [
     emoji: "🎯",
     title: "Tutorial Hook",
     tag: "Educational",
-    color: "#3B82F6",
+    color: "#D4FF00",
     prompt:
       "Quick-cut tutorial: text overlay 'stop doing this mistake', step-by-step demonstration with numbered overlays, clean studio lighting, final result dramatic reveal with animated check marks, energetic pace",
   },
@@ -112,11 +112,11 @@ const STRUCTURE_TEMPLATES = [
     id: "hook_story_cta",
     title: "Hook → Story → CTA",
     tag: "Universal #1",
-    color: "#3B82F6",
+    color: "#D4FF00",
     description: "First 3s: pattern interrupt. 3–25s: value delivery. Last 5s: clear CTA.",
     segments: [
       { label: "HOOK", pct: 10, bg: "#EF4444" },
-      { label: "STORY / VALUE", pct: 75, bg: "#3B82F6" },
+      { label: "STORY / VALUE", pct: 75, bg: "#D4FF00" },
       { label: "CTA", pct: 15, bg: "#22C55E" },
     ],
   },
@@ -183,7 +183,7 @@ const THUMBNAIL_FORMULAS = [
     emoji: "🤔",
     title: "Curiosity Gap",
     tag: "CTR gold",
-    color: "#3B82F6",
+    color: "#D4FF00",
     ctrScore: 94,
     description: "Imply something shocking without fully revealing it",
     tips: [
@@ -599,7 +599,7 @@ export default function SmartBar({
                                       formula.ctrScore >= 90
                                         ? "#22C55E"
                                         : formula.ctrScore >= 80
-                                        ? "#3B82F6"
+                                        ? "#D4FF00"
                                         : "#F59E0B",
                                   }}
                                 >

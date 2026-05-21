@@ -366,7 +366,7 @@ export const CAPTION_STYLES_LIBRARY: CaptionStyle[] = [
       fontFamily: "'Poppins', sans-serif",
       color: "#FFFFFF",
       bg: "transparent",
-      stroke: "#3B82F6",
+      stroke: "#D4FF00",
       weight: 800,
       size: 24,
       animation: "gold glow",

@@ -324,7 +324,7 @@ export const VideoOverlay: React.FC<VideoOverlayProps> = ({
   videoUrl = "",
   title = "",
   captionText = "",
-  brandColor = "#3B82F6",
+  brandColor = "#D4FF00",
   logoUrl,
   showIntro = false,
   showOutro = false,

@@ -188,7 +188,7 @@ export default class ErrorBoundary extends React.Component<
           <div className="flex items-center justify-center gap-2 flex-wrap">
             <button
               onClick={this.handleReset}
-              className="px-4 py-2 text-xs font-medium rounded-lg bg-[#2563EB] text-white hover:bg-[#1D4ED8] transition-colors"
+              className="px-4 py-2 text-xs font-medium rounded-lg bg-[#D4FF00] text-[#020711] hover:bg-[#AACC00] transition-colors"
             >
               Try again
             </button>

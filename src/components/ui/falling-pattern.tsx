@@ -9,7 +9,7 @@
  *
  * Usage:
  *   <div className="relative overflow-hidden">
- *     <FallingPattern color="#2563EB" density={30} />
+ *     <FallingPattern color="#D4FF00" density={30} />
  *     <YourContent className="relative z-10" />
  *   </div>
  */
@@ -49,7 +49,7 @@ function randomBetween(a: number, b: number): number {
 const SHAPES: Particle["shape"][] = ["circle", "cross", "square", "diamond"];
 
 export function FallingPattern({
-  color = "#2563EB",
+  color = "#D4FF00",
   density = 24,
   sizeRange = [3, 10],
   speedRange = [0.3, 1.2],

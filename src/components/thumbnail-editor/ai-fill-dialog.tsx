@@ -120,8 +120,8 @@ export default function AIFillDialog({
                           ? "rgba(212,255,0,0.18)"
                           : "rgba(255,255,255,0.04)",
                         borderColor: active
-                          ? "#3B82F6"
-                          : "rgba(99,146,255,0.18)",
+                          ? "#D4FF00"
+                          : "rgba(212, 255, 0,0.18)",
                         color: active ? "#93C5FD" : "#A8A8B2",
                       }}
                     >
@@ -133,7 +133,7 @@ export default function AIFillDialog({
                             background: m.badgeColor
                               ? `${m.badgeColor}22`
                               : "rgba(212,255,0,0.14)",
-                            color: m.badgeColor ?? "#60A5FA",
+                            color: m.badgeColor ?? "#D4FF00",
                           }}
                         >
                           {m.badge}
@@ -163,8 +163,8 @@ export default function AIFillDialog({
                           ? "rgba(212,255,0,0.18)"
                           : "rgba(255,255,255,0.04)",
                         borderColor: active
-                          ? "#3B82F6"
-                          : "rgba(99,146,255,0.18)",
+                          ? "#D4FF00"
+                          : "rgba(212, 255, 0,0.18)",
                         color: active ? "#93C5FD" : "#A8A8B2",
                       }}
                     >
@@ -176,7 +176,7 @@ export default function AIFillDialog({
                             background: s.badgeColor
                               ? `${s.badgeColor}22`
                               : "rgba(212,255,0,0.14)",
-                            color: s.badgeColor ?? "#60A5FA",
+                            color: s.badgeColor ?? "#D4FF00",
                           }}
                         >
                           {s.badge}

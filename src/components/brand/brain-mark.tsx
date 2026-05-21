@@ -7,7 +7,7 @@
  * built from smooth cubic bezier curves. At distance it reads as a brain;
  * up close it reveals the ShortStack double-S curve geometry.
  *
- * Uses a blue gradient (#2563EB → #60A5FA) matching the brand accent.
+ * Uses a blue gradient (#D4FF00 → #E8FF4D) matching the brand accent.
  * Supports sm/md/lg/xl sizes and an optional CSS drop-shadow glow.
  */
 
@@ -37,7 +37,7 @@ export default function BrainMark({
   const px = SIZE_PX[size];
 
   const glowFilter = glowing
-    ? "drop-shadow(0 0 8px rgba(212,255,0,0.7)) drop-shadow(0 0 18px rgba(96,165,250,0.4))"
+    ? "drop-shadow(0 0 8px rgba(212,255,0,0.7)) drop-shadow(0 0 18px rgba(212, 255, 0,0.4))"
     : undefined;
 
   return (
@@ -60,8 +60,8 @@ export default function BrainMark({
           y2="44"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#2563EB" />
-          <stop offset="100%" stopColor="#60A5FA" />
+          <stop offset="0%" stopColor="#D4FF00" />
+          <stop offset="100%" stopColor="#D4FF00" />
         </linearGradient>
 
         {/* Soft inner highlight for depth */}

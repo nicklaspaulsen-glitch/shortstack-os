@@ -81,7 +81,7 @@ export default function DesktopIndicator({ collapsed }: { collapsed?: boolean })
               </p>
 
               <FeatureRow
-                icon={<Bell size={14} className="text-[#2563EB]" />}
+                icon={<Bell size={14} className="text-[#D4FF00]" />}
                 title="Native notifications"
                 body="Leads, email opens, and agent replies surface as real OS notifications — even when ShortStack isn't focused."
               />

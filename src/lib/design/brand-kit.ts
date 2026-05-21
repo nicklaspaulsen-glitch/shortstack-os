@@ -19,7 +19,7 @@ export interface BrandKit {
   bodyFont: string;
 }
 
-const DEFAULT_PRIMARY = "#3B82F6";
+const DEFAULT_PRIMARY = "#D4FF00";
 const DEFAULT_ACCENT = "#8B6FCF";
 const DEFAULT_FONT = "Inter";
 

@@ -111,7 +111,7 @@ export default function PromptEnhancer({
                       onClick={() => applySuggestion(s)}
                       className="w-full text-left px-3 py-2 text-xs text-text-muted hover:text-text-primary hover:bg-surface-light border-b border-border-subtle/10 last:border-0 transition-colors"
                     >
-                      <span className="text-[9px] text-[#2563EB] font-medium mr-1">#{i + 1}</span>
+                      <span className="text-[9px] text-[#D4FF00] font-medium mr-1">#{i + 1}</span>
                       {s.length > 120 ? s.substring(0, 120) + "..." : s}
                     </button>
                   ))}
@@ -125,7 +125,7 @@ export default function PromptEnhancer({
             onClick={enhance}
             disabled={!value.trim() || enhancing}
             className="flex items-center gap-1.5 text-[10px] font-medium px-2.5 py-1 rounded-md transition-all disabled:opacity-30
-              bg-[rgba(212,255,0,0.08)] text-[#2563EB] border border-[rgba(212,255,0,0.2)] hover:bg-[rgba(212,255,0,0.12)] hover:border-[rgba(212,255,0,0.3)]"
+              bg-[rgba(212,255,0,0.08)] text-[#D4FF00] border border-[rgba(212,255,0,0.2)] hover:bg-[rgba(212,255,0,0.12)] hover:border-[rgba(212,255,0,0.3)]"
           >
             {enhancing ? (
               <>

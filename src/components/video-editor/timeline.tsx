@@ -58,9 +58,9 @@ export interface TimelineSuggestion {
 /* ─── Default multi-track set ───────────────────────────────── */
 
 export const DEFAULT_TRACKS = [
-  { id: "v1",  label: "V1",         kind: "video"   as const, accent: "#3B82F6" },
-  { id: "v2",  label: "V2",         kind: "video"   as const, accent: "#3B82F6" },
-  { id: "v3",  label: "V3",         kind: "video"   as const, accent: "#3B82F6" },
+  { id: "v1",  label: "V1",         kind: "video"   as const, accent: "#D4FF00" },
+  { id: "v2",  label: "V2",         kind: "video"   as const, accent: "#D4FF00" },
+  { id: "v3",  label: "V3",         kind: "video"   as const, accent: "#D4FF00" },
   { id: "a1",  label: "A1 · Music", kind: "audio"   as const, accent: "#22C55E" },
   { id: "a2",  label: "A2 · SFX",   kind: "audio"   as const, accent: "#F59E0B" },
   { id: "a3",  label: "A3 · VO",    kind: "audio"   as const, accent: "#EC4899" },
@@ -127,7 +127,7 @@ function VideoTimeline({
         <button
           type="button"
           onClick={() => void onSuggestEdits()}
-          className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-border-subtle text-text-muted hover:text-[#2563EB]"
+          className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-border-subtle text-text-muted hover:text-[#D4FF00]"
           title="Ask the AI editor for timed edit suggestions"
         >
           <Lightbulb size={10} /> Suggest
@@ -232,7 +232,7 @@ export function buildProjectFromStoryboard(
       start: cursor,
       duration: dur,
       label: `Scene ${scene.scene_number} — ${scene.visual.slice(0, 24)}`,
-      color: "#3B82F6",
+      color: "#D4FF00",
     });
     if (scene.text_overlay) {
       clips.push({

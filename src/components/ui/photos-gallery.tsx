@@ -158,7 +158,7 @@ export function PhotosGallery({
               style={{
                 width: i === activeIdx ? 20 : 6,
                 height: 6,
-                background: i === activeIdx ? "#3B82F6" : "rgba(255,255,255,0.25)",
+                background: i === activeIdx ? "#D4FF00" : "rgba(255,255,255,0.25)",
               }}
             />
           ))}

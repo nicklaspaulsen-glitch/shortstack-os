@@ -202,7 +202,7 @@ function AllocationPie({ slices }: { slices: AllocationSlice[] }) {
         <Tooltip
           contentStyle={{
             background: "rgba(13,17,32,0.95)",
-            border: "1px solid rgba(99,146,255,0.18)",
+            border: "1px solid rgba(212, 255, 0,0.18)",
             borderRadius: 6,
             fontSize: 11,
             color: "#F0F0F4",

@@ -180,11 +180,11 @@ export default function OverviewPanel() {
             <AreaChart data={dailySeries} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="spendGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.35} />
-                  <stop offset="100%" stopColor="#3B82F6" stopOpacity={0} />
+                  <stop offset="0%" stopColor="#D4FF00" stopOpacity={0.35} />
+                  <stop offset="100%" stopColor="#D4FF00" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,146,255,0.08)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(212, 255, 0,0.08)" />
               <XAxis
                 dataKey="date"
                 tick={{ fontSize: 10, fill: "#4A4A5A" }}
@@ -200,7 +200,7 @@ export default function OverviewPanel() {
               <Tooltip
                 contentStyle={{
                   background: "rgba(13,17,32,0.95)",
-                  border: "1px solid rgba(99,146,255,0.18)",
+                  border: "1px solid rgba(212, 255, 0,0.18)",
                   borderRadius: 6,
                   fontSize: 12,
                   color: "#F0F0F4",
@@ -211,7 +211,7 @@ export default function OverviewPanel() {
               <Area
                 type="monotone"
                 dataKey="spend"
-                stroke="#3B82F6"
+                stroke="#D4FF00"
                 strokeWidth={2}
                 fill="url(#spendGradient)"
               />
@@ -230,7 +230,7 @@ export default function OverviewPanel() {
           </div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="text-[11px] uppercase tracking-wide text-text-muted bg-[rgba(99,146,255,0.04)]">
+            <thead className="text-[11px] uppercase tracking-wide text-text-muted bg-[rgba(212, 255, 0,0.04)]">
               <tr>
                 <th className="text-left px-4 py-2 font-medium">Campaign</th>
                 <th className="text-left px-4 py-2 font-medium">Platform</th>
@@ -241,7 +241,7 @@ export default function OverviewPanel() {
             </thead>
             <tbody>
               {topCampaigns.map((c) => (
-                <tr key={c.id} className="border-t border-border-subtle hover:bg-[rgba(99,146,255,0.03)] transition-colors">
+                <tr key={c.id} className="border-t border-border-subtle hover:bg-[rgba(212, 255, 0,0.03)] transition-colors">
                   <td className="px-4 py-2.5 truncate max-w-xs text-text-primary">{c.name}</td>
                   <td className="px-4 py-2.5">
                     <PlatformBadge platform={c.platform} />

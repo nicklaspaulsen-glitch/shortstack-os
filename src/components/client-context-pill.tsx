@@ -62,7 +62,7 @@ export default function ClientContextPill() {
       {managedClient ? (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 bg-gradient-to-r from-[rgba(212,255,0,0.12)] to-amber-500/10 border border-[rgba(212,255,0,0.4)] backdrop-blur-md rounded-full pl-2 pr-3 py-2 shadow-lg shadow-[rgba(212,255,0,0.2)]">
           {/* Avatar */}
-          <div className="relative w-7 h-7 rounded-full bg-gradient-to-br from-[#2563EB] to-amber-500 flex items-center justify-center text-white text-[11px] font-bold shadow-inner">
+          <div className="relative w-7 h-7 rounded-full bg-gradient-to-br from-[#D4FF00] to-amber-500 flex items-center justify-center text-white text-[11px] font-bold shadow-inner">
             {initials}
             <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-background animate-pulse" />
           </div>
@@ -119,7 +119,7 @@ export default function ClientContextPill() {
             {/* Header */}
             <div className="px-4 py-3 border-b border-border-subtle flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Building2 size={14} className="text-[#2563EB]" />
+                <Building2 size={14} className="text-[#D4FF00]" />
                 <h3 className="text-sm font-semibold">Switch Client View</h3>
               </div>
               <button onClick={() => setOpen(false)} className="p-1 text-text-muted hover:text-text-primary">
@@ -195,20 +195,20 @@ export default function ClientContextPill() {
                     >
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold shadow-inner ${
                         isCurrent
-                          ? "bg-gradient-to-br from-[#2563EB] to-amber-500 text-white"
+                          ? "bg-gradient-to-br from-[#D4FF00] to-amber-500 text-white"
                           : "bg-surface-light text-text-primary"
                       }`}>
                         {clientInitials}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className={`text-xs font-medium truncate ${isCurrent ? "text-[#2563EB]" : "text-text-primary"}`}>
+                        <p className={`text-xs font-medium truncate ${isCurrent ? "text-[#D4FF00]" : "text-text-primary"}`}>
                           {c.business_name}
                         </p>
                         <p className="text-[10px] text-text-muted truncate">
                           {c.contact_name || c.email || c.package_tier}
                         </p>
                       </div>
-                      {isCurrent && <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-[#2563EB]">Active</span>}
+                      {isCurrent && <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-[#D4FF00]">Active</span>}
                     </button>
                   );
                 })

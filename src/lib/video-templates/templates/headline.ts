@@ -17,7 +17,7 @@ export interface HeadlineProps {
   subheadline?: string;
   cta?: string;
   bgColor?: string;       // e.g. "#020711"
-  accentColor?: string;   // e.g. "#3B82F6"
+  accentColor?: string;   // e.g. "#D4FF00"
   textColor?: string;     // e.g. "#F0F0F4"
   bgImageUrl?: string;    // Optional background image URL
   fontFamily?: string;    // Default: "Inter, sans-serif"
@@ -29,7 +29,7 @@ export function renderHeadline(props: HeadlineProps): string {
     subheadline = "",
     cta = "",
     bgColor = "#020711",
-    accentColor = "#3B82F6",
+    accentColor = "#D4FF00",
     textColor = "#F0F0F4",
     bgImageUrl = "",
     fontFamily = "Inter, -apple-system, sans-serif",
@@ -115,7 +115,7 @@ export const headlineTemplate = {
     subheadline: "Supporting context in one short line",
     cta: "#shortstack",
     bgColor: "#020711",
-    accentColor: "#3B82F6",
+    accentColor: "#D4FF00",
     textColor: "#F0F0F4",
   } satisfies HeadlineProps,
   render: renderHeadline,

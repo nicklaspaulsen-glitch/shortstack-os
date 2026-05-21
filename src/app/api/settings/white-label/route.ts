@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "client_id required" }, { status: 400 });
   }
 
-  const config = { brand_name, primary_color: primary_color || "#3B82F6", logo_url, tagline, updated_at: new Date().toISOString() };
+  const config = { brand_name, primary_color: primary_color || "#D4FF00", logo_url, tagline, updated_at: new Date().toISOString() };
 
   const { data: existing } = await supabase
     .from("social_accounts")

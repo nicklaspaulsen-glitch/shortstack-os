@@ -127,12 +127,12 @@ export default function OriginStory() {
                       border: "1px solid rgba(255,255,255,0.2)",
                     }}
                   >
-                    <m.icon size={16} style={{ color: "#60A5FA" }} />
+                    <m.icon size={16} style={{ color: "#D4FF00" }} />
                   </div>
                   <div className="pl-4">
                     <p
                       className="text-[10px] uppercase tracking-widest font-semibold mb-1"
-                      style={{ color: "#60A5FA" }}
+                      style={{ color: "#D4FF00" }}
                     >
                       {m.year}
                     </p>

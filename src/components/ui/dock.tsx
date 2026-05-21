@@ -135,7 +135,7 @@ function DockIcon({ item, mouseX, baseSize, maxSize, radius, isActive }: DockIco
             className={cn(
               "absolute bottom-[calc(100%+10px)] pointer-events-none",
               "whitespace-nowrap px-2.5 py-1 rounded-lg text-[11px] font-medium leading-none",
-              "bg-[rgba(15,20,35,0.92)] text-[#E8E8F0] border border-[rgba(99,146,255,0.18)]",
+              "bg-[rgba(15,20,35,0.92)] text-[#E8E8F0] border border-[rgba(212, 255, 0,0.18)]",
               "shadow-[0_4px_16px_rgba(0,0,0,0.40)] backdrop-blur-[8px]",
             )}
           >
@@ -162,17 +162,17 @@ function DockIcon({ item, mouseX, baseSize, maxSize, radius, isActive }: DockIco
           className={cn(
             "relative flex items-center justify-center w-full h-full rounded-[14px]",
             "transition-colors duration-150",
-            "outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/60",
+            "outline-none focus-visible:ring-2 focus-visible:ring-[#D4FF00]/60",
             isActive
               ? "bg-[rgba(212,255,0,0.22)] border border-[rgba(212,255,0,0.40)]"
-              : "bg-[rgba(19,24,39,0.78)] border border-[rgba(255,255,255,0.09)] hover:bg-[rgba(28,36,58,0.88)] hover:border-[rgba(99,146,255,0.24)]",
+              : "bg-[rgba(19,24,39,0.78)] border border-[rgba(255,255,255,0.09)] hover:bg-[rgba(28,36,58,0.88)] hover:border-[rgba(212, 255, 0,0.24)]",
             "shadow-[0_2px_12px_rgba(0,0,0,0.30),inset_0_1px_0_rgba(255,255,255,0.07)]",
           )}
         >
           {/* Icon */}
           <span className={cn(
             "relative flex items-center justify-center",
-            isActive ? "text-[#60A5FA]" : "text-[#8A8A9A]",
+            isActive ? "text-[#D4FF00]" : "text-[#8A8A9A]",
             "transition-colors duration-150 group-hover:text-[#C8C8D4]",
           )}
             style={{ fontSize: Math.round(baseSize * 0.42) }}
@@ -184,7 +184,7 @@ function DockIcon({ item, mouseX, baseSize, maxSize, radius, isActive }: DockIco
           {isActive && (
             <span
               aria-hidden
-              className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-[4px] h-[4px] rounded-full bg-[#3B82F6]"
+              className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-[4px] h-[4px] rounded-full bg-[#D4FF00]"
               style={{ boxShadow: "0 0 6px rgba(212,255,0,0.80)" }}
             />
           )}
@@ -240,7 +240,7 @@ export function Dock({
           background: "rgba(13,17,32,0.82)",
           backdropFilter: "blur(20px) saturate(160%)",
           WebkitBackdropFilter: "blur(20px) saturate(160%)",
-          border: "1px solid rgba(99,146,255,0.15)",
+          border: "1px solid rgba(212, 255, 0,0.15)",
           boxShadow: [
             "0 1px 0 rgba(255,255,255,0.06) inset",
             "0 8px 32px rgba(0,0,0,0.50)",
@@ -264,7 +264,7 @@ export function Dock({
             {item.separator && i > 0 && (
               <div
                 className="w-px self-stretch mx-1"
-                style={{ background: "rgba(99,146,255,0.15)", marginBottom: 4 }}
+                style={{ background: "rgba(212, 255, 0,0.15)", marginBottom: 4 }}
               />
             )}
             <DockIcon

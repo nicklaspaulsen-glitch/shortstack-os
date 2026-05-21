@@ -62,8 +62,8 @@ function AreaChart({ pct }: { pct: number }) {
       >
         <defs>
           <linearGradient id="heroAreaFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#2563EB" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#2563EB" stopOpacity="0.01" />
+            <stop offset="0%" stopColor="#D4FF00" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="#D4FF00" stopOpacity="0.01" />
           </linearGradient>
         </defs>
         {/* Filled area */}
@@ -72,7 +72,7 @@ function AreaChart({ pct }: { pct: number }) {
         <path
           d={linePath}
           fill="none"
-          stroke="#2563EB"
+          stroke="#D4FF00"
           strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -80,7 +80,7 @@ function AreaChart({ pct }: { pct: number }) {
         />
         {/* Terminal dot + pulse ring */}
         <circle cx={last.x} cy={last.y} r="5" fill="rgba(212,255,0,0.15)" />
-        <circle cx={last.x} cy={last.y} r="3" fill="#2563EB" opacity="0.9" />
+        <circle cx={last.x} cy={last.y} r="3" fill="#D4FF00" opacity="0.9" />
       </svg>
       {/* Percent label pinned to the terminal dot */}
       <span
@@ -88,7 +88,7 @@ function AreaChart({ pct }: { pct: number }) {
         style={{
           top: 0,
           background: "rgba(212,255,0,0.08)",
-          color: "#2563EB",
+          color: "#D4FF00",
           border: "1px solid rgba(212,255,0,0.18)",
         }}
       >

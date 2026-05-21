@@ -181,7 +181,7 @@ export default function DemoManagementPage() {
               <p className="text-[9px] text-[#6B7280] uppercase tracking-wider mb-1">Services</p>
               <div className="flex flex-wrap gap-1">
                 {demoClient.services?.map((s) => (
-                  <span key={s} className="text-[9px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded-lg">
+                  <span key={s} className="text-[9px] bg-[rgba(212, 255, 0,0.08)] text-brand-accent px-1.5 py-0.5 rounded-lg">
                     {s}
                   </span>
                 ))}

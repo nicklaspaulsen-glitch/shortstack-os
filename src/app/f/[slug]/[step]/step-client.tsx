@@ -186,7 +186,7 @@ export default function StepClientShell({
                 ctaTarget ?? undefined
               )
             }
-            className="px-8 py-3 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-50 text-white font-semibold text-base transition-colors"
+            className="px-8 py-3 rounded-lg bg-[#D4FF00] hover:bg-[#AACC00] disabled:opacity-50 text-[#020711] font-semibold text-base transition-colors"
           >
             {submitting ? "Loading…" : ctaLabel}
           </button>

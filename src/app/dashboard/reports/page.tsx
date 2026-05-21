@@ -162,7 +162,7 @@ export default function ReportsPage() {
     const metricsHTML = m ? `
       <table style="width:100%;border-collapse:collapse;margin:24px 0;">
         <thead>
-          <tr style="background:#FBF9F4;border-bottom:2px solid #2563EB;">
+          <tr style="background:#FBF9F4;border-bottom:2px solid #D4FF00;">
             <th style="text-align:left;padding:10px 14px;font-size:12px;color:#6B7280;font-weight:600;">Metric</th>
             <th style="text-align:right;padding:10px 14px;font-size:12px;color:#6B7280;font-weight:600;">Value</th>
           </tr>
@@ -170,7 +170,7 @@ export default function ReportsPage() {
         <tbody>
           <tr style="border-bottom:1px solid #E8E5E0;">
             <td style="padding:10px 14px;font-size:13px;color:#374151;">Leads</td>
-            <td style="padding:10px 14px;font-size:13px;color:#374151;text-align:right;font-weight:600;">${m.leads}${m.leads_trend !== "N/A" ? ` <span style="color:${parseInt(m.leads_trend) >= 0 ? "#2563EB" : "#EF4444"};font-size:11px;">(${parseInt(m.leads_trend) >= 0 ? "+" : ""}${m.leads_trend}%)</span>` : ""}</td>
+            <td style="padding:10px 14px;font-size:13px;color:#374151;text-align:right;font-weight:600;">${m.leads}${m.leads_trend !== "N/A" ? ` <span style="color:${parseInt(m.leads_trend) >= 0 ? "#D4FF00" : "#EF4444"};font-size:11px;">(${parseInt(m.leads_trend) >= 0 ? "+" : ""}${m.leads_trend}%)</span>` : ""}</td>
           </tr>
           <tr style="border-bottom:1px solid #E8E5E0;background:#FEFDFB;">
             <td style="padding:10px 14px;font-size:13px;color:#374151;">Outreach</td>
@@ -186,7 +186,7 @@ export default function ReportsPage() {
           </tr>
           <tr style="border-bottom:1px solid #E8E5E0;">
             <td style="padding:10px 14px;font-size:13px;color:#374151;">Health Score</td>
-            <td style="padding:10px 14px;font-size:13px;text-align:right;font-weight:600;color:${m.health_score >= 70 ? "#2563EB" : m.health_score >= 40 ? "#F59E0B" : "#EF4444"};">${m.health_score}%</td>
+            <td style="padding:10px 14px;font-size:13px;text-align:right;font-weight:600;color:${m.health_score >= 70 ? "#D4FF00" : m.health_score >= 40 ? "#F59E0B" : "#EF4444"};">${m.health_score}%</td>
           </tr>
           <tr style="background:#FEFDFB;">
             <td style="padding:10px 14px;font-size:13px;color:#374151;">MRR</td>
@@ -243,12 +243,12 @@ export default function ReportsPage() {
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: #2563EB;
+      background: #D4FF00;
     }
     .brand-name {
       font-size: 13px;
       font-weight: 600;
-      color: #2563EB;
+      color: #D4FF00;
       letter-spacing: 0.5px;
     }
     .title {
@@ -266,7 +266,7 @@ export default function ReportsPage() {
     .section-title {
       font-size: 11px;
       font-weight: 600;
-      color: #2563EB;
+      color: #D4FF00;
       text-transform: uppercase;
       letter-spacing: 1px;
       margin: 0 0 16px;
@@ -284,7 +284,7 @@ export default function ReportsPage() {
       display: inline-block;
       margin: 0 auto 32px;
       padding: 10px 24px;
-      background: #2563EB;
+      background: #D4FF00;
       color: #fff;
       border: none;
       border-radius: 8px;

@@ -229,7 +229,7 @@ export function iconForEmoji(
  * Render helper — always returns a Lucide icon element. Falls back to
  * `<Sparkles>` when the emoji isn't mapped.
  *
- *     <EmojiIcon emoji={opt.emoji} size={18} className="text-[#2563EB]" />
+ *     <EmojiIcon emoji={opt.emoji} size={18} className="text-[#D4FF00]" />
  */
 export interface EmojiIconProps extends LucideProps {
   /** The source emoji — will be normalized and looked up. */

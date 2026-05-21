@@ -88,7 +88,7 @@ export default function SidebarCustomizer({
           type="button"
           onClick={runAiRecommend}
           disabled={aiLoading}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[rgba(212,255,0,0.12)] to-amber-400/15 border border-[rgba(212,255,0,0.25)] text-[#2563EB] text-xs font-semibold hover:from-[rgba(212,255,0,0.18)] hover:to-amber-400/20 transition-all disabled:opacity-50"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[rgba(212,255,0,0.12)] to-amber-400/15 border border-[rgba(212,255,0,0.25)] text-[#D4FF00] text-xs font-semibold hover:from-[rgba(212,255,0,0.18)] hover:to-amber-400/20 transition-all disabled:opacity-50"
         >
           {aiLoading ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
           {aiLoading ? "Thinking..." : "AI Recommended"}
@@ -109,13 +109,13 @@ export default function SidebarCustomizer({
         </button>
         <div className="flex-1" />
         <span className="text-[11px] text-text-muted">
-          <span className="text-[#2563EB] font-semibold">{enabledItems.length}</span> of {ALL_SIDEBAR_ITEMS.length} enabled
+          <span className="text-[#D4FF00] font-semibold">{enabledItems.length}</span> of {ALL_SIDEBAR_ITEMS.length} enabled
         </span>
       </div>
 
       {reasoning && (
         <div className="px-3 py-2 rounded-lg bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.08)] text-[11px] text-text-muted italic">
-          <span className="text-[#2563EB] font-medium">AI: </span>
+          <span className="text-[#D4FF00] font-medium">AI: </span>
           {reasoning}
         </div>
       )}
@@ -135,7 +135,7 @@ export default function SidebarCustomizer({
                 className="w-full flex items-center justify-between px-3 py-2 bg-surface-light/50 hover:bg-surface-light transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <Grid size={12} className="text-[#2563EB]" />
+                  <Grid size={12} className="text-[#D4FF00]" />
                   <span className="text-xs font-semibold text-text-primary">{cat.category}</span>
                   <span className="text-[10px] text-text-muted">
                     {catHrefs.filter((h) => enabledSet.has(h)).length}/{catHrefs.length}
@@ -144,9 +144,9 @@ export default function SidebarCustomizer({
                 <span
                   className={`w-4 h-4 rounded-md border flex items-center justify-center text-[9px] font-bold transition-all ${
                     allSelected
-                      ? "bg-[#2563EB] border-[#2563EB] text-white"
+                      ? "bg-[#D4FF00] border-[#D4FF00] text-[#020711]"
                       : someSelected
-                      ? "bg-[rgba(212,255,0,0.18)] border-[rgba(212,255,0,0.4)] text-[#2563EB]"
+                      ? "bg-[rgba(212,255,0,0.18)] border-[rgba(212,255,0,0.4)] text-[#D4FF00]"
                       : "border-border-subtle"
                   }`}
                 >
@@ -170,7 +170,7 @@ export default function SidebarCustomizer({
                       <span className="truncate">{item.label}</span>
                       <span
                         className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                          selected ? "bg-[#2563EB] border-[#2563EB]" : "border-border-subtle"
+                          selected ? "bg-[#D4FF00] border-[#D4FF00]" : "border-border-subtle"
                         }`}
                       >
                         {selected && <Check size={9} className="text-white" />}

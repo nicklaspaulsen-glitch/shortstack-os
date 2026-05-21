@@ -37,13 +37,13 @@ export default function DashboardBackground() {
         style={{
           background: [
             // Top-left: deep blue corona — boosted vibrancy
-            "radial-gradient(ellipse 80% 60% at 30% 40%, rgba(37,99,235,0.16) 0%, transparent 60%)",
+            "radial-gradient(ellipse 80% 60% at 30% 40%, rgba(212, 255, 0,0.16) 0%, transparent 60%)",
             // Bottom-right: indigo depth bloom
             "radial-gradient(ellipse 60% 50% at 70% 70%, rgba(212,255,0,0.12) 0%, transparent 55%)",
             // Top-right: violet accent
             "radial-gradient(ellipse 50% 40% at 82% 18%, rgba(139,92,246,0.10) 0%, transparent 50%)",
             // Bottom-left: subtle blue fade
-            "radial-gradient(ellipse 40% 40% at 18% 82%, rgba(37,99,235,0.08) 0%, transparent 50%)",
+            "radial-gradient(ellipse 40% 40% at 18% 82%, rgba(212, 255, 0,0.08) 0%, transparent 50%)",
             // Center: teal depth hint
             "radial-gradient(ellipse 30% 30% at 50% 55%, rgba(20,184,166,0.06) 0%, transparent 55%)",
             // Base — Trinity OS matte-black
@@ -67,7 +67,7 @@ export default function DashboardBackground() {
               top: "-20%",
               left: "-12%",
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(37,99,235,0.16) 0%, transparent 70%)",
+              background: "radial-gradient(circle, rgba(212, 255, 0,0.16) 0%, transparent 70%)",
               filter: "blur(110px)",
             }}
           />
@@ -131,7 +131,7 @@ export default function DashboardBackground() {
               top: "-6%",
               right: "8%",
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(96,165,250,0.12) 0%, transparent 60%)",
+              background: "radial-gradient(circle, rgba(212, 255, 0,0.12) 0%, transparent 60%)",
               filter: "blur(80px)",
             }}
           />

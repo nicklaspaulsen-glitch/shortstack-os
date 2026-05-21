@@ -86,14 +86,14 @@ export default function GlobalError({
             onClick={reset}
             className="px-5 py-2.5 text-sm font-medium rounded-lg transition-colors"
             style={{
-              background: "#2563EB",
+              background: "#D4FF00",
               color: "#FFFFFF",
             }}
             onMouseEnter={(e) =>
-              (e.currentTarget.style.background = "#1D4ED8")
+              (e.currentTarget.style.background = "#AACC00")
             }
             onMouseLeave={(e) =>
-              (e.currentTarget.style.background = "#2563EB")
+              (e.currentTarget.style.background = "#D4FF00")
             }
           >
             Try Again

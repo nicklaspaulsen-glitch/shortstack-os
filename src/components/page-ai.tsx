@@ -22,9 +22,9 @@ interface Message {
 function TypingDots() {
   return (
     <div className="flex items-center gap-1">
-      <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse-dot" style={{ animationDelay: "0ms" }} />
-      <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse-dot" style={{ animationDelay: "150ms" }} />
-      <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse-dot" style={{ animationDelay: "300ms" }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-[#D4FF00] animate-pulse-dot" style={{ animationDelay: "0ms" }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-[#D4FF00] animate-pulse-dot" style={{ animationDelay: "150ms" }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-[#D4FF00] animate-pulse-dot" style={{ animationDelay: "300ms" }} />
       <style jsx>{`
         @keyframes pulse-dot {
           0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
@@ -276,7 +276,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={(e) => { const wasDrag = dragRef.current?.moved; dragRef.current = null; elRef.current?.releasePointerCapture(e.pointerId); if (!wasDrag) setMinimized(false); }}
-        className="flex items-center gap-2 px-3 py-2 rounded-full bg-surface border border-[rgba(212,255,0,0.2)] text-xs text-[#2563EB] hover:bg-surface-light transition-all cursor-grab active:cursor-grabbing touch-none select-none"
+        className="flex items-center gap-2 px-3 py-2 rounded-full bg-surface border border-[rgba(212,255,0,0.2)] text-xs text-[#D4FF00] hover:bg-surface-light transition-all cursor-grab active:cursor-grabbing touch-none select-none"
       >
         <Bot size={14} /> {pageName} AI
         <span className="w-1.5 h-1.5 bg-success rounded-full animate-pulse" />
@@ -313,7 +313,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
       >
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
-            <Sparkles size={14} className="text-[#2563EB]" />
+            <Sparkles size={14} className="text-[#D4FF00]" />
           </div>
           <div>
             <p className="text-xs font-semibold">{pageName} AI</p>
@@ -364,7 +364,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
                 <p className="text-[11px] whitespace-pre-wrap leading-relaxed">
                   {displayText}
                   {isStreaming && (
-                    <span className="stream-cursor inline-block align-middle ml-0.5 w-[2px] h-3 bg-[#2563EB]" />
+                    <span className="stream-cursor inline-block align-middle ml-0.5 w-[2px] h-3 bg-[#D4FF00]" />
                   )}
                 </p>
                 {msg.role === "ai" && !isStreaming && (
@@ -396,7 +396,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
           className="flex-1 bg-transparent text-xs placeholder-muted/50 outline-none"
           disabled={thinking} />
         <button type="submit" disabled={!input.trim() || thinking}
-          className="w-7 h-7 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[#2563EB] disabled:opacity-30 hover:bg-[rgba(212,255,0,0.12)] transition-colors">
+          className="w-7 h-7 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[#D4FF00] disabled:opacity-30 hover:bg-[rgba(212,255,0,0.12)] transition-colors">
           <Send size={12} />
         </button>
       </form>

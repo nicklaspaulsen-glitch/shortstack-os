@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
   const sections = Array.isArray(a.sections) ? (a.sections as string[]) : ["about", "features", "testimonials", "faq"];
   const targetAudience = String(a.target_audience || "prospects");
   const valueProp = String(a.value_prop || "");
-  const brandPrimary = String(a.brand_primary || "#3B82F6");
+  const brandPrimary = String(a.brand_primary || "#D4FF00");
   const brandAccent = String(a.brand_accent || "#0f172a");
   const visuals = String(a.visuals || "AI-generated images");
 

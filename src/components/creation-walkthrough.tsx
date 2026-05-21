@@ -134,7 +134,7 @@ export default function CreationWalkthrough({
       if (stepStatus === "in_progress") {
         return (
           <span className="w-5 h-5 rounded-full bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.4)] flex items-center justify-center shrink-0">
-            <Loader2 size={11} className="text-[#2563EB] animate-spin" />
+            <Loader2 size={11} className="text-[#D4FF00] animate-spin" />
           </span>
         );
       }
@@ -154,7 +154,7 @@ export default function CreationWalkthrough({
       }
       return (
         <span className="w-5 h-5 rounded-full border border-[rgba(212,255,0,0.4)] bg-[rgba(212,255,0,0.05)] flex items-center justify-center shrink-0">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#D4FF00]" />
         </span>
       );
     }
@@ -228,7 +228,7 @@ export default function CreationWalkthrough({
             type="button"
             onClick={() => handle(!setting.value)}
             className={`relative inline-flex w-10 h-5 rounded-full transition-colors ${
-              setting.value ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"
+              setting.value ? "bg-[#D4FF00]" : "bg-surface-light border border-border-subtle"
             }`}
           >
             <span
@@ -243,14 +243,14 @@ export default function CreationWalkthrough({
           <div className="flex items-center gap-3">
             <input
               type="range"
-              className="flex-1 accent-[#2563EB]"
+              className="flex-1 accent-[#D4FF00]"
               value={Number(setting.value ?? 0)}
               min={setting.min ?? 0}
               max={setting.max ?? 100}
               step={setting.step ?? 1}
               onChange={(e) => handle(Number(e.target.value))}
             />
-            <span className="text-[10px] font-mono text-[#2563EB] min-w-[34px] text-right">
+            <span className="text-[10px] font-mono text-[#D4FF00] min-w-[34px] text-right">
               {String(setting.value ?? 0)}
             </span>
           </div>
@@ -274,7 +274,7 @@ export default function CreationWalkthrough({
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-border-subtle bg-surface-light/40">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-[rgba(212,255,0,0.08)] rounded-xl flex items-center justify-center">
-              <Sparkles size={16} className="text-[#2563EB]" />
+              <Sparkles size={16} className="text-[#D4FF00]" />
             </div>
             <div>
               <h2 className="text-sm font-semibold">{title}</h2>
@@ -304,7 +304,7 @@ export default function CreationWalkthrough({
                   i < currentStepIndex
                     ? "text-text-primary"
                     : isActive && stepStatus === "in_progress"
-                      ? "text-[#2563EB] font-semibold"
+                      ? "text-[#D4FF00] font-semibold"
                       : isActive
                         ? "text-text-primary font-semibold"
                         : "text-text-muted";
@@ -316,7 +316,7 @@ export default function CreationWalkthrough({
                       onClick={() => isClickable && onJumpToStep?.(i)}
                       className={`w-full flex items-start gap-2.5 px-4 py-2.5 text-left transition-colors ${
                         isActive
-                          ? "bg-[rgba(212,255,0,0.05)] border-l-2 border-[#2563EB]"
+                          ? "bg-[rgba(212,255,0,0.05)] border-l-2 border-[#D4FF00]"
                           : "border-l-2 border-transparent"
                       } ${
                         isClickable
@@ -396,7 +396,7 @@ export default function CreationWalkthrough({
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     {current.icon && (
-                      <span className="text-[#2563EB]">{current.icon}</span>
+                      <span className="text-[#D4FF00]">{current.icon}</span>
                     )}
                     <h3 className="text-base font-semibold">{current.title}</h3>
                   </div>
@@ -406,9 +406,9 @@ export default function CreationWalkthrough({
                 {/* In-progress indicator */}
                 {stepStatus === "in_progress" && (
                   <div className="card-static border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.05)] flex items-center gap-3">
-                    <Loader2 size={16} className="text-[#2563EB] animate-spin" />
+                    <Loader2 size={16} className="text-[#D4FF00] animate-spin" />
                     <div className="flex-1">
-                      <div className="text-xs text-[#2563EB] font-medium">
+                      <div className="text-xs text-[#D4FF00] font-medium">
                         {current.progressText ?? "Working on it"}
                         <span className="inline-block w-5">
                           {PROGRESS_DOTS[dotIndex]}
@@ -447,7 +447,7 @@ export default function CreationWalkthrough({
                       <button
                         type="button"
                         onClick={() => setShowSettings((v) => !v)}
-                        className="flex items-center gap-1.5 text-[11px] text-[#2563EB] hover:text-[rgba(212,255,0,0.8)] font-medium"
+                        className="flex items-center gap-1.5 text-[11px] text-[#D4FF00] hover:text-[rgba(212,255,0,0.8)] font-medium"
                       >
                         <Edit3 size={12} />
                         {showSettings
@@ -530,7 +530,7 @@ export default function CreationWalkthrough({
           <div className="flex items-center gap-3">
             <div className="flex-1 h-1.5 bg-surface-light/60 rounded-full overflow-hidden border border-border-subtle/60">
               <div
-                className="h-full bg-gradient-to-r from-[rgba(212,255,0,0.7)] to-[#2563EB] transition-all duration-300 ease-out"
+                className="h-full bg-gradient-to-r from-[rgba(212,255,0,0.7)] to-[#AACC00] transition-all duration-300 ease-out"
                 style={{ width: `${progressPct}%` }}
               />
             </div>

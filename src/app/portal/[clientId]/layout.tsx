@@ -109,7 +109,7 @@ export default function PortalLayout({
               /* eslint-disable-next-line @next/next/no-img-element */
               <img src={logoUrl} alt={companyName} className="w-full h-full object-contain" />
             ) : (
-              <span className="text-[#2563EB] text-xs font-bold">{logoLetter}</span>
+              <span className="text-[#D4FF00] text-xs font-bold">{logoLetter}</span>
             )}
           </div>
           <div className="w-9" />
@@ -154,7 +154,7 @@ function SidebarContent({
               /* eslint-disable-next-line @next/next/no-img-element */
               <img src={logoUrl} alt={companyName} className="w-full h-full object-contain" />
             ) : (
-              <span className="text-[#2563EB] font-bold text-sm">{logoLetter}</span>
+              <span className="text-[#D4FF00] font-bold text-sm">{logoLetter}</span>
             )}
           </div>
           <div>
@@ -187,7 +187,7 @@ function SidebarContent({
               <Icon size={16} />
               <span className="flex-1">{item.label}</span>
               {item.badge && item.badge > 0 && (
-                <span className="flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-[rgba(212,255,0,0.08)] text-[#2563EB] text-[10px] font-semibold px-1">
+                <span className="flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-[rgba(212,255,0,0.08)] text-[#D4FF00] text-[10px] font-semibold px-1">
                   {item.badge}
                 </span>
               )}
@@ -202,7 +202,7 @@ function SidebarContent({
         {/* Profile mini-card */}
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 rounded-full bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center">
-            <span className="text-[#2563EB] text-xs font-semibold">AC</span>
+            <span className="text-[#D4FF00] text-xs font-semibold">AC</span>
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-xs font-medium text-text-primary truncate">Acme Corp</p>

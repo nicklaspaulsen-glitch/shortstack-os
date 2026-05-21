@@ -62,7 +62,7 @@ export interface IntegrationCardProps {
  *  palette so two adjacent cards never look identical. */
 function fallbackHue(id: string): string {
   const palette = [
-    "#2563EB", // blue
+    "#D4FF00", // blue
     "#8B5CF6", // violet
     "#EC4899", // pink
     "#F59E0B", // amber
@@ -192,7 +192,7 @@ export default function IntegrationCard({
             onClick={() => onConnect(integration)}
             className="flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1.5 rounded-md text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
             style={{
-              background: "#2563EB",
+              background: "#D4FF00",
               boxShadow:
                 "0 1px 0 rgba(255,255,255,0.25) inset, 0 4px 10px -3px rgba(212,255,0,0.35)",
             }}

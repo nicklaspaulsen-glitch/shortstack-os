@@ -341,7 +341,7 @@ export default function ColdEmailPage() {
                     </div>
                     <div
                       className="w-full rounded-full overflow-hidden mb-2"
-                      style={{ height: "1.5px", background: "rgba(99,146,255,0.10)" }}
+                      style={{ height: "1.5px", background: "rgba(212, 255, 0,0.10)" }}
                     >
                       <div
                         className="h-full rounded-full transition-all duration-500"

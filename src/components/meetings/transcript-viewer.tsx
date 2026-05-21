@@ -26,7 +26,7 @@ function formatTs(seconds: number): string {
 function speakerColor(speaker?: string): string {
   if (!speaker) return "text-text-muted";
   // Stable hue from speaker label — two-speaker case gets gold + blue.
-  if (/1/.test(speaker)) return "text-[#2563EB]";
+  if (/1/.test(speaker)) return "text-[#D4FF00]";
   if (/2/.test(speaker)) return "text-indigo-400";
   if (/3/.test(speaker)) return "text-purple-400";
   return "text-text-muted";

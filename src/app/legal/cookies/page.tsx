@@ -12,7 +12,7 @@ export default function CookiePolicyPage() {
         {/* Back link */}
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1 text-xs text-[#6B7280] hover:text-[#2563EB] mb-8 transition-colors"
+          className="inline-flex items-center gap-1 text-xs text-[#6B7280] hover:text-[#D4FF00] mb-8 transition-colors"
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
             <path d="M7.5 9L4.5 6l3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -55,27 +55,27 @@ export default function CookiePolicyPage() {
                 </thead>
                 <tbody className="divide-y divide-[rgba(0,0,0,0.05)]">
                   <tr>
-                    <td className="py-2.5 px-4 font-mono text-[#2563EB]">sb-*-auth-token</td>
+                    <td className="py-2.5 px-4 font-mono text-[#D4FF00]">sb-*-auth-token</td>
                     <td className="py-2.5 px-4 text-[#374151]">Supabase authentication — keeps you logged in</td>
                     <td className="py-2.5 px-4 text-[#6B7280] whitespace-nowrap">1 hr (auto-refreshed)</td>
                   </tr>
                   <tr>
-                    <td className="py-2.5 px-4 font-mono text-[#2563EB]">cookie-consent</td>
+                    <td className="py-2.5 px-4 font-mono text-[#D4FF00]">cookie-consent</td>
                     <td className="py-2.5 px-4 text-[#374151]">Records acknowledgement of this notice</td>
                     <td className="py-2.5 px-4 text-[#6B7280] whitespace-nowrap">Persistent (localStorage)</td>
                   </tr>
                   <tr>
-                    <td className="py-2.5 px-4 font-mono text-[#2563EB]">tour_completed</td>
+                    <td className="py-2.5 px-4 font-mono text-[#D4FF00]">tour_completed</td>
                     <td className="py-2.5 px-4 text-[#374151]">Remembers whether you finished the onboarding tour</td>
                     <td className="py-2.5 px-4 text-[#6B7280] whitespace-nowrap">Persistent (localStorage)</td>
                   </tr>
                   <tr>
-                    <td className="py-2.5 px-4 font-mono text-[#2563EB]">advanced-mode-*</td>
+                    <td className="py-2.5 px-4 font-mono text-[#D4FF00]">advanced-mode-*</td>
                     <td className="py-2.5 px-4 text-[#374151]">Saves your advanced vs. guided wizard preference per page</td>
                     <td className="py-2.5 px-4 text-[#6B7280] whitespace-nowrap">Persistent (localStorage)</td>
                   </tr>
                   <tr>
-                    <td className="py-2.5 px-4 font-mono text-[#2563EB]">sidebar-*</td>
+                    <td className="py-2.5 px-4 font-mono text-[#D4FF00]">sidebar-*</td>
                     <td className="py-2.5 px-4 text-[#374151]">Saves sidebar collapse / expand state</td>
                     <td className="py-2.5 px-4 text-[#6B7280] whitespace-nowrap">Persistent (localStorage)</td>
                   </tr>
@@ -141,11 +141,11 @@ export default function CookiePolicyPage() {
             <h2 className="text-sm font-semibold text-[#111827] mb-3">6. Contact</h2>
             <p className="text-sm text-[#374151] leading-relaxed">
               Questions about our cookie use? Email{" "}
-              <a href="mailto:growth@shortstack.work" className="text-[#2563EB] hover:text-[#1D4ED8]">
+              <a href="mailto:growth@shortstack.work" className="text-[#D4FF00] hover:text-[#AACC00]">
                 growth@shortstack.work
               </a>{" "}
               or see our{" "}
-              <Link href="/legal/privacy" className="text-[#2563EB] hover:text-[#1D4ED8]">
+              <Link href="/legal/privacy" className="text-[#D4FF00] hover:text-[#AACC00]">
                 Privacy Policy
               </Link>
               .
@@ -155,8 +155,8 @@ export default function CookiePolicyPage() {
 
         {/* Footer nav */}
         <div className="mt-8 pt-6 border-t border-[rgba(0,0,0,0.06)] flex flex-wrap gap-5 text-xs text-[#6B7280]">
-          <Link href="/legal/privacy" className="hover:text-[#2563EB] transition-colors">Privacy Policy</Link>
-          <Link href="/legal/terms" className="hover:text-[#2563EB] transition-colors">Terms of Service</Link>
+          <Link href="/legal/privacy" className="hover:text-[#D4FF00] transition-colors">Privacy Policy</Link>
+          <Link href="/legal/terms" className="hover:text-[#D4FF00] transition-colors">Terms of Service</Link>
           <span className="font-medium text-[#111827]">Cookie Policy</span>
         </div>
         <p className="mt-4 text-[10px] text-text-muted">ShortStack Agency &middot; shortstack.work</p>

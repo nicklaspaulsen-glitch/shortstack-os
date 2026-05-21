@@ -147,7 +147,7 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
       style_vibe: "minimal-clean",
       hero_style: "split-screen",
       cta_goal: "schedule-demo",
-      brand_primary: "#2563EB",
+      brand_primary: "#D4FF00",
       brand_accent: "#0F172A",
       sections: ["features", "testimonials", "pricing", "faq"],
     },
@@ -204,7 +204,7 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
       style_vibe: "corporate-pro",
       hero_style: "big-headline-image",
       cta_goal: "contact",
-      brand_primary: "#2563EB",
+      brand_primary: "#D4FF00",
       brand_accent: "#0C4A6E",
       sections: ["services", "testimonials", "faq", "contact"],
     },
@@ -261,7 +261,7 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
       style_vibe: "luxury-gold",
       hero_style: "big-headline-image",
       cta_goal: "contact",
-      brand_primary: "#2563EB",
+      brand_primary: "#D4FF00",
       brand_accent: "#1E293B",
       sections: ["gallery", "about", "testimonials", "contact"],
     },
@@ -299,8 +299,8 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
       style_vibe: "dark-cinematic",
       hero_style: "interactive-gradient",
       cta_goal: "join-waitlist",
-      brand_primary: "#2563EB",
-      brand_accent: "#2563EB",
+      brand_primary: "#D4FF00",
+      brand_accent: "#D4FF00",
       sections: ["features", "testimonials"],
     },
   },
@@ -318,7 +318,7 @@ const NICHE_TEMPLATES: NicheTemplate[] = [
       style_vibe: "dark-cinematic",
       hero_style: "3d-spline",
       cta_goal: "schedule-demo",
-      brand_primary: "#2563EB",
+      brand_primary: "#D4FF00",
       brand_accent: "#0F172A",
       sections: ["features", "testimonials", "pricing"],
     },
@@ -453,16 +453,16 @@ export default function WebsitesPage() {
     const industry = String(data.industry || data.business_type || "");
     const map: Record<string, { primary: string; accent: string }> = {
       restaurant: { primary: "#B45309", accent: "#78350F" },
-      real_estate: { primary: "#2563EB", accent: "#1E293B" },
+      real_estate: { primary: "#D4FF00", accent: "#1E293B" },
       coach: { primary: "#7C3AED", accent: "#1E1B4B" },
-      saas: { primary: "#2563EB", accent: "#0F172A" },
+      saas: { primary: "#D4FF00", accent: "#0F172A" },
       ecommerce: { primary: "#EC4899", accent: "#111827" },
-      local_service: { primary: "#2563EB", accent: "#0C4A6E" },
+      local_service: { primary: "#D4FF00", accent: "#0C4A6E" },
       portfolio: { primary: "#F97316", accent: "#18181B" },
-      blog: { primary: "#2563EB", accent: "#1E3A5F" },
+      blog: { primary: "#D4FF00", accent: "#1E3A5F" },
       agency: { primary: "#DC2626", accent: "#1F2937" },
     };
-    const palette = map[industry.toLowerCase()] || { primary: "#2563EB", accent: "#0F172A" };
+    const palette = map[industry.toLowerCase()] || { primary: "#D4FF00", accent: "#0F172A" };
     return { brand_primary: palette.primary, brand_accent: palette.accent };
   }
 
@@ -681,7 +681,7 @@ export default function WebsitesPage() {
 
   function startBlank(): void {
     setWizardPreset({
-      brand_primary: "#2563EB",
+      brand_primary: "#D4FF00",
       brand_accent: "#0F172A",
       sections: ["about", "features", "testimonials", "faq"],
       visuals: "stock-photos",

@@ -19,7 +19,7 @@
  *   videoUrl      string   — source video URL (required)
  *   title         string   — text overlay (optional)
  *   captionText   string   — lower-third caption (optional)
- *   brandColor    string   — hex accent color (default "#3B82F6")
+ *   brandColor    string   — hex accent color (default "#D4FF00")
  *   logoUrl       string   — brand logo image URL (optional)
  *   showIntro     boolean  — 30-frame branded intro (default false)
  *   showOutro     boolean  — 30-frame branded outro (default false)
@@ -47,7 +47,7 @@ const RenderSchema = z.object({
     .string()
     .regex(/^#[0-9A-Fa-f]{6}$/, "brandColor must be a hex color like #3B82F6")
     .optional()
-    .default("#3B82F6"),
+    .default("#D4FF00"),
   logoUrl: z.string().url().optional(),
   showIntro: z.boolean().optional().default(false),
   showOutro: z.boolean().optional().default(false),

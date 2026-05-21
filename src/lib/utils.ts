@@ -48,7 +48,7 @@ export function getStatusColor(status: string): string {
     called: "text-warning",
     not_interested: "text-danger",
     booked: "text-success",
-    converted: "text-[#2563EB]",
+    converted: "text-[#D4FF00]",
     sent: "text-info",
     delivered: "text-indigo-400",
     replied: "text-success",
@@ -75,7 +75,7 @@ export function getStatusColor(status: string): string {
     scripted: "text-indigo-400",
     in_production: "text-warning",
     editing: "text-orange-400",
-    ready_to_publish: "text-[#2563EB]",
+    ready_to_publish: "text-[#D4FF00]",
   };
   return colors[status] || "text-text-primary";
 }

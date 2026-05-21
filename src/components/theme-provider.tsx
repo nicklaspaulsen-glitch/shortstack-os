@@ -36,9 +36,9 @@ const THEMES: Record<ThemeId, ThemeDef> = {
     surface: "#0D1120",            // panels (Trinity surface-1)
     surfaceLight: "#131827",       // hover / raised (Trinity surface-2)
     border: "#2A3350",
-    accent: "#3B82F6",             // blue — matches globals.css dark override
-    accentSoft: "#60A5FA",
-    accentDim: "#2563EB",
+    accent: "#D4FF00",             // blue — matches globals.css dark override
+    accentSoft: "#D4FF00",
+    accentDim: "#D4FF00",
     text: "#F0F0F4",               // off-white, never pure
     muted: "#A8A8B2",
   },
@@ -47,9 +47,9 @@ const THEMES: Record<ThemeId, ThemeDef> = {
     surface: "#FFFFFF",
     surfaceLight: "#F1F5F9",
     border: "#E2E8F0",
-    accent: "#2563EB",             // blue — AA contrast on white
-    accentSoft: "#3B82F6",
-    accentDim: "#1D4ED8",
+    accent: "#D4FF00",             // blue — AA contrast on white
+    accentSoft: "#D4FF00",
+    accentDim: "#AACC00",
     text: "#0A0A0B",               // pure black for body
     muted: "#52525B",
   },

@@ -56,7 +56,7 @@ export default function AccountSettings({
       {/* Profile — Nickname & Avatar */}
       <div className="glass rounded-xl p-4" id="profile-section">
         <h2 className="flex items-center gap-2">
-          <Settings size={14} className="text-[#2563EB]" /> Profile
+          <Settings size={14} className="text-[#D4FF00]" /> Profile
         </h2>
         <p className="text-[10px] text-text-muted mb-3">Customize how you appear in the sidebar and across the app</p>
         <div className="flex items-start gap-4">
@@ -66,7 +66,7 @@ export default function AccountSettings({
               <img src={profile.avatar_url} alt="" className="w-16 h-16 rounded-xl object-cover border border-border-subtle" />
             ) : (
               <div className="w-16 h-16 rounded-xl bg-[rgba(212,255,0,0.08)] border border-border-subtle flex items-center justify-center">
-                <span className="text-[#2563EB] text-xl font-bold">{(profile?.nickname || profile?.full_name)?.charAt(0) || "?"}</span>
+                <span className="text-[#D4FF00] text-xl font-bold">{(profile?.nickname || profile?.full_name)?.charAt(0) || "?"}</span>
               </div>
             )}
             <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-xl opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
@@ -147,7 +147,7 @@ export default function AccountSettings({
       {profile?.role === "admin" && (
         <div className="glass rounded-xl p-4">
           <h2 className="flex items-center gap-2">
-            <CreditCard size={14} className="text-[#2563EB]" /> Subscription
+            <CreditCard size={14} className="text-[#D4FF00]" /> Subscription
           </h2>
           <p className="text-[10px] text-text-muted mb-3">Manage your Trinity plan</p>
           {(() => {
@@ -208,7 +208,7 @@ export default function AccountSettings({
       {typeof window !== "undefined" && !!(window as unknown as { electronAPI?: unknown }).electronAPI && (
         <div className="glass rounded-xl p-4">
           <h2 className="flex items-center gap-2">
-            <Monitor size={14} className="text-[#2563EB]" /> Desktop App
+            <Monitor size={14} className="text-[#D4FF00]" /> Desktop App
           </h2>
           <p className="text-[10px] text-text-muted mb-3">Settings for the Trinity desktop application</p>
           <div className="space-y-2">
@@ -228,7 +228,7 @@ export default function AccountSettings({
                     safeSet(setting.key, next ? "true" : "false");
                     toast.success(`${setting.label} ${next ? "enabled" : "disabled"}`);
                   }}
-                    className={`w-10 h-5 rounded-full transition-colors ${isEnabled ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
+                    className={`w-10 h-5 rounded-full transition-colors ${isEnabled ? "bg-[#D4FF00]" : "bg-surface-light border border-border-subtle"}`}>
                     <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${isEnabled ? "translate-x-5" : "translate-x-0.5"}`} />
                   </button>
                 </div>
@@ -241,7 +241,7 @@ export default function AccountSettings({
       {/* Display & Zoom */}
       <div className="glass rounded-xl p-4">
         <h2 className="flex items-center gap-2">
-          <Settings size={14} className="text-[#2563EB]" /> Display
+          <Settings size={14} className="text-[#D4FF00]" /> Display
         </h2>
         <div className="space-y-3">
           <div>
@@ -250,14 +250,14 @@ export default function AccountSettings({
                 <p className="text-xs font-medium">Interface Zoom</p>
                 <p className="text-[10px] text-text-muted">Make everything smaller or larger</p>
               </div>
-              <span className="text-xs font-mono text-[#2563EB]">{typeof window !== "undefined" ? Math.round((parseFloat(document.documentElement.style.zoom || "1")) * 100) : 100}%</span>
+              <span className="text-xs font-mono text-[#D4FF00]">{typeof window !== "undefined" ? Math.round((parseFloat(document.documentElement.style.zoom || "1")) * 100) : 100}%</span>
             </div>
             <div className="flex items-center gap-2">
               {["0.75", "0.85", "0.9", "1", "1.1"].map((zoom) => {
                 const label = Math.round(parseFloat(zoom) * 100) + "%";
                 return (
                   <button key={zoom} onClick={() => { document.documentElement.style.zoom = zoom; safeSet("ss-zoom", zoom); forceRerender(); toast.success(`Zoom: ${label}`); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === zoom || (!safeGet("ss-zoom") && zoom === "1") ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-[#2563EB]" : "border-border-subtle text-text-muted hover:text-text-primary"}`}>{label}</button>
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === zoom || (!safeGet("ss-zoom") && zoom === "1") ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-[#D4FF00]" : "border-border-subtle text-text-muted hover:text-text-primary"}`}>{label}</button>
                 );
               })}
             </div>
@@ -274,7 +274,7 @@ export default function AccountSettings({
               toast.success(current ? "Sidebar expanded" : "Sidebar collapsed");
               window.dispatchEvent(new Event("storage"));
             }}
-              className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-sidebar-collapsed") === "true" ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
+              className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-sidebar-collapsed") === "true" ? "bg-[#D4FF00]" : "bg-surface-light border border-border-subtle"}`}>
               <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-sidebar-collapsed") === "true" ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
           </div>
@@ -293,7 +293,7 @@ export default function AccountSettings({
               forceRerender();
               toast.success(isCurrentlyLight ? "Dark mode enabled" : "Light mode enabled");
             }}
-              className={`w-10 h-5 rounded-full transition-all ${(() => { const t = safeGet("ss-theme") || "nordic"; return t !== "nordic" && t !== "light"; })() ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
+              className={`w-10 h-5 rounded-full transition-all ${(() => { const t = safeGet("ss-theme") || "nordic"; return t !== "nordic" && t !== "light"; })() ? "bg-[#D4FF00]" : "bg-surface-light border border-border-subtle"}`}>
               <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${(() => { const t = safeGet("ss-theme") || "nordic"; return t !== "nordic" && t !== "light"; })() ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
           </div>
@@ -310,7 +310,7 @@ export default function AccountSettings({
               else document.documentElement.classList.remove("reduce-motion");
               toast.success(current ? "Animations enabled" : "Animations disabled");
             }}
-              className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-animations") !== "false" ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
+              className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-animations") !== "false" ? "bg-[#D4FF00]" : "bg-surface-light border border-border-subtle"}`}>
               <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-animations") !== "false" ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
           </div>
@@ -320,7 +320,7 @@ export default function AccountSettings({
       {/* Sound Effects */}
       <div className="glass rounded-xl p-4">
         <h2 className="flex items-center gap-2">
-          {sfxEnabled ? <Volume2 size={14} className="text-[#2563EB]" /> : <VolumeX size={14} className="text-text-muted" />}
+          {sfxEnabled ? <Volume2 size={14} className="text-[#D4FF00]" /> : <VolumeX size={14} className="text-text-muted" />}
           Sound Effects
         </h2>
         <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border-subtle">
@@ -329,7 +329,7 @@ export default function AccountSettings({
             <p className="text-[10px] text-text-muted">Click sounds, notifications, success/error tones</p>
           </div>
           <button onClick={toggleSfx}
-            className={`w-10 h-5 rounded-full transition-all ${sfxEnabled ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
+            className={`w-10 h-5 rounded-full transition-all ${sfxEnabled ? "bg-[#D4FF00]" : "bg-surface-light border border-border-subtle"}`}>
             <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${sfxEnabled ? "translate-x-5" : "translate-x-0.5"}`} />
           </button>
         </div>
@@ -338,7 +338,7 @@ export default function AccountSettings({
       {/* Widget Visibility */}
       <div className="glass rounded-xl p-4">
         <h2 className="flex items-center gap-2">
-          <Bot size={14} className="text-[#2563EB]" /> Floating Widgets
+          <Bot size={14} className="text-[#D4FF00]" /> Floating Widgets
         </h2>
         <p className="text-[10px] text-text-muted mb-3">Show or hide the floating assistant bubbles. You can also drag them to any position.</p>
         <div className="space-y-2">
@@ -358,7 +358,7 @@ export default function AccountSettings({
                   localStorage.setItem(widget.key, next ? "true" : "false");
                   toast.success(next ? `${widget.label} hidden — refresh to apply` : `${widget.label} visible — refresh to apply`);
                 }}
-                  className={`w-10 h-5 rounded-full transition-all ${!isHidden ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
+                  className={`w-10 h-5 rounded-full transition-all ${!isHidden ? "bg-[#D4FF00]" : "bg-surface-light border border-border-subtle"}`}>
                   <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${!isHidden ? "translate-x-5" : "translate-x-0.5"}`} />
                 </button>
               </div>
@@ -370,15 +370,15 @@ export default function AccountSettings({
       {/* Color Theme */}
       <div className="glass rounded-xl p-4">
         <h2 className="flex items-center gap-2">
-          <Palette size={14} className="text-[#2563EB]" /> Color Theme
+          <Palette size={14} className="text-[#D4FF00]" /> Color Theme
         </h2>
         <p className="text-[10px] text-text-muted mb-3">10 color schemes to match your style</p>
         <div className="grid grid-cols-5 gap-2">
           {[
-            { id: "nordic", name: "Nordic", bg: "#FAFAF7", surface: "#FFFFFF", accent: "#3B82F6", text: "#374151", desc: "Default" },
-            { id: "midnight", name: "Midnight", bg: "#08090e", surface: "#10121a", accent: "#3B82F6", text: "#e8eaed", desc: "Dark" },
-            { id: "light", name: "Light", bg: "#f8fafc", surface: "#ffffff", accent: "#3B82F6", text: "#0f172a", desc: "Clean" },
-            { id: "ocean", name: "Ocean", bg: "#0a1628", surface: "#0f1d32", accent: "#3B82F6", text: "#e2e8f0", desc: "Blue" },
+            { id: "nordic", name: "Nordic", bg: "#FAFAF7", surface: "#FFFFFF", accent: "#D4FF00", text: "#374151", desc: "Default" },
+            { id: "midnight", name: "Midnight", bg: "#08090e", surface: "#10121a", accent: "#D4FF00", text: "#e8eaed", desc: "Dark" },
+            { id: "light", name: "Light", bg: "#f8fafc", surface: "#ffffff", accent: "#D4FF00", text: "#0f172a", desc: "Clean" },
+            { id: "ocean", name: "Ocean", bg: "#0a1628", surface: "#0f1d32", accent: "#D4FF00", text: "#e2e8f0", desc: "Blue" },
             { id: "ember", name: "Ember", bg: "#120a08", surface: "#1a100c", accent: "#f97316", text: "#e2e8f0", desc: "Warm" },
             { id: "forest", name: "Forest", bg: "#071008", surface: "#0d1a10", accent: "#22c55e", text: "#e2e8f0", desc: "Green" },
             { id: "purple", name: "Purple", bg: "#0e0812", surface: "#16101e", accent: "#a855f7", text: "#e8e0f0", desc: "Violet" },
@@ -405,7 +405,7 @@ export default function AccountSettings({
                   <div className="w-4 h-4 rounded-full border border-border-subtle" style={{ background: theme.accent }} />
                 </div>
                 <p className="text-[9px] font-bold">{theme.name}</p>
-                {isActive && <p className="text-[7px] text-[#2563EB] mt-0.5">Active</p>}
+                {isActive && <p className="text-[7px] text-[#D4FF00] mt-0.5">Active</p>}
               </button>
             );
           })}
@@ -415,7 +415,7 @@ export default function AccountSettings({
       {/* Layout Options */}
       <div className="glass rounded-xl p-4">
         <h2 className="flex items-center gap-2">
-          <Settings size={14} className="text-[#2563EB]" /> Layout &amp; Density
+          <Settings size={14} className="text-[#D4FF00]" /> Layout &amp; Density
         </h2>
         <p className="text-[10px] text-text-muted mb-3">Customize how compact or spacious the interface feels</p>
         <div className="space-y-4">

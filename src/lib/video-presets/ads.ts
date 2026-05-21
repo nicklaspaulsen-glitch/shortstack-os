@@ -108,7 +108,7 @@ export const ADS_PRESET: AdsPreset = {
   color_palette: {
     primary: "#FFFFFF",
     secondary: "#000000",
-    accent: "#2563EB", // punchy red
+    accent: "#D4FF00", // punchy red
     background: "#0A0A0A",
     text_on_dark: "#FFFFFF",
     text_on_light: "#0A0A0A",

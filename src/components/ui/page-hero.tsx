@@ -217,22 +217,22 @@ const TREATMENTS: Record<Treatment, TreatmentStyle> = {
     bg: `linear-gradient(140deg, ${tokens.bg.base} 0%, ${tokens.bg.surface1} 60%, ${tokens.brand.plum} 130%)`,
     accent: tokens.brand.accent,
     underline: `linear-gradient(90deg, ${tokens.brand.accent} 0%, transparent 70%)`,
-    iconBg: "rgba(37, 99, 235, 0.1)",
+    iconBg: "rgba(212, 255, 0, 0.1)",
     iconBorder: tokens.border.strong,
   },
   plum: {
     bg: `linear-gradient(140deg, ${tokens.bg.base} 0%, ${tokens.brand.plum} 70%, ${tokens.brand.plumHover} 130%)`,
     accent: tokens.brand.accent,
     underline: `linear-gradient(90deg, ${tokens.brand.accent} 0%, transparent 70%)`,
-    iconBg: "rgba(37, 99, 235, 0.08)",
+    iconBg: "rgba(212, 255, 0, 0.08)",
     iconBorder: tokens.border.strong,
   },
   indigo: {
     bg: `linear-gradient(140deg, ${tokens.bg.base} 0%, ${tokens.bg.surface2} 50%, ${tokens.brand.accent}30 130%)`,
     accent: tokens.brand.accent,
     underline: `linear-gradient(90deg, ${tokens.brand.accent} 0%, transparent 70%)`,
-    iconBg: "rgba(37, 99, 235, 0.12)",
-    iconBorder: "rgba(37, 99, 235, 0.35)",
+    iconBg: "rgba(212, 255, 0, 0.12)",
+    iconBorder: "rgba(212, 255, 0, 0.35)",
   },
 };
 
@@ -358,7 +358,7 @@ export default function PageHero({
               style={{
                 background: "linear-gradient(135deg, rgba(212,255,0,0.09) 0%, rgba(212,255,0,0.05) 100%)",
                 border: "1px solid rgba(212,255,0,0.18)",
-                color: "#2563EB",
+                color: "#D4FF00",
                 boxShadow: "0 1px 4px rgba(212,255,0,0.10), inset 0 1px 0 rgba(255,255,255,0.9)",
               }}
             >
@@ -369,7 +369,7 @@ export default function PageHero({
           <div className="flex-1 min-w-0">
             {eyebrow && (
               <motion.p
-                className="font-editorial text-[9.5px] text-[#2563EB] mb-0.5 truncate uppercase"
+                className="font-editorial text-[9.5px] text-[#D4FF00] mb-0.5 truncate uppercase"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.85 }}
                 transition={{ duration: 0.18, delay: 0.06 }}

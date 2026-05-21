@@ -34,7 +34,7 @@ const FEATURES: Feature[] = [
     title: "Lead Scraper",
     description:
       "Pull targeted leads from Google Maps, LinkedIn, niche directories, and custom sources. AI-enrich with emails, phones, socials, and fit scores.",
-    color: "#2563EB",
+    color: "#D4FF00",
     metrics: [
       { label: "Sources", value: "12+" },
       { label: "Enriched", value: "98%" },
@@ -45,7 +45,7 @@ const FEATURES: Feature[] = [
     title: "AI Outreach",
     description:
       "Cold email, DM, and LinkedIn sequences that write and adapt themselves. Built-in warmup, deliverability monitoring, and reply-handling.",
-    color: "#2563EB",
+    color: "#D4FF00",
     metrics: [
       { label: "Channels", value: "5" },
       { label: "Avg reply", value: "11%" },
@@ -56,7 +56,7 @@ const FEATURES: Feature[] = [
     title: "AI Voice Caller",
     description:
       "Outbound AI voice agents that qualify leads, book meetings, and hand off to humans the moment intent spikes.",
-    color: "#3B82F6",
+    color: "#D4FF00",
     metrics: [
       { label: "24/7", value: "Live" },
       { label: "Hand-off", value: "<2s" },
@@ -78,7 +78,7 @@ const FEATURES: Feature[] = [
     title: "Content Auto-Publishing",
     description:
       "Schedule and post to Meta, TikTok, LinkedIn, X, YouTube, Google Business, and more. Queue-first, mobile-friendly, failure-safe.",
-    color: "#2563EB",
+    color: "#D4FF00",
     metrics: [
       { label: "Platforms", value: "10+" },
       { label: "Retry", value: "Auto" },
@@ -111,7 +111,7 @@ const FEATURES: Feature[] = [
     title: "Proposals",
     description:
       "Template-driven proposals your prospects actually open on their phones. e-Sign, expiration, auto-reminders, win-rate analytics built in.",
-    color: "#3B82F6",
+    color: "#D4FF00",
     metrics: [
       { label: "Mobile", value: "Yes" },
       { label: "e-Sign", value: "Built-in" },
@@ -122,7 +122,7 @@ const FEATURES: Feature[] = [
     title: "Contracts & e-Sign",
     description:
       "Legally-binding e-signature with audit trails. Reusable templates, auto-fill from CRM, reminder sequences for stalling signers.",
-    color: "#2563EB",
+    color: "#D4FF00",
     metrics: [
       { label: "Audit log", value: "Full" },
       { label: "Templates", value: "∞" },
@@ -166,7 +166,7 @@ const FEATURES: Feature[] = [
     title: "White-Label Reports",
     description:
       "Automated monthly and weekly reports your clients actually forward around. Custom branding, custom KPIs, scheduled delivery.",
-    color: "#2563EB",
+    color: "#D4FF00",
     metrics: [
       { label: "Branded", value: "Yes" },
       { label: "Scheduled", value: "Auto" },

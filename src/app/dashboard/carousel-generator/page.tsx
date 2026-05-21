@@ -76,11 +76,11 @@ const TEMPLATES = [
 ];
 
 const PRESET_COLORS: { name: string; primary: string; secondary: string }[] = [
-  { name: "Ocean Blue", primary: "#2563EB", secondary: "#3B82F6" },
+  { name: "Ocean Blue", primary: "#D4FF00", secondary: "#D4FF00" },
   { name: "Coral Sunset", primary: "#f43f5e", secondary: "#fb923c" },
   { name: "Forest Green", primary: "#16A34A", secondary: "#86EFAC" },
-  { name: "Royal Purple", primary: "#7c3aed", secondary: "#3B82F6" },
-  { name: "Midnight Gold", primary: "#1a1a2e", secondary: "#2563EB" },
+  { name: "Royal Purple", primary: "#7c3aed", secondary: "#D4FF00" },
+  { name: "Midnight Gold", primary: "#1a1a2e", secondary: "#D4FF00" },
   { name: "Slate Rose", primary: "#475569", secondary: "#f472b6" },
 ];
 
@@ -445,7 +445,7 @@ export default function CarouselGeneratorPage() {
   const [slideCount, setSlideCount] = useState(6);
   const [style, setStyle] = useState<CarouselStyle>("bold");
   const [template, setTemplate] = useState<string | null>(null);
-  const [brandColors, setBrandColors] = useState<BrandColors>({ primary: "#1a1a2e", secondary: "#2563EB" });
+  const [brandColors, setBrandColors] = useState<BrandColors>({ primary: "#1a1a2e", secondary: "#D4FF00" });
 
   // Generation state
   const [slides, setSlides] = useState<Slide[]>([]);

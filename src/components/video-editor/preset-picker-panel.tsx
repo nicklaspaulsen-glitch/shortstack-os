@@ -412,7 +412,7 @@ export function PresetPickerPanel({
       {/* Header */}
       <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-border-subtle bg-surface-light/30">
         <div className="flex items-center gap-2">
-          <Wand2 size={14} className="text-[#2563EB]" />
+          <Wand2 size={14} className="text-[#D4FF00]" />
           <span className="text-xs font-semibold">Preset Picker</span>
           <span className="text-[9px] text-text-muted hidden sm:inline">
             Cmd/Ctrl+K
@@ -612,9 +612,9 @@ function TabBtn({
       onClick={() => onSelect(id)}
       className={`relative flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition-colors ${
         active
-          ? highlight ? "text-[#2563EB]" : "text-[#2563EB]"
+          ? highlight ? "text-[#D4FF00]" : "text-[#D4FF00]"
           : highlight
-            ? "text-[rgba(212,255,0,0.7)] hover:bg-surface-light hover:text-[#2563EB]"
+            ? "text-[rgba(212,255,0,0.7)] hover:bg-surface-light hover:text-[#D4FF00]"
             : "text-text-muted hover:bg-surface-light hover:text-text-primary"
       }`}
       aria-pressed={active}
@@ -725,7 +725,7 @@ function FavStar({
         onToggle();
       }}
       className={`rounded p-1 transition ${
-        isFav ? "text-[#2563EB]" : "text-text-muted hover:text-[#2563EB]"
+        isFav ? "text-[#D4FF00]" : "text-text-muted hover:text-[#D4FF00]"
       } ${className}`}
       title={isFav ? "Unpin from Favourites" : "Pin to Favourites"}
     >
@@ -1005,7 +1005,7 @@ function EffectTile({
       <button
         type="button"
         onClick={onAdd}
-        className="absolute inset-x-1 bottom-1 rounded bg-[#1D4ED8] text-white text-[8px] font-semibold py-0.5 opacity-0 group-hover:opacity-100 transition"
+        className="absolute inset-x-1 bottom-1 rounded bg-[#D4FF00] text-[#020711] text-[8px] font-semibold py-0.5 opacity-0 group-hover:opacity-100 transition"
       >
         + Add
       </button>
@@ -1151,7 +1151,7 @@ function TransitionTile({
       <button
         type="button"
         onClick={onAdd}
-        className="absolute inset-x-1 bottom-1 rounded bg-[#1D4ED8] text-white text-[8px] font-semibold py-0.5 opacity-0 group-hover:opacity-100 transition"
+        className="absolute inset-x-1 bottom-1 rounded bg-[#D4FF00] text-[#020711] text-[8px] font-semibold py-0.5 opacity-0 group-hover:opacity-100 transition"
       >
         + Add
       </button>
@@ -1306,7 +1306,7 @@ function BrollTile({
       <button
         type="button"
         onClick={onAdd}
-        className="absolute inset-x-1 bottom-1 rounded bg-[#1D4ED8] text-white text-[8px] font-semibold py-0.5 opacity-0 group-hover:opacity-100 transition"
+        className="absolute inset-x-1 bottom-1 rounded bg-[#D4FF00] text-[#020711] text-[8px] font-semibold py-0.5 opacity-0 group-hover:opacity-100 transition"
       >
         + Add
       </button>
@@ -1403,7 +1403,7 @@ function FontTab({
             <button
               type="button"
               onClick={() => onApply(f)}
-              className="mt-1 rounded bg-[#1D4ED8] text-white text-[8px] font-semibold px-2 py-0.5"
+              className="mt-1 rounded bg-[#D4FF00] text-[#020711] text-[8px] font-semibold px-2 py-0.5"
             >
               Apply to text
             </button>
@@ -1585,7 +1585,7 @@ function FavouritesTab({
               onDoubleClick={() => onToggleFav("vfx", fx.id)}
               className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(212,255,0,0.4)]"
             >
-              <Wand2 size={12} className="text-[#2563EB]" />
+              <Wand2 size={12} className="text-[#D4FF00]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{fx.name}</p>
                 <p className="text-[8px] text-text-muted">VFX · {fx.category}</p>
@@ -1593,7 +1593,7 @@ function FavouritesTab({
               <button
                 type="button"
                 onClick={() => onDrop("vfx", fx.id, { name: fx.name, category: fx.category })}
-                className="rounded bg-[#1D4ED8] px-1.5 py-0.5 text-[8px] font-semibold text-white"
+                className="rounded bg-[#D4FF00] px-1.5 py-0.5 text-[8px] font-semibold text-white"
               >
                 Add
               </button>
@@ -1611,7 +1611,7 @@ function FavouritesTab({
               onDoubleClick={() => onToggleFav("transition", t.id)}
               className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(212,255,0,0.4)]"
             >
-              <Scissors size={12} className="text-[#2563EB]" />
+              <Scissors size={12} className="text-[#D4FF00]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{t.name}</p>
                 <p className="text-[8px] text-text-muted">Transition · {t.category}</p>
@@ -1619,7 +1619,7 @@ function FavouritesTab({
               <button
                 type="button"
                 onClick={() => onDrop("transition", t.id, { name: t.name, category: t.category, duration_ms: t.duration_ms })}
-                className="rounded bg-[#1D4ED8] px-1.5 py-0.5 text-[8px] font-semibold text-white"
+                className="rounded bg-[#D4FF00] px-1.5 py-0.5 text-[8px] font-semibold text-white"
               >
                 Add
               </button>
@@ -1637,7 +1637,7 @@ function FavouritesTab({
               onDoubleClick={() => onToggleFav("font", f.id)}
               className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(212,255,0,0.4)]"
             >
-              <TypeIcon size={12} className="text-[#2563EB]" />
+              <TypeIcon size={12} className="text-[#D4FF00]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{f.family}</p>
                 <p className="text-[8px] text-text-muted">Font · {f.category}</p>
@@ -1645,7 +1645,7 @@ function FavouritesTab({
               <button
                 type="button"
                 onClick={() => onApplyFont?.(f)}
-                className="rounded bg-[#1D4ED8] px-1.5 py-0.5 text-[8px] font-semibold text-white"
+                className="rounded bg-[#D4FF00] px-1.5 py-0.5 text-[8px] font-semibold text-white"
               >
                 Apply
               </button>
@@ -1660,7 +1660,7 @@ function FavouritesTab({
               key={`broll-${b.id}`}
               className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2"
             >
-              <Film size={12} className="text-[#2563EB]" />
+              <Film size={12} className="text-[#D4FF00]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{b.label}</p>
                 <p className="text-[8px] text-text-muted">B-roll · pinned</p>
@@ -1761,8 +1761,8 @@ function AudioRow({
           error
             ? "bg-red-500/10 text-red-400"
             : playing
-              ? "bg-[#2563EB] text-white"
-              : "bg-[rgba(212,255,0,0.12)] text-[#2563EB] hover:bg-[rgba(212,255,0,0.18)]"
+              ? "bg-[#D4FF00] text-[#020711]"
+              : "bg-[rgba(212,255,0,0.12)] text-[#D4FF00] hover:bg-[rgba(212,255,0,0.18)]"
         }`}
         title={error ? "Preview URL broken" : playing ? "Pause" : "Play"}
       >
@@ -1775,7 +1775,7 @@ function AudioRow({
       <button
         type="button"
         onClick={onAdd}
-        className="shrink-0 rounded bg-surface-light/80 p-1 text-text-muted hover:text-[#2563EB]"
+        className="shrink-0 rounded bg-surface-light/80 p-1 text-text-muted hover:text-[#D4FF00]"
         title="Add to timeline"
       >
         <Check size={11} />

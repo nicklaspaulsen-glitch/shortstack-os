@@ -165,7 +165,7 @@ export function TiltCardGrid({ items, columns = 3, className = "" }: TiltCardGri
             className="h-full rounded-2xl p-6 flex flex-col gap-3"
             style={{
               background: "rgba(19,24,39,0.72)",
-              border: "1px solid rgba(99,146,255,0.12)",
+              border: "1px solid rgba(212, 255, 0,0.12)",
               backdropFilter: "blur(12px)",
               boxShadow: "0 1px 0 rgba(255,255,255,0.04) inset, 0 4px 24px rgba(0,0,0,0.30)",
             }}
@@ -177,7 +177,7 @@ export function TiltCardGrid({ items, columns = 3, className = "" }: TiltCardGri
                   background: item.color
                     ? `${item.color}18`
                     : "rgba(212,255,0,0.15)",
-                  color: item.color ?? "#3B82F6",
+                  color: item.color ?? "#D4FF00",
                   boxShadow: item.color
                     ? `0 0 14px ${item.color}30`
                     : "0 0 14px rgba(212,255,0,0.22)",

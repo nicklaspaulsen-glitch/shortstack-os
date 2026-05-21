@@ -11,7 +11,7 @@
  *     <MyCard />
  *   </ShineBorder>
  *
- *   <ShineBorder color={["#2563EB", "#818CF8", "#38BDF8"]} borderWidth={2}>
+ *   <ShineBorder color={["#D4FF00", "#818CF8", "#38BDF8"]} borderWidth={2}>
  *     <MyFeaturedCard />
  *   </ShineBorder>
  */
@@ -39,7 +39,7 @@ export function ShineBorder({
   className,
   borderWidth = 1.5,
   borderRadius = "12px",
-  color = ["#2563EB", "#93C5FD", "#DBEAFE", "#2563EB"],
+  color = ["#D4FF00", "#93C5FD", "#DBEAFE", "#D4FF00"],
   duration = 4,
   background = "#FFFFFF",
 }: ShineBorderProps) {

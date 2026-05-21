@@ -48,11 +48,11 @@ const TYPE_LABEL: Record<TaskType, string> = {
 const TYPE_COLORS: Record<TaskType, { bg: string; text: string }> = {
   video: { bg: "rgba(168, 85, 247, 0.18)", text: "#D8B4FE" },
   thumbnail: { bg: "rgba(236, 72, 153, 0.18)", text: "#F9A8D4" },
-  post: { bg: "rgba(37, 99, 235, 0.18)", text: "#93C5FD" },
-  copy: { bg: "rgba(37, 99, 235, 0.18)", text: "#93C5FD" },
+  post: { bg: "rgba(212, 255, 0, 0.18)", text: "#93C5FD" },
+  copy: { bg: "rgba(212, 255, 0, 0.18)", text: "#93C5FD" },
   ad: { bg: "rgba(249, 115, 22, 0.18)", text: "#FDBA74" },
   brief: { bg: "rgba(139, 92, 246, 0.18)", text: "#C4B5FD" },
-  call: { bg: "rgba(37, 99, 235, 0.18)", text: "#93C5FD" },
+  call: { bg: "rgba(212, 255, 0, 0.18)", text: "#93C5FD" },
   generic: { bg: "rgba(148, 163, 184, 0.18)", text: "#CBD5E1" },
 };
 
@@ -177,7 +177,7 @@ export function BoardCard({
         </div>
         {assignee && (
           <div
-            className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-[rgba(212,255,0,0.12)] text-[#2563EB] border border-[rgba(212,255,0,0.3)]"
+            className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-[rgba(212,255,0,0.12)] text-[#D4FF00] border border-[rgba(212,255,0,0.3)]"
             title={assignee.full_name}
           >
             {assignee.avatar_url ? (

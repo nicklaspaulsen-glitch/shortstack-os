@@ -134,7 +134,7 @@ export function MotionTiles({
               className="h-full min-h-[120px] rounded-2xl p-5 flex flex-col gap-2.5"
               style={{
                 background: "rgba(19,24,39,0.70)",
-                border: "1px solid rgba(99,146,255,0.11)",
+                border: "1px solid rgba(212, 255, 0,0.11)",
                 backdropFilter: "blur(12px)",
                 boxShadow:
                   "0 1px 0 rgba(255,255,255,0.04) inset, 0 2px 20px rgba(0,0,0,0.28)",
@@ -148,7 +148,7 @@ export function MotionTiles({
                     background: item.color
                       ? `${item.color}18`
                       : "rgba(212,255,0,0.14)",
-                    color: item.color ?? "#3B82F6",
+                    color: item.color ?? "#D4FF00",
                   }}
                 >
                   {item.icon}
@@ -159,7 +159,7 @@ export function MotionTiles({
               {item.headline && (
                 <p
                   className="text-2xl font-extrabold font-display"
-                  style={{ color: item.color ?? "#3B82F6" }}
+                  style={{ color: item.color ?? "#D4FF00" }}
                 >
                   {item.headline}
                 </p>

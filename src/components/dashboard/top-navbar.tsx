@@ -206,7 +206,7 @@ export default function TopNavbar() {
           background: "rgba(9,13,27,0.92)",
           backdropFilter: "blur(20px) saturate(1.6)",
           WebkitBackdropFilter: "blur(20px) saturate(1.6)",
-          borderColor: "rgba(99,146,255,0.12)",
+          borderColor: "rgba(212, 255, 0,0.12)",
         }}
       >
         {/* Breadcrumb + Trinity row */}
@@ -285,7 +285,7 @@ export default function TopNavbar() {
               className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.16em] px-2 py-[3px] rounded-full border mr-1"
               style={{
                 color: "rgba(160,160,180,0.8)",
-                borderColor: "rgba(99,146,255,0.15)",
+                borderColor: "rgba(212, 255, 0,0.15)",
                 background: "rgba(212,255,0,0.06)",
               }}
             >

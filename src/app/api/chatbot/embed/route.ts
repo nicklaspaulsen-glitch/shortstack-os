@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     if (client) clientName = client.business_name;
   }
 
-  const safeColor = CSS_COLOR_RE.test(primary_color ?? "") ? primary_color! : "#3B82F6";
+  const safeColor = CSS_COLOR_RE.test(primary_color ?? "") ? primary_color! : "#D4FF00";
   const safeName = escapeHtml(bot_name || "Assistant");
   const pos = (position === "bottom-left" || position === "bottom-right") ? position : "bottom-right";
   const safeWelcome = escapeHtml(welcome_message || `Hi! Welcome to ${clientName}. How can I help you today?`);

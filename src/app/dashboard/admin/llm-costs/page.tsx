@@ -243,8 +243,8 @@ export default function LlmCostsDashboard() {
               <AreaChart data={data.daily_series}>
                 <defs>
                   <linearGradient id="spend-gradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#2563EB" stopOpacity={0.5} />
-                    <stop offset="100%" stopColor="#2563EB" stopOpacity={0.04} />
+                    <stop offset="0%" stopColor="#D4FF00" stopOpacity={0.5} />
+                    <stop offset="100%" stopColor="#D4FF00" stopOpacity={0.04} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeOpacity={0.08} />
@@ -271,7 +271,7 @@ export default function LlmCostsDashboard() {
                 <Area
                   type="monotone"
                   dataKey="cost_usd"
-                  stroke="#2563EB"
+                  stroke="#D4FF00"
                   fill="url(#spend-gradient)"
                   strokeWidth={2}
                 />
@@ -317,7 +317,7 @@ export default function LlmCostsDashboard() {
                     }}
                     formatter={(value) => formatUsd(Number(value))}
                   />
-                  <Bar dataKey="cost_usd" fill="#2563EB" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="cost_usd" fill="#D4FF00" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

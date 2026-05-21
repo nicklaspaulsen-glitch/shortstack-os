@@ -220,7 +220,7 @@ function LeadDetailPanel({
       style={{
         background: "rgba(13,17,32,0.97)",
         backdropFilter: "blur(24px) saturate(160%)",
-        borderLeft: "1px solid rgba(99,146,255,0.14)",
+        borderLeft: "1px solid rgba(212, 255, 0,0.14)",
         boxShadow: "-8px 0 40px rgba(0,0,0,0.5)",
       }}
     >
@@ -265,7 +265,7 @@ function LeadDetailPanel({
                 initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.14 }}
                 className="absolute right-0 top-full mt-1.5 w-48 z-50 rounded-xl overflow-hidden"
-                style={{ background: "rgba(13,17,32,0.98)", border: "1px solid rgba(99,146,255,0.16)", boxShadow: "0 8px 32px rgba(0,0,0,0.6)" }}
+                style={{ background: "rgba(13,17,32,0.98)", border: "1px solid rgba(212, 255, 0,0.16)", boxShadow: "0 8px 32px rgba(0,0,0,0.6)" }}
               >
                 {[...PIPELINE_STAGES, DEAD_STAGE].map((s) => (
                   <button
@@ -412,13 +412,13 @@ function ScriptsTab({ scripts }: { scripts: ScriptItem[] }) {
       {scripts.map((s) => {
         const statusColor = s.status === "approved" ? "#10B981" : s.status === "revision_requested" ? "#F87171" : "#A8A8B2";
         return (
-          <div key={s.id} className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(99,146,255,0.12)" }}>
+          <div key={s.id} className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(212, 255, 0,0.12)" }}>
             <button
               onClick={() => setOpen(open === s.id ? null : s.id)}
               className="w-full flex items-center gap-2 px-4 py-2.5 text-xs hover:bg-white/5 transition-colors"
             >
               <span className="font-medium text-text-secondary flex-1 text-left truncate">{s.title}</span>
-              <span className="text-[9px] px-1.5 py-0.5 rounded-full" style={{ background: "rgba(99,146,255,0.08)", color: statusColor }}>
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full" style={{ background: "rgba(212, 255, 0,0.08)", color: statusColor }}>
                 {s.status}
               </span>
               <span className="text-[9px] text-text-muted ml-1">{s.duration_estimate}</span>
@@ -458,7 +458,7 @@ function ContentTab({ content }: { content: GeneratedContent }) {
   return (
     <div className="p-4 flex flex-col gap-2">
       {sections.map((s) => (
-        <div key={s.key} className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(99,146,255,0.12)" }}>
+        <div key={s.key} className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(212, 255, 0,0.12)" }}>
           <button
             onClick={() => setOpen(open === s.key ? null : s.key)}
             className="w-full flex items-center justify-between px-4 py-2.5 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors"
@@ -480,7 +480,7 @@ function ContentTab({ content }: { content: GeneratedContent }) {
         </div>
       ))}
       {content.captions.length > 0 && (
-        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(99,146,255,0.12)" }}>
+        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(212, 255, 0,0.12)" }}>
           <button
             onClick={() => setOpen(open === "captions" ? null : "captions")}
             className="w-full flex items-center justify-between px-4 py-2.5 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors"
@@ -525,7 +525,7 @@ function FilesTab({ files }: { files: FileRecord[] }) {
         <a
           key={i} href={f.url} target="_blank" rel="noreferrer"
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5 transition-colors group"
-          style={{ border: "1px solid rgba(99,146,255,0.10)" }}
+          style={{ border: "1px solid rgba(212, 255, 0,0.10)" }}
         >
           <Paperclip size={12} className="text-text-muted flex-shrink-0" />
           <span className="text-xs text-text-secondary truncate flex-1">{f.filename ?? f.url.split("/").pop() ?? "File"}</span>
@@ -553,7 +553,7 @@ function LeadCard({ lead, onClick }: { lead: Lead; onClick: () => void }) {
       transition={{ duration: 0.18 }}
       onClick={onClick}
       className="w-full text-left p-3 rounded-xl mb-2 transition-all group relative"
-      style={{ background: "rgba(13,17,32,0.7)", border: "1px solid rgba(99,146,255,0.10)" }}
+      style={{ background: "rgba(13,17,32,0.7)", border: "1px solid rgba(212, 255, 0,0.10)" }}
     >
       <div className="flex items-start gap-2.5">
         <div
@@ -617,11 +617,11 @@ function KanbanColumn({
   return (
     <div
       className="flex flex-col rounded-2xl overflow-hidden flex-shrink-0"
-      style={{ width: 200, background: "rgba(13,17,32,0.5)", border: "1px solid rgba(99,146,255,0.08)" }}
+      style={{ width: 200, background: "rgba(13,17,32,0.5)", border: "1px solid rgba(212, 255, 0,0.08)" }}
     >
       <div
         className="flex items-center gap-2 px-3 py-2.5 border-b"
-        style={{ borderColor: "rgba(99,146,255,0.08)", background: cfg.bg }}
+        style={{ borderColor: "rgba(212, 255, 0,0.08)", background: cfg.bg }}
       >
         <span style={{ color: cfg.color }}>{cfg.icon}</span>
         <span className="text-xs font-semibold tracking-tight flex-1" style={{ color: cfg.color }}>{cfg.label}</span>
@@ -726,12 +726,12 @@ function StatsBar({ leads }: { leads: Lead[] }) {
   ];
 
   return (
-    <div className="flex items-center mb-5 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(99,146,255,0.10)" }}>
+    <div className="flex items-center mb-5 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(212, 255, 0,0.10)" }}>
       {items.map((item, i) => (
         <div
           key={item.label}
           className="flex-1 px-4 py-3 flex flex-col items-center"
-          style={{ borderRight: i < items.length - 1 ? "1px solid rgba(99,146,255,0.08)" : "none" }}
+          style={{ borderRight: i < items.length - 1 ? "1px solid rgba(212, 255, 0,0.08)" : "none" }}
         >
           <span className="text-base font-display font-bold" style={{ color: item.color }}>{item.value}</span>
           <span className="text-[10px] text-text-muted mt-0.5">{item.label}</span>
@@ -845,7 +845,7 @@ export default function LeadgenPipelinePage() {
               onClick={() => void fetchLeads(true)}
               disabled={refreshing}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-text-secondary hover:text-text-primary transition-colors"
-              style={{ border: "1px solid rgba(99,146,255,0.12)" }}
+              style={{ border: "1px solid rgba(212, 255, 0,0.12)" }}
             >
               <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
               Refresh
@@ -886,7 +886,7 @@ export default function LeadgenPipelinePage() {
             <button
               onClick={() => setShowDead((v) => !v)}
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-text-muted hover:text-text-secondary transition-colors mb-2"
-              style={{ border: "1px solid rgba(99,146,255,0.08)" }}
+              style={{ border: "1px solid rgba(212, 255, 0,0.08)" }}
             >
               {showDead ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
               <XCircle size={11} />

@@ -59,7 +59,7 @@ export default function CreateHubPage() {
             ]}
             stats={[
               { label: "Generations (30d)", key: "generations_month", icon: Sparkles, color: "text-brand-accent" },
-              { label: "Scripts", key: "scripts", icon: FileText, color: "text-[#3B82F6]" },
+              { label: "Scripts", key: "scripts", icon: FileText, color: "text-[#D4FF00]" },
               { label: "Emails", key: "emails", icon: Mail, color: "text-brand-accent" },
               { label: "Posts", key: "posts", icon: Film, color: "text-brand-accent" },
             ]}

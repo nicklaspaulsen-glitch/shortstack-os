@@ -28,7 +28,7 @@ export default function ImageLayer({ layer, isSelected, scale, onSelect }: Props
     overflow: "hidden",
     cursor: "pointer",
     outline: isSelected
-      ? `${Math.max(1, 2 / scale)}px solid #2563EB`
+      ? `${Math.max(1, 2 / scale)}px solid #D4FF00`
       : "none",
     outlineOffset: -1,
     boxSizing: "border-box",

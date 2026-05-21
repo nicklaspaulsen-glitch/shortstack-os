@@ -14,9 +14,9 @@ import { MotionPage } from "@/components/motion/motion-page";
 
 // -- Widget definitions ---------------------------------------------------------
 const WIDGET_TYPES = [
-  { id: "leads_today", label: "Leads Today", icon: <Users className="w-5 h-5" />, color: "#2563EB", bg: "from-[#2563EB]/15 to-[#2563EB]/5" },
-  { id: "revenue_month", label: "Revenue This Month", icon: <DollarSign className="w-5 h-5" />, color: "#2563EB", bg: "from-emerald-500/15 to-emerald-500/5" },
-  { id: "active_clients", label: "Active Clients", icon: <Activity className="w-5 h-5" />, color: "#2563EB", bg: "from-blue-500/15 to-blue-500/5" },
+  { id: "leads_today", label: "Leads Today", icon: <Users className="w-5 h-5" />, color: "#D4FF00", bg: "from-[#D4FF00]/15 to-[#AACC00]/5" },
+  { id: "revenue_month", label: "Revenue This Month", icon: <DollarSign className="w-5 h-5" />, color: "#D4FF00", bg: "from-emerald-500/15 to-emerald-500/5" },
+  { id: "active_clients", label: "Active Clients", icon: <Activity className="w-5 h-5" />, color: "#D4FF00", bg: "from-blue-500/15 to-blue-500/5" },
   { id: "pipeline_value", label: "Pipeline Value", icon: <TrendingUp className="w-5 h-5" />, color: "#8B5CF6", bg: "from-violet-500/15 to-violet-500/5" },
   { id: "messages_inbox", label: "Messages Inbox", icon: <MessageSquare className="w-5 h-5" />, color: "#F59E0B", bg: "from-amber-500/15 to-amber-500/5" },
   { id: "reviews_week", label: "Reviews This Week", icon: <Star className="w-5 h-5" />, color: "#EC4899", bg: "from-pink-500/15 to-pink-500/5" },
@@ -66,7 +66,7 @@ function WidgetCard({
       onDragOver={onDragOver}
       onDrop={onDrop}
       className={`bg-white border border-[rgba(0,0,0,0.08)] rounded-xl overflow-hidden cursor-grab active:cursor-grabbing transition-all select-none shadow-sm ${
-        isDragOver ? "border-[rgba(59,130,246,0.60)] scale-[1.02]" : ""
+        isDragOver ? "border-[rgba(212, 255, 0,0.60)] scale-[1.02]" : ""
       }`}
     >
       <div className="p-4 flex flex-col gap-3">
@@ -212,7 +212,7 @@ export default function CustomDashboardPage() {
             <button
               onClick={() => saveLayout(widgets)}
               disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-[#3B82F6] text-white transition-all disabled:opacity-60"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-[#D4FF00] text-[#020711] transition-all disabled:opacity-60"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save Layout

@@ -26,14 +26,14 @@ interface LogEntry {
 }
 
 const AGENT_CONFIGS = [
-  { id: "lead_gen", name: "Scout", role: "Lead Finder", color: "#3B82F6", headColor: "#f5e6c8", message: "Scraping Google Maps..." },
-  { id: "outreach", name: "Echo", role: "Outreach Agent", color: "#3B82F6", headColor: "#bae6fd", message: "Sending cold DMs..." },
+  { id: "lead_gen", name: "Scout", role: "Lead Finder", color: "#D4FF00", headColor: "#f5e6c8", message: "Scraping Google Maps..." },
+  { id: "outreach", name: "Echo", role: "Outreach Agent", color: "#D4FF00", headColor: "#bae6fd", message: "Sending cold DMs..." },
   { id: "content", name: "Pixel", role: "Content Writer", color: "#f43f5e", headColor: "#fecdd3", message: "Writing viral script..." },
-  { id: "social", name: "Wave", role: "Social Manager", color: "#2563EB", headColor: "#FFB3B3", message: "Scheduling posts..." },
+  { id: "social", name: "Wave", role: "Social Manager", color: "#D4FF00", headColor: "#FFB3B3", message: "Scheduling posts..." },
   { id: "ads", name: "Blaze", role: "Ads Manager", color: "#f59e0b", headColor: "#fde68a", message: "Optimizing ROAS..." },
   { id: "automation", name: "Nexus", role: "Supervisor", color: "#ec4899", headColor: "#fbcfe8", message: "Monitoring agents..." },
   { id: "custom", name: "Trinity", role: "AI Assistant", color: "#8b5cf6", headColor: "#ddd6fe", message: "Ready to help..." },
-  { id: "ai_receptionist", name: "Ring", role: "Cold Caller", color: "#2563EB", headColor: "#99f6e4", message: "Dialing leads..." },
+  { id: "ai_receptionist", name: "Ring", role: "Cold Caller", color: "#D4FF00", headColor: "#99f6e4", message: "Dialing leads..." },
 ];
 
 export default function PixelOffice() {
@@ -144,11 +144,11 @@ export default function PixelOffice() {
       // === HEADER BAR ===
       ctx.fillStyle = "rgba(6,8,12,0.85)";
       ctx.fillRect(0, 0, W, 22);
-      ctx.fillStyle = "#3B82F6";
+      ctx.fillStyle = "#D4FF00";
       ctx.font = "bold 10px 'Courier New', monospace";
       ctx.fillText("SHORTSTACK HQ", 10, 15);
       const working = agents.filter(a => a.status === "working").length;
-      ctx.fillStyle = working === agents.length ? "#2563EB" : "#64748b";
+      ctx.fillStyle = working === agents.length ? "#D4FF00" : "#64748b";
       ctx.font = "9px 'Courier New', monospace";
       ctx.textAlign = "right";
       ctx.fillText(`${working}/${agents.length} agents active`, W - 10, 15);
@@ -290,7 +290,7 @@ export default function PixelOffice() {
         }
 
         // Status indicator — floating dot
-        const statusColor = agent.status === "working" ? "#2563EB" : agent.status === "error" ? "#f43f5e" : agent.status === "talking" ? "#3B82F6" : "#475569";
+        const statusColor = agent.status === "working" ? "#D4FF00" : agent.status === "error" ? "#f43f5e" : agent.status === "talking" ? "#D4FF00" : "#475569";
         ctx.fillStyle = statusColor;
         ctx.beginPath();
         ctx.arc(ax + 6, cy - 12, 2.5, 0, Math.PI * 2);

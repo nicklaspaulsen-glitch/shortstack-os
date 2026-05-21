@@ -165,7 +165,7 @@ export default function TokenUsageWidget() {
           onMouseLeave={() => setExpanded(false)}
         >
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#2563EB]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#D4FF00]">
               Token usage
             </span>
             <span className="text-[10px] text-text-muted">{data.plan}</span>

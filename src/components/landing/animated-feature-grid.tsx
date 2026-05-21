@@ -7,8 +7,8 @@ import {
   Zap, Globe, BarChart3,
 } from "lucide-react";
 
-const ACCENT = "#2563EB";
-const ACCENT_LIGHT = "#60A5FA";
+const ACCENT = "#D4FF00";
+const ACCENT_LIGHT = "#D4FF00";
 
 // Lucide icon compatible — accept any component that takes size + className
 type LucideLike = React.ComponentType<React.SVGProps<SVGSVGElement> & { size?: number | string }>;
@@ -231,7 +231,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-lg flex items-center justify-center"
           style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)" }}>
-          <Icon size={18} className="text-[#2563EB]" />
+          <Icon size={18} className="text-[#D4FF00]" />
         </div>
         <h3 className="text-white font-semibold">{feature.title}</h3>
       </div>

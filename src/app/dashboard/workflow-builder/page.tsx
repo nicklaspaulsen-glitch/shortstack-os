@@ -136,7 +136,7 @@ function mkNode(id: string, defId: string, x: number, y: number, cfg?: Record<st
   return { id, type: "workflow", position: { x, y }, data: { defId, config: cfg || {} } };
 }
 function mkEdge(src: string, tgt: string): Edge {
-  return { id: `e_${src}_${tgt}`, source: src, target: tgt, animated: true, style: { stroke: "#2563EB", strokeWidth: 1.5 }, markerEnd: { type: MarkerType.ArrowClosed, color: "#2563EB", width: 16, height: 16 } };
+  return { id: `e_${src}_${tgt}`, source: src, target: tgt, animated: true, style: { stroke: "#D4FF00", strokeWidth: 1.5 }, markerEnd: { type: MarkerType.ArrowClosed, color: "#D4FF00", width: 16, height: 16 } };
 }
 
 const TEMPLATES: Template[] = [
@@ -570,7 +570,7 @@ function WorkflowBuilderInner() {
   // -- Callbacks --
   const onConnect = useCallback((connection: Connection) => {
     pushHistory();
-    setEdges(eds => addEdge({ ...connection, animated: true, style: { stroke: "#2563EB", strokeWidth: 1.5 }, markerEnd: { type: MarkerType.ArrowClosed, color: "#2563EB", width: 16, height: 16 } }, eds));
+    setEdges(eds => addEdge({ ...connection, animated: true, style: { stroke: "#D4FF00", strokeWidth: 1.5 }, markerEnd: { type: MarkerType.ArrowClosed, color: "#D4FF00", width: 16, height: 16 } }, eds));
   }, [setEdges, pushHistory]);
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
@@ -949,8 +949,8 @@ function WorkflowBuilderInner() {
             proOptions={{ hideAttribution: true }}
             defaultEdgeOptions={{
               animated: true,
-              style: { stroke: "#2563EB", strokeWidth: 1.5 },
-              markerEnd: { type: MarkerType.ArrowClosed, color: "#2563EB", width: 16, height: 16 },
+              style: { stroke: "#D4FF00", strokeWidth: 1.5 },
+              markerEnd: { type: MarkerType.ArrowClosed, color: "#D4FF00", width: 16, height: 16 },
             }}
             style={{ background: "var(--color-background, #0a0a0f)" }}
           >
@@ -960,7 +960,7 @@ function WorkflowBuilderInner() {
               className="!bg-surface ! border-border-subtle !rounded-xl !shadow-lg [&>button]:!bg-surface [&>button]:! border-border-subtle [&>button]:! text-text-muted [&>button:hover]:! text-text-primary [&>button:hover]:!bg-surface-light"
             />
             <MiniMap
-              nodeColor={() => "#2563EB"}
+              nodeColor={() => "#D4FF00"}
               maskColor="rgba(0,0,0,0.3)"
               className="!bg-surface ! border-border-subtle !rounded-xl"
               pannable

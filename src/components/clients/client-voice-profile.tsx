@@ -101,7 +101,7 @@ export default function ClientVoiceProfile({ clientId, clientName }: Props) {
           <button
             onClick={() => setGenOpen(true)}
             disabled={!data?.active}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#2563EB] hover:bg-[#1D4ED8] text-white disabled:opacity-50 transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#D4FF00] hover:bg-[#AACC00] text-[#020711] disabled:opacity-50 transition-colors"
           >
             <MessageSquare size={13} />
             Generate copy in their voice
@@ -184,7 +184,7 @@ function Stats({ profile }: { profile: VoiceProfile }) {
   return (
     <div className="rounded-xl border border-border-subtle bg-black/5 p-4">
       <div className="flex items-center gap-2 mb-3">
-        <Type size={14} className="text-[#2563EB]" />
+        <Type size={14} className="text-[#D4FF00]" />
         <span className="text-xs font-semibold">Stats</span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -201,7 +201,7 @@ function Stats({ profile }: { profile: VoiceProfile }) {
               </div>
               <div className="h-1.5 rounded-full bg-black/5 overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-[#2563EB] transition-all"
+                  className="h-full rounded-full bg-[#D4FF00] transition-all"
                   style={{ width: `${pct}%` }}
                 />
               </div>
@@ -225,7 +225,7 @@ function Signature({ profile }: { profile: VoiceProfile }) {
   return (
     <div className="rounded-xl border border-border-subtle bg-black/5 p-4 space-y-3">
       <div className="flex items-center gap-2">
-        <Sparkles size={14} className="text-[#2563EB]" />
+        <Sparkles size={14} className="text-[#D4FF00]" />
         <span className="text-xs font-semibold">Signature</span>
       </div>
       {groups.map((g) =>
@@ -236,7 +236,7 @@ function Signature({ profile }: { profile: VoiceProfile }) {
               {g.items.map((x, i) => (
                 <span
                   key={`${g.label}-${i}`}
-                  className="text-[10px] px-2 py-1 rounded-full bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] text-[#2563EB]"
+                  className="text-[10px] px-2 py-1 rounded-full bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] text-[#D4FF00]"
                 >
                   {x}
                 </span>
@@ -253,7 +253,7 @@ function PromptPanel({ snippet }: { snippet: string }) {
   return (
     <div className="rounded-xl border border-border-subtle bg-black/5 p-4">
       <div className="flex items-center gap-2 mb-2">
-        <Wand2 size={14} className="text-[#2563EB]" />
+        <Wand2 size={14} className="text-[#D4FF00]" />
         <span className="text-xs font-semibold">Injected prompt</span>
       </div>
       <pre className="text-[11px] whitespace-pre-wrap font-mono text-text-primary rounded-lg bg-black/[0.04] p-3 border border-border-subtle max-h-40 overflow-auto">
@@ -334,7 +334,7 @@ function GenerateModal({
         <button
           onClick={handleGenerate}
           disabled={busy || !prompt.trim()}
-          className="px-4 py-2 rounded-lg text-xs font-semibold bg-[#2563EB] hover:bg-[#1D4ED8] text-white disabled:opacity-50 transition-colors"
+          className="px-4 py-2 rounded-lg text-xs font-semibold bg-[#D4FF00] hover:bg-[#AACC00] text-[#020711] disabled:opacity-50 transition-colors"
         >
           {busy ? "Generating..." : "Generate"}
         </button>

@@ -188,7 +188,7 @@ export default function ClientPortalPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
         className="glass border relative overflow-hidden"
-        style={{ borderColor: "rgba(99,146,255,0.10)" }}
+        style={{ borderColor: "rgba(212, 255, 0,0.10)" }}
       >
         <div className="absolute inset-0 bg-mesh opacity-40" />
         <div className="relative flex items-center justify-between">
@@ -291,7 +291,7 @@ export default function ClientPortalPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className="glass border"
-          style={{ borderColor: "rgba(99,146,255,0.10)" }}
+          style={{ borderColor: "rgba(212, 255, 0,0.10)" }}
         >
           <h2 className="flex items-center gap-2">
             <Sparkles size={13} className="text-brand-accent" /> Your Custom Marketing Plan
@@ -309,7 +309,7 @@ export default function ClientPortalPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.06 }}
         className="glass border"
-        style={{ borderColor: "rgba(99,146,255,0.10)" }}
+        style={{ borderColor: "rgba(212, 255, 0,0.10)" }}
       >
         <h2 className="flex items-center gap-2"><Zap size={13} className="text-brand-accent" /> Active Services</h2>
         <div className="flex flex-wrap gap-2">
@@ -339,7 +339,7 @@ export default function ClientPortalPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.08 }}
           className="glass border"
-          style={{ borderColor: "rgba(99,146,255,0.10)" }}
+          style={{ borderColor: "rgba(212, 255, 0,0.10)" }}
         >
           <h2 className="flex items-center gap-2">
             <CheckCircle size={13} className="text-success" /> Task Progress
@@ -382,7 +382,7 @@ export default function ClientPortalPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.12 }}
           className="glass border"
-          style={{ borderColor: "rgba(99,146,255,0.10)" }}
+          style={{ borderColor: "rgba(212, 255, 0,0.10)" }}
         >
           <h2 className="flex items-center gap-2">
             <Sparkles size={13} className="text-brand-accent" /> Recent Activity
@@ -413,7 +413,7 @@ export default function ClientPortalPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.14 }}
           className="glass border"
-          style={{ borderColor: "rgba(99,146,255,0.10)" }}
+          style={{ borderColor: "rgba(212, 255, 0,0.10)" }}
         >
           <div className="flex items-center justify-between mb-3">
             <h2 className="mb-0 flex items-center gap-2">

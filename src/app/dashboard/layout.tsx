@@ -381,7 +381,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               className="fixed bottom-4 right-20 z-50 text-[10px] font-mono px-2.5 py-1 rounded-lg transition-colors"
               style={{
                 background: "rgba(13,17,32,0.92)",
-                border: "1px solid rgba(99,146,255,0.15)",
+                border: "1px solid rgba(212, 255, 0,0.15)",
                 color: "#D4FF00",
               }}
             >

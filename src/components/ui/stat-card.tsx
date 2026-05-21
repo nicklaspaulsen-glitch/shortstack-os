@@ -132,7 +132,7 @@ function ProgressBar({ pct, color, visible }: { pct: number; color: string; visi
       {/* Track */}
       <div
         className="relative h-[3px] w-full overflow-hidden rounded-full"
-        style={{ background: `rgba(37, 99, 235, 0.12)` }}
+        style={{ background: `rgba(212, 255, 0, 0.12)` }}
         role="progressbar"
         aria-valuenow={Math.round(pct)}
         aria-valuemin={0}
@@ -173,7 +173,7 @@ export default function StatCard({
   progress,
 }: StatCardProps) {
   // May 16 v4: periwinkle-extended cycle — blue + indigo + periwinkle variants
-  const PRISM_CYCLE = ["#2563EB", "#6C72AC", "#9CA7DE", "#3B82F6", "#6366F1", "#8B5CF6"];
+  const PRISM_CYCLE = ["#D4FF00", "#6C72AC", "#9CA7DE", "#D4FF00", "#6366F1", "#8B5CF6"];
   const accent = accentColor ?? PRISM_CYCLE[index % PRISM_CYCLE.length];
   const changeColor = {
     positive: tokens.status.success,

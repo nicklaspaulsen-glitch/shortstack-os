@@ -166,8 +166,8 @@ export const CREATOR_STYLES: CreatorStyle[] = [
     emoji: "🔬",
     tagline: "Curiosity gaps, epic experiments, mind-blowing facts",
     platforms: ["youtube"],
-    primaryColor: "#1D4ED8",
-    accentColor: "#60A5FA",
+    primaryColor: "#AACC00",
+    accentColor: "#D4FF00",
     thumbnailDNA:
       "Experiment in progress + dramatic question mark or '?' text + scale comparison (tiny vs. huge) + blue/white color grading",
     hookFormulas: [

@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     .insert({
       user_id: ownerId,
       name: name.trim(),
-      color: color || "#3B82F6",
+      color: color || "#D4FF00",
       category: category || null,
     })
     .select()

@@ -1014,7 +1014,7 @@ export default function ClientsPage() {
                 className={`glass card card-accent ${accentClass} ${isFeatured ? "md:col-span-2" : ""} p-4 transition-all cursor-pointer group relative overflow-hidden`}
                 style={{ boxShadow: "0 1px 0 rgba(255,255,255,0.06) inset, 0 4px 12px -4px rgba(0,0,0,0.35)" }}
                 variants={fadeUp}
-                whileHover={{ y: -4, borderColor: "rgba(99,146,255,0.22)", boxShadow: "0 12px 40px rgba(0,0,0,0.50), 0 4px 16px rgba(0,0,0,0.35)", transition: { duration: 0.22 } }}
+                whileHover={{ y: -4, borderColor: "rgba(212, 255, 0,0.22)", boxShadow: "0 12px 40px rgba(0,0,0,0.50), 0 4px 16px rgba(0,0,0,0.35)", transition: { duration: 0.22 } }}
                 onClick={() => router.push(`/dashboard/clients/${c.id}`)}
                 onMouseEnter={() => setHoveredClient(c.id)}
                 onMouseLeave={() => setHoveredClient(null)}

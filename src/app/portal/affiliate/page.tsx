@@ -193,7 +193,7 @@ export default function AffiliatePortalPage() {
     <div className="max-w-5xl mx-auto py-10 px-6 space-y-8">
       <div className="flex items-center gap-3">
         <div className="p-3  bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.25)]">
-          <Award size={24} className="text-[#2563EB]" />
+          <Award size={24} className="text-[#D4FF00]" />
         </div>
         <div>
           <h1 className="text-2xl font-semibold">Your affiliate portal</h1>
@@ -204,7 +204,7 @@ export default function AffiliatePortalPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className=" border border-border-subtle bg-card/40 p-5">
           <div className="text-xs uppercase text-text-muted">Total earned</div>
-          <div className="text-2xl font-bold text-[#2563EB] mt-1">{fmtCents(totalEarned)}</div>
+          <div className="text-2xl font-bold text-[#D4FF00] mt-1">{fmtCents(totalEarned)}</div>
         </div>
         <div className=" border border-border-subtle bg-card/40 p-5">
           <div className="text-xs uppercase text-text-muted">Pending</div>
@@ -228,7 +228,7 @@ export default function AffiliatePortalPage() {
           <button
             onClick={connectStripe}
             disabled={connectingStripe}
-            className="flex items-center gap-2 px-4 py-2 bg-[#2563EB] text-white text-sm font-semibold rounded-lg disabled:opacity-60"
+            className="flex items-center gap-2 px-4 py-2 bg-[#D4FF00] text-[#020711] text-sm font-semibold rounded-lg disabled:opacity-60"
           >
             <ExternalLink size={14} />
             {connectingStripe ? "Opening…" : "Connect Stripe"}
@@ -346,7 +346,7 @@ function AffiliateProgramBlock({ affiliate }: { affiliate: AffiliateRow }) {
             <p className="text-xs text-text-muted">{program.description}</p>
           )}
           {program && (
-            <p className="text-xs text-[#2563EB] mt-1">
+            <p className="text-xs text-[#D4FF00] mt-1">
               {commissionLabel(program)} · {program.cookie_days}d cookie · payout threshold{" "}
               {fmtCents(program.payout_threshold_cents)}
             </p>
@@ -373,7 +373,7 @@ function AffiliateProgramBlock({ affiliate }: { affiliate: AffiliateRow }) {
         />
         <button
           onClick={copy}
-          className="px-3 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-semibold flex items-center gap-2"
+          className="px-3 py-2 bg-[#D4FF00] text-[#020711] rounded-lg text-sm font-semibold flex items-center gap-2"
         >
           <Copy size={14} /> Copy
         </button>
@@ -388,7 +388,7 @@ function AffiliateProgramBlock({ affiliate }: { affiliate: AffiliateRow }) {
       <div className="grid grid-cols-3 gap-2 text-xs">
         <div className="rounded-lg bg-muted/10 p-2">
           <div className="text-text-muted">Earned</div>
-          <div className="font-semibold text-[#2563EB]">{fmtCents(affiliate.total_earned_cents)}</div>
+          <div className="font-semibold text-[#D4FF00]">{fmtCents(affiliate.total_earned_cents)}</div>
         </div>
         <div className="rounded-lg bg-muted/10 p-2">
           <div className="text-text-muted">Pending</div>

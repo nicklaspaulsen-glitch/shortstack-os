@@ -63,7 +63,7 @@ function StatusBadge({ active }: { active: boolean }) {
         "inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full",
         active
           ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/25"
-          : "bg-[rgba(99,146,255,0.06)] text-[var(--text-muted)] border border-[var(--border-subtle)]",
+          : "bg-[rgba(212, 255, 0,0.06)] text-[var(--text-muted)] border border-[var(--border-subtle)]",
       ].join(" ")}
     >
       <span
@@ -124,7 +124,7 @@ function WorkflowRow({ wf }: { wf: WorkflowWithExecution }) {
     <motion.tr
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group border-b border-[var(--border-subtle)] hover:bg-[rgba(99,146,255,0.04)] transition-colors"
+      className="group border-b border-[var(--border-subtle)] hover:bg-[rgba(212, 255, 0,0.04)] transition-colors"
     >
       {/* Name + node count */}
       <td className="px-4 py-3">
@@ -160,7 +160,7 @@ function WorkflowRow({ wf }: { wf: WorkflowWithExecution }) {
             {wf.tags.slice(0, 3).map((t) => (
               <span
                 key={t.id}
-                className="inline-flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded bg-[rgba(99,146,255,0.08)] text-[var(--text-secondary)] border border-[var(--border-subtle)]"
+                className="inline-flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded bg-[rgba(212, 255, 0,0.08)] text-[var(--text-secondary)] border border-[var(--border-subtle)]"
               >
                 <Tag size={8} />
                 {t.name}

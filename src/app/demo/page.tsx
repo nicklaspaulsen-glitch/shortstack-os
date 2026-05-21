@@ -73,7 +73,7 @@ export default function DemoPage() {
         <div className="grid grid-cols-4 gap-4 mb-16">
           {STATS.map(s => (
             <div key={s.label} className="text-center p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
-              <p className="text-2xl font-extrabold text-[#2563EB]">{s.value}</p>
+              <p className="text-2xl font-extrabold text-[#D4FF00]">{s.value}</p>
               <p className="text-xs text-gray-500">{s.label}</p>
             </div>
           ))}
@@ -86,7 +86,7 @@ export default function DemoPage() {
             {FEATURES.map(f => (
               <div key={f.title} className="p-5 rounded-xl text-center"
                 style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
-                <div className="w-10 h-10 rounded-lg mx-auto mb-3 flex items-center justify-center text-[#2563EB]"
+                <div className="w-10 h-10 rounded-lg mx-auto mb-3 flex items-center justify-center text-[#D4FF00]"
                   style={{ background: "rgba(212,255,0,0.08)" }}>
                   {f.icon}
                 </div>

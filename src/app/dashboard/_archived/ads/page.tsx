@@ -610,7 +610,7 @@ export default function AdsPage() {
                     { key: "allow_create_ads", label: "Create new ads", desc: "AI generates copy & creates ads" },
                     { key: "auto_sync", label: "Auto-sync data", desc: "Pull latest data before analysis" },
                   ].map(toggle => (
-                    <div key={toggle.key} className="flex items-center justify-between p-2 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.1)] transition-all">
+                    <div key={toggle.key} className="flex items-center justify-between p-2 rounded-lg border border-border-subtle hover:border-[rgba(212, 255, 0,0.1)] transition-all">
                       <div>
                         <p className="text-[10px] font-medium">{toggle.label}</p>
                         <p className="text-[8px] text-text-muted">{toggle.desc}</p>
@@ -800,7 +800,7 @@ export default function AdsPage() {
                       <button
                         onClick={() => generateAISuggestions(campaign.id)}
                         disabled={optimizingId === campaign.id}
-                        className="p-2 rounded-lg hover:bg-[rgba(59,130,246,0.05)] border border-transparent hover:border-[rgba(59,130,246,0.2)] transition-all disabled:opacity-50"
+                        className="p-2 rounded-lg hover:bg-[rgba(212, 255, 0,0.05)] border border-transparent hover:border-[rgba(212, 255, 0,0.2)] transition-all disabled:opacity-50"
                         title="AI Optimize"
                       >
                         {optimizingId === campaign.id
@@ -869,7 +869,7 @@ export default function AdsPage() {
 
                       {/* AI Suggestions */}
                       {campaign.ai_suggestions && (
-                        <div className="bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.1)] rounded-xl p-4">
+                        <div className="bg-[rgba(212, 255, 0,0.05)] border border-[rgba(212, 255, 0,0.1)] rounded-xl p-4">
                           <div className="flex items-center gap-2 mb-2">
                             <Sparkles size={14} className="text-brand-accent" />
                             <p className="text-xs font-semibold">AI Optimization Suggestions</p>
@@ -940,7 +940,7 @@ export default function AdsPage() {
                         <p className="text-[10px] text-text-muted line-clamp-2">{cr.body_text}</p>
                       )}
                       {cr.cta_text && (
-                        <div className="inline-block bg-[rgba(59,130,246,0.08)] text-brand-accent text-[9px] font-semibold px-2 py-0.5 rounded-full">
+                        <div className="inline-block bg-[rgba(212, 255, 0,0.08)] text-brand-accent text-[9px] font-semibold px-2 py-0.5 rounded-full">
                           {cr.cta_text}
                         </div>
                       )}
@@ -983,7 +983,7 @@ export default function AdsPage() {
                   <button key={p.id} onClick={() => setCopyPlatform(p.id)}
                     className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium border transition-all ${
                       copyPlatform === p.id
-                        ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-text-primary"
+                        ? "border-[rgba(212, 255, 0,0.25)] bg-[rgba(212, 255, 0,0.05)] text-text-primary"
                         : "border-border-subtle bg-surface-light text-text-muted hover:text-text-primary"
                     }`}>
                     <span className="w-5 h-5 rounded-md flex items-center justify-center text-white text-[8px] font-bold" style={{ backgroundColor: p.color }}>
@@ -1060,7 +1060,7 @@ export default function AdsPage() {
                       >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <span className="w-5 h-5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent text-[9px] font-bold flex items-center justify-center">{i + 1}</span>
+                            <span className="w-5 h-5 rounded-full bg-[rgba(212, 255, 0,0.08)] text-brand-accent text-[9px] font-bold flex items-center justify-center">{i + 1}</span>
                             <span className="text-[9px] text-text-muted uppercase tracking-wider">{v.hook_type}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
@@ -1082,7 +1082,7 @@ export default function AdsPage() {
                         <p className="text-xs text-text-muted leading-relaxed">{v.primary_text}</p>
                         <div className="flex items-center justify-between mt-2 pt-2 border-t border-border-subtle">
                           <span className="text-[9px] text-text-muted">{v.description}</span>
-                          <span className="text-[10px] bg-[rgba(59,130,246,0.08)] text-brand-accent font-semibold px-2 py-0.5 rounded-full">{v.cta}</span>
+                          <span className="text-[10px] bg-[rgba(212, 255, 0,0.08)] text-brand-accent font-semibold px-2 py-0.5 rounded-full">{v.cta}</span>
                         </div>
                         {v.image_concept && (
                           <div className="mt-2 pt-2 border-t border-border-subtle">
@@ -1192,7 +1192,7 @@ export default function AdsPage() {
                   {campaigns.map(c => (
                     <button key={c.id} onClick={() => generateAISuggestions(c.id)}
                       disabled={optimizingId === c.id}
-                      className="w-full flex items-center gap-2 p-2 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.05)] transition-all text-left">
+                      className="w-full flex items-center gap-2 p-2 rounded-lg border border-border-subtle hover:border-[rgba(212, 255, 0,0.25)] hover:bg-[rgba(212, 255, 0,0.05)] transition-all text-left">
                       <div className="w-6 h-6 rounded-md flex items-center justify-center text-white text-[8px] font-bold shrink-0"
                         style={{ backgroundColor: getPlatformInfo(c.platform).color }}>
                         {getPlatformInfo(c.platform).icon}
@@ -1242,7 +1242,7 @@ export default function AdsPage() {
                                     <button
                                       onClick={() => syncPlatform(client.id, p.id)}
                                       disabled={syncing !== null}
-                                      className="text-[9px] px-2 py-1 rounded-md font-medium border border-border-subtle hover:border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.05)] transition-all disabled:opacity-50 flex items-center gap-1">
+                                      className="text-[9px] px-2 py-1 rounded-md font-medium border border-border-subtle hover:border-[rgba(212, 255, 0,0.2)] hover:bg-[rgba(212, 255, 0,0.05)] transition-all disabled:opacity-50 flex items-center gap-1">
                                       {syncing === p.id ? <Loader size={8} className="animate-spin" /> : <RefreshCw size={8} />}
                                       Sync
                                     </button>
@@ -1250,7 +1250,7 @@ export default function AdsPage() {
                                 ) : (
                                   <button
                                     onClick={() => connectAdPlatform(client.id, p.id)}
-                                    className="text-[9px] px-2 py-1 rounded-md font-medium bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] transition-all flex items-center gap-1">
+                                    className="text-[9px] px-2 py-1 rounded-md font-medium bg-[rgba(212, 255, 0,0.08)] text-brand-accent hover:bg-[rgba(212, 255, 0,0.12)] transition-all flex items-center gap-1">
                                     <Plug size={8} /> Connect
                                   </button>
                                 )}
@@ -1305,7 +1305,7 @@ export default function AdsPage() {
                   {(insights as Record<string, unknown>).summary as string || JSON.stringify(insights, null, 2)}
                 </pre>
                 {String((insights as Record<string, unknown>).budget_recommendations || "") && (
-                  <div className="mt-3 p-3 rounded-lg bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.1)]">
+                  <div className="mt-3 p-3 rounded-lg bg-[rgba(212, 255, 0,0.05)] border border-[rgba(212, 255, 0,0.1)]">
                     <p className="text-[10px] font-semibold text-brand-accent mb-1">Budget Recommendations</p>
                     <p className="text-[10px] text-text-muted">{String((insights as Record<string, unknown>).budget_recommendations)}</p>
                   </div>
@@ -1369,7 +1369,7 @@ export default function AdsPage() {
                           <p className="text-xs font-semibold">{action.title}</p>
                           {action.description && <p className="text-[10px] text-text-muted mt-0.5">{action.description}</p>}
                           {action.ai_reasoning && (
-                            <div className="mt-2 p-2 rounded-lg bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.1)]">
+                            <div className="mt-2 p-2 rounded-lg bg-[rgba(212, 255, 0,0.05)] border border-[rgba(212, 255, 0,0.1)]">
                               <p className="text-[9px] text-brand-accent font-medium mb-0.5">AI Reasoning</p>
                               <p className="text-[10px] text-text-muted leading-relaxed">{action.ai_reasoning}</p>
                             </div>

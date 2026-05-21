@@ -106,7 +106,7 @@ export function ValidationSummaryPanel({
           type="button"
           onClick={() => void run()}
           disabled={running}
-          className="rounded border border-border-subtle px-2 py-0.5 text-xs text-text-muted hover:bg-[rgba(99,146,255,0.06)] hover:border-[rgba(99,146,255,0.25)] hover:text-text-primary transition-colors disabled:opacity-50"
+          className="rounded border border-border-subtle px-2 py-0.5 text-xs text-text-muted hover:bg-[rgba(212, 255, 0,0.06)] hover:border-[rgba(212, 255, 0,0.25)] hover:text-text-primary transition-colors disabled:opacity-50"
         >
           {running ? "Validating..." : "Re-run"}
         </button>
@@ -147,7 +147,7 @@ function SummaryTile({ label, value, tone }: TileProps) {
     green:  { bg: "rgba(34,197,94,0.10)",    text: "#4ADE80" },
     amber:  { bg: "rgba(234,179,8,0.10)",    text: "#FDE047" },
     red:    { bg: "rgba(239,68,68,0.10)",    text: "#F87171" },
-    gray:   { bg: "rgba(99,146,255,0.06)",   text: "#A8A8B2" },
+    gray:   { bg: "rgba(212, 255, 0,0.06)",   text: "#A8A8B2" },
   };
   const s = toneStyles[tone];
   return (

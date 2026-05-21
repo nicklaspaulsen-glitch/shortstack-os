@@ -160,7 +160,7 @@ export function CinematicWizard({
       {/* Top bar */}
       <div className="flex items-center justify-between px-6 sm:px-10 pt-5 pb-4 border-b border-white/[0.05] shrink-0">
         <div className="flex items-center gap-2.5">
-          {icon && <div className="text-[#60A5FA] opacity-70">{icon}</div>}
+          {icon && <div className="text-[#D4FF00] opacity-70">{icon}</div>}
           <span className="text-xs font-medium text-white/35 tracking-wide">{title}</span>
         </div>
         <div className="flex items-center gap-3">
@@ -180,7 +180,7 @@ export function CinematicWizard({
       {/* Progress bar */}
       <div className="h-[2px] bg-white/[0.04] shrink-0">
         <motion.div
-          className="h-full bg-[#3B82F6]"
+          className="h-full bg-[#D4FF00]"
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
         />
@@ -200,7 +200,7 @@ export function CinematicWizard({
               {/* Question */}
               <div className="mb-8">
                 {currentStep.icon && (
-                  <div className="inline-flex w-11 h-11 rounded-xl bg-[rgba(212,255,0,0.1)] items-center justify-center text-[#60A5FA] mb-5">
+                  <div className="inline-flex w-11 h-11 rounded-xl bg-[rgba(212,255,0,0.1)] items-center justify-center text-[#D4FF00] mb-5">
                     {currentStep.icon}
                   </div>
                 )}
@@ -224,7 +224,7 @@ export function CinematicWizard({
               {/* AI helper */}
               {currentStep.aiHelper && (
                 <div className="mt-5 relative group">
-                  <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-[#2563EB] via-[#3B82F6] to-[#2563EB] opacity-30 blur-md group-hover:opacity-60 transition-opacity" />
+                  <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-[#D4FF00] via-[#E8FF4D] to-[#AACC00] opacity-30 blur-md group-hover:opacity-60 transition-opacity" />
                   <button
                     onClick={runAiHelper}
                     disabled={aiLoading}
@@ -261,9 +261,9 @@ export function CinematicWizard({
               key={i}
               className={`rounded-full transition-all duration-300 ${
                 i === stepIdx
-                  ? "w-5 h-[5px] bg-[#3B82F6]"
+                  ? "w-5 h-[5px] bg-[#D4FF00]"
                   : i < stepIdx
-                  ? "w-[5px] h-[5px] bg-[#3B82F6]/40"
+                  ? "w-[5px] h-[5px] bg-[#D4FF00]/40"
                   : "w-[5px] h-[5px] bg-white/[0.10]"
               }`}
             />
@@ -275,7 +275,7 @@ export function CinematicWizard({
           <button
             onClick={goNext}
             disabled={!canAdvance()}
-            className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#3B82F6] text-white text-sm font-semibold hover:bg-[#2563EB] disabled:opacity-35 transition-colors shadow-lg shadow-[rgba(212,255,0,0.18)]"
+            className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#D4FF00] text-[#020711] text-sm font-semibold hover:bg-[#D4FF00] disabled:opacity-35 transition-colors shadow-lg shadow-[rgba(212,255,0,0.18)]"
           >
             Continue <ChevronRight size={14} />
           </button>
@@ -283,7 +283,7 @@ export function CinematicWizard({
           <button
             onClick={handleComplete}
             disabled={!canAdvance() || submitting}
-            className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#3B82F6] text-white text-sm font-semibold hover:bg-[#2563EB] disabled:opacity-35 transition-colors shadow-lg shadow-[rgba(212,255,0,0.18)]"
+            className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#D4FF00] text-[#020711] text-sm font-semibold hover:bg-[#D4FF00] disabled:opacity-35 transition-colors shadow-lg shadow-[rgba(212,255,0,0.18)]"
           >
             {submitting ? <RefreshCw size={14} className="animate-spin" /> : <Sparkles size={14} />}
             {submitting ? "Creating..." : submitLabel}
@@ -383,7 +383,7 @@ export default function CreationWizard({
         {/* Header */}
         <div className="relative px-6 py-4 border-b border-border-subtle bg-gradient-to-br from-[rgba(212,255,0,0.08)] via-transparent to-transparent">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[#2563EB]">
+            <div className="w-10 h-10 rounded-xl bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[#D4FF00]">
               {icon || <Sparkles size={18} />}
             </div>
             <div className="flex-1 min-w-0">
@@ -402,7 +402,7 @@ export default function CreationWizard({
             </div>
             <div className="h-1 rounded-full bg-surface-light overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-[#2563EB] to-[#3B82F6]"
+                className="h-full bg-gradient-to-r from-[#D4FF00] to-[#AACC00]"
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
               />
@@ -422,7 +422,7 @@ export default function CreationWizard({
                 disabled={i > stepIdx}
                 className={`group flex items-center gap-1.5 px-2.5 py-1.5 rounded-t-lg text-[10px] font-medium shrink-0 transition-all ${
                   isCurrent
-                    ? "bg-[rgba(212,255,0,0.08)] text-[#2563EB] border-b-2 border-[#2563EB]"
+                    ? "bg-[rgba(212,255,0,0.08)] text-[#D4FF00] border-b-2 border-[#D4FF00]"
                     : isDone
                     ? "text-text-muted hover:text-text-primary cursor-pointer"
                     : "text-text-muted/50 cursor-not-allowed"
@@ -432,7 +432,7 @@ export default function CreationWizard({
                   <Check size={10} className="text-emerald-400" />
                 ) : (
                   <span className={`w-4 h-4 rounded-full border flex items-center justify-center text-[8px] font-bold ${
-                    isCurrent ? "border-[#2563EB] bg-[#2563EB] text-white" : "border-muted/30"
+                    isCurrent ? "border-[#D4FF00] bg-[#D4FF00] text-[#020711]" : "border-muted/30"
                   }`}>{i + 1}</span>
                 )}
                 <span className="whitespace-nowrap">{s.title}</span>
@@ -456,7 +456,7 @@ export default function CreationWizard({
             >
               <div className="flex items-start gap-3 mb-5">
                 {currentStep.icon && (
-                  <div className="w-9 h-9 rounded-xl bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[#2563EB] shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[#D4FF00] shrink-0">
                     {currentStep.icon}
                   </div>
                 )}
@@ -484,11 +484,11 @@ export default function CreationWizard({
                 {currentStep.aiHelper && (
                   <div className="relative group">
                     {/* Glow halo */}
-                    <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-[#2563EB] via-[#3B82F6] to-[#2563EB] opacity-60 blur group-hover:opacity-90 transition-opacity animate-pulse-slow" />
+                    <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-[#D4FF00] via-[#E8FF4D] to-[#AACC00] opacity-60 blur group-hover:opacity-90 transition-opacity animate-pulse-slow" />
                     <button
                       onClick={runAiHelper}
                       disabled={aiLoading}
-                      className="relative w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-bold shadow-lg shadow-[rgba(212,255,0,0.3)] hover:shadow-[rgba(212,255,0,0.5)] hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-60 disabled:hover:scale-100"
+                      className="relative w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-gradient-to-r from-[#D4FF00] to-[#AACC00] text-white text-xs font-bold shadow-lg shadow-[rgba(212,255,0,0.3)] hover:shadow-[rgba(212,255,0,0.5)] hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-60 disabled:hover:scale-100"
                     >
                       {aiLoading ? (
                         <>
@@ -515,7 +515,7 @@ export default function CreationWizard({
           {currentStep.preview && (
             <div className="w-72 md:w-80 shrink-0 border-l border-border-subtle bg-surface-light/40 p-5 overflow-y-auto hidden md:block">
               <div className="flex items-center gap-1.5 text-[10px] text-text-muted uppercase tracking-wider mb-3 font-semibold">
-                <Sparkles size={9} className="text-[#2563EB]" /> Live Preview
+                <Sparkles size={9} className="text-[#D4FF00]" /> Live Preview
               </div>
               <div className="space-y-2">
                 {currentStep.preview(data)}
@@ -552,7 +552,7 @@ export default function CreationWizard({
             <button
               onClick={() => setStepIdx(stepIdx + 1)}
               disabled={!canAdvance()}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.3)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#D4FF00] to-[#AACC00] text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.3)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Next <ChevronRight size={12} />
             </button>
@@ -560,7 +560,7 @@ export default function CreationWizard({
             <button
               onClick={handleComplete}
               disabled={!canAdvance() || submitting}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.3)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#D4FF00] to-[#AACC00] text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.3)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {submitting ? <RefreshCw size={12} className="animate-spin" /> : <Sparkles size={12} />}
               {submitting ? "Creating..." : submitLabel}
@@ -591,7 +591,7 @@ function FieldRenderer({
           value={(value as string) || ""}
           onChange={e => onChange(e.target.value)}
           placeholder={field.placeholder}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#D4FF00] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all"
           autoFocus
         />
       );
@@ -603,7 +603,7 @@ function FieldRenderer({
           onChange={e => onChange(e.target.value)}
           placeholder={field.placeholder}
           rows={4}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all resize-none"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#D4FF00] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all resize-none"
           autoFocus
         />
       );
@@ -617,7 +617,7 @@ function FieldRenderer({
           min={field.min}
           max={field.max}
           step={field.step}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#D4FF00] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all"
           autoFocus
         />
       );
@@ -632,11 +632,11 @@ function FieldRenderer({
             min={field.min ?? 0}
             max={field.max ?? 100}
             step={field.step ?? 1}
-            className="w-full accent-[#2563EB]"
+            className="w-full accent-[#D4FF00]"
           />
           <div className="flex justify-between text-[10px] text-text-muted">
             <span>{field.min ?? 0}</span>
-            <span className="text-[#2563EB] font-bold">{String(value ?? field.min ?? 0)}</span>
+            <span className="text-[#D4FF00] font-bold">{String(value ?? field.min ?? 0)}</span>
             <span>{field.max ?? 100}</span>
           </div>
         </div>
@@ -647,11 +647,11 @@ function FieldRenderer({
         <button
           onClick={() => onChange(!value)}
           className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${
-            value ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)] text-[#2563EB]" : "bg-surface-light border-border-subtle text-text-muted"
+            value ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)] text-[#D4FF00]" : "bg-surface-light border-border-subtle text-text-muted"
           }`}
         >
           <span className="text-sm">{value ? "Yes, enabled" : "No, disabled"}</span>
-          <div className={`w-10 h-5 rounded-full relative transition-all ${value ? "bg-[#2563EB]" : "bg-surface-light border border-border-subtle"}`}>
+          <div className={`w-10 h-5 rounded-full relative transition-all ${value ? "bg-[#D4FF00]" : "bg-surface-light border border-border-subtle"}`}>
             <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${value ? "translate-x-5" : "translate-x-0.5"}`} />
           </div>
         </button>
@@ -662,16 +662,16 @@ function FieldRenderer({
         <div className="flex items-center gap-3">
           <input
             type="color"
-            value={(value as string) || "#3B82F6"}
+            value={(value as string) || "#D4FF00"}
             onChange={e => onChange(e.target.value)}
             className="w-16 h-16 rounded-xl cursor-pointer border border-border-subtle bg-surface-light"
           />
           <input
             type="text"
-            value={(value as string) || "#3B82F6"}
+            value={(value as string) || "#D4FF00"}
             onChange={e => onChange(e.target.value)}
-            placeholder="#3B82F6"
-            className="flex-1 px-3 py-2 rounded-lg bg-surface-light border border-border-subtle text-sm font-mono focus:outline-none focus:border-[#2563EB]"
+            placeholder="#D4FF00"
+            className="flex-1 px-3 py-2 rounded-lg bg-surface-light border border-border-subtle text-sm font-mono focus:outline-none focus:border-[#D4FF00]"
           />
         </div>
       );
@@ -681,7 +681,7 @@ function FieldRenderer({
         <select
           value={(value as string) || ""}
           onChange={e => onChange(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB]"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#D4FF00]"
         >
           <option value="" disabled>{field.placeholder || "Choose..."}</option>
           {(field.options || []).map(opt => (
@@ -723,8 +723,8 @@ function FieldRenderer({
                     <div
                       className={`w-10 h-10 shrink-0 rounded-lg flex items-center justify-center transition-colors ${
                         selected
-                          ? "bg-[rgba(212,255,0,0.12)] text-[#2563EB]"
-                          : "bg-[rgba(212,255,0,0.08)] text-[rgba(212,255,0,0.7)] group-hover:bg-[rgba(212,255,0,0.08)] group-hover:text-[#2563EB]"
+                          ? "bg-[rgba(212,255,0,0.12)] text-[#D4FF00]"
+                          : "bg-[rgba(212,255,0,0.08)] text-[rgba(212,255,0,0.7)] group-hover:bg-[rgba(212,255,0,0.08)] group-hover:text-[#D4FF00]"
                       }`}
                     >
                       {opt.icon ? opt.icon : <EmojiIcon emoji={opt.emoji} size={18} strokeWidth={1.75} />}
@@ -742,7 +742,7 @@ function FieldRenderer({
                   </div>
                 </div>
                 {selected && (
-                  <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[#2563EB] flex items-center justify-center shadow-sm shadow-[rgba(212,255,0,0.3)]">
+                  <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[#D4FF00] flex items-center justify-center shadow-sm shadow-[rgba(212,255,0,0.3)]">
                     <Check size={9} className="text-black" strokeWidth={3} />
                   </div>
                 )}
@@ -769,7 +769,7 @@ function FieldRenderer({
                 }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] border transition-all ${
                   selected
-                    ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)] text-[#2563EB]"
+                    ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)] text-[#D4FF00]"
                     : "bg-surface-light border-border-subtle text-text-muted hover:text-text-primary"
                 }`}
               >

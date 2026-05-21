@@ -135,7 +135,7 @@ export function AdvancedToggle({
       data-advanced-toggle
       className={`relative z-20 shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-[11px] font-semibold border backdrop-blur-sm transition-all whitespace-nowrap ${
         value
-          ? "bg-[#2563EB] text-white border-[#2563EB] shadow-sm shadow-[rgba(212,255,0,0.18)] hover:shadow-[rgba(212,255,0,0.4)]"
+          ? "bg-[#D4FF00] text-[#020711] border-[#D4FF00] shadow-sm shadow-[rgba(212,255,0,0.18)] hover:shadow-[rgba(212,255,0,0.4)]"
           : "bg-black/30 text-white border-border-subtle hover:bg-black/40 hover:border-border-subtle"
       } ${className}`}
       title={value ? "Click to return to the guided wizard" : "Click for full control"}
@@ -288,18 +288,18 @@ export function Wizard({
       <div className="relative px-4 md:px-6 pt-4 pb-3 border-b border-border-subtle bg-gradient-to-br from-[rgba(212,255,0,0.06)] via-transparent to-transparent">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2 text-[11px] text-text-muted">
-            <Wand2 size={12} className="text-[#2563EB]" />
+            <Wand2 size={12} className="text-[#D4FF00]" />
             <span className="font-semibold text-text-primary">Guided Mode</span>
             <span className="text-text-muted">·</span>
             <span>{current.title}</span>
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#2563EB] bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] px-2 py-0.5 rounded-full">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#D4FF00] bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] px-2 py-0.5 rounded-full">
             Step {idx + 1} of {steps.length}
           </span>
         </div>
         <div className="h-1.5 rounded-full bg-surface-light overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-[#2563EB] to-amber-400 transition-all duration-500 ease-out"
+            className="h-full bg-gradient-to-r from-[#D4FF00] to-amber-400 transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -317,9 +317,9 @@ export function Wizard({
                 disabled={!reachable || disabled}
                 className={`group flex items-center gap-1.5 text-[10px] font-medium shrink-0 px-2 py-1 rounded-full transition-colors ${
                   active
-                    ? "bg-[#2563EB] text-white shadow-sm shadow-[rgba(212,255,0,0.18)]"
+                    ? "bg-[#D4FF00] text-[#020711] shadow-sm shadow-[rgba(212,255,0,0.18)]"
                     : done
-                    ? "bg-[rgba(212,255,0,0.08)] text-[#2563EB] hover:bg-[rgba(212,255,0,0.12)]"
+                    ? "bg-[rgba(212,255,0,0.08)] text-[#D4FF00] hover:bg-[rgba(212,255,0,0.12)]"
                     : "bg-surface-light text-text-muted/70 cursor-not-allowed"
                 }`}
                 aria-current={active ? "step" : undefined}
@@ -329,7 +329,7 @@ export function Wizard({
                     active
                       ? "bg-black/20 text-text-primary"
                       : done
-                      ? "bg-[#2563EB] text-white"
+                      ? "bg-[#D4FF00] text-[#020711]"
                       : "bg-border text-text-muted"
                   }`}
                 >
@@ -346,7 +346,7 @@ export function Wizard({
       {preview && (
         <div className="border-b border-border-subtle bg-surface-light/40 px-4 md:px-6 py-3">
           <div className="flex items-center gap-1.5 text-[10px] text-text-muted uppercase tracking-wider mb-2 font-semibold">
-            <Sparkles size={10} className="text-[#2563EB]" /> Live Preview
+            <Sparkles size={10} className="text-[#D4FF00]" /> Live Preview
           </div>
           {preview}
         </div>
@@ -365,7 +365,7 @@ export function Wizard({
           >
             <div className="flex items-start gap-3 mb-5">
               {current.icon && (
-                <div className="w-10 h-10 rounded-xl bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[#2563EB] shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[#D4FF00] shrink-0">
                   {current.icon}
                 </div>
               )}
@@ -437,8 +437,8 @@ export function Wizard({
           disabled={!canAdvance || disabled}
           className={`flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
             isLast
-              ? "bg-gradient-to-r from-[#2563EB] to-amber-500 text-white shadow-lg shadow-[rgba(212,255,0,0.18)] hover:shadow-[rgba(212,255,0,0.4)] hover:scale-[1.02] active:scale-[0.99]"
-              : "bg-gradient-to-r from-[#2563EB] to-amber-500 text-white shadow shadow-[rgba(212,255,0,0.12)] hover:shadow-[rgba(212,255,0,0.25)]"
+              ? "bg-gradient-to-r from-[#D4FF00] to-amber-500 text-white shadow-lg shadow-[rgba(212,255,0,0.18)] hover:shadow-[rgba(212,255,0,0.4)] hover:scale-[1.02] active:scale-[0.99]"
+              : "bg-gradient-to-r from-[#D4FF00] to-amber-500 text-white shadow shadow-[rgba(212,255,0,0.12)] hover:shadow-[rgba(212,255,0,0.25)]"
           }`}
         >
           {finishing ? (

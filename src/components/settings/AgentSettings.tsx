@@ -46,7 +46,7 @@ export default function AgentSettings({ agentConfigs, editingAgent, setEditingAg
           <div key={config.client_id} className="card-hover">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-medium">{config.client_name}</h3>
-              <button onClick={() => setEditingAgent(config)} className="text-[#2563EB] text-xs hover:text-[#3B82F6]">Configure</button>
+              <button onClick={() => setEditingAgent(config)} className="text-[#D4FF00] text-xs hover:text-[#D4FF00]">Configure</button>
             </div>
             <div className="space-y-2 text-xs">
               <div className="flex justify-between">
@@ -67,7 +67,7 @@ export default function AgentSettings({ agentConfigs, editingAgent, setEditingAg
               </div>
               <div className="flex justify-between">
                 <span className="text-text-muted">AI Model</span>
-                <span className="text-[#2563EB]">{config.ai_model.split("-").slice(-2).join(" ")}</span>
+                <span className="text-[#D4FF00]">{config.ai_model.split("-").slice(-2).join(" ")}</span>
               </div>
             </div>
           </div>
@@ -125,19 +125,19 @@ export default function AgentSettings({ agentConfigs, editingAgent, setEditingAg
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={editingAgent.outreach_enabled} onChange={e => setEditingAgent({ ...editingAgent, outreach_enabled: e.target.checked })} className="accent-[#2563EB]" />
+                <input type="checkbox" checked={editingAgent.outreach_enabled} onChange={e => setEditingAgent({ ...editingAgent, outreach_enabled: e.target.checked })} className="accent-[#D4FF00]" />
                 <span className="text-sm">DM Outreach</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={editingAgent.cold_calling_enabled} onChange={e => setEditingAgent({ ...editingAgent, cold_calling_enabled: e.target.checked })} className="accent-[#2563EB]" />
+                <input type="checkbox" checked={editingAgent.cold_calling_enabled} onChange={e => setEditingAgent({ ...editingAgent, cold_calling_enabled: e.target.checked })} className="accent-[#D4FF00]" />
                 <span className="text-sm">Cold Calling</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={editingAgent.content_generation_enabled} onChange={e => setEditingAgent({ ...editingAgent, content_generation_enabled: e.target.checked })} className="accent-[#2563EB]" />
+                <input type="checkbox" checked={editingAgent.content_generation_enabled} onChange={e => setEditingAgent({ ...editingAgent, content_generation_enabled: e.target.checked })} className="accent-[#D4FF00]" />
                 <span className="text-sm">Content Gen</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={editingAgent.auto_publish_enabled} onChange={e => setEditingAgent({ ...editingAgent, auto_publish_enabled: e.target.checked })} className="accent-[#2563EB]" />
+                <input type="checkbox" checked={editingAgent.auto_publish_enabled} onChange={e => setEditingAgent({ ...editingAgent, auto_publish_enabled: e.target.checked })} className="accent-[#D4FF00]" />
                 <span className="text-sm">Auto Publish</span>
               </label>
             </div>
@@ -163,7 +163,7 @@ export default function AgentSettings({ agentConfigs, editingAgent, setEditingAg
                         ? [...editingAgent.outreach_platforms, p]
                         : editingAgent.outreach_platforms.filter(x => x !== p);
                       setEditingAgent({ ...editingAgent, outreach_platforms: platforms });
-                    }} className="accent-[#2563EB]" />
+                    }} className="accent-[#D4FF00]" />
                     <span className="text-sm capitalize">{p}</span>
                   </label>
                 ))}

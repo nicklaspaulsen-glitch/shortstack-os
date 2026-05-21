@@ -25,9 +25,9 @@ import { Float, MeshDistortMaterial, MeshTransmissionMaterial, Environment } fro
 import { Suspense, useRef } from "react";
 import type { Mesh } from "three";
 
-const C_BLUE  = "#2563EB";
-const C_SOFT  = "#3B82F6";
-const C_DIM   = "#1D4ED8";
+const C_BLUE  = "#D4FF00";
+const C_SOFT  = "#D4FF00";
+const C_DIM   = "#AACC00";
 const C_INDIGO = "#4F46E5";
 const C_SKY   = "#0EA5E9";
 

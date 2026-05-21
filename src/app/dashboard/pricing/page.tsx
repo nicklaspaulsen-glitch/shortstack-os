@@ -128,7 +128,7 @@ export default function PricingPage() {
             className={`relative w-11 h-6 rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:outline-none ${
               annual
                 ? "bg-brand-accent border-brand-accent"
-                : "bg-[rgba(99,146,255,0.12)] border-[rgba(99,146,255,0.20)]"
+                : "bg-[rgba(212, 255, 0,0.12)] border-[rgba(212, 255, 0,0.20)]"
             }`}
           >
             <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${annual ? "translate-x-5" : "translate-x-1"}`} />
@@ -225,7 +225,7 @@ export default function PricingPage() {
                       ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 cursor-default"
                       : plan.popular
                       ? "bg-brand-accent text-[#020711] hover:bg-[#E8FF4D] shadow-[0_4px_16px_rgba(212,255,0,0.30)] hover:shadow-[0_4px_24px_rgba(212,255,0,0.45)]"
-                      : "bg-[rgba(99,146,255,0.08)] text-text-secondary hover:bg-[rgba(212,255,0,0.12)] hover:text-brand-accent border border-[rgba(99,146,255,0.14)] hover:border-[rgba(212,255,0,0.30)]"
+                      : "bg-[rgba(212, 255, 0,0.08)] text-text-secondary hover:bg-[rgba(212,255,0,0.12)] hover:text-brand-accent border border-[rgba(212, 255, 0,0.14)] hover:border-[rgba(212,255,0,0.30)]"
                   } ${checkoutLoading === plan.key ? "opacity-60 cursor-wait" : ""} disabled:cursor-default`}
                 >
                   {isCurrentPlan ? (
@@ -241,7 +241,7 @@ export default function PricingPage() {
                 </button>
 
                 {/* Feature list */}
-                <div className="mt-4 pt-4 border-t border-[rgba(99,146,255,0.10)] space-y-2">
+                <div className="mt-4 pt-4 border-t border-[rgba(212, 255, 0,0.10)] space-y-2">
                   {plan.features.map((f) => (
                     <div key={f} className="flex items-start gap-2">
                       <Check size={11} className="mt-0.5 shrink-0 text-brand-accent" />
@@ -295,7 +295,7 @@ export default function PricingPage() {
               },
             ].map((col) => (
               <div key={col.label} className="space-y-2.5">
-                <div className="flex items-center gap-2 text-xs font-semibold text-text-primary pb-1 border-b border-[rgba(99,146,255,0.10)]">
+                <div className="flex items-center gap-2 text-xs font-semibold text-text-primary pb-1 border-b border-[rgba(212, 255, 0,0.10)]">
                   {col.icon}
                   {col.label}
                 </div>
@@ -354,7 +354,7 @@ export default function PricingPage() {
               { label: "Ad campaign", tokens: "~2,000", uses: "250 campaigns" },
               { label: "Lead scoring", tokens: "~100", uses: "5,000 leads" },
             ].map((item) => (
-              <div key={item.label} className="rounded-xl bg-[rgba(99,146,255,0.05)] border border-[rgba(99,146,255,0.10)] p-3.5">
+              <div key={item.label} className="rounded-xl bg-[rgba(212, 255, 0,0.05)] border border-[rgba(212, 255, 0,0.10)] p-3.5">
                 <p className="text-xs font-semibold text-text-primary">{item.label}</p>
                 <p className="text-[11px] text-text-muted mt-0.5">{item.tokens} tokens</p>
                 <p className="text-[10px] text-brand-accent font-medium mt-1.5">~{item.uses}/500K</p>
@@ -386,7 +386,7 @@ export default function PricingPage() {
                   e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
                 }}
               >
-                <div className="w-8 h-8 rounded-lg bg-[rgba(99,146,255,0.08)] border border-[rgba(99,146,255,0.12)] flex items-center justify-center text-text-muted shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-[rgba(212, 255, 0,0.08)] border border-[rgba(212, 255, 0,0.12)] flex items-center justify-center text-text-muted shrink-0">
                   {addon.icon}
                 </div>
                 <div className="flex-1 min-w-0">

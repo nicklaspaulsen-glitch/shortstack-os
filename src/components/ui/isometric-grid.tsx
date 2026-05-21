@@ -8,7 +8,7 @@
  *
  * Usage:
  *   <div className="relative h-64 overflow-hidden rounded-xl">
- *     <IsometricGrid color="#2563EB" />
+ *     <IsometricGrid color="#D4FF00" />
  *     <YourContent className="relative z-10" />
  *   </div>
  */
@@ -28,7 +28,7 @@ interface IsometricGridProps {
 }
 
 export function IsometricGrid({
-  color = "#2563EB",
+  color = "#D4FF00",
   cols = 18,
   rows = 12,
   speed = 1,

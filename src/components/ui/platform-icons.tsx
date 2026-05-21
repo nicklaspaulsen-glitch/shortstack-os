@@ -619,7 +619,7 @@ export function GoHighLevelIcon({ size = 18, className }: IconProps) {
 export function AyrshareIcon({ size = 18, className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
-      <rect width="24" height="24" rx="5" fill="#2563EB"/>
+      <rect width="24" height="24" rx="5" fill="#D4FF00"/>
       <path d="M7 18l5-12 5 12h-2.2l-1-2.5h-3.6L9.2 18H7zm3.7-4h2.6L12 10.6 10.7 14z" fill="#fff"/>
     </svg>
   );

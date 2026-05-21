@@ -8,14 +8,14 @@ function Defs({ id }: { id: string }) {
     <defs>
       {/* Blue gradient (primary brand accent) */}
       <linearGradient id={`${id}-gold`} x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#60A5FA" />
-        <stop offset="50%" stopColor="#2563EB" />
-        <stop offset="100%" stopColor="#1D4ED8" />
+        <stop offset="0%" stopColor="#D4FF00" />
+        <stop offset="50%" stopColor="#D4FF00" />
+        <stop offset="100%" stopColor="#AACC00" />
       </linearGradient>
       {/* Blue gradient (alt) */}
       <linearGradient id={`${id}-blue`} x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#3B82F6" />
-        <stop offset="100%" stopColor="#2563EB" />
+        <stop offset="0%" stopColor="#D4FF00" />
+        <stop offset="100%" stopColor="#D4FF00" />
       </linearGradient>
       {/* Purple gradient */}
       <linearGradient id={`${id}-purple`} x1="0" y1="0" x2="1" y2="1">
@@ -39,8 +39,8 @@ function Defs({ id }: { id: string }) {
       </linearGradient>
       {/* Radial glow — blue */}
       <radialGradient id={`${id}-glow`} cx="0.5" cy="0.5" r="0.5">
-        <stop offset="0%" stopColor="#2563EB" stopOpacity="0.18" />
-        <stop offset="100%" stopColor="#2563EB" stopOpacity="0" />
+        <stop offset="0%" stopColor="#D4FF00" stopOpacity="0.18" />
+        <stop offset="100%" stopColor="#D4FF00" stopOpacity="0" />
       </radialGradient>
       {/* Soft shadow blur filter */}
       <filter id={`${id}-soft-shadow`} x="-50%" y="-50%" width="200%" height="200%">
@@ -248,7 +248,7 @@ export function EmptyCalendarIllustration({ size = 200 }: { size?: number }) {
         <rect x="134" y="45" width="6" height="20" rx="3" fill="#1a1a2e" />
         {/* Dates */}
         {[0,1,2,3,4].map(r => [0,1,2,3,4,5].map(c => (
-          <circle key={`${r}-${c}`} cx={54 + c*18} cy={96 + r*14} r="3.5" fill="#2563EB" opacity={r*5+c === 8 ? 1 : 0.18} />
+          <circle key={`${r}-${c}`} cx={54 + c*18} cy={96 + r*14} r="3.5" fill="#D4FF00" opacity={r*5+c === 8 ? 1 : 0.18} />
         )))}
       </g>
       {/* Sparkle */}

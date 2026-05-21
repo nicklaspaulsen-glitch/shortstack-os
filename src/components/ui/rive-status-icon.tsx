@@ -115,7 +115,7 @@ interface RiveStatusIconProps {
   size?: number;
   /**
    * Dot color override for "live" and "generating" states.
-   * Defaults: live → #10b981 (green), generating → #2563EB (blue)
+   * Defaults: live → #10b981 (green), generating → #D4FF00 (lime)
    */
   color?: string;
   /**
@@ -136,7 +136,7 @@ const DEFAULT_RIV_PATHS: Record<RiveStatusState, string> = {
 };
 
 const DEFAULT_COLORS: Record<RiveStatusState, string> = {
-  generating: "#2563EB",
+  generating: "#D4FF00",
   live: "#10b981",
   success: "#10b981",
 };

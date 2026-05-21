@@ -21,7 +21,7 @@ import {
 export const DEFAULT_TRACKS: Track[] = [
   { id: "v1", label: "V1", kind: "video", accent: "#EF4444" },
   { id: "v2", label: "V2", kind: "video", accent: "#22C55E" },
-  { id: "v3", label: "V3", kind: "video", accent: "#2563EB" },
+  { id: "v3", label: "V3", kind: "video", accent: "#D4FF00" },
   { id: "a1", label: "A1", kind: "audio", accent: "#F59E0B" },
   { id: "a2", label: "A2", kind: "audio", accent: "#F59E0B" },
   { id: "a3", label: "A3", kind: "audio", accent: "#F59E0B" },

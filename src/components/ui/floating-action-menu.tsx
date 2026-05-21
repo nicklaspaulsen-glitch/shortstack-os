@@ -49,7 +49,7 @@ const POSITION_CLASSES = {
 
 export function FloatingActionMenu({
   actions,
-  accentColor = "#2563EB",
+  accentColor = "#D4FF00",
   position = "bottom-right",
   direction = "up",
   className,
@@ -145,7 +145,7 @@ export function FloatingActionMenu({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 4 }}
               transition={{ delay: reducedMotion ? 0 : (actions.length - 1 - i) * 0.04 + 0.08, duration: 0.18 }}
-              className="whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-medium text-text-primary border border-[rgba(99,146,255,0.20)]"
+              className="whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-medium text-text-primary border border-[rgba(212, 255, 0,0.20)]"
               style={{
                 background: "rgba(9,13,24,0.92)",
                 backdropFilter: "blur(12px) saturate(150%)",
@@ -165,10 +165,10 @@ export function FloatingActionMenu({
               aria-label={action.label}
               className={cn(
                 "relative flex h-11 w-11 items-center justify-center rounded-full",
-                "shadow-[0_2px_16px_rgba(0,0,0,0.40)] border border-[rgba(99,146,255,0.18)]",
+                "shadow-[0_2px_16px_rgba(0,0,0,0.40)] border border-[rgba(212, 255, 0,0.18)]",
                 "text-text-secondary cursor-pointer select-none",
                 "transition-all duration-150 ease-out",
-                "hover:shadow-[0_4px_20px_rgba(212,255,0,0.20)] hover:border-[rgba(212,255,0,0.30)] hover:text-[#60A5FA]",
+                "hover:shadow-[0_4px_20px_rgba(212,255,0,0.20)] hover:border-[rgba(212,255,0,0.30)] hover:text-[#D4FF00]",
                 "active:scale-95",
                 "disabled:opacity-40 disabled:pointer-events-none"
               )}

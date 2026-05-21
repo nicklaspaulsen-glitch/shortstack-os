@@ -12,7 +12,7 @@ export default function PrivacyPolicyPage() {
         {/* Back link */}
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1 text-xs text-[#6B7280] hover:text-[#2563EB] mb-8 transition-colors"
+          className="inline-flex items-center gap-1 text-xs text-[#6B7280] hover:text-[#D4FF00] mb-8 transition-colors"
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
             <path d="M7.5 9L4.5 6l3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -106,7 +106,7 @@ export default function PrivacyPolicyPage() {
               revoke social media connections, opt out of AI-powered outreach, and update your privacy
               settings at any time from your account portal. To exercise any of these rights, contact
               us at{" "}
-              <a href="mailto:growth@shortstack.work" className="text-[#2563EB] hover:text-[#1D4ED8]">
+              <a href="mailto:growth@shortstack.work" className="text-[#D4FF00] hover:text-[#AACC00]">
                 growth@shortstack.work
               </a>
               .
@@ -118,7 +118,7 @@ export default function PrivacyPolicyPage() {
             <p className="text-sm text-[#374151] leading-relaxed">
               We use essential cookies for authentication and preferences. We do not use tracking or
               advertising cookies. See our{" "}
-              <Link href="/legal/cookies" className="text-[#2563EB] hover:text-[#1D4ED8]">
+              <Link href="/legal/cookies" className="text-[#D4FF00] hover:text-[#AACC00]">
                 Cookie Policy
               </Link>{" "}
               for the full list and details.
@@ -138,7 +138,7 @@ export default function PrivacyPolicyPage() {
             <h2 className="text-sm font-semibold text-[#111827] mb-3">10. Contact</h2>
             <p className="text-sm text-[#374151] leading-relaxed">
               For privacy questions or data requests, contact{" "}
-              <a href="mailto:growth@shortstack.work" className="text-[#2563EB] hover:text-[#1D4ED8]">
+              <a href="mailto:growth@shortstack.work" className="text-[#D4FF00] hover:text-[#AACC00]">
                 growth@shortstack.work
               </a>
               .
@@ -149,8 +149,8 @@ export default function PrivacyPolicyPage() {
         {/* Footer nav */}
         <div className="mt-8 pt-6 border-t border-[rgba(0,0,0,0.06)] flex flex-wrap gap-5 text-xs text-[#6B7280]">
           <span className="font-medium text-[#111827]">Privacy Policy</span>
-          <Link href="/legal/terms" className="hover:text-[#2563EB] transition-colors">Terms of Service</Link>
-          <Link href="/legal/cookies" className="hover:text-[#2563EB] transition-colors">Cookie Policy</Link>
+          <Link href="/legal/terms" className="hover:text-[#D4FF00] transition-colors">Terms of Service</Link>
+          <Link href="/legal/cookies" className="hover:text-[#D4FF00] transition-colors">Cookie Policy</Link>
         </div>
         <p className="mt-4 text-[10px] text-text-muted">ShortStack Agency &middot; shortstack.work</p>
       </div>

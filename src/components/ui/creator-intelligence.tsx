@@ -104,7 +104,7 @@ export default function CreatorIntelligence({
       {/* Header */}
       <div
         className="flex items-center justify-between px-4 py-2.5 border-b shrink-0"
-        style={{ borderColor: "rgba(99,146,255,0.14)" }}
+        style={{ borderColor: "rgba(212, 255, 0,0.14)" }}
       >
         <div className="flex items-center gap-2">
           {panel !== "creator-pick" && (
@@ -116,7 +116,7 @@ export default function CreatorIntelligence({
               <ChevronLeft size={13} />
             </button>
           )}
-          <TrendingUp size={12} style={{ color: "#3B82F6" }} />
+          <TrendingUp size={12} style={{ color: "#D4FF00" }} />
           <span className="text-[11px] font-semibold text-text-primary">Creator Intelligence</span>
           {selectedCreator && panel === "ideas" && (
             <span
@@ -149,9 +149,9 @@ export default function CreatorIntelligence({
             onChange={(e) => setLocalTopic(e.target.value)}
             placeholder="Your topic or niche (e.g. email marketing tips)"
             className="w-full px-3 py-2 text-xs rounded-lg border bg-transparent text-text-primary placeholder:text-text-muted focus:outline-none transition-all"
-            style={{ borderColor: "rgba(99,146,255,0.20)", background: "rgba(13,17,32,0.55)" }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = "#3B82F6")}
-            onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(99,146,255,0.20)")}
+            style={{ borderColor: "rgba(212, 255, 0,0.20)", background: "rgba(13,17,32,0.55)" }}
+            onFocus={(e) => (e.currentTarget.style.borderColor = "#D4FF00")}
+            onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(212, 255, 0,0.20)")}
           />
           {error && (
             <p className="mt-1.5 text-[10px]" style={{ color: "#EF4444" }}>
@@ -177,14 +177,14 @@ export default function CreatorIntelligence({
                   className="flex flex-col gap-1.5 p-2.5 rounded-xl border text-left transition-all duration-150 cursor-pointer"
                   style={{
                     background: "rgba(13,17,32,0.65)",
-                    borderColor: "rgba(99,146,255,0.13)",
+                    borderColor: "rgba(212, 255, 0,0.13)",
                   }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLButtonElement).style.borderColor = c.primaryColor + "70";
                     (e.currentTarget as HTMLButtonElement).style.background = c.primaryColor + "0F";
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(99,146,255,0.13)";
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(212, 255, 0,0.13)";
                     (e.currentTarget as HTMLButtonElement).style.background = "rgba(13,17,32,0.65)";
                   }}
                 >
@@ -212,7 +212,7 @@ export default function CreatorIntelligence({
         {/* ── Loading state ── */}
         {panel === "loading" && (
           <div className="flex flex-col items-center justify-center py-14 gap-3">
-            <Loader2 size={20} className="animate-spin" style={{ color: "#3B82F6" }} />
+            <Loader2 size={20} className="animate-spin" style={{ color: "#D4FF00" }} />
             <p className="text-[11px] text-text-muted text-center px-4">
               Generating 5 ideas in
               <br />
@@ -230,7 +230,7 @@ export default function CreatorIntelligence({
               <button
                 onClick={reset}
                 className="text-[10px] flex items-center gap-1 transition-colors"
-                style={{ color: "#3B82F6" }}
+                style={{ color: "#D4FF00" }}
               >
                 <Sparkles size={9} />
                 Change style
@@ -243,14 +243,14 @@ export default function CreatorIntelligence({
                 className="rounded-xl border p-3 space-y-1.5"
                 style={{
                   background: "rgba(13,17,32,0.65)",
-                  borderColor: "rgba(99,146,255,0.11)",
+                  borderColor: "rgba(212, 255, 0,0.11)",
                 }}
               >
                 {/* Title + idea number */}
                 <div className="flex items-start gap-2">
                   <span
                     className="shrink-0 text-[8px] font-mono font-bold mt-0.5 w-4 h-4 rounded flex items-center justify-center"
-                    style={{ background: "rgba(212,255,0,0.18)", color: "#60A5FA" }}
+                    style={{ background: "rgba(212,255,0,0.18)", color: "#D4FF00" }}
                   >
                     {i + 1}
                   </span>
@@ -271,7 +271,7 @@ export default function CreatorIntelligence({
                     <span
                       key={tag}
                       className="text-[8px] px-1.5 py-0.5 rounded"
-                      style={{ background: "rgba(99,146,255,0.10)", color: "#A8A8B2" }}
+                      style={{ background: "rgba(212, 255, 0,0.10)", color: "#A8A8B2" }}
                     >
                       #{tag}
                     </span>
@@ -288,7 +288,7 @@ export default function CreatorIntelligence({
                     className="flex-1 py-1.5 rounded-lg text-[10px] font-semibold transition-all duration-150 flex items-center justify-center gap-1.5"
                     style={{
                       background: "rgba(212,255,0,0.18)",
-                      color: "#60A5FA",
+                      color: "#D4FF00",
                       border: "1px solid rgba(212,255,0,0.22)",
                     }}
                     onMouseEnter={(e) => {
@@ -307,7 +307,7 @@ export default function CreatorIntelligence({
                     style={{
                       background: "rgba(13,17,32,0.8)",
                       color: copiedIndex === i ? "#4ADE80" : "#6B7280",
-                      border: "1px solid rgba(99,146,255,0.15)",
+                      border: "1px solid rgba(212, 255, 0,0.15)",
                     }}
                     title="Copy all fields to clipboard"
                   >
@@ -323,11 +323,11 @@ export default function CreatorIntelligence({
       {/* Footer */}
       <div
         className="px-4 py-1.5 border-t shrink-0 flex items-center gap-1.5"
-        style={{ borderColor: "rgba(99,146,255,0.09)" }}
+        style={{ borderColor: "rgba(212, 255, 0,0.09)" }}
       >
         <div
           className="w-1.5 h-1.5 rounded-full animate-pulse"
-          style={{ background: "#3B82F6" }}
+          style={{ background: "#D4FF00" }}
         />
         <span className="text-[8.5px] text-text-muted">
           12 creator archetypes · trained on viral patterns
@@ -343,7 +343,7 @@ export default function CreatorIntelligence({
         className={`rounded-2xl border overflow-hidden ${className}`}
         style={{
           background: "rgba(13,17,32,0.92)",
-          borderColor: "rgba(99,146,255,0.14)",
+          borderColor: "rgba(212, 255, 0,0.14)",
         }}
       >
         {panelContent}
@@ -360,8 +360,8 @@ export default function CreatorIntelligence({
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg border transition-all duration-150"
         style={{
           background: open ? "rgba(212,255,0,0.22)" : "rgba(13,17,32,0.90)",
-          borderColor: open ? "#3B82F6" : "rgba(99,146,255,0.22)",
-          color: open ? "#60A5FA" : "#A8A8B2",
+          borderColor: open ? "#D4FF00" : "rgba(212, 255, 0,0.22)",
+          color: open ? "#D4FF00" : "#A8A8B2",
           backdropFilter: "blur(12px)",
         }}
       >
@@ -383,7 +383,7 @@ export default function CreatorIntelligence({
             style={{
               width: 340,
               background: "rgba(13,17,32,0.97)",
-              borderColor: "rgba(99,146,255,0.17)",
+              borderColor: "rgba(212, 255, 0,0.17)",
               backdropFilter: "blur(20px)",
             }}
           >

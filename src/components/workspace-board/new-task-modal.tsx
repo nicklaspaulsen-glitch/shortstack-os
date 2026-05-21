@@ -253,7 +253,7 @@ export function NewTaskModal({
                 <button
                   type="submit"
                   disabled={submitting || !title.trim()}
-                  className="px-4 py-1.5 rounded-lg text-sm font-medium bg-[#2563EB] text-white hover:bg-[#1D4ED8] transition-colors disabled:opacity-50"
+                  className="px-4 py-1.5 rounded-lg text-sm font-medium bg-[#D4FF00] text-[#020711] hover:bg-[#AACC00] transition-colors disabled:opacity-50"
                 >
                   {submitting ? "Creating..." : "Create task"}
                 </button>

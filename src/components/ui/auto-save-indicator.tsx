@@ -40,7 +40,7 @@ export default function AutoSaveIndicator({ status, lastSavedAt, error, classNam
   let bgClass = "";
 
   if (status === "saving") {
-    colorClass = "text-[#2563EB]";
+    colorClass = "text-[#D4FF00]";
     borderClass = "border-[rgba(212,255,0,0.3)]";
     bgClass = "bg-[rgba(212,255,0,0.05)]";
     content = (

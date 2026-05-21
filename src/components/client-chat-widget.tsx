@@ -187,7 +187,7 @@ export default function ClientChatWidget() {
           <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
             <div className={`max-w-[80%]  px-3.5 py-2.5 ${
               msg.role === "user"
-                ? "bg-[#2563EB] text-white rounded-br-sm"
+                ? "bg-[#D4FF00] text-[#020711] rounded-br-sm"
                 : "bg-surface-light text-text-primary rounded-bl-sm"
             }`}>
               <p className="text-sm leading-relaxed">{msg.content}</p>
@@ -198,9 +198,9 @@ export default function ClientChatWidget() {
           <div className="flex justify-start">
             <div className="bg-surface-light  rounded-bl-sm px-4 py-3">
               <div className="flex gap-1">
-                <div className="w-1.5 h-1.5 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                <div className="w-1.5 h-1.5 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                <div className="w-1.5 h-1.5 bg-[#2563EB] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                <div className="w-1.5 h-1.5 bg-[#D4FF00] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                <div className="w-1.5 h-1.5 bg-[#D4FF00] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                <div className="w-1.5 h-1.5 bg-[#D4FF00] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
               </div>
             </div>
           </div>
@@ -232,7 +232,7 @@ export default function ClientChatWidget() {
             disabled={sending}
           />
           <button type="submit" disabled={sending || !input.trim()}
-            className="w-9 h-9 bg-[#2563EB] rounded-full flex items-center justify-center hover:bg-[#1D4ED8] disabled:opacity-30 transition-all shrink-0">
+            className="w-9 h-9 bg-[#D4FF00] rounded-full flex items-center justify-center hover:bg-[#AACC00] disabled:opacity-30 transition-all shrink-0">
             <Send size={14} className="text-white" />
           </button>
         </form>

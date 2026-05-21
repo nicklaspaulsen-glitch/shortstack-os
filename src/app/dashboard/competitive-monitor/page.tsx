@@ -147,7 +147,7 @@ export default function CompetitiveMonitorPage() {
 
   function addCompetitor() {
     if (!addUrl || !addName) { toast.error("URL and name are required"); return; }
-    const colors = ["#2563EB", "#ec4899", "#f59e0b", "#2563EB", "#8b5cf6", "#2563EB", "#ef4444", "#d946ef"];
+    const colors = ["#D4FF00", "#ec4899", "#f59e0b", "#D4FF00", "#8b5cf6", "#D4FF00", "#ef4444", "#d946ef"];
     const newComp: Competitor = {
       id: `c${Date.now()}`, name: addName, url: addUrl, industry: addIndustry || "Unknown",
       notes: addNotes, status: "active", lastChecked: "Never", changeCount: 0,
@@ -835,12 +835,12 @@ export default function CompetitiveMonitorPage() {
                   <h3 className="text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-brand-accent" /> Estimated Market Share (Agency SaaS Segment)</h3>
                   <div className="space-y-3">
                     {[
-                      { name: "AgencyFlow", share: 22, color: "#2563EB" },
+                      { name: "AgencyFlow", share: 22, color: "#D4FF00" },
                       { name: "MarketMind AI", share: 18, color: "#8b5cf6" },
                       { name: "SocialSpark", share: 15, color: "#f59e0b" },
                       { name: "Trinity (You)", share: 12, color: "#D4FF00" },
                       { name: "ClientPulse", share: 10, color: "#ec4899" },
-                      { name: "ContentEngine", share: 8, color: "#2563EB" },
+                      { name: "ContentEngine", share: 8, color: "#D4FF00" },
                       { name: "Others", share: 15, color: "#64748b" },
                     ].map((item, i) => (
                       <div key={i} className="flex items-center gap-3">

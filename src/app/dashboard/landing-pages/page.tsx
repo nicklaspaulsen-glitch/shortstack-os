@@ -91,21 +91,21 @@ interface BusinessInfo {
    ------------------------------------------------------------------ */
 
 const COLOR_SCHEMES = [
-  { id: "modern-dark", name: "Modern Dark", bg: "#0f172a", primary: "#2563EB", accent: "#3B82F6", text: "#f1f5f9" },
-  { id: "clean-light", name: "Clean Light", bg: "#ffffff", primary: "#2563EB", accent: "#3B82F6", text: "#1e293b" },
-  { id: "bold-gradient", name: "Bold Gradient", bg: "linear-gradient(135deg,#2563EB,#ec4899)", primary: "#8b5cf6", accent: "#f472b6", text: "#ffffff" },
+  { id: "modern-dark", name: "Modern Dark", bg: "#0f172a", primary: "#D4FF00", accent: "#D4FF00", text: "#f1f5f9" },
+  { id: "clean-light", name: "Clean Light", bg: "#ffffff", primary: "#D4FF00", accent: "#D4FF00", text: "#1e293b" },
+  { id: "bold-gradient", name: "Bold Gradient", bg: "linear-gradient(135deg,#D4FF00,#ec4899)", primary: "#8b5cf6", accent: "#f472b6", text: "#ffffff" },
   { id: "minimal", name: "Minimal", bg: "#fafafa", primary: "#18181b", accent: "#71717a", text: "#18181b" },
-  { id: "luxury-gold", name: "Luxury Gold", bg: "#0a0a0a", primary: "#2563EB", accent: "#d4af37", text: "#f5f5f5" },
+  { id: "luxury-gold", name: "Luxury Gold", bg: "#0a0a0a", primary: "#D4FF00", accent: "#d4af37", text: "#f5f5f5" },
 ];
 
 const TEMPLATES = [
-  { id: "saas", name: "SaaS Landing", desc: "Hero + features + pricing + testimonials", icon: Monitor, color: "#2563EB", gradient: "from-violet-600 to-cyan-500", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop", tagline: "Hero + pricing + testimonials + CTA", cvr: "Avg 2.8% CVR", avgLaunch: "6 min to live" },
+  { id: "saas", name: "SaaS Landing", desc: "Hero + features + pricing + testimonials", icon: Monitor, color: "#D4FF00", gradient: "from-violet-600 to-cyan-500", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop", tagline: "Hero + pricing + testimonials + CTA", cvr: "Avg 2.8% CVR", avgLaunch: "6 min to live" },
   { id: "agency", name: "Agency Portfolio", desc: "Hero + services + case studies + contact", icon: Building2, color: "#8b5cf6", gradient: "from-purple-600 to-pink-500", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop", tagline: "Services + case studies + contact", cvr: "Avg 3.1% CVR", avgLaunch: "5 min to live" },
   { id: "restaurant", name: "Restaurant", desc: "Hero + menu highlights + location + reservations", icon: UtensilsCrossed, color: "#f59e0b", gradient: "from-amber-500 to-orange-500", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=400&fit=crop", tagline: "Menu highlights + reservations + location", cvr: "Avg 4.2% CVR", avgLaunch: "4 min to live" },
-  { id: "realestate", name: "Real Estate", desc: "Property showcase + search + agent contact", icon: Home, color: "#2563EB", gradient: "from-emerald-500 to-teal-500", image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop", tagline: "Property showcase + agent contact", cvr: "Avg 2.4% CVR", avgLaunch: "7 min to live" },
+  { id: "realestate", name: "Real Estate", desc: "Property showcase + search + agent contact", icon: Home, color: "#D4FF00", gradient: "from-emerald-500 to-teal-500", image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop", tagline: "Property showcase + agent contact", cvr: "Avg 2.4% CVR", avgLaunch: "7 min to live" },
   { id: "fitness", name: "Fitness Studio", desc: "Classes + trainers + pricing + schedule", icon: Dumbbell, color: "#ef4444", gradient: "from-red-500 to-rose-500", image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop", tagline: "Classes + trainers + schedule + pricing", cvr: "Avg 3.6% CVR", avgLaunch: "5 min to live" },
   { id: "ecommerce", name: "E-commerce", desc: "Product hero + features + reviews + CTA", icon: ShoppingBag, color: "#f97316", gradient: "from-orange-500 to-yellow-500", image: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&h=400&fit=crop", tagline: "Product hero + features + reviews", cvr: "Avg 2.9% CVR", avgLaunch: "6 min to live" },
-  { id: "consultant", name: "Consultant", desc: "About + services + testimonials + booking", icon: Briefcase, color: "#2563EB", gradient: "from-indigo-500 to-purple-500", image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&h=400&fit=crop", tagline: "About + services + testimonials + booking", cvr: "Avg 3.4% CVR", avgLaunch: "5 min to live" },
+  { id: "consultant", name: "Consultant", desc: "About + services + testimonials + booking", icon: Briefcase, color: "#D4FF00", gradient: "from-indigo-500 to-purple-500", image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&h=400&fit=crop", tagline: "About + services + testimonials + booking", cvr: "Avg 3.4% CVR", avgLaunch: "5 min to live" },
   { id: "event", name: "Event", desc: "Countdown + speakers + schedule + tickets", icon: CalendarDays, color: "#ec4899", gradient: "from-pink-500 to-rose-500", image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=400&fit=crop", tagline: "Countdown + speakers + schedule + tickets", cvr: "Avg 5.1% CVR", avgLaunch: "4 min to live" },
 ];
 
@@ -1151,7 +1151,7 @@ export default function LandingPagesPage() {
                     <span className="font-normal opacity-60 ml-0.5">/ 100</span>
                   </div>
                 </div>
-                <div className="w-full rounded-full overflow-hidden mb-2" style={{ height: "1.5px", background: "rgba(99,146,255,0.10)" }}>
+                <div className="w-full rounded-full overflow-hidden mb-2" style={{ height: "1.5px", background: "rgba(212, 255, 0,0.10)" }}>
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{

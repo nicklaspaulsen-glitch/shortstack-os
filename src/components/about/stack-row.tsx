@@ -14,7 +14,7 @@ const stack = [
   { name: "Claude", tone: "#d97757" },
   { name: "Stripe", tone: "#635bff" },
   { name: "OpenAI", tone: "#10a37f" },
-  { name: "Tailwind", tone: "#3B82F6" },
+  { name: "Tailwind", tone: "#D4FF00" },
   { name: "Vercel", tone: "#ffffff" },
   { name: "Resend", tone: "#ffffff" },
 ];

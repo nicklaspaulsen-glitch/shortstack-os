@@ -16,7 +16,7 @@
  *   size      — avatar size in px (default: 32)
  *   overlap   — px overlap between avatars (default: 10)
  *   pulse     — show pulsing ring on first avatar (default: false)
- *   pulseColor — pulse ring color (default: "#3B82F6")
+ *   pulseColor — pulse ring color (default: "#D4FF00")
  *   showCount — whether to show +N overflow badge (default: true)
  */
 
@@ -72,7 +72,7 @@ interface AvatarCellProps {
   pulseColor?: string;
 }
 
-function AvatarCell({ avatar, size, style, pulse, pulseColor = "#3B82F6" }: AvatarCellProps) {
+function AvatarCell({ avatar, size, style, pulse, pulseColor = "#D4FF00" }: AvatarCellProps) {
   const fontSize = Math.round(size * 0.38);
   const dotSize  = Math.round(size * 0.30);
 
@@ -151,7 +151,7 @@ export function AvatarGroup({
   size = 32,
   overlap = 10,
   pulse = false,
-  pulseColor = "#3B82F6",
+  pulseColor = "#D4FF00",
   showCount = true,
   className = "",
 }: AvatarGroupProps) {

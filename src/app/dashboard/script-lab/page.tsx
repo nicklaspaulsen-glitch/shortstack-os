@@ -300,7 +300,7 @@ function hookQualityScore(hook: { text: string; type: string }): { score: number
   if (/^(curiosity|question|contrarian|pattern.interrupt)$/.test(hook.type.toLowerCase())) score += 10;
   score = Math.min(100, score);
   const label = score >= 80 ? "Strong" : score >= 60 ? "Good" : score >= 40 ? "Fair" : "Weak";
-  const color = score >= 80 ? "#22C55E" : score >= 60 ? "#3B82F6" : score >= 40 ? "#F59E0B" : "#EF4444";
+  const color = score >= 80 ? "#22C55E" : score >= 60 ? "#D4FF00" : score >= 40 ? "#F59E0B" : "#EF4444";
   return { score, label, color };
 }
 
@@ -1343,23 +1343,23 @@ export default function ScriptLabPage() {
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Inter', system-ui, sans-serif; background: #fff; color: #1a1a1a; padding: 40px; max-width: 800px; margin: 0 auto; }
-  .logo-bar { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #2563EB; padding-bottom: 16px; margin-bottom: 32px; }
-  .logo-bar h1 { font-size: 20px; font-weight: 800; color: #2563EB; letter-spacing: -0.5px; }
+  .logo-bar { display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #D4FF00; padding-bottom: 16px; margin-bottom: 32px; }
+  .logo-bar h1 { font-size: 20px; font-weight: 800; color: #D4FF00; letter-spacing: -0.5px; }
   .logo-bar .sub { font-size: 11px; color: #666; }
   .meta { font-size: 12px; color: #888; margin-bottom: 24px; }
-  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: #2563EB; margin: 24px 0 12px; border-bottom: 1px solid #eee; padding-bottom: 6px; }
-  .hook-box { background: linear-gradient(135deg, #fdf8ed, #fff9e0); border: 1px solid #2563EB40; border-radius: 12px; padding: 16px; margin: 12px 0; }
+  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: #D4FF00; margin: 24px 0 12px; border-bottom: 1px solid #eee; padding-bottom: 6px; }
+  .hook-box { background: linear-gradient(135deg, #fdf8ed, #fff9e0); border: 1px solid #D4FF0040; border-radius: 12px; padding: 16px; margin: 12px 0; }
   .hook-text { font-size: 16px; font-style: italic; font-weight: 600; color: #1a1a1a; }
-  .section { background: #f9f9f9; border-radius: 8px; padding: 16px; margin: 8px 0; border-left: 3px solid #2563EB; }
-  .section-name { font-weight: 700; font-size: 12px; color: #2563EB; text-transform: uppercase; }
+  .section { background: #f9f9f9; border-radius: 8px; padding: 16px; margin: 8px 0; border-left: 3px solid #D4FF00; }
+  .section-name { font-weight: 700; font-size: 12px; color: #D4FF00; text-transform: uppercase; }
   .section-meta { font-size: 11px; color: #888; }
   .dialogue { font-size: 14px; line-height: 1.6; margin-top: 8px; }
-  .visual { font-size: 11px; color: #2563EB; margin-top: 6px; }
+  .visual { font-size: 11px; color: #D4FF00; margin-top: 6px; }
   .cta-box { background: #1a1a1a; color: white; border-radius: 12px; padding: 20px; text-align: center; margin: 20px 0; }
-  .cta-text { font-size: 18px; font-weight: 700; color: #2563EB; }
+  .cta-text { font-size: 18px; font-weight: 700; color: #D4FF00; }
   .caption { background: #f5f5f5; border-radius: 8px; padding: 16px; white-space: pre-wrap; font-size: 13px; line-height: 1.5; }
   .hashtags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-  .hashtag { background: #e8f4fd; color: #2563EB; font-size: 11px; padding: 3px 8px; border-radius: 20px; }
+  .hashtag { background: #e8f4fd; color: #D4FF00; font-size: 11px; padding: 3px 8px; border-radius: 20px; }
   .footer { margin-top: 40px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee; padding-top: 16px; }
   @media print { body { padding: 20px; } }
 </style></head><body>
@@ -2652,7 +2652,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   const arch = detectHookArchetype(activeScript.hook);
                   const platform = config.platform as string;
                   const pf = arch.platformFit[platform] ?? { fit: "good" as const, tip: "Analyze your hook against your specific platform goals" };
-                  const fitColors: Record<string, string> = { ideal: "#22C55E", good: "#3B82F6", mismatch: "#EF4444" };
+                  const fitColors: Record<string, string> = { ideal: "#22C55E", good: "#D4FF00", mismatch: "#EF4444" };
                   const fitLabels: Record<string, string> = { ideal: "Ideal fit", good: "Good fit", mismatch: "Platform mismatch" };
                   const fitColor = fitColors[pf.fit];
                   return (
@@ -2706,16 +2706,16 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 <svg width="100%" viewBox={`-2 0 ${W + 4} ${H + 6}`} className="overflow-visible">
                   <defs>
                     <linearGradient id="arc-fill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.22" />
-                      <stop offset="100%" stopColor="#3B82F6" stopOpacity="0.02" />
+                      <stop offset="0%" stopColor="#D4FF00" stopOpacity="0.22" />
+                      <stop offset="100%" stopColor="#D4FF00" stopOpacity="0.02" />
                     </linearGradient>
                   </defs>
                   <path d={fillD} fill="url(#arc-fill)" />
-                  <path d={pathD} stroke="#3B82F6" strokeWidth="1.5" fill="none" strokeLinejoin="round" strokeLinecap="round" />
+                  <path d={pathD} stroke="#D4FF00" strokeWidth="1.5" fill="none" strokeLinejoin="round" strokeLinecap="round" />
                   {pts.map((p, i) => (
                     <g key={i}>
-                      <circle cx={p.x} cy={p.y} r={i === peakIdx ? 4 : 2.5} fill={i === peakIdx ? "#60A5FA" : "#3B82F6"} />
-                      {i === peakIdx && <circle cx={p.x} cy={p.y} r={7} fill="none" stroke="#60A5FA" strokeWidth="0.8" opacity="0.45" />}
+                      <circle cx={p.x} cy={p.y} r={i === peakIdx ? 4 : 2.5} fill={i === peakIdx ? "#D4FF00" : "#D4FF00"} />
+                      {i === peakIdx && <circle cx={p.x} cy={p.y} r={7} fill="none" stroke="#D4FF00" strokeWidth="0.8" opacity="0.45" />}
                     </g>
                   ))}
                 </svg>
@@ -2760,7 +2760,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   {[
-                    { label: "B-roll cues", count: withVisual, pct: visualPct, color: "#3B82F6", tip: "Sections with visual direction" },
+                    { label: "B-roll cues", count: withVisual, pct: visualPct, color: "#D4FF00", tip: "Sections with visual direction" },
                     { label: "Text overlays", count: withOverlay, pct: overlayPct, color: "#8B5CF6", tip: "Sections with on-screen text" },
                     { label: "Emotion set", count: withEmotion, pct: emotionPct, color: "#EC4899", tip: "Sections with non-neutral emotion" },
                   ].map(m => (

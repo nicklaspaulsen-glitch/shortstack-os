@@ -36,7 +36,7 @@ const CATEGORY_BADGES: Record<string, string> = {
   seo: "bg-emerald-400/10 text-emerald-400",
   social: "bg-purple-400/10 text-purple-400",
   operations: "bg-amber-400/10 text-amber-400",
-  growth: "bg-[rgba(212,255,0,0.08)] text-[#2563EB]",
+  growth: "bg-[rgba(212,255,0,0.08)] text-[#D4FF00]",
 };
 
 export default function AIInsights({ clientId }: { clientId?: string }) {
@@ -86,7 +86,7 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
     return (
       <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.1)]">
         <div className="flex items-center gap-2 mb-3">
-          <Sparkles size={14} className="text-[#2563EB] animate-pulse" />
+          <Sparkles size={14} className="text-[#D4FF00] animate-pulse" />
           <span className="text-xs font-semibold">AI is analyzing your business...</span>
         </div>
         <div className="space-y-2">
@@ -104,9 +104,9 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Sparkles size={14} className="text-[#2563EB]" />
+          <Sparkles size={14} className="text-[#D4FF00]" />
           <h2 className="text-sm font-semibold">AI Recommendations</h2>
-          <span className="text-[9px] bg-[rgba(212,255,0,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded font-medium">
+          <span className="text-[9px] bg-[rgba(212,255,0,0.08)] text-[#D4FF00] px-1.5 py-0.5 rounded font-medium">
             {insights.length - actionedIds.size} active
           </span>
         </div>
@@ -127,13 +127,13 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
             >
               <div className="flex items-start justify-between mb-1.5">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[#2563EB]">{TYPE_ICONS[insight.type] || <Zap size={14} />}</span>
+                  <span className="text-[#D4FF00]">{TYPE_ICONS[insight.type] || <Zap size={14} />}</span>
                   <span className={`text-[8px] px-1.5 py-0.5 rounded-md font-medium ${CATEGORY_BADGES[insight.category] || "bg-surface-light text-text-muted"}`}>
                     {insight.category}
                   </span>
                 </div>
                 {insight.priority === "high" && (
-                  <span className="text-[8px] text-[#2563EB] font-bold uppercase">Priority</span>
+                  <span className="text-[8px] text-[#D4FF00] font-bold uppercase">Priority</span>
                 )}
               </div>
 

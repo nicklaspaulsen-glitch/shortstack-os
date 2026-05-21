@@ -159,7 +159,7 @@ export function NewsTriggerBadge({ leadId, compact = false }: Props) {
                 <button
                   type="button"
                   onClick={() => acknowledge(t.id)}
-                  className="rounded border border-border-subtle px-2 py-0.5 hover:bg-[rgba(99,146,255,0.06)] hover:border-[rgba(99,146,255,0.25)] hover:text-text-primary transition-colors"
+                  className="rounded border border-border-subtle px-2 py-0.5 hover:bg-[rgba(212, 255, 0,0.06)] hover:border-[rgba(212, 255, 0,0.25)] hover:text-text-primary transition-colors"
                 >
                   Mark seen
                 </button>

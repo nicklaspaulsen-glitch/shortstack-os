@@ -214,7 +214,7 @@ export default function InsightsPanel() {
                       </button>
                       <button
                         onClick={() => void decide(s.id, "reject")}
-                        className="inline-flex items-center gap-1 rounded border border-border-subtle bg-[rgba(99,146,255,0.04)] px-2 py-1 text-[11px] text-text-muted hover:bg-[rgba(99,146,255,0.08)] transition-colors"
+                        className="inline-flex items-center gap-1 rounded border border-border-subtle bg-[rgba(212, 255, 0,0.04)] px-2 py-1 text-[11px] text-text-muted hover:bg-[rgba(212, 255, 0,0.08)] transition-colors"
                       >
                         <X size={11} /> Dismiss
                       </button>
@@ -266,7 +266,7 @@ function PlatformLineChart({
       ) : (
         <ResponsiveContainer width="100%" height={180}>
           <LineChart data={data} margin={{ top: 5, right: 5, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,146,255,0.08)" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(212, 255, 0,0.08)" />
             <XAxis
               dataKey="date"
               tick={{ fontSize: 9, fill: "#4A4A5A" }}
@@ -282,7 +282,7 @@ function PlatformLineChart({
             <Tooltip
               contentStyle={{
                 background: "rgba(13,17,32,0.95)",
-                border: "1px solid rgba(99,146,255,0.18)",
+                border: "1px solid rgba(212, 255, 0,0.18)",
                 borderRadius: 6,
                 fontSize: 11,
                 color: "#F0F0F4",

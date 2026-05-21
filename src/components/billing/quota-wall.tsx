@@ -135,7 +135,7 @@ export function QuotaWall({ payload, onClose, inline = false }: QuotaWallProps) 
         <Link
           href="/dashboard/upgrade"
           onClick={onClose}
-          className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#2563EB] text-white text-xs font-semibold hover:bg-[#1D4ED8] transition-colors shadow-sm"
+          className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#D4FF00] text-[#020711] text-xs font-semibold hover:bg-[#AACC00] transition-colors shadow-sm"
         >
           <ArrowUpRight size={12} />
           Upgrade plan
@@ -143,7 +143,7 @@ export function QuotaWall({ payload, onClose, inline = false }: QuotaWallProps) 
         <Link
           href="/dashboard/billing"
           onClick={onClose}
-          className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-text-primary text-xs font-medium border border-border-subtle hover:bg-[rgba(212,255,0,0.08)] hover:text-[#2563EB] transition-colors"
+          className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-text-primary text-xs font-medium border border-border-subtle hover:bg-[rgba(212,255,0,0.08)] hover:text-[#D4FF00] transition-colors"
         >
           <Plus size={12} />
           Buy more tokens
@@ -160,7 +160,7 @@ export function QuotaWall({ payload, onClose, inline = false }: QuotaWallProps) 
       <div className="relative w-full max-w-md mx-4 bg-surface border border-border-subtle/50  shadow-2xl shadow-black/50">
         <div className="flex items-center justify-between px-5 py-3 border-b border-border-subtle/30">
           <div className="flex items-center gap-2">
-            <CreditCard size={14} className="text-[#2563EB]" />
+            <CreditCard size={14} className="text-[#D4FF00]" />
             <h2 className="text-xs font-semibold text-text-primary">Plan limit reached</h2>
           </div>
         </div>

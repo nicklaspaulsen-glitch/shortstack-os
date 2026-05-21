@@ -82,7 +82,7 @@ const LOCATION_OPTIONS = [
 ];
 
 const COLOR_OPTIONS = [
-  "#D4FF00", "#10B981", "#2563EB", "#8b5cf6", "#f59e0b", "#ef4444", "#ec4899", "#FF5252",
+  "#D4FF00", "#10B981", "#D4FF00", "#8b5cf6", "#f59e0b", "#ef4444", "#ec4899", "#FF5252",
 ];
 
 /* ------------------------------------------------------------------ */
@@ -136,7 +136,7 @@ export default function SchedulingPage() {
     duration: 30,
     description: "",
     location_type: "zoom",
-    color: "#2563EB",
+    color: "#D4FF00",
     buffer_time: 0,
     max_bookings_per_day: "",
   });
@@ -189,7 +189,7 @@ export default function SchedulingPage() {
       });
       if (res.ok) {
         setShowCreateModal(false);
-        setNewMeeting({ name: "", duration: 30, description: "", location_type: "zoom", color: "#2563EB", buffer_time: 0, max_bookings_per_day: "" });
+        setNewMeeting({ name: "", duration: 30, description: "", location_type: "zoom", color: "#D4FF00", buffer_time: 0, max_bookings_per_day: "" });
         fetchMeetingTypes();
       }
     } finally {
@@ -832,7 +832,7 @@ export default function SchedulingPage() {
                           <td key={h} className="py-0.5 px-0.5">
                             <div className="w-full h-7 rounded flex items-center justify-center text-[8px] font-bold transition-all"
                               style={{
-                                background: intensity > 0.7 ? "rgba(212,255,0,0.35)" : intensity > 0.4 ? "rgba(212,255,0,0.20)" : intensity > 0.1 ? "rgba(212,255,0,0.08)" : "rgba(99,146,255,0.03)",
+                                background: intensity > 0.7 ? "rgba(212,255,0,0.35)" : intensity > 0.4 ? "rgba(212,255,0,0.20)" : intensity > 0.1 ? "rgba(212,255,0,0.08)" : "rgba(212, 255, 0,0.03)",
                                 color: intensity > 0.4 ? "#D4FF00" : "rgba(160,160,180,0.40)"
                               }}>
                               {val}

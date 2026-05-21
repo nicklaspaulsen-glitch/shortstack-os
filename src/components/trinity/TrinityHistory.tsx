@@ -61,9 +61,9 @@ export default function TrinityHistory({ messages, sending }: Props) {
       {sending && (
         <div className="flex justify-start">
           <div className="bg-surface-light border border-border-subtle  rounded-bl-sm px-4 py-3 flex gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-bounce" style={{ animationDelay: "0ms" }} />
-            <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-bounce" style={{ animationDelay: "150ms" }} />
-            <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-bounce" style={{ animationDelay: "300ms" }} />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D4FF00] animate-bounce" style={{ animationDelay: "0ms" }} />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D4FF00] animate-bounce" style={{ animationDelay: "150ms" }} />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D4FF00] animate-bounce" style={{ animationDelay: "300ms" }} />
           </div>
         </div>
       )}

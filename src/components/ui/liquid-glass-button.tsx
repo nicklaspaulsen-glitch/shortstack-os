@@ -94,7 +94,7 @@ export function LiquidGlassButton({
             "0 1px 4px rgba(0,0,0,0.08)",
           ].join(", "),
           border: "1px solid rgba(255,255,255,0.40)",
-          color: "#1D4ED8",
+          color: "#AACC00",
         }}
         onMouseEnter={(e) => {
           (e.currentTarget as HTMLButtonElement).style.boxShadow = [

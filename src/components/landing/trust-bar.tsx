@@ -29,7 +29,7 @@ export default function TrustBar() {
                   className="text-3xl md:text-4xl font-extrabold mb-1"
                   style={{
                     background:
-                      "linear-gradient(135deg, #2563EB, #60A5FA)",
+                      "linear-gradient(135deg, #D4FF00, #E8FF4D)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                   }}

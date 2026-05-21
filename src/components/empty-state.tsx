@@ -35,7 +35,7 @@ export default function EmptyState({
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-[rgba(212,255,0,0.04)] blur-3xl pointer-events-none" />
 
       <div className="relative z-10 flex flex-col items-center">
-        <div className="w-14 h-14 bg-[rgba(212,255,0,0.08)] flex items-center justify-center mb-4 text-[#2563EB]">
+        <div className="w-14 h-14 bg-[rgba(212,255,0,0.08)] flex items-center justify-center mb-4 text-[#D4FF00]">
           {icon}
         </div>
         <h3 className="text-sm font-semibold text-text-primary mb-1">{title}</h3>
@@ -47,7 +47,7 @@ export default function EmptyState({
               href={actionHref}
               className="mt-5 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-semibold text-white transition-all hover:-translate-y-0.5"
               style={{
-                background: "var(--color-accent, #3B82F6)",
+                background: "var(--color-accent, #D4FF00)",
                 boxShadow: "0 1px 3px rgba(212,255,0,0.25)",
               }}
             >
@@ -58,7 +58,7 @@ export default function EmptyState({
               onClick={onAction}
               className="mt-5 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-semibold text-white transition-all hover:-translate-y-0.5"
               style={{
-                background: "var(--color-accent, #3B82F6)",
+                background: "var(--color-accent, #D4FF00)",
                 boxShadow: "0 1px 3px rgba(212,255,0,0.25)",
               }}
             >

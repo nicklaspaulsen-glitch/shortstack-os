@@ -90,8 +90,8 @@ export interface LayerPanelProps {
 /* ─── Palette presets for quick background swatches ────────── */
 
 const COLOR_SWATCHES: Array<{ id: string; name: string; colors: [string, string] }> = [
-  { id: "red_black", name: "Red + Black", colors: ["#2563EB", "#0A0A0A"] },
-  { id: "blue_white", name: "Blue + White", colors: ["#2563EB", "#FFFFFF"] },
+  { id: "red_black", name: "Red + Black", colors: ["#D4FF00", "#0A0A0A"] },
+  { id: "blue_white", name: "Blue + White", colors: ["#D4FF00", "#FFFFFF"] },
   { id: "green_gold", name: "Green + Gold", colors: ["#16A34A", "#FACC15"] },
   { id: "purple_black", name: "Purple + Black", colors: ["#7C3AED", "#0B0120"] },
   { id: "orange_teal", name: "Orange + Teal", colors: ["#EA580C", "#0E7490"] },
@@ -247,7 +247,7 @@ export function LayerPanel({
         className="flex items-center justify-between gap-2 w-full text-left"
       >
         <div className="flex items-center gap-2">
-          <LayersIcon size={14} className="text-[#2563EB]" />
+          <LayersIcon size={14} className="text-[#D4FF00]" />
           <span className="text-[11px] font-semibold uppercase tracking-wider text-text-primary">
             Layers
           </span>
@@ -290,7 +290,7 @@ export function LayerPanel({
                   }}
                   title={sw.name}
                   className={`aspect-video rounded border ${
-                    layers.background?.id === sw.id ? "border-[#2563EB] ring-1 ring-[rgba(212,255,0,0.25)]" : "border-border-subtle hover:border-border-subtle"
+                    layers.background?.id === sw.id ? "border-[#D4FF00] ring-1 ring-[rgba(212,255,0,0.25)]" : "border-border-subtle hover:border-border-subtle"
                   }`}
                   style={{ background: `linear-gradient(135deg, ${sw.colors[0]}, ${sw.colors[1]})` }}
                 >
@@ -354,7 +354,7 @@ export function LayerPanel({
               <button
                 type="button"
                 onClick={addText}
-                className="text-[9px] text-[#2563EB] hover:text-[#3B82F6] flex items-center gap-1"
+                className="text-[9px] text-[#D4FF00] hover:text-[#D4FF00] flex items-center gap-1"
               >
                 <Plus size={10} /> Add text
               </button>
@@ -436,7 +436,7 @@ export function LayerPanel({
               const allOn = effects.every((e) => e.enabled);
               patch({ effects: effects.map((e) => ({ ...e, enabled: !allOn })) });
             }}
-            swatch={<span className="text-[9px] text-[#2563EB]">{effects.filter((e) => e.enabled).length}/{effects.length}</span>}
+            swatch={<span className="text-[9px] text-[#D4FF00]">{effects.filter((e) => e.enabled).length}/{effects.length}</span>}
             onEdit={() => setEditingId(editingId === "fx" ? null : "fx")}
             editing={editingId === "fx"}
           >
@@ -447,7 +447,7 @@ export function LayerPanel({
                     type="button"
                     onClick={() => toggleEffect(e.id)}
                     className={`h-4 w-7 rounded-full transition-all ${
-                      e.enabled ? "bg-[#2563EB]" : "bg-surface-light"
+                      e.enabled ? "bg-[#D4FF00]" : "bg-surface-light"
                     } relative`}
                     aria-label={`Toggle ${e.label}`}
                   >
@@ -465,7 +465,7 @@ export function LayerPanel({
                     value={e.intensity ?? 50}
                     disabled={!e.enabled}
                     onChange={(ev) => setEffectIntensity(e.id, Number(ev.target.value))}
-                    className="flex-1 h-1 accent-[#2563EB] disabled:opacity-30"
+                    className="flex-1 h-1 accent-[#D4FF00] disabled:opacity-30"
                   />
                   <span className="text-[9px] text-text-muted w-7 text-right font-mono">{e.intensity ?? 50}</span>
                 </div>
@@ -541,7 +541,7 @@ export function LayerPanel({
               type="button"
               onClick={handleRegenerate}
               disabled={regenerating}
-              className="mt-2 w-full flex items-center justify-center gap-1.5 rounded-lg bg-[#2563EB] text-white text-[11px] font-semibold py-2 hover:bg-[#3B82F6] disabled:opacity-50 transition"
+              className="mt-2 w-full flex items-center justify-center gap-1.5 rounded-lg bg-[#D4FF00] text-[#020711] text-[11px] font-semibold py-2 hover:bg-[#D4FF00] disabled:opacity-50 transition"
             >
               <RefreshCw size={12} className={regenerating ? "animate-spin" : ""} />
               {regenerating ? "Regenerating…" : "Regenerate with edits"}
@@ -586,7 +586,7 @@ function LayerRow({
         ) : (
           <span className="w-3 h-3" />
         )}
-        <span className="text-[#2563EB]">{icon}</span>
+        <span className="text-[#D4FF00]">{icon}</span>
         <div className="flex-1 min-w-0">
           <div className="text-[11px] font-medium text-text-primary truncate">{name}</div>
           {description ? (

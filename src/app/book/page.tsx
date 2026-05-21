@@ -103,7 +103,7 @@ export default function PublicBookingPage() {
             {selectedDate && selectedTime && (
               <button onClick={() => setStep("form")}
                 className="w-full py-3 rounded-lg font-semibold text-sm text-black flex items-center justify-center gap-2"
-                style={{ background: "linear-gradient(135deg, #2563EB, #1D4ED8)" }}>
+                style={{ background: "linear-gradient(135deg, #D4FF00, #AACC00)" }}>
                 Continue <ArrowRight size={14} />
               </button>
             )}
@@ -144,7 +144,7 @@ export default function PublicBookingPage() {
 
               <button onClick={submitBooking} disabled={submitting || !form.name || !form.email}
                 className="w-full py-3 rounded-lg font-semibold text-sm text-black disabled:opacity-50 flex items-center justify-center gap-2"
-                style={{ background: "linear-gradient(135deg, #2563EB, #1D4ED8)" }}>
+                style={{ background: "linear-gradient(135deg, #D4FF00, #AACC00)" }}>
                 {submitting ? "Booking..." : "Confirm Booking"}
               </button>
             </div>

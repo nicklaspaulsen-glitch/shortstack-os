@@ -149,7 +149,7 @@ export function AIPromptBox({
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 top-0 h-px"
               style={{
-                background: "linear-gradient(90deg, transparent, #2563EB 40%, #93C5FD 60%, transparent)",
+                background: "linear-gradient(90deg, transparent, #D4FF00 40%, #E8FF4D 60%, transparent)",
               }}
             />
           )}
@@ -159,7 +159,7 @@ export function AIPromptBox({
         <div className="flex items-start gap-3 px-4 pt-4 pb-2">
           {/* Sparkle icon */}
           <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-indigo-50">
-            <Sparkles className="h-3.5 w-3.5 text-[#2563EB]" />
+            <Sparkles className="h-3.5 w-3.5 text-[#D4FF00]" />
           </div>
 
           <label htmlFor="ai-prompt-textarea" className="sr-only">
@@ -210,7 +210,7 @@ export function AIPromptBox({
           <div className="flex items-center gap-2">
             {/* Model badge */}
             {modelLabel && (
-              <span className="rounded-full border border-[rgba(212,255,0,0.20)] bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-[#2563EB]">
+              <span className="rounded-full border border-[rgba(212,255,0,0.20)] bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-[#D4FF00]">
                 {modelLabel}
               </span>
             )}
@@ -232,7 +232,7 @@ export function AIPromptBox({
               "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full",
               "transition-all duration-200",
               value.trim() && !busy
-                ? "bg-[#2563EB] text-white shadow-[0_2px_8px_rgba(212,255,0,0.30)]"
+                ? "bg-[#D4FF00] text-[#020711] shadow-[0_2px_8px_rgba(212,255,0,0.30)]"
                 : "bg-[rgba(0,0,0,0.07)] text-text-muted",
               "disabled:pointer-events-none"
             )}
@@ -259,7 +259,7 @@ export function AIPromptBox({
               key={s}
               type="button"
               onClick={() => applySuggestion(s)}
-              className="rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-3 py-1.5 text-xs text-text-secondary transition-all duration-150 hover:border-[rgba(212,255,0,0.25)] hover:bg-indigo-50 hover:text-[#2563EB] active:scale-[0.97]"
+              className="rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-3 py-1.5 text-xs text-text-secondary transition-all duration-150 hover:border-[rgba(212,255,0,0.25)] hover:bg-indigo-50 hover:text-[#D4FF00] active:scale-[0.97]"
             >
               {s}
             </button>

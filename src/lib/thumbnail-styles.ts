@@ -63,7 +63,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Jaw-dropped faces, pile of cash, red/yellow pop, oversized props.",
     promptModifier:
       "MrBeast-style viral thumbnail, exaggerated shocked expression, jaw wide open, piles of cash or giant prop, bold red and yellow accents, high-saturation, studio lighting, extreme close-up face, 3-color palette, clean background",
-    gradient: ["#2563EB", "#FFDD00"],
+    gradient: ["#D4FF00", "#FFDD00"],
   },
   {
     id: "yt_gaming_stream",
@@ -81,7 +81,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Green numbers, stacks of cash, red arrows, Wall Street intensity.",
     promptModifier:
       "finance content thumbnail, green rising chart arrows, hundred-dollar bills stacks, Wall Street intensity, red percentage callouts, black suit professional subject, high-contrast white background",
-    gradient: ["#2563EB", "#1D4ED8"],
+    gradient: ["#D4FF00", "#AACC00"],
   },
   {
     id: "yt_tech_reviewer",
@@ -126,7 +126,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Clean flat-lay, labeled steps, friendly colors, high readability.",
     promptModifier:
       "tutorial thumbnail, clean well-lit flat-lay or screen recording, numbered step callouts, soft natural daylight, friendly approachable tone, bright white or light gradient background, organized hierarchy",
-    gradient: ["#FBBF24", "#3B82F6"],
+    gradient: ["#FBBF24", "#D4FF00"],
   },
   {
     id: "yt_podcast_clip",
@@ -173,7 +173,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Holographic brain, particle swarms, cool blue glow.",
     promptModifier:
       "AI and technology thumbnail, holographic brain or neural network visualization, particle effects, cool blue and white glow, sci-fi futuristic aesthetic, dark space background with glowing nodes",
-    gradient: ["#1D4ED8", "#2563EB"],
+    gradient: ["#AACC00", "#D4FF00"],
   },
 
   // ───────── FINANCE / BUSINESS ─────────
@@ -222,7 +222,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Pastel cartoon explosion, character hero pose, sparkles.",
     promptModifier:
       "bright cartoony gaming thumbnail, Fortnite inspired palette, pastel sky with sparkles, character in hero pose with weapon, exaggerated cel-shaded style, high saturation, kid-friendly energy",
-    gradient: ["#3B82F6", "#F472B6"],
+    gradient: ["#D4FF00", "#F472B6"],
   },
   {
     id: "gaming_retro_arcade",
@@ -231,7 +231,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "CRT scanlines, pixel art, 80s synthwave palette.",
     promptModifier:
       "retro arcade thumbnail, CRT scanline texture overlay, pixel art elements, 80s synthwave palette with magenta and cyan, neon grid floor, old arcade cabinet, nostalgic vibe",
-    gradient: ["#F472B6", "#3B82F6"],
+    gradient: ["#F472B6", "#D4FF00"],
   },
 
   // ───────── EDUCATION ─────────
@@ -251,7 +251,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Clean whiteboard, colorful markers, icon doodles.",
     promptModifier:
       "explainer video thumbnail, clean white whiteboard background, colorful marker doodles and icons, organized visual hierarchy, friendly approachable tone, natural daylight",
-    gradient: ["#F8FAFC", "#2563EB"],
+    gradient: ["#F8FAFC", "#D4FF00"],
   },
   {
     id: "edu_science_lab",
@@ -271,7 +271,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Aerial beach/mountain, tiny person, wanderlust saturation.",
     promptModifier:
       "travel drone thumbnail, sweeping aerial shot of exotic beach or mountain, tiny silhouetted person for scale, golden-hour saturation, cinematic aspect crop, wanderlust-inducing composition",
-    gradient: ["#2563EB", "#F59E0B"],
+    gradient: ["#D4FF00", "#F59E0B"],
   },
   {
     id: "lifestyle_cozy_aesthetic",
@@ -300,7 +300,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Red banner, serious anchor, urgent energy.",
     promptModifier:
       "breaking news thumbnail, red banner with white text space, serious news anchor look, urgent intensity, broadcast-quality composition, red and navy blue palette, sharp professional",
-    gradient: ["#B91C1C", "#1D4ED8"],
+    gradient: ["#B91C1C", "#AACC00"],
   },
   {
     id: "news_investigative_doc",
@@ -358,7 +358,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Two-color gradient, halftone dots, Spotify-ad aesthetic.",
     promptModifier:
       "duotone thumbnail, two-color gradient subject treatment, halftone dot texture overlay, Spotify campaign aesthetic, striking monochromatic energy, bold minimalist composition",
-    gradient: ["#3B82F6", "#F472B6"],
+    gradient: ["#D4FF00", "#F472B6"],
   },
   {
     id: "minimal_paper_cutout",
@@ -387,7 +387,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Grainy two-color overprint, indie zine texture.",
     promptModifier:
       "risograph print aesthetic thumbnail, grainy textured two-color overprint, fluorescent pink and blue ink, indie zine DIY feel, slight misregistration, artisanal handmade quality",
-    gradient: ["#F9A8D4", "#3B82F6"],
+    gradient: ["#F9A8D4", "#D4FF00"],
   },
   {
     id: "exp_vaporwave",
@@ -396,7 +396,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Purple-pink gradients, marble busts, palm silhouettes.",
     promptModifier:
       "vaporwave aesthetic thumbnail, pink and purple gradient sky, Greek marble bust, palm tree silhouettes, retro-future nostalgia, grid floor receding to horizon, dreamy surreal mood",
-    gradient: ["#3B82F6", "#EC4899"],
+    gradient: ["#D4FF00", "#EC4899"],
   },
   {
     id: "exp_glitch_distort",
@@ -434,7 +434,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Exaggerated jaw-drop, green arrow, split-screen clip.",
     promptModifier:
       "reaction channel thumbnail, massive exaggerated jaw-drop gasp face, green arrow pointing to the reacted-to content, split-screen composition, blue studio ring light, meme-culture energy",
-    gradient: ["#22C55E", "#1D4ED8"],
+    gradient: ["#22C55E", "#AACC00"],
   },
   {
     id: "creator_hasan_leftist",
@@ -508,7 +508,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Clean isometric illustration, infographic tiles, flat shading.",
     promptModifier:
       "isometric illustration thumbnail, clean flat-shaded 3D diagram, infographic tile composition, muted professional palette, explanatory tech-product aesthetic, Dribbble-style",
-    gradient: ["#3B82F6", "#3B82F6"],
+    gradient: ["#D4FF00", "#D4FF00"],
   },
 
   // ───────── NAMED YOUTUBER CHANNEL PRESETS ─────────
@@ -523,7 +523,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Giant number hook ($100,000), oversized prop, wide-eyed gasp, pristine red/yellow.",
     promptModifier:
       "MrBeast-style challenge thumbnail, gigantic bold number overlay (like $100,000 or 1,000,000), oversized real-world prop (car, yacht, mountain of cash, house), wide-eyed gasp with jaw dropped, saturated red and yellow accents on clean blue-sky or colored background, perfect studio lighting, 3-color palette, hyperclean composition, trending YouTube megabudget feel",
-    gradient: ["#2563EB", "#FACC15"],
+    gradient: ["#D4FF00", "#FACC15"],
   },
   {
     id: "creator_8bitryan",
@@ -568,7 +568,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Cartoon-style group characters, bright pastel chaos, GTA/GMod comedy feel.",
     promptModifier:
       "VanossGaming-style multiplayer cartoon thumbnail, exaggerated cartoonified characters (the whale-headed Vanoss mascot plus friend avatars) striking silly action poses, bright pastel sky-blue and magenta palette, GTA V or Garry's Mod chaos backdrop (cars exploding, ragdoll physics), comedic motion lines, cel-shaded outlines, group-shot composition with all characters fitting into frame, meme-energy playful chaos",
-    gradient: ["#2563EB", "#F472B6"],
+    gradient: ["#D4FF00", "#F472B6"],
   },
   {
     id: "creator_chris_bumstead",
@@ -619,7 +619,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Deep indigo backdrop, phone floating with glow halo, Arun-style polish.",
     promptModifier:
       "Mrwhosetheboss-inspired premium tech thumbnail, flagship smartphone floating mid-air with a soft circular radial glow halo behind it, deep indigo and midnight-blue backdrop with subtle star-field particles, polished cinematic product composition, British-reviewer cool aesthetic, sleek futuristic typography space, ultra-crisp focus and smooth gradients",
-    gradient: ["#1E3A8A", "#3B82F6"],
+    gradient: ["#1E3A8A", "#D4FF00"],
   },
   {
     id: "creator_dave2d",
@@ -648,7 +648,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Green smile logo looming, pixel Minecraft landscape, lime-green glow.",
     promptModifier:
       "Dream-style Minecraft manhunt thumbnail, iconic Dream smiley-face mask logo looming large and slightly blurred behind, blocky Minecraft biome landscape (forest or nether) in the background, lime-green magical glow emanating from the mask, small pixel Steve player figure running in the foreground, bright saturated sky blue, speedrun-tension composition",
-    gradient: ["#22C55E", "#1D4ED8"],
+    gradient: ["#22C55E", "#AACC00"],
   },
   {
     id: "creator_ninja",
@@ -693,7 +693,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Cartoonified Ssundee tiny body big head, pastel Minecraft chaos, sunglasses.",
     promptModifier:
       "SSundee-style cartoon gaming thumbnail, exaggerated cartoonified Ssundee with oversized head and tiny body wearing his signature sunglasses and purple hoodie, goofy exaggerated open-mouth laugh, bright pastel Minecraft-mod chaos in background (exploding creepers, flying pigs, rainbow blocks), kid-friendly toon-shaded lighting, sky-blue and pink bubble accents",
-    gradient: ["#3B82F6", "#F472B6"],
+    gradient: ["#D4FF00", "#F472B6"],
   },
 
   // FITNESS
@@ -760,7 +760,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Ali smiling with Notion/iPad, warm teal-cream, cozy study-desk aesthetic.",
     promptModifier:
       "Ali Abdaal-style productivity thumbnail, host smiling warmly while holding an iPad or showing a Notion dashboard, cozy warm-teal and cream color palette, wooden desk with a neatly arranged cup of coffee and a plant, soft window light from the left, doctor-turned-creator intelligent-approachable aesthetic, hand-drawn doodle arrow callout, friendly-educator tone",
-    gradient: ["#2563EB", "#FEF3C7"],
+    gradient: ["#D4FF00", "#FEF3C7"],
   },
   {
     id: "creator_hormozi",
@@ -798,7 +798,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Colorful plate, Nick smiling, bright pastel rainbow studio kitchen.",
     promptModifier:
       "Nick DiGiovanni-style MasterChef thumbnail, cheerful young chef in a clean white apron holding up a vibrantly plated dish with rainbow-colored fruits or sushi, bright pastel kitchen studio backdrop with seafoam-green cabinets, playful youthful energy, saturated but clean food-styling photography, joyful-foodie approachable tone",
-    gradient: ["#F472B6", "#3B82F6"],
+    gradient: ["#F472B6", "#D4FF00"],
   },
   {
     id: "creator_joshua_weissman",
@@ -825,7 +825,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Overhead recreation of movie-food, blue wooden board, calm Brooklyn home.",
     promptModifier:
       "Binging with Babish-style thumbnail, overhead flat-lay shot of a meticulously recreated iconic movie or TV show dish on Babish's signature blue wooden cutting board, arms in rolled-sleeve chef shirt just entering the frame, warm Brooklyn-apartment kitchen natural daylight, soft shadows, calm methodical tone, muted teal and oak palette",
-    gradient: ["#1D4ED8", "#D97706"],
+    gradient: ["#AACC00", "#D97706"],
   },
   {
     id: "creator_mrbeast_burger",
@@ -854,7 +854,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Emma with Chamberlain coffee, faded film, fisheye bedroom, gen-Z mess.",
     promptModifier:
       "Emma Chamberlain-style vlog thumbnail, casual messy-bun subject holding a Chamberlain Coffee cup, faded film-grain color grade with washed-out yellows and dusty pinks, slight fisheye distortion, lived-in bedroom or LA cafe backdrop, unposed candid mid-laugh moment, gen-Z chaotic-authentic aesthetic, low-saturation vintage feel",
-    gradient: ["#F5D0A9", "#3B82F6"],
+    gradient: ["#F5D0A9", "#D4FF00"],
   },
   {
     id: "creator_david_dobrik",
@@ -863,7 +863,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Group selfie, big ensemble laugh, bright LA sun, fisheye warm chaos.",
     promptModifier:
       "David Dobrik Vlog-Squad-style thumbnail, a big group selfie of eight-plus friends all cramming into a fisheye wide-angle frame with over-the-top laughing open-mouth expressions, piled into a Tesla or crammed into a hotel room, bright LA sunny midday overexposed look, chaotic prank-aftermath energy, orange and sky-blue palette, 4-minute-vlog signature",
-    gradient: ["#FB923C", "#3B82F6"],
+    gradient: ["#FB923C", "#D4FF00"],
   },
   {
     id: "creator_jake_paul",
@@ -883,7 +883,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Open Notion on laptop, cozy study desk, College Info Geek warm tones.",
     promptModifier:
       "Thomas Frank-style study-productivity thumbnail, overhead angle of a laptop running a color-coded Notion dashboard on a tidy wooden desk, bullet-journal notebook, leather pen, and a cup of tea arranged around it, warm amber reading-lamp light, College-Info-Geek cozy-intellectual aesthetic, autumn-earth-tone palette, friendly student-focused tone",
-    gradient: ["#B45309", "#1D4ED8"],
+    gradient: ["#B45309", "#AACC00"],
   },
   {
     id: "creator_matt_davella",
@@ -901,7 +901,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Derek holding a counter-intuitive object, physics demo, electric blue.",
     promptModifier:
       "Veritasium-style science-education thumbnail, Derek Muller holding a counter-intuitive physics demonstration object (a spinning top, a vacuum chamber, a magnet), dramatic key light and dark teal backdrop, electric-blue chalkboard-style equation overlay, raised-eyebrow curious expression, educational-but-mind-blown mood, sharp professional documentary polish",
-    gradient: ["#2563EB", "#0F172A"],
+    gradient: ["#D4FF00", "#0F172A"],
   },
   {
     id: "creator_kurzgesagt",
@@ -930,7 +930,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
     description: "Isometric airplane/map infographic, clean vector, blue corporate palette.",
     promptModifier:
       "Wendover Productions-style infographic thumbnail, isometric vector illustration of a Boeing airplane or a world-trade-route map with clean animated-style arrows and data callouts, corporate-infographic clean cyan and navy palette, no human subject, crisp bold sans-serif title space, systems-analysis-explainer educational-documentary polish",
-    gradient: ["#1D4ED8", "#2563EB"],
+    gradient: ["#AACC00", "#D4FF00"],
   },
   {
     id: "creator_coffeezilla",

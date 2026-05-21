@@ -17,9 +17,9 @@
  *   4. Outer ring: thin rim with 32 notches.
  *
  * Colours
- *   Primary gold   #3B82F6  — single source of truth for the brand.
+ *   Primary gold   #D4FF00  — single source of truth for the brand.
  *                              "gold" variant uses a 3-stop gradient
- *                              (#E4C876 → #3B82F6 → #8A6F2F) for depth.
+ *                              (#E4C876 → #D4FF00 → #8A6F2F) for depth.
  *   Mono variant   currentColor — inherits from surrounding text colour.
  *
  * Variants
@@ -39,11 +39,11 @@
 import React from "react";
 
 /** Brand accent blue — primary accent color across light-theme UI. */
-export const BRAND_ACCENT = "#2563EB" as const;
+export const BRAND_ACCENT = "#D4FF00" as const;
 
 /**
- * @deprecated Renamed to BRAND_ACCENT. Was gold (#3B82F6) before the
- * May 2026 brand refresh; now resolves to blue (#2563EB). Kept as an
+ * @deprecated Renamed to BRAND_ACCENT. Was lime (#D4FF00) before the
+ * May 2026 brand refresh; now resolves to lime (#D4FF00). Kept as an
  * alias so existing imports don't break. Prefer BRAND_ACCENT in new code.
  */
 export const SHORTSTACK_GOLD = BRAND_ACCENT;
@@ -93,7 +93,7 @@ export default function Logo({
         <defs>
           <linearGradient id={goldId} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor="#E4C876" />
-            <stop offset="55%" stopColor="#3B82F6" />
+            <stop offset="55%" stopColor="#D4FF00" />
             <stop offset="100%" stopColor="#8A6F2F" />
           </linearGradient>
           <radialGradient id={coreId} cx="50%" cy="45%" r="55%">

@@ -210,7 +210,7 @@ function TrendCard({
         background: "rgba(13,17,32,0.95)",
         border: hovered
           ? "1px solid rgba(212,255,0,0.35)"
-          : "1px solid rgba(99,146,255,0.08)",
+          : "1px solid rgba(212, 255, 0,0.08)",
         transition: "border-color 0.2s ease",
       }}
       onMouseEnter={() => setHovered(true)}

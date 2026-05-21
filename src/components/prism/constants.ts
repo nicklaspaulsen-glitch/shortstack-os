@@ -9,18 +9,18 @@
  */
 
 /** Primary brand accent — blue */
-export const PRISM_ACCENT = "#2563EB";
+export const PRISM_ACCENT = "#D4FF00";
 /** @deprecated Use PRISM_ACCENT instead */
 export const PRISM_RED = PRISM_ACCENT;
 
 /** Brand accent palette — blue-dominant with restrained secondary tones */
 export const PRISM_ACCENTS = [
-  "#2563EB", // blue (hero)
-  "#1D4ED8", // blue-dark
-  "#3B82F6", // blue-light
-  "#2563EB", // blue (repeat)
-  "#1D4ED8", // blue-dark
-  "#3B82F6", // blue-light
+  "#D4FF00", // blue (hero)
+  "#AACC00", // blue-dark
+  "#D4FF00", // blue-light
+  "#D4FF00", // blue (repeat)
+  "#AACC00", // blue-dark
+  "#D4FF00", // blue-light
 ] as const;
 
 /** Per-tile config — accent color + bottom bar gradient */
@@ -67,16 +67,16 @@ export const PRISM_BORDERS = {
 
 /** Accent gradient for signature top bars — blue shimmer, not rainbow */
 export const PRISM_RAINBOW_GRADIENT =
-  "linear-gradient(90deg, #1D4ED8, #2563EB, #3B82F6, #2563EB, #1D4ED8)";
+  "linear-gradient(90deg, #AACC00, #D4FF00, #E8FF4D, #D4FF00, #AACC00)";
 
 /** Text color tokens — light-theme values */
 export const PRISM_TEXT = {
   primary: "#111827",
   secondary: "#374151",
   muted: "#6B7280",
-  accent: "#2563EB",
+  accent: "#D4FF00",
   /** @deprecated Use accent instead */
-  red: "#2563EB",
+  red: "#D4FF00",
 } as const;
 
 /** Surface colors — light-theme */

@@ -229,7 +229,7 @@ export default function FormsPage() {
         redirectUrl: "",
         webhookUrl: "",
         thankYouMessage: data.success_message || "Thanks! We'll be in touch soon.",
-        accentColor: "#2563EB",
+        accentColor: "#D4FF00",
         spamProtection: true,
         views: 0, starts: 0, completions: 0,
       };
@@ -291,7 +291,7 @@ export default function FormsPage() {
       redirectUrl: "",
       webhookUrl: "",
       thankYouMessage: "Thank you for your submission! We'll be in touch soon.",
-      accentColor: "#2563EB",
+      accentColor: "#D4FF00",
       spamProtection: true,
       views: 0,
       starts: 0,
@@ -596,7 +596,7 @@ export default function FormsPage() {
                       <div>
                         <label className="block text-[10px] text-text-muted mb-1">Accent Color</label>
                         <div className="flex gap-2">
-                          {["#2563EB", "#2563EB", "#2563EB", "#ef4444", "#8b5cf6", "#ec4899", "#f59e0b"].map(c => (
+                          {["#D4FF00", "#D4FF00", "#D4FF00", "#ef4444", "#8b5cf6", "#ec4899", "#f59e0b"].map(c => (
                             <button key={c} onClick={() => {
                               const u = { ...activeForm, accentColor: c }; setActiveForm(u); setForms(p => p.map(f => f.id === u.id ? u : f));
                             }} className={`w-6 h-6 rounded-full transition-all ${activeForm.accentColor === c ? "ring-2 ring-[rgba(0,0,0,0.20)] scale-110" : ""}`}

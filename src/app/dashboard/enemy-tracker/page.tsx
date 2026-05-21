@@ -621,7 +621,7 @@ function fmt(n: number): string {
 function scoreColor(score: number) {
   if (score >= 90) return "#22c55e";
   if (score >= 75) return "#f59e0b";
-  if (score >= 55) return "#3B82F6";
+  if (score >= 55) return "#D4FF00";
   return "#6b7280";
 }
 
@@ -739,7 +739,7 @@ function ContentCard({
           : "rgba(13,17,32,0.9)",
         border: selected
           ? "1px solid rgba(212,255,0,0.50)"
-          : "1px solid rgba(99,146,255,0.10)",
+          : "1px solid rgba(212, 255, 0,0.10)",
         boxShadow: selected
           ? "0 0 0 2px rgba(212,255,0,0.20)"
           : "none",
@@ -963,7 +963,7 @@ function DetailPanel({
       style={{
         width: 400,
         background: "rgba(9,13,26,0.97)",
-        borderLeft: "1px solid rgba(99,146,255,0.15)",
+        borderLeft: "1px solid rgba(212, 255, 0,0.15)",
         backdropFilter: "blur(24px)",
       }}
     >
@@ -1166,7 +1166,7 @@ function DetailPanel({
           className="rounded-xl p-4 space-y-3"
           style={{
             background: "rgba(13,17,32,0.8)",
-            border: "1px solid rgba(99,146,255,0.10)",
+            border: "1px solid rgba(212, 255, 0,0.10)",
           }}
         >
           <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider">
@@ -1230,7 +1230,7 @@ function DetailPanel({
           className="rounded-xl p-4"
           style={{
             background: "rgba(13,17,32,0.8)",
-            border: "1px solid rgba(99,146,255,0.10)",
+            border: "1px solid rgba(212, 255, 0,0.10)",
           }}
         >
           <h4 className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-2 flex items-center gap-1.5">
@@ -1490,7 +1490,7 @@ export default function EnemyTrackerPage() {
           style={{
             width: 200,
             background: "rgba(13,17,32,0.70)",
-            borderRight: "1px solid rgba(99,146,255,0.08)",
+            borderRight: "1px solid rgba(212, 255, 0,0.08)",
           }}
         >
           <div className="p-3">
@@ -1579,7 +1579,7 @@ export default function EnemyTrackerPage() {
             style={{
               background: "rgba(2,7,17,0.92)",
               backdropFilter: "blur(12px)",
-              borderBottom: "1px solid rgba(99,146,255,0.08)",
+              borderBottom: "1px solid rgba(212, 255, 0,0.08)",
             }}
           >
             {/* Platform tabs */}

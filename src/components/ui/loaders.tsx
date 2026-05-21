@@ -16,7 +16,7 @@ export interface LoaderProps {
 }
 
 /* 1. DotsPulse — 3 dots scaling in sequence */
-export function DotsPulse({ size = 40, color = "var(--gold, #3B82F6)", label, className = "" }: LoaderProps) {
+export function DotsPulse({ size = 40, color = "var(--gold, #D4FF00)", label, className = "" }: LoaderProps) {
   return (
     <div className={`inline-flex flex-col items-center gap-2 ${className}`}>
       <div style={{ width: size, height: size / 3 }} className="inline-flex items-center gap-[6px]">
@@ -46,7 +46,7 @@ export function DotsPulse({ size = 40, color = "var(--gold, #3B82F6)", label, cl
 }
 
 /* 2. OrbitLoader — 3 dots orbiting center */
-export function OrbitLoader({ size = 40, color = "var(--gold, #3B82F6)", label, className = "" }: LoaderProps) {
+export function OrbitLoader({ size = 40, color = "var(--gold, #D4FF00)", label, className = "" }: LoaderProps) {
   return (
     <div className={`inline-flex flex-col items-center gap-2 ${className}`}>
       <div className="relative" style={{ width: size, height: size }}>
@@ -81,7 +81,7 @@ export function OrbitLoader({ size = 40, color = "var(--gold, #3B82F6)", label, 
 }
 
 /* 3. WaveBars — audio visualizer */
-export function WaveBars({ size = 40, color = "var(--gold, #3B82F6)", label, className = "" }: LoaderProps) {
+export function WaveBars({ size = 40, color = "var(--gold, #D4FF00)", label, className = "" }: LoaderProps) {
   return (
     <div className={`inline-flex flex-col items-center gap-2 ${className}`}>
       <div className="inline-flex items-end gap-[3px]" style={{ height: size, width: size }}>
@@ -111,7 +111,7 @@ export function WaveBars({ size = 40, color = "var(--gold, #3B82F6)", label, cla
 }
 
 /* 4. InfinityLoader — figure-8 trail */
-export function InfinityLoader({ size = 60, color = "var(--gold, #3B82F6)", label, className = "" }: LoaderProps) {
+export function InfinityLoader({ size = 60, color = "var(--gold, #D4FF00)", label, className = "" }: LoaderProps) {
   return (
     <div className={`inline-flex flex-col items-center gap-2 ${className}`}>
       <svg width={size} height={size / 2} viewBox="0 0 100 50" style={{ overflow: "visible" }}>
@@ -136,7 +136,7 @@ export function InfinityLoader({ size = 60, color = "var(--gold, #3B82F6)", labe
 }
 
 /* 5. MorphShapes — shape morphing via border-radius */
-export function MorphShapes({ size = 40, color = "var(--gold, #3B82F6)", label, className = "" }: LoaderProps) {
+export function MorphShapes({ size = 40, color = "var(--gold, #D4FF00)", label, className = "" }: LoaderProps) {
   return (
     <div className={`inline-flex flex-col items-center gap-2 ${className}`}>
       <span
@@ -162,7 +162,7 @@ export function MorphShapes({ size = 40, color = "var(--gold, #3B82F6)", label, 
 }
 
 /* 6. ParticleBurst — 8 particles radiating */
-export function ParticleBurst({ size = 50, color = "var(--gold, #3B82F6)", label, className = "" }: LoaderProps) {
+export function ParticleBurst({ size = 50, color = "var(--gold, #D4FF00)", label, className = "" }: LoaderProps) {
   return (
     <div className={`inline-flex flex-col items-center gap-2 ${className}`}>
       <div className="relative" style={{ width: size, height: size }}>
@@ -232,7 +232,7 @@ export function TypewriterLoader({ prefix = "Loading", size = 14, color, classNa
 }
 
 /* 8. SphereLoader — rotating conic-gradient sphere */
-export function SphereLoader({ size = 40, color = "var(--gold, #3B82F6)", label, className = "" }: LoaderProps) {
+export function SphereLoader({ size = 40, color = "var(--gold, #D4FF00)", label, className = "" }: LoaderProps) {
   return (
     <div className={`inline-flex flex-col items-center gap-2 ${className}`}>
       <div
@@ -254,7 +254,7 @@ export function SphereLoader({ size = 40, color = "var(--gold, #3B82F6)", label,
 }
 
 /* 9. ScanLineLoader — horizontal line sweeping */
-export function ScanLineLoader({ size = 100, color = "var(--gold, #3B82F6)", label, className = "" }: LoaderProps) {
+export function ScanLineLoader({ size = 100, color = "var(--gold, #D4FF00)", label, className = "" }: LoaderProps) {
   return (
     <div className={`inline-flex flex-col items-center gap-2 ${className}`}>
       <div
@@ -282,7 +282,7 @@ export function ScanLineLoader({ size = 100, color = "var(--gold, #3B82F6)", lab
 }
 
 /* 10. QuantumLoader — 3 concentric rotating circles */
-export function QuantumLoader({ size = 50, color = "var(--gold, #3B82F6)", label, className = "" }: LoaderProps) {
+export function QuantumLoader({ size = 50, color = "var(--gold, #D4FF00)", label, className = "" }: LoaderProps) {
   return (
     <div className={`inline-flex flex-col items-center gap-2 ${className}`}>
       <div className="relative" style={{ width: size, height: size }}>

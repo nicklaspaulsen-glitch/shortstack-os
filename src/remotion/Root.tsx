@@ -36,7 +36,7 @@ export function RemotionRoot() {
           videoUrl: "",
           title: "",
           captionText: "",
-          brandColor: "#3B82F6",
+          brandColor: "#D4FF00",
           showIntro: true,
           showOutro: true,
         }}
@@ -54,7 +54,7 @@ export function RemotionRoot() {
           videoUrl: "",
           title: "",
           captionText: "",
-          brandColor: "#3B82F6",
+          brandColor: "#D4FF00",
           showIntro: false,
           showOutro: false,
         }}
@@ -72,7 +72,7 @@ export function RemotionRoot() {
           videoUrl: "",
           title: "",
           captionText: "",
-          brandColor: "#3B82F6",
+          brandColor: "#D4FF00",
           showIntro: false,
           showOutro: false,
         }}

@@ -18,7 +18,7 @@ export interface QuoteCardProps {
   attribution?: string;         // e.g. "— Steve Jobs" or "Confucius"
   tag?: string;                 // bottom tag, e.g. "#motivation" or "Daily Wisdom"
   bgColor?: string;             // e.g. "#020711"
-  accentColor?: string;         // e.g. "#3B82F6" — rule + quote mark tint
+  accentColor?: string;         // e.g. "#D4FF00" — rule + quote mark tint
   textColor?: string;           // e.g. "#F0F0F4"
   fontFamily?: string;
   quoteSize?: "sm" | "md" | "lg"; // controls quote font size (default "md")
@@ -30,7 +30,7 @@ export function renderQuoteCard(props: QuoteCardProps): string {
     attribution = "",
     tag = "",
     bgColor = "#020711",
-    accentColor = "#3B82F6",
+    accentColor = "#D4FF00",
     textColor = "#F0F0F4",
     fontFamily = "Georgia, 'Times New Roman', serif",
     quoteSize = "md",
@@ -132,7 +132,7 @@ export const quoteCardTemplate = {
     attribution: "— Peter Drucker",
     tag: "#leadership",
     bgColor: "#020711",
-    accentColor: "#3B82F6",
+    accentColor: "#D4FF00",
     textColor: "#F0F0F4",
     quoteSize: "md" as const,
   } satisfies QuoteCardProps,

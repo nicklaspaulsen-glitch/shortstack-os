@@ -18,7 +18,7 @@ export default function TrinitySuggestions({ suggestions, onPick }: Props) {
         <button
           key={s}
           onClick={() => onPick(s)}
-          className="text-[11px] px-3 py-1.5 rounded-full border border-border-subtle bg-surface-light text-text-muted hover:text-[#2563EB] hover:border-[rgba(212,255,0,0.3)] hover:bg-[rgba(212,255,0,0.04)] transition-all"
+          className="text-[11px] px-3 py-1.5 rounded-full border border-border-subtle bg-surface-light text-text-muted hover:text-[#D4FF00] hover:border-[rgba(212,255,0,0.3)] hover:bg-[rgba(212,255,0,0.04)] transition-all"
         >
           {s}
         </button>

@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
       duration: duration ?? 30,
       description: description ?? null,
       location_type: location_type ?? "zoom",
-      color: color ?? "#3B82F6",
+      color: color ?? "#D4FF00",
       price: price ?? null,
       active: active ?? true,
       buffer_time: buffer_time ?? 0,

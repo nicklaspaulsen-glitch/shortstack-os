@@ -339,7 +339,7 @@ export default function PageTrainingPanel({
   return (
     <div
       className={`rounded-2xl border overflow-hidden ${className}`}
-      style={{ borderColor: "rgba(99,146,255,0.14)" }}
+      style={{ borderColor: "rgba(212, 255, 0,0.14)" }}
     >
       {/* Header — always visible */}
       <button
@@ -350,7 +350,7 @@ export default function PageTrainingPanel({
         <div className="flex items-center gap-2.5">
           <Brain
             size={14}
-            style={{ color: config.creator_style_id || config.custom_instructions ? "#3B82F6" : "#4A4A5A" }}
+            style={{ color: config.creator_style_id || config.custom_instructions ? "#D4FF00" : "#4A4A5A" }}
           />
           <span className="text-[12px] font-semibold text-text-primary">
             AI Training
@@ -391,7 +391,7 @@ export default function PageTrainingPanel({
               className="px-4 pb-4 pt-1 space-y-4 border-t"
               style={{
                 background: "rgba(13,17,32,0.95)",
-                borderColor: "rgba(99,146,255,0.10)",
+                borderColor: "rgba(212, 255, 0,0.10)",
               }}
             >
               {/* Creator style picker */}
@@ -418,7 +418,7 @@ export default function PageTrainingPanel({
                         borderColor:
                           config.creator_style_id === s.id
                             ? s.primaryColor + "60"
-                            : "rgba(99,146,255,0.10)",
+                            : "rgba(212, 255, 0,0.10)",
                         color:
                           config.creator_style_id === s.id
                             ? s.primaryColor
@@ -455,9 +455,9 @@ export default function PageTrainingPanel({
                             : "rgba(13,17,32,0.55)",
                         borderColor:
                           config.tone === t
-                            ? "#3B82F6"
-                            : "rgba(99,146,255,0.12)",
-                        color: config.tone === t ? "#60A5FA" : "#A8A8B2",
+                            ? "#D4FF00"
+                            : "rgba(212, 255, 0,0.12)",
+                        color: config.tone === t ? "#D4FF00" : "#A8A8B2",
                       }}
                     >
                       {t}
@@ -481,7 +481,7 @@ export default function PageTrainingPanel({
                         className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px]"
                         style={{
                           background: "rgba(212,255,0,0.12)",
-                          color: "#60A5FA",
+                          color: "#D4FF00",
                           border: "1px solid rgba(212,255,0,0.22)",
                         }}
                       >
@@ -512,7 +512,7 @@ export default function PageTrainingPanel({
                           className="px-2 py-0.5 rounded-full text-[9px] border cursor-pointer transition-all duration-150 hover:border-indigo-400/40"
                           style={{
                             background: "rgba(13,17,32,0.55)",
-                            borderColor: "rgba(99,146,255,0.16)",
+                            borderColor: "rgba(212, 255, 0,0.16)",
                             color: "#6B7280",
                           }}
                         >
@@ -532,7 +532,7 @@ export default function PageTrainingPanel({
                     onKeyDown={(e) => e.key === "Enter" && addTopic()}
                     placeholder="Add a topic…"
                     className="flex-1 px-2.5 py-1.5 text-[10px] rounded-lg border bg-transparent text-text-primary placeholder:text-text-muted focus:outline-none"
-                    style={{ borderColor: "rgba(99,146,255,0.18)" }}
+                    style={{ borderColor: "rgba(212, 255, 0,0.18)" }}
                   />
                   <button
                     onClick={() => addTopic()}
@@ -540,7 +540,7 @@ export default function PageTrainingPanel({
                     style={{
                       background: "rgba(212,255,0,0.12)",
                       borderColor: "rgba(212,255,0,0.22)",
-                      color: "#60A5FA",
+                      color: "#D4FF00",
                     }}
                   >
                     <Plus size={11} />
@@ -564,7 +564,7 @@ export default function PageTrainingPanel({
                   rows={4}
                   placeholder={hints.instructionPlaceholder}
                   className="w-full px-3 py-2 text-[10px] rounded-lg border bg-transparent text-text-primary placeholder:text-text-muted focus:outline-none resize-none"
-                  style={{ borderColor: "rgba(99,146,255,0.18)", lineHeight: 1.6 }}
+                  style={{ borderColor: "rgba(212, 255, 0,0.18)", lineHeight: 1.6 }}
                 />
               </div>
 
@@ -582,7 +582,7 @@ export default function PageTrainingPanel({
                       className="flex-1 px-3 py-2 text-[10px] rounded-lg border"
                       style={{
                         background: "rgba(13,17,32,0.55)",
-                        borderColor: "rgba(99,146,255,0.12)",
+                        borderColor: "rgba(212, 255, 0,0.12)",
                         color: "#A8A8B2",
                         whiteSpace: "pre-wrap",
                         wordBreak: "break-word",
@@ -606,7 +606,7 @@ export default function PageTrainingPanel({
                       rows={2}
                       placeholder={hints.examplePlaceholder}
                       className="flex-1 px-2.5 py-1.5 text-[10px] rounded-lg border bg-transparent text-text-primary placeholder:text-text-muted focus:outline-none resize-none"
-                      style={{ borderColor: "rgba(99,146,255,0.18)" }}
+                      style={{ borderColor: "rgba(212, 255, 0,0.18)" }}
                     />
                     <button
                       onClick={addExample}
@@ -614,7 +614,7 @@ export default function PageTrainingPanel({
                       style={{
                         background: "rgba(212,255,0,0.12)",
                         borderColor: "rgba(212,255,0,0.22)",
-                        color: "#60A5FA",
+                        color: "#D4FF00",
                       }}
                     >
                       <Plus size={11} />
@@ -633,7 +633,7 @@ export default function PageTrainingPanel({
                     background: saved
                       ? "rgba(74,222,128,0.15)"
                       : "rgba(212,255,0,0.18)",
-                    color: saved ? "#4ADE80" : "#60A5FA",
+                    color: saved ? "#4ADE80" : "#D4FF00",
                     border: `1px solid ${saved ? "rgba(74,222,128,0.30)" : "rgba(212,255,0,0.28)"}`,
                     opacity: saving ? 0.7 : 1,
                   }}

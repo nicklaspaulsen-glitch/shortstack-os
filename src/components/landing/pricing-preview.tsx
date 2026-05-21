@@ -99,7 +99,7 @@ export default function PricingPreview() {
                   <div
                     className="self-start text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full mb-4"
                     style={{
-                      background: "#2563EB",
+                      background: "#D4FF00",
                       color: "#fff",
                     }}
                   >
@@ -131,7 +131,7 @@ export default function PricingPreview() {
                       <Check
                         size={14}
                         className="shrink-0 mt-0.5"
-                        style={{ color: "#60A5FA" }}
+                        style={{ color: "#D4FF00" }}
                       />
                       <span>{b}</span>
                     </li>
@@ -143,8 +143,8 @@ export default function PricingPreview() {
                   href="/pricing"
                   className={
                     plan.featured
-                      ? "relative inline-flex items-center justify-center select-none font-semibold leading-none cursor-pointer shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/50 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] h-10 px-5 text-[12px] gap-2 rounded-[12px] w-full bg-[#3B82F6] text-white border border-[rgba(96,165,250,0.40)] shadow-[0_0_0_1px_rgba(212,255,0,0.30),0_4px_20px_rgba(212,255,0,0.55),0_0_60px_rgba(212,255,0,0.20)] hover:shadow-[0_0_0_1px_rgba(212,255,0,0.50),0_6px_28px_rgba(212,255,0,0.70),0_0_80px_rgba(212,255,0,0.30)] hover:bg-[#2563EB] hover:-translate-y-0.5 active:translate-y-0"
-                      : "relative inline-flex items-center justify-center select-none font-medium leading-none cursor-pointer shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/50 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] h-10 px-5 text-[12px] gap-2 rounded-[12px] w-full bg-[rgba(19,24,39,0.72)] text-[#A8A8B2] border border-[rgba(255,255,255,0.08)] backdrop-blur-[14px] hover:bg-[rgba(28,35,56,0.80)] hover:text-[#F0F0F4] hover:border-[rgba(255,255,255,0.13)] hover:-translate-y-px active:translate-y-0"
+                      ? "relative inline-flex items-center justify-center select-none font-semibold leading-none cursor-pointer shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-[#D4FF00]/50 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] h-10 px-5 text-[12px] gap-2 rounded-[12px] w-full bg-[#D4FF00] text-[#020711] border border-[rgba(212, 255, 0,0.40)] shadow-[0_0_0_1px_rgba(212,255,0,0.30),0_4px_20px_rgba(212,255,0,0.55),0_0_60px_rgba(212,255,0,0.20)] hover:shadow-[0_0_0_1px_rgba(212,255,0,0.50),0_6px_28px_rgba(212,255,0,0.70),0_0_80px_rgba(212,255,0,0.30)] hover:bg-[#D4FF00] hover:-translate-y-0.5 active:translate-y-0"
+                      : "relative inline-flex items-center justify-center select-none font-medium leading-none cursor-pointer shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-[#D4FF00]/50 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] h-10 px-5 text-[12px] gap-2 rounded-[12px] w-full bg-[rgba(19,24,39,0.72)] text-[#A8A8B2] border border-[rgba(255,255,255,0.08)] backdrop-blur-[14px] hover:bg-[rgba(28,35,56,0.80)] hover:text-[#F0F0F4] hover:border-[rgba(255,255,255,0.13)] hover:-translate-y-px active:translate-y-0"
                   }
                 >
                   {plan.cta}

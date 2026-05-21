@@ -98,7 +98,7 @@ export default function ReplaceStack() {
               className="text-4xl md:text-5xl font-extrabold mb-2 relative"
               style={{
                 background:
-                  "linear-gradient(135deg, #2563EB, #60A5FA 60%, #DBEAFE)",
+                  "linear-gradient(135deg, #D4FF00, #E8FF4D 60%, #F0FFB0)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -153,7 +153,7 @@ function ToolCard({ tool }: { tool: Tool }) {
           <p className="text-[10px] text-gray-500 mt-0.5 truncate">{category}</p>
           <p
             className="text-[10px] font-bold mt-1.5"
-            style={{ color: "#60A5FA" }}
+            style={{ color: "#D4FF00" }}
           >
             Save ${saved}/mo
           </p>

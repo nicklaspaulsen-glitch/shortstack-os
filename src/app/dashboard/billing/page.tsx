@@ -480,7 +480,7 @@ export default function BillingPage() {
                       className="relative overflow-hidden border p-4 transition-all spotlight-card"
                       style={{
                         background: pack.popular ? "rgba(212,255,0,0.08)" : "rgba(255,255,255,0.05)",
-                        borderColor: pack.popular ? "rgba(212,255,0,0.30)" : "rgba(99,146,255,0.10)",
+                        borderColor: pack.popular ? "rgba(212,255,0,0.30)" : "rgba(212, 255, 0,0.10)",
                       }}
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}

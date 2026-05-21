@@ -245,7 +245,7 @@ interface Props {
   businessType?: string | null;
 }
 
-const GROUP_COLOR_PALETTE = ["#3B82F6", "#2563EB", "#2563EB", "#EF4444", "#A855F7", "#F59E0B", "#EC4899"];
+const GROUP_COLOR_PALETTE = ["#D4FF00", "#D4FF00", "#D4FF00", "#EF4444", "#A855F7", "#F59E0B", "#EC4899"];
 
 export default function SidebarCustomizerFull({ businessType }: Props) {
   /* ── Loaded prefs (saved baseline, used for dirty comparison) ──── */
@@ -295,7 +295,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                 name: String(g.name || g.label || "Group"),
                 label: String(g.label || g.name || "Group"),
                 icon: String(g.icon || "Layers"),
-                color: String(g.color || "#3B82F6"),
+                color: String(g.color || "#D4FF00"),
                 order: typeof g.order === "number" ? g.order : 0,
                 items: Array.isArray(g.items) ? (g.items as unknown[]).filter((x): x is string => typeof x === "string") : [],
                 subgroups: Array.isArray(g.subgroups)
@@ -482,7 +482,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
         name: name.trim(),
         label: name.trim(),
         icon: icon || "Layers",
-        color: color || "#3B82F6",
+        color: color || "#D4FF00",
         order: nextOrder,
         items: [],
         subgroups: [],
@@ -678,7 +678,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
           <button
             onClick={runAiRecommend}
             disabled={aiLoading}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[rgba(212,255,0,0.12)] to-amber-400/15 border border-[rgba(212,255,0,0.25)] text-[#2563EB] text-xs font-semibold hover:from-[rgba(212,255,0,0.18)] hover:to-amber-400/20 transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[rgba(212,255,0,0.12)] to-amber-400/15 border border-[rgba(212,255,0,0.25)] text-[#D4FF00] text-xs font-semibold hover:from-[rgba(212,255,0,0.18)] hover:to-amber-400/20 transition-all disabled:opacity-50"
           >
             {aiLoading ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
             {aiLoading ? "Thinking..." : "AI Recommended"}
@@ -707,7 +707,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
           </button>
           <div className="flex-1" />
           <span className="text-[11px] text-text-muted">
-            <span className="text-[#2563EB] font-semibold">
+            <span className="text-[#D4FF00] font-semibold">
               {prefs.enabled_items.length === 0 ? ALL_SIDEBAR_ITEMS.length : prefs.enabled_items.length}
             </span>
             {" / "}{ALL_SIDEBAR_ITEMS.length} visible
@@ -721,7 +721,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
         <div className="lg:col-span-4 card space-y-2">
           <div className="flex items-center gap-2">
             <h3 className="!mb-0 flex items-center gap-1.5 flex-1">
-              <Layers size={14} className="text-[#2563EB]" /> Library
+              <Layers size={14} className="text-[#D4FF00]" /> Library
             </h3>
             <span className="text-[10px] text-text-muted">{filteredLibrary.length}</span>
           </div>
@@ -768,7 +768,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                     <span className="text-text-primary">{prefs.renames[item.href] || item.label}</span>
                     <span className="ml-1 text-[9px] text-text-muted/60">· {item.section}</span>
                   </span>
-                  {pinned && <Pin size={10} className="text-[#2563EB] shrink-0" />}
+                  {pinned && <Pin size={10} className="text-[#D4FF00] shrink-0" />}
                   {assigned && <Layers size={10} className="text-indigo-400 shrink-0" />}
                   <button
                     onClick={() => toggleItem(item.href)}
@@ -780,10 +780,10 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                   <div className="hidden group-hover:flex items-center gap-0.5 shrink-0">
                     <button
                       onClick={() => togglePin(item.href)}
-                      className="p-0.5 rounded text-text-muted hover:text-[#2563EB] transition-colors"
+                      className="p-0.5 rounded text-text-muted hover:text-[#D4FF00] transition-colors"
                       title={pinned ? "Unpin" : "Pin to top"}
                     >
-                      <Pin size={11} className={pinned ? "text-[#2563EB]" : ""} />
+                      <Pin size={11} className={pinned ? "text-[#D4FF00]" : ""} />
                     </button>
                     <button
                       onClick={() => setRenameItemHref(item.href)}
@@ -816,7 +816,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
         <div className="lg:col-span-5 card space-y-2">
           <div className="flex items-center gap-2">
             <h3 className="!mb-0 flex items-center gap-1.5 flex-1">
-              <Settings2 size={14} className="text-[#2563EB]" /> Your Layout
+              <Settings2 size={14} className="text-[#D4FF00]" /> Your Layout
             </h3>
             <button
               onClick={() => setNewGroupOpen({})}
@@ -830,8 +830,8 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
           {pinnedItems.length > 0 && (
             <div className="rounded-xl border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.04)] p-2">
               <div className="flex items-center gap-1.5 mb-1.5">
-                <Pin size={10} className="text-[#2563EB]" />
-                <span className="text-[10px] uppercase tracking-wider font-semibold text-[#2563EB]">Pinned</span>
+                <Pin size={10} className="text-[#D4FF00]" />
+                <span className="text-[10px] uppercase tracking-wider font-semibold text-[#D4FF00]">Pinned</span>
               </div>
               <div className="space-y-0.5">
                 {pinnedItems.map(href => (
@@ -872,7 +872,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                       name: "My Group",
                       label: "My Group",
                       icon: "Layers",
-                      color: "#3B82F6",
+                      color: "#D4FF00",
                       order: p.custom_groups.length,
                       items: [href],
                       subgroups: [],
@@ -884,12 +884,12 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                 toast.success("Created your first group — drop more items in, or rename it.");
               }}
               className={`text-[11px] text-center py-6 border border-dashed rounded-xl transition-colors ${
-                dragTarget === "_newgroup" ? "border-[#2563EB] bg-[rgba(212,255,0,0.06)] text-text-primary" : "border-border-subtle/50 text-text-muted"
+                dragTarget === "_newgroup" ? "border-[#D4FF00] bg-[rgba(212,255,0,0.06)] text-text-primary" : "border-border-subtle/50 text-text-muted"
               }`}
             >
               {dragTarget === "_newgroup"
                 ? "Release to create your first group"
-                : <>No custom groups yet. Drop an item here or click <span className="text-[#2563EB] font-medium">+ New Group</span>.</>}
+                : <>No custom groups yet. Drop an item here or click <span className="text-[#D4FF00] font-medium">+ New Group</span>.</>}
             </div>
           ) : (
             <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1 scrollbar-none">
@@ -930,7 +930,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
             onDragOver={(e) => { e.preventDefault(); setDragTarget("_unassigned"); }}
             onDrop={onDropUnassign}
             className={`rounded-xl p-2 border border-dashed ${
-              dragTarget === "_unassigned" ? "border-[#2563EB] bg-[rgba(212,255,0,0.06)]" : "border-border-subtle/60 bg-surface-light/30"
+              dragTarget === "_unassigned" ? "border-[#D4FF00] bg-[rgba(212,255,0,0.06)]" : "border-border-subtle/60 bg-surface-light/30"
             }`}
           >
             <div className="flex items-center gap-1.5 mb-1.5">
@@ -1060,8 +1060,8 @@ function LayoutItemRow({
       <IconByName name={iconName} size={11} className="text-text-muted shrink-0" />
       <span className="truncate flex-1 text-text-primary">{label}</span>
       <div className="hidden group-hover:flex items-center gap-0.5 shrink-0">
-        <button onClick={onTogglePin} title={pinned ? "Unpin" : "Pin to top"} className="p-0.5 rounded text-text-muted hover:text-[#2563EB]">
-          <Pin size={10} className={pinned ? "text-[#2563EB]" : ""} />
+        <button onClick={onTogglePin} title={pinned ? "Unpin" : "Pin to top"} className="p-0.5 rounded text-text-muted hover:text-[#D4FF00]">
+          <Pin size={10} className={pinned ? "text-[#D4FF00]" : ""} />
         </button>
         <button onClick={onRename} title="Rename" className="p-0.5 rounded text-text-muted hover:text-text-primary">
           <PencilLine size={10} />
@@ -1130,7 +1130,7 @@ function GroupCard({
           {open ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
         </button>
         <button onClick={onChangeIcon} className="p-0.5 rounded hover:bg-surface-light transition-colors" title="Change icon">
-          <IconByName name={group.icon} size={13} className="text-[#2563EB]" />
+          <IconByName name={group.icon} size={13} className="text-[#D4FF00]" />
         </button>
         {editingName ? (
           <input
@@ -1142,7 +1142,7 @@ function GroupCard({
             className="input text-xs flex-1 py-0.5"
           />
         ) : (
-          <button onClick={() => setEditingName(true)} className="text-xs font-semibold text-text-primary hover:text-[#2563EB] transition-colors flex-1 text-left truncate">
+          <button onClick={() => setEditingName(true)} className="text-xs font-semibold text-text-primary hover:text-[#D4FF00] transition-colors flex-1 text-left truncate">
             {group.name}
           </button>
         )}
@@ -1150,7 +1150,7 @@ function GroupCard({
         <div className="flex items-center gap-0.5">
           <button onClick={onMoveUp} disabled={isFirst} className="p-0.5 rounded text-text-muted hover:text-text-primary disabled:opacity-30" title="Move up"><ArrowUp size={10} /></button>
           <button onClick={onMoveDown} disabled={isLast} className="p-0.5 rounded text-text-muted hover:text-text-primary disabled:opacity-30" title="Move down"><ArrowDown size={10} /></button>
-          <button onClick={onAddSubgroup} className="p-0.5 rounded text-text-muted hover:text-[#2563EB]" title="Add subgroup"><Plus size={10} /></button>
+          <button onClick={onAddSubgroup} className="p-0.5 rounded text-text-muted hover:text-[#D4FF00]" title="Add subgroup"><Plus size={10} /></button>
           <button onClick={onDelete} className="p-0.5 rounded text-text-muted hover:text-danger" title="Delete group"><Trash2 size={10} /></button>
         </div>
       </div>
@@ -1282,7 +1282,7 @@ function LivePreview({ prefs }: { prefs: SidebarPrefs }) {
   return (
     <div className="glass rounded-xl !p-2 sticky top-2">
       <div className="flex items-center gap-1.5 mb-2 px-1">
-        <Eye size={12} className="text-[#2563EB]" />
+        <Eye size={12} className="text-[#D4FF00]" />
         <span className="text-[10px] uppercase tracking-wider text-text-muted font-semibold">Live Preview</span>
       </div>
       <div className="rounded-xl border border-border-subtle bg-surface p-1.5 max-h-[640px] overflow-y-auto scrollbar-none">
@@ -1290,8 +1290,8 @@ function LivePreview({ prefs }: { prefs: SidebarPrefs }) {
         {prefs.pins.length > 0 && (
           <div className="mb-1.5">
             <div className="flex items-center gap-1 px-2 pt-1 pb-0.5">
-              <Pin size={8} className="text-[#2563EB]" />
-              <span className="text-[8px] uppercase tracking-[0.2em] font-semibold text-[#2563EB]">Pinned</span>
+              <Pin size={8} className="text-[#D4FF00]" />
+              <span className="text-[8px] uppercase tracking-[0.2em] font-semibold text-[#D4FF00]">Pinned</span>
             </div>
             {prefs.pins.filter(isEnabled).map(href => (
               <PreviewRow key={href} href={href} prefs={prefs} />
@@ -1343,7 +1343,7 @@ function LivePreview({ prefs }: { prefs: SidebarPrefs }) {
       </div>
       <p className="text-[9px] text-text-muted mt-2 px-1 leading-relaxed">
         Showing{" "}
-        <span className="text-[#2563EB]">
+        <span className="text-[#D4FF00]">
           {prefs.enabled_items.length === 0 ? ALL_SIDEBAR_ITEMS.length : prefs.enabled_items.length}
         </span>
         {" "}items in {prefs.custom_groups.length} groups
@@ -1376,7 +1376,7 @@ function NewGroupModal({
 }) {
   const [name, setName] = useState("");
   const [icon, setIcon] = useState("Layers");
-  const [color, setColor] = useState("#3B82F6");
+  const [color, setColor] = useState("#D4FF00");
   const [iconSearch, setIconSearch] = useState("");
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -1444,7 +1444,7 @@ function NewGroupModal({
                       key={n}
                       onClick={() => setIcon(n)}
                       className={`p-1.5 rounded-md flex items-center justify-center transition-all ${
-                        icon === n ? "bg-[#2563EB] text-white" : "bg-surface-light/50 text-text-muted hover:text-text-primary hover:bg-surface-light"
+                        icon === n ? "bg-[#D4FF00] text-[#020711]" : "bg-surface-light/50 text-text-muted hover:text-text-primary hover:bg-surface-light"
                       }`}
                       title={n}
                     >
@@ -1552,7 +1552,7 @@ function IconPickerModal({
                 key={n}
                 onClick={() => onPick(n)}
                 className={`p-2 rounded-md flex items-center justify-center transition-all ${
-                  currentIcon === n ? "bg-[#2563EB] text-white" : "bg-surface-light/50 text-text-muted hover:text-text-primary hover:bg-surface-light"
+                  currentIcon === n ? "bg-[#D4FF00] text-[#020711]" : "bg-surface-light/50 text-text-muted hover:text-text-primary hover:bg-surface-light"
                 }`}
                 title={n}
               >

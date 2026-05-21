@@ -266,12 +266,12 @@ async function resolveBranding(
   if (meta) {
     return {
       brandName: meta.brand_name || data?.account_name || null,
-      primaryColor: meta.primary_color || "#3B82F6",
+      primaryColor: meta.primary_color || "#D4FF00",
       logoUrl: meta.logo_url || null,
       whiteLabelActive: true,
     };
   }
-  return { brandName: null, primaryColor: "#3B82F6", logoUrl: null, whiteLabelActive: false };
+  return { brandName: null, primaryColor: "#D4FF00", logoUrl: null, whiteLabelActive: false };
 }
 
 /* ── PDF builder — PDFKit, streaming into a Buffer ────────────── */

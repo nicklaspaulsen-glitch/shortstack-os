@@ -420,7 +420,7 @@ const ADVANCED_CAPTION_PRESETS = [
   { id: "youtube_standard", name: "YouTube Standard", desc: "White on dark box", bg: "rgba(0,0,0,0.75)", color: "#fff", stroke: "transparent", weight: 500, size: 28, position: "bottom" },
   { id: "podcast_minimal", name: "Podcast Minimal", desc: "Clean sans, no backdrop", bg: "transparent", color: "#fff", stroke: "transparent", weight: 400, size: 24, position: "bottom" },
   { id: "mrbeast", name: "MrBeast Style", desc: "Huge yellow, word highlight", bg: "transparent", color: "#FFEB3B", stroke: "#000", weight: 900, size: 96, position: "center" },
-  { id: "karaoke", name: "Karaoke", desc: "Word-by-word color fill", bg: "transparent", color: "#fff", stroke: "#2563EB", weight: 700, size: 48, position: "bottom" },
+  { id: "karaoke", name: "Karaoke", desc: "Word-by-word color fill", bg: "transparent", color: "#fff", stroke: "#D4FF00", weight: 700, size: 48, position: "bottom" },
   { id: "typewriter", name: "Typewriter", desc: "Letter-by-letter reveal", bg: "rgba(0,0,0,0.6)", color: "#00ff00", stroke: "transparent", weight: 400, size: 28, position: "bottom" },
   { id: "popup", name: "Pop-up", desc: "Fade + scale words", bg: "transparent", color: "#fff", stroke: "#000", weight: 800, size: 56, position: "center" },
   { id: "cinematic", name: "Cinematic", desc: "Italic lower-third", bg: "transparent", color: "#f5f5f5", stroke: "transparent", weight: 300, size: 22, position: "bottom" },
@@ -1388,7 +1388,7 @@ export default function VideoEditorPage() {
           start: at,
           duration: durSec * 1000,
           label: String(drop.payload.label || drop.id).slice(0, 32),
-          color: "#3B82F6",
+          color: "#D4FF00",
           thumbnailUrl:
             typeof drop.payload.thumbnail_url === "string"
               ? (drop.payload.thumbnail_url as string)
@@ -1437,7 +1437,7 @@ export default function VideoEditorPage() {
         duration: durMs,
         tracks: DEFAULT_TIMELINE_TRACKS,
         clips: [
-          { id: "main", trackId: "v1", start: 0, duration: durMs, label: "Rendered video", color: "#3B82F6", thumbnailUrl: undefined },
+          { id: "main", trackId: "v1", start: 0, duration: durMs, label: "Rendered video", color: "#D4FF00", thumbnailUrl: undefined },
         ],
       });
     }
@@ -1581,7 +1581,7 @@ export default function VideoEditorPage() {
   const [aiScriptScenes, setAiScriptScenes] = useState<Array<{ text: string; suggestedStyle: string; duration: number }>>([]);
   const [selectedBrandKit, setSelectedBrandKit] = useState("");
   const [brandKits] = useState([
-    { id: "bk1", name: "Default Brand", colors: ["#2563EB", "#1a1a1a", "#ffffff"], font: "Inter", logo: "logo.png" },
+    { id: "bk1", name: "Default Brand", colors: ["#D4FF00", "#1a1a1a", "#ffffff"], font: "Inter", logo: "logo.png" },
   ]);
   const [selectedMotionGraphics, setSelectedMotionGraphics] = useState<string[]>([]);
   const [motionGraphicsCategory, setMotionGraphicsCategory] = useState("lower-thirds");
@@ -7116,7 +7116,7 @@ export default function VideoEditorPage() {
                         } else if (sug.type === "caption") {
                           clip = { id: `sug-${sug.id}`, trackId: "cap", start: at, duration: 2000, label: sug.reasoning.slice(0, 32), color: "#A855F7", isMarker: false };
                         } else if (sug.type === "broll_insert") {
-                          clip = { id: `sug-${sug.id}`, trackId: "v2", start: at, duration: Math.round((Number((sug.payload as Record<string, unknown>).duration_sec) || 3) * 1000), label: `B-roll: ${String((sug.payload as Record<string, unknown>).query || "")}`.slice(0, 32), color: "#3B82F6" };
+                          clip = { id: `sug-${sug.id}`, trackId: "v2", start: at, duration: Math.round((Number((sug.payload as Record<string, unknown>).duration_sec) || 3) * 1000), label: `B-roll: ${String((sug.payload as Record<string, unknown>).query || "")}`.slice(0, 32), color: "#D4FF00" };
                         } else {
                           clip = { id: `sug-${sug.id}`, trackId: "fx", start: at, duration: 400, label: sug.reasoning.slice(0, 32), color: "#EF4444", isMarker: true };
                         }

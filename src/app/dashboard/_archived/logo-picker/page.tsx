@@ -169,7 +169,7 @@ export default function LogoPickerPage() {
                   <button
                     onClick={() => applyPermanently(revertTarget)}
                     disabled={applying != null}
-                    className="inline-flex items-center gap-2 rounded-md border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] px-3 py-2 text-xs font-medium text-brand-accent transition hover:bg-[rgba(59,130,246,0.14)] disabled:opacity-50"
+                    className="inline-flex items-center gap-2 rounded-md border border-[rgba(212, 255, 0,0.25)] bg-[rgba(212, 255, 0,0.08)] px-3 py-2 text-xs font-medium text-brand-accent transition hover:bg-[rgba(212, 255, 0,0.14)] disabled:opacity-50"
                   >
                     <RotateCcw size={14} /> Revert to concept #{String(revertTarget).padStart(2, "0")}
                   </button>
@@ -181,7 +181,7 @@ export default function LogoPickerPage() {
                   initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4 }}
-                  className="mb-6 flex items-center gap-3 glass rounded-xl border border-[rgba(59,130,246,0.25)] px-4 py-3 text-sm"
+                  className="mb-6 flex items-center gap-3 glass rounded-xl border border-[rgba(212, 255, 0,0.25)] px-4 py-3 text-sm"
                 >
                   <Eye size={16} className="text-brand-accent" />
                   <span className="font-medium">Previewing #{previewConcept.id} — {previewConcept.name}</span>
@@ -210,7 +210,7 @@ export default function LogoPickerPage() {
                       whileHover={{ y: -4, scale: 1.01 }}
                       className={`group relative overflow-hidden glass rounded-xl transition ${
                         isSelected
-                          ? "border border-brand-accent ring-2 ring-[rgba(59,130,246,0.25)]"
+                          ? "border border-brand-accent ring-2 ring-[rgba(212, 255, 0,0.25)]"
                           : ""
                       }`}
                     >
@@ -255,7 +255,7 @@ export default function LogoPickerPage() {
                             className={`w-full rounded-md px-2 py-1.5 text-xs font-medium transition ${
                               isPreviewing
                                 ? "bg-brand-accent text-white"
-                                : "bg-[rgba(0,0,0,0.04)] text-text-primary hover:bg-[rgba(59,130,246,0.14)] hover:text-brand-accent"
+                                : "bg-[rgba(0,0,0,0.04)] text-text-primary hover:bg-[rgba(212, 255, 0,0.14)] hover:text-brand-accent"
                             }`}
                           >
                             {isPreviewing ? (
@@ -273,7 +273,7 @@ export default function LogoPickerPage() {
                             <button
                               onClick={() => applyPermanently(c.number)}
                               disabled={applying != null}
-                              className="inline-flex w-full items-center justify-center gap-1 rounded-md border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] px-2 py-1.5 text-xs font-medium text-brand-accent transition hover:bg-[rgba(59,130,246,0.14)] disabled:opacity-50"
+                              className="inline-flex w-full items-center justify-center gap-1 rounded-md border border-[rgba(212, 255, 0,0.25)] bg-[rgba(212, 255, 0,0.08)] px-2 py-1.5 text-xs font-medium text-brand-accent transition hover:bg-[rgba(212, 255, 0,0.14)] disabled:opacity-50"
                             >
                               <Upload size={12} />
                               {isApplying ? "Applying…" : "Apply permanently"}

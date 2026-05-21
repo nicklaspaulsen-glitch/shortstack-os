@@ -12,7 +12,7 @@ interface PatternProps {
   className?: string;
 }
 
-export function DotPattern({ opacity = 0.05, size = 20, className = "text-[#2563EB]" }: PatternProps) {
+export function DotPattern({ opacity = 0.05, size = 20, className = "text-[#D4FF00]" }: PatternProps) {
   const id = `dot-pattern-${size}`;
   return (
     <svg
@@ -30,7 +30,7 @@ export function DotPattern({ opacity = 0.05, size = 20, className = "text-[#2563
   );
 }
 
-export function GridPattern({ opacity = 0.05, size = 40, className = "text-[#2563EB]" }: PatternProps) {
+export function GridPattern({ opacity = 0.05, size = 40, className = "text-[#D4FF00]" }: PatternProps) {
   const id = `grid-pattern-${size}`;
   return (
     <svg
@@ -53,7 +53,7 @@ export function GridPattern({ opacity = 0.05, size = 40, className = "text-[#256
   );
 }
 
-export function DiagonalPattern({ opacity = 0.05, size = 14, className = "text-[#2563EB]" }: PatternProps) {
+export function DiagonalPattern({ opacity = 0.05, size = 14, className = "text-[#D4FF00]" }: PatternProps) {
   const id = `diag-pattern-${size}`;
   return (
     <svg

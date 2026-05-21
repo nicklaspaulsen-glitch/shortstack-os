@@ -16,8 +16,8 @@ import toast from "react-hot-toast";
 // Apr 28 v9: was hardcoded gold (#c8a855 / #e4c876) — yellow bubble
 // stuck out hard against the new teal brand. Repointed to the v4 teal
 // accent palette so the floating button blends with the rest of the OS.
-const GOLD = "#2563EB";        // blue-600 (matches --brand-accent in light mode)
-const GOLD_LIGHT = "#3B82F6";  // blue-500 (matches --brand-accent in dark mode)
+const GOLD = "#D4FF00";        // blue-600 (matches --brand-accent in light mode)
+const GOLD_LIGHT = "#D4FF00";  // blue-500 (matches --brand-accent in dark mode)
 
 type FeedbackType = "bug" | "feature" | "praise" | "question";
 
@@ -256,7 +256,7 @@ export default function FeedbackButton() {
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="What's going on? Be as specific as possible."
                     rows={5}
-                    className="w-full px-3 py-2.5 rounded-lg text-sm text-[#111827] placeholder-gray-400 resize-none outline-none focus:ring-2 focus:ring-[#2563EB]/30"
+                    className="w-full px-3 py-2.5 rounded-lg text-sm text-[#111827] placeholder-gray-400 resize-none outline-none focus:ring-2 focus:ring-[#D4FF00]/30"
                     style={{
                       background: "rgba(255,255,255,0.70)",
                       border: "1px solid rgba(0,0,0,0.08)",
@@ -269,7 +269,7 @@ export default function FeedbackButton() {
                     type="checkbox"
                     checked={includeScreenshot}
                     onChange={(e) => setIncludeScreenshot(e.target.checked)}
-                    className="w-4 h-4 rounded accent-[#2563EB]"
+                    className="w-4 h-4 rounded accent-[#D4FF00]"
                   />
                   <span className="text-xs text-[#6B7280] group-hover:text-[#374151]">
                     Include a screenshot of the current page

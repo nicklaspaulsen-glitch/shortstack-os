@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
   doc.on("data", (chunk: Buffer) => chunks.push(chunk));
 
   // Header
-  doc.fontSize(24).fillColor("#3B82F6").text("ShortStack", 50, 50);
+  doc.fontSize(24).fillColor("#D4FF00").text("ShortStack", 50, 50);
   doc.fontSize(9).fillColor("#64748b").text("WEEKLY PERFORMANCE REPORT", 50, 78);
   doc.moveDown(1.5);
 
@@ -98,14 +98,14 @@ export async function POST(request: NextRequest) {
 
   // AI Summary
   if (aiSummary) {
-    doc.fontSize(11).fillColor("#3B82F6").text("AI Summary");
+    doc.fontSize(11).fillColor("#D4FF00").text("AI Summary");
     doc.moveDown(0.3);
     doc.fontSize(10).fillColor("#94a3b8").text(aiSummary);
     doc.moveDown(1);
   }
 
   // Key Metrics
-  doc.fontSize(11).fillColor("#3B82F6").text("Key Metrics");
+  doc.fontSize(11).fillColor("#D4FF00").text("Key Metrics");
   doc.moveDown(0.3);
   const metrics = [
     ["Leads Generated", String(leadsGenerated || 0)],
@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
 
   // Activity log
   if (activity && activity.length > 0) {
-    doc.fontSize(11).fillColor("#3B82F6").text("AI Activity This Week");
+    doc.fontSize(11).fillColor("#D4FF00").text("AI Activity This Week");
     doc.moveDown(0.3);
     for (const a of activity.slice(0, 8)) {
       doc.fontSize(9).fillColor("#94a3b8").text(`• ${a.description}`);

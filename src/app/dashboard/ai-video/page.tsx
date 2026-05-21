@@ -1186,7 +1186,7 @@ export default function AIVideoPage() {
                       key={i}
                       type="button"
                       onClick={() => setPrompt(h)}
-                      className="text-left text-[10px] text-text-secondary hover:text-text-primary px-2.5 py-1.5 rounded-lg border border-border-subtle hover:border-[rgba(99,146,255,0.3)] hover:bg-white/[0.04] transition-all cursor-pointer truncate"
+                      className="text-left text-[10px] text-text-secondary hover:text-text-primary px-2.5 py-1.5 rounded-lg border border-border-subtle hover:border-[rgba(212, 255, 0,0.3)] hover:bg-white/[0.04] transition-all cursor-pointer truncate"
                       title={h}
                     >
                       {h.length > 90 ? h.slice(0, 90) + "…" : h}
@@ -1775,7 +1775,7 @@ export default function AIVideoPage() {
                   <motion.div
                     key={result.id}
                     className={`hf-thumb rounded-xl ${aspectClass} group`}
-                    style={{ background: "rgba(13,17,32,0.85)", border: "1px solid rgba(99,146,255,0.12)" }}
+                    style={{ background: "rgba(13,17,32,0.85)", border: "1px solid rgba(212, 255, 0,0.12)" }}
                     variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] } } }}
                     whileHover={{ y: -4, scale: 1.02 }}
                   >
@@ -2078,7 +2078,7 @@ export default function AIVideoPage() {
         <div className="flex items-center gap-2 text-[9px] text-text-primary/35 px-1">
           <Zap size={10} />
           <span>
-            GPU rendering requires <code className="text-text-primary/55 bg-[rgba(99,146,255,0.08)] px-1 py-0.5 rounded">HIGGSFIELD_URL</code> + <code className="text-text-primary/55 bg-[rgba(99,146,255,0.08)] px-1 py-0.5 rounded">RUNPOD_API_KEY</code>. Without them, you&apos;ll get a scene plan instead.
+            GPU rendering requires <code className="text-text-primary/55 bg-[rgba(212, 255, 0,0.08)] px-1 py-0.5 rounded">HIGGSFIELD_URL</code> + <code className="text-text-primary/55 bg-[rgba(212, 255, 0,0.08)] px-1 py-0.5 rounded">RUNPOD_API_KEY</code>. Without them, you&apos;ll get a scene plan instead.
           </span>
         </div>
       )}

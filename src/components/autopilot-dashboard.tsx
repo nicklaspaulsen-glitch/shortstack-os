@@ -29,31 +29,31 @@ interface AutopilotStatus {
 const TASK_META: Record<string, { label: string; icon: React.ReactNode; countLabel?: (n: number) => string }> = {
   strategy: {
     label: "30-Day Marketing Strategy",
-    icon: <BarChart3 size={11} className="text-[#2563EB]" />,
+    icon: <BarChart3 size={11} className="text-[#D4FF00]" />,
   },
   social_posts: {
     label: "Social Media Posts",
-    icon: <Calendar size={11} className="text-[#2563EB]" />,
+    icon: <Calendar size={11} className="text-[#D4FF00]" />,
     countLabel: (n) => `${n} post${n !== 1 ? "s" : ""}`,
   },
   blog_outlines: {
     label: "Blog Article Outlines",
-    icon: <FileText size={11} className="text-[#2563EB]" />,
+    icon: <FileText size={11} className="text-[#D4FF00]" />,
     countLabel: (n) => `${n} outline${n !== 1 ? "s" : ""}`,
   },
   email_templates: {
     label: "Email Templates",
-    icon: <Mail size={11} className="text-[#2563EB]" />,
+    icon: <Mail size={11} className="text-[#D4FF00]" />,
     countLabel: (n) => `${n} template${n !== 1 ? "s" : ""}`,
   },
   ad_copy: {
     label: "Ad Copy Variations",
-    icon: <Megaphone size={11} className="text-[#2563EB]" />,
+    icon: <Megaphone size={11} className="text-[#D4FF00]" />,
     countLabel: (n) => `${n} variation${n !== 1 ? "s" : ""}`,
   },
   competitor_analysis: {
     label: "Competitor Analysis",
-    icon: <Search size={11} className="text-[#2563EB]" />,
+    icon: <Search size={11} className="text-[#D4FF00]" />,
   },
 };
 
@@ -109,7 +109,7 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className={`p-1.5 rounded-md ${status?.active ? "bg-[rgba(212,255,0,0.08)]" : "bg-black/5"}`}>
-            <Bot size={14} className={status?.active ? "text-[#2563EB]" : "text-text-muted"} />
+            <Bot size={14} className={status?.active ? "text-[#D4FF00]" : "text-text-muted"} />
           </div>
           <div>
             <p className="text-xs font-semibold text-text-primary leading-none">AI Auto-Pilot</p>
@@ -124,7 +124,7 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
           <span
             className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
               status?.active
-                ? "bg-[rgba(212,255,0,0.08)] text-[#2563EB] border border-[rgba(212,255,0,0.2)]"
+                ? "bg-[rgba(212,255,0,0.08)] text-[#D4FF00] border border-[rgba(212,255,0,0.2)]"
                 : "bg-black/5 text-text-muted border border-border-subtle"
             }`}
           >
@@ -202,7 +202,7 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
                       {isComplete ? (
                         <CheckCircle
                           size={12}
-                          className="text-[#2563EB]"
+                          className="text-[#D4FF00]"
                           style={{
                             animation: `fadeIn 0.3s ease ${idx * 80}ms both`,
                           }}
@@ -263,7 +263,7 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
       {/* Footer — loading indicator if tasks are still generating */}
       {status?.active && status.total_generated < 6 && (
         <div className="flex items-center gap-1.5 mt-3 pt-2 border-t border-border-subtle">
-          <Loader2 size={9} className="text-[#2563EB] animate-spin" />
+          <Loader2 size={9} className="text-[#D4FF00] animate-spin" />
           <span className="text-[9px] text-text-muted">Generating remaining tasks…</span>
         </div>
       )}

@@ -85,7 +85,7 @@ export default function StatStrip({
             className="text-[10px] mt-0.5"
             style={{
               color:
-                focal.subOk === false ? "#3B82F6" : "#52525B",
+                focal.subOk === false ? "#D4FF00" : "#52525B",
             }}
           >
             {focal.sub}
@@ -134,7 +134,7 @@ export default function StatStrip({
                 className="text-[10px] mt-0.5"
                 style={{
                   color:
-                    stat.subOk === false ? "#3B82F6" : "#52525B",
+                    stat.subOk === false ? "#D4FF00" : "#52525B",
                 }}
               >
                 {stat.sub}

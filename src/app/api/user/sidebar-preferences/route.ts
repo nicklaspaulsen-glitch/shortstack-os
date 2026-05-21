@@ -226,7 +226,7 @@ function normalizeGroup(raw: CustomGroup | Record<string, unknown>): CustomGroup
     name: String(name),
     label: String(name),
     icon: typeof g.icon === "string" ? g.icon : "Layers",
-    color: typeof g.color === "string" ? g.color : "#3B82F6",
+    color: typeof g.color === "string" ? g.color : "#D4FF00",
     order: typeof g.order === "number" ? g.order : 0,
     items: (g.items as string[]).filter((i) => ALL_SIDEBAR_ITEMS.includes(i)),
     subgroups: subs,

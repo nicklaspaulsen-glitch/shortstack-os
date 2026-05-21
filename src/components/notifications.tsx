@@ -30,10 +30,10 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
   success: <CheckCircle2 size={14} className="text-success" />,
   error:   <XCircle size={14} className="text-danger" />,
   // Legacy / domain-specific types
-  lead:    <Zap size={14} className="text-[#2563EB]" />,
+  lead:    <Zap size={14} className="text-[#D4FF00]" />,
   task:    <CheckCircle size={14} className="text-success" />,
   invoice: <CreditCard size={14} className="text-warning" />,
-  system:  <Activity size={14} className="text-[#2563EB]" />,
+  system:  <Activity size={14} className="text-[#D4FF00]" />,
   content: <Film size={14} className="text-pink-400" />,
   message: <MessageSquare size={14} className="text-indigo-400" />,
   deal:    <Briefcase size={14} className="text-emerald-400" />,
@@ -156,7 +156,7 @@ export default function Notifications() {
             {/* Header */}
             <div className="px-4 py-2.5 border-b border-border-subtle/20 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Bell size={13} className="text-[#2563EB]" />
+                <Bell size={13} className="text-[#D4FF00]" />
                 <span className="text-xs font-semibold">Notifications</span>
                 {unreadCount > 0 && (
                   <span className="text-[9px] bg-danger/10 text-danger px-1.5 py-0.5 rounded-full font-medium">
@@ -168,7 +168,7 @@ export default function Notifications() {
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllRead}
-                    className="text-[9px] text-[#2563EB] hover:text-[#3B82F6]"
+                    className="text-[9px] text-[#D4FF00] hover:text-[#D4FF00]"
                   >
                     Mark all read
                   </button>
@@ -222,7 +222,7 @@ export default function Notifications() {
                           {n.title}
                         </p>
                         {!n.read && (
-                          <div className="w-1.5 h-1.5 rounded-full bg-[#2563EB] shrink-0" />
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#D4FF00] shrink-0" />
                         )}
                       </div>
                       {n.message && (
@@ -244,7 +244,7 @@ export default function Notifications() {
               <Link
                 href="/dashboard/notifications"
                 onClick={() => setOpen(false)}
-                className="block text-center text-[10px] text-[#2563EB] hover:text-[#3B82F6] font-medium transition-colors"
+                className="block text-center text-[10px] text-[#D4FF00] hover:text-[#D4FF00] font-medium transition-colors"
               >
                 View all notifications
               </Link>

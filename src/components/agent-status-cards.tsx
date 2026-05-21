@@ -84,7 +84,7 @@ export default function AgentStatusCards() {
           <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
           <span className="text-[10px] text-text-muted font-semibold uppercase tracking-wider">AI Agents</span>
         </div>
-        <Link href="/dashboard/agent-supervisor" className="text-[9px] text-[#2563EB] hover:text-[#3B82F6]">
+        <Link href="/dashboard/agent-supervisor" className="text-[9px] text-[#D4FF00] hover:text-[#D4FF00]">
           {activeCount}/{agents.length} active — View All
         </Link>
       </div>

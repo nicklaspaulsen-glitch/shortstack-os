@@ -69,15 +69,15 @@ const AGENT_POSITIONS: Record<string, [number, number, number]> = {
 /** Hex accent per agent, matching agents.ts brandColor. */
 const AGENT_HEX: Record<string, string> = {
   echo:   "#5E5BFF",
-  lyra:   "#2563EB",
+  lyra:   "#D4FF00",
   sage:   "#7FE5B8",
   reef:   "#3EDDC7",
   onyx:   "#FF8A4C",
   nova:   "#E8FF66",
   casper: "#FFC062",
   pixel:  "#7C5CFF",
-  maven:  "#3B82F6",
-  aria:   "#3B82F6",
+  maven:  "#D4FF00",
+  aria:   "#D4FF00",
 };
 
 /** Short task label shown on the monitor when working. */
@@ -144,10 +144,10 @@ function OledFloor() {
         args={[60, 60]}
         cellSize={2}
         cellThickness={0.3}
-        cellColor="#2563EB30"
+        cellColor="#D4FF0030"
         sectionSize={10}
         sectionThickness={0.6}
-        sectionColor="#2563EB60"
+        sectionColor="#D4FF0060"
         fadeDistance={45}
         fadeStrength={1}
         infiniteGrid
@@ -156,8 +156,8 @@ function OledFloor() {
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
         <circleGeometry args={[8, 64]} />
         <meshStandardMaterial
-          color="#2563EB"
-          emissive="#2563EB"
+          color="#D4FF00"
+          emissive="#D4FF00"
           emissiveIntensity={0.06}
           transparent
           opacity={0.15}
@@ -190,8 +190,8 @@ function CentralStack3D() {
         <mesh key={i} position={[0, s.y, 0]} rotation={[0, s.rotation, 0.06]}>
           <boxGeometry args={[2.2, 0.35, 1.1]} />
           <meshStandardMaterial
-            color="#2563EB"
-            emissive="#2563EB"
+            color="#D4FF00"
+            emissive="#D4FF00"
             emissiveIntensity={0.6 + i * 0.2}
             roughness={0.1}
             metalness={0.8}
@@ -202,8 +202,8 @@ function CentralStack3D() {
       <mesh position={[0, -0.2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[1.2, 2.2, 48]} />
         <meshStandardMaterial
-          color="#2563EB"
-          emissive="#2563EB"
+          color="#D4FF00"
+          emissive="#D4FF00"
           emissiveIntensity={1}
           transparent
           opacity={0.35}
@@ -211,12 +211,12 @@ function CentralStack3D() {
         />
       </mesh>
       {/* Point light at the stack */}
-      <pointLight color="#2563EB" intensity={4} distance={18} decay={2} />
+      <pointLight color="#D4FF00" intensity={4} distance={18} decay={2} />
       {/* Floating "TRINITY" label */}
       <Billboard position={[0, 2.4, 0]}>
         <Text
           fontSize={0.3}
-          color="#3B82F6"
+          color="#D4FF00"
           font="/fonts/Inter-Bold.woff"
           anchorX="center"
           anchorY="middle"
@@ -350,7 +350,7 @@ function AgentMonitor({
           >
             {/* Fake browser bar */}
             <div style={{ display: "flex", alignItems: "center", gap: 3, marginBottom: 4 }}>
-              <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#3B82F6" }} />
+              <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#D4FF00" }} />
               <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#FFC062" }} />
               <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#7FE5B8" }} />
               <div
@@ -360,7 +360,7 @@ function AgentMonitor({
                   borderRadius: 2,
                   padding: "1px 4px",
                   fontSize: 6,
-                  color: "#2563EB",
+                  color: "#D4FF00",
                   fontWeight: 600,
                   letterSpacing: "0.05em",
                 }}
@@ -568,7 +568,7 @@ function AgentPod({
   onClick: (key: string) => void;
 }) {
   const pos = AGENT_POSITIONS[agent.key] ?? [0, 0, 0];
-  const color = hexToColor(AGENT_HEX[agent.key] ?? "#2563EB");
+  const color = hexToColor(AGENT_HEX[agent.key] ?? "#D4FF00");
   const working = isWorking(recent, agent.key);
   const pulsing = isPulsing(recent, agent.key);
   const task = AGENT_TASKS[agent.key] ?? "Idle";
@@ -774,7 +774,7 @@ function AmbientParticles() {
       position={[0, 3, 0]}
       size={0.6}
       speed={0.1}
-      color="#2563EB"
+      color="#D4FF00"
       opacity={0.2}
     />
   );
@@ -803,9 +803,9 @@ function RoomLights() {
       {/* Ambient */}
       <ambientLight intensity={0.15} color="#101028" />
       {/* Fill rim from below */}
-      <pointLight position={[0, -1, 0]} color="#2563EB" intensity={0.8} distance={20} decay={2} />
+      <pointLight position={[0, -1, 0]} color="#D4FF00" intensity={0.8} distance={20} decay={2} />
       {/* Corner fills */}
-      <pointLight position={[-20, 8, -20]} color="#3B82F6" intensity={0.5} distance={30} />
+      <pointLight position={[-20, 8, -20]} color="#D4FF00" intensity={0.5} distance={30} />
       <pointLight position={[20, 8, 20]} color="#7FE5B8" intensity={0.3} distance={30} />
     </>
   );

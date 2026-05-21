@@ -89,7 +89,7 @@ export default function HeroProductTour() {
                   onClick={() => setActive(s.key)}
                   className="relative text-[10px] font-semibold px-3 py-1 rounded-md transition-colors duration-150"
                   style={{
-                    color: active === s.key ? "#60A5FA" : "rgba(255,255,255,0.4)",
+                    color: active === s.key ? "#D4FF00" : "rgba(255,255,255,0.4)",
                   }}
                 >
                   {active === s.key && (
@@ -138,7 +138,7 @@ export default function HeroProductTour() {
                 className="rounded-full"
                 animate={{
                   width: active === s.key ? 18 : 6,
-                  background: active === s.key ? "#2563EB" : "rgba(255,255,255,0.25)",
+                  background: active === s.key ? "#D4FF00" : "rgba(255,255,255,0.25)",
                 }}
                 transition={{ duration: 0.2 }}
                 style={{ height: 6 }}
@@ -255,7 +255,7 @@ function LeadsMock() {
                   initial={{ width: 0 }}
                   animate={{ width: `${r.score}%` }}
                   transition={{ delay: i * 0.08 + 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ background: "linear-gradient(90deg, #2563EB, #60A5FA)" }}
+                  style={{ background: "linear-gradient(90deg, #D4FF00, #E8FF4D)" }}
                 />
               </div>
               <span className="text-[9px] text-white font-mono">{r.score}</span>
@@ -338,7 +338,7 @@ function VoiceMock() {
           border: "1px solid rgba(255,255,255,0.10)",
         }}
       >
-        <Sparkles size={10} style={{ color: "#3B82F6" }} />
+        <Sparkles size={10} style={{ color: "#D4FF00" }} />
         AI hand-off triggered for high-intent caller — booked to John Friday 2pm.
       </motion.div>
     </div>
@@ -353,7 +353,7 @@ function ContentMock() {
     { day: 2, type: "video", icon: <SiYoutube size={9} />, color: "#FF0000" },
     { day: 3, type: "reel", icon: <SiInstagram size={9} />, color: "#E4405F" },
     { day: 4, type: "post", icon: <SiTiktok size={9} />, color: "#FFFFFF" },
-    { day: 5, type: "ai", icon: <Sparkles size={9} />, color: "#3B82F6" },
+    { day: 5, type: "ai", icon: <Sparkles size={9} />, color: "#D4FF00" },
   ];
   return (
     <div>
@@ -445,7 +445,7 @@ function AdsMock() {
             <div className="text-[10px] text-gray-500">{row.spend}</div>
             <div
               className="text-[10px] font-bold px-2 py-0.5 rounded"
-              style={{ background: "rgba(212,255,0,0.12)", color: "#60A5FA" }}
+              style={{ background: "rgba(212,255,0,0.12)", color: "#D4FF00" }}
             >
               {row.roas}
             </div>
@@ -462,7 +462,7 @@ function AdsMock() {
           border: "1px solid rgba(255,255,255,0.10)",
         }}
       >
-        <Sparkles size={10} style={{ color: "#3B82F6" }} className="shrink-0 mt-0.5" />
+        <Sparkles size={10} style={{ color: "#D4FF00" }} className="shrink-0 mt-0.5" />
         AI rebalanced budget: shifted $400/day from Meta Awareness → Google Search.
       </motion.div>
     </div>

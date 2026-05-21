@@ -160,7 +160,7 @@ export default function ConnectModal({
           className="h-1.5 w-full"
           style={{
             background:
-              `linear-gradient(90deg, ${BRAND_ACCENT} 0%, #60A5FA 60%, ${BRAND_ACCENT} 100%)`,
+              `linear-gradient(90deg, ${BRAND_ACCENT} 0%, #E8FF4D 60%, ${BRAND_ACCENT} 100%)`,
           }}
         />
 

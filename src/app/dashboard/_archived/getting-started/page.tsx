@@ -152,7 +152,7 @@ export default function GettingStartedPage() {
                 <span className="text-xs text-brand-accent font-mono">{progress}%</span>
               </div>
               <div className="w-full h-2 rounded-full bg-[rgba(0,0,0,0.06)]">
-                <div className="h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "linear-gradient(90deg, #2563EB, #3B82F6)" }} />
+                <div className="h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "linear-gradient(90deg, #D4FF00, #E8FF4D)" }} />
               </div>
               {progress === 100 && (
                 <p className="text-xs text-green-700 mt-2 flex items-center gap-1"><CheckCircle size={12} /> All done! Your agency is fully set up.</p>
@@ -176,7 +176,7 @@ export default function GettingStartedPage() {
                       transition={{ delay: i * 0.04 }}
                       className={`p-4 bg-white border rounded-xl flex items-center gap-4 transition-all ${
                         done ? "opacity-70 border-[rgba(0,0,0,0.06)]" :
-                        isCurrent ? "border-[rgba(59,130,246,0.25)]" :
+                        isCurrent ? "border-[rgba(212, 255, 0,0.25)]" :
                         "border-[rgba(0,0,0,0.06)]"
                       }`}>
                       <button
@@ -192,7 +192,7 @@ export default function GettingStartedPage() {
                         <div className="flex items-center gap-2">
                           <span className={done ? "text-green-700" : isCurrent ? "text-brand-accent" : "text-[#6B7280]"}>{step.icon}</span>
                           <p className={`text-sm font-semibold ${done ? "line-through text-text-muted" : "text-[#111827]"}`}>{step.title}</p>
-                          {isCurrent && <span className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Next</span>}
+                          {isCurrent && <span className="text-[8px] bg-[rgba(212, 255, 0,0.08)] text-brand-accent px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Next</span>}
                         </div>
                         <p className="text-[10px] text-[#6B7280] mt-0.5">{step.description}</p>
                       </div>
@@ -210,7 +210,7 @@ export default function GettingStartedPage() {
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.2 }}
-                className="bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] rounded-xl p-4"
+                className="bg-[rgba(212, 255, 0,0.08)] border border-[rgba(212, 255, 0,0.25)] rounded-xl p-4"
               >
                 <p className="text-[10px] text-[#374151]">
                   <span className="text-brand-accent font-semibold">Tip:</span> Steps are auto-detected from your actual data. You can also manually check them off by clicking the circle.

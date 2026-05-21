@@ -24,7 +24,7 @@ interface FlowButtonProps {
 export function FlowButton({
   children,
   text,
-  fillColor = "#2563EB",
+  fillColor = "#D4FF00",
   className,
   onClick,
   disabled,
@@ -40,7 +40,7 @@ export function FlowButton({
       className={cn(
         "group relative flex items-center gap-1 overflow-hidden",
         "rounded-full border border-[rgba(212,255,0,0.35)] bg-transparent",
-        "px-7 py-2.5 text-sm font-semibold text-[#2563EB]",
+        "px-7 py-2.5 text-sm font-semibold text-[#D4FF00]",
         "cursor-pointer select-none",
         "transition-all duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)]",
         "hover:border-transparent hover:text-white hover:rounded-xl",
@@ -56,7 +56,7 @@ export function FlowButton({
           "absolute left-[-20%] h-4 w-4 fill-none",
           "transition-all duration-[700ms] ease-[cubic-bezier(0.34,1.56,0.64,1)]",
           "group-hover:left-3.5 group-hover:stroke-white",
-          "stroke-[#2563EB] z-10"
+          "stroke-[#D4FF00] z-10"
         )}
       />
 
@@ -75,7 +75,7 @@ export function FlowButton({
       <ArrowRight
         className={cn(
           "absolute right-3.5 h-4 w-4 fill-none",
-          "stroke-[#2563EB] z-10",
+          "stroke-[#D4FF00] z-10",
           "transition-all duration-[700ms] ease-[cubic-bezier(0.34,1.56,0.64,1)]",
           "group-hover:right-[-20%] group-hover:stroke-white"
         )}

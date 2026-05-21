@@ -32,7 +32,7 @@ function intensityColor(v: number): string {
   if (v <= 0) return "rgba(161,161,170,0.05)";
   // Map 0..1 onto the brand blue accent ramp.
   const alpha = 0.1 + v * 0.7;
-  return `rgba(59, 130, 246, ${alpha.toFixed(3)})`;
+  return `rgba(212, 255, 0, ${alpha.toFixed(3)})`;
 }
 
 export default function Tab4Stats() {
@@ -106,13 +106,13 @@ export default function Tab4Stats() {
         <div style={{ width: "100%", height: 280 }}>
           <ResponsiveContainer>
             <AreaChart data={weeklyForChart} margin={{ top: 8, right: 16, left: -8, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,146,255,0.08)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(212, 255, 0,0.08)" />
               <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#4A4A5A" }} tickLine={false} />
               <YAxis tick={{ fontSize: 10, fill: "#4A4A5A" }} tickLine={false} axisLine={false} />
               <Tooltip
                 contentStyle={{
                   background: "rgba(13,17,32,0.95)",
-                  border: "1px solid rgba(99,146,255,0.18)",
+                  border: "1px solid rgba(212, 255, 0,0.18)",
                   borderRadius: 8,
                   fontSize: 11,
                   color: "#F0F0F4",

@@ -12,7 +12,7 @@ export const runtime = "edge";
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
-const INDIGO = "#2563EB";
+const INDIGO = "#D4FF00";
 
 export default function Icon() {
   return new ImageResponse(

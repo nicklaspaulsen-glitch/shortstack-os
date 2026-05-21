@@ -135,29 +135,29 @@ export default function TrinityOrbVisual({
           aria-hidden
         >
           <defs>
-            {/* May 2026: migrated from teal (#3B82F6) to indigo/violet palette
+            {/* May 2026: migrated from blue (#3B82F6) to indigo/violet palette
                 to match the new brand direction. The lit-side facets use a
                 holographic gradient (soft-indigo → violet → deep-indigo) so the
                 head reads as iridescent crystal glass. */}
             <linearGradient id="trinity-facet-light" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#FFE0E0" />
-              <stop offset="40%" stopColor="#3B82F6" />
-              <stop offset="100%" stopColor="#2563EB" />
+              <stop offset="40%" stopColor="#D4FF00" />
+              <stop offset="100%" stopColor="#D4FF00" />
             </linearGradient>
             <linearGradient id="trinity-facet-mid" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#2563EB" />
-              <stop offset="55%" stopColor="#1D4ED8" />
-              <stop offset="100%" stopColor="#1D4ED8" />
+              <stop offset="0%" stopColor="#D4FF00" />
+              <stop offset="55%" stopColor="#AACC00" />
+              <stop offset="100%" stopColor="#AACC00" />
             </linearGradient>
             <linearGradient id="trinity-facet-dark" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#1D4ED8" />
+              <stop offset="0%" stopColor="#AACC00" />
               <stop offset="55%" stopColor="#1E3A8A" />
               <stop offset="100%" stopColor="#1E1B4B" />
             </linearGradient>
             <radialGradient id="trinity-eye" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
               <stop offset="40%" stopColor="#FFB3B3" stopOpacity={eyeIntensity} />
-              <stop offset="100%" stopColor="#2563EB" stopOpacity="0" />
+              <stop offset="100%" stopColor="#D4FF00" stopOpacity="0" />
             </radialGradient>
             <linearGradient id="trinity-scan" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="rgba(199,210,254,0)" />

@@ -160,7 +160,7 @@ export default function SmartManageOverlay({
         <div className="sticky top-0 z-10 bg-surface/95 backdrop-blur-sm border-b border-border-subtle/30 px-5 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center">
-              <Sparkles size={14} className="text-[#2563EB]" />
+              <Sparkles size={14} className="text-[#D4FF00]" />
             </div>
             <div>
               <h2 className="text-sm font-semibold">Smart Manage</h2>
@@ -226,7 +226,7 @@ export default function SmartManageOverlay({
               >
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center shrink-0">
-                    <Icon size={14} className="text-[#2563EB]" />
+                    <Icon size={14} className="text-[#D4FF00]" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-bold text-text-primary leading-tight">
@@ -236,7 +236,7 @@ export default function SmartManageOverlay({
                       {s.reason}
                     </p>
                     {s.estimated_impact && (
-                      <p className="text-[10px] text-[#2563EB] font-semibold mt-1.5">
+                      <p className="text-[10px] text-[#D4FF00] font-semibold mt-1.5">
                         Impact: {s.estimated_impact}
                       </p>
                     )}
@@ -255,7 +255,7 @@ export default function SmartManageOverlay({
                         ? "bg-success/10 text-success cursor-default"
                         : state === "failed"
                           ? "bg-danger/10 text-danger hover:bg-danger/15"
-                          : "bg-[#2563EB] text-white hover:bg-[#1D4ED8] disabled:opacity-50"
+                          : "bg-[#D4FF00] text-[#020711] hover:bg-[#AACC00] disabled:opacity-50"
                     }`}
                   >
                     {isRunning ? (
