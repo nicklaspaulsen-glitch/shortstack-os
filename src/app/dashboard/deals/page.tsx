@@ -441,7 +441,7 @@ export default function DealsPage() {
                     {(["month", "quarter"] as const).map(p => (
                       <button key={p} onClick={() => setForecastPeriod(p)}
                         className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
-                          forecastPeriod === p ? "bg-brand-accent/80/10 text-brand-accent border border-[#1D4ED8]/20" : "text-text-muted border border-border-subtle"
+                          forecastPeriod === p ? "bg-brand-accent/10 text-brand-accent border border-brand-accent/20" : "text-text-muted border border-border-subtle"
                         }`}>{p}</button>
                     ))}
                   </div>
@@ -640,7 +640,7 @@ export default function DealsPage() {
                           <button
                             key={s}
                             onClick={() => toast(`${s} service selection coming soon — needs proposal builder`)}
-                            className="text-[9px] px-2 py-1 rounded border border-border-subtle hover:border-[#1D4ED8]/30 hover:bg-brand-accent/80/5 text-text-muted hover:text-brand-accent transition-all"
+                            className="text-[9px] px-2 py-1 rounded border border-border-subtle hover:border-brand-accent/30 hover:bg-brand-accent/5 text-text-muted hover:text-brand-accent transition-all"
 >{s}</button>
                         ))}
                       </div>

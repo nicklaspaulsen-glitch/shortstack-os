@@ -652,7 +652,7 @@ function ConversationRow({
       whileHover={{ backgroundColor: active ? undefined : "rgba(255,255,255,0.04)" }}
       onClick={onClick}
       className={`w-full text-left px-4 py-3 border-b border-border-subtle transition-colors ${
-        active ? "bg-brand-accent/80/5 border-l-2 border-l-[#1D4ED8]/40" : ""
+        active ? "bg-brand-accent/5 border-l-2 border-l-brand-accent/40" : ""
       }`}
     >
       <div className="flex items-start justify-between gap-2 mb-1">

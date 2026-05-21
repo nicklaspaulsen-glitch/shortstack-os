@@ -60,10 +60,10 @@ const RAINBOW_BAR = {
 };
 
 const ROLE_DEFINITIONS: RoleDefinition[] = [
-  { id: "owner", label: "Owner", description: "Full access to everything including billing and workspace deletion", color: "#1D4ED8", memberCount: 0 },
-  { id: "admin", label: "Admin", description: "Everything except billing management and workspace deletion", color: "#1D4ED8", memberCount: 0 },
+  { id: "owner", label: "Owner", description: "Full access to everything including billing and workspace deletion", color: "#D4FF00", memberCount: 0 },
+  { id: "admin", label: "Admin", description: "Everything except billing management and workspace deletion", color: "#6366F1", memberCount: 0 },
   { id: "manager", label: "Manager", description: "Client management, reports, content creation and approval", color: "#8b5cf6", memberCount: 0 },
-  { id: "creator", label: "Creator", description: "Content creation only - no client or financial access", color: "#1D4ED8", memberCount: 0 },
+  { id: "creator", label: "Creator", description: "Content creation only - no client or financial access", color: "#10B981", memberCount: 0 },
   { id: "viewer", label: "Viewer", description: "Read-only access to dashboards and reports", color: "#6b7280", memberCount: 0 },
 ];
 
@@ -327,7 +327,7 @@ export default function TeamPage() {
                   <div className="relative flex-1 min-w-[200px]">
                     <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/50" />
                     <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                      className="rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-white/[0.05] border border-border-subtle focus:outline-none focus:ring-1 focus:ring-[#1D4ED8]/40 placeholder:text-text-muted"
+                      className="rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-white/[0.05] border border-border-subtle focus:outline-none focus:ring-1 focus:ring-brand-accent/40 placeholder:text-text-muted"
                       placeholder="Search members..." aria-label="Search team members" />
                   </div>
                   <div className="flex gap-1 bg-surface rounded-lg p-0.5">
@@ -624,7 +624,7 @@ export default function TeamPage() {
                     const combinedLoad = Math.min(Math.round((taskLoad + hourLoad) / 2), 100);
                     const loadLevel = combinedLoad> 80 ? "Overloaded" : combinedLoad> 50 ? "Balanced" : "Available";
                     const loadColor = combinedLoad> 80 ? "text-red-400" : combinedLoad> 50 ? "text-brand-accent" : "text-emerald-400";
-                    const barColor = combinedLoad> 80 ? "#ef4444" : combinedLoad> 50 ? "#1D4ED8" : "#16a34a";
+                    const barColor = combinedLoad> 80 ? "#ef4444" : combinedLoad> 50 ? "#f59e0b" : "#16a34a";
                     return (
                       <motion.div
                         key={m.id}

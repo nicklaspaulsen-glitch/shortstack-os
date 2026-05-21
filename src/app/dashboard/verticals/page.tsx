@@ -123,7 +123,7 @@ export default function VerticalsIndexPage() {
   }, []);
 
   return (
-    <MotionPage className="min-h-screen bg-[#FAFAFB]">{/* -- Vertical Templates command strip -- */}
+    <MotionPage className="min-h-screen">{/* -- Vertical Templates command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">VERTICAL TEMPLATES</p>

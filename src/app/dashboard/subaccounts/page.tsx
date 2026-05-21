@@ -280,7 +280,7 @@ export default function SubaccountsPage() {
                         value={form.name}
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
                         placeholder="Client Name"
-                        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-[#1D4ED8]/50"
+                        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-brand-accent/50"
                       />
                     </div>
                     <div>
@@ -290,7 +290,7 @@ export default function SubaccountsPage() {
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
                         placeholder="client@theircompany.com"
-                        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-[#1D4ED8]/50"
+                        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-brand-accent/50"
                       />
                     </div>
                     <div>
@@ -298,7 +298,7 @@ export default function SubaccountsPage() {
                       <select
                         value={form.plan_tier}
                         onChange={(e) => setForm({ ...form, plan_tier: e.target.value })}
-                        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-[#1D4ED8]/50"
+                        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-brand-accent/50"
                       >
                         {PLAN_TIERS.map((t) => (
                           <option key={t.value} value={t.value} className="bg-white">
@@ -314,7 +314,7 @@ export default function SubaccountsPage() {
                         min={0}
                         value={form.monthly_amount_cents}
                         onChange={(e) => setForm({ ...form, monthly_amount_cents: Number(e.target.value) || 0 })}
-                        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-[#1D4ED8]/50"
+                        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-brand-accent/50"
                       />
                       <p className="text-xs text-black/40 mt-1">
                         e.g. 9900 = $99.00. This is what you charge the client. ShortStack base fee is deducted via Stripe Connect.
