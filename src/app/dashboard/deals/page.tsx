@@ -210,7 +210,7 @@ export default function DealsPage() {
                   <span className="opacity-30" aria-hidden>·</span>
                   <span>Won <span className="text-emerald-400 font-semibold">{formatCurrency(wonValue)}</span></span>
                   <span className="opacity-30" aria-hidden>·</span>
-                  <span>Win <span className="text-blue-400 font-semibold">{winRate}%</span></span>
+                  <span>Win <span className="text-brand-accent font-semibold">{winRate}%</span></span>
                   <span className="opacity-30" aria-hidden>·</span>
                   <span>Avg <span className="text-brand-accent font-semibold">{formatCurrency(avgDealSize)}</span></span>
                 </>

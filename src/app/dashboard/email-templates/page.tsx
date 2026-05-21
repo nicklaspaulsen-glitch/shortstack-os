@@ -68,7 +68,7 @@ const MERGE_TAGS = [
 
 const categoryColors: Record<string, string> = {
   Welcome: "bg-green-500/10 text-green-400",
-  "Follow-up": "bg-blue-500/10 text-blue-400",
+  "Follow-up": "bg-[rgba(99,102,241,0.10)] text-indigo-400",
   "Re-engagement": "bg-orange-500/10 text-orange-400",
   Invoice: "bg-yellow-500/10 text-yellow-400",
   Report: "bg-purple-500/10 text-purple-400",
@@ -219,7 +219,7 @@ export default function EmailTemplatesPage() {
                   {CATEGORIES.map(cat => (
                     <button key={cat} onClick={() => setFilterCategory(cat)}
                       className={`px-3 py-1.5 rounded-lg text-[10px] font-medium transition-colors ${
-                        filterCategory === cat ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "bg-white/4 text-text-muted border border-border-subtle hover:bg-white/8"
+                        filterCategory === cat ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.20)]" : "bg-white/4 text-text-muted border border-border-subtle hover:bg-white/8"
                       }`}>{cat}</button>
                   ))}
                 </div>
@@ -307,7 +307,7 @@ export default function EmailTemplatesPage() {
                         <div className="space-y-1">
                           {MERGE_TAGS.map(tag => (
                             <button key={tag.tag} onClick={() => setEditedBody(prev => prev + " " + tag.tag)}
-                              className="flex items-center justify-between w-full p-1.5 rounded hover:bg-[rgba(59,130,246,0.05)] transition-all text-[10px]">
+                              className="flex items-center justify-between w-full p-1.5 rounded hover:bg-[rgba(212,255,0,0.05)] transition-all text-[10px]">
                               <span className="font-mono text-brand-accent">{tag.tag}</span>
                               <span className="text-text-muted">{tag.desc}</span>
                             </button>
@@ -325,7 +325,7 @@ export default function EmailTemplatesPage() {
                           ].map(m => (
                             <button key={m.key} onClick={() => setPreviewMode(m.key as typeof previewMode)}
                               className={`flex-1 text-[9px] py-1.5 rounded flex items-center justify-center gap-1 ${
-                                previewMode === m.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted hover:bg-white/5"
+                                previewMode === m.key ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" : "text-text-muted hover:bg-white/5"
                               }`}>{m.icon} {m.label}</button>
                           ))}
                         </div>
@@ -426,7 +426,7 @@ export default function EmailTemplatesPage() {
                           <p className="text-[9px] text-text-muted">{t.category}</p>
                         </div>
                         <div className="grid grid-cols-3 gap-4 text-center text-[10px]">
-                          <div><p className="font-bold text-blue-400">{t.opens}%</p><p className="text-[8px] text-text-muted">Opens</p></div>
+                          <div><p className="font-bold text-brand-accent">{t.opens}%</p><p className="text-[8px] text-text-muted">Opens</p></div>
                           <div><p className="font-bold text-green-400">{t.clicks}%</p><p className="text-[8px] text-text-muted">Clicks</p></div>
                           <div><p className="font-bold text-purple-400">{t.replies}%</p><p className="text-[8px] text-text-muted">Replies</p></div>
                         </div>
@@ -454,7 +454,7 @@ export default function EmailTemplatesPage() {
 >
                       <div className="flex items-center justify-between mb-3">
                         <p className="text-xs font-semibold">{t.name}</p>
-                        <span className="text-[9px] px-2 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">v{t.version} (current)</span>
+                        <span className="text-[9px] px-2 py-0.5 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent">v{t.version} (current)</span>
                       </div>
                       <div className="space-y-1.5">
                         {Array.from({ length: t.version }, (_, i) => t.version - i).map(v => (
@@ -484,7 +484,7 @@ export default function EmailTemplatesPage() {
                   className="glass rounded-xl p-6" 
 >
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 bg-[rgba(59,130,246,0.08)] rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 bg-[rgba(212,255,0,0.08)] rounded-xl flex items-center justify-center">
                       <Sparkles size={18} className="text-brand-accent" />
                     </div>
                     <div>
@@ -531,7 +531,7 @@ export default function EmailTemplatesPage() {
                     <div className="flex gap-2 justify-center flex-wrap">
                       {["Follow-up", "Welcome", "Re-engagement", "Upsell", "Review request", "Holiday promo"].map(q => (
                         <button key={q} onClick={() => setAiPrompt(`Write a ${q.toLowerCase()} email template for a digital marketing agency. Professional but conversational tone.`)}
-                          className="text-[9px] px-2 py-1 rounded bg-white/5 text-text-muted border border-border-subtle hover:border-[rgba(59,130,246,0.25)] hover:text-brand-accent transition-all">{q}</button>
+                          className="text-[9px] px-2 py-1 rounded bg-white/5 text-text-muted border border-border-subtle hover:border-[rgba(212,255,0,0.25)] hover:text-brand-accent transition-all">{q}</button>
                       ))}
                     </div>
 
@@ -581,7 +581,7 @@ export default function EmailTemplatesPage() {
                       {aiGenerated.merge_tags.length> 0 && (
                         <div className="flex gap-1 flex-wrap">
                           {aiGenerated.merge_tags.map(tag => (
-                            <span key={tag} className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">{tag}</span>
+                            <span key={tag} className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent">{tag}</span>
                           ))}
                         </div>
                       )}
@@ -608,7 +608,7 @@ export default function EmailTemplatesPage() {
                     className="glass rounded-xl p-3" 
 >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] px-2 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent font-semibold">{v.angle}</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent font-semibold">{v.angle}</span>
                       <button onClick={() => { setEditedSubject(v.subject); setEditedBody(v.body); setShowVariantsModal(false); toast.success("Variant applied"); }} className="btn-primary text-[10px] py-1 px-2">Apply</button>
                     </div>
                     <p className="text-xs font-semibold mb-1">{v.subject}</p>
@@ -683,7 +683,7 @@ export default function EmailTemplatesPage() {
                           <span className={`text-[9px] px-1.5 py-0.5 rounded ${t.shared ? "bg-green-500/10 text-green-400" : "bg-white/5 text-text-muted"}`}>
                             {t.shared ? "Shared" : "Private"}
                           </span>
-                          <button className="text-[9px] px-2 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)]">
+                          <button className="text-[9px] px-2 py-0.5 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)]">
                             {t.shared ? "Unshare" : "Share"}
                           </button>
                         </div>

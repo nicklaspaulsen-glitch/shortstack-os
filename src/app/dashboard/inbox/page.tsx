@@ -55,8 +55,8 @@ interface InboxItem {
 
 /* -- Category Config -- */
 const CATEGORIES: { key: InboxCategory; label: string; icon: React.ReactNode; color: string; bg: string }[] = [
-  { key: "all", label: "All Items", icon: <Inbox size={14} />, color: "text-brand-accent", bg: "bg-blue-500/10" },
-  { key: "scripts", label: "Scripts", icon: <Film size={14} />, color: "text-blue-400", bg: "bg-blue-500/10" },
+  { key: "all", label: "All Items", icon: <Inbox size={14} />, color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.10)]" },
+  { key: "scripts", label: "Scripts", icon: <Film size={14} />, color: "text-indigo-400", bg: "bg-[rgba(212,255,0,0.10)]" },
   { key: "emails", label: "Email Drafts", icon: <Mail size={14} />, color: "text-purple-400", bg: "bg-purple-500/10" },
   { key: "outreach", label: "Outreach", icon: <Megaphone size={14} />, color: "text-emerald-400", bg: "bg-emerald-500/10" },
   { key: "contracts", label: "Contracts", icon: <FileCheck size={14} />, color: "text-amber-400", bg: "bg-amber-500/10" },
@@ -500,8 +500,8 @@ export default function InboxPage() {
   const StatusPill = ({ status }: { status: string }) => {
     const colors: Record<string, string> = {
       draft: "bg-white/8 text-text-muted",
-      sent: "bg-blue-500/15 text-blue-400",
-      delivered: "bg-blue-500/15 text-blue-400",
+      sent: "bg-[rgba(99,102,241,0.15)] text-indigo-400",
+      delivered: "bg-[rgba(99,102,241,0.15)] text-indigo-400",
       read: "bg-emerald-500/15 text-emerald-400",
       unread: "bg-amber-500/15 text-amber-400",
       replied: "bg-emerald-500/15 text-emerald-400",
@@ -514,7 +514,7 @@ export default function InboxPage() {
       published: "bg-emerald-500/15 text-emerald-400",
       scheduled: "bg-cyan-500/15 text-cyan-400",
       idea: "bg-yellow-500/15 text-yellow-400",
-      scripted: "bg-blue-500/15 text-blue-400",
+      scripted: "bg-[rgba(99,102,241,0.15)] text-indigo-400",
     };
     return (
       <MotionPage>
@@ -625,7 +625,7 @@ export default function InboxPage() {
               </button>
             )}
           </div>
-          <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs transition-all ${showFilters ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "bg-white/5 text-text-muted hover:text-text-primary"}`}>
+          <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1 px-3 py-2 rounded-lg text-xs transition-all ${showFilters ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : "bg-white/5 text-text-muted hover:text-text-primary"}`}>
             <SlidersHorizontal size={12} /> Filters
             {(filterStarred || filterUnread || filterPinned) && <span className="w-1.5 h-1.5 rounded-full bg-brand-accent" />}
           </button>
@@ -635,7 +635,7 @@ export default function InboxPage() {
               <button
                 key={field}
                 onClick={() => toggleSort(field)}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded text-[10px] font-medium transition-all ${sortField === field ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted hover:text-text-secondary"}`}
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded text-[10px] font-medium transition-all ${sortField === field ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" : "text-text-muted hover:text-text-secondary"}`}
               >
                 {label}
                 {sortField === field && (sortDir === "desc" ? <ArrowDown size={10} /> : <ArrowUp size={10} />)}
@@ -655,7 +655,7 @@ export default function InboxPage() {
               <button
                 key={f.key}
                 onClick={f.toggle}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${f.active ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "bg-white/5 text-text-muted hover:text-text-secondary border border-border-subtle"}`}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${f.active ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.25)]" : "bg-white/5 text-text-muted hover:text-text-secondary border border-border-subtle"}`}
               >
                 {f.icon} {f.label}
               </button>
@@ -670,7 +670,7 @@ export default function InboxPage() {
 
         {/* Bulk Actions */}
         {selectedIds.size > 0 && (
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)]">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.20)]">
             <span className="text-xs text-brand-accent font-medium">{selectedIds.size} selected</span>
             <div className="flex items-center gap-1 ml-auto">
               <button onClick={bulkMarkRead} className="px-2 py-1 text-[10px] rounded bg-white/6 hover:bg-white/10 text-text-primary transition-all">Mark Read</button>
@@ -693,7 +693,7 @@ export default function InboxPage() {
               key={c.key}
               onClick={() => { setCategory(c.key); setSelectedItem(null); }}
               className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all ${
-                category === c.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "text-text-muted hover:text-text-secondary hover:bg-white/5"
+                category === c.key ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.25)]" : "text-text-muted hover:text-text-secondary hover:bg-white/5"
               }`}
             >
               <div className="flex items-center gap-2">
@@ -701,7 +701,7 @@ export default function InboxPage() {
                 <span className="font-medium">{c.label}</span>
               </div>
               {categoryCounts[c.key] > 0 && (
-                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${category === c.key ? "bg-[rgba(59,130,246,0.14)] text-brand-accent" : "bg-white/8 text-text-muted"}`}>
+                <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${category === c.key ? "bg-[rgba(212,255,0,0.14)] text-brand-accent" : "bg-white/8 text-text-muted"}`}>
                   {categoryCounts[c.key]}
                 </span>
               )}
@@ -716,7 +716,7 @@ export default function InboxPage() {
               key={c.key}
               onClick={() => { setCategory(c.key); setSelectedItem(null); }}
               className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] whitespace-nowrap transition-all ${
-                category === c.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "bg-white/5 text-text-muted"
+                category === c.key ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" : "bg-white/5 text-text-muted"
               }`}
             >
               {c.icon} {c.label}
@@ -766,7 +766,7 @@ export default function InboxPage() {
                     onClick={() => openItem(item)}
                     className={`group flex items-start gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
                       selectedItem?.id === item.id
-                        ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)]"
+                        ? "bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.20)]"
                         : isSelected
                         ? "bg-white/8 border border-border-subtle"
                         : !item.read
@@ -947,7 +947,7 @@ export default function InboxPage() {
                   automation: <Zap size={14} className="text-cyan-400" />,
                 };
                 const statusColors: Record<string, string> = {
-                  running: "bg-blue-500/15 text-blue-400",
+                  running: "bg-[rgba(99,102,241,0.15)] text-indigo-400",
                   completed: "bg-emerald-500/15 text-emerald-400",
                   failed: "bg-red-500/15 text-red-400",
                   queued: "bg-amber-500/15 text-amber-400",
@@ -1072,7 +1072,7 @@ export default function InboxPage() {
               {/* Inline Reply */}
               {showReply && (
                 <div className="mt-4 space-y-3">
-                  <div className="border border-[rgba(59,130,246,0.25)] rounded-xl overflow-hidden glass">
+                  <div className="border border-[rgba(212,255,0,0.25)] rounded-xl overflow-hidden glass">
                     <textarea
                       value={replyText}
                       onChange={e => setReplyText(e.target.value)}
@@ -1099,7 +1099,7 @@ export default function InboxPage() {
                           setReplyText("");
                         }}
                         disabled={!replyText.trim()}
-                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-brand-accent hover:bg-blue-600 text-[#020711] text-xs font-semibold transition-all disabled:opacity-50"
+                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-brand-accent hover:bg-brand-accent/90 text-[#020711] text-xs font-semibold transition-all disabled:opacity-50"
                       >
                         <Send size={12} /> Copy Draft
                       </button>
@@ -1115,8 +1115,8 @@ export default function InboxPage() {
                 onClick={() => setShowReply(!showReply)}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium transition-all ${
                   showReply
-                    ? "bg-[rgba(59,130,246,0.14)] text-brand-accent border border-[rgba(59,130,246,0.25)]"
-                    : "bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.14)] text-brand-accent border border-[rgba(59,130,246,0.25)]"
+                    ? "bg-[rgba(212,255,0,0.14)] text-brand-accent border border-[rgba(212,255,0,0.25)]"
+                    : "bg-[rgba(212,255,0,0.08)] hover:bg-[rgba(212,255,0,0.14)] text-brand-accent border border-[rgba(212,255,0,0.25)]"
                 }`}
               >
                 <Reply size={14} /> Reply

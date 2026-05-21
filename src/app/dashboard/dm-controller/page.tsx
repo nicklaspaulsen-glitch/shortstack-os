@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, Fragment } from "react";
 import {
   Send, Play, Pause, Settings, CheckCircle, Zap, Copy, Clock,
   AlertTriangle, BarChart3, GitBranch, Ban, Target,
@@ -1755,7 +1755,7 @@ function Heatmap() {
           <div key={h} className="text-[8px] text-text-muted text-center font-mono">{h}</div>
         ))}
         {days.map((d, dIdx) => (
-          <React.Fragment key={d}>
+          <Fragment key={d}>
             <div className="text-[8px] text-text-muted pr-1 text-right font-mono">{d}</div>
             {hours.map(h => {
               const v = heat(dIdx, h);
@@ -1768,7 +1768,7 @@ function Heatmap() {
                 />
               );
             })}
-          </>
+          </Fragment>
         ))}
       </div>
     </div>

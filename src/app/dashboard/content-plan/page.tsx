@@ -102,7 +102,7 @@ function formatTime(iso: string | null): string {
 
 function statusColor(s: string): string {
   if (s === "published" || s === "posted") return "text-emerald-400 bg-emerald-400/10 border-emerald-400/20";
-  if (s === "scheduled") return "text-blue-400 bg-blue-400/10 border-blue-400/20";
+  if (s === "scheduled") return "text-indigo-400 bg-[rgba(99,102,241,0.10)] border-[rgba(99,102,241,0.20)]";
   if (s === "failed") return "text-red-400 bg-red-400/10 border-red-400/20";
   if (s === "ready_to_publish") return "text-amber-400 bg-amber-400/10 border-amber-400/20";
   return "text-text-muted bg-surface-light border-border-subtle";
@@ -136,7 +136,7 @@ function sentimentBadge(s: string | undefined) {
 function urgencyColor(u: string): string {
   if (u === "high") return "bg-red-400/10 text-red-400 border-red-400/20";
   if (u === "medium") return "bg-amber-400/10 text-amber-400 border-amber-400/20";
-  return "bg-blue-400/10 text-blue-400 border-blue-400/20";
+  return "bg-[rgba(99,102,241,0.10)] text-indigo-400 border-[rgba(99,102,241,0.20)]";
 }
 
 /* ---------------- Page ---------------- */
@@ -340,8 +340,8 @@ export default function ContentPlanPage() {
             onClick={() => setWizardClientId("")}
             className={`w-full text-left p-3.5 rounded-xl border transition-all ${
               wizardClientId === ""
-                ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.1)]"
-                : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                ? "border-brand-accent bg-[rgba(212,255,0,0.08)] shadow-lg shadow-[rgba(212,255,0,0.10)]"
+                : "border-border-subtle hover:border-[rgba(212,255,0,0.25)] bg-surface-light"
             }`}
           >
             <p className="text-sm font-semibold">No client (plan for yourself)</p>
@@ -362,8 +362,8 @@ export default function ContentPlanPage() {
                                     onClick={() => setWizardClientId(c.id)}
                                     className={`w-full text-left p-3.5 rounded-xl border transition-all ${
                                       selected
-                                        ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.1)]"
-                                        : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                                        ? "border-brand-accent bg-[rgba(212,255,0,0.08)] shadow-lg shadow-[rgba(212,255,0,0.10)]"
+                                        : "border-border-subtle hover:border-[rgba(212,255,0,0.25)] bg-surface-light"
                                     }`}
                                   >
                                     <p className="text-sm font-semibold">{c.business_name}</p>
@@ -399,8 +399,8 @@ export default function ContentPlanPage() {
                     onClick={() => setWizardGoal(g.id)}
                     className={`p-3 rounded-xl border text-center text-sm font-semibold transition-all ${
                       sel
-                        ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent shadow-lg shadow-[rgba(59,130,246,0.1)]"
-                        : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                        ? "border-brand-accent bg-[rgba(212,255,0,0.08)] text-brand-accent shadow-lg shadow-[rgba(212,255,0,0.10)]"
+                        : "border-border-subtle hover:border-[rgba(212,255,0,0.25)] bg-surface-light"
                     }`}
                   >
                     {g.label}
@@ -425,8 +425,8 @@ export default function ContentPlanPage() {
                     onClick={() => setWizardDuration(d.id)}
                     className={`p-3 rounded-xl border text-center text-sm font-semibold transition-all ${
                       sel
-                        ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent shadow-lg shadow-[rgba(59,130,246,0.1)]"
-                        : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                        ? "border-brand-accent bg-[rgba(212,255,0,0.08)] text-brand-accent shadow-lg shadow-[rgba(212,255,0,0.10)]"
+                        : "border-border-subtle hover:border-[rgba(212,255,0,0.25)] bg-surface-light"
                     }`}
                   >
                     {d.label}
@@ -463,7 +463,7 @@ export default function ContentPlanPage() {
                     }
                     className={`p-2 rounded-lg border text-[11px] font-medium capitalize transition-all ${
                       sel
-                        ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                        ? "border-brand-accent bg-[rgba(212,255,0,0.08)] text-brand-accent"
                         : "border-border-subtle text-text-muted hover:text-text-primary"
                     }`}
                   >
@@ -483,7 +483,7 @@ export default function ContentPlanPage() {
       description: "We'll draft a full calendar of posts across the selected platforms. You can edit every post in Advanced mode.",
       icon: <Wand2 size={18} />,
       component: (
-        <div className="glass rounded-xl p-4 bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.2)] space-y-2">
+        <div className="glass rounded-xl p-4 bg-[rgba(212,255,0,0.04)] border-[rgba(212,255,0,0.20)] space-y-2">
           <div className="flex items-center gap-2 text-sm">
             <Target size={14} className="text-brand-accent" />
             <span className="font-semibold capitalize">{wizardGoal}</span>
@@ -601,8 +601,8 @@ export default function ContentPlanPage() {
                   onClick={() => setPlatformFilter(p.id)}
                   className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] border transition-all ${
                     platformFilter === p.id
-                      ? "bg-[rgba(59,130,246,0.12)] border-[rgba(59,130,246,0.4)] text-brand-accent"
-                      : "bg-surface-light border-border-subtle text-text-muted hover:text-text-primary hover:border-[rgba(59,130,246,0.2)]"
+                      ? "bg-[rgba(212,255,0,0.12)] border-[rgba(212,255,0,0.40)] text-brand-accent"
+                      : "bg-surface-light border-border-subtle text-text-muted hover:text-text-primary hover:border-[rgba(212,255,0,0.20)]"
                   }`}
                 >
                   {p.icon} {p.label}
@@ -631,7 +631,7 @@ export default function ContentPlanPage() {
 
           {/* Bulk actions bar */}
           {selectedIds.size > 0 && (
-            <div className="flex items-center justify-between flex-wrap gap-2 card py-2.5 px-3.5 border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]">
+            <div className="flex items-center justify-between flex-wrap gap-2 card py-2.5 px-3.5 border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)]">
               <div className="flex items-center gap-3 text-[11px] text-text-primary">
                 <span className="font-medium">{selectedIds.size} selected</span>
                 <button onClick={clearSelection} className="text-text-muted hover:text-text-primary text-[10px]">Clear</button>
@@ -799,7 +799,7 @@ export default function ContentPlanPage() {
 
           <InsightSection
             title="Thumbnail improvement suggestions"
-            icon={<ImageDown size={12} className="text-blue-400" />}
+            icon={<ImageDown size={12} className="text-indigo-400" />}
             emptyText="No thumbnail suggestions."
             loading={insightsLoading}
           >
@@ -807,7 +807,7 @@ export default function ContentPlanPage() {
               <div key={i} className="p-2 rounded-lg border border-border-subtle bg-surface-light">
                 <p className="text-[11px] font-medium text-text-primary truncate mb-1">{t.title}</p>
                 <p className="text-[9px] text-text-muted leading-relaxed mb-0.5">Issue: {t.current_issue}</p>
-                <p className="text-[9px] text-blue-400 leading-relaxed">Try: {t.suggestion}</p>
+                <p className="text-[9px] text-text-secondary leading-relaxed">Try: {t.suggestion}</p>
               </div>
             ))}
           </InsightSection>
@@ -875,13 +875,13 @@ function PostGrid({
           transition={{ delay: i * 0.06, duration: 0.4 }}
           whileHover={{ y: -4, scale: 1.01 }}
           className={`rounded-xl overflow-hidden cursor-pointer group transition-shadow ${
-            selectedIds.has(p.id) ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : ""
+            selectedIds.has(p.id) ? "border-brand-accent bg-[rgba(212,255,0,0.05)]" : ""
           }`}
 
           onClick={() => onOpen(p)}
         >
           {/* Thumbnail area */}
-          <div className="relative aspect-video rounded-lg overflow-hidden mb-2.5 bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-pink-500/10 border border-border-subtle/50 flex items-center justify-center">
+          <div className="relative aspect-video rounded-lg overflow-hidden mb-2.5 bg-gradient-to-br from-purple-500/10 via-indigo-500/10 to-pink-500/10 border border-border-subtle/50 flex items-center justify-center">
             {p.thumbnail_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={p.thumbnail_url} alt={p.title} className="w-full h-full object-cover" />
@@ -988,7 +988,7 @@ function PostList({
                 transition={{ delay: idx * 0.04 }}
                 onClick={() => onOpen(p)}
                 className={`border-b border-border-subtle/50 cursor-pointer hover:bg-surface-light ${
-                  selectedIds.has(p.id) ? "bg-[rgba(59,130,246,0.05)]" : idx % 2 ? "bg-surface/40" : ""
+                  selectedIds.has(p.id) ? "bg-[rgba(212,255,0,0.05)]" : idx % 2 ? "bg-surface/40" : ""
                 }`}
               >
                 <td className="py-2 px-3" onClick={e => e.stopPropagation()}>
@@ -1106,7 +1106,7 @@ function PostCalendar({
               className={`min-h-[76px] rounded-lg border p-1.5 ${
                 c.date
                   ? isToday
-                    ? "border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.05)]"
+                    ? "border-[rgba(212,255,0,0.40)] bg-[rgba(212,255,0,0.05)]"
                     : "border-border-subtle bg-surface-light/40"
                   : "border-transparent"
               }`}
@@ -1117,7 +1117,7 @@ function PostCalendar({
                     {c.date.getDate()}
                   </span>
                   {c.posts.length > 0 && (
-                    <span className="text-[8px] bg-[rgba(59,130,246,0.12)] text-brand-accent px-1 rounded">{c.posts.length}</span>
+                    <span className="text-[8px] bg-[rgba(212,255,0,0.12)] text-brand-accent px-1 rounded">{c.posts.length}</span>
                   )}
                 </div>
               )}
@@ -1130,7 +1130,7 @@ function PostCalendar({
                     title={p.title}
                     className={`w-2 h-2 rounded-full ${
                       p.status === "published" ? "bg-emerald-400"
-                      : p.status === "scheduled" ? "bg-blue-400"
+                      : p.status === "scheduled" ? "bg-indigo-400"
                       : p.status === "failed" ? "bg-red-400"
                       : "bg-amber-400"
                     }`}
@@ -1146,7 +1146,7 @@ function PostCalendar({
       {/* Legend */}
       <div className="mt-3 flex items-center gap-4 text-[9px] text-text-muted flex-wrap">
         <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" /> Posted</span>
-        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-400 inline-block" /> Scheduled</span>
+        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-indigo-400 inline-block" /> Scheduled</span>
         <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block" /> Draft / Needs review</span>
         <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-400 inline-block" /> Failed</span>
       </div>
@@ -1202,7 +1202,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
       <div className="space-y-4">
         {/* Top row: thumbnail + meta */}
         <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-4">
-          <div className="aspect-video rounded-lg overflow-hidden bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-pink-500/10 border border-border-subtle/50 flex items-center justify-center">
+          <div className="aspect-video rounded-lg overflow-hidden bg-gradient-to-br from-purple-500/10 via-indigo-500/10 to-pink-500/10 border border-border-subtle/50 flex items-center justify-center">
             {post.thumbnail_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={post.thumbnail_url} alt={post.title} className="w-full h-full object-cover" />
@@ -1286,7 +1286,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
         </div>
 
         {/* AI analysis */}
-        <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)]">
+        <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.20)] bg-[rgba(212,255,0,0.05)]">
           <div className="flex items-center justify-between mb-2">
             <h4 className="text-[11px] font-semibold flex items-center gap-1.5 text-text-primary">
               <Sparkles size={12} className="text-brand-accent" /> AI analysis

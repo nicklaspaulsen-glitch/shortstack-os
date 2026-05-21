@@ -240,7 +240,7 @@ export default function FinancialsPage() {
 
   const revenueByTier = useMemo(() => {
     const tiers = [
-      { name: "Starter", price: 497, count: 0, color: "bg-blue-400" },
+      { name: "Starter", price: 497, count: 0, color: "bg-indigo-400" },
       { name: "Growth", price: 997, count: 0, color: "bg-green-400" },
       { name: "Pro", price: 2497, count: 0, color: "bg-purple-400" },
       { name: "Business", price: 4997, count: 0, color: "bg-brand-accent" },
@@ -623,7 +623,7 @@ export default function FinancialsPage() {
                         <span className="text-brand-accent font-semibold">{formatCurrency(totalMRR)}</span>
                       </div>
                       <div className="h-5 rounded-lg bg-surface-light border border-border-subtle overflow-hidden">
-                        <div className="h-full rounded-lg transition-all duration-500" style={{ width: barWidth(totalMRR), background: "rgba(59,130,246,0.7)" }} />
+                        <div className="h-full rounded-lg transition-all duration-500" style={{ width: barWidth(totalMRR), background: "rgba(212,255,0,0.7)" }} />
                       </div>
                     </div>
                     <div>
@@ -661,7 +661,7 @@ export default function FinancialsPage() {
                           <div key={i} className="flex-1 flex flex-col items-center gap-1">
                             <span className="text-[8px] text-text-muted">{formatCurrency(item.mrr)}</span>
                             <div className="w-full flex-1 flex items-end">
-                              <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(59,130,246,0.6)" }} />
+                              <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(212,255,0,0.6)" }} />
                             </div>
                             <span className="text-[8px] text-text-muted">{item.month}</span>
                           </div>
@@ -708,7 +708,7 @@ export default function FinancialsPage() {
                         <p className="text-lg font-bold text-text-primary">{pm.count}</p>
                         <div className="flex items-center gap-1 mt-1">
                           <div className="flex-1 h-1.5 rounded bg-surface border border-border-subtle overflow-hidden">
-                            <div className="h-full rounded" style={{ width: `${pm.pct}%`, background: "rgba(59,130,246,0.6)" }} />
+                            <div className="h-full rounded" style={{ width: `${pm.pct}%`, background: "rgba(212,255,0,0.6)" }} />
                           </div>
                           <span className="text-[9px] text-text-muted">{pm.pct}%</span>
                         </div>
@@ -835,7 +835,7 @@ export default function FinancialsPage() {
                             onClick={() => addPreset(preset)}
                             disabled={exists}
                             className={`text-left p-2.5 rounded-lg border text-xs transition-all ${
-                              exists ? "border-border-subtle/30 text-text-muted/40 cursor-not-allowed" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.05)]"
+                              exists ? "border-border-subtle/30 text-text-muted/40 cursor-not-allowed" : "border-border-subtle hover:border-[rgba(212,255,0,0.25)] hover:bg-[rgba(212,255,0,0.05)]"
                             }`}
                           >
                             <p className="font-semibold">{preset.name}</p>
@@ -981,7 +981,7 @@ export default function FinancialsPage() {
                       {subscriptions.map(s => (
                         <div key={s.id} className="grid grid-cols-12 px-4 py-3 items-center hover:bg-surface-light/30 transition-colors text-xs">
                           <div className="col-span-4 flex items-center gap-2">
-                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${s.status === "active" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "bg-surface-light text-text-muted"}`}>
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${s.status === "active" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" : "bg-surface-light text-text-muted"}`}>
                               {s.tool_name.charAt(0).toUpperCase()}
                             </div>
                             <div>
@@ -1164,7 +1164,7 @@ export default function FinancialsPage() {
                             inv.status === "paid" ? "text-emerald-400 border-emerald-500/30 bg-emerald-500/10" :
                             inv.status === "overdue" ? "text-rose-400 border-rose-500/30 bg-rose-500/10" :
                             inv.status === "due_soon" ? "text-amber-400 border-amber-500/30 bg-amber-500/10" :
-                            "text-blue-400 border-blue-500/30 bg-blue-500/10"
+                            "text-indigo-400 border-[rgba(99,102,241,0.30)] bg-[rgba(99,102,241,0.10)]"
                           }`}>
                             {inv.status === "due_soon" ? "Due Soon" : inv.status.charAt(0).toUpperCase() + inv.status.slice(1)}
                           </span>
@@ -1187,7 +1187,7 @@ export default function FinancialsPage() {
                   <button
                     onClick={() => toast("Automated reminders ship with the invoicing backend. For now, chase manually from the client's Billing tab.", { icon: "💡", duration: 6000 })}
                     className="card-hover p-3 text-left">
-                    <RefreshCw size={14} className="text-blue-400 mb-1.5" />
+                    <RefreshCw size={14} className="text-indigo-400 mb-1.5" />
                     <p className="text-xs font-semibold">Send Reminders</p>
                     <p className="text-[10px] text-text-muted">Coming soon</p>
                   </button>
@@ -1243,7 +1243,7 @@ export default function FinancialsPage() {
                         <div key={i} className="flex-1 flex flex-col items-center gap-1">
                           <span className="text-[8px] text-text-muted">{formatCurrency(item.projected)}</span>
                           <div className="w-full flex-1 flex items-end">
-                            <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(59,130,246,0.5)" }} />
+                            <div className="w-full rounded-t-md transition-all duration-500 min-h-[4px]" style={{ height, background: "rgba(212,255,0,0.5)" }} />
                           </div>
                           <span className="text-[8px] text-text-muted">{item.month}</span>
                         </div>
@@ -1285,7 +1285,7 @@ export default function FinancialsPage() {
                   </div>
                   <div className="glass rounded-xl p-3">
                     <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Projected ARR ({forecastMonths}mo)</p>
-                    <p className="text-lg font-bold text-blue-400">{formatCurrency((forecast[forecast.length - 1]?.projected || 0) * 12)}</p>
+                    <p className="text-lg font-bold text-brand-accent">{formatCurrency((forecast[forecast.length - 1]?.projected || 0) * 12)}</p>
                   </div>
                   <div className="glass rounded-xl p-3">
                     <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Cumulative Profit</p>
@@ -1336,7 +1336,7 @@ export default function FinancialsPage() {
                             key={fmt}
                             onClick={() => setExportFormat(fmt)}
                             className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
-                              exportFormat === fmt ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border-subtle text-text-muted hover:text-text-primary"
+                              exportFormat === fmt ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-brand-accent" : "border-border-subtle text-text-muted hover:text-text-primary"
                             }`}
                           >
                             {fmt.toUpperCase()}
@@ -1352,7 +1352,7 @@ export default function FinancialsPage() {
                             key={range}
                             onClick={() => setExportRange(range)}
                             className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
-                              exportRange === range ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border-subtle text-text-muted hover:text-text-primary"
+                              exportRange === range ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-brand-accent" : "border-border-subtle text-text-muted hover:text-text-primary"
                             }`}
                           >
                             {range.charAt(0).toUpperCase() + range.slice(1)}
@@ -1369,7 +1369,7 @@ export default function FinancialsPage() {
                     { label: "Revenue Report", desc: "MRR, ARR, growth trends", icon: TrendingUp, color: "text-brand-accent" },
                     { label: "Expense Report", desc: "All tracked subscriptions", icon: Receipt, color: "text-rose-400" },
                     { label: "Profit & Loss", desc: "Full P&L statement", icon: BarChart3, color: "text-emerald-400" },
-                    { label: "Invoice Report", desc: "All invoices & aging", icon: FileText, color: "text-blue-400" },
+                    { label: "Invoice Report", desc: "All invoices & aging", icon: FileText, color: "text-indigo-400" },
                     { label: "Tax Summary", desc: "Tax-ready financials", icon: Shield, color: "text-orange-400" },
                     { label: "Client Revenue", desc: "Revenue by client/tier", icon: Users, color: "text-purple-400" },
                   ].map(report => (
@@ -1407,7 +1407,7 @@ export default function FinancialsPage() {
                       </div>
                       <button
                         onClick={() => toast(stripeSynced ? "Syncing..." : "Configure Stripe in Settings > Integrations")}
-                        className="w-full text-[10px] py-1.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.14)] transition-all flex items-center justify-center gap-1"
+                        className="w-full text-[10px] py-1.5 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.14)] transition-all flex items-center justify-center gap-1"
                       >
                         <RefreshCw size={10} /> {stripeSynced ? "Sync Now" : "Connect"}
                       </button>
@@ -1455,14 +1455,14 @@ export default function FinancialsPage() {
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => toast("CSV import is coming soon. Add expenses manually via the Expenses tab → Add Expense.", { icon: "💡", duration: 6000 })}
-                      className="p-4 rounded-lg border-2 border-dashed border-border-subtle hover:border-[rgba(59,130,246,0.25)] transition-colors text-center">
+                      className="p-4 rounded-lg border-2 border-dashed border-border-subtle hover:border-[rgba(212,255,0,0.25)] transition-colors text-center">
                       <FileText size={20} className="mx-auto mb-2 text-text-muted" />
                       <p className="text-xs font-semibold">Import CSV</p>
                       <p className="text-[10px] text-text-muted mt-0.5">Coming soon</p>
                     </button>
                     <button
                       onClick={() => toast("QuickBooks sync is on the roadmap. For now, enter expenses manually or use the Subscriptions tab.", { icon: "💡", duration: 6000 })}
-                      className="p-4 rounded-lg border-2 border-dashed border-border-subtle hover:border-[rgba(59,130,246,0.25)] transition-colors text-center">
+                      className="p-4 rounded-lg border-2 border-dashed border-border-subtle hover:border-[rgba(212,255,0,0.25)] transition-colors text-center">
                       <Globe size={20} className="mx-auto mb-2 text-text-muted" />
                       <p className="text-xs font-semibold">QuickBooks Import</p>
                       <p className="text-[10px] text-text-muted mt-0.5">Coming soon</p>
