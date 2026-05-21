@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
+import { getPageTrainingPrompt } from "@/lib/ai/page-training";
 
 // AI Sales Proposal Generator — Creates premium proposal PDFs for prospects
 export async function POST(request: NextRequest) {
@@ -11,6 +12,8 @@ export async function POST(request: NextRequest) {
   const { data: profile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
   const limited = checkAiRateLimit(user.id, profile?.plan_tier);
   if (limited) return limited;
+
+  const trainingPrompt = await getPageTrainingPrompt(supabase, user.id, "proposals");
 
   const body = await request.json();
   const { prospect_name, business_name, industry, services, package_tier, mrr, pain_points, goals } = body;
@@ -32,7 +35,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
         max_tokens: 4000,
-        system: `You are a sales strategist for ShortStack digital marketing agency. Write a compelling, personalized business proposal. Be specific about ROI projections and deliverables. Write in sections with clear headers.`,
+        system: `You are a sales strategist for ShortStack digital marketing agency. Write a compelling, personalized business proposal. Be specific about ROI projections and deliverables. Write in sections with clear headers.${trainingPrompt ? `\n\n${trainingPrompt}` : ""}`,
         messages: [{ role: "user", content: `Write a sales proposal for:
 Prospect: ${prospect_name} at ${business_name}
 Industry: ${industry}
