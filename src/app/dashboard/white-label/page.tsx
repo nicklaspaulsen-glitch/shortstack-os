@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
-  Palette, Globe, Mail, Image, ToggleLeft, ToggleRight, Save, Loader2,
+  Globe, Mail, Image, ToggleLeft, ToggleRight, Save, Loader2,
   AlignLeft, CheckCircle2, Eye, EyeOff, RefreshCw, ShieldCheck, X,
   DollarSign, ExternalLink,
 } from "lucide-react";

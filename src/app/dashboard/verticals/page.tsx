@@ -18,7 +18,6 @@ import {
   ShoppingBag,
   ArrowRight,
   Check,
-  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";

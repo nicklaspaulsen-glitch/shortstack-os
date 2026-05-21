@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 import {
   Layers, Film, Megaphone, Image as ImageIcon, Mail,
   FileText, Share2, Globe, Search, RefreshCw,
-  Calendar, TrendingUp, Copy,
-  Trash2, Loader, Sparkles, Clock
+  Copy,
+  Trash2, Loader, Sparkles
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";

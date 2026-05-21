@@ -73,8 +73,6 @@ export default function ElevenAgentsPage() {
   const [selectedCall, setSelectedCall] = useState<string | null>(null);
   const [callFilter, setCallFilter] = useState<string>("all");
   const [scriptFilter, setScriptFilter] = useState<string>("all");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [playingVoice, setPlayingVoice] = useState<string | null>(null);
   const [abTestName, setAbTestName] = useState("");
   const [abScriptA, setAbScriptA] = useState("");
   const [abScriptB, setAbScriptB] = useState("");

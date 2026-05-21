@@ -7784,7 +7784,7 @@ export default function VideoEditorPage() {
                   {generating && (
                     <div className="mt-1 w-full h-1 bg-surface-light rounded-full overflow-hidden">
                       <motion.div
-                        className="h-1 bg-gradient-to-r from-[#2563EB] to-[#3B82F6]"
+                        className="h-1 bg-gradient-to-r from-[#D4FF00] to-[#E8FF4D]"
                         animate={{ width: `${renderProgress}%` }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
                       />

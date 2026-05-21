@@ -11,7 +11,6 @@ import {
 import { PLAN_TIERS, formatBytes, type PlanTier } from "@/lib/plan-config";
 import { LIMITS_BY_TIER } from "@/lib/plan-limits";
 import { formatLimit, getTierFeatures } from "@/lib/plan-display";
-import { CreditCard } from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 

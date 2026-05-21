@@ -5,11 +5,10 @@
  * Only visible to users with role === "admin" / "founder".
  */
 
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import Link from "next/link";
-import { Activity, DollarSign, Zap, FlaskConical, Shield } from "lucide-react";
+import { Activity, DollarSign, FlaskConical, Shield } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 const ADMIN_LINKS = [

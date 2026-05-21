@@ -30,9 +30,7 @@ import {
   Search,
   ChevronDown,
   Lightbulb,
-  Radio,
   Zap,
-  Volume2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -1331,7 +1329,7 @@ function DetailPanel({
                 ? "rgba(34,197,94,0.15)"
                 : "rgba(212,255,0,0.12)",
               border: `1px solid ${copied ? "rgba(34,197,94,0.30)" : "rgba(212,255,0,0.25)"}`,
-              color: copied ? "#22c55e" : "#60a5fa",
+              color: copied ? "#22c55e" : "#D4FF00",
             }}
           >
             {copied ? (
@@ -1598,7 +1596,7 @@ export default function EnemyTrackerPage() {
                         : "transparent",
                     color:
                       platform === p.id
-                        ? "#60a5fa"
+                        ? "#D4FF00"
                         : "rgba(255,255,255,0.45)",
                     border:
                       platform === p.id
@@ -1677,7 +1675,7 @@ export default function EnemyTrackerPage() {
                       setTimeout(() => inputRef.current?.focus(), 50);
                     }}
                     className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all hover:brightness-110"
-                    style={{ background: "rgba(212,255,0,0.18)", border: "1px solid rgba(212,255,0,0.30)", color: "#60a5fa" }}
+                    style={{ background: "rgba(212,255,0,0.18)", border: "1px solid rgba(212,255,0,0.30)", color: "#D4FF00" }}
                   >
                     + Add Competitor
                   </button>

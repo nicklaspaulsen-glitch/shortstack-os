@@ -13,7 +13,6 @@ import RightInspector from "@/components/design-studio/RightInspector";
 import { PenTool, Plus, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { SIZE_PRESETS } from "@/lib/design/types";
-import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
 export default function DesignStudioPage() {
@@ -28,7 +27,6 @@ export default function DesignStudioPage() {
   const isDirty = useDesignStore((s) => s.isDirty);
 
   const [loading, setLoading] = React.useState(false);
-  const [showPicker, setShowPicker] = React.useState(false);
   const [creating, setCreating] = React.useState(false);
 
   // Load existing design from URL param

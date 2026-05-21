@@ -10,7 +10,6 @@ import {
   Flag
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
-import { Kanban } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type ProductionTab = "pipeline" | "calendar" | "standup" | "approvals";
@@ -297,7 +296,7 @@ export default function ProductionPage() {
                               <div className="h-full rounded-full bg-[rgba(212,255,0,0.50)]" style={{ width: `${pctEst * 3}%` }} />
                             </div>
                             <div className="flex-1 h-1.5 rounded-full bg-surface overflow-hidden">
-                              <div className="h-full rounded-full" style={{ width: `${pctAct * 3}%`, background: overBudget ? "#ef4444" : "#2563EB" }} />
+                              <div className="h-full rounded-full" style={{ width: `${pctAct * 3}%`, background: overBudget ? "#ef4444" : "#D4FF00" }} />
                             </div>
                           </div>
                         </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
-  Globe, Globe2, Search, Loader, CheckCircle, XCircle, ExternalLink,
+  Globe, Search, Loader, CheckCircle, XCircle, ExternalLink,
   ShieldCheck, Plus, RefreshCw, Copy, Trash2,
   AlertTriangle, Edit3, AlertCircle, Mail, MailCheck, MailWarning,
   ArrowUpRight, Info, Sparkles,

@@ -5,11 +5,9 @@ import { motion } from "framer-motion";
 import {
   MapPin, Star, Send, RefreshCw, Reply, PenTool, Eye,
   BarChart3, Image, Clock, Calendar, Plus,
-  TrendingUp, Globe, Settings, CheckCircle,
+  Globe, Settings,
   ArrowUpRight, Sparkles, MessageSquare, Tag,
-  Globe as GlobeIcon,
 } from "lucide-react";
-import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /* ------------------------------------------------------------------ */
@@ -37,7 +35,6 @@ export default function GoogleBusinessPage() {
   const [activeTab, setActiveTab] = useState<"reviews" | "posts" | "insights" | "qa" | "photos" | "settings">("reviews");
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("loc1");
   const [postContent, setPostContent] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [aiReply, setAiReply] = useState<Record<string, string>>({});
