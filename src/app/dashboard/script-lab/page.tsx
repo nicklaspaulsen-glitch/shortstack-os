@@ -541,7 +541,6 @@ export default function ScriptLabPage() {
   const [newWatchlistName, setNewWatchlistName] = useState("");
 
   // Template categories
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [templateCategory, setTemplateCategory] = useState("all");
   const scriptTemplates = [
     { id: "1", name: "Product Launch Announcement", category: "launch", framework: "aida", platform: "instagram", desc: "Build hype for a new product or service launch" },
@@ -570,35 +569,25 @@ export default function ScriptLabPage() {
     { id: "24", name: "Local Business Highlight", category: "brand", framework: "storytelling", platform: "facebook", desc: "Showcase local business partnerships" },
   ];
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const templateCategories = ["all", "educational", "social_proof", "brand", "sales", "viral", "email", "promotion", "launch"];
 
   // Tone analyzer state
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [toneAnalysisText, setToneAnalysisText] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [toneResult, setToneResult] = useState<{ tones: { tone: string; score: number }[]; readability: string; wordCount: number; sentiment: string } | null>(null);
 
   // SEO optimizer state
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [seoKeyword, setSeoKeyword] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [seoContent, setSeoContent] = useState("");
 
   // Voice-over state
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [voiceoverText, setVoiceoverText] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [voiceSpeed, setVoiceSpeed] = useState<"slow" | "normal" | "fast">("normal");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [voiceStyle, setVoiceStyle] = useState<"professional" | "casual" | "energetic" | "calm">("professional");
 
   // Approval flow state
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [approvalScripts] = useState<{ id: string; title: string; client: string; status: "pending" | "approved" | "revision"; submitted: string; feedback?: string }[]>([]);
 
   // Multi-platform formatter
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [formatPlatform, setFormatPlatform] = useState("tiktok");
 
   useEffect(() => {

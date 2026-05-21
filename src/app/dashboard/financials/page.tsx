@@ -102,7 +102,6 @@ export default function FinancialsPage() {
 
   // Revenue state
   const [clients, setClients] = useState<ClientRow[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
 
   // Tab state
@@ -122,7 +121,6 @@ export default function FinancialsPage() {
   // Expense state
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [showModal, setShowModal] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [showPresets, setShowPresets] = useState(false);
   const [editing, setEditing] = useState<Expense | null>(null);
   const [form, setForm] = useState<Omit<Expense, "id">>({
@@ -225,7 +223,6 @@ export default function FinancialsPage() {
 
   const [invoices] = useState<{ id: string; client: string; amount: number; due: string; status: "overdue" | "due_soon" | "pending" | "paid" }[]>([]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const invoiceTotals = useMemo(() => {
     const overdue = invoices.filter(i => i.status === "overdue").reduce((s, i) => s + i.amount, 0);
     const dueSoon = invoices.filter(i => i.status === "due_soon").reduce((s, i) => s + i.amount, 0);
@@ -260,14 +257,12 @@ export default function FinancialsPage() {
     return tiers.map(t => ({ ...t, revenue: t.count * t.price }));
   }, [activeClients]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const totalTierRevenue = revenueByTier.reduce((s, t) => s + t.revenue, 0);
 
   // ---------------------------------------------------------------------------
   // Payment method distribution mock
   // ---------------------------------------------------------------------------
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [paymentMethods] = useState<{ method: string; count: number; pct: number }[]>([]);
 
   // ---------------------------------------------------------------------------
@@ -278,7 +273,6 @@ export default function FinancialsPage() {
   const [monthlyGrowthRate] = useState(8);
   const [monthlyChurnRate] = useState(3);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const forecast = useMemo(() => {
     const months: { month: string; projected: number; expenses: number; profit: number }[] = [];
     let currentMRR = totalMRR;
@@ -311,7 +305,6 @@ export default function FinancialsPage() {
     { category: "Payments", budget: 50, actual: 0 },
   ]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const budgetsWithActual = useMemo(() => {
     return budgets.map(b => {
       const actual = expenses
@@ -323,21 +316,17 @@ export default function FinancialsPage() {
 
   // Client Lifetime Value
   const avgClientLifeMonths = 14;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const clv = avgRevenue * avgClientLifeMonths;
 
   // ARR & Churn
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const annualRecurringRevenue = totalMRR * 12;
   const churnedThisMonth = clients.filter(c => !c.is_active).length;
   const totalClients = clients.length;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const churnRate = totalClients > 0 ? (churnedThisMonth / totalClients) * 100 : 0;
 
   // Tax estimate
   const estimatedTaxRate = 25;
   const annualProfit = netProfit * 12;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const estimatedTax = annualProfit > 0 ? annualProfit * (estimatedTaxRate / 100) : 0;
 
   // Stripe sync state
@@ -345,9 +334,7 @@ export default function FinancialsPage() {
   const [lastSyncTime] = useState<string | null>(null);
 
   // Export state
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [exportFormat, setExportFormat] = useState<"csv" | "pdf" | "xlsx">("csv");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [exportRange, setExportRange] = useState<"month" | "quarter" | "year" | "all">("month");
 
   // ---------------------------------------------------------------------------
