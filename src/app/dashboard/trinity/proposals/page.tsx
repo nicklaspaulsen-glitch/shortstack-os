@@ -83,12 +83,12 @@ const MODE_TILES: { mode: Mode; label: string; desc: string; icon: React.ReactNo
 ];
 
 const STATUS_COLOR: Record<string, string> = {
-  proposed: "bg-amber-500/10 text-amber-700",
-  approved: "bg-blue-500/10 text-blue-700",
-  executed: "bg-emerald-500/10 text-emerald-700",
-  vetoed: "bg-[rgba(0,0,0,0.06)] text-[#6B7280]",
-  expired: "bg-[rgba(0,0,0,0.06)] text-[#6B7280]",
-  failed: "bg-red-500/10 text-red-700",
+  proposed: "bg-amber-500/10 text-amber-400",
+  approved: "bg-blue-500/10 text-blue-400",
+  executed: "bg-emerald-500/10 text-emerald-400",
+  vetoed: "bg-white/8 text-text-muted",
+  expired: "bg-white/8 text-text-muted",
+  failed: "bg-red-500/10 text-red-400",
 };
 
 const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
@@ -224,14 +224,14 @@ export default function TrinityProposalsPage() {
                     <div className="flex items-center gap-2">
                       <span
                         className={
-                          active ? "text-purple-600" : "text-text-muted"
+                          active ? "text-purple-400" : "text-text-muted"
                         }
                       >
                         {t.icon}
                       </span>
-                      <h3 className="text-sm font-bold text-[#111827]">{t.label}</h3>
+                      <h3 className="text-sm font-bold text-text-primary">{t.label}</h3>
                       {active && (
-                        <span className="ml-auto rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-bold uppercase text-purple-700">
+                        <span className="ml-auto rounded-full bg-purple-500/10 px-2 py-0.5 text-[10px] font-bold uppercase text-purple-400">
                           Active
                         </span>
                       )}
@@ -241,7 +241,7 @@ export default function TrinityProposalsPage() {
                 );
               })}
             </div>{/* Enabled actions + veto window */}<div className="glass rounded-xl p-4">
-              <h2 className="text-sm font-semibold text-[#111827]">Configure</h2>
+              <h2 className="text-sm font-semibold text-text-primary">Configure</h2>
 
               <div className="mt-4 space-y-2">
                 <div className="text-xs text-text-muted">Enabled action types</div>
@@ -255,8 +255,8 @@ export default function TrinityProposalsPage() {
                         disabled={savingSettings}
                         className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
                           enabled
-                            ? "bg-purple-100 text-purple-700 ring-1 ring-purple-300"
-                            : "bg-[rgba(0,0,0,0.04)] text-text-muted hover:bg-[rgba(0,0,0,0.06)]"
+                            ? "bg-purple-500/10 text-purple-400 ring-1 ring-purple-400/30"
+                            : "bg-white/5 text-text-muted hover:bg-white/8"
                         }`}
                       >
                         {ACTION_LABELS[a] ?? a}
@@ -339,7 +339,7 @@ export default function TrinityProposalsPage() {
                 className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition ${
                   tab === "pending"
                     ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
-                    : "text-text-muted hover:text-[#111827]"
+                    : "text-text-muted hover:text-text-primary"
                 }`}
               >
                 <Clock size={12} />
@@ -350,7 +350,7 @@ export default function TrinityProposalsPage() {
                 className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition ${
                   tab === "history"
                     ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
-                    : "text-text-muted hover:text-[#111827]"
+                    : "text-text-muted hover:text-text-primary"
                 }`}
               >
                 <History size={12} />
@@ -361,7 +361,7 @@ export default function TrinityProposalsPage() {
             ) : proposals.length === 0 ? (
               <div className="glass rounded-xl p-4 flex flex-col items-center justify-center py-12 text-center">
                 <Brain size={36} className="mb-3 text-text-muted/30" />
-                <p className="text-sm font-medium text-[#111827]">
+                <p className="text-sm font-medium text-text-primary">
                   {tab === "pending" ? "No pending proposals" : "No history yet"}
                 </p>
                 <p className="mt-1 text-xs text-text-muted">
@@ -380,12 +380,12 @@ export default function TrinityProposalsPage() {
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
-                            <h3 className="text-sm font-semibold text-[#111827]">
+                            <h3 className="text-sm font-semibold text-text-primary">
                               {ACTION_LABELS[p.action_type] ?? p.action_type}
                             </h3>
                             <span
                               className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                                STATUS_COLOR[p.status] ?? "bg-[rgba(0,0,0,0.06)] text-[#6B7280]"
+                                STATUS_COLOR[p.status] ?? "bg-white/8 text-text-muted"
                               }`}
                             >
                               {p.status}
@@ -421,7 +421,7 @@ export default function TrinityProposalsPage() {
                         )}
                       </div>
                       {p.rationale && (
-                        <p className="mt-3 text-sm text-[#374151]">{p.rationale}</p>
+                        <p className="mt-3 text-sm text-text-secondary">{p.rationale}</p>
                       )}
                       {p.veto_window_until && p.status === "proposed" && (
                         <p className="mt-2 text-[10px] text-text-muted">
@@ -431,7 +431,7 @@ export default function TrinityProposalsPage() {
                         </p>
                       )}
                       {p.result && (
-                        <pre className="mt-3 overflow-x-auto rounded-lg bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] p-3 text-[10px] leading-relaxed text-[#374151]">
+                        <pre className="mt-3 overflow-x-auto rounded-lg bg-white/5 border border-border-subtle p-3 text-[10px] leading-relaxed text-text-secondary">
                           {JSON.stringify(p.result, null, 2)}
                         </pre>
                       )}

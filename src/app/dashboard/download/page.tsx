@@ -163,7 +163,7 @@ export default function DownloadDesktopPage() {
                   href={GH_RELEASES}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-black/5 hover:bg-black/10 text-text-primary border border-border-subtle transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/5 hover:bg-white/10 text-text-primary border border-border-subtle transition-colors"
                 >
                   View all releases <ExternalLink size={12} />
                 </a>
@@ -177,10 +177,10 @@ export default function DownloadDesktopPage() {
               >
                 <AlertTriangle size={18} className="shrink-0 mt-0.5 text-amber-500" />
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-amber-700">
+                  <div className="text-sm font-semibold text-amber-400">
                     Installer temporarily unavailable
                   </div>
-                  <div className="text-xs text-amber-600 mt-0.5">
+                  <div className="text-xs text-amber-400 mt-0.5">
                     Our desktop installer is currently being staged. You can still grab it from
                     GitHub releases, or email support and we&apos;ll send a direct link.
                   </div>
@@ -195,7 +195,7 @@ export default function DownloadDesktopPage() {
                     </a>
                     <a
                       href={SUPPORT_MAILTO}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-[rgba(0,0,0,0.04)] hover:bg-[rgba(0,0,0,0.06)] text-[#374151] border border-[rgba(0,0,0,0.08)]"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-white/5 hover:bg-white/8 text-text-secondary border border-border-subtle"
                     >
                       <Mail size={11} /> Contact support
                     </a>
@@ -225,7 +225,7 @@ export default function DownloadDesktopPage() {
                     }`}
                   >
                     {isRecommended && (
-                      <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-brand-accent text-[10px] font-bold text-white uppercase tracking-wider">
+                      <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-brand-accent text-[10px] font-bold text-[#0D1120] uppercase tracking-wider">
                         Recommended for you
                       </div>
                     )}
