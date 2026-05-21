@@ -33,11 +33,11 @@ type SortDir = "asc" | "desc";
 type ViewMode = "table" | "card";
 
 const TAG_PRESETS: ClientTag[] = [
-  { label: "VIP", color: "#1D4ED8" },
+  { label: "VIP", color: "#D4FF00" },
   { label: "At Risk", color: "#F59E0B" },
-  { label: "New", color: "#3B82F6" },
-  { label: "Enterprise", color: "#3B82F6" },
-  { label: "Growing", color: "#1D4ED8" },
+  { label: "New", color: "#10B981" },
+  { label: "Enterprise", color: "#6366F1" },
+  { label: "Growing", color: "#D4FF00" },
   { label: "Needs Attention", color: "#F59E0B" },
 ];
 
@@ -45,7 +45,7 @@ function HealthArc({ score }: { score: number }) {
   const pct = Math.min(100, Math.max(0, score ?? 0));
   const r = 16, circ = 2 * Math.PI * r;
   const dash = (pct / 100) * circ;
-  const color = pct>= 70 ? "#3B82F6" : pct>= 40 ? "#1D4ED8" : "#F59E0B";
+  const color = pct>= 70 ? "#D4FF00" : pct>= 40 ? "#F59E0B" : "#F43F5E";
   return (
     <svg width="42" height="42" viewBox="0 0 42 42" className="-rotate-90">
       <circle cx="21" cy="21" r={r} fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="3" />
@@ -642,9 +642,9 @@ export default function ClientsPage() {
 
  // --- Prism color map for stat tiles -------------------------------------
   const CLIENT_PRISM = [
-    { accent: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" }, // Total
-    { accent: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" }, // Active
-    { accent: "#3B82F6", bar: "from-[#3B82F6] to-transparent" }, // MRR
+    { accent: "#D4FF00", bar: "from-[#D4FF00] to-transparent" }, // Total
+    { accent: "#D4FF00", bar: "from-[#D4FF00] to-transparent" }, // Active
+    { accent: "#D4FF00", bar: "from-[#D4FF00] to-transparent" }, // MRR
     { accent: "#F59E0B", bar: "from-[#F59E0B] to-transparent" }, // At Risk
   ] as const;
 
@@ -678,7 +678,7 @@ export default function ClientsPage() {
           {/* Live count + MRR badges beside the title */}
           {clients.length> 0 && (
             <div className="hidden sm:flex items-center gap-1.5 ml-1">
-              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.15)] text-[10px] font-medium text-brand-accent">
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.15)] text-[10px] font-medium text-brand-accent">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
                 {clients.length}
               </span>
@@ -727,7 +727,7 @@ export default function ClientsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+            <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#D4FF00] to-[#AACC00] shrink-0" />
             <div>
               <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly Recurring Revenue</p>
               <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">
@@ -894,7 +894,7 @@ export default function ClientsPage() {
                 className={`text-[10px] px-2 py-1 rounded-full border transition-all ${
                   activityFilter === chip.key
                     ? chip.color + " border"
-                    : "bg-surface text-text-muted border-border-subtle hover:border-[rgba(59,130,246,0.30)]"
+                    : "bg-surface text-text-muted border-border-subtle hover:border-[rgba(212,255,0,0.25)]"
                 }`}
 >
                 {chip.label}
@@ -956,7 +956,7 @@ export default function ClientsPage() {
 
           {/* Feature 4: Bulk Actions Bar */}
           {selectedClients.size> 0 && (
-            <div className="glass rounded-xl p-2.5 flex items-center gap-3 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.20)] flex-wrap">
+            <div className="glass rounded-xl p-2.5 flex items-center gap-3 bg-[rgba(212,255,0,0.04)] border-[rgba(212,255,0,0.18)] flex-wrap">
               <span className="text-xs font-medium">{selectedClients.size} selected</span>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <button onClick={() => handleBulkAction("email")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
@@ -1021,13 +1021,13 @@ export default function ClientsPage() {
                 onMouseLeave={() => setHoveredClient(null)}
                 onMouseMove={cardSpotlightMove}>
                 <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: "radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(59,130,246,0.09), transparent 55%)" } as React.CSSProperties} />
+                  style={{ background: "radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(212,255,0,0.06), transparent 55%)" } as React.CSSProperties} />
 
                 {/* Feature 4: Selection checkbox */}
                 <div className="absolute top-3 left-3" onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border-subtle hover:border-[rgba(59,130,246,0.40)]"
+                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border-subtle hover:border-[rgba(212,255,0,0.35)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
@@ -1256,7 +1256,7 @@ export default function ClientsPage() {
             columns={[
               { key: "select", label: (
                 <button onClick={selectAllClients} className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                  selectedClients.size === filteredClients.length && filteredClients.length> 0 ? "bg-brand-accent border-brand-accent text-white" : "border-border-subtle hover:border-[rgba(59,130,246,0.40)]"
+                  selectedClients.size === filteredClients.length && filteredClients.length> 0 ? "bg-brand-accent border-brand-accent text-white" : "border-border-subtle hover:border-[rgba(212,255,0,0.35)]"
                 }`}>
                   {selectedClients.size === filteredClients.length && filteredClients.length> 0 && <Check size={10} />}
                 </button>
@@ -1264,7 +1264,7 @@ export default function ClientsPage() {
                 <div onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border-subtle hover:border-[rgba(59,130,246,0.40)]"
+                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border-subtle hover:border-[rgba(212,255,0,0.35)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
@@ -1426,9 +1426,9 @@ export default function ClientsPage() {
               <div className="border border-t-0 border-border-subtle rounded-b-xl px-4 pb-4" style={{ background: "rgba(248,250,252,0.80)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
                 <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
                   {[
-                    { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#1D4ED8" },
-                    { label: "Health", value: `${client.health_score ?? "�"}%`, color: client.health_score>= 70 ? "#3B82F6" : client.health_score>= 40 ? "#1D4ED8" : "#F59E0B" },
-                    { label: "Package", value: client.package_tier ?? "�", color: "#3B82F6" },
+                    { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#D4FF00" },
+                    { label: "Health", value: `${client.health_score ?? "�"}%`, color: client.health_score>= 70 ? "#D4FF00" : client.health_score>= 40 ? "#F59E0B" : "#F43F5E" },
+                    { label: "Package", value: client.package_tier ?? "�", color: "#D4FF00" },
                     { label: "Since", value: formatDate(client.created_at ?? ""), color: "var(--text-muted)" },
                   ].map((tile, ti) => {
                     return (
@@ -1548,9 +1548,9 @@ export default function ClientsPage() {
           {/* Billing Stats � prism glass tiles */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { label: "Stripe Customers", value: `${clientsWithStripe.length}/${clients.length}`, color: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },
-              { label: "Active Subs", value: String(clientsWithSubs.length), color: "#1D4ED8", bar: "from-[#1D4ED8] to-transparent" },
-              { label: "Paid Invoices", value: String(paidInvoices.length), color: "#3B82F6", bar: "from-[#3B82F6] to-transparent" },
+              { label: "Stripe Customers", value: `${clientsWithStripe.length}/${clients.length}`, color: "#D4FF00", bar: "from-[#D4FF00] to-transparent" },
+              { label: "Active Subs", value: String(clientsWithSubs.length), color: "#D4FF00", bar: "from-[#D4FF00] to-transparent" },
+              { label: "Paid Invoices", value: String(paidInvoices.length), color: "#D4FF00", bar: "from-[#D4FF00] to-transparent" },
               { label: "Overdue", value: String(overdueInvoices.length), color: overdueInvoices.length> 0 ? "#F59E0B" : "#6F6D7A", bar: overdueInvoices.length> 0 ? "from-[#F59E0B] to-transparent" : "from-[#6F6D7A] to-transparent" },
             ].map((tile, i) => (
               <motion.div
@@ -1947,7 +1947,7 @@ export default function ClientsPage() {
                   return (
                     <button key={tag.label} onClick={() => toggleTag(showTagModal, tag)}
                       className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all border ${
-                        isActive ? "border-transparent" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
+                        isActive ? "border-transparent" : "border-border-subtle hover:border-[rgba(212,255,0,0.20)]"
                       }`}
                       style={isActive ? { background: tag.color + "22", color: tag.color, borderColor: tag.color + "44" } : {}}>
                       {isActive && <Check size={10} className="inline mr-1" />}

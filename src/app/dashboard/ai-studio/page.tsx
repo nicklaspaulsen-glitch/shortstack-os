@@ -41,15 +41,15 @@ interface JobResult {
 
 // -- Tool configs -------------------------------------------------
 const TOOLS = [
-  { id: "transcribe",  name: "Transcribe",      desc: "Audio/video to text with timestamps",  icon: Mic,        color: "#3B82F6", tag: "Whisper V3",   inputLabel: "Audio / Video file",     outputLabel: "Text transcript"       },
-  { id: "image-gen",  name: "Image Gen",        desc: "Generate images from text prompts",    icon: Palette,    color: "#3B82F6", tag: "FLUX/DALL-E",  inputLabel: "Text prompt",            outputLabel: "Generated image"       },
-  { id: "upscale",    name: "Upscale",          desc: "4× AI image upscaling",                icon: ArrowUpRight, color: "#3B82F6", tag: "Real-ESRGAN", inputLabel: "Low-res image",          outputLabel: "4× sharp image"        },
-  { id: "remove-bg",  name: "Remove BG",        desc: "One-click background removal",         icon: Scissors,   color: "#3B82F6", tag: "REMBG/SAM",    inputLabel: "Photo with background",  outputLabel: "Transparent PNG"       },
-  { id: "img-to-video", name: "Image to Video", desc: "Animate still images into video",      icon: Film,       color: "#3B82F6", tag: "SVD",          inputLabel: "Still image",            outputLabel: "Short video clip"      },
-  { id: "music-gen",  name: "Music Gen",        desc: "AI background music for videos",       icon: Music,      color: "#1D4ED8", tag: "MusicGen",     inputLabel: "Style description",      outputLabel: "Background track",     newBadge: true },
-  { id: "voice-clone", name: "Voice Clone",     desc: "Clone voice from 6s audio sample",    icon: Volume2,    color: "#3B82F6", tag: "XTTS v2",      inputLabel: "6s voice sample",        outputLabel: "Cloned voice model"    },
-  { id: "train-lora", name: "Brand LoRA",       desc: "Train custom image style models",      icon: Brain,      color: "#1D4ED8", tag: "LoRA",         inputLabel: "15–20 reference photos", outputLabel: "Custom style model",   badge: "Business+" },
-  { id: "batch-gen",  name: "Batch Generate",   desc: "50+ images in one go",                 icon: Layers,     color: "#3B82F6", tag: "FLUX/SDXL",   inputLabel: "Prompt + variants",      outputLabel: "50+ images"            },
+  { id: "transcribe",  name: "Transcribe",      desc: "Audio/video to text with timestamps",  icon: Mic,        color: "#D4FF00", tag: "Whisper V3",   inputLabel: "Audio / Video file",     outputLabel: "Text transcript"       },
+  { id: "image-gen",  name: "Image Gen",        desc: "Generate images from text prompts",    icon: Palette,    color: "#D4FF00", tag: "FLUX/DALL-E",  inputLabel: "Text prompt",            outputLabel: "Generated image"       },
+  { id: "upscale",    name: "Upscale",          desc: "4× AI image upscaling",                icon: ArrowUpRight, color: "#D4FF00", tag: "Real-ESRGAN", inputLabel: "Low-res image",          outputLabel: "4× sharp image"        },
+  { id: "remove-bg",  name: "Remove BG",        desc: "One-click background removal",         icon: Scissors,   color: "#D4FF00", tag: "REMBG/SAM",    inputLabel: "Photo with background",  outputLabel: "Transparent PNG"       },
+  { id: "img-to-video", name: "Image to Video", desc: "Animate still images into video",      icon: Film,       color: "#D4FF00", tag: "SVD",          inputLabel: "Still image",            outputLabel: "Short video clip"      },
+  { id: "music-gen",  name: "Music Gen",        desc: "AI background music for videos",       icon: Music,      color: "#D4FF00", tag: "MusicGen",     inputLabel: "Style description",      outputLabel: "Background track",     newBadge: true },
+  { id: "voice-clone", name: "Voice Clone",     desc: "Clone voice from 6s audio sample",    icon: Volume2,    color: "#D4FF00", tag: "XTTS v2",      inputLabel: "6s voice sample",        outputLabel: "Cloned voice model"    },
+  { id: "train-lora", name: "Brand LoRA",       desc: "Train custom image style models",      icon: Brain,      color: "#D4FF00", tag: "LoRA",         inputLabel: "15–20 reference photos", outputLabel: "Custom style model",   badge: "Business+" },
+  { id: "batch-gen",  name: "Batch Generate",   desc: "50+ images in one go",                 icon: Layers,     color: "#D4FF00", tag: "FLUX/SDXL",   inputLabel: "Prompt + variants",      outputLabel: "50+ images"            },
 ] as const;
 
 type ToolId = typeof TOOLS[number]["id"];
@@ -163,7 +163,7 @@ export default function AIStudioPage() {
             {TOOLS.length} tools
           </span>
           {history.length > 0 && (
-            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.15)] text-brand-accent">
+            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.15)] text-brand-accent">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
               {history.filter(j => j.status === "completed").length} done
             </span>
@@ -174,7 +174,7 @@ export default function AIStudioPage() {
             {TOOLS.find(t => t.id === activeTool)?.name ?? "Select tool"}
           </span>
           {/* Model badge — shows current default generation model */}
-          <span className="hidden sm:flex items-center gap-1 text-[10px] font-medium px-2.5 py-1 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.18)] text-brand-accent">
+          <span className="hidden sm:flex items-center gap-1 text-[10px] font-medium px-2.5 py-1 rounded-full bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.18)] text-brand-accent">
             <Brain size={10} />
             Claude Sonnet 4.5
           </span>
@@ -286,7 +286,7 @@ export default function AIStudioPage() {
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Sparkles size={13} className="text-[#3B82F6]" />
+                <Sparkles size={13} className="text-brand-accent" />
                 <span className="text-sm font-semibold text-text-primary">Latest generation</span>
                 <span className="text-[10px] text-text-muted">{wizardImages.length} image{wizardImages.length > 1 ? "s" : ""}</span>
               </div>
@@ -297,7 +297,7 @@ export default function AIStudioPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {wizardImages.map((img, i) => (
                 <a key={i} href={img.url} target="_blank" rel="noopener noreferrer"
-                  className="block bg-black rounded-xl overflow-hidden hover:ring-1 hover:ring-[#2563EB]/40 transition-all">
+                  className="block bg-black rounded-xl overflow-hidden hover:ring-1 hover:ring-brand-accent/40 transition-all">
                   <SafeThumb
                     src={img.url}
                     alt={`Wizard output ${i + 1}`}
@@ -320,7 +320,7 @@ export default function AIStudioPage() {
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#2563EB] to-[#3B82F6] shrink-0" />
+              <div className="w-1 self-stretch rounded-full bg-gradient-to-b from-[#D4FF00] to-[#AACC00] shrink-0" />
               <div>
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Jobs Run</p>
                 <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">{history.length}</p>
@@ -358,7 +358,7 @@ export default function AIStudioPage() {
 
         {/* Category filter pills */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-1.5 p-1 rounded-xl" style={{ background: "rgba(19,24,39,0.70)", border: "1px solid rgba(59,130,246,0.12)" }}>
+          <div className="flex items-center gap-1.5 p-1 rounded-xl" style={{ background: "rgba(19,24,39,0.70)", border: "1px solid rgba(212,255,0,0.12)" }}>
             {(["all", "visual", "audio", "utility"] as ToolCategory[]).map(cat => (
               <button
                 key={cat}
@@ -369,8 +369,8 @@ export default function AIStudioPage() {
                     : "text-text-muted hover:text-text-muted"
                 }`}
                 style={toolCategory === cat ? {
-                  background: "linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)",
-                  boxShadow: "0 1px 0 rgba(255,255,255,0.15) inset, 0 2px 8px rgba(59,130,246,0.35)",
+                  background: "linear-gradient(180deg, #D4FF00 0%, #AACC00 100%)",
+                  boxShadow: "0 1px 0 rgba(255,255,255,0.15) inset, 0 2px 8px rgba(212,255,0,0.35)",
                 } : undefined}
               >
                 {cat === "all" ? "All" : cat}
@@ -406,7 +406,7 @@ export default function AIStudioPage() {
                     }}
                     className={`relative w-full text-left flex items-center gap-2 px-2.5 py-2 rounded-xl border transition-shadow duration-200 ${
                       active
-                        ? "border-[rgba(59,130,246,0.25)] shadow-[0_4px_20px_rgba(59,130,246,0.08)]"
+                        ? "border-[rgba(212,255,0,0.25)] shadow-[0_4px_20px_rgba(212,255,0,0.08)]"
                         : "hover:bg-white/[0.04] border-transparent hover:shadow-[0_2px_12px_rgba(0,0,0,0.20)]"
                     }`}
                   >
@@ -414,7 +414,7 @@ export default function AIStudioPage() {
                       <>
                         <motion.div
                           layoutId="tool-active-bg"
-                          className="absolute inset-0 rounded-xl bg-[rgba(59,130,246,0.08)]"
+                          className="absolute inset-0 rounded-xl bg-[rgba(212,255,0,0.08)]"
                           transition={{ type: "spring", stiffness: 380, damping: 32 }}
                         />
                         <motion.div
@@ -428,7 +428,7 @@ export default function AIStudioPage() {
                       className="relative z-10 w-6 h-6 rounded-md flex items-center justify-center shrink-0"
                       style={{ background: `${tool.color}${active ? "28" : "18"}` }}
                     >
-                      <Icon size={12} style={{ color: active ? "#2563EB" : tool.color }} />
+                      <Icon size={12} style={{ color: active ? "#D4FF00" : tool.color }} />
                     </div>
                     <div className="relative z-10 min-w-0 flex-1">
                       <p className={`text-[11px] font-semibold leading-tight truncate ${active ? "text-brand-accent" : "text-text-primary"}`}>
@@ -438,12 +438,12 @@ export default function AIStudioPage() {
                       <p className="text-[8px] text-text-muted/60 truncate leading-snug mt-0.5">{tool.desc}</p>
                     </div>
                     {"newBadge" in tool && tool.newBadge && (
-                      <span className="relative z-10 text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.1)] text-brand-accent shrink-0 uppercase tracking-wide">
+                      <span className="relative z-10 text-[7px] font-semibold px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.1)] text-brand-accent shrink-0 uppercase tracking-wide">
                         New
                       </span>
                     )}
                     {"badge" in tool && tool.badge && (
-                      <span className="relative z-10 text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(59,130,246,0.12)] text-blue-300 shrink-0">
+                      <span className="relative z-10 text-[7px] font-bold px-1 py-0.5 rounded bg-[rgba(212,255,0,0.12)] text-brand-accent shrink-0">
                         Biz+
                       </span>
                     )}
@@ -477,7 +477,7 @@ export default function AIStudioPage() {
                       </p>
                     </div>
                     {"badge" in t && t.badge && (
-                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(59,130,246,0.12)] text-blue-300 border border-[rgba(59,130,246,0.20)]">
+                      <span className="text-[8px] font-bold px-2 py-0.5 rounded-full bg-[rgba(212,255,0,0.12)] text-brand-accent border border-[rgba(212,255,0,0.20)]">
                         {t.badge}
                       </span>
                     )}
@@ -532,7 +532,7 @@ export default function AIStudioPage() {
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.18, delay: i * 0.04 }}
-                    className="relative rounded-xl overflow-hidden border border-border-subtle cursor-pointer hover:border-[rgba(59,130,246,0.25)] transition-all"
+                    className="relative rounded-xl overflow-hidden border border-border-subtle cursor-pointer hover:border-[rgba(212,255,0,0.25)] transition-all"
                     style={{ background: "rgba(19,24,39,0.60)" }}
                   >
                     {job.result && (job.type === "image-gen" || job.type === "upscale" || job.type === "remove-bg" || job.type === "img-to-video") ? (
@@ -631,7 +631,7 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
   };
 
   // Section label component (defined inline to keep component closure)
-  const SectionLabel = ({ label, color = "#3B82F6" }: { label: string; color?: string }) => (
+  const SectionLabel = ({ label, color = "#D4FF00" }: { label: string; color?: string }) => (
     <div className="flex items-center gap-2 mb-3">
       <span className="w-[3px] h-3 rounded-full inline-block" style={{ background: color }} />
       <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-text-muted">{label}</span>
@@ -647,14 +647,14 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.22, delay, ease: ease4 }}
-        className="glass text-left p-4 rounded-2xl border border-border-subtle hover:border-[rgba(59,130,246,0.28)] hover:bg-white/[0.015] transition-all group relative overflow-hidden"
+        className="glass text-left p-4 rounded-2xl border border-border-subtle hover:border-[rgba(212,255,0,0.28)] hover:bg-white/[0.015] transition-all group relative overflow-hidden"
         onMouseMove={spotlightMove}
       >
         {/* 21st.dev — spotlight radial gradient tracks cursor via CSS custom props */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          style={{ background: "radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(59,130,246,0.11), transparent 55%)" } as React.CSSProperties}
+          style={{ background: "radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(212,255,0,0.10), transparent 55%)" } as React.CSSProperties}
         />
         <div
           className="relative z-10 w-8 h-8 rounded-lg flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform duration-200"
@@ -670,7 +670,7 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
           </span>
         )}
         {"badge" in tool && tool.badge && (
-          <span className="relative z-10 mt-2 inline-block text-[7px] font-bold px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.12)] text-blue-300">
+          <span className="relative z-10 mt-2 inline-block text-[7px] font-bold px-1.5 py-0.5 rounded bg-[rgba(212,255,0,0.12)] text-brand-accent">
             {tool.badge}
           </span>
         )}
@@ -723,14 +723,14 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.28, ease: ease4 }}
             className="col-span-2 row-span-2 glass text-left p-5 rounded-2xl border border-border-subtle
-              hover:border-[rgba(59,130,246,0.32)] transition-all group relative overflow-hidden"
+              hover:border-[rgba(212,255,0,0.32)] transition-all group relative overflow-hidden"
             onMouseMove={spotlightMove}
           >
             {/* 21st.dev — spotlight on hero tile */}
             <div
               aria-hidden
               className="pointer-events-none absolute -inset-px rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              style={{ background: "radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), rgba(59,130,246,0.10), transparent 45%)" } as React.CSSProperties}
+              style={{ background: "radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), rgba(212,255,0,0.09), transparent 45%)" } as React.CSSProperties}
             />
             {/* Subtle directional wash */}
             <div className="absolute inset-0 bg-gradient-to-br from-brand-accent/[0.055] to-transparent pointer-events-none rounded-2xl" />
@@ -775,10 +775,10 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, delay: 0.15, ease: ease4 }}
             className="col-span-2 glass text-left p-4 rounded-2xl border border-border-subtle
-              hover:border-[rgba(59,130,246,0.28)] hover:bg-white/[0.015] transition-all group flex items-center gap-3 relative overflow-hidden"
+              hover:border-[rgba(212,255,0,0.28)] hover:bg-white/[0.015] transition-all group flex items-center gap-3 relative overflow-hidden"
             onMouseMove={spotlightMove}
           >
-            <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: "radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(59,130,246,0.10), transparent 55%)" } as React.CSSProperties} />
+            <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: "radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(212,255,0,0.09), transparent 55%)" } as React.CSSProperties} />
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200"
               style={{ background: `${imgToVideo.color}1c` }}
@@ -798,7 +798,7 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
 
       {/* ── Audio Tools ───────────────────────────────────────── */}
       <div>
-        <SectionLabel label="Audio" color="#1D4ED8" />
+        <SectionLabel label="Audio" color="#D4FF00" />
         {/* 3-col fractional grid: transcribe gets more width */}
         <div className="grid gap-3" style={{ gridTemplateColumns: "5fr 3fr 3fr" }}>
           {/* transcribe: wider with waveform decoration */}
@@ -808,11 +808,11 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, delay: 0.06, ease: ease4 }}
             className="glass text-left p-4 rounded-2xl border border-border-subtle
-              hover:border-[rgba(59,130,246,0.28)] hover:bg-white/[0.015] transition-all group relative overflow-hidden"
+              hover:border-[rgba(212,255,0,0.28)] hover:bg-white/[0.015] transition-all group relative overflow-hidden"
             onMouseMove={spotlightMove}
           >
             <div aria-hidden className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              style={{ background: "radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(59,130,246,0.10), transparent 55%)" } as React.CSSProperties} />
+              style={{ background: "radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(212,255,0,0.09), transparent 55%)" } as React.CSSProperties} />
             {/* Decorative waveform bars — bottom-right, low opacity */}
             <div className="absolute bottom-3 right-3 pointer-events-none opacity-[0.09]">
               <svg width="52" height="18" viewBox="0 0 52 18" fill="none">
@@ -824,7 +824,7 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
                     width="2"
                     height={h}
                     rx="1"
-                    fill="#3B82F6"
+                    fill="#D4FF00"
                   />
                 ))}
               </svg>
@@ -997,7 +997,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
                 </button>
                 <button
                   onClick={() => toast.success("Saved to library")}
-                  className="text-[10px] text-brand-accent/70 hover:text-brand-accent flex items-center gap-1 border border-[rgba(59,130,246,0.20)] px-1.5 py-0.5 rounded"
+                  className="text-[10px] text-brand-accent/70 hover:text-brand-accent flex items-center gap-1 border border-[rgba(212,255,0,0.20)] px-1.5 py-0.5 rounded"
                 >
                   <Download size={10} /> Save to Library
                 </button>
@@ -1148,13 +1148,13 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
         {/* Orb + title */}
         <div
           className="relative flex flex-col items-center pt-6 pb-4 rounded-2xl overflow-hidden"
-          style={{ background: "rgba(59,130,246,0.06)", border: "1px solid rgba(59,130,246,0.15)" }}
+          style={{ background: "rgba(212,255,0,0.06)", border: "1px solid rgba(212,255,0,0.15)" }}
         >
           <div
             className="w-20 h-20 rounded-full mb-3 shrink-0"
             style={{
-              background: "radial-gradient(circle at 35% 30%, #BFDBFE 0%, #60A5FA 35%, #2563EB 65%, #1e3a8a 100%)",
-              boxShadow: "0 0 32px rgba(59,130,246,0.40), 0 0 64px rgba(59,130,246,0.15)",
+              background: "radial-gradient(circle at 35% 30%, #F0FFB2 0%, #D4FF00 35%, #AACC00 65%, #889900 100%)",
+              boxShadow: "0 0 32px rgba(212,255,0,0.40), 0 0 64px rgba(212,255,0,0.15)",
             }}
           />
           <p className="text-sm font-bold text-text-primary font-display">AI Image Generation</p>
@@ -1176,7 +1176,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                   setPrompt(suggestions[Math.floor(Math.random() * suggestions.length)]);
                 }
               }}
-              className="text-[10px] text-blue-400 hover:text-blue-300 hover:underline font-medium transition-colors"
+              className="text-[10px] text-brand-accent hover:text-brand-accent/70 hover:underline font-medium transition-colors"
             >
               Suggest
             </button>
@@ -1194,7 +1194,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
         </div>
 
         {/* Style accordion */}
-        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(59,130,246,0.12)", background: "rgba(19,24,39,0.60)" }}>
+        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(212,255,0,0.12)", background: "rgba(19,24,39,0.60)" }}>
           <button
             onClick={() => setExpandedSection(expandedSection === "style" ? null : "style")}
             className="w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold text-text-secondary hover:bg-white/[0.04] transition-colors"
@@ -1216,7 +1216,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                       onClick={() => { setStyle(s.value); setExpandedSection(null); }}
                       className={`text-[10px] px-2 py-1 rounded-lg transition-all ${
                         style === s.value
-                          ? "bg-blue-500/80 text-white font-semibold"
+                          ? "bg-brand-accent text-black font-semibold"
                           : "bg-white/[0.06] text-text-muted hover:bg-white/[0.10] hover:text-text-secondary"
                       }`}
                     >
@@ -1230,7 +1230,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
         </div>
 
         {/* Aspect ratio accordion */}
-        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(59,130,246,0.12)", background: "rgba(19,24,39,0.60)" }}>
+        <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(212,255,0,0.12)", background: "rgba(19,24,39,0.60)" }}>
           <button
             onClick={() => setExpandedSection(expandedSection === "aspect" ? null : "aspect")}
             className="w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold text-text-secondary hover:bg-white/[0.04] transition-colors"
@@ -1252,7 +1252,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                       onClick={() => { setSize(s.value); setExpandedSection(null); }}
                       className={`w-full text-left text-[11px] px-2 py-1.5 rounded-lg transition-all ${
                         size === s.value
-                          ? "bg-blue-500/80 text-white font-semibold"
+                          ? "bg-brand-accent text-black font-semibold"
                           : "hover:bg-white/[0.04] text-text-secondary"
                       }`}
                     >
@@ -1272,7 +1272,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className="btn-pill w-full text-xs flex items-center justify-center gap-2"
-          style={{ boxShadow: "0 0 20px rgba(59,130,246,0.22)" }}
+          style={{ boxShadow: "0 0 20px rgba(212,255,0,0.22)" }}
         >
           {processing ? <Loader size={13} className="animate-spin" /> : <Sparkles size={13} />}
           {processing ? "Generating..." : "Generate Image"}
@@ -1282,11 +1282,11 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
         {prompt.trim().length > 0 && (
           <div
             className="rounded-xl p-3"
-            style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}
+            style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}
           >
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
-                <TrendingUp size={11} className="text-blue-400" />
+                <TrendingUp size={11} className="text-brand-accent" />
                 <span className="text-[10px] font-semibold text-text-secondary">Prompt quality</span>
               </div>
               <span
@@ -1341,15 +1341,15 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
         className="flex-1 min-w-0 relative rounded-2xl overflow-hidden flex items-center justify-center"
         style={{
           background: "linear-gradient(160deg, #080B14 0%, #0A0E1A 60%, #0D1120 100%)",
-          border: "1px solid rgba(59,130,246,0.12)",
+          border: "1px solid rgba(212,255,0,0.12)",
           minHeight: 520,
         }}
       >
         {/* Ambient orbs */}
         <div className="pointer-events-none absolute -top-16 -right-16 w-64 h-64 rounded-full opacity-15"
-          style={{ background: "radial-gradient(circle, #60A5FA 0%, transparent 70%)" }} />
+          style={{ background: "radial-gradient(circle, #D4FF00 0%, transparent 70%)" }} />
         <div className="pointer-events-none absolute -bottom-12 -left-12 w-48 h-48 rounded-full opacity-10"
-          style={{ background: "radial-gradient(circle, #818CF8 0%, transparent 70%)" }} />
+          style={{ background: "radial-gradient(circle, #AACC00 0%, transparent 70%)" }} />
         {/* Subtle grid texture for depth */}
         <div className="pointer-events-none absolute inset-0 opacity-[0.025]"
           style={{ backgroundImage: "linear-gradient(rgba(148,163,184,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.6) 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
@@ -1358,8 +1358,8 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
           <div className="flex flex-col items-center gap-4 relative z-10">
             <div className="relative w-16 h-16">
               <div className="absolute inset-0 rounded-full"
-                style={{ background: "rgba(59,130,246,0.12)", boxShadow: "0 0 40px rgba(59,130,246,0.20)" }} />
-              <Loader size={26} className="text-blue-400 animate-spin absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                style={{ background: "rgba(212,255,0,0.12)", boxShadow: "0 0 40px rgba(212,255,0,0.20)" }} />
+              <Loader size={26} className="text-brand-accent animate-spin absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
             </div>
             <div className="text-center">
               <p className="text-sm font-semibold text-text-primary">Generating your image</p>
@@ -1367,7 +1367,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
             </div>
             <div className="w-40 h-[3px] rounded-full overflow-hidden bg-white/[0.06]">
               <motion.div
-                className="h-full rounded-full bg-blue-500"
+                className="h-full rounded-full bg-brand-accent"
                 animate={{ x: ["-100%", "200%"] }}
                 transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -1389,7 +1389,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
               />
               {/* Glow beneath image */}
               <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-3/4 h-8 rounded-full blur-xl opacity-25"
-                style={{ background: "rgba(59,130,246,0.5)" }} />
+                style={{ background: "rgba(212,255,0,0.5)" }} />
             </motion.div>
 
             {/* Overlay action buttons — top right */}
@@ -1400,7 +1400,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                 style={{
                   background: liked[images[0]] ? "rgba(239,68,68,0.20)" : "rgba(19,24,39,0.85)",
                   backdropFilter: "blur(12px)",
-                  border: `1px solid ${liked[images[0]] ? "rgba(239,68,68,0.30)" : "rgba(59,130,246,0.18)"}`,
+                  border: `1px solid ${liked[images[0]] ? "rgba(239,68,68,0.30)" : "rgba(212,255,0,0.18)"}`,
                 }}
               >
                 <Heart size={14} className={liked[images[0]] ? "text-red-400 fill-red-400" : "text-text-muted"} />
@@ -1411,7 +1411,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95"
-                style={{ background: "rgba(19,24,39,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(59,130,246,0.18)" }}
+                style={{ background: "rgba(19,24,39,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(212,255,0,0.18)" }}
               >
                 <Download size={14} className="text-text-muted" />
               </a>
@@ -1429,7 +1429,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                   }
                 }}
                 className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95"
-                style={{ background: "rgba(19,24,39,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(59,130,246,0.18)" }}
+                style={{ background: "rgba(19,24,39,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(212,255,0,0.18)" }}
               >
                 {handoffingIdx === 0
                   ? <Loader2 size={14} className="text-text-muted animate-spin" />
@@ -1441,7 +1441,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
             {/* Prompt caption — bottom */}
             <div className="absolute bottom-4 left-4 right-4">
               <div className="px-3 py-2 rounded-xl text-[10px] text-text-muted truncate"
-                style={{ background: "rgba(13,17,32,0.82)", backdropFilter: "blur(8px)", border: "1px solid rgba(59,130,246,0.10)" }}>
+                style={{ background: "rgba(13,17,32,0.82)", backdropFilter: "blur(8px)", border: "1px solid rgba(212,255,0,0.10)" }}>
                 {prompt}
               </div>
             </div>
@@ -1449,8 +1449,8 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
         ) : (
           <div className="flex flex-col items-center gap-4 opacity-50 relative z-10">
             <div className="w-20 h-20 rounded-3xl flex items-center justify-center"
-              style={{ background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.12)" }}>
-              <ImagePlus size={32} className="text-blue-400" />
+              style={{ background: "rgba(212,255,0,0.08)", border: "1px solid rgba(212,255,0,0.12)" }}>
+              <ImagePlus size={32} className="text-brand-accent" />
             </div>
             <div className="text-center">
               <p className="text-base font-semibold text-text-secondary">Your image will appear here</p>
@@ -1472,8 +1472,8 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
               value={historySearch}
               onChange={e => setHistorySearch(e.target.value)}
               placeholder="Search..."
-              className="w-full pl-7 pr-3 py-1.5 text-[10px] rounded-lg focus:outline-none focus:border-blue-500/30 transition-colors"
-              style={{ background: "rgba(19,24,39,0.70)", border: "1px solid rgba(59,130,246,0.12)", color: "var(--text-secondary)" }}
+              className="w-full pl-7 pr-3 py-1.5 text-[10px] rounded-lg focus:outline-none focus:border-brand-accent/30 transition-colors"
+              style={{ background: "rgba(19,24,39,0.70)", border: "1px solid rgba(212,255,0,0.12)", color: "var(--text-secondary)" }}
             />
           </div>
           <div className="grid grid-cols-2 gap-1.5 overflow-y-auto">
@@ -1485,7 +1485,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                 transition={{ duration: 0.16 }}
                 className="aspect-square rounded-lg overflow-hidden relative group cursor-pointer"
                 onClick={() => { if (j.result) setImages([j.result]); }}
-                style={{ border: "1px solid rgba(59,130,246,0.08)" }}
+                style={{ border: "1px solid rgba(212,255,0,0.08)" }}
               >
                 <SafeThumb
                   src={j.result!}
@@ -1493,7 +1493,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                   className="w-full h-full object-cover"
                   wrapperClassName="w-full h-full"
                 />
-                <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/15 transition-colors rounded-lg" />
+                <div className="absolute inset-0 bg-brand-accent/0 group-hover:bg-brand-accent/15 transition-colors rounded-lg" />
               </motion.div>
             ))}
           </div>
@@ -2040,15 +2040,15 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Film size={16} className="text-[#3B82F6]" />
+        <Film size={16} className="text-brand-accent" />
         <h2 className="text-sm font-bold text-text-primary">Image to Video</h2>
-        <span className="text-[9px] bg-[rgba(59,130,246,0.12)] text-blue-300 px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
+        <span className="text-[9px] bg-[rgba(212,255,0,0.12)] text-brand-accent px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border-subtle rounded-xl p-8 text-center cursor-pointer hover:border-[rgba(59,130,246,0.35)] transition-all">
+            className="border-2 border-dashed border-border-subtle rounded-xl p-8 text-center cursor-pointer hover:border-[rgba(212,255,0,0.35)] transition-all">
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) { setFile(f); setPreview(URL.createObjectURL(f)); setResult(null); } }} />
             {preview ? (
               /* eslint-disable-next-line @next/next/no-img-element */
@@ -2065,7 +2065,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
             <div className="flex items-center gap-3">
               <span className="text-[10px] text-text-muted w-16">Motion:</span>
               <input type="range" min={1} max={255} value={motionBucket} onChange={e => setMotionBucket(Number(e.target.value))}
-                className="flex-1 h-1 accent-[#2563EB]" />
+                className="flex-1 h-1 accent-[#D4FF00]" />
               <span className="text-[10px] text-text-muted w-8">{motionBucket}</span>
             </div>
             <div className="flex items-center gap-3">
@@ -2143,9 +2143,9 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Music size={16} className="text-[#3B82F6]" />
+        <Music size={16} className="text-brand-accent" />
         <h2 className="text-sm font-bold text-text-primary">AI Music Generator</h2>
-        <span className="text-[9px] bg-[rgba(59,130,246,0.1)] text-[#3B82F6] px-2 py-0.5 rounded-full">MusicGen</span>
+        <span className="text-[9px] bg-[rgba(212,255,0,0.10)] text-brand-accent px-2 py-0.5 rounded-full">MusicGen</span>
         <span className="text-[9px] text-text-muted ml-auto">Royalty-free output</span>
       </motion.div>
 
@@ -2177,7 +2177,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
           <div className="flex items-center gap-3">
             <span className="text-[10px] text-text-muted">Duration:</span>
             <input type="range" min={5} max={30} value={duration} onChange={e => setDuration(Number(e.target.value))}
-              className="flex-1 h-1 accent-[#2563EB]" />
+              className="flex-1 h-1 accent-[#D4FF00]" />
             <span className="text-xs text-text-primary font-mono">{duration}s</span>
           </div>
 
@@ -2196,12 +2196,12 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
         >
           {result ? (
             <div className="w-full text-center space-y-3">
-              <div className="w-16 h-16 mx-auto rounded-full bg-[rgba(59,130,246,0.1)] flex items-center justify-center">
-                <Music size={24} className="text-[#3B82F6]" />
+              <div className="w-16 h-16 mx-auto rounded-full bg-[rgba(212,255,0,0.10)] flex items-center justify-center">
+                <Music size={24} className="text-brand-accent" />
               </div>
               <audio src={result} controls className="w-full" />
               <a href={result} download="ai-music.wav"
-                className="inline-flex items-center gap-1 text-[10px] text-[#3B82F6] hover:underline">
+                className="inline-flex items-center gap-1 text-[10px] text-brand-accent hover:underline">
                 <Download size={10} /> Download WAV
               </a>
             </div>
@@ -2438,9 +2438,9 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Brain size={16} className="text-[#3B82F6]" />
+        <Brain size={16} className="text-brand-accent" />
         <h2 className="text-sm font-bold text-text-primary">Brand LoRA Training</h2>
-        <span className="text-[9px] bg-[rgba(59,130,246,0.12)] text-blue-300 px-2 py-0.5 rounded-full">Business+ Only</span>
+        <span className="text-[9px] bg-[rgba(212,255,0,0.12)] text-brand-accent px-2 py-0.5 rounded-full">Business+ Only</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -2483,7 +2483,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
           <div className="flex items-center gap-3">
             <span className="text-[10px] text-text-muted">Steps:</span>
             <input type="range" min={500} max={5000} step={100} value={steps} onChange={e => setSteps(Number(e.target.value))}
-              className="flex-1 h-1 accent-[#2563EB]" />
+              className="flex-1 h-1 accent-[#D4FF00]" />
             <span className="text-xs text-text-primary font-mono">{steps}</span>
           </div>
 
@@ -2509,15 +2509,15 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
               { step: 4, text: "Use the trained LoRA in Design Studio & Thumbnail Generator" },
             ].map(({ step, text }) => (
               <div key={step} className="flex items-start gap-2">
-                <div className="w-5 h-5 rounded-full bg-[rgba(59,130,246,0.12)] flex items-center justify-center shrink-0">
-                  <span className="text-[9px] font-bold text-[#3B82F6]">{step}</span>
+                <div className="w-5 h-5 rounded-full bg-[rgba(212,255,0,0.12)] flex items-center justify-center shrink-0">
+                  <span className="text-[9px] font-bold text-brand-accent">{step}</span>
                 </div>
                 <p className="text-[10px] text-text-muted leading-relaxed">{text}</p>
               </div>
             ))}
           </div>
           {trainingStatus && (
-            <div className="mt-4 p-3 rounded-lg bg-[rgba(59,130,246,0.06)] text-xs text-brand-accent">
+            <div className="mt-4 p-3 rounded-lg bg-[rgba(212,255,0,0.06)] text-xs text-brand-accent">
               {trainingStatus}
             </div>
           )}
@@ -2571,7 +2571,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
       >
         <Layers size={16} className="text-brand-accent" />
         <h2 className="text-sm font-bold text-text-primary">Batch Image Generation</h2>
-        <span className="text-[9px] bg-[rgba(59,130,246,0.10)] text-brand-accent px-2 py-0.5 rounded-full">FLUX / SDXL</span>
+        <span className="text-[9px] bg-[rgba(212,255,0,0.10)] text-brand-accent px-2 py-0.5 rounded-full">FLUX / SDXL</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
