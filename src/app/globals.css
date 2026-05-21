@@ -3746,6 +3746,38 @@ body {
   animation: notifPulse 3s ease-in-out infinite;
 }
 
+/* Render / status chips — ghost pill for "3 renders" and "all systems" */
+.gtn-render-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em;
+  color: rgba(240, 240, 244, 0.55);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+
+/* Amber pulsing dot — active renders in flight */
+.gtn-render-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #F59E0B;
+  flex-shrink: 0;
+  animation: notifPulse 2s ease-in-out infinite;
+}
+
+/* Green dot — all systems ok */
+.gtn-render-dot.gtn-render-dot-ok {
+  background: #4ADE80;
+  animation: none;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────
  * CORNER WIDGET — bottom-left fixed account chip
  * ────────────────────────────────────────────────────────────────────── */
@@ -3918,32 +3950,21 @@ body {
   border-right: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.gsn-crumb-group {
+.gsn-crumb {
   display: flex;
   align-items: center;
-  gap: 3px;
-}
-
-.gsn-crumb-sep {
-  color: rgba(240, 240, 244, 0.2);
-}
-
-.gsn-crumb-parent {
+  gap: 4px;
   font-size: 9px;
   font-family: var(--font-mono, 'JetBrains Mono', monospace);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: rgba(240, 240, 244, 0.28);
+  color: rgba(240, 240, 244, 0.55);
   white-space: nowrap;
 }
 
-.gsn-crumb-active {
-  font-size: 9px;
-  font-family: var(--font-mono, 'JetBrains Mono', monospace);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: rgba(240, 240, 244, 0.65);
-  white-space: nowrap;
+.gsn-crumb-arrow {
+  opacity: 0.35;
+  flex-shrink: 0;
 }
 
 .gsn-tabs {

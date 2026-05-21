@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { ChevronRight } from "lucide-react";
 
 // ── Sub-nav config ──────────────────────────────────────────────────
 
@@ -122,33 +121,26 @@ export default function GlassSubNav() {
   const config = getSubNavConfig(pathname);
   if (!config) return null;
 
-  const crumbParts = config.crumb.split(" · ");
-
   return (
     <div className="glass-sub-nav" role="navigation" aria-label="Page navigation">
       {/* Breadcrumb */}
       <nav className="gsn-breadcrumb" aria-label="Breadcrumb">
-        {crumbParts.map((part, i) => (
-          <span key={i} className="gsn-crumb-group">
-            {i > 0 && (
-              <ChevronRight
-                size={9}
-                strokeWidth={2.5}
-                className="gsn-crumb-sep"
-                aria-hidden="true"
-              />
-            )}
-            <span
-              className={
-                i === crumbParts.length - 1
-                  ? "gsn-crumb-active"
-                  : "gsn-crumb-parent"
-              }
-            >
-              {part}
-            </span>
-          </span>
-        ))}
+        <span className="gsn-crumb">
+          {config.crumb}
+          <svg
+            className="gsn-crumb-arrow"
+            width="10"
+            height="10"
+            viewBox="0 0 12 12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <path d="M4 2 L8 6 L4 10" />
+          </svg>
+        </span>
       </nav>
 
       {/* Tab strip */}

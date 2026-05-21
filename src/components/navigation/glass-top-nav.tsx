@@ -13,7 +13,6 @@ import {
   Zap,
   Search,
   Bell,
-  ChevronRight,
   Moon,
   Sun,
   MessageSquare,
@@ -22,6 +21,7 @@ import {
   Scissors,
   FolderOpen,
   Palette,
+  Plus,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
@@ -72,7 +72,7 @@ function NavPillBtn({ pill, pathname }: { pill: NavPill; pathname: string }) {
         flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium
         transition-all duration-150 whitespace-nowrap relative
         ${active
-          ? "text-[#D4FF00] bg-[rgba(212,255,0,0.10)] border border-[rgba(212,255,0,0.22)]"
+          ? "bg-[#D4FF00] text-[#0a0a0a] border-transparent shadow-[0_6px_14px_-6px_rgba(212,255,0,0.5)]"
           : "text-[rgba(240,240,244,0.65)] hover:text-[#F0F0F4] hover:bg-[rgba(255,255,255,0.05)] border border-transparent hover:border-[rgba(255,255,255,0.08)]"
         }
       `}
@@ -250,12 +250,16 @@ export default function GlassTopNav() {
         <div className="gtn-quickbar">
           <Link
             href="/dashboard/ai-studio"
-            className="gtn-action-btn"
+            className="gtn-action-btn gtn-action-primary"
             aria-label="Generate with AI Studio"
           >
             <Wand2 size={11} strokeWidth={2} />
             Generate
           </Link>
+          <span className="gtn-render-chip" title="3 renders in flight" aria-label="3 renders in flight">
+            <span className="gtn-render-dot" aria-hidden="true" />
+            <span>3 renders</span>
+          </span>
         </div>
       </div>
 
@@ -269,16 +273,16 @@ export default function GlassTopNav() {
         </div>
         <div className="gtn-quickbar">
           <Link
-            href="/dashboard/automations"
+            href="/dashboard/social-studio"
             className="gtn-action-btn gtn-action-ghost"
-            aria-label="Automations"
+            aria-label="Schedule posts"
           >
-            <Zap size={11} strokeWidth={2} />
-            Automate
+            <Plus size={11} strokeWidth={2} />
+            Schedule
           </Link>
-          <span className="gtn-status-chip" aria-label="All systems operational">
-            <span className="gtn-status-dot" aria-hidden="true" />
-            live
+          <span className="gtn-render-chip" title="System health" aria-label="All systems operational">
+            <span className="gtn-render-dot gtn-render-dot-ok" aria-hidden="true" />
+            <span>all systems</span>
           </span>
         </div>
       </div>
