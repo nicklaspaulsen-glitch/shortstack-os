@@ -44,10 +44,10 @@ interface ReviewDraft {
 const PLATFORMS = ["Google", "Yelp", "Facebook", "Trustpilot", "G2"];
 
 const STATUS_STYLES: Record<ReviewDraft["status"], { label: string; tint: string }> = {
-  pending: { label: "Pending", tint: "bg-amber-100 text-amber-700" },
-  approved: { label: "Approved", tint: "bg-sky-100 text-sky-700" },
-  published: { label: "Published", tint: "bg-emerald-100 text-emerald-700" },
-  rejected: { label: "Rejected", tint: "bg-rose-100 text-rose-700" },
+  pending: { label: "Pending", tint: "bg-amber-500/10 text-amber-400" },
+  approved: { label: "Approved", tint: "bg-sky-500/10 text-sky-400" },
+  published: { label: "Published", tint: "bg-emerald-500/10 text-emerald-400" },
+  rejected: { label: "Rejected", tint: "bg-rose-500/10 text-rose-400" },
 };
 
 function Stars({ rating }: { rating: number | null }) {
@@ -196,7 +196,7 @@ export default function ReviewsAutoReplyPage() {
   }
 
   return (
-    <MotionPage className="min-h-screen bg-[#F3F6FA] text-[#111827]">{/* -- Review Auto-Reply command strip -- */}
+    <MotionPage className="min-h-screen">{/* -- Review Auto-Reply command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Reply Automation</p>
@@ -206,13 +206,13 @@ export default function ReviewsAutoReplyPage() {
         <div className="flex items-center gap-2">
                   <Link
                     href="/dashboard/reviews"
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-text-muted hover:text-text-primary bg-black/5 hover:bg-black/5 transition-all"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-text-muted hover:text-text-primary bg-white/5 hover:bg-white/8 transition-all"
                   >
                     <ArrowLeft size={14} /> Back
                   </Link>
                   <button
                     onClick={() => setShowCompose((v) => !v)}
-                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-brand-accent/80 text-white transition-all"
+                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-brand-accent/80 text-[#0D1120] transition-all"
                   >
                     <Sparkles size={14} /> New Draft
                   </button>
@@ -244,7 +244,7 @@ export default function ReviewsAutoReplyPage() {
               {/* Compose */}
               {showCompose && (
                 <div className="glass rounded-xl p-5 space-y-3">
-                  <p className="font-semibold text-[#111827] text-sm flex items-center gap-2">
+                  <p className="font-semibold text-text-primary text-sm flex items-center gap-2">
                     <Sparkles size={14} className="text-brand-accent" /> Generate AI Reply
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -297,7 +297,7 @@ export default function ReviewsAutoReplyPage() {
                     value={brandVoice}
                     onChange={(e) => setBrandVoice(e.target.value)}
                   />
-                  <label className="flex items-center gap-2 text-xs text-[#374151]">
+                  <label className="flex items-center gap-2 text-xs text-text-secondary">
                     <input
                       type="checkbox"
                       checked={autoPublish}
@@ -310,7 +310,7 @@ export default function ReviewsAutoReplyPage() {
                     <button
                       onClick={handleGenerate}
                       disabled={generating}
-                      className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-[#3B82F6] text-white disabled:opacity-50 transition-all"
+                      className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-brand-accent/80 text-[#0D1120] disabled:opacity-50 transition-all"
                     >
                       {generating ? (
                         <Loader2 size={14} className="animate-spin" />
@@ -324,7 +324,7 @@ export default function ReviewsAutoReplyPage() {
                         resetForm();
                         setShowCompose(false);
                       }}
-                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm text-[#374151] bg-black/[0.04] hover:bg-black/[0.06] transition-all"
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm text-text-secondary bg-white/5 hover:bg-white/8 transition-all"
                     >
                       <X size={14} /> Cancel
                     </button>
@@ -351,14 +351,14 @@ export default function ReviewsAutoReplyPage() {
                     return (
                       <div
                         key={d.id}
-                        className="glass rounded-xl hover:bg-[#F8FAFC] p-4 transition-all"
+                        className="glass rounded-xl hover:bg-white/5 p-4 transition-all"
                       >
                         <div className="flex items-start justify-between gap-3 mb-3">
                           <div className="flex items-center gap-3 flex-wrap">
                             <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${cfg.tint}`}>
                               {cfg.label}
                             </span>
-                            <span className="text-xs text-[#6B7280] capitalize">{d.platform}</span>
+                            <span className="text-xs text-text-muted capitalize">{d.platform}</span>
                             <Stars rating={d.review_rating} />
                             {d.review_author && (
                               <span className="text-xs text-text-muted">— {d.review_author}</span>
@@ -370,11 +370,11 @@ export default function ReviewsAutoReplyPage() {
                         </div>
 
                         {d.review_text && (
-                          <div className="mb-3 px-3 py-2 rounded-lg bg-[#F3F6FA] border border-black/[0.06]">
+                          <div className="mb-3 px-3 py-2 rounded-lg bg-white/5 border border-white/8">
                             <p className="text-[11px] uppercase tracking-wider text-text-muted mb-1">
                               Original Review
                             </p>
-                            <p className="text-sm text-[#374151] whitespace-pre-wrap">{d.review_text}</p>
+                            <p className="text-sm text-text-secondary whitespace-pre-wrap">{d.review_text}</p>
                           </div>
                         )}
 
@@ -390,7 +390,7 @@ export default function ReviewsAutoReplyPage() {
                               onChange={(e) => setEditingText(e.target.value)}
                             />
                           ) : (
-                            <p className="text-sm text-[#111827] whitespace-pre-wrap">
+                            <p className="text-sm text-text-primary whitespace-pre-wrap">
                               {d.approved_text ?? d.ai_draft}
                             </p>
                           )}
@@ -402,7 +402,7 @@ export default function ReviewsAutoReplyPage() {
                             <>
                               <button
                                 onClick={() => void saveEdit(d)}
-                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-100 hover:bg-emerald-200 text-emerald-700"
+                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400"
                               >
                                 <Check size={12} /> Save
                               </button>
@@ -411,7 +411,7 @@ export default function ReviewsAutoReplyPage() {
                                   setEditingId(null);
                                   setEditingText("");
                                 }}
-                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-[#374151] bg-black/[0.04] hover:bg-black/[0.06]"
+                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-text-secondary bg-white/5 hover:bg-white/8"
                               >
                                 <X size={12} /> Cancel
                               </button>
@@ -423,7 +423,7 @@ export default function ReviewsAutoReplyPage() {
                                   setEditingId(d.id);
                                   setEditingText(d.approved_text ?? d.ai_draft);
                                 }}
-                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-[#374151] bg-black/[0.04] hover:bg-black/[0.06]"
+                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-text-secondary bg-white/5 hover:bg-white/8"
                                 disabled={d.status === "published"}
                               >
                                 <RefreshCw size={12} /> Edit
@@ -431,7 +431,7 @@ export default function ReviewsAutoReplyPage() {
                               {d.status === "pending" && (
                                 <button
                                   onClick={() => void approve(d)}
-                                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-sky-100 hover:bg-sky-200 text-sky-700"
+                                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-sky-500/10 hover:bg-sky-500/20 text-sky-400"
                                 >
                                   <Check size={12} /> Approve
                                 </button>
@@ -439,7 +439,7 @@ export default function ReviewsAutoReplyPage() {
                               {(d.status === "approved" || d.status === "pending") && (
                                 <button
                                   onClick={() => void publish(d)}
-                                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-100 hover:bg-emerald-200 text-emerald-700"
+                                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400"
                                 >
                                   <Send size={12} /> Publish
                                 </button>
@@ -447,7 +447,7 @@ export default function ReviewsAutoReplyPage() {
                               {d.status !== "published" && d.status !== "rejected" && (
                                 <button
                                   onClick={() => void reject(d)}
-                                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-rose-700 bg-rose-50 hover:bg-rose-100"
+                                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-rose-400 bg-rose-500/10 hover:bg-rose-500/20"
                                 >
                                   <X size={12} /> Reject
                                 </button>
