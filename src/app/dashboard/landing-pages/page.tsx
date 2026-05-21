@@ -1549,7 +1549,7 @@ export default function LandingPagesPage() {
                 transition={{ duration: 0.38, delay: 0.26, ease: [0.22, 1, 0.36, 1] }}
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Form Subs</p>
-                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-indigo-600 tabular-nums">{EMPTY_ANALYTICS.formSubmissions.toLocaleString()}</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-brand-accent tabular-nums">{EMPTY_ANALYTICS.formSubmissions.toLocaleString()}</p>
                 <p className="text-[11px] text-text-muted mt-1.5">submitted</p>
               </motion.div>
             </div>
