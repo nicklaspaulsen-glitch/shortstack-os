@@ -413,7 +413,7 @@ export default function VoiceCloneDetailPage() {
                                       className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-accent/20 hover:bg-brand-accent/40 flex items-center justify-center transition-colors"
                                       aria-label={isPlaying ? "Pause" : "Play"}
                                     >
-                                      {isPlaying ? <Pause size={10} className="text-[#3B82F6]" /> : <Play size={10} className="text-brand-accent" />}
+                                      {isPlaying ? <Pause size={10} className="text-brand-accent" /> : <Play size={10} className="text-brand-accent" />}
                                     </button>
                                   ) : (
                                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
@@ -484,7 +484,7 @@ export default function VoiceCloneDetailPage() {
                                     className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-brand-accent/20 hover:bg-brand-accent/40 flex items-center justify-center transition-colors"
                                     aria-label={isPlaying ? "Pause" : "Play"}
                                   >
-                                    {isPlaying ? <Pause size={10} className="text-[#3B82F6]" /> : <Play size={10} className="text-brand-accent" />}
+                                    {isPlaying ? <Pause size={10} className="text-brand-accent" /> : <Play size={10} className="text-brand-accent" />}
                                   </button>
                                 ) : (
                                   <div className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">

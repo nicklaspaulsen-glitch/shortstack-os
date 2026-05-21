@@ -54,7 +54,7 @@ const STATUS_STYLES: Record<Proposal["status"], { label: string; tint: string }>
 const STAT_BARS = [
   "bg-gradient-to-r from-indigo-500 to-violet-500",
   "bg-gradient-to-r from-emerald-500 to-green-500",
-  "bg-gradient-to-r from-sky-500 to-blue-500",
+  "bg-gradient-to-r from-brand-accent/70 to-brand-accent/40",
 ];
 
 const containerVariants: Variants = {
