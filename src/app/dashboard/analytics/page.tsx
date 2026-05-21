@@ -552,7 +552,7 @@ export default function AnalyticsPage() {
 >
                     {stats.totalLeads.toLocaleString()}
                   </p>
-                  <p className="text-[10px] mt-0.5" style={{ color: leadGrowth>= 0 ? "#52525B" : "#94A3B8" }}>
+                  <p className="text-[10px] mt-0.5 text-text-secondary">
                     {leadGrowth !== 0 ? `${leadGrowth> 0 ? "+" : ""}${leadGrowth}% vs last mo.` : "�"}
                   </p>
                 </motion.div>
@@ -586,7 +586,7 @@ export default function AnalyticsPage() {
                           <Sparkline values={stat.sparkData} color="#D4FF00" id={`z1s-${i}`} width={44} height={18} />
                         )}
                       </div>
-                      <p className="text-[10px] mt-0.5" style={{ color: stat.subOk ? "#52525B" : "#94A3B8" }}>{stat.sub}</p>
+                      <p className="text-[10px] mt-0.5 text-text-secondary">{stat.sub}</p>
                     </motion.div>
                   ))}
                 </div>

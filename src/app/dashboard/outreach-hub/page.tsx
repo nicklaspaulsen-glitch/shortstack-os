@@ -391,7 +391,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
                   </span>
                 ))}
               </div>
-              <p className="text-[8.5px] leading-relaxed" style={{ color: "#6b7280" }}>
+              <p className="text-[8.5px] leading-relaxed text-text-muted">
                 {(() => {
                   const first = emailQualitySignals.find((s) => !s.pass);
                   return first
@@ -436,7 +436,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
                   </span>
                 ))}
               </div>
-              <p className="text-[8.5px] leading-relaxed" style={{ color: "#6b7280" }}>
+              <p className="text-[8.5px] leading-relaxed text-text-muted">
                 {(() => {
                   const first = smsQualitySignals.find((s) => !s.pass);
                   return first ? first.tip : "Compliant, personal, and clear — ready to send.";
@@ -479,7 +479,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
                   </span>
                 ))}
               </div>
-              <p className="text-[8.5px] leading-relaxed" style={{ color: "#6b7280" }}>
+              <p className="text-[8.5px] leading-relaxed text-text-muted">
                 {(() => {
                   const first = dmQualitySignals.find((s) => !s.pass);
                   return first ? first.tip : "Genuine, value-first DM that earns a reply.";
@@ -522,7 +522,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
                   </span>
                 ))}
               </div>
-              <p className="text-[8.5px] leading-relaxed" style={{ color: "#6b7280" }}>
+              <p className="text-[8.5px] leading-relaxed text-text-muted">
                 {(() => {
                   const first = callQualitySignals.find((s) => !s.pass);
                   return first ? first.tip : "Well-structured script — opener, objections, and close all covered.";
