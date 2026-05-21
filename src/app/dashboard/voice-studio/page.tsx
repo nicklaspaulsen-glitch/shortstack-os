@@ -26,6 +26,7 @@ import {
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
+import toast from "react-hot-toast";
 
 // -- Types ----------------------------------------------------------
 interface VoiceClone {
@@ -381,20 +382,19 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
       if (!res.ok) {
         throw new Error(data.error || `Upload failed (${res.status})`);
       }
-      // TODO: add toast feedback here once react-hot-toast is imported in this component
-      // e.g. toast.success("Clone trained!") on success, toast.error(msg) on failure
-      setSubmitMsg(
+      toast.success(
         data.status === "ready"
-          ? "Clone trained successfully — try it from the row below."
-          : "Clone training started — we'll mark it ready when the worker finishes.",
+          ? "Clone trained — try it from the row below."
+          : "Training started — we'll mark it ready when the worker finishes.",
       );
       setFiles([]);
       setLabel("");
       setDescription("");
       setSignedBy("");
+      setSubmitMsg(null);
       onCreated();
     } catch (err) {
-      setSubmitMsg(err instanceof Error ? err.message : "Upload failed");
+      toast.error(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setSubmitting(false);
     }
