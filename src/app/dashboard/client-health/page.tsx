@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import { PrismPanel } from "@/components/prism";
-import { Heart as HeartIcon } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /* ------------------------------------------------------------------ */

@@ -51,12 +51,6 @@ const STATUS_STYLES: Record<Proposal["status"], { label: string; tint: string }>
   declined: { label: "Declined", tint: "bg-rose-500/15 text-rose-400" },
 };
 
-const STAT_BARS = [
-  "bg-gradient-to-r from-indigo-500 to-violet-500",
-  "bg-gradient-to-r from-emerald-500 to-green-500",
-  "bg-gradient-to-r from-brand-accent/70 to-brand-accent/40",
-];
-
 const containerVariants: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.08 } },

@@ -4,15 +4,15 @@ import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { formatCurrency, formatRelativeTime } from "@/lib/utils";
 import {
-  BarChart3, Users, DollarSign, Zap, Film, Phone, MessageSquare, ArrowUp, ArrowDown,
+  BarChart3, Users, DollarSign, Zap, Film, Phone, MessageSquare, ArrowUp,
   TrendingUp, AlertTriangle, Target, Trophy, Calendar, Download, Activity,
   Flame, Star, Clock, CheckCircle
 } from "lucide-react";
 import {
-  AreaChart, Area, BarChart, Bar, LineChart, Line,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
+  AreaChart, Area, LineChart, Line,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from "recharts";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
 import { StatSkeleton, CardSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
@@ -375,14 +375,6 @@ export default function AnalyticsPage() {
   const hasData = stats.totalLeads> 0 || stats.totalMRR> 0 || stats.dmsSent> 0 ||
     stats.totalClients> 0 || stats.totalDeals> 0 || stats.replies> 0 ||
     stats.callsBooked> 0 || stats.contentPublished> 0;
-
- // --- Prism color map for stat tiles -------------------------------------
-  const PRISM_TILES = [
-    { accent: "#D4FF00", bar: "from-[#D4FF00] to-transparent" },
-    { accent: "#D4FF00", bar: "from-[#D4FF00] to-transparent" },
-    { accent: "#D4FF00", bar: "from-[#D4FF00] to-transparent" },
-    { accent: "#D4FF00", bar: "from-[#D4FF00] to-transparent" },
-  ] as const;
 
  // --- Render ---------------------------------------------------------------
   return (
