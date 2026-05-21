@@ -161,7 +161,6 @@ export default function OutreachLogsPage() {
   const [search, setSearch] = useState("");
   const [platformFilter, setPlatformFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [typeFilter, setTypeFilter] = useState("all");
   const [viewMode, setViewMode] = useState<ViewMode>("compact");
   const [dateFrom, setDateFrom] = useState("");

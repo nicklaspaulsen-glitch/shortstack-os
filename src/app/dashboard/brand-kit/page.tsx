@@ -70,7 +70,6 @@ export default function BrandKitPage() {
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
  // `generating` is retained so the preset cards can flip into a loading state
  // once the /api/brand-generate endpoint lands.
- // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [generating, setGenerating] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [savingManual, setSavingManual] = useState(false);

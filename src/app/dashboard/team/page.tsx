@@ -106,8 +106,6 @@ export default function TeamPage() {
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
- // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [inviteForm, setInviteForm] = useState({ name: "", email: "", role: "creator" as RoleId });
   const [customRoleName, setCustomRoleName] = useState("");
   const [customPermissions, setCustomPermissions] = useState<Record<string, boolean>>({});
 

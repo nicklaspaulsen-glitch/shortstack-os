@@ -36,8 +36,7 @@ export default function GoogleBusinessPage() {
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
   const [postContent, setPostContent] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [aiReply, setAiReply] = useState<Record<string, string>>({});
+  const [, setAiReply] = useState<Record<string, string>>({});
   const [reviews] = useState<Review[]>([]);
   const [posts] = useState<{ id: string; content: string; date: string; views: number; clicks: number; type: string }[]>([]);
 

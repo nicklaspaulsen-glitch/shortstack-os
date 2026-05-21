@@ -84,7 +84,6 @@ export default function WorkflowsPage() {
   const supabase = createClient();
 
   // Test mode
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [testMode, setTestMode] = useState(false);
 
   // Analytics data — populated lazily from /api/n8n/executions when the tab is opened.
@@ -103,15 +102,11 @@ export default function WorkflowsPage() {
   const [runHistory, setRunHistory] = useState<{ id: string; workflow: string; status: "success" | "failed"; duration: string; steps: number; timestamp: string; error?: string }[]>([]);
 
   // Error handling
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [errorNotifications, setErrorNotifications] = useState(true);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [retryOnFailure, setRetryOnFailure] = useState(true);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [maxRetries] = useState(3);
 
   // Shared workflows
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [sharedWorkflows] = useState<{ id: string; name: string; author: string; downloads: number; rating: number }[]>([]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -162,8 +162,7 @@ export default function FormsPage() {
   const [tab, setTab] = useState<FormTab>("builder");
   const [forms, setForms] = useState<LeadForm[]>([]);
   const [activeForm, setActiveForm] = useState<LeadForm | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [showEmbedCode, setShowEmbedCode] = useState(false);
+  const [, setShowEmbedCode] = useState(false);
   const [ratingHover, setRatingHover] = useState(0);
   const [previewValues, setPreviewValues] = useState<Record<string, string>>({});
   const [conditionEditorFieldId, setConditionEditorFieldId] = useState<string | null>(null);
