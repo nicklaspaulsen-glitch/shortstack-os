@@ -676,7 +676,7 @@ export default function DMControllerPage() {
                       <button onClick={() => setConfig({ ...config, warmup: !config.warmup })}
                         className={cn(
                           "relative w-11 h-6 rounded-full transition-all",
-                          config.warmup ? "bg-orange-500" : "bg-white/15"
+                          config.warmup ? "bg-brand-accent" : "bg-white/15"
                         )}>
                         <span className={cn(
                           "absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all",

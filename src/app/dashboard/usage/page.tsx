@@ -228,7 +228,7 @@ export default function UsagePage() {
   // ── Render ──────────────────────────────────────────────────────────────
 
   return (
-    <MotionPage className="p-6 max-w-5xl mx-auto space-y-5">{/* -- Token Usage command strip -- */}
+    <MotionPage className="max-w-5xl mx-auto space-y-5">{/* -- Token Usage command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">USAGE & LIMITS</p>

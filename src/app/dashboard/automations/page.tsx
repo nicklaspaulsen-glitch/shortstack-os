@@ -218,7 +218,7 @@ export default function AutomationsPage() {
                         {/* Status indicator */}
                         <div
                           className={`w-2 h-2 rounded-full shrink-0 ${
-                            w.active ? "bg-emerald-500" : "bg-white/[0.25]"
+                            w.active ? "bg-brand-accent" : "bg-white/[0.25]"
                           }`}
                         />
 

@@ -134,7 +134,7 @@ export default function SubaccountsPage() {
   };
 
   return (
-    <MotionPage className="flex flex-col gap-6 p-4 sm:p-6 max-w-7xl mx-auto">{/* -- Subaccounts command strip -- */}
+    <MotionPage className="flex flex-col gap-6 max-w-7xl mx-auto">{/* -- Subaccounts command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">SUB-ACCOUNTS</p>

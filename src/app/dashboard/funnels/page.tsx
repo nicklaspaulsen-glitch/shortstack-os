@@ -115,7 +115,7 @@ export default function FunnelsPage() {
   ];
 
   return (
-    <MotionPage className="p-6 space-y-6 max-w-7xl mx-auto">{/* -- Funnels command strip -- */}
+    <MotionPage className="space-y-6 max-w-7xl mx-auto">{/* -- Funnels command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Conversion Funnels</p>

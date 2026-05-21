@@ -131,7 +131,7 @@ export default function HubStatusPage() {
 
   if (!job) {
     return (
-      <MotionPage className="p-6 text-center text-text-muted text-sm"><Loader className="inline animate-spin mr-2" size={14} />Loading job status…
+      <MotionPage className="text-center text-text-muted text-sm"><Loader className="inline animate-spin mr-2" size={14} />Loading job status…
               </MotionPage>
     );
   }

@@ -1130,14 +1130,8 @@ function AgencyDashboard() {
       </div>
 
       {/* ── Row 1: 4 stat cards ── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: 16,
-          marginBottom: 20,
-        }}
-      >
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+
         {statCards.map((card) => (
           <RHStatCard key={card.label} {...card} />
         ))}
@@ -1149,13 +1143,8 @@ function AgencyDashboard() {
       </div>
 
       {/* ── Row 3: Enquiries + Follow-ups ── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 20,
-        }}
-      >
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
         <NewEnquiries />
         <FollowUps />
       </div>

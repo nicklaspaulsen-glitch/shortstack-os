@@ -186,7 +186,7 @@ export default function ClientOutreachPage() {
   ];
 
   return (
-    <MotionPage className="p-6 space-y-6">{/* Header */}<div>
+    <MotionPage className="space-y-6">{/* Header */}<div>
               <h1 className="text-xl font-bold flex items-center gap-2 text-text-primary">
                 <Send size={20} className="text-indigo-400" />
                 Outreach Center

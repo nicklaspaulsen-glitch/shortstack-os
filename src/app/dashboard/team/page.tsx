@@ -856,7 +856,7 @@ export default function TeamPage() {
                           {perms.map(perm => (
                             <div key={perm.feature} className="flex items-center gap-3 p-2 rounded-lg bg-surface-light border border-border-subtle">
                               <button onClick={() => setCustomPermissions(prev => ({ ...prev, [perm.feature]: !prev[perm.feature] }))}
-                                className={`w-8 h-4 rounded-full transition-colors ${customPermissions[perm.feature] ? "bg-emerald-400" : "bg-surface"}`}>
+                                className={`w-8 h-4 rounded-full transition-colors ${customPermissions[perm.feature] ? "bg-brand-accent" : "bg-surface"}`}>
                                 <div className={`w-3.5 h-3.5 rounded-full bg-white shadow transition-all mt-[1px] ${customPermissions[perm.feature] ? "ml-4" : "ml-0.5"}`} />
                               </button>
                               <span className="text-[10px] flex-1">{perm.feature}</span>

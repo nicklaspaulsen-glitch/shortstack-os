@@ -175,7 +175,7 @@ export default function MeetingDetailPage() {
 
   if (loading) {
     return (
-      <MotionPage className="p-6 text-[11px] text-text-muted flex items-center gap-2"><Loader2 size={12} className="animate-spin" />Loading...
+      <MotionPage className="text-[11px] text-text-muted flex items-center gap-2"><Loader2 size={12} className="animate-spin" />Loading...
               </MotionPage>
     );
   }

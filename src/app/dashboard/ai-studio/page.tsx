@@ -808,7 +808,7 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
       <div>
         <SectionLabel label="Audio" color="#D4FF00" />
         {/* 3-col fractional grid: transcribe gets more width */}
-        <div className="grid gap-3" style={{ gridTemplateColumns: "5fr 3fr 3fr" }}>
+        <div className="grid grid-cols-1 sm:grid-cols-[5fr_3fr_3fr] gap-3">
           {/* transcribe: wider with waveform decoration */}
           <motion.button
             onClick={() => onSelect(transcribe.id)}
@@ -1849,7 +1849,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
               <span className="text-[10px] text-text-muted">Scale:</span>
               {[2, 4].map(s => (
                 <button key={s} onClick={() => setScale(s)}
-                  className={`text-xs px-2.5 py-1 rounded-lg font-medium ${scale === s ? "bg-green-500 text-white" : "bg-surface-light text-text-muted"}`}>
+                  className={`text-xs px-2.5 py-1 rounded-lg font-medium ${scale === s ? "bg-brand-accent text-[#020711]" : "bg-surface-light text-text-muted"}`}>
                   {s}x
                 </button>
               ))}

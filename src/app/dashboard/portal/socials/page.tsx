@@ -171,13 +171,13 @@ export default function ClientSocialsPage() {
 
   if (loading) {
     return (
-      <MotionPage className="p-6 flex items-center justify-center min-h-[60vh]"><Loader size={20} className="animate-spin text-text-muted" /></MotionPage>
+      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader size={20} className="animate-spin text-text-muted" /></MotionPage>
     );
   }
 
   if (!clientId) {
     return (
-      <div className="p-6 flex flex-col items-center justify-center min-h-[60vh] text-center">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <Link2 size={32} className="text-text-muted/30 mb-3" />
         <h2 className="text-sm font-semibold mb-1">No Client Profile Found</h2>
         <p className="text-xs text-text-muted max-w-xs">
@@ -188,7 +188,7 @@ export default function ClientSocialsPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

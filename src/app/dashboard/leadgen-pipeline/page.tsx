@@ -834,11 +834,11 @@ export default function LeadgenPipelinePage() {
   return (
     <MotionPage>
       <div className="p-6 pb-2 min-w-0">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-5">
-          <div>
-            <h1 className="font-display text-2xl font-bold text-text-primary tracking-tight">Lead Pipeline</h1>
-            <p className="text-sm text-text-muted mt-1">Autonomous outreach → qualify → close → deliver</p>
+        {/* -- LeadGen Pipeline command strip (slim editorial header) -- */}
+        <div className="flex items-center justify-between gap-4 mb-5">
+          <div className="min-w-0">
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Autonomous Outreach</p>
+            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Lead Pipeline</h1>
           </div>
           <div className="flex items-center gap-2">
             <button
