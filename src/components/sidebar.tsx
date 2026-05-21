@@ -503,6 +503,10 @@ export default function Sidebar() {
 
   const filteredNav = navItems.filter((item) => {
     if (!userRole || !item.roles.includes(userRole)) return false;
+    // settingsOnly items are NEVER rendered in the sidebar — they live only on
+    // the /dashboard/settings hub page. This was the root cause of all 60+
+    // hidden pages appearing in the nav (tier: undefined passes the tier===4 check).
+    if (item.settingsOnly) return false;
     // Apply user-level enable list only for admin/team_member (client portal is untouched).
     if ((userRole === "admin" || userRole === "team_member") && enabledHrefs && enabledHrefs.length > 0) {
       if (!enabledHrefs.includes(item.href)) return false;
