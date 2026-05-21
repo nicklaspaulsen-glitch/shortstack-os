@@ -236,12 +236,6 @@ export default function ApiDocsPage() {
     setShowNewKey(false);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function revokeKey(id: string) {
-    setApiKeys(prev => prev.map(k => k.id === id ? { ...k, is_active: false } : k));
-    setRevealedKeys(prev => { const n = { ...prev }; delete n[id]; return n; });
-  }
-
   function deleteKey(id: string) {
     setApiKeys(prev => prev.filter(k => k.id !== id));
     setConfirmDeleteId(null);

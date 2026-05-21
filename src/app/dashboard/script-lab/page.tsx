@@ -1773,7 +1773,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   type="button"
                   onClick={() => setCreatorIdeasOpen((o) => !o)}
                   className="flex items-center gap-1.5 text-[10px] font-medium mb-2 transition-colors cursor-pointer"
-                  style={{ color: creatorIdeasOpen ? "#60A5FA" : "#6B7280" }}
+                  style={{ color: creatorIdeasOpen ? "#D4FF00" : "#6B7280" }}
                 >
                   <TrendingUp size={10} />
                   Get creator-style ideas
@@ -2670,7 +2670,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                     <div className="mt-2 pt-2 border-t border-border-subtle/50 space-y-1.5">
                       <div className="flex items-center flex-wrap gap-1.5">
                         <span className="text-[8px] text-text-muted">Archetype:</span>
-                        <span className="text-[8px] font-medium px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.1)] text-[#60A5FA] border border-[rgba(212,255,0,0.2)]">
+                        <span className="text-[8px] font-medium px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.1)] text-brand-accent border border-[rgba(212,255,0,0.2)]">
                           {arch.label}
                         </span>
                         <span className="text-[8px] text-text-muted hidden sm:inline">{arch.description}</span>

@@ -527,10 +527,10 @@ export default function PhoneEmailPage() {
                 <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
                   <div className="p-3">
                     <div className="flex items-center gap-1.5 mb-1">
-                      <TrendingUp size={11} className="text-cyan-400" />
+                      <TrendingUp size={11} className="text-brand-accent" />
                       <span className="text-[9px] text-text-muted uppercase tracking-wider">Used Today</span>
                     </div>
-                    <p className="text-lg font-bold text-cyan-400">{totalUsed.toLocaleString()}</p>
+                    <p className="text-lg font-bold text-brand-accent">{totalUsed.toLocaleString()}</p>
                     <div className="mt-1 h-1.5 bg-border-subtle rounded-full overflow-hidden">
                       <div className={`h-full rounded-full transition-all ${pctBarColor(totalUsed, totalCapacity)}`}
                         style={{ width: `${pct(totalUsed, totalCapacity)}%` }} />
@@ -653,7 +653,7 @@ export default function PhoneEmailPage() {
                                       <Users size={10} className="text-text-muted" /> {p.assignedTo}
                                     </span>
                                   ) : (
-                                    <span className="px-2 py-0.5 rounded-full text-[9px] font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                                    <span className="px-2 py-0.5 rounded-full text-[9px] font-medium bg-cyan-500/10 text-brand-accent border border-cyan-500/20">
                                       Pool
                                     </span>
                                   )}

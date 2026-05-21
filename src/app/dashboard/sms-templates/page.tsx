@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
-import { Smartphone } from "lucide-react";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -194,7 +193,7 @@ export default function SMSTemplatesPage() {
                   <input value={aiAudience} onChange={e => setAiAudience(e.target.value)} className="input w-full text-xs" placeholder="e.g. Existing dental patients" />
                 </div>
                 <div className="flex items-center gap-2">
-                  <input type="checkbox" id="ai-sms-link" checked={aiIncludeLink} onChange={e => setAiIncludeLink(e.target.checked)} className="accent-blue-600" />
+                  <input type="checkbox" id="ai-sms-link" checked={aiIncludeLink} onChange={e => setAiIncludeLink(e.target.checked)} className="accent-[#D4FF00]" />
                   <label htmlFor="ai-sms-link" className="text-xs text-text-muted">Include {"{link}"} placeholder</label>
                 </div>
                 <div className="flex items-center justify-end gap-2 pt-1">

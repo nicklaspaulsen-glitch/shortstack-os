@@ -13,7 +13,6 @@ import {
   AlertTriangle,
   Send, Filter, Target, Lightbulb,
   Flame, LayoutGrid, PieChart,
-  Target as TargetIcon,
 } from "lucide-react";
 import { PrismPanel } from "@/components/prism";
 import toast from "react-hot-toast";

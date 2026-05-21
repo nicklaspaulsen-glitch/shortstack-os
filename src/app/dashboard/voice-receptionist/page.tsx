@@ -44,8 +44,6 @@ import {
   CheckCircle2,
   Sparkles,
   Upload,
-  Play,
-  Pause,
   ExternalLink,
   FileText,
   UserCheck,
@@ -1306,6 +1304,3 @@ function buildSystemPrompt(c: AgentConfig): string {
   ].join(" ");
 }
 
-// Silence unused-import lint � buttons referenced conditionally above.
-void Play;
-void Pause;
