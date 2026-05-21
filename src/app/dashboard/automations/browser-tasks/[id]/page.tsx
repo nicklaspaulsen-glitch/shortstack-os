@@ -48,10 +48,10 @@ interface BrowserTask {
 }
 
 const STATUS_STYLES: Record<BrowserTask["status"], { label: string; bg: string; fg: string; icon: React.ReactNode }> = {
-  queued: { label: "Queued", bg: "bg-amber-500/15", fg: "text-amber-700", icon: <Clock size={14} /> },
-  running: { label: "Running", bg: "bg-sky-500/15", fg: "text-sky-700", icon: <Loader2 size={14} className="animate-spin" /> },
-  completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-700", icon: <CheckCircle2 size={14} /> },
-  failed: { label: "Failed", bg: "bg-rose-500/15", fg: "text-rose-700", icon: <XCircle size={14} /> },
+  queued: { label: "Queued", bg: "bg-amber-500/15", fg: "text-amber-400", icon: <Clock size={14} /> },
+  running: { label: "Running", bg: "bg-sky-500/15", fg: "text-sky-400", icon: <Loader2 size={14} className="animate-spin" /> },
+  completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-400", icon: <CheckCircle2 size={14} /> },
+  failed: { label: "Failed", bg: "bg-rose-500/15", fg: "text-rose-400", icon: <XCircle size={14} /> },
   cancelled: { label: "Cancelled", bg: "bg-zinc-500/15", fg: "text-zinc-400", icon: <XCircle size={14} /> },
 };
 
@@ -186,7 +186,7 @@ export default function BrowserTaskDetailPage() {
     return (
       <div className="glass rounded-lg p-10 text-center text-text-muted">
         Task not found.{" "}
-        <Link href="/dashboard/automations/browser-tasks" className="text-blue-600 hover:underline">
+        <Link href="/dashboard/automations/browser-tasks" className="text-blue-400 hover:underline">
           Back to list
         </Link>
       </div>
@@ -246,7 +246,7 @@ export default function BrowserTaskDetailPage() {
           <button
             onClick={runNow}
             disabled={!!busy}
-            className="inline-flex items-center gap-1.5 rounded-md bg-emerald-500/20 px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-500/30 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-md bg-emerald-500/20 px-3 py-1.5 text-xs font-medium text-emerald-400 hover:bg-emerald-500/30 disabled:opacity-50"
           >
             {busy === "run" ? <Loader2 size={12} className="animate-spin" /> : <Play size={12} />}
             Run now
@@ -265,7 +265,7 @@ export default function BrowserTaskDetailPage() {
           <button
             onClick={cancel}
             disabled={!!busy}
-            className="inline-flex items-center gap-1.5 rounded-md bg-rose-500/20 px-3 py-1.5 text-xs font-medium text-rose-700 hover:bg-rose-500/30 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-md bg-rose-500/20 px-3 py-1.5 text-xs font-medium text-rose-400 hover:bg-rose-500/30 disabled:opacity-50"
           >
             <XCircle size={12} /> Cancel
           </button>
@@ -282,7 +282,7 @@ export default function BrowserTaskDetailPage() {
       {/* Live tail when running */}
       {isLive && lastRec && (
         <div className="rounded-xl border border-sky-500/30 bg-sky-500/5 p-5">
-          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-sky-700">
+          <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-sky-400">
             <Loader2 size={14} className="animate-spin" /> Live — step {lastRec.step + 1}
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -314,7 +314,7 @@ export default function BrowserTaskDetailPage() {
       {/* Final result */}
       {task.status === "completed" && task.result_text && (
         <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5">
-          <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-emerald-700">
+          <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-emerald-400">
             <CheckCircle2 size={14} /> Result
           </div>
           <div className="text-sm text-text-primary whitespace-pre-wrap">{task.result_text}</div>
@@ -328,7 +328,7 @@ export default function BrowserTaskDetailPage() {
 
       {task.status === "failed" && task.error_message && (
         <div className="rounded-xl border border-rose-500/30 bg-rose-500/5 p-5">
-          <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-rose-700">
+          <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-rose-400">
             <XCircle size={14} /> Error
           </div>
           <div className="text-sm text-text-primary">{task.error_message}</div>

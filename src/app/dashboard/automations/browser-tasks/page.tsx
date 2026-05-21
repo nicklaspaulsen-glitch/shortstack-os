@@ -151,7 +151,7 @@ export default function BrowserTasksPage() {
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">AI Browser Tasks</h1>
       </div>
     </div>{/* New task card */}<div className="glass rounded-xl p-5">
-              <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#374151]">
+              <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-text-secondary">
                 <Plus size={15} /> New task
               </div>
 
@@ -159,9 +159,9 @@ export default function BrowserTasksPage() {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-sm font-medium text-[#374151]">{selectedTemplate.name}</div>
+                      <div className="text-sm font-medium text-text-secondary">{selectedTemplate.name}</div>
                       {selectedTemplate.description && (
-                        <div className="text-xs text-[#6B7280]">{selectedTemplate.description}</div>
+                        <div className="text-xs text-text-muted">{selectedTemplate.description}</div>
                       )}
                     </div>
                     <button
@@ -169,14 +169,14 @@ export default function BrowserTasksPage() {
                         setSelectedTemplateId(null);
                         setTemplateValues({});
                       }}
-                      className="text-xs text-[#6B7280] hover:text-[#111827]"
+                      className="text-xs text-text-muted hover:text-text-primary"
                     >
                       Clear
                     </button>
                   </div>
                   {selectedTemplate.variables.map((v) => (
                     <label key={v.name} className="block">
-                      <span className="block text-xs font-medium text-[#6B7280]">
+                      <span className="block text-xs font-medium text-text-muted">
                         {v.name}
                         {v.required && <span className="text-rose-500"> *</span>}
                         <span className="ml-1 text-[10px] uppercase tracking-wide text-text-muted">{v.kind}</span>
@@ -187,7 +187,7 @@ export default function BrowserTasksPage() {
                         onChange={(e) =>
                           setTemplateValues((prev) => ({ ...prev, [v.name]: e.target.value }))
                         }
-                        className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-brand-accent focus:outline-none"
+                        className="mt-1 w-full rounded-md border border-border-subtle bg-white/5 px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-accent focus:outline-none"
                         placeholder={`{{${v.name}}}`}
                       />
                     </label>
@@ -196,23 +196,23 @@ export default function BrowserTasksPage() {
               ) : (
                 <div className="space-y-3">
                   <label className="block">
-                    <span className="block text-xs font-medium text-[#6B7280]">Goal</span>
+                    <span className="block text-xs font-medium text-text-muted">Goal</span>
                     <textarea
                       value={goal}
                       onChange={(e) => setGoal(e.target.value)}
                       rows={3}
                       placeholder="Visit example.com/pricing and extract every tier as JSON…"
-                      className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-brand-accent focus:outline-none"
+                      className="mt-1 w-full rounded-md border border-border-subtle bg-white/5 px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-accent focus:outline-none"
                     />
                   </label>
                   <label className="block">
-                    <span className="block text-xs font-medium text-[#6B7280]">Start URL (optional)</span>
+                    <span className="block text-xs font-medium text-text-muted">Start URL (optional)</span>
                     <input
                       type="url"
                       value={startUrl}
                       onChange={(e) => setStartUrl(e.target.value)}
                       placeholder="https://example.com"
-                      className="mt-1 w-full rounded-md border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-brand-accent focus:outline-none"
+                      className="mt-1 w-full rounded-md border border-border-subtle bg-white/5 px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-accent focus:outline-none"
                     />
                   </label>
                 </div>
@@ -222,7 +222,7 @@ export default function BrowserTasksPage() {
                 <button
                   onClick={submit}
                   disabled={submitting}
-                  className="inline-flex items-center gap-1.5 rounded-md bg-brand-accent px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[rgba(59,130,246,0.30)] transition hover:bg-[#3B82F6] disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 rounded-md bg-brand-accent px-4 py-2 text-sm font-semibold text-[#0D1120] transition hover:bg-brand-accent/80 disabled:opacity-50"
                 >
                   {submitting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
                   Queue task
@@ -230,7 +230,7 @@ export default function BrowserTasksPage() {
               </div>
             </div>{/* Templates */}{templates.length > 0 && (
               <div className="glass rounded-xl p-5">
-                <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[#374151]">
+                <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-text-secondary">
                   <Sparkles size={15} /> Try a template
                 </div>
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
@@ -244,28 +244,28 @@ export default function BrowserTasksPage() {
                       className={`group rounded-lg border p-3 text-left transition ${
                         selectedTemplateId === t.id
                           ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]"
-                          : "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] hover:border-[rgba(0,0,0,0.10)] hover:bg-[rgba(0,0,0,0.06)]"
+                          : "border-border-subtle bg-white/5 hover:border-white/12 hover:bg-white/8"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
-                        <div className="text-sm font-medium text-[#374151]">{t.name}</div>
+                        <div className="text-sm font-medium text-text-secondary">{t.name}</div>
                         {t.category && (
-                          <span className="rounded-full bg-[rgba(0,0,0,0.06)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[#6B7280]">
+                          <span className="rounded-full bg-white/8 px-2 py-0.5 text-[10px] uppercase tracking-wide text-text-muted">
                             {t.category.replace("_", " ")}
                           </span>
                         )}
                       </div>
                       {t.description && (
-                        <div className="mt-1 text-xs text-[#6B7280] line-clamp-2">{t.description}</div>
+                        <div className="mt-1 text-xs text-text-muted line-clamp-2">{t.description}</div>
                       )}
                     </button>
                   ))}
                 </div>
               </div>
             )}{/* Task list */}<div className="glass rounded-xl">
-              <div className="flex items-center gap-2 border-b border-[rgba(0,0,0,0.08)] px-5 py-3 text-sm font-semibold text-[#374151]">
+              <div className="flex items-center gap-2 border-b border-border-subtle px-5 py-3 text-sm font-semibold text-text-secondary">
                 <Globe size={15} /> Tasks
-                <span className="ml-2 rounded-full bg-[rgba(0,0,0,0.06)] px-2 py-0.5 text-[10px] text-[#6B7280]">
+                <span className="ml-2 rounded-full bg-white/8 px-2 py-0.5 text-[10px] text-text-muted">
                   {tasks.length}
                 </span>
               </div>
@@ -278,21 +278,21 @@ export default function BrowserTasksPage() {
                   No tasks yet. Queue your first one above.
                 </div>
               ) : (
-                <ul className="divide-y divide-[rgba(0,0,0,0.06)]">
+                <ul className="divide-y divide-white/8">
                   {tasks.map((t) => {
                     const status = STATUS_STYLES[t.status];
                     return (
                       <li key={t.id}>
                         <Link
                           href={`/dashboard/automations/browser-tasks/${t.id}`}
-                          className="flex items-center gap-3 px-5 py-3 hover:bg-[rgba(0,0,0,0.03)]"
+                          className="flex items-center gap-3 px-5 py-3 hover:bg-white/4"
                         >
                           <span
                             className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${status.bg} ${status.fg}`}
                           >
                             {status.icon} {status.label}
                           </span>
-                          <span className="flex-1 truncate text-sm text-[#374151]">{t.goal}</span>
+                          <span className="flex-1 truncate text-sm text-text-secondary">{t.goal}</span>
                           <span className="hidden text-xs text-text-muted md:inline">
                             {t.steps_taken}/{t.max_steps} steps
                           </span>

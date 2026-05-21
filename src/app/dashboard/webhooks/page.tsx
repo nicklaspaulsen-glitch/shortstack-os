@@ -336,8 +336,8 @@ export default function WebhooksPage() {
                         initial={{ opacity: 0, x: -12 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.07, duration: 0.35, ease: "easeOut" }}
-                        whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
-                        className={`p-4 rounded-xl border transition-colors ${wh.active ? "glass border-black/10" : "bg-surface border-border-subtle/50 opacity-60"}`}>
+                        whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
+                        className={`p-4 rounded-xl border transition-colors ${wh.active ? "glass border-border-subtle" : "bg-surface border-border-subtle/50 opacity-60"}`}>
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-3">
                             <div className={`w-2.5 h-2.5 rounded-full ${wh.active ? "bg-emerald-400" : "bg-muted"}`} />
@@ -371,7 +371,7 @@ export default function WebhooksPage() {
                           <span>Limit: {wh.rateLimit}/min</span>
                         </div>
                         {showSecret === wh.id && (
-                          <div className="mt-2 p-2 rounded-lg bg-black/5 border border-border-subtle">
+                          <div className="mt-2 p-2 rounded-lg bg-white/5 border border-border-subtle">
                             <div className="flex items-center gap-2">
                               <span className="text-[9px] text-text-muted">Signing Secret:</span>
                               <code className="text-[10px] font-mono text-brand-accent">{wh.secret}</code>
@@ -424,7 +424,7 @@ export default function WebhooksPage() {
                         <span className="text-[9px] text-text-muted">{d.timestamp}</span>
                       </button>
                       {expandedDelivery === d.id && (
-                        <div className="mx-3 mb-2 p-3 rounded-lg bg-black/5 border border-border-subtle space-y-2">
+                        <div className="mx-3 mb-2 p-3 rounded-lg bg-white/5 border border-border-subtle space-y-2">
                           <div>
                             <p className="text-[9px] text-text-muted uppercase mb-1">Request Payload</p>
                             <pre className="text-[10px] font-mono text-emerald-400 whitespace-pre-wrap">{d.payload}</pre>
@@ -468,7 +468,7 @@ export default function WebhooksPage() {
                   </div>
                   <div>
                     <label className="text-[9px] text-text-muted uppercase mb-1 block">Payload Preview</label>
-                    <pre className="bg-black/5 rounded-lg p-3 text-[10px] font-mono text-emerald-700">
+                    <pre className="bg-white/5 rounded-lg p-3 text-[10px] font-mono text-emerald-400">
       {`{
   "event": "${testEvent}",
   "timestamp": "${new Date().toISOString()}",

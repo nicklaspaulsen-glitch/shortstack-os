@@ -835,11 +835,11 @@ function WorkflowBuilderInner() {
         </button>
 
         {simulating ? (
-          <button onClick={stopSimulation} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium text-red-400 hover:text-red-600 hover:bg-red-500/10 transition-colors">
+          <button onClick={stopSimulation} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium text-red-400 hover:text-red-500 hover:bg-red-500/10 transition-colors">
             <Eye size={13} /> Stop
           </button>
         ) : (
-          <button onClick={runSimulation} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium text-emerald-400 hover:text-emerald-600 hover:bg-emerald-500/10 transition-colors" title="Run Simulation">
+          <button onClick={runSimulation} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium text-emerald-400 hover:text-emerald-500 hover:bg-emerald-500/10 transition-colors" title="Run Simulation">
             <Play size={13} /> Test
           </button>
         )}
@@ -1088,7 +1088,7 @@ function WorkflowBuilderInner() {
                     setSelectedNodeId(null);
                     toast.success("Node deleted");
                   }}
-                  className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-[11px] text-red-400 hover:text-red-600 hover:bg-red-500/10 transition-colors"
+                  className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-[11px] text-red-400 hover:text-red-500 hover:bg-red-500/10 transition-colors"
                 >
                   <Trash2 size={12} /> Delete Node
                 </button>

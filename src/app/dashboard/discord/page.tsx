@@ -265,7 +265,7 @@ export default function DiscordPage() {
       {activeTab === "Install" && (
         <div className="space-y-5">
           {/* Hero / pitch */}
-          <div className="rounded-xl p-6" style={{ background: "linear-gradient(135deg, rgba(88,101,242,0.08), rgba(88,101,242,0.03), transparent)", border: "1px solid rgba(0,0,0,0.08)" }}>
+          <div className="rounded-xl p-6" style={{ background: "linear-gradient(135deg, rgba(88,101,242,0.08), rgba(88,101,242,0.03), transparent)", border: "1px solid rgba(212,255,0,0.08)" }}>
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-[#5865F2]/20 flex items-center justify-center shrink-0">
                 <Bot size={24} className="text-[#5865F2]" />
@@ -309,7 +309,7 @@ export default function DiscordPage() {
               ].map((f, i) => (
                 <motion.div
                   key={i}
-                  className="rounded-xl p-4 flex items-start gap-3 spotlight-card" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
+                  className="rounded-xl p-4 flex items-start gap-3 spotlight-card" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
@@ -348,7 +348,7 @@ export default function DiscordPage() {
                 return (
                   <motion.div
                     key={int.id}
-                    className="rounded-xl p-4" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
+                    className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.04 }}

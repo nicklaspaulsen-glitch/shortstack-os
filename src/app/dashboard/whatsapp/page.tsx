@@ -52,7 +52,7 @@ interface Client {
 }
 
 const STATUS_CONFIG = {
-  draft: { label: "Draft", color: "text-black/50", bg: "bg-black/5", icon: <Clock className="w-3.5 h-3.5" /> },
+  draft: { label: "Draft", color: "text-text-muted", bg: "bg-white/5", icon: <Clock className="w-3.5 h-3.5" /> },
   scheduled: { label: "Scheduled", color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]", icon: <Calendar className="w-3.5 h-3.5" /> },
   sending: { label: "Sending", color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]", icon: <Loader2 className="w-3.5 h-3.5 animate-spin" /> },
   sent: { label: "Sent", color: "text-emerald-400", bg: "bg-emerald-400/10", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
@@ -247,7 +247,7 @@ export default function WhatsAppPage() {
                 <MessageCircle className="w-5 h-5 text-[#25D366]" />
                 <p className="font-semibold text-text-primary">New WhatsApp Campaign</p>
               </div>
-              <button onClick={resetCompose} className="text-black/40 hover:text-text-primary">
+              <button onClick={resetCompose} className="text-text-muted hover:text-text-primary">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -255,19 +255,19 @@ export default function WhatsAppPage() {
             <div className="p-5 flex flex-col gap-4 max-h-[80vh] overflow-y-auto">
               {/* Campaign name */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-black/60 uppercase tracking-wider">Campaign Name</label>
+                <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Campaign Name</label>
                 <input
                   type="text"
                   value={campaignName}
                   onChange={(e) => setCampaignName(e.target.value)}
                   placeholder="e.g. April Promo Blast"
-                  className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-text-primary text-sm placeholder:text-black/30 focus:outline-none focus:border-[#25D366]/50 transition-all"
+                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-[#25D366]/50 transition-all"
                 />
               </div>
 
               {/* Recipients */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-black/60 uppercase tracking-wider">
+                <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
                   Recipients
                   {selectedClients.length > 0 && (
                     <span className="ml-2 text-[#25D366] normal-case font-normal">
@@ -280,11 +280,11 @@ export default function WhatsAppPage() {
                   placeholder="Search clients�"
                   value={clientSearch}
                   onChange={(e) => setClientSearch(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-black/5 border border-black/10 text-text-primary text-sm placeholder:text-black/30 focus:outline-none focus:border-[#25D366]/50 transition-all"
+                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-[#25D366]/50 transition-all"
                 />
                 <div className="rounded-lg border border-black/8 bg-black/3 max-h-40 overflow-y-auto">
                   {filteredClients.length === 0 ? (
-                    <div className="flex items-center gap-2 p-3 text-sm text-black/30">
+                    <div className="flex items-center gap-2 p-3 text-sm text-text-muted">
                       <Users className="w-4 h-4" />
                       {clients.length === 0 ? "No clients found" : "No matches"}
                     </div>
@@ -292,7 +292,7 @@ export default function WhatsAppPage() {
                     filteredClients.map((c) => (
                       <label
                         key={c.id}
-                        className="flex items-center gap-3 px-3 py-2.5 hover:bg-black/5 cursor-pointer transition-all"
+                        className="flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 cursor-pointer transition-all"
                       >
                         <input
                           type="checkbox"
@@ -303,7 +303,7 @@ export default function WhatsAppPage() {
                         <div className="flex-1 min-w-0">
                           <p className="text-sm text-text-primary truncate">{c.business_name}</p>
                           {c.phone && (
-                            <p className="text-xs text-black/40">{c.phone}</p>
+                            <p className="text-xs text-text-muted">{c.phone}</p>
                           )}
                         </div>
                         {!c.phone && (
@@ -320,8 +320,8 @@ export default function WhatsAppPage() {
               {/* Message */}
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-semibold text-black/60 uppercase tracking-wider">Message</label>
-                  <span className={`text-xs ${message.length > WARN_LEN ? "text-brand-accent" : "text-black/30"}`}>
+                  <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Message</label>
+                  <span className={`text-xs ${message.length > WARN_LEN ? "text-brand-accent" : "text-text-muted"}`}>
                     {message.length}/{MAX_MSG_LEN}
                   </span>
                 </div>
@@ -330,7 +330,7 @@ export default function WhatsAppPage() {
                   onChange={(e) => setMessage(e.target.value.slice(0, MAX_MSG_LEN))}
                   placeholder="Hi {{name}}, here's your update from ShortStack�"
                   rows={5}
-                  className="w-full px-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-text-primary text-sm placeholder:text-black/30 focus:outline-none focus:border-[#25D366]/50 transition-all resize-none"
+                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-[#25D366]/50 transition-all resize-none"
                 />
                 {message.length > WARN_LEN && (
                   <div className="flex items-center gap-1.5 text-xs text-brand-accent">
@@ -342,20 +342,20 @@ export default function WhatsAppPage() {
 
               {/* Schedule */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-black/60 uppercase tracking-wider">
+                <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider">
                   Schedule (optional)
                 </label>
                 <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/30" />
+                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                   <input
                     type="datetime-local"
                     value={scheduleAt}
                     onChange={(e) => setScheduleAt(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-black/5 border border-black/10 text-text-primary text-sm focus:outline-none focus:border-[#25D366]/50 transition-all [color-scheme:light]"
+                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-[#25D366]/50 transition-all [color-scheme:light]"
                   />
                 </div>
                 {!scheduleAt && (
-                  <p className="text-[10px] text-black/30">Leave blank to send immediately</p>
+                  <p className="text-[10px] text-text-muted">Leave blank to send immediately</p>
                 )}
               </div>
             </div>
@@ -364,7 +364,7 @@ export default function WhatsAppPage() {
             <div className="flex items-center justify-end gap-3 px-5 py-4 border-t border-black/8">
               <button
                 onClick={resetCompose}
-                className="px-4 py-2 rounded-lg text-sm font-medium text-black/60 hover:text-text-primary bg-black/5 hover:bg-black/8 transition-all"
+                className="px-4 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary bg-white/5 hover:bg-white/8 transition-all"
               >
                 Cancel
               </button>
@@ -400,7 +400,7 @@ export default function WhatsAppPage() {
             className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium border-b-2 transition-all ${
               activeTab === t.id
                 ? "text-text-primary border-[#25D366]"
-                : "text-black/50 border-transparent hover:text-black/65"
+                : "text-text-muted border-transparent hover:text-text-secondary"
             }`}
           >
             {t.icon}
@@ -411,12 +411,12 @@ export default function WhatsAppPage() {
 
       {activeTab === "numbers" && (
         <div className="flex flex-col gap-3">
-          <p className="text-sm font-semibold text-black/60">Provisioned Numbers</p>
+          <p className="text-sm font-semibold text-text-secondary">Provisioned Numbers</p>
           {numbers.length === 0 ? (
             <div className="rounded-xl border-2 border-dashed border-black/8 flex flex-col items-center justify-center py-10 gap-2 text-center">
-              <Phone className="w-8 h-8 text-black/20" />
-              <p className="text-black/40 text-sm">No WhatsApp numbers yet</p>
-              <p className="text-black/30 text-xs max-w-md">
+              <Phone className="w-8 h-8 text-text-muted" />
+              <p className="text-text-muted text-sm">No WhatsApp numbers yet</p>
+              <p className="text-text-muted text-xs max-w-md">
                 {isPlatformAdmin
                   ? "Configure WHATSAPP_ACCESS_TOKEN + WHATSAPP_PHONE_NUMBER_ID (Meta Cloud) or provision a Twilio number per client to enable WhatsApp sends."
                   : "WhatsApp isn't enabled on this workspace yet. Reach out to your platform admin to switch it on, or connect a Twilio number per client from the Phone Setup page."}
@@ -437,13 +437,13 @@ export default function WhatsAppPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-text-primary truncate">{n.label}</p>
-                    <p className="text-xs text-black/40 font-mono">{n.phone}</p>
+                    <p className="text-xs text-text-muted font-mono">{n.phone}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
-                    <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-black/5 text-black/60">
+                    <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/5 text-text-secondary">
                       {n.provider === "meta-cloud" ? "Meta Cloud" : "Twilio"}
                     </span>
-                    <span className={`text-[10px] ${n.status === "active" ? "text-emerald-600" : "text-amber-500"}`}>
+                    <span className={`text-[10px] ${n.status === "active" ? "text-emerald-400" : "text-amber-400"}`}>
                       {n.status}
                     </span>
                   </div>
@@ -456,12 +456,12 @@ export default function WhatsAppPage() {
 
       {activeTab === "inbox" && (
         <div className="flex flex-col gap-3">
-          <p className="text-sm font-semibold text-black/60">Recent Conversations</p>
+          <p className="text-sm font-semibold text-text-secondary">Recent Conversations</p>
           {conversations.length === 0 ? (
             <div className="rounded-xl border-2 border-dashed border-black/8 flex flex-col items-center justify-center py-10 gap-2 text-center">
-              <Inbox className="w-8 h-8 text-black/20" />
-              <p className="text-black/40 text-sm">No conversations yet</p>
-              <p className="text-black/30 text-xs max-w-md">
+              <Inbox className="w-8 h-8 text-text-muted" />
+              <p className="text-text-muted text-sm">No conversations yet</p>
+              <p className="text-text-muted text-xs max-w-md">
                 Inbound WhatsApp messages appear here once your account is wired
                 to Meta&apos;s webhook or Twilio&apos;s SMS-webhook.
               </p>
@@ -489,7 +489,7 @@ export default function WhatsAppPage() {
                     <p className="text-sm font-semibold text-text-primary truncate">
                       {c.subject || c.external_thread_id || "Unknown contact"}
                     </p>
-                    <p className="text-xs text-black/40 truncate line-clamp-1">
+                    <p className="text-xs text-text-muted truncate line-clamp-1">
                       {c.last_message_preview || "(no preview)"}
                     </p>
                   </div>
@@ -499,7 +499,7 @@ export default function WhatsAppPage() {
                         {c.unread_count}
                       </span>
                     )}
-                    <p className="text-[10px] text-black/30">
+                    <p className="text-[10px] text-text-muted">
                       {c.last_message_at ? new Date(c.last_message_at).toLocaleDateString() : "�"}
                     </p>
                   </div>
@@ -531,7 +531,7 @@ export default function WhatsAppPage() {
           transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
         >
           <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Sent</p>
-          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-700 tabular-nums">{campaigns.filter((c) => c.status === "sent").length}</p>
+          <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">{campaigns.filter((c) => c.status === "sent").length}</p>
           <p className="text-[11px] text-text-muted mt-1.5">delivered</p>
         </motion.div>
         <motion.div
@@ -556,11 +556,11 @@ export default function WhatsAppPage() {
 
       {/* Campaign list */}
       <div className="flex flex-col gap-3">
-        <p className="text-sm font-semibold text-black/60">Past Campaigns</p>
+        <p className="text-sm font-semibold text-text-secondary">Past Campaigns</p>
         {campaigns.length === 0 ? (
           <div className="rounded-xl border-2 border-dashed border-black/8 flex flex-col items-center justify-center py-14 gap-3 text-center">
-            <MessageCircle className="w-10 h-10 text-black/20" />
-            <p className="text-black/40 text-sm">No campaigns yet</p>
+            <MessageCircle className="w-10 h-10 text-text-muted" />
+            <p className="text-text-muted text-sm">No campaigns yet</p>
             <button
               onClick={() => setShowCompose(true)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-[#25D366] hover:bg-[#20b858] text-white transition-all"
@@ -585,16 +585,16 @@ export default function WhatsAppPage() {
                     <p className="text-sm font-semibold text-text-primary truncate">{c.name}</p>
                     <StatusBadge status={c.status} />
                   </div>
-                  <p className="text-xs text-black/40 mt-1 truncate line-clamp-1">
+                  <p className="text-xs text-text-muted mt-1 truncate line-clamp-1">
                     {c.message_template}
                   </p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <div className="flex items-center gap-1 text-xs text-black/50">
+                  <div className="flex items-center gap-1 text-xs text-text-muted">
                     <Users className="w-3.5 h-3.5" />
                     {c.recipient_count} recipients
                   </div>
-                  <p className="text-xs text-black/30">
+                  <p className="text-xs text-text-muted">
                     {c.sent_at
                       ? `Sent ${new Date(c.sent_at).toLocaleDateString()}`
                       : c.scheduled_at
@@ -602,7 +602,7 @@ export default function WhatsAppPage() {
                       : `Created ${new Date(c.created_at).toLocaleDateString()}`}
                   </p>
                 </div>
-                <ChevronDown className="w-4 h-4 text-black/20 shrink-0 -rotate-90" />
+                <ChevronDown className="w-4 h-4 text-text-muted shrink-0 -rotate-90" />
               </motion.div>
             ))}
           </div>
