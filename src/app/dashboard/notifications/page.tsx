@@ -305,7 +305,7 @@ export default function NotificationsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <>
                   {unreadCount > 0 && (
-                    <span className="text-[10px] font-medium text-text-primary bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] px-2.5 py-1 rounded-full">
+                    <span className="text-[10px] font-medium text-text-primary bg-white/8 border border-white/10 px-2.5 py-1 rounded-full">
                       {unreadCount} unread
                     </span>
                   )}
@@ -393,7 +393,7 @@ export default function NotificationsPage() {
                   </p>
                   <button
                     onClick={() => { setSearchQuery(""); setActiveTab("all"); }}
-                    className="mt-3 text-xs text-brand-accent hover:text-[#3B82F6] font-medium transition-colors"
+                    className="mt-3 text-xs text-brand-accent hover:text-brand-accent/80 font-medium transition-colors"
                   >
                     Clear filters
                   </button>
@@ -483,7 +483,7 @@ export default function NotificationsPage() {
                                     <Link
                                       href={n.link}
                                       onClick={() => markRead(n.id)}
-                                      className="text-[10px] text-brand-accent hover:text-[#3B82F6] flex items-center gap-1 font-medium transition-colors"
+                                      className="text-[10px] text-brand-accent hover:text-brand-accent/80 flex items-center gap-1 font-medium transition-colors"
                                     >
                                       {actionLabel}
                                       <ExternalLink size={9} />

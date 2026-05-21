@@ -413,7 +413,7 @@ export default function ClientLeadEnginePage() {
                     ) : error ? (
                       <tr><td colSpan={9} className="text-center py-12 text-danger">
                         <p className="text-xs mb-2">Failed to load leads: {error}</p>
-                        <button onClick={fetchExistingLeads} className="text-[10px] text-brand-accent hover:text-[#3B82F6] underline">Try again</button>
+                        <button onClick={fetchExistingLeads} className="text-[10px] text-brand-accent hover:text-brand-accent/80 underline">Try again</button>
                       </td></tr>
                     ) : leads.length === 0 ? (
                       <tr><td colSpan={9} className="text-center py-12 text-text-muted">

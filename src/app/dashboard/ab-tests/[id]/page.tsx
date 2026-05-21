@@ -127,7 +127,7 @@ export default function AbTestDetailPage() {
 
   if (loading || !test) {
     return (
-      <MotionPage className="p-6 max-w-6xl mx-auto space-y-6"><div className="h-32 bg-black/[0.04] animate-pulse rounded-xl" /><div className="h-64 bg-black/[0.04] animate-pulse rounded-xl" /></MotionPage>
+      <MotionPage className="p-6 max-w-6xl mx-auto space-y-6"><div className="h-32 bg-white/4 animate-pulse rounded-xl" /><div className="h-64 bg-white/4 animate-pulse rounded-xl" /></MotionPage>
     );
   }
 
@@ -148,7 +148,7 @@ export default function AbTestDetailPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => router.push("/dashboard/ab-tests")}
-              className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm bg-black/[0.04] hover:bg-black/[0.08] text-gray-600"
+              className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm bg-white/4 hover:bg-white/8 text-text-muted"
             >
               <ArrowLeft size={14} />
               Back
@@ -165,7 +165,7 @@ export default function AbTestDetailPage() {
             {test.status === "paused" && (
               <button
                 onClick={() => void setStatus("running")}
-                className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-600"
+                className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400"
               >
                 <Clock size={14} />
                 Resume
@@ -184,7 +184,7 @@ export default function AbTestDetailPage() {
 
       <div className="glass rounded-xl overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-black/[0.03] text-xs uppercase tracking-wider text-gray-500">
+          <thead className="bg-white/4 text-xs uppercase tracking-wider text-text-muted">
             <tr>
               <th className="px-4 py-3 text-left">Variant</th>
               <th className="px-4 py-3 text-right">Views</th>
@@ -202,7 +202,7 @@ export default function AbTestDetailPage() {
               return (
                 <tr
                   key={v.id}
-                  className={`border-t border-black/[0.04] ${isWinner ? "bg-amber-500/8" : ""}`}
+                  className={`border-t border-white/8 ${isWinner ? "bg-amber-500/8" : ""}`}
                 >
                   <td className="px-4 py-3 font-semibold text-text-primary">
                     <div className="flex items-center gap-2">
@@ -246,12 +246,12 @@ export default function AbTestDetailPage() {
       {test.status !== "completed" && (
         <div className="glass rounded-xl p-4 flex items-end gap-3">
           <div className="flex-1">
-            <label className="block text-xs text-gray-500 mb-1">Add variant</label>
+            <label className="block text-xs text-text-muted mb-1">Add variant</label>
             <input
               value={newVariantKey}
               onChange={(e) => setNewVariantKey(e.target.value)}
               placeholder="Variant key (e.g. C)"
-              className="w-full bg-black/[0.04] border border-border-subtle rounded-lg px-3 py-2 text-text-primary placeholder-text-muted text-sm focus:outline-none focus:border-brand-accent"
+              className="w-full bg-white/4 border border-border-subtle rounded-lg px-3 py-2 text-text-primary placeholder-text-muted text-sm focus:outline-none focus:border-brand-accent"
             />
           </div>
           <button

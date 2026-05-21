@@ -859,7 +859,7 @@ export default function EmailComposerPage() {
 >
                   <Sparkles size={12} className="animate-pulse" />
                   New with AI
-                  <span className="ml-1 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wide">Recommended</span>
+                  <span className="ml-1 text-[8px] uppercase bg-white/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wide">Recommended</span>
                 </button>
                 <button
                   onClick={() => { setEmail({ to: "", subject: "", body: "", fromName: email.fromName, fromEmail: email.fromEmail, replyTo: email.replyTo }); setActiveTab("compose"); toast.success("Blank email ready"); }}
@@ -870,7 +870,7 @@ export default function EmailComposerPage() {
                 <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5" disabled={aiWriting}>
                   {aiWriting ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} AI Write
                 </button>
-                <button onClick={handleAiImprove} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={aiImproving}>
+                <button onClick={handleAiImprove} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5" disabled={aiImproving}>
                   {aiImproving ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />} AI Improve
                 </button>
                 <button onClick={handleGenerateSubjectVariants} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={loadingVariants}>
@@ -1207,7 +1207,7 @@ export default function EmailComposerPage() {
                   whileTap={{ scale: 0.97 }}
                   onClick={() => handleSend()}
                   disabled={sending || sendingTest}
-                  className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg bg-brand-accent hover:bg-[#3B82F6] text-white font-semibold shadow-lg shadow-[#2563EB]/25 hover:shadow-[#2563EB]/40 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-semibold shadow-lg shadow-[rgba(212,255,0,0.15)] hover:shadow-[rgba(212,255,0,0.30)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
 >
                   {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                   {sending ? "Sending..." : "Send"}
@@ -1352,7 +1352,7 @@ export default function EmailComposerPage() {
               </div>
               <div className="p-6">
                 <p className="text-sm font-semibold text-gray-900 mb-1">{email.subject || "No subject"}</p>
-                <p className="text-[10px] text-gray-500 mb-4">From: {email.fromName} &lt;{email.fromEmail || email.replyTo}&gt;</p>
+                <p className="text-[10px] text-text-muted mb-4">From: {email.fromName} &lt;{email.fromEmail || email.replyTo}&gt;</p>
                 <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
                   {email.body.replace(/\{first_name\}/g, "John").replace(/\{business_name\}/g, "Bright Smile Dental").replace(/\{industry\}/g, "dental").replace(/\{company\}/g, "ShortStack").replace(/\{city\}/g, "Miami")}
                 </div>
@@ -1361,7 +1361,7 @@ export default function EmailComposerPage() {
                     <p className="text-[10px] text-text-muted mb-2">Attachments ({attachments.length})</p>
                     <div className="flex gap-2">
                       {attachments.map((f, i) => (
-                        <div key={i} className="flex items-center gap-1 px-2 py-1 rounded bg-gray-100 text-[9px] text-gray-500">
+                        <div key={i} className="flex items-center gap-1 px-2 py-1 rounded bg-white/10 text-[9px] text-text-muted">
                           <Paperclip size={8} /> {f}
                         </div>
                       ))}
@@ -1465,7 +1465,7 @@ export default function EmailComposerPage() {
                     }
                     toast.success("Scheduling arrives soon � send now for instant delivery");
                   }}
-                  className="w-full text-xs flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-brand-accent hover:bg-[#3B82F6] text-white font-semibold shadow-lg shadow-[#2563EB]/25 hover:shadow-[#2563EB]/40 transition-all"
+                  className="w-full text-xs flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-semibold shadow-lg shadow-[rgba(212,255,0,0.15)] hover:shadow-[rgba(212,255,0,0.30)] transition-all"
 >
                   <Clock size={12} /> Schedule Email
                 </button>
@@ -1583,7 +1583,7 @@ export default function EmailComposerPage() {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
-                className="w-full text-xs py-2.5 rounded-xl bg-brand-accent hover:bg-[#3B82F6] text-white font-semibold shadow-lg shadow-[#2563EB]/25 hover:shadow-[#2563EB]/40 transition-all"
+                className="w-full text-xs py-2.5 rounded-xl bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-semibold shadow-lg shadow-[rgba(212,255,0,0.15)] hover:shadow-[rgba(212,255,0,0.30)] transition-all"
 >Save Signature</motion.button>
             </motion.div>
             <motion.div
@@ -1596,8 +1596,8 @@ export default function EmailComposerPage() {
               <h4 className="text-xs font-semibold mb-3">Preview</h4>
               <div className="p-4 rounded-lg bg-[#F5F5F5]">
                 <div className="border-t-2 border-indigo-500 pt-3">
-                  <p className="text-sm font-bold text-gray-500 italic">No signature configured</p>
-                  <p className="text-[10px] text-gray-500">Fill in the fields to preview your signature</p>
+                  <p className="text-sm font-bold text-text-muted italic">No signature configured</p>
+                  <p className="text-[10px] text-text-muted">Fill in the fields to preview your signature</p>
                 </div>
               </div>
             </motion.div>

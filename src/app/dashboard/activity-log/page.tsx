@@ -181,8 +181,8 @@ export default function ActivityLogPage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <>
-                  <button onClick={() => setIsLive(!isLive)} className={`flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-lg border ${isLive ? "border-border-subtle bg-black/10 text-text-primary" : "border-border-subtle bg-black/5 text-text-muted"}`}>
-                    <div className={`w-2 h-2 rounded-full ${isLive ? "bg-emerald-300 animate-pulse" : "bg-black/20"}`} />
+                  <button onClick={() => setIsLive(!isLive)} className={`flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-lg border ${isLive ? "border-border-subtle bg-white/10 text-text-primary" : "border-border-subtle bg-white/5 text-text-muted"}`}>
+                    <div className={`w-2 h-2 rounded-full ${isLive ? "bg-emerald-300 animate-pulse" : "bg-white/20"}`} />
                     {isLive ? "Live" : "Paused"}
                   </button>
                   <button
@@ -197,7 +197,7 @@ export default function ActivityLogPage() {
                       a.click();
                       URL.revokeObjectURL(url);
                     }}
-                    className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"><Download size={12} /> Export Log</button>
+                    className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5"><Download size={12} /> Export Log</button>
                 </>
       </div>
     </div>{/* Stats */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">

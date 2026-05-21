@@ -484,7 +484,7 @@ export default function ProjectsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={() => setShowNewBoard(true)}
-                  className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1.5"
                 >
                   <Plus size={12} /> New Board
                 </button>

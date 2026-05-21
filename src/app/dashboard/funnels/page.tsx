@@ -133,7 +133,7 @@ export default function FunnelsPage() {
                 </button>
       </div>
     </div>{/* Tabs + Search */}<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-1 bg-black/[0.04] border border-black/[0.08] rounded-lg p-1">
+              <div className="flex items-center gap-1 bg-white/4 border border-white/8 rounded-lg p-1">
                 {TABS.map((tab) => (
                   <button
                     key={tab.id}
@@ -141,7 +141,7 @@ export default function FunnelsPage() {
                     className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                       filter === tab.id
                         ? "bg-[rgba(59,130,246,0.08)] text-blue-700 border border-[rgba(59,130,246,0.25)]"
-                        : "text-[#6B7280] hover:text-[#374151]"
+                        : "text-text-muted hover:text-text-secondary"
                     }`}
                   >
                     {tab.label}
@@ -161,7 +161,7 @@ export default function FunnelsPage() {
             </div>{/* Grid */}{loading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="h-48 rounded-xl bg-black/[0.04] animate-pulse" />
+                  <div key={i} className="h-48 rounded-xl bg-white/4 animate-pulse" />
                 ))}
               </div>
             ) : filtered.length === 0 ? (
@@ -170,8 +170,8 @@ export default function FunnelsPage() {
                   <Layers size={28} className="text-brand-accent" />
                 </div>
                 <div className="text-center">
-                  <p className="text-[#111827] font-semibold text-lg">No funnels yet</p>
-                  <p className="text-[#6B7280] text-sm mt-1">Create your first funnel to start converting visitors.</p>
+                  <p className="text-text-primary font-semibold text-lg">No funnels yet</p>
+                  <p className="text-text-muted text-sm mt-1">Create your first funnel to start converting visitors.</p>
                 </div>
                 <button
                   onClick={() => router.push("/dashboard/funnels/new")}
@@ -199,9 +199,9 @@ export default function FunnelsPage() {
                       {/* Header */}
                       <div className="flex items-start justify-between gap-3 mb-3">
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-[#111827] font-semibold text-base truncate">{funnel.name}</h3>
+                          <h3 className="text-text-primary font-semibold text-base truncate">{funnel.name}</h3>
                           {funnel.description && (
-                            <p className="text-[#6B7280] text-xs mt-0.5 line-clamp-1">{funnel.description}</p>
+                            <p className="text-text-muted text-xs mt-0.5 line-clamp-1">{funnel.description}</p>
                           )}
                         </div>
                         <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border ${sc.color} shrink-0`}>
@@ -212,22 +212,22 @@ export default function FunnelsPage() {
 
                       {/* Stats */}
                       <div className="grid grid-cols-3 gap-2 mb-4">
-                        <div className="bg-black/[0.04] rounded-lg p-2 text-center">
-                          <div className="text-[#111827] font-bold text-lg leading-none">{funnel.step_count}</div>
-                          <div className="text-[#6B7280] text-[10px] mt-0.5">Steps</div>
+                        <div className="bg-white/4 rounded-lg p-2 text-center">
+                          <div className="text-text-primary font-bold text-lg leading-none">{funnel.step_count}</div>
+                          <div className="text-text-muted text-[10px] mt-0.5">Steps</div>
                         </div>
-                        <div className="bg-black/[0.04] rounded-lg p-2 text-center">
-                          <div className="text-[#111827] font-bold text-lg leading-none flex items-center justify-center gap-0.5">
+                        <div className="bg-white/4 rounded-lg p-2 text-center">
+                          <div className="text-text-primary font-bold text-lg leading-none flex items-center justify-center gap-0.5">
                             <Eye size={12} className="text-text-muted" />
                             {funnel.total_views.toLocaleString()}
                           </div>
-                          <div className="text-[#6B7280] text-[10px] mt-0.5">Views</div>
+                          <div className="text-text-muted text-[10px] mt-0.5">Views</div>
                         </div>
-                        <div className="bg-black/[0.04] rounded-lg p-2 text-center">
-                          <div className={`font-bold text-lg leading-none ${funnel.conversion_rate >= 20 ? "text-emerald-700" : funnel.conversion_rate >= 10 ? "text-amber-700" : "text-[#6B7280]"}`}>
+                        <div className="bg-white/4 rounded-lg p-2 text-center">
+                          <div className={`font-bold text-lg leading-none ${funnel.conversion_rate >= 20 ? "text-emerald-400" : funnel.conversion_rate >= 10 ? "text-amber-400" : "text-text-muted"}`}>
                             {funnel.conversion_rate}%
                           </div>
-                          <div className="text-[#6B7280] text-[10px] mt-0.5">Conv.</div>
+                          <div className="text-text-muted text-[10px] mt-0.5">Conv.</div>
                         </div>
                       </div>
 
@@ -242,14 +242,14 @@ export default function FunnelsPage() {
                         >
                           <button
                             onClick={() => handleDuplicate(funnel)}
-                            className="p-1.5 rounded-md hover:bg-black/[0.06] text-text-muted hover:text-[#374151] transition-colors"
+                            className="p-1.5 rounded-md hover:bg-white/8 text-text-muted hover:text-text-secondary transition-colors"
                             title="Duplicate"
                           >
                             <Copy size={13} />
                           </button>
                           <button
                             onClick={() => router.push(`/dashboard/funnels/${funnel.id}`)}
-                            className="p-1.5 rounded-md hover:bg-black/[0.06] text-text-muted hover:text-[#374151] transition-colors"
+                            className="p-1.5 rounded-md hover:bg-white/8 text-text-muted hover:text-text-secondary transition-colors"
                             title="Edit"
                           >
                             <Pencil size={13} />

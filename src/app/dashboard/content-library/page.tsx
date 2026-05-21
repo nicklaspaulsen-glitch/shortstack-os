@@ -521,7 +521,7 @@ export default function ContentLibraryPage() {
         tabIndex={0}
         onKeyDown={e => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click(); }}
         className={`border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer ${
-          dragging ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "glass border-[rgba(0,0,0,0.10)] hover:border-[rgba(0,0,0,0.15)]"
+          dragging ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "glass border-white/10 hover:border-white/20"
         }`}
       >
         {uploading ? (
@@ -569,7 +569,7 @@ export default function ContentLibraryPage() {
               {collections.map(c => (
                 <div
                   key={c.id}
-                  className={`rounded-xl cursor-pointer hover:border-[rgba(0,0,0,0.15)] transition-all p-3 relative group ${
+                  className={`rounded-xl cursor-pointer hover:border-white/20 transition-all p-3 relative group ${
                     collectionFilter === c.id ? "border border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.05)]" : "glass"
                   }`}
                   onClick={() => setCollectionFilter(collectionFilter === c.id ? "all" : c.id)}
@@ -650,7 +650,7 @@ export default function ContentLibraryPage() {
 
       {/* Bulk Actions */}
       {selectedAssets.size > 0 && (
-        <div className="glass rounded-xl p-4 flex items-center gap-3 border border-[rgba(0,0,0,0.12)]">
+        <div className="glass rounded-xl p-4 flex items-center gap-3 border border-white/15">
           <button onClick={selectAll} className="text-xs text-text-muted hover:text-text-primary flex items-center gap-1">
             <CheckSquare size={14} /> {selectedAssets.size} selected
           </button>
@@ -697,7 +697,7 @@ export default function ContentLibraryPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04, duration: 0.4 }}
               whileHover={{ y: -4, scale: 1.01 }}
-              className={`rounded-xl p-3 group cursor-pointer transition-all hover:border-[rgba(0,0,0,0.15)] relative spotlight-card ${
+              className={`rounded-xl p-3 group cursor-pointer transition-all hover:border-white/20 relative spotlight-card ${
                 selectedAssets.has(asset.id) ? "border border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.05)]" : "glass"
               }`}
               onMouseMove={(e) => {

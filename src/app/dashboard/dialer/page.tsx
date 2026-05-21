@@ -32,7 +32,7 @@ export default function DialerPage() {
       </div>
     </div><div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
               <div className="glass rounded-xl overflow-hidden">
-                <div className="border-b border-[rgba(0,0,0,0.08)]">
+                <div className="border-b border-white/10">
                   <nav className="flex gap-1 overflow-x-auto px-2" aria-label="Dialer tabs">
                     {TABS.map((tab, index) => {
                       const isActive = activeTab === tab;
@@ -48,7 +48,7 @@ export default function DialerPage() {
                           className={`flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
                             isActive
                               ? "border-brand-accent text-brand-accent"
-                              : "border-transparent text-[#6B7280] hover:text-[#374151]"
+                              : "border-transparent text-text-muted hover:text-text-secondary"
                           }`}
                           aria-current={isActive ? "page" : undefined}
                         >

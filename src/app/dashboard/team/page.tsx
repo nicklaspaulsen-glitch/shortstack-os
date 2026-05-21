@@ -561,7 +561,7 @@ export default function TeamPage() {
                     whileHover={{ y: -3 }}
                     onClick={() => setShowCustomRole(true)}
                     className="glass hover:border-[rgba(59,130,246,0.2)] transition-all flex flex-col items-center justify-center gap-2 min-h-[160px] rounded-xl p-4"
-                    style={{ border: "1px dashed rgba(0,0,0,0.12)" }}
+                    style={{ border: "1px dashed rgba(255,255,255,0.12)" }}
 >
                     <div className="w-10 h-10 rounded-xl bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
                       <Settings size={16} className="text-brand-accent" />

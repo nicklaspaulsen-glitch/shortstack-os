@@ -168,7 +168,7 @@ export default function ListingsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={() => setShowForm((v) => !v)}
-                  className="flex items-center gap-2 rounded-lg border border-border-subtle bg-black/5 px-4 py-2 text-sm font-medium text-text-primary transition hover:bg-black/10"
+                  className="flex items-center gap-2 rounded-lg border border-border-subtle bg-white/5 px-4 py-2 text-sm font-medium text-text-primary transition hover:bg-white/10"
                 >
                   <Plus size={14} />
                   New listing
@@ -177,13 +177,13 @@ export default function ListingsPage() {
     </div>{showForm && (
               <div className="rounded-xl border border-border-subtle bg-surface p-5">
                 <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-sm font-semibold text-[#111827]">New service listing</h2>
+                  <h2 className="text-sm font-semibold text-text-primary">New service listing</h2>
                   <button
                     onClick={() => {
                       setShowForm(false);
                       setDraft(EMPTY_DRAFT);
                     }}
-                    className="text-text-muted hover:text-[#111827]"
+                    className="text-text-muted hover:text-text-primary"
                     aria-label="Cancel"
                   >
                     <X size={16} />
@@ -199,7 +199,7 @@ export default function ListingsPage() {
                       value={draft.title}
                       onChange={(e) => setDraft({ ...draft, title: e.target.value })}
                       maxLength={200}
-                      className="w-full rounded-lg border border-border-subtle bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                      className="w-full rounded-lg border border-border-subtle bg-white/4 px-3 py-2 text-sm text-text-primary"
                       placeholder="Short, specific. e.g. Edit a 60-second YouTube Short"
                     />
                   </div>
@@ -216,7 +216,7 @@ export default function ListingsPage() {
                       onChange={(e) => setDraft({ ...draft, description: e.target.value })}
                       maxLength={5000}
                       rows={5}
-                      className="w-full rounded-lg border border-border-subtle bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                      className="w-full rounded-lg border border-border-subtle bg-white/4 px-3 py-2 text-sm text-text-primary"
                       placeholder="What's included, what you need from the buyer, what they'll receive."
                     />
                   </div>
@@ -228,7 +228,7 @@ export default function ListingsPage() {
                       id="svc-cat"
                       value={draft.category}
                       onChange={(e) => setDraft({ ...draft, category: e.target.value })}
-                      className="w-full rounded-lg border border-border-subtle bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                      className="w-full rounded-lg border border-border-subtle bg-white/4 px-3 py-2 text-sm text-text-primary"
                     >
                       {CATEGORIES.map((c) => (
                         <option key={c} value={c} className="capitalize">
@@ -253,7 +253,7 @@ export default function ListingsPage() {
                       onChange={(e) =>
                         setDraft({ ...draft, priceDollars: e.target.value })
                       }
-                      className="w-full rounded-lg border border-border-subtle bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                      className="w-full rounded-lg border border-border-subtle bg-white/4 px-3 py-2 text-sm text-text-primary"
                     />
                   </div>
                   <div>
@@ -272,7 +272,7 @@ export default function ListingsPage() {
                       onChange={(e) =>
                         setDraft({ ...draft, deliveryDays: e.target.value })
                       }
-                      className="w-full rounded-lg border border-border-subtle bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                      className="w-full rounded-lg border border-border-subtle bg-white/4 px-3 py-2 text-sm text-text-primary"
                     />
                   </div>
                   <div>
@@ -288,7 +288,7 @@ export default function ListingsPage() {
                       onChange={(e) =>
                         setDraft({ ...draft, status: e.target.value as "active" | "draft" })
                       }
-                      className="w-full rounded-lg border border-border-subtle bg-[rgba(0,0,0,0.04)] px-3 py-2 text-sm text-[#111827]"
+                      className="w-full rounded-lg border border-border-subtle bg-white/4 px-3 py-2 text-sm text-text-primary"
                     >
                       <option value="active">Active (visible to buyers)</option>
                       <option value="draft">Draft (hidden)</option>
@@ -301,14 +301,14 @@ export default function ListingsPage() {
                       setShowForm(false);
                       setDraft(EMPTY_DRAFT);
                     }}
-                    className="rounded-lg border border-border-subtle px-4 py-2 text-xs text-text-muted hover:text-[#111827]"
+                    className="rounded-lg border border-border-subtle px-4 py-2 text-xs text-text-muted hover:text-text-primary"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleSubmit}
                     disabled={submitting || !draft.title || !draft.description}
-                    className="flex items-center gap-2 rounded-lg bg-brand-accent px-4 py-2 text-xs font-bold text-white hover:bg-brand-accent/80 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex items-center gap-2 rounded-lg bg-brand-accent px-4 py-2 text-xs font-bold text-[#0D1120] hover:bg-brand-accent/80 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {submitting && <Loader2 size={12} className="animate-spin" />}
                     Create listing
@@ -320,7 +320,7 @@ export default function ListingsPage() {
             ) : services.length === 0 ? (
               <div className="glass rounded-xl p-4 flex flex-col items-center justify-center py-12 text-center">
                 <Store size={36} className="mb-3 text-text-muted/30" />
-                <p className="text-sm font-medium text-[#111827]">No listings yet</p>
+                <p className="text-sm font-medium text-text-primary">No listings yet</p>
                 <p className="mt-1 text-xs text-text-muted">
                   Create your first service to start selling.
                 </p>
@@ -331,7 +331,7 @@ export default function ListingsPage() {
                   <div key={svc.id} className="glass rounded-xl p-4 flex items-center justify-between gap-4">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="truncate text-sm font-semibold text-[#111827]">
+                        <h3 className="truncate text-sm font-semibold text-text-primary">
                           {svc.title}
                         </h3>
                         <span
@@ -340,7 +340,7 @@ export default function ListingsPage() {
                               ? "bg-emerald-500/10 text-emerald-400"
                               : svc.status === "paused"
                                 ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
-                                : "bg-[rgba(0,0,0,0.06)] text-text-muted"
+                                : "bg-white/8 text-text-muted"
                           }`}
                         >
                           {svc.status}
@@ -359,7 +359,7 @@ export default function ListingsPage() {
                       {(svc.status === "active" || svc.status === "paused") && (
                         <button
                           onClick={() => togglePause(svc)}
-                          className="rounded-lg border border-border-subtle p-2 text-text-muted hover:text-[#111827]"
+                          className="rounded-lg border border-border-subtle p-2 text-text-muted hover:text-text-primary"
                           title={svc.status === "active" ? "Pause" : "Activate"}
                         >
                           {svc.status === "active" ? (

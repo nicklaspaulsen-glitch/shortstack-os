@@ -227,7 +227,7 @@ export default function WebhooksPage() {
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Webhooks</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <button onClick={() => { setShowCreate(true); setTab("Endpoints"); }} className="px-3 py-1.5 rounded-lg bg-black/8 border border-black/15 text-text-primary text-xs font-semibold hover:bg-black/12 transition-all flex items-center gap-1.5">
+        <button onClick={() => { setShowCreate(true); setTab("Endpoints"); }} className="px-3 py-1.5 rounded-lg bg-white/8 border border-white/15 text-text-primary text-xs font-semibold hover:bg-white/12 transition-all flex items-center gap-1.5">
                   <Plus size={12} /> New Webhook
                 </button>
       </div>

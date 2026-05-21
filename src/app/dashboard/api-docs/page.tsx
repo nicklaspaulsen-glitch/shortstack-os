@@ -392,7 +392,7 @@ export default function ApiDocsPage() {
                           </button>
                         </div>
                       </div>
-                      <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-green-400 overflow-x-auto max-h-64 overflow-y-auto">
+                      <pre className="bg-white/4 rounded-lg p-3 text-[10px] font-mono text-green-400 overflow-x-auto max-h-64 overflow-y-auto">
                         {explorerResponse}
                       </pre>
                     </div>
@@ -424,7 +424,7 @@ export default function ApiDocsPage() {
                   return (
                     <motion.div key={cat.name} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 }} className="glass rounded-xl overflow-hidden p-0">
                       <button onClick={() => toggleSection(cat.name)}
-                        className="w-full flex items-center gap-2.5 p-3 hover:bg-[rgba(0,0,0,0.03)] transition-colors">
+                        className="w-full flex items-center gap-2.5 p-3 hover:bg-white/4 transition-colors">
                         {isOpen ? <ChevronDown size={13} className="text-text-muted" /> : <ChevronRight size={13} className="text-text-muted" />}
                         {cat.icon}
                         <span className="text-xs font-semibold">{cat.name}</span>
@@ -438,7 +438,7 @@ export default function ApiDocsPage() {
                             return (
                               <div key={epKey} className="border-b border-border-subtle last:border-b-0">
                                 <button onClick={() => toggleEndpoint(epKey)}
-                                  className="w-full flex items-center gap-2.5 px-4 py-2.5 hover:bg-[rgba(0,0,0,0.03)] transition-colors text-left">
+                                  className="w-full flex items-center gap-2.5 px-4 py-2.5 hover:bg-white/4 transition-colors text-left">
                                   <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border shrink-0 ${METHOD_STYLES[ep.method]}`}>{ep.method}</span>
                                   <span className="text-xs font-mono text-text-primary truncate">{ep.path}</span>
                                   {ep.auth && <Lock size={9} className="text-text-muted shrink-0" />}
@@ -456,13 +456,13 @@ export default function ApiDocsPage() {
                                     {ep.body && (
                                       <div>
                                         <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">Request Body</p>
-                                        <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-green-400 overflow-x-auto">{ep.body}</pre>
+                                        <pre className="bg-white/4 rounded-lg p-2.5 text-[10px] font-mono text-green-400 overflow-x-auto">{ep.body}</pre>
                                       </div>
                                     )}
                                     {ep.response && (
                                       <div>
                                         <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">Response</p>
-                                        <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-brand-accent overflow-x-auto">{ep.response}</pre>
+                                        <pre className="bg-white/4 rounded-lg p-2.5 text-[10px] font-mono text-brand-accent overflow-x-auto">{ep.response}</pre>
                                       </div>
                                     )}
                                   </div>
@@ -487,12 +487,12 @@ export default function ApiDocsPage() {
                     <div className="p-3 rounded-lg border border-border-subtle">
                       <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Key size={12} className="text-brand-accent" /> API Key Authentication</h3>
                       <p className="text-[10px] text-text-muted mb-2">Include your API key in the Authorization header with every request.</p>
-                      <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-green-400">Authorization: Bearer sk_live_your_api_key_here</pre>
+                      <pre className="bg-white/4 rounded-lg p-2.5 text-[10px] font-mono text-green-400">Authorization: Bearer sk_live_your_api_key_here</pre>
                     </div>
                     <div className="p-3 rounded-lg border border-border-subtle">
                       <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Lock size={12} className="text-brand-accent" /> Session Cookie (Browser)</h3>
                       <p className="text-[10px] text-text-muted mb-2">For browser-based apps, use Supabase session cookies. The cookie is automatically set after login.</p>
-                      <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-green-400">Cookie: sb-access-token=eyJhbG...; sb-refresh-token=...</pre>
+                      <pre className="bg-white/4 rounded-lg p-2.5 text-[10px] font-mono text-green-400">Cookie: sb-access-token=eyJhbG...; sb-refresh-token=...</pre>
                     </div>
                     <div className="p-3 rounded-lg border border-border-subtle bg-[rgba(59,130,246,0.04)]">
                       <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><AlertTriangle size={12} className="text-brand-accent" /> Security Best Practices</h3>
@@ -518,7 +518,7 @@ export default function ApiDocsPage() {
 
                   <div className="p-3 rounded-lg border border-border-subtle mb-4">
                     <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1.5">Response Headers</p>
-                    <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-cyan-400">{`X-RateLimit-Limit: 60
+                    <pre className="bg-white/4 rounded-lg p-2.5 text-[10px] font-mono text-cyan-400">{`X-RateLimit-Limit: 60
 X-RateLimit-Remaining: 42
 X-RateLimit-Reset: 1712000000
 Retry-After: 30`}</pre>
@@ -571,7 +571,7 @@ Retry-After: 30`}</pre>
                     {/* List clients example */}
                     <div>
                       <p className="text-xs font-medium mb-1.5">List all clients</p>
-                      <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-green-400 overflow-x-auto">
+                      <pre className="bg-white/4 rounded-lg p-3 text-[10px] font-mono text-green-400 overflow-x-auto">
                         {codeExampleLang === "curl" && `curl -X GET https://api.shortstack.io/api/clients \\
   -H "Authorization: Bearer sk_live_your_key" \\
   -H "Content-Type: application/json"`}
@@ -601,7 +601,7 @@ print(data['clients'])`}
                     {/* Generate content example */}
                     <div>
                       <p className="text-xs font-medium mb-1.5">Generate content with AI</p>
-                      <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-green-400 overflow-x-auto">
+                      <pre className="bg-white/4 rounded-lg p-3 text-[10px] font-mono text-green-400 overflow-x-auto">
                         {codeExampleLang === "curl" && `curl -X POST https://api.shortstack.io/api/content/generate \\
   -H "Authorization: Bearer sk_live_your_key" \\
   -H "Content-Type: application/json" \\
@@ -650,7 +650,7 @@ print(data['content'])`}
                   </div>
                   <p className="text-[10px] text-text-muted mb-3">All errors return a JSON body with an error message and optional details.</p>
 
-                  <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-red-400 mb-4">{`{
+                  <pre className="bg-white/4 rounded-lg p-3 text-[10px] font-mono text-red-400 mb-4">{`{
   "error": "Validation failed",
   "code": 422,
   "details": {
@@ -711,7 +711,7 @@ print(data['content'])`}
 
                   <div>
                     <p className="text-xs font-medium mb-2">Webhook Payload Format</p>
-                    <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 text-[10px] font-mono text-green-400">{`{
+                    <pre className="bg-white/4 rounded-lg p-3 text-[10px] font-mono text-green-400">{`{
   "event": "lead.created",
   "timestamp": "2026-04-14T10:30:00Z",
   "data": {
@@ -729,7 +729,7 @@ print(data['content'])`}
                       <Shield size={11} className="text-brand-accent" /> Signature Verification
                     </h3>
                     <p className="text-[10px] text-text-muted mb-2">Verify webhook authenticity using the X-Webhook-Signature header.</p>
-                    <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2.5 text-[10px] font-mono text-cyan-400">{`const crypto = require('crypto');
+                    <pre className="bg-white/4 rounded-lg p-2.5 text-[10px] font-mono text-cyan-400">{`const crypto = require('crypto');
 const signature = req.headers['x-webhook-signature'];
 const expected = crypto.createHmac('sha256', webhookSecret)
   .update(JSON.stringify(req.body))
@@ -788,7 +788,7 @@ const valid = signature === expected;`}</pre>
                             </button>
                           </div>
                         </div>
-                        <pre className="bg-[rgba(0,0,0,0.04)] rounded-lg p-2 mt-2 text-[9px] font-mono text-cyan-400">
+                        <pre className="bg-white/4 rounded-lg p-2 mt-2 text-[9px] font-mono text-cyan-400">
                           {sdk.lang === "js" && "npm install @shortstack/sdk"}
                           {sdk.lang === "py" && "pip install shortstack-sdk"}
                           {sdk.lang === "go" && "go get github.com/shortstack/sdk-go"}
@@ -810,7 +810,7 @@ const valid = signature === expected;`}</pre>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-semibold text-green-400 mb-1">API key created successfully</p>
                         <p className="text-[10px] text-text-muted mb-2">Copy your key now -- you will not be able to see it again after closing this banner.</p>
-                        <div className="flex items-center gap-2 bg-[rgba(0,0,0,0.04)] rounded-lg px-3 py-2 font-mono text-[11px] text-text-primary">
+                        <div className="flex items-center gap-2 bg-white/4 rounded-lg px-3 py-2 font-mono text-[11px] text-text-primary">
                           <span className="truncate flex-1">{justCreatedKey}</span>
                           <button onClick={() => copyText(justCreatedKey, "new-key")}
                             className="text-text-muted hover:text-brand-accent transition-colors flex-shrink-0">
@@ -1124,7 +1124,7 @@ const valid = signature === expected;`}</pre>
                     <Terminal size={13} className="text-brand-accent" />
                     <h3 className="text-xs font-semibold">Quick Start</h3>
                   </div>
-                  <div className="bg-[rgba(0,0,0,0.04)] rounded-lg p-3 font-mono text-[10px] text-text-muted leading-relaxed overflow-x-auto">
+                  <div className="bg-white/4 rounded-lg p-3 font-mono text-[10px] text-text-muted leading-relaxed overflow-x-auto">
                     <div className="text-green-400/60"># Authenticate with your API key</div>
                     <div><span className="text-cyan-400">curl</span> -X GET https://api.shortstack.os/v2/clients \</div>
                     <div className="pl-4">-H <span className="text-brand-accent">&quot;Authorization: Bearer sk_live_your_key_here&quot;</span> \</div>

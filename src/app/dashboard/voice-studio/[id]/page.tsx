@@ -492,7 +492,7 @@ export default function VoiceCloneDetailPage() {
                                   </div>
                                 )}
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-[#374151] leading-snug">{r.text_preview}</p>
+                                  <p className="text-text-secondary leading-snug">{r.text_preview}</p>
                                   <p className="mt-1 text-[10px] text-text-muted">
                                     {new Date(r.rendered_at).toLocaleString(undefined, {
                                       dateStyle: "short",

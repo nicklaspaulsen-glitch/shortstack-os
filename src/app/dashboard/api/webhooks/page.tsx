@@ -307,7 +307,7 @@ export default function WebhooksPage() {
                       <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">
                         Signing secret
                       </p>
-                      <div className="flex items-center gap-2 bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)] rounded-lg px-3 py-2 font-mono text-[10px]">
+                      <div className="flex items-center gap-2 bg-white/4 border border-white/8 rounded-lg px-3 py-2 font-mono text-[10px]">
                         <span className="truncate flex-1">
                           {revealedSecrets[w.id]
                             ? w.secret
@@ -342,7 +342,7 @@ export default function WebhooksPage() {
                 Every delivery includes <code className="text-brand-accent">x-shortstack-signature</code> — HMAC-SHA256 of
                 the raw body using your subscription secret.
               </p>
-              <pre className="bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.06)] rounded-lg p-3 text-[10px] font-mono text-brand-accent overflow-x-auto">
+              <pre className="bg-white/4 border border-white/8 rounded-lg p-3 text-[10px] font-mono text-brand-accent overflow-x-auto">
       {`import crypto from "crypto";
 
 const signature = req.headers["x-shortstack-signature"];

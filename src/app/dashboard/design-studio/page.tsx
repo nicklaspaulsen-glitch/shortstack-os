@@ -144,7 +144,7 @@ export default function DesignStudioPage() {
 
                         >
                           <div
-                            className="border border-black/15 bg-black/5 rounded group-hover:border-brand-accent/50 transition-colors"
+                            className="border border-white/15 bg-white/5 rounded group-hover:border-brand-accent/50 transition-colors"
                             style={{
                               width: 48,
                               height: Math.round(48 * (preset.height / preset.width)),
@@ -208,14 +208,14 @@ function RecentDesigns() {
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2 text-gray-500 text-sm py-4">
+      <div className="flex items-center gap-2 text-text-muted text-sm py-4">
         <Loader2 size={16} className="animate-spin" /> Loading�
       </div>
     );
   }
 
   if (designs.length === 0) {
-    return <p className="text-sm text-gray-600">No designs yet. Create one above.</p>;
+    return <p className="text-sm text-text-muted">No designs yet. Create one above.</p>;
   }
 
   return (

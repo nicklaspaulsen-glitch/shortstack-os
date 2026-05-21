@@ -134,7 +134,7 @@ export default function MonitorPage() {
                   <span className="text-xs text-text-muted tabular-nums">Next refresh in {countdown}s</span>
                   <button
                     onClick={load}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.08)] text-[#374151] text-sm transition-colors border border-[rgba(0,0,0,0.08)]"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/8 hover:bg-white/10 text-text-secondary text-sm transition-colors border border-white/10"
                   >
                     <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
                     Refresh now
@@ -174,9 +174,9 @@ export default function MonitorPage() {
               <div className="space-y-4">
                 {Array.from({ length: 3 }).map((_, i) => (
                   <div key={i} className="glass rounded-xl p-5 animate-pulse">
-                    <div className="h-4 bg-[rgba(0,0,0,0.06)] rounded w-1/4 mb-4" />
+                    <div className="h-4 bg-white/8 rounded w-1/4 mb-4" />
                     <div className="space-y-2">
-                      {Array.from({ length: 3 }).map((_, j) => <div key={j} className="h-10 bg-[rgba(0,0,0,0.04)] rounded" />)}
+                      {Array.from({ length: 3 }).map((_, j) => <div key={j} className="h-10 bg-white/4 rounded" />)}
                     </div>
                   </div>
                 ))}
@@ -196,11 +196,11 @@ export default function MonitorPage() {
                     transition={{ duration: 0.35, delay: ci * 0.06 }}
                     className="glass rounded-xl overflow-hidden"
                   >
-                    <div className="px-5 py-3 border-b border-[rgba(0,0,0,0.06)] flex items-center justify-between">
-                      <span className="text-sm font-semibold text-[#111827]">{category}</span>
+                    <div className="px-5 py-3 border-b border-white/8 flex items-center justify-between">
+                      <span className="text-sm font-semibold text-text-primary">{category}</span>
                       <span className="text-xs text-text-muted">{svcs.length} service{svcs.length !== 1 ? "s" : ""}</span>
                     </div>
-                    <div className="divide-y divide-[rgba(0,0,0,0.06)]">
+                    <div className="divide-y divide-white/8">
                       {svcs.map((svc, si) => (
                         <motion.div
                           key={svc.id}
@@ -211,11 +211,11 @@ export default function MonitorPage() {
                         >
                           <StatusDot status={svc.computedStatus} />
                           <StatusIcon status={svc.computedStatus} />
-                          <span className="flex-1 text-sm text-[#374151]">{svc.integration_name}</span>
+                          <span className="flex-1 text-sm text-text-secondary">{svc.integration_name}</span>
                           <div className="flex items-center gap-4 text-xs text-text-muted">
                             {svc.response_time_ms != null && <span>{svc.response_time_ms}ms</span>}
                             {svc.uptime_percentage != null && (
-                              <span className="text-[#6B7280]">{Number(svc.uptime_percentage).toFixed(1)}% uptime</span>
+                              <span className="text-text-muted">{Number(svc.uptime_percentage).toFixed(1)}% uptime</span>
                             )}
                             <span>Checked {timeAgo(svc.last_check_at)}</span>
                           </div>

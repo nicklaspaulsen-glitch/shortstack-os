@@ -291,7 +291,7 @@ export default function BrowserTaskDetailPage() {
               <img
                 src={r2Url(lastRec.screenshot_r2_key) ?? ""}
                 alt={`Step ${lastRec.step + 1} screenshot`}
-                className="rounded-md border border-black/[0.08]"
+                className="rounded-md border border-white/10"
               />
             ) : (
               <div className="rounded-md border border-border-subtle bg-surface-2 p-4 text-xs text-text-muted">
@@ -346,7 +346,7 @@ export default function BrowserTaskDetailPage() {
         {recordings.length === 0 ? (
           <div className="px-5 py-8 text-center text-sm text-text-muted">No steps yet.</div>
         ) : (
-          <ul className="divide-y divide-black/[0.04]">
+          <ul className="divide-y divide-white/8">
             {recordings.map((r) => {
               const url = r2Url(r.screenshot_r2_key);
               return (
@@ -358,7 +358,7 @@ export default function BrowserTaskDetailPage() {
                         <img
                           src={url}
                           alt={`Step ${r.step + 1}`}
-                          className="rounded-md border border-black/[0.08]"
+                          className="rounded-md border border-white/10"
                         />
                       ) : (
                         <div className="rounded-md border border-border-subtle bg-surface-2 p-3 text-xs text-text-muted">
@@ -382,7 +382,7 @@ export default function BrowserTaskDetailPage() {
                           step {String(r.step + 1).padStart(2, "0")}
                         </span>
                         <span>·</span>
-                        <span className="rounded bg-black/[0.06] px-1.5 py-0.5 font-mono text-[10px]">
+                        <span className="rounded bg-white/8 px-1.5 py-0.5 font-mono text-[10px]">
                           {r.tool_name}
                         </span>
                         <span>·</span>

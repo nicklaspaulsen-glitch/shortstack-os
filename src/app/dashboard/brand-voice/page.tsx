@@ -299,7 +299,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Brand Voice Manager</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <button onClick={() => setShowNewProfile(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1">
+        <button onClick={() => setShowNewProfile(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1">
                   <Plus size={14} /> New Profile
                 </button>
       </div>
@@ -334,7 +334,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
               <motion.div
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-xl p-4" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.12)" }}
+                className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)" }}
               >
                 <div className="flex items-center gap-2 mb-3">
                   <Users size={16} className="text-brand-accent" />
@@ -383,8 +383,8 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                       whileHover={{ y: -2, scale: 1.01 }}
                       onClick={() => setSelectedProfile(p.id)}
                       onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
-                      style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.08)" }}
-                      className={`rounded-xl p-3 cursor-pointer transition-all spotlight-card ${p.id === selectedProfile ? "!border-[rgba(59,130,246,0.35)] bg-[rgba(59,130,246,0.06)]" : "hover:border-[rgba(0,0,0,0.12)]"}`}
+                      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+                      className={`rounded-xl p-3 cursor-pointer transition-all spotlight-card ${p.id === selectedProfile ? "!border-[rgba(59,130,246,0.35)] bg-[rgba(59,130,246,0.06)]" : "hover:border-[rgba(255,255,255,0.12)]"}`}
                     >
                       <div className="flex items-center justify-between">
                         <div>
@@ -393,7 +393,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         </div>
                         <button
                           onClick={e => { e.stopPropagation(); toggleActive(p.id); }}
-                          className="text-text-muted hover:text-[#374151] transition-colors"
+                          className="text-text-muted hover:text-text-secondary transition-colors"
                         >
                           {p.active
                             ? <ToggleRight size={20} className="text-green-400" />
@@ -402,7 +402,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         </button>
                       </div>
                       {!p.active && (
-                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-text-muted mt-1 inline-block">Inactive</span>
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/4 text-text-muted mt-1 inline-block">Inactive</span>
                       )}
                     </motion.div>
                   ))}
@@ -414,7 +414,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                 {profile ? (
                   <>
                     {/* Tabs */}
-                    <div className="flex gap-1 bg-[rgba(0,0,0,0.05)] rounded-lg p-1">
+                    <div className="flex gap-1 bg-white/5 rounded-lg p-1">
                       {TABS.map(t => (
                         <button
                           key={t.key}
@@ -441,7 +441,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                             <div className="relative">
                               <button
                                 onClick={() => setShowPresetMenu(!showPresetMenu)}
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-xs hover:border-[rgba(59,130,246,0.25)] transition-colors"
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white/4 border border-border-subtle text-xs hover:border-[rgba(59,130,246,0.25)] transition-colors"
                               >
                                 {VOICE_PRESETS.find(p => p.key === profile.preset)?.icon}
                                 <span className="capitalize">{profile.preset}</span>
@@ -453,7 +453,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                     <button
                                       key={p.key}
                                       onClick={() => applyPreset(p.key)}
-                                      className={`w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-[rgba(0,0,0,0.04)] transition-colors ${
+                                      className={`w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-white/4 transition-colors ${
                                         profile.preset === p.key ? "text-brand-accent" : "text-text-primary"
                                       }`}
                                     >
@@ -473,7 +473,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                 className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${
                                   profile.preset === p.key
                                     ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]"
-                                    : "bg-[rgba(0,0,0,0.04)] text-text-muted hover:text-[#374151] border border-[rgba(0,0,0,0.08)]"
+                                    : "bg-white/4 text-text-muted hover:text-text-secondary border border-border-subtle"
                                 }`}
                               >
                                 {p.icon} {p.label}
@@ -527,10 +527,10 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                           </div>
                           {profile.guidelines ? (
                             <div className="relative">
-                              <pre className="text-xs text-text-muted whitespace-pre-wrap bg-[rgba(0,0,0,0.05)] rounded-lg p-3 max-h-60 overflow-y-auto">{profile.guidelines}</pre>
+                              <pre className="text-xs text-text-muted whitespace-pre-wrap bg-white/5 rounded-lg p-3 max-h-60 overflow-y-auto">{profile.guidelines}</pre>
                               <button
                                 onClick={() => { navigator.clipboard.writeText(profile.guidelines); toast.success("Copied to clipboard"); }}
-                                className="absolute top-2 right-2 p-1 rounded bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.10)] transition-colors"
+                                className="absolute top-2 right-2 p-1 rounded bg-white/8 hover:bg-white/10 transition-colors"
                               >
                                 <Copy size={12} />
                               </button>
@@ -615,7 +615,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                           <p className="text-[10px] text-text-muted mb-3">Paste example content that represents this brand&apos;s voice</p>
                           <div className="space-y-2 mb-3">
                             {profile.samples.map((s, i) => (
-                              <div key={i} className="flex items-start gap-2 p-2 rounded bg-[rgba(0,0,0,0.04)] group">
+                              <div key={i} className="flex items-start gap-2 p-2 rounded bg-white/4 group">
                                 <Eye size={12} className="text-text-muted mt-0.5 shrink-0" />
                                 <p className="text-xs text-text-muted flex-1">&quot;{s}&quot;</p>
                                 <button onClick={() => removeItem("samples", i)} className="text-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
@@ -748,7 +748,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                             {profile.bannedWords.map((t, i) => (
                               <span key={i} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/10 text-red-400 text-[10px] group">
                                 {t}
-                                <button onClick={() => removeItem("bannedWords", i)} className="opacity-0 group-hover:opacity-100 transition-all hover:text-[#374151]">
+                                <button onClick={() => removeItem("bannedWords", i)} className="opacity-0 group-hover:opacity-100 transition-all hover:text-text-secondary">
                                   <X size={10} />
                                 </button>
                               </span>
@@ -842,7 +842,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                 {checkerResult.score}/100
                               </div>
                             </div>
-                            <div className="w-full bg-[rgba(0,0,0,0.08)] rounded-full h-2 mb-4">
+                            <div className="w-full bg-white/10 rounded-full h-2 mb-4">
                               <div
                                 className={`h-2 rounded-full transition-all ${
                                   checkerResult.score >= 80 ? "bg-green-400" :

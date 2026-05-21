@@ -139,7 +139,7 @@ function SignalBreakdownPills({
       {entries.map((e) => (
         <span
           key={e.k}
-          className="text-[9px] px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)] border border-border-subtle text-text-muted"
+          className="text-[9px] px-1.5 py-0.5 rounded bg-white/4 border border-border-subtle text-text-muted"
         >
           <span className="text-text-primary font-semibold">{e.v}</span>{" "}
           <span className="opacity-60">{e.k}</span>
@@ -253,7 +253,7 @@ function ScoreDetailModal({
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded hover:bg-[rgba(0,0,0,0.04)] text-text-muted hover:text-text-primary"
+            className="p-1 rounded hover:bg-white/4 text-text-muted hover:text-text-primary"
             aria-label="Close score detail"
           >
             <X size={14} />

@@ -719,7 +719,7 @@ export default function AIVideoPage() {
           {nextTierLabel && (
             <Link
               href="/dashboard/upgrade"
-              className="flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-[#3B82F6] py-1.5 rounded-lg border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] transition-all"
+              className="flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-brand-accent/80 py-1.5 rounded-lg border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] transition-all"
             >
               <Lock size={10} /> Upgrade to unlock longer videos ({nextTierLabel})
             </Link>
@@ -1707,7 +1707,7 @@ export default function AIVideoPage() {
                 {nextTierLabel && (
                   <Link
                     href="/dashboard/upgrade"
-                    className="col-span-full flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-[#3B82F6] py-1.5 rounded-lg border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] transition-all"
+                    className="col-span-full flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-brand-accent/80 py-1.5 rounded-lg border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] transition-all"
                   >
                     <Lock size={10} /> Upgrade to unlock longer videos ({nextTierLabel})
                   </Link>
@@ -1881,7 +1881,7 @@ export default function AIVideoPage() {
                                   await extractBestFrame(result.id, result.url, result.prompt);
                                 }
                               }}
-                              className="flex items-center gap-1 hover:text-[#3B82F6] transition-colors disabled:opacity-40"
+                              className="flex items-center gap-1 hover:text-brand-accent/80 transition-colors disabled:opacity-40"
                             >
                               {thumbnailCapturingId === result.id
                                 ? <Loader2 size={10} className="animate-spin" />

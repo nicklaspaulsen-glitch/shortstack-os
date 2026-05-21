@@ -167,7 +167,7 @@ export default function NewFunnelPage() {
                 { n: 2, label: "Review & Create" },
               ].map((s, idx) => (
                 <div key={s.n} className="flex items-center gap-2">
-                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${step === s.n ? "bg-[rgba(59,130,246,0.08)] text-blue-700 border border-[rgba(59,130,246,0.25)]" : step > s.n ? "text-emerald-700" : "text-text-muted"}`}>
+                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${step === s.n ? "bg-[rgba(59,130,246,0.08)] text-blue-400 border border-[rgba(59,130,246,0.25)]" : step > s.n ? "text-emerald-400" : "text-text-muted"}`}>
                     {step > s.n ? <Check size={14} /> : <span className="w-4 h-4 rounded-full bg-current/20 flex items-center justify-center text-xs">{s.n}</span>}
                     {s.label}
                   </div>
@@ -178,23 +178,23 @@ export default function NewFunnelPage() {
               <div className="space-y-6">
                 {/* Name */}
                 <div className="glass rounded-xl p-5 space-y-4">
-                  <h2 className="text-[#111827] font-semibold text-base">Funnel Details</h2>
+                  <h2 className="text-text-primary font-semibold text-base">Funnel Details</h2>
                   <div>
-                    <label className="block text-xs text-[#6B7280] font-medium mb-1.5">Funnel Name *</label>
+                    <label className="block text-xs text-text-muted font-medium mb-1.5">Funnel Name *</label>
                     <input
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Lead Gen — Free Audit"
-                      className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(59,130,246,0.25)]"
+                      className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-text-primary text-sm placeholder-text-muted outline-none focus:border-[rgba(59,130,246,0.25)]"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-[#6B7280] font-medium mb-1.5">Description (optional)</label>
+                    <label className="block text-xs text-text-muted font-medium mb-1.5">Description (optional)</label>
                     <input
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       placeholder="Short description of the funnel goal"
-                      className="w-full px-3 py-2.5 rounded-lg bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm placeholder-[#9CA3AF] outline-none focus:border-[rgba(59,130,246,0.25)]"
+                      className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-text-primary text-sm placeholder-text-muted outline-none focus:border-[rgba(59,130,246,0.25)]"
                     />
                   </div>
                 </div>
@@ -203,7 +203,7 @@ export default function NewFunnelPage() {
                 <div className="glass rounded-xl p-5 space-y-4">
                   <div className="flex items-center gap-2">
                     <Sparkles size={15} className="text-purple-600" />
-                    <h2 className="text-[#111827] font-semibold text-base">Choose a Template</h2>
+                    <h2 className="text-text-primary font-semibold text-base">Choose a Template</h2>
                     <span className="text-text-muted text-xs ml-1">(optional)</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -214,11 +214,11 @@ export default function NewFunnelPage() {
                     >
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-8 h-8 rounded-md bg-black/[0.04] border border-black/[0.08] flex items-center justify-center">
-                          <Plus size={15} className="text-[#6B7280]" />
+                          <Plus size={15} className="text-text-muted" />
                         </div>
-                        <span className="text-[#111827] text-sm font-semibold">Blank</span>
+                        <span className="text-text-primary text-sm font-semibold">Blank</span>
                       </div>
-                      <p className="text-[#6B7280] text-xs">Start with an empty canvas.</p>
+                      <p className="text-text-muted text-xs">Start with an empty canvas.</p>
                     </button>
 
                     {TEMPLATES.map((tpl) => (
@@ -231,12 +231,12 @@ export default function NewFunnelPage() {
                           <div className={`w-8 h-8 rounded-md border flex items-center justify-center ${tpl.color}`}>
                             {tpl.icon}
                           </div>
-                          <span className="text-[#111827] text-sm font-semibold">{tpl.name}</span>
+                          <span className="text-text-primary text-sm font-semibold">{tpl.name}</span>
                         </div>
-                        <p className="text-[#6B7280] text-xs">{tpl.description}</p>
+                        <p className="text-text-muted text-xs">{tpl.description}</p>
                         <div className="flex flex-wrap gap-1 mt-2">
                           {tpl.steps.map((s) => (
-                            <span key={s.title} className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${STEP_TYPE_COLORS[s.step_type] ?? "bg-zinc-500/10 text-[#6B7280] border-zinc-500/20"}`}>
+                            <span key={s.title} className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${STEP_TYPE_COLORS[s.step_type] ?? "bg-zinc-500/10 text-text-muted border-zinc-500/20"}`}>
                               {STEP_TYPE_LABELS[s.step_type] ?? s.step_type}
                             </span>
                           ))}
@@ -262,28 +262,28 @@ export default function NewFunnelPage() {
             )}{step === 2 && (
               <div className="space-y-6">
                 <div className="glass rounded-xl p-5 space-y-4">
-                  <h2 className="text-[#111827] font-semibold text-base">Funnel Summary</h2>
+                  <h2 className="text-text-primary font-semibold text-base">Funnel Summary</h2>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <span className="text-[#6B7280] text-xs">Name</span>
-                      <p className="text-[#111827] font-medium mt-0.5">{name}</p>
+                      <span className="text-text-muted text-xs">Name</span>
+                      <p className="text-text-primary font-medium mt-0.5">{name}</p>
                     </div>
                     {description && (
                       <div>
-                        <span className="text-[#6B7280] text-xs">Description</span>
-                        <p className="text-[#111827] font-medium mt-0.5">{description}</p>
+                        <span className="text-text-muted text-xs">Description</span>
+                        <p className="text-text-primary font-medium mt-0.5">{description}</p>
                       </div>
                     )}
                     <div>
-                      <span className="text-[#6B7280] text-xs">Template</span>
-                      <p className="text-[#111827] font-medium mt-0.5">{selectedTemplate?.name ?? "Blank"}</p>
+                      <span className="text-text-muted text-xs">Template</span>
+                      <p className="text-text-primary font-medium mt-0.5">{selectedTemplate?.name ?? "Blank"}</p>
                     </div>
                   </div>
                 </div>
 
                 {selectedTemplate && (
                   <div className="glass rounded-xl p-5 space-y-3">
-                    <h2 className="text-[#111827] font-semibold text-base">Steps Preview</h2>
+                    <h2 className="text-text-primary font-semibold text-base">Steps Preview</h2>
                     <div className="flex items-center gap-2 overflow-x-auto pb-2">
                       {selectedTemplate.steps.map((s, idx) => (
                         <div key={idx} className="flex items-center gap-2 shrink-0">
@@ -291,8 +291,8 @@ export default function NewFunnelPage() {
                             <div className="text-text-muted text-[10px] font-bold uppercase tracking-widest mb-1">
                               Step {idx + 1}
                             </div>
-                            <div className="text-[#111827] text-sm font-medium mb-1.5">{s.title}</div>
-                            <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${STEP_TYPE_COLORS[s.step_type] ?? "bg-zinc-500/10 text-[#6B7280] border-zinc-500/20"}`}>
+                            <div className="text-text-primary text-sm font-medium mb-1.5">{s.title}</div>
+                            <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${STEP_TYPE_COLORS[s.step_type] ?? "bg-zinc-500/10 text-text-muted border-zinc-500/20"}`}>
                               {STEP_TYPE_LABELS[s.step_type] ?? s.step_type}
                             </span>
                           </div>
@@ -308,7 +308,7 @@ export default function NewFunnelPage() {
                 <div className="flex items-center justify-between">
                   <button
                     onClick={() => setStep(1)}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-black/[0.08] text-[#6B7280] hover:text-[#111827] text-sm font-medium transition-colors"
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-white/10 text-text-muted hover:text-text-primary text-sm font-medium transition-colors"
                   >
                     <ChevronLeft size={15} />
                     Back

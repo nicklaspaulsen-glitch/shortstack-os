@@ -636,10 +636,10 @@ export default function NewsletterPage() {
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             {advancedMode && (
               <>
-                <button onClick={() => setActiveTab("preview")} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
+                <button onClick={() => setActiveTab("preview")} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5">
                   <Eye size={12} /> Preview
                 </button>
-                <button onClick={handleSend} disabled={sending} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
+                <button onClick={handleSend} disabled={sending} className="px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1.5">
                   {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                   {sendMode === "schedule" ? "Schedule" : "Send"}
                 </button>
@@ -1148,7 +1148,7 @@ export default function NewsletterPage() {
               </div>
 
               {/* Email header bar */}
-              <div className="p-4 border-b" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
+              <div className="p-4 border-b" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
                 <p className="text-sm font-semibold text-text-primary mb-1">{subject || "No subject"}</p>
                 <p className="text-[10px] text-text-primary/40">From: ShortStack &lt;hello@shortstack.work&gt;</p>
                 <p className="text-[10px] text-text-primary/40">To: {selectedList?.label} ({selectedList?.count} recipients)</p>

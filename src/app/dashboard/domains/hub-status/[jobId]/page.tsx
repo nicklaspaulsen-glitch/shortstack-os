@@ -294,7 +294,7 @@ function ServiceDoneDetail({
           <span className="text-[11px] font-mono text-brand-accent">{sendAddress}</span>
           <button
             onClick={() => copyToClipboard(sendAddress, "Address")}
-            className="text-[10px] p-1.5 rounded border border-border-subtle hover:bg-black/5"
+            className="text-[10px] p-1.5 rounded border border-border-subtle hover:bg-white/5"
           >
             <Copy size={10} />
           </button>
@@ -329,7 +329,7 @@ function ServiceDoneDetail({
         </div>
         <button
           onClick={() => copyToClipboard(phone, "Number")}
-          className="text-[10px] p-1.5 rounded border border-border-subtle hover:bg-black/5"
+          className="text-[10px] p-1.5 rounded border border-border-subtle hover:bg-white/5"
         >
           <Copy size={10} />
         </button>
@@ -366,7 +366,7 @@ function ServiceDoneDetail({
           <span className="text-[11px] font-mono text-brand-accent">https://{subdomain}</span>
           <button
             onClick={() => copyToClipboard(`https://${subdomain}`, "Portal URL")}
-            className="text-[10px] p-1.5 rounded border border-border-subtle hover:bg-black/5"
+            className="text-[10px] p-1.5 rounded border border-border-subtle hover:bg-white/5"
           >
             <Copy size={10} />
           </button>
@@ -391,7 +391,7 @@ function ServiceDoneDetail({
         </pre>
         <button
           onClick={() => copyToClipboard(embed, "Embed script")}
-          className="text-[10px] px-2.5 py-1 rounded-lg border border-border-subtle hover:bg-black/5 flex items-center gap-1"
+          className="text-[10px] px-2.5 py-1 rounded-lg border border-border-subtle hover:bg-white/5 flex items-center gap-1"
         >
           <Copy size={10} /> Copy embed
         </button>

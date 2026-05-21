@@ -709,14 +709,14 @@ export default function CarouselGeneratorPage() {
                     <>
                       <button
                         onClick={handleCopyAll}
-                        className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-border-subtle bg-black/5 text-text-primary hover:bg-black/10 transition-all"
+                        className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-border-subtle bg-white/5 text-text-primary hover:bg-white/10 transition-all"
                       >
                         {copied ? <Check size={13} /> : <Copy size={13} />}
                         {copied ? "Copied!" : "Copy Text"}
                       </button>
                       <button
                         onClick={handleDownload}
-                        className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary hover:bg-black/15 transition-all"
+                        className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary hover:bg-white/15 transition-all"
                       >
                         <Download size={13} />
                         Download All

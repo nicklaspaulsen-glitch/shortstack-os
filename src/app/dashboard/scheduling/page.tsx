@@ -531,7 +531,7 @@ export default function SchedulingPage() {
                 <p className="font-bold text-base mb-2" style={{ color: "#2563EB" }}>ShortStack Creative</p>
                 <p className="mb-3">Hi <strong>[Client Name]</strong>,</p>
                 <p className="mb-2">Your <strong>[Meeting Type]</strong> has been confirmed!</p>
-                <div className="bg-black/[0.04] rounded-lg p-3 mb-3">
+                <div className="bg-white/5 rounded-lg p-3 mb-3">
                   <p><strong>Date:</strong> [Date]</p>
                   <p><strong>Time:</strong> [Time] ([Timezone])</p>
                   <p><strong>Duration:</strong> [Duration] minutes</p>

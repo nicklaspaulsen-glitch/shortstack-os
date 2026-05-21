@@ -242,7 +242,7 @@ export default function WhatsAppPage() {
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="w-full max-w-2xl glass shadow-2xl overflow-hidden">
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-black/8">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-white/8">
               <div className="flex items-center gap-2">
                 <MessageCircle className="w-5 h-5 text-[#25D366]" />
                 <p className="font-semibold text-text-primary">New WhatsApp Campaign</p>
@@ -282,7 +282,7 @@ export default function WhatsAppPage() {
                   onChange={(e) => setClientSearch(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-[#25D366]/50 transition-all"
                 />
-                <div className="rounded-lg border border-black/8 bg-black/3 max-h-40 overflow-y-auto">
+                <div className="rounded-lg border border-white/8 bg-white/4 max-h-40 overflow-y-auto">
                   {filteredClients.length === 0 ? (
                     <div className="flex items-center gap-2 p-3 text-sm text-text-muted">
                       <Users className="w-4 h-4" />
@@ -361,7 +361,7 @@ export default function WhatsAppPage() {
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-end gap-3 px-5 py-4 border-t border-black/8">
+            <div className="flex items-center justify-end gap-3 px-5 py-4 border-t border-white/8">
               <button
                 onClick={resetCompose}
                 className="px-4 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary bg-white/5 hover:bg-white/8 transition-all"
@@ -388,7 +388,7 @@ export default function WhatsAppPage() {
       )}
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 border-b border-black/8">
+      <div className="flex items-center gap-1 border-b border-white/8">
         {([
           { id: "campaigns" as const, label: "Campaigns", icon: <Send className="w-3.5 h-3.5" /> },
           { id: "numbers" as const, label: "Numbers", icon: <Phone className="w-3.5 h-3.5" /> },
@@ -413,7 +413,7 @@ export default function WhatsAppPage() {
         <div className="flex flex-col gap-3">
           <p className="text-sm font-semibold text-text-secondary">Provisioned Numbers</p>
           {numbers.length === 0 ? (
-            <div className="rounded-xl border-2 border-dashed border-black/8 flex flex-col items-center justify-center py-10 gap-2 text-center">
+            <div className="rounded-xl border-2 border-dashed border-white/8 flex flex-col items-center justify-center py-10 gap-2 text-center">
               <Phone className="w-8 h-8 text-text-muted" />
               <p className="text-text-muted text-sm">No WhatsApp numbers yet</p>
               <p className="text-text-muted text-xs max-w-md">
@@ -458,7 +458,7 @@ export default function WhatsAppPage() {
         <div className="flex flex-col gap-3">
           <p className="text-sm font-semibold text-text-secondary">Recent Conversations</p>
           {conversations.length === 0 ? (
-            <div className="rounded-xl border-2 border-dashed border-black/8 flex flex-col items-center justify-center py-10 gap-2 text-center">
+            <div className="rounded-xl border-2 border-dashed border-white/8 flex flex-col items-center justify-center py-10 gap-2 text-center">
               <Inbox className="w-8 h-8 text-text-muted" />
               <p className="text-text-muted text-sm">No conversations yet</p>
               <p className="text-text-muted text-xs max-w-md">
@@ -558,7 +558,7 @@ export default function WhatsAppPage() {
       <div className="flex flex-col gap-3">
         <p className="text-sm font-semibold text-text-secondary">Past Campaigns</p>
         {campaigns.length === 0 ? (
-          <div className="rounded-xl border-2 border-dashed border-black/8 flex flex-col items-center justify-center py-14 gap-3 text-center">
+          <div className="rounded-xl border-2 border-dashed border-white/8 flex flex-col items-center justify-center py-14 gap-3 text-center">
             <MessageCircle className="w-10 h-10 text-text-muted" />
             <p className="text-text-muted text-sm">No campaigns yet</p>
             <button

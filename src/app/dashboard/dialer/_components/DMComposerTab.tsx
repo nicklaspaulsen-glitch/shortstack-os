@@ -152,8 +152,8 @@ export default function DMComposerTab() {
       </div>
 
       <div className="glass rounded-xl p-5">
-        <h3 className="text-sm font-semibold text-[#111827]">Compose direct message</h3>
-        <p className="mt-1 text-xs text-[#6B7280]">
+        <h3 className="text-sm font-semibold text-text-primary">Compose direct message</h3>
+        <p className="mt-1 text-xs text-text-muted">
           {isPlatformAdmin
             ? "Sends via Zernio. When ZERNIO_API_KEY is missing the DM is queued in outreach_log so you can replay it later."
             : "Sends via your connected social accounts. If a platform isn't connected yet, the DM is saved so you can replay it once you reconnect."}
@@ -171,8 +171,8 @@ export default function DMComposerTab() {
                   onClick={() => setPlatform(p.value)}
                   className={`flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors ${
                     isActive
-                      ? "border-orange-400/60 bg-orange-500/10 text-orange-700"
-                      : "border-black/[0.06] bg-black/[0.04] text-[#374151] hover:bg-[rgba(0,0,0,0.08)]"
+                      ? "border-orange-400/60 bg-orange-500/10 text-orange-400"
+                      : "border-white/8 bg-white/4 text-text-secondary hover:bg-white/10"
                   }`}
                 >
                   {p.icon}
@@ -188,14 +188,14 @@ export default function DMComposerTab() {
             <label className="text-xs uppercase tracking-wider text-text-muted">
               Recipient handle
             </label>
-            <div className="mt-1 flex items-center gap-1 rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3">
+            <div className="mt-1 flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-3">
               <span className="text-text-muted">@</span>
               <input
                 type="text"
                 value={handle}
                 onChange={(e) => setHandle(e.target.value)}
                 placeholder="username"
-                className="flex-1 bg-transparent py-2 text-sm text-[#111827] placeholder:text-text-muted focus:outline-none"
+                className="flex-1 bg-transparent py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none"
               />
             </div>
           </div>
@@ -208,25 +208,25 @@ export default function DMComposerTab() {
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Hey, I came across your profile and..."
             rows={6}
-            className="mt-1 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#111827] placeholder:text-text-muted focus:border-orange-400/50 focus:outline-none"
+            className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-orange-400/50 focus:outline-none"
           />
           <div className="mt-1 text-xs text-text-muted">{message.length} / 2000 chars</div>
         </div>
 
         {/* Voice DM toggle. */}
-        <div className="mt-4 rounded-lg border border-amber-500/20 bg-amber-50 p-3">
-          <label className="flex items-center gap-2 text-xs font-medium text-amber-700">
+        <div className="mt-4 rounded-lg border border-amber-500/20 bg-amber-500/10 p-3">
+          <label className="flex items-center gap-2 text-xs font-medium text-amber-400">
             <input
               type="checkbox"
               checked={voiceMode}
               onChange={(e) => setVoiceMode(e.target.checked)}
               disabled={!voiceSupported}
-              className="h-3 w-3 rounded border border-black/[0.08] bg-[#F8FAFC] text-amber-500 focus:ring-amber-400 disabled:opacity-40"
+              className="h-3 w-3 rounded border border-white/10 bg-white/5 text-amber-500 focus:ring-amber-400 disabled:opacity-40"
             />
             <Mic size={12} />
             Send as voice note
             {!voiceSupported && (
-              <span className="text-[10px] uppercase tracking-wider text-rose-600">
+              <span className="text-[10px] uppercase tracking-wider text-rose-400">
                 {platform} doesn&apos;t support voice DM
               </span>
             )}
@@ -239,7 +239,7 @@ export default function DMComposerTab() {
                 surface="dm"
                 compact
               />
-              <p className="mt-2 text-[11px] text-amber-600">
+              <p className="mt-2 text-[11px] text-amber-400">
                 We&apos;ll synthesise the message above with the chosen voice and
                 deliver it as an audio attachment via the {platform} API.
               </p>
@@ -252,7 +252,7 @@ export default function DMComposerTab() {
             type="button"
             onClick={polishMessage}
             disabled={!message.trim() || polishing}
-            className="flex items-center gap-2 rounded-lg border border-black/[0.06] bg-[rgba(0,0,0,0.06)] px-3 py-2 text-sm font-medium text-[#111827] hover:bg-[rgba(0,0,0,0.10)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg border border-white/8 bg-white/8 px-3 py-2 text-sm font-medium text-text-primary hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {polishing ? (
               <Loader2 size={14} className="animate-spin" />

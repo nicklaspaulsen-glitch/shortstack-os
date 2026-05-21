@@ -43,7 +43,7 @@ function formatDuration(seconds: number | null): string {
 
 function statusBadge(status: MeetingRow["status"]) {
   const map = {
-    scheduled: { color: "bg-[rgba(0,0,0,0.04)] text-text-muted", icon: Clock, label: "Scheduled" },
+    scheduled: { color: "bg-white/4 text-text-muted", icon: Clock, label: "Scheduled" },
     recording: { color: "bg-red-400/10 text-red-400", icon: Mic, label: "Recording" },
     processing: { color: "bg-yellow-400/10 text-yellow-400", icon: Loader2, label: "Processing" },
     ready: { color: "bg-green-400/10 text-green-400", icon: CheckCircle2, label: "Ready" },

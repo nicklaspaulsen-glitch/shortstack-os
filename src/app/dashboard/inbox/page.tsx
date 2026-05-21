@@ -538,25 +538,25 @@ export default function InboxPage() {
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <>
-              <div className="flex items-center gap-0.5 bg-black/5 rounded-lg p-0.5">
+              <div className="flex items-center gap-0.5 bg-white/5 rounded-lg p-0.5">
                 <button
                   onClick={() => setView("inbox")}
-                  className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "inbox" ? "bg-black/10 text-text-primary" : "text-text-muted hover:text-text-primary"}`}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "inbox" ? "bg-white/10 text-text-primary" : "text-text-muted hover:text-text-primary"}`}
                 >
                   <Inbox size={11} /> Inbox
                 </button>
                 <button
                   onClick={() => setView("auto-runs")}
-                  className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "auto-runs" ? "bg-black/10 text-text-primary" : "text-text-muted hover:text-text-primary"}`}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "auto-runs" ? "bg-white/10 text-text-primary" : "text-text-muted hover:text-text-primary"}`}
                 >
                   <Zap size={11} /> Auto-Runs
                 </button>
               </div>
-              <button onClick={view === "auto-runs" ? fetchAutoRuns : fetchInbox} className="p-2 rounded-lg bg-black/5 hover:bg-black/10 text-text-primary transition-all" title="Refresh" aria-label="Refresh">
+              <button onClick={view === "auto-runs" ? fetchAutoRuns : fetchInbox} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-text-primary transition-all" title="Refresh" aria-label="Refresh">
                 <RefreshCw size={14} className={loading || autoRunsLoading ? "animate-spin" : ""} aria-hidden="true" />
               </button>
               {view === "inbox" && (
-                <button onClick={() => setShowArchived(!showArchived)} className={`px-3 py-1.5 rounded-lg text-xs text-text-primary transition-all ${showArchived ? "bg-black/15" : "bg-black/5 hover:bg-black/10"}`}>
+                <button onClick={() => setShowArchived(!showArchived)} className={`px-3 py-1.5 rounded-lg text-xs text-text-primary transition-all ${showArchived ? "bg-white/15" : "bg-white/5 hover:bg-white/10"}`}>
                   <Archive size={12} className="inline mr-1" /> {showArchived ? "Viewing Archive" : "Archive"}
                 </button>
               )}
@@ -1077,7 +1077,7 @@ export default function InboxPage() {
                       value={replyText}
                       onChange={e => setReplyText(e.target.value)}
                       placeholder="Type your reply... (saved as a draft — send flows per channel)"
-                      className="w-full bg-transparent text-sm text-text-secondary placeholder-[#9CA3AF] px-4 py-3 resize-none focus:outline-none min-h-[120px]"
+                      className="w-full bg-transparent text-sm text-text-secondary placeholder-text-muted px-4 py-3 resize-none focus:outline-none min-h-[120px]"
                       autoFocus
                     />
                     <div className="flex items-center justify-between px-4 py-2.5 border-t border-border-subtle">

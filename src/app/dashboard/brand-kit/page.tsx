@@ -289,7 +289,7 @@ export default function BrandKitPage() {
                     <div className="relative" ref={exportMenuRef}>
                       <button
                         onClick={() => setShowExportMenu((v) => !v)}
-                        className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"
+                        className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5"
 >
                         <Download size={13} /> Export Kit
                         <ChevronDown size={12} className={showExportMenu ? "rotate-180 transition-transform" : "transition-transform"} />
@@ -313,7 +313,7 @@ export default function BrandKitPage() {
                     </div>
                     <button
                       onClick={() => { setBrand(null); setUrl(""); setTab("extract"); if (typeof window !== "undefined") { localStorage.removeItem("ss_brand_kit_data"); localStorage.removeItem("ss_brand_kit_url"); } }}
-                      className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5"
+                      className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5"
 >
                       <RefreshCw size={13} /> New Scan
                     </button>
@@ -779,12 +779,12 @@ export default function BrandKitPage() {
                             onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }}
  />
                           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                            <a href={img} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-black/10 rounded-lg hover:bg-black/15">
+                            <a href={img} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-white/10 rounded-lg hover:bg-white/15">
                               <ExternalLink size={14} className="text-white" />
                             </a>
                             <button
                               onClick={() => { navigator.clipboard.writeText(img); toast.success("Image URL copied!"); }}
-                              className="p-1.5 bg-black/10 rounded-lg hover:bg-black/15"
+                              className="p-1.5 bg-white/10 rounded-lg hover:bg-white/15"
 >
                               <Copy size={14} className="text-white" />
                             </button>

@@ -374,11 +374,11 @@ export default function FormsPage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <>
-                  <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
+                  <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5">
                     <Sparkles size={12} /> Describe your form
                   </button>
                   {activeForm && (
-                    <button onClick={() => setActiveForm(null)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all">All Forms</button>
+                    <button onClick={() => setActiveForm(null)} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all">All Forms</button>
                   )}
                 </>
       </div>
@@ -529,7 +529,7 @@ export default function FormsPage() {
                             <span className="text-text-muted">{FIELD_TYPES.find(t => t.type === field.type)?.icon}</span>
                             <input value={field.label} onChange={e => updateField(field.id, "label", e.target.value)}
                               className="flex-1 bg-transparent text-xs outline-none font-medium" aria-label="Field label" />
-                            <span className="text-[8px] text-text-muted px-1.5 py-0.5 rounded bg-[rgba(0,0,0,0.04)]">{field.type}</span>
+                            <span className="text-[8px] text-text-muted px-1.5 py-0.5 rounded bg-white/4">{field.type}</span>
                             <button onClick={() => updateField(field.id, "required", !field.required)}
                               className={`text-[8px] px-1.5 py-0.5 rounded ${field.required ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted"}`}>
                               {field.required ? "Required" : "Optional"}
@@ -620,7 +620,7 @@ export default function FormsPage() {
                         </div>
                         <button onClick={() => {
                           const u = { ...activeForm, spamProtection: !activeForm.spamProtection }; setActiveForm(u); setForms(p => p.map(f => f.id === u.id ? u : f));
-                        }} className={`w-10 h-5 rounded-full transition-all relative ${activeForm.spamProtection ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.08)]"}`}>
+                        }} className={`w-10 h-5 rounded-full transition-all relative ${activeForm.spamProtection ? "bg-brand-accent" : "bg-white/10"}`}>
                           <div className="w-4 h-4 rounded-full bg-white absolute top-0.5" style={{ left: activeForm.spamProtection ? 22 : 2 }} />
                         </button>
                       </div>
@@ -630,7 +630,7 @@ export default function FormsPage() {
                   {/* Embed Code */}
                   <div className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                     <h2 className="flex items-center gap-2"><Code size={12} className="text-brand-accent" /> Embed Code</h2>
-                    <pre className="text-[9px] text-text-muted bg-[rgba(0,0,0,0.04)] rounded-lg p-3 overflow-x-auto whitespace-pre-wrap">{generateEmbedCode()}</pre>
+                    <pre className="text-[9px] text-text-muted bg-white/4 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap">{generateEmbedCode()}</pre>
                     <button onClick={() => navigator.clipboard.writeText(generateEmbedCode())} className="btn-primary w-full text-xs mt-2 flex items-center justify-center gap-1.5">
                       <Copy size={12} /> Copy Embed Code
                     </button>
@@ -872,7 +872,7 @@ export default function FormsPage() {
                         className="flex items-center justify-between p-2.5 rounded-lg border" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.subtle }}
                       >
                         <span className="text-xs">{int.name}</span>
-                        <span className={`text-[9px] px-2 py-0.5 rounded-full ${int.connected ? "bg-emerald-400/10 text-emerald-400" : "bg-[rgba(0,0,0,0.04)] text-text-muted"}`}>
+                        <span className={`text-[9px] px-2 py-0.5 rounded-full ${int.connected ? "bg-emerald-400/10 text-emerald-400" : "bg-white/4 text-text-muted"}`}>
                           {int.connected ? "Connected" : "Connect"}
                         </span>
                       </motion.div>

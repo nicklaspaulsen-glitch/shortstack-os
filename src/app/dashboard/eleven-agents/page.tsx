@@ -261,7 +261,7 @@ export default function ElevenAgentsPage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button onClick={() => { loadAgents(); loadVoices(); }} disabled={apiLoading}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/15 transition-all disabled:opacity-50">
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/15 transition-all disabled:opacity-50">
                   <RefreshCw size={12} className={apiLoading ? "animate-spin" : ""} /> {apiLoading ? "Loading..." : "Refresh"}
                 </button>
       </div>
@@ -563,7 +563,7 @@ export default function ElevenAgentsPage() {
                           <div>Time</div>
                         </div>
                         {filteredCalls.map(call => (
-                          <div key={call.id} className="grid grid-cols-8 gap-2 px-4 py-2.5 border-b border-border-subtle last:border-0 text-[10px] items-center hover:bg-[rgba(0,0,0,0.02)] cursor-pointer"
+                          <div key={call.id} className="grid grid-cols-8 gap-2 px-4 py-2.5 border-b border-border-subtle last:border-0 text-[10px] items-center hover:bg-white/4 cursor-pointer"
                             onClick={() => setSelectedCall(selectedCall === call.id ? null : call.id)}>
                             <div className="col-span-2">
                               <p className="font-medium">{call.contactName}</p>
@@ -814,7 +814,7 @@ export default function ElevenAgentsPage() {
                 <h2 className="text-sm font-semibold mb-3 flex items-center gap-2 text-text-primary"><ArrowRight size={14} className="text-brand-accent" /> Call Transfer Rules</h2>
                 <div className="space-y-2">
                   {transferRules.map(rule => (
-                    <div key={rule.id} className={`p-3 rounded-lg border transition-all ${rule.active ? "border-border-subtle" : "border-[rgba(0,0,0,0.04)] opacity-60"}`}>
+                    <div key={rule.id} className={`p-3 rounded-lg border transition-all ${rule.active ? "border-border-subtle" : "border-white/4 opacity-60"}`}>
                       <div className="flex items-center gap-3">
                         <button onClick={() => toggleTransferRule(rule.id)}
                           className={`w-9 h-5 rounded-full transition-colors shrink-0 ${rule.active ? "bg-green-600" : "bg-white/15"}`}>

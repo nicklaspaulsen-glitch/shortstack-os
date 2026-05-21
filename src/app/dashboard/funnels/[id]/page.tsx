@@ -246,8 +246,8 @@ export default function FunnelCanvasPage() {
 
   if (loading) {
     return (
-      <MotionPage className="p-6 max-w-7xl mx-auto space-y-6"><div className="h-32  bg-black/[0.04] animate-pulse" /><div className="flex gap-4">
-                  {[...Array(3)].map((_, i) => <div key={i} className="h-36 w-48 rounded-xl bg-black/[0.04] animate-pulse" />)}
+      <MotionPage className="p-6 max-w-7xl mx-auto space-y-6"><div className="h-32  bg-white/4 animate-pulse" /><div className="flex gap-4">
+                  {[...Array(3)].map((_, i) => <div key={i} className="h-36 w-48 rounded-xl bg-white/4 animate-pulse" />)}
                 </div></MotionPage>
     );
   }
@@ -300,7 +300,7 @@ export default function FunnelCanvasPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 bg-black/[0.04] border border-border-subtle rounded-lg p-1 w-fit">
+      <div className="flex items-center gap-1 bg-white/4 border border-border-subtle rounded-lg p-1 w-fit">
         {(["builder", "analytics"] as const).map((tab) => (
           <button
             key={tab}
@@ -339,7 +339,7 @@ export default function FunnelCanvasPage() {
       {activeTab === "builder" && (
         <div className="space-y-4">
           {/* Canvas — horizontal step chain */}
-          <div className="bg-white/5 border border-black/[0.06] rounded-xl p-6 overflow-x-auto">
+          <div className="bg-white/5 border border-white/8 rounded-xl p-6 overflow-x-auto">
             <div className="flex items-start gap-0 min-w-max">
               {steps.map((step, idx) => {
                 const sc = getStepColor(step.step_type);
@@ -359,7 +359,7 @@ export default function FunnelCanvasPage() {
                       </div>
 
                       {/* Type chip */}
-                      <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider mb-2 ${sc.text} bg-black/[0.04]`}>
+                      <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider mb-2 ${sc.text} bg-white/4`}>
                         <div className={`w-1.5 h-1.5 rounded-full ${sc.dot}`} />
                         {STEP_TYPES.find((t) => t.value === step.step_type)?.label ?? step.step_type}
                       </div>
@@ -378,11 +378,11 @@ export default function FunnelCanvasPage() {
                       {/* Analytics mini */}
                       {stepAnalytics && (
                         <div className="grid grid-cols-2 gap-1 mt-2">
-                          <div className="bg-black/[0.06] rounded p-1 text-center">
+                          <div className="bg-white/8 rounded p-1 text-center">
                             <div className="text-text-primary text-xs font-bold">{stepAnalytics.views}</div>
                             <div className="text-text-muted text-[9px]">views</div>
                           </div>
-                          <div className="bg-black/[0.06] rounded p-1 text-center">
+                          <div className="bg-white/8 rounded p-1 text-center">
                             <div className={`text-xs font-bold ${stepAnalytics.conversion_rate >= 20 ? "text-emerald-400" : "text-text-muted"}`}>
                               {stepAnalytics.conversion_rate}%
                             </div>
@@ -541,7 +541,7 @@ export default function FunnelCanvasPage() {
                               )}
                             </div>
                           </div>
-                          <div className="h-2 rounded-full bg-black/[0.06]">
+                          <div className="h-2 rounded-full bg-white/8">
                             <div
                               className={`h-2 rounded-full transition-all ${sc.dot}`}
                               style={{ width: `${barWidth}%` }}
@@ -645,7 +645,7 @@ export default function FunnelCanvasPage() {
 
               {/* Analytics for this step */}
               {analyticsMap.get(selectedStep.id) && (
-                <div className="bg-white/5 border border-black/[0.06] rounded-lg p-3 space-y-2">
+                <div className="bg-white/5 border border-white/8 rounded-lg p-3 space-y-2">
                   <div className="text-text-muted text-xs font-semibold uppercase tracking-widest">Step Stats</div>
                   {(() => {
                     const sa = analyticsMap.get(selectedStep.id)!;
@@ -657,7 +657,7 @@ export default function FunnelCanvasPage() {
                           { label: "Conv. Rate", value: `${sa.conversion_rate}%` },
                           { label: "Drop-off", value: `${sa.dropoff_pct}%` },
                         ].map((s) => (
-                          <div key={s.label} className="bg-black/[0.06] rounded p-2">
+                          <div key={s.label} className="bg-white/8 rounded p-2">
                             <div className="text-text-primary text-sm font-bold">{s.value}</div>
                             <div className="text-text-muted text-[10px]">{s.label}</div>
                           </div>

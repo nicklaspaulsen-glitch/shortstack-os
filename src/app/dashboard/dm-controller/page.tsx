@@ -538,9 +538,9 @@ export default function DMControllerPage() {
                   <div className={cn(
                     "flex items-center gap-1.5 text-[10px] border px-2.5 py-1 rounded-md",
                     running ? "bg-green-400/10 border-green-400/30 text-green-400" :
-                             "bg-black/5 border-border-subtle text-text-muted"
+                             "bg-white/5 border-border-subtle text-text-muted"
                   )}>
-                    <span className={cn("w-1.5 h-1.5 rounded-full", running ? "bg-green-400 animate-pulse" : "bg-black/15")} />
+                    <span className={cn("w-1.5 h-1.5 rounded-full", running ? "bg-green-400 animate-pulse" : "bg-white/15")} />
                     {running ? `Running · ${completed}/${totalDMs}` : "Paused"}
                   </div>
                   {running && (

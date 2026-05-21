@@ -516,7 +516,7 @@ export default function DomainsPage() {
                               <button
                                 onClick={() => purchaseDomain(r.domain, "monthly", r.price || undefined)}
                                 disabled={anyRowLoading}
-                                className="text-[10px] px-2 py-2 rounded-lg border border-border-subtle text-text-primary hover:border-[rgba(59,130,246,0.4)] hover:bg-black/5 flex flex-col items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="text-[10px] px-2 py-2 rounded-lg border border-border-subtle text-text-primary hover:border-[rgba(59,130,246,0.4)] hover:bg-white/5 flex flex-col items-center disabled:opacity-50 disabled:cursor-not-allowed"
                               >
                                 {rowMonthlyLoading ? (
                                   <Loader size={12} className="animate-spin my-1" />
@@ -530,7 +530,7 @@ export default function DomainsPage() {
                               <button
                                 onClick={() => purchaseDomain(r.domain, "yearly", r.price || undefined)}
                                 disabled={anyRowLoading}
-                                className="relative text-[10px] px-2 py-2 rounded-lg bg-brand-accent hover:bg-[#3B82F6] text-white font-bold flex flex-col items-center hover:shadow-lg hover:shadow-[#2563EB]/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                                className="relative text-[10px] px-2 py-2 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-bold flex flex-col items-center hover:shadow-lg hover:shadow-[rgba(212,255,0,0.20)] disabled:opacity-60 disabled:cursor-not-allowed"
                               >
                                 {rowYearlyLoading ? (
                                   <Loader size={12} className="animate-spin my-1" />

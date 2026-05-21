@@ -379,7 +379,7 @@ export default function SMSTemplatesPage() {
                           )}
                         </div>
                         <button onClick={() => { navigator.clipboard.writeText(template.body); }}
-                          className="text-[9px] text-brand-accent hover:text-[#3B82F6] flex items-center gap-0.5">
+                          className="text-[9px] text-brand-accent hover:text-brand-accent/80 flex items-center gap-0.5">
                           <Copy size={8} /> Copy
                         </button>
                       </div>

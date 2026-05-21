@@ -230,7 +230,7 @@ export default function ColdEmailPage() {
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <button
                     onClick={() => setShowCreate((v) => !v)}
-                    className="text-[11px] px-3 py-1.5 rounded-lg bg-black/10 text-text-primary border border-black/20 hover:bg-black/15 transition-all flex items-center gap-1.5"
+                    className="text-[11px] px-3 py-1.5 rounded-lg bg-white/10 text-text-primary border border-white/20 hover:bg-white/15 transition-all flex items-center gap-1.5"
                   >
                     <Sparkles size={11} />
                     New Campaign
@@ -264,7 +264,7 @@ export default function ColdEmailPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Q2 dental outreach"
-                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-accent"
+                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-border-subtle text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-accent"
                     />
                   </div>
                   <div>
@@ -275,7 +275,7 @@ export default function ColdEmailPage() {
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value)}
                       placeholder="new"
-                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-accent"
+                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-border-subtle text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-accent"
                     />
                     <p className="text-[9px] text-text-muted mt-0.5">
                       We pull all leads with this status that have an email.
@@ -291,7 +291,7 @@ export default function ColdEmailPage() {
                     value={templateSeed}
                     onChange={(e) => setTemplateSeed(e.target.value)}
                     rows={4}
-                    className="glass rounded-lg w-full text-xs py-2 px-2 bg-transparent border border-black/10 text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-accent font-mono"
+                    className="glass rounded-lg w-full text-xs py-2 px-2 bg-transparent border border-border-subtle text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand-accent font-mono"
                   />
                   <p className="text-[9px] text-text-muted mt-0.5">
                     Tokens: <code>{"{{first_name}}"}</code>, <code>{"{{business_name}}"}</code>,{" "}
@@ -421,7 +421,7 @@ export default function ColdEmailPage() {
                       onChange={(e) => setThrottle(parseInt(e.target.value || "100") || 100)}
                       min={1}
                       max={5000}
-                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-black/10 text-text-primary focus:outline-none focus:border-brand-accent"
+                      className="glass rounded-lg w-full text-xs py-1.5 px-2 bg-transparent border border-border-subtle text-text-primary focus:outline-none focus:border-brand-accent"
                     />
                     <p className="text-[9px] text-text-muted mt-0.5">
                       Recommended: 100/hr to protect domain reputation.
@@ -475,7 +475,7 @@ export default function ColdEmailPage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.04 }}
                       whileHover={{ backgroundColor: "rgba(255,255,255,0.06)" }}
-                      className="relative p-4 space-y-3 border-b border-black/[0.05] last:border-0"
+                      className="relative p-4 space-y-3 border-b border-white/5 last:border-0"
                     >
                       {/* Rainbow top bar (first item only decorative, per-card via absolute) */}
                       <div
@@ -560,7 +560,7 @@ export default function ColdEmailPage() {
                       </div>
 
                       {jobSamples.length > 0 && (
-                        <div className="space-y-2 pt-2 border-t border-black/[0.05]">
+                        <div className="space-y-2 pt-2 border-t border-white/5">
                           <p className="text-[9px] text-text-muted uppercase tracking-wider">
                             Preview samples
                           </p>

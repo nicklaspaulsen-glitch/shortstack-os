@@ -265,7 +265,7 @@ export default function CompetitiveMonitorPage() {
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Competitive Monitor</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <button onClick={() => setShowAddForm(!showAddForm)} className="flex items-center gap-2 px-4 py-2 bg-black/10 border border-black/20 text-text-primary rounded-lg hover:bg-black/15 transition text-sm font-medium">
+        <button onClick={() => setShowAddForm(!showAddForm)} className="flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/20 text-text-primary rounded-lg hover:bg-white/15 transition text-sm font-medium">
                   <Plus className="w-4 h-4" /> Add Competitor
                 </button>
       </div>
@@ -317,7 +317,7 @@ export default function CompetitiveMonitorPage() {
                 initial={{ opacity: 0, y: -12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="glass rounded-xl p-5" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.12)" }}
+                className="glass rounded-xl p-5" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)" }}
               >
                 <h3 className="text-sm flex items-center gap-2 mb-4"><Plus className="w-4 h-4 text-brand-accent" /> Add New Competitor</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -632,7 +632,7 @@ export default function CompetitiveMonitorPage() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.28 }}
-                    className="glass rounded-xl p-5" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.12)" }}
+                    className="glass rounded-xl p-5" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)" }}
                   >
                     <h4 className="text-sm font-medium mb-4">New Alert Rule</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -818,7 +818,7 @@ export default function CompetitiveMonitorPage() {
                         transition={{ duration: 0.3, delay: i * 0.07 }}
                         whileHover={{ y: -3 }}
                         onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
-                        className="glass rounded-xl p-4 spotlight-card" style={{ background: "rgba(0,0,0,0.03)", border: "1px solid rgba(0,0,0,0.12)" }}
+                        className="glass rounded-xl p-4 spotlight-card" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)" }}
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <Target className="w-4 h-4 text-brand-accent" />

@@ -323,7 +323,7 @@ export default function ClientHealthPage() {
                             <span className="text-[8px] text-text-muted">Task Progress</span>
                             <span className="text-[8px] text-text-muted">{Math.round((client.tasks_done / client.tasks_total) * 100)}%</span>
                           </div>
-                          <div className="w-full bg-black/5 rounded-full h-1.5 overflow-hidden">
+                          <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
                             <div className="h-full rounded-full transition-all" style={{
                               width: `${(client.tasks_done / client.tasks_total) * 100}%`,
                               background: client.tasks_done / client.tasks_total >= 0.75 ? "#4ade80" :
@@ -401,7 +401,7 @@ export default function ClientHealthPage() {
                           <span className="text-xs font-medium">{w.factor}</span>
                           <span className="text-xs text-brand-accent font-mono">{w.weight}%</span>
                         </div>
-                        <div className="w-full bg-black/5 rounded-full h-2 overflow-hidden">
+                        <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden">
                           <div className="h-full rounded-full bg-[rgba(59,130,246,0.40)]" style={{ width: `${w.weight}%` }} />
                         </div>
                         <p className="text-[9px] text-text-muted mt-0.5">{w.description}</p>

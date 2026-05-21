@@ -1234,7 +1234,7 @@ export default function WebsitesPage() {
 
                 {(active.preview_url || active.vercel_url) && (
                   <div className="flex items-center justify-between p-2 rounded-lg bg-surface-light border border-border-subtle">
-                    <a href={active.preview_url || active.vercel_url || "#"} target="_blank" rel="noopener" className="text-[11px] text-brand-accent hover:text-[#3B82F6] truncate">
+                    <a href={active.preview_url || active.vercel_url || "#"} target="_blank" rel="noopener" className="text-[11px] text-brand-accent hover:text-brand-accent/80 truncate">
                       {active.preview_url || active.vercel_url}
                     </a>
                     <button onClick={() => { navigator.clipboard.writeText(active.preview_url || active.vercel_url || ""); toast.success("Copied"); }}>
@@ -1414,7 +1414,7 @@ export default function WebsitesPage() {
                               href={p.custom_domain ? `https://${p.custom_domain}` : (p.preview_url || p.vercel_url || "#")}
                               target="_blank"
                               rel="noopener"
-                              className="text-[10px] text-brand-accent hover:text-[#3B82F6] truncate block"
+                              className="text-[10px] text-brand-accent hover:text-brand-accent/80 truncate block"
                             >
                               {p.custom_domain || p.preview_url || p.vercel_url}
                             </a>

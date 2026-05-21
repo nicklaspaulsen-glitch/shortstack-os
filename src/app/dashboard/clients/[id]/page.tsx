@@ -330,7 +330,7 @@ export default function ClientDetailPage() {
                     // the user downloads a script.
                     setTimeout(() => URL.revokeObjectURL(url), 1000);
                   }
-                }} aria-label={`Download ${s.title} as PDF`} className="text-brand-accent text-xs hover:text-[#3B82F6]"><Download size={14} /></button>
+                }} aria-label={`Download ${s.title} as PDF`} className="text-brand-accent text-xs hover:text-brand-accent/80"><Download size={14} /></button>
               )},
             ]}
             data={scripts}

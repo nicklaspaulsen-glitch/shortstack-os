@@ -448,7 +448,7 @@ export default function IntakePage() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: i * 0.04 }}
                             onClick={() => setSubDetail(sub)}
-                            className="w-full text-left glass rounded-xl p-3.5 flex items-center gap-3 transition-all hover:border-[rgba(0,0,0,0.12)]"
+                            className="w-full text-left glass rounded-xl p-3.5 flex items-center gap-3 transition-all hover:border-[rgba(255,255,255,0.12)]"
                           >
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 flex-wrap">
@@ -528,7 +528,7 @@ export default function IntakePage() {
                       <label className="text-xs text-text-secondary">AI scoring</label>
                       <button
                         onClick={() => setBAI((p) => !p)}
-                        className={`relative w-11 h-6 rounded-full transition-colors ${bAI ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.10)]"}`}
+                        className={`relative w-11 h-6 rounded-full transition-colors ${bAI ? "bg-brand-accent" : "bg-white/10"}`}
                       >
                         <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${bAI ? "left-6" : "left-1"}`} />
                       </button>
@@ -656,9 +656,9 @@ export default function IntakePage() {
                             onClick={() => updateStatus(subDetail.id, s)}
                             className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all"
                             style={{
-                              background: subDetail.status === s ? `${meta.color}20` : "rgba(0,0,0,0.04)",
-                              color: subDetail.status === s ? meta.color : "rgba(0,0,0,0.45)",
-                              border: `1px solid ${subDetail.status === s ? `${meta.color}40` : "rgba(0,0,0,0.08)"}`,
+                              background: subDetail.status === s ? `${meta.color}20` : "rgba(255,255,255,0.04)",
+                              color: subDetail.status === s ? meta.color : "rgba(255,255,255,0.45)",
+                              border: `1px solid ${subDetail.status === s ? `${meta.color}40` : "rgba(255,255,255,0.08)"}`,
                             }}
                           >
                             {meta.icon}

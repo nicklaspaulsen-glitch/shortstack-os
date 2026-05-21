@@ -49,13 +49,13 @@ interface OrderDetail {
 }
 
 const STATUS_COLOR: Record<string, string> = {
-  pending_payment: "bg-amber-500/10 text-amber-700",
-  paid: "bg-blue-500/10 text-blue-700",
-  in_progress: "bg-blue-500/10 text-blue-700",
-  delivered: "bg-emerald-500/10 text-emerald-700",
-  disputed: "bg-red-500/10 text-red-700",
-  refunded: "bg-black/[0.04] text-[#6B7280]",
-  cancelled: "bg-black/[0.04] text-[#6B7280]",
+  pending_payment: "bg-amber-500/10 text-amber-400",
+  paid: "bg-blue-500/10 text-blue-400",
+  in_progress: "bg-blue-500/10 text-blue-400",
+  delivered: "bg-emerald-500/10 text-emerald-400",
+  disputed: "bg-red-500/10 text-red-400",
+  refunded: "bg-white/4 text-text-muted",
+  cancelled: "bg-white/4 text-text-muted",
 };
 
 function formatPrice(cents: number, currency: string): string {
@@ -175,7 +175,7 @@ export default function OrderDetailPage() {
     <div className="space-y-4">
       <Link
         href="/dashboard/marketplace/orders"
-        className="inline-flex items-center gap-1.5 text-xs text-[#6B7280] hover:text-[#111827]"
+        className="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary"
       >
         <ArrowLeft size={12} />
         All orders
@@ -191,13 +191,13 @@ export default function OrderDetailPage() {
               </span>
               <span
                 className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                  STATUS_COLOR[order.status] ?? "bg-black/[0.04] text-[#6B7280]"
+                  STATUS_COLOR[order.status] ?? "bg-white/4 text-text-muted"
                 }`}
               >
                 {order.status.replace("_", " ")}
               </span>
             </div>
-            <h1 className="mt-2 text-xl font-bold text-[#111827]">
+            <h1 className="mt-2 text-xl font-bold text-text-primary">
               {service?.title ?? "Service"}
             </h1>
             {service?.category && (
@@ -221,14 +221,14 @@ export default function OrderDetailPage() {
 
         <div className="mt-5 grid gap-4 md:grid-cols-2">
           <div>
-            <h3 className="text-xs font-semibold text-[#111827]">Buyer notes</h3>
+            <h3 className="text-xs font-semibold text-text-primary">Buyer notes</h3>
             <p className="mt-1 whitespace-pre-line text-xs text-text-muted">
               {order.buyer_notes || "No notes provided."}
             </p>
           </div>
           {order.seller_delivery_notes && (
             <div>
-              <h3 className="text-xs font-semibold text-[#111827]">
+              <h3 className="text-xs font-semibold text-text-primary">
                 Delivery notes
               </h3>
               <p className="mt-1 whitespace-pre-line text-xs text-text-muted">
@@ -241,7 +241,7 @@ export default function OrderDetailPage() {
 
       {canDeliver && (
         <div className="glass rounded-xl p-4">
-          <h3 className="text-sm font-semibold text-[#111827]">Deliver order</h3>
+          <h3 className="text-sm font-semibold text-text-primary">Deliver order</h3>
           <p className="mt-1 text-xs text-text-muted">
             Once you mark this delivered, the buyer will be invited to leave a
             review and your Stripe payout will release per Connect schedule.
@@ -251,12 +251,12 @@ export default function OrderDetailPage() {
             onChange={(e) => setDeliveryNotes(e.target.value.slice(0, 5000))}
             rows={4}
             placeholder="Links, attachments, or instructions..."
-            className="mt-3 w-full rounded-lg border border-black/[0.08] bg-black/[0.02] px-3 py-2 text-xs text-[#111827]"
+            className="mt-3 w-full rounded-lg border border-white/10 bg-white/4 px-3 py-2 text-xs text-text-primary"
           />
           <button
             onClick={handleDeliver}
             disabled={delivering}
-            className="mt-3 flex items-center gap-2 rounded-lg bg-brand-accent px-4 py-2 text-xs font-bold text-white hover:bg-[#3B82F6] disabled:opacity-50"
+            className="mt-3 flex items-center gap-2 rounded-lg bg-brand-accent px-4 py-2 text-xs font-bold text-[#0D1120] hover:bg-brand-accent/80 disabled:opacity-50"
           >
             {delivering ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
             Mark delivered
@@ -266,14 +266,14 @@ export default function OrderDetailPage() {
 
       {canReview && (
         <div className="glass rounded-xl p-4">
-          <h3 className="text-sm font-semibold text-[#111827]">Leave a review</h3>
+          <h3 className="text-sm font-semibold text-text-primary">Leave a review</h3>
           <div className="mt-3 flex items-center gap-2">
             {[1, 2, 3, 4, 5].map((n) => (
               <button
                 key={n}
                 onClick={() => setRating(n)}
                 aria-label={`${n} stars`}
-                className={n <= rating ? "text-amber-400" : "text-black/[0.08]"}
+                className={n <= rating ? "text-amber-400" : "text-white/10"}
               >
                 <Star size={20} className={n <= rating ? "fill-amber-400" : ""} />
               </button>
@@ -284,12 +284,12 @@ export default function OrderDetailPage() {
             onChange={(e) => setReviewText(e.target.value.slice(0, 4000))}
             rows={4}
             placeholder="What was the experience like?"
-            className="mt-3 w-full rounded-lg border border-black/[0.08] bg-black/[0.02] px-3 py-2 text-xs text-[#111827]"
+            className="mt-3 w-full rounded-lg border border-white/10 bg-white/4 px-3 py-2 text-xs text-text-primary"
           />
           <button
             onClick={handleReview}
             disabled={reviewing}
-            className="mt-3 flex items-center gap-2 rounded-lg bg-brand-accent px-4 py-2 text-xs font-bold text-white hover:bg-[#3B82F6] disabled:opacity-50"
+            className="mt-3 flex items-center gap-2 rounded-lg bg-brand-accent px-4 py-2 text-xs font-bold text-[#0D1120] hover:bg-brand-accent/80 disabled:opacity-50"
           >
             {reviewing ? (
               <Loader2 size={12} className="animate-spin" />
@@ -303,13 +303,13 @@ export default function OrderDetailPage() {
 
       {review && (
         <div className="glass rounded-xl p-4">
-          <h3 className="text-sm font-semibold text-[#111827]">Your review</h3>
+          <h3 className="text-sm font-semibold text-text-primary">Your review</h3>
           <div className="mt-2 flex items-center gap-1 text-amber-400">
             {Array.from({ length: review.rating }).map((_, i) => (
               <Star key={i} size={14} className="fill-amber-400" />
             ))}
             {Array.from({ length: 5 - review.rating }).map((_, i) => (
-              <Star key={i} size={14} className="text-black/[0.08]" />
+              <Star key={i} size={14} className="text-white/10" />
             ))}
           </div>
           {review.text && (

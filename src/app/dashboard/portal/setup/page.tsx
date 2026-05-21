@@ -113,7 +113,7 @@ export default function ClientSetupPage() {
           <X size={14} /> No thanks, maybe later
         </button>
         <button onClick={() => toast("Contact your account manager for help connecting accounts.")}
-          className="text-sm text-brand-accent hover:text-[#3B82F6] flex items-center gap-1">
+          className="text-sm text-brand-accent hover:text-brand-accent/80 flex items-center gap-1">
           <HelpCircle size={14} /> Need help setting it up?
         </button>
       </div>

@@ -252,7 +252,7 @@ export default function LeadSourcesPage() {
                           </td>
                         </tr>
                       ) : (
-                        <tr key={s.id} className="hover:bg-black/[0.02] transition-colors group">
+                        <tr key={s.id} className="hover:bg-white/4 transition-colors group">
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
                               <span className="text-lg">{s.icon ?? "🔍"}</span>

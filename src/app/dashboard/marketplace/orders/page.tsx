@@ -27,13 +27,13 @@ interface OrderRow {
 type Role = "buyer" | "seller";
 
 const STATUS_COLOR: Record<string, string> = {
-  pending_payment: "bg-amber-500/10 text-amber-700",
-  paid: "bg-blue-500/10 text-blue-700",
-  in_progress: "bg-blue-500/10 text-blue-700",
-  delivered: "bg-emerald-500/10 text-emerald-700",
-  disputed: "bg-red-500/10 text-red-700",
-  refunded: "bg-black/[0.04] text-[#6B7280]",
-  cancelled: "bg-black/[0.04] text-[#6B7280]",
+  pending_payment: "bg-amber-500/10 text-amber-400",
+  paid: "bg-blue-500/10 text-blue-400",
+  in_progress: "bg-blue-500/10 text-blue-400",
+  delivered: "bg-emerald-500/10 text-emerald-400",
+  disputed: "bg-red-500/10 text-red-400",
+  refunded: "bg-white/4 text-text-muted",
+  cancelled: "bg-white/4 text-text-muted",
 };
 
 function formatPrice(cents: number, currency: string): string {
@@ -71,12 +71,12 @@ export default function OrdersPage() {
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Marketplace Orders</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <div className="flex items-center gap-1 rounded-lg border border-border-subtle bg-black/5 p-1">
+        <div className="flex items-center gap-1 rounded-lg border border-border-subtle bg-white/5 p-1">
                   <button
                     onClick={() => setRole("buyer")}
                     className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition ${
                       role === "buyer"
-                        ? "bg-black/10 text-text-primary"
+                        ? "bg-white/10 text-text-primary"
                         : "text-text-muted hover:text-white"
                     }`}
                   >
@@ -87,7 +87,7 @@ export default function OrdersPage() {
                     onClick={() => setRole("seller")}
                     className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition ${
                       role === "seller"
-                        ? "bg-black/10 text-text-primary"
+                        ? "bg-white/10 text-text-primary"
                         : "text-text-muted hover:text-white"
                     }`}
                   >
@@ -101,7 +101,7 @@ export default function OrdersPage() {
             ) : orders.length === 0 ? (
               <div className="glass rounded-xl p-4 flex flex-col items-center justify-center py-12 text-center">
                 <Receipt size={36} className="mb-3 text-text-muted" />
-                <p className="text-sm font-medium text-[#111827]">
+                <p className="text-sm font-medium text-text-primary">
                   No {role === "buyer" ? "purchases" : "incoming orders"} yet
                 </p>
                 <p className="mt-1 text-xs text-text-muted">
@@ -131,7 +131,7 @@ export default function OrdersPage() {
                         </span>
                         <span
                           className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                            STATUS_COLOR[o.status] ?? "bg-black/[0.04] text-[#6B7280]"
+                            STATUS_COLOR[o.status] ?? "bg-white/4 text-text-muted"
                           }`}
                         >
                           {o.status.replace("_", " ")}
@@ -142,7 +142,7 @@ export default function OrdersPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm font-bold text-[#111827]">
+                      <div className="text-sm font-bold text-text-primary">
                         {formatPrice(o.amount_cents, o.currency)}
                       </div>
                       {role === "seller" && (

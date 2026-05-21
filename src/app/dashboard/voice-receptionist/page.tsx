@@ -646,7 +646,7 @@ export default function VoiceReceptionistPage() {
                       The pipeline is fully wired � Twilio voice-webhook,
                       ElevenLabs ConvAI bridge, status callback, and the
                       conversation-ended webhook all log straight into your{" "}
-                      <code className="rounded bg-black/40 px-1 py-0.5 text-[10.5px]">
+                      <code className="rounded bg-white/10 px-1 py-0.5 text-[10.5px]">
                         voice_calls
                       </code>{" "}
                       table. Once your receptionist picks up its first inbound call,

@@ -216,7 +216,7 @@ export default function CoachPage() {
                   />
                 </PrismPanel>
               ))}
-            </motion.div>{/* Tab bar */}<div className="flex flex-wrap items-center gap-2 border-b border-black/5 pb-2">
+            </motion.div>{/* Tab bar */}<div className="flex flex-wrap items-center gap-2 border-b border-white/5 pb-2">
               {(
                 [
                   { id: "recent", label: "Recent Calls" },
@@ -232,7 +232,7 @@ export default function CoachPage() {
                   className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                     tab === t.id
                       ? "bg-[rgba(59,130,246,0.10)] text-brand-accent border border-[rgba(59,130,246,0.25)]"
-                      : "text-black/60 hover:bg-black/5 hover:text-text-primary"
+                      : "text-text-muted hover:bg-white/5 hover:text-text-primary"
                   }`}
                 >
                   {t.label}
@@ -271,9 +271,9 @@ export default function CoachPage() {
                       <motion.div key={row.id} variants={rowVariants}>
                         <Link
                           href={`/dashboard/coach/analyses/${row.id}`}
-                          className="group flex items-center gap-4 border-b border-black/5 last:border-0 px-4 py-3 transition-colors hover:bg-[rgba(59,130,246,0.04)]"
+                          className="group flex items-center gap-4 border-b border-white/5 last:border-0 px-4 py-3 transition-colors hover:bg-[rgba(59,130,246,0.04)]"
                         >
-                          <div className="rounded-lg border border-black/10 bg-black/5 p-2 text-black/65">
+                          <div className="rounded-lg border border-white/10 bg-white/5 p-2 text-text-muted">
                             <Icon className="h-4 w-4" />
                           </div>
                           <div className="min-w-0 flex-1">
@@ -385,7 +385,7 @@ export default function CoachPage() {
                       className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                         period === p.id
                           ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent"
-                          : "border-black/10 text-black/60 hover:border-black/15 hover:text-text-primary"
+                          : "border-white/10 text-text-muted hover:border-white/15 hover:text-text-primary"
                       }`}
                     >
                       {p.label}
@@ -401,7 +401,7 @@ export default function CoachPage() {
                 ) : (
                   <motion.div variants={cardVariants} className="glass rounded-xl overflow-hidden">
                     <table className="w-full text-sm">
-                      <thead className="bg-black/[0.03] text-xs uppercase tracking-wider text-black/50">
+                      <thead className="bg-white/4 text-xs uppercase tracking-wider text-text-muted">
                         <tr>
                           <th className="px-4 py-2 text-left">#</th>
                           <th className="px-4 py-2 text-left">Rep</th>

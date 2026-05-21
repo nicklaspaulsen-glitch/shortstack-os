@@ -352,7 +352,7 @@ export default function MeetingDetailPage() {
                   <button
                     key={i}
                     onClick={() => seekTo(k.ts)}
-                    className="text-[10px] px-2 py-1 rounded-md bg-black/[0.04] hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent transition-all flex items-center gap-1"
+                    className="text-[10px] px-2 py-1 rounded-md bg-white/4 hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent transition-all flex items-center gap-1"
                   >
                     <Play size={8} /> {formatTs(k.ts)} · {k.label}
                   </button>

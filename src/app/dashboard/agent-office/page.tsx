@@ -226,7 +226,7 @@ export default function AgentOfficePage() {
         <div className="flex items-center gap-2 shrink-0">
           <div className="flex flex-wrap items-center gap-2">
             {/* 2D / 3D toggle */}
-            <div className="flex items-center rounded-lg border border-border-subtle bg-black/5 p-0.5">
+            <div className="flex items-center rounded-lg border border-border-subtle bg-white/5 p-0.5">
               <button
                 onClick={() => setViewMode("kumo")}
                 className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "kumo" ? "bg-blue-600 text-white shadow" : "text-text-muted hover:text-text-muted"}`}

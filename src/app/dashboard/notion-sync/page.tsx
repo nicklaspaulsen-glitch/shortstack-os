@@ -126,10 +126,10 @@ export default function NotionSyncPage() {
               <CheckCircle2 className="w-5 h-5 text-emerald-400" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-[#374151]">Connected to Notion</p>
-              <p className="text-sm text-[#6B7280] mt-0.5 truncate">
+              <p className="text-sm font-semibold text-text-secondary">Connected to Notion</p>
+              <p className="text-sm text-text-muted mt-0.5 truncate">
                 Workspace:{" "}
-                <span className="text-[#374151]">
+                <span className="text-text-secondary">
                   {connection.account_name || connection.account_id || "Unknown workspace"}
                 </span>
               </p>
@@ -141,7 +141,7 @@ export default function NotionSyncPage() {
                   : "Never"}
               </div>
             </div>
-            <div className="text-[rgba(0,0,0,0.10)]">
+            <div className="text-white/10">
               <NotionIcon />
             </div>
           </motion.div>
@@ -152,9 +152,9 @@ export default function NotionSyncPage() {
             <motion.div className="glass rounded-xl p-5 flex flex-col gap-3 spotlight-card" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
               <div className="flex items-center gap-2">
                 <RefreshCw className="w-4 h-4 text-brand-accent" />
-                <p className="text-sm font-semibold text-[#374151]">Sync Now</p>
+                <p className="text-sm font-semibold text-text-secondary">Sync Now</p>
               </div>
-              <p className="text-xs text-[#6B7280]">
+              <p className="text-xs text-text-muted">
                 Pull latest changes from all connected Notion databases immediately.
               </p>
               <button
@@ -175,9 +175,9 @@ export default function NotionSyncPage() {
             <motion.div className="glass rounded-xl p-5 flex flex-col gap-3 spotlight-card" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-brand-accent" />
-                <p className="text-sm font-semibold text-[#374151]">Auto-Sync</p>
+                <p className="text-sm font-semibold text-text-secondary">Auto-Sync</p>
               </div>
-              <p className="text-xs text-[#6B7280]">
+              <p className="text-xs text-text-muted">
                 Automatically sync with Notion every 15 minutes in the background.
               </p>
               <div className="flex items-center gap-3 mt-1">
@@ -188,7 +188,7 @@ export default function NotionSyncPage() {
                     <ToggleLeft className="w-9 h-9 text-text-muted" />
                   )}
                 </button>
-                <span className="text-sm text-[#6B7280]">
+                <span className="text-sm text-text-muted">
                   {autoSync ? "Auto-sync on (every 15 min)" : "Auto-sync off"}
                 </span>
               </div>
@@ -207,7 +207,7 @@ export default function NotionSyncPage() {
                 "Content calendar ? Notion calendar",
                 "Tasks & projects ? Notion tasks",
               ].map((item) => (
-                <div key={item} className="flex items-center gap-2 text-sm text-[#6B7280]">
+                <div key={item} className="flex items-center gap-2 text-sm text-text-muted">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                   {item}
                 </div>
@@ -234,12 +234,12 @@ export default function NotionSyncPage() {
       ) : (
         /* Not connected state */
         <div className="flex flex-col items-center gap-6 py-10">
-          <motion.div className="w-20 h-20  glass border border-[rgba(0,0,0,0.08)] flex items-center justify-center text-text-muted" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
+          <motion.div className="w-20 h-20 glass border border-white/10 flex items-center justify-center text-text-muted" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
             <NotionIcon />
           </motion.div>
           <div className="text-center">
-            <h2 className="text-xl font-bold text-[#111827]">Connect Your Notion Workspace</h2>
-            <p className="text-[#6B7280] mt-2 max-w-md text-sm">
+            <h2 className="text-xl font-bold text-text-primary">Connect Your Notion Workspace</h2>
+            <p className="text-text-muted mt-2 max-w-md text-sm">
               Link Notion to automatically sync your CRM, content calendar, tasks, and leads � all in one place.
             </p>
           </div>
@@ -254,8 +254,8 @@ export default function NotionSyncPage() {
                 <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT, borderRadius: "4px 4px 0 0" }} />
                 <div className="p-4 flex flex-col gap-2">
                   <div className="text-brand-accent">{f.icon}</div>
-                  <p className="text-sm font-semibold text-[#374151]">{f.label}</p>
-                  <p className="text-xs text-[#6B7280]">{f.desc}</p>
+                  <p className="text-sm font-semibold text-text-secondary">{f.label}</p>
+                  <p className="text-xs text-text-muted">{f.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -272,7 +272,7 @@ export default function NotionSyncPage() {
                 )
               }
               title="Notion OAuth is coming soon"
-              className="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold bg-[rgba(0,0,0,0.06)] text-text-muted border border-[rgba(0,0,0,0.08)] cursor-not-allowed"
+              className="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold bg-white/8 text-text-muted border border-white/10 cursor-not-allowed"
             >
               <NotionIcon />
               Connect Notion Workspace

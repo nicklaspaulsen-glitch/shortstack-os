@@ -85,7 +85,7 @@ export default function GoogleBusinessPage() {
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Google Business</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <button className="px-3 py-1.5 rounded-lg border border-border-subtle bg-black/5 text-text-primary text-xs hover:bg-black/10 transition-all flex items-center gap-1.5">
+        <button className="px-3 py-1.5 rounded-lg border border-border-subtle bg-white/5 text-text-primary text-xs hover:bg-white/10 transition-all flex items-center gap-1.5">
                   <RefreshCw size={12} /> Refresh
                 </button>
       </div>

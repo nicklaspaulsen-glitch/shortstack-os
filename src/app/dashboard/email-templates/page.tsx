@@ -67,15 +67,15 @@ const MERGE_TAGS = [
 ];
 
 const categoryColors: Record<string, string> = {
-  Welcome: "bg-green-500/10 text-green-700",
-  "Follow-up": "bg-blue-500/10 text-blue-700",
-  "Re-engagement": "bg-orange-500/10 text-orange-700",
-  Invoice: "bg-yellow-500/10 text-yellow-700",
-  Report: "bg-purple-500/10 text-purple-700",
-  Promotion: "bg-pink-500/10 text-pink-700",
-  Onboarding: "bg-teal-500/10 text-teal-700",
-  Sales: "bg-indigo-500/10 text-indigo-700",
-  Retention: "bg-amber-500/10 text-amber-700",
+  Welcome: "bg-green-500/10 text-green-400",
+  "Follow-up": "bg-blue-500/10 text-blue-400",
+  "Re-engagement": "bg-orange-500/10 text-orange-400",
+  Invoice: "bg-yellow-500/10 text-yellow-400",
+  Report: "bg-purple-500/10 text-purple-400",
+  Promotion: "bg-pink-500/10 text-pink-400",
+  Onboarding: "bg-teal-500/10 text-teal-400",
+  Sales: "bg-indigo-500/10 text-indigo-400",
+  Retention: "bg-amber-500/10 text-amber-400",
 };
 
 export default function EmailTemplatesPage() {
@@ -190,7 +190,7 @@ export default function EmailTemplatesPage() {
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Email Templates</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <button className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
+        <button className="px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1.5">
                   <Plus size={12} /> New Template
                 </button>
       </div>
@@ -207,9 +207,9 @@ export default function EmailTemplatesPage() {
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="relative flex-1 min-w-[200px]">
                     <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-                    <input value={search} onChange={e => setSearch(e.target.value)} className="rounded-xl w-full pl-9 text-xs px-3 py-2 text-text-primary placeholder:text-text-muted outline-none bg-[#FFFFFF] border border-[rgba(0,0,0,0.10)]" placeholder="Search templates..." aria-label="Search email templates" />
+                    <input value={search} onChange={e => setSearch(e.target.value)} className="rounded-xl w-full pl-9 text-xs px-3 py-2 text-text-primary placeholder:text-text-muted outline-none bg-white/5 border border-border-subtle" placeholder="Search templates..." aria-label="Search email templates" />
                   </div>
-                  <select value={sortBy} onChange={e => setSortBy(e.target.value as typeof sortBy)} className="rounded-xl text-xs px-3 py-2 text-text-primary outline-none bg-[#FFFFFF] border border-[rgba(0,0,0,0.10)]">
+                  <select value={sortBy} onChange={e => setSortBy(e.target.value as typeof sortBy)} className="rounded-xl text-xs px-3 py-2 text-text-primary outline-none bg-white/5 border border-border-subtle">
                     <option value="name">Sort: Name</option>
                     <option value="opens">Sort: Opens</option>
                     <option value="replies">Sort: Replies</option>
@@ -219,7 +219,7 @@ export default function EmailTemplatesPage() {
                   {CATEGORIES.map(cat => (
                     <button key={cat} onClick={() => setFilterCategory(cat)}
                       className={`px-3 py-1.5 rounded-lg text-[10px] font-medium transition-colors ${
-                        filterCategory === cat ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "bg-[rgba(0,0,0,0.03)] text-text-muted border border-[rgba(0,0,0,0.08)] hover:bg-[rgba(0,0,0,0.06)]"
+                        filterCategory === cat ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "bg-white/4 text-text-muted border border-border-subtle hover:bg-white/8"
                       }`}>{cat}</button>
                   ))}
                 </div>
@@ -254,7 +254,7 @@ export default function EmailTemplatesPage() {
                           {template.body.substring(0, 120)}...
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded ${categoryColors[template.category] || "bg-[rgba(0,0,0,0.04)] text-[#6B7280]"}`}>
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded ${categoryColors[template.category] || "bg-white/5 text-text-muted"}`}>
                             {template.category}
                           </span>
                           <div className="flex items-center gap-2 text-[8px] text-text-muted">
@@ -325,7 +325,7 @@ export default function EmailTemplatesPage() {
                           ].map(m => (
                             <button key={m.key} onClick={() => setPreviewMode(m.key as typeof previewMode)}
                               className={`flex-1 text-[9px] py-1.5 rounded flex items-center justify-center gap-1 ${
-                                previewMode === m.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-[#6B7280] hover:bg-[rgba(0,0,0,0.04)]"
+                                previewMode === m.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted hover:bg-white/5"
                               }`}>{m.icon} {m.label}</button>
                           ))}
                         </div>
@@ -426,9 +426,9 @@ export default function EmailTemplatesPage() {
                           <p className="text-[9px] text-text-muted">{t.category}</p>
                         </div>
                         <div className="grid grid-cols-3 gap-4 text-center text-[10px]">
-                          <div><p className="font-bold text-blue-700">{t.opens}%</p><p className="text-[8px] text-[#6B7280]">Opens</p></div>
-                          <div><p className="font-bold text-green-700">{t.clicks}%</p><p className="text-[8px] text-[#6B7280]">Clicks</p></div>
-                          <div><p className="font-bold text-purple-700">{t.replies}%</p><p className="text-[8px] text-[#6B7280]">Replies</p></div>
+                          <div><p className="font-bold text-blue-400">{t.opens}%</p><p className="text-[8px] text-text-muted">Opens</p></div>
+                          <div><p className="font-bold text-green-400">{t.clicks}%</p><p className="text-[8px] text-text-muted">Clicks</p></div>
+                          <div><p className="font-bold text-purple-400">{t.replies}%</p><p className="text-[8px] text-text-muted">Replies</p></div>
                         </div>
                       </motion.div>
                     ))}
@@ -466,7 +466,7 @@ export default function EmailTemplatesPage() {
                             <div className="flex items-center gap-3">
                               <span className="text-text-muted">{v === t.version ? t.lastEdited : `Mar ${10 + v}`}</span>
                               {v !== t.version && (
-                                <button className="text-[9px] px-2 py-0.5 rounded bg-[rgba(0,0,0,0.04)] text-[#6B7280] hover:text-brand-accent">Restore</button>
+                                <button className="text-[9px] px-2 py-0.5 rounded bg-white/5 text-text-muted hover:text-brand-accent">Restore</button>
                               )}
                             </div>
                           </div>
@@ -531,7 +531,7 @@ export default function EmailTemplatesPage() {
                     <div className="flex gap-2 justify-center flex-wrap">
                       {["Follow-up", "Welcome", "Re-engagement", "Upsell", "Review request", "Holiday promo"].map(q => (
                         <button key={q} onClick={() => setAiPrompt(`Write a ${q.toLowerCase()} email template for a digital marketing agency. Professional but conversational tone.`)}
-                          className="text-[9px] px-2 py-1 rounded bg-[rgba(0,0,0,0.04)] text-[#6B7280] border border-[rgba(0,0,0,0.08)] hover:border-[rgba(59,130,246,0.25)] hover:text-brand-accent transition-all">{q}</button>
+                          className="text-[9px] px-2 py-1 rounded bg-white/5 text-text-muted border border-border-subtle hover:border-[rgba(59,130,246,0.25)] hover:text-brand-accent transition-all">{q}</button>
                       ))}
                     </div>
 
@@ -680,7 +680,7 @@ export default function EmailTemplatesPage() {
 >
                         <span className="font-medium">{t.name}</span>
                         <div className="flex items-center gap-2">
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded ${t.shared ? "bg-green-500/10 text-green-700" : "bg-[rgba(0,0,0,0.04)] text-[#6B7280]"}`}>
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded ${t.shared ? "bg-green-500/10 text-green-400" : "bg-white/5 text-text-muted"}`}>
                             {t.shared ? "Shared" : "Private"}
                           </span>
                           <button className="text-[9px] px-2 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)]">
@@ -699,7 +699,7 @@ export default function EmailTemplatesPage() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   className="glass rounded-xl w-full max-w-2xl max-h-[80vh] flex flex-col" 
 >
-                  <div className="flex items-center justify-between p-4 border-b border-[rgba(0,0,0,0.10)]">
+                  <div className="flex items-center justify-between p-4 border-b border-white/10">
                     <div className="flex items-center gap-2">
                       <Tag size={14} className="text-brand-accent" />
                       <h3 className="text-sm font-bold">{selectedTemplate.name}</h3>
@@ -723,7 +723,7 @@ export default function EmailTemplatesPage() {
                       <textarea value={editedBody} onChange={e => setEditedBody(e.target.value)} rows={12} className="input w-full text-xs resize-none font-mono" />
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 p-4 border-t border-[rgba(0,0,0,0.10)]">
+                  <div className="flex items-center gap-2 p-4 border-t border-white/10">
                     <button className="btn-primary flex items-center gap-1.5 text-[10px]"><Copy size={12} /> Copy</button>
                     <button onClick={handleGenerateVariants} className="btn-secondary flex items-center gap-1.5 text-[10px]"><Sparkles size={12} /> A/B Variants</button>
                     <button onClick={() => { setActiveTab("editor"); }} className="btn-secondary flex items-center gap-1.5 text-[10px]"><Edit3 size={12} /> Full Editor</button>

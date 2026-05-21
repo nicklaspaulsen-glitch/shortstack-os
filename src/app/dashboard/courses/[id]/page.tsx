@@ -688,7 +688,7 @@ export default function CourseBuilderPage() {
                   <button
                     onClick={() => void enrollClient()}
                     disabled={enrolling || !enrollClientId}
-                    className="w-full py-1.5 bg-brand-accent hover:bg-[#3B82F6] disabled:opacity-50 text-white rounded-lg text-sm transition-colors"
+                    className="w-full py-1.5 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] rounded-lg text-sm transition-colors"
                   >
                     {enrolling ? "Enrolling…" : "Enroll"}
                   </button>

@@ -133,7 +133,7 @@ export default function VoiceProfileSettingsPage() {
                 </button>
       </div>
     </div>{loading ? (
-              <div className="h-48 rounded-xl bg-black/4 animate-pulse" />
+              <div className="h-48 rounded-xl bg-white/5 animate-pulse" />
             ) : (
               <>
                 <StatusBanner data={data} />
@@ -281,7 +281,7 @@ function Gauge({
           {suffix}
         </span>
       </div>
-      <div className="h-2 rounded-full bg-black/6 overflow-hidden">
+      <div className="h-2 rounded-full bg-white/8 overflow-hidden">
         <div
           className="h-full rounded-full bg-gradient-to-r from-blue-500 to-blue-400 transition-all"
           style={{ width: `${pct}%` }}
@@ -311,7 +311,7 @@ function SignatureSection({ profile }: { profile: VoiceProfile }) {
       {groups.map((g) =>
         g.items && g.items.length > 0 ? (
           <div key={g.label}>
-            <p className="text-xs text-gray-500 mb-2">{g.label}</p>
+            <p className="text-xs text-text-muted mb-2">{g.label}</p>
             <div className="flex flex-wrap gap-2">
               {g.items.map((item, i) => (
                 <span
@@ -366,7 +366,7 @@ function BootstrapPanel({
         <Wand2 size={16} className="text-blue-600" />
         <h3 className="font-semibold text-sm">Bootstrap</h3>
       </div>
-      <p className="text-xs text-gray-500 mb-3">
+      <p className="text-xs text-text-muted mb-3">
         Paste 5-10 samples of your real writing. Separate samples with a
         blank line or a {"\"---\""} separator. We capture each sample,
         recompute the profile, and switch voice matching on immediately.

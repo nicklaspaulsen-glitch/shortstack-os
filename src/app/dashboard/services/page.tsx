@@ -243,7 +243,7 @@ export default function ServicesPage() {
                           </td>
                         </tr>
                       ) : (
-                        <motion.tr key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className={`hover:bg-[rgba(0,0,0,0.02)] transition-colors group ${!s.is_active ? "opacity-50" : ""}`}>
+                        <motion.tr key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className={`hover:bg-white/4 transition-colors group ${!s.is_active ? "opacity-50" : ""}`}>
                           <td className="px-4 py-3">
                             <p className="text-text-secondary font-medium">{s.name}</p>
                             {s.description && <p className="text-text-muted text-xs mt-0.5 line-clamp-1">{s.description}</p>}
