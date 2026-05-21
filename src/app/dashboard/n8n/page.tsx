@@ -16,7 +16,6 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
-import PageHero from "@/components/ui/page-hero";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -291,12 +290,15 @@ export default function N8NPage() {
 
   return (
     <MotionPage>
-      <PageHero
-        title="N8N Workflows"
-        subtitle="Automation pipelines running on your n8n instance"
-        eyebrow="Automations"
-        gradient="ocean"
-      />
+      {/* ── Slim editorial header ───────────────────────────────────── */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">Automations</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+            N8N Workflows
+          </h1>
+        </div>
+      </div>
 
       <div className="px-4 sm:px-6 lg:px-8 pb-16 max-w-screen-xl mx-auto">
         {/* Stats */}

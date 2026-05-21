@@ -41,7 +41,6 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
-import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
 import toast from "react-hot-toast";
 
@@ -276,40 +275,40 @@ export default function AgentCommandPage() {
   return (
     <MotionPage>
       <div className="min-h-screen bg-bg-base text-text-primary px-4 py-6 space-y-6 max-w-[1400px] mx-auto">
-        {/* ── PageHero ──────────────────────────────────────────────────── */}
-        <PageHero
-          title="Agent Command Center"
-          subtitle="Live view of every agent, task, and pipeline stage"
-          eyebrow="AUTONOMOUS"
-          variant="compact"
-          actions={
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => void fetchData()}
-                className="btn-pill-ghost text-xs flex items-center gap-1.5"
-              >
-                <RefreshCw size={12} />
-                Refresh
-              </button>
-              <button
-                onClick={() => void toggleLoop()}
-                disabled={toggling}
-                className={`btn-pill text-xs flex items-center gap-1.5 min-w-[130px] ${
-                  loopOn ? "bg-red-500/20 text-red-400 border border-red-500/30" : ""
-                }`}
-              >
-                {toggling ? (
-                  <Loader2 size={12} className="animate-spin" />
-                ) : loopOn ? (
-                  <Pause size={12} />
-                ) : (
-                  <Play size={12} />
-                )}
-                {loopOn ? "Pause Loop" : "Start Loop"}
-              </button>
-            </div>
-          }
-        />
+        {/* ── Slim editorial header ─────────────────────────────────────── */}
+        <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+          <div className="min-w-0">
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">Autonomous</p>
+            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+              Agent Command Center
+            </h1>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => void fetchData()}
+              className="btn-pill-ghost text-xs flex items-center gap-1.5"
+            >
+              <RefreshCw size={12} />
+              Refresh
+            </button>
+            <button
+              onClick={() => void toggleLoop()}
+              disabled={toggling}
+              className={`btn-pill text-xs flex items-center gap-1.5 min-w-[120px] ${
+                loopOn ? "bg-red-500/20 text-red-400 border border-red-500/30" : ""
+              }`}
+            >
+              {toggling ? (
+                <Loader2 size={12} className="animate-spin" />
+              ) : loopOn ? (
+                <Pause size={12} />
+              ) : (
+                <Play size={12} />
+              )}
+              {loopOn ? "Pause Loop" : "Start Loop"}
+            </button>
+          </div>
+        </div>
 
         {/* ── Loop status strip ──────────────────────────────────────────── */}
         {loopOn && (

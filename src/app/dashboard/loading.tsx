@@ -1,18 +1,14 @@
 ﻿export default function DashboardLoading() {
   return (
     <div className="space-y-5 p-1">
-      {/* Hero banner skeleton — matches PageHero component */}
-      <div className="relative overflow-hidden  border border-border-subtle bg-gradient-to-br from-[rgba(212,255,0,0.08)] via-[rgba(212,255,0,0.03)] to-transparent p-6">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14  bg-[rgba(212,255,0,0.08)] animate-pulse" />
-          <div className="flex-1 space-y-2">
-            <div className="h-6 w-64 bg-white/8 rounded-lg animate-pulse" />
-            <div className="h-3 w-48 bg-white/8 rounded animate-pulse" />
-          </div>
-          <div className="hidden md:flex gap-2">
-            <div className="h-8 w-24 bg-white/8 rounded-lg animate-pulse" />
-            <div className="h-8 w-20 bg-white/8 rounded-lg animate-pulse" />
-          </div>
+      {/* Slim editorial header skeleton */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="space-y-1.5">
+          <div className="h-2.5 w-20 bg-white/6 rounded animate-pulse" />
+          <div className="h-7 w-52 bg-white/10 rounded-lg animate-pulse" />
+        </div>
+        <div className="hidden sm:flex gap-2">
+          <div className="h-8 w-24 bg-white/6 rounded-full animate-pulse" />
         </div>
       </div>
 
@@ -44,7 +40,7 @@
         ))}
       </div>
 
-      {/* Subtle blue accent — gives energy instead of dead skeleton */}
+      {/* Lime pulse — gives energy instead of dead skeleton */}
       <div className="fixed bottom-6 right-6 flex items-center gap-2 px-4 py-2 rounded-full bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] backdrop-blur-sm">
         <span className="relative flex h-2 w-2">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-accent opacity-75" />

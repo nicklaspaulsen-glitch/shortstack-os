@@ -14,7 +14,6 @@ import { formatLimit, getTierFeatures } from "@/lib/plan-display";
 import { CreditCard } from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
-import PageHero from "@/components/ui/page-hero";
 
 // Description + icon + marketing badge are the only hand-curated bits.
 // Price, token count, client count, feature bullets — all derived from
@@ -112,33 +111,35 @@ export default function PricingPage() {
 
   return (
     <MotionPage className="max-w-7xl mx-auto">
-      <PageHero
-        eyebrow="Billing"
-        title="Choose Your Plan"
-        subtitle="Scale your agency without limits — upgrade or downgrade anytime."
-        icon={<CreditCard size={18} />}
-        actions={
-          <div className="flex items-center gap-3">
-            <span className={`text-xs font-medium transition-colors ${!annual ? "text-text-primary" : "text-text-muted"}`}>Monthly</span>
-            <button
-              onClick={() => setAnnual(!annual)}
-              aria-pressed={annual}
-              aria-label="Toggle annual billing"
-              className={`relative w-11 h-6 rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:outline-none ${
-                annual
-                  ? "bg-brand-accent border-brand-accent"
-                  : "bg-[rgba(99,146,255,0.12)] border-[rgba(99,146,255,0.20)]"
-              }`}
-            >
-              <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${annual ? "translate-x-5" : "translate-x-1"}`} />
-            </button>
-            <span className={`text-xs font-medium transition-colors ${annual ? "text-text-primary" : "text-text-muted"}`}>
-              Annual
-              {annual && <span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.15)] text-brand-accent text-[10px] font-bold">−20%</span>}
-            </span>
-          </div>
-        }
-      />
+      {/* ── Slim editorial header ───────────────────────────────────── */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">Billing</p>
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+            Choose Your Plan
+          </h1>
+        </div>
+        {/* Annual / monthly toggle */}
+        <div className="flex items-center gap-3 shrink-0">
+          <span className={`text-xs font-medium transition-colors ${!annual ? "text-text-primary" : "text-text-muted"}`}>Monthly</span>
+          <button
+            onClick={() => setAnnual(!annual)}
+            aria-pressed={annual}
+            aria-label="Toggle annual billing"
+            className={`relative w-11 h-6 rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:outline-none ${
+              annual
+                ? "bg-brand-accent border-brand-accent"
+                : "bg-[rgba(99,146,255,0.12)] border-[rgba(99,146,255,0.20)]"
+            }`}
+          >
+            <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${annual ? "translate-x-5" : "translate-x-1"}`} />
+          </button>
+          <span className={`text-xs font-medium transition-colors ${annual ? "text-text-primary" : "text-text-muted"}`}>
+            Annual
+            {annual && <span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.15)] text-brand-accent text-[10px] font-bold">−20%</span>}
+          </span>
+        </div>
+      </div>
 
       <div className="space-y-6 mt-6">
         {/* Plans grid */}

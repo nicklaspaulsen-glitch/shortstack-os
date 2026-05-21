@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Activity, ChevronRight, Clock, Sparkles } from "lucide-react";
-import PageHero, { type HeroGradient } from "@/components/ui/page-hero";
+import type { HeroGradient } from "@/components/ui/page-hero";
 import RollingPreview, { type RollingPreviewItem, type RollingPreviewProps } from "@/components/RollingPreview";
 import { formatRelativeTime } from "@/lib/utils";
 
@@ -131,14 +131,20 @@ export default function SectionHub({
 
   return (
     <div className="space-y-5 max-w-[1400px] mx-auto">
-      {/* Hero */}
-      <PageHero
-        icon={heroIcon}
-        eyebrow={eyebrow}
-        title={title}
-        subtitle={subtitle}
-        gradient={heroGradient}
-      />
+      {/* ── Slim editorial header ───────────────────────────────────── */}
+      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+        <div className="min-w-0">
+          {eyebrow && (
+            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">{eyebrow}</p>
+          )}
+          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="text-xs text-text-muted mt-1 truncate">{subtitle}</p>
+          )}
+        </div>
+      </div>
 
       {/* Rolling preview marquee (optional — each hub can pass its own set) */}
       {preview && preview.items.length > 0 && (
@@ -175,14 +181,14 @@ export default function SectionHub({
                 href={a.href}
                 className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light hover:border-[rgba(212,255,0,0.25)] transition-all"
               >
-                <div className="w-9 h-9 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center text-[#2563EB] shrink-0 group-hover:bg-[rgba(212,255,0,0.08)] transition-colors">
+                <div className="w-9 h-9 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center text-brand-accent shrink-0 group-hover:bg-[rgba(212,255,0,0.08)] transition-colors">
                   <Icon size={16} />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-[12px] font-semibold text-text-primary leading-tight truncate">{a.label}</p>
                   <p className="text-[10px] text-text-muted leading-tight">Quick action</p>
                 </div>
-                <ChevronRight size={14} className="text-text-muted group-hover:text-[#2563EB] transition-colors shrink-0" />
+                <ChevronRight size={14} className="text-text-muted group-hover:text-brand-accent transition-colors shrink-0" />
               </Link>
             );
           })}
@@ -197,7 +203,7 @@ export default function SectionHub({
           const display = loading ? "…" : formatStat(raw, s.format);
           return (
             <div key={s.key} className="glass rounded-xl !py-3 !px-3.5 flex items-center gap-3">
-              <div className={s.color || "text-[#2563EB]"}>
+              <div className={s.color || "text-brand-accent"}>
                 <Icon size={16} />
               </div>
               <div className="min-w-0">
@@ -242,7 +248,7 @@ export default function SectionHub({
               const content = (
                 <>
                   <div className="flex items-start gap-2.5 min-w-0">
-                    <div className="w-9 h-9 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center text-[#2563EB] shrink-0">
+                    <div className="w-9 h-9 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center text-brand-accent shrink-0">
                       <Icon size={16} />
                     </div>
                     <div className="min-w-0 flex-1">
