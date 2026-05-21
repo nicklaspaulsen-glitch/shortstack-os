@@ -40,9 +40,9 @@ type View = "all" | "my_tasks" | "by_client" | "by_type" | "due_this_week";
 
 const COLUMN_META: Record<TaskStatus, { label: string; color: string }> = {
   backlog: { label: "Backlog", color: "#94a3b8" },
-  in_progress: { label: "In Progress", color: "#2563EB" },
+  in_progress: { label: "In Progress", color: "#D4FF00" },
   review: { label: "Review", color: "#a855f7" },
-  done: { label: "Done", color: "#2563EB" },
+  done: { label: "Done", color: "#22C55E" },
 };
 
 function getBrowserSupabase() {

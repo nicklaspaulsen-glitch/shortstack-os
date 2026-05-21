@@ -288,7 +288,7 @@ interface LiveStage {
 }
 
 const STAGE_META: LiveStage[] = [
-  { id: "new",          label: "New",        color: "#60A5FA", count: 0 },
+  { id: "new",          label: "New",        color: "#D4FF00", count: 0 },
   { id: "called",       label: "Contacted",  color: "#A78BFA", count: 0 },
   { id: "replied",      label: "Replied",    color: "#F59E0B", count: 0 },
   { id: "booked",       label: "Booked",     color: "#22C55E", count: 0 },
@@ -472,7 +472,7 @@ interface RecentLead {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  new: "#60A5FA",
+  new: "#D4FF00",
   called: "#A78BFA",
   replied: "#F59E0B",
   booked: "#22C55E",
@@ -596,7 +596,7 @@ function NewEnquiries() {
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {leads.map((lead) => {
-            const color = STATUS_COLORS[lead.status] ?? "#60A5FA";
+            const color = STATUS_COLORS[lead.status] ?? "#D4FF00";
             const ini = initials(lead.business_name);
             return (
               <Link
@@ -1112,7 +1112,7 @@ function AgencyDashboard() {
               width: 36,
               height: 36,
               borderRadius: 10,
-              background: "linear-gradient(135deg, #60A5FA, #A78BFA)",
+              background: "linear-gradient(135deg, #6366F1, #A78BFA)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -1185,7 +1185,7 @@ function ClientDashboard() {
           className="h-[2px] mt-1 rounded-full"
           style={{
             background:
-              "linear-gradient(90deg, var(--brand-accent, #2563EB) 0%, transparent 70%)",
+              "linear-gradient(90deg, var(--brand-accent, #D4FF00) 0%, transparent 70%)",
           }}
           aria-hidden
         />

@@ -382,7 +382,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               style={{
                 background: "rgba(13,17,32,0.92)",
                 border: "1px solid rgba(99,146,255,0.15)",
-                color: "#60A5FA",
+                color: "#D4FF00",
               }}
             >
               {zoom}% — click to reset

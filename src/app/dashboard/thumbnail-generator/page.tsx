@@ -1021,7 +1021,7 @@ export default function ThumbnailEditorProPage() {
     { id: "mrbeast", label: "MrBeast", badge: "Viral", badgeColor: "#F59E0B" },
     { id: "jordan-welch", label: "Welch", badge: "Commentary", badgeColor: "#6366F1" },
     { id: "jeff-nippard", label: "Nippard", badge: "Fitness", badgeColor: "#10B981" },
-    { id: "alex-hormozi", label: "Hormozi", badge: "Business", badgeColor: "#3B82F6" },
+    { id: "alex-hormozi", label: "Hormozi", badge: "Business", badgeColor: "#6366F1" },
     { id: "logan-paul", label: "Logan", badge: "Drama", badgeColor: "#EF4444" },
     { id: "grizzy", label: "Grizzy", badge: "Comedy", badgeColor: "#F97316" },
     { id: "pezzy", label: "Pezzy", badge: "Reaction", badgeColor: "#8B5CF6" },

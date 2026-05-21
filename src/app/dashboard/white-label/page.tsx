@@ -38,7 +38,7 @@ const DEFAULT: WhiteLabelConfig = {
   company_name: "",
   brand_name: "",
   logo_url: "",
-  primary_color: "#2563EB",
+  primary_color: "#D4FF00",
   custom_domain: "",
   custom_domain_verified: false,
   custom_domain_ssl_status: "pending",
@@ -326,7 +326,7 @@ export default function WhiteLabelPage() {
           <Field label="Primary Color" hint="Main accent color -- buttons, highlights">
             <div className="flex gap-3 items-center">
               <input type="color" value={config.primary_color} onChange={(e) => set("primary_color", e.target.value)} className="w-10 h-10 rounded-lg cursor-pointer border border-border-subtle bg-transparent" />
-              <Input value={config.primary_color} onChange={(v) => set("primary_color", v)} placeholder="#2563EB" />
+              <Input value={config.primary_color} onChange={(v) => set("primary_color", v)} placeholder="#D4FF00" />
             </div>
           </Field>
           <Field label="Background / Dark Color" hint="Used in hero gradients and dark surfaces">
