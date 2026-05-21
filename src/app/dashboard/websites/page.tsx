@@ -30,8 +30,8 @@ import PageTrainingPanel from "@/components/ui/page-training-panel";
 const Spline = dynamic(() => import("@splinetool/react-spline"), {
   ssr: false,
   loading: () => (
-    <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
-      <div className="w-5 h-5 rounded-full border-2 border-blue-400/40 border-t-blue-400 animate-spin" />
+    <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-black via-[#0D1120] to-black">
+      <div className="w-5 h-5 rounded-full border-2 border-[rgba(212,255,0,0.20)] border-t-brand-accent animate-spin" />
     </div>
   ),
 });
@@ -73,9 +73,9 @@ interface PriceQuote {
 
 const STATUS_BADGE: Record<string, string> = {
   draft:      "bg-white/[0.05] text-[#A8A8B2] border-white/10",
-  generating: "bg-blue-500/15 text-blue-300 border-blue-500/25",
+  generating: "bg-[rgba(212,255,0,0.10)] text-brand-accent border-[rgba(212,255,0,0.25)]",
   preview:    "bg-amber-500/15 text-amber-300 border-amber-500/25",
-  deploying:  "bg-blue-500/15 text-blue-300 border-blue-500/25",
+  deploying:  "bg-[rgba(212,255,0,0.10)] text-brand-accent border-[rgba(212,255,0,0.25)]",
   live:       "bg-emerald-500/15 text-emerald-300 border-emerald-500/25",
   failed:     "bg-red-500/15 text-red-300 border-red-500/25",
   archived:   "bg-white/[0.05] text-[#A8A8B2] border-white/10",
@@ -364,7 +364,7 @@ function GeneratingAnimation() {
             scaleX: { duration: 0.5, ease: "easeOut" },
           }}
           style={{ originX: 0 }}
-          className={`${b.width} ${b.height} ${b.className} bg-[rgba(59,130,246,0.18)]`}
+          className={`${b.width} ${b.height} ${b.className} bg-[rgba(212,255,0,0.10)]`}
         />
       ))}
       <div className="absolute bottom-2 left-0 right-0 flex items-center justify-center gap-1.5">
@@ -478,7 +478,7 @@ export default function WebsitesPage() {
         options: [
           { value: "local_service", label: "Local Service", description: "HVAC, plumbing, dental…", icon: <Home2 size={16} variant="Bulk" color="#38bdf8" />, preview: "bg-gradient-to-br from-sky-500/40 to-cyan-500/40" },
           { value: "ecommerce", label: "E-commerce", description: "Online store", icon: <IxShoppingBag size={16} variant="Bulk" color="#f472b6" />, preview: "bg-gradient-to-br from-pink-500/40 to-rose-500/40" },
-          { value: "saas", label: "SaaS", description: "Software product", icon: <MonitorMobbile size={16} variant="Bulk" color="#818cf8" />, preview: "bg-gradient-to-br from-blue-500/40 to-indigo-500/40" },
+          { value: "saas", label: "SaaS", description: "Software product", icon: <MonitorMobbile size={16} variant="Bulk" color="#818cf8" />, preview: "bg-gradient-to-br from-indigo-600/40 to-indigo-500/40" },
           { value: "portfolio", label: "Portfolio", description: "Creative showcase", icon: <IxCamera size={16} variant="Bulk" color="#fb923c" />, preview: "bg-gradient-to-br from-orange-500/40 to-amber-500/40" },
           { value: "coach", label: "Coach / Course", description: "Coaching, personal brand", icon: <Teacher size={16} variant="Bulk" color="#c084fc" />, preview: "bg-gradient-to-br from-purple-500/40 to-fuchsia-500/40" },
           { value: "blog", label: "Blog / Content", description: "Editorial & newsletter", icon: <Newspaper size={14} />, preview: "bg-gradient-to-br from-emerald-500/40 to-teal-500/40" },
@@ -938,7 +938,7 @@ export default function WebsitesPage() {
                 </button>
               </div>
             </div>
-            {/* Social proof strip */}<div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border-subtle bg-gradient-to-r from-blue-500/[0.04] via-transparent to-emerald-500/[0.04]">
+            {/* Social proof strip */}<div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border-subtle bg-gradient-to-r from-[rgba(212,255,0,0.03)] via-transparent to-emerald-500/[0.04]">
               <div className="flex items-center gap-4 flex-wrap">
                 <div className="flex items-center gap-1.5 text-[11px] text-text-primary">
                   <TrendingUp size={12} className="text-emerald-400" />
@@ -962,7 +962,7 @@ export default function WebsitesPage() {
                 {["A", "M", "J", "K", "R"].map((l, i) => (
                   <span
                     key={i}
-                    className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500/20 to-blue-400/10 border border-border-subtle text-[9px] font-semibold flex items-center justify-center text-text-secondary"
+                    className="w-6 h-6 rounded-full bg-gradient-to-br from-[rgba(212,255,0,0.10)] to-[rgba(212,255,0,0.04)] border border-border-subtle text-[9px] font-semibold flex items-center justify-center text-text-secondary"
                     style={{ marginLeft: i === 0 ? 0 : -6 }}
                   >
                     {l}
@@ -1008,13 +1008,13 @@ export default function WebsitesPage() {
                       key={niche}
                       type="button"
                       onClick={() => setNicheFilter(filterKey)}
-                      className="relative px-3 py-1 text-[11px] font-medium rounded-full transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/60"
-                      style={{ color: isActive ? "#60A5FA" : "#6B7280" }}
+                      className="relative px-3 py-1 text-[11px] font-medium rounded-full transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/60"
+                      style={{ color: isActive ? "#D4FF00" : "#6B7280" }}
                     >
                       {isActive && (
                         <motion.span
                           layoutId="niche-filter-pill"
-                          className="absolute inset-0 rounded-full border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.12)]"
+                          className="absolute inset-0 rounded-full border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.10)]"
                           transition={{ type: "spring", stiffness: 380, damping: 30 }}
                         />
                       )}
@@ -1034,7 +1034,7 @@ export default function WebsitesPage() {
                     onClick={() => pickTemplate(t)}
                     onMouseEnter={() => setHoveredTemplate(t.id)}
                     onMouseLeave={() => setHoveredTemplate(null)}
-                    className="group relative text-left overflow-hidden border border-border-subtle bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-[rgba(59,130,246,0.12)] hover:-translate-y-1 hover:border-[rgba(59,130,246,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(59,130,246,0.6)] [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
+                    className="group relative text-left overflow-hidden border border-border-subtle bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-[rgba(212,255,0,0.10)] hover:-translate-y-1 hover:border-[rgba(212,255,0,0.30)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/50 [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
                   >
                     {/* Preview image */}
                     <div className="relative aspect-[3/2] overflow-hidden">
@@ -1055,8 +1055,8 @@ export default function WebsitesPage() {
                         >
                           {isHovered && (
                             <Suspense fallback={
-                              <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
-                                <div className="w-5 h-5 rounded-full border-2 border-blue-400/40 border-t-blue-400 animate-spin" />
+                              <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-black via-[#0D1120] to-black">
+                                <div className="w-5 h-5 rounded-full border-2 border-[rgba(212,255,0,0.20)] border-t-brand-accent animate-spin" />
                               </div>
                             }>
                               <Spline
@@ -1066,8 +1066,8 @@ export default function WebsitesPage() {
                             </Suspense>
                           )}
                           {/* "LIVE" badge overlay */}
-                          <span className="absolute top-2.5 left-1/2 -translate-x-1/2 text-[9px] px-2.5 py-0.5 rounded-full bg-blue-500/90 backdrop-blur-md text-white font-semibold tracking-widest uppercase flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                          <span className="absolute top-2.5 left-1/2 -translate-x-1/2 text-[9px] px-2.5 py-0.5 rounded-full bg-brand-accent backdrop-blur-md text-black font-semibold tracking-widest uppercase flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-black/40 animate-pulse" />
                             Live 3D
                           </span>
                         </div>
@@ -1138,7 +1138,7 @@ export default function WebsitesPage() {
                     {/* Footer bar */}
                     <div className="flex items-center justify-between px-3 py-2.5 bg-surface">
                       <span className="text-[10px] text-text-muted flex items-center gap-1">
-                        <Clock size={10} className="text-[rgba(59,130,246,0.7)]" /> {t.avgLaunch}
+                        <Clock size={10} className="text-text-muted" /> {t.avgLaunch}
                       </span>
                       <span className="text-[10px] text-brand-accent font-semibold flex items-center gap-1 transition-transform duration-200 group-hover:translate-x-0.5">
                         Use this <ArrowRight size={11} />
@@ -1189,7 +1189,7 @@ export default function WebsitesPage() {
                       {STATUS_LABEL[effectiveStatus(active)] || active.status}
                     </span>
                     {effectiveStatus(active) === "preview" && active.demo_expires_at && (
-                      <span className="text-[9px] px-2 py-0.5 rounded-full border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent inline-flex items-center gap-1">
+                      <span className="text-[9px] px-2 py-0.5 rounded-full border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-brand-accent inline-flex items-center gap-1">
                         <Clock size={9} /> {daysUntil(active.demo_expires_at)} days left
                       </span>
                     )}
@@ -1358,7 +1358,7 @@ export default function WebsitesPage() {
                             {STATUS_LABEL[status] || p.status}
                           </span>
                           {status === "preview" && days !== null && (
-                            <span className="absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent backdrop-blur inline-flex items-center gap-1">
+                            <span className="absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-brand-accent backdrop-blur inline-flex items-center gap-1">
                               <Clock size={9} /> {days}d
                             </span>
                           )}
@@ -1637,7 +1637,7 @@ function PricingModal({
                     <button
                       key={a.key}
                       onClick={() => onToggleAddon(a.key)}
-                      className={`w-full flex items-center justify-between p-2 rounded-lg border text-left transition ${active ? "border-brand-accent bg-[rgba(59,130,246,0.08)]" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"}`}
+                      className={`w-full flex items-center justify-between p-2 rounded-lg border text-left transition ${active ? "border-brand-accent bg-[rgba(212,255,0,0.08)]" : "border-border-subtle hover:border-[rgba(212,255,0,0.25)]"}`}
                     >
                       <span className="flex items-center gap-2 text-[11px]">
                         <span className={active ? "text-brand-accent" : "text-text-muted"}>{a.icon}</span>
@@ -1690,7 +1690,7 @@ function PricingModal({
               <li className="flex items-center gap-1 text-text-muted/60"><X size={9} /> No analytics</li>
             </ul>
           </div>
-          <div className="glass rounded-xl border border-[rgba(59,130,246,0.25)] bg-gradient-to-br from-blue-500/5 to-indigo-500/5 p-3">
+          <div className="glass rounded-xl border border-[rgba(212,255,0,0.20)] bg-gradient-to-br from-[rgba(212,255,0,0.04)] to-transparent p-3">
             <h3 className="text-[11px] font-semibold mb-2 flex items-center gap-1.5">
               <Crown size={11} className="text-brand-accent" /> Paid Plan
             </h3>
