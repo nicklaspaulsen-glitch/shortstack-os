@@ -14,8 +14,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import EmptyState from "@/components/empty-state";
-import { PrismPanel } from "@/components/prism";
-import { BookOpen as BookOpenIcon } from "lucide-react";
 import { useAutoSave } from "@/lib/use-auto-save";
 import AutoSaveIndicator from "@/components/ui/auto-save-indicator";
 import { MotionPage } from "@/components/motion/motion-page";

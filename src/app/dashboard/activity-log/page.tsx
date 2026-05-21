@@ -7,7 +7,7 @@ import {
   CreditCard, BarChart3, Shield, Download,
   AlertTriangle, Eye, Key,
   Settings, ChevronRight,
-  ClipboardList, Loader2,
+  Loader2,
 } from "lucide-react";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
