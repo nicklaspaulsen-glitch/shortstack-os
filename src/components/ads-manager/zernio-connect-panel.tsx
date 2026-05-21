@@ -156,15 +156,15 @@ export default function ZernioConnectPanel() {
         className="rounded-xl p-4 flex items-start gap-3"
         style={{
           background:
-            "linear-gradient(135deg, rgba(200,168,85,0.06), rgba(200,168,85,0.02))",
-          border: "1px solid rgba(200,168,85,0.2)",
+            "linear-gradient(135deg, rgba(212,255,0,0.06), rgba(212,255,0,0.02))",
+          border: "1px solid rgba(212,255,0,0.18)",
         }}
       >
         <div
           className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-          style={{ background: "rgba(200,168,85,0.12)" }}
+          style={{ background: "rgba(212,255,0,0.10)" }}
         >
-          <Sparkles size={16} style={{ color: "#c8a855" }} />
+          <Sparkles size={16} style={{ color: "#D4FF00" }} />
         </div>
         <div className="text-[12.5px] leading-relaxed">
           <p className="font-semibold text-white mb-1">

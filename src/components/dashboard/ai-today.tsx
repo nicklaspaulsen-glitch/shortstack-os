@@ -47,8 +47,8 @@ const ICON_MAP = {
 
 const URGENCY_COLORS = {
   high: { glow: "rgba(239,68,68,0.18)", accent: "#ef4444", text: "text-red-600", border: "rgba(239,68,68,0.25)" },
-  medium: { glow: "rgba(200,168,85,0.16)", accent: "#c8a855", text: "text-amber-600", border: "rgba(200,168,85,0.25)" },
-  low: { glow: "rgba(212,255,0,0.10)", accent: "#2563EB", text: "text-indigo-600", border: "rgba(212,255,0,0.18)" },
+  medium: { glow: "rgba(245,158,11,0.16)", accent: "#F59E0B", text: "text-amber-500", border: "rgba(245,158,11,0.25)" },
+  low: { glow: "rgba(212,255,0,0.10)", accent: "#D4FF00", text: "text-brand-accent", border: "rgba(212,255,0,0.18)" },
 } as const;
 
 export default function AiToday() {
@@ -84,9 +84,9 @@ export default function AiToday() {
         <div className="flex items-center gap-2 mb-4">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center animate-pulse"
-            style={{ background: "rgba(200,168,85,0.08)" }}
+            style={{ background: "rgba(212,255,0,0.08)" }}
           >
-            <Sparkles size={14} style={{ color: "#c8a855" }} />
+            <Sparkles size={14} style={{ color: "#D4FF00" }} />
           </div>
           <div className="flex-1">
             <div className="h-3 w-24 bg-white/[0.04] rounded animate-pulse mb-1.5" />
@@ -114,7 +114,7 @@ export default function AiToday() {
         className="absolute -top-12 -right-12 w-48 h-48 rounded-full pointer-events-none blur-3xl opacity-50"
         style={{
           background:
-            "radial-gradient(circle, rgba(200,168,85,0.12) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(212,255,0,0.12) 0%, transparent 70%)",
         }}
       />
 
@@ -124,11 +124,11 @@ export default function AiToday() {
             className="w-9 h-9 rounded-xl flex items-center justify-center"
             style={{
               background:
-                "linear-gradient(135deg, rgba(200,168,85,0.14), rgba(200,168,85,0.04))",
-              border: "1px solid rgba(200,168,85,0.25)",
+                "linear-gradient(135deg, rgba(212,255,0,0.14), rgba(212,255,0,0.04))",
+              border: "1px solid rgba(212,255,0,0.25)",
             }}
           >
-            <Sparkles size={15} style={{ color: "#c8a855" }} />
+            <Sparkles size={15} style={{ color: "#D4FF00" }} />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -136,8 +136,8 @@ export default function AiToday() {
               <span
                 className="text-[9.5px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded"
                 style={{
-                  background: "rgba(200,168,85,0.12)",
-                  color: "#c8a855",
+                  background: "rgba(212,255,0,0.10)",
+                  color: "#D4FF00",
                 }}
               >
                 Live

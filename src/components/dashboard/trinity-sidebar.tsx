@@ -198,14 +198,14 @@ function NavItem({
             width: 3,
             height: 16,
             borderRadius: "0 2px 2px 0",
-            background: "#3B82F6",
+            background: "#D4FF00",
           }}
         />
       )}
       <item.icon
         size={14}
         style={{
-          color: active ? "#3B82F6" : hovered ? "#93A3B8" : "inherit",
+          color: active ? "#D4FF00" : hovered ? "#93A3B8" : "inherit",
           flexShrink: 0,
           transition: "color 120ms ease",
         }}
@@ -282,7 +282,7 @@ function SidebarBody({ pathname }: { pathname: string }) {
               flexShrink: 0,
             }}
           >
-            <Layers size={16} style={{ color: "#3B82F6" }} />
+            <Layers size={16} style={{ color: "#D4FF00" }} />
           </div>
 
           <div>

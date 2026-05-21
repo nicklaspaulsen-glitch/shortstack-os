@@ -1545,7 +1545,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-1">
                     <TrendingUp size={8} style={{ color: ttsQualityScore >= 80 ? "#4ade80" : ttsQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
-                    <span className="text-[8px] font-semibold tracking-wide" style={{ color: "#71717A" }}>TTS READY</span>
+                    <span className="text-[8px] font-semibold tracking-wide text-text-muted">TTS READY</span>
                   </div>
                   <span className="text-[9px] font-bold tabular-nums"
                     style={{ color: ttsQualityScore >= 80 ? "#4ade80" : ttsQualityScore >= 50 ? "#fbbf24" : "#f87171" }}>
