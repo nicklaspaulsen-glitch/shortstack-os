@@ -144,7 +144,7 @@ interface CardFaceProps {
 }
 
 function CardFace({ card, isTop }: CardFaceProps) {
-  const accent = card.accent ?? "rgba(59,130,246,0.50)";
+  const accent = card.accent ?? "rgba(212,255,0,0.50)";
 
   return (
     <div
@@ -215,7 +215,7 @@ function CardFace({ card, isTop }: CardFaceProps) {
 const DEMO_CARDS: ShuffleCard[] = [
   {
     id: "analytics",
-    accent: "rgba(59,130,246,0.70)",
+    accent: "rgba(212,255,0,0.70)",
     title: "Analytics",
     subtitle: "Track performance across all campaigns",
   },

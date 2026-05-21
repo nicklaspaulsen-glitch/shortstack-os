@@ -119,10 +119,10 @@ export default function TutorialSection({
             return (
               <div
                 key={step.number}
-                className="relative flex flex-col gap-2 p-3 rounded-xl border border-border-subtle bg-surface-light/40 hover:border-[rgba(59,130,246,0.25)] transition-all"
+                className="relative flex flex-col gap-2 p-3 rounded-xl border border-border-subtle bg-surface-light/40 hover:border-[rgba(212,255,0,0.25)] transition-all"
               >
                 <div className="flex items-start gap-2">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[rgba(59,130,246,0.12)] text-[#2563EB] text-[11px] font-bold flex items-center justify-center border border-[rgba(59,130,246,0.25)]">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[rgba(212,255,0,0.12)] text-[#2563EB] text-[11px] font-bold flex items-center justify-center border border-[rgba(212,255,0,0.25)]">
                     {step.number}
                   </div>
                   <div className="min-w-0 flex-1">

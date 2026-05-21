@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -738,13 +738,13 @@ function ContentCard({
       className="group relative cursor-pointer rounded-xl overflow-hidden"
       style={{
         background: selected
-          ? "rgba(59,130,246,0.10)"
+          ? "rgba(212,255,0,0.10)"
           : "rgba(13,17,32,0.9)",
         border: selected
-          ? "1px solid rgba(59,130,246,0.50)"
+          ? "1px solid rgba(212,255,0,0.50)"
           : "1px solid rgba(99,146,255,0.10)",
         boxShadow: selected
-          ? "0 0 0 2px rgba(59,130,246,0.20)"
+          ? "0 0 0 2px rgba(212,255,0,0.20)"
           : "none",
       }}
     >
@@ -835,7 +835,7 @@ function ContentCard({
             <Bookmark className="w-3 h-3" />
             {fmt(item.metrics.saves)}
           </span>
-          <span className="ml-auto flex items-center gap-0.5 text-blue-400">
+          <span className="ml-auto flex items-center gap-0.5 text-indigo-400">
             <BarChart3 className="w-3 h-3" />
             {engagementRate}%
           </span>
@@ -1125,7 +1125,7 @@ function DetailPanel({
           <div
             className="rounded-xl p-3 text-center"
             style={{
-              background: `rgba(${scoreColor(item.viralScore) === "#22c55e" ? "34,197,94" : scoreColor(item.viralScore) === "#f59e0b" ? "245,158,11" : "59,130,246"},0.08)`,
+              background: `rgba(${scoreColor(item.viralScore) === "#22c55e" ? "34,197,94" : scoreColor(item.viralScore) === "#f59e0b" ? "245,158,11" : "99,102,241"},0.08)`,
               border: `1px solid ${scoreColor(item.viralScore)}22`,
             }}
           >
@@ -1146,15 +1146,15 @@ function DetailPanel({
           <div
             className="rounded-xl p-3 text-center"
             style={{
-              background: "rgba(59,130,246,0.08)",
-              border: "1px solid rgba(59,130,246,0.15)",
+              background: "rgba(212,255,0,0.08)",
+              border: "1px solid rgba(212,255,0,0.15)",
             }}
           >
-            <div className="text-2xl font-bold font-display text-blue-400 mb-0.5">
+            <div className="text-2xl font-bold font-display text-indigo-400 mb-0.5">
               {item.clientScore}
             </div>
             <div className="text-[11px] text-white/50">Your Potential</div>
-            <div className="text-[10px] font-semibold text-blue-400 mt-0.5">
+            <div className="text-[10px] font-semibold text-indigo-400 mt-0.5">
               {item.clientScore >= 80
                 ? "Very High"
                 : item.clientScore >= 65
@@ -1221,7 +1221,7 @@ function DetailPanel({
                 key={i}
                 className="flex items-start gap-2 text-xs text-white/70 bg-white/[0.04] rounded-lg px-3 py-2"
               >
-                <TrendingUp className="w-3 h-3 text-blue-400 mt-0.5 shrink-0" />
+                <TrendingUp className="w-3 h-3 text-indigo-400 mt-0.5 shrink-0" />
                 {hook}
               </div>
             ))}
@@ -1330,8 +1330,8 @@ function DetailPanel({
             style={{
               background: copied
                 ? "rgba(34,197,94,0.15)"
-                : "rgba(59,130,246,0.12)",
-              border: `1px solid ${copied ? "rgba(34,197,94,0.30)" : "rgba(59,130,246,0.25)"}`,
+                : "rgba(212,255,0,0.12)",
+              border: `1px solid ${copied ? "rgba(34,197,94,0.30)" : "rgba(212,255,0,0.25)"}`,
               color: copied ? "#22c55e" : "#60a5fa",
             }}
           >
@@ -1520,7 +1520,7 @@ export default function EnemyTrackerPage() {
                     if (e.key === "Escape") setAddingCompetitor(false);
                   }}
                   placeholder="@handle"
-                  className="w-full text-xs bg-white/[0.06] border border-white/10 rounded-lg px-2.5 py-1.5 text-white placeholder:text-white/30 outline-none focus:border-blue-500/50"
+                  className="w-full text-xs bg-white/[0.06] border border-white/10 rounded-lg px-2.5 py-1.5 text-white placeholder:text-white/30 outline-none focus:border-indigo-500/50"
                 />
               </div>
             )}
@@ -1560,7 +1560,7 @@ export default function EnemyTrackerPage() {
                 (niche) => (
                   <div
                     key={niche}
-                    className="flex items-center gap-1.5 py-1.5 cursor-pointer hover:text-blue-400 transition-colors text-[11px] text-white/40 hover:text-white/60"
+                    className="flex items-center gap-1.5 py-1.5 cursor-pointer hover:text-indigo-400 transition-colors text-[11px] text-white/40 hover:text-white/60"
                   >
                     <ArrowUpRight className="w-3 h-3" />
                     {niche}
@@ -1592,7 +1592,7 @@ export default function EnemyTrackerPage() {
                   style={{
                     background:
                       platform === p.id
-                        ? "rgba(59,130,246,0.18)"
+                        ? "rgba(212,255,0,0.18)"
                         : "transparent",
                     color:
                       platform === p.id
@@ -1600,7 +1600,7 @@ export default function EnemyTrackerPage() {
                         : "rgba(255,255,255,0.45)",
                     border:
                       platform === p.id
-                        ? "1px solid rgba(59,130,246,0.35)"
+                        ? "1px solid rgba(212,255,0,0.35)"
                         : "1px solid transparent",
                   }}
                 >
@@ -1648,14 +1648,14 @@ export default function EnemyTrackerPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="mb-4 rounded-xl p-4"
                 style={{
-                  background: "linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(139,92,246,0.05) 100%)",
-                  border: "1px solid rgba(59,130,246,0.18)",
+                  background: "linear-gradient(135deg, rgba(212,255,0,0.08) 0%, rgba(139,92,246,0.05) 100%)",
+                  border: "1px solid rgba(212,255,0,0.18)",
                 }}
               >
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: "rgba(59,130,246,0.15)", border: "1px solid rgba(59,130,246,0.25)" }}>
-                    <Zap className="w-4 h-4 text-blue-400" />
+                    style={{ background: "rgba(212,255,0,0.15)", border: "1px solid rgba(212,255,0,0.25)" }}>
+                    <Zap className="w-4 h-4 text-indigo-400" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-semibold text-white mb-0.5">
@@ -1675,7 +1675,7 @@ export default function EnemyTrackerPage() {
                       setTimeout(() => inputRef.current?.focus(), 50);
                     }}
                     className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all hover:brightness-110"
-                    style={{ background: "rgba(59,130,246,0.18)", border: "1px solid rgba(59,130,246,0.30)", color: "#60a5fa" }}
+                    style={{ background: "rgba(212,255,0,0.18)", border: "1px solid rgba(212,255,0,0.30)", color: "#60a5fa" }}
                   >
                     + Add Competitor
                   </button>
@@ -1687,7 +1687,7 @@ export default function EnemyTrackerPage() {
                   {["fitness", "business", "food", "finance", "tech", "beauty", "lifestyle"].map((niche) => (
                     <button
                       key={niche}
-                      className="px-2.5 py-1 rounded-full text-[10px] font-medium transition-all hover:bg-blue-500/20 hover:text-blue-300"
+                      className="px-2.5 py-1 rounded-full text-[10px] font-medium transition-all hover:bg-indigo-500/20 hover:text-indigo-300"
                       style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.50)", border: "1px solid rgba(255,255,255,0.08)" }}
                     >
                       {niche}

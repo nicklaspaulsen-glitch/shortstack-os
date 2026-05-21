@@ -41,7 +41,7 @@ const ZONE_GRADIENT: Record<string, string> = {
 const ZONE_BORDER: Record<string, string> = {
   emerald: "border-emerald-400/20",
   purple: "border-purple-400/20",
-  blue: "border-blue-400/20",
+  blue: "border-indigo-400/20",
   amber: "border-amber-400/20",
   rose: "border-rose-400/20",
 };

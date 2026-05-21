@@ -62,7 +62,7 @@ const SEVERITY_LABEL: Record<Incident["severity"], string> = {
 const SEVERITY_BADGE: Record<Incident["severity"], string> = {
   investigating: "bg-yellow-500/20 border-yellow-500/40 text-yellow-200",
   identified: "bg-orange-500/20 border-orange-500/40 text-orange-200",
-  monitoring: "bg-blue-500/20 border-blue-500/40 text-blue-200",
+  monitoring: "bg-indigo-500/20 border-indigo-500/40 text-indigo-200",
   resolved: "bg-emerald-500/20 border-emerald-500/40 text-emerald-200",
 };
 

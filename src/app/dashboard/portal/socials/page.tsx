@@ -193,7 +193,7 @@ export default function ClientSocialsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2 text-text-primary">
-            <Link2 size={20} className="text-blue-400" />
+            <Link2 size={20} className="text-indigo-400" />
             Connected Accounts
           </h1>
           <p className="text-xs text-text-muted mt-1">Connect your social media accounts to enable posting, DMs, and analytics</p>
@@ -213,14 +213,14 @@ export default function ClientSocialsPage() {
           </div>
         </div>
         <div className="glass rounded-xl p-4 flex items-center gap-3 py-3">
-          <MessageSquare size={14} className="text-blue-400" />
+          <MessageSquare size={14} className="text-indigo-400" />
           <div>
             <p className="text-lg font-bold text-text-primary">{accounts.filter((a) => a.is_active && PLATFORMS.find((p) => p.id === a.platform)?.dm).length}</p>
             <p className="text-[9px] text-text-muted uppercase tracking-wider">DM Enabled</p>
           </div>
         </div>
         <div className="glass rounded-xl p-4 flex items-center gap-3 py-3">
-          <Globe size={14} className="text-blue-400" />
+          <Globe size={14} className="text-indigo-400" />
           <div>
             <p className="text-lg font-bold text-text-primary">{PLATFORMS.length - accounts.filter((a) => a.is_active).length}</p>
             <p className="text-[9px] text-text-muted uppercase tracking-wider">Available</p>
@@ -256,7 +256,7 @@ export default function ClientSocialsPage() {
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-semibold text-text-primary">{platform.name}</span>
                   {platform.dm && (
-                    <span className="text-[7px] px-1.5 py-0.5 bg-blue-500/[0.10] text-blue-400 rounded-full uppercase font-bold tracking-wider">DM</span>
+                    <span className="text-[7px] px-1.5 py-0.5 bg-indigo-500/[0.10] text-indigo-400 rounded-full uppercase font-bold tracking-wider">DM</span>
                   )}
                 </div>
                 {isConnected ? (
@@ -306,8 +306,8 @@ export default function ClientSocialsPage() {
       </div>
 
       {/* Security note */}
-      <div className="glass rounded-xl p-4 bg-blue-500/[0.10] border-blue-500/[0.20]">
-        <p className="text-[10px] text-blue-400 flex items-center gap-1.5 mb-1">
+      <div className="glass rounded-xl p-4 bg-indigo-500/[0.10] border-indigo-500/[0.20]">
+        <p className="text-[10px] text-indigo-400 flex items-center gap-1.5 mb-1">
           <Shield size={11} /> Secure OAuth Connection
         </p>
         <p className="text-[9px] text-text-muted">

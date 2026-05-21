@@ -77,7 +77,7 @@ const PACK_LABELS: Record<string, string> = {
 // Tailwind-compatible colour classes. If the host app isn't using Tailwind
 // the badge still renders cleanly via the inline fallback styles below.
 const TYPE_COLOR: Record<FootageType, string> = {
-  webcam_talking_head: "bg-blue-600/20 text-blue-300 border-blue-500/40",
+  webcam_talking_head: "bg-indigo-600/20 text-indigo-300 border-indigo-500/40",
   vlog: "bg-pink-600/20 text-pink-300 border-pink-500/40",
   screen_recording: "bg-slate-600/20 text-slate-300 border-slate-500/40",
   gameplay: "bg-purple-600/20 text-purple-300 border-purple-500/40",

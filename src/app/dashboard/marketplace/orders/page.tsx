@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Buyer + seller order tracking dashboard.  Tabs let the user toggle
@@ -28,8 +28,8 @@ type Role = "buyer" | "seller";
 
 const STATUS_COLOR: Record<string, string> = {
   pending_payment: "bg-amber-500/10 text-amber-400",
-  paid: "bg-blue-500/10 text-blue-400",
-  in_progress: "bg-blue-500/10 text-blue-400",
+  paid: "bg-indigo-500/10 text-indigo-400",
+  in_progress: "bg-indigo-500/10 text-indigo-400",
   delivered: "bg-emerald-500/10 text-emerald-400",
   disputed: "bg-red-500/10 text-red-400",
   refunded: "bg-white/4 text-text-muted",
@@ -111,7 +111,7 @@ export default function OrdersPage() {
                 </p>
                 <Link
                   href={role === "buyer" ? "/marketplace" : "/dashboard/marketplace/listings"}
-                  className="mt-4 rounded-lg bg-[rgba(59,130,246,0.08)] px-4 py-2 text-sm font-medium text-brand-accent hover:bg-[rgba(59,130,246,0.14)]"
+                  className="mt-4 rounded-lg bg-[rgba(212,255,0,0.08)] px-4 py-2 text-sm font-medium text-brand-accent hover:bg-[rgba(212,255,0,0.14)]"
                 >
                   {role === "buyer" ? "Browse marketplace" : "Manage listings"}
                 </Link>

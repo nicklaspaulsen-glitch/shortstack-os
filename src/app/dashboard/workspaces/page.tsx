@@ -179,7 +179,7 @@ export default function WorkspacesPage() {
                           <div className="flex items-center gap-2">
                             <p className="text-text-primary font-semibold truncate">{w.name}</p>
                             {w.is_default && (
-                              <span className="text-[10px] bg-brand-accent/10 text-blue-400 border border-brand-accent/20 px-1.5 py-0.5 rounded-full shrink-0">Default</span>
+                              <span className="text-[10px] bg-brand-accent/10 text-indigo-400 border border-brand-accent/20 px-1.5 py-0.5 rounded-full shrink-0">Default</span>
                             )}
                           </div>
                           <p className="text-text-muted text-xs mt-0.5 font-mono">{w.slug}</p>
@@ -199,7 +199,7 @@ export default function WorkspacesPage() {
                         </button>
                       )}
                       {isActive && (
-                        <div className="text-center text-xs text-blue-400 py-1">Currently active</div>
+                        <div className="text-center text-xs text-indigo-400 py-1">Currently active</div>
                       )}
                     </motion.div>
                   );

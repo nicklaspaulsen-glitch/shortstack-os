@@ -614,7 +614,7 @@ function TabBtn({
         active
           ? highlight ? "text-[#2563EB]" : "text-[#2563EB]"
           : highlight
-            ? "text-[rgba(59,130,246,0.7)] hover:bg-surface-light hover:text-[#2563EB]"
+            ? "text-[rgba(212,255,0,0.7)] hover:bg-surface-light hover:text-[#2563EB]"
             : "text-text-muted hover:bg-surface-light hover:text-text-primary"
       }`}
       aria-pressed={active}
@@ -982,7 +982,7 @@ function EffectTile({
       draggable
       onDragStart={onDragStart}
       onDoubleClick={onToggleFav}
-      className="group relative rounded-md border border-border-subtle/50 bg-surface-light/30 p-1.5 hover:border-[rgba(59,130,246,0.4)] transition cursor-grab active:cursor-grabbing"
+      className="group relative rounded-md border border-border-subtle/50 bg-surface-light/30 p-1.5 hover:border-[rgba(212,255,0,0.4)] transition cursor-grab active:cursor-grabbing"
     >
       <div
         className="aspect-video rounded overflow-hidden bg-gradient-to-br from-amber-500/40 via-rose-500/40 to-indigo-500/40 relative"
@@ -1118,7 +1118,7 @@ function TransitionTile({
       draggable
       onDragStart={onDragStart}
       onDoubleClick={onToggleFav}
-      className="group relative rounded-md border border-border-subtle/50 bg-surface-light/30 p-1.5 hover:border-[rgba(59,130,246,0.4)] transition cursor-grab active:cursor-grabbing"
+      className="group relative rounded-md border border-border-subtle/50 bg-surface-light/30 p-1.5 hover:border-[rgba(212,255,0,0.4)] transition cursor-grab active:cursor-grabbing"
     >
       <button
         type="button"
@@ -1127,7 +1127,7 @@ function TransitionTile({
       >
         <div
           key={k}
-          className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[rgba(59,130,246,0.18)] to-red-500/30 text-xs font-semibold ${
+          className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[rgba(212,255,0,0.18)] to-red-500/30 text-xs font-semibold ${
             playing ? animClass : "opacity-70"
           }`}
         >
@@ -1260,7 +1260,7 @@ function BrollTile({
       onDoubleClick={onToggleFav}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
-      className="group relative rounded-md border border-border-subtle/50 bg-surface-light/30 p-1.5 hover:border-[rgba(59,130,246,0.4)] transition cursor-grab active:cursor-grabbing"
+      className="group relative rounded-md border border-border-subtle/50 bg-surface-light/30 p-1.5 hover:border-[rgba(212,255,0,0.4)] transition cursor-grab active:cursor-grabbing"
     >
       <div className="aspect-video rounded overflow-hidden bg-black relative">
         {showVideo ? (
@@ -1379,7 +1379,7 @@ function FontTab({
             draggable
             onDragStart={startDrag(f.id, f)}
             onDoubleClick={() => onToggleFav(f.id)}
-            className="rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(59,130,246,0.4)] transition cursor-grab active:cursor-grabbing"
+            className="rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(212,255,0,0.4)] transition cursor-grab active:cursor-grabbing"
           >
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0 flex-1">
@@ -1583,7 +1583,7 @@ function FavouritesTab({
               draggable
               onDragStart={startDrag("vfx", fx.id, { name: fx.name, category: fx.category })}
               onDoubleClick={() => onToggleFav("vfx", fx.id)}
-              className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(59,130,246,0.4)]"
+              className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(212,255,0,0.4)]"
             >
               <Wand2 size={12} className="text-[#2563EB]" />
               <div className="flex-1 min-w-0">
@@ -1609,7 +1609,7 @@ function FavouritesTab({
               draggable
               onDragStart={startDrag("transition", t.id, { name: t.name, category: t.category, duration_ms: t.duration_ms })}
               onDoubleClick={() => onToggleFav("transition", t.id)}
-              className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(59,130,246,0.4)]"
+              className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(212,255,0,0.4)]"
             >
               <Scissors size={12} className="text-[#2563EB]" />
               <div className="flex-1 min-w-0">
@@ -1635,7 +1635,7 @@ function FavouritesTab({
               draggable
               onDragStart={startDrag("font", f.id, { family: f.family, url: f.url })}
               onDoubleClick={() => onToggleFav("font", f.id)}
-              className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(59,130,246,0.4)]"
+              className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(212,255,0,0.4)]"
             >
               <TypeIcon size={12} className="text-[#2563EB]" />
               <div className="flex-1 min-w-0">
@@ -1750,7 +1750,7 @@ function AudioRow({
       onDragStart={onDragStart}
       onDoubleClick={onDoubleClick}
       data-preset-item-id={id}
-      className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-1.5 hover:border-[rgba(59,130,246,0.4)] cursor-grab active:cursor-grabbing"
+      className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-1.5 hover:border-[rgba(212,255,0,0.4)] cursor-grab active:cursor-grabbing"
     >
       <GripVertical size={10} className="text-text-muted shrink-0" />
       <button
@@ -1762,7 +1762,7 @@ function AudioRow({
             ? "bg-red-500/10 text-red-400"
             : playing
               ? "bg-[#2563EB] text-white"
-              : "bg-[rgba(59,130,246,0.12)] text-[#2563EB] hover:bg-[rgba(59,130,246,0.18)]"
+              : "bg-[rgba(212,255,0,0.12)] text-[#2563EB] hover:bg-[rgba(212,255,0,0.18)]"
         }`}
         title={error ? "Preview URL broken" : playing ? "Pause" : "Play"}
       >

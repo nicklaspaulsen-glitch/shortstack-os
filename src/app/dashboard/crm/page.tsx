@@ -130,7 +130,7 @@ const OUTREACH_STATUS_COLORS: Record<string, string> = {
 
 const TAG_COLORS = [
   { id: "red", bg: "bg-red-500/15 text-red-400 border-red-500/30" },
-  { id: "blue", bg: "bg-blue-500/15 text-blue-400 border-blue-500/30" },
+  { id: "blue", bg: "bg-indigo-500/15 text-indigo-400 border-indigo-500/30" },
   { id: "green", bg: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" },
   { id: "purple", bg: "bg-purple-500/15 text-purple-400 border-purple-500/30" },
   { id: "amber", bg: "bg-amber-500/15 text-amber-400 border-amber-500/30" },
@@ -1062,7 +1062,7 @@ export default function CRMPage() {
                       className="hover:text-red-400 cursor-pointer"><X size={7} /></span>
                   </button>
                 ))}
-                <button onClick={() => setShowSegmentSave(true)} className="text-[8px] px-2 py-1 rounded-full border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-all flex items-center gap-1">
+                <button onClick={() => setShowSegmentSave(true)} className="text-[8px] px-2 py-1 rounded-full border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(212,255,0,0.2)] transition-all flex items-center gap-1">
                   <Plus size={8} /> Save Current
                 </button>
               </div>
@@ -1751,7 +1751,7 @@ export default function CRMPage() {
                         })}
                         {AVAILABLE_TAGS.filter(t => !(leadTags[detailLead.id] || []).includes(t.id)).slice(0, 4).map(tag => (
                           <button key={tag.id} onClick={() => addTag(detailLead.id, tag.id)}
-                            className="text-[8px] px-1.5 py-0.5 rounded-full border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] transition-all">
+                            className="text-[8px] px-1.5 py-0.5 rounded-full border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(212,255,0,0.2)] transition-all">
                             + {tag.label}
                           </button>
                         ))}
@@ -1808,7 +1808,7 @@ export default function CRMPage() {
                             <div key={e.id} className="flex items-start gap-2 text-[9px] py-1.5 px-2 rounded-lg bg-surface-light">
                               {e.platform === "email" ? <Mail size={10} className="text-brand-accent shrink-0 mt-0.5" /> :
                                e.platform === "call" ? <Phone size={10} className="text-green-400 shrink-0 mt-0.5" /> :
-                               <MessageSquare size={10} className="text-blue-400 shrink-0 mt-0.5" />}
+                               <MessageSquare size={10} className="text-indigo-400 shrink-0 mt-0.5" />}
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-1">
                                   <span className={`text-[8px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-text-muted"}`}>{e.status}</span>

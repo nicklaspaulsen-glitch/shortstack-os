@@ -241,7 +241,7 @@ function StatsPanel({ profile }: { profile: VoiceProfile }) {
   return (
     <div className="rounded-xl glass p-5">
       <div className="flex items-center gap-2 mb-4">
-        <Type size={16} className="text-blue-600" />
+        <Type size={16} className="text-indigo-600" />
         <h3 className="font-semibold text-sm">Voice Stats</h3>
       </div>
       <motion.div
@@ -283,7 +283,7 @@ function Gauge({
       </div>
       <div className="h-2 rounded-full bg-white/8 overflow-hidden">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-blue-500 to-blue-400 transition-all"
+          className="h-full rounded-full bg-gradient-to-r from-brand-accent to-[#E8FF4D] transition-all"
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -305,7 +305,7 @@ function SignatureSection({ profile }: { profile: VoiceProfile }) {
   return (
     <div className="rounded-xl glass p-5 space-y-4">
       <div className="flex items-center gap-2">
-        <Sparkles size={16} className="text-blue-600" />
+        <Sparkles size={16} className="text-indigo-600" />
         <h3 className="font-semibold text-sm">Signature</h3>
       </div>
       {groups.map((g) =>
@@ -316,7 +316,7 @@ function SignatureSection({ profile }: { profile: VoiceProfile }) {
               {g.items.map((item, i) => (
                 <span
                   key={`${g.label}-${i}`}
-                  className="text-xs px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400"
+                  className="text-xs px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400"
                 >
                   {item}
                 </span>
@@ -333,7 +333,7 @@ function PromptSnippetPanel({ snippet }: { snippet: string }) {
   return (
     <div className="rounded-xl glass p-5">
       <div className="flex items-center gap-2 mb-3">
-        <Wand2 size={16} className="text-blue-600" />
+        <Wand2 size={16} className="text-indigo-600" />
         <h3 className="font-semibold text-sm">Prompt Injection</h3>
       </div>
       <p className="text-xs text-text-muted mb-3">
@@ -363,7 +363,7 @@ function BootstrapPanel({
   return (
     <div className="rounded-xl glass p-5">
       <div className="flex items-center gap-2 mb-3">
-        <Wand2 size={16} className="text-blue-600" />
+        <Wand2 size={16} className="text-indigo-600" />
         <h3 className="font-semibold text-sm">Bootstrap</h3>
       </div>
       <p className="text-xs text-text-muted mb-3">

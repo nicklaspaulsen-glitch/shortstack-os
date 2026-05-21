@@ -55,7 +55,7 @@ export function PresetEmptyState({ onReset, label = "presets" }: PresetEmptyStat
           cx="60"
           cy="60"
           r="20"
-          fill="rgba(59,130,246,0.06)"
+          fill="rgba(212,255,0,0.06)"
         />
         <line
           x1="82"
@@ -88,7 +88,7 @@ export function PresetEmptyState({ onReset, label = "presets" }: PresetEmptyStat
       <button
         type="button"
         onClick={onReset}
-        className="flex items-center gap-2 rounded-lg border border-border-subtle bg-surface-light px-4 py-2 text-sm text-text-muted hover:text-text-primary hover:border-[rgba(59,130,246,0.3)] transition-all"
+        className="flex items-center gap-2 rounded-lg border border-border-subtle bg-surface-light px-4 py-2 text-sm text-text-muted hover:text-text-primary hover:border-[rgba(212,255,0,0.3)] transition-all"
       >
         <RotateCcw size={13} />
         Reset filters

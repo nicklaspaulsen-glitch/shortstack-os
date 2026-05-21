@@ -54,8 +54,8 @@ const ACTION_STYLES: Record<ActionType, { icon: React.ReactNode; label: string; 
 const SEVERITY_STYLES: Record<string, string> = {
   critical: "bg-red-500/10 text-red-400 border-red-500/20",
   high: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-  medium: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.20)]",
-  low: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.20)]",
+  medium: "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.20)]",
+  low: "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.20)]",
 };
 
 const ACTION_FILTERS: ActionType[] = ["login", "create", "update", "delete", "export", "send", "config"];
@@ -254,7 +254,7 @@ export default function AuditPage() {
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-                    tab === t.id ? "bg-[rgba(59,130,246,0.08)] text-brand-accent font-medium" : "text-text-muted hover:text-text-primary"
+                    tab === t.id ? "bg-[rgba(212,255,0,0.08)] text-brand-accent font-medium" : "text-text-muted hover:text-text-primary"
                   }`}>
                   {t.icon} {t.label}
                   {t.badge !== undefined && t.badge > 0 && (
@@ -274,10 +274,10 @@ export default function AuditPage() {
 
                   {/* Action type filter */}
                   <div className="flex gap-1 bg-surface rounded-lg p-0.5">
-                    <button onClick={() => setActionFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${actionFilter === "all" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-text-muted"}`}>All</button>
+                    <button onClick={() => setActionFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${actionFilter === "all" ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : "text-text-muted"}`}>All</button>
                     {ACTION_FILTERS.map(af => (
                       <button key={af} onClick={() => setActionFilter(af)}
-                        className={`px-2 py-1 rounded-md text-[9px] font-medium capitalize ${actionFilter === af ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-text-muted"}`}>
+                        className={`px-2 py-1 rounded-md text-[9px] font-medium capitalize ${actionFilter === af ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : "text-text-muted"}`}>
                         {ACTION_STYLES[af].label}
                       </button>
                     ))}
@@ -295,13 +295,13 @@ export default function AuditPage() {
                   <div className="flex gap-1">
                     {([["today", "Today"], ["7d", "7 Days"], ["30d", "30 Days"], ["all", "All"]] as const).map(([val, label]) => (
                       <button key={val} onClick={() => setDateFilter(val)}
-                        className={`px-2 py-1 rounded text-[9px] ${dateFilter === val ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-text-muted"}`}>{label}</button>
+                        className={`px-2 py-1 rounded text-[9px] ${dateFilter === val ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : "text-text-muted"}`}>{label}</button>
                     ))}
                   </div>
 
                   {/* Sensitive toggle */}
                   <button onClick={() => setShowSensitiveOnly(!showSensitiveOnly)}
-                    className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${showSensitiveOnly ? "bg-[rgba(59,130,246,0.10)] text-brand-accent" : "text-text-muted"}`}>
+                    className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${showSensitiveOnly ? "bg-[rgba(212,255,0,0.10)] text-brand-accent" : "text-text-muted"}`}>
                     <Lock size={9} /> Sensitive Only
                   </button>
 
@@ -340,7 +340,7 @@ export default function AuditPage() {
                             </td>
                             <td className="py-2.5 px-3">
                               <div className="flex items-center gap-2">
-                                <div className="w-6 h-6 rounded-md bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[8px] font-bold text-brand-accent shrink-0">{entry.userAvatar}</div>
+                                <div className="w-6 h-6 rounded-md bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[8px] font-bold text-brand-accent shrink-0">{entry.userAvatar}</div>
                                 <span className="text-[10px] font-medium truncate">{entry.user}</span>
                                 {entry.sensitive && <Lock size={8} className="text-brand-accent shrink-0" />}
                               </div>
@@ -357,7 +357,7 @@ export default function AuditPage() {
                               <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium inline-flex items-center gap-1 ${
                                 entry.status === "success" ? "bg-emerald-500/10 text-emerald-400" :
                                 entry.status === "failed" ? "bg-red-500/10 text-red-400" :
-                                "bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                                "bg-[rgba(212,255,0,0.08)] text-brand-accent"
                               }`}>
                                 {entry.status === "success" ? <CheckCircle size={8} /> : entry.status === "failed" ? <AlertTriangle size={8} /> : <Clock size={8} />}
                                 {entry.status}
@@ -413,7 +413,7 @@ export default function AuditPage() {
                         <p className="text-[10px] font-medium">{e.resource}</p>
                       </div>
                       {e.sensitive && (
-                        <div className="p-2.5 rounded-lg bg-[rgba(59,130,246,0.06)] border border-[rgba(59,130,246,0.15)] flex items-center gap-2">
+                        <div className="p-2.5 rounded-lg bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.15)] flex items-center gap-2">
                           <Lock size={11} className="text-brand-accent shrink-0" />
                           <p className="text-[10px] text-brand-accent">This action involved sensitive data or configuration changes.</p>
                         </div>
@@ -534,7 +534,7 @@ export default function AuditPage() {
                         <div className="flex gap-1">
                           {[30, 60, 90, 180, 365].map(d => (
                             <button key={d} onClick={() => setRetentionDays(d)}
-                              className={`px-2 py-1 rounded text-[9px] ${retentionDays === d ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-text-muted hover:text-text-primary"}`}>{d}d</button>
+                              className={`px-2 py-1 rounded text-[9px] ${retentionDays === d ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : "text-text-muted hover:text-text-primary"}`}>{d}d</button>
                           ))}
                         </div>
                       </div>

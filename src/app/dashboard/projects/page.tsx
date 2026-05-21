@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
@@ -58,7 +58,7 @@ const COLUMNS: { key: Status; label: string; color: string }[] = [
 
 const PRIORITY_META: Record<Priority, { label: string; color: string; bg: string }> = {
   low:    { label: "Low",    color: "#6b7280", bg: "rgba(107,114,128,0.12)" },
-  medium: { label: "Medium", color: "#2563EB", bg: "rgba(59,130,246,0.12)" },
+  medium: { label: "Medium", color: "#2563EB", bg: "rgba(212,255,0,0.12)" },
   high:   { label: "High",   color: "#f59e0b", bg: "rgba(245,158,11,0.12)" },
   urgent: { label: "Urgent", color: "#ef4444", bg: "rgba(239,68,68,0.14)" },
 };
@@ -530,8 +530,8 @@ export default function ProjectsPage() {
                       onClick={() => setActiveBoardId(b.id)}
                       className={`px-4 py-2 text-xs rounded-lg border flex items-center gap-2 transition-all whitespace-nowrap ${
                         activeBoardId === b.id
-                          ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]"
-                          : "bg-surface text-text-muted border-border-subtle hover:text-text-primary hover:border-[rgba(59,130,246,0.15)]"
+                          ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.25)]"
+                          : "bg-surface text-text-muted border-border-subtle hover:text-text-primary hover:border-[rgba(212,255,0,0.15)]"
                       }`}
                     >
                       <span
@@ -607,7 +607,7 @@ export default function ProjectsPage() {
                           {/* Tasks */}
                           <div
                             className={`space-y-2 min-h-[120px] rounded-lg p-1 transition-colors ${
-                              isDragTarget ? "bg-[rgba(59,130,246,0.05)] ring-1 ring-[rgba(59,130,246,0.18)]" : ""
+                              isDragTarget ? "bg-[rgba(212,255,0,0.05)] ring-1 ring-[rgba(212,255,0,0.18)]" : ""
                             }`}
                           >
                             {columnTasks.map((task, taskIdx) => {
@@ -638,7 +638,7 @@ export default function ProjectsPage() {
                                     if (justDraggedRef.current) return;
                                     openTaskPanel(task);
                                   }}
-                                  className="p-3 rounded-lg glass-md hover:border-[rgba(59,130,246,0.25)] transition-all cursor-grab active:cursor-grabbing"
+                                  className="p-3 rounded-lg glass-md hover:border-[rgba(212,255,0,0.25)] transition-all cursor-grab active:cursor-grabbing"
                                 >
                                   <p className="text-[12px] font-semibold leading-snug mb-2 break-words">
                                     {task.title}
@@ -663,7 +663,7 @@ export default function ProjectsPage() {
                                     )}
                                     {task.assignee_profile_id && (
                                       <span
-                                        className="ml-auto w-5 h-5 rounded-full bg-[rgba(59,130,246,0.12)] border border-[rgba(59,130,246,0.25)] text-brand-accent text-[9px] font-bold flex items-center justify-center"
+                                        className="ml-auto w-5 h-5 rounded-full bg-[rgba(212,255,0,0.12)] border border-[rgba(212,255,0,0.25)] text-brand-accent text-[9px] font-bold flex items-center justify-center"
                                         title={assignee.name ? `Assigned to ${assignee.name}` : "Assignee"}
                                       >
                                         {assignee.initial || <User size={10} />}
@@ -705,7 +705,7 @@ export default function ProjectsPage() {
                                   setAddingTaskColumn(col.key);
                                   setNewTaskTitle("");
                                 }}
-                                className="w-full mt-1 py-1.5 rounded-lg text-[10px] text-text-muted hover:text-brand-accent hover:bg-[rgba(59,130,246,0.05)] transition-colors flex items-center justify-center gap-1"
+                                className="w-full mt-1 py-1.5 rounded-lg text-[10px] text-text-muted hover:text-brand-accent hover:bg-[rgba(212,255,0,0.05)] transition-colors flex items-center justify-center gap-1"
                               >
                                 <Plus size={10} /> New task
                               </button>

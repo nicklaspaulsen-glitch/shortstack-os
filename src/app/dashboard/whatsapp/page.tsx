@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -53,8 +53,8 @@ interface Client {
 
 const STATUS_CONFIG = {
   draft: { label: "Draft", color: "text-text-muted", bg: "bg-white/5", icon: <Clock className="w-3.5 h-3.5" /> },
-  scheduled: { label: "Scheduled", color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]", icon: <Calendar className="w-3.5 h-3.5" /> },
-  sending: { label: "Sending", color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]", icon: <Loader2 className="w-3.5 h-3.5 animate-spin" /> },
+  scheduled: { label: "Scheduled", color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]", icon: <Calendar className="w-3.5 h-3.5" /> },
+  sending: { label: "Sending", color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]", icon: <Loader2 className="w-3.5 h-3.5 animate-spin" /> },
   sent: { label: "Sent", color: "text-emerald-400", bg: "bg-emerald-400/10", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
   failed: { label: "Failed", color: "text-red-400", bg: "bg-red-400/10", icon: <XCircle className="w-3.5 h-3.5" /> },
 };
@@ -307,7 +307,7 @@ export default function WhatsAppPage() {
                           )}
                         </div>
                         {!c.phone && (
-                          <span className="text-[10px] text-brand-accent bg-[rgba(59,130,246,0.08)] px-1.5 py-0.5 rounded shrink-0">
+                          <span className="text-[10px] text-brand-accent bg-[rgba(212,255,0,0.08)] px-1.5 py-0.5 rounded shrink-0">
                             No phone
                           </span>
                         )}

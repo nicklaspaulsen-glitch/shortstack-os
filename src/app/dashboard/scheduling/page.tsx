@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -70,7 +70,7 @@ const STATUS_COLORS: Record<string, string> = {
   confirmed: "bg-emerald-400/10 text-emerald-400",
   pending: "bg-yellow-400/10 text-yellow-400",
   cancelled: "bg-red-400/10 text-red-400",
-  completed: "bg-[rgba(59,130,246,0.08)] text-brand-accent",
+  completed: "bg-[rgba(212,255,0,0.08)] text-brand-accent",
   no_show: "bg-orange-400/10 text-orange-400",
 };
 
@@ -332,7 +332,7 @@ export default function SchedulingPage() {
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-              tab === t.id ? "bg-[rgba(59,130,246,0.08)] text-brand-accent font-medium" : "text-text-muted hover:text-text-primary"
+              tab === t.id ? "bg-[rgba(212,255,0,0.08)] text-brand-accent font-medium" : "text-text-muted hover:text-text-primary"
             }`}>
             {t.icon} {t.label}
           </button>
@@ -506,7 +506,7 @@ export default function SchedulingPage() {
                       )}
                       {b.status === "confirmed" && (
                         <button onClick={() => updateBookingStatus(b.id, "completed")}
-                          className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.14)]">
+                          className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.14)]">
                           Complete
                         </button>
                       )}
@@ -535,7 +535,7 @@ export default function SchedulingPage() {
                   <p><strong>Date:</strong> [Date]</p>
                   <p><strong>Time:</strong> [Time] ([Timezone])</p>
                   <p><strong>Duration:</strong> [Duration] minutes</p>
-                  <p><strong>Join Link:</strong> <span className="text-blue-500">[Video Link]</span></p>
+                  <p><strong>Join Link:</strong> <span className="text-indigo-500">[Video Link]</span></p>
                 </div>
                 <p className="text-text-muted text-[10px]">Need to reschedule? Click the link in this email to find a new time.</p>
               </div>
@@ -604,7 +604,7 @@ export default function SchedulingPage() {
                     });
                     return (
                       <div key={`${day}-${slot}`}
-                        className={`text-center py-1 rounded ${booked ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : inRange ? "bg-emerald-400/10 text-emerald-400" : "bg-surface-light text-text-muted/20"}`}>
+                        className={`text-center py-1 rounded ${booked ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : inRange ? "bg-emerald-400/10 text-emerald-400" : "bg-surface-light text-text-muted/20"}`}>
                         {booked ? "Booked" : inRange ? "Open" : "-"}
                       </div>
                     );
@@ -652,15 +652,15 @@ export default function SchedulingPage() {
                 <p className="text-xs text-text-muted text-center py-4">No AI suggestions available yet. Book some meetings to get insights.</p>
               )}
               {AI_SUGGESTED_TIMES.map((slot, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-xl border border-border-subtle hover:border-[rgba(59,130,246,0.12)] transition-all">
-                  <div className="w-10 h-10 rounded-xl bg-[rgba(59,130,246,0.08)] flex items-center justify-center shrink-0">
+                <div key={i} className="flex items-center gap-3 p-3 rounded-xl border border-border-subtle hover:border-[rgba(212,255,0,0.12)] transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-[rgba(212,255,0,0.08)] flex items-center justify-center shrink-0">
                     <span className="text-xs font-bold text-brand-accent">{slot.score}</span>
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="text-xs font-semibold">{slot.day} at {slot.time}</p>
                       {i === 0 && (
-                        <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent font-medium flex items-center gap-0.5">
+                        <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-brand-accent font-medium flex items-center gap-0.5">
                           <Star size={7} /> Top Pick
                         </span>
                       )}
@@ -689,10 +689,10 @@ export default function SchedulingPage() {
               <div className="space-y-2">
                 {CONFLICT_ALERTS.map(alert => (
                   <div key={alert.id} className={`flex items-start gap-3 p-3 rounded-xl border ${
-                    alert.severity === "warning" ? "border-amber-500/20 bg-amber-500/[0.03]" : "border-[rgba(59,130,246,0.20)] bg-[rgba(59,130,246,0.03)]"
+                    alert.severity === "warning" ? "border-amber-500/20 bg-amber-500/[0.03]" : "border-[rgba(212,255,0,0.20)] bg-[rgba(212,255,0,0.03)]"
                   }`}>
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                      alert.severity === "warning" ? "bg-amber-500/10" : "bg-[rgba(59,130,246,0.10)]"
+                      alert.severity === "warning" ? "bg-amber-500/10" : "bg-[rgba(212,255,0,0.10)]"
                     }`}>
                       {alert.severity === "warning"
                         ? <AlertTriangle size={14} className="text-amber-400" />
@@ -734,7 +734,7 @@ export default function SchedulingPage() {
                   {[5, 10, 15, 20, 30].map(min => (
                     <button key={min} onClick={() => setBufferMinutes(min)}
                       className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${
-                        bufferMinutes === min ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent" : "border-border-subtle text-text-muted"
+                        bufferMinutes === min ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-brand-accent" : "border-border-subtle text-text-muted"
                       }`}>
                       {min}m
                     </button>
@@ -832,7 +832,7 @@ export default function SchedulingPage() {
                           <td key={h} className="py-0.5 px-0.5">
                             <div className="w-full h-7 rounded flex items-center justify-center text-[8px] font-bold transition-all"
                               style={{
-                                background: intensity > 0.7 ? "rgba(59,130,246,0.35)" : intensity > 0.4 ? "rgba(59,130,246,0.20)" : intensity > 0.1 ? "rgba(59,130,246,0.08)" : "rgba(99,146,255,0.03)",
+                                background: intensity > 0.7 ? "rgba(212,255,0,0.35)" : intensity > 0.4 ? "rgba(212,255,0,0.20)" : intensity > 0.1 ? "rgba(212,255,0,0.08)" : "rgba(99,146,255,0.03)",
                                 color: intensity > 0.4 ? "#60A5FA" : "rgba(160,160,180,0.40)"
                               }}>
                               {val}
@@ -847,13 +847,13 @@ export default function SchedulingPage() {
             </div>
             <div className="flex items-center gap-3 mt-3 justify-center">
               <div className="flex items-center gap-1 text-[8px] text-text-muted">
-                <div className="w-3 h-3 rounded" style={{ background: "rgba(59,130,246,0.08)" }} /> Low
+                <div className="w-3 h-3 rounded" style={{ background: "rgba(212,255,0,0.08)" }} /> Low
               </div>
               <div className="flex items-center gap-1 text-[8px] text-text-muted">
-                <div className="w-3 h-3 rounded" style={{ background: "rgba(59,130,246,0.20)" }} /> Medium
+                <div className="w-3 h-3 rounded" style={{ background: "rgba(212,255,0,0.20)" }} /> Medium
               </div>
               <div className="flex items-center gap-1 text-[8px] text-text-muted">
-                <div className="w-3 h-3 rounded" style={{ background: "rgba(59,130,246,0.35)" }} /> High
+                <div className="w-3 h-3 rounded" style={{ background: "rgba(212,255,0,0.35)" }} /> High
               </div>
             </div>
           </div>
@@ -898,7 +898,7 @@ export default function SchedulingPage() {
                   return sorted.map(([time, count]) => (
                     <div key={time} className="text-center">
                       <div className="h-20 rounded-lg bg-surface-light flex items-end justify-center overflow-hidden mb-1">
-                        <div className="w-full rounded-t-lg bg-[rgba(59,130,246,0.12)]" style={{ height: `${(count / max) * 100}%` }} />
+                        <div className="w-full rounded-t-lg bg-[rgba(212,255,0,0.12)]" style={{ height: `${(count / max) * 100}%` }} />
                       </div>
                       <p className="text-[9px] text-text-muted">{time}</p>
                       <p className="text-[10px] font-bold">{count}</p>

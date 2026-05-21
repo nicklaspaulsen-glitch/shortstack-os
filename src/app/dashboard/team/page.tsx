@@ -92,8 +92,8 @@ const PERMISSIONS: PermissionRow[] = [
 const STATUS_COLORS: Record<string, string> = { online: "bg-emerald-400", away: "bg-yellow-400", offline: "bg-gray-500" };
 
 const ROLE_COLORS: Record<string, string> = {
-  owner: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]",
-  admin: "bg-blue-400/10 text-blue-400 border-blue-400/20",
+  owner: "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.2)]",
+  admin: "bg-indigo-400/10 text-indigo-400 border-indigo-400/20",
   manager: "bg-purple-400/10 text-purple-400 border-purple-400/20",
   creator: "bg-emerald-400/10 text-emerald-400 border-emerald-400/20",
   viewer: "bg-gray-400/10 text-text-muted border-gray-400/20",
@@ -253,7 +253,7 @@ export default function TeamPage() {
     { icon: <Users size={12} className="text-brand-accent" />, label: "Team Size", value: members.length, sub: `${onlineCount} online now`, subColor: "text-emerald-400" },
     { icon: <Shield size={12} className="text-purple-400" />, label: "Roles", value: ROLE_DEFINITIONS.length, valueColor: "text-purple-400", sub: "defined roles" },
     { icon: <CheckCircle size={12} className="text-emerald-400" />, label: "Tasks Done", value: `${completedTasks}/${totalTasks}`, valueColor: "text-emerald-400", sub: "this week" },
-    { icon: <Clock size={12} className="text-blue-400" />, label: "Avg Hours/Week", value: `${avgHours}h`, valueColor: "text-blue-400", sub: "across team" },
+    { icon: <Clock size={12} className="text-indigo-400" />, label: "Avg Hours/Week", value: `${avgHours}h`, valueColor: "text-indigo-400", sub: "across team" },
   ];
 
   return (
@@ -331,9 +331,9 @@ export default function TeamPage() {
                       placeholder="Search members..." aria-label="Search team members" />
                   </div>
                   <div className="flex gap-1 bg-surface rounded-lg p-0.5">
-                    <button onClick={() => setRoleFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${roleFilter === "all" ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-text-muted"}`}>All</button>
+                    <button onClick={() => setRoleFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${roleFilter === "all" ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : "text-text-muted"}`}>All</button>
                     {ROLE_DEFINITIONS.map(r => (
-                      <button key={r.id} onClick={() => setRoleFilter(r.id)} className={`px-2 py-1 rounded-md text-[9px] font-medium ${roleFilter === r.id ? "bg-[rgba(59,130,246,0.12)] text-brand-accent" : "text-text-muted"}`}>{r.label}</button>
+                      <button key={r.id} onClick={() => setRoleFilter(r.id)} className={`px-2 py-1 rounded-md text-[9px] font-medium ${roleFilter === r.id ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : "text-text-muted"}`}>{r.label}</button>
                     ))}
                   </div>
                 </div>
@@ -367,7 +367,7 @@ export default function TeamPage() {
                           <td className="py-2.5 px-3">
                             <div className="flex items-center gap-2.5">
                               <div className="relative">
-                                <div className="w-8 h-8 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[10px] font-bold text-brand-accent">{member.avatar}</div>
+                                <div className="w-8 h-8 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[10px] font-bold text-brand-accent">{member.avatar}</div>
                                 <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-[var(--color-surface)] ${STATUS_COLORS[member.status]}`} />
                               </div>
                               <div>
@@ -422,7 +422,7 @@ export default function TeamPage() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="relative">
-                            <div className="w-12 h-12 rounded-xl bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-lg font-bold text-brand-accent">{m.avatar}</div>
+                            <div className="w-12 h-12 rounded-xl bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-lg font-bold text-brand-accent">{m.avatar}</div>
                             <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[var(--color-surface)] ${STATUS_COLORS[m.status]}`} />
                           </div>
                           <div>
@@ -436,7 +436,7 @@ export default function TeamPage() {
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                         {[
                           { value: m.clients, label: "Clients" },
-                          { value: `${m.hoursThisWeek}h`, label: "This Week", color: "text-blue-400" },
+                          { value: `${m.hoursThisWeek}h`, label: "This Week", color: "text-indigo-400" },
                           { value: m.tasksCompleted, label: "Tasks Done", color: "text-emerald-400" },
                           { value: `${m.tasksAssigned> 0 ? Math.round((m.tasksCompleted / m.tasksAssigned) * 100) : 0}%`, label: "Completion", color: "text-brand-accent" },
                         ].map((tile) => (
@@ -560,10 +560,10 @@ export default function TeamPage() {
                   <motion.button
                     whileHover={{ y: -3 }}
                     onClick={() => setShowCustomRole(true)}
-                    className="glass hover:border-[rgba(59,130,246,0.2)] transition-all flex flex-col items-center justify-center gap-2 min-h-[160px] rounded-xl p-4"
+                    className="glass hover:border-[rgba(212,255,0,0.2)] transition-all flex flex-col items-center justify-center gap-2 min-h-[160px] rounded-xl p-4"
                     style={{ border: "1px dashed rgba(255,255,255,0.12)" }}
 >
-                    <div className="w-10 h-10 rounded-xl bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
                       <Settings size={16} className="text-brand-accent" />
                     </div>
                     <p className="text-xs font-bold text-text-muted">Create Custom Role</p>
@@ -595,7 +595,7 @@ export default function TeamPage() {
                       transition={{ duration: 0.18, delay: idx * 0.04 }}
                       className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/[0.03] border-b border-border-subtle transition-colors"
 >
-                      <div className="w-7 h-7 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[9px] font-bold text-brand-accent shrink-0">{act.avatar}</div>
+                      <div className="w-7 h-7 rounded-full bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[9px] font-bold text-brand-accent shrink-0">{act.avatar}</div>
                       <div className="flex-1 min-w-0">
                         <p className="text-[11px]">
                           <span className="font-semibold">{act.member}</span>
@@ -635,7 +635,7 @@ export default function TeamPage() {
 >
                         <div className="flex items-center gap-3 mb-2">
                           <div className="relative">
-                            <div className="w-8 h-8 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[10px] font-bold text-brand-accent">{m.avatar}</div>
+                            <div className="w-8 h-8 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[10px] font-bold text-brand-accent">{m.avatar}</div>
                             <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-[var(--color-surface-light)] ${STATUS_COLORS[m.status]}`} />
                           </div>
                           <div className="flex-1">
@@ -671,7 +671,7 @@ export default function TeamPage() {
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="flex items-center gap-2 mb-0">
                     <Users size={13} className="text-brand-accent" /> Active Team Members
-                    <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent">
+                    <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-brand-accent">
                       {realMembers.filter(m => m.status === "active").length} active
                     </span>
                   </h2>
@@ -684,14 +684,14 @@ export default function TeamPage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.18, delay: index * 0.05 }}
                       whileHover={{ y: -3 }}
-                      className="glass flex items-center gap-3 rounded-xl p-3 hover:border-[rgba(59,130,246,0.2)] transition-all spotlight-card"
+                      className="glass flex items-center gap-3 rounded-xl p-3 hover:border-[rgba(212,255,0,0.2)] transition-all spotlight-card"
                       onMouseMove={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
                         e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
                         e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
                       }}
 >
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[rgba(59,130,246,0.25)] to-[rgba(59,130,246,0.15)] flex items-center justify-center text-brand-accent text-xs font-bold shrink-0">
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[rgba(212,255,0,0.25)] to-[rgba(212,255,0,0.15)] flex items-center justify-center text-brand-accent text-xs font-bold shrink-0">
                         {m.full_name?.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase() || m.email[0].toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -710,9 +710,9 @@ export default function TeamPage() {
                           {m.can_manage_outreach && <span className="text-[8px] px-1 py-0.5 rounded bg-white/[0.04] text-text-muted">Outreach</span>}
                           {m.can_manage_content && <span className="text-[8px] px-1 py-0.5 rounded bg-white/[0.04] text-text-muted">Content</span>}
                           {m.can_manage_ads && <span className="text-[8px] px-1 py-0.5 rounded bg-white/[0.04] text-text-muted">Ads</span>}
-                          {m.can_view_financials && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">Financials</span>}
+                          {m.can_view_financials && <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent">Financials</span>}
                           {m.client_access_mode === "specific" && (
-                            <span className="text-[8px] px-1 py-0.5 rounded bg-blue-400/10 text-blue-400">
+                            <span className="text-[8px] px-1 py-0.5 rounded bg-indigo-400/10 text-indigo-400">
                               {m.allowed_client_ids.length} client{m.allowed_client_ids.length === 1 ? "" : "s"}
                             </span>
                           )}
@@ -783,7 +783,7 @@ export default function TeamPage() {
                       {(["member", "manager", "viewer"] as const).map(r => (
                         <button key={r} onClick={() => setCreateForm({ ...createForm, role: r })}
                           className={`flex-1 py-1.5 rounded-lg text-xs capitalize transition-all ${
-                            createForm.role === r ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "bg-surface-light text-text-muted border border-border-subtle"
+                            createForm.role === r ? "bg-[rgba(212,255,0,0.12)] text-brand-accent border border-[rgba(212,255,0,0.25)]" : "bg-surface-light text-text-muted border border-border-subtle"
                           }`}>{r}</button>
                       ))}
                     </div>
@@ -800,7 +800,7 @@ export default function TeamPage() {
                         { key: "can_manage_team", label: "Invite team" },
                         { key: "can_view_financials", label: "View financials" },
                       ] as const).map(p => (
-                        <label key={p.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light/50 border border-border-subtle cursor-pointer hover:border-[rgba(59,130,246,0.2)]">
+                        <label key={p.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light/50 border border-border-subtle cursor-pointer hover:border-[rgba(212,255,0,0.2)]">
                           <input
                             type="checkbox"
                             checked={!!createForm[p.key as keyof typeof createForm]}
@@ -813,7 +813,7 @@ export default function TeamPage() {
                     </div>
                   </div>
 
-                  <div className="rounded-lg bg-[rgba(59,130,246,0.06)] border border-[rgba(59,130,246,0.15)] p-2.5 flex items-start gap-2">
+                  <div className="rounded-lg bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.15)] p-2.5 flex items-start gap-2">
                     <AlertTriangle size={11} className="text-brand-accent shrink-0 mt-0.5" />
                     <p className="text-[10px] text-text-muted">
                       Team members control <span className="text-brand-accent font-medium">your clients</span>. They cannot create their own agency accounts, manage billing, or see other agencies.
@@ -997,7 +997,7 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
             {(["member", "manager", "viewer"] as const).map(r => (
               <button key={r} onClick={() => setRole(r)}
                 className={`flex-1 py-1.5 rounded-lg text-xs capitalize transition-all ${
-                  role === r ? "bg-[rgba(59,130,246,0.12)] text-brand-accent border border-[rgba(59,130,246,0.25)]" : "bg-surface-light text-text-muted border border-border-subtle"
+                  role === r ? "bg-[rgba(212,255,0,0.12)] text-brand-accent border border-[rgba(212,255,0,0.25)]" : "bg-surface-light text-text-muted border border-border-subtle"
                 }`}>{r}</button>
             ))}
           </div>
@@ -1014,7 +1014,7 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
               { key: "can_manage_team", label: "Invite team" },
               { key: "can_view_financials", label: "View financials" },
             ] as const).map(p => (
-              <label key={p.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light/50 border border-border-subtle cursor-pointer hover:border-[rgba(59,130,246,0.2)]">
+              <label key={p.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light/50 border border-border-subtle cursor-pointer hover:border-[rgba(212,255,0,0.2)]">
                 <input
                   type="checkbox"
                   checked={perms[p.key as keyof typeof perms]}

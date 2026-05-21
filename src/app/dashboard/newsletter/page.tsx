@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useMemo } from "react";
 import { motion } from "framer-motion";
@@ -497,7 +497,7 @@ export default function NewsletterPage() {
             onChange={e => setGuidedTopic(e.target.value)}
             placeholder={`e.g., "${new Date().toLocaleString("default", { month: "long" })} round-up: new features, 2 client wins, and what's coming next"`}
             rows={3}
-            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-2 focus:ring-[rgba(59,130,246,0.08)] transition-all resize-none"
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(212,255,0,0.5)] focus:ring-2 focus:ring-[rgba(212,255,0,0.08)] transition-all resize-none"
             autoFocus
           />
         </div>
@@ -527,8 +527,8 @@ export default function NewsletterPage() {
                                         onClick={() => setGuidedLength(l.id)}
                                         className={`p-3 rounded-xl border text-center transition-all ${
                                           sel
-                                            ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent shadow-lg shadow-[rgba(59,130,246,0.1)]"
-                                            : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                                            ? "border-brand-accent bg-[rgba(212,255,0,0.08)] text-brand-accent shadow-lg shadow-[rgba(212,255,0,0.1)]"
+                                            : "border-border-subtle hover:border-[rgba(212,255,0,0.25)] bg-surface-light"
                                         }`}
                                       >
                                         <p className="text-sm font-semibold">{l.label}</p>
@@ -556,8 +556,8 @@ export default function NewsletterPage() {
                     onClick={() => setGuidedTone(t.id)}
                     className={`p-3 rounded-xl border text-sm font-semibold transition-all ${
                       sel
-                        ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent shadow-lg shadow-[rgba(59,130,246,0.1)]"
-                        : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                        ? "border-brand-accent bg-[rgba(212,255,0,0.08)] text-brand-accent shadow-lg shadow-[rgba(212,255,0,0.1)]"
+                        : "border-border-subtle hover:border-[rgba(212,255,0,0.25)] bg-surface-light"
                     }`}
                   >
                     {t.label}
@@ -575,7 +575,7 @@ export default function NewsletterPage() {
       description: "We'll write the subject, headline, and section copy. You'll be able to tweak every block in the builder.",
       icon: <Wand2 size={18} />,
       component: (
-        <div className="glass rounded-xl p-4 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)] space-y-2">
+        <div className="glass rounded-xl p-4 bg-[rgba(212,255,0,0.05)] border-[rgba(212,255,0,0.2)] space-y-2">
           <p className="text-sm">
             <span className="text-text-muted">Topic: </span>
             <span className="font-semibold">{guidedTopic || <span className="italic text-text-muted">(none)</span>}</span>
@@ -676,7 +676,7 @@ export default function NewsletterPage() {
           />
         </div>
         <div className="relative text-center px-4">
-          <p className="text-[11px] uppercase tracking-widest text-[rgba(59,130,246,0.8)] font-semibold">
+          <p className="text-[11px] uppercase tracking-widest text-[rgba(212,255,0,0.8)] font-semibold">
             Newsletter template library
           </p>
           <h3 className="text-lg font-bold text-text-primary mt-1">
@@ -720,7 +720,7 @@ export default function NewsletterPage() {
                 />
                 <button
                   onClick={generateSubjectLines}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] transition-all flex items-center gap-1"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] transition-all flex items-center gap-1"
                 >
                   {aiLoading === "subject" ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />} AI Ideas
                 </button>
@@ -729,14 +729,14 @@ export default function NewsletterPage() {
 
             {/* AI subject suggestions */}
             {subjectAiOpen && aiSubjects.length > 0 && (
-              <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.1)] p-3 space-y-1.5">
+              <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.1)] p-3 space-y-1.5">
                 <div className="flex items-center justify-between mb-1">
                   <p className="text-[10px] font-semibold text-brand-accent">AI Subject Line Suggestions</p>
                   <button onClick={() => setSubjectAiOpen(false)} className="text-text-muted hover:text-text-primary"><X size={12} /></button>
                 </div>
                 {aiSubjects.map((s, i) => (
                   <button key={i} onClick={() => { setSubject(s); setSubjectAiOpen(false); toast.success("Subject line applied"); }}
-                    className="block w-full text-left text-[10px] p-2 rounded hover:bg-[rgba(59,130,246,0.05)] transition-all text-text-muted hover:text-text-primary">
+                    className="block w-full text-left text-[10px] p-2 rounded hover:bg-[rgba(212,255,0,0.05)] transition-all text-text-muted hover:text-text-primary">
                     {s}
                   </button>
                 ))}
@@ -818,7 +818,7 @@ export default function NewsletterPage() {
                       <button
                         onClick={() => generateAiContent(block.id, block.content.body || "newsletter section content")}
                         disabled={aiLoading === block.id}
-                        className="text-[9px] px-2 py-1 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] transition-all flex items-center gap-1"
+                        className="text-[9px] px-2 py-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] transition-all flex items-center gap-1"
                       >
                         {aiLoading === block.id ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />} Write with AI
                       </button>
@@ -914,7 +914,7 @@ export default function NewsletterPage() {
               <span className="text-[9px] text-text-muted uppercase tracking-wider font-semibold mr-2">Add Block:</span>
               {(["text", "image", "button", "divider"] as const).map(type => (
                 <button key={type} onClick={() => addBlock(type)}
-                  className="text-[10px] px-3 py-1.5 rounded-lg bg-surface border border-border-subtle hover:border-[rgba(59,130,246,0.2)] hover:text-brand-accent transition-all flex items-center gap-1.5">
+                  className="text-[10px] px-3 py-1.5 rounded-lg bg-surface border border-border-subtle hover:border-[rgba(212,255,0,0.2)] hover:text-brand-accent transition-all flex items-center gap-1.5">
                   {type === "text" && <Type size={10} />}
                   {type === "image" && <ImageIcon size={10} />}
                   {type === "button" && <MousePointerClick size={10} />}
@@ -932,9 +932,9 @@ export default function NewsletterPage() {
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-text-muted flex items-center gap-1.5"><Users size={10} /> Recipients</h3>
               <div className="relative">
                 <button onClick={() => setShowRecipientDropdown(!showRecipientDropdown)}
-                  className="w-full text-left p-2.5 rounded-xl bg-surface-light border border-border-subtle hover:border-[rgba(59,130,246,0.2)] transition-all flex items-center justify-between text-xs">
+                  className="w-full text-left p-2.5 rounded-xl bg-surface-light border border-border-subtle hover:border-[rgba(212,255,0,0.2)] transition-all flex items-center justify-between text-xs">
                   <span className="flex items-center gap-2">
-                    <span className={`w-2 h-2 rounded-full ${selectedList?.color === "text-blue-400" ? "bg-blue-400" : selectedList?.color === "text-green-400" ? "bg-green-400" : selectedList?.color === "text-yellow-400" ? "bg-yellow-400" : "bg-purple-400"}`} />
+                    <span className={`w-2 h-2 rounded-full ${selectedList?.color === "text-indigo-400" ? "bg-indigo-400" : selectedList?.color === "text-green-400" ? "bg-green-400" : selectedList?.color === "text-yellow-400" ? "bg-yellow-400" : "bg-purple-400"}`} />
                     {selectedList?.label}
                     <span className="text-text-muted">({selectedList?.count})</span>
                   </span>
@@ -944,9 +944,9 @@ export default function NewsletterPage() {
                   <div className="absolute z-10 top-full left-0 right-0 mt-1 rounded-xl bg-surface border border-border-subtle shadow-lg overflow-hidden">
                     {RECIPIENT_LISTS.map(l => (
                       <button key={l.id} onClick={() => { setRecipientList(l.id); setShowRecipientDropdown(false); }}
-                        className={`w-full text-left px-3 py-2.5 text-xs hover:bg-surface-light transition-all flex items-center justify-between ${recipientList === l.id ? "bg-[rgba(59,130,246,0.05)] text-brand-accent" : "text-text-primary"}`}>
+                        className={`w-full text-left px-3 py-2.5 text-xs hover:bg-surface-light transition-all flex items-center justify-between ${recipientList === l.id ? "bg-[rgba(212,255,0,0.05)] text-brand-accent" : "text-text-primary"}`}>
                         <span className="flex items-center gap-2">
-                          <span className={`w-2 h-2 rounded-full ${l.color === "text-blue-400" ? "bg-blue-400" : l.color === "text-green-400" ? "bg-green-400" : l.color === "text-yellow-400" ? "bg-yellow-400" : "bg-purple-400"}`} />
+                          <span className={`w-2 h-2 rounded-full ${l.color === "text-indigo-400" ? "bg-indigo-400" : l.color === "text-green-400" ? "bg-green-400" : l.color === "text-yellow-400" ? "bg-yellow-400" : "bg-purple-400"}`} />
                           {l.label}
                         </span>
                         <span className="text-text-muted text-[10px]">{l.count}</span>
@@ -962,11 +962,11 @@ export default function NewsletterPage() {
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-text-muted flex items-center gap-1.5"><Send size={10} /> Send Options</h3>
               <div className="flex gap-1 mb-3">
                 <button onClick={() => setSendMode("now")}
-                  className={`flex-1 text-[10px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${sendMode === "now" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-border-subtle"}`}>
+                  className={`flex-1 text-[10px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${sendMode === "now" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)]" : "text-text-muted border border-border-subtle"}`}>
                   <Zap size={10} /> Send Now
                 </button>
                 <button onClick={() => setSendMode("schedule")}
-                  className={`flex-1 text-[10px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${sendMode === "schedule" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-border-subtle"}`}>
+                  className={`flex-1 text-[10px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${sendMode === "schedule" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)]" : "text-text-muted border border-border-subtle"}`}>
                   <Clock size={10} /> Schedule
                 </button>
               </div>
@@ -993,7 +993,7 @@ export default function NewsletterPage() {
             {/* Send Readiness Scorer */}
             <div
               className="rounded-xl p-3"
-              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}
+              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
@@ -1095,9 +1095,9 @@ export default function NewsletterPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {TEMPLATES.map(tpl => (
               <button key={tpl.id} onClick={() => loadTemplate(tpl.id)}
-                className="text-left p-5  bg-surface border border-border-subtle hover:border-[rgba(59,130,246,0.2)] hover:shadow-lg transition-all group">
+                className="text-left p-5  bg-surface border border-border-subtle hover:border-[rgba(212,255,0,0.2)] hover:shadow-lg transition-all group">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-[rgba(59,130,246,0.08)] text-brand-accent flex items-center justify-center group-hover:bg-[rgba(59,130,246,0.12)] transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-[rgba(212,255,0,0.08)] text-brand-accent flex items-center justify-center group-hover:bg-[rgba(212,255,0,0.12)] transition-colors">
                     {tpl.icon}
                   </div>
                   <div>
@@ -1122,11 +1122,11 @@ export default function NewsletterPage() {
           <div className="flex items-center justify-center gap-2">
             <button onClick={() => setPreviewMode("desktop")}
               className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
-                previewMode === "desktop" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-border-subtle"
+                previewMode === "desktop" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)]" : "text-text-muted border border-border-subtle"
               }`}><Monitor size={12} /> Desktop</button>
             <button onClick={() => setPreviewMode("mobile")}
               className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
-                previewMode === "mobile" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-border-subtle"
+                previewMode === "mobile" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)]" : "text-text-muted border border-border-subtle"
               }`}><Smartphone size={12} /> Mobile</button>
           </div>
 

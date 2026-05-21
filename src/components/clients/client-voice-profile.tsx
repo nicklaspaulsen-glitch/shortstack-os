@@ -236,7 +236,7 @@ function Signature({ profile }: { profile: VoiceProfile }) {
               {g.items.map((x, i) => (
                 <span
                   key={`${g.label}-${i}`}
-                  className="text-[10px] px-2 py-1 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] text-[#2563EB]"
+                  className="text-[10px] px-2 py-1 rounded-full bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] text-[#2563EB]"
                 >
                   {x}
                 </span>
@@ -328,7 +328,7 @@ function GenerateModal({
             onChange={(e) => setPrompt(e.target.value)}
             placeholder={promptHelp}
             rows={4}
-            className="w-full text-xs rounded-lg bg-bg-base border border-border-subtle p-3 focus:outline-none focus:border-[rgba(59,130,246,0.5)] resize-y"
+            className="w-full text-xs rounded-lg bg-bg-base border border-border-subtle p-3 focus:outline-none focus:border-[rgba(212,255,0,0.5)] resize-y"
           />
         </div>
         <button

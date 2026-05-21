@@ -69,8 +69,8 @@ const DEPTH_COPY: Record<Depth, { label: string; desc: string; cost: string }> =
 
 const STATUS_PILLS: Record<JobRow["status"], string> = {
   pending: "bg-white/8 text-text-muted border-white/15",
-  researching: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]",
-  generating: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]",
+  researching: "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.25)]",
+  generating: "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.25)]",
   sending: "bg-amber-500/15 text-amber-400 border-amber-500/30",
   completed: "bg-green-500/15 text-green-400 border-green-500/30",
   failed: "bg-red-500/15 text-red-400 border-red-500/30",
@@ -311,7 +311,7 @@ export default function ColdEmailPage() {
                 {seedQualitySignals.length > 0 && (
                   <div
                     className="rounded-lg p-2.5"
-                    style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}
+                    style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-1.5">
@@ -400,7 +400,7 @@ export default function ColdEmailPage() {
                           onClick={() => setDepth(d)}
                           className={`flex-1 text-[10px] px-2 py-1.5 rounded border transition-all ${
                             depth === d
-                              ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.10)] text-brand-accent"
+                              ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.10)] text-brand-accent"
                               : "border-border-subtle text-text-muted hover:text-text-primary"
                           }`}
                         >
@@ -509,7 +509,7 @@ export default function ColdEmailPage() {
                               <button
                                 onClick={() => handlePreview(j.id)}
                                 disabled={previewing === j.id}
-                                className="text-[9px] px-2 py-1 rounded border border-[rgba(59,130,246,0.25)] text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
+                                className="text-[9px] px-2 py-1 rounded border border-[rgba(212,255,0,0.25)] text-brand-accent hover:bg-[rgba(212,255,0,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
                               >
                                 {previewing === j.id ? (
                                   <Loader2 size={9} className="animate-spin" />
@@ -530,7 +530,7 @@ export default function ColdEmailPage() {
                           {(j.status === "researching" || j.status === "generating") && (
                             <button
                               onClick={() => handleSend(j.id)}
-                              className="text-[9px] px-2 py-1 rounded border border-[rgba(59,130,246,0.25)] text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-all flex items-center gap-1"
+                              className="text-[9px] px-2 py-1 rounded border border-[rgba(212,255,0,0.25)] text-brand-accent hover:bg-[rgba(212,255,0,0.08)] transition-all flex items-center gap-1"
                             >
                               <Send size={9} />
                               Send

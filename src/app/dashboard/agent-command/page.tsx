@@ -116,7 +116,7 @@ type CommandData = {
 
 const PIPELINE_STAGES = [
   { key: "outreach_pending", label: "Pending", color: "text-text-muted" },
-  { key: "outreach_sent", label: "Contacted", color: "text-blue-400" },
+  { key: "outreach_sent", label: "Contacted", color: "text-indigo-400" },
   { key: "replied", label: "Replied", color: "text-cyan-400" },
   { key: "qualifying", label: "Qualifying", color: "text-violet-400" },
   { key: "qualified", label: "Qualified", color: "text-success" },
@@ -130,7 +130,7 @@ const PIPELINE_STAGES = [
 ];
 
 const AGENT_COLORS: Record<string, string> = {
-  Aria: "text-blue-400 bg-blue-400/10",
+  Aria: "text-indigo-400 bg-indigo-400/10",
   NEXUS: "text-violet-400 bg-violet-400/10",
   system: "text-text-muted bg-surface-light",
   default: "text-text-secondary bg-surface-light",
@@ -138,7 +138,7 @@ const AGENT_COLORS: Record<string, string> = {
 
 const STATUS_CONFIG: Record<string, { color: string; icon: React.ReactNode }> = {
   queued: { color: "text-text-muted", icon: <Clock size={10} /> },
-  running: { color: "text-blue-400", icon: <Loader2 size={10} className="animate-spin" /> },
+  running: { color: "text-indigo-400", icon: <Loader2 size={10} className="animate-spin" /> },
   completed: { color: "text-success", icon: <CheckCircle2 size={10} /> },
   failed: { color: "text-red-400", icon: <AlertCircle size={10} /> },
   cancelled: { color: "text-text-muted", icon: <AlertCircle size={10} /> },

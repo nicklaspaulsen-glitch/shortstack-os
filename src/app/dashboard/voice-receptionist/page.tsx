@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Voice Receptionist � 24/7 AI phone agent that answers, qualifies, and books.
@@ -257,7 +257,7 @@ function outcomeMeta(outcome: CallOutcome): {
     case "qualified":
       return {
         label: "Qualified",
-        className: "bg-[rgba(59,130,246,0.10)] text-brand-accent",
+        className: "bg-[rgba(212,255,0,0.10)] text-brand-accent",
         icon: UserCheck,
       };
     case "unqualified":
@@ -275,13 +275,13 @@ function outcomeMeta(outcome: CallOutcome): {
     case "missed":
       return {
         label: "Missed",
-        className: "bg-[rgba(59,130,246,0.08)] text-brand-accent",
+        className: "bg-[rgba(212,255,0,0.08)] text-brand-accent",
         icon: AlertCircle,
       };
     case "dropped":
       return {
         label: "Dropped",
-        className: "bg-[rgba(59,130,246,0.08)] text-brand-accent",
+        className: "bg-[rgba(212,255,0,0.08)] text-brand-accent",
         icon: AlertCircle,
       };
     case "pending":
@@ -633,7 +633,7 @@ export default function VoiceReceptionistPage() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22 }}
-                  className="flex items-start gap-3 rounded-xl border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] p-4"
+                  className="flex items-start gap-3 rounded-xl border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] p-4"
                 >
                   <AlertCircle size={18} className="mt-0.5 shrink-0 text-brand-accent" />
                   <div className="text-[12px] leading-relaxed">
@@ -712,7 +712,7 @@ export default function VoiceReceptionistPage() {
               >
                 <div className="mb-4 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(59,130,246,0.10)] text-brand-accent">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(212,255,0,0.10)] text-brand-accent">
                       <Mic size={14} />
                     </div>
                     <div>
@@ -910,7 +910,7 @@ export default function VoiceReceptionistPage() {
               >
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(59,130,246,0.10)] text-brand-accent">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(212,255,0,0.10)] text-brand-accent">
                       <FileText size={14} />
                     </div>
                     <div>
@@ -921,7 +921,7 @@ export default function VoiceReceptionistPage() {
                     </div>
                   </div>
                   {!liveBackend && calls.length > 0 && (
-                    <span className="rounded-full bg-[rgba(59,130,246,0.08)] px-2 py-0.5 text-[10px] font-semibold text-brand-accent">
+                    <span className="rounded-full bg-[rgba(212,255,0,0.08)] px-2 py-0.5 text-[10px] font-semibold text-brand-accent">
                       Demo data
                     </span>
                   )}
@@ -1210,7 +1210,7 @@ function QuotaCard({
       className="glass rounded-xl !p-5"
     >
       <div className="mb-3 flex items-center gap-2">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent">
           <Phone size={14} />
         </div>
         <div>

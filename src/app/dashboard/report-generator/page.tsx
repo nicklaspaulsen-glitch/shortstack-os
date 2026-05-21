@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -253,7 +253,7 @@ export default function ReportGeneratorPage() {
             onClick={() => setRangePreset(p.id)}
             className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all ${
               rangePreset === p.id
-                ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.4)] text-brand-accent"
+                ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.4)] text-brand-accent"
                 : "bg-surface-light border-border-subtle/30 text-text-muted hover:text-text-primary"
             }`}
           >
@@ -319,7 +319,7 @@ export default function ReportGeneratorPage() {
                                     <label
                                     key={m.id}
                                     className={`flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer text-xs transition-all ${
-                                      on ? "border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.05)] text-text-primary" : "border-border-subtle/30 bg-surface-light text-text-muted hover:text-text-primary"
+                                      on ? "border-[rgba(212,255,0,0.4)] bg-[rgba(212,255,0,0.05)] text-text-primary" : "border-border-subtle/30 bg-surface-light text-text-muted hover:text-text-primary"
                                     }`}
                                   >
                                     <input

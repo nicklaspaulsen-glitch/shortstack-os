@@ -31,7 +31,7 @@ const BLOBS = [
   // Primary blue — bottom-left
   {
     style: { left: "-6%", top: "42%", width: 680, height: 680 },
-    color: "rgba(59,130,246,0.18)",
+    color: "rgba(212,255,0,0.18)",
     animate: { y: [0, -26, 0], x: [0, 12, 0] },
     duration: 16,
     delay: 0,
@@ -47,7 +47,7 @@ const BLOBS = [
   // Wide diffuse — top-center
   {
     style: { left: "28%", top: "-18%", width: 860, height: 380 },
-    color: "rgba(59,130,246,0.08)",
+    color: "rgba(212,255,0,0.08)",
     animate: { y: [0, 14, 0], x: [0, 6, 0] },
     duration: 20,
     delay: 0.6,
@@ -80,7 +80,7 @@ const STATS = [
 function DashboardMockup() {
   return (
     <div
-      className="relative w-full rounded-2xl overflow-hidden border border-[rgba(99,146,255,0.14)] shadow-[0_0_0_1px_rgba(99,146,255,0.06),0_24px_80px_rgba(0,0,0,0.6),0_0_120px_rgba(59,130,246,0.07)]"
+      className="relative w-full rounded-2xl overflow-hidden border border-[rgba(99,146,255,0.14)] shadow-[0_0_0_1px_rgba(99,146,255,0.06),0_24px_80px_rgba(0,0,0,0.6),0_0_120px_rgba(212,255,0,0.07)]"
       style={{ background: "rgba(13,17,32,0.92)", backdropFilter: "blur(24px)" }}
     >
       {/* Browser chrome */}
@@ -112,7 +112,7 @@ function DashboardMockup() {
               className="w-7 h-7 rounded-lg mx-auto"
               style={{
                 background: i === 0
-                  ? "rgba(59,130,246,0.25)"
+                  ? "rgba(212,255,0,0.25)"
                   : "rgba(255,255,255,0.04)",
                 opacity: op,
               }}
@@ -142,7 +142,7 @@ function DashboardMockup() {
                     className="h-full rounded-full"
                     style={{
                       width: ["82%", "67%", "45%", "71%"][i],
-                      background: i === 0 ? "rgba(59,130,246,0.6)" : "rgba(99,146,255,0.25)",
+                      background: i === 0 ? "rgba(212,255,0,0.6)" : "rgba(99,146,255,0.25)",
                     }}
                   />
                 </div>
@@ -188,7 +188,7 @@ function DashboardMockup() {
                     className="flex-1 rounded-sm"
                     style={{
                       height: `${h}%`,
-                      background: `rgba(59,130,246,${0.15 + (h / 100) * 0.45})`,
+                      background: `rgba(212,255,0,${0.15 + (h / 100) * 0.45})`,
                     }}
                   />
                 ))}
@@ -261,7 +261,7 @@ export default function Hero() {
             {/* Eyebrow */}
             <motion.p
               variants={ITEM}
-              className="text-[11px] font-semibold tracking-[0.22em] uppercase text-blue-400/70 mb-7"
+              className="text-[11px] font-semibold tracking-[0.22em] uppercase text-indigo-400/70 mb-7"
             >
               Agency Operating System
             </motion.p>
@@ -293,13 +293,13 @@ export default function Hero() {
               className="mt-8 text-base md:text-lg text-[#A8A8B2] leading-relaxed max-w-xl"
             >
               {BRAND.product_name}{" "}
-              <strong className="text-blue-400 font-semibold">scrapes</strong>
+              <strong className="text-indigo-400 font-semibold">scrapes</strong>
               <sup className="text-[9px] text-[#4A4A5A] ml-0.5 font-mono tracking-wider">01</sup>
               {" "}leads, {" "}
-              <strong className="text-blue-400 font-semibold">converts</strong>
+              <strong className="text-indigo-400 font-semibold">converts</strong>
               <sup className="text-[9px] text-[#4A4A5A] ml-0.5 font-mono tracking-wider">02</sup>
               {" "}them automatically, and{" "}
-              <strong className="text-blue-400 font-semibold">manages</strong>
+              <strong className="text-indigo-400 font-semibold">manages</strong>
               <sup className="text-[9px] text-[#4A4A5A] ml-0.5 font-mono tracking-wider">03</sup>
               {" "}your clients end-to-end.
             </motion.p>
@@ -337,7 +337,7 @@ export default function Hero() {
             <motion.div variants={ITEM} className="flex flex-col gap-3">
               <Link
                 href="/pricing"
-                className="relative inline-flex items-center justify-center gap-2.5 font-semibold text-[13px] h-11 px-6 rounded-[14px] bg-[#3B82F6] text-white border border-[rgba(96,165,250,0.40)] shadow-[0_0_0_1px_rgba(59,130,246,0.30),0_4px_20px_rgba(59,130,246,0.50),0_0_60px_rgba(59,130,246,0.18)] hover:bg-[#2563EB] hover:shadow-[0_0_0_1px_rgba(59,130,246,0.50),0_6px_28px_rgba(59,130,246,0.65),0_0_80px_rgba(59,130,246,0.28)] hover:-translate-y-0.5 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                className="relative inline-flex items-center justify-center gap-2.5 font-semibold text-[13px] h-11 px-6 rounded-[14px] bg-[#3B82F6] text-white border border-[rgba(96,165,250,0.40)] shadow-[0_0_0_1px_rgba(212,255,0,0.30),0_4px_20px_rgba(212,255,0,0.50),0_0_60px_rgba(212,255,0,0.18)] hover:bg-[#2563EB] hover:shadow-[0_0_0_1px_rgba(212,255,0,0.50),0_6px_28px_rgba(212,255,0,0.65),0_0_80px_rgba(212,255,0,0.28)] hover:-translate-y-0.5 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)]"
               >
                 Start your 7-day free trial
                 <ArrowRight size={15} />
@@ -345,7 +345,7 @@ export default function Hero() {
 
               <Link
                 href="#features"
-                className="inline-flex items-center justify-center gap-2 font-medium text-[12px] h-9 px-4 rounded-[12px] bg-transparent text-[#A8A8B2] border border-[rgba(99,146,255,0.18)] hover:bg-[rgba(59,130,246,0.08)] hover:text-[#C8C8D4] hover:border-[rgba(99,146,255,0.32)] transition-all duration-200"
+                className="inline-flex items-center justify-center gap-2 font-medium text-[12px] h-9 px-4 rounded-[12px] bg-transparent text-[#A8A8B2] border border-[rgba(99,146,255,0.18)] hover:bg-[rgba(212,255,0,0.08)] hover:text-[#C8C8D4] hover:border-[rgba(99,146,255,0.32)] transition-all duration-200"
               >
                 See all features
                 <ChevronRight size={13} />

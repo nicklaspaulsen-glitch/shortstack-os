@@ -116,19 +116,19 @@ export default function ClientContentPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="page-header mb-0 flex items-center gap-2"><Film size={18} className="text-blue-400" /> Your Content</h1>
+        <h1 className="page-header mb-0 flex items-center gap-2"><Film size={18} className="text-indigo-400" /> Your Content</h1>
         <p className="text-xs text-text-muted mt-0.5">All content created and scheduled for your brand</p>
       </div>
 
       {/* Content Calendar */}
       <div className="glass rounded-xl p-4">
-        <h2 className="flex items-center gap-2"><Calendar size={13} className="text-blue-400" /> Content Calendar</h2>
+        <h2 className="flex items-center gap-2"><Calendar size={13} className="text-indigo-400" /> Content Calendar</h2>
         {calendar.length === 0 ? (
           <EmptyState icon={<Calendar size={32} />} title="No Content Scheduled" description="Your content calendar is empty. We&apos;ll start populating it soon." />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
             {calendar.map((c) => (
-              <div key={c.id} className="bg-white/[0.06] border border-border-subtle rounded-lg p-3 hover:border-blue-500/[0.30] transition-colors">
+              <div key={c.id} className="bg-white/[0.06] border border-border-subtle rounded-lg p-3 hover:border-indigo-500/[0.30] transition-colors">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[10px] text-text-muted capitalize font-medium">{c.platform.replace(/_/g, " ")}</span>
                   <StatusBadge status={c.status} />
@@ -182,7 +182,7 @@ export default function ClientContentPage() {
                   <button onClick={async () => {
                     const res = await fetch(`/api/content/pdf?id=${s.id}`);
                     if (res.ok) { const blob = await res.blob(); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = `${s.title}.pdf`; a.click(); }
-                  }} className="text-blue-400 hover:text-blue-300"><Download size={13} /></button>
+                  }} className="text-indigo-400 hover:text-indigo-300"><Download size={13} /></button>
                 </div>
               </div>
             ))}
@@ -210,7 +210,7 @@ export default function ClientContentPage() {
           rows={5}
           autoFocus
           disabled={submittingRevision}
-          className="w-full text-xs border border-border-subtle bg-white/[0.06] rounded-lg px-3 py-2.5 resize-none focus:outline-none focus:border-blue-400 text-text-secondary"
+          className="w-full text-xs border border-border-subtle bg-white/[0.06] rounded-lg px-3 py-2.5 resize-none focus:outline-none focus:border-indigo-400 text-text-secondary"
         />
         <label className="mt-4 flex items-center gap-2 text-xs text-text-secondary cursor-pointer select-none">
           <input
@@ -236,7 +236,7 @@ export default function ClientContentPage() {
           <button
             onClick={submitRevision}
             disabled={submittingRevision || !revisionNote.trim()}
-            className="text-xs px-4 py-2 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
+            className="text-xs px-4 py-2 rounded-lg bg-indigo-500 text-white font-semibold hover:bg-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
           >
             <MessageSquare size={12} />
             {submittingRevision ? "Sending..." : "Send revision"}

@@ -22,8 +22,8 @@ export default function FinalCTA() {
           <div
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-medium mb-6"
             style={{
-              background: "rgba(59,130,246,0.10)",
-              border: "1px solid rgba(59,130,246,0.25)",
+              background: "rgba(212,255,0,0.10)",
+              border: "1px solid rgba(212,255,0,0.25)",
               color: "#93C5FD",
             }}
           >
@@ -36,7 +36,7 @@ export default function FinalCTA() {
             style={{ letterSpacing: "-0.03em" }}
           >
             Run your agency on{" "}
-            <span className="text-blue-500">
+            <span className="text-indigo-500">
               {BRAND.product_name}.
             </span>
           </h2>
@@ -51,7 +51,7 @@ export default function FinalCTA() {
             {/* GlassButton glow variant (Link-compatible) */}
             <Link
               href="/pricing"
-              className="relative inline-flex items-center justify-center select-none font-semibold leading-none cursor-pointer shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/50 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] h-11 px-6 text-[13px] gap-2.5 rounded-[14px] bg-[#3B82F6] text-white border border-[rgba(96,165,250,0.40)] shadow-[0_0_0_1px_rgba(59,130,246,0.30),0_4px_20px_rgba(59,130,246,0.55),0_0_60px_rgba(59,130,246,0.20)] hover:shadow-[0_0_0_1px_rgba(59,130,246,0.50),0_6px_28px_rgba(59,130,246,0.70),0_0_80px_rgba(59,130,246,0.30)] hover:bg-[#2563EB] hover:-translate-y-0.5 active:translate-y-0"
+              className="relative inline-flex items-center justify-center select-none font-semibold leading-none cursor-pointer shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/50 transition-all duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] h-11 px-6 text-[13px] gap-2.5 rounded-[14px] bg-[#3B82F6] text-white border border-[rgba(96,165,250,0.40)] shadow-[0_0_0_1px_rgba(212,255,0,0.30),0_4px_20px_rgba(212,255,0,0.55),0_0_60px_rgba(212,255,0,0.20)] hover:shadow-[0_0_0_1px_rgba(212,255,0,0.50),0_6px_28px_rgba(212,255,0,0.70),0_0_80px_rgba(212,255,0,0.30)] hover:bg-[#2563EB] hover:-translate-y-0.5 active:translate-y-0"
             >
               Start your 7-day free trial
               <ArrowRight size={16} />

@@ -653,7 +653,7 @@ export default function Sidebar() {
             indented ? "px-3 ml-1" : "px-2.5"
           } ${
             isActive
-              ? "active text-brand-accent font-semibold bg-[rgba(59,130,246,0.09)] shadow-[inset_0_0_0_1px_rgba(59,130,246,0.13),0_1px_4px_rgba(59,130,246,0.06)]"
+              ? "active text-brand-accent font-semibold bg-[rgba(212,255,0,0.09)] shadow-[inset_0_0_0_1px_rgba(212,255,0,0.13),0_1px_4px_rgba(212,255,0,0.06)]"
               : "text-text-secondary hover:text-text-primary hover:bg-[rgba(108,114,172,0.07)]"
           }`}
         >
@@ -666,7 +666,7 @@ export default function Sidebar() {
             <motion.div
               layoutId="sidebar-active-accent"
               className="absolute -left-px top-1/2 w-[2px] h-[62%] rounded-r bg-brand-accent"
-              style={{ y: "-50%", boxShadow: "0 0 8px rgba(59,130,246,0.55), 0 0 2px rgba(59,130,246,0.8)" }}
+              style={{ y: "-50%", boxShadow: "0 0 8px rgba(212,255,0,0.55), 0 0 2px rgba(212,255,0,0.8)" }}
               transition={{ type: "spring", stiffness: 380, damping: 32 }}
             />
           )}
@@ -689,8 +689,8 @@ export default function Sidebar() {
           onMouseLeave={() => setHoveredItem(null)}
           className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-220 ease-out-expo-foundation nav-icon-alive ${
             isActive
-              ? "bg-[#2563EB] text-white shadow-[0_2px_10px_rgba(59,130,246,0.32)]"
-              : "text-text-secondary hover:text-[#2563EB] hover:bg-[rgba(59,130,246,0.09)]"
+              ? "bg-brand-accent text-[#020711] font-semibold shadow-[0_2px_10px_rgba(212,255,0,0.32)]"
+              : "text-text-secondary hover:text-brand-accent hover:bg-[rgba(212,255,0,0.09)]"
           }`}
           title={unreadCount > 0 ? `${label} (${unreadCount})` : label}
           aria-label={label}
@@ -702,7 +702,7 @@ export default function Sidebar() {
         </Link>
         {hoveredItem === item.href && (
           <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 z-50 whitespace-nowrap pointer-events-none">
-            <div className="bg-[#1C2338] border border-[rgba(59,130,246,0.18)] rounded-lg px-2.5 py-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.50),0_1px_3px_rgba(0,0,0,0.30)] text-xs font-medium text-text-primary">
+            <div className="bg-[#1C2338] border border-[rgba(212,255,0,0.18)] rounded-lg px-2.5 py-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.50),0_1px_3px_rgba(0,0,0,0.30)] text-xs font-medium text-text-primary">
               {label}
               {unreadCount > 0 && <span className="ml-1.5 text-[10px] text-status-error font-bold">{unreadCount > 9 ? "9+" : unreadCount}</span>}
             </div>
@@ -730,8 +730,8 @@ export default function Sidebar() {
         background: "rgba(10,13,26,0.94)",
         backdropFilter: "blur(24px) saturate(160%)",
         WebkitBackdropFilter: "blur(24px) saturate(160%)",
-        borderRight: "1px solid rgba(59,130,246,0.10)",
-        boxShadow: "inset -1px 0 0 rgba(59,130,246,0.06), 2px 0 32px rgba(0,0,0,0.50)",
+        borderRight: "1px solid rgba(212,255,0,0.10)",
+        boxShadow: "inset -1px 0 0 rgba(212,255,0,0.06), 2px 0 32px rgba(0,0,0,0.50)",
       }}
     >
       {/* LED light strip — lives on the sidebar's right edge, theme-colored */}
@@ -761,7 +761,7 @@ export default function Sidebar() {
             return (
               <Link href="/dashboard" className="flex items-center justify-center" aria-label={displayName}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/trinity-logo-white.svg" alt={displayName} width={24} height={24} className="opacity-90 drop-shadow-[0_0_8px_rgba(59,130,246,0.50)]" />
+                <img src="/trinity-logo-white.svg" alt={displayName} width={24} height={24} className="opacity-90 drop-shadow-[0_0_8px_rgba(212,255,0,0.50)]" />
               </Link>
             );
           }
@@ -774,7 +774,7 @@ export default function Sidebar() {
               ) : (
                 <div className="shrink-0 transition-transform duration-220 ease-out-expo-foundation group-hover:scale-105">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/trinity-logo-white.svg" alt={displayName} width={28} height={28} className="opacity-90 drop-shadow-[0_0_12px_rgba(59,130,246,0.55)]" />
+                  <img src="/trinity-logo-white.svg" alt={displayName} width={28} height={28} className="opacity-90 drop-shadow-[0_0_12px_rgba(212,255,0,0.55)]" />
                 </div>
               )}
               <div className="min-w-0 leading-tight">
@@ -791,7 +791,7 @@ export default function Sidebar() {
             onClick={() => setPinned(!pinned)}
             className={`p-1 rounded-md transition-colors duration-220 ease-out-expo-foundation shrink-0 ${
               pinned
-                ? "text-brand-accent bg-[rgba(59,130,246,0.10)]"
+                ? "text-brand-accent bg-[rgba(212,255,0,0.10)]"
                 : "text-text-muted hover:text-brand-accent hover:bg-white/[0.02]"
             }`}
             aria-label={pinned ? "Unpin sidebar (auto-collapse)" : "Pin sidebar open"}
@@ -819,7 +819,7 @@ export default function Sidebar() {
                 disabled={!ws.active}
                 className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-left transition-all duration-220 ease-out-expo-foundation ${
                   ws.active
-                    ? "bg-[rgba(59,130,246,0.10)] border border-[rgba(59,130,246,0.22)] text-text-primary cursor-default"
+                    ? "bg-[rgba(212,255,0,0.10)] border border-[rgba(212,255,0,0.22)] text-text-primary cursor-default"
                     : "hover:bg-white/[0.03] text-text-muted hover:text-text-secondary cursor-not-allowed opacity-60"
                 }`}
                 aria-label={`Switch to ${ws.name} workspace`}
@@ -832,7 +832,7 @@ export default function Sidebar() {
                   <div className="text-[10px] text-text-muted/60 leading-tight truncate">{ws.subtitle}</div>
                 </div>
                 {ws.active && (
-                  <div className="ml-auto w-1.5 h-1.5 rounded-full bg-brand-accent shrink-0 shadow-[0_0_6px_rgba(59,130,246,0.8)]" />
+                  <div className="ml-auto w-1.5 h-1.5 rounded-full bg-brand-accent shrink-0 shadow-[0_0_6px_rgba(212,255,0,0.8)]" />
                 )}
               </button>
             ))}
@@ -921,7 +921,7 @@ export default function Sidebar() {
                     aria-label={item.label}
                     className={`flex-1 flex items-center justify-center py-1 rounded-md transition-all duration-150 ${
                       isActive
-                        ? "bg-[rgba(59,130,246,0.15)] text-brand-accent"
+                        ? "bg-[rgba(212,255,0,0.15)] text-brand-accent"
                         : "text-text-muted hover:text-text-primary hover:bg-white/[0.04]"
                     }`}
                   >
@@ -1070,7 +1070,7 @@ export default function Sidebar() {
                           title={`Open ${group.section} hub →`}
                           className={`group/hub inline-flex items-center gap-0.5 text-[9px] font-semibold px-2 py-[3px] rounded-full border transition-all duration-220 ease-out-expo-foundation ${
                             hubActive
-                              ? "bg-[rgba(59,130,246,0.10)] border-[rgba(59,130,246,0.30)] text-brand-accent"
+                              ? "bg-[rgba(212,255,0,0.10)] border-[rgba(212,255,0,0.30)] text-brand-accent"
                               : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.10)] text-text-muted hover:bg-[rgba(0,0,0,0.07)] hover:border-[rgba(0,0,0,0.18)] hover:text-text-primary"
                           }`}
                         >

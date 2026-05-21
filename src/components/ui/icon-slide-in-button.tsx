@@ -52,13 +52,13 @@ const iconGapMap: Record<SlideSize, number> = { sm: 6, md: 8, lg: 10 };
 
 const variantMap: Record<SlideVariant, string> = {
   default:
-    "bg-[#3B82F6] text-white border border-[rgba(59,130,246,0.60)] shadow-[0_2px_8px_rgba(59,130,246,0.35)] hover:bg-[#2563EB] hover:shadow-[0_4px_16px_rgba(59,130,246,0.50)]",
+    "bg-[#3B82F6] text-white border border-[rgba(212,255,0,0.60)] shadow-[0_2px_8px_rgba(212,255,0,0.35)] hover:bg-[#2563EB] hover:shadow-[0_4px_16px_rgba(212,255,0,0.50)]",
   ghost:
-    "bg-transparent text-[#A8A8B2] border border-[rgba(99,146,255,0.18)] hover:bg-[rgba(59,130,246,0.08)] hover:text-[#C8C8D4] hover:border-[rgba(99,146,255,0.32)]",
+    "bg-transparent text-[#A8A8B2] border border-[rgba(99,146,255,0.18)] hover:bg-[rgba(212,255,0,0.08)] hover:text-[#C8C8D4] hover:border-[rgba(99,146,255,0.32)]",
   glass:
     "bg-[rgba(19,24,39,0.72)] text-[#A8A8B2] border border-[rgba(255,255,255,0.08)] backdrop-blur-[14px] hover:bg-[rgba(28,35,56,0.80)] hover:text-[#F0F0F4]",
   glow:
-    "bg-[#3B82F6] text-white font-semibold border border-[rgba(96,165,250,0.40)] shadow-[0_0_0_1px_rgba(59,130,246,0.30),0_4px_20px_rgba(59,130,246,0.55)] hover:shadow-[0_0_0_1px_rgba(59,130,246,0.50),0_6px_28px_rgba(59,130,246,0.70)]",
+    "bg-[#3B82F6] text-white font-semibold border border-[rgba(96,165,250,0.40)] shadow-[0_0_0_1px_rgba(212,255,0,0.30),0_4px_20px_rgba(212,255,0,0.55)] hover:shadow-[0_0_0_1px_rgba(212,255,0,0.50),0_6px_28px_rgba(212,255,0,0.70)]",
 };
 
 const base =

@@ -50,8 +50,8 @@ interface OrderDetail {
 
 const STATUS_COLOR: Record<string, string> = {
   pending_payment: "bg-amber-500/10 text-amber-400",
-  paid: "bg-blue-500/10 text-blue-400",
-  in_progress: "bg-blue-500/10 text-blue-400",
+  paid: "bg-indigo-500/10 text-indigo-400",
+  in_progress: "bg-indigo-500/10 text-indigo-400",
   delivered: "bg-emerald-500/10 text-emerald-400",
   disputed: "bg-red-500/10 text-red-400",
   refunded: "bg-white/4 text-text-muted",

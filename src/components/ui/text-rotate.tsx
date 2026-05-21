@@ -8,7 +8,7 @@
  * Usage:
  *   <TextRotate
  *     texts={["Leads", "Deals", "Revenue", "Growth"]}
- *     className="text-blue-600 font-bold"
+ *     className="text-indigo-600 font-bold"
  *   />
  */
 

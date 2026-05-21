@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -239,7 +239,7 @@ export default function ClientLeadEnginePage() {
               </div>
               <div className="flex items-center gap-2">
                 {selectedLeads.size > 0 && (
-                  <span className="text-[10px] text-brand-accent font-medium px-2 py-1 bg-[rgba(59,130,246,0.08)] rounded-lg">
+                  <span className="text-[10px] text-brand-accent font-medium px-2 py-1 bg-[rgba(212,255,0,0.08)] rounded-lg">
                     {selectedLeads.size} selected
                   </span>
                 )}
@@ -286,7 +286,7 @@ export default function ClientLeadEnginePage() {
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Score</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.avgScore}%</p>
               </motion.div>
-            </div>{/* Search Bar — The Engine */}<div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.2)]">
+            </div>{/* Search Bar — The Engine */}<div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.2)]">
               <div className="flex items-center gap-2 mb-3">
                 <Zap size={14} className="text-brand-accent" />
                 <span className="text-xs font-semibold">Find New Leads</span>
@@ -373,13 +373,13 @@ export default function ClientLeadEnginePage() {
                 </div>
               )}
             </div>{/* Bulk Action Bar */}{selectedLeads.size > 0 && (
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.08)]">
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.08)]">
                 <span className="text-xs font-medium text-brand-accent">{selectedLeads.size} leads selected</span>
                 <div className="flex-1" />
                 <button onClick={() => bulkAction("email")} className="text-[10px] px-3 py-1.5 rounded-lg bg-info/10 text-info hover:bg-info/20 flex items-center gap-1.5 transition-colors">
                   <Mail size={11} /> Email All
                 </button>
-                <button onClick={() => bulkAction("dm")} className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-1.5 transition-colors">
+                <button onClick={() => bulkAction("dm")} className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] flex items-center gap-1.5 transition-colors">
                   <MessageSquare size={11} /> DM All
                 </button>
                 <button onClick={() => bulkAction("call")} className="text-[10px] px-3 py-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 flex items-center gap-1.5 transition-colors">
@@ -417,7 +417,7 @@ export default function ClientLeadEnginePage() {
                       </td></tr>
                     ) : leads.length === 0 ? (
                       <tr><td colSpan={9} className="text-center py-12 text-text-muted">
-                        <Sparkles size={20} className="mx-auto mb-2 text-[rgba(59,130,246,0.4)]" />
+                        <Sparkles size={20} className="mx-auto mb-2 text-[rgba(212,255,0,0.4)]" />
                         <p className="text-xs">No leads yet. Use the search above to find prospects.</p>
                       </td></tr>
                     ) : (
@@ -465,9 +465,9 @@ export default function ClientLeadEnginePage() {
                             <td className="px-3 py-2.5 text-center">
                               <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium uppercase tracking-wider ${
                                 lead.status === "new" ? "bg-info/10 text-info" :
-                                lead.status === "contacted" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
+                                lead.status === "contacted" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" :
                                 lead.status === "replied" ? "bg-success/10 text-success" :
-                                lead.status === "booked" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
+                                lead.status === "booked" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" :
                                 "bg-surface-light text-text-muted"
                               }`}>
                                 {lead.status}

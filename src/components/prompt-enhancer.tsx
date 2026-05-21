@@ -125,7 +125,7 @@ export default function PromptEnhancer({
             onClick={enhance}
             disabled={!value.trim() || enhancing}
             className="flex items-center gap-1.5 text-[10px] font-medium px-2.5 py-1 rounded-md transition-all disabled:opacity-30
-              bg-[rgba(59,130,246,0.08)] text-[#2563EB] border border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.12)] hover:border-[rgba(59,130,246,0.3)]"
+              bg-[rgba(212,255,0,0.08)] text-[#2563EB] border border-[rgba(212,255,0,0.2)] hover:bg-[rgba(212,255,0,0.12)] hover:border-[rgba(212,255,0,0.3)]"
           >
             {enhancing ? (
               <>

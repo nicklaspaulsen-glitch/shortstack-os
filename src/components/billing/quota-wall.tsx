@@ -143,7 +143,7 @@ export function QuotaWall({ payload, onClose, inline = false }: QuotaWallProps) 
         <Link
           href="/dashboard/billing"
           onClick={onClose}
-          className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-text-primary text-xs font-medium border border-border-subtle hover:bg-[rgba(59,130,246,0.08)] hover:text-[#2563EB] transition-colors"
+          className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-text-primary text-xs font-medium border border-border-subtle hover:bg-[rgba(212,255,0,0.08)] hover:text-[#2563EB] transition-colors"
         >
           <Plus size={12} />
           Buy more tokens

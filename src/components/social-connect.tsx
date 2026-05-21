@@ -20,15 +20,15 @@ interface ConnectedAccount {
 
 const PLATFORMS = [
   { id: "instagram", name: "Instagram", icon: <Camera size={16} />, color: "text-pink-400", bg: "bg-pink-400/10 border-pink-400/20", urlPrefix: "instagram.com/", placeholder: "@handle" },
-  { id: "facebook", name: "Facebook", icon: <MessageCircle size={16} />, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20", urlPrefix: "facebook.com/", placeholder: "Page name or URL" },
+  { id: "facebook", name: "Facebook", icon: <MessageCircle size={16} />, color: "text-indigo-400", bg: "bg-indigo-400/10 border-indigo-400/20", urlPrefix: "facebook.com/", placeholder: "Page name or URL" },
   { id: "tiktok", name: "TikTok", icon: <Music size={16} />, color: "text-text-primary", bg: "bg-black/5 border-border-subtle", urlPrefix: "tiktok.com/@", placeholder: "@handle" },
-  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={16} />, color: "text-blue-600", bg: "bg-blue-300/10 border-blue-300/20", urlPrefix: "linkedin.com/company/", placeholder: "Company page URL" },
+  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={16} />, color: "text-indigo-600", bg: "bg-indigo-300/10 border-indigo-300/20", urlPrefix: "linkedin.com/company/", placeholder: "Company page URL" },
   { id: "youtube", name: "YouTube", icon: <Play size={16} />, color: "text-red-400", bg: "bg-red-400/10 border-red-400/20", urlPrefix: "youtube.com/@", placeholder: "@channel or URL" },
   { id: "google_ads", name: "Google Ads", icon: <Megaphone size={16} />, color: "text-green-400", bg: "bg-green-400/10 border-green-400/20", urlPrefix: "", placeholder: "Account ID (xxx-xxx-xxxx)" },
-  { id: "meta_ads", name: "Meta Ads", icon: <Megaphone size={16} />, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20", urlPrefix: "", placeholder: "Ad Account ID" },
+  { id: "meta_ads", name: "Meta Ads", icon: <Megaphone size={16} />, color: "text-indigo-400", bg: "bg-indigo-400/10 border-indigo-400/20", urlPrefix: "", placeholder: "Ad Account ID" },
   { id: "tiktok_ads", name: "TikTok Ads", icon: <Megaphone size={16} />, color: "text-cyan-400", bg: "bg-cyan-400/10 border-cyan-400/20", urlPrefix: "", placeholder: "Advertiser ID" },
   { id: "x_twitter", name: "X (Twitter)", icon: <Hash size={16} />, color: "text-text-primary", bg: "bg-black/5 border-border-subtle", urlPrefix: "x.com/", placeholder: "@handle" },
-  { id: "website", name: "Website", icon: <Globe size={16} />, color: "text-[#2563EB]", bg: "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)]", urlPrefix: "", placeholder: "https://example.com" },
+  { id: "website", name: "Website", icon: <Globe size={16} />, color: "text-[#2563EB]", bg: "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.2)]", urlPrefix: "", placeholder: "https://example.com" },
 ];
 
 // Platforms that have OAuth ready
@@ -189,7 +189,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
                     {hasApi ? (
                       <span className="text-[8px] px-1 py-px rounded bg-success/10 text-success font-semibold uppercase tracking-wider">API</span>
                     ) : (
-                      <span className="text-[8px] px-1 py-px rounded bg-[rgba(59,130,246,0.08)] text-[#2563EB] font-semibold uppercase tracking-wider">Linked</span>
+                      <span className="text-[8px] px-1 py-px rounded bg-[rgba(212,255,0,0.08)] text-[#2563EB] font-semibold uppercase tracking-wider">Linked</span>
                     )}
                   </div>
                 </div>
@@ -206,7 +206,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
                         const p = PLATFORMS.find(pl => pl.id === account.platform);
                         if (p) startOAuth(p);
                       }}
-                      className="p-1 rounded hover:bg-[rgba(59,130,246,0.08)] text-text-muted hover:text-[#2563EB] transition-colors"
+                      className="p-1 rounded hover:bg-[rgba(212,255,0,0.08)] text-text-muted hover:text-[#2563EB] transition-colors"
                       title="Upgrade to API access"
                     >
                       <Zap size={12} />
@@ -238,7 +238,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
                 <button
                   key={p.id}
                   onClick={() => setConnectPlatform(p)}
-                  className={`flex flex-col items-center gap-2 p-3 rounded-lg border hover:border-[rgba(59,130,246,0.25)] transition-all ${p.bg}`}
+                  className={`flex flex-col items-center gap-2 p-3 rounded-lg border hover:border-[rgba(212,255,0,0.25)] transition-all ${p.bg}`}
                 >
                   <span className={p.color}>{p.icon}</span>
                   <span className="text-[10px] font-medium">{p.name}</span>

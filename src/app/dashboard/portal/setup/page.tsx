@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -13,10 +13,10 @@ import { MotionPage } from "@/components/motion/motion-page";
 
 const SOCIAL_PLATFORMS = [
   { id: "instagram", name: "Instagram", icon: <Camera size={24} />, color: "text-pink-500" },
-  { id: "facebook", name: "Facebook", icon: <Globe size={24} />, color: "text-blue-500" },
+  { id: "facebook", name: "Facebook", icon: <Globe size={24} />, color: "text-indigo-500" },
   { id: "tiktok", name: "TikTok", icon: <Hash size={24} />, color: "text-text-primary" },
   { id: "youtube", name: "YouTube", icon: <Video size={24} />, color: "text-red-500" },
-  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={24} />, color: "text-blue-400" },
+  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={24} />, color: "text-indigo-400" },
   { id: "twitter", name: "X (Twitter)", icon: <AtSign size={24} />, color: "text-text-primary" },
 ];
 
@@ -97,8 +97,8 @@ export default function ClientSetupPage() {
           <button key={platform.id} onClick={() => togglePlatform(platform.id)}
             className={`p-4 rounded-xl border flex flex-col items-center gap-2 transition-all ${
               connectedPlatforms.includes(platform.id)
-                ? "border-brand-accent bg-[rgba(59,130,246,0.08)]"
-                : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
+                ? "border-brand-accent bg-[rgba(212,255,0,0.08)]"
+                : "border-border-subtle hover:border-[rgba(212,255,0,0.25)]"
             }`}>
             <span className={platform.color}>{platform.icon}</span>
             <span className="text-sm font-medium">{platform.name}</span>
@@ -121,7 +121,7 @@ export default function ClientSetupPage() {
 
     // Step 3: Meet Trinity
     <div key="trinity" className="text-center space-y-6">
-      <div className="w-16 h-16 bg-[rgba(59,130,246,0.08)] flex items-center justify-center mx-auto">
+      <div className="w-16 h-16 bg-[rgba(212,255,0,0.08)] flex items-center justify-center mx-auto">
         <MessageSquare size={32} className="text-brand-accent" />
       </div>
       <div>

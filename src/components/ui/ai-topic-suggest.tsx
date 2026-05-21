@@ -73,7 +73,7 @@ const DEFAULT_TITLE: Record<SuggestSurface, string> = {
 
 const IMPACT_BADGE: Record<SuggestedTopic["impact"], string> = {
   high: "bg-emerald-500/15 text-emerald-700 border border-emerald-500/30",
-  medium: "bg-[rgba(59,130,246,0.12)] text-[#2563EB] border border-[rgba(59,130,246,0.25)]",
+  medium: "bg-[rgba(212,255,0,0.12)] text-[#2563EB] border border-[rgba(212,255,0,0.25)]",
   low: "bg-muted/15 text-text-muted border border-border-subtle/40",
 };
 
@@ -176,7 +176,7 @@ export default function AITopicSuggest({
               type="button"
               onClick={() => handlePick(s.topic)}
               title={s.reason || s.topic}
-              className="group inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-surface-light px-3 py-1 text-[11px] text-text-primary/80 transition-all hover:border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.08)] hover:text-text-primary"
+              className="group inline-flex items-center gap-1.5 rounded-full border border-border-subtle/50 bg-surface-light px-3 py-1 text-[11px] text-text-primary/80 transition-all hover:border-[rgba(212,255,0,0.25)] hover:bg-[rgba(212,255,0,0.08)] hover:text-text-primary"
             >
               <span className={`h-1.5 w-1.5 rounded-full ${
                 s.impact === "high" ? "bg-emerald-400" :

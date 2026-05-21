@@ -192,7 +192,7 @@ export function TaskDrawer({
                       setEditingTitle(false);
                     }
                   }}
-                  className="w-full px-2 py-1 -mx-2 -my-1 rounded bg-surface-light border border-[rgba(59,130,246,0.4)] text-xl font-semibold focus:outline-none"
+                  className="w-full px-2 py-1 -mx-2 -my-1 rounded bg-surface-light border border-[rgba(212,255,0,0.4)] text-xl font-semibold focus:outline-none"
                 />
               ) : (
                 <h2
@@ -305,7 +305,7 @@ export function TaskDrawer({
                     value={descDraft}
                     onChange={(e) => setDescDraft(e.target.value)}
                     onBlur={saveDesc}
-                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-[rgba(59,130,246,0.4)] text-sm resize-none focus:outline-none"
+                    className="w-full px-3 py-2 rounded-lg bg-surface-light border border-[rgba(212,255,0,0.4)] text-sm resize-none focus:outline-none"
                     placeholder="Add details, links, or references..."
                   />
                 ) : task.description ? (
@@ -415,7 +415,7 @@ function CommentRow({
     : "?";
   return (
     <div className="flex gap-2.5">
-      <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold bg-[rgba(59,130,246,0.12)] text-[#2563EB] border border-[rgba(59,130,246,0.25)]">
+      <div className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold bg-[rgba(212,255,0,0.12)] text-[#2563EB] border border-[rgba(212,255,0,0.25)]">
         {author?.avatar_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

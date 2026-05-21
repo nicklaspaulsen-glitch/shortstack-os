@@ -339,7 +339,7 @@ function LayerRow({
       onDragEnd={onDragEnd}
       className={`flex items-center gap-2 px-2 py-1.5 cursor-pointer border-l-2 ${
         selected
-          ? "bg-blue-600/20 border-blue-500"
+          ? "bg-indigo-600/20 border-indigo-500"
           : "border-transparent hover:bg-neutral-800/60"
       }`}
       style={{ paddingLeft: 8 + depth * 12 }}

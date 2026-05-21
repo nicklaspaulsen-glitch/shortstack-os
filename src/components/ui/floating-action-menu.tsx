@@ -96,9 +96,9 @@ export function FloatingActionMenu({
         onClick={toggle}
         aria-label={open ? "Close quick actions" : "Open quick actions"}
         aria-expanded={open}
-        className="relative flex h-14 w-14 items-center justify-center rounded-full shadow-lg cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+        className="relative flex h-14 w-14 items-center justify-center rounded-full shadow-lg cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500"
         style={{ backgroundColor: accentColor }}
-        whileHover={reducedMotion ? undefined : { scale: 1.07, boxShadow: "0 8px 28px rgba(59,130,246,0.40)" }}
+        whileHover={reducedMotion ? undefined : { scale: 1.07, boxShadow: "0 8px 28px rgba(212,255,0,0.40)" }}
         whileTap={reducedMotion ? undefined : { scale: 0.94 }}
         transition={SPRING}
       >
@@ -168,7 +168,7 @@ export function FloatingActionMenu({
                 "shadow-[0_2px_16px_rgba(0,0,0,0.40)] border border-[rgba(99,146,255,0.18)]",
                 "text-text-secondary cursor-pointer select-none",
                 "transition-all duration-150 ease-out",
-                "hover:shadow-[0_4px_20px_rgba(59,130,246,0.20)] hover:border-[rgba(59,130,246,0.30)] hover:text-[#60A5FA]",
+                "hover:shadow-[0_4px_20px_rgba(212,255,0,0.20)] hover:border-[rgba(212,255,0,0.30)] hover:text-[#60A5FA]",
                 "active:scale-95",
                 "disabled:opacity-40 disabled:pointer-events-none"
               )}

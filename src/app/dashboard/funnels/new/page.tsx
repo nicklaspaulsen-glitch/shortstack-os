@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -29,7 +29,7 @@ const TEMPLATES: FunnelTemplate[] = [
     name: "Lead Gen",
     description: "Capture email leads with a compelling opt-in and thank-you page.",
     icon: <Users size={20} />,
-    color: "text-blue-400 bg-blue-400/10 border-blue-400/20",
+    color: "text-indigo-400 bg-indigo-400/10 border-indigo-400/20",
     steps: [
       { title: "Opt-In Page", step_type: "opt-in" },
       { title: "Thank You", step_type: "thank-you" },
@@ -91,7 +91,7 @@ const TEMPLATES: FunnelTemplate[] = [
 ];
 
 const STEP_TYPE_COLORS: Record<string, string> = {
-  "opt-in": "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  "opt-in": "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
   "thank-you": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
   vsl: "bg-purple-500/10 text-purple-400 border-purple-500/20",
   checkout: "bg-amber-500/10 text-amber-400 border-amber-500/20",
@@ -167,7 +167,7 @@ export default function NewFunnelPage() {
                 { n: 2, label: "Review & Create" },
               ].map((s, idx) => (
                 <div key={s.n} className="flex items-center gap-2">
-                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${step === s.n ? "bg-[rgba(59,130,246,0.08)] text-blue-400 border border-[rgba(59,130,246,0.25)]" : step > s.n ? "text-emerald-400" : "text-text-muted"}`}>
+                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${step === s.n ? "bg-[rgba(212,255,0,0.08)] text-indigo-400 border border-[rgba(212,255,0,0.25)]" : step > s.n ? "text-emerald-400" : "text-text-muted"}`}>
                     {step > s.n ? <Check size={14} /> : <span className="w-4 h-4 rounded-full bg-current/20 flex items-center justify-center text-xs">{s.n}</span>}
                     {s.label}
                   </div>
@@ -185,7 +185,7 @@ export default function NewFunnelPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Lead Gen — Free Audit"
-                      className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-text-primary text-sm placeholder-text-muted outline-none focus:border-[rgba(59,130,246,0.25)]"
+                      className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-text-primary text-sm placeholder-text-muted outline-none focus:border-[rgba(212,255,0,0.25)]"
                     />
                   </div>
                   <div>
@@ -194,7 +194,7 @@ export default function NewFunnelPage() {
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       placeholder="Short description of the funnel goal"
-                      className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-text-primary text-sm placeholder-text-muted outline-none focus:border-[rgba(59,130,246,0.25)]"
+                      className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-text-primary text-sm placeholder-text-muted outline-none focus:border-[rgba(212,255,0,0.25)]"
                     />
                   </div>
                 </div>
@@ -210,7 +210,7 @@ export default function NewFunnelPage() {
                     {/* Blank option */}
                     <button
                       onClick={() => setSelectedTemplate(null)}
-                      className={`text-left p-4 rounded-lg border transition-all ${!selectedTemplate ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]" : "border-white/8 hover:border-white/15 bg-white/5"}`}
+                      className={`text-left p-4 rounded-lg border transition-all ${!selectedTemplate ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)]" : "border-white/8 hover:border-white/15 bg-white/5"}`}
                     >
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-8 h-8 rounded-md bg-white/4 border border-white/10 flex items-center justify-center">
@@ -225,7 +225,7 @@ export default function NewFunnelPage() {
                       <button
                         key={tpl.id}
                         onClick={() => setSelectedTemplate(tpl)}
-                        className={`text-left p-4 rounded-lg border transition-all ${selectedTemplate?.id === tpl.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]" : "border-white/8 hover:border-white/15 bg-white/5"}`}
+                        className={`text-left p-4 rounded-lg border transition-all ${selectedTemplate?.id === tpl.id ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)]" : "border-white/8 hover:border-white/15 bg-white/5"}`}
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <div className={`w-8 h-8 rounded-md border flex items-center justify-center ${tpl.color}`}>

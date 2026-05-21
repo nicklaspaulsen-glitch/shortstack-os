@@ -208,7 +208,7 @@ export default function ClientHealthPage() {
               {tabs.map(t => (
                 <button key={t.id} onClick={() => setActiveTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border ${
-                    activeTab === t.id ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)] text-brand-accent font-medium" : "border-border-subtle text-text-muted hover:text-text-primary"
+                    activeTab === t.id ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.2)] text-brand-accent font-medium" : "border-border-subtle text-text-muted hover:text-text-primary"
                   }`}>
                   <t.icon size={12} /> {t.label}
                 </button>
@@ -241,7 +241,7 @@ export default function ClientHealthPage() {
                     {(["all", "critical", "warning", "healthy"] as const).map(f => (
                       <button key={f} onClick={() => setFilter(f)}
                         className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${
-                          filter === f ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent font-medium" : "border-border-subtle text-text-muted hover:text-text-primary"
+                          filter === f ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] text-brand-accent font-medium" : "border-border-subtle text-text-muted hover:text-text-primary"
                         }`}>
                         {f === "all" ? `All (${clients.length})` :
                          f === "critical" ? `Critical (${criticalCount})` :
@@ -269,7 +269,7 @@ export default function ClientHealthPage() {
                 )}
                 <motion.div className="space-y-2" variants={containerVariants} initial="hidden" animate="visible">
                   {filtered.map(client => (
-                    <motion.div key={client.id} variants={itemVariants} className={`rounded-xl border p-4 transition-all cursor-pointer hover:border-[rgba(59,130,246,0.2)] ${
+                    <motion.div key={client.id} variants={itemVariants} className={`rounded-xl border p-4 transition-all cursor-pointer hover:border-[rgba(212,255,0,0.2)] ${
                       client.health_score >= 75 ? "border-green-500/15 bg-green-500/[0.02]" :
                       client.health_score >= 50 ? "border-yellow-500/15 bg-yellow-500/[0.02]" :
                       "border-red-500/15 bg-red-500/[0.02]"
@@ -286,7 +286,7 @@ export default function ClientHealthPage() {
                             <span className={`text-[8px] px-1.5 py-0.5 rounded font-medium ${getHealthBg(client.health_score)} ${getHealthColor(client.health_score)}`}>
                               {getHealthLabel(client.health_score)}
                             </span>
-                            <span className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{client.package_tier}</span>
+                            <span className="text-[8px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{client.package_tier}</span>
                             {client.trend > 0 ? (
                               <span className="flex items-center text-[8px] text-green-400"><TrendingUp size={8} /> +{client.trend}%</span>
                             ) : client.trend < 0 ? (
@@ -357,7 +357,7 @@ export default function ClientHealthPage() {
                             <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><DollarSign size={10} className="text-brand-accent" /> Revenue Trend</h4>
                             <div className="flex items-end gap-0.5 h-12">
                               {client.revenue_trend.map((v, i) => (
-                                <div key={i} className="flex-1 rounded-t bg-[rgba(59,130,246,0.12)]" style={{ height: `${(v / Math.max(...client.revenue_trend)) * 100}%` }} />
+                                <div key={i} className="flex-1 rounded-t bg-[rgba(212,255,0,0.12)]" style={{ height: `${(v / Math.max(...client.revenue_trend)) * 100}%` }} />
                               ))}
                             </div>
                             <p className="text-[9px] text-text-muted mt-1">Last 6 months MRR</p>
@@ -402,7 +402,7 @@ export default function ClientHealthPage() {
                           <span className="text-xs text-brand-accent font-mono">{w.weight}%</span>
                         </div>
                         <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden">
-                          <div className="h-full rounded-full bg-[rgba(59,130,246,0.40)]" style={{ width: `${w.weight}%` }} />
+                          <div className="h-full rounded-full bg-[rgba(212,255,0,0.40)]" style={{ width: `${w.weight}%` }} />
                         </div>
                         <p className="text-[9px] text-text-muted mt-0.5">{w.description}</p>
                       </div>
@@ -462,15 +462,15 @@ export default function ClientHealthPage() {
                       <div key={alert.id} className={`flex items-start gap-3 p-3 rounded-lg border ${
                         alert.type === "critical" ? "bg-red-400/5 border-red-400/15" :
                         alert.type === "warning" ? "bg-yellow-400/5 border-yellow-400/15" :
-                        "bg-blue-400/5 border-blue-400/15"
+                        "bg-indigo-400/5 border-indigo-400/15"
                       }`}>
                         <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
                           alert.type === "critical" ? "bg-red-400/10" :
-                          alert.type === "warning" ? "bg-yellow-400/10" : "bg-blue-400/10"
+                          alert.type === "warning" ? "bg-yellow-400/10" : "bg-indigo-400/10"
                         }`}>
                           {alert.type === "critical" ? <AlertTriangle size={13} className="text-red-400" /> :
                            alert.type === "warning" ? <AlertTriangle size={13} className="text-yellow-400" /> :
-                           <Eye size={13} className="text-blue-400" />}
+                           <Eye size={13} className="text-indigo-400" />}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
@@ -478,7 +478,7 @@ export default function ClientHealthPage() {
                             <span className={`text-[8px] px-1.5 py-0.5 rounded uppercase font-bold ${
                               alert.type === "critical" ? "bg-red-400/10 text-red-400" :
                               alert.type === "warning" ? "bg-yellow-400/10 text-yellow-400" :
-                              "bg-blue-400/10 text-blue-400"
+                              "bg-indigo-400/10 text-indigo-400"
                             }`}>{alert.type}</span>
                           </div>
                           <p className="text-[10px] text-text-muted mt-0.5">{alert.message}</p>

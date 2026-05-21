@@ -250,7 +250,7 @@ export default function CreatorIntelligence({
                 <div className="flex items-start gap-2">
                   <span
                     className="shrink-0 text-[8px] font-mono font-bold mt-0.5 w-4 h-4 rounded flex items-center justify-center"
-                    style={{ background: "rgba(59,130,246,0.18)", color: "#60A5FA" }}
+                    style={{ background: "rgba(212,255,0,0.18)", color: "#60A5FA" }}
                   >
                     {i + 1}
                   </span>
@@ -287,15 +287,15 @@ export default function CreatorIntelligence({
                     }}
                     className="flex-1 py-1.5 rounded-lg text-[10px] font-semibold transition-all duration-150 flex items-center justify-center gap-1.5"
                     style={{
-                      background: "rgba(59,130,246,0.18)",
+                      background: "rgba(212,255,0,0.18)",
                       color: "#60A5FA",
-                      border: "1px solid rgba(59,130,246,0.22)",
+                      border: "1px solid rgba(212,255,0,0.22)",
                     }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.background = "rgba(59,130,246,0.30)";
+                      (e.currentTarget as HTMLButtonElement).style.background = "rgba(212,255,0,0.30)";
                     }}
                     onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.background = "rgba(59,130,246,0.18)";
+                      (e.currentTarget as HTMLButtonElement).style.background = "rgba(212,255,0,0.18)";
                     }}
                   >
                     <Lightbulb size={10} />
@@ -359,7 +359,7 @@ export default function CreatorIntelligence({
         onClick={() => setOpen((o) => !o)}
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg border transition-all duration-150"
         style={{
-          background: open ? "rgba(59,130,246,0.22)" : "rgba(13,17,32,0.90)",
+          background: open ? "rgba(212,255,0,0.22)" : "rgba(13,17,32,0.90)",
           borderColor: open ? "#3B82F6" : "rgba(99,146,255,0.22)",
           color: open ? "#60A5FA" : "#A8A8B2",
           backdropFilter: "blur(12px)",

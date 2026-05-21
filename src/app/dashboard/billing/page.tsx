@@ -479,8 +479,8 @@ export default function BillingPage() {
                       key={pack.id}
                       className="relative overflow-hidden border p-4 transition-all spotlight-card"
                       style={{
-                        background: pack.popular ? "rgba(59,130,246,0.08)" : "rgba(255,255,255,0.05)",
-                        borderColor: pack.popular ? "rgba(59,130,246,0.30)" : "rgba(99,146,255,0.10)",
+                        background: pack.popular ? "rgba(212,255,0,0.08)" : "rgba(255,255,255,0.05)",
+                        borderColor: pack.popular ? "rgba(212,255,0,0.30)" : "rgba(99,146,255,0.10)",
                       }}
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -606,7 +606,7 @@ export default function BillingPage() {
                                     href={inv.hosted_invoice_url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-1 rounded text-text-muted hover:text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-colors"
+                                    className="p-1 rounded text-text-muted hover:text-brand-accent hover:bg-[rgba(212,255,0,0.08)] transition-colors"
                                     title="View invoice"
                                   >
                                     <ExternalLink size={12} />
@@ -617,7 +617,7 @@ export default function BillingPage() {
                                     href={inv.invoice_pdf}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-1 rounded text-text-muted hover:text-brand-accent hover:bg-[rgba(59,130,246,0.08)] transition-colors"
+                                    className="p-1 rounded text-text-muted hover:text-brand-accent hover:bg-[rgba(212,255,0,0.08)] transition-colors"
                                     title="Download PDF"
                                   >
                                     <Download size={12} />

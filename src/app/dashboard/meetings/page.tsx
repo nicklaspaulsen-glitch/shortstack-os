@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -162,7 +162,7 @@ export default function MeetingsPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="glass rounded-xl p-4 border-[rgba(59,130,246,0.25)] bg-gradient-to-r from-[rgba(59,130,246,0.08)] to-transparent"
+              className="glass rounded-xl p-4 border-[rgba(212,255,0,0.25)] bg-gradient-to-r from-[rgba(212,255,0,0.08)] to-transparent"
             >
               <div className="flex items-center gap-2 text-[11px] font-semibold mb-1">
                 <Sparkles size={11} className="text-brand-accent" /> AI Notetaker
@@ -267,7 +267,7 @@ export default function MeetingsPage() {
                       className="flex items-center justify-between p-4"
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-10 h-10 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center flex-shrink-0">
+                        <div className="w-10 h-10 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center flex-shrink-0">
                           <Mic size={16} className="text-brand-accent" />
                         </div>
                         <div className="min-w-0">

@@ -93,7 +93,7 @@ export default function AgentOffice() {
   return (
     <Link href="/dashboard/agent-supervisor" className="block">
       <div ref={containerRef} onMouseMove={handleMouseMove}
-        className="rounded-xl overflow-hidden cursor-pointer transition-all hover:ring-1 hover:ring-[rgba(59,130,246,0.1)] border border-border-subtle bg-surface/60"
+        className="rounded-xl overflow-hidden cursor-pointer transition-all hover:ring-1 hover:ring-[rgba(212,255,0,0.1)] border border-border-subtle bg-surface/60"
         style={{ padding: "16px 12px 8px" }}>
 
         {/* Header */}

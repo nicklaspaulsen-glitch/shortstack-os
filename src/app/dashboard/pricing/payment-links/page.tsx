@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Admin-only: copy-able Stripe Payment Links for each plan/cycle.
@@ -196,7 +196,7 @@ export default function PaymentLinksPage() {
                           <div className="flex gap-2">
                             <button
                               onClick={() => copyLink(key, link.url!)}
-                              className="flex-1 flex items-center justify-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] border border-[rgba(59,130,246,0.2)] font-medium"
+                              className="flex-1 flex items-center justify-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] border border-[rgba(212,255,0,0.2)] font-medium"
                             >
                               {copiedKey === key ? <Check size={11} /> : <Copy size={11} />}
                               {copiedKey === key ? "Copied!" : "Copy"}
@@ -205,7 +205,7 @@ export default function PaymentLinksPage() {
                               href={link.url}
                               target="_blank"
                               rel="noreferrer"
-                              className="flex items-center justify-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-surface-light text-text-primary hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent border border-border-subtle font-medium"
+                              className="flex items-center justify-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-surface-light text-text-primary hover:bg-[rgba(212,255,0,0.08)] hover:text-brand-accent border border-border-subtle font-medium"
                             >
                               <ExternalLink size={11} />
                               Preview

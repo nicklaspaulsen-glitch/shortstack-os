@@ -147,7 +147,7 @@ export function MotionTiles({
                   style={{
                     background: item.color
                       ? `${item.color}18`
-                      : "rgba(59,130,246,0.14)",
+                      : "rgba(212,255,0,0.14)",
                     color: item.color ?? "#3B82F6",
                   }}
                 >

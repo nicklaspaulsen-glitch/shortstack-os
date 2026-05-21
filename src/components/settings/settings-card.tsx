@@ -102,14 +102,14 @@ export default function SettingsCard({
             "inset 0 1px 0 rgba(255,255,255,1)",
             "0 2px 8px -2px rgba(0,0,0,0.06)",
             "0 8px 20px -8px rgba(0,0,0,0.06)",
-            "0 0 32px -12px rgba(59,130,246,0.06)",
+            "0 0 32px -12px rgba(212,255,0,0.06)",
           ].join(", "),
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.background = "rgba(255,255,255,0.95)";
           e.currentTarget.style.borderColor = danger
             ? "rgba(242, 96, 99, 0.45)"
-            : "rgba(59,130,246,0.22)";
+            : "rgba(212,255,0,0.22)";
           e.currentTarget.style.transform = "translateY(-2px)";
           e.currentTarget.style.boxShadow = [
             "inset 0 1px 0 rgba(255,255,255,1)",
@@ -126,7 +126,7 @@ export default function SettingsCard({
             "inset 0 1px 0 rgba(255,255,255,1)",
             "0 2px 8px -2px rgba(0,0,0,0.06)",
             "0 8px 20px -8px rgba(0,0,0,0.06)",
-            "0 0 32px -12px rgba(59,130,246,0.06)",
+            "0 0 32px -12px rgba(212,255,0,0.06)",
           ].join(", ");
         }}
       >

@@ -186,7 +186,7 @@ export default function DealsPage() {
             </h1>
           </div>
           {deals.length> 0 && (
-            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.15)] text-brand-accent">
+            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.15)] text-brand-accent">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
               {deals.length} deal{deals.length !== 1 ? "s" : ""}
             </span>
@@ -282,7 +282,7 @@ export default function DealsPage() {
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-                    activeTab === t.key ? "bg-[rgba(59,130,246,0.10)] text-brand-accent border border-[rgba(59,130,246,0.25)] font-medium" : "text-text-muted hover:text-text-primary"
+                    activeTab === t.key ? "bg-[rgba(212,255,0,0.10)] text-brand-accent border border-[rgba(212,255,0,0.25)] font-medium" : "text-text-muted hover:text-text-primary"
                   }`}>
                   {t.icon} {t.label}
                 </button>

@@ -758,8 +758,8 @@ export default function EmailComposerPage() {
                                 onClick={() => setGuidedKind(k.id)}
                                 className={`text-left p-4 rounded-xl border transition-all ${
                                   sel
-                                    ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.1)]"
-                                    : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                                    ? "border-brand-accent bg-[rgba(212,255,0,0.08)] shadow-lg shadow-[rgba(212,255,0,0.1)]"
+                                    : "border-border-subtle hover:border-[rgba(212,255,0,0.25)] bg-surface-light"
                                 }`}
 >
                                 <p className="text-sm font-semibold">{k.label}</p>
@@ -788,7 +788,7 @@ export default function EmailComposerPage() {
               value={guidedAudience}
               onChange={e => setGuidedAudience(e.target.value)}
               placeholder="e.g., SaaS founders on a free trial"
-              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)] transition-all"
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(212,255,0,0.4)] focus:ring-2 focus:ring-[rgba(212,255,0,0.12)] transition-all"
  />
           </div>
           <div>
@@ -800,7 +800,7 @@ export default function EmailComposerPage() {
               onChange={e => setGuidedDirection(e.target.value)}
               placeholder="Key points to cover, must-include details, what the reader should do next�"
               rows={4}
-              className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.4)] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)] transition-all resize-none"
+              className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(212,255,0,0.4)] focus:ring-2 focus:ring-[rgba(212,255,0,0.12)] transition-all resize-none"
               autoFocus
  />
           </div>
@@ -813,7 +813,7 @@ export default function EmailComposerPage() {
       description: "We'll write the subject and body. You can tweak every line in Advanced mode before sending.",
       icon: <Wand2 size={18} />,
       component: (
-        <div className="glass rounded-xl p-4 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)] space-y-2">
+        <div className="glass rounded-xl p-4 bg-[rgba(212,255,0,0.05)] border-[rgba(212,255,0,0.2)] space-y-2">
           <p className="text-sm">
             <span className="text-text-muted capitalize">{guidedKind} email</span>
             {guidedAudience.trim() && (
@@ -1548,7 +1548,7 @@ export default function EmailComposerPage() {
           )}
           {!loadingVariants && subjectVariants.map((v, i) => (
             <button key={i} onClick={() => { setEmail({ ...email, subject: v.subject }); setShowSubjectVariants(false); toast.success("Subject applied"); }}
-              className="block w-full text-left p-3 rounded-lg bg-surface-light border border-border-subtle hover:border-[rgba(59,130,246,0.25)] transition-all">
+              className="block w-full text-left p-3 rounded-lg bg-surface-light border border-border-subtle hover:border-[rgba(212,255,0,0.25)] transition-all">
               <div className="flex items-center justify-between mb-1">
                 <p className="text-sm font-semibold">{v.subject}</p>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 font-bold">{v.predicted_open_rate.toFixed(0)}% open</span>

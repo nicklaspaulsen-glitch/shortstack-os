@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
@@ -44,7 +44,7 @@ interface BrowserTaskTemplate {
 
 const STATUS_STYLES: Record<BrowserTask["status"], { label: string; bg: string; fg: string; icon: React.ReactNode }> = {
   queued: { label: "Queued", bg: "bg-amber-500/15", fg: "text-amber-400", icon: <Clock size={12} /> },
-  running: { label: "Running", bg: "bg-[rgba(59,130,246,0.08)]", fg: "text-brand-accent", icon: <Loader2 size={12} className="animate-spin" /> },
+  running: { label: "Running", bg: "bg-[rgba(212,255,0,0.08)]", fg: "text-brand-accent", icon: <Loader2 size={12} className="animate-spin" /> },
   completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-400", icon: <CheckCircle2 size={12} /> },
   failed: { label: "Failed", bg: "bg-rose-500/15", fg: "text-rose-400", icon: <XCircle size={12} /> },
   cancelled: { label: "Cancelled", bg: "bg-zinc-500/15", fg: "text-text-muted", icon: <XCircle size={12} /> },
@@ -243,7 +243,7 @@ export default function BrowserTasksPage() {
                       }}
                       className={`group rounded-lg border p-3 text-left transition ${
                         selectedTemplateId === t.id
-                          ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]"
+                          ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)]"
                           : "border-border-subtle bg-white/5 hover:border-white/12 hover:bg-white/8"
                       }`}
                     >

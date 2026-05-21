@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import { Hash, Lightbulb, Loader2, RefreshCcw, Sparkles } from "lucide-react";
@@ -73,7 +73,7 @@ export default function Tab3Trends() {
               onClick={() => setNiche(n)}
               className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${
                 niche === n
-                  ? "bg-[rgba(59,130,246,0.12)] border-[rgba(59,130,246,0.3)] text-brand-accent"
+                  ? "bg-[rgba(212,255,0,0.12)] border-[rgba(212,255,0,0.3)] text-brand-accent"
                   : "border-border-subtle/40 text-text-muted hover:bg-elevated"
               }`}
             >
@@ -153,7 +153,7 @@ export default function Tab3Trends() {
             {(data?.ideas ?? []).map((idea: ContentIdea, i) => (
               <div
                 key={`${idea.title}-${i}`}
-                className="rounded-lg border border-border-subtle/40 bg-elevated p-3 hover:border-[rgba(59,130,246,0.3)] transition-all"
+                className="rounded-lg border border-border-subtle/40 bg-elevated p-3 hover:border-[rgba(212,255,0,0.3)] transition-all"
               >
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <h4 className="text-sm font-medium leading-snug flex-1">{idea.title}</h4>

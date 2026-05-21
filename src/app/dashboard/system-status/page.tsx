@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Admin-only: Launch-readiness system status dashboard.
@@ -69,7 +69,7 @@ interface StatusResponse {
 
 const STATUS_META: Record<Status, { color: string; bg: string; border: string; icon: LucideIcon; label: string }> = {
   ok: { color: "text-success", bg: "bg-success/10", border: "border-success/30", icon: CheckCircle2, label: "Connected" },
-  configured: { color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]", border: "border-[rgba(59,130,246,0.25)]", icon: CheckCircle2, label: "Configured" },
+  configured: { color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]", border: "border-[rgba(212,255,0,0.25)]", icon: CheckCircle2, label: "Configured" },
   missing: { color: "text-text-muted", bg: "bg-muted/10", border: "border-border-subtle", icon: AlertTriangle, label: "Not set" },
   error: { color: "text-danger", bg: "bg-danger/10", border: "border-danger/30", icon: XCircle, label: "Error" },
 };
@@ -227,12 +227,12 @@ export default function SystemStatusPage() {
             ? "border-success/30 bg-success/5"
             : summary.blockers > 0
               ? "border-danger/30 bg-danger/5"
-              : "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]"
+              : "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)]"
         }`}
       >
         <div
           className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-            summary.ready_to_launch ? "bg-success/20 text-success" : summary.blockers > 0 ? "bg-danger/20 text-danger" : "bg-[rgba(59,130,246,0.12)] text-brand-accent"
+            summary.ready_to_launch ? "bg-success/20 text-success" : summary.blockers > 0 ? "bg-danger/20 text-danger" : "bg-[rgba(212,255,0,0.12)] text-brand-accent"
           }`}
         >
           {summary.ready_to_launch ? <CheckCircle2 size={20} /> : summary.blockers > 0 ? <XCircle size={20} /> : <AlertTriangle size={20} />}
@@ -340,7 +340,7 @@ export default function SystemStatusPage() {
           href="https://vercel.com/dashboard"
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] border border-[rgba(59,130,246,0.2)] font-medium"
+          className="inline-flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] border border-[rgba(212,255,0,0.2)] font-medium"
         >
           Open Vercel <ExternalLink size={10} />
         </a>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Sellers manage their service listings here.  Lists their own services
@@ -339,7 +339,7 @@ export default function ListingsPage() {
                             svc.status === "active"
                               ? "bg-emerald-500/10 text-emerald-400"
                               : svc.status === "paused"
-                                ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                                ? "bg-[rgba(212,255,0,0.08)] text-brand-accent"
                                 : "bg-white/8 text-text-muted"
                           }`}
                         >

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useRef, useState, useMemo } from "react";
 import {
@@ -378,12 +378,12 @@ export default function Tab2AIUpload() {
         onDrop={onDrop}
         className={`relative  border-2 border-dashed transition-all p-8 text-center ${
           dragOver
-            ? "border-[rgba(59,130,246,0.5)] bg-[rgba(59,130,246,0.05)]"
+            ? "border-[rgba(212,255,0,0.5)] bg-[rgba(212,255,0,0.05)]"
             : "border-border-subtle/40 bg-surface hover:border-border-subtle/60"
         }`}
       >
         <div className="flex flex-col items-center gap-3">
-          <div className="w-14 h-14  bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] flex items-center justify-center">
+          <div className="w-14 h-14  bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.25)] flex items-center justify-center">
             <UploadCloud size={26} className="text-brand-accent" />
           </div>
           <div>
@@ -446,7 +446,7 @@ export default function Tab2AIUpload() {
                 onClick={() => setTone(t)}
                 className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${
                   tone === t
-                    ? "bg-[rgba(59,130,246,0.12)] border-[rgba(59,130,246,0.4)] text-brand-accent"
+                    ? "bg-[rgba(212,255,0,0.12)] border-[rgba(212,255,0,0.4)] text-brand-accent"
                     : "border-border-subtle/40 text-text-muted hover:bg-elevated"
                 }`}
               >
@@ -613,7 +613,7 @@ export default function Tab2AIUpload() {
                             onClick={() => pickVariant(platform, c)}
                             className={`text-[10px] px-2 py-1 rounded border transition-all ${
                               e.selectedVariant === c.variant
-                                ? "border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                                ? "border-[rgba(212,255,0,0.4)] bg-[rgba(212,255,0,0.08)] text-brand-accent"
                                 : "border-border-subtle/40 text-text-muted hover:bg-elevated"
                             }`}
                           >

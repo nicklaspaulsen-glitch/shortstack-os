@@ -55,7 +55,7 @@ export default function WhoItsFor() {
               <>
                 Built for teams of{" "}
                 <span
-                  className="text-blue-500"
+                  className="text-indigo-500"
                 >
                   1 to 50.
                 </span>

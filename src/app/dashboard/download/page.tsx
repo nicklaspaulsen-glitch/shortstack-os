@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
@@ -220,7 +220,7 @@ export default function DownloadDesktopPage() {
                     onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                     className={`group relative glass rounded-xl p-5 transition-all spotlight-card ${
                       isRecommended
-                        ? "border-[rgba(59,130,246,0.5)] shadow-[0_0_20px_rgba(59,130,246,0.12)]"
+                        ? "border-[rgba(212,255,0,0.5)] shadow-[0_0_20px_rgba(212,255,0,0.12)]"
                         : ""
                     }`}
                   >
@@ -283,7 +283,7 @@ export default function DownloadDesktopPage() {
                     transition={{ delay: i * 0.04 }}
                     className="flex items-start gap-3 p-3 glass-md rounded-xl"
                   >
-                    <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)]">
+                    <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.25)]">
                       <CheckCircle2 size={16} />
                     </div>
                     <div className="min-w-0">

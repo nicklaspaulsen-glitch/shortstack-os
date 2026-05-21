@@ -153,7 +153,7 @@ function BentoCell({ item, delay, area }: BentoCellProps) {
             <span
               className="inline-flex items-center justify-center w-8 h-8 rounded-lg mb-2"
               style={{
-                background: item.color ? `${item.color}22` : "rgba(59,130,246,0.18)",
+                background: item.color ? `${item.color}22` : "rgba(212,255,0,0.18)",
                 color: item.color ?? "#3B82F6",
               }}
             >

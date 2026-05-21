@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -48,7 +48,7 @@ function StatusIcon({ status }: { status: string }) {
 function StatusDot({ status }: { status: string }) {
   const cls: Record<string, string> = {
     healthy: "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]",
-    degraded: "bg-brand-accent shadow-[0_0_6px_rgba(59,130,246,0.5)]",
+    degraded: "bg-brand-accent shadow-[0_0_6px_rgba(212,255,0,0.5)]",
     down: "bg-red-400 shadow-[0_0_6px_rgba(248,113,113,0.6)]",
     unknown: "bg-slate-400",
   };
@@ -118,7 +118,7 @@ export default function MonitorPage() {
   const overallLabel = { healthy: "All Systems Operational", degraded: "Partial Outage", down: "Major Outage" }[overall];
   const overallCls = {
     healthy: "bg-emerald-500/15 border-emerald-500/30 text-emerald-400",
-    degraded: "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent",
+    degraded: "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)] text-brand-accent",
     down: "bg-red-500/15 border-red-500/30 text-red-400",
   }[overall];
 
@@ -207,7 +207,7 @@ export default function MonitorPage() {
                           initial={{ opacity: 0, x: -8 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.25, delay: ci * 0.06 + si * 0.04 }}
-                          className="px-5 py-3.5 flex items-center gap-3 flex-wrap hover:bg-[rgba(59,130,246,0.04)] transition-colors"
+                          className="px-5 py-3.5 flex items-center gap-3 flex-wrap hover:bg-[rgba(212,255,0,0.04)] transition-colors"
                         >
                           <StatusDot status={svc.computedStatus} />
                           <StatusIcon status={svc.computedStatus} />

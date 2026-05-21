@@ -303,7 +303,7 @@ export default function AffiliateDetailPage() {
                       r.status === "subscribed"
                         ? "text-success"
                         : r.status === "signed_up"
-                        ? "text-blue-400"
+                        ? "text-indigo-400"
                         : "text-text-muted"
                     }`}
                   >

@@ -150,12 +150,12 @@ const TEMPLATE_LIBRARY: { name: string; description: string; steps: SequenceStep
 ];
 
 const STEP_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  email: { bg: "bg-[rgba(59,130,246,0.08)]", text: "text-brand-accent", border: "border-[rgba(59,130,246,0.25)]" },
+  email: { bg: "bg-[rgba(212,255,0,0.08)]", text: "text-brand-accent", border: "border-[rgba(212,255,0,0.25)]" },
   sms: { bg: "bg-green-500/10", text: "text-green-600", border: "border-green-500/20" },
   call: { bg: "bg-amber-500/10", text: "text-amber-400", border: "border-amber-500/20" },
   social: { bg: "bg-pink-500/10", text: "text-pink-600", border: "border-pink-500/20" },
   wait: { bg: "bg-white/5", text: "text-text-muted", border: "border-border-subtle" },
-  condition: { bg: "bg-[rgba(59,130,246,0.08)]", text: "text-brand-accent", border: "border-[rgba(59,130,246,0.25)]" },
+  condition: { bg: "bg-[rgba(212,255,0,0.08)]", text: "text-brand-accent", border: "border-[rgba(212,255,0,0.25)]" },
   dm: { bg: "bg-pink-500/10", text: "text-pink-600", border: "border-pink-500/20" },
 };
 
@@ -687,7 +687,7 @@ export default function SequencesPage() {
                   <label className="text-[10px] text-text-muted uppercase tracking-wider block mb-2">Channels *</label>
                   <div className="flex gap-2">
                     {([{ key: "email", label: "Email" }, { key: "sms", label: "SMS" }, { key: "dm", label: "DM" }] as const).map(c => (
-                      <label key={c.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border-subtle cursor-pointer hover:border-[rgba(59,130,246,0.2)] transition-all">
+                      <label key={c.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border-subtle cursor-pointer hover:border-[rgba(212,255,0,0.2)] transition-all">
                         <input type="checkbox" checked={aiChannels[c.key]} onChange={() => setAiChannels(prev => ({ ...prev, [c.key]: !prev[c.key] }))} className="accent-[#2563EB]" />
                         <span className="text-xs">{c.label}</span>
                       </label>
@@ -770,7 +770,7 @@ export default function SequencesPage() {
                       </PrismPanel>
                     )}
                     {/* Quick create from template hint */}
-                    <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.1)] text-center py-6">
+                    <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.1)] text-center py-6">
                       <Sparkles size={24} className="mx-auto mb-2 text-brand-accent" />
                       <p className="text-sm font-semibold">Create a new sequence</p>
                       <p className="text-[10px] text-text-muted mt-1">Pick a template from the Templates tab, or build from scratch</p>
@@ -985,7 +985,7 @@ export default function SequencesPage() {
                           <p className="text-xs font-semibold">{t.name}</p>
                           <p className="text-[10px] text-text-muted mt-0.5">{t.description}</p>
                         </div>
-                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">{t.category}</span>
+                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent">{t.category}</span>
                       </div>
                       <div className="flex gap-1 mt-2 mb-3">
                         {t.steps.map((s, j) => (
@@ -1180,8 +1180,8 @@ export default function SequencesPage() {
                             <span className={`px-1.5 py-0.5 rounded text-[9px] ${
                               r.status === "active" ? "bg-green-500/10 text-green-400"
                               : r.status === "paused" ? "bg-yellow-500/10 text-yellow-400"
-                              : r.status === "exited" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
-                              : r.status === "completed" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                              : r.status === "exited" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent"
+                              : r.status === "completed" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent"
                               : "bg-red-500/10 text-red-400"}`}>
                               {r.status}
                             </span>

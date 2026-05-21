@@ -154,7 +154,7 @@ export default function HeroProductTour() {
         className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-16 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse, rgba(59,130,246,0.12) 0%, transparent 70%)",
+            "radial-gradient(ellipse, rgba(212,255,0,0.12) 0%, transparent 70%)",
           filter: "blur(20px)",
         }}
       />
@@ -265,7 +265,7 @@ function LeadsMock() {
                 className="text-[9px] font-bold px-2 py-0.5 rounded"
                 style={{
                   background:
-                    r.status === "Hot" ? "rgba(239,68,68,0.14)" : "rgba(59,130,246,0.10)",
+                    r.status === "Hot" ? "rgba(239,68,68,0.14)" : "rgba(212,255,0,0.10)",
                   color: r.status === "Hot" ? "#fca5a5" : "#93C5FD",
                 }}
               >
@@ -445,7 +445,7 @@ function AdsMock() {
             <div className="text-[10px] text-gray-500">{row.spend}</div>
             <div
               className="text-[10px] font-bold px-2 py-0.5 rounded"
-              style={{ background: "rgba(59,130,246,0.12)", color: "#60A5FA" }}
+              style={{ background: "rgba(212,255,0,0.12)", color: "#60A5FA" }}
             >
               {row.roas}
             </div>

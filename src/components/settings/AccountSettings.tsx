@@ -65,7 +65,7 @@ export default function AccountSettings({
               // eslint-disable-next-line @next/next/no-img-element
               <img src={profile.avatar_url} alt="" className="w-16 h-16 rounded-xl object-cover border border-border-subtle" />
             ) : (
-              <div className="w-16 h-16 rounded-xl bg-[rgba(59,130,246,0.08)] border border-border-subtle flex items-center justify-center">
+              <div className="w-16 h-16 rounded-xl bg-[rgba(212,255,0,0.08)] border border-border-subtle flex items-center justify-center">
                 <span className="text-[#2563EB] text-xl font-bold">{(profile?.nickname || profile?.full_name)?.charAt(0) || "?"}</span>
               </div>
             )}
@@ -257,7 +257,7 @@ export default function AccountSettings({
                 const label = Math.round(parseFloat(zoom) * 100) + "%";
                 return (
                   <button key={zoom} onClick={() => { document.documentElement.style.zoom = zoom; safeSet("ss-zoom", zoom); forceRerender(); toast.success(`Zoom: ${label}`); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === zoom || (!safeGet("ss-zoom") && zoom === "1") ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-[#2563EB]" : "border-border-subtle text-text-muted hover:text-text-primary"}`}>{label}</button>
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === zoom || (!safeGet("ss-zoom") && zoom === "1") ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-[#2563EB]" : "border-border-subtle text-text-muted hover:text-text-primary"}`}>{label}</button>
                 );
               })}
             </div>
@@ -397,7 +397,7 @@ export default function AccountSettings({
                 toast.success(`${theme.name} theme applied`);
               }}
                 className={`p-2.5 rounded-lg border transition-all text-center ${
-                  isActive ? "border-[rgba(59,130,246,0.4)] ring-2 ring-[rgba(59,130,246,0.2)] bg-surface-light" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
+                  isActive ? "border-[rgba(212,255,0,0.4)] ring-2 ring-[rgba(212,255,0,0.2)] bg-surface-light" : "border-border-subtle hover:border-[rgba(212,255,0,0.25)]"
                 }`}
               >
                 <div className="flex items-center justify-center gap-0.5 mb-1.5">
@@ -435,7 +435,7 @@ export default function AccountSettings({
                     toast.success(`${style.name} sidebar applied`);
                   }}
                     className={`p-3 rounded-lg border text-center transition-all ${
-                      current === style.id ? "border-[rgba(59,130,246,0.4)] ring-2 ring-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.08)]" : "border-border-subtle"
+                      current === style.id ? "border-[rgba(212,255,0,0.4)] ring-2 ring-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.08)]" : "border-border-subtle"
                     }`}>
                     <p className="text-[10px] font-bold">{style.name}</p>
                     <p className="text-[8px] text-text-muted">{style.desc}</p>
@@ -463,7 +463,7 @@ export default function AccountSettings({
                     toast.success(`Font size: ${fs.name}`);
                   }}
                     className={`p-2.5 rounded-lg border text-center transition-all ${
-                      current === fs.id ? "border-[rgba(59,130,246,0.4)] ring-2 ring-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.08)]" : "border-border-subtle"
+                      current === fs.id ? "border-[rgba(212,255,0,0.4)] ring-2 ring-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.08)]" : "border-border-subtle"
                     }`}>
                     <p style={{ fontSize: fs.size }} className="font-bold">Aa</p>
                     <p className="text-[8px] text-text-muted">{fs.name}</p>

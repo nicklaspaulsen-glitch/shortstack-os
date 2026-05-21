@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -178,7 +178,7 @@ export default function LeadSourcesPage() {
                   <span className="text-xs text-text-muted">Icon:</span>
                   {ICON_OPTIONS.map((ic) => (
                     <button key={ic} type="button" onClick={() => setForm({ ...form, icon: ic })}
-                      className={`text-lg p-1 rounded ${form.icon === ic ? "bg-[rgba(59,130,246,0.14)]" : "hover:bg-white/5"}`}>{ic}</button>
+                      className={`text-lg p-1 rounded ${form.icon === ic ? "bg-[rgba(212,255,0,0.14)]" : "hover:bg-white/5"}`}>{ic}</button>
                   ))}
                 </div>
                 <input className="input w-full text-sm" placeholder="Description (optional)"
@@ -219,7 +219,7 @@ export default function LeadSourcesPage() {
                   <tbody className="divide-y divide-black/[0.04]">
                     {sources.map((s) =>
                       editId === s.id ? (
-                        <tr key={s.id} className="bg-[rgba(59,130,246,0.04)]">
+                        <tr key={s.id} className="bg-[rgba(212,255,0,0.04)]">
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
                               <select className="input text-sm h-8 w-12 px-1"

@@ -195,11 +195,11 @@ export default function HubStatusPage() {
       {/* Live-DNS-still-pending callout — relevant once email/portal are done */}
       {job.all_done && (job.services.some(s => s.service === "email" && s.status === "done") ||
         job.services.some(s => s.service === "portal" && s.status === "done")) && (
-        <div className="glass rounded-xl p-4 border-blue-500/25 bg-blue-500/5 flex items-start gap-2">
-          <Info size={14} className="text-blue-600 mt-0.5 shrink-0" />
-          <div className="text-[11px] text-blue-400">
+        <div className="glass rounded-xl p-4 border-indigo-500/25 bg-indigo-500/5 flex items-start gap-2">
+          <Info size={14} className="text-indigo-600 mt-0.5 shrink-0" />
+          <div className="text-[11px] text-indigo-400">
             <p className="font-semibold mb-1">DNS may still be propagating</p>
-            <p className="text-blue-600 leading-relaxed">
+            <p className="text-indigo-600 leading-relaxed">
               Even once all dots go green, DNS records can take up to 24 hours to fully propagate
               at public resolvers — typically though, it&apos;s minutes. Email verification in
               particular may show &ldquo;verifying&rdquo; for a few more minutes.
@@ -348,7 +348,7 @@ function ServiceDoneDetail({
         </div>
         <a
           href={editorUrl}
-          className="text-[10px] px-2.5 py-1 rounded-lg border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-1"
+          className="text-[10px] px-2.5 py-1 rounded-lg border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] flex items-center gap-1"
         >
           Open builder <ExternalLink size={10} />
         </a>

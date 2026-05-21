@@ -591,7 +591,7 @@ export default function ImageWizard({
     return (
       <FullModal onClose={onClose}>
         <div className="flex flex-col items-center justify-center py-16 px-6">
-          <div className="w-20 h-20  bg-gradient-to-br from-[rgba(59,130,246,0.12)] to-amber-500/10 flex items-center justify-center mb-4">
+          <div className="w-20 h-20  bg-gradient-to-br from-[rgba(212,255,0,0.12)] to-amber-500/10 flex items-center justify-center mb-4">
             <Loader2 size={32} className="text-[#2563EB] animate-spin" />
           </div>
           <h2 className="text-base font-semibold text-text-primary mb-1.5">Generating with FLUX on RunPod</h2>
@@ -669,7 +669,7 @@ function ReviewModal({
   return (
     <FullModal onClose={onClose}>
       <div className="px-6 py-4 border-b border-border-subtle flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[#2563EB]">
+        <div className="w-10 h-10 rounded-xl bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[#2563EB]">
           <Wand2 size={18} />
         </div>
         <div className="flex-1 min-w-0">
@@ -710,7 +710,7 @@ function PromptReview({
   return (
     <div className="max-w-2xl mx-auto space-y-5">
       <div className="flex items-center gap-3 text-[11px]">
-        <span className="px-2 py-1 rounded-full bg-[rgba(59,130,246,0.08)] text-[#2563EB] border border-[rgba(59,130,246,0.25)] font-semibold uppercase tracking-wider">
+        <span className="px-2 py-1 rounded-full bg-[rgba(212,255,0,0.08)] text-[#2563EB] border border-[rgba(212,255,0,0.25)] font-semibold uppercase tracking-wider">
           {build?.recommended_model || "flux"}
         </span>
         <span className="text-text-muted">
@@ -732,7 +732,7 @@ function PromptReview({
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           rows={5}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)] resize-none font-mono"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.12)] resize-none font-mono"
         />
         <p className="text-[10px] text-text-muted mt-1.5">
           Edit freely — this is the exact text we send to FLUX.
@@ -747,17 +747,17 @@ function PromptReview({
           value={negative}
           onChange={(e) => setNegative(e.target.value)}
           rows={2}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-xs focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)] resize-none font-mono"
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-xs focus:outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.12)] resize-none font-mono"
         />
       </div>
 
       {build?.notes && (
-        <div className="text-[11px] text-text-muted italic border-l-2 border-[rgba(59,130,246,0.25)] pl-3">{build.notes}</div>
+        <div className="text-[11px] text-text-muted italic border-l-2 border-[rgba(212,255,0,0.25)] pl-3">{build.notes}</div>
       )}
 
       <button
         onClick={onGenerate}
-        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#2563EB] to-amber-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-[rgba(59,130,246,0.18)] transition-all"
+        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#2563EB] to-amber-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.18)] transition-all"
       >
         <Sparkles size={14} /> Generate with FLUX
       </button>
@@ -782,7 +782,7 @@ function CarouselSetup({
   const palette = answers.palette as string | undefined;
   return (
     <div className="max-w-2xl mx-auto space-y-5">
-      <div className="bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.2)] rounded-xl p-4">
+      <div className="bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.2)] rounded-xl p-4">
         <div className="flex items-center gap-2 mb-1.5">
           <Layers size={14} className="text-[#2563EB]" />
           <h3 className="text-xs font-semibold text-text-primary">Shared style locked in</h3>
@@ -802,7 +802,7 @@ function CarouselSetup({
       <div className="space-y-2">
         {subjects.map((s, i) => (
           <div key={i} className="flex gap-2 items-start">
-            <span className="w-6 h-6 rounded-full bg-[rgba(59,130,246,0.08)] text-[#2563EB] text-[10px] font-bold flex items-center justify-center mt-2.5 shrink-0">
+            <span className="w-6 h-6 rounded-full bg-[rgba(212,255,0,0.08)] text-[#2563EB] text-[10px] font-bold flex items-center justify-center mt-2.5 shrink-0">
               {i + 1}
             </span>
             <textarea
@@ -832,7 +832,7 @@ function CarouselSetup({
         <button
           onClick={() => setSubjects([...subjects, ""])}
           disabled={subjects.length >= 10}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-[#2563EB] hover:bg-[rgba(59,130,246,0.08)] disabled:opacity-40"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-[#2563EB] hover:bg-[rgba(212,255,0,0.08)] disabled:opacity-40"
         >
           <Plus size={12} /> Add slide ({subjects.length}/10)
         </button>
@@ -841,7 +841,7 @@ function CarouselSetup({
       <button
         onClick={onGenerate}
         disabled={subjects.filter(s => s.trim()).length === 0}
-        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#2563EB] to-amber-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-[rgba(59,130,246,0.18)] transition-all disabled:opacity-40"
+        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#2563EB] to-amber-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.18)] transition-all disabled:opacity-40"
       >
         <Sparkles size={14} /> Generate {subjects.filter(s => s.trim()).length} slide
         {subjects.filter(s => s.trim()).length === 1 ? "" : "s"}
@@ -958,7 +958,7 @@ function ResultPanel({
         <div className="flex-1" />
         <button
           onClick={onClose}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-amber-500 text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(59,130,246,0.18)]"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-amber-500 text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.18)]"
         >
           <CheckCircle2 size={12} /> Done
         </button>

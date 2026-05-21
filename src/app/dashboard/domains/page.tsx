@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -66,8 +66,8 @@ interface UsageSnapshot {
 const STATUS_BADGE: Record<string, string> = {
   pending: "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
   pending_payment: "bg-amber-500/10 text-amber-400 border-amber-500/30",
-  processing: "bg-blue-500/10 text-blue-400 border-blue-500/30",
-  purchased: "bg-blue-500/10 text-blue-400 border-blue-500/30",
+  processing: "bg-indigo-500/10 text-indigo-400 border-indigo-500/30",
+  purchased: "bg-indigo-500/10 text-indigo-400 border-indigo-500/30",
   dns_configured: "bg-purple-500/10 text-purple-400 border-purple-500/30",
   active: "bg-green-500/10 text-green-400 border-green-500/30",
   expired: "bg-red-500/10 text-red-400 border-red-500/30",
@@ -163,7 +163,7 @@ export default function DomainsPage() {
               </div>
             </div>
           ),
-          { duration: 12000, icon: <Mail size={16} className="text-blue-400" /> },
+          { duration: 12000, icon: <Mail size={16} className="text-indigo-400" /> },
         );
       }, 3000);
     } else if (purchase === "cancelled") {
@@ -421,15 +421,15 @@ export default function DomainsPage() {
                 </div>
       </div>
     </div>{/* Who-pays clarity banner — agencies pass domain costs to clients, so
-                make it unambiguous on a page where a miscommunication = a chargeback. */}<div className="flex flex-wrap items-start gap-2 rounded-xl border border-blue-500/25 bg-blue-500/5 p-3 text-[11px] text-blue-400">
-              <Info size={13} className="mt-0.5 shrink-0 text-blue-400" />
+                make it unambiguous on a page where a miscommunication = a chargeback. */}<div className="flex flex-wrap items-start gap-2 rounded-xl border border-indigo-500/25 bg-indigo-500/5 p-3 text-[11px] text-indigo-400">
+              <Info size={13} className="mt-0.5 shrink-0 text-indigo-400" />
               <div className="flex-1 min-w-0">
-                <span className="font-semibold text-blue-300">Who pays?</span>{" "}
+                <span className="font-semibold text-indigo-300">Who pays?</span>{" "}
                 <span>
                   Domain purchases charge <span className="font-semibold">your</span> Stripe-linked card.
                   Most agencies rebill the client (monthly: our yearly-retail price divided by 12 + $4
                   ops fee; yearly: same with a 20% discount). Adjust the markup in{" "}
-                  <code className="px-1 py-0.5 rounded bg-blue-500/10 text-[10px]">
+                  <code className="px-1 py-0.5 rounded bg-indigo-500/10 text-[10px]">
                     src/lib/domain-pricing.ts
                   </code>
                   .
@@ -439,7 +439,7 @@ export default function DomainsPage() {
                 the main domains page. Sits above the search so the "buy the
                 domain → launch the brand" loop is discoverable. */}<a
               href="/dashboard/domains/hub-setup"
-              className="glass rounded-xl block bg-gradient-to-br from-[rgba(59,130,246,0.08)] to-[rgba(59,130,246,0.03)] border-[rgba(59,130,246,0.25)] hover:border-[rgba(59,130,246,0.4)] transition p-4"
+              className="glass rounded-xl block bg-gradient-to-br from-[rgba(212,255,0,0.08)] to-[rgba(212,255,0,0.03)] border-[rgba(212,255,0,0.25)] hover:border-[rgba(212,255,0,0.4)] transition p-4"
             >
               <div className="flex items-center gap-3">
                 <Sparkles size={18} className="text-brand-accent shrink-0" />
@@ -516,7 +516,7 @@ export default function DomainsPage() {
                               <button
                                 onClick={() => purchaseDomain(r.domain, "monthly", r.price || undefined)}
                                 disabled={anyRowLoading}
-                                className="text-[10px] px-2 py-2 rounded-lg border border-border-subtle text-text-primary hover:border-[rgba(59,130,246,0.4)] hover:bg-white/5 flex flex-col items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="text-[10px] px-2 py-2 rounded-lg border border-border-subtle text-text-primary hover:border-[rgba(212,255,0,0.4)] hover:bg-white/5 flex flex-col items-center disabled:opacity-50 disabled:cursor-not-allowed"
                               >
                                 {rowMonthlyLoading ? (
                                   <Loader size={12} className="animate-spin my-1" />
@@ -586,7 +586,7 @@ export default function DomainsPage() {
                                   <MailCheck size={9} /> Mail verified
                                 </span>
                               ) : d.resend_status === "verifying" || d.resend_status === "pending" ? (
-                                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-blue-500/10 text-blue-400 border-blue-500/30 flex items-center gap-1">
+                                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-indigo-500/10 text-indigo-400 border-indigo-500/30 flex items-center gap-1">
                                   <Mail size={9} /> Mail verifying
                                 </span>
                               ) : d.resend_status === "failed" ? (
@@ -609,7 +609,7 @@ export default function DomainsPage() {
                           {(d.status === "processing" || d.status === "purchased" || d.status === "pending_payment") && (
                             <button
                               onClick={() => retryAutoConfigure(d)}
-                              className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-1"
+                              className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.25)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] flex items-center gap-1"
                             >
                               <RefreshCw size={10} /> Finish setup
                             </button>
@@ -618,7 +618,7 @@ export default function DomainsPage() {
                           {!d.resend_status && (
                             <button
                               onClick={() => setupMail(d)}
-                              className="text-[10px] px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/25 text-blue-400 hover:bg-blue-500/20 flex items-center gap-1"
+                              className="text-[10px] px-2.5 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/25 text-indigo-400 hover:bg-indigo-500/20 flex items-center gap-1"
                             >
                               <Mail size={10} /> Set up mail
                             </button>
@@ -626,7 +626,7 @@ export default function DomainsPage() {
                           {(d.resend_status === "verifying" || d.resend_status === "pending") && (
                             <button
                               onClick={() => refreshMailStatus(d)}
-                              className="text-[10px] px-2.5 py-1 rounded-lg border border-blue-500/25 text-blue-400 hover:bg-blue-500/10 flex items-center gap-1"
+                              className="text-[10px] px-2.5 py-1 rounded-lg border border-indigo-500/25 text-indigo-400 hover:bg-indigo-500/10 flex items-center gap-1"
                             >
                               <RefreshCw size={10} /> Check status
                             </button>
@@ -696,12 +696,12 @@ export default function DomainsPage() {
                           dedicated /dashboard/mail-setup page so the user can
                           copy-paste DNS records or trigger a re-verify. */}
                       {(d.resend_status === "verifying" || d.resend_status === "pending") && (
-                        <div className="mt-2 px-3 py-2 rounded-lg bg-blue-500/5 border border-blue-500/25 text-[10px] text-blue-400 flex items-center gap-2 flex-wrap">
+                        <div className="mt-2 px-3 py-2 rounded-lg bg-indigo-500/5 border border-indigo-500/25 text-[10px] text-indigo-400 flex items-center gap-2 flex-wrap">
                           <Mail size={11} />
                           <span>DNS records are propagating — this usually takes a few minutes.</span>
                           <a
                             href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
-                            className="ml-auto inline-flex items-center gap-1 text-blue-400 hover:text-blue-300"
+                            className="ml-auto inline-flex items-center gap-1 text-indigo-400 hover:text-indigo-300"
                           >
                             View records <ArrowUpRight size={10} />
                           </a>
@@ -721,7 +721,7 @@ export default function DomainsPage() {
                       )}
                       {/* No mail yet — gentle nudge since this is the "agency flow" win */}
                       {!d.resend_status && (d.status === "active" || d.status === "dns_configured" || d.status === "purchased") && (
-                        <div className="mt-2 px-3 py-2 rounded-lg bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.2)] text-[10px] text-brand-accent flex items-center gap-2 flex-wrap">
+                        <div className="mt-2 px-3 py-2 rounded-lg bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.2)] text-[10px] text-brand-accent flex items-center gap-2 flex-wrap">
                           <Sparkles size={11} />
                           <span>
                             Send marketing email from{" "}
@@ -744,7 +744,7 @@ export default function DomainsPage() {
                               <ShieldCheck size={12} className="text-brand-accent" /> DNS Records
                             </h3>
                             <div className="flex items-center gap-1.5">
-                              <button onClick={pointToVercel} className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-1">
+                              <button onClick={pointToVercel} className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.25)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] flex items-center gap-1">
                                 <VercelIcon size={10} /> Point to Vercel
                               </button>
                               <button onClick={addDnsRecord} className="text-[10px] px-2.5 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary flex items-center gap-1">
@@ -805,7 +805,7 @@ export default function DomainsPage() {
                   ))}
                 </div>
               )}
-            </div>{/* Tip card */}<div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.1)]">
+            </div>{/* Tip card */}<div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.1)]">
               <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
                 <AlertTriangle size={11} className="text-brand-accent" /> How domain ownership works
               </h3>

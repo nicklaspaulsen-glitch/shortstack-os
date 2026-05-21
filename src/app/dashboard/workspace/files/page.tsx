@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Workspace Files — Drive-style file system on Cloudflare R2.
@@ -419,7 +419,7 @@ export default function WorkspaceFilesPage() {
                   }}
                   placeholder="Folder name"
                   autoFocus
-                  className="flex-1 min-w-[180px] rounded-md bg-white/5 border border-border-subtle text-text-primary text-sm px-3 py-1.5 outline-none focus:border-[rgba(59,130,246,0.6)]"
+                  className="flex-1 min-w-[180px] rounded-md bg-white/5 border border-border-subtle text-text-primary text-sm px-3 py-1.5 outline-none focus:border-[rgba(212,255,0,0.6)]"
                 />
                 <select
                   value={newFolderPermission}
@@ -602,7 +602,7 @@ function FolderTreeNode(props: FolderTreeNodeProps) {
     <li>
       <div
         className={`flex items-center gap-1 rounded-md text-sm cursor-pointer ${
-          isActive ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-secondary hover:bg-white/5"
+          isActive ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" : "text-text-secondary hover:bg-white/5"
         }`}
         style={{ paddingLeft: 8 + depth * 12, paddingRight: 8 }}
       >
@@ -662,7 +662,7 @@ function FileCard(props: FileCardProps) {
       type="button"
       onContextMenu={(e) => onContextMenu(e, file)}
       onDoubleClick={() => onDoubleClick(file)}
-      className="group flex flex-col text-left glass rounded-lg hover:bg-white/8 hover:border-[rgba(59,130,246,0.3)] transition overflow-hidden"
+      className="group flex flex-col text-left glass rounded-lg hover:bg-white/8 hover:border-[rgba(212,255,0,0.3)] transition overflow-hidden"
     >
       <div className="aspect-square w-full bg-white/5 flex items-center justify-center text-text-muted overflow-hidden">
         {isImage ? (

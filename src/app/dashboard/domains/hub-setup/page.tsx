@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -162,7 +162,7 @@ function HubSetupInner() {
         </div>
       )}
       {prefillDomain && (
-        <div className="glass rounded-xl p-4 flex items-center gap-3 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)]">
+        <div className="glass rounded-xl p-4 flex items-center gap-3 bg-[rgba(212,255,0,0.05)] border-[rgba(212,255,0,0.2)]">
           <ShieldCheck size={18} className="text-brand-accent" />
           <div>
             <p className="text-xs font-semibold">{prefillDomain}</p>
@@ -189,7 +189,7 @@ function HubSetupInner() {
               onClick={() => toggle(t.key)}
               className={`w-full text-left p-3 rounded-xl border transition flex items-start gap-3 ${
                 enabled[t.key]
-                  ? "border-[rgba(59,130,246,0.35)] bg-[rgba(59,130,246,0.05)] hover:bg-[rgba(59,130,246,0.08)]"
+                  ? "border-[rgba(212,255,0,0.35)] bg-[rgba(212,255,0,0.05)] hover:bg-[rgba(212,255,0,0.08)]"
                   : "border-border-subtle bg-surface-light hover:border-border-subtle/60"
               }`}
             >
@@ -236,11 +236,11 @@ function HubSetupInner() {
         )}
       </div>
 
-      <div className="glass rounded-xl p-4 bg-blue-500/5 border-blue-500/25 flex items-start gap-2">
-        <Info size={14} className="text-blue-600 mt-0.5 shrink-0" />
-        <div className="text-[11px] text-blue-400">
+      <div className="glass rounded-xl p-4 bg-indigo-500/5 border-indigo-500/25 flex items-start gap-2">
+        <Info size={14} className="text-indigo-600 mt-0.5 shrink-0" />
+        <div className="text-[11px] text-indigo-400">
           <p className="font-semibold mb-1">What happens next</p>
-          <p className="text-blue-600 leading-relaxed">
+          <p className="text-indigo-600 leading-relaxed">
             Clicking Launch starts all {enabledCount} services in parallel. You&apos;ll land on a
             live progress page showing colored dots — gray → yellow → green. Any failure surfaces
             a retry button without blocking the rest.

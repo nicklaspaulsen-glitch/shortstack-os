@@ -28,7 +28,7 @@ export interface StatStripItem {
   sub?: string;
   /** If false, sub text renders in rose color (for negative indicators) */
   subOk?: boolean;
-  /** Optional tailwind text color class for the value — e.g. "text-blue-700" */
+  /** Optional tailwind text color class for the value — e.g. "text-indigo-700" */
   color?: string;
   /** Optional icon rendered beside the label */
   icon?: ReactNode;

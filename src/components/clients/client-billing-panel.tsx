@@ -215,7 +215,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
 
   if (!status?.connected) {
     return (
-      <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]">
+      <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)]">
         <div className="flex items-start gap-3">
           <DollarSign size={18} className="text-[#2563EB] shrink-0 mt-0.5" />
           <div className="flex-1">
@@ -462,7 +462,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
                     inv.status === "paid"
                       ? "bg-success/10 text-success"
                       : inv.status === "open"
-                      ? "bg-[rgba(59,130,246,0.08)] text-[#2563EB]"
+                      ? "bg-[rgba(212,255,0,0.08)] text-[#2563EB]"
                       : "bg-surface-light text-text-muted"
                   }`}
                 >

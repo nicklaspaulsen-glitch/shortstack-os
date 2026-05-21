@@ -28,8 +28,8 @@ interface Generation {
 /* ── Category Config ── */
 
 const CATEGORIES: { key: string; label: string; icon: React.ReactNode; color: string; bg: string }[] = [
-  { key: "all",          label: "All",          icon: <Layers size={14} />,    color: "text-brand-accent",        bg: "bg-[rgba(59,130,246,0.08)]" },
-  { key: "video",        label: "Videos",       icon: <Film size={14} />,      color: "text-blue-400",    bg: "bg-blue-500/10" },
+  { key: "all",          label: "All",          icon: <Layers size={14} />,    color: "text-brand-accent",        bg: "bg-[rgba(212,255,0,0.08)]" },
+  { key: "video",        label: "Videos",       icon: <Film size={14} />,      color: "text-indigo-400",    bg: "bg-indigo-500/10" },
   { key: "ad_copy",      label: "Ads & Copy",   icon: <Megaphone size={14} />, color: "text-purple-400",  bg: "bg-purple-500/10" },
   { key: "thumbnail",    label: "Images",       icon: <ImageIcon size={14} />, color: "text-emerald-400", bg: "bg-emerald-500/10" },
   { key: "email",        label: "Emails",       icon: <Mail size={14} />,      color: "text-amber-400",   bg: "bg-amber-500/10" },
@@ -200,7 +200,7 @@ export default function GenerationsPage() {
                   onClick={() => { setCategory(c.key); setPage(1); }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all ${
                     category === c.key
-                      ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] font-medium"
+                      ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)] font-medium"
                       : "bg-white/5 text-text-muted hover:text-text-primary hover:bg-white/8 border border-transparent"
                   }`}
                 >
@@ -232,7 +232,7 @@ export default function GenerationsPage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.04 }}
                       whileHover={{ y: -4, scale: 1.01 }}
-                      className="glass rounded-xl !p-0 overflow-hidden hover:border-[rgba(59,130,246,0.2)] transition-all group spotlight-card"
+                      className="glass rounded-xl !p-0 overflow-hidden hover:border-[rgba(212,255,0,0.2)] transition-all group spotlight-card"
                       onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                     >
                       <div className="flex items-start gap-3 px-4 py-3">

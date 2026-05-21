@@ -41,11 +41,11 @@ interface Workflow {
 }
 
 const NODE_TYPES: Record<string, { icon: React.ReactNode; color: string; bg: string }> = {
-  send_telegram: { icon: <TelegramIcon size={14} />, color: "text-blue-400", bg: "border-blue-400/20 bg-blue-400/5" },
+  send_telegram: { icon: <TelegramIcon size={14} />, color: "text-indigo-400", bg: "border-[rgba(99,102,241,0.20)] bg-[rgba(99,102,241,0.05)]" },
   send_slack_message: { icon: <SlackIcon size={14} />, color: "text-purple-400", bg: "border-purple-400/20 bg-purple-400/5" },
   send_email: { icon: <Mail size={14} />, color: "text-cyan-400", bg: "border-cyan-400/20 bg-cyan-400/5" },
   send_sms: { icon: <Phone size={14} />, color: "text-green-400", bg: "border-green-400/20 bg-green-400/5" },
-  create_task: { icon: <FileText size={14} />, color: "text-brand-accent", bg: "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)]" },
+  create_task: { icon: <FileText size={14} />, color: "text-brand-accent", bg: "border-[rgba(212,255,0,0.20)] bg-[rgba(212,255,0,0.05)]" },
   update_lead_status: { icon: <Tag size={14} />, color: "text-orange-400", bg: "border-orange-400/20 bg-orange-400/5" },
   generate_content: { icon: <Sparkles size={14} />, color: "text-pink-400", bg: "border-pink-400/20 bg-pink-400/5" },
   create_invoice: { icon: <FileText size={14} />, color: "text-emerald-400", bg: "border-emerald-400/20 bg-emerald-400/5" },
@@ -474,7 +474,7 @@ export default function WorkflowsPage() {
                   <div className="flex flex-wrap gap-1.5">
                     {EXAMPLE_PROMPTS.map((p, i) => (
                       <button key={i} onClick={() => { setPrompt(p.replace(/&apos;/g, "'")); setShowCreate(true); }}
-                        className="text-[10px] bg-surface-light px-2.5 py-1.5 rounded-md text-text-muted hover:text-text-primary hover:border-[rgba(59,130,246,0.2)] border border-border-subtle transition-all text-left"
+                        className="text-[10px] bg-surface-light px-2.5 py-1.5 rounded-md text-text-muted hover:text-text-primary hover:border-[rgba(212,255,0,0.20)] border border-border-subtle transition-all text-left"
                       >{p.replace(/&apos;/g, "'")}</button>
                     ))}
                   </div>
@@ -482,7 +482,7 @@ export default function WorkflowsPage() {
 
                 {/* Visual workflow preview */}
                 {previewWorkflow && (
-                  <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.15)] relative overflow-hidden">
+                  <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.15)] relative overflow-hidden">
                     <div className="absolute inset-0 bg-mesh opacity-30" />
                     <div className="relative">
                       <div className="flex items-center justify-between mb-4">
@@ -502,10 +502,10 @@ export default function WorkflowsPage() {
 
                       {/* Trigger */}
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-7 h-7 bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] rounded-lg flex items-center justify-center">
+                        <div className="w-7 h-7 bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.20)] rounded-lg flex items-center justify-center">
                           <Zap size={12} className="text-brand-accent" />
                         </div>
-                        <div className="flex-1 bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.15)] rounded-lg px-3 py-2">
+                        <div className="flex-1 bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.15)] rounded-lg px-3 py-2">
                           <p className="text-[10px] text-brand-accent uppercase tracking-wider font-medium">Trigger</p>
                           <p className="text-xs">{previewWorkflow.trigger}</p>
                         </div>
@@ -592,7 +592,7 @@ export default function WorkflowsPage() {
                       <button key={d} onClick={() => setPresetDifficulty(d)}
                         className={`text-[10px] px-2.5 py-1.5 rounded-lg border transition-all ${
                           presetDifficulty === d
-                            ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent font-medium"
+                            ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] text-brand-accent font-medium"
                             : "border-border-subtle text-text-muted hover:text-text-primary"
                         }`}>
                         {d === "all" ? "All Levels" : d.charAt(0).toUpperCase() + d.slice(1)}
@@ -606,7 +606,7 @@ export default function WorkflowsPage() {
                   <button onClick={() => setPresetCategory("all")}
                     className={`text-[10px] px-2.5 py-1.5 rounded-lg border transition-all flex items-center gap-1 ${
                       presetCategory === "all"
-                        ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent font-medium"
+                        ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] text-brand-accent font-medium"
                         : "border-border-subtle text-text-muted hover:text-text-primary"
                     }`}>
                     <BookOpen size={10} /> All ({WORKFLOW_PRESETS.length})
@@ -615,7 +615,7 @@ export default function WorkflowsPage() {
                     <button key={cat.id} onClick={() => setPresetCategory(cat.id)}
                       className={`text-[10px] px-2.5 py-1.5 rounded-lg border transition-all flex items-center gap-1 ${
                         presetCategory === cat.id
-                          ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent font-medium"
+                          ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] text-brand-accent font-medium"
                           : "border-border-subtle text-text-muted hover:text-text-primary"
                       }`}>
                       {CATEGORY_ICONS[cat.id]} {cat.name} ({cat.count})
@@ -641,7 +641,7 @@ export default function WorkflowsPage() {
                     >
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center shrink-0">
+                          <div className="w-8 h-8 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center shrink-0">
                             {CATEGORY_ICONS[preset.category] || <Zap size={12} />}
                           </div>
                           <div className="min-w-0">
@@ -677,7 +677,7 @@ export default function WorkflowsPage() {
                         <div className="flex items-center justify-between">
                           <div className="flex gap-1 flex-wrap">
                             {preset.tags.slice(0, 3).map(tag => (
-                              <span key={tag} className="text-[7px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{tag}</span>
+                              <span key={tag} className="text-[7px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{tag}</span>
                             ))}
                           </div>
                           <div className="flex items-center gap-1 shrink-0">
@@ -710,13 +710,13 @@ export default function WorkflowsPage() {
                 )}
               </div>
             )}{/* Agent Tab — conversational AI workflow builder */}{tab === "agent" && (
-              <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.1)] relative overflow-hidden" style={{ minHeight: "500px" }}>
+              <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.1)] relative overflow-hidden" style={{ minHeight: "500px" }}>
                 <div className="absolute inset-0 bg-mesh opacity-20" />
                 <div className="relative flex flex-col h-full" style={{ minHeight: "480px" }}>
                   {/* Agent header */}
                   <div className="flex items-center justify-between pb-3 border-b border-border-subtle mb-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center">
+                      <div className="w-8 h-8 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center">
                         <Bot size={16} className="text-brand-accent" />
                       </div>
                       <div>
@@ -741,7 +741,7 @@ export default function WorkflowsPage() {
                   <div className="flex-1 overflow-y-auto space-y-3 mb-3 max-h-[350px]">
                     {agentChat.length === 0 && (
                       <div className="text-center py-12">
-                        <Bot size={32} className="mx-auto mb-3 text-[rgba(59,130,246,0.3)]" />
+                        <Bot size={32} className="mx-auto mb-3 text-[rgba(212,255,0,0.3)]" />
                         <p className="text-xs text-text-muted mb-4">Tell me what you want to automate. I&apos;ll design it, show you the plan, and execute it.</p>
                         <div className="flex flex-wrap justify-center gap-1.5">
                           {[
@@ -751,7 +751,7 @@ export default function WorkflowsPage() {
                             "When a lead replies, notify me and create a task",
                           ].map((s, i) => (
                             <button key={i} onClick={() => { setAgentInput(s); }}
-                              className="text-[10px] bg-surface-light/50 px-2.5 py-1.5 rounded-md text-text-muted hover:text-text-primary border border-border-subtle hover:border-[rgba(59,130,246,0.2)] transition-all">
+                              className="text-[10px] bg-surface-light/50 px-2.5 py-1.5 rounded-md text-text-muted hover:text-text-primary border border-border-subtle hover:border-[rgba(212,255,0,0.20)] transition-all">
                               {s}
                             </button>
                           ))}
@@ -763,7 +763,7 @@ export default function WorkflowsPage() {
                       <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                         <div className={`max-w-[80%] rounded-lg px-3 py-2 ${
                           msg.role === "user"
-                            ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.15)] text-text-primary"
+                            ? "bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.15)] text-text-primary"
                             : "bg-surface-light/50 border border-border-subtle"
                         }`}>
                           <p className="text-xs whitespace-pre-wrap">{msg.content}</p>
@@ -845,7 +845,7 @@ export default function WorkflowsPage() {
                   <div className="glass rounded-xl p-4 text-center py-8"><Loader size={16} className="animate-spin text-brand-accent mx-auto" /></div>
                 ) : n8nWorkflows.length === 0 ? (
                   <div className="glass rounded-xl p-4 text-center py-8">
-                    <Zap size={20} className="mx-auto mb-2 text-[rgba(59,130,246,0.3)]" />
+                    <Zap size={20} className="mx-auto mb-2 text-[rgba(212,255,0,0.3)]" />
                     <p className="text-xs text-text-muted">No n8n workflows found. Create one in the Builder tab or via Agent Mode.</p>
                     {isPlatformAdmin && (
                       <p className="text-[9px] text-text-muted mt-1">Make sure N8N_API_KEY is set in your environment variables.</p>
@@ -873,7 +873,7 @@ export default function WorkflowsPage() {
                         {w.tags.length > 0 && (
                           <div className="flex flex-wrap gap-1 mb-2">
                             {w.tags.map((t, i) => (
-                              <span key={i} className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{t.name}</span>
+                              <span key={i} className="text-[8px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{t.name}</span>
                             ))}
                           </div>
                         )}
@@ -900,7 +900,7 @@ export default function WorkflowsPage() {
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Zap size={13} className="text-brand-accent" /> Trigger Library (15+)</p>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                     {[
-                      { name: "New Lead Scraped", icon: Users, color: "text-blue-400", desc: "When scraper finds a lead" },
+                      { name: "New Lead Scraped", icon: Users, color: "text-indigo-400", desc: "When scraper finds a lead" },
                       { name: "Client Created", icon: UserPlus, color: "text-green-400", desc: "New client is added" },
                       { name: "Deal Closed", icon: CreditCard, color: "text-brand-accent", desc: "Deal status changes to won" },
                       { name: "Form Submitted", icon: FileText, color: "text-purple-400", desc: "Website form submission" },
@@ -929,7 +929,7 @@ export default function WorkflowsPage() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {["Send Email", "Send SMS", "Send Telegram", "Send Slack Message", "Create Task", "Update Lead Status", "Add Tag", "Generate Content", "Create Invoice", "Fire Webhook", "Add to CRM", "Schedule Meeting", "Generate Report", "Push Notification", "Create Proposal", "Update Database", "Run AI Analysis", "Deploy Website", "Generate Social Posts", "Send Voice Message"].map((action, i) => (
                       <div key={action} className="px-3 py-2 rounded-lg border border-border-subtle text-[10px] font-medium flex items-center gap-1.5">
-                        <span className={`w-2 h-2 rounded-full ${["bg-cyan-400", "bg-green-400", "bg-blue-400", "bg-purple-400", "bg-brand-accent", "bg-orange-400", "bg-teal-400", "bg-pink-400", "bg-emerald-400", "bg-yellow-400"][i % 10]}`} />
+                        <span className={`w-2 h-2 rounded-full ${["bg-cyan-400", "bg-green-400", "bg-indigo-400", "bg-purple-400", "bg-brand-accent", "bg-orange-400", "bg-teal-400", "bg-pink-400", "bg-emerald-400", "bg-yellow-400"][i % 10]}`} />
                         {action}
                       </div>
                     ))}
@@ -972,7 +972,7 @@ export default function WorkflowsPage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
                   <div className="glass rounded-xl p-3"><div className="flex items-center gap-1.5 mb-1"><Play size={12} className="text-brand-accent" /><p className="text-[10px] text-text-muted uppercase tracking-wider">Total Runs</p></div><p className="text-lg font-bold text-brand-accent">{workflowAnalytics.totalRuns}</p></div>
                   <div className="glass rounded-xl p-3"><div className="flex items-center gap-1.5 mb-1"><Target size={12} className="text-green-400" /><p className="text-[10px] text-text-muted uppercase tracking-wider">Success Rate</p></div><p className="text-lg font-bold text-green-400">{workflowAnalytics.successRate}%</p></div>
-                  <div className="glass rounded-xl p-3"><div className="flex items-center gap-1.5 mb-1"><Clock size={12} className="text-blue-400" /><p className="text-[10px] text-text-muted uppercase tracking-wider">Avg Duration</p></div><p className="text-lg font-bold text-blue-400">{workflowAnalytics.avgDuration}</p></div>
+                  <div className="glass rounded-xl p-3"><div className="flex items-center gap-1.5 mb-1"><Clock size={12} className="text-indigo-400" /><p className="text-[10px] text-text-muted uppercase tracking-wider">Avg Duration</p></div><p className="text-lg font-bold text-brand-accent">{workflowAnalytics.avgDuration}</p></div>
                   <div className="glass rounded-xl p-3"><div className="flex items-center gap-1.5 mb-1"><Zap size={12} className="text-brand-accent" /><p className="text-[10px] text-text-muted uppercase tracking-wider">Hours Saved</p></div><p className="text-lg font-bold text-brand-accent">{workflowAnalytics.savedHours}h</p></div>
                 </div>
                 <div className="glass rounded-xl p-4">
@@ -1066,7 +1066,7 @@ export default function WorkflowsPage() {
                   workflows.map((w) => (
                     <div key={w.id} className="card-hover flex items-center justify-between p-3">
                       <div className="flex items-center gap-3">
-                        <div className="relative w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center">
+                        <div className="relative w-8 h-8 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center">
                           <Zap size={14} className="text-brand-accent" />
                           <span className={`absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full border border-background ${w.status === "completed" ? "bg-green-500" : "bg-zinc-500"}`} title={w.status === "completed" ? "Active" : "Paused"} />
                         </div>
@@ -1163,7 +1163,7 @@ function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => v
           <div className="flex items-center gap-2">
             <Sparkles size={16} className="text-brand-accent" />
             <h3 className="text-sm font-semibold">AI Workflow Generator</h3>
-            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent">Sonnet</span>
+            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-brand-accent">Sonnet</span>
           </div>
           <button onClick={onClose} className="text-text-muted hover:text-text-primary text-lg">×</button>
         </div>
@@ -1203,7 +1203,7 @@ function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => v
                   <button key={ch} type="button" onClick={() => toggleChannel(ch)}
                     className={`text-[10px] px-2.5 py-1 rounded-full border capitalize ${
                       channels.includes(ch)
-                        ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent"
+                        ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)] text-brand-accent"
                         : "bg-surface-light border-border-subtle text-text-muted"
                     }`}>
                     {ch.replace("_", " ")}
@@ -1231,7 +1231,7 @@ function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => v
           </>
         ) : (
           <div className="space-y-3">
-            <div className="bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.2)] rounded-lg p-3">
+            <div className="bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.20)] rounded-lg p-3">
               <div className="flex items-center gap-2 mb-1">
                 <h4 className="text-sm font-semibold">{result.name}</h4>
                 <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">
@@ -1248,14 +1248,14 @@ function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => v
             <div className="space-y-1.5 max-h-[300px] overflow-y-auto">
               {result.nodes.map((node, i) => (
                 <div key={node.id} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light/50 border border-border-subtle">
-                  <span className="w-6 h-6 rounded-md bg-[rgba(59,130,246,0.08)] text-brand-accent text-[9px] font-bold flex items-center justify-center">{i + 1}</span>
+                  <span className="w-6 h-6 rounded-md bg-[rgba(212,255,0,0.08)] text-brand-accent text-[9px] font-bold flex items-center justify-center">{i + 1}</span>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <span className={`text-[9px] px-1.5 py-0.5 rounded-full uppercase tracking-wider ${
                         node.type === "trigger" ? "bg-emerald-500/10 text-emerald-400" :
-                        node.type === "action" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
-                        node.type === "condition" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
-                        node.type === "wait" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
+                        node.type === "action" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" :
+                        node.type === "condition" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" :
+                        node.type === "wait" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" :
                         "bg-surface-light text-text-muted"
                       }`}>{node.type}</span>
                       <span className="text-[10px] font-medium">{node.label}</span>

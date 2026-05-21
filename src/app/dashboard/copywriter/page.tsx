@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
@@ -663,7 +663,7 @@ export default function CopywriterPage() {
             value={topic}
             onChange={e => setTopic(e.target.value)}
             placeholder={`e.g., ${activeType.id === "email" ? "Welcome sequence for SaaS onboarding" : activeType.id === "ad" ? "Local gym offering 30-day free trial" : "How to start a successful newsletter in 2026"}`}
-            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all"
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(212,255,0,0.20)] transition-all"
             autoFocus
             aria-label="Topic"
           />
@@ -690,7 +690,7 @@ export default function CopywriterPage() {
               value={audience}
               onChange={e => setAudience(e.target.value)}
               placeholder="e.g., SaaS founders, busy moms, first-time home buyers"
-              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all"
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(212,255,0,0.20)] transition-all"
               aria-label="Target audience"
             />
           </div>
@@ -732,7 +732,7 @@ export default function CopywriterPage() {
       icon: <Wand2 size={18} />,
       component: (
         <div className="space-y-3">
-          <div className="glass rounded-xl p-4 bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)] space-y-2">
+          <div className="glass rounded-xl p-4 bg-[rgba(212,255,0,0.05)] border-[rgba(212,255,0,0.2)] space-y-2">
             <div className="flex items-center gap-2">
               <activeType.icon size={16} style={{ color: activeType.color }} />
               <p className="text-sm font-semibold">{activeType.label}</p>
@@ -1149,7 +1149,7 @@ export default function CopywriterPage() {
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={copyToClipboard}
-                    className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.14)] transition-colors"
+                    className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.14)] transition-colors"
                   >
                     <Copy size={11} /> Copy
                   </motion.button>
@@ -1171,7 +1171,7 @@ export default function CopywriterPage() {
                   />
                 </div>
                 <div className="relative text-center px-4">
-                  <p className="text-[11px] uppercase tracking-widest text-[rgba(59,130,246,0.80)] font-semibold">
+                  <p className="text-[11px] uppercase tracking-widest text-[rgba(212,255,0,0.80)] font-semibold">
                     Example copy library
                   </p>
                   <h3 className="text-lg font-bold text-text-primary mt-1">
@@ -1210,7 +1210,7 @@ export default function CopywriterPage() {
                   <div className="flex items-center gap-2">
                     <Layers size={16} className="text-brand-accent" />
                     <h2 className="text-sm font-bold text-text-primary">Template Gallery</h2>
-                    <span className="text-[9px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-2 py-0.5 rounded-full font-medium">
+                    <span className="text-[9px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-2 py-0.5 rounded-full font-medium">
                       {TEMPLATES.length} templates
                     </span>
                   </div>
@@ -1230,7 +1230,7 @@ export default function CopywriterPage() {
                         whileHover={{ y: -4, scale: 1.01 }}
                         onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                         onClick={() => applyTemplate(template)}
-                        className="text-left p-3 glass rounded-xl hover:border-[rgba(59,130,246,0.25)] transition-all group spotlight-card"
+                        className="text-left p-3 glass rounded-xl hover:border-[rgba(212,255,0,0.25)] transition-all group spotlight-card"
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <div
@@ -1358,7 +1358,7 @@ export default function CopywriterPage() {
                           onClick={() => setContentType(type.id)}
                           className={`text-left p-2.5 rounded-xl border transition-all ${
                             active
-                              ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.06)]"
+                              ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.06)]"
                               : "border-border-subtle bg-white/3 hover:bg-white/5"
                           }`}
                         >
@@ -1400,7 +1400,7 @@ export default function CopywriterPage() {
                       onChange={e => setTopic(e.target.value)}
                       placeholder={`Describe what you want to write about...\n\nExample: "How AI is transforming small business marketing in 2026"`}
                       rows={4}
-                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all resize-none"
+                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(212,255,0,0.20)] transition-all resize-none"
                     />
                   </div>
 
@@ -1417,7 +1417,7 @@ export default function CopywriterPage() {
                           onClick={() => setTone(t.id)}
                           className={`flex-1 py-2 text-[11px] font-medium rounded-lg border transition-all ${
                             tone === t.id
-                              ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-text-primary"
+                              ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] text-text-primary"
                               : "border-border-subtle bg-surface-light text-text-muted hover:text-text-primary hover:bg-surface"
                           }`}
                         >
@@ -1438,7 +1438,7 @@ export default function CopywriterPage() {
                       value={audience}
                       onChange={e => setAudience(e.target.value)}
                       placeholder="e.g., SaaS founders, e-commerce brands, local businesses"
-                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all"
+                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(212,255,0,0.20)] transition-all"
                     />
                   </div>
 
@@ -1453,7 +1453,7 @@ export default function CopywriterPage() {
                       value={keywords}
                       onChange={e => setKeywords(e.target.value)}
                       placeholder="Comma-separated: growth, automation, ROI, conversions"
-                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(59,130,246,0.20)] transition-all"
+                      className="w-full text-xs glass rounded-lg px-3.5 py-2.5 text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-[rgba(212,255,0,0.20)] transition-all"
                     />
                   </div>
 
@@ -1490,7 +1490,7 @@ export default function CopywriterPage() {
                   {topic.trim() && (
                     <div
                       className="rounded-lg p-2.5"
-                      style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}
+                      style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-1.5">
@@ -1663,14 +1663,14 @@ export default function CopywriterPage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={copyToClipboard}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-lg bg-surface-light border border-border-subtle text-text-primary hover:bg-[rgba(59,130,246,0.05)] hover:border-[rgba(59,130,246,0.2)] transition-all"
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-lg bg-surface-light border border-border-subtle text-text-primary hover:bg-[rgba(212,255,0,0.05)] hover:border-[rgba(212,255,0,0.2)] transition-all"
                         >
                           <Copy size={12} />
                           Copy
                         </button>
                         <button
                           onClick={saveToLibrary}
-                          className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-lg bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.2)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] transition-all"
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-lg bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.2)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] transition-all"
                         >
                           <BookmarkPlus size={12} />
                           Save to Library
@@ -1684,7 +1684,7 @@ export default function CopywriterPage() {
               {generating ? (
                 <div className="space-y-4 animate-pulse">
                   <div className="flex items-center gap-2 mb-4">
-                    <div className="w-5 h-5 rounded-full bg-[rgba(59,130,246,0.12)] flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full bg-[rgba(212,255,0,0.12)] flex items-center justify-center">
                       <Sparkles size={10} className="text-brand-accent" />
                     </div>
                     <span className="text-xs text-text-muted">AI is writing your {activeType.label.toLowerCase()}...</span>
@@ -1743,7 +1743,7 @@ export default function CopywriterPage() {
                       // Blockquote
                       if (line.startsWith("> ")) {
                         return (
-                          <blockquote key={i} className="border-l-2 border-[rgba(59,130,246,0.40)] pl-3 my-2 text-text-muted italic text-[11px]">
+                          <blockquote key={i} className="border-l-2 border-[rgba(212,255,0,0.40)] pl-3 my-2 text-text-muted italic text-[11px]">
                             {renderInlineFormatting(line.replace(/^> /, ""))}
                           </blockquote>
                         );
@@ -1792,8 +1792,8 @@ export default function CopywriterPage() {
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
-                  <div className="w-16 h-16  bg-[rgba(59,130,246,0.05)] flex items-center justify-center mb-4">
-                    <PenTool size={28} className="text-[rgba(59,130,246,0.40)]" />
+                  <div className="w-16 h-16  bg-[rgba(212,255,0,0.05)] flex items-center justify-center mb-4">
+                    <PenTool size={28} className="text-[rgba(212,255,0,0.40)]" />
                   </div>
                   <h3 className="text-sm font-semibold text-text-primary mb-1">Ready to Write</h3>
                   <p className="text-[11px] text-text-muted max-w-xs mb-4">
@@ -1871,7 +1871,7 @@ function renderInlineFormatting(text: string): (string | JSX.Element)[] {
     } else if (match[2] && match[3]) {
       // Link
       parts.push(
-        <span key={match.index} className="text-brand-accent font-medium underline underline-offset-2 decoration-[rgba(59,130,246,0.30)]">
+        <span key={match.index} className="text-brand-accent font-medium underline underline-offset-2 decoration-[rgba(212,255,0,0.30)]">
           {match[2]}
         </span>
       );

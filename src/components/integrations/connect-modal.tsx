@@ -282,7 +282,7 @@ export default function ConnectModal({
               style={{
                 background: BRAND_ACCENT,
                 boxShadow:
-                  "0 1px 0 rgba(255,255,255,0.12) inset, 0 4px 12px -4px rgba(59,130,246,0.6)",
+                  "0 1px 0 rgba(255,255,255,0.12) inset, 0 4px 12px -4px rgba(212,255,0,0.6)",
               }}
             >
               Authorize

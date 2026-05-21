@@ -746,11 +746,11 @@ export default function SmartBar({
                         <div
                           className="rounded-xl p-3 mt-1"
                           style={{
-                            background: "rgba(59,130,246,0.07)",
-                            border: "1px solid rgba(59,130,246,0.18)",
+                            background: "rgba(212,255,0,0.07)",
+                            border: "1px solid rgba(212,255,0,0.18)",
                           }}
                         >
-                          <p className="text-[10px] font-semibold text-blue-400 mb-1">
+                          <p className="text-[10px] font-semibold text-indigo-400 mb-1">
                             Overall CTR Score
                           </p>
                           <div className="flex items-end gap-1">

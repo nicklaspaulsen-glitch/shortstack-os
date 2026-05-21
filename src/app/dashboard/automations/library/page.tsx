@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
@@ -46,7 +46,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const CATEGORY_COLORS: Record<string, string> = {
   sales: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-  onboarding: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]",
+  onboarding: "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.25)]",
   retention: "bg-violet-500/15 text-violet-400 border-violet-500/30",
   recovery: "bg-rose-500/15 text-rose-400 border-rose-500/30",
   social: "bg-pink-500/15 text-pink-400 border-pink-500/30",

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -33,7 +33,7 @@ interface ProductionItem {
 }
 
 const PRIORITY_CONFIG: Record<Priority, { label: string; color: string; bg: string }> = {
-  low: { label: "Low", color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]" },
+  low: { label: "Low", color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]" },
   medium: { label: "Medium", color: "text-yellow-400", bg: "bg-yellow-400/10" },
   high: { label: "High", color: "text-orange-400", bg: "bg-orange-400/10" },
   urgent: { label: "Urgent", color: "text-red-400", bg: "bg-red-400/10" },
@@ -154,7 +154,7 @@ export default function ProductionPage() {
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-                    tab === t.id ? "bg-[rgba(59,130,246,0.08)] text-brand-accent font-medium" : "text-text-muted hover:text-text-primary"
+                    tab === t.id ? "bg-[rgba(212,255,0,0.08)] text-brand-accent font-medium" : "text-text-muted hover:text-text-primary"
                   }`}>
                   {t.icon} {t.label}
                 </button>
@@ -197,7 +197,7 @@ export default function ProductionPage() {
                           >
                             {/* Inner div handles HTML5 drag — cannot go on motion.div */}
                             <div draggable onDragStart={() => setDraggedItem(item.id)}
-                              className="glass rounded-xl p-3 cursor-move hover:border-[rgba(59,130,246,0.08)] transition-all spotlight-card"
+                              className="glass rounded-xl p-3 cursor-move hover:border-[rgba(212,255,0,0.08)] transition-all spotlight-card"
                               onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                               <div className="flex items-center justify-between mb-1">
                                 <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${PRIORITY_CONFIG[item.priority].bg} ${PRIORITY_CONFIG[item.priority].color}`}>
@@ -219,7 +219,7 @@ export default function ProductionPage() {
                               </div>
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-1">
-                                  <div className="w-5 h-5 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[8px] font-bold text-brand-accent">{item.assignee[0]}</div>
+                                  <div className="w-5 h-5 rounded-full bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[8px] font-bold text-brand-accent">{item.assignee[0]}</div>
                                   <span className="text-[9px] text-text-muted">{item.assignee}</span>
                                 </div>
                                 <span className={`text-[9px] ${item.dueDate < new Date().toISOString().slice(0, 10) && item.status !== "delivered" ? "text-red-400" : "text-text-muted"}`}>
@@ -294,7 +294,7 @@ export default function ProductionPage() {
                           </div>
                           <div className="flex gap-1">
                             <div className="flex-1 h-1.5 rounded-full bg-surface overflow-hidden">
-                              <div className="h-full rounded-full bg-[rgba(59,130,246,0.50)]" style={{ width: `${pctEst * 3}%` }} />
+                              <div className="h-full rounded-full bg-[rgba(212,255,0,0.50)]" style={{ width: `${pctEst * 3}%` }} />
                             </div>
                             <div className="flex-1 h-1.5 rounded-full bg-surface overflow-hidden">
                               <div className="h-full rounded-full" style={{ width: `${pctAct * 3}%`, background: overBudget ? "#ef4444" : "#2563EB" }} />
@@ -345,7 +345,7 @@ export default function ProductionPage() {
                       return (
                         <div key={name} className="p-3 rounded-lg bg-surface-light border border-border-subtle">
                           <div className="flex items-center gap-2 mb-2">
-                            <div className="w-7 h-7 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[10px] font-bold text-brand-accent">{name[0]}</div>
+                            <div className="w-7 h-7 rounded-full bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[10px] font-bold text-brand-accent">{name[0]}</div>
                             <span className="text-xs font-bold">{name}</span>
                             <span className="text-[9px] text-text-muted ml-auto">{memberItems.length} items</span>
                           </div>

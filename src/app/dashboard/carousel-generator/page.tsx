@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
@@ -696,7 +696,7 @@ export default function CarouselGeneratorPage() {
                   {advancedMode && (
                     <button
                       onClick={() => setWizardOpen(true)}
-                      className="relative group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#2563EB] to-amber-500 text-black text-xs font-bold shadow-lg shadow-[rgba(59,130,246,0.2)] hover:shadow-[rgba(59,130,246,0.4)] hover-lift transition-all"
+                      className="relative group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#2563EB] to-amber-500 text-black text-xs font-bold shadow-lg shadow-[rgba(212,255,0,0.2)] hover:shadow-[rgba(212,255,0,0.4)] hover-lift transition-all"
                     >
                       <Sparkles size={13} className="animate-pulse" />
                       + New with AI
@@ -742,7 +742,7 @@ export default function CarouselGeneratorPage() {
                           value={topic}
                           onChange={e => setTopic(e.target.value)}
                           placeholder="e.g., 5 mistakes new founders make in their first year"
-                          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all"
+                          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(212,255,0,0.5)] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all"
                           autoFocus
                         />
                         <div>
@@ -752,7 +752,7 @@ export default function CarouselGeneratorPage() {
                               <button
                                 key={t.id}
                                 onClick={() => { setTopic(t.example); setTemplate(t.id); }}
-                                className="text-[10px] text-text-muted hover:text-text-primary bg-surface-light hover:bg-[rgba(59,130,246,0.08)] hover:border-[rgba(59,130,246,0.25)] px-2.5 py-1 rounded-full border border-border-subtle/50 transition-all"
+                                className="text-[10px] text-text-muted hover:text-text-primary bg-surface-light hover:bg-[rgba(212,255,0,0.08)] hover:border-[rgba(212,255,0,0.25)] px-2.5 py-1 rounded-full border border-border-subtle/50 transition-all"
                               >
                                 {t.name}: {t.example.slice(0, 30)}�
                               </button>
@@ -776,7 +776,7 @@ export default function CarouselGeneratorPage() {
                               key={s.id}
                               onClick={() => setStyle(s.id)}
                               className={`text-left rounded-xl border overflow-hidden transition-all ${
-                                selected ? "border-brand-accent ring-2 ring-[rgba(59,130,246,0.25)]" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
+                                selected ? "border-brand-accent ring-2 ring-[rgba(212,255,0,0.25)]" : "border-border-subtle hover:border-[rgba(212,255,0,0.25)]"
                               }`}
                             >
                               <div className="h-16" style={{ background: s.preview }}>
@@ -807,8 +807,8 @@ export default function CarouselGeneratorPage() {
                             onClick={() => setSlideCount(n)}
                             className={`p-4 rounded-xl border text-center transition-all ${
                               slideCount === n
-                                ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.08)]"
-                                : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                                ? "border-brand-accent bg-[rgba(212,255,0,0.08)] shadow-lg shadow-[rgba(212,255,0,0.08)]"
+                                : "border-border-subtle hover:border-[rgba(212,255,0,0.25)] bg-surface-light"
                             }`}
                           >
                             <p className="text-2xl font-bold">{n}</p>
@@ -824,7 +824,7 @@ export default function CarouselGeneratorPage() {
                     description: "We'll draft all your slides now. You can tweak individual cards in Advanced mode.",
                     icon: <Wand2 size={18} />,
                     component: (
-                      <div className="glass rounded-xl p-4 bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.2)] space-y-2">
+                      <div className="glass rounded-xl p-4 bg-[rgba(212,255,0,0.04)] border-[rgba(212,255,0,0.2)] space-y-2">
                         <div className="grid grid-cols-3 gap-3">
                           <div>
                             <p className="text-[9px] uppercase tracking-wider text-text-muted">Style</p>
@@ -863,7 +863,7 @@ export default function CarouselGeneratorPage() {
                   </h2>
                   <button
                     onClick={handleCopyAll}
-                    className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] transition-colors"
+                    className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] transition-colors"
                   >
                     {copied ? <Check size={11} /> : <Copy size={11} />} {copied ? "Copied!" : "Copy text"}
                   </button>
@@ -906,7 +906,7 @@ export default function CarouselGeneratorPage() {
                 />
               </div>
               <div className="relative text-center px-4">
-                <p className="text-[11px] uppercase tracking-widest text-[rgba(59,130,246,0.8)] font-semibold">
+                <p className="text-[11px] uppercase tracking-widest text-[rgba(212,255,0,0.8)] font-semibold">
                   Example carousel library
                 </p>
                 <h3 className="text-lg font-bold text-text-primary mt-1">

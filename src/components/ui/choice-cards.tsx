@@ -164,12 +164,12 @@ export default function ChoiceCards({
               item.disabled
                 ? "opacity-50 cursor-not-allowed border-border-subtle bg-surface-light"
                 : selected
-                  ? "border-[#2563EB] bg-[rgba(59,130,246,0.08)] ring-2 ring-[rgba(59,130,246,0.25)]"
-                  : "border-border-subtle bg-surface-light hover:border-[rgba(59,130,246,0.25)] focus-visible:border-[rgba(59,130,246,0.5)] focus-visible:ring-2 focus-visible:ring-[rgba(59,130,246,0.12)]"
+                  ? "border-[#2563EB] bg-[rgba(212,255,0,0.08)] ring-2 ring-[rgba(212,255,0,0.25)]"
+                  : "border-border-subtle bg-surface-light hover:border-[rgba(212,255,0,0.25)] focus-visible:border-[rgba(212,255,0,0.5)] focus-visible:ring-2 focus-visible:ring-[rgba(212,255,0,0.12)]"
             }`}
           >
             {item.badge && (
-              <span className="absolute top-2 right-2 text-[8px] px-1.5 py-0.5 bg-[rgba(59,130,246,0.08)] text-[#2563EB] rounded-full font-semibold uppercase tracking-wider">
+              <span className="absolute top-2 right-2 text-[8px] px-1.5 py-0.5 bg-[rgba(212,255,0,0.08)] text-[#2563EB] rounded-full font-semibold uppercase tracking-wider">
                 {item.badge}
               </span>
             )}
@@ -177,7 +177,7 @@ export default function ChoiceCards({
               <div className="flex items-center gap-2 mb-2">
                 <div
                   className={`${SIZE_ICON[size]} flex items-center justify-center shrink-0 ${
-                    selected ? "bg-[rgba(59,130,246,0.12)] text-[#2563EB]" : "bg-surface-light text-text-muted"
+                    selected ? "bg-[rgba(212,255,0,0.12)] text-[#2563EB]" : "bg-surface-light text-text-muted"
                   }`}
                 >
                   {item.icon}

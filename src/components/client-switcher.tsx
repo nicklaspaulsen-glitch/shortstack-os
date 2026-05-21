@@ -88,8 +88,8 @@ export default function ClientSwitcher() {
         onClick={() => setOpen(!open)}
         className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
           managedClient
-            ? "text-[#2563EB] bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.08)]"
-            : "text-text-muted hover:text-text-primary bg-surface-light/50 border border-border-subtle/50 hover:border-[rgba(59,130,246,0.2)]"
+            ? "text-[#2563EB] bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] hover:bg-[rgba(212,255,0,0.08)]"
+            : "text-text-muted hover:text-text-primary bg-surface-light/50 border border-border-subtle/50 hover:border-[rgba(212,255,0,0.2)]"
         }`}
       >
         {managedClient ? <UserCheck size={13} /> : <Users size={13} />}
@@ -142,7 +142,7 @@ export default function ClientSwitcher() {
                       key={client.id}
                       onClick={() => selectClient(client)}
                       className={`w-full text-left px-3 py-2.5 border-b border-border-subtle/10 hover:bg-surface-light/50 transition-colors ${
-                        activeClient?.id === client.id ? "bg-[rgba(59,130,246,0.05)] border-l-2 border-l-[#2563EB]" : ""
+                        activeClient?.id === client.id ? "bg-[rgba(212,255,0,0.05)] border-l-2 border-l-[#2563EB]" : ""
                       }`}
                     >
                       <div className="flex items-center justify-between">
@@ -173,7 +173,7 @@ export default function ClientSwitcher() {
                       <h3 className="text-xs font-semibold">{activeClient.business_name}</h3>
                       <p className="text-[10px] text-text-muted">{activeClient.contact_name} · {activeClient.industry}</p>
                       <div className="flex items-center gap-2 mt-1.5">
-                        <span className="text-[10px] bg-[rgba(59,130,246,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded font-medium">
+                        <span className="text-[10px] bg-[rgba(212,255,0,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded font-medium">
                           {activeClient.package_tier || "No tier"}
                         </span>
                         <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${

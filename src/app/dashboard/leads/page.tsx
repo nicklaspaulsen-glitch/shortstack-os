@@ -198,7 +198,7 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
             onDrop={onDrop}
             onClick={() => fileRef.current?.click()}
             className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all ${
-              dragOver ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
+              dragOver ? "border-brand-accent bg-[rgba(212,255,0,0.05)]" : "border-border-subtle hover:border-[rgba(212,255,0,0.25)]"
             }`}
           >
             <FileSpreadsheet size={32} className="mx-auto mb-3 text-text-muted" />
@@ -424,7 +424,7 @@ function ScoreBadge({ score, onClick }: { score: number | null; onClick?: () => 
     return (
       <button
         onClick={(e) => { e.stopPropagation(); onClick?.(); }}
-        className="text-[9px] px-2 py-0.5 rounded bg-white/[0.04] text-text-muted hover:bg-[rgba(59,130,246,0.08)] hover:text-brand-accent border border-dashed border-border-subtle transition-all"
+        className="text-[9px] px-2 py-0.5 rounded bg-white/[0.04] text-text-muted hover:bg-[rgba(212,255,0,0.08)] hover:text-brand-accent border border-dashed border-border-subtle transition-all"
         title="Score this lead with AI"
       >
         Score
@@ -445,7 +445,7 @@ function ScoreBadge({ score, onClick }: { score: number | null; onClick?: () => 
 // ====================== SCORE BREAKDOWN BARS ======================
 function ScoreBreakdownBars({ breakdown }: { breakdown: ScoreBreakdown }) {
   const items = [
-    { label: "Fit", value: breakdown.fit, max: 25, color: "bg-blue-400" },
+    { label: "Fit", value: breakdown.fit, max: 25, color: "bg-indigo-400" },
     { label: "Intent", value: breakdown.intent, max: 25, color: "bg-purple-400" },
     { label: "Urgency", value: breakdown.urgency, max: 25, color: "bg-orange-400" },
     { label: "Data Quality", value: breakdown.data_quality, max: 25, color: "bg-green-400" },
@@ -643,7 +643,7 @@ function LeadDetailPanel({
           <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
             lead.status === "converted" ? "bg-purple-400/10 text-purple-400" :
             lead.status === "booked" ? "bg-green-400/10 text-green-400" :
-            lead.status === "qualified" ? "bg-blue-400/10 text-blue-400" :
+            lead.status === "qualified" ? "bg-indigo-400/10 text-indigo-400" :
             lead.status === "contacted" ? "bg-yellow-400/10 text-yellow-400" :
             "bg-white/[0.05] text-text-muted"
           }`}>
@@ -809,7 +809,7 @@ export default function LeadEnginePage() {
             </h1>
           </div>
           {totalCount > 0 && (
-            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.15)] text-brand-accent">
+            <span className="hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.15)] text-brand-accent">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
               {totalCount.toLocaleString()} lead{totalCount !== 1 ? "s" : ""}
             </span>
@@ -942,7 +942,7 @@ export default function LeadEnginePage() {
                     className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
                       highPriorityOnly
                         ? "bg-green-400/10 border-green-400/30 text-green-400"
-                        : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.1)] hover:text-text-primary"
+                        : "border-border-subtle text-text-muted hover:border-[rgba(212,255,0,0.1)] hover:text-text-primary"
                     }`}
                   >
                     <Flame size={11} /> High priority (70+)
@@ -952,8 +952,8 @@ export default function LeadEnginePage() {
                     onClick={() => setSortByScore(v => !v)}
                     className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
                       sortByScore
-                        ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent"
-                        : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.1)] hover:text-text-primary"
+                        ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)] text-brand-accent"
+                        : "border-border-subtle text-text-muted hover:border-[rgba(212,255,0,0.1)] hover:text-text-primary"
                     }`}
                   >
                     <Target size={11} /> Sort by score
@@ -1031,7 +1031,7 @@ export default function LeadEnginePage() {
                         }}
                         className={`grid grid-cols-12 items-center py-1.5 px-3 rounded-lg border transition-all cursor-pointer text-[10px] ${
                           selectedLead?.id === lead.id
-                            ? "bg-[rgba(59,130,246,0.10)] border-[rgba(59,130,246,0.28)]"
+                            ? "bg-[rgba(212,255,0,0.10)] border-[rgba(212,255,0,0.28)]"
                             : "bg-surface-light border-border-subtle hover:border-border-subtle"
                         }`}>
                         <div className="col-span-3">
@@ -1053,7 +1053,7 @@ export default function LeadEnginePage() {
                         <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
                           lead.status === "converted" ? "bg-purple-400/10 text-purple-400" :
                           lead.status === "booked" ? "bg-green-400/10 text-green-400" :
-                          lead.status === "qualified" ? "bg-blue-400/10 text-blue-400" :
+                          lead.status === "qualified" ? "bg-indigo-400/10 text-indigo-400" :
                           lead.status === "contacted" || lead.status === "called" ? "bg-yellow-400/10 text-yellow-400" :
                           lead.status === "replied" ? "bg-emerald-400/10 text-emerald-400" :
                           "bg-white/[0.05] text-text-muted"
@@ -1112,7 +1112,7 @@ export default function LeadEnginePage() {
                                 <button
                                   onClick={(e) => { e.stopPropagation(); scoreOneLead(lead); }}
                                   disabled={scoringLeads.has(lead.id)}
-                                  className="text-[9px] px-2.5 py-1 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] transition-all flex items-center gap-1 disabled:opacity-50"
+                                  className="text-[9px] px-2.5 py-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] transition-all flex items-center gap-1 disabled:opacity-50"
                                 >
                                   {scoringLeads.has(lead.id) ? <Loader size={9} className="animate-spin" /> : <Zap size={9} />}
                                   Score now
@@ -1186,14 +1186,14 @@ export default function LeadEnginePage() {
                     </p>
                     <div className="flex items-center gap-2">
                       <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
-                        className="p-1.5 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.2)] disabled:opacity-30 transition-all">
+                        className="p-1.5 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.2)] disabled:opacity-30 transition-all">
                         <ChevronLeft size={14} />
                       </button>
                       <span className="text-xs font-mono text-text-muted">
                         {page} / {totalPages}
                       </span>
                       <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}
-                        className="p-1.5 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.2)] disabled:opacity-30 transition-all">
+                        className="p-1.5 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.2)] disabled:opacity-30 transition-all">
                         <ChevronRightIcon size={14} />
                       </button>
                     </div>
@@ -1249,7 +1249,7 @@ export default function LeadEnginePage() {
                         { range: "90-100 (Hot)", count: 0, pct: 0, color: "bg-red-400" },
                         { range: "70-89 (Warm)", count: 0, pct: 0, color: "bg-orange-400" },
                         { range: "50-69 (Lukewarm)", count: 0, pct: 0, color: "bg-yellow-400" },
-                        { range: "0-49 (Cold)", count: 0, pct: 0, color: "bg-blue-400" },
+                        { range: "0-49 (Cold)", count: 0, pct: 0, color: "bg-indigo-400" },
                       ].map((d, i) => (
                         <div key={i}>
                           <div className="flex justify-between text-[10px] mb-1">
@@ -1275,7 +1275,7 @@ export default function LeadEnginePage() {
                               <span className="font-semibold">{lead.business_name}</span>
                               <span className="text-text-muted">Score: {lead.lead_score}</span>
                             </div>
-                            <Link href={`/dashboard/crm?leadId=${lead.id}`} className="text-[9px] px-2 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)]">Open in CRM</Link>
+                            <Link href={`/dashboard/crm?leadId=${lead.id}`} className="text-[9px] px-2 py-0.5 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)]">Open in CRM</Link>
                           </div>
                         ))}
                       </div>
@@ -1299,7 +1299,7 @@ export default function LeadEnginePage() {
                   ].map((rule, i) => (
                     <div key={i} className={`glass rounded-xl p-4 flex items-center justify-between ${!rule.active ? "opacity-50" : ""}`}>
                       <div className="flex items-center gap-3">
-                        <div className={`w-2 h-2 rounded-full ${rule.priority === "High" ? "bg-red-400" : rule.priority === "Medium" ? "bg-yellow-400" : "bg-blue-400"}`} />
+                        <div className={`w-2 h-2 rounded-full ${rule.priority === "High" ? "bg-red-400" : rule.priority === "Medium" ? "bg-yellow-400" : "bg-indigo-400"}`} />
                         <div>
                           <p className="text-xs font-semibold">If: {rule.condition}</p>
                           <p className="text-[10px] text-text-muted">Then: {rule.action}</p>
@@ -1307,7 +1307,7 @@ export default function LeadEnginePage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <span className={`text-[8px] px-1.5 py-0.5 rounded ${
-                          rule.priority === "High" ? "bg-red-400/10 text-red-400" : rule.priority === "Medium" ? "bg-yellow-400/10 text-yellow-400" : "bg-blue-400/10 text-blue-400"
+                          rule.priority === "High" ? "bg-red-400/10 text-red-400" : rule.priority === "Medium" ? "bg-yellow-400/10 text-yellow-400" : "bg-indigo-400/10 text-indigo-400"
                         }`}>{rule.priority}</span>
                         <div className={`w-8 h-4 rounded-full ${rule.active ? "bg-brand-accent" : "bg-surface-light"}`}>
                           <div className={`w-3 h-3 bg-white rounded-full mt-0.5 ${rule.active ? "ml-4" : "ml-0.5"}`} />
@@ -1388,7 +1388,7 @@ export default function LeadEnginePage() {
                         </div>
                         <button
                           onClick={() => toast("Per-lead enrichment coming soon � needs API")}
-                          className="text-[9px] px-2 py-1 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)]"
+                          className="text-[9px] px-2 py-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)]"
                         >Enrich</button>
                       </div>
                     </motion.div>
@@ -1402,7 +1402,7 @@ export default function LeadEnginePage() {
                 </h3>
                 <div className="flex flex-col items-center gap-2">
                   {[
-                    { stage: "Total Leads Scraped", count: 0, pct: 0, color: "bg-blue-400" },
+                    { stage: "Total Leads Scraped", count: 0, pct: 0, color: "bg-indigo-400" },
                     { stage: "Contacted (DM/Email/Call)", count: 0, pct: 0, color: "bg-purple-400" },
                     { stage: "Replied / Engaged", count: 0, pct: 0, color: "bg-yellow-400" },
                     { stage: "Qualified (Score 70+)", count: 0, pct: 0, color: "bg-orange-400" },
@@ -1441,7 +1441,7 @@ export default function LeadEnginePage() {
                     </h3>
                     <div className="flex flex-wrap gap-2 mb-3">
                       {["high-value", "responsive", "warm", "needs-nurture", "follow-up", "hot", "referral", "decision-maker", "client", "upsell", "no-budget", "competitor-user"].map(tag => (
-                        <span key={tag} className="text-[9px] px-2 py-1 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] cursor-pointer hover:bg-[rgba(59,130,246,0.12)] transition-all">{tag}</span>
+                        <span key={tag} className="text-[9px] px-2 py-1 rounded-full bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)] cursor-pointer hover:bg-[rgba(212,255,0,0.12)] transition-all">{tag}</span>
                       ))}
                     </div>
                     <div className="flex gap-2">

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -283,7 +283,7 @@ export default function NotionSyncPage() {
             </p>
           </div>
 
-          <div className="flex items-start gap-2 text-xs text-brand-accent bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] rounded-lg px-4 py-3 max-w-md">
+          <div className="flex items-start gap-2 text-xs text-brand-accent bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.25)] rounded-lg px-4 py-3 max-w-md">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             Notion OAuth is coming soon � join the waitlist to be notified when it goes live.
           </div>

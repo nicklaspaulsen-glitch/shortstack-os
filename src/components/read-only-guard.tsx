@@ -40,7 +40,7 @@ export function BrowserModeBanner() {
   if (profile.role === "admin") return null;
 
   return (
-    <div className="bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] rounded-lg px-4 py-3 mb-4 flex items-center justify-between">
+    <div className="bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] rounded-lg px-4 py-3 mb-4 flex items-center justify-between">
       <div className="flex items-center gap-2">
         <Download size={16} className="text-[#2563EB]" />
         <p className="text-sm">

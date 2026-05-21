@@ -192,7 +192,7 @@ function SfxTab({ state, dispatch }: Props) {
               }}
               className="shrink-0 p-1 rounded hover:bg-neutral-700 text-neutral-400 hover:text-white transition-colors"
             >
-              {playing === sfx.id ? <Volume2 size={12} className="text-blue-400" /> : <VolumeX size={12} />}
+              {playing === sfx.id ? <Volume2 size={12} className="text-indigo-400" /> : <VolumeX size={12} />}
             </button>
             <div className="flex-1 min-w-0">
               <p className="text-[11px] text-neutral-200 truncate">{sfx.name}</p>
@@ -206,7 +206,7 @@ function SfxTab({ state, dispatch }: Props) {
               type="button"
               title="Add to timeline"
               onClick={(e) => { e.stopPropagation(); addSfx(sfx.id); }}
-              className="shrink-0 p-1 rounded opacity-0 group-hover:opacity-100 hover:bg-blue-500/20 text-blue-400 transition-all"
+              className="shrink-0 p-1 rounded opacity-0 group-hover:opacity-100 hover:bg-indigo-500/20 text-indigo-400 transition-all"
             >
               <Plus size={11} />
             </button>
@@ -288,7 +288,7 @@ function VfxTab({ state, dispatch }: Props) {
           {filtered.map((effect) => (
             <div
               key={effect.id}
-              className="relative rounded-lg overflow-hidden border border-neutral-700/60 hover:border-blue-500/50 cursor-pointer group transition-colors"
+              className="relative rounded-lg overflow-hidden border border-neutral-700/60 hover:border-indigo-500/50 cursor-pointer group transition-colors"
               onClick={() => addVfx(effect.id)}
               title={effect.description}
             >
@@ -324,7 +324,7 @@ function VfxTab({ state, dispatch }: Props) {
                 <button
                   type="button"
                   onClick={(e) => { e.stopPropagation(); addVfx(effect.id); }}
-                  className="p-0.5 rounded bg-blue-500 text-white hover:bg-blue-400"
+                  className="p-0.5 rounded bg-indigo-500 text-white hover:bg-indigo-400"
                 >
                   <Plus size={10} />
                 </button>
@@ -418,7 +418,7 @@ function BrollTab({ state, dispatch }: Props) {
               type="button"
               onClick={() => void addBroll(concept)}
               disabled={adding === concept.id}
-              className="text-left rounded-lg overflow-hidden border border-neutral-700/60 hover:border-blue-500/50 transition-colors group disabled:opacity-60"
+              className="text-left rounded-lg overflow-hidden border border-neutral-700/60 hover:border-indigo-500/50 transition-colors group disabled:opacity-60"
             >
               {/* Thumbnail preview */}
               <div
@@ -431,7 +431,7 @@ function BrollTab({ state, dispatch }: Props) {
                   </div>
                 )}
                 <div className="absolute bottom-0.5 right-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="p-0.5 rounded bg-blue-500 text-white">
+                  <div className="p-0.5 rounded bg-indigo-500 text-white">
                     <Plus size={9} />
                   </div>
                 </div>
@@ -484,7 +484,7 @@ export function SfxVfxBrollPanel({ state, dispatch }: Props) {
             onClick={() => setTab(t.id)}
             className={`flex-1 flex items-center justify-center gap-1 text-[10px] py-1.5 border-r border-neutral-800 last:border-r-0 transition-colors ${
               tab === t.id
-                ? "bg-neutral-800 text-blue-400"
+                ? "bg-neutral-800 text-indigo-400"
                 : "text-neutral-400 hover:text-white"
             }`}
           >

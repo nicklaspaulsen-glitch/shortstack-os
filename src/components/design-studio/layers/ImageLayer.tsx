@@ -70,7 +70,7 @@ export default function ImageLayer({ layer, isSelected, scale, onSelect }: Props
         >
           {hasJob ? (
             <>
-              <Loader2 size={24} className="animate-spin text-blue-400" />
+              <Loader2 size={24} className="animate-spin text-indigo-400" />
               <span>Generating…</span>
             </>
           ) : (

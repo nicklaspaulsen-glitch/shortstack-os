@@ -222,7 +222,7 @@ export default function SMSTemplatesPage() {
                             <button onClick={() => { navigator.clipboard.writeText(v.text); toast.success("Copied"); }} className="text-[9px] px-2 py-1 rounded bg-white/5 text-text-muted hover:text-brand-accent">
                               <Copy size={9} />
                             </button>
-                            <button onClick={() => saveAiVariant(v)} className="text-[9px] px-2 py-1 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-1">
+                            <button onClick={() => saveAiVariant(v)} className="text-[9px] px-2 py-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] flex items-center gap-1">
                               <Plus size={9} /> Save
                             </button>
                           </div>
@@ -230,7 +230,7 @@ export default function SMSTemplatesPage() {
                         {v.compliance_notes.length > 0 && (
                           <div className="mt-2 pt-2 border-t border-border-subtle flex gap-1 flex-wrap">
                             {v.compliance_notes.map((note, ni) => (
-                              <span key={ni} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent flex items-center gap-0.5">
+                              <span key={ni} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent flex items-center gap-0.5">
                                 <Shield size={8} /> {note}
                               </span>
                             ))}
@@ -260,7 +260,7 @@ export default function SMSTemplatesPage() {
                     {categories.map(c => (
                       <button key={c} onClick={() => setFilter(c)}
                         className={`text-[10px] px-2.5 py-1.5 rounded-lg capitalize ${
-                          filter === c ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-white/8"
+                          filter === c ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)]" : "text-text-muted border border-white/8"
                         }`}>{c}</button>
                     ))}
                   </div>
@@ -310,7 +310,7 @@ export default function SMSTemplatesPage() {
                     <div className="flex flex-wrap gap-1">
                       {MERGE_TAGS.map(tag => (
                         <button key={tag} onClick={() => setNewTemplate(prev => ({ ...prev, body: prev.body + " " + tag }))}
-                          className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)]">{tag}</button>
+                          className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)]">{tag}</button>
                       ))}
                     </div>
                     {/* Character counter */}
@@ -344,7 +344,7 @@ export default function SMSTemplatesPage() {
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <p className="text-xs font-semibold">{template.name}</p>
-                          <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent">{template.category}</span>
+                          <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-brand-accent">{template.category}</span>
                         </div>
                         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button onClick={() => { navigator.clipboard.writeText(template.body); }} className="p-1 rounded hover:bg-white/5 text-text-muted hover:text-text-primary"><Copy size={10} /></button>
@@ -373,7 +373,7 @@ export default function SMSTemplatesPage() {
                           <span>{getSegments(template.body)} seg</span>
                           {template.sends > 0 && (
                             <>
-                              <span className="text-blue-400">{template.sends} sent</span>
+                              <span className="text-indigo-400">{template.sends} sent</span>
                               <span className="text-green-400">{template.replies} replies</span>
                             </>
                           )}
@@ -393,7 +393,7 @@ export default function SMSTemplatesPage() {
                   <div className="w-[320px] bg-gray-900 rounded-[2rem] p-3 shadow-2xl">
                     <div className="bg-gray-800 rounded-[1.5rem] overflow-hidden">
                       <div className="bg-gray-700 p-3 flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-[rgba(59,130,246,0.12)] flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.12)] flex items-center justify-center">
                           <MessageSquare size={12} className="text-brand-accent" />
                         </div>
                         <div>
@@ -440,7 +440,7 @@ export default function SMSTemplatesPage() {
                     {templates.slice(0, 8).map(t => (
                       <button key={t.id} onClick={() => setPreviewTemplate(t)}
                         className={`text-left p-2 rounded-lg text-[9px] border transition-all ${
-                          previewTemplate?.id === t.id ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border-subtle hover:border-[rgba(59,130,246,0.1)]"
+                          previewTemplate?.id === t.id ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)]" : "border-border-subtle hover:border-[rgba(212,255,0,0.1)]"
                         }`}>
                         <p className="font-semibold truncate">{t.name}</p>
                         <p className="text-text-muted">{t.body.length} chars</p>
@@ -498,7 +498,7 @@ export default function SMSTemplatesPage() {
                       ].map((footer, i) => (
                         <button key={i} onClick={() => setOptOutFooter(footer)}
                           className={`w-full text-left p-2.5 rounded-lg text-[10px] border transition-all ${
-                            optOutFooter === footer ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] text-brand-accent" : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.1)]"
+                            optOutFooter === footer ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] text-brand-accent" : "border-border-subtle text-text-muted hover:border-[rgba(212,255,0,0.1)]"
                           }`}>{footer}</button>
                       ))}
                       <div className="flex gap-2 mt-2">

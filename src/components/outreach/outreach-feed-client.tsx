@@ -286,7 +286,7 @@ export default function OutreachFeedClient({
               onClick={() => setChannelFilter(null)}
               className={`px-2.5 py-1 rounded-full text-[11px] font-medium border transition-colors ${
                 !channelFilter
-                  ? "bg-[rgba(59,130,246,0.10)] text-[#2563EB] border-[rgba(59,130,246,0.30)]"
+                  ? "bg-[rgba(212,255,0,0.10)] text-[#2563EB] border-[rgba(212,255,0,0.30)]"
                   : "bg-[rgba(0,0,0,0.04)] text-[#6B7280] border-[rgba(0,0,0,0.08)] hover:text-[#111827]"
               }`}
             >
@@ -299,7 +299,7 @@ export default function OutreachFeedClient({
                 onClick={() => setChannelFilter(f.key)}
                 className={`px-2.5 py-1 rounded-full text-[11px] font-medium border transition-colors flex items-center gap-1 ${
                   channelFilter === f.key
-                    ? "bg-[rgba(59,130,246,0.10)] text-[#2563EB] border-[rgba(59,130,246,0.30)]"
+                    ? "bg-[rgba(212,255,0,0.10)] text-[#2563EB] border-[rgba(212,255,0,0.30)]"
                     : "bg-[rgba(0,0,0,0.04)] text-[#6B7280] border-[rgba(0,0,0,0.08)] hover:text-[#111827]"
                 }`}
               >
@@ -330,7 +330,7 @@ export default function OutreachFeedClient({
                       type="button"
                       onClick={() => setSelectedKey(key)}
                       className={`w-full text-left px-4 py-3 border-b border-[rgba(0,0,0,0.06)] transition-colors ${
-                        isActive ? "bg-[rgba(59,130,246,0.06)]" : "hover:bg-[rgba(0,0,0,0.03)]"
+                        isActive ? "bg-[rgba(212,255,0,0.06)]" : "hover:bg-[rgba(0,0,0,0.03)]"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2 mb-1">
@@ -397,7 +397,7 @@ export default function OutreachFeedClient({
                   {selected.contact_email && <span>{selected.contact_email}</span>}
                   {selected.contact_phone && <span>{selected.contact_phone}</span>}
                   {selected.client_id && (
-                    <span className="px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.10)] border border-[rgba(59,130,246,0.25)] text-[#2563EB]">
+                    <span className="px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.10)] border border-[rgba(212,255,0,0.25)] text-[#2563EB]">
                       Client
                     </span>
                   )}
@@ -409,7 +409,7 @@ export default function OutreachFeedClient({
             {/* AI summary card */}
             {thread.summary?.summary && (
               <div className="px-5 pt-3">
-                <div className="flex items-start gap-2 rounded-xl border border-[rgba(59,130,246,0.20)] bg-[rgba(59,130,246,0.05)] px-3 py-2.5">
+                <div className="flex items-start gap-2 rounded-xl border border-[rgba(212,255,0,0.20)] bg-[rgba(212,255,0,0.05)] px-3 py-2.5">
                   <Sparkles size={14} className="text-[#2563EB] mt-0.5 shrink-0" />
                   <div className="text-xs text-[#374151] leading-relaxed flex-1">
                     <p>{thread.summary.summary}</p>
@@ -443,7 +443,7 @@ export default function OutreachFeedClient({
                     type="button"
                     onClick={() => handleCall("ai")}
                     disabled={calling || !selected.contact_phone}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.25)] text-[#2563EB] text-xs font-medium hover:bg-[rgba(59,130,246,0.14)] disabled:opacity-40"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.25)] text-[#2563EB] text-xs font-medium hover:bg-[rgba(212,255,0,0.14)] disabled:opacity-40"
                   >
                     <PhoneCall size={13} />
                     Call back AI
@@ -477,7 +477,7 @@ export default function OutreachFeedClient({
                         className={`px-2 py-0.5 rounded-full text-[11px] font-medium border ${
                           composerChannel === ch ||
                           (!composerChannel && pickReplyChannel(thread.events, null) === ch)
-                            ? "bg-[rgba(59,130,246,0.10)] text-[#2563EB] border-[rgba(59,130,246,0.30)]"
+                            ? "bg-[rgba(212,255,0,0.10)] text-[#2563EB] border-[rgba(212,255,0,0.30)]"
                             : "bg-[rgba(0,0,0,0.04)] text-[#6B7280] border-[rgba(0,0,0,0.08)] hover:text-[#111827]"
                         }`}
                       >
@@ -545,7 +545,7 @@ function BubbleItem({ event }: BubbleItemProps) {
   const isOutbound = event.direction === "out";
   const align = isOutbound ? "items-end ml-auto" : "items-start mr-auto";
   const tone = isOutbound
-    ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.20)] text-[#111827]"
+    ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.20)] text-[#111827]"
     : "bg-[rgba(0,0,0,0.04)] border-[rgba(0,0,0,0.08)] text-[#374151]";
 
   if (event.channel === "voice_call") {

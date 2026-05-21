@@ -165,7 +165,7 @@ export default function FeedbackButton() {
         style={{
           background: `linear-gradient(135deg, ${GOLD}, ${GOLD_LIGHT})`,
           color: "#FFFFFF",
-          boxShadow: `0 8px 24px rgba(59,130,246,0.40), 0 0 0 1px rgba(59,130,246,0.25)`,
+          boxShadow: `0 8px 24px rgba(212,255,0,0.40), 0 0 0 1px rgba(212,255,0,0.25)`,
         }}
       >
         <MessageCirclePlus size={20} strokeWidth={2.2} />
@@ -196,7 +196,7 @@ export default function FeedbackButton() {
                 backdropFilter: "blur(24px) saturate(1.5)",
                 WebkitBackdropFilter: "blur(24px) saturate(1.5)",
                 border: "1px solid rgba(0,0,0,0.08)",
-                boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 20px 60px rgba(0,0,0,0.12), 0 0 48px -12px rgba(59,130,246,0.14)",
+                boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 20px 60px rgba(0,0,0,0.12), 0 0 48px -12px rgba(212,255,0,0.14)",
               }}
             >
               {celebrate && <ConfettiBurst />}
@@ -234,8 +234,8 @@ export default function FeedbackButton() {
                           type="button"
                           className="flex flex-col items-center gap-1 py-2.5 rounded-lg transition-all"
                           style={{
-                            background: active ? "rgba(59,130,246,0.10)" : "rgba(0,0,0,0.04)",
-                            border: `1px solid ${active ? "rgba(59,130,246,0.30)" : "rgba(0,0,0,0.08)"}`,
+                            background: active ? "rgba(212,255,0,0.10)" : "rgba(0,0,0,0.04)",
+                            border: `1px solid ${active ? "rgba(212,255,0,0.30)" : "rgba(0,0,0,0.08)"}`,
                             color: active ? GOLD : "#6B7280",
                           }}
                         >

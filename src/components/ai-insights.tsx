@@ -25,18 +25,18 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
 };
 
 const PRIORITY_COLORS: Record<string, string> = {
-  high: "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)]",
-  medium: "border-[rgba(59,130,246,0.1)] bg-[rgba(59,130,246,0.05)]",
+  high: "border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.05)]",
+  medium: "border-[rgba(212,255,0,0.1)] bg-[rgba(212,255,0,0.05)]",
   low: "border-border-subtle/30",
 };
 
 const CATEGORY_BADGES: Record<string, string> = {
   content: "bg-pink-400/10 text-pink-400",
-  ads: "bg-blue-400/10 text-blue-400",
+  ads: "bg-indigo-400/10 text-indigo-400",
   seo: "bg-emerald-400/10 text-emerald-400",
   social: "bg-purple-400/10 text-purple-400",
   operations: "bg-amber-400/10 text-amber-400",
-  growth: "bg-[rgba(59,130,246,0.08)] text-[#2563EB]",
+  growth: "bg-[rgba(212,255,0,0.08)] text-[#2563EB]",
 };
 
 export default function AIInsights({ clientId }: { clientId?: string }) {
@@ -84,7 +84,7 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
 
   if (loading) {
     return (
-      <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.1)]">
+      <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.1)]">
         <div className="flex items-center gap-2 mb-3">
           <Sparkles size={14} className="text-[#2563EB] animate-pulse" />
           <span className="text-xs font-semibold">AI is analyzing your business...</span>
@@ -106,7 +106,7 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
         <div className="flex items-center gap-2">
           <Sparkles size={14} className="text-[#2563EB]" />
           <h2 className="text-sm font-semibold">AI Recommendations</h2>
-          <span className="text-[9px] bg-[rgba(59,130,246,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded font-medium">
+          <span className="text-[9px] bg-[rgba(212,255,0,0.08)] text-[#2563EB] px-1.5 py-0.5 rounded font-medium">
             {insights.length - actionedIds.size} active
           </span>
         </div>
@@ -141,7 +141,7 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
               <p className="text-[10px] text-text-muted leading-relaxed mb-2">{insight.description}</p>
 
               <div className="flex items-center justify-between">
-                <p className="text-[9px] text-[rgba(59,130,246,0.8)] flex items-center gap-1">
+                <p className="text-[9px] text-[rgba(212,255,0,0.8)] flex items-center gap-1">
                   <ArrowRight size={8} /> {insight.action}
                 </p>
                 {!isActioned && (

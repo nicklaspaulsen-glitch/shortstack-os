@@ -34,9 +34,9 @@ interface CalEvent {
 }
 
 const CATEGORY_CONFIG: Record<EventCategory, { label: string; color: string; bg: string }> = {
-  meeting: { label: "Meeting", color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]" },
+  meeting: { label: "Meeting", color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]" },
   deadline: { label: "Deadline", color: "text-[#dc2626]", bg: "bg-[rgba(220,38,38,0.08)]" },
-  content: { label: "Content", color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]" },
+  content: { label: "Content", color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]" },
   call: { label: "Call", color: "text-emerald-400", bg: "bg-emerald-400/10" },
 };
 
@@ -449,7 +449,7 @@ export default function CalendarPage() {
                             onDragOver={e => e.preventDefault()}
                             onDrop={() => handleDrop(dateStr)}
                             className={`rounded-lg p-1.5 min-h-[80px] border transition-all ${
-                              isToday ? "ring-1 ring-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.1)]" : "border-border-subtle"
+                              isToday ? "ring-1 ring-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.04)] border-[rgba(212,255,0,0.1)]" : "border-border-subtle"
                             } ${!isCurrentMonth ? "opacity-30" : "bg-surface-light"}`}>
                             <p className={`text-[10px] font-medium text-center ${isToday ? "text-brand-accent" : ""}`}>{day.getDate()}</p>
                             {dayEvts.slice(0, 3).map(evt => (
@@ -482,7 +482,7 @@ export default function CalendarPage() {
                           onDragOver={e => e.preventDefault()}
                           onDrop={() => handleDrop(dateStr)}
                           className={`rounded-xl p-3 min-h-[220px] border border-border-subtle ${
-                            isToday ? "ring-1 ring-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)]" : "bg-surface-light"
+                            isToday ? "ring-1 ring-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.04)]" : "bg-surface-light"
                           }`}>
                           <div className="text-center mb-2">
                             <p className="text-[10px] text-text-muted uppercase">{day.toLocaleDateString("en-US", { weekday: "short" })}</p>
@@ -657,7 +657,7 @@ export default function CalendarPage() {
                         const count = todaysEvents.filter(e => e.teamMember === member).length;
                         return (
                           <div key={member} className="flex items-center gap-2 text-xs p-1.5 rounded-lg hover:bg-white/[0.04]">
-                            <div className="w-6 h-6 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[9px] font-bold text-brand-accent">{member[0]}</div>
+                            <div className="w-6 h-6 rounded-full bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[9px] font-bold text-brand-accent">{member[0]}</div>
                             <span className="flex-1">{member}</span>
                             <span className="text-text-muted">{count} event{count !== 1 ? "s" : ""}</span>
                           </div>
@@ -686,8 +686,8 @@ export default function CalendarPage() {
                             whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
                             className="flex items-center gap-3 p-3 rounded-lg border border-border-subtle"
                           >
-                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${daysLeft <= 1 ? "bg-red-400/10" : daysLeft <= 3 ? "bg-yellow-400/10" : "bg-blue-400/10"}`}>
-                              <AlertCircle size={16} className={daysLeft <= 1 ? "text-red-400" : daysLeft <= 3 ? "text-yellow-400" : "text-blue-400"} />
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${daysLeft <= 1 ? "bg-red-400/10" : daysLeft <= 3 ? "bg-yellow-400/10" : "bg-indigo-400/10"}`}>
+                              <AlertCircle size={16} className={daysLeft <= 1 ? "text-red-400" : daysLeft <= 3 ? "text-yellow-400" : "text-indigo-400"} />
                             </div>
                             <div className="flex-1">
                               <p className="text-xs font-semibold">{dl.title}</p>
@@ -810,7 +810,7 @@ export default function CalendarPage() {
                       ] as const).map(t => (
                         <button key={t.id} onClick={() => setNewEvent({ ...newEvent, type: t.id })}
                           className={`flex-1 flex items-center justify-center gap-1.5 p-2 rounded-lg border text-xs transition-all ${
-                            newEvent.type === t.id ? "border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] text-brand-accent" : "border-border-subtle text-text-muted"
+                            newEvent.type === t.id ? "border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.04)] text-brand-accent" : "border-border-subtle text-text-muted"
                           }`}>
                           {t.icon} {t.label}
                         </button>

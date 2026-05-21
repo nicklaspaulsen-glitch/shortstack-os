@@ -41,8 +41,8 @@ export default function AutoSaveIndicator({ status, lastSavedAt, error, classNam
 
   if (status === "saving") {
     colorClass = "text-[#2563EB]";
-    borderClass = "border-[rgba(59,130,246,0.3)]";
-    bgClass = "bg-[rgba(59,130,246,0.05)]";
+    borderClass = "border-[rgba(212,255,0,0.3)]";
+    bgClass = "bg-[rgba(212,255,0,0.05)]";
     content = (
       <>
         <Loader2 size={12} className="animate-spin" />

@@ -630,7 +630,7 @@ export function Timeline({
           type="button"
           onClick={() => setSnapOn((v) => !v)}
           className={`flex items-center gap-1 text-[9px] rounded px-2 py-1 border transition-colors ${
-            snapOn ? "border-[rgba(59,130,246,0.3)] bg-[rgba(59,130,246,0.08)] text-[#2563EB]" : "border-border-subtle text-text-muted hover:text-text-primary"
+            snapOn ? "border-[rgba(212,255,0,0.3)] bg-[rgba(212,255,0,0.08)] text-[#2563EB]" : "border-border-subtle text-text-muted hover:text-text-primary"
           }`}
           title="Snap to 1-second grid, clip edges & playhead"
         >
@@ -643,7 +643,7 @@ export function Timeline({
           onClick={() => setShowSections((v) => !v)}
           className={`flex items-center gap-1 text-[9px] rounded px-2 py-1 border transition-colors ${
             showSections
-              ? "border-blue-400/30 bg-blue-400/10 text-blue-300"
+              ? "border-indigo-400/30 bg-indigo-400/10 text-indigo-300"
               : "border-border-subtle text-text-muted hover:text-text-primary"
           }`}
           title="Toggle intro / body / outro section markers"

@@ -50,20 +50,20 @@ const METRIC_ICONS: Record<DashboardMetricKey, LucideIcon> = {
 const METRIC_ACCENT: Record<DashboardMetricKey, string> = {
   clients: "text-emerald-400",
   mrr: "text-[#2563EB]",
-  outreach: "text-blue-400",
+  outreach: "text-indigo-400",
   leads: "text-emerald-400",
   views: "text-purple-400",
-  subscribers: "text-blue-400",
+  subscribers: "text-indigo-400",
   engagement: "text-pink-400",
   content_pieces: "text-purple-400",
-  listings: "text-blue-400",
+  listings: "text-indigo-400",
   showings: "text-emerald-400",
   closings: "text-[#2563EB]",
   sessions_booked: "text-emerald-400",
   revenue: "text-[#2563EB]",
   churn: "text-red-400",
   signups: "text-emerald-400",
-  activations: "text-blue-400",
+  activations: "text-indigo-400",
   orders: "text-emerald-400",
   aov: "text-[#2563EB]",
   conversion: "text-purple-400",
@@ -115,10 +115,10 @@ export default function PersonalizedMetrics({ userType: providedType }: Props) {
   if (!meta) return null;
 
   return (
-    <div className=" border border-[rgba(59,130,246,0.2)] bg-gradient-to-br from-[rgba(59,130,246,0.05)] via-transparent to-transparent p-4">
+    <div className=" border border-[rgba(212,255,0,0.2)] bg-gradient-to-br from-[rgba(212,255,0,0.05)] via-transparent to-transparent p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
+          <div className="w-7 h-7 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
             <Sparkles size={13} className="text-[#2563EB]" />
           </div>
           <div>
@@ -147,7 +147,7 @@ export default function PersonalizedMetrics({ userType: providedType }: Props) {
           return (
             <div
               key={key}
-              className="rounded-xl border border-border-subtle bg-surface-light/40 p-3 hover:border-[rgba(59,130,246,0.25)] transition-all"
+              className="rounded-xl border border-border-subtle bg-surface-light/40 p-3 hover:border-[rgba(212,255,0,0.25)] transition-all"
             >
               <div className="flex items-center gap-2 mb-1">
                 <Icon size={13} className={accent} />
@@ -163,7 +163,7 @@ export default function PersonalizedMetrics({ userType: providedType }: Props) {
       </div>
 
       <div className="mt-3 text-[10px] text-text-muted/70 italic">
-        <Rocket size={10} className="inline mr-1 text-[rgba(59,130,246,0.7)]" />
+        <Rocket size={10} className="inline mr-1 text-[rgba(212,255,0,0.7)]" />
         Connect your platforms to populate these metrics live.
       </div>
     </div>

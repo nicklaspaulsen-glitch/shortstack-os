@@ -115,7 +115,7 @@ export default function ToolsPalette({
                 title={`${tool.label} (${tool.shortcut.toUpperCase()})`}
                 className={`w-10 h-10 flex items-center justify-center rounded transition-colors ${
                   isActive
-                    ? "bg-blue-600 text-white"
+                    ? "bg-indigo-600 text-white"
                     : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-100"
                 }`}
               >

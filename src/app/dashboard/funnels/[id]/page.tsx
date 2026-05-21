@@ -58,7 +58,7 @@ const STEP_TYPES: { value: StepType; label: string }[] = [
 ];
 
 const STEP_TYPE_COLORS: Record<string, { bg: string; border: string; text: string; dot: string }> = {
-  "opt-in":   { bg: "bg-blue-500/10",    border: "border-blue-500/30",    text: "text-blue-400",    dot: "bg-blue-500" },
+  "opt-in":   { bg: "bg-indigo-500/10",    border: "border-indigo-500/30",    text: "text-indigo-400",    dot: "bg-indigo-500" },
   "thank-you":{ bg: "bg-emerald-500/10", border: "border-emerald-500/30", text: "text-emerald-400", dot: "bg-emerald-500" },
   vsl:        { bg: "bg-purple-500/10",  border: "border-purple-500/30",  text: "text-purple-400",  dot: "bg-purple-500" },
   checkout:   { bg: "bg-amber-500/10",   border: "border-amber-500/30",   text: "text-amber-400",   dot: "bg-amber-500" },
@@ -587,7 +587,7 @@ export default function FunnelCanvasPage() {
                 <input
                   value={panelTitle}
                   onChange={(e) => setPanelTitle(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm outline-none focus:border-[rgba(59,130,246,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm outline-none focus:border-[rgba(212,255,0,0.25)]"
                 />
               </div>
 
@@ -596,7 +596,7 @@ export default function FunnelCanvasPage() {
                 <select
                   value={panelType}
                   onChange={(e) => setPanelType(e.target.value as StepType)}
-                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm outline-none focus:border-[rgba(59,130,246,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm outline-none focus:border-[rgba(212,255,0,0.25)]"
                 >
                   {STEP_TYPES.map((t) => (
                     <option key={t.value} value={t.value}>{t.label}</option>
@@ -611,7 +611,7 @@ export default function FunnelCanvasPage() {
                 <select
                   value={panelPageId}
                   onChange={(e) => setPanelPageId(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm outline-none focus:border-[rgba(59,130,246,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm outline-none focus:border-[rgba(212,255,0,0.25)]"
                 >
                   <option value="">— None —</option>
                   {pages.map((p) => (
@@ -629,7 +629,7 @@ export default function FunnelCanvasPage() {
                   value={panelButtonText}
                   onChange={(e) => setPanelButtonText(e.target.value)}
                   placeholder="e.g. Yes, I Want Access!"
-                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted/60 outline-none focus:border-[rgba(59,130,246,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted/60 outline-none focus:border-[rgba(212,255,0,0.25)]"
                 />
               </div>
 
@@ -639,7 +639,7 @@ export default function FunnelCanvasPage() {
                   value={panelRedirectUrl}
                   onChange={(e) => setPanelRedirectUrl(e.target.value)}
                   placeholder="https://…"
-                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted/60 outline-none focus:border-[rgba(59,130,246,0.25)]"
+                  className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm placeholder:text-text-muted/60 outline-none focus:border-[rgba(212,255,0,0.25)]"
                 />
               </div>
 

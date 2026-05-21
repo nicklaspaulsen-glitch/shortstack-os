@@ -163,7 +163,7 @@ export default function ClientChatWidget() {
       {/* Header */}
       <div className="bg-surface-light px-4 py-3 flex items-center justify-between border-b border-border-subtle">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-full flex items-center justify-center">
+          <div className="w-8 h-8 bg-[rgba(212,255,0,0.08)] rounded-full flex items-center justify-center">
             <Image src="/icons/shortstack-logo.svg" alt="Trinity" width={20} height={20} />
           </div>
           <div>
@@ -228,7 +228,7 @@ export default function ClientChatWidget() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask Trinity anything..."
-            className="flex-1 bg-surface-light border border-border-subtle rounded-full px-4 py-2 text-sm text-text-primary placeholder-muted focus:outline-none focus:border-[rgba(59,130,246,0.4)]"
+            className="flex-1 bg-surface-light border border-border-subtle rounded-full px-4 py-2 text-sm text-text-primary placeholder-muted focus:outline-none focus:border-[rgba(212,255,0,0.4)]"
             disabled={sending}
           />
           <button type="submit" disabled={sending || !input.trim()}

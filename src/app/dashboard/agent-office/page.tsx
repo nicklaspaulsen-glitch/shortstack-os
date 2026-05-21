@@ -46,7 +46,7 @@ const AgentScene3D = dynamic(
     loading: () => (
       <div className="flex aspect-video w-full items-center justify-center border border-border-subtle bg-white/[0.03]">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-600/30 border-t-blue-600" />
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-indigo-600/30 border-t-indigo-500" />
           <p className="text-xs font-medium text-text-primary/40 tracking-widest uppercase">Loading 3D scene…</p>
         </div>
       </div>

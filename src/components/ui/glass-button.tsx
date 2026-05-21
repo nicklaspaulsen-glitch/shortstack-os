@@ -72,17 +72,17 @@ const variantStyles: Record<GlassVariant, { wrapper: string; inner?: string }> =
   default: {
     wrapper:
       "bg-[#3B82F6] text-white " +
-      "border border-[rgba(59,130,246,0.60)] " +
-      "shadow-[0_2px_8px_rgba(59,130,246,0.35)] " +
-      "hover:bg-[#2563EB] hover:shadow-[0_4px_16px_rgba(59,130,246,0.50)] " +
+      "border border-[rgba(212,255,0,0.60)] " +
+      "shadow-[0_2px_8px_rgba(212,255,0,0.35)] " +
+      "hover:bg-[#2563EB] hover:shadow-[0_4px_16px_rgba(212,255,0,0.50)] " +
       "hover:-translate-y-px active:translate-y-0 active:shadow-none",
   },
   ghost: {
     wrapper:
       "bg-transparent text-[#A8A8B2] " +
       "border border-[rgba(99,146,255,0.18)] " +
-      "hover:bg-[rgba(59,130,246,0.08)] hover:text-[#C8C8D4] hover:border-[rgba(99,146,255,0.32)] " +
-      "active:bg-[rgba(59,130,246,0.12)]",
+      "hover:bg-[rgba(212,255,0,0.08)] hover:text-[#C8C8D4] hover:border-[rgba(99,146,255,0.32)] " +
+      "active:bg-[rgba(212,255,0,0.12)]",
   },
   glass: {
     wrapper:
@@ -105,8 +105,8 @@ const variantStyles: Record<GlassVariant, { wrapper: string; inner?: string }> =
     wrapper:
       "bg-[#3B82F6] text-white font-semibold " +
       "border border-[rgba(96,165,250,0.40)] " +
-      "shadow-[0_0_0_1px_rgba(59,130,246,0.30),0_4px_20px_rgba(59,130,246,0.55),0_0_60px_rgba(59,130,246,0.20)] " +
-      "hover:shadow-[0_0_0_1px_rgba(59,130,246,0.50),0_6px_28px_rgba(59,130,246,0.70),0_0_80px_rgba(59,130,246,0.30)] " +
+      "shadow-[0_0_0_1px_rgba(212,255,0,0.30),0_4px_20px_rgba(212,255,0,0.55),0_0_60px_rgba(212,255,0,0.20)] " +
+      "hover:shadow-[0_0_0_1px_rgba(212,255,0,0.50),0_6px_28px_rgba(212,255,0,0.70),0_0_80px_rgba(212,255,0,0.30)] " +
       "hover:bg-[#2563EB] hover:-translate-y-0.5 active:translate-y-0",
   },
   metal: {

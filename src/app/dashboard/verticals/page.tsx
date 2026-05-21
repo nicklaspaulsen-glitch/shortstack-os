@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Vertical SaaS Templates — index page.
@@ -51,19 +51,19 @@ const ICON_MAP: Record<string, LucideIcon> = {
 };
 
 const ACCENT_RING: Record<string, string> = {
-  blue: "from-[rgba(59,130,246,0.12)] via-[rgba(59,130,246,0.06)] to-transparent border-[rgba(59,130,246,0.25)] hover:border-[rgba(59,130,246,0.50)]",
-  purple: "from-[rgba(59,130,246,0.12)] via-[rgba(59,130,246,0.06)] to-transparent border-[rgba(59,130,246,0.25)] hover:border-[rgba(59,130,246,0.50)]",
+  blue: "from-[rgba(212,255,0,0.12)] via-[rgba(212,255,0,0.06)] to-transparent border-[rgba(212,255,0,0.25)] hover:border-[rgba(212,255,0,0.50)]",
+  purple: "from-[rgba(212,255,0,0.12)] via-[rgba(212,255,0,0.06)] to-transparent border-[rgba(212,255,0,0.25)] hover:border-[rgba(212,255,0,0.50)]",
   sunset: "from-orange-500/20 via-rose-400/10 to-transparent border-orange-400/30 hover:border-orange-400/60",
-  gold: "from-[rgba(59,130,246,0.12)] via-[rgba(59,130,246,0.06)] to-transparent border-[rgba(59,130,246,0.25)] hover:border-[rgba(59,130,246,0.50)]",
+  gold: "from-[rgba(212,255,0,0.12)] via-[rgba(212,255,0,0.06)] to-transparent border-[rgba(212,255,0,0.25)] hover:border-[rgba(212,255,0,0.50)]",
   green: "from-emerald-500/20 via-emerald-400/10 to-transparent border-emerald-400/30 hover:border-emerald-400/60",
   ocean: "from-cyan-500/20 via-cyan-400/10 to-transparent border-cyan-400/30 hover:border-cyan-400/60",
 };
 
 const ACCENT_ICON_BG: Record<string, string> = {
-  blue: "bg-[rgba(59,130,246,0.10)] text-brand-accent",
-  purple: "bg-[rgba(59,130,246,0.08)] text-brand-accent",
+  blue: "bg-[rgba(212,255,0,0.10)] text-brand-accent",
+  purple: "bg-[rgba(212,255,0,0.08)] text-brand-accent",
   sunset: "bg-orange-500/15 text-orange-400",
-  gold: "bg-[rgba(59,130,246,0.08)] text-brand-accent",
+  gold: "bg-[rgba(212,255,0,0.08)] text-brand-accent",
   green: "bg-emerald-500/15 text-emerald-400",
   ocean: "bg-cyan-500/15 text-cyan-400",
 };

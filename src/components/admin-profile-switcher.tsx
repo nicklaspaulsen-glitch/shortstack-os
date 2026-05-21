@@ -161,9 +161,9 @@ export default function AdminProfileSwitcher() {
       <div className="mx-2 mb-1 relative">
         <button
           onClick={() => { setOpen(!open); fetchClients(); }}
-          className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-left bg-surface-light/30 hover:bg-surface-light/60 border border-border-subtle/30 hover:border-[rgba(59,130,246,0.1)] transition-all"
+          className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-left bg-surface-light/30 hover:bg-surface-light/60 border border-border-subtle/30 hover:border-[rgba(212,255,0,0.1)] transition-all"
         >
-          <div className="w-6 h-6 bg-[rgba(59,130,246,0.08)] rounded-md flex items-center justify-center shrink-0">
+          <div className="w-6 h-6 bg-[rgba(212,255,0,0.08)] rounded-md flex items-center justify-center shrink-0">
             <Shield size={12} className="text-[#2563EB]" />
           </div>
           <div className="flex-1 min-w-0">
@@ -229,7 +229,7 @@ export default function AdminProfileSwitcher() {
                       {/* Action buttons */}
                       <div className="flex items-center gap-1 mt-1.5 pl-3.5">
                         <button onClick={() => switchTo(client)}
-                          className="text-[9px] bg-[rgba(59,130,246,0.08)] text-[#2563EB] hover:bg-[rgba(59,130,246,0.12)] px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
+                          className="text-[9px] bg-[rgba(212,255,0,0.08)] text-[#2563EB] hover:bg-[rgba(212,255,0,0.12)] px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
                           <Eye size={9} /> View as
                         </button>
                         <button onClick={() => manageClient(client)}
@@ -238,7 +238,7 @@ export default function AdminProfileSwitcher() {
                         </button>
                         {!client.profile_id ? (
                           <button onClick={() => { setOpen(false); setShowCreateProfile(client); }}
-                            className="text-[9px] bg-[rgba(59,130,246,0.08)] text-[#2563EB] hover:bg-[rgba(59,130,246,0.12)] px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
+                            className="text-[9px] bg-[rgba(212,255,0,0.08)] text-[#2563EB] hover:bg-[rgba(212,255,0,0.12)] px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
                             <UserPlus size={9} /> Create Login
                           </button>
                         ) : (

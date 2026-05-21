@@ -256,8 +256,8 @@ export default function TopNavbar() {
             }}
             className="shrink-0 flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-md border transition-all hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-accent/50"
             style={{
-              background: "rgba(59,130,246,0.07)",
-              borderColor: "rgba(59,130,246,0.20)",
+              background: "rgba(212,255,0,0.07)",
+              borderColor: "rgba(212,255,0,0.20)",
               color: "#2563EB",
             }}
             title="Open Trinity quick prompt"
@@ -266,7 +266,7 @@ export default function TopNavbar() {
             <span className="hidden sm:inline">Ask Trinity</span>
             <span
               className="text-[9px] font-mono opacity-60 border rounded px-1 hidden md:inline"
-              style={{ borderColor: "rgba(59,130,246,0.25)" }}
+              style={{ borderColor: "rgba(212,255,0,0.25)" }}
             >
               {shortcutHint}
             </span>
@@ -286,7 +286,7 @@ export default function TopNavbar() {
               style={{
                 color: "rgba(160,160,180,0.8)",
                 borderColor: "rgba(99,146,255,0.15)",
-                background: "rgba(59,130,246,0.06)",
+                background: "rgba(212,255,0,0.06)",
               }}
             >
               {activeSection.label}

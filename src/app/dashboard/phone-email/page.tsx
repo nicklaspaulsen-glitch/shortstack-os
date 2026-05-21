@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -103,7 +103,7 @@ const NUMBER_TYPES: { value: NumberType; label: string; cost: number }[] = [
 const WARMUP_BADGE: Record<WarmupStage, { label: string; class: string }> = {
   new:     { label: "New",     class: "bg-red-500/10 text-red-400 border-red-500/20" },
   warming: { label: "Warming", class: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" },
-  ramping: { label: "Ramping", class: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]" },
+  ramping: { label: "Ramping", class: "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.25)]" },
   full:    { label: "Full",    class: "bg-green-500/10 text-green-400 border-green-500/20" },
 };
 
@@ -468,8 +468,8 @@ export default function PhoneEmailPage() {
 
   /* ── Helpers ── */
   const capBadgeColor = (cap: string) => {
-    if (cap === "Voice") return "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]";
-    if (cap === "SMS") return "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]";
+    if (cap === "Voice") return "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.25)]";
+    if (cap === "SMS") return "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.25)]";
     return "bg-green-500/10 text-green-400 border-green-500/20";
   };
 
@@ -505,7 +505,7 @@ export default function PhoneEmailPage() {
                   </span>
                 </div>
                 <button onClick={() => { loadAll(); fetchRotationStats(); }}
-                  className="text-[10px] px-2 py-1 rounded-lg text-text-muted hover:text-text-primary border border-border-subtle hover:border-[rgba(59,130,246,0.2)] transition-all flex items-center gap-1">
+                  className="text-[10px] px-2 py-1 rounded-lg text-text-muted hover:text-text-primary border border-border-subtle hover:border-[rgba(212,255,0,0.2)] transition-all flex items-center gap-1">
                   <RefreshCw size={10} /> Refresh
                 </button>
               </div>
@@ -600,11 +600,11 @@ export default function PhoneEmailPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <button onClick={() => { setShowManualPhoneModal(true); setManualPhone(""); setManualLabel(""); setManualType("local"); }}
-                      className="text-[10px] px-3 py-1.5 rounded-lg bg-background text-text-primary border border-border-subtle hover:border-[rgba(59,130,246,0.2)] transition-all flex items-center gap-1">
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-background text-text-primary border border-border-subtle hover:border-[rgba(212,255,0,0.2)] transition-all flex items-center gap-1">
                       <Plus size={12} /> Add Existing Number
                     </button>
                     <button onClick={() => { setShowBuyModal(true); setSearchResults([]); setSearchError(""); setPurchaseError(""); setSelectedClientId(""); setPurchaseTarget("pool"); }}
-                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.12)] transition-all flex items-center gap-1">
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)] hover:bg-[rgba(212,255,0,0.12)] transition-all flex items-center gap-1">
                       <Plus size={12} /> Buy New Number
                     </button>
                   </div>
@@ -659,7 +659,7 @@ export default function PhoneEmailPage() {
                                   )}
                                 </td>
                                 <td className="p-3">
-                                  <span className="px-2 py-0.5 rounded-full text-[9px] font-medium bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] capitalize">
+                                  <span className="px-2 py-0.5 rounded-full text-[9px] font-medium bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)] capitalize">
                                     {p.type}
                                   </span>
                                 </td>
@@ -701,7 +701,7 @@ export default function PhoneEmailPage() {
                                 <td className="p-3 text-right">
                                   <div className="flex items-center justify-end gap-1.5">
                                     <a href="/dashboard/voice-receptionist"
-                                      className="px-2 py-1 rounded text-[9px] bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.14)] transition-all flex items-center gap-1">
+                                      className="px-2 py-1 rounded text-[9px] bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.25)] hover:bg-[rgba(212,255,0,0.14)] transition-all flex items-center gap-1">
                                       <Settings size={10} /> Configure
                                     </a>
                                     <button onClick={() => releaseNumber(p)}
@@ -745,7 +745,7 @@ export default function PhoneEmailPage() {
                             <button key={c.code} onClick={() => setBuyCountry(c.code)}
                               className={`p-2 rounded-lg text-[10px] font-medium border transition-all text-center ${
                                 buyCountry === c.code
-                                  ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                                  ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-brand-accent"
                                   : "border-border-subtle text-text-muted hover:text-text-primary"
                               }`}>
                               <span className="block text-sm mb-0.5">{c.flag}</span>
@@ -762,7 +762,7 @@ export default function PhoneEmailPage() {
                           <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                           <input value={buyAreaCode} onChange={e => setBuyAreaCode(e.target.value)}
                             placeholder="e.g. 415, 212, 310..."
-                            className="w-full pl-8 pr-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(59,130,246,0.40)] focus:outline-none transition-all" />
+                            className="w-full pl-8 pr-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(212,255,0,0.40)] focus:outline-none transition-all" />
                         </div>
                       </div>
 
@@ -774,7 +774,7 @@ export default function PhoneEmailPage() {
                             <button key={t.value} onClick={() => setBuyType(t.value)}
                               className={`p-3 rounded-lg border text-center transition-all ${
                                 buyType === t.value
-                                  ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                                  ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-brand-accent"
                                   : "border-border-subtle text-text-muted hover:text-text-primary"
                               }`}>
                               <span className="block text-[11px] font-medium">{t.label}</span>
@@ -791,7 +791,7 @@ export default function PhoneEmailPage() {
                           <button onClick={() => setPurchaseTarget("pool")}
                             className={`p-3 rounded-lg border text-left transition-all ${
                               purchaseTarget === "pool"
-                                ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]"
+                                ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)]"
                                 : "border-border-subtle hover:border-border-subtle"
                             }`}>
                             <span className={`block text-[11px] font-medium ${purchaseTarget === "pool" ? "text-brand-accent" : "text-text-primary"}`}>
@@ -802,7 +802,7 @@ export default function PhoneEmailPage() {
                           <button onClick={() => setPurchaseTarget("client")}
                             className={`p-3 rounded-lg border text-left transition-all ${
                               purchaseTarget === "client"
-                                ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]"
+                                ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)]"
                                 : "border-border-subtle hover:border-border-subtle"
                             }`}>
                             <span className={`block text-[11px] font-medium ${purchaseTarget === "client" ? "text-brand-accent" : "text-text-primary"}`}>
@@ -823,7 +823,7 @@ export default function PhoneEmailPage() {
                             </p>
                           ) : (
                             <select value={selectedClientId} onChange={e => setSelectedClientId(e.target.value)}
-                              className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(59,130,246,0.40)] focus:outline-none transition-all">
+                              className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(212,255,0,0.40)] focus:outline-none transition-all">
                               <option value="">Select a client...</option>
                               {clientsWithoutPhone.map(c => (
                                 <option key={c.id} value={c.id}>{c.business_name}</option>
@@ -858,7 +858,7 @@ export default function PhoneEmailPage() {
                         <div className="space-y-2">
                           <p className="text-[10px] text-text-muted">{searchResults.length} numbers found</p>
                           {searchResults.map((num, i) => (
-                            <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.2)] transition-all">
+                            <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.2)] transition-all">
                               <div>
                                 <p className="text-xs font-mono font-medium">{num.number}</p>
                                 <div className="flex items-center gap-2 mt-1">
@@ -904,14 +904,14 @@ export default function PhoneEmailPage() {
                         <label className="text-[10px] text-text-muted uppercase tracking-wider mb-1 block">Phone Number</label>
                         <input value={manualPhone} onChange={e => setManualPhone(e.target.value)}
                           placeholder="+1 (555) 123-4567"
-                          className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(59,130,246,0.40)] focus:outline-none transition-all" />
+                          className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(212,255,0,0.40)] focus:outline-none transition-all" />
                       </div>
 
                       <div>
                         <label className="text-[10px] text-text-muted uppercase tracking-wider mb-1 block">Label (optional)</label>
                         <input value={manualLabel} onChange={e => setManualLabel(e.target.value)}
                           placeholder="e.g. Outreach Line 1, Sales Pool..."
-                          className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(59,130,246,0.40)] focus:outline-none transition-all" />
+                          className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(212,255,0,0.40)] focus:outline-none transition-all" />
                       </div>
 
                       <div>
@@ -921,7 +921,7 @@ export default function PhoneEmailPage() {
                             <button key={t.value} onClick={() => setManualType(t.value)}
                               className={`p-2 rounded-lg border text-center transition-all text-[10px] font-medium ${
                                 manualType === t.value
-                                  ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                                  ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-brand-accent"
                                   : "border-border-subtle text-text-muted hover:text-text-primary"
                               }`}>
                               {t.label}
@@ -948,7 +948,7 @@ export default function PhoneEmailPage() {
                     <p className="text-[10px] text-text-muted">Configure email addresses for outreach and campaigns</p>
                   </div>
                   <button onClick={() => setShowEmailModal(true)}
-                    className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.12)] transition-all flex items-center gap-1">
+                    className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)] hover:bg-[rgba(212,255,0,0.12)] transition-all flex items-center gap-1">
                     <Plus size={12} /> Add Email Address
                   </button>
                 </div>
@@ -1018,7 +1018,7 @@ export default function PhoneEmailPage() {
                                 </td>
                                 <td className="p-3 text-right">
                                   <div className="flex items-center justify-end gap-1.5">
-                                    <button className="px-2 py-1 rounded text-[9px] bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)] hover:bg-[rgba(59,130,246,0.14)] transition-all flex items-center gap-1">
+                                    <button className="px-2 py-1 rounded text-[9px] bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.25)] hover:bg-[rgba(212,255,0,0.14)] transition-all flex items-center gap-1">
                                       <Send size={10} /> Send Test
                                     </button>
                                     <button onClick={() => removeEmail(e)}
@@ -1050,7 +1050,7 @@ export default function PhoneEmailPage() {
                       <Shield size={14} className="text-brand-accent" /> Domain Verification
                     </h2>
                     <button onClick={() => setShowDomainModal(true)}
-                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.12)] transition-all flex items-center gap-1">
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)] hover:bg-[rgba(212,255,0,0.12)] transition-all flex items-center gap-1">
                       <Plus size={12} /> Add Domain
                     </button>
                   </div>
@@ -1131,7 +1131,7 @@ export default function PhoneEmailPage() {
                         <label className="text-[10px] text-text-muted uppercase tracking-wider mb-1 block">Email Address</label>
                         <input value={newEmail} onChange={e => setNewEmail(e.target.value)}
                           placeholder="outreach@yourdomain.com"
-                          className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(59,130,246,0.40)] focus:outline-none transition-all" />
+                          className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(212,255,0,0.40)] focus:outline-none transition-all" />
                       </div>
 
                       {/* Display Name */}
@@ -1139,7 +1139,7 @@ export default function PhoneEmailPage() {
                         <label className="text-[10px] text-text-muted uppercase tracking-wider mb-1 block">Display Name</label>
                         <input value={newDisplayName} onChange={e => setNewDisplayName(e.target.value)}
                           placeholder="Your Company Name"
-                          className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(59,130,246,0.40)] focus:outline-none transition-all" />
+                          className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(212,255,0,0.40)] focus:outline-none transition-all" />
                       </div>
 
                       {/* SMTP Option */}
@@ -1149,7 +1149,7 @@ export default function PhoneEmailPage() {
                           <button onClick={() => setSmtpOption("shortstack")}
                             className={`p-3 rounded-lg border text-left transition-all ${
                               smtpOption === "shortstack"
-                                ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]"
+                                ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)]"
                                 : "border-border-subtle hover:border-border-subtle"
                             }`}>
                             <span className={`block text-[11px] font-medium ${smtpOption === "shortstack" ? "text-brand-accent" : "text-text-primary"}`}>
@@ -1160,7 +1160,7 @@ export default function PhoneEmailPage() {
                           <button onClick={() => setSmtpOption("custom")}
                             className={`p-3 rounded-lg border text-left transition-all ${
                               smtpOption === "custom"
-                                ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]"
+                                ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)]"
                                 : "border-border-subtle hover:border-border-subtle"
                             }`}>
                             <span className={`block text-[11px] font-medium ${smtpOption === "custom" ? "text-brand-accent" : "text-text-primary"}`}>
@@ -1179,26 +1179,26 @@ export default function PhoneEmailPage() {
                               <label className="text-[10px] text-text-muted uppercase tracking-wider mb-1 block">SMTP Host</label>
                               <input value={customSmtp.host} onChange={e => setCustomSmtp(p => ({ ...p, host: e.target.value }))}
                                 placeholder="smtp.gmail.com"
-                                className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(59,130,246,0.40)] focus:outline-none transition-all" />
+                                className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(212,255,0,0.40)] focus:outline-none transition-all" />
                             </div>
                             <div>
                               <label className="text-[10px] text-text-muted uppercase tracking-wider mb-1 block">Port</label>
                               <input value={customSmtp.port} onChange={e => setCustomSmtp(p => ({ ...p, port: e.target.value }))}
                                 placeholder="587"
-                                className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(59,130,246,0.40)] focus:outline-none transition-all" />
+                                className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(212,255,0,0.40)] focus:outline-none transition-all" />
                             </div>
                           </div>
                           <div>
                             <label className="text-[10px] text-text-muted uppercase tracking-wider mb-1 block">Username</label>
                             <input value={customSmtp.user} onChange={e => setCustomSmtp(p => ({ ...p, user: e.target.value }))}
                               placeholder="your-email@gmail.com"
-                              className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(59,130,246,0.40)] focus:outline-none transition-all" />
+                              className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(212,255,0,0.40)] focus:outline-none transition-all" />
                           </div>
                           <div>
                             <label className="text-[10px] text-text-muted uppercase tracking-wider mb-1 block">Password</label>
                             <input type="password" value={customSmtp.pass} onChange={e => setCustomSmtp(p => ({ ...p, pass: e.target.value }))}
                               placeholder="App password or SMTP password"
-                              className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(59,130,246,0.40)] focus:outline-none transition-all" />
+                              className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(212,255,0,0.40)] focus:outline-none transition-all" />
                           </div>
                         </div>
                       )}
@@ -1227,7 +1227,7 @@ export default function PhoneEmailPage() {
                         <label className="text-[10px] text-text-muted uppercase tracking-wider mb-1 block">Domain Name</label>
                         <input value={newDomain} onChange={e => setNewDomain(e.target.value)}
                           placeholder="yourdomain.com"
-                          className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(59,130,246,0.40)] focus:outline-none transition-all" />
+                          className="w-full px-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(212,255,0,0.40)] focus:outline-none transition-all" />
                       </div>
                       <p className="text-[9px] text-text-muted">
                         After adding, you will need to configure SPF, DKIM, and DMARC DNS records with your domain registrar.

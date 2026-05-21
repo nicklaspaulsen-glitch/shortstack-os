@@ -233,7 +233,7 @@ export default function ClientDetailPage() {
         </div>
         <div className="flex flex-wrap gap-2">
           {(client.services || []).map((s, i) => (
-            <span key={i} className="bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)] rounded-lg px-3 py-1.5 text-brand-accent text-sm">{s}</span>
+            <span key={i} className="bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] rounded-lg px-3 py-1.5 text-brand-accent text-sm">{s}</span>
           ))}
           {(client.services || []).length === 0 && <span className="text-text-muted text-sm">No services assigned</span>}
         </div>
@@ -624,7 +624,7 @@ function ClientPhoneSection({
                 <Phone size={9} /> Active
               </span>
               {status.eleven_agent_id ? (
-                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)] flex items-center gap-1">
+                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.25)] flex items-center gap-1">
                   <Bot size={9} /> AI agent ready
                 </span>
               ) : (
@@ -721,7 +721,7 @@ function formatFileBytes(bytes: number): string {
 function fileIconFor(type: string) {
   const t = (type || "").toLowerCase();
   if (t.startsWith("image") || ["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(t))
-    return <ImageIcon size={14} className="text-blue-400" />;
+    return <ImageIcon size={14} className="text-indigo-400" />;
   if (t.startsWith("video") || ["mp4", "mov", "avi", "webm", "mkv"].includes(t))
     return <Film size={14} className="text-brand-accent" />;
   if (t.startsWith("audio") || ["mp3", "wav", "ogg", "m4a", "flac"].includes(t))
@@ -782,7 +782,7 @@ function ClientFilesSection({ clientId, readOnly = false }: { clientId: string; 
                 href={f.url || "#"}
                 target={f.url ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                className={`flex items-center gap-2 p-2 rounded-lg border border-border-subtle bg-surface-light/50 hover:border-[rgba(59,130,246,0.25)] transition-colors min-w-0 ${f.url ? "" : "pointer-events-none opacity-60"}`}
+                className={`flex items-center gap-2 p-2 rounded-lg border border-border-subtle bg-surface-light/50 hover:border-[rgba(212,255,0,0.25)] transition-colors min-w-0 ${f.url ? "" : "pointer-events-none opacity-60"}`}
                 title={f.name}
               >
                 <div className="w-10 h-10 rounded-lg bg-surface flex items-center justify-center shrink-0 overflow-hidden">
@@ -916,7 +916,7 @@ const ONBOARDING_PHASES = [
     phase: "Setup & Discovery",
     icon: <Rocket size={14} />,
     color: "text-brand-accent",
-    bg: "bg-[rgba(59,130,246,0.08)]",
+    bg: "bg-[rgba(212,255,0,0.08)]",
     tasks: [
       { title: "Complete client onboarding form", description: "Fill in business details, goals, and preferences" },
       { title: "Connect social media accounts", description: "Link Instagram, TikTok, Facebook, LinkedIn via Zernio" },
@@ -931,7 +931,7 @@ const ONBOARDING_PHASES = [
     phase: "Strategy & Planning",
     icon: <Target size={14} />,
     color: "text-brand-accent",
-    bg: "bg-[rgba(59,130,246,0.08)]",
+    bg: "bg-[rgba(212,255,0,0.08)]",
     tasks: [
       { title: "Create content strategy document", description: "Define content pillars, posting frequency, and tone" },
       { title: "Build first month content calendar", description: "Plan 30 days of posts across all platforms" },
@@ -945,7 +945,7 @@ const ONBOARDING_PHASES = [
     phase: "Content Production",
     icon: <Palette size={14} />,
     color: "text-brand-accent",
-    bg: "bg-[rgba(59,130,246,0.08)]",
+    bg: "bg-[rgba(212,255,0,0.08)]",
     tasks: [
       { title: "Write first 5 video scripts", description: "Use AI Script Lab to create platform-specific scripts" },
       { title: "Design social media templates", description: "Create branded templates in Design Studio" },

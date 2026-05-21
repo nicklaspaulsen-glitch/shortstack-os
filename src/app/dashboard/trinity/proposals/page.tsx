@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Trinity proposals inbox + autonomous-mode settings.
@@ -84,7 +84,7 @@ const MODE_TILES: { mode: Mode; label: string; desc: string; icon: React.ReactNo
 
 const STATUS_COLOR: Record<string, string> = {
   proposed: "bg-amber-500/10 text-amber-400",
-  approved: "bg-blue-500/10 text-blue-400",
+  approved: "bg-indigo-500/10 text-indigo-400",
   executed: "bg-emerald-500/10 text-emerald-400",
   vetoed: "bg-white/8 text-text-muted",
   expired: "bg-white/8 text-text-muted",
@@ -338,7 +338,7 @@ export default function TrinityProposalsPage() {
                 onClick={() => setTab("pending")}
                 className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition ${
                   tab === "pending"
-                    ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                    ? "bg-[rgba(212,255,0,0.08)] text-brand-accent"
                     : "text-text-muted hover:text-text-primary"
                 }`}
               >
@@ -349,7 +349,7 @@ export default function TrinityProposalsPage() {
                 onClick={() => setTab("history")}
                 className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium transition ${
                   tab === "history"
-                    ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                    ? "bg-[rgba(212,255,0,0.08)] text-brand-accent"
                     : "text-text-muted hover:text-text-primary"
                 }`}
               >

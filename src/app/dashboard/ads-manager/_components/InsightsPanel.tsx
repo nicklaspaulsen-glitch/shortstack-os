@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * InsightsPanel — AI-generated optimization suggestions plus per-platform
@@ -44,7 +44,7 @@ const SUGGESTION_ICONS: Record<SuggestionRow["suggestion_type"], typeof Sparkles
 };
 
 const SUGGESTION_COLORS: Record<SuggestionRow["suggestion_type"], string> = {
-  reallocate: "text-blue-400 border-blue-500/40 bg-blue-500/10",
+  reallocate: "text-indigo-400 border-indigo-500/40 bg-indigo-500/10",
   pause: "text-amber-400 border-amber-500/40 bg-amber-500/10",
   scale: "text-emerald-400 border-emerald-500/40 bg-emerald-500/10",
   optimize_creative: "text-purple-400 border-purple-500/40 bg-purple-500/10",
@@ -151,7 +151,7 @@ export default function InsightsPanel() {
           <button
             onClick={() => void generate()}
             disabled={generating}
-            className="inline-flex items-center gap-1.5 rounded border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] px-3 py-1.5 text-xs text-brand-accent hover:bg-[rgba(59,130,246,0.14)] disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] px-3 py-1.5 text-xs text-brand-accent hover:bg-[rgba(212,255,0,0.14)] disabled:opacity-50"
           >
             {generating ? (
               <Loader2 className="animate-spin" size={12} />

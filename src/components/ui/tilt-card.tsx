@@ -176,11 +176,11 @@ export function TiltCardGrid({ items, columns = 3, className = "" }: TiltCardGri
                 style={{
                   background: item.color
                     ? `${item.color}18`
-                    : "rgba(59,130,246,0.15)",
+                    : "rgba(212,255,0,0.15)",
                   color: item.color ?? "#3B82F6",
                   boxShadow: item.color
                     ? `0 0 14px ${item.color}30`
-                    : "0 0 14px rgba(59,130,246,0.22)",
+                    : "0 0 14px rgba(212,255,0,0.22)",
                 }}
               >
                 {item.icon}

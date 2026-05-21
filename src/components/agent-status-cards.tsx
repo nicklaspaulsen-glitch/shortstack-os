@@ -21,13 +21,13 @@ interface AgentStatus {
 }
 
 const AGENT_CONFIGS = [
-  { id: "lead_gen", name: "Scout", role: "Lead Finder", icon: <Search size={14} />, gradient: "from-emerald-500 to-green-600", glow: "rgba(59,130,246,0.4)" },
-  { id: "outreach", name: "Echo", role: "Outreach", icon: <Send size={14} />, gradient: "from-blue-500 to-cyan-500", glow: "rgba(59,130,246,0.4)" },
+  { id: "lead_gen", name: "Scout", role: "Lead Finder", icon: <Search size={14} />, gradient: "from-emerald-500 to-green-600", glow: "rgba(212,255,0,0.4)" },
+  { id: "outreach", name: "Echo", role: "Outreach", icon: <Send size={14} />, gradient: "from-blue-500 to-cyan-500", glow: "rgba(212,255,0,0.4)" },
   { id: "content", name: "Pixel", role: "Content", icon: <Sparkles size={14} />, gradient: "from-purple-500 to-pink-500", glow: "rgba(168,85,247,0.4)" },
   { id: "ads", name: "Blaze", role: "Ads", icon: <Film size={14} />, gradient: "from-orange-500 to-amber-500", glow: "rgba(249,115,22,0.4)" },
   { id: "reviews", name: "Star", role: "Reviews", icon: <Star size={14} />, gradient: "from-yellow-400 to-amber-500", glow: "rgba(250,204,21,0.4)" },
   { id: "analytics", name: "Lens", role: "Analytics", icon: <BarChart3 size={14} />, gradient: "from-cyan-500 to-blue-600", glow: "rgba(255,82,82,0.4)" },
-  { id: "custom", name: "Trinity", role: "Coordinator", icon: <Shield size={14} />, gradient: "from-blue-500 to-indigo-600", glow: "rgba(59,130,246,0.5)" },
+  { id: "custom", name: "Trinity", role: "Coordinator", icon: <Shield size={14} />, gradient: "from-blue-500 to-indigo-600", glow: "rgba(212,255,0,0.5)" },
   { id: "competitor", name: "Spy", role: "Competitor", icon: <Eye size={14} />, gradient: "from-red-500 to-rose-600", glow: "rgba(239,68,68,0.4)" },
   { id: "invoice", name: "Ledger", role: "Invoice", icon: <CreditCard size={14} />, gradient: "from-green-500 to-emerald-600", glow: "rgba(34,197,94,0.4)" },
   { id: "onboarding", name: "Welcome", role: "Onboarding", icon: <UserPlus size={14} />, gradient: "from-sky-500 to-indigo-500", glow: "rgba(14,165,233,0.4)" },
@@ -35,7 +35,7 @@ const AGENT_CONFIGS = [
   { id: "reputation", name: "Shield", role: "Reputation", icon: <Megaphone size={14} />, gradient: "from-fuchsia-500 to-pink-600", glow: "rgba(217,70,239,0.4)" },
   { id: "retention", name: "Keep", role: "Retention", icon: <Heart size={14} />, gradient: "from-rose-500 to-red-500", glow: "rgba(244,63,94,0.4)" },
   { id: "proposal", name: "Pitch", role: "Proposal", icon: <FileText size={14} />, gradient: "from-violet-500 to-purple-600", glow: "rgba(139,92,246,0.4)" },
-  { id: "scheduler", name: "Clock", role: "Scheduler", icon: <Clock size={14} />, gradient: "from-teal-500 to-cyan-600", glow: "rgba(59,130,246,0.4)" },
+  { id: "scheduler", name: "Clock", role: "Scheduler", icon: <Clock size={14} />, gradient: "from-teal-500 to-cyan-600", glow: "rgba(212,255,0,0.4)" },
 ];
 
 export default function AgentStatusCards() {
@@ -98,7 +98,7 @@ export default function AgentStatusCards() {
                 : agent.status === "error"
                 ? "border-red-500/20 bg-red-500/5"
                 : "border-border-subtle/10 bg-surface/50 opacity-50"
-            } hover:border-[rgba(59,130,246,0.2)] hover:opacity-100`}>
+            } hover:border-[rgba(212,255,0,0.2)] hover:opacity-100`}>
               {/* 3D Agent Head */}
               <div className="relative mb-1">
                 <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${agent.gradient} flex items-center justify-center transition-all duration-300`}

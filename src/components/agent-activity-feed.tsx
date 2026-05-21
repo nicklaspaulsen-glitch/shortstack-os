@@ -24,7 +24,7 @@ const AGENT_MAP: Record<string, { name: string; icon: React.ReactNode; color: st
   custom: { name: "Trinity", icon: <Bot size={10} />, color: "text-[#2563EB]" },
   ai_receptionist: { name: "Ring", icon: <Phone size={10} />, color: "text-green-400" },
   content: { name: "Pixel", icon: <Film size={10} />, color: "text-pink-400" },
-  outreach: { name: "Echo", icon: <Send size={10} />, color: "text-blue-400" },
+  outreach: { name: "Echo", icon: <Send size={10} />, color: "text-indigo-400" },
   social: { name: "Wave", icon: <Camera size={10} />, color: "text-emerald-400" },
   ads: { name: "Blaze", icon: <Megaphone size={10} />, color: "text-amber-400" },
   insights: { name: "Nexus", icon: <Sparkles size={10} />, color: "text-purple-400" },

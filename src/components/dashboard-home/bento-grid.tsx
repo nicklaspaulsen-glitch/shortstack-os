@@ -34,14 +34,14 @@ export default function BentoGrid({ data }: Props) {
         <div
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[50%] rounded-full"
           style={{
-            background: "radial-gradient(closest-side, rgba(59,130,246,0.07) 0%, transparent 100%)",
+            background: "radial-gradient(closest-side, rgba(212,255,0,0.07) 0%, transparent 100%)",
             filter: "blur(60px)",
           }}
         />
         <div
           className="absolute top-0 right-1/4 w-[40%] h-[30%] rounded-full"
           style={{
-            background: "radial-gradient(closest-side, rgba(59,130,246,0.05) 0%, transparent 100%)",
+            background: "radial-gradient(closest-side, rgba(212,255,0,0.05) 0%, transparent 100%)",
             filter: "blur(80px)",
           }}
         />

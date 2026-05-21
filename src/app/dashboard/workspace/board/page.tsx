@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Kanban, Plus, Filter } from "lucide-react";
@@ -464,7 +464,7 @@ export default function WorkspaceBoardPage() {
                     onClick={() => setView(opt.v)}
                     className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
                       view === opt.v
-                        ? "bg-[rgba(59,130,246,0.12)] text-brand-accent"
+                        ? "bg-[rgba(212,255,0,0.12)] text-brand-accent"
                         : "text-text-muted hover:text-fg"
                     }`}
                   >
@@ -585,7 +585,7 @@ export default function WorkspaceBoardPage() {
                       <div
                         className={`flex-1 min-h-[200px] rounded-xl border border-dashed transition-colors p-2 space-y-2 ${
                           isHover
-                            ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]"
+                            ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)]"
                             : "glass border-border-subtle"
                         }`}
                       >

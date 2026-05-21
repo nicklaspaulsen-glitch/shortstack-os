@@ -572,7 +572,7 @@ export function PremiereEditor({
                         onClick={() => setSpeed(s)}
                         className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-medium transition-colors ${
                           active
-                            ? "bg-blue-500/25 text-blue-300 border border-blue-500/50"
+                            ? "bg-indigo-500/25 text-indigo-300 border border-indigo-500/50"
                             : "text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300"
                         }`}
                         title={`Set speed to ${s}×`}
@@ -685,7 +685,7 @@ export function PremiereEditor({
               type="button"
               onClick={() => setPanel("assets")}
               className={`flex-1 flex items-center justify-center gap-1 text-[11px] px-2 py-1.5 ${
-                panel === "assets" ? "bg-neutral-800 text-blue-400" : "text-neutral-400 hover:text-white"
+                panel === "assets" ? "bg-neutral-800 text-indigo-400" : "text-neutral-400 hover:text-white"
               }`}
             >
               <LibraryBig size={11} /> Assets

@@ -96,7 +96,7 @@ function HistoryRow({ entry, isPresent, isFuture, onJump }: HistoryRowProps) {
       onClick={onJump}
       className={`w-full text-left px-3 py-1.5 flex items-center gap-2 border-l-2 ${
         isPresent
-          ? "bg-blue-600/20 border-blue-500 text-neutral-100"
+          ? "bg-indigo-600/20 border-indigo-500 text-neutral-100"
           : isFuture
             ? "border-transparent text-neutral-500 hover:bg-neutral-800/60"
             : "border-transparent text-neutral-300 hover:bg-neutral-800/60"

@@ -86,7 +86,7 @@ export default function DesktopIndicator({ collapsed }: { collapsed?: boolean })
                 body="Leads, email opens, and agent replies surface as real OS notifications — even when ShortStack isn't focused."
               />
               <FeatureRow
-                icon={<Keyboard size={14} className="text-blue-400" />}
+                icon={<Keyboard size={14} className="text-indigo-400" />}
                 title="Global hotkeys"
                 body="Ctrl+Shift+N to drop a quick note, Ctrl+Shift+S to capture a screenshot to the active client."
               />

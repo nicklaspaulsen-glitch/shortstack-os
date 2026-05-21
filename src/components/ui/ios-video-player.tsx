@@ -283,7 +283,7 @@ export function IosVideoPlayer({
               />
               {/* Played */}
               <div
-                className="absolute inset-y-0 left-0 bg-blue-500 rounded-full"
+                className="absolute inset-y-0 left-0 bg-indigo-500 rounded-full"
                 style={{ width: `${progress}%` }}
               />
               <input

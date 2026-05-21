@@ -195,7 +195,7 @@ export default function QuickAdd() {
         className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
         style={{
           background: "#2563EB",
-          boxShadow: "0 4px 20px rgba(59,130,246,0.35), 0 1px 4px rgba(0,0,0,0.12)",
+          boxShadow: "0 4px 20px rgba(212,255,0,0.35), 0 1px 4px rgba(0,0,0,0.12)",
         }}
       >
         <Plus
@@ -269,7 +269,7 @@ export default function QuickAdd() {
                     placeholder="Write a note..."
                     rows={4}
                     autoFocus
-                    className="w-full text-sm text-[#111827] placeholder-[#9CA3AF] bg-[#F9FAFB] border border-[rgba(0,0,0,0.1)] rounded-xl px-3 py-2.5 outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)] resize-none transition-colors"
+                    className="w-full text-sm text-[#111827] placeholder-[#9CA3AF] bg-[#F9FAFB] border border-[rgba(0,0,0,0.1)] rounded-xl px-3 py-2.5 outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.12)] resize-none transition-colors"
                   />
                   <SubmitBtn saving={saving} label="Save Note"  icon={<StickyNote size={13} />} onClick={saveNote}   />
                 </>
@@ -315,7 +315,7 @@ function FormInput({
       onChange={e => onChange(e.target.value)}
       placeholder={placeholder}
       autoFocus={autoFocus}
-      className="w-full text-sm text-[#111827] placeholder-[#9CA3AF] bg-[#F9FAFB] border border-[rgba(0,0,0,0.1)] rounded-xl px-3 py-2.5 outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(59,130,246,0.12)] transition-colors"
+      className="w-full text-sm text-[#111827] placeholder-[#9CA3AF] bg-[#F9FAFB] border border-[rgba(0,0,0,0.1)] rounded-xl px-3 py-2.5 outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[rgba(212,255,0,0.12)] transition-colors"
     />
   );
 }

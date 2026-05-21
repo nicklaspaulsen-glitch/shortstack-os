@@ -271,7 +271,7 @@ export default function PageHero({
     // Auto-detect section from pathname for tint
     const editorialPathname = typeof window !== "undefined" ? window.location.pathname : "";
     // Section tints: very subtle color shift in the glass based on route family
-    let sectionTint = "rgba(59,130,246,0.018)"; // default: blue
+    let sectionTint = "rgba(212,255,0,0.018)"; // default: lime accent
     if (/\/(voice|phone|eleven|voicemail|dialer|headphone)/.test(editorialPathname)) {
       sectionTint = "rgba(139,92,246,0.020)"; // voice: soft violet
     } else if (/\/(leads|crm|deals|outreach|sales)/.test(editorialPathname)) {
@@ -294,14 +294,14 @@ export default function PageHero({
           background: `linear-gradient(135deg, rgba(2,7,17,0.95) 0%, rgba(8,12,28,0.92) 50%, rgba(13,17,40,0.90) 100%)`,
           backdropFilter: "blur(36px) saturate(2.2)",
           WebkitBackdropFilter: "blur(36px) saturate(2.2)",
-          borderBottom: "1px solid rgba(59,130,246,0.16)",
+          borderBottom: "1px solid rgba(212,255,0,0.16)",
           boxShadow: [
             "inset 0 1px 0 rgba(255,255,255,0.08)",
-            "inset 0 0 0 1px rgba(59,130,246,0.08)",
+            "inset 0 0 0 1px rgba(212,255,0,0.08)",
             `inset 0 0 60px 0 ${sectionTint}`,
             "0 1px 3px rgba(0,0,0,0.35)",
             "0 4px 20px -4px rgba(0,0,0,0.45)",
-            "0 0 80px -16px rgba(59,130,246,0.18)",
+            "0 0 80px -16px rgba(212,255,0,0.18)",
           ].join(", "),
         }}
       >
@@ -309,7 +309,7 @@ export default function PageHero({
         <div
           className="absolute top-0 left-0 right-0 h-px pointer-events-none"
           style={{
-            background: "linear-gradient(90deg, transparent 0%, rgba(59,130,246,0.72) 15%, rgba(96,165,250,0.60) 45%, rgba(99,102,241,0.42) 75%, transparent 100%)",
+            background: "linear-gradient(90deg, transparent 0%, rgba(212,255,0,0.72) 15%, rgba(212,255,0,0.40) 45%, rgba(99,102,241,0.30) 75%, transparent 100%)",
           }}
           aria-hidden
         />
@@ -320,7 +320,7 @@ export default function PageHero({
           style={{
             width: "45%", height: "200%",
             top: "-50%", left: "-5%",
-            background: "radial-gradient(ellipse, rgba(59,130,246,0.07) 0%, transparent 70%)",
+            background: "radial-gradient(ellipse, rgba(212,255,0,0.07) 0%, transparent 70%)",
             filter: "blur(20px)",
             animation: "blobDrift1 30s ease-in-out infinite",
           }}
@@ -356,10 +356,10 @@ export default function PageHero({
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.20, delay: 0.04, ease: [0.32, 0.72, 0, 1] }}
               style={{
-                background: "linear-gradient(135deg, rgba(59,130,246,0.09) 0%, rgba(59,130,246,0.05) 100%)",
-                border: "1px solid rgba(59,130,246,0.18)",
+                background: "linear-gradient(135deg, rgba(212,255,0,0.09) 0%, rgba(212,255,0,0.05) 100%)",
+                border: "1px solid rgba(212,255,0,0.18)",
                 color: "#2563EB",
-                boxShadow: "0 1px 4px rgba(59,130,246,0.10), inset 0 1px 0 rgba(255,255,255,0.9)",
+                boxShadow: "0 1px 4px rgba(212,255,0,0.10), inset 0 1px 0 rgba(255,255,255,0.9)",
               }}
             >
               {icon}
@@ -432,15 +432,15 @@ export default function PageHero({
         background: "rgba(13,17,32,0.88)",
         backdropFilter: "blur(32px) saturate(1.6)",
         WebkitBackdropFilter: "blur(32px) saturate(1.6)",
-        border: "1px solid rgba(59,130,246,0.12)",
-        borderTopColor: "rgba(59,130,246,0.22)",
+        border: "1px solid rgba(212,255,0,0.12)",
+        borderTopColor: "rgba(212,255,0,0.22)",
         borderRadius: "24px",
         boxShadow: [
           "inset 0 1.5px 0 rgba(255,255,255,0.06)",
-          "inset 0 0 0 1px rgba(59,130,246,0.06)",
+          "inset 0 0 0 1px rgba(212,255,0,0.06)",
           "0 2px 8px rgba(0,0,0,0.35)",
           "0 8px 32px -8px rgba(0,0,0,0.45)",
-          "0 0 64px -16px rgba(59,130,246,0.15)",
+          "0 0 64px -16px rgba(212,255,0,0.15)",
         ].join(", "),
       }}
     >

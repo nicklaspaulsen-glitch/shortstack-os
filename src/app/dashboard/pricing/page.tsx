@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -134,7 +134,7 @@ export default function PricingPage() {
             </button>
             <span className={`text-xs font-medium transition-colors ${annual ? "text-text-primary" : "text-text-muted"}`}>
               Annual
-              {annual && <span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.15)] text-brand-accent text-[10px] font-bold">−20%</span>}
+              {annual && <span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.15)] text-brand-accent text-[10px] font-bold">−20%</span>}
             </span>
           </div>
         }
@@ -162,7 +162,7 @@ export default function PricingPage() {
                 }}
                 className={`relative glass-panel p-5 flex flex-col transition-all duration-220 spotlight-card ${
                   plan.popular
-                    ? "border-[rgba(59,130,246,0.30)] bg-[rgba(59,130,246,0.04)] shadow-[0_0_0_1px_rgba(59,130,246,0.12),inset_0_1px_0_rgba(255,255,255,0.08),0_8px_32px_rgba(0,0,0,0.40),0_0_48px_-16px_rgba(59,130,246,0.28)]"
+                    ? "border-[rgba(212,255,0,0.30)] bg-[rgba(212,255,0,0.04)] shadow-[0_0_0_1px_rgba(212,255,0,0.12),inset_0_1px_0_rgba(255,255,255,0.08),0_8px_32px_rgba(0,0,0,0.40),0_0_48px_-16px_rgba(212,255,0,0.28)]"
                     : isCurrentPlan
                     ? "border-emerald-500/30 bg-emerald-500/[0.03] ring-1 ring-emerald-500/10"
                     : ""
@@ -172,8 +172,8 @@ export default function PricingPage() {
                 {plan.highlight && (
                   <div className={`absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-white text-[9px] font-bold uppercase tracking-wider whitespace-nowrap ${
                     plan.popular
-                      ? "bg-brand-accent shadow-[0_0_12px_rgba(59,130,246,0.40)]"
-                      : "bg-[rgba(59,130,246,0.18)] border border-[rgba(59,130,246,0.35)] text-brand-accent"
+                      ? "bg-brand-accent shadow-[0_0_12px_rgba(212,255,0,0.40)]"
+                      : "bg-[rgba(212,255,0,0.18)] border border-[rgba(212,255,0,0.35)] text-brand-accent"
                   }`}>
                     {plan.highlight}
                   </div>
@@ -224,8 +224,8 @@ export default function PricingPage() {
                     isCurrentPlan
                       ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 cursor-default"
                       : plan.popular
-                      ? "bg-brand-accent text-[#020711] hover:bg-[#2563EB] shadow-[0_4px_16px_rgba(59,130,246,0.30)] hover:shadow-[0_4px_24px_rgba(59,130,246,0.45)]"
-                      : "bg-[rgba(99,146,255,0.08)] text-text-secondary hover:bg-[rgba(59,130,246,0.12)] hover:text-brand-accent border border-[rgba(99,146,255,0.14)] hover:border-[rgba(59,130,246,0.30)]"
+                      ? "bg-brand-accent text-[#020711] hover:bg-[#2563EB] shadow-[0_4px_16px_rgba(212,255,0,0.30)] hover:shadow-[0_4px_24px_rgba(212,255,0,0.45)]"
+                      : "bg-[rgba(99,146,255,0.08)] text-text-secondary hover:bg-[rgba(212,255,0,0.12)] hover:text-brand-accent border border-[rgba(99,146,255,0.14)] hover:border-[rgba(212,255,0,0.30)]"
                   } ${checkoutLoading === plan.key ? "opacity-60 cursor-wait" : ""} disabled:cursor-default`}
                 >
                   {isCurrentPlan ? (
@@ -327,7 +327,7 @@ export default function PricingPage() {
               transition={{ delay: i * 0.06 + 0.3, duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
               className="glass-panel p-4"
             >
-              <div className="w-8 h-8 rounded-lg bg-[rgba(59,130,246,0.09)] flex items-center justify-center text-brand-accent mb-2.5 border border-[rgba(59,130,246,0.12)]">
+              <div className="w-8 h-8 rounded-lg bg-[rgba(212,255,0,0.09)] flex items-center justify-center text-brand-accent mb-2.5 border border-[rgba(212,255,0,0.12)]">
                 {item.icon}
               </div>
               <p className="text-xs font-semibold text-text-primary">{item.label}</p>
@@ -366,7 +366,7 @@ export default function PricingPage() {
         {/* Add-ons */}
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-6 h-6 rounded-lg bg-[rgba(59,130,246,0.09)] flex items-center justify-center border border-[rgba(59,130,246,0.12)]">
+            <div className="w-6 h-6 rounded-lg bg-[rgba(212,255,0,0.09)] flex items-center justify-center border border-[rgba(212,255,0,0.12)]">
               <Plus size={13} className="text-brand-accent" />
             </div>
             <h2 className="text-sm font-bold text-text-primary font-display">Add-ons</h2>
@@ -395,7 +395,7 @@ export default function PricingPage() {
                     <span className={`shrink-0 text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide ${
                       addon.type === "one-time"
                         ? "bg-[rgba(52,211,153,0.12)] text-emerald-400 border border-emerald-400/20"
-                        : "bg-[rgba(59,130,246,0.10)] text-brand-accent border border-[rgba(59,130,246,0.18)]"
+                        : "bg-[rgba(212,255,0,0.10)] text-brand-accent border border-[rgba(212,255,0,0.18)]"
                     }`}>
                       {addon.type === "one-time" ? "One-time" : "Monthly"}
                     </span>
@@ -413,7 +413,7 @@ export default function PricingPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.4 }}
-          className="glass-panel glass-border-gradient border-[rgba(59,130,246,0.22)] bg-[rgba(59,130,246,0.03)] p-8 text-center"
+          className="glass-panel glass-border-gradient border-[rgba(212,255,0,0.22)] bg-[rgba(212,255,0,0.03)] p-8 text-center"
         >
           <h2 className="text-base font-bold text-text-primary font-display mb-1.5">Not sure which plan is right?</h2>
           <p className="text-xs text-text-muted mb-5 leading-relaxed max-w-md mx-auto">
@@ -421,7 +421,7 @@ export default function PricingPage() {
           </p>
           <button
             onClick={() => handleSubscribe("Starter")}
-            className="px-6 py-2.5 rounded-xl bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-[#2563EB] transition-all duration-220 shadow-[0_4px_16px_rgba(59,130,246,0.30)] hover:shadow-[0_4px_24px_rgba(59,130,246,0.45)] inline-flex items-center gap-2"
+            className="px-6 py-2.5 rounded-xl bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-[#2563EB] transition-all duration-220 shadow-[0_4px_16px_rgba(212,255,0,0.30)] hover:shadow-[0_4px_24px_rgba(212,255,0,0.45)] inline-flex items-center gap-2"
           >
             Start Free Trial
             <ArrowRight size={13} />

@@ -786,7 +786,7 @@ export default function LandingPagesPage() {
             <button onClick={() => toggleSection(sec.key)} className={`p-1 hover:bg-surface-light rounded ${!sec.visible ? "opacity-40" : ""}`} title={sec.visible ? "Hide" : "Show"}>
               {sec.visible ? <Eye className="w-3.5 h-3.5 text-text-muted" /> : <EyeOff className="w-3.5 h-3.5 text-text-muted" />}
             </button>
-            <button onClick={() => toggleEdit(sec.key)} className={`p-1 hover:bg-surface-light rounded ${isEditing ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : ""}`} title="Edit">
+            <button onClick={() => toggleEdit(sec.key)} className={`p-1 hover:bg-surface-light rounded ${isEditing ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" : ""}`} title="Edit">
               <Pencil className="w-3.5 h-3.5" />
             </button>
             <button onClick={() => handleRegenSection(sec.key)} className="p-1 hover:bg-surface-light rounded" title="Regenerate with AI">
@@ -870,7 +870,7 @@ export default function LandingPagesPage() {
             {sec.key === "pricing" && (
               <div className="space-y-3">
                 {content.pricing.map((tier, pi) => (
-                  <div key={pi} className={`p-3 rounded-lg border space-y-2 ${tier.highlighted ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "bg-surface-light border-border-subtle"}`}>
+                  <div key={pi} className={`p-3 rounded-lg border space-y-2 ${tier.highlighted ? "border-brand-accent bg-[rgba(212,255,0,0.05)]" : "bg-surface-light border-border-subtle"}`}>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-text-muted font-medium">{tier.name}</span>
                       <label className="flex items-center gap-1.5 text-xs text-text-muted cursor-pointer">
@@ -1029,7 +1029,7 @@ export default function LandingPagesPage() {
                 onClick={() => setStep(s.n as 1 | 2 | 3)}
                 className={`flex items-center gap-2 text-sm font-medium transition-colors ${step === s.n ? "text-brand-accent" : step > s.n ? "text-green-400" : "text-text-muted"}`}
               >
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border ${step === s.n ? "border-brand-accent bg-[rgba(59,130,246,0.08)] text-brand-accent" : step > s.n ? "border-green-500 bg-green-500/10 text-green-400" : "border-border-subtle text-text-muted"}`}>
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border ${step === s.n ? "border-brand-accent bg-[rgba(212,255,0,0.08)] text-brand-accent" : step > s.n ? "border-green-500 bg-green-500/10 text-green-400" : "border-border-subtle text-text-muted"}`}>
                   {step > s.n ? <Check className="w-3.5 h-3.5" /> : s.n}
                 </div>
                 {s.label}
@@ -1086,7 +1086,7 @@ export default function LandingPagesPage() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {bizInfo.benefits.map((b, i) => (
-                    <span key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-[rgba(59,130,246,0.08)] text-brand-accent rounded-full text-xs font-medium">
+                    <span key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-[rgba(212,255,0,0.08)] text-brand-accent rounded-full text-xs font-medium">
                       {b}
                       <button onClick={() => removeBenefit(i)} aria-label={`Remove benefit ${b}`}><X className="w-3 h-3" /></button>
                     </span>
@@ -1114,7 +1114,7 @@ export default function LandingPagesPage() {
                     <button
                       key={cs.id}
                       onClick={() => setBizInfo(p => ({ ...p, colorScheme: cs.id }))}
-                      className={`p-3 rounded-lg border transition-all ${bizInfo.colorScheme === cs.id ? "border-brand-accent ring-1 ring-[rgba(59,130,246,0.25)]" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"}`}
+                      className={`p-3 rounded-lg border transition-all ${bizInfo.colorScheme === cs.id ? "border-brand-accent ring-1 ring-[rgba(212,255,0,0.25)]" : "border-border-subtle hover:border-[rgba(212,255,0,0.25)]"}`}
                     >
                       <div className="h-10 rounded-md mb-2 flex items-center justify-center" style={{ background: cs.bg.startsWith("linear") ? cs.bg : cs.bg, border: cs.id === "clean-light" || cs.id === "minimal" ? "1px solid #333" : "none" }}>
                         <div className="w-6 h-2 rounded-full" style={{ backgroundColor: cs.primary }} />
@@ -1128,7 +1128,7 @@ export default function LandingPagesPage() {
               {/* Logo Upload Placeholder */}
               <div>
                 <label className="text-xs text-text-muted mb-1.5 block font-medium">Logo</label>
-                <div className="border border-dashed border-border-subtle rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-brand-accent hover:bg-[rgba(59,130,246,0.05)] transition-colors">
+                <div className="border border-dashed border-border-subtle rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-brand-accent hover:bg-[rgba(212,255,0,0.05)] transition-colors">
                   <Upload className="w-6 h-6 text-text-muted" />
                   <span className="text-xs text-text-muted">Click to upload your logo (PNG, SVG)</span>
                   <span className="text-[10px] text-text-muted/50">Max 2MB</span>
@@ -1137,7 +1137,7 @@ export default function LandingPagesPage() {
 
               {/* Brief Readiness Score */}
               <div className="rounded-lg p-3"
-                style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}>
+                style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-1.5">
                     <TrendingUp size={11} className="text-brand-accent" />
@@ -1572,7 +1572,7 @@ export default function LandingPagesPage() {
                     <div key={i} className="flex-1 flex flex-col items-center gap-1">
                       <span className="text-[10px] text-text-muted">{v.toLocaleString()}</span>
                       <div className="w-full rounded-t-md relative group" style={{ height: `${h}%`, background: `linear-gradient(180deg, #2563EB 0%, #2563EB40 100%)` }}>
-                        <div className="absolute inset-0 bg-[rgba(59,130,246,0.12)] opacity-0 group-hover:opacity-100 transition-opacity rounded-t-md" />
+                        <div className="absolute inset-0 bg-[rgba(212,255,0,0.12)] opacity-0 group-hover:opacity-100 transition-opacity rounded-t-md" />
                       </div>
                       <span className="text-[10px] text-text-muted">{days[i]}</span>
                     </div>

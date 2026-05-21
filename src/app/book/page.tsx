@@ -153,7 +153,7 @@ export default function PublicBookingPage() {
 
         {step === "done" && (
           <div className="rounded-xl p-8 text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: "rgba(59,130,246,0.1)" }}>
+            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: "rgba(212,255,0,0.1)" }}>
               <CheckCircle size={32} className="text-emerald-400" />
             </div>
             <h2 className="text-lg font-bold text-white mb-1">You&apos;re Booked!</h2>

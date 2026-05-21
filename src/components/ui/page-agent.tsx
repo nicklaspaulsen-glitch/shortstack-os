@@ -209,7 +209,7 @@ function TrendCard({
       style={{
         background: "rgba(13,17,32,0.95)",
         border: hovered
-          ? "1px solid rgba(59,130,246,0.35)"
+          ? "1px solid rgba(212,255,0,0.35)"
           : "1px solid rgba(99,146,255,0.08)",
         transition: "border-color 0.2s ease",
       }}
@@ -240,8 +240,8 @@ function TrendCard({
         <div
           className="absolute top-2 right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-md"
           style={{
-            background: item.viralScore >= 90 ? "rgba(34,197,94,0.20)" : "rgba(59,130,246,0.20)",
-            border: `1px solid ${item.viralScore >= 90 ? "rgba(34,197,94,0.30)" : "rgba(59,130,246,0.30)"}`,
+            background: item.viralScore >= 90 ? "rgba(34,197,94,0.20)" : "rgba(212,255,0,0.20)",
+            border: `1px solid ${item.viralScore >= 90 ? "rgba(34,197,94,0.30)" : "rgba(212,255,0,0.30)"}`,
             color: item.viralScore >= 90 ? "#22c55e" : "#60a5fa",
           }}
         >
@@ -259,8 +259,8 @@ function TrendCard({
               style={{ background: "rgba(2,7,17,0.65)", backdropFilter: "blur(4px)" }}
             >
               <div className="text-center px-3">
-                <Wand2 className="w-5 h-5 text-blue-400 mx-auto mb-1" />
-                <div className="text-[10px] font-semibold text-blue-300">
+                <Wand2 className="w-5 h-5 text-indigo-400 mx-auto mb-1" />
+                <div className="text-[10px] font-semibold text-indigo-300">
                   {CONTEXT_ACTIONS[context].label}
                 </div>
               </div>
@@ -280,7 +280,7 @@ function TrendCard({
         <p className="text-[10px] text-white/80 font-medium leading-tight line-clamp-2">
           {item.title}
         </p>
-        <p className="text-[9px] text-blue-400/70 mt-1 truncate">{item.hook}</p>
+        <p className="text-[9px] text-indigo-400/70 mt-1 truncate">{item.hook}</p>
       </div>
     </motion.div>
   );
@@ -324,7 +324,7 @@ export default function PageAgent({ context, niche, className = "" }: PageAgentP
       className={`rounded-xl overflow-hidden ${className}`}
       style={{
         background: "rgba(13,17,32,0.92)",
-        border: "1px solid rgba(59,130,246,0.12)",
+        border: "1px solid rgba(212,255,0,0.12)",
       }}
     >
       {/* Header */}
@@ -334,8 +334,8 @@ export default function PageAgent({ context, niche, className = "" }: PageAgentP
       >
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-lg flex items-center justify-center"
-            style={{ background: "rgba(59,130,246,0.15)", border: "1px solid rgba(59,130,246,0.25)" }}>
-            <Flame className="w-3.5 h-3.5 text-blue-400" />
+            style={{ background: "rgba(212,255,0,0.15)", border: "1px solid rgba(212,255,0,0.25)" }}>
+            <Flame className="w-3.5 h-3.5 text-indigo-400" />
           </div>
           <div className="text-left">
             <div className="text-xs font-semibold text-white">
@@ -397,7 +397,7 @@ export default function PageAgent({ context, niche, className = "" }: PageAgentP
                     <button
                       key={hook}
                       onClick={() => handleCopyHook(hook)}
-                      className="w-full flex items-center justify-between gap-2 px-2.5 py-2 rounded-lg text-[10px] font-medium transition-all hover:bg-blue-500/10 group"
+                      className="w-full flex items-center justify-between gap-2 px-2.5 py-2 rounded-lg text-[10px] font-medium transition-all hover:bg-indigo-500/10 group"
                       style={{
                         background:
                           copiedHook === hook
@@ -414,7 +414,7 @@ export default function PageAgent({ context, niche, className = "" }: PageAgentP
                       }}
                     >
                       <div className="flex items-center gap-1.5 min-w-0">
-                        <TrendingUp className="w-3 h-3 shrink-0 text-blue-400" />
+                        <TrendingUp className="w-3 h-3 shrink-0 text-indigo-400" />
                         <span className="truncate">{hook}</span>
                       </div>
                       <Copy
@@ -432,8 +432,8 @@ export default function PageAgent({ context, niche, className = "" }: PageAgentP
                   onClick={() => router.push("/dashboard/enemy-tracker")}
                   className="w-full flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-semibold transition-all hover:brightness-110"
                   style={{
-                    background: "linear-gradient(135deg, rgba(59,130,246,0.18) 0%, rgba(99,102,241,0.12) 100%)",
-                    border: "1px solid rgba(59,130,246,0.25)",
+                    background: "linear-gradient(135deg, rgba(212,255,0,0.18) 0%, rgba(99,102,241,0.12) 100%)",
+                    border: "1px solid rgba(212,255,0,0.25)",
                     color: "#60a5fa",
                   }}
                 >

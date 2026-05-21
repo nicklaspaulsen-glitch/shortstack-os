@@ -114,7 +114,7 @@ function AIEnhanceButton({ value, onResult, context }: { value: string; onResult
 
   return (
     <button onClick={enhance} disabled={loading || !value.trim()}
-      className="text-[9px] px-2.5 py-1 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] disabled:opacity-30 flex items-center gap-1 transition-all border border-[rgba(59,130,246,0.1)] hover:border-[rgba(59,130,246,0.2)]">
+      className="text-[9px] px-2.5 py-1 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-30 flex items-center gap-1 transition-all border border-[rgba(212,255,0,0.1)] hover:border-[rgba(212,255,0,0.2)]">
       {loading ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />}
       {loading ? "Enhancing..." : "AI Enhance"}
     </button>
@@ -326,7 +326,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
         </div>
         <div className="flex items-center gap-1 flex-shrink-0">
           {template.variables.length > 0 && (
-            <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent">{template.variables.length} vars</span>
+            <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent">{template.variables.length} vars</span>
           )}
           <button onClick={e => { e.stopPropagation(); copyContent(); }} className="p-1 hover:bg-white/[0.06] rounded" aria-label="Copy template">
             {copied ? <Check size={10} className="text-green-400" /> : <Copy size={10} className="text-text-muted" />}
@@ -346,7 +346,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
           <div className="flex items-center justify-between">
             <div className="flex gap-1 flex-wrap">
               {template.variables.map(v => (
-                <span key={v} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent font-mono">{`{{${v}}}`}</span>
+                <span key={v} className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent font-mono">{`{{${v}}}`}</span>
               ))}
             </div>
             <AIEnhanceButton value={template.content} context={context}
@@ -355,7 +355,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
           {/* Cold Email Quality Panel */}
           {emailQualitySignals !== null && (
             <div className="rounded-lg p-2.5 mt-1"
-              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}>
+              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
                   <TrendingUp size={9} style={{ color: emailQualityScore >= 71 ? "#4ade80" : emailQualityScore >= 43 ? "#fbbf24" : "#f87171" }} />
@@ -404,7 +404,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
           {/* SMS Quality Panel */}
           {smsQualitySignals !== null && (
             <div className="rounded-lg p-2.5 mt-1"
-              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}>
+              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
                   <TrendingUp size={9} style={{ color: smsQualityScore >= 80 ? "#4ade80" : smsQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
@@ -447,7 +447,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
           {/* DM Quality Panel */}
           {dmQualitySignals !== null && (
             <div className="rounded-lg p-2.5 mt-1"
-              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}>
+              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
                   <TrendingUp size={9} style={{ color: dmQualityScore >= 80 ? "#4ade80" : dmQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
@@ -490,7 +490,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
           {/* Call Script Quality Panel */}
           {callQualitySignals !== null && (
             <div className="rounded-lg p-2.5 mt-1"
-              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}>
+              style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
                   <TrendingUp size={9} style={{ color: callQualityScore >= 80 ? "#4ade80" : callQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
@@ -819,7 +819,7 @@ function channelColor(ch: string) {
     case "email": return "text-brand-accent";
     case "sms": return "text-green-400";
     case "call": return "text-emerald-400";
-    case "dm": return "text-blue-400";
+    case "dm": return "text-indigo-400";
     default: return "text-text-muted";
   }
 }
@@ -1134,14 +1134,14 @@ export default function OutreachHubPage() {
             </div>
 
             {/* -- How Outreach Works (collapsible explainer) -- */}
-            <div className="glass rounded-xl p-4 border-blue-400/20 bg-gradient-to-br from-blue-500/5 via-surface to-surface">
+            <div className="glass rounded-xl p-4 border-indigo-400/20 bg-gradient-to-br from-indigo-500/5 via-surface to-surface">
               <button
                 onClick={toggleExplainer}
                 className="w-full flex items-center justify-between text-left"
                 aria-expanded={explainerOpen}
               >
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-[rgba(59,130,246,0.10)] border border-[rgba(59,130,246,0.25)] flex items-center justify-center text-brand-accent">
+                  <div className="w-7 h-7 rounded-lg bg-[rgba(212,255,0,0.10)] border border-[rgba(212,255,0,0.25)] flex items-center justify-center text-brand-accent">
                     <Target size={14} />
                   </div>
                   <div>
@@ -1165,7 +1165,7 @@ export default function OutreachHubPage() {
                       href: "#campaigns",
                       cta: "Show me",
                       ctaOnClick: () => setTab("campaigns"),
-                      color: "text-blue-400 bg-blue-400/10 border-[rgba(59,130,246,0.25)]",
+                      color: "text-indigo-400 bg-indigo-400/10 border-[rgba(212,255,0,0.25)]",
                     },
                     {
                       n: 2,
@@ -1184,7 +1184,7 @@ export default function OutreachHubPage() {
                       href: "#sequences",
                       cta: "Show me",
                       ctaOnClick: () => setTab("sequences"),
-                      color: "text-brand-accent bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)]",
+                      color: "text-brand-accent bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)]",
                     },
                     {
                       n: 4,
@@ -1193,7 +1193,7 @@ export default function OutreachHubPage() {
                       icon: <BarChart3 size={14} />,
                       href: "/dashboard/outreach-logs",
                       cta: "Open Logs",
-                      color: "text-brand-accent bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)]",
+                      color: "text-brand-accent bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)]",
                     },
                   ].map((step, idx, arr) => (
                     <div key={step.n} className="relative">
@@ -1263,7 +1263,7 @@ export default function OutreachHubPage() {
                 <div className="flex items-center justify-between">
                   <h2 className="text-sm font-semibold flex items-center gap-2">
                     <Megaphone size={14} className="text-brand-accent" /> Active Campaigns
-                    {campaigns.length > 0 && <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent">{campaigns.length}</span>}
+                    {campaigns.length > 0 && <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-brand-accent">{campaigns.length}</span>}
                   </h2>
                   <button onClick={() => setShowCampaignBuilder(!showCampaignBuilder)}
                     className="btn-pill text-xs flex items-center gap-1.5">
@@ -1301,7 +1301,7 @@ export default function OutreachHubPage() {
                             }));
                             toast.success(`Loaded: ${preset.name}`);
                           }}
-                            className="text-left p-2.5 rounded-xl border border-border-subtle/50 hover:border-[rgba(59,130,246,0.2)] hover:bg-[rgba(59,130,246,0.05)] transition-all group">
+                            className="text-left p-2.5 rounded-xl border border-border-subtle/50 hover:border-[rgba(212,255,0,0.2)] hover:bg-[rgba(212,255,0,0.05)] transition-all group">
                             <p className="text-[10px] font-semibold group-hover:text-brand-accent">{preset.name}</p>
                             <p className="text-[9px] text-text-muted mt-0.5">{preset.description}</p>
                             <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-surface-light text-text-muted mt-1 inline-block">{preset.targetMode.toUpperCase()}</span>
@@ -1325,7 +1325,7 @@ export default function OutreachHubPage() {
                         {(["b2b", "b2c"] as TargetMode[]).map(m => (
                           <button key={m} onClick={() => setNewCampaign(p => ({ ...p, targetMode: m }))}
                             className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-all ${
-                              newCampaign.targetMode === m ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle/50 hover:border-border-subtle"
+                              newCampaign.targetMode === m ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.2)]" : "text-text-muted border-border-subtle/50 hover:border-border-subtle"
                             }`}>{m.toUpperCase()}</button>
                         ))}
                       </div>
@@ -1341,7 +1341,7 @@ export default function OutreachHubPage() {
                           return (
                             <button key={ind.id} onClick={() => setNewCampaign(p => ({ ...p, industries: toggleArray(p.industries, ind.id) }))}
                               className={`flex items-center gap-1.5 p-2 rounded-lg text-[10px] border transition-all ${
-                                selected ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle/30 hover:border-border-subtle"
+                                selected ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.2)]" : "text-text-muted border-border-subtle/30 hover:border-border-subtle"
                               }`}>
                               <Icon size={12} /> {ind.label}
                             </button>
@@ -1362,7 +1362,7 @@ export default function OutreachHubPage() {
                         ]).map(ch => (
                           <button key={ch.key} onClick={() => setNewCampaign(p => ({ ...p, channels: { ...p.channels, [ch.key]: !p.channels[ch.key] } }))}
                             className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs border transition-all ${
-                              newCampaign.channels[ch.key] ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle/50"
+                              newCampaign.channels[ch.key] ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.2)]" : "text-text-muted border-border-subtle/50"
                             }`}>
                             {ch.icon} {ch.label}
                           </button>
@@ -1393,7 +1393,7 @@ export default function OutreachHubPage() {
                         {sequences.map(seq => (
                           <button key={seq.id} onClick={() => setNewCampaign(p => ({ ...p, sequenceId: seq.id }))}
                             className={`text-left p-2.5 rounded-xl border transition-all ${
-                              newCampaign.sequenceId === seq.id ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)]" : "border-border-subtle/50 hover:border-border-subtle"
+                              newCampaign.sequenceId === seq.id ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.2)]" : "border-border-subtle/50 hover:border-border-subtle"
                             }`}>
                             <p className={`text-[10px] font-semibold ${newCampaign.sequenceId === seq.id ? "text-brand-accent" : ""}`}>{seq.name}</p>
                             <p className="text-[9px] text-text-muted mt-0.5">{seq.steps.length} steps</p>
@@ -1596,7 +1596,7 @@ export default function OutreachHubPage() {
                               <span className={`${channelColor(step.channel)}`}>{channelIcon(step.channel, 12)}</span>
                               <span className="text-[10px] font-semibold capitalize">{step.channel}</span>
                               <span className="text-[8px] px-1.5 py-0.5 rounded bg-surface-light text-text-muted">Day {step.day}</span>
-                              <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent ml-auto">{conditionLabel(step.condition)}</span>
+                              <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent ml-auto">{conditionLabel(step.condition)}</span>
                             </div>
                             <p className="text-[10px] text-text-muted">{step.action}</p>
                           </div>
@@ -1703,7 +1703,7 @@ export default function OutreachHubPage() {
                         whileTap={{ scale: 0.97 }}
                         className={`tab-pill flex items-center gap-1.5${templateSubTab === t.key ? " active" : ""}`}>
                         {t.icon} {t.label}
-                        <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${templateSubTab === t.key ? "bg-[rgba(59,130,246,0.12)]" : "bg-white/[0.05]"}`}>{t.count}</span>
+                        <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${templateSubTab === t.key ? "bg-[rgba(212,255,0,0.12)]" : "bg-white/[0.05]"}`}>{t.count}</span>
                       </motion.button>
                     ))}
                   </div>
@@ -1711,7 +1711,7 @@ export default function OutreachHubPage() {
                     {(["all", "b2b", "b2c"] as const).map(f => (
                       <button key={f} onClick={() => setTemplateFilter(f)}
                         className={`text-[9px] px-2.5 py-1 rounded-lg border transition-all uppercase ${
-                          templateFilter === f ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle/30"
+                          templateFilter === f ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.2)]" : "text-text-muted border-border-subtle/30"
                         }`}>{f}</button>
                     ))}
                   </div>
@@ -1725,7 +1725,7 @@ export default function OutreachHubPage() {
                         <h2 className="text-sm font-semibold flex items-center gap-2">
                           <PhoneCall size={14} className="text-emerald-400" /> Call Scripts &amp; Prompts
                         </h2>
-                        <button onClick={() => addTemplate("calls")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] flex items-center gap-1">
+                        <button onClick={() => addTemplate("calls")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(212,255,0,0.2)] flex items-center gap-1">
                           <Plus size={10} /> Add Script
                         </button>
                       </div>
@@ -1808,7 +1808,7 @@ export default function OutreachHubPage() {
                         <h2 className="text-sm font-semibold flex items-center gap-2">
                           <Smartphone size={14} className="text-green-400" /> SMS Templates
                         </h2>
-                        <button onClick={() => addTemplate("sms")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] flex items-center gap-1">
+                        <button onClick={() => addTemplate("sms")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(212,255,0,0.2)] flex items-center gap-1">
                           <Plus size={10} /> Add Template
                         </button>
                       </div>
@@ -1874,7 +1874,7 @@ export default function OutreachHubPage() {
                                     : [...p.followupDays, d].sort((a, b) => a - b),
                                 }));
                               }} className={`text-[9px] px-2 py-1 rounded-lg border ${
-                                smsSettings.followupDays.includes(d) ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle"
+                                smsSettings.followupDays.includes(d) ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.2)]" : "text-text-muted border-border-subtle"
                               }`}>Day {d}</button>
                             ))}
                           </div>
@@ -1892,7 +1892,7 @@ export default function OutreachHubPage() {
                         <h2 className="text-sm font-semibold flex items-center gap-2">
                           <Mail size={14} className="text-brand-accent" /> Email Templates
                         </h2>
-                        <button onClick={() => addTemplate("email")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] flex items-center gap-1">
+                        <button onClick={() => addTemplate("email")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(212,255,0,0.2)] flex items-center gap-1">
                           <Plus size={10} /> Add Template
                         </button>
                       </div>
@@ -1962,9 +1962,9 @@ export default function OutreachHubPage() {
                     <div className="lg:col-span-2 space-y-3">
                       <div className="flex items-center justify-between">
                         <h2 className="text-sm font-semibold flex items-center gap-2">
-                          <MessageSquare size={14} className="text-blue-400" /> Social DM Templates
+                          <MessageSquare size={14} className="text-indigo-400" /> Social DM Templates
                         </h2>
-                        <button onClick={() => addTemplate("dms")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(59,130,246,0.2)] flex items-center gap-1">
+                        <button onClick={() => addTemplate("dms")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(212,255,0,0.2)] flex items-center gap-1">
                           <Plus size={10} /> Add Template
                         </button>
                       </div>
@@ -2131,7 +2131,7 @@ export default function OutreachHubPage() {
                       { channel: "Email", icon: <Mail size={14} />, color: "bg-brand-accent", sent: 0, opened: 0, replied: 0 },
                       { channel: "SMS", icon: <Smartphone size={14} />, color: "bg-green-400", sent: 0, opened: 0, replied: 0 },
                       { channel: "Calls", icon: <PhoneCall size={14} />, color: "bg-emerald-400", sent: 0, opened: 0, replied: 0 },
-                      { channel: "DMs", icon: <MessageSquare size={14} />, color: "bg-blue-400", sent: 0, opened: 0, replied: 0 },
+                      { channel: "DMs", icon: <MessageSquare size={14} />, color: "bg-indigo-400", sent: 0, opened: 0, replied: 0 },
                     ].map(ch => (
                       <div key={ch.channel} className="space-y-1.5">
                         <div className="flex items-center gap-2 text-xs">
@@ -2194,7 +2194,7 @@ export default function OutreachHubPage() {
                         <div key={s.stage} className="flex items-center gap-3">
                           <span className="text-[10px] text-text-muted w-20">{s.stage}</span>
                           <div className="flex-1 h-6 bg-surface-light rounded-lg overflow-hidden flex items-center" style={{ maxWidth: s.width }}>
-                            <div className="h-full bg-[rgba(59,130,246,0.12)] w-0 rounded-lg" />
+                            <div className="h-full bg-[rgba(212,255,0,0.12)] w-0 rounded-lg" />
                             <span className="text-[10px] font-mono ml-2">{s.value}</span>
                           </div>
                         </div>
@@ -2211,7 +2211,7 @@ export default function OutreachHubPage() {
                   className="rounded-xl p-6 text-center"
 
                 >
-                  <div className="w-12 h-12 rounded-xl bg-[rgba(59,130,246,0.08)] flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 rounded-xl bg-[rgba(212,255,0,0.08)] flex items-center justify-center mx-auto mb-3">
                     <Star size={20} className="text-brand-accent" />
                   </div>
                   <h3 className="text-sm font-semibold mb-1">Best Performing</h3>
@@ -2238,7 +2238,7 @@ export default function OutreachHubPage() {
                       {["friendly", "professional", "casual", "bold", "empathetic", "authoritative"].map(t => (
                         <button key={t} onClick={() => setGlobalSettings(p => ({ ...p, tone: t }))}
                           className={`text-[10px] px-3 py-1.5 rounded-lg capitalize border ${
-                            globalSettings.tone === t ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle hover:border-border-subtle"
+                            globalSettings.tone === t ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.2)]" : "text-text-muted border-border-subtle hover:border-border-subtle"
                           }`}>{t}</button>
                       ))}
                     </div>
@@ -2254,7 +2254,7 @@ export default function OutreachHubPage() {
                       ].map(a => (
                         <button key={a.key} onClick={() => setGlobalSettings(p => ({ ...p, aggressiveness: a.key }))}
                           className={`flex-1 text-left p-2.5 rounded-xl border transition-all ${
-                            globalSettings.aggressiveness === a.key ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.2)]" : "border-border-subtle hover:border-border-subtle"
+                            globalSettings.aggressiveness === a.key ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.2)]" : "border-border-subtle hover:border-border-subtle"
                           }`}>
                           <p className={`text-xs font-semibold ${globalSettings.aggressiveness === a.key ? "text-brand-accent" : ""}`}>{a.label}</p>
                           <p className="text-[9px] text-text-muted">{a.desc}</p>
@@ -2362,7 +2362,7 @@ export default function OutreachHubPage() {
                       {(["b2b", "b2c"] as TargetMode[]).map(m => (
                         <button key={m} onClick={() => setDefaultTargetMode(m)}
                           className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-all ${
-                            defaultTargetMode === m ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle/50"
+                            defaultTargetMode === m ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.2)]" : "text-text-muted border-border-subtle/50"
                           }`}>{m.toUpperCase()}</button>
                       ))}
                     </div>

@@ -93,8 +93,8 @@ const PLATFORM_ICON: Record<string, React.ReactNode> = {
 };
 
 const STATUS_STYLE: Record<string, string> = {
-  sent: "bg-blue-400/10 text-blue-400",
-  delivered: "bg-blue-400/10 text-blue-400",
+  sent: "bg-indigo-400/10 text-indigo-400",
+  delivered: "bg-indigo-400/10 text-indigo-400",
   replied: "bg-green-400/10 text-green-400",
   completed: "bg-green-400/10 text-green-400",
   interested: "bg-green-400/10 text-green-400",
@@ -103,15 +103,15 @@ const STATUS_STYLE: Record<string, string> = {
   bounced: "bg-red-400/10 text-red-400",
   not_interested: "bg-orange-400/10 text-orange-400",
   pending: "bg-yellow-400/10 text-yellow-400",
-  maybe_later: "bg-[rgba(59,130,246,0.08)] text-brand-accent",
+  maybe_later: "bg-[rgba(212,255,0,0.08)] text-brand-accent",
   no_answer: "bg-gray-400/10 text-text-muted",
-  voicemail: "bg-[rgba(59,130,246,0.08)] text-brand-accent",
+  voicemail: "bg-[rgba(212,255,0,0.08)] text-brand-accent",
 };
 
 // Sentiment dot color based on status
 function getSentimentColor(status: string): string {
   if (["replied", "interested", "completed", "booked"].includes(status)) return "bg-green-400";
-  if (["sent", "delivered", "pending"].includes(status)) return "bg-blue-400";
+  if (["sent", "delivered", "pending"].includes(status)) return "bg-indigo-400";
   if (["failed", "bounced", "not_interested"].includes(status)) return "bg-red-400";
   if (["no_answer", "voicemail", "maybe_later"].includes(status)) return "bg-amber-400";
   return "bg-gray-400";
@@ -613,7 +613,7 @@ export default function OutreachLogsPage() {
                       ].map(p => (
                         <button key={p.val} onClick={() => { setPlatformFilter(p.val); setPage(1); }}
                           className={`text-[10px] px-2 py-1.5 rounded-lg flex items-center gap-1 ${
-                            platformFilter === p.val ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-border-subtle hover:border-border-subtle"
+                            platformFilter === p.val ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)]" : "text-text-muted border border-border-subtle hover:border-border-subtle"
                           }`}>{p.icon} {p.label}</button>
                       ))}
                     </div>
@@ -629,11 +629,11 @@ export default function OutreachLogsPage() {
                     </select>
                     <div className="flex items-center gap-1 border border-border-subtle rounded-lg">
                       <button onClick={() => setViewMode("compact")}
-                        className={`p-1.5 rounded-l-lg ${viewMode === "compact" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted"}`}>
+                        className={`p-1.5 rounded-l-lg ${viewMode === "compact" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" : "text-text-muted"}`}>
                         <LayoutList size={14} />
                       </button>
                       <button onClick={() => setViewMode("detailed")}
-                        className={`p-1.5 rounded-r-lg ${viewMode === "detailed" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-muted"}`}>
+                        className={`p-1.5 rounded-r-lg ${viewMode === "detailed" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" : "text-text-muted"}`}>
                         <LayoutGrid size={14} />
                       </button>
                     </div>
@@ -678,7 +678,7 @@ export default function OutreachLogsPage() {
 
                   {/* Bulk action bar */}
                   {selectedIds.size > 0 && (
-                    <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.2)] animate-in slide-in-from-top-1">
+                    <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.2)] animate-in slide-in-from-top-1">
                       <span className="text-xs font-medium text-brand-accent">{selectedIds.size} selected</span>
                       <div className="flex-1" />
                       <div className="relative">
@@ -738,7 +738,7 @@ export default function OutreachLogsPage() {
                           <tr className="border-b border-border-subtle text-[9px] text-text-muted uppercase tracking-wider">
                             <th className="p-2.5 w-8">
                               <button onClick={toggleAll} className={`w-4 h-4 rounded border flex items-center justify-center ${
-                                allSelected ? "bg-brand-accent border-brand-accent" : "border-white/15 hover:border-[rgba(59,130,246,0.25)]"
+                                allSelected ? "bg-brand-accent border-brand-accent" : "border-white/15 hover:border-[rgba(212,255,0,0.25)]"
                               }`}>{allSelected && <Check size={10} className="text-black" />}</button>
                             </th>
                             <th className="p-2.5 text-left w-8">Ch</th>
@@ -760,12 +760,12 @@ export default function OutreachLogsPage() {
                               <tr key={entry.id}
                                 onClick={() => openDetail(entry)}
                                 className={`border-b border-border-subtle/50 text-[11px] transition-colors cursor-pointer ${
-                                  isActive ? "bg-[rgba(59,130,246,0.05)] border-l-2 border-l-[#2563EB]" :
-                                  isSelected ? "bg-[rgba(59,130,246,0.05)]" : "hover:bg-white/5"
+                                  isActive ? "bg-[rgba(212,255,0,0.05)] border-l-2 border-l-[#2563EB]" :
+                                  isSelected ? "bg-[rgba(212,255,0,0.05)]" : "hover:bg-white/5"
                                 }`}>
                                 <td className="p-2.5" onClick={e => e.stopPropagation()}>
                                   <button onClick={() => toggleOne(entry.id)} className={`w-4 h-4 rounded border flex items-center justify-center ${
-                                    isSelected ? "bg-brand-accent border-brand-accent" : "border-white/15 hover:border-[rgba(59,130,246,0.25)]"
+                                    isSelected ? "bg-brand-accent border-brand-accent" : "border-white/15 hover:border-[rgba(212,255,0,0.25)]"
                                   }`}>{isSelected && <Check size={10} className="text-black" />}</button>
                                 </td>
                                 <td className="p-2.5">{PLATFORM_ICON[entry.platform] || <Mail size={13} className="text-text-muted" />}</td>
@@ -814,15 +814,15 @@ export default function OutreachLogsPage() {
                           <div key={entry.id}
                             onClick={() => openDetail(entry)}
                             className={`p-3 rounded-xl border transition-all cursor-pointer ${
-                              isActive ? "bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.25)]" :
-                              isSelected ? "bg-[rgba(59,130,246,0.05)] border-[rgba(59,130,246,0.2)]" :
+                              isActive ? "bg-[rgba(212,255,0,0.05)] border-[rgba(212,255,0,0.25)]" :
+                              isSelected ? "bg-[rgba(212,255,0,0.05)] border-[rgba(212,255,0,0.2)]" :
                               entry.status === "replied" || entry.status === "interested" ? "bg-green-400/[0.02] border-green-400/10" :
                               entry.status === "failed" || entry.status === "bounced" ? "bg-red-400/[0.02] border-red-400/10" :
                               "bg-surface-light border-border-subtle hover:border-border-subtle"
                             }`}>
                             <div className="flex items-center gap-3">
                               <button onClick={e => { e.stopPropagation(); toggleOne(entry.id); }} className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center ${
-                                isSelected ? "bg-brand-accent border-brand-accent" : "border-white/15 hover:border-[rgba(59,130,246,0.25)]"
+                                isSelected ? "bg-brand-accent border-brand-accent" : "border-white/15 hover:border-[rgba(212,255,0,0.25)]"
                               }`}>{isSelected && <Check size={10} className="text-black" />}</button>
 
                               <div className="flex-shrink-0">{PLATFORM_ICON[entry.platform] || <Mail size={13} className="text-text-muted" />}</div>
@@ -932,7 +932,7 @@ export default function OutreachLogsPage() {
                               onClick={() => updateEntryStatus(detailEntry.id, tag.status)}
                               className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${
                                 detailEntry.status === tag.status
-                                  ? "bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)] text-brand-accent font-medium"
+                                  ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)] text-brand-accent font-medium"
                                   : "bg-white/5 border-border-subtle text-text-muted hover:border-white/15 hover:text-text-primary"
                               }`}
                             >
@@ -950,7 +950,7 @@ export default function OutreachLogsPage() {
                           </button>
                         )}
                         {detailEntry.lead_id && (
-                          <a href={`/dashboard/crm?lead=${detailEntry.lead_id}`} className="text-[9px] px-2 py-1 rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-1">
+                          <a href={`/dashboard/crm?lead=${detailEntry.lead_id}`} className="text-[9px] px-2 py-1 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] flex items-center gap-1">
                             <ExternalLink size={9} /> View Lead
                           </a>
                         )}
@@ -997,7 +997,7 @@ export default function OutreachLogsPage() {
 
                               {/* Summary */}
                               {conversationDetail.summary && (
-                                <div className="bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.1)] rounded-lg p-2.5">
+                                <div className="bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.1)] rounded-lg p-2.5">
                                   <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">AI Summary</p>
                                   <p className="text-[10px] leading-relaxed">{conversationDetail.summary}</p>
                                 </div>
@@ -1021,7 +1021,7 @@ export default function OutreachLogsPage() {
                                     </div>
                                     <div className="flex justify-between text-[8px] text-text-muted">
                                       <span><Bot size={7} className="inline mr-0.5 text-brand-accent" /> Agent: {agentLines.length} turns</span>
-                                      <span><User size={7} className="inline mr-0.5 text-blue-400" /> Customer: {customerLines.length} turns</span>
+                                      <span><User size={7} className="inline mr-0.5 text-indigo-400" /> Customer: {customerLines.length} turns</span>
                                     </div>
                                   </div>
                                 );
@@ -1043,12 +1043,12 @@ export default function OutreachLogsPage() {
                                     <div key={i} className={`flex ${line.role === "agent" ? "justify-start" : "justify-end"}`}>
                                       <div className={`max-w-[85%] rounded-xl px-3 py-2 ${
                                         line.role === "agent"
-                                          ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.1)] rounded-tl-sm"
-                                          : "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.08)] rounded-tr-sm"
+                                          ? "bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.1)] rounded-tl-sm"
+                                          : "bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.08)] rounded-tr-sm"
                                       }`}>
                                         <div className="flex items-center gap-1 mb-0.5">
-                                          {line.role === "agent" ? <Bot size={8} className="text-brand-accent" /> : <User size={8} className="text-blue-400" />}
-                                          <span className={`text-[8px] font-medium ${line.role === "agent" ? "text-brand-accent" : "text-blue-400"}`}>
+                                          {line.role === "agent" ? <Bot size={8} className="text-brand-accent" /> : <User size={8} className="text-indigo-400" />}
+                                          <span className={`text-[8px] font-medium ${line.role === "agent" ? "text-brand-accent" : "text-indigo-400"}`}>
                                             {line.role === "agent" ? "AI Agent" : "Customer"}
                                           </span>
                                           {line.timestamp !== undefined && (
@@ -1089,9 +1089,9 @@ export default function OutreachLogsPage() {
                               <ArrowRight size={9} className="text-brand-accent" /> <span className="font-medium text-brand-accent">Sent</span>
                               <span className="ml-auto">{detailEntry.sent_at ? new Date(detailEntry.sent_at).toLocaleString() : ""}</span>
                             </div>
-                            <div className="bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.1)] rounded-lg p-3">
+                            <div className="bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.1)] rounded-lg p-3">
                               {detailEntry.message_text?.startsWith("Subject:") && (
-                                <p className="text-[10px] font-semibold mb-2 pb-2 border-b border-[rgba(59,130,246,0.1)]">
+                                <p className="text-[10px] font-semibold mb-2 pb-2 border-b border-[rgba(212,255,0,0.1)]">
                                   {detailEntry.message_text.split("\n")[0]}
                                 </p>
                               )}
@@ -1161,13 +1161,13 @@ export default function OutreachLogsPage() {
                       {(detailEntry.platform === "sms" || detailEntry.platform.includes("dm") || detailEntry.platform === "instagram" || detailEntry.platform === "facebook" || detailEntry.platform === "linkedin" || detailEntry.platform === "tiktok") && (
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
-                            {detailEntry.platform === "sms" ? <Phone size={14} className="text-green-400" /> : <MessageSquare size={14} className="text-blue-400" />}
+                            {detailEntry.platform === "sms" ? <Phone size={14} className="text-green-400" /> : <MessageSquare size={14} className="text-indigo-400" />}
                             <h4 className="text-xs font-semibold">{detailEntry.platform === "sms" ? "SMS" : "DM"} Conversation</h4>
                           </div>
 
                           {/* Outbound message */}
                           <div className="flex justify-end">
-                            <div className="max-w-[85%] bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.1)] rounded-xl rounded-tr-sm px-3 py-2">
+                            <div className="max-w-[85%] bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.1)] rounded-xl rounded-tr-sm px-3 py-2">
                               <div className="flex items-center gap-1 mb-0.5">
                                 <Bot size={8} className="text-brand-accent" />
                                 <span className="text-[8px] font-medium text-brand-accent">You</span>
@@ -1182,10 +1182,10 @@ export default function OutreachLogsPage() {
                           {/* Reply */}
                           {detailEntry.reply_text && (
                             <div className="flex justify-start">
-                              <div className="max-w-[85%] bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.08)] rounded-xl rounded-tl-sm px-3 py-2">
+                              <div className="max-w-[85%] bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.08)] rounded-xl rounded-tl-sm px-3 py-2">
                                 <div className="flex items-center gap-1 mb-0.5">
-                                  <User size={8} className="text-blue-400" />
-                                  <span className="text-[8px] font-medium text-blue-400">{detailEntry.business_name}</span>
+                                  <User size={8} className="text-indigo-400" />
+                                  <span className="text-[8px] font-medium text-indigo-400">{detailEntry.business_name}</span>
                                   <span className="text-[7px] text-text-muted ml-auto">
                                     {detailEntry.replied_at ? new Date(detailEntry.replied_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : ""}
                                   </span>
@@ -1252,7 +1252,7 @@ export default function OutreachLogsPage() {
                     <h3 className="text-sm font-semibold mb-3">Status Breakdown</h3>
                     <div className="space-y-3">
                       {[
-                        { label: "Sent / Delivered", value: stats.sent, color: "bg-blue-400", pct: stats.total > 0 ? (stats.sent / stats.total) * 100 : 0 },
+                        { label: "Sent / Delivered", value: stats.sent, color: "bg-indigo-400", pct: stats.total > 0 ? (stats.sent / stats.total) * 100 : 0 },
                         { label: "Replied", value: stats.replied, color: "bg-green-400", pct: stats.total > 0 ? (stats.replied / stats.total) * 100 : 0 },
                         { label: "Failed / Bounced", value: stats.failed, color: "bg-red-400", pct: stats.total > 0 ? (stats.failed / stats.total) * 100 : 0 },
                       ].map(s => (
@@ -1275,7 +1275,7 @@ export default function OutreachLogsPage() {
                     { icon: <ThumbsUp size={20} className="mx-auto mb-2 text-green-400" />, value: stats.replied, label: "Total Replies", color: "text-green-400" },
                     { icon: <BarChart3 size={20} className="mx-auto mb-2 text-brand-accent" />, value: `${replyRate}%`, label: "Reply Rate", color: "text-brand-accent" },
                     { icon: <ThumbsDown size={20} className="mx-auto mb-2 text-red-400" />, value: stats.failed, label: "Failed/Bounced", color: "text-red-400" },
-                    { icon: <Calendar size={20} className="mx-auto mb-2 text-blue-400" />, value: stats.total, label: "All Time Total", color: "text-blue-400" },
+                    { icon: <Calendar size={20} className="mx-auto mb-2 text-indigo-400" />, value: stats.total, label: "All Time Total", color: "text-indigo-400" },
                   ].map((tile, i) => (
                     <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 + i * 0.06, duration: 0.4 }} className="rounded-xl overflow-hidden text-center spotlight-card" style={{ background: "rgba(13,17,32,0.7)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid rgba(212,255,0,0.08)" }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                       <div className="p-4">
@@ -1375,7 +1375,7 @@ export default function OutreachLogsPage() {
                       <p className="text-[10px] text-text-muted">{availableNumbers.length} numbers available:</p>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[300px] overflow-y-auto">
                         {availableNumbers.map((num, i) => (
-                          <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg bg-surface-light border border-border-subtle hover:border-[rgba(59,130,246,0.2)] transition-all">
+                          <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg bg-surface-light border border-border-subtle hover:border-[rgba(212,255,0,0.2)] transition-all">
                             <PhoneForwarded size={12} className="text-green-400 flex-shrink-0" />
                             <div className="flex-1 min-w-0">
                               <p className="text-xs font-mono font-semibold">{num.phone}</p>
@@ -1400,8 +1400,8 @@ export default function OutreachLogsPage() {
                     {/* Resend status */}
                     <div className="p-3 rounded-xl bg-surface-light border border-border-subtle">
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="w-6 h-6 rounded bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
-                          <Mail size={12} className="text-blue-400" />
+                        <div className="w-6 h-6 rounded bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
+                          <Mail size={12} className="text-indigo-400" />
                         </div>
                         <div>
                           <p className="text-xs font-semibold">Resend</p>
@@ -1426,7 +1426,7 @@ export default function OutreachLogsPage() {
                     {/* GHL status */}
                     <div className="p-3 rounded-xl bg-surface-light border border-border-subtle">
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="w-6 h-6 rounded bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
+                        <div className="w-6 h-6 rounded bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
                           <Globe size={12} className="text-brand-accent" />
                         </div>
                         <div>
@@ -1527,7 +1527,7 @@ export default function OutreachLogsPage() {
                     <p className="text-[10px] text-text-muted mb-2 uppercase tracking-wider">Platforms to scrape from</p>
                     <div className="flex gap-2 flex-wrap">
                       {[
-                        { id: "google_maps", label: "Google Maps", icon: <MapPin size={12} className="text-blue-400" /> },
+                        { id: "google_maps", label: "Google Maps", icon: <MapPin size={12} className="text-indigo-400" /> },
                         { id: "facebook", label: "Facebook", icon: <FacebookIcon size={12} /> },
                         { id: "yelp", label: "Yelp", icon: <Star size={12} className="text-red-400" /> },
                       ].map(pl => {
@@ -1535,7 +1535,7 @@ export default function OutreachLogsPage() {
                         return (
                           <button key={pl.id} onClick={() => toggleScrapePlatform(pl.id)}
                             className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-all ${
-                              active ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle hover:border-border-subtle"
+                              active ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.2)]" : "text-text-muted border-border-subtle hover:border-border-subtle"
                             }`}>
                             {pl.icon} {pl.label}
                             {active && <Check size={10} className="ml-0.5" />}
@@ -1551,7 +1551,7 @@ export default function OutreachLogsPage() {
                       <p className="text-[10px] text-text-muted mb-1.5 uppercase tracking-wider">Niches / Industries</p>
                       <div className="flex flex-wrap gap-1.5 mb-2 min-h-[36px] p-2 rounded-lg bg-surface-light border border-border-subtle">
                         {config.scrape_niches.map((n: string) => (
-                          <span key={n} className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]">
+                          <span key={n} className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)]">
                             {n}
                             <button onClick={() => removeTag("scrape_niches", n)} className="hover:text-white transition-colors ml-0.5">
                               <X size={9} />
@@ -1579,7 +1579,7 @@ export default function OutreachLogsPage() {
                       <p className="text-[10px] text-text-muted mb-1.5 uppercase tracking-wider">Locations</p>
                       <div className="flex flex-wrap gap-1.5 mb-2 min-h-[36px] p-2 rounded-lg bg-surface-light border border-border-subtle">
                         {config.scrape_locations.map((loc: string) => (
-                          <span key={loc} className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-blue-400/10 text-blue-400 border border-blue-400/20">
+                          <span key={loc} className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-indigo-400/10 text-indigo-400 border border-indigo-400/20">
                             <MapPin size={8} /> {loc}
                             <button onClick={() => removeTag("scrape_locations", loc)} className="hover:text-white transition-colors ml-0.5">
                               <X size={9} />
@@ -1766,7 +1766,7 @@ export default function OutreachLogsPage() {
                       ].map(s => (
                         <button key={s.val} onClick={() => setConfig(c => ({ ...c, message_style: s.val }))}
                           className={`text-left px-3 py-2 rounded-lg border transition-all ${
-                            config.message_style === s.val ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.2)]" : "text-text-muted border-border-subtle hover:border-border-subtle"
+                            config.message_style === s.val ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.2)]" : "text-text-muted border-border-subtle hover:border-border-subtle"
                           }`}>
                           <p className="text-xs font-medium">{s.label}</p>
                           <p className="text-[9px] opacity-70">{s.desc}</p>
@@ -1835,8 +1835,8 @@ export default function OutreachLogsPage() {
                     {/* Sender pool health */}
                     <div className="p-3 rounded-xl bg-surface-light border border-border-subtle">
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="w-7 h-7 rounded-lg bg-blue-400/10 flex items-center justify-center">
-                          <Activity size={13} className="text-blue-400" />
+                        <div className="w-7 h-7 rounded-lg bg-indigo-400/10 flex items-center justify-center">
+                          <Activity size={13} className="text-indigo-400" />
                         </div>
                         <div className="flex-1">
                           <p className="text-xs font-semibold">Sender Pool</p>
@@ -1870,7 +1870,7 @@ export default function OutreachLogsPage() {
                             {senderStats.warmup_stage && (
                               <div className="flex justify-between text-[10px]">
                                 <span className="text-text-muted">Warmup stage</span>
-                                <span className="px-1.5 py-0.5 rounded bg-blue-400/10 text-blue-400 text-[9px] capitalize">{senderStats.warmup_stage}</span>
+                                <span className="px-1.5 py-0.5 rounded bg-indigo-400/10 text-indigo-400 text-[9px] capitalize">{senderStats.warmup_stage}</span>
                               </div>
                             )}
                           </>
@@ -2017,7 +2017,7 @@ export default function OutreachLogsPage() {
                                   <div key={i} className={`relative flex flex-col items-center justify-center h-6 rounded text-[9px]
                               ${!day ? "" : ""}
                               ${day && isPast(day) ? "text-text-muted" : "text-text-muted"}
-                              ${day === todayDate ? "ring-1 ring-[rgba(59,130,246,0.6)] bg-[rgba(59,130,246,0.08)] font-bold text-brand-accent" : ""}
+                              ${day === todayDate ? "ring-1 ring-[rgba(212,255,0,0.6)] bg-[rgba(212,255,0,0.08)] font-bold text-brand-accent" : ""}
                             `}>
                                     {day && <span>{day}</span>}
                                     {day && isScheduled(day) && !isPast(day) && (
@@ -2134,7 +2134,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
 
   if (!analysis) {
     return (
-      <div className="rounded-lg border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.05)] p-3">
+      <div className="rounded-lg border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.05)] p-3">
         <div className="flex items-center gap-2 mb-2">
           <Bot size={12} className="text-brand-accent" />
           <span className="text-[11px] font-semibold">AI Analysis</span>
@@ -2143,7 +2143,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
         <button
           onClick={runAnalysis}
           disabled={loading}
-          className="w-full py-1.5 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-[10px] font-semibold hover:shadow-lg hover:shadow-[rgba(59,130,246,0.3)] disabled:opacity-50 flex items-center justify-center gap-1.5"
+          className="w-full py-1.5 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-[10px] font-semibold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.3)] disabled:opacity-50 flex items-center justify-center gap-1.5"
         >
           {loading ? <Loader2 size={10} className="animate-spin" /> : <Bot size={10} />}
           {loading ? "Analyzing..." : "Analyze with AI"}
@@ -2156,15 +2156,15 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
     analysis.sentiment === "positive" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
     analysis.sentiment === "negative" ? "text-red-400 bg-red-500/10 border-red-500/20" :
     analysis.sentiment === "no_reply" ? "text-text-muted bg-white/5 border-border-subtle" :
-    "text-brand-accent bg-[rgba(59,130,246,0.08)] border-[rgba(59,130,246,0.25)]";
+    "text-brand-accent bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)]";
 
   const urgencyColor =
     analysis.urgency === "high" ? "text-red-400 bg-red-500/10" :
-    analysis.urgency === "medium" ? "text-brand-accent bg-[rgba(59,130,246,0.08)]" :
+    analysis.urgency === "medium" ? "text-brand-accent bg-[rgba(212,255,0,0.08)]" :
     "text-text-muted bg-white/5";
 
   return (
-    <div className="rounded-lg border border-[rgba(59,130,246,0.2)] bg-gradient-to-br from-[rgba(59,130,246,0.06)] to-transparent p-3 space-y-3">
+    <div className="rounded-lg border border-[rgba(212,255,0,0.2)] bg-gradient-to-br from-[rgba(212,255,0,0.06)] to-transparent p-3 space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Bot size={12} className="text-brand-accent" />
@@ -2212,7 +2212,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
         <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1 flex items-center gap-1">
           <ArrowRight size={9} /> Recommended Action
         </p>
-        <div className="text-[10px] font-medium capitalize text-brand-accent bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.15)] rounded px-2 py-1">
+        <div className="text-[10px] font-medium capitalize text-brand-accent bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.15)] rounded px-2 py-1">
           {analysis.recommended_action.replace(/_/g, " ")}
         </div>
       </div>
@@ -2271,7 +2271,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
               {copied ? "Copied" : "Copy"}
             </button>
           </div>
-          <div className="bg-surface-light/80 border border-[rgba(59,130,246,0.2)] rounded px-2 py-1.5">
+          <div className="bg-surface-light/80 border border-[rgba(212,255,0,0.2)] rounded px-2 py-1.5">
             <p className="text-[10px] leading-relaxed whitespace-pre-wrap">{analysis.next_reply_draft}</p>
           </div>
         </div>

@@ -678,7 +678,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
           <button
             onClick={runAiRecommend}
             disabled={aiLoading}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[rgba(59,130,246,0.12)] to-amber-400/15 border border-[rgba(59,130,246,0.25)] text-[#2563EB] text-xs font-semibold hover:from-[rgba(59,130,246,0.18)] hover:to-amber-400/20 transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[rgba(212,255,0,0.12)] to-amber-400/15 border border-[rgba(212,255,0,0.25)] text-[#2563EB] text-xs font-semibold hover:from-[rgba(212,255,0,0.18)] hover:to-amber-400/20 transition-all disabled:opacity-50"
           >
             {aiLoading ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
             {aiLoading ? "Thinking..." : "AI Recommended"}
@@ -692,7 +692,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
             <button
               key={p.key}
               onClick={() => applyPreset(p.key)}
-              className="text-xs px-2.5 py-1.5 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.4)] text-text-muted hover:text-text-primary transition-colors"
+              className="text-xs px-2.5 py-1.5 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.4)] text-text-muted hover:text-text-primary transition-colors"
               title={`Preset: ${p.label}`}
             >
               {p.label}
@@ -700,7 +700,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
           ))}
           <button
             onClick={() => applyPreset("custom")}
-            className="text-xs px-2.5 py-1.5 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.4)] text-text-muted hover:text-text-primary transition-colors"
+            className="text-xs px-2.5 py-1.5 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.4)] text-text-muted hover:text-text-primary transition-colors"
             title="Custom — use your own arrangement"
           >
             Custom
@@ -769,7 +769,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                     <span className="ml-1 text-[9px] text-text-muted/60">· {item.section}</span>
                   </span>
                   {pinned && <Pin size={10} className="text-[#2563EB] shrink-0" />}
-                  {assigned && <Layers size={10} className="text-blue-400 shrink-0" />}
+                  {assigned && <Layers size={10} className="text-indigo-400 shrink-0" />}
                   <button
                     onClick={() => toggleItem(item.href)}
                     className="p-0.5 rounded text-text-muted hover:text-text-primary transition-colors shrink-0"
@@ -828,7 +828,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
 
           {/* Pinned rail */}
           {pinnedItems.length > 0 && (
-            <div className="rounded-xl border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] p-2">
+            <div className="rounded-xl border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.04)] p-2">
               <div className="flex items-center gap-1.5 mb-1.5">
                 <Pin size={10} className="text-[#2563EB]" />
                 <span className="text-[10px] uppercase tracking-wider font-semibold text-[#2563EB]">Pinned</span>
@@ -884,7 +884,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                 toast.success("Created your first group — drop more items in, or rename it.");
               }}
               className={`text-[11px] text-center py-6 border border-dashed rounded-xl transition-colors ${
-                dragTarget === "_newgroup" ? "border-[#2563EB] bg-[rgba(59,130,246,0.06)] text-text-primary" : "border-border-subtle/50 text-text-muted"
+                dragTarget === "_newgroup" ? "border-[#2563EB] bg-[rgba(212,255,0,0.06)] text-text-primary" : "border-border-subtle/50 text-text-muted"
               }`}
             >
               {dragTarget === "_newgroup"
@@ -930,7 +930,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
             onDragOver={(e) => { e.preventDefault(); setDragTarget("_unassigned"); }}
             onDrop={onDropUnassign}
             className={`rounded-xl p-2 border border-dashed ${
-              dragTarget === "_unassigned" ? "border-[#2563EB] bg-[rgba(59,130,246,0.06)]" : "border-border-subtle/60 bg-surface-light/30"
+              dragTarget === "_unassigned" ? "border-[#2563EB] bg-[rgba(212,255,0,0.06)]" : "border-border-subtle/60 bg-surface-light/30"
             }`}
           >
             <div className="flex items-center gap-1.5 mb-1.5">
@@ -969,7 +969,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
       {/* ── Save/Discard sticky bar ─────────────────────────────── */}
       {isDirty && (
         <div className="sticky bottom-2 z-30">
-          <div className="glass rounded-xl p-4 flex items-center gap-3 shadow-2xl border-[rgba(59,130,246,0.25)]">
+          <div className="glass rounded-xl p-4 flex items-center gap-3 shadow-2xl border-[rgba(212,255,0,0.25)]">
             <span className="text-xs text-text-muted">You have unsaved changes.</span>
             <div className="flex-1" />
             <button onClick={discard} className="btn-pill-ghost text-xs flex items-center gap-1.5"><X size={12} /> Discard</button>
@@ -1159,7 +1159,7 @@ function GroupCard({
         <div
           onDragOver={onDragOver(`group:${group.id}`)}
           onDrop={onDropItems(group.id)}
-          className={`p-1.5 space-y-0.5 transition-colors ${dragTarget === `group:${group.id}` ? "bg-[rgba(59,130,246,0.06)]" : ""}`}
+          className={`p-1.5 space-y-0.5 transition-colors ${dragTarget === `group:${group.id}` ? "bg-[rgba(212,255,0,0.06)]" : ""}`}
         >
           {group.items.length === 0 && group.subgroups.length === 0 && (
             <div className="text-[10px] text-text-muted text-center py-3 border border-dashed border-border-subtle/40 rounded-md">
@@ -1201,7 +1201,7 @@ function GroupCard({
                   <div
                     onDragOver={onDragOver(`sub:${sg.id}`)}
                     onDrop={onDropItems(group.id, sg.id)}
-                    className={`p-1 space-y-0.5 min-h-[24px] transition-colors ${dragTarget === `sub:${sg.id}` ? "bg-[rgba(59,130,246,0.08)]" : ""}`}
+                    className={`p-1 space-y-0.5 min-h-[24px] transition-colors ${dragTarget === `sub:${sg.id}` ? "bg-[rgba(212,255,0,0.08)]" : ""}`}
                   >
                     {sg.items.length === 0 ? (
                       <div className="text-[10px] text-text-muted text-center py-2 border border-dashed border-border-subtle/30 rounded-md">

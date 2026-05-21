@@ -272,7 +272,7 @@ export default function InvoicesPage() {
                             <motion.div
                               variants={itemVariants}
                               onClick={() => setExpandedInvoice(expandedInvoice === inv.id ? null : inv.id)}
-                              className={`flex items-center justify-between p-4 transition-all cursor-pointer hover:bg-[rgba(59,130,246,0.05)] ${
+                              className={`flex items-center justify-between p-4 transition-all cursor-pointer hover:bg-[rgba(212,255,0,0.05)] ${
                                 isOverdue ? "bg-rose-400/10" : ""
                               }`}
 >
@@ -290,7 +290,7 @@ export default function InvoicesPage() {
                                     <p className="text-sm font-semibold">{inv.client}</p>
                                     <span className="text-[8px] font-mono text-text-muted">{inv.id}</span>
                                     {inv.recurring && <RefreshCw size={8} className="text-brand-accent" />}
-                                    {inv.currency !== "USD" && <Globe size={8} className="text-blue-400" />}
+                                    {inv.currency !== "USD" && <Globe size={8} className="text-indigo-400" />}
                                   </div>
                                   <p className="text-[10px] text-text-muted">{inv.description}</p>
                                 </div>
@@ -304,7 +304,7 @@ export default function InvoicesPage() {
                                   inv.status === "paid" ? "bg-emerald-400/10 text-emerald-400 border border-emerald-400/20" :
                                   isOverdue ? "bg-rose-400/10 text-rose-400 border border-rose-400/20" :
                                   inv.status === "draft" ? "bg-white/[0.05] text-text-muted border border-border-subtle" :
-                                  inv.status === "sent" ? "bg-blue-400/10 text-blue-400 border border-blue-400/20" :
+                                  inv.status === "sent" ? "bg-indigo-400/10 text-indigo-400 border border-indigo-400/20" :
                                   "bg-amber-400/10 text-amber-400 border border-amber-400/20"
                                 }`}>{isOverdue ? "overdue" : inv.status}</span>
                                 <ChevronRight size={14} className="text-text-muted" />
@@ -456,7 +456,7 @@ export default function InvoicesPage() {
                       </select>
                       <button
                         onClick={() => toast("Proposals ? invoice pipeline ships with the proposals module. Track progress on the roadmap.", { icon: "??", duration: 6000 })}
-                        className="w-full text-xs flex items-center justify-center gap-1.5 bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.25)] rounded-lg py-1.5 hover:bg-[rgba(59,130,246,0.14)] transition-all">
+                        className="w-full text-xs flex items-center justify-center gap-1.5 bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.25)] rounded-lg py-1.5 hover:bg-[rgba(212,255,0,0.14)] transition-all">
                         <ArrowRight size={12} /> Create from Proposal
                       </button>
                     </PrismPanel>
@@ -580,7 +580,7 @@ export default function InvoicesPage() {
                           <p className="font-bold text-rose-400">{formatCurrency(inv.amount)}</p>
                           <button
                             onClick={() => toast("Automated reminders are coming. For now, contact the client directly or use Stripe's payment reminder emails.", { icon: "??", duration: 6000 })}
-                            className="text-[9px] px-2 py-1 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.14)]">Send Reminder</button>
+                            className="text-[9px] px-2 py-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.14)]">Send Reminder</button>
                         </div>
                       </div>
                     ))}
@@ -612,7 +612,7 @@ export default function InvoicesPage() {
                       }}
 >
                       <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
                           <FileText size={16} className="text-brand-accent" />
                         </div>
                         <div>

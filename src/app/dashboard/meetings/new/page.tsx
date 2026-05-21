@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
@@ -164,10 +164,10 @@ export default function NewMeetingPage() {
                   onClick={() => inputRef.current?.click()}
                   className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
                     dragOver
-                      ? "border-brand-accent bg-[rgba(59,130,246,0.05)]"
+                      ? "border-brand-accent bg-[rgba(212,255,0,0.05)]"
                       : file
                       ? "border-green-400/30 bg-green-400/5"
-                      : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
+                      : "border-border-subtle hover:border-[rgba(212,255,0,0.25)]"
                   }`}
                 >
                   <input

@@ -289,7 +289,7 @@ export default function CommandPalette() {
                       onMouseEnter={() => setSelectedIndex(flatIdx)}
                       className="w-full flex items-center gap-3 px-4 py-2 text-left transition-colors"
                       style={{
-                        background: isSelected ? "rgba(59,130,246,0.14)" : "transparent",
+                        background: isSelected ? "rgba(212,255,0,0.14)" : "transparent",
                       }}
                       onMouseLeave={() => {}}
                     >
@@ -334,7 +334,7 @@ export default function CommandPalette() {
                       onMouseEnter={() => setSelectedIndex(flatIdx)}
                       className="w-full flex items-center gap-3 px-4 py-2 text-left transition-colors"
                       style={{
-                        background: isSelected ? "rgba(59,130,246,0.14)" : "transparent",
+                        background: isSelected ? "rgba(212,255,0,0.14)" : "transparent",
                       }}
                     >
                       <span className="shrink-0">{RECORD_ICONS[r.type] ?? <Search size={14} className="text-[#4A4A5A]" />}</span>

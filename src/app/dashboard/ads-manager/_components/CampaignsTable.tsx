@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * CampaignsTable — unified campaign list across Meta / Google / TikTok.
@@ -259,7 +259,7 @@ export default function CampaignsTable() {
       </div>
 
       {selected.size > 0 && (
-        <div className="flex items-center gap-2 rounded border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.04)] px-3 py-2 text-sm">
+        <div className="flex items-center gap-2 rounded border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.04)] px-3 py-2 text-sm">
           <span className="text-brand-accent">{selected.size} selected</span>
           <button
             onClick={() => void bulkPause("paused")}
@@ -358,7 +358,7 @@ export default function CampaignsTable() {
                         c.status === "active"
                           ? "bg-success/15 text-success"
                           : c.status === "paused"
-                          ? "bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                          ? "bg-[rgba(212,255,0,0.08)] text-brand-accent"
                           : "bg-[rgba(99,146,255,0.06)] text-text-muted"
                       }`}
                     >

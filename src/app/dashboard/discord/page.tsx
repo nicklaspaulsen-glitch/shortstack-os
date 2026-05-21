@@ -502,7 +502,7 @@ export default function DiscordPage() {
             <div className="flex gap-1">
               {["All", "Info", "Reports", "Tools"].map(f => (
                 <button key={f} onClick={() => setCommandFilter(f)}
-                  className={`text-[10px] px-2.5 py-1 rounded-full border ${commandFilter === f ? "border-brand-accent text-brand-accent bg-[rgba(59,130,246,0.05)]" : "border-border-subtle text-text-muted"}`}>{f}</button>
+                  className={`text-[10px] px-2.5 py-1 rounded-full border ${commandFilter === f ? "border-brand-accent text-brand-accent bg-[rgba(212,255,0,0.05)]" : "border-border-subtle text-text-muted"}`}>{f}</button>
               ))}
             </div>
           </div>
@@ -551,7 +551,7 @@ export default function DiscordPage() {
               <label className="text-[10px] text-text-muted font-semibold uppercase">Response Template</label>
               <textarea className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface h-20 resize-none" placeholder="Enter the bot response message..." />
             </div>
-            <button className="mt-3 text-xs bg-[rgba(59,130,246,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium hover:bg-[rgba(59,130,246,0.12)]">Register Command</button>
+            <button className="mt-3 text-xs bg-[rgba(212,255,0,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium hover:bg-[rgba(212,255,0,0.12)]">Register Command</button>
           </div>
         </div>
       )}
@@ -603,7 +603,7 @@ export default function DiscordPage() {
                 <input type="color" defaultValue="#5865F2" className="w-full mt-1 h-9 border border-border-subtle rounded-lg bg-surface cursor-pointer" />
               </div>
             </div>
-            <button className="mt-3 text-xs bg-[rgba(59,130,246,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium hover:bg-[rgba(59,130,246,0.12)]">Add Rule</button>
+            <button className="mt-3 text-xs bg-[rgba(212,255,0,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium hover:bg-[rgba(212,255,0,0.12)]">Add Rule</button>
           </div>
         </div>
       )}
@@ -776,7 +776,7 @@ export default function DiscordPage() {
           <PreviewBanner />
           <div className="flex items-center justify-between">
             <p className="text-xs text-text-muted">Schedule and manage Discord events.</p>
-            <button onClick={() => setShowNewEvent(!showNewEvent)} className="text-xs bg-[rgba(59,130,246,0.08)] text-brand-accent px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5">
+            <button onClick={() => setShowNewEvent(!showNewEvent)} className="text-xs bg-[rgba(212,255,0,0.08)] text-brand-accent px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5">
               <Plus size={12} /> New Event
             </button>
           </div>
@@ -803,7 +803,7 @@ export default function DiscordPage() {
                   <input type="time" className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface" />
                 </div>
               </div>
-              <button className="mt-3 text-xs bg-[rgba(59,130,246,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium">Create Event</button>
+              <button className="mt-3 text-xs bg-[rgba(212,255,0,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium">Create Event</button>
             </div>
           )}
           <div className="flex flex-col items-center justify-center py-8 text-center">
@@ -843,7 +843,7 @@ export default function DiscordPage() {
                       className="w-full mt-1 text-xs border border-border-subtle rounded-lg px-3 py-2 bg-surface" placeholder="Footer text" />
                   </div>
                 </div>
-                <button className="text-xs bg-[rgba(59,130,246,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium hover:bg-[rgba(59,130,246,0.12)] w-full">
+                <button className="text-xs bg-[rgba(212,255,0,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium hover:bg-[rgba(212,255,0,0.12)] w-full">
                   <Send size={12} className="inline mr-1.5" /> Send Embed
                 </button>
               </div>
@@ -920,7 +920,7 @@ export default function DiscordPage() {
                 <option>Error/Alert</option>
               </select>
             </div>
-            <button className="mt-3 text-xs bg-[rgba(59,130,246,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium hover:bg-[rgba(59,130,246,0.12)]">Create Webhook</button>
+            <button className="mt-3 text-xs bg-[rgba(212,255,0,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium hover:bg-[rgba(212,255,0,0.12)]">Create Webhook</button>
           </div>
         </div>
       )}
@@ -963,7 +963,7 @@ export default function DiscordPage() {
                   </select>
                 </div>
               </div>
-              <button className="text-xs bg-[rgba(59,130,246,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium hover:bg-[rgba(59,130,246,0.12)]">Schedule</button>
+              <button className="text-xs bg-[rgba(212,255,0,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium hover:bg-[rgba(212,255,0,0.12)]">Schedule</button>
             </div>
           </div>
           <div className="flex flex-col items-center justify-center py-8 text-center">

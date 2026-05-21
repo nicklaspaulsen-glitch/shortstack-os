@@ -16,7 +16,7 @@ interface CreateAction {
 const ACTIONS: CreateAction[] = [
   { label: "New Campaign",   icon: <Megaphone size={14} />,  href: "/dashboard/ads",                  color: "text-warning" },
   { label: "New Thumbnail",  icon: <ImageIcon size={14} />,  href: "/dashboard/thumbnail-generator",  color: "text-emerald-400" },
-  { label: "New Video",      icon: <Film size={14} />,       href: "/dashboard/production",           color: "text-blue-400" },
+  { label: "New Video",      icon: <Film size={14} />,       href: "/dashboard/production",           color: "text-indigo-400" },
   { label: "New Email",      icon: <Mail size={14} />,       href: "/dashboard/email-templates",      color: "text-amber-400" },
   { label: "New Content",    icon: <Sparkles size={14} />,   href: "/dashboard/ai-studio",            color: "text-purple-400" },
   { label: "New Client",     icon: <Users size={14} />,      href: "/dashboard/onboard",              color: "text-success" },
@@ -44,7 +44,7 @@ export default function QuickCreateFab() {
             <button
               key={a.label}
               onClick={() => { router.push(a.href); setOpen(false); }}
-              className="flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full bg-surface border border-border-subtle shadow-md hover:border-[rgba(59,130,246,0.3)] hover:shadow-lg transition-all group"
+              className="flex items-center gap-2 pl-3 pr-3.5 py-2 rounded-full bg-surface border border-border-subtle shadow-md hover:border-[rgba(212,255,0,0.3)] hover:shadow-lg transition-all group"
             >
               <span className={`${a.color}`}>{a.icon}</span>
               <span className="text-[11px] font-medium group-hover:text-[#2563EB] transition-colors">{a.label}</span>
@@ -60,9 +60,9 @@ export default function QuickCreateFab() {
         className={`w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all ${
           open
             ? "bg-surface border border-border-subtle text-text-muted hover:text-text-primary"
-            : "bg-gradient-to-br from-[#2563EB] to-[rgba(59,130,246,0.8)] text-white hover:scale-110"
+            : "bg-gradient-to-br from-[#2563EB] to-[rgba(212,255,0,0.8)] text-white hover:scale-110"
         }`}
-        style={open ? {} : { boxShadow: "0 8px 24px -4px rgba(59,130,246,0.55)" }}
+        style={open ? {} : { boxShadow: "0 8px 24px -4px rgba(212,255,0,0.55)" }}
       >
         {open ? <X size={18} /> : <Plus size={18} />}
       </button>

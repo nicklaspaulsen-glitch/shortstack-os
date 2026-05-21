@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
@@ -140,7 +140,7 @@ export default function FunnelsPage() {
                     onClick={() => setFilter(tab.id)}
                     className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                       filter === tab.id
-                        ? "bg-[rgba(59,130,246,0.08)] text-blue-400 border border-[rgba(59,130,246,0.25)]"
+                        ? "bg-[rgba(212,255,0,0.08)] text-indigo-400 border border-[rgba(212,255,0,0.25)]"
                         : "text-text-muted hover:text-text-secondary"
                     }`}
                   >
@@ -166,7 +166,7 @@ export default function FunnelsPage() {
               </div>
             ) : filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 gap-4">
-                <div className="w-16 h-16  bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.15)] flex items-center justify-center">
+                <div className="w-16 h-16  bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.15)] flex items-center justify-center">
                   <Layers size={28} className="text-brand-accent" />
                 </div>
                 <div className="text-center">

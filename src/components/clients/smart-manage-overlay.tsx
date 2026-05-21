@@ -159,7 +159,7 @@ export default function SmartManageOverlay({
       <div className="relative w-full max-w-md h-full bg-surface border-l border-border-subtle/50 shadow-2xl shadow-black/50 overflow-y-auto">
         <div className="sticky top-0 z-10 bg-surface/95 backdrop-blur-sm border-b border-border-subtle/30 px-5 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center">
+            <div className="w-7 h-7 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center">
               <Sparkles size={14} className="text-[#2563EB]" />
             </div>
             <div>
@@ -221,11 +221,11 @@ export default function SmartManageOverlay({
                       ? "border-danger/30 bg-danger/[0.04]"
                       : state === "todo"
                         ? "border-warning/30 bg-warning/[0.04]"
-                        : "border-border-subtle bg-surface-light/40 hover:border-[rgba(59,130,246,0.25)]"
+                        : "border-border-subtle bg-surface-light/40 hover:border-[rgba(212,255,0,0.25)]"
                 }`}
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center shrink-0">
                     <Icon size={14} className="text-[#2563EB]" />
                   </div>
                   <div className="flex-1 min-w-0">

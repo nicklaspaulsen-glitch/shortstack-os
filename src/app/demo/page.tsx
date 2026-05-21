@@ -87,7 +87,7 @@ export default function DemoPage() {
               <div key={f.title} className="p-5 rounded-xl text-center"
                 style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
                 <div className="w-10 h-10 rounded-lg mx-auto mb-3 flex items-center justify-center text-[#2563EB]"
-                  style={{ background: "rgba(59,130,246,0.08)" }}>
+                  style={{ background: "rgba(212,255,0,0.08)" }}>
                   {f.icon}
                 </div>
                 <h3 className="text-sm font-bold text-white mb-1">{f.title}</h3>

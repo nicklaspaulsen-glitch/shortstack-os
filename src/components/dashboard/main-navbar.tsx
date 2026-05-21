@@ -183,13 +183,13 @@ function IconCircle({
       className="group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl shrink-0 outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6]/60"
       style={{
         background: active
-          ? "rgba(59,130,246,0.16)"
+          ? "rgba(212,255,0,0.16)"
           : "rgba(255,255,255,0.04)",
         border: active
-          ? "1px solid rgba(59,130,246,0.30)"
+          ? "1px solid rgba(212,255,0,0.30)"
           : "1px solid rgba(255,255,255,0.06)",
         boxShadow: active
-          ? "0 0 0 1px rgba(59,130,246,0.12), 0 0 12px rgba(59,130,246,0.18), inset 0 1px 0 rgba(255,255,255,0.10)"
+          ? "0 0 0 1px rgba(212,255,0,0.12), 0 0 12px rgba(212,255,0,0.18), inset 0 1px 0 rgba(255,255,255,0.10)"
           : "inset 0 1px 0 rgba(255,255,255,0.04)",
         transition: "all 180ms cubic-bezier(0.32,0.72,0,1)",
       }}
@@ -201,7 +201,7 @@ function IconCircle({
           className="pointer-events-none absolute inset-0 rounded-xl"
           style={{
             background:
-              "conic-gradient(from 180deg, rgba(59,130,246,0) 0%, rgba(96,165,250,0.35) 25%, rgba(59,130,246,0) 50%, rgba(37,99,235,0.25) 75%, rgba(59,130,246,0) 100%)",
+              "conic-gradient(from 180deg, rgba(212,255,0,0) 0%, rgba(212,255,0,0.35) 25%, rgba(212,255,0,0) 50%, rgba(212,255,0,0.18) 75%, rgba(212,255,0,0) 100%)",
             animation: "conicSpin 3s linear infinite",
             opacity: 0.5,
           }}
@@ -222,7 +222,7 @@ function IconCircle({
         <span
           aria-hidden
           className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
-          style={{ background: "#3B82F6", boxShadow: "0 0 4px rgba(59,130,246,0.80)" }}
+          style={{ background: "#3B82F6", boxShadow: "0 0 4px rgba(212,255,0,0.80)" }}
         />
       )}
       {/* Tooltip */}
@@ -272,16 +272,16 @@ function SectionDropdown({
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-medium outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6]/60 cursor-pointer"
         style={{
           background: active
-            ? "rgba(59,130,246,0.12)"
+            ? "rgba(212,255,0,0.12)"
             : open
             ? "rgba(255,255,255,0.07)"
             : "rgba(255,255,255,0.04)",
           border: active
-            ? "1px solid rgba(59,130,246,0.22)"
+            ? "1px solid rgba(212,255,0,0.22)"
             : "1px solid rgba(255,255,255,0.06)",
           color: active ? "#60A5FA" : open ? "#C8C8D4" : "#7A7F9A",
           boxShadow: active
-            ? "0 0 8px rgba(59,130,246,0.10), inset 0 1px 0 rgba(255,255,255,0.08)"
+            ? "0 0 8px rgba(212,255,0,0.10), inset 0 1px 0 rgba(255,255,255,0.08)"
             : "inset 0 1px 0 rgba(255,255,255,0.04)",
           transition: "all 150ms cubic-bezier(0.32,0.72,0,1)",
         }}
@@ -332,7 +332,7 @@ function SectionDropdown({
                   role="menuitem"
                   className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12px] group outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6]/60"
                   style={{
-                    background: itemActive ? "rgba(59,130,246,0.12)" : "transparent",
+                    background: itemActive ? "rgba(212,255,0,0.12)" : "transparent",
                     color: itemActive ? "#60A5FA" : "#8A8FA8",
                     transition: "all 120ms",
                   }}
@@ -343,7 +343,7 @@ function SectionDropdown({
                   }}
                   onMouseLeave={(e) => {
                     const el = e.currentTarget as HTMLElement;
-                    el.style.background = itemActive ? "rgba(59,130,246,0.12)" : "transparent";
+                    el.style.background = itemActive ? "rgba(212,255,0,0.12)" : "transparent";
                     el.style.color = itemActive ? "#60A5FA" : "#8A8FA8";
                   }}
                 >
@@ -351,10 +351,10 @@ function SectionDropdown({
                     className="flex items-center justify-center w-6 h-6 rounded-lg shrink-0"
                     style={{
                       background: itemActive
-                        ? "rgba(59,130,246,0.20)"
+                        ? "rgba(212,255,0,0.20)"
                         : "rgba(255,255,255,0.05)",
                       border: itemActive
-                        ? "1px solid rgba(59,130,246,0.25)"
+                        ? "1px solid rgba(212,255,0,0.25)"
                         : "1px solid rgba(255,255,255,0.06)",
                     }}
                   >
@@ -369,7 +369,7 @@ function SectionDropdown({
                     <span
                       aria-hidden
                       className="ml-auto w-1 h-1 rounded-full shrink-0"
-                      style={{ background: "#3B82F6", boxShadow: "0 0 4px rgba(59,130,246,0.70)" }}
+                      style={{ background: "#3B82F6", boxShadow: "0 0 4px rgba(212,255,0,0.70)" }}
                     />
                   )}
                 </Link>
@@ -444,7 +444,7 @@ function MobileDrawer({
                     onClick={onClose}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-xl mb-0.5"
                     style={{
-                      background: active ? "rgba(59,130,246,0.12)" : "transparent",
+                      background: active ? "rgba(212,255,0,0.12)" : "transparent",
                       color: active ? "#60A5FA" : "#7A7F9A",
                       transition: "all 120ms",
                     }}
@@ -453,10 +453,10 @@ function MobileDrawer({
                       className="flex items-center justify-center w-7 h-7 rounded-lg shrink-0"
                       style={{
                         background: active
-                          ? "rgba(59,130,246,0.18)"
+                          ? "rgba(212,255,0,0.18)"
                           : "rgba(255,255,255,0.04)",
                         border: active
-                          ? "1px solid rgba(59,130,246,0.22)"
+                          ? "1px solid rgba(212,255,0,0.22)"
                           : "1px solid rgba(255,255,255,0.06)",
                       }}
                     >
@@ -488,7 +488,7 @@ function MobileDrawer({
                         onClick={onClose}
                         className="flex items-center gap-3 px-3 py-2 rounded-xl mb-0.5"
                         style={{
-                          background: active ? "rgba(59,130,246,0.12)" : "transparent",
+                          background: active ? "rgba(212,255,0,0.12)" : "transparent",
                           color: active ? "#60A5FA" : "#7A7F9A",
                           transition: "all 120ms",
                         }}
@@ -497,7 +497,7 @@ function MobileDrawer({
                           className="flex items-center justify-center w-6 h-6 rounded-lg shrink-0"
                           style={{
                             background: active
-                              ? "rgba(59,130,246,0.16)"
+                              ? "rgba(212,255,0,0.16)"
                               : "rgba(255,255,255,0.04)",
                           }}
                         >
@@ -532,9 +532,9 @@ function PlanBadge({
     <span
       className="hidden md:flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full"
       style={{
-        background: isFounder ? "rgba(245,158,11,0.10)" : "rgba(59,130,246,0.10)",
+        background: isFounder ? "rgba(245,158,11,0.10)" : "rgba(212,255,0,0.10)",
         color: isFounder ? "#F59E0B" : "#60A5FA",
-        border: `1px solid ${isFounder ? "rgba(245,158,11,0.18)" : "rgba(59,130,246,0.18)"}`,
+        border: `1px solid ${isFounder ? "rgba(245,158,11,0.18)" : "rgba(212,255,0,0.18)"}`,
       }}
     >
       {isFounder && <Crown size={9} aria-hidden />}
@@ -557,7 +557,7 @@ function NavLogo() {
           background:
             "linear-gradient(135deg, #3B82F6 0%, #2563EB 60%, #1D4ED8 100%)",
           boxShadow:
-            "0 0 0 1px rgba(59,130,246,0.30), 0 2px 10px rgba(59,130,246,0.40), inset 0 1px 0 rgba(255,255,255,0.18)",
+            "0 0 0 1px rgba(212,255,0,0.30), 0 2px 10px rgba(212,255,0,0.40), inset 0 1px 0 rgba(255,255,255,0.18)",
           transition: "box-shadow 200ms, transform 200ms",
         }}
       >
@@ -692,7 +692,7 @@ export default function MainNavbar() {
             }
             className="shrink-0 rounded-full outline-none"
             style={{
-              boxShadow: "0 0 0 1px rgba(99,146,255,0.18), 0 0 8px rgba(59,130,246,0.08)",
+              boxShadow: "0 0 0 1px rgba(99,146,255,0.18), 0 0 8px rgba(212,255,0,0.08)",
               transition: "box-shadow 200ms",
             }}
           >
@@ -709,8 +709,8 @@ export default function MainNavbar() {
               <div
                 className="w-7 h-7 rounded-full flex items-center justify-center"
                 style={{
-                  background: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(37,99,235,0.10))",
-                  border: "1px solid rgba(59,130,246,0.22)",
+                  background: "linear-gradient(135deg, rgba(212,255,0,0.20), rgba(37,99,235,0.10))",
+                  border: "1px solid rgba(212,255,0,0.22)",
                 }}
               >
                 <span className="text-[#60A5FA] text-[10px] font-bold font-display leading-none">

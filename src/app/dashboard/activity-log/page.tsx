@@ -228,7 +228,7 @@ export default function ActivityLogPage() {
               {TABS.map(t => (
                 <button key={t.id} onClick={() => setTab(t.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-                    tab === t.id ? "bg-[rgba(59,130,246,0.08)] text-brand-accent font-medium" : "text-text-muted hover:text-text-primary"
+                    tab === t.id ? "bg-[rgba(212,255,0,0.08)] text-brand-accent font-medium" : "text-text-muted hover:text-text-primary"
                   }`}>
                   {t.icon} {t.label}
                 </button>
@@ -369,7 +369,7 @@ export default function ActivityLogPage() {
                     return (
                       <motion.div key={user} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(212,255,0,0.08)" }}>
                         <div className="flex items-center gap-3 mb-2">
-                          <div className="w-8 h-8 rounded-full bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-xs font-bold text-brand-accent">{user[0]}</div>
+                          <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-xs font-bold text-brand-accent">{user[0]}</div>
                           <div className="flex-1">
                             <p className="text-xs font-semibold">{user}</p>
                             <p className="text-[10px] text-text-muted">{count} actions ({pct.toFixed(0)}%)</p>

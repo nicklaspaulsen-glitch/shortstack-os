@@ -186,7 +186,7 @@ export default function BrowserTaskDetailPage() {
     return (
       <div className="glass rounded-lg p-10 text-center text-text-muted">
         Task not found.{" "}
-        <Link href="/dashboard/automations/browser-tasks" className="text-blue-400 hover:underline">
+        <Link href="/dashboard/automations/browser-tasks" className="text-indigo-400 hover:underline">
           Back to list
         </Link>
       </div>

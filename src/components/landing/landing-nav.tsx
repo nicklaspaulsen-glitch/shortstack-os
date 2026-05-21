@@ -187,8 +187,8 @@ export default function LandingNav() {
                     layoutId="nav-active-pill"
                     className="absolute inset-0 rounded-lg"
                     style={{
-                      background: "rgba(59,130,246,0.16)",
-                      border: "1px solid rgba(59,130,246,0.28)",
+                      background: "rgba(212,255,0,0.16)",
+                      border: "1px solid rgba(212,255,0,0.28)",
                     }}
                     initial={false}
                     transition={{ type: "spring", stiffness: 380, damping: 34 }}
@@ -216,11 +216,11 @@ export default function LandingNav() {
           </Link>
           <Link
             href="/pricing"
-            className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-all duration-200 bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_16px_rgba(59,130,246,0.30)] hover:shadow-[0_0_24px_rgba(59,130,246,0.50)]"
+            className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-all duration-200 bg-indigo-600 hover:bg-indigo-500 text-white shadow-[0_0_16px_rgba(212,255,0,0.30)] hover:shadow-[0_0_24px_rgba(212,255,0,0.50)]"
           >
             Start free
             <span
-              className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px] font-medium font-mono text-blue-200/70"
+              className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px] font-medium font-mono text-indigo-200/70"
               style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.15)" }}
             >
               S
@@ -275,8 +275,8 @@ export default function LandingNav() {
                       <span
                         className="absolute inset-0 rounded-lg"
                         style={{
-                          background: "rgba(59,130,246,0.14)",
-                          border: "1px solid rgba(59,130,246,0.24)",
+                          background: "rgba(212,255,0,0.14)",
+                          border: "1px solid rgba(212,255,0,0.24)",
                         }}
                       />
                     )}
@@ -295,7 +295,7 @@ export default function LandingNav() {
                 </Link>
                 <Link
                   href="/pricing"
-                  className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-all text-center bg-blue-600 hover:bg-blue-500 text-white"
+                  className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-all text-center bg-indigo-600 hover:bg-indigo-500 text-white"
                   onClick={close}
                 >
                   Start free trial

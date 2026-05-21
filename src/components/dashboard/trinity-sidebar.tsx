@@ -141,9 +141,9 @@ function ItemBadge({ text }: { text: string }) {
         letterSpacing: "0.04em",
         padding: "1px 5px",
         borderRadius: 4,
-        background: isHot ? "rgba(239,68,68,0.12)" : "rgba(59,130,246,0.12)",
+        background: isHot ? "rgba(239,68,68,0.12)" : "rgba(212,255,0,0.12)",
         color: isHot ? "#F87171" : "#60A5FA",
-        border: `1px solid ${isHot ? "rgba(239,68,68,0.20)" : "rgba(59,130,246,0.20)"}`,
+        border: `1px solid ${isHot ? "rgba(239,68,68,0.20)" : "rgba(212,255,0,0.20)"}`,
         marginLeft: "auto",
         flexShrink: 0,
       }}
@@ -176,7 +176,7 @@ function NavItem({
         padding: "7px 10px 7px 13px",
         borderRadius: 7,
         background: active
-          ? "rgba(59,130,246,0.10)"
+          ? "rgba(212,255,0,0.10)"
           : hovered
           ? "rgba(255,255,255,0.04)"
           : "transparent",
@@ -231,7 +231,7 @@ function NavItem({
             fontWeight: 600,
             padding: "1px 5px",
             borderRadius: 10,
-            background: "rgba(59,130,246,0.15)",
+            background: "rgba(212,255,0,0.15)",
             color: "#60A5FA",
             marginLeft: "auto",
           }}
@@ -274,8 +274,8 @@ function SidebarBody({ pathname }: { pathname: string }) {
               width: 32,
               height: 32,
               borderRadius: 8,
-              background: "rgba(59,130,246,0.14)",
-              border: "1px solid rgba(59,130,246,0.22)",
+              background: "rgba(212,255,0,0.14)",
+              border: "1px solid rgba(212,255,0,0.22)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",

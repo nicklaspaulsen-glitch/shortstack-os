@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Admin-only: Tier-1 self-test dashboard.
@@ -218,7 +218,7 @@ export default function SelfTestDashboard() {
 
       {/* Verdict banner */}
       {!latest_run ? (
-        <div className=" border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] p-4 flex items-start gap-3">
+        <div className=" border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] p-4 flex items-start gap-3">
           <AlertTriangle size={20} className="text-brand-accent shrink-0 mt-0.5" />
           <div>
             <div className="text-sm font-bold text-text-primary">No runs yet</div>

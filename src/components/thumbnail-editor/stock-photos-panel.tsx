@@ -156,13 +156,13 @@ export default function StockPhotosPanel({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search photos..."
-              className="w-full bg-neutral-900 border border-neutral-700 rounded pl-7 pr-2 py-1.5 text-xs text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:border-blue-500"
+              className="w-full bg-neutral-900 border border-neutral-700 rounded pl-7 pr-2 py-1.5 text-xs text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:border-indigo-500"
             />
           </div>
           <button
             type="submit"
             disabled={loading || !query.trim()}
-            className="px-3 py-1.5 rounded bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-xs text-white"
+            className="px-3 py-1.5 rounded bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-xs text-white"
           >
             Go
           </button>
@@ -227,7 +227,7 @@ export default function StockPhotosPanel({
                 key={photo.id}
                 type="button"
                 onClick={() => onInsert(photo)}
-                className="group relative aspect-video bg-neutral-900 rounded overflow-hidden border border-neutral-800 hover:border-blue-500 transition-colors"
+                className="group relative aspect-video bg-neutral-900 rounded overflow-hidden border border-neutral-800 hover:border-indigo-500 transition-colors"
                 title={`Insert: ${photo.photographer}`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}

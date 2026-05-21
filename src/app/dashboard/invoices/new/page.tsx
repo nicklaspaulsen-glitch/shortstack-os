@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -305,7 +305,7 @@ export default function NewSmartInvoicePage() {
               </button>
 
               {reasoning && (
-                <p className="text-[10px] text-text-muted italic border-l-2 border-[rgba(59,130,246,0.30)] pl-2">
+                <p className="text-[10px] text-text-muted italic border-l-2 border-[rgba(212,255,0,0.30)] pl-2">
                   {reasoning}
                 </p>
               )}
@@ -414,7 +414,7 @@ export default function NewSmartInvoicePage() {
                 className="input w-full text-xs resize-none"
               />
             </div>{paymentLink && (
-              <div className="glass rounded-xl p-4 border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] p-4 flex items-center justify-between gap-3">
+              <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] p-4 flex items-center justify-between gap-3">
                 <div>
                   <p className="text-[11px] font-semibold">Stripe payment link ready</p>
                   <a

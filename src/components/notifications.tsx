@@ -25,7 +25,7 @@ interface Notification {
 /* Map notification type to an icon */
 const TYPE_ICONS: Record<string, React.ReactNode> = {
   // New standard types
-  info:    <Info size={14} className="text-blue-400" />,
+  info:    <Info size={14} className="text-indigo-400" />,
   warning: <AlertTriangle size={14} className="text-warning" />,
   success: <CheckCircle2 size={14} className="text-success" />,
   error:   <XCircle size={14} className="text-danger" />,
@@ -35,7 +35,7 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
   invoice: <CreditCard size={14} className="text-warning" />,
   system:  <Activity size={14} className="text-[#2563EB]" />,
   content: <Film size={14} className="text-pink-400" />,
-  message: <MessageSquare size={14} className="text-blue-400" />,
+  message: <MessageSquare size={14} className="text-indigo-400" />,
   deal:    <Briefcase size={14} className="text-emerald-400" />,
 };
 
@@ -202,7 +202,7 @@ export default function Notifications() {
                       if (n.link) window.location.href = n.link;
                     }}
                     className={`w-full text-left px-4 py-2.5 border-b border-border-subtle/10 hover:bg-surface-light/30 transition-colors flex items-start gap-2.5 ${
-                      !n.read ? "bg-[rgba(59,130,246,0.05)]" : ""
+                      !n.read ? "bg-[rgba(212,255,0,0.05)]" : ""
                     }`}
                   >
                     <div className="mt-0.5 shrink-0">

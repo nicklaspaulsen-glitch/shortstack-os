@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -16,9 +16,9 @@ const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   instagram: <Camera size={10} className="text-pink-400" />,
   tiktok: <Film size={10} className="text-text-secondary" />,
-  facebook: <Send size={10} className="text-blue-400" />,
+  facebook: <Send size={10} className="text-indigo-400" />,
   youtube: <Film size={10} className="text-red-400" />,
-  linkedin: <Globe size={10} className="text-blue-400" />,
+  linkedin: <Globe size={10} className="text-indigo-400" />,
 };
 
 export default function ContentCalendarPage() {
@@ -207,7 +207,7 @@ export default function ContentCalendarPage() {
                 key={i}
                 onClick={() => { setSelectedDay(new Date(year, month, day)); setShowAddPost(true); }}
                 className={`min-h-[90px] p-1.5 rounded-lg text-left transition-all duration-200 hover:bg-white/[0.04] hover:border-border-subtle border ${
-                  isToday ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.04)]" : "border-transparent"
+                  isToday ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.04)]" : "border-transparent"
                 }`}
               >
                 <div className={`text-[10px] font-medium mb-1 ${isToday ? "text-brand-accent" : "text-text-muted"}`}>
@@ -217,8 +217,8 @@ export default function ContentCalendarPage() {
                   {dayEntries.slice(0, 3).map((entry, j) => (
                     <div key={j} className={`text-[8px] px-1 py-0.5 rounded flex items-center gap-0.5 truncate ${
                       entry.status === "published" ? "bg-success/10 text-success" :
-                      entry.status === "scheduled" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
-                      entry.status === "idea" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
+                      entry.status === "scheduled" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" :
+                      entry.status === "idea" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" :
                       "bg-white/[0.06] text-text-muted"
                     }`}>
                       {PLATFORM_ICONS[entry.platform] || null}
@@ -238,8 +238,8 @@ export default function ContentCalendarPage() {
       {/* Legend */}
       <div className="flex items-center gap-4 justify-center">
         {[
-          { label: "Idea", color: "bg-[rgba(59,130,246,0.15)] text-brand-accent" },
-          { label: "Scheduled", color: "bg-[rgba(59,130,246,0.15)] text-brand-accent" },
+          { label: "Idea", color: "bg-[rgba(212,255,0,0.15)] text-brand-accent" },
+          { label: "Scheduled", color: "bg-[rgba(212,255,0,0.15)] text-brand-accent" },
           { label: "Published", color: "bg-success/10 text-success" },
         ].map(item => (
           <div key={item.label} className="flex items-center gap-1.5">
@@ -268,7 +268,7 @@ export default function ContentCalendarPage() {
       {/* AI Plan Modal */}
       <Modal isOpen={showAIPlan} onClose={() => setShowAIPlan(false)} title="AI Content Planner" size="md">
         <div className="space-y-3">
-          <div className="flex items-center gap-2 p-2.5 bg-[rgba(59,130,246,0.05)] rounded-lg border border-[rgba(59,130,246,0.15)]">
+          <div className="flex items-center gap-2 p-2.5 bg-[rgba(212,255,0,0.05)] rounded-lg border border-[rgba(212,255,0,0.15)]">
             <Sparkles size={16} className="text-brand-accent shrink-0" />
             <p className="text-[10px] text-text-muted">Describe your business and goals, and AI will generate a full 30-day content calendar with platform-specific ideas.</p>
           </div>

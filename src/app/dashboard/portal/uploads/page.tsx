@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -188,7 +188,7 @@ export default function ClientUploadsPage() {
 
   function getFileIcon(type: string) {
     if (type.startsWith("image") || ["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(type)) return <MotionPage>
-                                                                                                              <ImageIcon size={14} className="text-blue-600" />
+                                                                                                              <ImageIcon size={14} className="text-indigo-600" />
                                                                                                             </MotionPage>;
     if (type.startsWith("video") || ["mp4", "mov", "avi", "webm"].includes(type)) return <Film size={14} className="text-purple-400" />;
     if (type.startsWith("audio") || ["mp3", "wav", "ogg"].includes(type)) return <Music size={14} className="text-pink-400" />;
@@ -229,7 +229,7 @@ export default function ClientUploadsPage() {
     <div className="space-y-5">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-[rgba(59,130,246,0.08)] rounded-xl flex items-center justify-center">
+        <div className="w-10 h-10 bg-[rgba(212,255,0,0.08)] rounded-xl flex items-center justify-center">
           <FolderOpen size={20} className="text-brand-accent" />
         </div>
         <div>
@@ -263,7 +263,7 @@ export default function ClientUploadsPage() {
         </div>
         <div className="glass rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp size={14} className="text-blue-600" />
+            <TrendingUp size={14} className="text-indigo-600" />
             <span className="text-[9px] text-text-muted uppercase tracking-wider">This Week</span>
           </div>
           <p className="text-2xl font-bold font-mono">{analytics.recentActivity}</p>
@@ -307,7 +307,7 @@ export default function ClientUploadsPage() {
             onDragLeave={() => setDragOver(false)}
             onDrop={handleDrop}
             className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer ${
-              dragOver ? "border-brand-accent bg-[rgba(59,130,246,0.05)]" : "border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
+              dragOver ? "border-brand-accent bg-[rgba(212,255,0,0.05)]" : "border-border-subtle hover:border-[rgba(212,255,0,0.25)]"
             }`}
             onClick={() => {
               const input = document.createElement("input");
@@ -328,7 +328,7 @@ export default function ClientUploadsPage() {
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2">
-                <div className="w-12 h-12 bg-[rgba(59,130,246,0.08)] rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-[rgba(212,255,0,0.08)] rounded-xl flex items-center justify-center">
                   <Upload size={20} className="text-brand-accent" />
                 </div>
                 <p className="text-sm font-medium">Drop files here or click to upload</p>
@@ -394,7 +394,7 @@ export default function ClientUploadsPage() {
                     <div className="flex items-center gap-2 mt-1.5">
                       <StatusBadge status={item.status} />
                       {item.platforms?.map(p => (
-                        <span key={p} className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded capitalize">
+                        <span key={p} className="text-[8px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-1.5 py-0.5 rounded capitalize">
                           {p.replace(/_/g, " ")}
                         </span>
                       ))}
@@ -432,7 +432,7 @@ export default function ClientUploadsPage() {
           ) : (
             content.map(item => (
               <div key={item.id} className="glass rounded-xl p-4 card-hover p-3 flex items-center gap-3">
-                <div className="w-9 h-9 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center shrink-0">
                   <Film size={14} className="text-brand-accent" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -440,7 +440,7 @@ export default function ClientUploadsPage() {
                   <div className="flex items-center gap-2 mt-0.5">
                     <span className="text-[9px] bg-white/[0.06] px-1.5 py-0.5 rounded text-text-muted">{item.script_type}</span>
                     {item.target_platform && (
-                      <span className="text-[9px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded capitalize">
+                      <span className="text-[9px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-1.5 py-0.5 rounded capitalize">
                         {item.target_platform.replace(/_/g, " ")}
                       </span>
                     )}
@@ -465,7 +465,7 @@ export default function ClientUploadsPage() {
         <div className="space-y-4">
           {zernioProfiles.length === 0 ? (
             <div className="card-static text-center py-12">
-              <div className="w-16 h-16 bg-[rgba(59,130,246,0.08)] flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-[rgba(212,255,0,0.08)] flex items-center justify-center mx-auto mb-4">
                 <Share2 size={28} className="text-brand-accent" />
               </div>
               <h3 className="text-sm font-semibold mb-1">Social accounts not connected</h3>
@@ -512,7 +512,7 @@ export default function ClientUploadsPage() {
                 <h3 className="text-[10px] text-text-muted uppercase tracking-wider mb-3">Social Performance</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div className="text-center p-3 bg-white/[0.04] rounded-xl">
-                    <Eye size={16} className="text-blue-600 mx-auto mb-1" />
+                    <Eye size={16} className="text-indigo-600 mx-auto mb-1" />
                     <p className="text-[9px] text-text-muted">Impressions</p>
                     <p className="text-sm font-bold font-mono">—</p>
                   </div>

@@ -725,10 +725,10 @@ export default function KumoScene({
           {/* Dark polished floor */}
           <pattern id="wood-floor" x="0" y="0" width="120" height="36" patternUnits="userSpaceOnUse">
             <rect width="120" height="36" fill="#080C18" />
-            <line x1="0" y1="0" x2="120" y2="0" stroke="rgba(59,130,246,0.10)" strokeWidth="0.5" />
-            <line x1="0" y1="36" x2="120" y2="36" stroke="rgba(59,130,246,0.10)" strokeWidth="0.5" />
-            <line x1="40" y1="0" x2="40" y2="36" stroke="rgba(59,130,246,0.06)" strokeWidth="0.4" />
-            <line x1="80" y1="0" x2="80" y2="36" stroke="rgba(59,130,246,0.06)" strokeWidth="0.4" />
+            <line x1="0" y1="0" x2="120" y2="0" stroke="rgba(212,255,0,0.10)" strokeWidth="0.5" />
+            <line x1="0" y1="36" x2="120" y2="36" stroke="rgba(212,255,0,0.10)" strokeWidth="0.5" />
+            <line x1="40" y1="0" x2="40" y2="36" stroke="rgba(212,255,0,0.06)" strokeWidth="0.4" />
+            <line x1="80" y1="0" x2="80" y2="36" stroke="rgba(212,255,0,0.06)" strokeWidth="0.4" />
             <line x1="0" y1="9" x2="120" y2="10" stroke="rgba(99,146,255,0.04)" strokeWidth="0.3" />
             <line x1="0" y1="22" x2="120" y2="21" stroke="rgba(99,146,255,0.03)" strokeWidth="0.3" />
             <line x1="0" y1="29" x2="120" y2="30" stroke="rgba(99,146,255,0.05)" strokeWidth="0.3" />

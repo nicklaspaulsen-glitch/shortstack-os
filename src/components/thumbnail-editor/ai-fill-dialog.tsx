@@ -117,7 +117,7 @@ export default function AIFillDialog({
                       className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border transition-all duration-100"
                       style={{
                         background: active
-                          ? "rgba(59,130,246,0.18)"
+                          ? "rgba(212,255,0,0.18)"
                           : "rgba(255,255,255,0.04)",
                         borderColor: active
                           ? "#3B82F6"
@@ -132,7 +132,7 @@ export default function AIFillDialog({
                           style={{
                             background: m.badgeColor
                               ? `${m.badgeColor}22`
-                              : "rgba(59,130,246,0.14)",
+                              : "rgba(212,255,0,0.14)",
                             color: m.badgeColor ?? "#60A5FA",
                           }}
                         >
@@ -160,7 +160,7 @@ export default function AIFillDialog({
                       className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border transition-all duration-100"
                       style={{
                         background: active
-                          ? "rgba(59,130,246,0.18)"
+                          ? "rgba(212,255,0,0.18)"
                           : "rgba(255,255,255,0.04)",
                         borderColor: active
                           ? "#3B82F6"
@@ -175,7 +175,7 @@ export default function AIFillDialog({
                           style={{
                             background: s.badgeColor
                               ? `${s.badgeColor}22`
-                              : "rgba(59,130,246,0.14)",
+                              : "rgba(212,255,0,0.14)",
                             color: s.badgeColor ?? "#60A5FA",
                           }}
                         >
@@ -194,7 +194,7 @@ export default function AIFillDialog({
             onChange={(e) => setPrompt(e.target.value)}
             placeholder={placeholder}
             rows={4}
-            className="w-full bg-neutral-800 border border-neutral-700 rounded p-2 text-sm text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:border-blue-500"
+            className="w-full bg-neutral-800 border border-neutral-700 rounded p-2 text-sm text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:border-indigo-500"
           />
           {presetSuggestions && presetSuggestions.length > 0 && (
             <div>

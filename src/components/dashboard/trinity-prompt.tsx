@@ -104,7 +104,7 @@ export default function TrinityPrompt() {
             backdropFilter: "blur(24px) saturate(1.5)",
             WebkitBackdropFilter: "blur(24px) saturate(1.5)",
             borderColor: "rgba(0,0,0,0.08)",
-            boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 24px 60px rgba(0,0,0,0.10), 0 0 48px -12px rgba(59,130,246,0.14)",
+            boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 24px 60px rgba(0,0,0,0.10), 0 0 48px -12px rgba(212,255,0,0.14)",
           }}
         >
           {/* Header */}
@@ -160,8 +160,8 @@ export default function TrinityPrompt() {
             <div
               className="mx-4 mb-3 rounded-xl px-4 py-3 text-sm"
               style={{
-                background: "rgba(59,130,246,0.04)",
-                border: "1px solid rgba(59,130,246,0.12)",
+                background: "rgba(212,255,0,0.04)",
+                border: "1px solid rgba(212,255,0,0.12)",
               }}
             >
               {sending ? (

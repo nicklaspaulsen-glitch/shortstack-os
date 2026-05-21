@@ -164,7 +164,7 @@ function DockIcon({ item, mouseX, baseSize, maxSize, radius, isActive }: DockIco
             "transition-colors duration-150",
             "outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/60",
             isActive
-              ? "bg-[rgba(59,130,246,0.22)] border border-[rgba(59,130,246,0.40)]"
+              ? "bg-[rgba(212,255,0,0.22)] border border-[rgba(212,255,0,0.40)]"
               : "bg-[rgba(19,24,39,0.78)] border border-[rgba(255,255,255,0.09)] hover:bg-[rgba(28,36,58,0.88)] hover:border-[rgba(99,146,255,0.24)]",
             "shadow-[0_2px_12px_rgba(0,0,0,0.30),inset_0_1px_0_rgba(255,255,255,0.07)]",
           )}
@@ -185,7 +185,7 @@ function DockIcon({ item, mouseX, baseSize, maxSize, radius, isActive }: DockIco
             <span
               aria-hidden
               className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-[4px] h-[4px] rounded-full bg-[#3B82F6]"
-              style={{ boxShadow: "0 0 6px rgba(59,130,246,0.80)" }}
+              style={{ boxShadow: "0 0 6px rgba(212,255,0,0.80)" }}
             />
           )}
         </Link>

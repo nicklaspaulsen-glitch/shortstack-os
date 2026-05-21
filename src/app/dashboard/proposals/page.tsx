@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Proposals — send branded proposals to prospects.
@@ -46,7 +46,7 @@ const STORAGE_KEY = "ss_proposals_v1";
 
 const STATUS_STYLES: Record<Proposal["status"], { label: string; tint: string }> = {
   draft: { label: "Draft", tint: "bg-muted/20 text-text-muted" },
-  sent: { label: "Sent", tint: "bg-[rgba(59,130,246,0.08)] text-brand-accent" },
+  sent: { label: "Sent", tint: "bg-[rgba(212,255,0,0.08)] text-brand-accent" },
   signed: { label: "Signed", tint: "bg-emerald-500/15 text-emerald-400" },
   declined: { label: "Declined", tint: "bg-rose-500/15 text-rose-400" },
 };
@@ -133,7 +133,7 @@ export default function ProposalsPage() {
       </div>
     </div><div className="mx-auto max-w-5xl space-y-5 px-6 pb-10 pt-5">
               {/* Beta banner */}
-              <div className="rounded-xl border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] px-4 py-3 text-[12px] text-brand-accent">
+              <div className="rounded-xl border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] px-4 py-3 text-[12px] text-brand-accent">
                 <span className="font-semibold">Beta:</span> proposals are stored locally on this
                 device. E-sign and PandaDoc wiring land next sprint — existing drafts will migrate.
               </div>
@@ -292,7 +292,7 @@ function ProposalCard({
         show: { opacity: 1, x: 0, transition: { duration: 0.3, ease: [0.32, 0.72, 0, 1] } },
       }}
       whileHover={{ y: -3 }}
-      className="glass rounded-xl hover:border-[rgba(59,130,246,0.14)] transition-colors spotlight-card"
+      className="glass rounded-xl hover:border-[rgba(212,255,0,0.14)] transition-colors spotlight-card"
       onMouseMove={(e) => {
         const rect = e.currentTarget.getBoundingClientRect();
         e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
@@ -300,7 +300,7 @@ function ProposalCard({
       }}
     >
       <div className="flex items-center gap-3 p-4">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[rgba(59,130,246,0.08)] text-brand-accent">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent">
           <FileCheck size={16} />
         </div>
         <div className="min-w-0 flex-1">
@@ -326,7 +326,7 @@ function ProposalCard({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onMarkSent}
-              className="inline-flex items-center gap-1 rounded bg-[rgba(59,130,246,0.08)] px-2.5 py-1.5 text-[11px] text-brand-accent hover:bg-[rgba(59,130,246,0.14)]"
+              className="inline-flex items-center gap-1 rounded bg-[rgba(212,255,0,0.08)] px-2.5 py-1.5 text-[11px] text-brand-accent hover:bg-[rgba(212,255,0,0.14)]"
               title="Mark as sent"
             >
               <Send size={11} /> Send
@@ -530,7 +530,7 @@ function NewProposalForm({
       {/* Proposal Strength Panel */}
       {proposalSignals.length > 0 && (
         <div className="mt-3 rounded-lg p-3"
-          style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(59,130,246,0.12)" }}>
+          style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}>
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-1.5">
               <TrendingUp size={10} style={{ color: proposalScore >= 80 ? "#4ade80" : proposalScore >= 50 ? "#fbbf24" : "#f87171" }} />

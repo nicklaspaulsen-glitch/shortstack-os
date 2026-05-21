@@ -39,7 +39,7 @@ export default function DashboardBackground() {
             // Top-left: deep blue corona — boosted vibrancy
             "radial-gradient(ellipse 80% 60% at 30% 40%, rgba(37,99,235,0.16) 0%, transparent 60%)",
             // Bottom-right: indigo depth bloom
-            "radial-gradient(ellipse 60% 50% at 70% 70%, rgba(59,130,246,0.12) 0%, transparent 55%)",
+            "radial-gradient(ellipse 60% 50% at 70% 70%, rgba(212,255,0,0.12) 0%, transparent 55%)",
             // Top-right: violet accent
             "radial-gradient(ellipse 50% 40% at 82% 18%, rgba(139,92,246,0.10) 0%, transparent 50%)",
             // Bottom-left: subtle blue fade
@@ -83,7 +83,7 @@ export default function DashboardBackground() {
               bottom: "-15%",
               right: "-10%",
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(59,130,246,0.14) 0%, transparent 68%)",
+              background: "radial-gradient(circle, rgba(212,255,0,0.14) 0%, transparent 68%)",
               filter: "blur(100px)",
             }}
           />

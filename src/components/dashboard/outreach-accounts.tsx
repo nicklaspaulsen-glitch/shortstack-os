@@ -262,7 +262,7 @@ export default function OutreachAccounts() {
         <div className="flex items-center gap-2">
           <Shield size={14} className="text-[#2563EB]" />
           <h3 className="text-sm font-semibold">Outreach Accounts</h3>
-          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-[#2563EB] border border-[rgba(59,130,246,0.2)]">
+          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-[#2563EB] border border-[rgba(212,255,0,0.2)]">
             {activeEmails + activePhones + activeSocials} active
           </span>
           {lastCheck && (
@@ -399,7 +399,7 @@ export default function OutreachAccounts() {
                         <StatusDot status={deriveLiveStatus(sender)} />
                         <p className="text-[11px] font-medium truncate">{sender.email}</p>
                         {sender.is_primary && (
-                          <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(59,130,246,0.08)] text-[#2563EB]">Primary</span>
+                          <span className="text-[8px] px-1 py-0.5 rounded bg-[rgba(212,255,0,0.08)] text-[#2563EB]">Primary</span>
                         )}
                       </div>
                       <div className="flex items-center gap-2 mt-0.5">

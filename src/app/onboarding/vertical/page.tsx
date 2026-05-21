@@ -52,7 +52,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
 };
 
 const ACCENT_BG: Record<string, string> = {
-  blue: "from-blue-600/40 via-blue-500/20 to-blue-900/30 border-blue-400/40 hover:border-blue-300",
+  blue: "from-blue-600/40 via-blue-500/20 to-blue-900/30 border-indigo-400/40 hover:border-indigo-300",
   purple: "from-purple-600/40 via-purple-500/20 to-purple-900/30 border-purple-400/40 hover:border-purple-300",
   sunset: "from-orange-500/40 via-rose-500/20 to-orange-900/30 border-orange-400/40 hover:border-orange-300",
   gold: "from-amber-500/40 via-yellow-400/20 to-amber-900/30 border-amber-400/40 hover:border-amber-300",

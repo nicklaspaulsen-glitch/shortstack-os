@@ -16,9 +16,9 @@ interface GradeStyle {
 const GRADE_STYLES: Record<ScoreGrade, GradeStyle> = {
   cold: {
     label: "Cold",
-    bg: "bg-blue-500/10 border-blue-500/20",
-    text: "text-blue-400",
-    dot: "bg-blue-400",
+    bg: "bg-indigo-500/10 border-indigo-500/20",
+    text: "text-indigo-400",
+    dot: "bg-indigo-400",
     icon: <Snowflake size={9} />,
   },
   warm: {

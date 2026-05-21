@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 // Thumbnail Generator Pro — Photoshop/Photopea-style layer editor.
 // The previous 7000+ line AI-generator page has been replaced with a
@@ -1030,7 +1030,7 @@ export default function ThumbnailEditorProPage() {
 
   const tierColor = (tier: CtrPreset["tier"]) =>
     tier === "top" ? { bg: "rgba(16,185,129,0.14)", text: "#10B981" }
-      : tier === "high" ? { bg: "rgba(59,130,246,0.14)", text: "#60A5FA" }
+      : tier === "high" ? { bg: "rgba(212,255,0,0.14)", text: "#60A5FA" }
       : { bg: "rgba(245,158,11,0.14)", text: "#F59E0B" };
 
   return (
@@ -1183,7 +1183,7 @@ export default function ThumbnailEditorProPage() {
                 onClick={() => setCtrPresetsOpen((o) => !o)}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg border transition-all duration-150"
                 style={{
-                  background: ctrPresetsOpen ? "rgba(59,130,246,0.22)" : "rgba(13,17,32,0.90)",
+                  background: ctrPresetsOpen ? "rgba(212,255,0,0.22)" : "rgba(13,17,32,0.90)",
                   borderColor: ctrPresetsOpen ? "#3B82F6" : "rgba(99,146,255,0.22)",
                   color: ctrPresetsOpen ? "#60A5FA" : "#A8A8B2",
                   backdropFilter: "blur(12px)",
@@ -1247,7 +1247,7 @@ export default function ThumbnailEditorProPage() {
                               background: "transparent",
                             }}
                             onMouseEnter={(e) => {
-                              (e.currentTarget as HTMLButtonElement).style.background = "rgba(59,130,246,0.06)";
+                              (e.currentTarget as HTMLButtonElement).style.background = "rgba(212,255,0,0.06)";
                             }}
                             onMouseLeave={(e) => {
                               (e.currentTarget as HTMLButtonElement).style.background = "transparent";

@@ -40,9 +40,9 @@ import { MotionPage } from "@/components/motion/motion-page";
 
 const SUPPORTED_PLATFORMS = [
   { key: "instagram", label: "Instagram", color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/20", description: "Connect your Instagram Business or Creator account" },
-  { key: "facebook", label: "Facebook", color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]", border: "border-[rgba(59,130,246,0.20)]", description: "Connect your Facebook Page for publishing" },
+  { key: "facebook", label: "Facebook", color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]", border: "border-[rgba(212,255,0,0.20)]", description: "Connect your Facebook Page for publishing" },
   { key: "tiktok", label: "TikTok", color: "text-white", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your TikTok account for video publishing" },
-  { key: "linkedin", label: "LinkedIn", color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]", border: "border-[rgba(59,130,246,0.18)]", description: "Connect your LinkedIn profile or company page" },
+  { key: "linkedin", label: "LinkedIn", color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]", border: "border-[rgba(212,255,0,0.18)]", description: "Connect your LinkedIn profile or company page" },
   { key: "twitter", label: "Twitter / X", color: "text-text-muted", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your X (Twitter) account" },
   { key: "threads", label: "Threads", color: "text-text-primary", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your Threads account for text posts" },
   { key: "pinterest", label: "Pinterest", color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20", description: "Connect Pinterest for pins and boards" },
@@ -423,7 +423,7 @@ export default function SocialManagerPage() {
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               isAutopilot
                 ? "bg-success/10 text-success border border-success/20 pulse-ring"
-                : "bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(59,130,246,0.2)]"
+                : "bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(212,255,0,0.2)]"
             }`}>
             {isAutopilot ? <Play size={12} /> : <Pause size={12} />}
             {isAutopilot ? "Autopilot ON" : "Autopilot OFF"}
@@ -454,7 +454,7 @@ export default function SocialManagerPage() {
             </>
           ) : (
             <button onClick={() => setConnectModalOpen(true)}
-              className="flex items-center gap-1.5 text-[10px] text-brand-accent hover:text-brand-accent/80 bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.2)] rounded px-2.5 py-1 transition-all hover:bg-[rgba(59,130,246,0.08)]">
+              className="flex items-center gap-1.5 text-[10px] text-brand-accent hover:text-brand-accent/80 bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.2)] rounded px-2.5 py-1 transition-all hover:bg-[rgba(212,255,0,0.08)]">
               <Plus size={10} />
               Connect Social Accounts
             </button>
@@ -467,7 +467,7 @@ export default function SocialManagerPage() {
         <PrismPanel glow padding="p-0" className="relative overflow-hidden">
           <div className="absolute inset-0 bg-mesh opacity-20" />
           <div className="relative text-center py-6 px-6">
-            <div className="w-12 h-12 bg-[rgba(59,130,246,0.08)] rounded-xl flex items-center justify-center mx-auto mb-3">
+            <div className="w-12 h-12 bg-[rgba(212,255,0,0.08)] rounded-xl flex items-center justify-center mx-auto mb-3">
               <Globe size={22} className="text-brand-accent" />
             </div>
             <h2 className="text-sm font-semibold mb-1">Connect Your Social Accounts</h2>
@@ -712,7 +712,7 @@ export default function SocialManagerPage() {
             <div className="relative">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center breathe">
+                  <div className="w-9 h-9 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center breathe">
                     <Sparkles size={18} className="text-brand-accent" />
                   </div>
                   <div>
@@ -751,7 +751,7 @@ export default function SocialManagerPage() {
                     thread: <FileTextIcon size={12} className="text-cyan-400" />,
                   };
                   return (
-                    <motion.div key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-2.5 hover:border-[rgba(59,130,246,0.1)] transition-all spotlight-card" onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
+                    <motion.div key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-2.5 hover:border-[rgba(212,255,0,0.1)] transition-all spotlight-card" onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                       <div className="flex items-center gap-2 mb-1">
                         {typeIcon[String(meta.type)] || <Sparkles size={12} className="text-brand-accent" />}
                         <span className="text-[10px] font-medium text-brand-accent uppercase">{String(meta.type || "").replace("_", " ")}</span>
@@ -760,7 +760,7 @@ export default function SocialManagerPage() {
                       <p className="text-xs font-medium truncate">{String(meta.title || s.description)}</p>
                       <p className="text-[10px] text-text-muted mt-0.5 line-clamp-2">{String(meta.description || "")}</p>
                       {typeof meta.hook === "string" && meta.hook && (
-                        <p className="text-[10px] text-text-primary/70 mt-1 italic border-l-2 border-[rgba(59,130,246,0.25)] pl-2">&ldquo;{meta.hook}&rdquo;</p>
+                        <p className="text-[10px] text-text-primary/70 mt-1 italic border-l-2 border-[rgba(212,255,0,0.25)] pl-2">&ldquo;{meta.hook}&rdquo;</p>
                       )}
                       {Array.isArray(meta.tags) && (
                         <div className="flex gap-1 mt-1.5">
@@ -791,7 +791,7 @@ export default function SocialManagerPage() {
                 {scheduledPosts.slice(0, 5).map((post, idx) => {
                   const meta = (post.metadata as Record<string, unknown>) || {};
                   return (
-                    <motion.div key={post.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.1)] transition-all">
+                    <motion.div key={post.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.1)] transition-all">
                       <div className="shrink-0">{PLATFORM_ICONS[post.platform] || <Globe size={14} />}</div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-medium truncate">{post.title}</p>
@@ -872,7 +872,7 @@ export default function SocialManagerPage() {
 
                 return (
                   <div key={i} className={`rounded-xl border p-2.5 min-h-[160px] ${
-                    isToday ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.03)]" : "border-border-subtle bg-surface"
+                    isToday ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.03)]" : "border-border-subtle bg-surface"
                   }`}>
                     <div className="flex items-center justify-between mb-2">
                       <span className={`text-[10px] font-semibold ${isToday ? "text-brand-accent" : "text-text-muted"}`}>
@@ -887,7 +887,7 @@ export default function SocialManagerPage() {
                         <div key={post.id} className={`p-1.5 rounded-lg text-[9px] cursor-pointer transition-all hover:scale-[1.02] ${
                           post.status === "published"
                             ? "bg-success/10 border border-success/20 text-success"
-                            : "bg-[rgba(59,130,246,0.05)] border border-[rgba(59,130,246,0.15)] text-text-primary"
+                            : "bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.15)] text-text-primary"
                         }`}>
                           <div className="flex items-center gap-1 mb-0.5">
                             {PLATFORM_ICONS[post.platform] || <Globe size={8} />}
@@ -913,16 +913,16 @@ export default function SocialManagerPage() {
               <p className="text-[10px] text-text-muted mb-3">Balanced content strategy across different post types</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {[
-                  { name: "Educational", desc: "Tips, how-tos, industry insights", color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]" },
+                  { name: "Educational", desc: "Tips, how-tos, industry insights", color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]" },
                   { name: "Social Proof", desc: "Reviews, testimonials, case studies", color: "text-success", bg: "bg-success/10" },
-                  { name: "Behind the Scenes", desc: "Team, process, day-in-the-life", color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]" },
-                  { name: "Promotional", desc: "Offers, CTAs, product features", color: "text-brand-accent", bg: "bg-[rgba(59,130,246,0.08)]" },
+                  { name: "Behind the Scenes", desc: "Team, process, day-in-the-life", color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]" },
+                  { name: "Promotional", desc: "Offers, CTAs, product features", color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]" },
                   { name: "Engagement", desc: "Polls, questions, challenges", color: "text-pink-400", bg: "bg-pink-400/10" },
                   { name: "Trending", desc: "Memes, trends, cultural moments", color: "text-orange-400", bg: "bg-orange-400/10" },
                   { name: "Storytelling", desc: "Client stories, founder journey", color: "text-cyan-400", bg: "bg-cyan-400/10" },
                   { name: "Value Bombs", desc: "Quick wins, cheat sheets, lists", color: "text-emerald-400", bg: "bg-emerald-400/10" },
                 ].map(pillar => (
-                  <div key={pillar.name} className={`p-3 rounded-xl border border-border-subtle hover:border-[rgba(59,130,246,0.1)] transition-all`}>
+                  <div key={pillar.name} className={`p-3 rounded-xl border border-border-subtle hover:border-[rgba(212,255,0,0.1)] transition-all`}>
                     <div className={`w-7 h-7 ${pillar.bg} rounded-lg flex items-center justify-center mb-1.5`}>
                       <Sparkles size={12} className={pillar.color} />
                     </div>
@@ -954,7 +954,7 @@ export default function SocialManagerPage() {
                     </div>
                     <div className="space-y-1">
                       {p.times.map(t => (
-                        <span key={t} className="inline-block text-[9px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-2 py-0.5 rounded mr-1">{t}</span>
+                        <span key={t} className="inline-block text-[9px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-2 py-0.5 rounded mr-1">{t}</span>
                       ))}
                     </div>
                     <p className="text-[8px] text-text-muted mt-1.5">Best days: {p.days}</p>
@@ -987,12 +987,12 @@ export default function SocialManagerPage() {
                   { category: "Reels & Video", tags: ["#reels", "#reelsinstagram", "#tiktokviral", "#shortsvideo", "#videocontent", "#reelsviral", "#instareels", "#contentcreation", "#videoediting", "#behindthescenes"] },
                   { category: "Call to Action", tags: ["#linkinbio", "#booknow", "#freeConsultation", "#limitedoffer", "#dmme", "#getstarted", "#learnmore", "#signupnow", "#actnow", "#dontmissout"] },
                 ].map(set => (
-                  <div key={set.category} className="p-3 bg-surface-light rounded-xl border border-border-subtle hover:border-[rgba(59,130,246,0.1)] transition-all">
+                  <div key={set.category} className="p-3 bg-surface-light rounded-xl border border-border-subtle hover:border-[rgba(212,255,0,0.1)] transition-all">
                     <h4 className="text-[10px] font-semibold text-brand-accent mb-2">{set.category}</h4>
                     <div className="flex flex-wrap gap-1">
                       {set.tags.map(tag => (
                         <button key={tag} onClick={() => { navigator.clipboard.writeText(tag); toast.success(`Copied ${tag}`); }}
-                          className="text-[9px] bg-surface px-2 py-0.5 rounded text-text-muted hover:text-brand-accent hover:bg-[rgba(59,130,246,0.05)] transition-all cursor-pointer">
+                          className="text-[9px] bg-surface px-2 py-0.5 rounded text-text-muted hover:text-brand-accent hover:bg-[rgba(212,255,0,0.05)] transition-all cursor-pointer">
                           {tag}
                         </button>
                       ))}
@@ -1186,7 +1186,7 @@ export default function SocialManagerPage() {
                   { key: "auto_hashtag_research", label: "Trending hashtag research", desc: "AI finds trending hashtags for posts", icon: <Hash size={11} className="text-brand-accent" /> },
                   { key: "require_approval", label: "Require approval before post", desc: "Posts go to queue for review first", icon: <Shield size={11} className="text-orange-400" /> },
                 ].map(toggle => (
-                  <div key={toggle.key} className="flex items-center justify-between p-2 rounded-lg border border-border-subtle hover:border-[rgba(59,130,246,0.1)] transition-all">
+                  <div key={toggle.key} className="flex items-center justify-between p-2 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.1)] transition-all">
                     <div className="flex items-center gap-2">
                       {toggle.icon}
                       <div>
@@ -1224,7 +1224,7 @@ export default function SocialManagerPage() {
                         saveAutopilotSetting({ allowed_platforms: updated });
                       }}
                         className={`flex items-center gap-1 px-2 py-1 rounded-md text-[9px] font-medium border transition-all ${
-                          allowed ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border-subtle bg-surface-light text-text-muted"
+                          allowed ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)]" : "border-border-subtle bg-surface-light text-text-muted"
                         }`}>
                         {PLATFORM_ICONS[p]} <span className="capitalize">{p}</span>
                       </button>
@@ -1289,7 +1289,7 @@ export default function SocialManagerPage() {
             ] as const).map(st => (
               <button key={st.key} onClick={() => setToolsSubTab(st.key)}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
-                  toolsSubTab === st.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(59,130,246,0.1)]"
+                  toolsSubTab === st.key ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)]" : "bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(212,255,0,0.1)]"
                 }`}>
                 {st.icon} {st.label}
               </button>
@@ -1302,7 +1302,7 @@ export default function SocialManagerPage() {
               <div className="absolute inset-0 bg-mesh opacity-30" />
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-[rgba(59,130,246,0.08)] rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center">
                     <RefreshCw size={16} className="text-brand-accent" />
                   </div>
                   <div>
@@ -1399,7 +1399,7 @@ export default function SocialManagerPage() {
                 {abVariants && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
                     {(["a", "b"] as const).map(variant => (
-                      <div key={variant} className={`p-3 rounded-xl border ${variant === "a" ? "border-blue-400/20 bg-blue-400/[0.03]" : "border-pink-400/20 bg-pink-400/[0.03]"}`}>
+                      <div key={variant} className={`p-3 rounded-xl border ${variant === "a" ? "border-indigo-400/20 bg-indigo-400/[0.03]" : "border-pink-400/20 bg-pink-400/[0.03]"}`}>
                         <div className="flex items-center justify-between mb-2">
                           <span className={`text-xs font-bold ${variant === "a" ? "text-brand-accent" : "text-pink-400"}`}>
                             Variant {variant.toUpperCase()}
@@ -1465,7 +1465,7 @@ export default function SocialManagerPage() {
                     <div className="flex items-center gap-4">
                       <div className={`w-20 h-20 flex flex-col items-center justify-center ${
                         viralScore.score>= 80 ? "bg-success/10 border border-success/20" :
-                        viralScore.score>= 60 ? "bg-[rgba(59,130,246,0.08)] border border-[rgba(59,130,246,0.2)]" :
+                        viralScore.score>= 60 ? "bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)]" :
                         "bg-orange-400/10 border border-orange-400/20"
                       }`}>
                         <span className={`text-2xl font-bold ${
@@ -1538,7 +1538,7 @@ export default function SocialManagerPage() {
                 {bioResults.length> 0 && (
                   <div className="space-y-2 mt-3">
                     {bioResults.map((bio, i) => (
-                      <div key={i} className="p-3 bg-surface-light rounded-xl border border-border-subtle hover:border-[rgba(59,130,246,0.1)] transition-all">
+                      <div key={i} className="p-3 bg-surface-light rounded-xl border border-border-subtle hover:border-[rgba(212,255,0,0.1)] transition-all">
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-[10px] font-semibold text-brand-accent">Option {i + 1}</span>
                           <button onClick={() => { navigator.clipboard.writeText(bio); toast.success("Bio copied!"); }}
@@ -1559,7 +1559,7 @@ export default function SocialManagerPage() {
           {toolsSubTab === "preview" && (
             <div className="glass rounded-xl p-4 space-y-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-blue-400/10 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-indigo-400/10 rounded-lg flex items-center justify-center">
                   <Eye size={16} className="text-brand-accent" />
                 </div>
                 <div>
@@ -1606,7 +1606,7 @@ export default function SocialManagerPage() {
                 {/* LinkedIn Preview */}
                 <div className="rounded-xl border border-border-subtle overflow-hidden">
                   <div className="bg-surface-light p-2.5 flex items-center gap-2 border-b border-border-subtle">
-                    <div className="w-8 h-8 rounded-full bg-blue-400/20 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-indigo-400/20 flex items-center justify-center">
                       <Briefcase size={12} className="text-brand-accent" />
                     </div>
                     <div>
@@ -1668,7 +1668,7 @@ export default function SocialManagerPage() {
           {toolsSubTab === "carousel" && (
             <div className="glass rounded-xl p-4 space-y-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-blue-400/10 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-indigo-400/10 rounded-lg flex items-center justify-center">
                   <Columns size={16} className="text-brand-accent" />
                 </div>
                 <div>
@@ -1689,7 +1689,7 @@ export default function SocialManagerPage() {
                 <>
                   <div className="flex gap-2 overflow-x-auto pb-2">
                     {carouselSlides.map((slide, i) => (
-                      <div key={slide.id} className="min-w-[200px] p-3 bg-surface-light rounded-xl border border-border-subtle hover:border-[rgba(59,130,246,0.1)] transition-all shrink-0">
+                      <div key={slide.id} className="min-w-[200px] p-3 bg-surface-light rounded-xl border border-border-subtle hover:border-[rgba(212,255,0,0.1)] transition-all shrink-0">
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-[9px] font-bold text-brand-accent">SLIDE {i + 1}</span>
                           {carouselSlides.length> 1 && (
@@ -1710,7 +1710,7 @@ export default function SocialManagerPage() {
                       </div>
                     ))}
                     <button onClick={() => setCarouselSlides([...carouselSlides, { id: Date.now(), heading: `Slide ${carouselSlides.length + 1}`, body: "" }])}
-                      className="min-w-[60px] flex items-center justify-center border border-dashed border-border-subtle rounded-xl hover:border-[rgba(59,130,246,0.25)] transition-all">
+                      className="min-w-[60px] flex items-center justify-center border border-dashed border-border-subtle rounded-xl hover:border-[rgba(212,255,0,0.25)] transition-all">
                       <Plus size={16} className="text-text-muted" />
                     </button>
                   </div>
@@ -1813,7 +1813,7 @@ export default function SocialManagerPage() {
                 <>
                   <div className="space-y-2">
                     {linkBioLinks.map((link, i) => (
-                      <div key={link.id} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-xl border border-border-subtle hover:border-[rgba(59,130,246,0.1)] transition-all">
+                      <div key={link.id} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-xl border border-border-subtle hover:border-[rgba(212,255,0,0.1)] transition-all">
                         <div className="w-8 h-8 bg-surface rounded-lg flex items-center justify-center text-xs font-bold text-brand-accent">{i + 1}</div>
                         <div className="flex-1 min-w-0">
                           <input value={link.label} onChange={e => {
@@ -1922,7 +1922,7 @@ export default function SocialManagerPage() {
               ) : (
                 <div className="space-y-2">
                   {recentPosts.slice(0, 8).map((post) => (
-                      <div key={post.id} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-xl border border-border-subtle hover:border-[rgba(59,130,246,0.1)] transition-all">
+                      <div key={post.id} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-xl border border-border-subtle hover:border-[rgba(212,255,0,0.1)] transition-all">
                         <div className="shrink-0">{PLATFORM_ICONS[post.platform] || <Globe size={14} />}</div>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium truncate">{post.title}</p>
@@ -1960,7 +1960,7 @@ export default function SocialManagerPage() {
             ] as const).map(st => (
               <button key={st.key} onClick={() => setAnalyticsSubTab(st.key)}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
-                  analyticsSubTab === st.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(59,130,246,0.1)]"
+                  analyticsSubTab === st.key ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)]" : "bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(212,255,0,0.1)]"
                 }`}>
                 {st.icon} {st.label}
               </button>
@@ -2141,7 +2141,7 @@ export default function SocialManagerPage() {
             ] as const).map(st => (
               <button key={st.key} onClick={() => setInboxSubTab(st.key)}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
-                  inboxSubTab === st.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(59,130,246,0.1)]"
+                  inboxSubTab === st.key ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)]" : "bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(212,255,0,0.1)]"
                 }`}>
                 {st.icon} {st.label}
               </button>
@@ -2154,7 +2154,7 @@ export default function SocialManagerPage() {
               <div className="flex items-center gap-2 mb-3">
                 <Inbox size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-semibold">Social Inbox</h2>
-                <span className="ml-auto text-[9px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-2 py-0.5 rounded-full font-medium">0 unread</span>
+                <span className="ml-auto text-[9px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-2 py-0.5 rounded-full font-medium">0 unread</span>
               </div>
               <p className="text-[10px] text-text-muted mb-3">Unified view of DMs and comments across all platforms</p>
               <div className="text-center py-8">
@@ -2189,7 +2189,7 @@ export default function SocialManagerPage() {
               </div>
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {listeningKeywords.map(kw => (
-                  <span key={kw} className="flex items-center gap-1 text-[10px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-2.5 py-1 rounded-lg border border-[rgba(59,130,246,0.2)]">
+                  <span key={kw} className="flex items-center gap-1 text-[10px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-2.5 py-1 rounded-lg border border-[rgba(212,255,0,0.2)]">
                     <Search size={9} /> {kw}
                     <button onClick={() => setListeningKeywords(listeningKeywords.filter(k => k !== kw))}
                       className="ml-1 text-brand-accent/60 hover:text-brand-accent"><X size={9} /></button>
@@ -2304,7 +2304,7 @@ export default function SocialManagerPage() {
             ] as const).map(st => (
               <button key={st.key} onClick={() => setCollabsSubTab(st.key)}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
-                  collabsSubTab === st.key ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(59,130,246,0.1)]"
+                  collabsSubTab === st.key ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)]" : "bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(212,255,0,0.1)]"
                 }`}>
                 {st.icon} {st.label}
               </button>
@@ -2342,7 +2342,7 @@ export default function SocialManagerPage() {
               ) : (
                 <div className="space-y-2">
                   {competitorHandles.map((comp, i) => (
-                    <div key={i} className="flex items-center gap-3 p-3 bg-surface-light rounded-xl border border-border-subtle hover:border-[rgba(59,130,246,0.1)] transition-all">
+                    <div key={i} className="flex items-center gap-3 p-3 bg-surface-light rounded-xl border border-border-subtle hover:border-[rgba(212,255,0,0.1)] transition-all">
                       <div className="shrink-0">{PLATFORM_ICONS[comp.platform] || <Globe size={14} />}</div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-semibold">{comp.handle}</p>
@@ -2402,8 +2402,8 @@ export default function SocialManagerPage() {
               ) : (
                 <div className="space-y-2">
                   {collabOpportunities.map(collab => (
-                    <div key={collab.id} className="flex items-center gap-3 p-3 bg-surface-light rounded-xl border border-border-subtle hover:border-[rgba(59,130,246,0.1)] transition-all">
-                      <div className="w-10 h-10 bg-[rgba(59,130,246,0.08)] rounded-xl flex items-center justify-center shrink-0">
+                    <div key={collab.id} className="flex items-center gap-3 p-3 bg-surface-light rounded-xl border border-border-subtle hover:border-[rgba(212,255,0,0.1)] transition-all">
+                      <div className="w-10 h-10 bg-[rgba(212,255,0,0.08)] rounded-xl flex items-center justify-center shrink-0">
                         <Handshake size={16} className="text-brand-accent" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -2418,8 +2418,8 @@ export default function SocialManagerPage() {
                       </div>
                       <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium shrink-0 ${
                         collab.status === "confirmed" ? "bg-success/10 text-success" :
-                        collab.status === "negotiating" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
-                        collab.status === "completed" ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" :
+                        collab.status === "negotiating" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" :
+                        collab.status === "completed" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" :
                         "bg-surface text-text-muted"
                       }`}>
                         {collab.status}
@@ -2473,7 +2473,7 @@ export default function SocialManagerPage() {
             </button>
             <button onClick={() => {
               toast.success("PDF export coming soon!");
-            }} className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(59,130,246,0.1)] transition-all">
+            }} className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(212,255,0,0.1)] transition-all">
               <FileTextIcon size={12} /> Export PDF
             </button>
           </div>

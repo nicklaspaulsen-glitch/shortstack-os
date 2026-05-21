@@ -18,7 +18,7 @@ interface JumpItem {
 }
 
 const TYPE_META: Record<string, { label: string; icon: React.ReactNode; color: string; bg: string }> = {
-  video:        { label: "Video",        icon: <Film size={13} />,      color: "text-blue-400",    bg: "bg-blue-500/10" },
+  video:        { label: "Video",        icon: <Film size={13} />,      color: "text-indigo-400",    bg: "bg-indigo-500/10" },
   thumbnail:    { label: "Thumbnail",    icon: <ImageIcon size={13} />, color: "text-emerald-400", bg: "bg-emerald-500/10" },
   email:        { label: "Email",        icon: <Mail size={13} />,      color: "text-amber-400",   bg: "bg-amber-500/10" },
   landing_page: { label: "Landing Page", icon: <Globe size={13} />,     color: "text-teal-400",    bg: "bg-teal-500/10" },
@@ -126,7 +126,7 @@ export default function JumpBackIn() {
               <Link
                 key={item.id}
                 href={item.href}
-                className="group p-3 rounded-xl border border-border-subtle bg-surface hover:border-[rgba(59,130,246,0.25)] hover:shadow-sm transition-all flex flex-col gap-2"
+                className="group p-3 rounded-xl border border-border-subtle bg-surface hover:border-[rgba(212,255,0,0.25)] hover:shadow-sm transition-all flex flex-col gap-2"
               >
                 <div className="flex items-center justify-between">
                   <span className={`inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full font-semibold ${meta.bg} ${meta.color}`}>

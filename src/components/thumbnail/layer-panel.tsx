@@ -290,7 +290,7 @@ export function LayerPanel({
                   }}
                   title={sw.name}
                   className={`aspect-video rounded border ${
-                    layers.background?.id === sw.id ? "border-[#2563EB] ring-1 ring-[rgba(59,130,246,0.25)]" : "border-border-subtle hover:border-border-subtle"
+                    layers.background?.id === sw.id ? "border-[#2563EB] ring-1 ring-[rgba(212,255,0,0.25)]" : "border-border-subtle hover:border-border-subtle"
                   }`}
                   style={{ background: `linear-gradient(135deg, ${sw.colors[0]}, ${sw.colors[1]})` }}
                 >
@@ -386,7 +386,7 @@ export function LayerPanel({
                       type="text"
                       value={t.text}
                       onChange={(e) => editText(t.id, { text: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-border-subtle bg-surface-light px-2 py-1 text-xs text-text-primary focus:border-[rgba(59,130,246,0.4)] focus:outline-none"
+                      className="mt-0.5 w-full rounded border border-border-subtle bg-surface-light px-2 py-1 text-xs text-text-primary focus:border-[rgba(212,255,0,0.4)] focus:outline-none"
                     />
                   </label>
                   <label className="text-[9px] text-text-muted">
@@ -395,7 +395,7 @@ export function LayerPanel({
                       type="text"
                       value={t.fontFamily || "Inter"}
                       onChange={(e) => editText(t.id, { fontFamily: e.target.value })}
-                      className="mt-0.5 w-full rounded border border-border-subtle bg-surface-light px-2 py-1 text-[11px] text-text-primary focus:border-[rgba(59,130,246,0.4)] focus:outline-none"
+                      className="mt-0.5 w-full rounded border border-border-subtle bg-surface-light px-2 py-1 text-[11px] text-text-primary focus:border-[rgba(212,255,0,0.4)] focus:outline-none"
                     />
                   </label>
                   <NumberField
@@ -504,7 +504,7 @@ export function LayerPanel({
                   const s = styleOptions.find((x) => x.id === e.target.value);
                   if (s) patch({ style: { id: s.id, name: s.name } });
                 }}
-                className="w-full rounded border border-border-subtle bg-surface-light px-2 py-1 text-[11px] text-text-primary focus:border-[rgba(59,130,246,0.4)] focus:outline-none"
+                className="w-full rounded border border-border-subtle bg-surface-light px-2 py-1 text-[11px] text-text-primary focus:border-[rgba(212,255,0,0.4)] focus:outline-none"
               >
                 <option value="">Select a style…</option>
                 {styleOptions.map((s) => (
@@ -572,7 +572,7 @@ function LayerRow({
   icon, name, description, visible, onToggleVisible, swatch, onEdit, editing, onDelete, children,
 }: LayerRowProps) {
   return (
-    <div className={`rounded-lg border ${editing ? "border-[rgba(59,130,246,0.4)] bg-[rgba(59,130,246,0.05)]" : "border-border-subtle bg-surface/40"} transition-colors`}>
+    <div className={`rounded-lg border ${editing ? "border-[rgba(212,255,0,0.4)] bg-[rgba(212,255,0,0.05)]" : "border-border-subtle bg-surface/40"} transition-colors`}>
       <div className="flex items-center gap-2 px-2 py-1.5">
         {onToggleVisible ? (
           <button
@@ -643,7 +643,7 @@ function NumberField({
         max={max}
         step={step}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="mt-0.5 w-full rounded border border-border-subtle bg-surface-light px-2 py-1 text-[11px] text-text-primary focus:border-[rgba(59,130,246,0.4)] focus:outline-none"
+        className="mt-0.5 w-full rounded border border-border-subtle bg-surface-light px-2 py-1 text-[11px] text-text-primary focus:border-[rgba(212,255,0,0.4)] focus:outline-none"
       />
     </label>
   );

@@ -123,7 +123,7 @@ export default function WebsiteScraper({
     <div className={`card space-y-4 ${className}`}>
       {!compact && (
         <div className="flex items-start gap-3">
-          <div className="w-9 h-9 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center text-[#2563EB] shrink-0">
+          <div className="w-9 h-9 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[#2563EB] shrink-0">
             <Globe size={16} />
           </div>
           <div className="flex-1">
@@ -245,7 +245,7 @@ function ResultCard({
               <p className="text-[9px] uppercase tracking-wider text-text-muted mb-1">AI-detected services</p>
               <div className="flex flex-wrap gap-1.5">
                 {ai.services.map((s, i) => (
-                  <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-[#2563EB] border border-[rgba(59,130,246,0.2)]">
+                  <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-[#2563EB] border border-[rgba(212,255,0,0.2)]">
                     {s}
                   </span>
                 ))}
@@ -277,7 +277,7 @@ function ResultCard({
                 href={s.url}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[10px] px-2 py-0.5 rounded-md bg-surface border border-border-subtle hover:border-[rgba(59,130,246,0.25)] capitalize"
+                className="text-[10px] px-2 py-0.5 rounded-md bg-surface border border-border-subtle hover:border-[rgba(212,255,0,0.25)] capitalize"
               >
                 {s.platform}
               </a>

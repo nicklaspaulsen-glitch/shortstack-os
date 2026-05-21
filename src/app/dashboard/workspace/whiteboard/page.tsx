@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -50,21 +50,21 @@ const KIND_STYLES: Record<WhiteboardItemKind, { bg: string; border: string; text
     icon: ListChecks,
   },
   video_render: {
-    bg: "rgba(59,130,246,0.10)",
-    border: "rgba(59,130,246,0.35)",
+    bg: "rgba(212,255,0,0.10)",
+    border: "rgba(212,255,0,0.35)",
     text: "rgb(96,165,250)",
     label: "Video",
     icon: Film,
   },
   scheduled_publish: {
-    bg: "rgba(59,130,246,0.10)",
-    border: "rgba(59,130,246,0.35)",
+    bg: "rgba(212,255,0,0.10)",
+    border: "rgba(212,255,0,0.35)",
     text: "rgb(147,197,253)",
     label: "Publish",
     icon: Send,
   },
   deal: {
-    bg: "rgba(59,130,246,0.10)",
+    bg: "rgba(212,255,0,0.10)",
     border: "rgba(110,231,183,0.35)",
     text: "rgb(110,231,183)",
     label: "Deal",

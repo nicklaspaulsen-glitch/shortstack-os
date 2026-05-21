@@ -558,13 +558,13 @@ export default function AIVideoPage() {
               <ChevronDown size={10} className={`ml-auto transition-transform duration-220 ${intentOpen ? "rotate-180" : ""}`} />
             </button>
             {intentOpen && (
-              <div className="mt-2 rounded-xl border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.03)] p-3 space-y-3">
+              <div className="mt-2 rounded-xl border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.03)] p-3 space-y-3">
                 <div>
                   <p className="text-[9px] uppercase tracking-wider text-text-muted font-semibold mb-1.5">1. What&apos;s the goal?</p>
                   <div className="flex flex-wrap gap-1.5">
                     {INTENT_GOALS.map(g => (
                       <button key={g.id} type="button" onClick={() => setIntentGoal(g.id)}
-                        className={`flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border transition-all cursor-pointer ${intentGoal === g.id ? "border-brand-accent bg-[rgba(59,130,246,0.12)] text-text-primary" : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.3)]"}`}>
+                        className={`flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border transition-all cursor-pointer ${intentGoal === g.id ? "border-brand-accent bg-[rgba(212,255,0,0.12)] text-text-primary" : "border-border-subtle text-text-muted hover:border-[rgba(212,255,0,0.3)]"}`}>
                         <span>{g.emoji}</span> {g.label}
                       </button>
                     ))}
@@ -575,7 +575,7 @@ export default function AIVideoPage() {
                   <div className="flex flex-wrap gap-1.5">
                     {INTENT_SUBJECTS.map(s => (
                       <button key={s.id} type="button" onClick={() => setIntentSubject(s.id)}
-                        className={`flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border transition-all cursor-pointer ${intentSubject === s.id ? "border-brand-accent bg-[rgba(59,130,246,0.12)] text-text-primary" : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.3)]"}`}>
+                        className={`flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border transition-all cursor-pointer ${intentSubject === s.id ? "border-brand-accent bg-[rgba(212,255,0,0.12)] text-text-primary" : "border-border-subtle text-text-muted hover:border-[rgba(212,255,0,0.3)]"}`}>
                         <span>{s.emoji}</span> {s.label}
                       </button>
                     ))}
@@ -586,7 +586,7 @@ export default function AIVideoPage() {
                   <div className="flex flex-wrap gap-1.5">
                     {INTENT_FEELINGS.map(f => (
                       <button key={f.id} type="button" onClick={() => setIntentFeeling(f.id)}
-                        className={`flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border transition-all cursor-pointer ${intentFeeling === f.id ? "border-brand-accent bg-[rgba(59,130,246,0.12)] text-text-primary" : "border-border-subtle text-text-muted hover:border-[rgba(59,130,246,0.3)]"}`}>
+                        className={`flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border transition-all cursor-pointer ${intentFeeling === f.id ? "border-brand-accent bg-[rgba(212,255,0,0.12)] text-text-primary" : "border-border-subtle text-text-muted hover:border-[rgba(212,255,0,0.3)]"}`}>
                         <span>{f.emoji}</span> {f.label}
                       </button>
                     ))}
@@ -610,7 +610,7 @@ export default function AIVideoPage() {
               onChange={e => setPrompt(e.target.value)}
               placeholder="e.g., Golden retriever running through a field of sunflowers at sunset, cinematic warm lighting, slow tracking shot"
               rows={4}
-              className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-2 focus:ring-[rgba(59,130,246,0.2)] transition-all resize-none"
+              className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border-subtle text-sm focus:outline-none focus:border-[rgba(212,255,0,0.5)] focus:ring-2 focus:ring-[rgba(212,255,0,0.2)] transition-all resize-none"
               autoFocus
             />
             {prompt.trim() && (
@@ -618,7 +618,7 @@ export default function AIVideoPage() {
                 type="button"
                 onClick={enhancePrompt}
                 disabled={enhancing}
-                className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1 text-[10px] text-[#60A5FA] hover:text-white bg-[rgba(59,130,246,0.1)] hover:bg-[rgba(59,130,246,0.2)] border border-[rgba(59,130,246,0.2)] px-2.5 py-1 rounded-full transition-all disabled:opacity-50 cursor-pointer"
+                className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1 text-[10px] text-[#60A5FA] hover:text-white bg-[rgba(212,255,0,0.1)] hover:bg-[rgba(212,255,0,0.2)] border border-[rgba(212,255,0,0.2)] px-2.5 py-1 rounded-full transition-all disabled:opacity-50 cursor-pointer"
               >
                 {enhancing ? <Loader2 size={10} className="animate-spin" /> : <Wand2 size={10} />}
                 {enhancing ? "Enhancing…" : "Enhance ✨"}
@@ -657,8 +657,8 @@ export default function AIVideoPage() {
               onClick={() => setAspectRatio(ar.id)}
               className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all ${
                 aspectRatio === ar.id
-                  ? "border-brand-accent bg-[rgba(59,130,246,0.08)] shadow-lg shadow-[rgba(59,130,246,0.08)]"
-                  : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                  ? "border-brand-accent bg-[rgba(212,255,0,0.08)] shadow-lg shadow-[rgba(212,255,0,0.08)]"
+                  : "border-border-subtle hover:border-[rgba(212,255,0,0.25)] bg-surface-light"
               }`}
             >
               <div
@@ -698,10 +698,10 @@ export default function AIVideoPage() {
                                     disabled={locked}
                                     className={`p-3 rounded-xl border transition-all text-center relative ${
                                       locked
-                                        ? "border-[rgba(59,130,246,0.25)] bg-surface-light/40 opacity-60 cursor-not-allowed"
+                                        ? "border-[rgba(212,255,0,0.25)] bg-surface-light/40 opacity-60 cursor-not-allowed"
                                         : numFrames === opt.f
-                                          ? "border-brand-accent bg-[rgba(59,130,246,0.08)]"
-                                          : "border-border-subtle hover:border-[rgba(59,130,246,0.25)] bg-surface-light"
+                                          ? "border-brand-accent bg-[rgba(212,255,0,0.08)]"
+                                          : "border-border-subtle hover:border-[rgba(212,255,0,0.25)] bg-surface-light"
                                     }`}
                                   >
                                     {locked && (
@@ -719,7 +719,7 @@ export default function AIVideoPage() {
           {nextTierLabel && (
             <Link
               href="/dashboard/upgrade"
-              className="flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-brand-accent/80 py-1.5 rounded-lg border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] transition-all"
+              className="flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-brand-accent/80 py-1.5 rounded-lg border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.04)] transition-all"
             >
               <Lock size={10} /> Upgrade to unlock longer videos ({nextTierLabel})
             </Link>
@@ -734,7 +734,7 @@ export default function AIVideoPage() {
       icon: <Sparkles size={18} />,
       component: (
         <div className="space-y-3">
-          <div className="glass rounded-xl p-4 bg-[rgba(59,130,246,0.04)] border-[rgba(59,130,246,0.2)]">
+          <div className="glass rounded-xl p-4 bg-[rgba(212,255,0,0.04)] border-[rgba(212,255,0,0.2)]">
             <p className="text-[10px] uppercase tracking-wider text-brand-accent font-semibold mb-2">Your prompt</p>
             <p className="text-sm text-text-primary leading-relaxed">{prompt || <span className="text-text-muted italic">(no prompt set)</span>}</p>
             <div className="grid grid-cols-2 gap-3 mt-4 pt-3 border-t border-border-subtle/50">
@@ -1212,7 +1212,7 @@ export default function AIVideoPage() {
                   type="button"
                   onClick={enhancePrompt}
                   disabled={enhancing}
-                  className="inline-flex items-center gap-1.5 text-[11px] text-[#60A5FA] hover:text-white bg-[rgba(59,130,246,0.08)] hover:bg-[rgba(59,130,246,0.18)] border border-[rgba(59,130,246,0.2)] hover:border-[rgba(59,130,246,0.4)] px-3 py-1.5 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-[11px] text-[#60A5FA] hover:text-white bg-[rgba(212,255,0,0.08)] hover:bg-[rgba(212,255,0,0.18)] border border-[rgba(212,255,0,0.2)] hover:border-[rgba(212,255,0,0.4)] px-3 py-1.5 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {enhancing ? (
                     <Loader2 size={11} className="animate-spin" />
@@ -1226,7 +1226,7 @@ export default function AIVideoPage() {
 
             {/* Batch queue banner — shows when clips queued from Script Lab */}
             {batchQueue.length > 1 && (
-              <div className="mt-3 flex items-center justify-between px-3 py-2 rounded-xl border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.06)]">
+              <div className="mt-3 flex items-center justify-between px-3 py-2 rounded-xl border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.06)]">
                 <div className="flex items-center gap-2">
                   <Film size={10} className="text-brand-accent" />
                   <p className="text-[10px] text-text-secondary">
@@ -1238,7 +1238,7 @@ export default function AIVideoPage() {
                     <button
                       type="button"
                       onClick={loadNextBatchClip}
-                      className="text-[9px] font-medium text-brand-accent hover:text-white px-2.5 py-1 rounded-full border border-[rgba(59,130,246,0.3)] hover:bg-[rgba(59,130,246,0.15)] transition-all cursor-pointer"
+                      className="text-[9px] font-medium text-brand-accent hover:text-white px-2.5 py-1 rounded-full border border-[rgba(212,255,0,0.3)] hover:bg-[rgba(212,255,0,0.15)] transition-all cursor-pointer"
                     >
                       Next clip →
                     </button>
@@ -1299,7 +1299,7 @@ export default function AIVideoPage() {
                     className={[
                       "inline-flex flex-col items-start gap-0.5 px-3 py-2 rounded-lg border text-left transition-all cursor-pointer",
                       modelBackend === b.id
-                        ? "border-[rgba(59,130,246,0.5)] bg-[rgba(59,130,246,0.1)] text-text-primary"
+                        ? "border-[rgba(212,255,0,0.5)] bg-[rgba(212,255,0,0.1)] text-text-primary"
                         : "border-border-subtle bg-white/[0.03] text-text-muted hover:text-text-primary hover:border-border-strong hover:bg-white/[0.06]",
                     ].join(" ")}
                   >
@@ -1369,14 +1369,14 @@ export default function AIVideoPage() {
                     <button
                       type="button"
                       onClick={() => setStyleVaultCat(null)}
-                      className={["text-[9px] px-3 py-2 whitespace-nowrap transition-colors cursor-pointer", styleVaultCat === null ? "text-brand-accent border-b border-brand-accent -mb-px bg-[rgba(59,130,246,0.05)]" : "text-text-muted hover:text-text-primary"].join(" ")}
+                      className={["text-[9px] px-3 py-2 whitespace-nowrap transition-colors cursor-pointer", styleVaultCat === null ? "text-brand-accent border-b border-brand-accent -mb-px bg-[rgba(212,255,0,0.05)]" : "text-text-muted hover:text-text-primary"].join(" ")}
                     >All</button>
                     {vaultCats.map(cat => (
                       <button
                         key={cat}
                         type="button"
                         onClick={() => setStyleVaultCat(c => c === cat ? null : cat)}
-                        className={["text-[9px] px-3 py-2 whitespace-nowrap transition-colors cursor-pointer", styleVaultCat === cat ? "text-brand-accent border-b border-brand-accent -mb-px bg-[rgba(59,130,246,0.05)]" : "text-text-muted hover:text-text-primary"].join(" ")}
+                        className={["text-[9px] px-3 py-2 whitespace-nowrap transition-colors cursor-pointer", styleVaultCat === cat ? "text-brand-accent border-b border-brand-accent -mb-px bg-[rgba(212,255,0,0.05)]" : "text-text-muted hover:text-text-primary"].join(" ")}
                       >{cat}</button>
                     ))}
                   </div>
@@ -1391,7 +1391,7 @@ export default function AIVideoPage() {
                           setStyleVaultOpen(false);
                           toast(`Applied: ${style.label}`, { icon: "🎬", duration: 2000 });
                         }}
-                        className="group bg-[rgba(13,17,32,0.9)] hover:bg-[rgba(59,130,246,0.06)] text-left px-3 py-2 transition-colors cursor-pointer"
+                        className="group bg-[rgba(13,17,32,0.9)] hover:bg-[rgba(212,255,0,0.06)] text-left px-3 py-2 transition-colors cursor-pointer"
                       >
                         <p className="text-[10px] font-medium text-text-secondary group-hover:text-text-primary transition-colors">{style.label}</p>
                         <p className="text-[8px] text-text-muted mt-0.5 line-clamp-2 leading-relaxed">{style.prompt}</p>
@@ -1597,7 +1597,7 @@ export default function AIVideoPage() {
                         </div>
                       </div>
                       {/* CTR estimate */}
-                      <div className="bg-[rgba(59,130,246,0.06)] border border-[rgba(59,130,246,0.15)] rounded-xl p-3">
+                      <div className="bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.15)] rounded-xl p-3">
                         <p className="text-[8px] uppercase tracking-wider text-brand-accent mb-1 font-medium flex items-center gap-1"><Target size={8} /> Est. CTR</p>
                         <p className="font-display text-3xl font-bold text-brand-accent tabular-nums">{viralResult.ctr_estimate}</p>
                         <p className="text-[9px] text-text-muted mt-1">click-through rate</p>
@@ -1707,7 +1707,7 @@ export default function AIVideoPage() {
                 {nextTierLabel && (
                   <Link
                     href="/dashboard/upgrade"
-                    className="col-span-full flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-brand-accent/80 py-1.5 rounded-lg border border-[rgba(59,130,246,0.2)] bg-[rgba(59,130,246,0.04)] transition-all"
+                    className="col-span-full flex items-center justify-center gap-1.5 text-[10px] text-brand-accent hover:text-brand-accent/80 py-1.5 rounded-lg border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.04)] transition-all"
                   >
                     <Lock size={10} /> Upgrade to unlock longer videos ({nextTierLabel})
                   </Link>
@@ -2044,7 +2044,7 @@ export default function AIVideoPage() {
                     value={overlayTitle}
                     onChange={e => setOverlayTitle(e.target.value)}
                     placeholder="Overlay title text (leave blank for none)"
-                    className="flex-1 px-3 py-2 rounded-xl bg-surface-light border border-border-subtle text-xs focus:outline-none focus:border-[rgba(59,130,246,0.5)] focus:ring-1 focus:ring-[rgba(59,130,246,0.2)] transition-all"
+                    className="flex-1 px-3 py-2 rounded-xl bg-surface-light border border-border-subtle text-xs focus:outline-none focus:border-[rgba(212,255,0,0.5)] focus:ring-1 focus:ring-[rgba(212,255,0,0.2)] transition-all"
                   />
                   <span className="text-[9px] text-text-muted whitespace-nowrap">Shown as text overlay</span>
                 </div>

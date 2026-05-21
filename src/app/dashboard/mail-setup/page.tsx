@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * Mail Setup — agency-facing page to add a custom email subdomain
@@ -275,7 +275,7 @@ export default function MailSetupPage() {
 
                   {/* Detail pane for currently-selected row */}
                   {selected && (
-                    <div className="mt-6 rounded-xl border border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)] p-5">
+                    <div className="mt-6 rounded-xl border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] p-5">
                       <div className="mb-4 flex items-center justify-between">
                         <div>
                           <h3 className="text-sm font-semibold">DNS records for <span className="font-mono">{selected.domain}</span></h3>
@@ -330,7 +330,7 @@ export default function MailSetupPage() {
                               done
                                 ? "bg-brand-accent text-[#020711]"
                                 : active
-                                  ? "bg-[rgba(59,130,246,0.08)] text-brand-accent ring-2 ring-[rgba(59,130,246,0.4)]"
+                                  ? "bg-[rgba(212,255,0,0.08)] text-brand-accent ring-2 ring-[rgba(212,255,0,0.4)]"
                                   : "bg-surface-light text-text-muted"
                             }`}
                           >
@@ -375,7 +375,7 @@ export default function MailSetupPage() {
                         <p className="text-[11px] text-emerald-400">✓ Looks good</p>
                       )}
 
-                      <div className="mt-6 flex items-start gap-2 rounded-lg bg-[rgba(59,130,246,0.08)] p-3 text-[11px] text-brand-accent">
+                      <div className="mt-6 flex items-start gap-2 rounded-lg bg-[rgba(212,255,0,0.08)] p-3 text-[11px] text-brand-accent">
                         <AlertTriangle size={13} className="mt-0.5 shrink-0" />
                         <p>
                           Use a subdomain you CONTROL. You&apos;ll need to add 3–5 DNS records to
@@ -550,7 +550,7 @@ function DomainRow({
       ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
       : domain.status === "failed"
         ? "bg-rose-500/15 text-rose-400 border-rose-500/30"
-        : "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]";
+        : "bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.25)]";
   const statusLabel =
     domain.status === "verified"
       ? "✓ Verified"
@@ -581,7 +581,7 @@ function DomainRow({
           <button
             onClick={onVerify}
             disabled={polling}
-            className="rounded bg-[rgba(59,130,246,0.08)] px-2 py-1 text-[11px] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] disabled:opacity-60"
+            className="rounded bg-[rgba(212,255,0,0.08)] px-2 py-1 text-[11px] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-60"
           >
             Verify
           </button>
@@ -628,7 +628,7 @@ function DnsRecordList({
             className="glass rounded-xl p-3"
           >
             <div className="mb-2 flex items-center justify-between">
-              <span className="rounded bg-[rgba(59,130,246,0.08)] px-2 py-0.5 text-[10px] font-bold uppercase text-brand-accent">
+              <span className="rounded bg-[rgba(212,255,0,0.08)] px-2 py-0.5 text-[10px] font-bold uppercase text-brand-accent">
                 {r.type}
               </span>
               {r.priority !== undefined && (

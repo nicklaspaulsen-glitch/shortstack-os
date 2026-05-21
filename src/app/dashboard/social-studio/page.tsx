@@ -154,7 +154,7 @@ export default function SocialStudioPage() {
               className="mx-1 rounded-2xl border p-4 space-y-2"
               style={{
                 background: "rgba(13,17,32,0.7)",
-                borderColor: "rgba(59,130,246,0.22)",
+                borderColor: "rgba(212,255,0,0.22)",
               }}
             >
               <div className="flex items-center gap-2 mb-1">

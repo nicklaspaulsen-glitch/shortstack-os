@@ -98,8 +98,8 @@ function BarChart({ buckets }: { buckets: MonthBucket[] }) {
                 <div
                   className={`absolute bottom-0 w-full rounded-t-md transition-all duration-500 ${
                     isThisMonth
-                      ? "bg-gradient-to-t from-blue-600/80 to-blue-400/80"
-                      : "bg-gradient-to-t from-blue-800/50 to-blue-600/30"
+                      ? "bg-gradient-to-t from-[rgba(212,255,0,0.80)] to-[rgba(212,255,0,0.45)]"
+                      : "bg-gradient-to-t from-[rgba(212,255,0,0.30)] to-[rgba(212,255,0,0.12)]"
                   }`}
                   style={{ height: `${heightPct}%` }}
                 />
@@ -244,7 +244,7 @@ export default function ForecastPage() {
                               <motion.tr
                                 key={d.id}
                                 variants={slideX}
-                                className="hover:bg-blue-500/5 transition-colors"
+                                className="hover:bg-indigo-500/5 transition-colors"
                               >
                                 <td className="px-4 py-3 text-text-primary font-medium">{d.title}</td>
                                 <td className="px-4 py-3 text-text-muted hidden sm:table-cell">{d.client_name}</td>
@@ -254,7 +254,7 @@ export default function ForecastPage() {
                                     {d.probability}%
                                   </span>
                                 </td>
-                                <td className="px-4 py-3 text-right text-blue-400 font-medium hidden md:table-cell">
+                                <td className="px-4 py-3 text-right text-indigo-400 font-medium hidden md:table-cell">
                                   {fmt(d.value * d.probability / 100)}
                                 </td>
                               </motion.tr>
@@ -292,7 +292,7 @@ export default function ForecastPage() {
                               <motion.tr
                                 key={d.id}
                                 variants={slideX}
-                                className="hover:bg-blue-500/5 transition-colors"
+                                className="hover:bg-indigo-500/5 transition-colors"
                               >
                                 <td className="px-4 py-3">
                                   <p className="text-text-primary">{d.title}</p>
@@ -307,7 +307,7 @@ export default function ForecastPage() {
                                     ? new Date(d.expected_close_date).toLocaleDateString()
                                     : "�"}
                                 </td>
-                                <td className="px-4 py-3 text-right text-blue-400 hidden md:table-cell">
+                                <td className="px-4 py-3 text-right text-indigo-400 hidden md:table-cell">
                                   {fmt(d.value * d.probability / 100)}
                                 </td>
                               </motion.tr>

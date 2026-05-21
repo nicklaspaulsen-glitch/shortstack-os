@@ -179,16 +179,16 @@ export default function ClientOutreachPage() {
   }
 
   const channels: Array<{ id: Channel; label: string; icon: React.ReactNode; color: string }> = [
-    { id: "email", label: "Email", icon: <Mail size={14} />, color: "text-blue-400" },
-    { id: "dm", label: "Social DMs", icon: <MessageSquare size={14} />, color: "text-blue-400" },
+    { id: "email", label: "Email", icon: <Mail size={14} />, color: "text-indigo-400" },
+    { id: "dm", label: "Social DMs", icon: <MessageSquare size={14} />, color: "text-indigo-400" },
     { id: "sms", label: "SMS", icon: <Smartphone size={14} />, color: "text-emerald-400" },
-    { id: "call", label: "AI Call", icon: <Phone size={14} />, color: "text-blue-400" },
+    { id: "call", label: "AI Call", icon: <Phone size={14} />, color: "text-indigo-400" },
   ];
 
   return (
     <MotionPage className="p-6 space-y-6">{/* Header */}<div>
               <h1 className="text-xl font-bold flex items-center gap-2 text-text-primary">
-                <Send size={20} className="text-blue-400" />
+                <Send size={20} className="text-indigo-400" />
                 Outreach Center
               </h1>
               <p className="text-xs text-text-muted mt-1">Launch multi-channel campaigns with AI-personalized messages</p>
@@ -223,7 +223,7 @@ export default function ClientOutreachPage() {
                   onClick={() => { setChannel(ch.id); setSelectedTemplate(0); }}
                   className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium transition-all ${
                     channel === ch.id
-                      ? "bg-blue-500/[0.10] text-blue-400 border border-blue-500/[0.20]"
+                      ? "bg-indigo-500/[0.10] text-indigo-400 border border-indigo-500/[0.20]"
                       : "bg-white/[0.06] text-text-muted hover:text-text-primary border border-border-subtle"
                   }`}
                 >
@@ -236,7 +236,7 @@ export default function ClientOutreachPage() {
                   key={t}
                   onClick={() => setTab(t)}
                   className={`pb-2 text-xs font-medium capitalize transition-colors border-b-2 ${
-                    tab === t ? "text-blue-400 border-blue-400" : "text-text-muted border-transparent hover:text-text-primary"
+                    tab === t ? "text-indigo-400 border-indigo-400" : "text-text-muted border-transparent hover:text-text-primary"
                   }`}
                 >
                   {t}
@@ -309,7 +309,7 @@ export default function ClientOutreachPage() {
                         <input type="checkbox" checked={useAI} onChange={(e) => setUseAI(e.target.checked)}
                           className="w-3.5 h-3.5 rounded border-border-subtle" />
                         <span className="text-[10px] flex items-center gap-1">
-                          <Sparkles size={10} className="text-blue-400" /> AI Personalization
+                          <Sparkles size={10} className="text-indigo-400" /> AI Personalization
                         </span>
                       </label>
                     </div>
@@ -325,7 +325,7 @@ export default function ClientOutreachPage() {
                           onClick={() => setSelectedTemplate(i)}
                           className={`w-full text-left px-2.5 py-2 rounded-lg text-[10px] transition-colors ${
                             selectedTemplate === i
-                              ? "bg-blue-500/[0.10] text-blue-400 border border-blue-500/[0.20]"
+                              ? "bg-indigo-500/[0.10] text-indigo-400 border border-indigo-500/[0.20]"
                               : "bg-white/[0.06] text-text-muted hover:text-text-primary"
                           }`}
                         >
@@ -336,8 +336,8 @@ export default function ClientOutreachPage() {
                   </div>
 
                   {channel === "dm" && (
-                    <div className="glass rounded-xl p-4 bg-blue-500/[0.10] border-blue-500/[0.20]">
-                      <p className="text-[10px] text-blue-400 flex items-center gap-1 mb-1">
+                    <div className="glass rounded-xl p-4 bg-indigo-500/[0.10] border-indigo-500/[0.20]">
+                      <p className="text-[10px] text-indigo-400 flex items-center gap-1 mb-1">
                         <Globe size={10} /> Chrome Extension Required
                       </p>
                       <p className="text-[9px] text-text-muted">
@@ -347,8 +347,8 @@ export default function ClientOutreachPage() {
                   )}
 
                   {channel === "call" && (
-                    <div className="glass rounded-xl p-4 bg-blue-500/[0.10] border-blue-500/[0.20]">
-                      <p className="text-[10px] text-blue-400 flex items-center gap-1 mb-1">
+                    <div className="glass rounded-xl p-4 bg-indigo-500/[0.10] border-indigo-500/[0.20]">
+                      <p className="text-[10px] text-indigo-400 flex items-center gap-1 mb-1">
                         <Bot size={10} /> AI-Powered Calls
                       </p>
                       <p className="text-[9px] text-text-muted">
@@ -388,7 +388,7 @@ export default function ClientOutreachPage() {
                           <td className="px-3 py-2.5 text-text-muted max-w-[200px] truncate">{log.message_text}</td>
                           <td className="px-3 py-2.5 text-center">
                             <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium ${
-                              log.status === "sent" ? "bg-blue-500/[0.10] text-blue-400" :
+                              log.status === "sent" ? "bg-indigo-500/[0.10] text-indigo-400" :
                               log.status === "replied" ? "bg-emerald-500/[0.10] text-emerald-400" :
                               log.status === "pending" ? "bg-amber-500/[0.10] text-amber-400" :
                               "bg-red-500/[0.10] text-red-400"
@@ -408,10 +408,10 @@ export default function ClientOutreachPage() {
                 {Object.entries(MESSAGE_TEMPLATES).map(([ch, templates]) => (
                   <div key={ch} className="glass rounded-xl p-4">
                     <h3 className="text-xs font-semibold capitalize flex items-center gap-2 mb-3 text-text-primary">
-                      {ch === "email" && <Mail size={13} className="text-blue-400" />}
-                      {ch === "dm" && <MessageSquare size={13} className="text-blue-400" />}
+                      {ch === "email" && <Mail size={13} className="text-indigo-400" />}
+                      {ch === "dm" && <MessageSquare size={13} className="text-indigo-400" />}
                       {ch === "sms" && <Smartphone size={13} className="text-emerald-400" />}
-                      {ch === "call" && <Phone size={13} className="text-blue-400" />}
+                      {ch === "call" && <Phone size={13} className="text-indigo-400" />}
                       {ch} Templates
                     </h3>
                     <div className="space-y-2">
@@ -421,7 +421,7 @@ export default function ClientOutreachPage() {
                           <p className="text-[9px] text-text-muted line-clamp-3">{tpl.body}</p>
                           <button
                             onClick={() => { setChannel(ch as Channel); setBody(tpl.body); if ("subject" in tpl) setSubject(tpl.subject || ""); setTab("compose"); }}
-                            className="text-[9px] text-blue-400 hover:text-blue-400 mt-1.5 flex items-center gap-0.5"
+                            className="text-[9px] text-indigo-400 hover:text-indigo-400 mt-1.5 flex items-center gap-0.5"
                           >
                             Use template <ArrowRight size={8} />
                           </button>

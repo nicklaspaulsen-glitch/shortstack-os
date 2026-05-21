@@ -231,7 +231,7 @@ export default function CoachPage() {
                   onClick={() => setTab(t.id)}
                   className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                     tab === t.id
-                      ? "bg-[rgba(59,130,246,0.10)] text-brand-accent border border-[rgba(59,130,246,0.25)]"
+                      ? "bg-[rgba(212,255,0,0.10)] text-brand-accent border border-[rgba(212,255,0,0.25)]"
                       : "text-text-muted hover:bg-white/5 hover:text-text-primary"
                   }`}
                 >
@@ -271,7 +271,7 @@ export default function CoachPage() {
                       <motion.div key={row.id} variants={rowVariants}>
                         <Link
                           href={`/dashboard/coach/analyses/${row.id}`}
-                          className="group flex items-center gap-4 border-b border-white/5 last:border-0 px-4 py-3 transition-colors hover:bg-[rgba(59,130,246,0.04)]"
+                          className="group flex items-center gap-4 border-b border-white/5 last:border-0 px-4 py-3 transition-colors hover:bg-[rgba(212,255,0,0.04)]"
                         >
                           <div className="rounded-lg border border-white/10 bg-white/5 p-2 text-text-muted">
                             <Icon className="h-4 w-4" />
@@ -384,7 +384,7 @@ export default function CoachPage() {
                       onClick={() => setPeriod(p.id)}
                       className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                         period === p.id
-                          ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)] text-brand-accent"
+                          ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-brand-accent"
                           : "border-white/10 text-text-muted hover:border-white/15 hover:text-text-primary"
                       }`}
                     >
@@ -416,7 +416,7 @@ export default function CoachPage() {
                           <motion.tr
                             key={entry.rep_id}
                             variants={rowVariants}
-                            className="text-black/65 hover:bg-[rgba(59,130,246,0.04)] transition-colors"
+                            className="text-black/65 hover:bg-[rgba(212,255,0,0.04)] transition-colors"
                           >
                             <td className="px-4 py-3 font-semibold text-black/60">{idx + 1}</td>
                             <td className="px-4 py-3 text-text-primary">

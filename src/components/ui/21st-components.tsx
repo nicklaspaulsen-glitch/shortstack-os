@@ -217,8 +217,8 @@ export function ActionSearchBar({
             "w-full rounded-xl border border-border-subtle bg-[rgba(19,24,39,0.80)]",
             "py-2 pl-9 pr-8 text-[12px] text-text-primary placeholder:text-text-muted",
             "outline-none transition-all duration-[220ms]",
-            "focus:border-[rgba(59,130,246,0.38)] focus:bg-[rgba(19,24,39,0.95)]",
-            "focus:shadow-[0_0_0_2px_rgba(59,130,246,0.10)]",
+            "focus:border-[rgba(212,255,0,0.38)] focus:bg-[rgba(19,24,39,0.95)]",
+            "focus:shadow-[0_0_0_2px_rgba(212,255,0,0.10)]",
           )}
         />
         {query && (
@@ -302,7 +302,7 @@ interface NetworkAnimationProps {
   maxDistance?: number;
   /** Background fill color. Pass "transparent" to skip fill. */
   backgroundColor?: string;
-  /** Particle RGBA prefix — no closing paren, e.g. "rgba(59,130,246," */
+  /** Particle RGBA prefix — no closing paren, e.g. "rgba(212,255,0," */
   particleColor?: string;
   /** Line RGBA prefix */
   lineColor?: string;
@@ -314,8 +314,8 @@ interface NetworkAnimationProps {
 export function NetworkAnimation({
   maxDistance = 140,
   backgroundColor = "#020711",
-  particleColor = "rgba(59,130,246,",
-  lineColor = "rgba(99,146,255,",
+  particleColor = "rgba(212,255,0,",
+  lineColor = "rgba(212,255,0,",
   particleCount = 55,
   className,
 }: NetworkAnimationProps) {

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -118,7 +118,7 @@ interface StageConfig {
 }
 
 const PIPELINE_STAGES: StageConfig[] = [
-  { stage: "outreach_sent",  label: "Outreach Sent", color: "#60A5FA", bg: "rgba(59,130,246,0.08)",   border: "rgba(59,130,246,0.22)",   icon: <Mic size={13} />,          phase: "outreach" },
+  { stage: "outreach_sent",  label: "Outreach Sent", color: "#60A5FA", bg: "rgba(212,255,0,0.08)",   border: "rgba(212,255,0,0.22)",   icon: <Mic size={13} />,          phase: "outreach" },
   { stage: "replied",        label: "Replied",        color: "#A78BFA", bg: "rgba(139,92,246,0.08)",   border: "rgba(139,92,246,0.22)",   icon: <MessageSquare size={13} />, phase: "outreach" },
   { stage: "qualifying",     label: "Qualifying",     color: "#FBBF24", bg: "rgba(251,191,36,0.08)",   border: "rgba(251,191,36,0.22)",   icon: <Target size={13} />,        phase: "outreach" },
   { stage: "qualified",      label: "Qualified",      color: "#34D399", bg: "rgba(52,211,153,0.08)",   border: "rgba(52,211,153,0.22)",   icon: <CheckCircle size={13} />,   phase: "deal" },
@@ -383,7 +383,7 @@ function ConversationTab({ lead }: { lead: Lead }) {
             className="max-w-[82%] px-3 py-2 rounded-2xl text-xs leading-relaxed"
             style={
               m.role === "assistant"
-                ? { background: "rgba(59,130,246,0.10)", color: "#E0E0EA", border: "1px solid rgba(59,130,246,0.18)" }
+                ? { background: "rgba(212,255,0,0.10)", color: "#E0E0EA", border: "1px solid rgba(212,255,0,0.18)" }
                 : { background: "rgba(255,255,255,0.07)", color: "#C0C0CC" }
             }
           >
