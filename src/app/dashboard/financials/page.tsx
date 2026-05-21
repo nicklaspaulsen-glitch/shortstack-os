@@ -489,7 +489,7 @@ export default function FinancialsPage() {
                     <StripeIcon size={14} /> Connect Stripe
                   </button>
                 ) : (
-                  <span className="text-[10px] text-emerald-700 flex items-center gap-1">
+                  <span className="text-[10px] text-emerald-400 flex items-center gap-1">
                     <CheckCircle size={10} /> Synced {lastSyncTime || "just now"}
                   </span>
                 )}
@@ -629,7 +629,7 @@ export default function FinancialsPage() {
                     <div>
                       <div className="flex justify-between text-[10px] mb-1">
                         <span className="text-text-muted">Expenses</span>
-                        <span className="text-rose-700 font-semibold">{formatCurrency(totalMonthlyExpenses)}</span>
+                        <span className="text-rose-400 font-semibold">{formatCurrency(totalMonthlyExpenses)}</span>
                       </div>
                       <div className="h-5 rounded-lg bg-surface-light border border-border-subtle overflow-hidden">
                         <div className="h-full rounded-lg bg-red-500/60 transition-all duration-500" style={{ width: barWidth(totalMonthlyExpenses) }} />
@@ -638,7 +638,7 @@ export default function FinancialsPage() {
                     <div>
                       <div className="flex justify-between text-[10px] mb-1">
                         <span className="text-text-muted">Net Profit</span>
-                        <span className={`font-semibold ${netProfit >= 0 ? "text-emerald-700" : "text-rose-700"}`}>{formatCurrency(netProfit)}</span>
+                        <span className={`font-semibold ${netProfit >= 0 ? "text-emerald-400" : "text-rose-400"}`}>{formatCurrency(netProfit)}</span>
                       </div>
                       <div className="h-5 rounded-lg bg-surface-light border border-border-subtle overflow-hidden">
                         <div className={`h-full rounded-lg transition-all duration-500 ${netProfit >= 0 ? "bg-green-500/60" : "bg-red-500/60"}`} style={{ width: barWidth(netProfit) }} />
@@ -788,7 +788,7 @@ export default function FinancialsPage() {
                         <span className="text-[10px] text-text-muted w-16 text-right">{formatCurrency(b.actual)}</span>
                         <span className="text-[10px] text-text-muted w-2">/</span>
                         <span className="text-[10px] font-semibold text-text-primary w-16">{formatCurrency(b.budget)}</span>
-                        <span className={`text-[10px] w-16 text-right font-semibold ${b.variance >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
+                        <span className={`text-[10px] w-16 text-right font-semibold ${b.variance >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
                           {b.variance >= 0 ? "+" : ""}{formatCurrency(b.variance)}
                         </span>
                       </div>
@@ -874,24 +874,24 @@ export default function FinancialsPage() {
                         <div key={exp.id} className="grid grid-cols-12 gap-2 items-center px-4 py-2.5 rounded-xl bg-surface-light border border-border-subtle transition-all hover:border-border-subtle/80">
                           <div className="col-span-4"><p className="text-sm font-semibold">{exp.name}</p></div>
                           <div className="col-span-2">
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[rgba(0,0,0,0.04)] border border-[rgba(0,0,0,0.08)] text-text-muted">{exp.category}</span>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 border border-border-subtle text-text-muted">{exp.category}</span>
                           </div>
                           <div className="col-span-2 text-right">
                             <p className="text-sm">{formatCurrency(exp.cost)}</p>
                             <p className="text-[9px] text-text-muted">/{exp.interval === "annual" ? "yr" : "mo"}</p>
                           </div>
                           <div className="col-span-2 text-right">
-                            <p className="text-sm font-semibold text-rose-700">{formatCurrency(monthlyEquivalent(exp))}</p>
+                            <p className="text-sm font-semibold text-rose-400">{formatCurrency(monthlyEquivalent(exp))}</p>
                           </div>
                           <div className="col-span-2 flex justify-end gap-1.5">
                             <button onClick={() => openEdit(exp)} className="p-1.5 rounded-md hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors" aria-label="Edit expense"><Pencil size={12} /></button>
-                            <button onClick={() => deleteExpense(exp.id)} className="p-1.5 rounded-md hover:bg-rose-50 text-text-muted hover:text-rose-700 transition-colors" aria-label="Delete expense"><Trash2 size={12} /></button>
+                            <button onClick={() => deleteExpense(exp.id)} className="p-1.5 rounded-md hover:bg-rose-500/10 text-text-muted hover:text-rose-400 transition-colors" aria-label="Delete expense"><Trash2 size={12} /></button>
                           </div>
                         </div>
                       ))}
                       <div className="grid grid-cols-12 gap-2 px-4 py-2.5 border-t border-border-subtle mt-1">
                         <div className="col-span-8 text-xs font-semibold text-text-muted">Total Monthly</div>
-                        <div className="col-span-2 text-right"><p className="text-sm font-bold text-rose-700">{formatCurrency(totalMonthlyExpenses)}</p></div>
+                        <div className="col-span-2 text-right"><p className="text-sm font-bold text-rose-400">{formatCurrency(totalMonthlyExpenses)}</p></div>
                         <div className="col-span-2" />
                       </div>
                     </div>
@@ -1003,13 +1003,13 @@ export default function FinancialsPage() {
                             </span>
                           </div>
                           <div className="col-span-1 text-right">
-                            <button onClick={() => deleteSubscription(s.id)} className="text-rose-700 hover:text-rose-900 text-[10px]">Remove</button>
+                            <button onClick={() => deleteSubscription(s.id)} className="text-rose-400 hover:text-rose-900 text-[10px]">Remove</button>
                           </div>
                         </div>
                       ))}
                       <div className="grid grid-cols-12 px-4 py-3 bg-surface-light/40 text-xs font-semibold">
                         <div className="col-span-6 text-text-muted">Total Monthly</div>
-                        <div className="col-span-2 text-right text-rose-700">{formatCurrency(totalMonthlySubs)}</div>
+                        <div className="col-span-2 text-right text-rose-400">{formatCurrency(totalMonthlySubs)}</div>
                         <div className="col-span-4" />
                       </div>
                     </div>
@@ -1201,7 +1201,7 @@ export default function FinancialsPage() {
                   <button
                     onClick={() => toast("Batch invoice export is not yet wired. Export individual invoices from Stripe via Billing → Manage subscription.", { icon: "💡", duration: 6000 })}
                     className="card-hover p-3 text-left">
-                    <Download size={14} className="text-emerald-700 mb-1.5" />
+                    <Download size={14} className="text-emerald-400 mb-1.5" />
                     <p className="text-xs font-semibold">Export Invoices</p>
                     <p className="text-[10px] text-text-muted">Coming soon</p>
                   </button>
@@ -1221,11 +1221,11 @@ export default function FinancialsPage() {
                     </div>
                     <div>
                       <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Monthly Growth Rate</label>
-                      <p className="text-sm font-semibold text-emerald-700">{monthlyGrowthRate}%</p>
+                      <p className="text-sm font-semibold text-emerald-400">{monthlyGrowthRate}%</p>
                     </div>
                     <div>
                       <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Monthly Churn Rate</label>
-                      <p className="text-sm font-semibold text-rose-700">{monthlyChurnRate}%</p>
+                      <p className="text-sm font-semibold text-rose-400">{monthlyChurnRate}%</p>
                     </div>
                   </div>
                 </div>
@@ -1268,8 +1268,8 @@ export default function FinancialsPage() {
                       <div key={i} className="grid grid-cols-4 gap-2 px-3 py-2 rounded-lg bg-surface-light border border-border-subtle">
                         <div className="text-xs font-semibold">{item.month}</div>
                         <div className="text-xs text-right text-brand-accent">{formatCurrency(item.projected)}</div>
-                        <div className="text-xs text-right text-rose-700">{formatCurrency(item.expenses)}</div>
-                        <div className={`text-xs text-right font-semibold ${item.profit >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
+                        <div className="text-xs text-right text-rose-400">{formatCurrency(item.expenses)}</div>
+                        <div className={`text-xs text-right font-semibold ${item.profit >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
                           {formatCurrency(item.profit)}
                         </div>
                       </div>
@@ -1289,7 +1289,7 @@ export default function FinancialsPage() {
                   </div>
                   <div className="glass rounded-xl p-3">
                     <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Cumulative Profit</p>
-                    <p className={`text-lg font-bold ${forecast.reduce((s, f) => s + f.profit, 0) >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
+                    <p className={`text-lg font-bold ${forecast.reduce((s, f) => s + f.profit, 0) >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
                       {formatCurrency(forecast.reduce((s, f) => s + f.profit, 0))}
                     </p>
                   </div>
@@ -1307,7 +1307,7 @@ export default function FinancialsPage() {
                     </div>
                     <div>
                       <p className="text-[10px] text-text-muted">Annual Expenses</p>
-                      <p className="text-sm font-bold text-rose-700">{formatCurrency(totalMonthlyExpenses * 12)}</p>
+                      <p className="text-sm font-bold text-rose-400">{formatCurrency(totalMonthlyExpenses * 12)}</p>
                     </div>
                     <div>
                       <p className="text-[10px] text-text-muted">Taxable Income</p>
@@ -1367,8 +1367,8 @@ export default function FinancialsPage() {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
                   {[
                     { label: "Revenue Report", desc: "MRR, ARR, growth trends", icon: TrendingUp, color: "text-brand-accent" },
-                    { label: "Expense Report", desc: "All tracked subscriptions", icon: Receipt, color: "text-rose-700" },
-                    { label: "Profit & Loss", desc: "Full P&L statement", icon: BarChart3, color: "text-emerald-700" },
+                    { label: "Expense Report", desc: "All tracked subscriptions", icon: Receipt, color: "text-rose-400" },
+                    { label: "Profit & Loss", desc: "Full P&L statement", icon: BarChart3, color: "text-emerald-400" },
                     { label: "Invoice Report", desc: "All invoices & aging", icon: FileText, color: "text-blue-400" },
                     { label: "Tax Summary", desc: "Tax-ready financials", icon: Shield, color: "text-orange-400" },
                     { label: "Client Revenue", desc: "Revenue by client/tier", icon: Users, color: "text-purple-400" },

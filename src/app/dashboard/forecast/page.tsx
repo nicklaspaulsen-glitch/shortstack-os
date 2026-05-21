@@ -220,13 +220,13 @@ export default function ForecastPage() {
                     {/* Likely to close this month */}
                     {likelyClose.length > 0 && (
                       <PrismPanel padding="p-0" className="overflow-hidden">
-                        <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.06)]">
+                        <div className="px-4 py-3 border-b border-white/8">
                           <p className="text-sm font-semibold text-text-primary">Likely to Close This Month</p>
                           <p className="text-xs text-text-muted mt-0.5">Deals with =70% probability closing in {new Date().toLocaleString("default", { month: "long" })}</p>
                         </div>
                         <table className="w-full text-sm">
                           <thead>
-                            <tr className="border-b border-[rgba(0,0,0,0.06)] text-text-muted text-xs">
+                            <tr className="border-b border-white/8 text-text-muted text-xs">
                               <th className="text-left px-4 py-2.5 font-medium">Deal</th>
                               <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">Client</th>
                               <th className="text-right px-4 py-2.5 font-medium">Value</th>
@@ -235,7 +235,7 @@ export default function ForecastPage() {
                             </tr>
                           </thead>
                           <motion.tbody
-                            className="divide-y divide-[rgba(0,0,0,0.06)]"
+                            className="divide-y divide-white/8"
                             variants={containerVariants}
                             initial="hidden"
                             animate="show"
@@ -266,12 +266,12 @@ export default function ForecastPage() {
 
                     {/* Full pipeline table */}
                     <PrismPanel padding="p-0" className="overflow-hidden">
-                      <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.06)]">
+                      <div className="px-4 py-3 border-b border-white/8">
                         <p className="text-sm font-semibold text-text-primary">Full Open Pipeline</p>
                       </div>
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="border-b border-[rgba(0,0,0,0.06)] text-text-muted text-xs">
+                          <tr className="border-b border-white/8 text-text-muted text-xs">
                             <th className="text-left px-4 py-2.5 font-medium">Deal</th>
                             <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">Stage</th>
                             <th className="text-right px-4 py-2.5 font-medium">Value</th>
@@ -280,7 +280,7 @@ export default function ForecastPage() {
                           </tr>
                         </thead>
                         <motion.tbody
-                          className="divide-y divide-[rgba(0,0,0,0.06)]"
+                          className="divide-y divide-white/8"
                           variants={containerVariants}
                           initial="hidden"
                           animate="show"

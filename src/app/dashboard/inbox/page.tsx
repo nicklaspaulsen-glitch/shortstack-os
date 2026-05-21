@@ -56,14 +56,14 @@ interface InboxItem {
 /* -- Category Config -- */
 const CATEGORIES: { key: InboxCategory; label: string; icon: React.ReactNode; color: string; bg: string }[] = [
   { key: "all", label: "All Items", icon: <Inbox size={14} />, color: "text-brand-accent", bg: "bg-blue-500/10" },
-  { key: "scripts", label: "Scripts", icon: <Film size={14} />, color: "text-blue-700", bg: "bg-blue-500/10" },
-  { key: "emails", label: "Email Drafts", icon: <Mail size={14} />, color: "text-purple-700", bg: "bg-purple-500/10" },
-  { key: "outreach", label: "Outreach", icon: <Megaphone size={14} />, color: "text-emerald-700", bg: "bg-emerald-500/10" },
-  { key: "contracts", label: "Contracts", icon: <FileCheck size={14} />, color: "text-amber-700", bg: "bg-amber-500/10" },
-  { key: "ideas", label: "Ideas", icon: <Lightbulb size={14} />, color: "text-yellow-700", bg: "bg-yellow-500/10" },
-  { key: "reports", label: "Reports", icon: <BarChart3 size={14} />, color: "text-cyan-700", bg: "bg-cyan-500/10" },
-  { key: "briefings", label: "Briefings", icon: <BookOpen size={14} />, color: "text-rose-700", bg: "bg-rose-500/10" },
-  { key: "exports", label: "Exports", icon: <Download size={14} />, color: "text-teal-700", bg: "bg-teal-500/10" },
+  { key: "scripts", label: "Scripts", icon: <Film size={14} />, color: "text-blue-400", bg: "bg-blue-500/10" },
+  { key: "emails", label: "Email Drafts", icon: <Mail size={14} />, color: "text-purple-400", bg: "bg-purple-500/10" },
+  { key: "outreach", label: "Outreach", icon: <Megaphone size={14} />, color: "text-emerald-400", bg: "bg-emerald-500/10" },
+  { key: "contracts", label: "Contracts", icon: <FileCheck size={14} />, color: "text-amber-400", bg: "bg-amber-500/10" },
+  { key: "ideas", label: "Ideas", icon: <Lightbulb size={14} />, color: "text-yellow-400", bg: "bg-yellow-500/10" },
+  { key: "reports", label: "Reports", icon: <BarChart3 size={14} />, color: "text-cyan-400", bg: "bg-cyan-500/10" },
+  { key: "briefings", label: "Briefings", icon: <BookOpen size={14} />, color: "text-rose-400", bg: "bg-rose-500/10" },
+  { key: "exports", label: "Exports", icon: <Download size={14} />, color: "text-teal-400", bg: "bg-teal-500/10" },
 ];
 
 function getCategoryConfig(type: InboxCategory) {
@@ -514,7 +514,7 @@ export default function InboxPage() {
       published: "bg-emerald-500/15 text-emerald-400",
       scheduled: "bg-cyan-500/15 text-cyan-400",
       idea: "bg-yellow-500/15 text-yellow-400",
-      scripted: "bg-blue-500/15 text-blue-700",
+      scripted: "bg-blue-500/15 text-blue-400",
     };
     return (
       <MotionPage>
@@ -825,7 +825,7 @@ export default function InboxPage() {
                         <button onClick={e => { e.stopPropagation(); togglePin(item.id); }} className="p-1 rounded hover:bg-white/8 text-text-muted hover:text-text-primary transition-all" title={item.pinned ? "Unpin" : "Pin"}>
                           {item.pinned ? <PinOff size={10} /> : <Pin size={10} />}
                         </button>
-                        <button onClick={e => { e.stopPropagation(); archiveItem(item.id); }} className="p-1 rounded hover:bg-white/8 text-text-muted hover:text-red-600 transition-all" title="Archive">
+                        <button onClick={e => { e.stopPropagation(); archiveItem(item.id); }} className="p-1 rounded hover:bg-white/8 text-text-muted hover:text-red-400 transition-all" title="Archive">
                           <Archive size={10} />
                         </button>
                       </div>
@@ -942,15 +942,15 @@ export default function InboxPage() {
               {autoRuns.map((run, index) => {
                 const iconMap: Record<string, React.ReactNode> = {
                   scraper: <Search size={14} className="text-brand-accent" />,
-                  outreach: <Send size={14} className="text-emerald-700" />,
-                  email: <Mail size={14} className="text-purple-700" />,
-                  automation: <Zap size={14} className="text-cyan-700" />,
+                  outreach: <Send size={14} className="text-emerald-400" />,
+                  email: <Mail size={14} className="text-purple-400" />,
+                  automation: <Zap size={14} className="text-cyan-400" />,
                 };
                 const statusColors: Record<string, string> = {
-                  running: "bg-blue-500/15 text-blue-700",
-                  completed: "bg-emerald-500/15 text-emerald-700",
-                  failed: "bg-red-500/15 text-red-700",
-                  queued: "bg-amber-500/15 text-amber-700",
+                  running: "bg-blue-500/15 text-blue-400",
+                  completed: "bg-emerald-500/15 text-emerald-400",
+                  failed: "bg-red-500/15 text-red-400",
+                  queued: "bg-amber-500/15 text-amber-400",
                 };
                 const timeDiff = Date.now() - new Date(run.timestamp).getTime();
                 const mins = Math.floor(timeDiff / 60000);

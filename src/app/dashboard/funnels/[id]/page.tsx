@@ -59,9 +59,9 @@ const STEP_TYPES: { value: StepType; label: string }[] = [
 
 const STEP_TYPE_COLORS: Record<string, { bg: string; border: string; text: string; dot: string }> = {
   "opt-in":   { bg: "bg-blue-500/10",    border: "border-blue-500/30",    text: "text-blue-700",    dot: "bg-blue-500" },
-  "thank-you":{ bg: "bg-emerald-500/10", border: "border-emerald-500/30", text: "text-emerald-700", dot: "bg-emerald-500" },
+  "thank-you":{ bg: "bg-emerald-500/10", border: "border-emerald-500/30", text: "text-emerald-400", dot: "bg-emerald-500" },
   vsl:        { bg: "bg-purple-500/10",  border: "border-purple-500/30",  text: "text-purple-700",  dot: "bg-purple-500" },
-  checkout:   { bg: "bg-amber-500/10",   border: "border-amber-500/30",   text: "text-amber-700",   dot: "bg-amber-500" },
+  checkout:   { bg: "bg-amber-500/10",   border: "border-amber-500/30",   text: "text-amber-400",   dot: "bg-amber-500" },
   upsell:     { bg: "bg-pink-500/10",    border: "border-pink-500/30",    text: "text-pink-700",    dot: "bg-pink-500" },
   downsell:   { bg: "bg-orange-500/10",  border: "border-orange-500/30",  text: "text-orange-700",  dot: "bg-orange-500" },
   webinar:    { bg: "bg-cyan-500/10",    border: "border-cyan-500/30",    text: "text-cyan-700",    dot: "bg-cyan-500" },
@@ -255,8 +255,8 @@ export default function FunnelCanvasPage() {
   if (!funnel) return null;
 
   const statusConfig = {
-    draft: { icon: <Clock size={13} />, label: "Draft", color: "text-amber-700 bg-amber-500/10 border-amber-500/20" },
-    published: { icon: <CheckCircle2 size={13} />, label: "Published", color: "text-emerald-700 bg-emerald-500/10 border-emerald-500/20" },
+    draft: { icon: <Clock size={13} />, label: "Draft", color: "text-amber-400 bg-amber-500/10 border-amber-500/20" },
+    published: { icon: <CheckCircle2 size={13} />, label: "Published", color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" },
     archived: { icon: <Archive size={13} />, label: "Archived", color: "text-zinc-600 bg-zinc-500/10 border-zinc-500/20" },
   }[funnel.status];
 
@@ -316,9 +316,9 @@ export default function FunnelCanvasPage() {
       {/* Publish URL banner */}
       {funnel.status === "published" && (
         <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-emerald-500/10 border border-emerald-500/25">
-          <Globe size={15} className="text-emerald-700 shrink-0" />
+          <Globe size={15} className="text-emerald-400 shrink-0" />
           <div className="flex-1 min-w-0">
-            <span className="text-emerald-700 text-sm font-medium">Funnel is live — </span>
+            <span className="text-emerald-400 text-sm font-medium">Funnel is live — </span>
             <span className="text-text-muted text-sm font-mono break-all">
               {typeof window !== "undefined" ? window.location.origin : ""}/f/{funnel.id}/1
             </span>
@@ -328,7 +328,7 @@ export default function FunnelCanvasPage() {
               navigator.clipboard.writeText(`${window.location.origin}/f/${funnel.id}/1`);
               toast.success("Link copied!");
             }}
-            className="text-xs text-emerald-700 hover:text-emerald-800 font-medium shrink-0"
+            className="text-xs text-emerald-400 hover:text-emerald-800 font-medium shrink-0"
           >
             Copy
           </button>
@@ -402,7 +402,7 @@ export default function FunnelCanvasPage() {
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); void deleteStep(step.id); }}
-                          className="p-1 rounded hover:bg-red-500/10 text-text-muted hover:text-red-600 transition-colors"
+                          className="p-1 rounded hover:bg-red-500/10 text-text-muted hover:text-red-400 transition-colors"
                         >
                           <Trash2 size={12} />
                         </button>
@@ -533,7 +533,7 @@ export default function FunnelCanvasPage() {
                             <span className="text-text-primary text-sm font-medium truncate">{step.title}</span>
                             <div className="flex items-center gap-3 text-xs shrink-0 ml-2">
                               <span className="text-text-muted">{views.toLocaleString()} views</span>
-                              <span className={sa?.conversion_rate && sa.conversion_rate >= 20 ? "text-emerald-700 font-semibold" : "text-text-muted"}>
+                              <span className={sa?.conversion_rate && sa.conversion_rate >= 20 ? "text-emerald-400 font-semibold" : "text-text-muted"}>
                                 {sa?.conversion_rate ?? 0}% conv.
                               </span>
                               {idx > 0 && sa?.dropoff_pct !== undefined && (

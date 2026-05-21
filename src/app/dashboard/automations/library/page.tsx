@@ -128,7 +128,7 @@ export default function WorkflowLibraryPage() {
   }
 
   return (
-    <MotionPage className="min-h-screen bg-[#F3F6FA] text-[#111827]">{/* -- Workflow Library command strip -- */}
+    <MotionPage className="min-h-screen">{/* -- Workflow Library command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Templates &amp; Blueprints</p>
@@ -146,7 +146,7 @@ export default function WorkflowLibraryPage() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search templates..."
-                    className="w-full rounded-lg glass pl-9 pr-3 py-2 text-sm text-[#111827] placeholder-[#9CA3AF] focus:border-brand-accent focus:outline-none"
+                    className="w-full rounded-lg glass pl-9 pr-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-accent focus:outline-none"
                   />
                 </div>
                 <div className="flex items-center gap-2">
@@ -154,7 +154,7 @@ export default function WorkflowLibraryPage() {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="rounded-lg glass px-3 py-2 text-sm text-[#111827] focus:border-brand-accent focus:outline-none"
+                    className="rounded-lg glass px-3 py-2 text-sm text-text-primary focus:border-brand-accent focus:outline-none"
                   >
                     <option value="all">All categories</option>
                     {Object.entries(CATEGORY_LABELS).map(([k, label]) => (
@@ -166,7 +166,7 @@ export default function WorkflowLibraryPage() {
                 </div>
                 <Link
                   href="/dashboard/automations"
-                  className="ml-auto inline-flex items-center gap-1.5 text-xs text-[#6B7280] hover:text-[#374151]"
+                  className="ml-auto inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-text-secondary"
                 >
                   Back to automations <ArrowRight size={12} />
                 </Link>
@@ -178,7 +178,7 @@ export default function WorkflowLibraryPage() {
                   <Loader className="animate-spin" size={20} />
                 </div>
               ) : filtered.length === 0 ? (
-                <div className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] px-6 py-16 text-center text-text-muted">
+                <div className="rounded-xl border border-border-subtle bg-white/5 px-6 py-16 text-center text-text-muted">
                   No templates match your filters.
                 </div>
               ) : (
@@ -193,7 +193,7 @@ export default function WorkflowLibraryPage() {
                         <span
                           className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
                             CATEGORY_COLORS[t.category] ||
-                            "bg-[rgba(0,0,0,0.06)] text-[#374151] border-[rgba(0,0,0,0.10)]"
+                            "bg-white/8 text-text-secondary border-white/15"
                           }`}
                         >
                           {CATEGORY_LABELS[t.category] || t.category}
@@ -205,10 +205,10 @@ export default function WorkflowLibraryPage() {
                         )}
                       </div>
 
-                      <h3 className="mb-1.5 text-base font-semibold text-[#111827]">
+                      <h3 className="mb-1.5 text-base font-semibold text-text-primary">
                         {t.name}
                       </h3>
-                      <p className="mb-4 text-sm text-[#6B7280] leading-relaxed">
+                      <p className="mb-4 text-sm text-text-muted leading-relaxed">
                         {t.description}
                       </p>
 
@@ -223,11 +223,11 @@ export default function WorkflowLibraryPage() {
 
                       {t.required_integrations.length > 0 && (
                         <div className="mb-4 text-[11px] text-text-muted">
-                          <span className="text-[#6B7280]">Needs:</span>{" "}
+                          <span className="text-text-muted">Needs:</span>{" "}
                           {t.required_integrations.map((i) => (
                             <span
                               key={i}
-                              className="ml-1 inline-flex rounded bg-[rgba(0,0,0,0.06)] px-1.5 py-0.5 font-mono text-[10px] text-[#374151]"
+                              className="ml-1 inline-flex rounded bg-white/8 px-1.5 py-0.5 font-mono text-[10px] text-text-secondary"
                             >
                               {i}
                             </span>
@@ -239,7 +239,7 @@ export default function WorkflowLibraryPage() {
                         {t.installed ? (
                           <Link
                             href={`/dashboard/automations`}
-                            className="flex-1 rounded-lg border border-[rgba(0,0,0,0.10)] bg-[rgba(0,0,0,0.04)] px-3 py-2 text-center text-xs font-semibold text-[#374151] hover:bg-[rgba(0,0,0,0.06)]"
+                            className="flex-1 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-center text-xs font-semibold text-text-secondary hover:bg-white/8"
                           >
                             Open
                           </Link>
@@ -247,7 +247,7 @@ export default function WorkflowLibraryPage() {
                           <button
                             onClick={() => install(t.id)}
                             disabled={installing === t.id}
-                            className="flex-1 rounded-lg bg-brand-accent px-3 py-2 text-xs font-semibold text-white transition hover:bg-[#3B82F6] disabled:opacity-60"
+                            className="flex-1 rounded-lg bg-brand-accent px-3 py-2 text-xs font-semibold text-[#0D1120] transition hover:bg-brand-accent/80 disabled:opacity-60"
                           >
                             {installing === t.id ? "Installing..." : "Install"}
                           </button>
