@@ -1560,7 +1560,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               const matchedPreset = Object.keys(TOPIC_PRESETS).find(k => client.industry.toLowerCase().includes(k));
               if (matchedPreset) setConfig(prev => ({ ...prev, industry_preset: matchedPreset }));
             }
-          }} className="text-xs py-1.5 px-2 min-w-[160px] rounded-lg bg-black/5 border border-border-subtle text-text-primary">
+          }} className="text-xs py-1.5 px-2 min-w-[160px] rounded-lg bg-white/5 border border-border-subtle text-text-primary">
             <option value="" className="bg-surface">No client</option>
             {clients.map(c => <option key={c.id} value={c.id} className="bg-surface">{c.business_name}</option>)}
           </select>
@@ -1844,7 +1844,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 <div className="flex flex-wrap gap-1 mt-1.5">
                   {topicPresets.map((t, i) => (
                     <button key={i} onClick={() => setConfig({ ...config, topic: t })}
-                      className="text-[8px] px-2 py-0.5 rounded bg-black/[0.03] border border-black/[0.06] text-text-muted hover:text-text-primary hover:border-[rgba(59,130,246,0.14)] transition-all">
+                      className="text-[8px] px-2 py-0.5 rounded bg-white/4 border border-white/8 text-text-muted hover:text-text-primary hover:border-[rgba(59,130,246,0.14)] transition-all">
                       {t}
                     </button>
                   ))}
@@ -1978,9 +1978,9 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                       initial={{ opacity: 0, x: -16 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.12 + i * 0.04, duration: 0.28 }}
-                      whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                      whileHover={{ backgroundColor: "rgba(255,255,255,0.05)" }}
                       onClick={() => setConfig({ ...config, topic: opp })}
-                      className="w-full text-left text-[10px] p-2.5 border-b border-black/[0.05] last:border-0 transition-all"
+                      className="w-full text-left text-[10px] p-2.5 border-b border-white/5 last:border-0 transition-all"
                     >
                       {opp}
                     </motion.button>

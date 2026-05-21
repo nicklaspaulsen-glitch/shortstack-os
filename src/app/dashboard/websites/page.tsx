@@ -1100,7 +1100,7 @@ export default function WebsitesPage() {
                                 <div className="h-1.5 w-6 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.9 }} />
                                 <div className="flex-1" />
                                 {[...Array(3)].map((_, i) => (
-                                  <div key={i} className="h-1 w-3 rounded-full bg-black/10" />
+                                  <div key={i} className="h-1 w-3 rounded-full bg-white/20" />
                                 ))}
                               </div>
                               {/* Hero block */}
@@ -1116,7 +1116,7 @@ export default function WebsitesPage() {
                               {/* CTA strip */}
                               <div className="flex items-center justify-center gap-1">
                                 <div className="h-2.5 w-10 rounded-full" style={{ backgroundColor: t.preset.brand_primary, opacity: 0.85 }} />
-                                <div className="h-2.5 w-6 rounded-full bg-black/10" />
+                                <div className="h-2.5 w-6 rounded-full bg-white/20" />
                               </div>
                             </div>
                             {/* Section chips */}

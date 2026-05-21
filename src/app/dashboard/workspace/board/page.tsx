@@ -429,7 +429,7 @@ export default function WorkspaceBoardPage() {
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setFiltersOpen((v) => !v)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/5 hover:bg-black/10 border border-border-subtle text-sm text-text-primary transition-colors"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-border-subtle text-sm text-text-primary transition-colors"
                   >
                     <Filter size={14} /> Filters
                   </motion.button>
@@ -574,7 +574,7 @@ export default function WorkspaceBoardPage() {
                             setModalDefaultStatus(status);
                             setModalOpen(true);
                           }}
-                          className="p-1 rounded text-text-muted hover:text-fg hover:bg-[rgba(0,0,0,0.03)] transition-colors"
+                          className="p-1 rounded text-text-muted hover:text-fg hover:bg-white/5 transition-colors"
                           aria-label={`Add task to ${meta.label}`}
                         >
                           <Plus size={14} />
@@ -586,7 +586,7 @@ export default function WorkspaceBoardPage() {
                         className={`flex-1 min-h-[200px] rounded-xl border border-dashed transition-colors p-2 space-y-2 ${
                           isHover
                             ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.08)]"
-                            : "glass border-[rgba(0,0,0,0.08)]"
+                            : "glass border-border-subtle"
                         }`}
                       >
                         {columnTasks.length === 0 ? (

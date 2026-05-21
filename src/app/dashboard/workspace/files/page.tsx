@@ -391,7 +391,7 @@ export default function WorkspaceFilesPage() {
           <button
             type="button"
             onClick={() => setCreatingFolder((v) => !v)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-black/5 hover:bg-black/10 border border-border-subtle text-text-primary text-sm px-3 py-1.5 transition"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-border-subtle text-text-primary text-sm px-3 py-1.5 transition"
           >
             <FolderPlus size={14} /> New folder
           </button>
@@ -410,7 +410,7 @@ export default function WorkspaceFilesPage() {
         </div>
       </div>
       {/* New-folder inline prompt */}{creatingFolder && (
-              <div className="flex flex-wrap items-center gap-2 rounded-xl border border-black/[0.06] bg-black/[0.04] p-3">
+              <div className="flex flex-wrap items-center gap-2 rounded-xl border border-white/8 bg-white/5 p-3">
                 <input
                   value={newFolderName}
                   onChange={(e) => setNewFolderName(e.target.value)}
@@ -419,12 +419,12 @@ export default function WorkspaceFilesPage() {
                   }}
                   placeholder="Folder name"
                   autoFocus
-                  className="flex-1 min-w-[180px] rounded-md bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm px-3 py-1.5 outline-none focus:border-[rgba(59,130,246,0.6)]"
+                  className="flex-1 min-w-[180px] rounded-md bg-white/5 border border-border-subtle text-text-primary text-sm px-3 py-1.5 outline-none focus:border-[rgba(59,130,246,0.6)]"
                 />
                 <select
                   value={newFolderPermission}
                   onChange={(e) => setNewFolderPermission(e.target.value as Folder["permission"])}
-                  className="rounded-md bg-[#F8FAFC] border border-black/[0.08] text-[#111827] text-sm px-2 py-1.5"
+                  className="rounded-md bg-white/5 border border-border-subtle text-text-primary text-sm px-2 py-1.5"
                 >
                   <option value="owner_only">Owner only</option>
                   <option value="team_read">Team can view</option>
@@ -444,7 +444,7 @@ export default function WorkspaceFilesPage() {
                     setCreatingFolder(false);
                     setNewFolderName("");
                   }}
-                  className="rounded-md text-[#6B7280] hover:text-[#111827] text-sm px-2 py-1.5"
+                  className="rounded-md text-text-muted hover:text-text-primary text-sm px-2 py-1.5"
                 >
                   Cancel
                 </button>
@@ -483,12 +483,12 @@ export default function WorkspaceFilesPage() {
                 className="glass rounded-xl p-4 min-h-[420px]"
               >
                 {/* Breadcrumb */}
-                <nav className="flex flex-wrap items-center gap-1.5 text-sm text-[#6B7280] mb-4">
+                <nav className="flex flex-wrap items-center gap-1.5 text-sm text-text-muted mb-4">
                   <span className="text-text-muted">Files</span>
                   {breadcrumb.map((c, i) => (
                     <span key={c.id} className="flex items-center gap-1.5">
                       <ChevronRight size={12} className="text-text-muted" />
-                      <span className={i === breadcrumb.length - 1 ? "text-[#111827]" : ""}>{c.name}</span>
+                      <span className={i === breadcrumb.length - 1 ? "text-text-primary" : ""}>{c.name}</span>
                     </span>
                   ))}
                 </nav>
@@ -567,7 +567,7 @@ export default function WorkspaceFilesPage() {
                       closeContext();
                     }}
                     className={`flex items-center gap-2 px-3 py-1.5 w-full text-left ${
-                      row.danger ? "text-red-700 hover:bg-red-500/10" : "text-[#111827] hover:bg-black/[0.04]"
+                      row.danger ? "text-red-700 hover:bg-red-500/10" : "text-text-primary hover:bg-white/5"
                     }`}
                   >
                     {row.icon} {row.label}
@@ -602,7 +602,7 @@ function FolderTreeNode(props: FolderTreeNodeProps) {
     <li>
       <div
         className={`flex items-center gap-1 rounded-md text-sm cursor-pointer ${
-          isActive ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-[#374151] hover:bg-black/[0.04]"
+          isActive ? "bg-[rgba(59,130,246,0.08)] text-brand-accent" : "text-text-secondary hover:bg-white/5"
         }`}
         style={{ paddingLeft: 8 + depth * 12, paddingRight: 8 }}
       >
@@ -610,7 +610,7 @@ function FolderTreeNode(props: FolderTreeNodeProps) {
           type="button"
           aria-label={isOpen ? "Collapse" : "Expand"}
           onClick={() => void onToggle(folder.id)}
-          className="p-1 text-[#6B7280] hover:text-[#111827]"
+          className="p-1 text-text-muted hover:text-text-primary"
         >
           {isOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
         </button>
@@ -620,7 +620,7 @@ function FolderTreeNode(props: FolderTreeNodeProps) {
           className="flex items-center gap-1.5 py-1.5 flex-1 text-left truncate"
           title={`${folder.name} — ${PERMISSION_LABEL[folder.permission]}`}
         >
-          <FolderIcon size={14} className={isActive ? "text-brand-accent" : "text-[#6B7280]"} />
+          <FolderIcon size={14} className={isActive ? "text-brand-accent" : "text-text-muted"} />
           <span className="truncate">{folder.name}</span>
           {folder.is_system && <Lock size={9} className="text-text-muted shrink-0" />}
         </button>
@@ -678,12 +678,12 @@ function FileCard(props: FileCardProps) {
         )}
       </div>
       <div className="px-2 py-1.5">
-        <div className="text-xs text-[#111827] truncate" title={file.name}>
+        <div className="text-xs text-text-primary truncate" title={file.name}>
           {file.name}
         </div>
         <div className="text-[10px] text-text-muted mt-0.5 flex items-center justify-between">
           <span>{formatBytes(file.size_bytes)}</span>
-          {file.status !== "ready" && <span className="text-amber-700">{file.status}</span>}
+          {file.status !== "ready" && <span className="text-amber-400">{file.status}</span>}
         </div>
       </div>
     </button>

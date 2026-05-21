@@ -133,11 +133,11 @@ export default function VerticalsIndexPage() {
               {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} className=" bg-[rgba(0,0,0,0.04)] h-72 animate-pulse" />
+                    <div key={i} className=" bg-white/5 h-72 animate-pulse" />
                   ))}
                 </div>
               ) : verticals.length === 0 ? (
-                <div className="text-center py-24 text-black/40">
+                <div className="text-center py-24 text-text-muted">
                   <Briefcase size={48} className="mx-auto mb-4 opacity-30" />
                   <p className="text-lg">No vertical templates available</p>
                 </div>
@@ -181,7 +181,7 @@ export default function VerticalsIndexPage() {
                         <h2 className="text-xl font-semibold text-text-primary mb-1">
                           {v.display_name}
                         </h2>
-                        <p className="text-sm text-black/60 mb-5">{v.tagline}</p>
+                        <p className="text-sm text-text-muted mb-5">{v.tagline}</p>
 
                         {/* Counts grid */}
                         <div className="grid grid-cols-3 gap-2 mb-5">
@@ -194,10 +194,10 @@ export default function VerticalsIndexPage() {
                         </div>
 
                         <div className="flex items-center justify-between text-sm">
-                          <span className="text-black/40">
+                          <span className="text-text-muted">
                             Course: {v.counts.course_modules} modules · {v.counts.course_lessons} lessons
                           </span>
-                          <span className="inline-flex items-center gap-1 text-black/65 group-hover:text-text-primary">
+                          <span className="inline-flex items-center gap-1 text-text-secondary group-hover:text-text-primary">
                             Configure
                             <ArrowRight
                               size={14}
@@ -219,7 +219,7 @@ function CountTile({ label, value }: { label: string; value: number }) {
   return (
     <div className="glass rounded-lg px-3 py-2">
       <div className="text-lg font-semibold text-text-primary">{value}</div>
-      <div className="text-[10px] uppercase tracking-wide text-black/50">{label}</div>
+      <div className="text-[10px] uppercase tracking-wide text-text-muted">{label}</div>
     </div>
   );
 }

@@ -202,7 +202,7 @@ export default function SystemStatusPage() {
             <button
               onClick={runProbes}
               disabled={runningProbes || refreshing}
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/10 border border-border-subtle text-text-primary hover:bg-black/15 disabled:opacity-50 font-medium"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-white/10 border border-border-subtle text-text-primary hover:bg-white/15 disabled:opacity-50 font-medium"
               title="Invoke the cron health-check sweep now instead of waiting 30 minutes"
             >
               <Play size={12} className={runningProbes ? "animate-pulse" : ""} />
@@ -211,7 +211,7 @@ export default function SystemStatusPage() {
             <button
               onClick={load}
               disabled={refreshing || runningProbes}
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/5 border border-border-subtle text-text-primary hover:bg-black/10 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-white/5 border border-border-subtle text-text-primary hover:bg-white/10 disabled:opacity-50"
             >
               <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
               {refreshing ? "Checking…" : "Re-check"}
@@ -305,7 +305,7 @@ export default function SystemStatusPage() {
                             <span className="text-muted-light">Add on Vercel:</span>{" "}
                             {check.missing.map((m, i) => (
                               <span key={m}>
-                                <code className="text-[#111827] bg-black/[0.06] px-1 py-0.5 rounded">{m}</code>
+                                <code className="text-text-primary bg-white/8 px-1 py-0.5 rounded">{m}</code>
                                 {i < check.missing!.length - 1 ? ", " : ""}
                               </span>
                             ))}
