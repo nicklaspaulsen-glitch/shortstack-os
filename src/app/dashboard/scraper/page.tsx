@@ -681,7 +681,7 @@ export default function ScraperPage() {
                                 )}
                                 className={`w-8 h-8 rounded-lg text-[10px] font-bold transition-all ${
                                   autoRunDays.includes(day.id)
-                                    ? "bg-brand-accent text-white"
+                                    ? "bg-brand-accent text-[#020711]"
                                     : "bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(59,130,246,0.25)]"
                                 }`}
                               >
@@ -716,7 +716,7 @@ export default function ScraperPage() {
                           className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold transition-all ${
                             autoRunEnabled
                               ? "bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20"
-                              : "bg-brand-accent text-white hover:bg-brand-accent/90"
+                              : "bg-brand-accent text-[#020711] hover:bg-brand-accent/90"
                           }`}
                         >
                           {autoRunSaving ? (

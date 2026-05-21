@@ -873,7 +873,7 @@ export default function EmailComposerPage() {
                 <button onClick={handleAiImprove} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5" disabled={aiImproving}>
                   {aiImproving ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />} AI Improve
                 </button>
-                <button onClick={handleGenerateSubjectVariants} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5" disabled={loadingVariants}>
+                <button onClick={handleGenerateSubjectVariants} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/8 transition-all flex items-center gap-1.5" disabled={loadingVariants}>
                   {loadingVariants ? <Loader2 size={12} className="animate-spin" /> : <TrendingUp size={12} />} Subject Variants
                 </button>
                 <button

@@ -199,7 +199,7 @@ export default function SelfTestDashboard() {
             <button
               onClick={runNow}
               disabled={running || refreshing}
-              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-black/10 border border-border-subtle text-text-primary hover:bg-black/15 disabled:opacity-50 font-medium"
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-white/8 border border-border-subtle text-text-primary hover:bg-white/12 disabled:opacity-50 font-medium"
             >
               <Play size={12} className={running ? "animate-pulse" : ""} />
               {running ? "Running…" : "Run now"}

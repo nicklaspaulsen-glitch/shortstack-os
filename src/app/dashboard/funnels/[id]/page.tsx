@@ -257,7 +257,7 @@ export default function FunnelCanvasPage() {
   const statusConfig = {
     draft: { icon: <Clock size={13} />, label: "Draft", color: "text-amber-400 bg-amber-500/10 border-amber-500/20" },
     published: { icon: <CheckCircle2 size={13} />, label: "Published", color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" },
-    archived: { icon: <Archive size={13} />, label: "Archived", color: "text-zinc-600 bg-zinc-500/10 border-zinc-500/20" },
+    archived: { icon: <Archive size={13} />, label: "Archived", color: "text-zinc-400 bg-zinc-500/10 border-zinc-500/20" },
   }[funnel.status];
 
   const analyticsMap = new Map(

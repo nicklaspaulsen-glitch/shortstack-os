@@ -708,7 +708,7 @@ function MessageBubble({ m }: { m: Message }) {
         className={`max-w-[70%]  px-4 py-2.5 text-sm leading-relaxed ${
           inbound
             ? "bg-white/[0.08] text-text-primary border border-border-subtle"
-            : "bg-brand-accent/80 text-white"
+            : "bg-brand-accent/80 text-[#020711]"
         }`}
       >
         <div className="whitespace-pre-wrap break-words">{m.body || <em className="opacity-60">No content</em>}</div>

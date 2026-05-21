@@ -197,7 +197,7 @@ export default function HubStatusPage() {
         job.services.some(s => s.service === "portal" && s.status === "done")) && (
         <div className="glass rounded-xl p-4 border-blue-500/25 bg-blue-500/5 flex items-start gap-2">
           <Info size={14} className="text-blue-600 mt-0.5 shrink-0" />
-          <div className="text-[11px] text-blue-700">
+          <div className="text-[11px] text-blue-400">
             <p className="font-semibold mb-1">DNS may still be propagating</p>
             <p className="text-blue-600 leading-relaxed">
               Even once all dots go green, DNS records can take up to 24 hours to fully propagate
@@ -250,7 +250,7 @@ function ServiceCard({
           <button
             onClick={onRetry}
             disabled={retrying}
-            className="text-[10px] px-2.5 py-1 rounded-lg border border-red-500/30 text-red-700 hover:bg-red-500/10 flex items-center gap-1 disabled:opacity-50"
+            className="text-[10px] px-2.5 py-1 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 flex items-center gap-1 disabled:opacity-50"
           >
             <RefreshCw size={10} className={retrying ? "animate-spin" : ""} />
             {retrying ? "Retrying…" : "Retry"}

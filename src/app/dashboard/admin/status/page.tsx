@@ -403,7 +403,7 @@ export default function AdminStatusPage() {
             <button
               onClick={saveDraft}
               disabled={saving}
-              className="text-xs px-4 py-2 rounded-xl bg-brand-accent text-white hover:bg-brand-accent/80 font-semibold disabled:opacity-50"
+              className="text-xs px-4 py-2 rounded-xl bg-brand-accent text-[#020711] hover:bg-brand-accent/80 font-semibold disabled:opacity-50"
             >
               {saving ? "Saving…" : draft.id ? "Save changes" : "Post incident"}
             </button>

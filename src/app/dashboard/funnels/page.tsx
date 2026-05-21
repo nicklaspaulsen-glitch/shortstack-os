@@ -39,7 +39,7 @@ const STATUS_CONFIG: Record<FunnelStatus, { label: string; color: string; icon: 
   },
   archived: {
     label: "Archived",
-    color: "text-zinc-600 bg-zinc-500/10 border-zinc-500/20",
+    color: "text-zinc-400 bg-zinc-500/10 border-zinc-500/20",
     icon: <Archive size={11} />,
   },
 };
@@ -140,7 +140,7 @@ export default function FunnelsPage() {
                     onClick={() => setFilter(tab.id)}
                     className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                       filter === tab.id
-                        ? "bg-[rgba(59,130,246,0.08)] text-blue-700 border border-[rgba(59,130,246,0.25)]"
+                        ? "bg-[rgba(59,130,246,0.08)] text-blue-400 border border-[rgba(59,130,246,0.25)]"
                         : "text-text-muted hover:text-text-secondary"
                     }`}
                   >
@@ -175,7 +175,7 @@ export default function FunnelsPage() {
                 </div>
                 <button
                   onClick={() => router.push("/dashboard/funnels/new")}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-white text-sm font-semibold transition-colors"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-[#020711] text-sm font-semibold transition-colors"
                 >
                   <Plus size={15} />
                   Create Funnel

@@ -191,7 +191,7 @@ export default function TrinityPage() {
                   {messages.map((msg, i) => (
                     <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                       <div className={`max-w-[70%]  px-4 py-3 ${
-                        msg.role === "user" ? "bg-brand-accent text-white rounded-br-sm" : "bg-surface-light text-text-primary rounded-bl-sm"
+                        msg.role === "user" ? "bg-brand-accent text-[#020711] rounded-br-sm" : "bg-surface-light text-text-primary rounded-bl-sm"
                       }`}>
                         <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                         <p className={`text-[10px] mt-1 ${msg.role === "user" ? "text-text-muted" : "text-text-muted"}`}>

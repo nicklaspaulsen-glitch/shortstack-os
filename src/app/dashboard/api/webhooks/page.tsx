@@ -163,7 +163,7 @@ export default function WebhooksPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={() => setShowCreate((v) => !v)}
-                  className="text-[11px] px-3 py-1.5 rounded-lg bg-black/10 text-text-primary border border-border-subtle hover:bg-black/15 transition-all flex items-center gap-1.5"
+                  className="text-[11px] px-3 py-1.5 rounded-lg bg-white/8 text-text-primary border border-border-subtle hover:bg-white/12 transition-all flex items-center gap-1.5"
                 >
                   <Plus size={11} />
                   New Webhook
@@ -221,7 +221,7 @@ export default function WebhooksPage() {
                   <button
                     onClick={handleCreate}
                     disabled={creating || !newUrl.trim() || newEvents.length === 0}
-                    className="text-[10px] px-4 py-1.5 rounded-lg bg-brand-accent text-white font-medium hover:bg-brand-accent/80 disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="text-[10px] px-4 py-1.5 rounded-lg bg-brand-accent text-[#020711] font-medium hover:bg-brand-accent/80 disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {creating ? "Creating…" : "Create Webhook"}
                   </button>

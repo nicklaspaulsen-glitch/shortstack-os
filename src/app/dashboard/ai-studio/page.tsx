@@ -1668,7 +1668,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                 <button key={s.value} onClick={() => setStyle(s.value)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg ${
                     style === s.value
-                      ? "bg-brand-accent text-white font-semibold"
+                      ? "bg-brand-accent text-[#020711] font-semibold"
                       : "bg-surface-light text-text-muted"
                   }`}>{s.label}</button>
               ))}
@@ -1682,7 +1682,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                 <button key={s.value} onClick={() => setSize(s.value)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg ${
                     size === s.value
-                      ? "bg-brand-accent text-white font-semibold"
+                      ? "bg-brand-accent text-[#020711] font-semibold"
                       : "bg-surface-light text-text-muted"
                   }`}>{s.label}</button>
               ))}
@@ -2081,7 +2081,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
               <span className="text-[10px] text-text-muted w-16">FPS:</span>
               {[6, 12, 24].map(f => (
                 <button key={f} onClick={() => setFps(f)}
-                  className={`text-xs px-2 py-1 rounded ${fps === f ? "bg-brand-accent text-white" : "bg-surface-light text-text-muted"}`}>{f}</button>
+                  className={`text-xs px-2 py-1 rounded ${fps === f ? "bg-brand-accent text-[#020711]" : "bg-surface-light text-text-muted"}`}>{f}</button>
               ))}
             </div>
           </div>
@@ -2168,7 +2168,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
             <div className="flex flex-wrap gap-1.5">
               {moods.map(m => (
                 <button key={m} onClick={() => setMood(m)}
-                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${mood === m ? "bg-brand-accent text-white font-semibold" : "bg-surface-light text-text-muted"}`}>{m}</button>
+                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${mood === m ? "bg-brand-accent text-[#020711] font-semibold" : "bg-surface-light text-text-muted"}`}>{m}</button>
               ))}
             </div>
           </div>
@@ -2178,7 +2178,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
             <div className="flex flex-wrap gap-1.5">
               {genres.map(g => (
                 <button key={g} onClick={() => setGenre(g)}
-                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${genre === g ? "bg-brand-accent text-white font-semibold" : "bg-surface-light text-text-muted"}`}>{g}</button>
+                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize ${genre === g ? "bg-brand-accent text-[#020711] font-semibold" : "bg-surface-light text-text-muted"}`}>{g}</button>
               ))}
             </div>
           </div>

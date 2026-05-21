@@ -342,7 +342,7 @@ export default function CalendarPage() {
                     <div className="flex gap-1">
                       {(["month", "week", "day"] as const).map(v => (
                         <button key={v} onClick={() => setViewMode(v)}
-                          className={`px-2.5 py-1 text-[10px] rounded-md capitalize transition-all ${viewMode === v ? "bg-brand-accent text-white font-medium" : "bg-surface-light text-text-muted"}`}>
+                          className={`px-2.5 py-1 text-[10px] rounded-md capitalize transition-all ${viewMode === v ? "bg-brand-accent text-[#020711] font-medium" : "bg-surface-light text-text-muted"}`}>
                           {v}
                         </button>
                       ))}

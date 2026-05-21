@@ -748,41 +748,41 @@ body {
   }
 
   /* ═══════════ BUTTONS ═══════════ */
-  /* btn-primary: visual alias of btn-pill — blue filled pill */
+  /* btn-primary: visual alias of btn-pill — lime filled pill */
   .btn-primary {
     @apply font-semibold px-5 py-2 rounded-full text-sm;
-    background: var(--brand-accent, #3B82F6);
-    color: #ffffff;
-    border: 1px solid rgba(255,255,255,0.12);
+    background: var(--brand-accent, #D4FF00);
+    color: #020711;
+    border: 1px solid rgba(212,255,0,0.25);
     box-shadow:
-      0 0 0 1px rgba(59,130,246,0.40) inset,
-      0 2px 12px rgba(59,130,246,0.30),
-      0 1px 0 rgba(255,255,255,0.12) inset;
+      0 0 0 1px rgba(212,255,0,0.30) inset,
+      0 2px 12px rgba(212,255,0,0.20),
+      0 1px 0 rgba(255,255,255,0.08) inset;
     transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1),
                 box-shadow 0.15s cubic-bezier(0.22, 1, 0.36, 1),
                 background 0.15s;
   }
   .btn-primary:hover {
-    background: var(--brand-accent-soft, #60A5FA);
+    background: var(--brand-accent-soft, #E8FF4D);
     box-shadow:
-      0 0 0 1px rgba(96,165,250,0.50) inset,
-      0 4px 18px rgba(59,130,246,0.40),
-      0 1px 0 rgba(255,255,255,0.18) inset;
+      0 0 0 1px rgba(212,255,0,0.45) inset,
+      0 4px 18px rgba(212,255,0,0.30),
+      0 1px 0 rgba(255,255,255,0.12) inset;
     transform: translateY(-1px);
   }
   .btn-primary:active {
     transform: translateY(0);
     box-shadow:
-      0 0 0 1px rgba(59,130,246,0.30) inset,
-      0 1px 6px rgba(59,130,246,0.20);
+      0 0 0 1px rgba(212,255,0,0.25) inset,
+      0 1px 6px rgba(212,255,0,0.15);
   }
 
-  /* btn-secondary: visual alias of btn-pill-ghost — blue outlined pill */
+  /* btn-secondary: visual alias of btn-pill-ghost — lime outlined pill */
   .btn-secondary {
     @apply font-medium px-4 py-2 rounded-full text-sm;
-    background: rgba(59,130,246,0.08);
-    color: var(--brand-accent-soft, #60A5FA);
-    border: 1px solid rgba(59,130,246,0.20);
+    background: rgba(212,255,0,0.06);
+    color: var(--brand-accent, #D4FF00);
+    border: 1px solid rgba(212,255,0,0.20);
     transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1),
                 box-shadow 0.15s cubic-bezier(0.22, 1, 0.36, 1),
                 border-color 0.15s,
@@ -790,10 +790,10 @@ body {
                 color 0.15s;
   }
   .btn-secondary:hover {
-    background: rgba(59,130,246,0.14);
-    border-color: rgba(59,130,246,0.35);
-    color: #ffffff;
-    box-shadow: 0 2px 12px rgba(59,130,246,0.20);
+    background: rgba(212,255,0,0.12);
+    border-color: rgba(212,255,0,0.35);
+    color: var(--brand-accent-soft, #E8FF4D);
+    box-shadow: 0 2px 12px rgba(212,255,0,0.15);
     transform: translateY(-1px);
   }
   .btn-secondary:active {
@@ -829,7 +829,7 @@ body {
   }
   .btn-ghost:hover {
     color: var(--color-foreground, #F0F0F4);
-    background: rgba(59, 130, 246, 0.08);
+    background: rgba(255, 255, 255, 0.06);
     box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset;
   }
 
@@ -838,38 +838,38 @@ body {
    * Use .btn-pill for primary actions, .btn-pill-ghost for secondary. */
   .btn-pill {
     @apply font-semibold px-5 py-2 rounded-full text-sm;
-    background: var(--brand-accent, #3B82F6);
-    color: #ffffff;
-    border: 1px solid rgba(255,255,255,0.12);
+    background: var(--brand-accent, #D4FF00);
+    color: #020711;
+    border: 1px solid rgba(212,255,0,0.25);
     box-shadow:
-      0 0 0 1px rgba(59,130,246,0.40) inset,
-      0 2px 12px rgba(59,130,246,0.30),
-      0 1px 0 rgba(255,255,255,0.12) inset;
+      0 0 0 1px rgba(212,255,0,0.30) inset,
+      0 2px 12px rgba(212,255,0,0.20),
+      0 1px 0 rgba(255,255,255,0.08) inset;
     transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1),
                 box-shadow 0.15s cubic-bezier(0.22, 1, 0.36, 1),
                 background 0.15s;
   }
   .btn-pill:hover {
-    background: var(--brand-accent-soft, #60A5FA);
+    background: var(--brand-accent-soft, #E8FF4D);
     box-shadow:
-      0 0 0 1px rgba(96,165,250,0.50) inset,
-      0 4px 18px rgba(59,130,246,0.40),
-      0 1px 0 rgba(255,255,255,0.18) inset;
+      0 0 0 1px rgba(212,255,0,0.45) inset,
+      0 4px 18px rgba(212,255,0,0.30),
+      0 1px 0 rgba(255,255,255,0.12) inset;
     transform: translateY(-1px);
   }
   .btn-pill:active { transform: translateY(0); }
 
   .btn-pill-ghost {
     @apply font-medium px-4 py-2 rounded-full text-sm;
-    background: rgba(59,130,246,0.08);
-    color: var(--brand-accent-soft, #60A5FA);
-    border: 1px solid rgba(59,130,246,0.20);
+    background: rgba(212,255,0,0.06);
+    color: var(--brand-accent, #D4FF00);
+    border: 1px solid rgba(212,255,0,0.20);
     transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .btn-pill-ghost:hover {
-    background: rgba(59,130,246,0.14);
-    border-color: rgba(59,130,246,0.35);
-    color: #ffffff;
+    background: rgba(212,255,0,0.12);
+    border-color: rgba(212,255,0,0.35);
+    color: var(--brand-accent-soft, #E8FF4D);
     transform: translateY(-1px);
   }
   .btn-pill-ghost:active { transform: translateY(0); }

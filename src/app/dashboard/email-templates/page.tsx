@@ -198,7 +198,7 @@ export default function EmailTemplatesPage() {
               {TABS.map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-                    activeTab === t.key ? "bg-brand-accent text-white font-medium" : "text-text-muted hover:text-text-primary"
+                    activeTab === t.key ? "bg-brand-accent text-[#020711] font-medium" : "text-text-muted hover:text-text-primary"
                   }`}>{t.icon} {t.label}</button>
               ))}
             </div>{/* ===== TEMPLATE GALLERY ===== */}{activeTab === "gallery" && (

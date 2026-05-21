@@ -551,7 +551,7 @@ export default function LeadScoringPage() {
                   <button
                     onClick={handleRecomputeAllStale}
                     disabled={batchRunning}
-                    className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5 disabled:opacity-50"
+                    className="px-3 py-1.5 rounded-lg bg-white/8 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/12 transition-all flex items-center gap-1.5 disabled:opacity-50"
                   >
                     {batchRunning ? (
                       <Loader size={12} className="animate-spin" />

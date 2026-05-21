@@ -445,7 +445,7 @@ export default function CourseBuilderPage() {
                 <button
                   onClick={() => { triggerLessonSave(); void saveLessonNow(); }}
                   disabled={saving}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-white rounded-lg text-sm transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] rounded-lg text-sm transition-colors"
                 >
                   <Save size={14} />
                   Save
@@ -473,7 +473,7 @@ export default function CourseBuilderPage() {
                         onClick={() => { setLessonType(t); triggerLessonSave(); }}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs capitalize transition-colors ${
                           lessonType === t
-                            ? "bg-brand-accent text-white"
+                            ? "bg-brand-accent text-[#020711]"
                             : "bg-white/5 text-text-muted hover:bg-white/8"
                         }`}
                       >
@@ -649,7 +649,7 @@ export default function CourseBuilderPage() {
             <button
               onClick={() => void saveSettings()}
               disabled={saving}
-              className="w-full py-2 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+              className="w-full py-2 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
             >
               <Save size={14} />
               Save Settings

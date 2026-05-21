@@ -195,7 +195,7 @@ function HubSetupInner() {
             >
               <div
                 className={`w-5 h-5 shrink-0 rounded-md flex items-center justify-center mt-0.5 border ${
-                  enabled[t.key] ? "bg-brand-accent border-brand-accent text-white" : "border-border-subtle"
+                  enabled[t.key] ? "bg-brand-accent border-brand-accent text-[#020711]" : "border-border-subtle"
                 }`}
               >
                 {enabled[t.key] && <span className="text-[10px] leading-none font-black">✓</span>}

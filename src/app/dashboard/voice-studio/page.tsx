@@ -816,7 +816,7 @@ function AudioPlayer({ src, autoPlay = false }: { src: string; autoPlay?: boolea
         type="button"
         onClick={toggle}
         aria-label={playing ? "Pause" : "Play"}
-        className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-brand-accent text-white hover:bg-brand-accent/80 transition-colors cursor-pointer"
+        className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-brand-accent text-[#020711] hover:bg-brand-accent/80 transition-colors cursor-pointer"
       >
         {playing ? <Pause size={9} /> : <Play size={9} />}
       </button>

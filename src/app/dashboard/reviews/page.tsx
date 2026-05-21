@@ -256,7 +256,7 @@ function ReviewManager() {
         </div>
         <button
           onClick={() => setShowNew(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] transition hover:opacity-90"
         >
           <Plus size={14} /> Log review
         </button>
@@ -277,7 +277,7 @@ function ReviewManager() {
             icon={<Star size={36} />}
             title={reviews.length === 0 ? "No reviews yet" : "No reviews match this filter"}
             description={reviews.length === 0 ? "Log a review manually to track responses." : "Try a different filter, or log a new review."}
-            action={reviews.length === 0 ? <button onClick={() => setShowNew(true)} className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white"><Plus size={14} /> Log review</button> : null}
+            action={reviews.length === 0 ? <button onClick={() => setShowNew(true)} className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711]"><Plus size={14} /> Log review</button> : null}
           />
         </div>
       ) : (
@@ -401,7 +401,7 @@ function ReviewRequests() {
             </p>
             <button
               onClick={() => { setEditing(null); setShowForm(true); }}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] hover:opacity-90"
             >
               <Plus size={14} /> New config
             </button>
@@ -424,7 +424,7 @@ function ReviewRequests() {
                 action={
                   <button
                     onClick={() => { setEditing(null); setShowForm(true); }}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711]"
                   >
                     <Plus size={14} /> New config
                   </button>
@@ -512,7 +512,7 @@ function ReviewRequests() {
                 <button
                   onClick={sendManual}
                   disabled={sending || !manualConfigId || !manualClientId}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] disabled:opacity-40"
                 >
                   {sending ? <Loader size={13} className="animate-spin" /> : <Send size={13} />}
                   Send now
@@ -706,7 +706,7 @@ function ConfigForm({
         <button
           onClick={save}
           disabled={saving || !reviewUrl.trim()}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-5 py-2 text-sm font-semibold text-white disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-5 py-2 text-sm font-semibold text-[#020711] disabled:opacity-40"
         >
           {saving ? <Loader size={13} className="animate-spin" /> : <CheckCircle2 size={13} />}
           Save config
@@ -762,7 +762,7 @@ function ReviewCard({
               <textarea value={draft} onChange={(e) => setDraft(e.target.value)} rows={3} placeholder="Thanks for sharing your feedback…" className="w-full rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2 text-sm" />
               <div className="mt-2 flex items-center justify-end gap-2">
                 <button onClick={() => { setReplying(false); setDraft(review.reply); }} className="rounded-lg px-3 py-1.5 text-xs text-text-muted hover:text-text-primary">Cancel</button>
-                <button onClick={() => { if (!draft.trim()) return; onReply(draft.trim()); setReplying(false); }} disabled={!draft.trim()} className="inline-flex items-center gap-1 rounded-lg bg-brand-accent px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-40">
+                <button onClick={() => { if (!draft.trim()) return; onReply(draft.trim()); setReplying(false); }} disabled={!draft.trim()} className="inline-flex items-center gap-1 rounded-lg bg-brand-accent px-3 py-1.5 text-xs font-semibold text-[#020711] disabled:opacity-40">
                   <MessageSquare size={11} /> Save reply
                 </button>
               </div>
@@ -845,7 +845,7 @@ function NewReviewForm({ onClose, onCreated }: { onClose: () => void; onCreated:
       </div>
       <div className="mt-4 flex items-center justify-end gap-2">
         <button onClick={onClose} className="rounded-lg px-4 py-2 text-sm text-text-muted hover:text-text-primary">Cancel</button>
-        <button onClick={submit} disabled={!canSubmit} className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-5 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-40">
+        <button onClick={submit} disabled={!canSubmit} className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-5 py-2 text-sm font-semibold text-[#020711] transition hover:opacity-90 disabled:opacity-40">
           <Plus size={14} /> Log review
         </button>
       </div>

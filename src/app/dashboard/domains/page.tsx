@@ -149,7 +149,7 @@ export default function DomainsPage() {
                       toast.dismiss(t.id);
                       window.location.href = `/dashboard/mail-setup?domain=${encodeURIComponent(domain)}`;
                     }}
-                    className="px-3 py-1 rounded-md bg-brand-accent text-white text-[11px] font-semibold"
+                    className="px-3 py-1 rounded-md bg-brand-accent text-[#020711] text-[11px] font-semibold"
                   >
                     Set up mail
                   </button>
@@ -594,7 +594,7 @@ export default function DomainsPage() {
                                   <MailWarning size={9} /> Mail failed
                                 </span>
                               ) : (
-                                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-slate-500/10 text-slate-600 border-slate-500/30 flex items-center gap-1">
+                                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-slate-500/10 text-slate-400 border-slate-500/30 flex items-center gap-1">
                                   <Mail size={9} /> Mail not set up
                                 </span>
                               )}

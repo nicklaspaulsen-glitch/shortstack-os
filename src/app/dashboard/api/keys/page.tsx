@@ -29,7 +29,7 @@ interface ApiKeyRow {
 
 const SCOPE_PILLS: Record<Scope, string> = {
   read: "bg-[rgba(59,130,246,0.08)] text-brand-accent border-[rgba(59,130,246,0.25)]",
-  write: "bg-yellow-500/10 text-yellow-700 border-yellow-500/30",
+  write: "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
   admin: "bg-red-500/10 text-red-400 border-red-500/30",
 };
 
@@ -149,7 +149,7 @@ export default function ApiKeysPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={() => setShowCreate((v) => !v)}
-                  className="text-[11px] px-3 py-1.5 rounded-lg bg-black/10 text-text-primary border border-border-subtle hover:bg-black/15 transition-all flex items-center gap-1.5"
+                  className="text-[11px] px-3 py-1.5 rounded-lg bg-white/8 text-text-primary border border-border-subtle hover:bg-white/12 transition-all flex items-center gap-1.5"
                 >
                   <Plus size={11} />
                   New Key
@@ -255,7 +255,7 @@ export default function ApiKeysPage() {
                   <button
                     onClick={handleCreate}
                     disabled={creating || !newName.trim() || newScopes.length === 0}
-                    className="text-[10px] px-4 py-1.5 rounded-lg bg-brand-accent text-white font-medium hover:bg-brand-accent/80 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="text-[10px] px-4 py-1.5 rounded-lg bg-brand-accent text-[#020711] font-medium hover:bg-brand-accent/80 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {creating ? "Creating…" : "Create Key"}
                   </button>

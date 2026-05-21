@@ -4465,7 +4465,7 @@ export default function VideoEditorPage() {
                               <div className={`h-12 w-full ${preset.preview} relative`}>
                                 <div className="absolute inset-0 bg-black/10" />
                                 {active && (
-                                  <div className="absolute top-1 right-1 bg-brand-accent text-white rounded-full p-0.5">
+                                  <div className="absolute top-1 right-1 bg-brand-accent text-[#020711] rounded-full p-0.5">
                                     <Check size={10} />
                                   </div>
                                 )}
@@ -5474,7 +5474,7 @@ export default function VideoEditorPage() {
                               >
                                 <div className={`h-10 w-full ${fx.preview} relative animate-pulse`}>
                                   {active && (
-                                    <div className="absolute top-0.5 right-0.5 bg-brand-accent text-white rounded-full p-0.5">
+                                    <div className="absolute top-0.5 right-0.5 bg-brand-accent text-[#020711] rounded-full p-0.5">
                                       <Check size={8} />
                                     </div>
                                   )}
@@ -6303,7 +6303,7 @@ export default function VideoEditorPage() {
                           <button
                             onClick={generateAiMusic}
                             disabled={aiMusicLoading}
-                            className="w-full flex items-center justify-center gap-1.5 text-[10px] font-semibold py-1.5 rounded-lg bg-brand-accent text-white hover:bg-brand-accent/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="w-full flex items-center justify-center gap-1.5 text-[10px] font-semibold py-1.5 rounded-lg bg-brand-accent text-[#020711] hover:bg-brand-accent/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                           >
                             {aiMusicLoading ? <Loader2 size={10} className="animate-spin" /> : <Waves size={10} />}
                             {aiMusicLoading ? "Generating�" : "Generate music"}
@@ -6530,7 +6530,7 @@ export default function VideoEditorPage() {
                                 <button
                                   onClick={(e) => { e.stopPropagation(); void analyzeReferenceFile(i); }}
                                   disabled={refAnalyzing}
-                                  className="absolute -bottom-1 -right-1 px-1 py-0.5 rounded-full bg-brand-accent text-white text-[7px] font-bold items-center justify-center hidden group-hover:flex disabled:opacity-40"
+                                  className="absolute -bottom-1 -right-1 px-1 py-0.5 rounded-full bg-brand-accent text-[#020711] text-[7px] font-bold items-center justify-center hidden group-hover:flex disabled:opacity-40"
                                   title="Analyze this style with AI"
                                 >
                                   {refAnalyzing ? <Loader2 size={7} className="animate-spin" /> : "AI"}

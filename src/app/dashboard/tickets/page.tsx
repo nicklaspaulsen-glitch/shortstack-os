@@ -67,13 +67,13 @@ const ACCENT_STYLES: Record<string, { ring: string; iconBg: string; iconText: st
     ring: "border-[rgba(59,130,246,0.25)] hover:border-[rgba(59,130,246,0.5)] hover:shadow-[0_0_0_1px_rgba(59,130,246,0.18)]",
     iconBg: "bg-[rgba(59,130,246,0.08)]",
     iconText: "text-brand-accent",
-    cta: "bg-brand-accent text-white hover:bg-brand-accent/80",
+    cta: "bg-brand-accent text-[#020711] hover:bg-brand-accent/80",
   },
   purple: {
     ring: "border-[rgba(59,130,246,0.25)] hover:border-[rgba(59,130,246,0.50)] hover:shadow-[0_0_0_1px_rgba(59,130,246,0.18)]",
     iconBg: "bg-[rgba(59,130,246,0.08)]",
     iconText: "text-brand-accent",
-    cta: "bg-brand-accent text-white hover:bg-[rgba(59,130,246,0.90)]",
+    cta: "bg-brand-accent text-[#020711] hover:bg-[rgba(59,130,246,0.90)]",
   },
 };
 

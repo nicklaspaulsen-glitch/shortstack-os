@@ -1262,7 +1262,7 @@ export default function LandingPagesPage() {
                           <Icon className="w-3.5 h-3.5 text-white" />
                         </div>
                         {/* CVR badge */}
-                        <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-brand-accent/90 text-white text-[10px] font-bold">
+                        <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-brand-accent/90 text-[#020711] text-[10px] font-bold">
                           {tpl.cvr}
                         </div>
                         {/* Selected overlay */}
@@ -1286,7 +1286,7 @@ export default function LandingPagesPage() {
                         <p className="text-xs text-text-muted mb-3 line-clamp-2">{tpl.desc}</p>
                         <button
                           onClick={e => { e.stopPropagation(); handleTemplateSelect(tpl.id); }}
-                          className={`w-full py-1.5 rounded-lg text-xs font-semibold transition-colors ${isSelected ? "bg-brand-accent text-white" : "bg-surface-light border border-border-subtle text-text-muted hover:text-brand-accent hover:border-brand-accent"}`}
+                          className={`w-full py-1.5 rounded-lg text-xs font-semibold transition-colors ${isSelected ? "bg-brand-accent text-[#020711]" : "bg-surface-light border border-border-subtle text-text-muted hover:text-brand-accent hover:border-brand-accent"}`}
                         >
                           {isSelected ? "Selected" : "Use Template"}
                         </button>

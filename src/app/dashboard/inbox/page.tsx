@@ -1099,7 +1099,7 @@ export default function InboxPage() {
                           setReplyText("");
                         }}
                         disabled={!replyText.trim()}
-                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-brand-accent hover:bg-blue-600 text-white text-xs font-semibold transition-all disabled:opacity-50"
+                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-brand-accent hover:bg-blue-600 text-[#020711] text-xs font-semibold transition-all disabled:opacity-50"
                       >
                         <Send size={12} /> Copy Draft
                       </button>

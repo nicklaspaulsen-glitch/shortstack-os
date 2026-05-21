@@ -835,7 +835,7 @@ export default function PhoneEmailPage() {
 
                       {/* Search Button */}
                       <button onClick={searchNumbers} disabled={searching}
-                        className="w-full py-2.5 rounded-lg bg-brand-accent text-white text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                        className="w-full py-2.5 rounded-lg bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
                         {searching ? <RefreshCw size={12} className="animate-spin" /> : <Search size={12} />}
                         {searching ? "Searching..." : "Search Available Numbers"}
                       </button>
@@ -931,7 +931,7 @@ export default function PhoneEmailPage() {
                       </div>
 
                       <button onClick={addManualPhone} disabled={!manualPhone.trim() || manualAdding}
-                        className="w-full py-2.5 rounded-lg bg-brand-accent text-white text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                        className="w-full py-2.5 rounded-lg bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
                         {manualAdding ? <RefreshCw size={12} className="animate-spin" /> : <Plus size={12} />}
                         {manualAdding ? "Adding..." : "Add to Pool"}
                       </button>
@@ -1205,7 +1205,7 @@ export default function PhoneEmailPage() {
 
                       {/* Add Button */}
                       <button onClick={addEmail} disabled={!newEmail.trim() || emailAdding}
-                        className="w-full py-2.5 rounded-lg bg-brand-accent text-white text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                        className="w-full py-2.5 rounded-lg bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
                         {emailAdding ? <RefreshCw size={12} className="animate-spin" /> : <Check size={12} />}
                         {emailAdding ? "Adding..." : "Verify & Add"}
                       </button>
@@ -1233,7 +1233,7 @@ export default function PhoneEmailPage() {
                         After adding, you will need to configure SPF, DKIM, and DMARC DNS records with your domain registrar.
                       </p>
                       <button onClick={addDomain} disabled={!newDomain.trim()}
-                        className="w-full py-2.5 rounded-lg bg-brand-accent text-white text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                        className="w-full py-2.5 rounded-lg bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
                         <Plus size={12} /> Add Domain
                       </button>
                     </div>

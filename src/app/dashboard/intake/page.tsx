@@ -268,7 +268,7 @@ export default function IntakePage() {
                   {activeTab === "forms" && (
                     <button
                       onClick={() => openBuilder()}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-accent hover:bg-brand-accent/80 text-white text-sm font-medium rounded-lg transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-accent hover:bg-brand-accent/80 text-[#020711] text-sm font-medium rounded-lg transition-colors"
                     >
                       <Plus size={14} />
                       New Form
@@ -309,7 +309,7 @@ export default function IntakePage() {
                       </div>
                       <button
                         onClick={() => openBuilder()}
-                        className="flex items-center gap-1.5 px-4 py-2 bg-brand-accent hover:bg-brand-accent/80 text-white text-sm font-medium rounded-lg transition-colors"
+                        className="flex items-center gap-1.5 px-4 py-2 bg-brand-accent hover:bg-brand-accent/80 text-[#020711] text-sm font-medium rounded-lg transition-colors"
                       >
                         <Plus size={14} />
                         Create your first form
@@ -589,7 +589,7 @@ export default function IntakePage() {
                 <button
                   onClick={saveForm}
                   disabled={saving || !bName.trim()}
-                  className="flex items-center gap-2 px-4 py-2 bg-brand-accent hover:bg-brand-accent/80 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                  className="flex items-center gap-2 px-4 py-2 bg-brand-accent hover:bg-brand-accent/80 text-[#020711] text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
                 >
                   {saving && <Loader2 size={14} className="animate-spin" />}
                   {editingForm ? "Save changes" : "Create form"}

@@ -353,7 +353,7 @@ export default function PhoneSetupPage() {
                   <div className="flex flex-wrap items-center gap-2">
                     <a
                       href="/dashboard/upgrade"
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-accent/80"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] transition hover:bg-brand-accent/80"
                     >
                       <ArrowUpRight size={14} /> See plans
                     </a>
@@ -379,7 +379,7 @@ export default function PhoneSetupPage() {
                       <div
                         className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold transition ${
                           done
-                            ? "bg-brand-accent text-white"
+                            ? "bg-brand-accent text-[#020711]"
                             : active
                               ? "bg-[rgba(59,130,246,0.08)] text-brand-accent ring-2 ring-[rgba(59,130,246,0.4)]"
                               : "bg-surface-light text-text-muted"
@@ -422,7 +422,7 @@ export default function PhoneSetupPage() {
                       </p>
                       <a
                         href="/dashboard/clients"
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-xs font-semibold text-white transition hover:bg-brand-accent/80"
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-xs font-semibold text-[#020711] transition hover:bg-brand-accent/80"
                       >
                         <ArrowRight size={12} /> Go to Clients
                       </a>
@@ -470,7 +470,7 @@ export default function PhoneSetupPage() {
                     <button
                       onClick={() => setStep(2)}
                       disabled={!canProceedStep1}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-accent/80 disabled:cursor-not-allowed disabled:opacity-40"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] transition hover:bg-brand-accent/80 disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       Next <ArrowRight size={14} />
                     </button>
@@ -575,7 +575,7 @@ export default function PhoneSetupPage() {
                     <button
                       onClick={() => setStep(3)}
                       disabled={!canProceedStep2}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-accent/80 disabled:cursor-not-allowed disabled:opacity-40"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] transition hover:bg-brand-accent/80 disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       Next <ArrowRight size={14} />
                     </button>
@@ -665,7 +665,7 @@ export default function PhoneSetupPage() {
                     <button
                       onClick={provision}
                       disabled={buying}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-accent/80 disabled:opacity-60"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-5 py-2 text-sm font-semibold text-[#020711] transition hover:bg-brand-accent/80 disabled:opacity-60"
                     >
                       {buying ? (
                         <>
@@ -724,7 +724,7 @@ export default function PhoneSetupPage() {
                     <button
                       onClick={sendTestSms}
                       disabled={testSending}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-accent/80 disabled:opacity-60"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] transition hover:bg-brand-accent/80 disabled:opacity-60"
                     >
                       {testSending ? (
                         <>

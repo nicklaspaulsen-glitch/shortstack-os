@@ -1090,7 +1090,7 @@ export default function CopywriterPage() {
                   <>
                     <button
                       onClick={() => setWizardOpen(true)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-brand-accent text-white hover:bg-brand-accent/80 active:scale-[0.98] transition-all"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-brand-accent text-[#020711] hover:bg-brand-accent/80 active:scale-[0.98] transition-all"
                     >
                       <Sparkles size={13} />
                       New with AI

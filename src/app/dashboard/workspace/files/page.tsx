@@ -567,7 +567,7 @@ export default function WorkspaceFilesPage() {
                       closeContext();
                     }}
                     className={`flex items-center gap-2 px-3 py-1.5 w-full text-left ${
-                      row.danger ? "text-red-700 hover:bg-red-500/10" : "text-text-primary hover:bg-white/5"
+                      row.danger ? "text-red-400 hover:bg-red-500/10" : "text-text-primary hover:bg-white/5"
                     }`}
                   >
                     {row.icon} {row.label}

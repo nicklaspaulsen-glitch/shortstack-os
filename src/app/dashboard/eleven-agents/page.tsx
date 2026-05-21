@@ -371,7 +371,7 @@ export default function ElevenAgentsPage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <button onClick={handleCreateAgent} disabled={createLoading || !createForm.name.trim()}
-                          className="px-4 py-2 rounded-lg bg-brand-accent text-white text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center gap-2">
+                          className="px-4 py-2 rounded-lg bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center gap-2">
                           {createLoading ? <><Loader2 size={12} className="animate-spin" /> Creating...</> : <><Plus size={12} /> Create Agent</>}
                         </button>
                         <button onClick={handleLoadDefaults} className="px-3 py-2 rounded-lg border border-border-subtle text-xs text-text-muted hover:text-text-secondary transition-all">
@@ -412,7 +412,7 @@ export default function ElevenAgentsPage() {
                             <div className="grid grid-cols-3 gap-2 text-[9px] text-text-muted">
                               <div><span className="block text-[8px] uppercase">Language</span><span className="text-text-secondary font-mono">{language}</span></div>
                               <div><span className="block text-[8px] uppercase">Voice</span><span className="text-text-secondary font-mono">{voiceId.slice(0, 10)}</span></div>
-                              <div><span className="block text-[8px] uppercase">Status</span><span className="text-green-700 font-mono">Live</span></div>
+                              <div><span className="block text-[8px] uppercase">Status</span><span className="text-green-400 font-mono">Live</span></div>
                             </div>
                           </motion.div>
                         );
@@ -773,7 +773,7 @@ export default function ElevenAgentsPage() {
                             <div className="bg-blue-500 h-2.5 rounded-full" style={{ width: `${(a.callsToday / Math.max(...agents.map(x => x.callsToday), 1)) * 100}%` }} />
                           </div>
                           <span className="w-12 text-right font-mono text-text-secondary">{a.callsToday}</span>
-                          <span className="w-12 text-right text-green-700 font-mono">{a.successRate}%</span>
+                          <span className="w-12 text-right text-green-400 font-mono">{a.successRate}%</span>
                         </div>
                       ))}
                     </div>

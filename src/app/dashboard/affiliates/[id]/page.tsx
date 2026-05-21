@@ -270,7 +270,7 @@ export default function AffiliateDetailPage() {
           />
           <button
             onClick={copyRefLink}
-            className="px-3 py-2 bg-brand-accent text-white rounded-lg text-sm font-semibold flex items-center gap-2"
+            className="px-3 py-2 bg-brand-accent text-[#020711] rounded-lg text-sm font-semibold flex items-center gap-2"
           >
             <Copy size={14} /> Copy
           </button>

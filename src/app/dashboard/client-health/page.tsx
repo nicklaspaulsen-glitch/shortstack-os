@@ -585,7 +585,7 @@ export default function ClientHealthPage() {
                           className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs text-text-primary h-20" placeholder="Any additional feedback..." />
                       </div>
                       <button onClick={() => { if (surveyClient) setSurveySubmitted(true); }}
-                        className="px-4 py-2 rounded-lg bg-brand-accent text-white text-xs font-semibold">
+                        className="px-4 py-2 rounded-lg bg-brand-accent text-[#020711] text-xs font-semibold">
                         Submit Survey
                       </button>
                     </div>

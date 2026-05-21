@@ -510,7 +510,7 @@ export default function UsagePage() {
                       }`}
                     >
                       {pack.popular && (
-                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-brand-accent text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-brand-accent text-[#020711] text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                           Popular
                         </div>
                       )}
@@ -534,7 +534,7 @@ export default function UsagePage() {
                       disabled={!selectedPack || buying}
                       className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                         selectedPack && !buying
-                          ? "bg-brand-accent text-white hover:bg-brand-accent/80"
+                          ? "bg-brand-accent text-[#020711] hover:bg-brand-accent/80"
                           : "bg-surface-light text-text-muted cursor-not-allowed"
                       }`}
                     >

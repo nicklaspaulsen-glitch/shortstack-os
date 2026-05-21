@@ -933,7 +933,7 @@ const valid = signature === expected;`}</pre>
                           </button>
                           <button onClick={generateApiKey}
                             disabled={!newKeyName.trim()}
-                            className="text-[10px] px-4 py-1.5 rounded-lg bg-brand-accent text-white font-medium hover:bg-brand-accent/80 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                            className="text-[10px] px-4 py-1.5 rounded-lg bg-brand-accent text-[#020711] font-medium hover:bg-brand-accent/80 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
                             Generate Key
                           </button>
                         </div>

@@ -984,7 +984,7 @@ function AudioCard({
           error
             ? "bg-red-500/20 text-red-400"
             : playing
-              ? "bg-brand-accent text-white"
+              ? "bg-brand-accent text-[#020711]"
               : "bg-[rgba(59,130,246,0.12)] text-brand-accent hover:bg-[rgba(59,130,246,0.18)]"
         }`}
         title={error ? "Preview URL broken" : playing ? "Pause" : "Play"}

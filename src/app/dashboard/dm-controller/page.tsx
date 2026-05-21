@@ -827,7 +827,7 @@ export default function DMControllerPage() {
                         disabled={!running && config.platforms.length === 0}
                         className={cn(
                           "w-full text-xs py-2.5 flex items-center justify-center gap-2 rounded-xl font-semibold transition-all",
-                          running ? "bg-red-500 text-white hover:bg-red-600" : "bg-brand-accent text-white disabled:opacity-50"
+                          running ? "bg-red-500 text-[#020711] hover:bg-red-600" : "bg-brand-accent text-[#020711] disabled:opacity-50"
                         )}
                       >
                         {running ? <><Pause size={14} /> Stop</> : <><Play size={14} /> Start DM Run</>}
@@ -856,7 +856,7 @@ export default function DMControllerPage() {
                     <h2 className="text-sm font-semibold">Active Campaigns</h2>
                     <p className="text-[10px] text-text-muted">Run multiple DM campaigns in parallel — each with its own template & volume.</p>
                   </div>
-                  <button onClick={() => setWizardOpen(true)} className="px-3 py-1.5 rounded-lg bg-brand-accent text-white text-[11px] font-semibold flex items-center gap-1.5 hover:scale-[1.02] transition-transform">
+                  <button onClick={() => setWizardOpen(true)} className="px-3 py-1.5 rounded-lg bg-brand-accent text-[#020711] text-[11px] font-semibold flex items-center gap-1.5 hover:scale-[1.02] transition-transform">
                     <Plus size={12} /> New Campaign
                   </button>
                 </div>
@@ -865,7 +865,7 @@ export default function DMControllerPage() {
                     <EmptyIllustration icon={<Target size={40} />} />
                     <h3 className="text-sm font-semibold mt-3">No campaigns yet</h3>
                     <p className="text-[11px] text-text-muted mt-1">Spin up your first campaign in under 60 seconds.</p>
-                    <button onClick={() => setWizardOpen(true)} className="mt-4 px-4 py-2 rounded-lg bg-brand-accent text-white text-[11px] font-semibold inline-flex items-center gap-1.5">
+                    <button onClick={() => setWizardOpen(true)} className="mt-4 px-4 py-2 rounded-lg bg-brand-accent text-[#020711] text-[11px] font-semibold inline-flex items-center gap-1.5">
                       <Plus size={12} /> Create campaign
                     </button>
                   </div>
@@ -1302,7 +1302,7 @@ export default function DMControllerPage() {
                         config: "Customize me",
                         enabled: false,
                       }, ...rs])}
-                      className="px-2.5 py-1 rounded-lg bg-brand-accent text-white text-[10px] font-semibold flex items-center gap-1">
+                      className="px-2.5 py-1 rounded-lg bg-brand-accent text-[#020711] text-[10px] font-semibold flex items-center gap-1">
                       <Plus size={10} /> Add rule
                     </button>
                   </div>
@@ -1428,7 +1428,7 @@ export default function DMControllerPage() {
                           setBlacklistInput("");
                         }
                       }}
-                      className="px-3 py-1.5 rounded-lg bg-brand-accent text-white text-[10px] font-semibold flex items-center gap-1">
+                      className="px-3 py-1.5 rounded-lg bg-brand-accent text-[#020711] text-[10px] font-semibold flex items-center gap-1">
                       <Plus size={10} /> Add
                     </button>
                   </div>
@@ -1832,7 +1832,7 @@ function HowItWorksFlow() {
           { n: 4, title: "Write & launch", desc: "AI-generated or custom message, schedule, monitor replies in Inbox tab", href: null, link: null },
         ].map(step => (
           <div key={step.n} className="bg-surface-light/50 rounded-xl p-3 border border-border-subtle relative">
-            <div className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-brand-accent text-white text-[10px] font-bold flex items-center justify-center">
+            <div className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-brand-accent text-[#020711] text-[10px] font-bold flex items-center justify-center">
               {step.n}
             </div>
             <h4 className="text-[11px] font-semibold mt-1">{step.title}</h4>
@@ -1873,7 +1873,7 @@ function LeadSourcePicker() {
       <div className="flex items-center justify-between mb-3">
         <div>
           <h2 className="text-xs font-semibold flex items-center gap-1.5">
-            <span className="w-5 h-5 rounded-full bg-brand-accent text-white text-[9px] font-bold flex items-center justify-center">1</span>
+            <span className="w-5 h-5 rounded-full bg-brand-accent text-[#020711] text-[9px] font-bold flex items-center justify-center">1</span>
             Lead Source
           </h2>
           <p className="text-[10px] text-text-muted mt-0.5">Where do the DMs go? Choose who you&apos;re contacting.</p>
@@ -1980,7 +1980,7 @@ function SenderAccountPicker() {
       <div className="flex items-center justify-between mb-3">
         <div>
           <h2 className="text-xs font-semibold flex items-center gap-1.5">
-            <span className="w-5 h-5 rounded-full bg-brand-accent text-white text-[9px] font-bold flex items-center justify-center">2</span>
+            <span className="w-5 h-5 rounded-full bg-brand-accent text-[#020711] text-[9px] font-bold flex items-center justify-center">2</span>
             Sender Accounts
           </h2>
           <p className="text-[10px] text-text-muted mt-0.5">Which of YOUR accounts will send the DMs? Rotates across selected to avoid spam flags.</p>

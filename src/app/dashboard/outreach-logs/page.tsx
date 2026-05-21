@@ -586,7 +586,7 @@ export default function OutreachLogsPage() {
               ]).map(t => (
                 <button key={t.key} onClick={() => setTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 transition-all ${
-                    tab === t.key ? "bg-brand-accent text-white font-medium" : "text-text-muted hover:text-text-primary"
+                    tab === t.key ? "bg-brand-accent text-[#020711] font-medium" : "text-text-muted hover:text-text-primary"
                   }`}>{t.icon} {t.label}</button>
               ))}
             </div>{/* ---------- OUTREACH TAB ---------- */}{tab === "outreach" && (
@@ -877,7 +877,7 @@ export default function OutreachLogsPage() {
                           return (
                             <button key={pageNum} onClick={() => setPage(pageNum)}
                               className={`text-xs px-2.5 py-1.5 rounded-md min-w-[32px] ${
-                                page === pageNum ? "bg-brand-accent text-white font-medium" : "text-text-muted hover:text-text-primary hover:bg-white/4"
+                                page === pageNum ? "bg-brand-accent text-[#020711] font-medium" : "text-text-muted hover:text-text-primary hover:bg-white/4"
                               }`}>{pageNum}</button>
                           );
                         })}
@@ -1382,7 +1382,7 @@ export default function OutreachLogsPage() {
                               <p className="text-[9px] text-text-muted truncate">{num.locality}{num.locality && num.region ? ", " : ""}{num.region}</p>
                             </div>
                             <button onClick={() => buyNumber(num.phone)} disabled={buyingNumber === num.phone || !provClientId}
-                              className="text-[9px] px-3 py-1.5 rounded-lg bg-brand-accent text-white font-medium hover:bg-brand-accent/90 disabled:opacity-30 flex items-center gap-1">
+                              className="text-[9px] px-3 py-1.5 rounded-lg bg-brand-accent text-[#020711] font-medium hover:bg-brand-accent/90 disabled:opacity-30 flex items-center gap-1">
                               {buyingNumber === num.phone ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />} Buy
                             </button>
                           </div>

@@ -220,7 +220,7 @@ export default function WhiteboardPage() {
                 </div>
       </div>
     </div>{/* Online now strip */}<PresenceStrip users={snapshot?.active_users ?? []} loading={loading} />{error && !snapshot && (
-              <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-700">
+              <div className="rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm text-red-400">
                 Couldn&apos;t load the whiteboard: {error}
               </div>
             )}<div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-6">

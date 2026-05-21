@@ -281,7 +281,7 @@ function ProgramsTab({
         </p>
         <button
           onClick={() => setShowCreate(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-brand-accent text-white text-sm font-semibold rounded-lg hover:bg-brand-accent/80 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-brand-accent text-[#020711] text-sm font-semibold rounded-lg hover:bg-brand-accent/80 transition-colors"
         >
           <Plus size={16} /> New program
         </button>
@@ -296,7 +296,7 @@ function ProgramsTab({
           </p>
           <button
             onClick={() => setShowCreate(true)}
-            className="px-4 py-2 bg-brand-accent text-white text-sm font-semibold rounded-lg"
+            className="px-4 py-2 bg-brand-accent text-[#020711] text-sm font-semibold rounded-lg"
           >
             Create program
           </button>
@@ -583,7 +583,7 @@ function CreateProgramModal({
           <button
             onClick={submit}
             disabled={submitting}
-            className="px-4 py-2 text-sm bg-brand-accent text-white font-semibold rounded-lg disabled:opacity-60"
+            className="px-4 py-2 text-sm bg-brand-accent text-[#020711] font-semibold rounded-lg disabled:opacity-60"
           >
             {submitting ? "Creating…" : "Create program"}
           </button>
@@ -624,7 +624,7 @@ function AffiliatesTab({
         </p>
         <button
           onClick={() => setShowInvite(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-brand-accent text-white text-sm font-semibold rounded-lg"
+          className="flex items-center gap-2 px-4 py-2 bg-brand-accent text-[#020711] text-sm font-semibold rounded-lg"
         >
           <Mail size={16} /> Invite affiliate
         </button>
@@ -906,7 +906,7 @@ function InviteAffiliateModal({
           <button
             onClick={submit}
             disabled={submitting}
-            className="px-4 py-2 text-sm bg-brand-accent text-white font-semibold rounded-lg disabled:opacity-60"
+            className="px-4 py-2 text-sm bg-brand-accent text-[#020711] font-semibold rounded-lg disabled:opacity-60"
           >
             {submitting ? "Adding…" : "Add affiliate"}
           </button>
@@ -1164,7 +1164,7 @@ function PayoutsTab({
           <button
             onClick={() => runPayouts(false)}
             disabled={running || readyCount === 0}
-            className="flex items-center gap-2 px-4 py-2 text-sm bg-brand-accent text-white font-semibold rounded-lg disabled:opacity-60"
+            className="flex items-center gap-2 px-4 py-2 text-sm bg-brand-accent text-[#020711] font-semibold rounded-lg disabled:opacity-60"
           >
             <DollarSign size={14} />
             {running ? "Paying…" : "Pay all"}

@@ -571,7 +571,7 @@ export default function ContentPlanPage() {
                 key={s}
                 onClick={() => setStatusFilter(s)}
                 className={`px-3.5 py-2 text-xs rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
-                  statusFilter === s ? "bg-brand-accent text-white font-medium" : "text-text-muted hover:text-text-primary"
+                  statusFilter === s ? "bg-brand-accent text-[#020711] font-medium" : "text-text-muted hover:text-text-primary"
                 }`}
               >
                 {statusFilter === s && statusIcon(s === "needs_review" ? "ready_to_publish" : s === "posted" ? "published" : s)}
@@ -620,7 +620,7 @@ export default function ContentPlanPage() {
                   key={v.id}
                   onClick={() => setViewMode(v.id)}
                   className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[10px] transition-all ${
-                    viewMode === v.id ? "bg-brand-accent text-white font-medium" : "text-text-muted hover:text-text-primary"
+                    viewMode === v.id ? "bg-brand-accent text-[#020711] font-medium" : "text-text-muted hover:text-text-primary"
                   }`}
                 >
                   {v.icon} {v.label}
@@ -894,7 +894,7 @@ function PostGrid({
             {/* Selection checkbox */}
             <label
               onClick={e => e.stopPropagation()}
-              className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm rounded p-1 border border-black/10"
+              className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm rounded p-1 border border-white/10"
             >
               <input
                 type="checkbox"
@@ -904,7 +904,7 @@ function PostGrid({
               />
             </label>
             {/* Platform badge */}
-            <span className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-md p-1 border border-black/10 flex items-center gap-1 text-[9px] text-white">
+            <span className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-md p-1 border border-white/10 flex items-center gap-1 text-[9px] text-white">
               {PLATFORM_ICON[p.platform.toLowerCase()] || null}
               {platformLabel(p.platform)}
             </span>

@@ -97,7 +97,7 @@ const STEP_TYPE_COLORS: Record<string, string> = {
   checkout: "bg-amber-500/10 text-amber-400 border-amber-500/20",
   upsell: "bg-pink-500/10 text-pink-400 border-pink-500/20",
   downsell: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-  webinar: "bg-cyan-500/10 text-cyan-700 border-cyan-500/20",
+  webinar: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
 };
 
 const STEP_TYPE_LABELS: Record<string, string> = {
@@ -316,7 +316,7 @@ export default function NewFunnelPage() {
                   <button
                     onClick={handleCreate}
                     disabled={creating}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-white font-semibold text-sm transition-colors"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] font-semibold text-sm transition-colors"
                   >
                     {creating ? "Creating…" : "Create Funnel"}
                     <GitBranch size={15} />

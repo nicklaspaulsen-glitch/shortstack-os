@@ -1974,7 +1974,7 @@ export default function CRMPage() {
                     ].map(tier => (
                       <button key={tier.amount} onClick={() => { setEmailCredits(p => p + tier.amount); setShowBuyCredits(false); toast.success(`Added ${tier.amount} credits`); }}
                         className={`relative flex items-center justify-between p-4 rounded-xl border transition-all hover:scale-[1.02] ${tier.popular ? "border-[rgba(59,130,246,0.25)] bg-[rgba(59,130,246,0.05)]" : "border-border-subtle bg-surface-light hover:border-[rgba(59,130,246,0.2)]"}`}>
-                        {tier.popular && <span className="absolute -top-2 left-4 text-[8px] px-2 py-0.5 rounded-full bg-brand-accent text-white font-bold">BEST VALUE</span>}
+                        {tier.popular && <span className="absolute -top-2 left-4 text-[8px] px-2 py-0.5 rounded-full bg-brand-accent text-[#020711] font-bold">BEST VALUE</span>}
                         <div className="text-left">
                           <span className="text-sm font-bold">{tier.amount.toLocaleString()}</span> <span className="text-[10px] text-text-muted">credits</span>
                           <p className="text-[9px] text-text-muted">{tier.per}/email</p>

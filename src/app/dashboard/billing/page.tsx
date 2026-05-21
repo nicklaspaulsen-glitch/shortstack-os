@@ -493,7 +493,7 @@ export default function BillingPage() {
                       }}
                     >
                       {pack.popular && (
-                        <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-brand-accent text-white text-[9px] font-bold uppercase tracking-wider">
+                        <div className="absolute -top-2 left-4 px-2 py-0.5 rounded-full bg-brand-accent text-[#020711] text-[9px] font-bold uppercase tracking-wider">
                           Best value
                         </div>
                       )}

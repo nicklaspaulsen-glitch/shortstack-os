@@ -224,7 +224,7 @@ export default function PricingPage() {
                     isCurrentPlan
                       ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 cursor-default"
                       : plan.popular
-                      ? "bg-brand-accent text-white hover:bg-[#2563EB] shadow-[0_4px_16px_rgba(59,130,246,0.30)] hover:shadow-[0_4px_24px_rgba(59,130,246,0.45)]"
+                      ? "bg-brand-accent text-[#020711] hover:bg-[#2563EB] shadow-[0_4px_16px_rgba(59,130,246,0.30)] hover:shadow-[0_4px_24px_rgba(59,130,246,0.45)]"
                       : "bg-[rgba(99,146,255,0.08)] text-text-secondary hover:bg-[rgba(59,130,246,0.12)] hover:text-brand-accent border border-[rgba(99,146,255,0.14)] hover:border-[rgba(59,130,246,0.30)]"
                   } ${checkoutLoading === plan.key ? "opacity-60 cursor-wait" : ""} disabled:cursor-default`}
                 >
@@ -421,7 +421,7 @@ export default function PricingPage() {
           </p>
           <button
             onClick={() => handleSubscribe("Starter")}
-            className="px-6 py-2.5 rounded-xl bg-brand-accent text-white text-xs font-semibold hover:bg-[#2563EB] transition-all duration-220 shadow-[0_4px_16px_rgba(59,130,246,0.30)] hover:shadow-[0_4px_24px_rgba(59,130,246,0.45)] inline-flex items-center gap-2"
+            className="px-6 py-2.5 rounded-xl bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-[#2563EB] transition-all duration-220 shadow-[0_4px_16px_rgba(59,130,246,0.30)] hover:shadow-[0_4px_24px_rgba(59,130,246,0.45)] inline-flex items-center gap-2"
           >
             Start Free Trial
             <ArrowRight size={13} />

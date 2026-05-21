@@ -257,7 +257,7 @@ export default function AbTestDetailPage() {
           <button
             onClick={() => void addVariant()}
             disabled={adding}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-white text-sm font-semibold transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] text-sm font-semibold transition-colors"
           >
             <Plus size={14} />
             {adding ? "Adding…" : "Add"}

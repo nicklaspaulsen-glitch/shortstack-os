@@ -697,13 +697,13 @@ export default function ClientsPage() {
               <button
                 onClick={() => setScope("all")}
                 className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                  scope === "all" ? "bg-brand-accent text-white" : "text-text-muted hover:text-text-primary"
+                  scope === "all" ? "bg-brand-accent text-[#020711]" : "text-text-muted hover:text-text-primary"
                 }`}
 >All</button>
               <button
                 onClick={() => setScope("mine")}
                 className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
-                  scope === "mine" ? "bg-brand-accent text-white" : "text-text-muted hover:text-text-primary"
+                  scope === "mine" ? "bg-brand-accent text-[#020711]" : "text-text-muted hover:text-text-primary"
                 }`}
 >Mine</button>
             </div>
@@ -1026,7 +1026,7 @@ export default function ClientsPage() {
                 <div className="absolute top-3 left-3" onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border-subtle hover:border-[rgba(212,255,0,0.35)]"
+                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-[#020711]" : "border-border-subtle hover:border-[rgba(212,255,0,0.35)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
@@ -1255,7 +1255,7 @@ export default function ClientsPage() {
             columns={[
               { key: "select", label: (
                 <button onClick={selectAllClients} className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                  selectedClients.size === filteredClients.length && filteredClients.length> 0 ? "bg-brand-accent border-brand-accent text-white" : "border-border-subtle hover:border-[rgba(212,255,0,0.35)]"
+                  selectedClients.size === filteredClients.length && filteredClients.length> 0 ? "bg-brand-accent border-brand-accent text-[#020711]" : "border-border-subtle hover:border-[rgba(212,255,0,0.35)]"
                 }`}>
                   {selectedClients.size === filteredClients.length && filteredClients.length> 0 && <Check size={10} />}
                 </button>
@@ -1263,7 +1263,7 @@ export default function ClientsPage() {
                 <div onClick={e => e.stopPropagation()}>
                   <button onClick={() => toggleSelectClient(c.id)}
                     className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-white" : "border-border-subtle hover:border-[rgba(212,255,0,0.35)]"
+                      selectedClients.has(c.id) ? "bg-brand-accent border-brand-accent text-[#020711]" : "border-border-subtle hover:border-[rgba(212,255,0,0.35)]"
                     }`}>
                     {selectedClients.has(c.id) && <Check size={10} />}
                   </button>
