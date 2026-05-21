@@ -213,9 +213,9 @@ a[role="button"]:hover,
   --bg-surface-2-rgb: 16 20 32;
   --bg-surface-3-rgb: 23 26 46;
 
-  /* Borders — blue-tinted for depth (Quantix-style) */
-  --border-subtle: rgba(59, 130, 246, 0.10);
-  --border-strong: rgba(59, 130, 246, 0.22);
+  /* Borders — lime-tinted for depth */
+  --border-subtle: rgba(212, 255, 0, 0.08);
+  --border-strong: rgba(212, 255, 0, 0.18);
 
   /* Text — bright on dark OLED, softer secondary scale */
   --text-primary: #F0F0F4;
@@ -225,24 +225,23 @@ a[role="button"]:hover,
   --text-secondary-rgb: 168 168 178;
   --text-muted-rgb: 74 74 90;
 
-  /* Brand accent — PRISM BLUE vibrant on dark OLED surfaces. */
-  --brand-accent: #3B82F6;
-  --brand-accent-soft: #60A5FA;
-  --brand-accent-dim: #2563EB;
-  --brand-accent-glow: rgba(59, 130, 246, 0.35);
-  --brand-accent-rgb: 59 130 246;
-  --brand-accent-soft-rgb: 96 165 250;
-  --brand-accent-dim-rgb: 37 99 235;
+  /* Brand accent — CHARTREUSE LIME electrifying on dark OLED surfaces. */
+  --brand-accent: #D4FF00;
+  --brand-accent-soft: #E8FF4D;
+  --brand-accent-dim: #AACC00;
+  --brand-accent-glow: rgba(212, 255, 0, 0.35);
+  --brand-accent-rgb: 212 255 0;
+  --brand-accent-soft-rgb: 232 255 77;
+  --brand-accent-dim-rgb: 170 204 0;
 
-  /* Legacy lime aliases — kept so existing pages work but redirected to
-     the prism blue accent. Do NOT introduce new uses of these vars in new code. */
-  --brand-lime: #3B82F6;
-  --brand-lime-soft: #60A5FA;
-  --brand-lime-dim: #2563EB;
-  --brand-lime-glow: rgba(59, 130, 246, 0.35);
-  --brand-lime-rgb: 59 130 246;
-  --brand-lime-soft-rgb: 96 165 250;
-  --brand-lime-dim-rgb: 37 99 235;
+  /* Lime aliases — restored to actual lime. */
+  --brand-lime: #D4FF00;
+  --brand-lime-soft: #E8FF4D;
+  --brand-lime-dim: #AACC00;
+  --brand-lime-glow: rgba(212, 255, 0, 0.35);
+  --brand-lime-rgb: 212 255 0;
+  --brand-lime-soft-rgb: 232 255 77;
+  --brand-lime-dim-rgb: 170 204 0;
 
   /* Editorial complement — dark navy (dark theme surface) */
   --brand-plum: #2A3350;
@@ -250,9 +249,9 @@ a[role="button"]:hover,
   --brand-plum-rgb: 42 51 80;
   --brand-plum-hover-rgb: 58 69 104;
 
-  /* Indigo alias — brighter blue for dark backgrounds */
-  --brand-indigo: #3B82F6;
-  --brand-indigo-rgb: 59 130 246;
+  /* Indigo alias — link color */
+  --brand-indigo: #6366F1;
+  --brand-indigo-rgb: 99 102 241;
 
   /* Functional */
   --status-success: #7FE5B8;
@@ -281,21 +280,22 @@ a[role="button"]:hover,
 
   /* Premium card shadow tokens — dark depths with ambient glow */
   --card-shadow: 0 1px 3px rgba(0,0,0,0.35), 0 4px 16px -4px rgba(0,0,0,0.40), 0 12px 40px -8px rgba(0,0,0,0.50);
-  --card-shadow-hover: 0 2px 4px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.30), 0 20px 48px -12px rgba(0,0,0,0.55), 0 0 32px -8px rgba(59,130,246,0.12);
+  --card-shadow-hover: 0 2px 4px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.30), 0 20px 48px -12px rgba(0,0,0,0.55), 0 0 32px -8px rgba(212,255,0,0.10);
 
-  /* ── Glass tokens — navy frosted glass (May 19: stronger metallic glass) ── */
+  /* ── Glass tokens — dark frosted glass with lime ambient glow ── */
   --glass-bg: rgba(10, 12, 26, 0.88);
-  --glass-border-inner: rgba(59, 130, 246, 0.18);
-  --glass-border-outer: rgba(59, 130, 246, 0.10);
-  --glass-blur: blur(28px) saturate(200%);
+  --glass-border-inner: rgba(212, 255, 0, 0.14);
+  --glass-border-outer: rgba(212, 255, 0, 0.07);
+  --glass-blur: blur(28px) saturate(200%) brightness(1.04);
   --glass-shadow:
-    0 0 0 1px rgba(59, 130, 246, 0.10),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 0 0 1px rgba(212, 255, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
     0 4px 24px rgba(0, 0, 0, 0.55),
     0 16px 56px rgba(0, 0, 0, 0.42),
-    0 0 80px -20px rgba(59, 130, 246, 0.18);
+    0 0 80px -20px rgba(212, 255, 0, 0.10);
   --glass-radius: 16px;
-  --glass-glow: 0 0 80px -20px rgba(59, 130, 246, 0.28);
+  --glass-glow: 0 0 80px -20px rgba(212, 255, 0, 0.20);
 
   /* ── Blue accent palette (replaces periwinkle on dark) ── */
   --color-periwinkle: #3B82F6;
@@ -305,14 +305,14 @@ a[role="button"]:hover,
 
   /* ── Trinity Sidebar tokens (deep navy) ── */
   --sidebar-bg: rgba(4, 5, 13, 0.98);
-  --sidebar-border: rgba(59, 130, 246, 0.09);
-  --sidebar-border-active: rgba(59, 130, 246, 0.40);
-  --sidebar-item-bg: rgba(59, 130, 246, 0.06);
-  --sidebar-item-bg-active: rgba(59, 130, 246, 0.12);
+  --sidebar-border: rgba(212, 255, 0, 0.08);
+  --sidebar-border-active: rgba(212, 255, 0, 0.30);
+  --sidebar-item-bg: rgba(212, 255, 0, 0.04);
+  --sidebar-item-bg-active: rgba(212, 255, 0, 0.10);
   --sidebar-dropdown-bg: rgba(6, 7, 18, 0.97);
   --sidebar-text-primary: #E8EDF5;
   --sidebar-text-secondary: #7A8499;
-  --sidebar-icon-active: #60A5FA;
+  --sidebar-icon-active: #D4FF00;
   --sidebar-icon-inactive: #3D4858;
 }
 
@@ -343,7 +343,7 @@ a[role="button"]:hover,
   --color-surface: #0A0C1A;
   --color-surface-light: #101420;
   --color-border: #171A2E;
-  --color-accent: #3B82F6;
+  --color-accent: #D4FF00;
   --color-text: #E8EDF5;
   --color-muted: #7A8499;
   --color-foreground: #E8EDF5;
@@ -351,7 +351,7 @@ a[role="button"]:hover,
   --color-surface-rgb: 10 12 26;
   --color-surface-light-rgb: 16 20 32;
   --color-border-rgb: 23 26 46;
-  --color-accent-rgb: 59 130 246;
+  --color-accent-rgb: 212 255 0;
   --color-text-rgb: 240 240 244;
   --color-muted-rgb: 168 168 178;
 }
@@ -371,7 +371,7 @@ a[role="button"]:hover,
   --color-surface: #0D1120;
   --color-surface-light: #131827;
   --color-border: #1C2338;
-  --color-accent: #3B82F6;
+  --color-accent: #D4FF00;
   --color-text: #F0F0F4;
   --color-muted: #A8A8B2;
   --color-foreground: #F0F0F4;
@@ -379,7 +379,7 @@ a[role="button"]:hover,
   --color-surface-rgb: 13 17 32;
   --color-surface-light-rgb: 19 24 39;
   --color-border-rgb: 28 35 56;
-  --color-accent-rgb: 59 130 246;
+  --color-accent-rgb: 212 255 0;
   --color-text-rgb: 240 240 244;
   --color-muted-rgb: 168 168 178;
 
@@ -394,9 +394,9 @@ a[role="button"]:hover,
   --bg-surface-2-rgb: 19 24 39;
   --bg-surface-3-rgb: 28 35 56;
 
-  /* Dark theme: blue-tinted borders for glass look */
-  --border-subtle: rgba(99, 146, 255, 0.10);
-  --border-strong: rgba(99, 146, 255, 0.22);
+  /* Dark theme: lime-tinted borders for glass look */
+  --border-subtle: rgba(212, 255, 0, 0.10);
+  --border-strong: rgba(212, 255, 0, 0.22);
 
   --text-primary: #F0F0F4;
   --text-secondary: #A8A8B2;
@@ -405,36 +405,36 @@ a[role="button"]:hover,
   --text-secondary-rgb: 168 168 178;
   --text-muted-rgb: 74 74 90;
 
-  /* Dark theme accent — brand blue for vibrant contrast on deep navy */
-  --brand-accent: #3B82F6;
-  --brand-accent-soft: #60A5FA;
-  --brand-accent-dim: #2563EB;
-  --brand-accent-glow: rgba(59, 130, 246, 0.35);
-  --brand-accent-rgb: 59 130 246;
+  /* Dark theme accent — chartreuse lime electrifying on deep navy */
+  --brand-accent: #D4FF00;
+  --brand-accent-soft: #E8FF4D;
+  --brand-accent-dim: #AACC00;
+  --brand-accent-glow: rgba(212, 255, 0, 0.35);
+  --brand-accent-rgb: 212 255 0;
 
-  --brand-lime: #3B82F6;
-  --brand-lime-soft: #60A5FA;
-  --brand-lime-dim: #2563EB;
-  --brand-lime-glow: rgba(59, 130, 246, 0.35);
-  --brand-lime-rgb: 59 130 246;
-  --brand-lime-soft-rgb: 96 165 250;
-  --brand-indigo: #3B82F6;
-  --brand-indigo-rgb: 59 130 246;
+  --brand-lime: #D4FF00;
+  --brand-lime-soft: #E8FF4D;
+  --brand-lime-dim: #AACC00;
+  --brand-lime-glow: rgba(212, 255, 0, 0.35);
+  --brand-lime-rgb: 212 255 0;
+  --brand-lime-soft-rgb: 232 255 77;
+  --brand-indigo: #6366F1;
+  --brand-indigo-rgb: 99 102 241;
 
   /* Dark theme card shadows — glass depth with blue ambient glow */
   --card-shadow: 0 1px 2px rgba(0,0,0,0.35), 0 4px 16px -4px rgba(0,0,0,0.40), 0 12px 40px -8px rgba(0,0,0,0.50);
-  --card-shadow-hover: 0 2px 4px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.30), 0 20px 48px -12px rgba(0,0,0,0.55), 0 0 32px -8px rgba(59,130,246,0.12);
+  --card-shadow-hover: 0 2px 4px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.30), 0 20px 48px -12px rgba(0,0,0,0.55), 0 0 32px -8px rgba(212,255,0,0.10);
 
   /* ── Trinity Sidebar tokens (dark explicit override) ── */
   --sidebar-bg: rgba(4, 8, 20, 0.97);
-  --sidebar-border: rgba(99, 146, 255, 0.12);
-  --sidebar-border-active: rgba(99, 146, 255, 0.28);
-  --sidebar-item-bg: rgba(59, 130, 246, 0.07);
-  --sidebar-item-bg-active: rgba(59, 130, 246, 0.14);
+  --sidebar-border: rgba(212, 255, 0, 0.10);
+  --sidebar-border-active: rgba(212, 255, 0, 0.28);
+  --sidebar-item-bg: rgba(212, 255, 0, 0.05);
+  --sidebar-item-bg-active: rgba(212, 255, 0, 0.12);
   --sidebar-dropdown-bg: rgba(10, 14, 30, 0.96);
   --sidebar-text-primary: #F0F0F4;
   --sidebar-text-secondary: #7A7A8C;
-  --sidebar-icon-active: #60A5FA;
+  --sidebar-icon-active: #D4FF00;
   --sidebar-icon-inactive: #52525F;
 }
 
@@ -480,20 +480,20 @@ a[role="button"]:hover,
   --text-secondary-rgb: 82 82 91;
   --text-muted-rgb: 113 113 122;
 
-  --brand-accent: #2563EB;
-  --brand-accent-soft: #3B82F6;
-  --brand-accent-dim: #1D4ED8;
-  --brand-accent-glow: rgba(37, 99, 235, 0.2);
-  --brand-accent-rgb: 37 99 235;
+  --brand-accent: #7CA800;
+  --brand-accent-soft: #9BC800;
+  --brand-accent-dim: #5A7C00;
+  --brand-accent-glow: rgba(124, 168, 0, 0.2);
+  --brand-accent-rgb: 124 168 0;
 
-  /* Legacy alias remap for light mode */
-  --brand-lime: #2563EB;
-  --brand-lime-soft: #3B82F6;
-  --brand-lime-dim: #1D4ED8;
-  --brand-lime-glow: rgba(37, 99, 235, 0.2);
-  --brand-lime-rgb: 37 99 235;
-  --brand-indigo: #2563EB;
-  --brand-indigo-rgb: 37 99 235;
+  /* Lime alias remap for light mode — darker tones for contrast on white */
+  --brand-lime: #7CA800;
+  --brand-lime-soft: #9BC800;
+  --brand-lime-dim: #5A7C00;
+  --brand-lime-glow: rgba(124, 168, 0, 0.2);
+  --brand-lime-rgb: 124 168 0;
+  --brand-indigo: #4F46E5;
+  --brand-indigo-rgb: 79 70 229;
 
   /* ── Trinity Sidebar tokens (light override) ── */
   --sidebar-bg: rgba(255, 255, 255, 0.98);
@@ -522,6 +522,59 @@ body {
   font-size: 14px;
   line-height: 1.6;
   position: relative;
+}
+
+/* ═══════════ AMBIENT ORB BACKGROUNDS ═══════════
+ * Two fixed radial-gradient blobs behind all content — give the OLED
+ * black surface a "glowing OS" feel. mix-blend-mode: screen ensures
+ * they only add light, never darken text. z-index: -20 keeps them
+ * completely behind all content. CSS-only, zero JS per frame. */
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -20;
+  overflow: hidden;
+}
+.ambient::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -15%;
+  width: 55vw;
+  height: 55vw;
+  background: radial-gradient(circle, rgba(212,255,0,0.055) 0%, transparent 70%);
+  filter: blur(80px);
+  mix-blend-mode: screen;
+  animation: ambientDrift1 28s ease-in-out infinite alternate;
+}
+.ambient::after {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  right: -15%;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(99,102,241,0.04) 0%, transparent 70%);
+  filter: blur(100px);
+  mix-blend-mode: screen;
+  animation: ambientDrift2 34s ease-in-out infinite alternate;
+}
+@keyframes ambientDrift1 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(6vw, 4vh) scale(1.08); }
+}
+@keyframes ambientDrift2 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-5vw, -3vh) scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ambient::before, .ambient::after { animation: none; }
+}
+
+/* Manrope UI font — used by ZIP design for sharp numeric displays + OS chrome */
+.font-ui {
+  font-family: 'Manrope', 'Inter', system-ui, sans-serif;
 }
 
 /* Display + editorial helpers — applied as opt-in classes. */
@@ -569,8 +622,8 @@ body {
 
 /* Selection */
 ::selection {
-  background: rgba(37, 99, 235, 0.18);
-  color: var(--color-foreground, #1A1A2E);
+  background: rgba(212, 255, 0, 0.20);
+  color: #0a0a0a;
 }
 
 /* Scrollbar — thin and subtle */
@@ -3051,6 +3104,32 @@ body {
   to   { transform: rotateY(360deg); }
 }
 
+/* ── ZIP OS design: pop + float + spin keyframes ──
+ * popIn: element reveals with upward blur-slide (chartreuse OS boot feel).
+ * float3d: gentle 3D float for Icon3D cards, hero marks.
+ * spin3d: continuous Z-rotation for orb/logo marks. */
+@keyframes popIn {
+  0%   { opacity: 0; transform: translateY(14px); filter: blur(6px); }
+  60%  { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+@keyframes float3d {
+  0%   { transform: rotateX(0deg)   rotateY(0deg)   translateY(0); }
+  25%  { transform: rotateX(2deg)   rotateY(-3deg)  translateY(-3px); }
+  50%  { transform: rotateX(-1deg)  rotateY(3deg)   translateY(-5px); }
+  75%  { transform: rotateX(2deg)   rotateY(-2deg)  translateY(-2px); }
+  100% { transform: rotateX(0deg)   rotateY(0deg)   translateY(0); }
+}
+@keyframes spin3d {
+  from { transform: rotateX(18deg) rotateY(-22deg) rotateZ(0deg); }
+  to   { transform: rotateX(18deg) rotateY(-22deg) rotateZ(360deg); }
+}
+
+/* Tailwind animation utilities for the above */
+.animate-pop-in    { animation: popIn  0.55s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-float-3d  { animation: float3d 8s ease-in-out infinite; }
+.animate-spin-3d   { animation: spin3d  12s linear infinite; }
+
 /* Foundation-tier reduce-motion override — caps animation at 100ms,
  * disables transforms entirely. Layered on top of existing
  * prefers-reduced-motion rules (which use 0.01ms). The 100ms cap is the
@@ -3098,9 +3177,9 @@ body {
   z-index: 1;
   background: radial-gradient(
     ellipse 90% 55% at 50% -10%,
-    rgba(59, 130, 246, 0.20) 0%,
-    rgba(99, 102, 241, 0.09) 42%,
-    rgba(29, 78, 216, 0.04) 62%,
+    rgba(212, 255, 0, 0.09) 0%,
+    rgba(99, 102, 241, 0.07) 42%,
+    rgba(170, 204, 0, 0.03) 62%,
     transparent 80%
   );
   animation: auroraShift 8s ease-in-out infinite;

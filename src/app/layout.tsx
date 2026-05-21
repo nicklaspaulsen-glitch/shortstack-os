@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     shortcut: "/icons/shortstack-logo.ico?v=3",
   },
   manifest: "/manifest.json",
-  themeColor: "#2563EB",
+  themeColor: "#D4FF00",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -110,7 +110,7 @@ export default function RootLayout({
         <link
           rel="preload"
           as="style"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
         />
         <script
           dangerouslySetInnerHTML={{
@@ -119,7 +119,7 @@ export default function RootLayout({
         />
         <noscript>
           <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" />
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" />
         </noscript>
       </head>
       <body className="antialiased bg-background min-h-screen prism-ambient">
@@ -165,9 +165,11 @@ export default function RootLayout({
         <div className="prism-orb prism-orb-2" aria-hidden />
         <div className="prism-orb prism-orb-3" aria-hidden />
         <GrainOverlay />
-        <ScrollIndicator height={2} color="#3B82F6" />
-        {/* Global cursor trail — blue pixel squares, subtle 8px blocks, max 20 squares */}
-        <PixelCursorTrail blockSize={8} trailLength={20} color="#3B82F6" />
+        {/* Ambient orbs — chartreuse + indigo radial blobs, CSS-only, z-index -20 */}
+        <div className="ambient" aria-hidden="true" />
+        <ScrollIndicator height={2} color="#D4FF00" />
+        {/* Global cursor trail — lime pixel squares, subtle 8px blocks, max 20 squares */}
+        <PixelCursorTrail blockSize={8} trailLength={20} color="#D4FF00" />
         <Suspense>
         <PostHogProvider>
         <AuthProvider>

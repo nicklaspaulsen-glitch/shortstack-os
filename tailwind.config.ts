@@ -29,18 +29,18 @@ const config: Config = {
         "text-primary": "rgb(var(--text-primary-rgb, 245 245 247) / <alpha-value>)",
         "text-secondary": "rgb(var(--text-secondary-rgb, 168 168 178) / <alpha-value>)",
         "text-muted": "rgb(var(--text-muted-rgb, 111 111 122) / <alpha-value>)",
-        // Brand — pure-monochrome themes + indigo accent (Apr 28).
-        // brand-lime is kept as an alias of brand-accent for back-compat
-        // so existing `bg-brand-lime` / `text-brand-lime/30` etc. still work.
-        "brand-accent": "rgb(var(--brand-accent-rgb, 255 45 45) / <alpha-value>)",
-        "brand-accent-soft": "rgb(var(--brand-accent-soft-rgb, 255 107 107) / <alpha-value>)",
-        "brand-accent-dim": "rgb(var(--brand-accent-dim-rgb, 204 36 36) / <alpha-value>)",
-        "brand-lime": "rgb(var(--brand-lime-rgb, 255 45 45) / <alpha-value>)",
-        "brand-lime-soft": "rgb(var(--brand-lime-soft-rgb, 255 107 107) / <alpha-value>)",
-        "brand-lime-dim": "rgb(var(--brand-lime-dim-rgb, 204 36 36) / <alpha-value>)",
+        // Brand — chartreuse lime accent (restored, matching ZIP design system).
+        // brand-lime is both the primary accent AND the back-compat alias so
+        // existing `bg-brand-lime` / `text-brand-lime/30` etc. continue to work.
+        "brand-accent": "rgb(var(--brand-accent-rgb, 212 255 0) / <alpha-value>)",
+        "brand-accent-soft": "rgb(var(--brand-accent-soft-rgb, 232 255 77) / <alpha-value>)",
+        "brand-accent-dim": "rgb(var(--brand-accent-dim-rgb, 170 204 0) / <alpha-value>)",
+        "brand-lime": "rgb(var(--brand-lime-rgb, 212 255 0) / <alpha-value>)",
+        "brand-lime-soft": "rgb(var(--brand-lime-soft-rgb, 232 255 77) / <alpha-value>)",
+        "brand-lime-dim": "rgb(var(--brand-lime-dim-rgb, 170 204 0) / <alpha-value>)",
         "brand-plum": "rgb(var(--brand-plum-rgb, 31 31 35) / <alpha-value>)",
         "brand-plum-hover": "rgb(var(--brand-plum-hover-rgb, 44 44 50) / <alpha-value>)",
-        "brand-indigo": "rgb(var(--brand-indigo-rgb, 255 45 45) / <alpha-value>)",
+        "brand-indigo": "rgb(var(--brand-indigo-rgb, 99 102 241) / <alpha-value>)",
         // Status
         "status-success": "rgb(var(--status-success-rgb, 127 229 184) / <alpha-value>)",
         "status-warning": "rgb(var(--status-warning-rgb, 255 192 98) / <alpha-value>)",
@@ -100,17 +100,17 @@ const config: Config = {
         // resolving — they just paint indigo now. Plum maps to a charcoal
         // neutral so old purple chrome doesn't fight the monochrome base.
         gold: {
-          DEFAULT: "rgb(var(--color-accent-rgb, 37 99 235) / <alpha-value>)",
-          50: "#EFF6FF",
-          100: "#DBEAFE",
-          200: "#BFDBFE",
-          300: "#93C5FD",
-          400: "#60A5FA",
-          500: "#3B82F6",
-          600: "#2563EB",
-          700: "#1D4ED8",
-          800: "#1E40AF",
-          900: "#1E3A8A",
+          DEFAULT: "rgb(var(--color-accent-rgb, 212 255 0) / <alpha-value>)",
+          50: "#F7FFD4",
+          100: "#EEFF99",
+          200: "#E8FF4D",
+          300: "#D4FF00",
+          400: "#AACC00",
+          500: "#8AAA00",
+          600: "#6B8800",
+          700: "#4F6600",
+          800: "#374600",
+          900: "#202800",
         },
         // amber, purple, green, emerald, teal, cyan, sky — Tailwind defaults
         // render natively. amber/yellow stay literal for warning/paused status
@@ -132,34 +132,31 @@ const config: Config = {
           800: "#18181B",
           900: "#101012",
         },
-        // Indigo alias — redirected to blue brand accent so `bg-indigo-500`,
-        // `text-indigo-400`, etc. in the ~40 pages that still use them
-        // render as brand blue instead of Tailwind's default violet.
+        // Indigo — restored to real indigo values (link/secondary accent color).
         indigo: {
-          50: "#EFF6FF",
-          100: "#DBEAFE",
-          200: "#BFDBFE",
-          300: "#93C5FD",
-          400: "#60A5FA",
-          500: "#3B82F6",
-          600: "#2563EB",
-          700: "#1D4ED8",
-          800: "#1E40AF",
-          900: "#1E3A8A",
+          50: "#EEF2FF",
+          100: "#E0E7FF",
+          200: "#C7D2FE",
+          300: "#A5B4FC",
+          400: "#818CF8",
+          500: "#6366F1",
+          600: "#4F46E5",
+          700: "#4338CA",
+          800: "#3730A3",
+          900: "#312E81",
         },
-        // Lime alias — kept registered so `text-lime-*` / `bg-lime-*` in
-        // old code still resolves, redirected to blue brand accent.
+        // Lime alias — restored to real lime values.
         lime: {
-          50: "#EFF6FF",
-          100: "#DBEAFE",
-          200: "#BFDBFE",
-          300: "#93C5FD",
-          400: "#60A5FA",
-          500: "#3B82F6",
-          600: "#2563EB",
-          700: "#1D4ED8",
-          800: "#1E40AF",
-          900: "#1E3A8A",
+          50: "#F7FFD4",
+          100: "#EEFF99",
+          200: "#E8FF4D",
+          300: "#D4FF00",
+          400: "#AACC00",
+          500: "#8AAA00",
+          600: "#6B8800",
+          700: "#4F6600",
+          800: "#374600",
+          900: "#202800",
         },
         // Blue alias — redirected to neutral grey/silver so old `bg-blue-600
         // text-white` buttons become grey chrome that stands out on the OLED
@@ -185,11 +182,11 @@ const config: Config = {
         sans: ["Inter", "system-ui", "sans-serif"],
         // Display — large headlines, hero numbers, page titles.
         display: ["Satoshi", "Inter", "system-ui", "sans-serif"],
-        // Editorial — Apr 28: italic-serif Bodoni retired (read as ugly).
-        // Now resolves to a bold-weighted sans-serif so existing
-        // `.font-editorial` callsites read clean and bold instead of
-        // italic-serif. Use `font-display` for hero typography.
+        // Editorial — tight bold sans for eyebrow/section labels.
         editorial: ["Satoshi", "Inter", "system-ui", "sans-serif"],
+        // UI — Manrope from ZIP design system: numeric displays, OS chrome,
+        // stat counters. Sharp geometric humanist that pairs with Satoshi.
+        ui: ["Manrope", "Inter", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "monospace"],
       },
       fontSize: {
@@ -205,7 +202,7 @@ const config: Config = {
       },
       boxShadow: {
         card: "0 1px 2px rgba(0,0,0,0.06), 0 4px 12px -4px rgba(0,0,0,0.08)",
-        "card-hover": "0 2px 4px rgba(0,0,0,0.08), 0 8px 24px -4px rgba(0,0,0,0.12), 0 0 32px -8px rgba(37,99,235,0.04)",
+        "card-hover": "0 2px 4px rgba(0,0,0,0.08), 0 8px 24px -4px rgba(0,0,0,0.12), 0 0 32px -8px rgba(212,255,0,0.04)",
         elevated: "0 2px 4px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.1), 0 20px 48px -12px rgba(0,0,0,0.15)",
         soft: "0 1px 4px rgba(0,0,0,0.04), 0 4px 12px -4px rgba(0,0,0,0.06)",
         // Window-glass depth system — multi-layer shadows for OLED surfaces
@@ -220,17 +217,17 @@ const config: Config = {
           "0 2px 4px rgba(0,0,0,0.35)",
           "0 8px 24px rgba(0,0,0,0.3)",
           "0 20px 56px -12px rgba(0,0,0,0.5)",
-          "0 0 0 1px rgba(37,99,235,0.06)",
+          "0 0 0 1px rgba(212,255,0,0.06)",
         ].join(", "),
         "stack-3": [
           "inset 0 1px 0 rgba(255,255,255,0.1)",
           "0 4px 8px rgba(0,0,0,0.4)",
           "0 12px 32px rgba(0,0,0,0.35)",
           "0 28px 64px -16px rgba(0,0,0,0.55)",
-          "0 0 0 1px rgba(37,99,235,0.08)",
-          "0 0 40px -12px rgba(37,99,235,0.12)",
+          "0 0 0 1px rgba(212,255,0,0.08)",
+          "0 0 40px -12px rgba(212,255,0,0.10)",
         ].join(", "),
-        "lime-glow": "0 0 24px -4px rgba(37,99,235,0.35), 0 0 48px -8px rgba(37,99,235,0.15)",
+        "lime-glow": "0 0 24px -4px rgba(212,255,0,0.35), 0 0 48px -8px rgba(212,255,0,0.15)",
         // Window glass floating shadow — for stat cards, panels floating above base
         "window": [
           "inset 0 1px 0 rgba(255,255,255,0.06)",
@@ -282,8 +279,8 @@ const config: Config = {
           to: { opacity: "1" },
         },
         limePulse: {
-          "0%, 100%": { boxShadow: "0 0 0 0 rgba(37,99,235,0.45)" },
-          "50%": { boxShadow: "0 0 0 8px rgba(37,99,235,0)" },
+          "0%, 100%": { boxShadow: "0 0 0 0 rgba(212,255,0,0.45)" },
+          "50%": { boxShadow: "0 0 0 8px rgba(212,255,0,0)" },
         },
         stackRotate: {
           from: { transform: "rotateY(0deg)" },
@@ -294,8 +291,8 @@ const config: Config = {
           to: { opacity: "1", filter: "blur(0px)" },
         },
         shadowBreathe: {
-          "0%, 100%": { boxShadow: "0 0 24px -8px rgba(37,99,235,0.08)" },
-          "50%": { boxShadow: "0 0 40px -8px rgba(37,99,235,0.16)" },
+          "0%, 100%": { boxShadow: "0 0 24px -8px rgba(212,255,0,0.08)" },
+          "50%": { boxShadow: "0 0 40px -8px rgba(212,255,0,0.16)" },
         },
       },
       transitionTimingFunction: {
