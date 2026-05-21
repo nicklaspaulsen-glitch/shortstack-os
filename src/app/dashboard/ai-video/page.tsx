@@ -618,7 +618,7 @@ export default function AIVideoPage() {
                 type="button"
                 onClick={enhancePrompt}
                 disabled={enhancing}
-                className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1 text-[10px] text-[#60A5FA] hover:text-white bg-[rgba(212,255,0,0.1)] hover:bg-[rgba(212,255,0,0.2)] border border-[rgba(212,255,0,0.2)] px-2.5 py-1 rounded-full transition-all disabled:opacity-50 cursor-pointer"
+                className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1 text-[10px] text-brand-accent hover:text-white bg-[rgba(212,255,0,0.1)] hover:bg-[rgba(212,255,0,0.2)] border border-[rgba(212,255,0,0.2)] px-2.5 py-1 rounded-full transition-all disabled:opacity-50 cursor-pointer"
               >
                 {enhancing ? <Loader2 size={10} className="animate-spin" /> : <Wand2 size={10} />}
                 {enhancing ? "Enhancing…" : "Enhance ✨"}
@@ -1141,7 +1141,7 @@ export default function AIVideoPage() {
                 type="button"
                 onClick={() => setCreatorIdeasOpen((o) => !o)}
                 className="flex items-center gap-1.5 text-[10px] font-medium mb-2 transition-colors cursor-pointer"
-                style={{ color: creatorIdeasOpen ? "#60A5FA" : "#4A4A5A" }}
+                style={{ color: creatorIdeasOpen ? "#D4FF00" : "#4A4A5A" }}
               >
                 <TrendingUp size={10} />
                 Get creator-style ideas
@@ -1212,7 +1212,7 @@ export default function AIVideoPage() {
                   type="button"
                   onClick={enhancePrompt}
                   disabled={enhancing}
-                  className="inline-flex items-center gap-1.5 text-[11px] text-[#60A5FA] hover:text-white bg-[rgba(212,255,0,0.08)] hover:bg-[rgba(212,255,0,0.18)] border border-[rgba(212,255,0,0.2)] hover:border-[rgba(212,255,0,0.4)] px-3 py-1.5 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-[11px] text-brand-accent hover:text-white bg-[rgba(212,255,0,0.08)] hover:bg-[rgba(212,255,0,0.18)] border border-[rgba(212,255,0,0.2)] hover:border-[rgba(212,255,0,0.4)] px-3 py-1.5 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {enhancing ? (
                     <Loader2 size={11} className="animate-spin" />
@@ -1323,8 +1323,8 @@ export default function AIVideoPage() {
 
             {/* ── Image-to-Video source (only for flux-i2v) ──────── */}
             {isI2vMode && (
-              <div className="mt-4 rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-3">
-                <p className="text-[10px] font-medium text-cyan-400 mb-1.5 flex items-center gap-1.5">
+              <div className="mt-4 rounded-xl border border-brand-accent/20 bg-[rgba(212,255,0,0.04)] p-3">
+                <p className="text-[10px] font-medium text-brand-accent mb-1.5 flex items-center gap-1.5">
                   <Image size={11} /> Source image for FLUX I2V
                 </p>
                 <p className="text-[9px] text-text-muted mb-2 leading-relaxed">
@@ -1336,7 +1336,7 @@ export default function AIVideoPage() {
                   placeholder="https://your-image-url.com/photo.jpg"
                   value={i2vSourceImageUrl}
                   onChange={(e) => setI2vSourceImageUrl(e.target.value)}
-                  className="w-full bg-bg-surface-1 border border-border-subtle rounded-lg px-3 py-2 text-[11px] text-text-primary placeholder-text-muted outline-none focus:border-cyan-500/60 transition-colors"
+                  className="w-full bg-bg-surface-1 border border-border-subtle rounded-lg px-3 py-2 text-[11px] text-text-primary placeholder-text-muted outline-none focus:border-brand-accent/50 transition-colors"
                 />
                 {i2vSourceImageUrl && (
                   // eslint-disable-next-line @next/next/no-img-element

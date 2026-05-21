@@ -210,7 +210,7 @@ export default function ClientContentPage() {
           rows={5}
           autoFocus
           disabled={submittingRevision}
-          className="w-full text-xs border border-border-subtle bg-white/[0.06] rounded-lg px-3 py-2.5 resize-none focus:outline-none focus:border-indigo-400 text-text-secondary"
+          className="w-full text-xs border border-border-subtle bg-white/[0.06] rounded-lg px-3 py-2.5 resize-none focus:outline-none focus:border-brand-accent/50 text-text-secondary"
         />
         <label className="mt-4 flex items-center gap-2 text-xs text-text-secondary cursor-pointer select-none">
           <input

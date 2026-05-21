@@ -231,7 +231,7 @@ export default function InvoicesPage() {
                     <input
                       value={search}
                       onChange={e => setSearch(e.target.value)}
-                      className="glass rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-border-subtle focus:outline-none focus:ring-1 focus:ring-indigo-500/40 placeholder:text-text-muted/50" 
+                      className="glass rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-border-subtle focus:outline-none focus:ring-1 focus:ring-brand-accent/20 placeholder:text-text-muted/50" 
                       placeholder="Search invoices..."
                       aria-label="Search invoices"
  />
