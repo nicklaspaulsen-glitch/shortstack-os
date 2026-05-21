@@ -218,21 +218,21 @@ export default function VoiceCloneDetailPage() {
       <div className="flex items-center gap-2 shrink-0">
         <Link
                   href="/dashboard/voice-studio"
-                  className="flex items-center gap-2 rounded-lg border border-border-subtle bg-black/5 px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-black/5"
+                  className="flex items-center gap-2 rounded-lg border border-border-subtle bg-white/5 px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-white/8"
                 >
                   <ArrowLeft size={12} /> Back to studio
                 </Link>
       </div>
     </div><div className="mx-auto mt-6 max-w-5xl space-y-6 px-4 sm:px-6">
               {error && (
-                <div className="flex items-start gap-3 rounded-lg border border-rose-500/30 bg-rose-50 p-4 text-sm text-rose-700">
+                <div className="flex items-start gap-3 rounded-lg border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-400">
                   <AlertTriangle size={18} className="mt-0.5 flex-shrink-0" />
                   <div>{error}</div>
                 </div>
               )}
 
               {loading || !clone ? (
-                <div className="flex justify-center py-12 text-[#6B7280]">
+                <div className="flex justify-center py-12 text-text-muted">
                   <Loader2 size={20} className="animate-spin" />
                 </div>
               ) : (
@@ -248,10 +248,10 @@ export default function VoiceCloneDetailPage() {
                           <span
                             className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${
                               clone.status === "ready"
-                                ? "bg-emerald-500/15 text-emerald-700"
+                                ? "bg-emerald-500/15 text-emerald-400"
                                 : clone.status === "training"
-                                  ? "bg-amber-500/15 text-amber-700"
-                                  : "bg-rose-500/15 text-rose-700"
+                                  ? "bg-amber-500/15 text-amber-400"
+                                  : "bg-rose-500/15 text-rose-400"
                             }`}
                           >
                             {clone.status === "training" && (
@@ -259,12 +259,12 @@ export default function VoiceCloneDetailPage() {
                             )}
                             {clone.status}
                           </span>
-                          <span className="rounded-full border border-black/[0.08] bg-black/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#6B7280]">
+                          <span className="rounded-full border border-border-subtle bg-white/5 px-2 py-0.5 text-[10px] uppercase tracking-wider text-text-muted">
                             {clone.provider}
                           </span>
                         </div>
                         {clone.failed_reason && (
-                          <p className="mt-2 text-xs text-rose-600">
+                          <p className="mt-2 text-xs text-rose-400">
                             {clone.failed_reason}
                           </p>
                         )}
@@ -275,7 +275,7 @@ export default function VoiceCloneDetailPage() {
                             type="button"
                             onClick={onPoll}
                             disabled={polling}
-                            className="flex items-center gap-1.5 rounded-lg border border-black/[0.08] bg-black/[0.04] px-3 py-1.5 text-xs font-medium text-[#374151] hover:bg-black/[0.06]"
+                            className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-white/5 px-3 py-1.5 text-xs font-medium text-text-secondary hover:bg-white/8"
                           >
                             {polling ? (
                               <Loader2 size={12} className="animate-spin" />
@@ -289,7 +289,7 @@ export default function VoiceCloneDetailPage() {
                           <button
                             type="button"
                             onClick={onDelete}
-                            className="flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-medium text-rose-700 hover:bg-rose-500/20"
+                            className="flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-medium text-rose-400 hover:bg-rose-500/20"
                           >
                             <Trash2 size={12} /> Delete
                           </button>
@@ -302,10 +302,10 @@ export default function VoiceCloneDetailPage() {
                   {clone.status === "ready" &&
                     clone.owner_subject_kind !== "preset" && (
                       <section className="glass rounded-xl p-6">
-                        <h3 className="text-sm font-semibold text-[#111827]">
+                        <h3 className="text-sm font-semibold text-text-primary">
                           Default for surfaces
                         </h3>
-                        <p className="mt-1 text-xs text-[#6B7280]">
+                        <p className="mt-1 text-xs text-text-muted">
                           When a surface is on, this clone is auto-selected for that
                           delivery channel.
                         </p>
@@ -319,8 +319,8 @@ export default function VoiceCloneDetailPage() {
                                 onClick={() => onToggleDefault(f.key)}
                                 className={`flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                                   active
-                                    ? "border-emerald-500/40 bg-emerald-50 text-emerald-700"
-                                    : "border-black/[0.08] bg-black/[0.04] text-[#374151] hover:bg-black/[0.06]"
+                                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
+                                    : "border-border-subtle bg-white/5 text-text-secondary hover:bg-white/8"
                                 }`}
                               >
                                 {active && <CheckCircle2 size={12} />}
@@ -336,14 +336,14 @@ export default function VoiceCloneDetailPage() {
                   {/* Test playback */}
                   {clone.status === "ready" && (
                     <section className="glass rounded-xl p-6">
-                      <h3 className="text-sm font-semibold text-[#111827]">
+                      <h3 className="text-sm font-semibold text-text-primary">
                         Test playback
                       </h3>
                       <textarea
                         value={testText}
                         onChange={(e) => setTestText(e.target.value)}
                         rows={3}
-                        className="mt-2 w-full rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2 text-sm text-[#374151] placeholder:text-text-muted focus:border-brand-accent/60 focus:outline-none"
+                        className="mt-2 w-full rounded-lg border border-border-subtle bg-white/5 px-3 py-2 text-sm text-text-secondary placeholder:text-text-muted focus:border-brand-accent/60 focus:outline-none"
                         placeholder="Test text..."
                       />
                       <div className="mt-3 flex items-center gap-2">
@@ -351,7 +351,7 @@ export default function VoiceCloneDetailPage() {
                           type="button"
                           onClick={onTest}
                           disabled={testing || testText.trim().length === 0}
-                          className="flex items-center gap-1.5 rounded-lg bg-brand-accent px-3 py-1.5 text-xs font-medium text-white hover:bg-[#3B82F6] disabled:cursor-not-allowed disabled:bg-black/[0.06] disabled:text-text-muted"
+                          className="flex items-center gap-1.5 rounded-lg bg-brand-accent px-3 py-1.5 text-xs font-medium text-[#0D1120] hover:bg-brand-accent/80 disabled:cursor-not-allowed disabled:bg-white/8 disabled:text-text-muted"
                         >
                           {testing ? (
                             <Loader2 size={12} className="animate-spin" />
@@ -362,7 +362,7 @@ export default function VoiceCloneDetailPage() {
                         </button>
                       </div>
                       {testUrl && (
-                        <div className="mt-3 rounded-lg border border-black/[0.08] bg-[#F8FAFC] p-3">
+                        <div className="mt-3 rounded-lg border border-border-subtle bg-white/5 p-3">
                           {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
                           <audio src={testUrl} controls className="w-full" />
                         </div>
@@ -372,13 +372,13 @@ export default function VoiceCloneDetailPage() {
 
                   {/* Consent */}
                   <section className="glass rounded-xl p-6">
-                    <h3 className="text-sm font-semibold text-[#111827]">Consent</h3>
-                    <div className="mt-2 text-xs text-[#374151]">
+                    <h3 className="text-sm font-semibold text-text-primary">Consent</h3>
+                    <div className="mt-2 text-xs text-text-secondary">
                       Kind: <span className="font-mono">{clone.consent_kind}</span>
                     </div>
                     {clone.consent_evidence &&
                       Object.keys(clone.consent_evidence).length > 0 && (
-                        <pre className="mt-2 max-h-64 overflow-auto rounded-lg border border-black/[0.08] bg-[#F8FAFC] p-3 text-[11px] text-[#374151]">
+                        <pre className="mt-2 max-h-64 overflow-auto rounded-lg border border-border-subtle bg-white/5 p-3 text-[11px] text-text-secondary">
                           {JSON.stringify(clone.consent_evidence, null, 2)}
                         </pre>
                       )}
@@ -386,11 +386,11 @@ export default function VoiceCloneDetailPage() {
 
                   {/* Samples */}
                   <section className="glass rounded-xl p-6">
-                    <h3 className="text-sm font-semibold text-[#111827]">
+                    <h3 className="text-sm font-semibold text-text-primary">
                       Samples ({samples.length})
                     </h3>
                     {samples.length === 0 ? (
-                      <p className="mt-2 text-xs text-[#6B7280]">
+                      <p className="mt-2 text-xs text-text-muted">
                         No samples on this clone (presets don&apos;t have stored
                         samples).
                       </p>
@@ -402,7 +402,7 @@ export default function VoiceCloneDetailPage() {
                           return (
                             <li
                               key={s.id}
-                              className="rounded-lg border border-black/[0.08] bg-[#F8FAFC] px-3 py-2.5 text-xs"
+                              className="rounded-lg border border-border-subtle bg-white/5 px-3 py-2.5 text-xs"
                             >
                               <div className="flex items-center justify-between gap-3">
                                 <div className="flex items-center gap-2 min-w-0">
@@ -416,7 +416,7 @@ export default function VoiceCloneDetailPage() {
                                       {isPlaying ? <Pause size={10} className="text-[#3B82F6]" /> : <Play size={10} className="text-brand-accent" />}
                                     </button>
                                   ) : (
-                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-black/[0.04] flex items-center justify-center">
+                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
                                       <Mic size={10} className="text-text-muted" />
                                     </div>
                                   )}
@@ -459,11 +459,11 @@ export default function VoiceCloneDetailPage() {
 
                   {/* Render history */}
                   <section className="glass rounded-xl p-6">
-                    <h3 className="text-sm font-semibold text-[#111827]">
+                    <h3 className="text-sm font-semibold text-text-primary">
                       Recent renders ({renders.length})
                     </h3>
                     {renders.length === 0 ? (
-                      <p className="mt-2 text-xs text-[#6B7280]">
+                      <p className="mt-2 text-xs text-text-muted">
                         No renders yet — try the test playback above.
                       </p>
                     ) : (
@@ -474,7 +474,7 @@ export default function VoiceCloneDetailPage() {
                           return (
                             <li
                               key={r.id}
-                              className="rounded-lg border border-black/[0.08] bg-[#F8FAFC] p-3 text-xs"
+                              className="rounded-lg border border-border-subtle bg-white/5 p-3 text-xs"
                             >
                               <div className="flex items-start gap-3">
                                 {audioUrl ? (
@@ -487,7 +487,7 @@ export default function VoiceCloneDetailPage() {
                                     {isPlaying ? <Pause size={10} className="text-[#3B82F6]" /> : <Play size={10} className="text-brand-accent" />}
                                   </button>
                                 ) : (
-                                  <div className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-black/[0.04] flex items-center justify-center">
+                                  <div className="flex-shrink-0 mt-0.5 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
                                     <Play size={10} className="text-text-muted" />
                                   </div>
                                 )}
