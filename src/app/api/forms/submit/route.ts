@@ -214,7 +214,7 @@ export async function POST(request: NextRequest) {
 
   // Return a simple thank you page
   return new NextResponse(
-    `<!DOCTYPE html><html><head><title>Thank You</title><style>body{font-family:system-ui;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0b0d12;color:#fff;margin:0}div{text-align:center;padding:40px}h1{color:#c8a855;margin-bottom:8px}p{color:#999;font-size:14px}</style></head><body><div><h1>Thank You!</h1><p>We received your information and will be in touch soon.</p></div></body></html>`,
+    `<!DOCTYPE html><html><head><title>Thank You</title><style>body{font-family:system-ui;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0b0d12;color:#fff;margin:0}div{text-align:center;padding:40px}h1{color:#D4FF00;margin-bottom:8px}p{color:#999;font-size:14px}</style></head><body><div><h1>Thank You!</h1><p>We received your information and will be in touch soon.</p></div></body></html>`,
     { headers: { "Content-Type": "text/html" } }
   );
 }

@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
         subject: "Thanks for your visit — leave us a review!",
         html: `<div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;">
           <p style="font-size:15px;line-height:1.6;color:#222;">${message.replace(/\n/g, "<br/>")}</p>
-          <p style="margin-top:20px;"><a href="${config.review_url}" style="background:#c8a855;color:#000;padding:10px 22px;border-radius:6px;font-weight:600;text-decoration:none;font-size:14px;">Leave a Review</a></p>
+          <p style="margin-top:20px;"><a href="${config.review_url}" style="background:#D4FF00;color:#000;padding:10px 22px;border-radius:6px;font-weight:600;text-decoration:none;font-size:14px;">Leave a Review</a></p>
         </div>`,
         text: message,
       });

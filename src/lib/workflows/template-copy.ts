@@ -30,7 +30,7 @@ export const EMAIL_COPY: Record<string, EmailCopy> = {
     html: `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#222;line-height:1.6;">
 <p>Hey {{first_name}},</p>
 <p>Just a heads up — the payment for {{plan_name}} didn't go through this morning. Could be the card, could be the bank — happens all the time.</p>
-<p>You can update your card here: <a href="{{billing_portal_url}}" style="color:#c8a855;">{{billing_portal_url}}</a></p>
+<p>You can update your card here: <a href="{{billing_portal_url}}" style="color:#D4FF00;">{{billing_portal_url}}</a></p>
 <p>Want me to retry the existing card first? Just reply "retry" and we'll give it another go.</p>
 <p>{{owner_first_name}}</p>
 </div>`,
@@ -51,7 +51,7 @@ Want me to retry the existing card first? Just reply "retry" and we'll give it a
 <p>Sent a note yesterday — the payment for {{plan_name}} is still showing as failed and we're getting close to a service pause.</p>
 <p>Two options:</p>
 <ol>
-  <li>Update the card: <a href="{{billing_portal_url}}" style="color:#c8a855;">{{billing_portal_url}}</a></li>
+  <li>Update the card: <a href="{{billing_portal_url}}" style="color:#D4FF00;">{{billing_portal_url}}</a></li>
   <li>Reply with a better day to retry and I'll set it up.</li>
 </ol>
 <p>{{owner_first_name}}</p>
@@ -93,7 +93,7 @@ I work with {{owner_business_type}} on {{value_prop}}. Worth a 15-min call next 
 <p><strong>What:</strong> {{appointment_title}}<br/>
 <strong>Where:</strong> {{appointment_location}}<br/>
 <strong>How long:</strong> {{appointment_duration}} minutes</p>
-<p>If anything comes up, you can reschedule here: <a href="{{appointment_reschedule_url}}" style="color:#c8a855;">{{appointment_reschedule_url}}</a></p>
+<p>If anything comes up, you can reschedule here: <a href="{{appointment_reschedule_url}}" style="color:#D4FF00;">{{appointment_reschedule_url}}</a></p>
 <p>Talk soon,<br/>{{owner_first_name}}</p>
 </div>`,
     text: `Hey {{first_name}},
@@ -115,7 +115,7 @@ Talk soon,
 <p>Hey {{first_name}},</p>
 <p>Quick reminder — we're meeting tomorrow at {{appointment_time}} ({{appointment_timezone}}).</p>
 <p><strong>{{appointment_title}}</strong> — {{appointment_duration}} minutes, {{appointment_location}}</p>
-<p>If something's blocking, here's the reschedule link: <a href="{{appointment_reschedule_url}}" style="color:#c8a855;">{{appointment_reschedule_url}}</a></p>
+<p>If something's blocking, here's the reschedule link: <a href="{{appointment_reschedule_url}}" style="color:#D4FF00;">{{appointment_reschedule_url}}</a></p>
 <p>Looking forward,<br/>{{owner_first_name}}</p>
 </div>`,
     text: `Hey {{first_name}},
@@ -188,7 +188,7 @@ If anything's urgent, just reply — these emails are real, not a bot.
     subject: "5-min kickoff form (so we hit the ground running)",
     html: `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#222;line-height:1.6;">
 <p>Hey {{first_name}},</p>
-<p>Quick favor — fill out this kickoff form when you get a sec: <a href="{{kickoff_form_url}}" style="color:#c8a855;">{{kickoff_form_url}}</a></p>
+<p>Quick favor — fill out this kickoff form when you get a sec: <a href="{{kickoff_form_url}}" style="color:#D4FF00;">{{kickoff_form_url}}</a></p>
 <p>It's 5 minutes. Saves us from playing 20 questions on the call later.</p>
 <p>{{owner_first_name}}</p>
 </div>`,
@@ -205,7 +205,7 @@ Quick favor — fill out this kickoff form when you get a sec: {{kickoff_form_ur
     html: `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#222;line-height:1.6;">
 <p>Hey {{first_name}},</p>
 <p>Day 2 — I want you to know where the levers are.</p>
-<p><a href="{{dashboard_tour_url}}" style="color:#c8a855;">Dashboard tour (3-min walkthrough)</a></p>
+<p><a href="{{dashboard_tour_url}}" style="color:#D4FF00;">Dashboard tour (3-min walkthrough)</a></p>
 <p>Three things I'd check first:</p>
 <ol>
   <li>Your account settings — make sure timezone and brand colors are right</li>
@@ -232,7 +232,7 @@ Three things to check first:
     html: `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#222;line-height:1.6;">
 <p>Hey {{first_name}},</p>
 <p>Three days in — time to actually talk. I want to make sure you're getting value, hear what's working / not, and align on the next 30 days.</p>
-<p><a href="{{booking_url}}" style="display:inline-block;background:#c8a855;color:#0b0d12;padding:10px 20px;text-decoration:none;border-radius:6px;font-weight:600;">Pick a time</a></p>
+<p><a href="{{booking_url}}" style="display:inline-block;background:#D4FF00;color:#0b0d12;padding:10px 20px;text-decoration:none;border-radius:6px;font-weight:600;">Pick a time</a></p>
 <p>30 minutes max — promise.</p>
 <p>{{owner_first_name}}</p>
 </div>`,
@@ -280,7 +280,7 @@ You're a week in. Here's what the people getting the most out of {{owner_busines
 <p>Hey {{first_name}},</p>
 <p>Confirmed — your subscription is cancelled. No more charges.</p>
 <p>Small ask: would you reply with one line on what didn't click? It's the most useful feedback we can get and it shapes the roadmap directly.</p>
-<p>If you ever want back in: <a href="{{reactivate_url}}" style="color:#c8a855;">{{reactivate_url}}</a></p>
+<p>If you ever want back in: <a href="{{reactivate_url}}" style="color:#D4FF00;">{{reactivate_url}}</a></p>
 <p>{{owner_first_name}}</p>
 </div>`,
     text: `Hey {{first_name}},
@@ -299,7 +299,7 @@ If you ever want back in: {{reactivate_url}}
 <p>Hey {{first_name}},</p>
 <p>Three days since you cancelled. I've been thinking about what would actually bring you back.</p>
 <p>Here's the offer: <strong>50% off for 3 months</strong> if you re-activate this week.</p>
-<p><a href="{{winback_url}}" style="display:inline-block;background:#c8a855;color:#0b0d12;padding:10px 20px;text-decoration:none;border-radius:6px;font-weight:600;">Take the offer</a></p>
+<p><a href="{{winback_url}}" style="display:inline-block;background:#D4FF00;color:#0b0d12;padding:10px 20px;text-decoration:none;border-radius:6px;font-weight:600;">Take the offer</a></p>
 <p>If 50% off doesn't move the needle, hit reply and tell me what would.</p>
 <p>{{owner_first_name}}</p>
 </div>`,
@@ -320,7 +320,7 @@ If 50% off doesn't move the needle, hit reply and tell me what would.
     html: `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#222;line-height:1.6;">
 <p>Hey {{first_name}},</p>
 <p>Last note from me — I won't keep nagging.</p>
-<p>The 50% offer is still good for another 48 hours: <a href="{{winback_url}}" style="color:#c8a855;">{{winback_url}}</a></p>
+<p>The 50% offer is still good for another 48 hours: <a href="{{winback_url}}" style="color:#D4FF00;">{{winback_url}}</a></p>
 <p>If not, totally understood. Best of luck with what's next.</p>
 <p>{{owner_first_name}}</p>
 </div>`,
@@ -343,7 +343,7 @@ If not, totally understood. Best of luck with what's next.
 <p>Saw your review come through. I read it twice — that's not the experience I want anyone walking away with.</p>
 <p>Two things I'd like to do:</p>
 <ol>
-  <li>Get on a 15-min call so I can hear it from you directly: <a href="{{booking_url}}" style="color:#c8a855;">{{booking_url}}</a></li>
+  <li>Get on a 15-min call so I can hear it from you directly: <a href="{{booking_url}}" style="color:#D4FF00;">{{booking_url}}</a></li>
   <li>{{make_good_offer}}</li>
 </ol>
 <p>Whether or not you ever come back, I genuinely want to fix what broke.</p>
@@ -369,7 +369,7 @@ Whether or not you come back, I want to fix what broke.
 <p>Hey {{first_name}},</p>
 <p>Noticed you've been digging around our content / website / pricing page recently. That's a strong signal you're at least kicking the tires.</p>
 <p>If you're trying to figure out whether {{owner_business_name}} fits your situation, easiest path is a 20-min call — I can answer in 5 minutes what would take a week of demo videos.</p>
-<p><a href="{{booking_url}}" style="display:inline-block;background:#c8a855;color:#0b0d12;padding:10px 20px;text-decoration:none;border-radius:6px;font-weight:600;">Pick a time</a></p>
+<p><a href="{{booking_url}}" style="display:inline-block;background:#D4FF00;color:#0b0d12;padding:10px 20px;text-decoration:none;border-radius:6px;font-weight:600;">Pick a time</a></p>
 <p>{{owner_first_name}}</p>
 </div>`,
     text: `Hey {{first_name}},
@@ -410,7 +410,7 @@ My number if you want to text: {{owner_phone}}
     html: `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#222;line-height:1.6;">
 <p>Hey {{first_name}},</p>
 <p>Quick nudge — invoice {{invoice_number}} for {{amount}} is showing as overdue. Probably just slipped through.</p>
-<p>Pay link: <a href="{{invoice_url}}" style="color:#c8a855;">{{invoice_url}}</a></p>
+<p>Pay link: <a href="{{invoice_url}}" style="color:#D4FF00;">{{invoice_url}}</a></p>
 <p>If there's a problem on our side, hit reply and I'll sort it.</p>
 <p>{{owner_first_name}}</p>
 </div>`,
@@ -429,7 +429,7 @@ If there's a problem on our side, hit reply and I'll sort it.
     html: `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#222;line-height:1.6;">
 <p>Hey {{first_name}},</p>
 <p>Second note on invoice {{invoice_number}} ({{amount}}) — it's now {{days_overdue}} days overdue.</p>
-<p>If there's something blocking on your end, please reply so we can work it out. If it's just a queue issue, here's the link: <a href="{{invoice_url}}" style="color:#c8a855;">{{invoice_url}}</a></p>
+<p>If there's something blocking on your end, please reply so we can work it out. If it's just a queue issue, here's the link: <a href="{{invoice_url}}" style="color:#D4FF00;">{{invoice_url}}</a></p>
 <p>If we don't hear back by {{escalation_date}}, I'll need to pause services until it clears.</p>
 <p>{{owner_first_name}}</p>
 </div>`,

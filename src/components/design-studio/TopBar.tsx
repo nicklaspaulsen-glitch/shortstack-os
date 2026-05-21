@@ -150,7 +150,7 @@ export default function TopBar({ onSave }: TopBarProps) {
         <button
           onClick={() => setShowPresets((v) => !v)}
           disabled={isExporting}
-          className="flex items-center gap-1.5 px-3 h-7 rounded text-xs font-medium bg-[#D4FF00] hover:bg-[#d4b35e] text-[#1a1a2e] font-semibold transition-colors disabled:opacity-50"
+          className="flex items-center gap-1.5 px-3 h-7 rounded text-xs font-medium bg-[#D4FF00] hover:bg-[#E8FF4D] text-[#1a1a2e] font-semibold transition-colors disabled:opacity-50"
         >
           {isExporting ? (
             <Loader2 size={12} className="animate-spin" />

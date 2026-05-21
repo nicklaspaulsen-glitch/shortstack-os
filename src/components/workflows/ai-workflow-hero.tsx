@@ -242,7 +242,7 @@ export default function AiWorkflowHero({
                   style={{
                     background: "rgba(212,255,0,0.06)",
                     border: "1px solid rgba(212,255,0,0.2)",
-                    color: "#e2c878",
+                    color: "#D4FF00",
                   }}
                   title={r}
                 >

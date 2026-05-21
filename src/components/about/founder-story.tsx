@@ -18,7 +18,7 @@ export default function FounderStory() {
             <div
               className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold"
               style={{
-                background: `linear-gradient(135deg, ${GOLD}, #e4c876)`,
+                background: `linear-gradient(135deg, ${GOLD}, #E8FF4D)`,
                 color: "#0b0d12",
               }}
             >

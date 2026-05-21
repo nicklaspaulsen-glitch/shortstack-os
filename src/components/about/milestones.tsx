@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
 const GOLD = "#D4FF00";
-const GOLD_LIGHT = "#e4c876";
+const GOLD_LIGHT = "#E8FF4D";
 
 const milestones = [
   {

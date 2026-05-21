@@ -217,8 +217,8 @@ export default function OnboardPage() {
   // Brand state
   const [assets, setAssets] = useState<BrandAsset[]>(INITIAL_ASSETS);
   const [selectedColorPreset, setSelectedColorPreset] = useState<string | null>(null);
-  const [customPrimary, setCustomPrimary] = useState("#c8a855");
-  const [customSecondary, setCustomSecondary] = useState("#f0d68a");
+  const [customPrimary, setCustomPrimary] = useState("#D4FF00");
+  const [customSecondary, setCustomSecondary] = useState("#E8FF4D");
   const [selectedFont, setSelectedFont] = useState("Inter");
 
   // Services state

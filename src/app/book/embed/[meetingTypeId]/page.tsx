@@ -53,7 +53,7 @@ export default function EmbedBookingPage({
           name: "Schedule a Meeting",
           duration: 30,
           description: null,
-          color: "#c8a855",
+          color: "#D4FF00",
           embed_brand_color: null,
           embed_logo_url: null,
         });
@@ -133,7 +133,7 @@ export default function EmbedBookingPage({
     return d;
   });
 
-  const accent = meetingType?.embed_brand_color || meetingType?.color || "#c8a855";
+  const accent = meetingType?.embed_brand_color || meetingType?.color || "#D4FF00";
 
   if (loading) {
     return (

@@ -199,7 +199,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
                 <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1">Accent Color</label>
                 <div className="flex items-center gap-2">
                   <input type="color" value={whiteLabel.accent_color} onChange={e => setWhiteLabel({ ...whiteLabel, accent_color: e.target.value })} className="w-10 h-10 rounded-lg border border-border-subtle cursor-pointer" style={{ padding: 2 }} />
-                  <input value={whiteLabel.accent_color} onChange={e => setWhiteLabel({ ...whiteLabel, accent_color: e.target.value })} className="input flex-1 text-sm font-mono" placeholder="#B8942F" />
+                  <input value={whiteLabel.accent_color} onChange={e => setWhiteLabel({ ...whiteLabel, accent_color: e.target.value })} className="input flex-1 text-sm font-mono" placeholder="#AACC00" />
                 </div>
                 <p className="text-[9px] text-text-muted mt-1">Secondary accent for hover states and highlights</p>
               </div>
@@ -274,7 +274,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
                     } else {
                       document.documentElement.style.removeProperty("--wl-primary");
                     }
-                    if (whiteLabel.accent_color && whiteLabel.accent_color !== "#B8942F") {
+                    if (whiteLabel.accent_color && whiteLabel.accent_color !== "#AACC00") {
                       document.documentElement.style.setProperty("--wl-accent", whiteLabel.accent_color);
                     } else {
                       document.documentElement.style.removeProperty("--wl-accent");
@@ -296,7 +296,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
             </button>
             <button
               onClick={() => {
-                setWhiteLabel({ company_name: "", logo_url: "", primary_color: "#D4FF00", accent_color: "#B8942F", favicon_url: "", login_text: "", show_powered_by: true, domain: "", support_email: "" });
+                setWhiteLabel({ company_name: "", logo_url: "", primary_color: "#D4FF00", accent_color: "#AACC00", favicon_url: "", login_text: "", show_powered_by: true, domain: "", support_email: "" });
                 toast.success("Reset to defaults — click Save to apply");
               }}
               className="btn-secondary text-xs flex items-center gap-2"
@@ -373,8 +373,8 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
               <span className="text-[10px] font-mono" style={{ color: whiteLabel.primary_color || "#D4FF00" }}>{whiteLabel.primary_color || "#D4FF00"}</span>
             </div>
             <div className="flex gap-2 items-center">
-              <div className="w-4 h-4 rounded-full" style={{ background: whiteLabel.accent_color || "#B8942F" }} />
-              <span className="text-[10px] font-mono" style={{ color: whiteLabel.accent_color || "#B8942F" }}>{whiteLabel.accent_color || "#B8942F"}</span>
+              <div className="w-4 h-4 rounded-full" style={{ background: whiteLabel.accent_color || "#AACC00" }} />
+              <span className="text-[10px] font-mono" style={{ color: whiteLabel.accent_color || "#AACC00" }}>{whiteLabel.accent_color || "#AACC00"}</span>
             </div>
           </div>
 

@@ -349,7 +349,7 @@ function DirectorBriefDisplay({
       : brief.overall_grade === "B"
       ? "#22c55e"
       : brief.overall_grade === "C"
-      ? "#c8a855"
+      ? "#AACC00"
       : "#ef4444";
   return (
     <div

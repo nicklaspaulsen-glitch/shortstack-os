@@ -54,35 +54,35 @@ function ExecutiveStyle({ expanded }: { expanded: boolean }) {
   return (
     <div className="h-full" style={{ background: "#050505", color: "#E8E0CE", fontFamily: "'Inter', system-ui, sans-serif" }}>
       {/* Top bar */}
-      <div className="flex items-center justify-between px-6 py-3" style={{ borderBottom: "1px solid rgba(201,168,76,0.12)" }}>
+      <div className="flex items-center justify-between px-6 py-3" style={{ borderBottom: "1px solid rgba(212,255,0,0.12)" }}>
         <div className="flex items-center gap-3">
-          <div className="w-6 h-6 rounded" style={{ background: "linear-gradient(135deg, #C9A84C, #A08030)" }} />
-          <span style={{ fontWeight: 700, fontSize: 13, letterSpacing: "0.05em", color: "#C9A84C" }}>SHORTSTACK</span>
+          <div className="w-6 h-6 rounded" style={{ background: "linear-gradient(135deg, #D4FF00, #AACC00)" }} />
+          <span style={{ fontWeight: 700, fontSize: 13, letterSpacing: "0.05em", color: "#D4FF00" }}>SHORTSTACK</span>
         </div>
         <div className="flex items-center gap-4" style={{ fontSize: 10, color: "#666" }}>
           <span>FRI 11 APR</span>
-          <span style={{ color: "#C9A84C" }}>SYSTEMS NOMINAL</span>
+          <span style={{ color: "#D4FF00" }}>SYSTEMS NOMINAL</span>
         </div>
       </div>
 
       {/* Greeting */}
       <div className="px-6 pt-5 pb-3">
         <p style={{ fontSize: 11, color: "#555", letterSpacing: "0.08em", textTransform: "uppercase" }}>Command Center</p>
-        <p style={{ fontSize: 22, fontWeight: 300, color: "#E8E0CE", letterSpacing: "-0.02em" }}>Good evening, <span style={{ color: "#C9A84C", fontWeight: 600 }}>Nicklas</span></p>
+        <p style={{ fontSize: 22, fontWeight: 300, color: "#E8E0CE", letterSpacing: "-0.02em" }}>Good evening, <span style={{ color: "#D4FF00", fontWeight: 600 }}>Nicklas</span></p>
       </div>
 
       {/* Stats row — big bold numbers, gold thin lines */}
-      <div className="grid grid-cols-4 mx-6 mb-4" style={{ border: "1px solid rgba(201,168,76,0.1)" }}>
+      <div className="grid grid-cols-4 mx-6 mb-4" style={{ border: "1px solid rgba(212,255,0,0.1)" }}>
         {[
           { label: "MRR", value: "$4,200", change: "+12%" },
           { label: "LEADS TODAY", value: "73", change: "+23" },
           { label: "OUTREACH", value: "142", change: "of 160" },
           { label: "DEALS WON", value: "8", change: "$34.2K" },
         ].map((s, i) => (
-          <div key={i} className="p-4 text-center" style={{ borderRight: i < 3 ? "1px solid rgba(201,168,76,0.08)" : "none" }}>
+          <div key={i} className="p-4 text-center" style={{ borderRight: i < 3 ? "1px solid rgba(212,255,0,0.08)" : "none" }}>
             <p style={{ fontSize: 9, color: "#555", letterSpacing: "0.12em", marginBottom: 6 }}>{s.label}</p>
             <p style={{ fontSize: 26, fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", color: "#E8E0CE", lineHeight: 1 }}>{s.value}</p>
-            <p style={{ fontSize: 10, color: "#C9A84C", marginTop: 4 }}>{s.change}</p>
+            <p style={{ fontSize: 10, color: "#D4FF00", marginTop: 4 }}>{s.change}</p>
           </div>
         ))}
       </div>
@@ -90,15 +90,15 @@ function ExecutiveStyle({ expanded }: { expanded: boolean }) {
       {expanded && (
         <>
           {/* Pipeline */}
-          <div className="mx-6 mb-4 p-4" style={{ border: "1px solid rgba(201,168,76,0.08)" }}>
+          <div className="mx-6 mb-4 p-4" style={{ border: "1px solid rgba(212,255,0,0.08)" }}>
             <p style={{ fontSize: 9, color: "#555", letterSpacing: "0.12em", marginBottom: 12 }}>PIPELINE</p>
             <div className="flex items-end gap-2 h-16">
               {[
-                { label: "New", w: 100, color: "#C9A84C" },
-                { label: "Called", w: 65, color: "#A08030" },
-                { label: "Replied", w: 30, color: "#7A6020" },
-                { label: "Booked", w: 18, color: "#5A4510" },
-                { label: "Won", w: 10, color: "#C9A84C" },
+                { label: "New", w: 100, color: "#D4FF00" },
+                { label: "Called", w: 65, color: "#AACC00" },
+                { label: "Replied", w: 30, color: "#88AA00" },
+                { label: "Booked", w: 18, color: "#668800" },
+                { label: "Won", w: 10, color: "#D4FF00" },
               ].map((b, i) => (
                 <div key={i} className="flex-1 flex flex-col items-center gap-1">
                   <div className="w-full rounded-sm" style={{ height: `${Math.max(b.w * 0.6, 4)}px`, background: b.color, opacity: 0.7 }} />
@@ -109,11 +109,11 @@ function ExecutiveStyle({ expanded }: { expanded: boolean }) {
           </div>
 
           {/* Activity rows */}
-          <div className="mx-6 p-4" style={{ border: "1px solid rgba(201,168,76,0.08)" }}>
+          <div className="mx-6 p-4" style={{ border: "1px solid rgba(212,255,0,0.08)" }}>
             <p style={{ fontSize: 9, color: "#555", letterSpacing: "0.12em", marginBottom: 10 }}>RECENT ACTIVITY</p>
             {["Lead Engine scraped 73 leads from 12 cities", "Outreach sent 42 emails, 28 SMS", "Follow-Up Agent sent 6 second-touch messages", "Lead Scoring rated 100 new leads"].map((a, i) => (
               <div key={i} className="flex items-center gap-3 py-2" style={{ borderBottom: i < 3 ? "1px solid rgba(255,255,255,0.03)" : "none" }}>
-                <div className="w-1 h-1 rounded-full" style={{ background: "#C9A84C" }} />
+                <div className="w-1 h-1 rounded-full" style={{ background: "#D4FF00" }} />
                 <span style={{ fontSize: 11, color: "#888" }}>{a}</span>
                 <span style={{ fontSize: 9, color: "#333", marginLeft: "auto" }}>{i === 0 ? "2m ago" : i === 1 ? "14m ago" : i === 2 ? "1h ago" : "3h ago"}</span>
               </div>

@@ -223,7 +223,7 @@ export async function POST(request: NextRequest) {
         <strong>${date} at ${time}</strong>.
       </p>
       <p style="margin-top:18px;">
-        <a href="${manageUrl}" style="background:#c8a855;color:#000;padding:9px 18px;border-radius:6px;font-weight:600;text-decoration:none;font-size:14px;">Manage booking</a>
+        <a href="${manageUrl}" style="background:#D4FF00;color:#000;padding:9px 18px;border-radius:6px;font-weight:600;text-decoration:none;font-size:14px;">Manage booking</a>
       </p>
       <p style="font-size:12px;color:#666;margin-top:14px;">
         Need to reschedule or cancel? Use the button above — no login required.

@@ -19,7 +19,7 @@
  * Colours
  *   Primary gold   #D4FF00  — single source of truth for the brand.
  *                              "gold" variant uses a 3-stop gradient
- *                              (#E4C876 → #D4FF00 → #8A6F2F) for depth.
+ *                              (#E8FF4D → #D4FF00 → #88AA00) for depth.
  *   Mono variant   currentColor — inherits from surrounding text colour.
  *
  * Variants
@@ -92,9 +92,9 @@ export default function Logo({
       {isGold && (
         <defs>
           <linearGradient id={goldId} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#E4C876" />
+            <stop offset="0%" stopColor="#E8FF4D" />
             <stop offset="55%" stopColor="#D4FF00" />
-            <stop offset="100%" stopColor="#8A6F2F" />
+            <stop offset="100%" stopColor="#88AA00" />
           </linearGradient>
           <radialGradient id={coreId} cx="50%" cy="45%" r="55%">
             <stop offset="0%" stopColor="#1a1410" />

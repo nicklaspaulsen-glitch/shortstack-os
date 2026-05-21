@@ -3,13 +3,8 @@
 import { useEffect } from "react";
 
 /**
- * ThemeProvider — only two permanent themes: pure black ("dark") and pure
- * white ("light"). One accent color (indigo `#5E5BFF`) works against both.
- *
- * Why the rewrite (Apr 28): the previous palette was acid-lime against
- * OLED black, which the user described as "ugly". The lime came across
- * as too neon / too youth-marketing for a premium agency OS. Replaced
- * with a disciplined pure-monochrome system + a single chromatic accent.
+ * ThemeProvider — two permanent themes: pure black ("dark") and pure
+ * white ("light"). Brand accent is chartreuse lime `#D4FF00`.
  *
  * White-label override (`--wl-primary`) still wins over both — agencies
  * branding their portal can pick any accent they want without touching
@@ -23,7 +18,7 @@ interface ThemeDef {
   surface: string;
   surfaceLight: string;
   border: string;
-  accent: string;        // indigo accent — same in both themes
+  accent: string;        // lime accent — same in both themes
   accentSoft: string;    // tinted variant for hover states
   accentDim: string;     // muted variant for disabled / secondary
   text: string;
@@ -36,7 +31,7 @@ const THEMES: Record<ThemeId, ThemeDef> = {
     surface: "#0D1120",            // panels (Trinity surface-1)
     surfaceLight: "#131827",       // hover / raised (Trinity surface-2)
     border: "#2A3350",
-    accent: "#D4FF00",             // blue — matches globals.css dark override
+    accent: "#D4FF00",             // lime — matches globals.css dark
     accentSoft: "#D4FF00",
     accentDim: "#D4FF00",
     text: "#F0F0F4",               // off-white, never pure
@@ -47,7 +42,7 @@ const THEMES: Record<ThemeId, ThemeDef> = {
     surface: "#FFFFFF",
     surfaceLight: "#F1F5F9",
     border: "#E2E8F0",
-    accent: "#D4FF00",             // blue — AA contrast on white
+    accent: "#D4FF00",             // lime — light theme variant
     accentSoft: "#D4FF00",
     accentDim: "#AACC00",
     text: "#0A0A0B",               // pure black for body

@@ -236,7 +236,7 @@ export default function LeftRail() {
             <button
               onClick={handleGenerate}
               disabled={generating || !prompt.trim() || !design}
-              className="w-full flex items-center justify-center gap-2 py-2 rounded bg-[#D4FF00] hover:bg-[#d4b35e] text-[#1a1a2e] text-xs font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-2 py-2 rounded bg-[#D4FF00] hover:bg-[#E8FF4D] text-[#1a1a2e] text-xs font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {generating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
               {generating ? "Generating…" : "Generate"}

@@ -49,7 +49,7 @@ export default function SurveyPage() {
                   }`}
                   style={{
                     background: score === n
-                      ? n >= 9 ? "#D4FF00" : n >= 7 ? "#c8a855" : "#ef4444"
+                      ? n >= 9 ? "#D4FF00" : n >= 7 ? "#AACC00" : "#ef4444"
                       : "rgba(255,255,255,0.04)",
                     border: `1px solid ${score === n ? "transparent" : "rgba(255,255,255,0.06)"}`,
                   }}>
@@ -67,7 +67,7 @@ export default function SurveyPage() {
         {step === "feedback" && (
           <div className="rounded-xl p-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
             <div className="flex items-center justify-center gap-1.5 mb-4">
-              <span className="text-2xl font-bold" style={{ color: score && score >= 9 ? "#D4FF00" : score && score >= 7 ? "#c8a855" : "#ef4444" }}>
+              <span className="text-2xl font-bold" style={{ color: score && score >= 9 ? "#D4FF00" : score && score >= 7 ? "#AACC00" : "#ef4444" }}>
                 {score}/10
               </span>
               <span className="text-sm text-text-muted">
@@ -87,7 +87,7 @@ export default function SurveyPage() {
               </button>
               <button onClick={submit} disabled={submitting}
                 className="flex-1 py-2.5 rounded-lg text-sm font-semibold text-black disabled:opacity-50"
-                style={{ background: "linear-gradient(135deg, #c8a855, #b89840)" }}>
+                style={{ background: "linear-gradient(135deg, #D4FF00, #AACC00)" }}>
                 {submitting ? "Sending..." : "Submit"}
               </button>
             </div>

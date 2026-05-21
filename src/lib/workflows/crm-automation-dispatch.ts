@@ -276,7 +276,7 @@ async function executeActions(
           const html = `<div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;color:#222;">
             <p style="font-size:15px;line-height:1.6;">${body.replace(/\n/g, "<br/>")}</p>
             ${action.type === "send_review_request"
-              ? `<p style="margin-top:20px;"><a href="${reviewUrl}" style="background:#c8a855;color:#000;padding:10px 22px;border-radius:6px;font-weight:600;text-decoration:none;font-size:14px;">Leave a Review</a></p>`
+              ? `<p style="margin-top:20px;"><a href="${reviewUrl}" style="background:#D4FF00;color:#000;padding:10px 22px;border-radius:6px;font-weight:600;text-decoration:none;font-size:14px;">Leave a Review</a></p>`
               : ""}
           </div>`;
           const ok = await sendEmail({ to, subject, html, text: body });

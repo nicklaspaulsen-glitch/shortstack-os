@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Mail, MessageCircle } from "lucide-react";
 
 const GOLD = "#D4FF00";
-const GOLD_LIGHT = "#e4c876";
+const GOLD_LIGHT = "#E8FF4D";
 
 export default function AboutContact() {
   return (

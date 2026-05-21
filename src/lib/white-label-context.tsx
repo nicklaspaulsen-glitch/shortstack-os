@@ -16,7 +16,7 @@ const DEFAULTS: WhiteLabelConfig = {
   company_name: "ShortStack",
   logo_url: "/icons/shortstack-logo.svg",
   primary_color: "#D4FF00",
-  accent_color: "#B8942F",
+  accent_color: "#AACC00",
   favicon_url: null,
   login_text: null,
   show_powered_by: true,

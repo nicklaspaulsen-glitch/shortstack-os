@@ -199,8 +199,8 @@ const baseStyle = `
   max-width: 560px; margin: 0 auto; padding: 32px 24px;
   background: #0b0d12; color: #e0e0e0; border-radius: 12px;
 `;
-const goldBtn = `
-  display: inline-block; padding: 10px 24px; background: #c8a855;
+const accentBtn = `
+  display: inline-block; padding: 10px 24px; background: #D4FF00;
   color: #0b0d12; text-decoration: none; border-radius: 6px;
   font-weight: 600; font-size: 14px;
 `;
@@ -216,7 +216,7 @@ export async function sendWelcomeEmail(
   const logoUrl = `${appUrl}/icons/shortstack-logo.png`;
 
   const planBadge = planTier
-    ? `<span style="display:inline-block;background:#c8a855;color:#0b0d12;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">${planTier} Plan</span>`
+    ? `<span style="display:inline-block;background:#D4FF00;color:#0b0d12;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">${planTier} Plan</span>`
     : "";
 
   return sendEmail({
@@ -239,7 +239,7 @@ export async function sendWelcomeEmail(
 
         <!-- Quick Start Steps -->
         <div style="background:#111318;border-radius:8px;padding:20px;margin:20px 0;">
-          <h2 style="color:#c8a855;font-size:14px;margin:0 0 12px;font-weight:600;">Quick Start Guide</h2>
+          <h2 style="color:#D4FF00;font-size:14px;margin:0 0 12px;font-weight:600;">Quick Start Guide</h2>
           <table style="width:100%;border-collapse:collapse;">
             <tr>
               <td style="padding:8px 0;color:#888;font-size:13px;width:28px;vertical-align:top;">1.</td>
@@ -261,7 +261,7 @@ export async function sendWelcomeEmail(
         </div>
 
         <div style="text-align:center;margin:24px 0;">
-          <a href="${appUrl}/dashboard/getting-started" style="${goldBtn}">Open Your Dashboard</a>
+          <a href="${appUrl}/dashboard/getting-started" style="${accentBtn}">Open Your Dashboard</a>
         </div>
 
         <!-- Key Resources -->
@@ -269,12 +269,12 @@ export async function sendWelcomeEmail(
           <h3 style="color:#fff;font-size:13px;margin:0 0 12px;">Key Resources</h3>
           <table style="width:100%;border-collapse:collapse;">
             <tr>
-              <td style="padding:6px 0;"><a href="${appUrl}/dashboard/getting-started" style="color:#c8a855;font-size:12px;text-decoration:none;">Getting Started Guide</a></td>
-              <td style="padding:6px 0;"><a href="${appUrl}/dashboard/integrations-hub" style="color:#c8a855;font-size:12px;text-decoration:none;">Connect Integrations</a></td>
+              <td style="padding:6px 0;"><a href="${appUrl}/dashboard/getting-started" style="color:#D4FF00;font-size:12px;text-decoration:none;">Getting Started Guide</a></td>
+              <td style="padding:6px 0;"><a href="${appUrl}/dashboard/integrations-hub" style="color:#D4FF00;font-size:12px;text-decoration:none;">Connect Integrations</a></td>
             </tr>
             <tr>
-              <td style="padding:6px 0;"><a href="${appUrl}/dashboard/settings" style="color:#c8a855;font-size:12px;text-decoration:none;">Account Settings</a></td>
-              <td style="padding:6px 0;"><a href="${appUrl}/dashboard/eleven-agents" style="color:#c8a855;font-size:12px;text-decoration:none;">AI Agent Setup</a></td>
+              <td style="padding:6px 0;"><a href="${appUrl}/dashboard/settings" style="color:#D4FF00;font-size:12px;text-decoration:none;">Account Settings</a></td>
+              <td style="padding:6px 0;"><a href="${appUrl}/dashboard/eleven-agents" style="color:#D4FF00;font-size:12px;text-decoration:none;">AI Agent Setup</a></td>
             </tr>
           </table>
         </div>
@@ -284,9 +284,9 @@ export async function sendWelcomeEmail(
         <div style="background:#111318;border:1px solid #1e2028;border-radius:8px;padding:16px;margin:20px 0;">
           <h3 style="color:#fff;font-size:13px;margin:0 0 8px;">Your License</h3>
           <p style="color:#a0a0a0;font-size:12px;line-height:1.6;margin:0;">
-            Plan: <strong style="color:#c8a855;">${planTier}</strong><br/>
+            Plan: <strong style="color:#D4FF00;">${planTier}</strong><br/>
             Status: <span style="color:#2563EB;">Active</span><br/>
-            Billing: Monthly, auto-renews. Manage at <a href="${appUrl}/dashboard/settings" style="color:#c8a855;text-decoration:none;">Settings &rarr; Billing</a>
+            Billing: Monthly, auto-renews. Manage at <a href="${appUrl}/dashboard/settings" style="color:#D4FF00;text-decoration:none;">Settings &rarr; Billing</a>
           </p>
         </div>
         ` : ""}
@@ -320,13 +320,13 @@ export async function sendUsageWarningEmail(
         <h1 style="color:#fff;font-size:20px;margin-bottom:8px;">Usage Alert</h1>
         <p style="color:#a0a0a0;font-size:14px;line-height:1.6;">
           You've used <strong style="color:#ef4444;">${usagePercent}%</strong> of your
-          <strong style="color:#c8a855;">${planTier}</strong> plan limits this billing cycle.
+          <strong style="color:#D4FF00;">${planTier}</strong> plan limits this billing cycle.
         </p>
         <p style="color:#a0a0a0;font-size:13px;line-height:1.6;">
           To avoid service interruptions, consider upgrading your plan.
         </p>
         <div style="text-align:center;margin:24px 0;">
-          <a href="${appUrl}/pricing" style="${goldBtn}">Upgrade Plan</a>
+          <a href="${appUrl}/pricing" style="${accentBtn}">Upgrade Plan</a>
         </div>
       </div>
     `,
@@ -350,7 +350,7 @@ export async function sendInvoiceEmail(
         </p>
         ${invoiceUrl ? `
           <div style="text-align:center;margin:24px 0;">
-            <a href="${invoiceUrl}" style="${goldBtn}">View Invoice</a>
+            <a href="${invoiceUrl}" style="${accentBtn}">View Invoice</a>
           </div>
         ` : ""}
       </div>
@@ -375,7 +375,7 @@ export async function sendPaymentFailedEmail(
           Please update your payment method to avoid service interruption.
         </p>
         <div style="text-align:center;margin:24px 0;">
-          <a href="${appUrl}/dashboard/settings" style="${goldBtn}">Update Payment</a>
+          <a href="${appUrl}/dashboard/settings" style="${accentBtn}">Update Payment</a>
         </div>
       </div>
     `,

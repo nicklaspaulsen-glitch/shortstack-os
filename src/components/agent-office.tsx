@@ -9,7 +9,7 @@ const AGENTS = [
   { id: "outreach", name: "Echo", role: "Outreach", color: "#D4FF00", emoji: "📨" },
   { id: "content", name: "Pixel", role: "Content", color: "#a855f7", emoji: "✨" },
   { id: "ads", name: "Blaze", role: "Ads", color: "#f59e0b", emoji: "🔥" },
-  { id: "trinity", name: "Trinity", role: "Boss", color: "#c8a855", emoji: "👑" },
+  { id: "trinity", name: "Trinity", role: "Boss", color: "#D4FF00", emoji: "👑" },
   { id: "analytics", name: "Lens", role: "Analytics", color: "#FF5252", emoji: "📊" },
   { id: "reviews", name: "Star", role: "Reviews", color: "#eab308", emoji: "⭐" },
   { id: "seo", name: "Rank", role: "SEO", color: "#84cc16", emoji: "🌐" },
