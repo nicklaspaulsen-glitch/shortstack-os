@@ -449,7 +449,7 @@ a[role="button"]:hover,
   --color-surface: #FFFFFF;
   --color-surface-light: #F4F6FC;
   --color-border: #D8DCEE;
-  --color-accent: #2563EB;
+  --color-accent: #4D7A00;
   --color-text: #0A0A0B;
   --color-muted: #52525B;
   --color-foreground: #0A0A0B;
@@ -457,7 +457,7 @@ a[role="button"]:hover,
   --color-surface-rgb: 255 255 255;
   --color-surface-light-rgb: 244 246 252;
   --color-border-rgb: 216 220 238;
-  --color-accent-rgb: 37 99 235;
+  --color-accent-rgb: 77 122 0;
   --color-text-rgb: 10 10 11;
   --color-muted-rgb: 82 82 91;
 
