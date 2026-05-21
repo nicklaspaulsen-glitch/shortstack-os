@@ -1174,10 +1174,10 @@ export default function CRMPage() {
                       <div className="flex items-center gap-2">
                         <input type="range" min={0} max={5} step={0.5} value={filters.ratingMin}
                           onChange={e => setFilters(prev => ({ ...prev, ratingMin: parseFloat(e.target.value) }))}
-                          className="flex-1 h-1 accent-[#2563EB]" aria-label="Minimum rating" />
+                          className="flex-1 h-1 accent-[#D4FF00]" aria-label="Minimum rating" />
                         <input type="range" min={0} max={5} step={0.5} value={filters.ratingMax}
                           onChange={e => setFilters(prev => ({ ...prev, ratingMax: parseFloat(e.target.value) }))}
-                          className="flex-1 h-1 accent-[#2563EB]" aria-label="Maximum rating" />
+                          className="flex-1 h-1 accent-[#D4FF00]" aria-label="Maximum rating" />
                       </div>
                     </div>
                     <div>
@@ -1185,10 +1185,10 @@ export default function CRMPage() {
                       <div className="flex items-center gap-2">
                         <input type="range" min={0} max={100} step={5} value={filters.scoreMin}
                           onChange={e => setFilters(prev => ({ ...prev, scoreMin: parseInt(e.target.value) }))}
-                          className="flex-1 h-1 accent-[#2563EB]" aria-label="Minimum lead score" />
+                          className="flex-1 h-1 accent-[#D4FF00]" aria-label="Minimum lead score" />
                         <input type="range" min={0} max={100} step={5} value={filters.scoreMax}
                           onChange={e => setFilters(prev => ({ ...prev, scoreMax: parseInt(e.target.value) }))}
-                          className="flex-1 h-1 accent-[#2563EB]" aria-label="Maximum lead score" />
+                          className="flex-1 h-1 accent-[#D4FF00]" aria-label="Maximum lead score" />
                       </div>
                     </div>
                     <div>

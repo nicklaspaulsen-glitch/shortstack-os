@@ -874,7 +874,7 @@ export default function LandingPagesPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-text-muted font-medium">{tier.name}</span>
                       <label className="flex items-center gap-1.5 text-xs text-text-muted cursor-pointer">
-                        <input type="checkbox" checked={tier.highlighted} onChange={() => { const np = [...content.pricing]; np[pi] = { ...np[pi], highlighted: !np[pi].highlighted }; setContent(c => ({ ...c, pricing: np })); }} className="accent-[#2563EB]" />
+                        <input type="checkbox" checked={tier.highlighted} onChange={() => { const np = [...content.pricing]; np[pi] = { ...np[pi], highlighted: !np[pi].highlighted }; setContent(c => ({ ...c, pricing: np })); }} className="accent-[#D4FF00]" />
                         Highlight
                       </label>
                     </div>

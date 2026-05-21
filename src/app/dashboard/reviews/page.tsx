@@ -96,7 +96,7 @@ function Stars({ rating }: { rating: number }) {
         <Star
           key={n}
           size={12}
-          className={n <= rating ? "fill-[#2563EB] text-brand-accent" : "text-text-muted/40"}
+          className={n <= rating ? "fill-brand-accent text-brand-accent" : "text-text-muted/40"}
         />
       ))}
     </div>
@@ -675,7 +675,7 @@ function ConfigForm({
               type="checkbox"
               checked={enabled}
               onChange={(e) => setEnabled(e.target.checked)}
-              className="h-4 w-4 rounded border-border-subtle/50 accent-[#2563EB]"
+              className="h-4 w-4 rounded border-border-subtle/50 accent-[#D4FF00]"
             />
             Enabled
           </label>
@@ -833,7 +833,7 @@ function NewReviewForm({ onClose, onCreated }: { onClose: () => void; onCreated:
           <div className="flex items-center gap-1">
             {[1, 2, 3, 4, 5].map((n) => (
               <button key={n} type="button" onClick={() => setRating(n)} aria-label={`${n} stars`} className="p-1">
-                <Star size={22} className={n <= rating ? "fill-[#2563EB] text-brand-accent" : "text-text-muted/40 hover:text-brand-accent/60"} />
+                <Star size={22} className={n <= rating ? "fill-brand-accent text-brand-accent" : "text-text-muted/40 hover:text-brand-accent/60"} />
               </button>
             ))}
           </div>

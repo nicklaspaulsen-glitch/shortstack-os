@@ -198,7 +198,7 @@ export default function ClientPortalPage() {
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5 text-[10px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-2.5 py-1 rounded-md border border-[rgba(212,255,0,0.08)]">
-              <Star size={10} className="fill-[#2563EB]" />
+              <Star size={10} className="fill-brand-accent" />
               <span className="font-medium">{client.health_score}% Health</span>
             </div>
           </div>

@@ -454,7 +454,7 @@ export default function ClientLeadEnginePage() {
                             <td className="px-3 py-2.5 text-center">
                               {lead.google_rating ? (
                                 <span className="flex items-center justify-center gap-0.5 text-[10px]">
-                                  <Star size={10} className="text-brand-accent fill-[#2563EB]" /> {lead.google_rating}
+                                  <Star size={10} className="text-brand-accent fill-brand-accent" /> {lead.google_rating}
                                   <span className="text-text-muted">({lead.review_count})</span>
                                 </span>
                               ) : <span className="text-text-muted text-[10px]">—</span>}

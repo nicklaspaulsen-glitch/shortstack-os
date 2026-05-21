@@ -819,7 +819,7 @@ export default function ScraperPage() {
                   </div>
                   <div className="glass rounded-xl p-4">
                     <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Hash size={14} className="text-brand-accent" /> Results per search</h3>
-                    <input type="range" min="5" max="500" value={maxResults} onChange={e => setMaxResults(parseInt(e.target.value))} className="w-full accent-[#2563EB]" />
+                    <input type="range" min="5" max="500" value={maxResults} onChange={e => setMaxResults(parseInt(e.target.value))} className="w-full accent-[#D4FF00]" />
                     <div className="flex justify-between text-xs text-text-muted mt-1"><span>5</span><span className="text-brand-accent font-bold">{maxResults}</span><span>500</span></div>
                   </div>
                   {/* Advanced Filters */}
@@ -849,7 +849,7 @@ export default function ScraperPage() {
                             { key: "missing_social", label: "Missing social profiles" },
                           ].map(f => (
                             <label key={f.key} className="flex items-center gap-2 cursor-pointer">
-                              <input type="checkbox" checked={(filters as Record<string, unknown>)[f.key] as boolean} onChange={e => setFilters({ ...filters, [f.key]: e.target.checked })} className="accent-[#2563EB] w-3.5 h-3.5" />
+                              <input type="checkbox" checked={(filters as Record<string, unknown>)[f.key] as boolean} onChange={e => setFilters({ ...filters, [f.key]: e.target.checked })} className="accent-[#D4FF00] w-3.5 h-3.5" />
                               <span className="text-[10px]">{f.label}</span>
                             </label>
                           ))}
@@ -868,7 +868,7 @@ export default function ScraperPage() {
                               { key: "no_social_at_all", label: "No social media at all" },
                             ].map(f => (
                               <label key={f.key} className="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" checked={(filters as Record<string, unknown>)[f.key] as boolean} onChange={e => setFilters({ ...filters, [f.key]: e.target.checked })} className="accent-[#2563EB] w-3.5 h-3.5" />
+                                <input type="checkbox" checked={(filters as Record<string, unknown>)[f.key] as boolean} onChange={e => setFilters({ ...filters, [f.key]: e.target.checked })} className="accent-[#D4FF00] w-3.5 h-3.5" />
                                 <span className="text-[10px]">{f.label}</span>
                               </label>
                             ))}
@@ -930,7 +930,7 @@ export default function ScraperPage() {
                             </div>
                           </div>
                           <div className="flex gap-2">
-                            <input type="range" min="0" max="5" step="0.5" value={filters.min_rating} onChange={e => setFilters({ ...filters, min_rating: parseFloat(e.target.value) })} className="flex-1 accent-[#2563EB]" />
+                            <input type="range" min="0" max="5" step="0.5" value={filters.min_rating} onChange={e => setFilters({ ...filters, min_rating: parseFloat(e.target.value) })} className="flex-1 accent-[#D4FF00]" />
                             <input type="range" min="0" max="5" step="0.5" value={filters.max_rating} onChange={e => setFilters({ ...filters, max_rating: parseFloat(e.target.value) })} className="flex-1 accent-danger" />
                           </div>
                           <div className="flex items-center justify-between mt-1">
@@ -950,8 +950,8 @@ export default function ScraperPage() {
                             </label>
                           </div>
                           <div className="flex gap-2">
-                            <input type="range" min="0" max="100" step="1" value={filters.min_reviews} onChange={e => setFilters({ ...filters, min_reviews: parseInt(e.target.value) })} className="flex-1 accent-[#2563EB]" />
-                            <input type="range" min="1" max="1000" step="5" value={filters.max_reviews} onChange={e => setFilters({ ...filters, max_reviews: parseInt(e.target.value) })} className="flex-1 accent-[#2563EB]" />
+                            <input type="range" min="0" max="100" step="1" value={filters.min_reviews} onChange={e => setFilters({ ...filters, min_reviews: parseInt(e.target.value) })} className="flex-1 accent-[#D4FF00]" />
+                            <input type="range" min="1" max="1000" step="5" value={filters.max_reviews} onChange={e => setFilters({ ...filters, max_reviews: parseInt(e.target.value) })} className="flex-1 accent-[#D4FF00]" />
                           </div>
                         </div>
                         {/* Enhanced Review Toggles */}
@@ -982,7 +982,7 @@ export default function ScraperPage() {
                         {Object.entries(scoringWeights).map(([key, val]) => (
                           <div key={key} className="flex items-center gap-2">
                             <span className="text-[10px] text-text-muted w-24 capitalize">{key.replace(/_/g, " ")}</span>
-                            <input type="range" min="0" max="30" value={val} onChange={e => setScoringWeights({ ...scoringWeights, [key]: parseInt(e.target.value) })} className="flex-1 accent-[#2563EB]" />
+                            <input type="range" min="0" max="30" value={val} onChange={e => setScoringWeights({ ...scoringWeights, [key]: parseInt(e.target.value) })} className="flex-1 accent-[#D4FF00]" />
                             <span className="text-[10px] text-brand-accent font-mono w-6 text-right">{val}</span>
                           </div>
                         ))}
@@ -1000,7 +1000,7 @@ export default function ScraperPage() {
                       <div className="space-y-3 mt-3 pt-3 border-t border-border-subtle">
                         <div>
                           <label className="flex items-center gap-2 cursor-pointer mb-2">
-                            <input type="checkbox" checked={filters.find_decision_makers} onChange={e => setFilters({ ...filters, find_decision_makers: e.target.checked })} className="accent-[#2563EB] w-3.5 h-3.5" />
+                            <input type="checkbox" checked={filters.find_decision_makers} onChange={e => setFilters({ ...filters, find_decision_makers: e.target.checked })} className="accent-[#D4FF00] w-3.5 h-3.5" />
                             <span className="text-[10px]">Find decision makers</span>
                           </label>
                         </div>
@@ -1040,7 +1040,7 @@ export default function ScraperPage() {
                           />
                         </div>
                         <label className="flex items-center gap-2 cursor-pointer">
-                          <input type="checkbox" checked={aiMatchEnabled} onChange={e => setAiMatchEnabled(e.target.checked)} className="accent-[#2563EB] w-3.5 h-3.5" />
+                          <input type="checkbox" checked={aiMatchEnabled} onChange={e => setAiMatchEnabled(e.target.checked)} className="accent-[#D4FF00] w-3.5 h-3.5" />
                           <span className="text-[10px]">AI Score leads based on this prompt</span>
                         </label>
                         {aiMatchPrompt && (
@@ -1371,7 +1371,7 @@ export default function ScraperPage() {
                     {results.length > 9 && (
                       <DataTable
                         columns={[
-                          { key: "select", label: "", render: (r: ScrapedLead) => { const i = results.indexOf(r); return <input type="checkbox" checked={selectedLeads.has(i)} onChange={() => toggleLeadSelection(i)} className="accent-[#2563EB] w-3.5 h-3.5" />; } },
+                          { key: "select", label: "", render: (r: ScrapedLead) => { const i = results.indexOf(r); return <input type="checkbox" checked={selectedLeads.has(i)} onChange={() => toggleLeadSelection(i)} className="accent-[#D4FF00] w-3.5 h-3.5" />; } },
                           { key: "lead_score", label: "Score", render: (r: ScrapedLead) => {
                             const score = r.lead_score || computeLeadScore(r);
                             return <span className={`text-sm font-bold ${score >= 70 ? "text-success" : score >= 40 ? "text-warning" : "text-text-muted"}`}>{score}</span>;
@@ -1896,7 +1896,7 @@ export default function ScraperPage() {
                               value={c.id}
                               checked={selectedPushCampaign === c.id}
                               onChange={() => setSelectedPushCampaign(c.id)}
-                              className="accent-[#2563EB]"
+                              className="accent-[#D4FF00]"
                             />
                             <div className="flex-1 min-w-0">
                               <p className="text-[11px] font-medium text-text-primary truncate">{c.name}</p>

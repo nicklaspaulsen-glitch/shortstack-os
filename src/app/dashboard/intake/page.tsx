@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import {
@@ -738,7 +738,7 @@ function FieldEditor({
               type="checkbox"
               checked={field.required ?? false}
               onChange={(e) => onChange({ required: e.target.checked })}
-              className="w-3.5 h-3.5 accent-[#2563EB]"
+              className="w-3.5 h-3.5 accent-[#D4FF00]"
             />
             <span className="text-xs text-text-secondary">Required</span>
           </label>

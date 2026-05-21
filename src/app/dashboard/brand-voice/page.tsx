@@ -501,7 +501,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                   max={100}
                                   value={profile.toneSliders[s.key]}
                                   onChange={e => updateSlider(s.key, Number(e.target.value))}
-                                  className="w-full accent-[#2563EB] h-1.5"
+                                  className="w-full accent-[#D4FF00] h-1.5"
                                 />
                                 <div className="text-center text-[10px] text-text-muted mt-0.5">{profile.toneSliders[s.key]}%</div>
                               </div>

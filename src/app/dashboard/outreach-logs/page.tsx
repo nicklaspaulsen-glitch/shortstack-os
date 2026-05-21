@@ -760,7 +760,7 @@ export default function OutreachLogsPage() {
                               <tr key={entry.id}
                                 onClick={() => openDetail(entry)}
                                 className={`border-b border-border-subtle/50 text-[11px] transition-colors cursor-pointer ${
-                                  isActive ? "bg-[rgba(212,255,0,0.05)] border-l-2 border-l-[#2563EB]" :
+                                  isActive ? "bg-[rgba(212,255,0,0.05)] border-l-2 border-l-brand-accent" :
                                   isSelected ? "bg-[rgba(212,255,0,0.05)]" : "hover:bg-white/5"
                                 }`}>
                                 <td className="p-2.5" onClick={e => e.stopPropagation()}>
@@ -2143,7 +2143,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
         <button
           onClick={runAnalysis}
           disabled={loading}
-          className="w-full py-1.5 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white text-[10px] font-semibold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.3)] disabled:opacity-50 flex items-center justify-center gap-1.5"
+          className="w-full py-1.5 rounded-lg bg-brand-accent text-[#020711] text-[10px] font-semibold hover:bg-[#E8FF4D] hover:shadow-lg hover:shadow-[rgba(212,255,0,0.3)] disabled:opacity-50 flex items-center justify-center gap-1.5"
         >
           {loading ? <Loader2 size={10} className="animate-spin" /> : <Bot size={10} />}
           {loading ? "Analyzing..." : "Analyze with AI"}

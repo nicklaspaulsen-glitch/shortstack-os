@@ -819,7 +819,7 @@ export default function CalendarPage() {
                   </div>
 
                   <label className="flex items-center gap-2 text-xs text-text-muted cursor-pointer">
-                    <input type="checkbox" checked={newEvent.recurring} onChange={e => setNewEvent({ ...newEvent, recurring: e.target.checked })} className="accent-[#2563EB]" />
+                    <input type="checkbox" checked={newEvent.recurring} onChange={e => setNewEvent({ ...newEvent, recurring: e.target.checked })} className="accent-[#D4FF00]" />
                     <Repeat size={12} /> Make recurring (weekly)
                   </label>
 

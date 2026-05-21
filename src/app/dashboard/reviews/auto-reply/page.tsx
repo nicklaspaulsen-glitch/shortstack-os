@@ -302,7 +302,7 @@ export default function ReviewsAutoReplyPage() {
                       type="checkbox"
                       checked={autoPublish}
                       onChange={(e) => setAutoPublish(e.target.checked)}
-                      className="accent-[#2563EB]"
+                      className="accent-[#D4FF00]"
                     />
                     Auto-approve (skip review). Publish step is still manual.
                   </label>

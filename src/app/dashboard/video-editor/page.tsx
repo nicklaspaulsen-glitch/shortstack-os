@@ -3860,7 +3860,7 @@ export default function VideoEditorPage() {
                               type="range" min={0.25} max={4} step={0.25}
                               value={speedControl[scene.id] || 1}
                               onChange={e => setSpeedControl(prev => ({ ...prev, [scene.id]: parseFloat(e.target.value) }))}
-                              className="flex-1 accent-[#2563EB] h-1"
+                              className="flex-1 accent-[#D4FF00] h-1"
                             />
                             <span className="text-[9px] font-mono text-brand-accent w-10 text-right">{speedControl[scene.id] || 1}x</span>
                             <span className="text-[8px] text-text-muted w-16 text-right">
@@ -4022,7 +4022,7 @@ export default function VideoEditorPage() {
                             <Volume2 size={10} className="text-text-muted" />
                             <input type="range" min={0} max={100} value={audioLayers.bgMusic.volume}
                               onChange={e => setAudioLayers(prev => ({ ...prev, bgMusic: { ...prev.bgMusic, volume: parseInt(e.target.value) } }))}
-                              className="flex-1 accent-[#2563EB] h-1" />
+                              className="flex-1 accent-[#D4FF00] h-1" />
                             <span className="text-[9px] font-mono w-8 text-right">{audioLayers.bgMusic.volume}%</span>
                           </div>
                         </div>
@@ -4045,7 +4045,7 @@ export default function VideoEditorPage() {
                             <Volume2 size={10} className="text-text-muted" />
                             <input type="range" min={0} max={100} value={audioLayers.voiceover.volume}
                               onChange={e => setAudioLayers(prev => ({ ...prev, voiceover: { ...prev.voiceover, volume: parseInt(e.target.value) } }))}
-                              className="flex-1 accent-[#2563EB] h-1" />
+                              className="flex-1 accent-[#D4FF00] h-1" />
                             <span className="text-[9px] font-mono w-8 text-right">{audioLayers.voiceover.volume}%</span>
                           </div>
                         </div>
@@ -4079,7 +4079,7 @@ export default function VideoEditorPage() {
                             <Volume2 size={10} className="text-text-muted" />
                             <input type="range" min={0} max={100} value={audioLayers.sfx.volume}
                               onChange={e => setAudioLayers(prev => ({ ...prev, sfx: { ...prev.sfx, volume: parseInt(e.target.value) } }))}
-                              className="flex-1 accent-[#2563EB] h-1" />
+                              className="flex-1 accent-[#D4FF00] h-1" />
                             <span className="text-[9px] font-mono w-8 text-right">{audioLayers.sfx.volume}%</span>
                           </div>
                         </div>
@@ -4120,7 +4120,7 @@ export default function VideoEditorPage() {
                             <div className="flex items-center gap-2">
                               <input type="range" min={0.5} max={2} step={0.1} value={voiceoverConfig.speed}
                                 onChange={e => setVoiceoverConfig(prev => ({ ...prev, speed: parseFloat(e.target.value) }))}
-                                className="flex-1 accent-[#2563EB] h-1" />
+                                className="flex-1 accent-[#D4FF00] h-1" />
                               <span className="text-[9px] font-mono w-8">{voiceoverConfig.speed}x</span>
                             </div>
                           </div>
@@ -4262,7 +4262,7 @@ export default function VideoEditorPage() {
                         <div className="flex items-center gap-2">
                           <input type="range" min={0} max={100} value={subtitlePreview.bgOpacity}
                             onChange={e => setSubtitlePreview(prev => ({ ...prev, bgOpacity: parseInt(e.target.value) }))}
-                            className="flex-1 accent-[#2563EB] h-1" />
+                            className="flex-1 accent-[#D4FF00] h-1" />
                           <span className="text-[9px] font-mono w-8">{subtitlePreview.bgOpacity}%</span>
                         </div>
                       </div>
@@ -4331,7 +4331,7 @@ export default function VideoEditorPage() {
                             <div className="flex items-center gap-2">
                               <input type="range" min={10} max={100} value={watermarkSettings.opacity}
                                 onChange={e => setWatermarkSettings(prev => ({ ...prev, opacity: parseInt(e.target.value) }))}
-                                className="flex-1 accent-[#2563EB] h-1" />
+                                className="flex-1 accent-[#D4FF00] h-1" />
                               <span className="text-[9px] font-mono w-8">{watermarkSettings.opacity}%</span>
                             </div>
                           </div>
@@ -4737,7 +4737,7 @@ export default function VideoEditorPage() {
                               type="range" min={0.3} max={5} step={0.1}
                               value={editorSettings.smart.silenceThreshold}
                               onChange={e => setEditorSettings(p => ({ ...p, smart: { ...p.smart, silenceThreshold: parseFloat(e.target.value) } }))}
-                              className="flex-1 accent-[#2563EB] h-1"
+                              className="flex-1 accent-[#D4FF00] h-1"
                             />
                             <span className="text-[9px] font-mono text-brand-accent w-10 text-right">{editorSettings.smart.silenceThreshold}s</span>
                           </div>
@@ -4847,7 +4847,7 @@ export default function VideoEditorPage() {
                                 type="range" min={12} max={120} step={1}
                                 value={editorSettings.captions.fontSize}
                                 onChange={e => setEditorSettings(p => ({ ...p, captions: { ...p.captions, fontSize: parseInt(e.target.value) } }))}
-                                className="w-full accent-[#2563EB] h-1"
+                                className="w-full accent-[#D4FF00] h-1"
                               />
                             </div>
                           </div>
@@ -4879,7 +4879,7 @@ export default function VideoEditorPage() {
                               <input type="range" min={0} max={12} step={1}
                                 value={editorSettings.captions.strokeWidth}
                                 onChange={e => setEditorSettings(p => ({ ...p, captions: { ...p.captions, strokeWidth: parseInt(e.target.value) } }))}
-                                className="w-full accent-[#2563EB] h-1" />
+                                className="w-full accent-[#D4FF00] h-1" />
                             </div>
                             <div>
                               <label className="block text-[8px] text-text-muted uppercase mb-1">Max Words Per Line</label>
@@ -4906,7 +4906,7 @@ export default function VideoEditorPage() {
                                 <input type="range" min={0} max={100}
                                   value={editorSettings.captions.customY}
                                   onChange={e => setEditorSettings(p => ({ ...p, captions: { ...p.captions, customY: parseInt(e.target.value) } }))}
-                                  className="w-full accent-[#2563EB] h-1" />
+                                  className="w-full accent-[#D4FF00] h-1" />
                               </div>
                             )}
                           </div>
@@ -4968,7 +4968,7 @@ export default function VideoEditorPage() {
                               <input type="range" min={0.1} max={3} step={0.1}
                                 value={editorSettings.textAnimation.duration}
                                 onChange={e => setEditorSettings(p => ({ ...p, textAnimation: { ...p.textAnimation, duration: parseFloat(e.target.value) } }))}
-                                className="w-full accent-[#2563EB] h-1" />
+                                className="w-full accent-[#D4FF00] h-1" />
                             </div>
                             <div>
                               <label className="block text-[8px] text-text-muted uppercase mb-1">Easing</label>
@@ -5045,7 +5045,7 @@ export default function VideoEditorPage() {
                             <input type="range" min={0} max={100}
                               value={editorSettings.motion.intensity}
                               onChange={e => setEditorSettings(p => ({ ...p, motion: { ...p.motion, intensity: parseInt(e.target.value) } }))}
-                              className="w-full accent-[#2563EB] h-1" />
+                              className="w-full accent-[#D4FF00] h-1" />
                           </div>
                         </div>
                       )}
@@ -5094,7 +5094,7 @@ export default function VideoEditorPage() {
                             <input type="range" min={0.1} max={2} step={0.1}
                               value={editorSettings.transitions.duration}
                               onChange={e => setEditorSettings(p => ({ ...p, transitions: { ...p.transitions, duration: parseFloat(e.target.value) } }))}
-                              className="w-full accent-[#2563EB] h-1" />
+                              className="w-full accent-[#D4FF00] h-1" />
                           </div>
                         </div>
                       )}
@@ -5168,7 +5168,7 @@ export default function VideoEditorPage() {
                                 <input type="range" min={s.min} max={s.max}
                                   value={editorSettings.color[s.key]}
                                   onChange={e => setEditorSettings(p => ({ ...p, color: { ...p.color, [s.key]: parseInt(e.target.value) } }))}
-                                  className="w-full accent-[#2563EB] h-1" />
+                                  className="w-full accent-[#D4FF00] h-1" />
                               </div>
                             ))}
                           </div>
@@ -5493,7 +5493,7 @@ export default function VideoEditorPage() {
                                     max={100}
                                     value={intensity}
                                     onChange={(e) => setEffectIntensity(fx.id, Number(e.target.value))}
-                                    className="w-full accent-[#2563EB]"
+                                    className="w-full accent-[#D4FF00]"
                                   />
                                 </div>
                               )}
@@ -5583,7 +5583,7 @@ export default function VideoEditorPage() {
                               max={12}
                               value={editorSettings.voice.pitch}
                               onChange={(e) => setEditorSettings(prev => ({ ...prev, voice: { ...prev.voice, pitch: Number(e.target.value) } }))}
-                              className="w-full accent-[#2563EB]"
+                              className="w-full accent-[#D4FF00]"
                             />
                           </div>
                           <div>
@@ -5595,7 +5595,7 @@ export default function VideoEditorPage() {
                               step={0.05}
                               value={editorSettings.voice.speed}
                               onChange={(e) => setEditorSettings(prev => ({ ...prev, voice: { ...prev.voice, speed: Number(e.target.value) } }))}
-                              className="w-full accent-[#2563EB]"
+                              className="w-full accent-[#D4FF00]"
                             />
                           </div>
                           <div>
@@ -5606,7 +5606,7 @@ export default function VideoEditorPage() {
                               max={100}
                               value={editorSettings.voice.emphasis}
                               onChange={(e) => setEditorSettings(prev => ({ ...prev, voice: { ...prev.voice, emphasis: Number(e.target.value) } }))}
-                              className="w-full accent-[#2563EB]"
+                              className="w-full accent-[#D4FF00]"
                             />
                           </div>
                           <div>
@@ -5617,7 +5617,7 @@ export default function VideoEditorPage() {
                               max={100}
                               value={editorSettings.voice.pauseLength}
                               onChange={(e) => setEditorSettings(prev => ({ ...prev, voice: { ...prev.voice, pauseLength: Number(e.target.value) } }))}
-                              className="w-full accent-[#2563EB]"
+                              className="w-full accent-[#D4FF00]"
                             />
                           </div>
                         </div>
@@ -5793,7 +5793,7 @@ export default function VideoEditorPage() {
                             max={100}
                             value={editorSettings.timeline.audioDucking}
                             onChange={(e) => setEditorSettings(prev => ({ ...prev, timeline: { ...prev.timeline, audioDucking: Number(e.target.value) } }))}
-                            className="flex-1 accent-[#2563EB]"
+                            className="flex-1 accent-[#D4FF00]"
                           />
                           <span className="text-[10px] font-mono text-brand-accent w-10 text-right">{editorSettings.timeline.audioDucking}%</span>
                         </div>
@@ -6842,7 +6842,7 @@ export default function VideoEditorPage() {
                       type="checkbox"
                       checked={walkthroughEnabled}
                       onChange={(e) => setWalkthroughEnabled(e.target.checked)}
-                      className="accent-[#2563EB]"
+                      className="accent-[#D4FF00]"
                     />
                     Show step-by-step walkthrough when generating
                   </label>

@@ -1760,7 +1760,7 @@ export default function OutreachHubPage() {
                           <div className="flex items-center gap-2">
                             <input type="range" min={30} max={300} step={30} value={callSettings.maxDuration}
                               onChange={e => setCallSettings(p => ({ ...p, maxDuration: Number(e.target.value) }))}
-                              className="flex-1 accent-[#2563EB]" />
+                              className="flex-1 accent-[#D4FF00]" />
                             <span className="text-xs font-mono w-12 text-right">{callSettings.maxDuration}s</span>
                           </div>
                         </div>
@@ -1947,7 +1947,7 @@ export default function OutreachHubPage() {
                           <div className="flex items-center gap-2">
                             <input type="range" min={0} max={600} step={30} value={emailSettings.sendDelay}
                               onChange={e => setEmailSettings(p => ({ ...p, sendDelay: Number(e.target.value) }))}
-                              className="flex-1 accent-[#2563EB]" />
+                              className="flex-1 accent-[#D4FF00]" />
                             <span className="text-xs font-mono w-12 text-right">{emailSettings.sendDelay}ms</span>
                           </div>
                         </div>

@@ -688,7 +688,7 @@ export default function SequencesPage() {
                   <div className="flex gap-2">
                     {([{ key: "email", label: "Email" }, { key: "sms", label: "SMS" }, { key: "dm", label: "DM" }] as const).map(c => (
                       <label key={c.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border-subtle cursor-pointer hover:border-[rgba(212,255,0,0.2)] transition-all">
-                        <input type="checkbox" checked={aiChannels[c.key]} onChange={() => setAiChannels(prev => ({ ...prev, [c.key]: !prev[c.key] }))} className="accent-[#2563EB]" />
+                        <input type="checkbox" checked={aiChannels[c.key]} onChange={() => setAiChannels(prev => ({ ...prev, [c.key]: !prev[c.key] }))} className="accent-[#D4FF00]" />
                         <span className="text-xs">{c.label}</span>
                       </label>
                     ))}

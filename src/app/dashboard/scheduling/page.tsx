@@ -557,7 +557,7 @@ export default function SchedulingPage() {
                     <label className="flex items-center gap-2 w-28 cursor-pointer">
                       <input type="checkbox" checked={dayAvail.enabled}
                         onChange={e => setAvailability(prev => ({ ...prev, [day]: { ...prev[day], enabled: e.target.checked } }))}
-                        className="accent-[#2563EB]" />
+                        className="accent-[#D4FF00]" />
                       <span className={`text-xs font-medium ${dayAvail.enabled ? "" : "text-text-muted"}`}>{day}</span>
                     </label>
                     {dayAvail.enabled ? (

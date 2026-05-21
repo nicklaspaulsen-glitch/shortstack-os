@@ -1936,7 +1936,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               whileTap={{ scale: 0.97 }}
               onClick={generateScript}
               disabled={generating || !config.topic}
-              className="w-full text-xs py-3 rounded-xl flex items-center justify-center gap-2 font-semibold text-white bg-gradient-to-r from-[#2563EB] to-[#3B82F6] shadow-lg shadow-[rgba(212,255,0,0.25)] hover:shadow-[rgba(212,255,0,0.40)] transition-all disabled:opacity-50"
+              className="w-full text-xs py-3 rounded-xl flex items-center justify-center gap-2 font-semibold text-[#020711] bg-brand-accent shadow-lg shadow-[rgba(212,255,0,0.25)] hover:bg-[#E8FF4D] hover:shadow-[rgba(212,255,0,0.40)] transition-all disabled:opacity-50"
             >
               {generating ? <Loader size={14} className="animate-spin" /> : <Sparkles size={14} />}
               {generating ? "Generating..." : config.batch_count > 1 ? `Generate ${config.batch_count} Variations` : "Generate Script"}
@@ -2625,7 +2625,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   ))}
                 </div>
                 <button onClick={generateStoryboard} disabled={generatingStoryboard}
-                  className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] text-white shadow-lg shadow-[rgba(212,255,0,0.25)] hover:shadow-[rgba(212,255,0,0.25)] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100">
+                  className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-brand-accent text-[#020711] shadow-lg shadow-[rgba(212,255,0,0.25)] hover:bg-[#E8FF4D] hover:shadow-[rgba(212,255,0,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100">
                   {generatingStoryboard ? <Loader size={13} className="animate-spin" /> : <Clapperboard size={13} className="animate-pulse" />}
                   {generatingStoryboard ? "Generating..." : "Generate Storyboard"}
                   <Sparkles size={11} className="opacity-70" />
@@ -3041,7 +3041,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 <div className="absolute inset-0 bg-gradient-to-br from-[rgba(212,255,0,0.05)] to-transparent pointer-events-none" />
                 <div className="relative flex items-center justify-between flex-wrap gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] flex items-center justify-center text-black shadow-lg shadow-[rgba(212,255,0,0.15)]">
+                    <div className="w-9 h-9 rounded-xl bg-brand-accent flex items-center justify-center text-[#020711] shadow-lg shadow-[rgba(212,255,0,0.20)]">
                       <Clapperboard size={18} />
                     </div>
                     <div>

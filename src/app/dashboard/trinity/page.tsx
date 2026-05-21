@@ -539,7 +539,7 @@ export default function TrinityPage() {
                         <span className="text-[10px] w-28 shrink-0">{name}</span>
                         <input type="range" min={0} max={100} value={weight}
                           onChange={e => setAgentWeights(prev => ({ ...prev, [name]: Number(e.target.value) }))}
-                          className="flex-1 accent-[#2563EB]" />
+                          className="flex-1 accent-[#D4FF00]" />
                         <span className="text-[10px] font-mono w-8 text-right">{weight}%</span>
                       </div>
                     ))}

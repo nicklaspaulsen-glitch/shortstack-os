@@ -719,7 +719,7 @@ export default function ContentLibraryPage() {
                 onClick={e => { e.stopPropagation(); toggleStar(asset.id); }}
                 className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-all"
               >
-                <Star size={14} className={asset.starred ? "fill-[#2563EB] text-brand-accent" : "text-text-muted"} />
+                <Star size={14} className={asset.starred ? "fill-brand-accent text-brand-accent" : "text-text-muted"} />
               </button>
 
               {/* Thumbnail */}

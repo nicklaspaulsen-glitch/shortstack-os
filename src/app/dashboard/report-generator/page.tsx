@@ -326,7 +326,7 @@ export default function ReportGeneratorPage() {
                                       type="checkbox"
                                       checked={on}
                                       onChange={() => toggleMetric(m.id)}
-                                      className="accent-[#2563EB]"
+                                      className="accent-[#D4FF00]"
                                     />
                                     <span>{m.label}</span>
                                   </label>
@@ -376,7 +376,7 @@ export default function ReportGeneratorPage() {
             type="checkbox"
             checked={emailToClient}
             onChange={e => setEmailToClient(e.target.checked)}
-            className="accent-[#2563EB]"
+            className="accent-[#D4FF00]"
             disabled={!selectedClientObj?.email}
           />
           <Mail size={11} className="text-brand-accent" />
