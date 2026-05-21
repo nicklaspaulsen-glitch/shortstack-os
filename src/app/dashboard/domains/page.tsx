@@ -64,14 +64,14 @@ interface UsageSnapshot {
 }
 
 const STATUS_BADGE: Record<string, string> = {
-  pending: "bg-yellow-500/10 text-yellow-700 border-yellow-500/30",
-  pending_payment: "bg-amber-500/10 text-amber-700 border-amber-500/30",
-  processing: "bg-blue-500/10 text-blue-700 border-blue-500/30",
-  purchased: "bg-blue-500/10 text-blue-700 border-blue-500/30",
-  dns_configured: "bg-purple-500/10 text-purple-700 border-purple-500/30",
-  active: "bg-green-500/10 text-green-700 border-green-500/30",
-  expired: "bg-red-500/10 text-red-700 border-red-500/30",
-  transferred: "bg-slate-500/10 text-slate-700 border-slate-500/30",
+  pending: "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
+  pending_payment: "bg-amber-500/10 text-amber-400 border-amber-500/30",
+  processing: "bg-blue-500/10 text-blue-400 border-blue-500/30",
+  purchased: "bg-blue-500/10 text-blue-400 border-blue-500/30",
+  dns_configured: "bg-purple-500/10 text-purple-400 border-purple-500/30",
+  active: "bg-green-500/10 text-green-400 border-green-500/30",
+  expired: "bg-red-500/10 text-red-400 border-red-500/30",
+  transferred: "bg-slate-500/10 text-slate-400 border-slate-500/30",
 };
 
 export default function DomainsPage() {

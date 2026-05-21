@@ -52,7 +52,7 @@ const STATUS_STYLES: Record<BrowserTask["status"], { label: string; bg: string; 
   running: { label: "Running", bg: "bg-sky-500/15", fg: "text-sky-700", icon: <Loader2 size={14} className="animate-spin" /> },
   completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-700", icon: <CheckCircle2 size={14} /> },
   failed: { label: "Failed", bg: "bg-rose-500/15", fg: "text-rose-700", icon: <XCircle size={14} /> },
-  cancelled: { label: "Cancelled", bg: "bg-zinc-100", fg: "text-zinc-600", icon: <XCircle size={14} /> },
+  cancelled: { label: "Cancelled", bg: "bg-zinc-500/15", fg: "text-zinc-400", icon: <XCircle size={14} /> },
 };
 
 function fmtDate(d: string | null): string {
@@ -177,14 +177,14 @@ export default function BrowserTaskDetailPage() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center justify-center py-20 text-sm text-gray-500"><Loader2 size={18} className="mr-2 animate-spin" />Loading task…
+      <MotionPage className="flex items-center justify-center py-20 text-sm text-text-muted"><Loader2 size={18} className="mr-2 animate-spin" />Loading task…
               </MotionPage>
     );
   }
 
   if (!task) {
     return (
-      <div className="glass rounded-lg p-10 text-center text-gray-500">
+      <div className="glass rounded-lg p-10 text-center text-text-muted">
         Task not found.{" "}
         <Link href="/dashboard/automations/browser-tasks" className="text-blue-600 hover:underline">
           Back to list
@@ -203,7 +203,7 @@ export default function BrowserTaskDetailPage() {
       <div>
         <Link
           href="/dashboard/automations/browser-tasks"
-          className="mb-3 inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-800"
+          className="mb-3 inline-flex items-center gap-1 text-xs text-text-muted hover:text-text-primary"
         >
           <ArrowLeft size={12} /> All tasks
         </Link>
@@ -219,24 +219,24 @@ export default function BrowserTaskDetailPage() {
       {/* Stats row */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <div className="glass rounded-lg p-4">
-          <div className="text-[10px] uppercase tracking-wide text-gray-500">Steps</div>
-          <div className="mt-1 text-lg font-semibold text-gray-900">
+          <div className="text-[10px] uppercase tracking-wide text-text-muted">Steps</div>
+          <div className="mt-1 text-lg font-semibold text-text-primary">
             {task.steps_taken} / {task.max_steps}
           </div>
         </div>
         <div className="glass rounded-lg p-4">
-          <div className="text-[10px] uppercase tracking-wide text-gray-500">Cost</div>
-          <div className="mt-1 text-lg font-semibold text-gray-900">
+          <div className="text-[10px] uppercase tracking-wide text-text-muted">Cost</div>
+          <div className="mt-1 text-lg font-semibold text-text-primary">
             ${task.total_cost_usd.toFixed(4)}
           </div>
         </div>
         <div className="glass rounded-lg p-4">
-          <div className="text-[10px] uppercase tracking-wide text-gray-500">Mode</div>
-          <div className="mt-1 text-sm font-medium text-gray-800">{task.run_mode}</div>
+          <div className="text-[10px] uppercase tracking-wide text-text-muted">Mode</div>
+          <div className="mt-1 text-sm font-medium text-text-secondary">{task.run_mode}</div>
         </div>
         <div className="glass rounded-lg p-4">
-          <div className="text-[10px] uppercase tracking-wide text-gray-500">Started</div>
-          <div className="mt-1 text-sm font-medium text-gray-800">{fmtDate(task.started_at)}</div>
+          <div className="text-[10px] uppercase tracking-wide text-text-muted">Started</div>
+          <div className="mt-1 text-sm font-medium text-text-secondary">{fmtDate(task.started_at)}</div>
         </div>
       </div>
 
@@ -256,7 +256,7 @@ export default function BrowserTaskDetailPage() {
           <button
             onClick={rerun}
             disabled={!!busy}
-            className="inline-flex items-center gap-1.5 rounded-md bg-black/[0.04] px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-black/[0.08] disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-md bg-white/5 px-3 py-1.5 text-xs font-medium text-text-secondary hover:bg-white/10 disabled:opacity-50"
           >
             <RefreshCw size={12} /> Re-queue
           </button>
@@ -273,7 +273,7 @@ export default function BrowserTaskDetailPage() {
         <button
           onClick={remove}
           disabled={!!busy}
-          className="ml-auto inline-flex items-center gap-1.5 rounded-md bg-black/[0.04] px-3 py-1.5 text-xs font-medium text-gray-500 hover:bg-rose-50 hover:text-rose-700 disabled:opacity-50"
+          className="ml-auto inline-flex items-center gap-1.5 rounded-md bg-white/5 px-3 py-1.5 text-xs font-medium text-text-muted hover:bg-rose-500/10 hover:text-rose-400 disabled:opacity-50"
         >
           <Trash2 size={12} /> Delete
         </button>
@@ -294,17 +294,17 @@ export default function BrowserTaskDetailPage() {
                 className="rounded-md border border-black/[0.08]"
               />
             ) : (
-              <div className="rounded-md border border-black/[0.06] bg-gray-50 p-4 text-xs text-text-muted">
+              <div className="rounded-md border border-border-subtle bg-surface-2 p-4 text-xs text-text-muted">
                 Screenshot unavailable
               </div>
             )}
-            <div className="text-xs text-gray-700">
-              <div className="mb-1 font-medium text-gray-900">{lastRec.tool_name}</div>
-              <pre className="max-h-72 overflow-auto rounded bg-gray-100 p-2 text-[11px] text-gray-600">
+            <div className="text-xs text-text-secondary">
+              <div className="mb-1 font-medium text-text-primary">{lastRec.tool_name}</div>
+              <pre className="max-h-72 overflow-auto rounded bg-surface-2 p-2 text-[11px] text-text-muted border border-border-subtle">
                 {JSON.stringify(lastRec.tool_input, null, 2)}
               </pre>
               {lastRec.reasoning && (
-                <div className="mt-2 italic text-gray-500">{lastRec.reasoning}</div>
+                <div className="mt-2 italic text-text-muted">{lastRec.reasoning}</div>
               )}
             </div>
           </div>
@@ -317,9 +317,9 @@ export default function BrowserTaskDetailPage() {
           <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-emerald-700">
             <CheckCircle2 size={14} /> Result
           </div>
-          <div className="text-sm text-gray-800 whitespace-pre-wrap">{task.result_text}</div>
+          <div className="text-sm text-text-primary whitespace-pre-wrap">{task.result_text}</div>
           {task.result_data && (
-            <pre className="mt-3 max-h-96 overflow-auto rounded bg-gray-100 p-3 text-[11px] text-gray-600">
+            <pre className="mt-3 max-h-96 overflow-auto rounded bg-surface-2 p-3 text-[11px] text-text-muted border border-border-subtle">
               {JSON.stringify(task.result_data, null, 2)}
             </pre>
           )}
@@ -331,15 +331,15 @@ export default function BrowserTaskDetailPage() {
           <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-rose-700">
             <XCircle size={14} /> Error
           </div>
-          <div className="text-sm text-gray-800">{task.error_message}</div>
+          <div className="text-sm text-text-primary">{task.error_message}</div>
         </div>
       )}
 
       {/* Step timeline */}
       <div className="glass rounded-xl">
-        <div className="flex items-center gap-2 border-b border-black/[0.06] px-5 py-3 text-sm font-semibold text-gray-800">
+        <div className="flex items-center gap-2 border-b border-border-subtle px-5 py-3 text-sm font-semibold text-text-primary">
           <Globe size={15} /> Step timeline
-          <span className="ml-2 rounded-full bg-black/[0.06] px-2 py-0.5 text-[10px] text-gray-500">
+          <span className="ml-2 rounded-full bg-white/5 px-2 py-0.5 text-[10px] text-text-muted">
             {recordings.length}
           </span>
         </div>
@@ -361,7 +361,7 @@ export default function BrowserTaskDetailPage() {
                           className="rounded-md border border-black/[0.08]"
                         />
                       ) : (
-                        <div className="rounded-md border border-black/[0.06] bg-gray-50 p-3 text-xs text-text-muted">
+                        <div className="rounded-md border border-border-subtle bg-surface-2 p-3 text-xs text-text-muted">
                           (no screenshot)
                         </div>
                       )}
@@ -370,14 +370,14 @@ export default function BrowserTaskDetailPage() {
                           href={url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-1 inline-flex items-center gap-1 text-[11px] text-text-muted hover:text-gray-800"
+                          className="mt-1 inline-flex items-center gap-1 text-[11px] text-text-muted hover:text-text-primary"
                         >
                           <ExternalLink size={10} /> open full
                         </a>
                       )}
                     </div>
-                    <div className="md:col-span-2 text-sm text-gray-700">
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="md:col-span-2 text-sm text-text-secondary">
+                      <div className="flex items-center gap-2 text-xs text-text-muted">
                         <span className="font-mono text-[11px] text-text-muted">
                           step {String(r.step + 1).padStart(2, "0")}
                         </span>
@@ -389,9 +389,9 @@ export default function BrowserTaskDetailPage() {
                         <span>${r.cost_usd.toFixed(4)}</span>
                       </div>
                       {r.reasoning && (
-                        <div className="mt-2 italic text-gray-500">{r.reasoning}</div>
+                        <div className="mt-2 italic text-text-muted">{r.reasoning}</div>
                       )}
-                      <pre className="mt-2 max-h-56 overflow-auto rounded bg-gray-100 p-2 text-[11px] text-gray-600">
+                      <pre className="mt-2 max-h-56 overflow-auto rounded bg-surface-2 p-2 text-[11px] text-text-muted border border-border-subtle">
                         {JSON.stringify(r.tool_input, null, 2)}
                       </pre>
                     </div>

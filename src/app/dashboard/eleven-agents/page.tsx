@@ -211,11 +211,11 @@ export default function ElevenAgentsPage() {
   const filteredScripts: ScriptTemplate[] = [];
 
   const outcomeColors: Record<string, string> = {
-    qualified: "bg-green-50 text-green-700",
-    callback: "bg-blue-50 text-blue-700",
-    not_interested: "bg-red-50 text-red-700",
-    voicemail: "bg-amber-50 text-amber-700",
-    no_answer: "bg-gray-100 text-gray-600",
+    qualified: "bg-green-500/15 text-green-400",
+    callback: "bg-blue-500/15 text-blue-400",
+    not_interested: "bg-red-500/15 text-red-400",
+    voicemail: "bg-amber-500/15 text-amber-400",
+    no_answer: "bg-white/8 text-text-muted",
   };
 
   const sentimentColors: Record<string, string> = {
@@ -310,14 +310,14 @@ export default function ElevenAgentsPage() {
               <div className="space-y-4">
                 {/* Error / Success Banners */}
                 {apiError && (
-                  <div className="flex items-center gap-2 p-3 rounded-lg border border-red-200 bg-red-50 text-red-700 text-[11px]">
+                  <div className="flex items-center gap-2 p-3 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 text-[11px]">
                     <AlertTriangle size={14} />
                     <span className="flex-1">{apiError}</span>
                     <button onClick={() => setApiError("")} className="hover:text-red-900"><X size={12} /></button>
                   </div>
                 )}
                 {apiSuccess && (
-                  <div className="flex items-center gap-2 p-3 rounded-lg border border-green-200 bg-green-50 text-green-700 text-[11px]">
+                  <div className="flex items-center gap-2 p-3 rounded-lg border border-green-500/30 bg-green-500/10 text-green-400 text-[11px]">
                     <Check size={14} />
                     <span className="flex-1">{apiSuccess}</span>
                     <button onClick={() => setApiSuccess("")} className="hover:text-green-900"><X size={12} /></button>
@@ -405,13 +405,13 @@ export default function ElevenAgentsPage() {
                                 </div>
                               </div>
                               <button onClick={() => handleDeleteAgent(agentId)}
-                                className="p-1.5 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 transition-all">
+                                className="p-1.5 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-all">
                                 <Trash2 size={12} />
                               </button>
                             </div>
-                            <div className="grid grid-cols-3 gap-2 text-[9px] text-[#6B7280]">
-                              <div><span className="block text-[8px] uppercase">Language</span><span className="text-[#111827] font-mono">{language}</span></div>
-                              <div><span className="block text-[8px] uppercase">Voice</span><span className="text-[#111827] font-mono">{voiceId.slice(0, 10)}</span></div>
+                            <div className="grid grid-cols-3 gap-2 text-[9px] text-text-muted">
+                              <div><span className="block text-[8px] uppercase">Language</span><span className="text-text-secondary font-mono">{language}</span></div>
+                              <div><span className="block text-[8px] uppercase">Voice</span><span className="text-text-secondary font-mono">{voiceId.slice(0, 10)}</span></div>
                               <div><span className="block text-[8px] uppercase">Status</span><span className="text-green-700 font-mono">Live</span></div>
                             </div>
                           </motion.div>
@@ -475,12 +475,12 @@ export default function ElevenAgentsPage() {
                         const status = (convo.status || "unknown") as string;
                         const agentId = (convo.agent_id || "") as string;
                         return (
-                          <div key={convId || i} className="flex items-center gap-3 p-2 rounded-lg border border-[rgba(0,0,0,0.08)] text-[10px]">
-                            <span className={`w-2 h-2 rounded-full ${status === "done" ? "bg-green-600" : status === "failed" ? "bg-red-600" : "bg-amber-500"}`} />
-                            <span className="font-mono text-[#6B7280] w-40 truncate">{convId}</span>
-                            <span className="text-[#6B7280] w-24 truncate">Agent: {agentId.slice(0, 8)}...</span>
+                          <div key={convId || i} className="flex items-center gap-3 p-2 rounded-lg border border-border-subtle text-[10px]">
+                            <span className={`w-2 h-2 rounded-full ${status === "done" ? "bg-green-500" : status === "failed" ? "bg-red-500" : "bg-amber-500"}`} />
+                            <span className="font-mono text-text-muted w-40 truncate">{convId}</span>
+                            <span className="text-text-muted w-24 truncate">Agent: {agentId.slice(0, 8)}...</span>
                             <span className={`px-1.5 py-0.5 rounded text-[8px] ${
-                              status === "done" ? "bg-green-50 text-green-700" : status === "failed" ? "bg-red-50 text-red-700" : "bg-amber-50 text-amber-700"
+                              status === "done" ? "bg-green-500/15 text-green-400" : status === "failed" ? "bg-red-500/15 text-red-400" : "bg-amber-500/15 text-amber-400"
                             }`}>{status}</span>
                           </div>
                         );
@@ -526,16 +526,16 @@ export default function ElevenAgentsPage() {
                           : (convo.created_at as string) || "";
                         const callDuration = (convo.call_duration_secs as number) || 0;
                         return (
-                          <div key={convId || i} className="grid grid-cols-5 gap-2 px-4 py-2.5 border-b border-[rgba(0,0,0,0.06)] last:border-0 text-[10px] items-center hover:bg-[rgba(0,0,0,0.02)]">
-                            <div className="font-mono text-[#6B7280] truncate">{convId}</div>
-                            <div className="text-[#6B7280] truncate">{agentId ? `${agentId.slice(0, 12)}...` : "---"}</div>
+                          <div key={convId || i} className="grid grid-cols-5 gap-2 px-4 py-2.5 border-b border-border-subtle last:border-0 text-[10px] items-center hover:bg-white/[0.03]">
+                            <div className="font-mono text-text-muted truncate">{convId}</div>
+                            <div className="text-text-muted truncate">{agentId ? `${agentId.slice(0, 12)}...` : "---"}</div>
                             <div>
                               <span className={`px-1.5 py-0.5 rounded text-[8px] ${
-                                status === "done" ? "bg-green-50 text-green-700" : status === "failed" ? "bg-red-50 text-red-700" : "bg-amber-50 text-amber-700"
+                                status === "done" ? "bg-green-500/15 text-green-400" : status === "failed" ? "bg-red-500/15 text-red-400" : "bg-amber-500/15 text-amber-400"
                               }`}>{status}</span>
                             </div>
-                            <div className="font-mono text-[#374151]">{callDuration > 0 ? formatDuration(callDuration) : "---"}</div>
-                            <div className="text-[#6B7280]">{startTime}</div>
+                            <div className="font-mono text-text-secondary">{callDuration > 0 ? formatDuration(callDuration) : "---"}</div>
+                            <div className="text-text-muted">{startTime}</div>
                           </div>
                         );
                       })}
@@ -636,17 +636,17 @@ export default function ElevenAgentsPage() {
                     const accent = labels?.accent || labels?.Accent || "";
                     const useCase = labels?.use_case || labels?.["use case"] || "";
                     return (
-                      <div key={voiceId} className="flex items-center gap-3 p-3 rounded-lg border border-[rgba(0,0,0,0.08)]">
+                      <div key={voiceId} className="flex items-center gap-3 p-3 rounded-lg border border-border-subtle">
                         <div className="w-10 h-10 rounded-lg bg-[rgba(59,130,246,0.08)] flex items-center justify-center">
                           <Volume2 size={16} className="text-brand-accent" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-[11px] font-medium text-[#111827]">{name}</p>
-                          <p className="text-[9px] text-[#6B7280] truncate">
+                          <p className="text-[11px] font-medium text-text-primary">{name}</p>
+                          <p className="text-[9px] text-text-muted truncate">
                             {[gender, accent, useCase, category].filter(Boolean).join(" \u00b7 ")}
                           </p>
                         </div>
-                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-green-50 text-green-700">ready</span>
+                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-green-500/15 text-green-400">ready</span>
                         <button onClick={() => {
                           navigator.clipboard.writeText(voiceId);
                           setApiSuccess(`Copied voice ID: ${voiceId}`);

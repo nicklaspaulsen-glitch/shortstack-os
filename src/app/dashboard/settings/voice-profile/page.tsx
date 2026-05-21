@@ -161,9 +161,9 @@ function StatusBanner({ data }: { data: ProfileResponse | null }) {
 
   if (!profile) {
     return (
-      <div className="rounded-xl border border-amber-500/30 bg-amber-50 p-4 text-sm">
-        <p className="font-semibold text-amber-700 mb-1">Not yet learned</p>
-        <p className="text-amber-700/80">
+      <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm">
+        <p className="font-semibold text-amber-400 mb-1">Not yet learned</p>
+        <p className="text-amber-400/80">
           We need at least {min} words from your sent messages before we can
           inject your voice into AI output. You can paste 5-10 samples below
           to seed it instantly, or just keep using the platform — capture is
@@ -176,9 +176,9 @@ function StatusBanner({ data }: { data: ProfileResponse | null }) {
   if (profile.corpus_size_words < min) {
     const remaining = min - profile.corpus_size_words;
     return (
-      <div className="rounded-xl border border-amber-500/30 bg-amber-50 p-4 text-sm">
-        <p className="font-semibold text-amber-700 mb-1">Building...</p>
-        <p className="text-amber-700/80">
+      <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm">
+        <p className="font-semibold text-amber-400 mb-1">Building...</p>
+        <p className="text-amber-400/80">
           {profile.corpus_size_words} words captured. Need ~{remaining} more
           before voice matching activates. Paste samples below to speed it up.
         </p>
@@ -187,9 +187,9 @@ function StatusBanner({ data }: { data: ProfileResponse | null }) {
   }
 
   return (
-    <div className="rounded-xl border border-emerald-500/30 bg-emerald-50 p-4 text-sm">
-      <p className="font-semibold text-emerald-700 mb-1">Active</p>
-      <p className="text-emerald-700/80">
+    <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm">
+      <p className="font-semibold text-emerald-400 mb-1">Active</p>
+      <p className="text-emerald-400/80">
         {profile.corpus_size_words.toLocaleString()} words captured. Trinity
         is rewriting AI output to match your voice. Last refreshed{" "}
         {new Date(profile.computed_at).toLocaleString()}.
@@ -275,8 +275,8 @@ function Gauge({
   return (
     <div>
       <div className="flex justify-between text-xs mb-1">
-        <span className="text-gray-500">{label}</span>
-        <span className="text-gray-800 font-mono">
+        <span className="text-text-muted">{label}</span>
+        <span className="text-text-primary font-mono">
           {Number.isFinite(value) ? value.toFixed(2) : "0"}
           {suffix}
         </span>
@@ -316,7 +316,7 @@ function SignatureSection({ profile }: { profile: VoiceProfile }) {
               {g.items.map((item, i) => (
                 <span
                   key={`${g.label}-${i}`}
-                  className="text-xs px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700"
+                  className="text-xs px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400"
                 >
                   {item}
                 </span>
@@ -336,11 +336,11 @@ function PromptSnippetPanel({ snippet }: { snippet: string }) {
         <Wand2 size={16} className="text-blue-600" />
         <h3 className="font-semibold text-sm">Prompt Injection</h3>
       </div>
-      <p className="text-xs text-gray-500 mb-3">
+      <p className="text-xs text-text-muted mb-3">
         This text is appended to AI prompts so generated copy matches your
         voice. Read-only.
       </p>
-      <pre className="text-xs whitespace-pre-wrap font-mono text-gray-800 rounded-lg bg-gray-50 p-3 border border-black/6">
+      <pre className="text-xs whitespace-pre-wrap font-mono text-text-secondary rounded-lg bg-surface-2 p-3 border border-border-subtle">
         {snippet}
       </pre>
     </div>
@@ -376,16 +376,16 @@ function BootstrapPanel({
         onChange={(e) => onChange(e.target.value)}
         rows={10}
         placeholder={`Hey,\nThanks for getting back so quick. Quick one — can you send the contract over by EOD?\n\n---\n\nMorning team,\nWanted to flag the budget overrun on the campaign...`}
-        className="w-full text-xs font-mono rounded-lg bg-gray-50 border border-black/6 p-3 focus:outline-none focus:border-blue-400 text-gray-800 resize-y"
+        className="w-full text-xs font-mono rounded-lg bg-surface-2 border border-border-subtle p-3 focus:outline-none focus:border-brand-accent text-text-primary resize-y"
       />
       <div className="flex items-center justify-between mt-3">
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-text-muted">
           {sampleCount} sample{sampleCount === 1 ? "" : "s"} detected
         </p>
         <button
           onClick={onSubmit}
           disabled={busy || sampleCount === 0}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white disabled:opacity-50 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold bg-brand-accent hover:bg-brand-accent/90 text-[#020711] disabled:opacity-50 transition-colors"
         >
           <Sparkles size={13} />
           Capture & recompute

@@ -217,8 +217,8 @@ export default function TrinityProposalsPage() {
                     disabled={loadingSettings || savingSettings}
                     className={`card text-left transition ${
                       active
-                        ? "border-purple-300 bg-purple-50"
-                        : "hover:border-purple-200"
+                        ? "border-purple-500/40 bg-purple-500/10"
+                        : "hover:border-purple-500/20"
                     }`}
                   >
                     <div className="flex items-center gap-2">

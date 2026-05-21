@@ -58,7 +58,7 @@ function PreviewModal({ template, onClose }: { template: InvoiceTemplate; onClos
             <div>
               <p className="text-[#6B7280] text-xs uppercase tracking-wider mb-1">Bill To</p>
               <p className="text-[#111827]">Client Name</p>
-              <p className="text-[#6B7280]">client@example.com</p>
+              <p className="text-[#6B7280]">Client Email</p>
             </div>
             <div className="text-right">
               <p className="text-[#6B7280] text-xs uppercase tracking-wider mb-1">Invoice Details</p>

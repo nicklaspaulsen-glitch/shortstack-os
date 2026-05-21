@@ -1161,10 +1161,10 @@ export default function FinancialsPage() {
                         <div className="col-span-3"><p className="text-xs text-text-muted">{inv.due}</p></div>
                         <div className="col-span-2 text-right">
                           <span className={`text-[10px] px-2 py-0.5 rounded-full border ${
-                            inv.status === "paid" ? "text-emerald-700 border-emerald-200 bg-emerald-50" :
-                            inv.status === "overdue" ? "text-rose-700 border-rose-200 bg-rose-50" :
-                            inv.status === "due_soon" ? "text-amber-600 border-amber-200 bg-amber-50" :
-                            "text-blue-700 border-blue-200 bg-blue-50"
+                            inv.status === "paid" ? "text-emerald-400 border-emerald-500/30 bg-emerald-500/10" :
+                            inv.status === "overdue" ? "text-rose-400 border-rose-500/30 bg-rose-500/10" :
+                            inv.status === "due_soon" ? "text-amber-400 border-amber-500/30 bg-amber-500/10" :
+                            "text-blue-400 border-blue-500/30 bg-blue-500/10"
                           }`}>
                             {inv.status === "due_soon" ? "Due Soon" : inv.status.charAt(0).toUpperCase() + inv.status.slice(1)}
                           </span>

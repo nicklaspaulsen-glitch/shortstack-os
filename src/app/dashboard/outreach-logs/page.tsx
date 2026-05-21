@@ -1631,7 +1631,7 @@ export default function OutreachLogsPage() {
                           <div key={f.key} className="flex items-center gap-2">
                             <button onClick={() => setConfig(c => ({ ...c, scrape_filters: { ...c.scrape_filters, [f.key]: !c.scrape_filters[f.key] } }))}
                               className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${config.scrape_filters[f.key] ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.06)]"}`}>
-                              <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${config.scrape_filters[f.key] ? "translate-x-3" : "translate-x-0"}`} />
+                              <div className={`w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${config.scrape_filters[f.key] ? "translate-x-3" : "translate-x-0"}`} />
                             </button>
                             <span className="text-[10px] text-text-muted">{f.label}</span>
                           </div>
@@ -1703,7 +1703,7 @@ export default function OutreachLogsPage() {
                                 ...c,
                                 platforms: { ...c.platforms, [p]: { ...plat, enabled: !plat.enabled } }
                               }))} className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${plat.enabled ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.06)]"}`}>
-                                <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${plat.enabled ? "translate-x-3" : "translate-x-0"}`} />
+                                <div className={`w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${plat.enabled ? "translate-x-3" : "translate-x-0"}`} />
                               </button>
                               <span className="flex items-center gap-1 text-[10px] flex-1 capitalize">{PLATFORM_ICON[p]} {p}</span>
                               <input type="number" min={0} max={50} value={dmVal}
@@ -1789,7 +1789,7 @@ export default function OutreachLogsPage() {
                           className={`w-8 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${
                             config[item.key as keyof typeof config] ? "bg-brand-accent" : "bg-[rgba(0,0,0,0.06)]"
                           }`}>
-                          <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${
+                          <div className={`w-3 h-3 rounded-full bg-white shadow-sm transition-transform ${
                             config[item.key as keyof typeof config] ? "translate-x-4" : "translate-x-0"
                           }`} />
                         </button>

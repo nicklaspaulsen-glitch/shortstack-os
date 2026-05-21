@@ -153,8 +153,8 @@ function defaultContent(): LandingPageContent {
     contact: {
       heading: "Get in Touch",
       subheading: "Have questions? Our team is here to help you get started.",
-      email: "hello@example.com",
-      phone: "(555) 123-4567",
+      email: "",
+      phone: "",
     },
     footer: {
       copyright: "\u00a9 2026 Your Company. All rights reserved.",

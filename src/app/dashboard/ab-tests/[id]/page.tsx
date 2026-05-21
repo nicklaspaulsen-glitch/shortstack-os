@@ -202,9 +202,9 @@ export default function AbTestDetailPage() {
               return (
                 <tr
                   key={v.id}
-                  className={`border-t border-black/[0.04] ${isWinner ? "bg-amber-50" : ""}`}
+                  className={`border-t border-black/[0.04] ${isWinner ? "bg-amber-500/8" : ""}`}
                 >
-                  <td className="px-4 py-3 font-semibold text-gray-900">
+                  <td className="px-4 py-3 font-semibold text-text-primary">
                     <div className="flex items-center gap-2">
                       {isWinner && <Trophy size={14} className="text-amber-400" />}
                       {v.variant_key}
@@ -251,7 +251,7 @@ export default function AbTestDetailPage() {
               value={newVariantKey}
               onChange={(e) => setNewVariantKey(e.target.value)}
               placeholder="Variant key (e.g. C)"
-              className="w-full bg-black/[0.04] border border-black/[0.08] rounded-lg px-3 py-2 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-blue-500"
+              className="w-full bg-black/[0.04] border border-border-subtle rounded-lg px-3 py-2 text-text-primary placeholder-text-muted text-sm focus:outline-none focus:border-brand-accent"
             />
           </div>
           <button
@@ -278,8 +278,8 @@ export default function AbTestDetailPage() {
 function Tile({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="glass rounded-xl p-3">
-      <div className="text-xs text-gray-500">{label}</div>
-      <div className="text-gray-900 font-bold text-lg mt-0.5">{value}</div>
+      <div className="text-xs text-text-muted">{label}</div>
+      <div className="text-text-primary font-bold text-lg mt-0.5">{value}</div>
     </div>
   );
 }

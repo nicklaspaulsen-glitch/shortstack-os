@@ -189,7 +189,7 @@ export default function DownloadDesktopPage() {
                       href={GH_RELEASES}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border border-amber-500/30"
                     >
                       GitHub releases <ExternalLink size={11} />
                     </a>

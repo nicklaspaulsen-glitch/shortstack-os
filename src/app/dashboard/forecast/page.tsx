@@ -250,11 +250,11 @@ export default function ForecastPage() {
                                 <td className="px-4 py-3 text-text-muted hidden sm:table-cell">{d.client_name}</td>
                                 <td className="px-4 py-3 text-right text-text-primary">{fmt(d.value)}</td>
                                 <td className="px-4 py-3 text-right hidden md:table-cell">
-                                  <span className="text-xs bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 rounded-full">
+                                  <span className="text-xs bg-green-500/15 text-green-400 border border-green-500/30 px-2 py-0.5 rounded-full">
                                     {d.probability}%
                                   </span>
                                 </td>
-                                <td className="px-4 py-3 text-right text-blue-700 font-medium hidden md:table-cell">
+                                <td className="px-4 py-3 text-right text-blue-400 font-medium hidden md:table-cell">
                                   {fmt(d.value * d.probability / 100)}
                                 </td>
                               </motion.tr>

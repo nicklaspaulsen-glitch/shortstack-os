@@ -151,10 +151,10 @@ export default function DesignStudioPage() {
                             }}
                           />
                           <div className="text-center">
-                            <p className="text-xs font-medium text-gray-700 group-hover:text-text-primary">
+                            <p className="text-xs font-medium text-text-secondary group-hover:text-text-primary">
                               {preset.label}
                             </p>
-                            <p className="text-[10px] text-gray-600">
+                            <p className="text-[10px] text-text-muted">
                               {preset.width}�{preset.height}
                             </p>
                           </div>
@@ -242,14 +242,14 @@ function RecentDesigns() {
                 className="object-cover"
               />
             ) : (
-              <PenTool size={20} className="text-gray-600" />
+              <PenTool size={20} className="text-text-muted" />
             )}
           </div>
           <div className="p-2">
-            <p className="text-xs font-medium text-gray-700 group-hover:text-text-primary truncate">
+            <p className="text-xs font-medium text-text-secondary group-hover:text-text-primary truncate">
               {d.title}
             </p>
-            <p className="text-[10px] text-gray-600">
+            <p className="text-[10px] text-text-muted">
               {d.width}�{d.height}
             </p>
           </div>

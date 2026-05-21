@@ -252,17 +252,27 @@ export default function AIStudioPage() {
                 />
               )}
               {studioTab === "video" && (
-                <div className="flex items-center justify-center min-h-[420px] rounded-2xl border border-border-subtle bg-surface-light">
-                  <div className="text-center space-y-3">
-                    <Film size={32} className="mx-auto text-brand-accent opacity-50" />
-                    <p className="text-sm font-semibold text-text-secondary">Video generation coming soon</p>
-                    <p className="text-xs text-text-muted">Use the AI Tools tab for image-to-video now</p>
-                    <button
-                      onClick={() => { setActiveTool("img-to-video"); setAdvancedMode(true); }}
-                      className="text-xs text-brand-accent hover:underline font-medium"
+                <div className="flex items-center justify-center min-h-[420px] rounded-2xl border border-border-subtle glass">
+                  <div className="text-center space-y-4">
+                    <Film size={36} className="mx-auto text-brand-accent" />
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold text-text-primary">AI Video Studio</p>
+                      <p className="text-xs text-text-muted max-w-xs">Generate, extend, and edit videos with AI. Powered by Runway and LongCat.</p>
+                    </div>
+                    <a
+                      href="/dashboard/ai-video"
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-[#020711] bg-brand-accent px-4 py-1.5 rounded-full hover:opacity-90 transition-opacity"
                     >
-                      Open Image-to-Video tool
-                    </button>
+                      Open AI Video <ArrowUpRight size={12} />
+                    </a>
+                    <div>
+                      <button
+                        onClick={() => { setActiveTool("img-to-video"); setAdvancedMode(true); }}
+                        className="text-xs text-text-muted hover:text-brand-accent transition-colors"
+                      >
+                        Or try image-to-video here
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}

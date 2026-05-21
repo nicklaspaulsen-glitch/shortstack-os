@@ -522,7 +522,7 @@ export default function DiscordPage() {
                 <div className="flex items-center gap-3">
                   <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light border border-border-subtle">{cmd.category}</span>
                   <div onClick={() => toggleCommand(cmd.name)}
-                    className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${cmd.enabled ? "bg-green-500" : "bg-gray-300"}`}>
+                    className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${cmd.enabled ? "bg-green-500" : "bg-white/20"}`}>
                     <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${cmd.enabled ? "translate-x-[18px]" : "translate-x-0.5"}`} />
                   </div>
                 </div>
@@ -575,7 +575,7 @@ export default function DiscordPage() {
                   </div>
                 </div>
                 <div onClick={() => toggleAutoRole(role.id)}
-                  className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${role.enabled ? "bg-green-500" : "bg-gray-300"}`}>
+                  className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${role.enabled ? "bg-green-500" : "bg-white/20"}`}>
                   <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${role.enabled ? "translate-x-[18px]" : "translate-x-0.5"}`} />
                 </div>
               </div>
@@ -624,14 +624,14 @@ export default function DiscordPage() {
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light border border-border-subtle">
                 <span className="text-xs">Send DM</span>
                 <div onClick={() => setWelcomeDm(!welcomeDm)}
-                  className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${welcomeDm ? "bg-green-500" : "bg-gray-300"}`}>
+                  className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${welcomeDm ? "bg-green-500" : "bg-white/20"}`}>
                   <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${welcomeDm ? "translate-x-[18px]" : "translate-x-0.5"}`} />
                 </div>
               </div>
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light border border-border-subtle">
                 <span className="text-xs">Channel Post</span>
                 <div onClick={() => setWelcomeChannel(!welcomeChannel)}
-                  className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${welcomeChannel ? "bg-green-500" : "bg-gray-300"}`}>
+                  className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${welcomeChannel ? "bg-green-500" : "bg-white/20"}`}>
                   <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${welcomeChannel ? "translate-x-[18px]" : "translate-x-0.5"}`} />
                 </div>
               </div>
@@ -682,7 +682,7 @@ export default function DiscordPage() {
                   <div className="flex items-center gap-3">
                     <span className="text-[9px] px-2 py-0.5 rounded-full bg-red-400/10 text-red-400">{rule.action}</span>
                     <div onClick={() => toggleModRule(rule.id)}
-                      className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${rule.enabled ? "bg-green-500" : "bg-gray-300"}`}>
+                      className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${rule.enabled ? "bg-green-500" : "bg-white/20"}`}>
                       <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${rule.enabled ? "translate-x-[18px]" : "translate-x-0.5"}`} />
                     </div>
                   </div>

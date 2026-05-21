@@ -69,7 +69,7 @@ const SEVERITY_STYLES: Record<Severity, { label: string; pill: string; dot: stri
   },
   identified: {
     label: "Identified",
-    pill: "bg-orange-50 border-orange-300 text-orange-700",
+    pill: "bg-orange-500/10 border-orange-500/30 text-orange-400",
     dot: "bg-orange-400",
   },
   monitoring: {
