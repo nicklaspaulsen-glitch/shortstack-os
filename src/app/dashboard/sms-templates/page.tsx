@@ -150,10 +150,10 @@ export default function SMSTemplatesPage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <>
-                  <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
+                  <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5">
                     <Sparkles size={12} /> Generate with AI
                   </button>
-                  <button onClick={() => setShowAdd(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
+                  <button onClick={() => setShowAdd(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1.5">
                     <Plus size={12} /> New
                   </button>
                 </>
@@ -219,7 +219,7 @@ export default function SMSTemplatesPage() {
                             <span className="text-text-muted capitalize">{v.tone}</span>
                           </div>
                           <div className="flex gap-1">
-                            <button onClick={() => { navigator.clipboard.writeText(v.text); toast.success("Copied"); }} className="text-[9px] px-2 py-1 rounded bg-[rgba(0,0,0,0.04)] text-text-muted hover:text-brand-accent">
+                            <button onClick={() => { navigator.clipboard.writeText(v.text); toast.success("Copied"); }} className="text-[9px] px-2 py-1 rounded bg-white/5 text-text-muted hover:text-brand-accent">
                               <Copy size={9} />
                             </button>
                             <button onClick={() => saveAiVariant(v)} className="text-[9px] px-2 py-1 rounded bg-[rgba(59,130,246,0.08)] text-brand-accent hover:bg-[rgba(59,130,246,0.12)] flex items-center gap-1">
@@ -260,7 +260,7 @@ export default function SMSTemplatesPage() {
                     {categories.map(c => (
                       <button key={c} onClick={() => setFilter(c)}
                         className={`text-[10px] px-2.5 py-1.5 rounded-lg capitalize ${
-                          filter === c ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-[rgba(0,0,0,0.06)]"
+                          filter === c ? "bg-[rgba(59,130,246,0.08)] text-brand-accent border border-[rgba(59,130,246,0.2)]" : "text-text-muted border border-white/8"
                         }`}>{c}</button>
                     ))}
                   </div>
@@ -299,7 +299,7 @@ export default function SMSTemplatesPage() {
                             <div className="flex gap-1 flex-wrap">
                               {cat.emojis.map(e => (
                                 <button key={e} onClick={() => setNewTemplate(prev => ({ ...prev, body: prev.body + e }))}
-                                  className="text-sm hover:bg-[rgba(0,0,0,0.06)] rounded p-0.5">{e}</button>
+                                  className="text-sm hover:bg-white/8 rounded p-0.5">{e}</button>
                               ))}
                             </div>
                           </div>
@@ -347,9 +347,9 @@ export default function SMSTemplatesPage() {
                           <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(59,130,246,0.08)] text-brand-accent">{template.category}</span>
                         </div>
                         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button onClick={() => { navigator.clipboard.writeText(template.body); }} className="p-1 rounded hover:bg-black/[0.04] text-text-muted hover:text-text-primary"><Copy size={10} /></button>
-                          <button onClick={() => setPreviewTemplate(template)} className="p-1 rounded hover:bg-black/[0.04] text-text-muted hover:text-text-primary"><Eye size={10} /></button>
-                          <button onClick={() => setEditing(editing === template.id ? null : template.id)} className="p-1 rounded hover:bg-black/[0.04] text-text-muted hover:text-text-primary"><Edit3 size={10} /></button>
+                          <button onClick={() => { navigator.clipboard.writeText(template.body); }} className="p-1 rounded hover:bg-white/5 text-text-muted hover:text-text-primary"><Copy size={10} /></button>
+                          <button onClick={() => setPreviewTemplate(template)} className="p-1 rounded hover:bg-white/5 text-text-muted hover:text-text-primary"><Eye size={10} /></button>
+                          <button onClick={() => setEditing(editing === template.id ? null : template.id)} className="p-1 rounded hover:bg-white/5 text-text-muted hover:text-text-primary"><Edit3 size={10} /></button>
                           <button onClick={() => setTemplates(prev => prev.filter(t => t.id !== template.id))} className="p-1 rounded hover:bg-red-400/10 text-text-muted hover:text-red-400"><Trash2 size={10} /></button>
                         </div>
                       </div>

@@ -1361,7 +1361,7 @@ export default function ScraperPage() {
                             <div className="flex gap-1 mt-2">
                               {r.instagram_url && <span className="text-[8px] bg-pink-500/10 text-pink-400 px-1.5 py-0.5 rounded">IG</span>}
                               {r.facebook_url && <span className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">FB</span>}
-                              {r.tiktok_url && <span className="text-[8px] bg-[rgba(0,0,0,0.06)] text-[#374151] px-1.5 py-0.5 rounded">TK</span>}
+                              {r.tiktok_url && <span className="text-[8px] bg-white/8 text-text-secondary px-1.5 py-0.5 rounded">TK</span>}
                               {r.linkedin_url && <span className="text-[8px] bg-[rgba(59,130,246,0.08)] text-brand-accent px-1.5 py-0.5 rounded">LI</span>}
                             </div>
                           </motion.div>

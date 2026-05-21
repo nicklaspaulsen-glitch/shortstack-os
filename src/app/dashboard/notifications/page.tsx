@@ -311,7 +311,7 @@ export default function NotificationsPage() {
                   )}
                   <button
                     onClick={() => fetchNotifications()}
-                    className="p-2 rounded-xl text-text-primary bg-[rgba(0,0,0,0.06)] border border-[rgba(0,0,0,0.10)] hover:bg-[rgba(0,0,0,0.09)] transition-colors"
+                    className="p-2 rounded-xl text-text-primary bg-white/8 border border-white/12 hover:bg-white/10 transition-colors"
                     title="Refresh"
                   >
                     <RefreshCw size={14} />
@@ -321,7 +321,7 @@ export default function NotificationsPage() {
                       <button
                         onClick={markAllRead}
                         disabled={markingAll}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-text-primary bg-[rgba(0,0,0,0.07)] border border-[rgba(0,0,0,0.12)] hover:bg-[rgba(0,0,0,0.10)] transition-colors disabled:opacity-50"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-text-primary bg-white/8 border border-white/12 hover:bg-white/10 transition-colors disabled:opacity-50"
                       >
                         {markingAll ? <Loader size={12} className="animate-spin" /> : <Check size={12} />}
                         Mark All Read
@@ -431,7 +431,7 @@ export default function NotificationsPage() {
                             initial={{ opacity: 0, x: -8 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.18, delay: index * 0.04 }}
-                            whileHover={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+                            whileHover={{ backgroundColor: "rgba(255,255,255,0.05)" }}
                             className={`glass rounded-xl group relative overflow-hidden transition-all duration-200 hover:shadow-md ${
                               !n.read
                                 ? "border-l-2 border-l-indigo-500"

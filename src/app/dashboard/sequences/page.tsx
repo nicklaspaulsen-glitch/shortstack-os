@@ -152,9 +152,9 @@ const TEMPLATE_LIBRARY: { name: string; description: string; steps: SequenceStep
 const STEP_COLORS: Record<string, { bg: string; text: string; border: string }> = {
   email: { bg: "bg-[rgba(59,130,246,0.08)]", text: "text-brand-accent", border: "border-[rgba(59,130,246,0.25)]" },
   sms: { bg: "bg-green-500/10", text: "text-green-600", border: "border-green-500/20" },
-  call: { bg: "bg-amber-500/10", text: "text-amber-700", border: "border-amber-500/20" },
+  call: { bg: "bg-amber-500/10", text: "text-amber-400", border: "border-amber-500/20" },
   social: { bg: "bg-pink-500/10", text: "text-pink-600", border: "border-pink-500/20" },
-  wait: { bg: "bg-[rgba(0,0,0,0.04)]", text: "text-[#6B7280]", border: "border-border-subtle" },
+  wait: { bg: "bg-white/5", text: "text-text-muted", border: "border-border-subtle" },
   condition: { bg: "bg-[rgba(59,130,246,0.08)]", text: "text-brand-accent", border: "border-[rgba(59,130,246,0.25)]" },
   dm: { bg: "bg-pink-500/10", text: "text-pink-600", border: "border-pink-500/20" },
 };
@@ -635,7 +635,7 @@ export default function SequencesPage() {
               ) : (
                 <ul className="space-y-1">
                   {activity.map(a => (
-                    <li key={a.id} className="flex items-center justify-between text-[10px] py-1 border-b border-black/[0.05] last:border-0">
+                    <li key={a.id} className="flex items-center justify-between text-[10px] py-1 border-b border-border-subtle last:border-0">
                       <span className="flex items-center gap-2">
                         <span className={`px-1.5 py-0.5 rounded text-[9px] ${a.status === "completed" ? "bg-green-500/10 text-green-400" : a.status === "failed" ? "bg-red-500/10 text-red-400" : "bg-gray-500/10 text-text-muted"}`}>
                           {a.status || "run"}
@@ -743,8 +743,8 @@ export default function SequencesPage() {
                             initial={{ opacity: 0, x: -8 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.18, delay: index * 0.04 }}
-                            whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
-                            className="p-4 flex items-center justify-between border-b border-black/[0.05] last:border-0"
+                            whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
+                            className="p-4 flex items-center justify-between border-b border-border-subtle last:border-0"
                           >
                             <div className="flex items-center gap-3">
                               <div className={`w-2.5 h-2.5 rounded-full ${seq.active ? "bg-green-400 animate-pulse" : "bg-muted"}`} />
@@ -840,7 +840,7 @@ export default function SequencesPage() {
                                     {STEP_ICONS[step.type]} {step.type === "wait" ? `Wait ${step.delay_days}d` : step.type === "condition" ? "Condition" : step.type}
                                   </span>
                                   <span className="text-[9px] text-text-muted">Step {i + 1}</span>
-                                  {step.channel && <span className="text-[8px] px-1.5 py-0.5 rounded bg-black/[0.04] text-text-muted capitalize">{step.channel}</span>}
+                                  {step.channel && <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 text-text-muted capitalize">{step.channel}</span>}
                                 </div>
                                 <button onClick={() => removeStep(step.id)} className="text-text-muted hover:text-red-400 p-1"><Trash2 size={12} /></button>
                               </div>
@@ -1025,7 +1025,7 @@ export default function SequencesPage() {
                       transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Completed</p>
-                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-600 tabular-nums">{sequences.reduce((s, seq) => s + seq.completed, 0)}</p>
+                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">{sequences.reduce((s, seq) => s + seq.completed, 0)}</p>
                       <p className="text-[11px] text-text-muted mt-1.5">finished</p>
                     </motion.div>
                     <motion.div
@@ -1056,7 +1056,7 @@ export default function SequencesPage() {
                       transition={{ duration: 0.38, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active Sequences</p>
-                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-600 tabular-nums">{sequences.filter(s => s.active).length}</p>
+                      <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">{sequences.filter(s => s.active).length}</p>
                       <p className="text-[11px] text-text-muted mt-1.5">running</p>
                     </motion.div>
                   </div>
@@ -1072,7 +1072,7 @@ export default function SequencesPage() {
                           initial={{ opacity: 0, x: -8 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.18, delay: index * 0.04 }}
-                          whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                          whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
                           className="p-3 rounded-lg bg-surface-light border border-border-subtle"
                         >
                           <div className="flex items-center justify-between mb-2">
@@ -1173,7 +1173,7 @@ export default function SequencesPage() {
                           initial={{ opacity: 0, x: -8 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.18, delay: index * 0.04 }}
-                          whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" }}
+                          whileHover={{ backgroundColor: "rgba(255,255,255,0.04)" }}
                           className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]"
                         >
                           <div className="flex items-center gap-2">
