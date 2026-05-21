@@ -18,6 +18,7 @@ import { trackGeneration } from "@/lib/track-generation";
 import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
 import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 import { MotionPage } from "@/components/motion/motion-page";
+import PageTrainingPanel from "@/components/ui/page-training-panel";
 
 // Fake-screenshot text cards used as the rolling marquee on the copywriter
 // landing state. Each card = one example of the kind of copy this tool
@@ -1843,7 +1844,7 @@ export default function CopywriterPage() {
           </motion.div>
         </div>
       </div>
-      )}</MotionPage>
+      )}<PageTrainingPanel pageKey="copy" pageLabel="Copywriter" /></MotionPage>
   );
 }
 

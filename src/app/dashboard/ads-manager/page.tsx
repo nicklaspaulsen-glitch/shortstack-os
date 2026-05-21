@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 import PageHero from "@/components/ui/page-hero";
+import PageTrainingPanel from "@/components/ui/page-training-panel";
 
 // Code-split the panels — only the active tab loads. Each panel has its
 // own data fetching, so this also avoids waterfall fetches at page load.
@@ -141,6 +142,8 @@ export default function AdsManagerPage() {
               {tab === "insights" && <InsightsPanel />}
               {tab === "budgets" && <BudgetsPanel />}
               {tab === "connect" && <ZernioConnectPanel />}
-            </motion.div></MotionPage>
+            </motion.div>
+            <PageTrainingPanel pageKey="ads" pageLabel="Ads Manager" />
+            </MotionPage>
   );
 }

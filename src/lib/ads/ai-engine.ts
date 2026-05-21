@@ -133,6 +133,7 @@ export async function generateAdCopy(config: {
   targetAudience: string;
   offer: string;
   tone: string;
+  trainingPrompt?: string;
 }): Promise<{
   variations: Array<{
     headline: string;
@@ -167,7 +168,7 @@ export async function generateAdCopy(config: {
 
   const systemPrompt = `You are an elite performance marketing copywriter who has managed $50M+ in ad spend across Meta, Google, and TikTok. You write conversion-focused ad copy that stops the scroll, hooks the reader, and drives action. Every variation you produce is ready to deploy.
 
-CRITICAL: Return ONLY raw JSON. No markdown, no code fences, no explanation outside the JSON.`;
+CRITICAL: Return ONLY raw JSON. No markdown, no code fences, no explanation outside the JSON.${config.trainingPrompt ? `\n\n${config.trainingPrompt}` : ""}`;
 
   const prompt = `Generate 5 high-converting ad copy variations for ${platformName}. Each variation MUST use a different angle/style as specified below.
 

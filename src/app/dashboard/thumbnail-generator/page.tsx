@@ -50,6 +50,7 @@ import StockPhotosPanel from "@/components/thumbnail-editor/stock-photos-panel";
 import type { StockPhoto } from "@/lib/integrations/stock-photos";
 import { MotionPage } from "@/components/motion/motion-page";
 import SmartBar from "@/components/ui/smart-bar";
+import PageTrainingPanel from "@/components/ui/page-training-panel";
 import CreatorIntelligence from "@/components/ui/creator-intelligence";
 
 // ── Headline Quality Scorer ───────────────────────────────────────────────
@@ -1386,6 +1387,7 @@ export default function ThumbnailEditorProPage() {
               />
             )}
           </motion.div>
+          <PageTrainingPanel pageKey="thumbnail" pageLabel="Thumbnail Generator" />
           </MotionPage>
   );
 }
