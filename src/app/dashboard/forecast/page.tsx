@@ -64,10 +64,6 @@ const containerVariants: Variants = {
   show: { transition: { staggerChildren: 0.08 } },
 };
 
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.32, 0.72, 0, 1] as [number, number, number, number] } },
-};
 
 const slideX: Variants = {
   hidden: { opacity: 0, x: -18 },

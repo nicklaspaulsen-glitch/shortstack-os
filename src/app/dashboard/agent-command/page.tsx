@@ -116,7 +116,7 @@ type CommandData = {
 const PIPELINE_STAGES = [
   { key: "outreach_pending", label: "Pending", color: "text-text-muted" },
   { key: "outreach_sent", label: "Contacted", color: "text-indigo-400" },
-  { key: "replied", label: "Replied", color: "text-cyan-400" },
+  { key: "replied", label: "Replied", color: "text-brand-accent" },
   { key: "qualifying", label: "Qualifying", color: "text-violet-400" },
   { key: "qualified", label: "Qualified", color: "text-success" },
   { key: "scripting", label: "Scripting", color: "text-yellow-400" },

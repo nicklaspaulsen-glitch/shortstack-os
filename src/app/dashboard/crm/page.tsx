@@ -233,8 +233,7 @@ export default function CRMPage() {
 
  // -- Core state --
   const [leads, setLeads] = useState<CRMLead[]>([]);
- // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<CRMStatus | "all">("all");
   const [sortBy, setSortBy] = useState<SortKey>("newest");
@@ -944,7 +943,7 @@ export default function CRMPage() {
                     {STATUS_TABS.filter(t => t.key !== "all").map((t, i) => {
                       const count = statusCounts[t.key] || 0;
                       const pct = stats.total> 0 ? Math.round((count / stats.total) * 100) : 0;
-                      const colors: Record<string, string> = { new: "#1D4ED8", contacted: "#f59e0b", replied: "#1D4ED8", booked: "#a855f7", converted: "#1D4ED8" };
+                      const colors: Record<string, string> = { new: "#D4FF00", contacted: "#f59e0b", replied: "#D4FF00", booked: "#a855f7", converted: "#D4FF00" };
                       return (
                         <div key={t.key} className="flex-1 group cursor-pointer" onClick={() => setActiveTab(t.key as CRMStatus)}>
                           <div className="h-2 rounded-full transition-all group-hover:h-3" style={{ background: colors[t.key], opacity: count> 0 ? 1 : 0.2 }} />
@@ -1603,7 +1602,7 @@ export default function CRMPage() {
                   <div className="flex gap-2 overflow-x-auto pb-4" style={{ minHeight: "500px" }}>
                     {STATUS_TABS.filter(t => t.key !== "all").map(stage => {
                       const stageLeads = searchFiltered.filter(l => mapToCRMStatus(l.status) === stage.key);
-                      const colors: Record<string, string> = { new: "#1D4ED8", contacted: "#f59e0b", replied: "#1D4ED8", booked: "#a855f7", converted: "#1D4ED8" };
+                      const colors: Record<string, string> = { new: "#D4FF00", contacted: "#f59e0b", replied: "#D4FF00", booked: "#a855f7", converted: "#D4FF00" };
                       const color = colors[stage.key] || "#6b7280";
                       return (
                         <div key={stage.key} className="flex-shrink-0 w-[260px]">

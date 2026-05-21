@@ -6,8 +6,8 @@ import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
 import {
   FileText, Sparkles, Users, TrendingUp, TrendingDown,
-  Loader, Clock, BarChart3, RefreshCw,
-  ChevronDown, ChevronUp, Copy, Check, Calendar,
+  Loader, Clock, RefreshCw,
+  ChevronDown, ChevronUp, Copy, Check,
   Download, Mail, ClipboardCopy, Share2,
 } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state-illustration";

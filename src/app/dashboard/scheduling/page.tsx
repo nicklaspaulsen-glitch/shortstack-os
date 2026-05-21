@@ -7,7 +7,7 @@ import {
   Plus, Settings, Mail, Shuffle, BarChart3, Shield,
   X, Check, ExternalLink, Edit3, AlertCircle, Loader2,
   Sparkles, Brain, Timer, MapPin,
-  AlertTriangle, Zap, Star, Eye
+  AlertTriangle, Zap, Star
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import { ZoomIcon, CalendlyIcon, GoogleIcon } from "@/components/ui/platform-icons";
@@ -364,7 +364,7 @@ export default function SchedulingPage() {
                 >
                   <div className="p-4">
                   <div className="flex items-start gap-3">
-                    <div className="w-3 h-full rounded-full shrink-0 mt-1" style={{ background: mt.color || "#2563EB", minHeight: 40 }} />
+                    <div className="w-3 h-full rounded-full shrink-0 mt-1" style={{ background: mt.color || "#D4FF00", minHeight: 40 }} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
                         <p className="text-xs font-bold">{mt.name}</p>
@@ -833,7 +833,7 @@ export default function SchedulingPage() {
                             <div className="w-full h-7 rounded flex items-center justify-center text-[8px] font-bold transition-all"
                               style={{
                                 background: intensity > 0.7 ? "rgba(212,255,0,0.35)" : intensity > 0.4 ? "rgba(212,255,0,0.20)" : intensity > 0.1 ? "rgba(212,255,0,0.08)" : "rgba(99,146,255,0.03)",
-                                color: intensity > 0.4 ? "#60A5FA" : "rgba(160,160,180,0.40)"
+                                color: intensity > 0.4 ? "#D4FF00" : "rgba(160,160,180,0.40)"
                               }}>
                               {val}
                             </div>
@@ -870,10 +870,10 @@ export default function SchedulingPage() {
                   const pct = totalBookings > 0 ? (count / totalBookings) * 100 : 0;
                   return (
                     <div key={mt.id} className="flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full shrink-0" style={{ background: mt.color || "#2563EB" }} />
+                      <div className="w-3 h-3 rounded-full shrink-0" style={{ background: mt.color || "#D4FF00" }} />
                       <span className="text-xs w-32 truncate">{mt.name}</span>
                       <div className="flex-1 h-2 rounded-full bg-surface-light overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${pct}%`, background: mt.color || "#2563EB" }} />
+                        <div className="h-full rounded-full" style={{ width: `${pct}%`, background: mt.color || "#D4FF00" }} />
                       </div>
                       <span className="text-xs font-bold w-8 text-right">{count}</span>
                     </div>

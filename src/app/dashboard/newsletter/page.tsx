@@ -11,7 +11,7 @@ import {
   Layout, Megaphone, BookOpen,
   Briefcase, Gift, Zap, Copy, Check, X,
   ArrowUp, ArrowDown, Loader2,
-  Newspaper, Wand2, FileText, TrendingUp,
+  Wand2, FileText, TrendingUp,
 } from "lucide-react";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";

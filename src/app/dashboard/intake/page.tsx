@@ -71,11 +71,11 @@ function ScoreBadge({ score }: { score: number | null }) {
 }
 
 const STATUS_META = {
-  new:          { label: "New",          color: "#2563EB", icon: <Clock size={10} /> },
+  new:          { label: "New",          color: "#D4FF00", icon: <Clock size={10} /> },
   contacted:    { label: "Contacted",    color: "#f59e0b", icon: <Mail size={10} /> },
   qualified:    { label: "Qualified",    color: "#22c55e", icon: <CheckCircle2 size={10} /> },
   disqualified: { label: "Disqualified", color: "#ef4444", icon: <XCircle size={10} /> },
-  converted:    { label: "Converted",    color: "#3B82F6", icon: <Star size={10} /> },
+  converted:    { label: "Converted",    color: "#D4FF00", icon: <Star size={10} /> },
 };
 
 const FIELD_TYPES: { value: FormField["type"]; label: string; icon: React.ReactNode }[] = [

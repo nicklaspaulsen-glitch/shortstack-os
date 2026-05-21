@@ -10,7 +10,7 @@ import {
   Globe, Shield, Wifi, Copy, ExternalLink, Clock, User,
   Bot, ArrowRight, Hash, Smartphone, Radar, MapPin, Building2, Sliders,
   AlertTriangle, Activity, Star, Sparkles,
-  CalendarRange, Tag, BookCheck
+  CalendarRange, Tag
 } from "lucide-react";
 import {
   FacebookIcon, InstagramIcon, LinkedInIcon, TikTokIcon,

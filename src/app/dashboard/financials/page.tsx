@@ -10,8 +10,8 @@ import {
   DollarSign, TrendingUp, Users, Minus, Plus, Pencil, Trash2,
   PiggyBank, BarChart3, Receipt, ArrowUpRight, ArrowDownRight,
   FileText, Download, Package, X,
-  RefreshCw, CheckCircle, Globe, AlertTriangle, Zap, Shield,
-  Layers, CreditCard, Calendar, Clock, Target, Percent,
+  RefreshCw, CheckCircle, Globe, Shield,
+  Layers, CreditCard, Calendar, Clock, Target,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { StripeIcon, PayPalIcon, SquareIcon } from "@/components/ui/platform-icons";
