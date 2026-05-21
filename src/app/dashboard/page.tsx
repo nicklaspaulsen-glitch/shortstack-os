@@ -101,7 +101,7 @@ function useAgencyStats() {
     const db = createSupabaseClient();
     Promise.all([
       db.from("clients").select("id", { count: "exact", head: true }),
-      db.from("workflows").select("id", { count: "exact", head: true }).eq("enabled", true),
+      db.from("workflows").select("id", { count: "exact", head: true }).eq("active", true),
       db.from("leads").select("id", { count: "exact", head: true }),
     ])
       .then(([c, w, l]) => {
