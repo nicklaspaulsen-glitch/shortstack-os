@@ -1383,7 +1383,7 @@ export default function OutreachLogsPage() {
                               <p className="text-[9px] text-text-muted truncate">{num.locality}{num.locality && num.region ? ", " : ""}{num.region}</p>
                             </div>
                             <button onClick={() => buyNumber(num.phone)} disabled={buyingNumber === num.phone || !provClientId}
-                              className="text-[9px] px-3 py-1.5 rounded-lg bg-brand-accent text-[#020711] font-medium hover:bg-brand-accent/90 disabled:opacity-30 flex items-center gap-1">
+                              className="text-[9px] px-3 py-1.5 rounded-full bg-brand-accent text-[#020711] font-medium hover:bg-brand-accent/90 disabled:opacity-30 flex items-center gap-1">
                               {buyingNumber === num.phone ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />} Buy
                             </button>
                           </div>
@@ -2144,7 +2144,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
         <button
           onClick={runAnalysis}
           disabled={loading}
-          className="w-full py-1.5 rounded-lg bg-brand-accent text-[#020711] text-[10px] font-semibold hover:bg-[#E8FF4D] hover:shadow-lg hover:shadow-[rgba(212,255,0,0.3)] disabled:opacity-50 flex items-center justify-center gap-1.5"
+          className="w-full py-1.5 rounded-full bg-brand-accent text-[#020711] text-[10px] font-semibold hover:bg-[#E8FF4D] hover:shadow-lg hover:shadow-[rgba(212,255,0,0.3)] disabled:opacity-50 flex items-center justify-center gap-1.5"
         >
           {loading ? <Loader2 size={10} className="animate-spin" /> : <Bot size={10} />}
           {loading ? "Analyzing..." : "Analyze with AI"}
