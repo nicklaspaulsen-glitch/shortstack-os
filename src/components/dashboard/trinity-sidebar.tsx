@@ -111,7 +111,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { label: "Integrations", href: "/dashboard/integrations-hub", icon: Plug },
       { label: "WhatsApp", href: "/dashboard/whatsapp", icon: MessageSquare },
-      { label: "Telegram", href: "/dashboard/telegram-bot", icon: MessageSquare },
+      { label: "Telegram", href: "/dashboard/telegram", icon: MessageSquare },
       { label: "Discord", href: "/dashboard/discord", icon: MessageSquare },
       { label: "Google Business", href: "/dashboard/google-business", icon: Globe },
     ],

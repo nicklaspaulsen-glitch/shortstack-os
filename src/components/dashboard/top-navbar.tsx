@@ -170,7 +170,7 @@ const CONTEXT_SECTIONS: ContextSection[] = [
       { label: "Integrations", href: "/dashboard/integrations-hub" },
       { label: "Discord", href: "/dashboard/discord" },
       { label: "Google Biz", href: "/dashboard/google-business" },
-      { label: "Telegram", href: "/dashboard/telegram-bot" },
+      { label: "Telegram", href: "/dashboard/telegram" },
       { label: "WhatsApp", href: "/dashboard/whatsapp" },
     ],
   },
