@@ -17,7 +17,7 @@ import {
   isPermanentFailure,
   signWebhookPayload,
 } from "@/lib/api/webhook-events";
-import { checkFetchUrl } from "@/lib/security/ssrf";
+import { checkFetchUrl, resolveAndCheckUrl } from "@/lib/security/ssrf";
 
 export const maxDuration = 60;
 
@@ -102,9 +102,11 @@ export async function GET(request: NextRequest) {
     const body = JSON.stringify(d.payload);
     const signature = signWebhookPayload(webhook.secret, body);
 
-    // SSRF guard — a URL saved before this check was added could point to
-    // an internal address. Check at delivery time as a second-layer defence.
-    const ssrfErr = checkFetchUrl(webhook.url);
+    // SSRF guard — Layer 1 (hostname string) + Layer 2 (DNS resolution).
+    // Resolves all A/AAAA records and rejects if ANY resolve to a private IP.
+    // This closes the DNS rebinding gap where an attacker flips their record
+    // between the hostname check and the fetch.
+    const ssrfErr = await resolveAndCheckUrl(webhook.url);
     if (ssrfErr) {
       console.error("[deliver-webhooks] SSRF block: URL rejected", {
         webhook_id: d.webhook_id,

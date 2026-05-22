@@ -144,3 +144,82 @@ export function assertSafeFetchUrl(
   if (err) throw new SsrfBlockedError(err);
   return input;
 }
+
+// ── DNS-resolving SSRF guard (Layer 2) ──────────────────────────────────
+// The functions above only do string matching on the hostname (Layer 1).
+// That leaves a DNS rebinding gap: attacker owns evil.com, first lookup
+// returns 1.2.3.4 (public), then rebinds to 169.254.169.254 before the
+// actual TCP connection. `resolveAndCheckUrl` closes this by resolving
+// ALL A/AAAA records and verifying every one against isPrivateOrInternal
+// from ssrf-guard.ts (which covers the full RFC range).
+//
+// Use `resolveAndCheckUrl` before `fetch()` for any user-supplied URL
+// that will be fetched server-side. It returns null if safe, or a reason
+// string if blocked.
+
+import dns from "dns";
+import { isPrivateOrInternal } from "./ssrf-guard";
+
+function withTimeout<T>(p: Promise<T>, ms = 5000): Promise<T> {
+  return Promise.race([
+    p,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`DNS timed out after ${ms}ms`)), ms),
+    ),
+  ]);
+}
+
+/**
+ * Resolve hostname to all A + AAAA records and verify none are
+ * private/internal. Returns null if safe, or a reason string if blocked.
+ */
+export async function resolveAndCheckUrl(urlString: string): Promise<string | null> {
+  // Layer 1 first
+  const l1 = checkFetchUrl(urlString);
+  if (l1) return l1;
+
+  // data: URLs don't involve DNS
+  if (urlString.startsWith("data:")) return null;
+
+  let parsed: URL;
+  try {
+    parsed = new URL(urlString);
+  } catch {
+    return "URL is not parseable";
+  }
+
+  const hostname = parsed.hostname;
+
+  // IP literals were already checked by Layer 1
+  if (/^(\d{1,3}\.){3}\d{1,3}$/.test(hostname)) return null;
+  if (hostname.startsWith("[")) return null;
+
+  // Layer 2: resolve all DNS records
+  let v4addrs: string[] = [];
+  let v6addrs: string[] = [];
+
+  try {
+    v4addrs = await withTimeout(dns.promises.resolve4(hostname));
+  } catch {
+    // no A record or timeout
+  }
+
+  try {
+    v6addrs = await withTimeout(dns.promises.resolve6(hostname));
+  } catch {
+    // no AAAA record
+  }
+
+  if (v4addrs.length === 0 && v6addrs.length === 0) {
+    return `hostname "${hostname}" could not be resolved`;
+  }
+
+  for (const addr of [...v4addrs, ...v6addrs]) {
+    if (isPrivateOrInternal(addr)) {
+      console.warn(`[ssrf] DNS rebinding blocked: ${hostname} resolved to private ${addr}`);
+      return `resolved address is private/reserved`;
+    }
+  }
+
+  return null;
+}
