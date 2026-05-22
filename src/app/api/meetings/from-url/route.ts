@@ -8,8 +8,8 @@
  * meeting row in `processing`. Returns the new meeting id so the client can
  * poll `/api/meetings/[id]/status` while the worker transcribes.
  *
- * SSRF-hardened — `assertSafeFetchUrl` inside `fetchMeetingFromUrl` blocks
- * loopback / private / cloud-metadata IPs.
+ * SSRF-hardened — `resolveAndCheckUrl` inside `fetchMeetingFromUrl` blocks
+ * loopback / private / cloud-metadata IPs via DNS resolution.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";

@@ -870,24 +870,59 @@ function inferGender(preset: VoiceClone): "female" | "male" | "neutral" {
 const PRESET_CATEGORIES = ["all", "warm", "authoritative", "youthful", "narrator", "casual", "british"] as const;
 type PresetCategory = (typeof PRESET_CATEGORIES)[number];
 
-// Use-case tags displayed on cards + use for filter chips.
-const USE_CASE_TAGS: Record<string, string[]> = {
-  warm:          ["Cold calls", "Voicemails"],
-  authoritative: ["Sales pitches", "Boardroom"],
-  youthful:      ["Social media", "Ads"],
-  narrator:      ["Video narration", "Training"],
-  casual:        ["DMs", "Podcasts"],
-  british:       ["Premium content", "Corporate"],
+// Fallback use-case tags by category — used when consent_evidence doesn't
+// have per-voice use_cases (pre-backfill rows or non-preset voices).
+const FALLBACK_USE_CASE_TAGS: Record<string, string[]> = {
+  warm:          ["Follow-ups", "Voicemails"],
+  authoritative: ["Sales pitches", "Decision-maker outreach"],
+  youthful:      ["Cold calls", "Social media", "Ads"],
+  narrator:      ["Video narration", "Training modules"],
+  casual:        ["Voice notes", "DMs", "Podcasts"],
+  british:       ["Premium content", "Corporate", "B2B outreach"],
 };
 
-function presetUseCases(category: string): string[] {
-  return USE_CASE_TAGS[category] ?? [];
+/** Data-driven use-case tags: read from consent_evidence first, fall back to category map. */
+function presetUseCases(preset: VoiceClone): string[] {
+  const fromEvidence = preset.consent_evidence?.use_cases;
+  if (Array.isArray(fromEvidence) && fromEvidence.length > 0) {
+    return fromEvidence as string[];
+  }
+  const category = (preset.consent_evidence?.category as string) || "";
+  return FALLBACK_USE_CASE_TAGS[category] ?? [];
+}
+
+/** All unique use-case tags across a set of presets — powers the use-case filter. */
+function collectUseCaseTags(presets: VoiceClone[]): string[] {
+  const tags = new Set<string>();
+  for (const p of presets) {
+    for (const t of presetUseCases(p)) tags.add(t);
+  }
+  return Array.from(tags).sort();
+}
+
+/** Get suggested scripts from consent_evidence, or fall back to generic SAMPLE_PHRASES. */
+function presetSuggestedScripts(preset: VoiceClone): readonly string[] {
+  const fromEvidence = preset.consent_evidence?.suggested_scripts;
+  if (Array.isArray(fromEvidence) && fromEvidence.length > 0) {
+    return fromEvidence as string[];
+  }
+  return SAMPLE_PHRASES;
+}
+
+/** Get the default example text for a preset (category-appropriate preview text). */
+function presetDefaultText(preset: VoiceClone): string {
+  const fromEvidence = preset.consent_evidence?.default_example_text;
+  if (typeof fromEvidence === "string" && fromEvidence.length > 0) {
+    return fromEvidence;
+  }
+  return TEST_PROMPT_DEFAULT;
 }
 
 function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; loading?: boolean; onRefresh?: () => void }) {
   const [categoryFilter, setCategoryFilter] = useState<PresetCategory>("all");
   const [langFilter, setLangFilter] = useState<string>("all");
   const [genderFilter, setGenderFilter] = useState<"all" | "female" | "male">("all");
+  const [useCaseFilter, setUseCaseFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [previewOnly, setPreviewOnly] = useState(false);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
@@ -898,6 +933,8 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
       return raw ? new Set<string>(JSON.parse(raw) as string[]) : new Set<string>();
     } catch { return new Set<string>(); }
   });
+
+  const allUseCaseTags = useMemo(() => collectUseCaseTags(presets), [presets]);
 
   const toggleFavorite = useCallback((id: string) => {
     setFavorites((prev) => {
@@ -912,6 +949,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
     setCategoryFilter("all");
     setLangFilter("all");
     setGenderFilter("all");
+    setUseCaseFilter("all");
     setSearchQuery("");
     setPreviewOnly(false);
     setFavoritesOnly(false);
@@ -969,7 +1007,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
         const res = await fetch(`/api/voice/clones/${p.id}/test`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: TEST_PROMPT_DEFAULT }),
+          body: JSON.stringify({ text: presetDefaultText(p) }),
         });
         if (res.ok) {
           const data = (await res.json()) as { r2_url?: string };
@@ -1011,6 +1049,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
         if (categoryFilter !== "all" && cat !== categoryFilter) return false;
         if (langFilter !== "all" && (p.language || "en") !== langFilter) return false;
         if (genderFilter !== "all" && inferGender(p) !== genderFilter) return false;
+        if (useCaseFilter !== "all" && !presetUseCases(p).includes(useCaseFilter)) return false;
         if (previewOnly && !p.consent_evidence?.preview_url) return false;
         if (favoritesOnly && !favorites.has(p.id)) return false;
         if (q && !`${p.label} ${p.description ?? ""}`.toLowerCase().includes(q)) return false;
@@ -1022,7 +1061,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
         const bFav = favorites.has(b.id) ? 0 : 1;
         return aFav - bFav;
       });
-  }, [presets, categoryFilter, langFilter, genderFilter, searchQuery, previewOnly, favoritesOnly, favorites]);
+  }, [presets, categoryFilter, langFilter, genderFilter, useCaseFilter, searchQuery, previewOnly, favoritesOnly, favorites]);
 
   if (loading) {
     return (
@@ -1194,6 +1233,18 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               ))}
             </select>
           )}
+          {allUseCaseTags.length > 0 && (
+            <select
+              value={useCaseFilter}
+              onChange={(e) => setUseCaseFilter(e.target.value)}
+              className="flex-shrink-0 rounded-lg border border-border-subtle bg-white/[0.03] px-2 py-1 text-xs text-text-secondary focus:outline-none focus:ring-1 focus:ring-brand-accent/50 cursor-pointer"
+            >
+              <option value="all" className="bg-white">All use cases</option>
+              {allUseCaseTags.map((tag) => (
+                <option key={tag} value={tag} className="bg-white">{tag}</option>
+              ))}
+            </select>
+          )}
         </div>
       </div>
 
@@ -1221,7 +1272,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               <PresetCard
                 preset={p}
                 cachedUrl={previewCache[p.id] ?? null}
-                cachedText={textCache[p.id] ?? TEST_PROMPT_DEFAULT}
+                cachedText={textCache[p.id] ?? presetDefaultText(p)}
                 onUrlCached={(url) => setPreviewCache((prev) => ({ ...prev, [p.id]: url }))}
                 onTextChanged={(text) => setTextCache((prev) => ({ ...prev, [p.id]: text }))}
                 onSaved={onRefresh}
@@ -1448,7 +1499,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
           <p className="mt-1 text-xs text-text-secondary leading-relaxed">{preset.description}</p>
         )}
         {(() => {
-          const tags = presetUseCases(category);
+          const tags = presetUseCases(preset);
           if (tags.length === 0) return null;
           return (
             <div className="mt-1.5 flex flex-wrap gap-1">
@@ -1590,9 +1641,10 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                 <span className="text-[10px] text-text-secondary">{testText.length}/300</span>
                 <button
                   type="button"
-                  title="Try a different sample phrase"
+                  title="Try a different sample phrase for this voice"
                   onClick={() => {
-                    const others = SAMPLE_PHRASES.filter((p) => p !== testText);
+                    const scripts = presetSuggestedScripts(preset);
+                    const others = scripts.filter((p) => p !== testText);
                     const next = others[Math.floor(Math.random() * others.length)];
                     setTestText(next);
                     onTextChanged(next);
