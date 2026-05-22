@@ -436,7 +436,7 @@ export default function ReportGeneratorPage() {
   /* ── Render ───────────────────────────────────────────── */
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-6">
       {/* -- Report Generator command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">

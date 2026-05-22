@@ -239,7 +239,7 @@ export default function CoachPage() {
                 </motion.button>
               ))}
             </div>{loading && (
-              <div className="flex items-center gap-2 text-black/60 text-sm">
+              <div className="flex items-center gap-2 text-text-secondary text-sm">
                 <Loader2 className="h-4 w-4 animate-spin" /> Loading analyses�
               </div>
             )}{error && !loading && (
@@ -254,7 +254,7 @@ export default function CoachPage() {
                 className="glass rounded-xl overflow-hidden"
               >
                 {data.analyses.length === 0 ? (
-                  <div className="px-6 py-12 text-center text-black/60">
+                  <div className="px-6 py-12 text-center text-text-secondary">
                     <Sparkles className="mx-auto mb-3 h-8 w-8 opacity-50" />
                     <p className="text-base font-medium text-text-primary">No analyses yet.</p>
                     <p className="mt-1 text-sm">
@@ -285,23 +285,23 @@ export default function CoachPage() {
                                     ? "Meeting"
                                     : "Email thread"}
                               </span>
-                              <span className="text-xs text-black/40">
+                              <span className="text-xs text-text-muted">
                                 {formatRelativeTime(row.created_at)}
                               </span>
                             </div>
                             {topInsight ? (
-                              <p className="truncate text-xs text-black/60">
+                              <p className="truncate text-xs text-text-secondary">
                                 {topInsight.category.replace("_", " ")}: {topInsight.text}
                               </p>
                             ) : (
-                              <p className="text-xs text-black/40">No qualitative findings.</p>
+                              <p className="text-xs text-text-muted">No qualitative findings.</p>
                             )}
                           </div>
-                          <div className="hidden text-xs text-black/50 sm:block">
+                          <div className="hidden text-xs text-text-muted sm:block">
                             Talk {talkRatio}%
                           </div>
                           <ScoreBadge score={row.overall_score} />
-                          <ArrowRight className="h-4 w-4 text-black/35 transition-colors group-hover:text-brand-accent" />
+                          <ArrowRight className="h-4 w-4 text-text-muted/60 transition-colors group-hover:text-brand-accent" />
                         </Link>
                       </motion.div>
                     );
@@ -317,7 +317,7 @@ export default function CoachPage() {
               >
                 {repBuckets.length === 0 ? (
                   <PrismPanel padding="px-6 py-8">
-                    <p className="text-center text-black/60">No rep-level data yet.</p>
+                    <p className="text-center text-text-secondary">No rep-level data yet.</p>
                   </PrismPanel>
                 ) : (
                   repBuckets.map((bucket) => (
@@ -337,7 +337,7 @@ export default function CoachPage() {
                           <div className="text-sm font-semibold text-text-primary">
                             {bucket.repId === "__owner" ? "Unassigned" : bucket.repId.slice(0, 8)}
                           </div>
-                          <div className="text-xs text-black/50">
+                          <div className="text-xs text-text-muted">
                             {bucket.rows.length} analyses � avg {bucket.avg}
                           </div>
                         </div>
@@ -394,7 +394,7 @@ export default function CoachPage() {
                 </motion.div>
 
                 {!leaderboard || leaderboard.leaderboard.length === 0 ? (
-                  <motion.div variants={cardVariants} className="glass rounded-xl px-6 py-8 text-center text-black/60">
+                  <motion.div variants={cardVariants} className="glass rounded-xl px-6 py-8 text-center text-text-secondary">
                     Leaderboard requires at least 3 analyses per rep. Once your team accumulates more
                     calls, rankings will appear here.
                   </motion.div>
@@ -411,18 +411,18 @@ export default function CoachPage() {
                           <th className="px-4 py-2 text-right">Worst</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-black/5">
+                      <tbody className="divide-y divide-white/5">
                         {leaderboard.leaderboard.map((entry, idx) => (
                           <motion.tr
                             key={entry.rep_id}
                             variants={rowVariants}
-                            className="text-black/65 hover:bg-[rgba(212,255,0,0.04)] transition-colors"
+                            className="text-text-secondary hover:bg-[rgba(212,255,0,0.04)] transition-colors"
                           >
-                            <td className="px-4 py-3 font-semibold text-black/60">{idx + 1}</td>
+                            <td className="px-4 py-3 font-semibold text-text-secondary">{idx + 1}</td>
                             <td className="px-4 py-3 text-text-primary">
                               {entry.rep_name || entry.rep_email || entry.rep_id.slice(0, 8)}
                             </td>
-                            <td className="px-4 py-3 text-right text-black/65">
+                            <td className="px-4 py-3 text-right text-text-secondary">
                               {entry.analyses_count}
                             </td>
                             <td className="px-4 py-3 text-right">

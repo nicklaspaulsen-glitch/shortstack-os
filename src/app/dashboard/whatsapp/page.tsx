@@ -219,7 +219,7 @@ export default function WhatsAppPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-4xl mx-auto">
+    <div className="flex flex-col gap-6 max-w-4xl mx-auto">
       {/* -- WhatsApp Campaigns command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">

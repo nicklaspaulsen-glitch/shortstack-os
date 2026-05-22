@@ -188,9 +188,9 @@ export default function SubaccountsPage() {
               </div>
             ) : subs.length === 0 ? (
               <div className="rounded-xl border border-dashed border-white/10 p-10 text-center">
-                <Building2 className="w-10 h-10 text-black/20 mx-auto mb-3" />
+                <Building2 className="w-10 h-10 text-text-muted/40 mx-auto mb-3" />
                 <p className="text-text-muted text-sm">No subaccounts yet.</p>
-                <p className="text-black/40 text-xs mt-1">
+                <p className="text-text-muted text-xs mt-1">
                   Invite your first client to get started -- they sign up under your brand and you keep the markup.
                 </p>
                 <button
@@ -224,12 +224,12 @@ export default function SubaccountsPage() {
                       >
                         <td className="px-4 py-3">
                           <p className="text-text-primary font-medium">{sub.name}</p>
-                          <p className="text-xs text-black/40 flex items-center gap-1 mt-0.5">
+                          <p className="text-xs text-text-muted flex items-center gap-1 mt-0.5">
                             <Mail className="w-3 h-3" />
                             {sub.email}
                           </p>
                         </td>
-                        <td className="px-4 py-3 text-black/65 capitalize">{sub.plan_tier}</td>
+                        <td className="px-4 py-3 text-text-secondary capitalize">{sub.plan_tier}</td>
                         <td className="px-4 py-3 text-text-primary">{formatMrr(sub.monthly_amount_cents)}</td>
                         <td className="px-4 py-3">
                           <span className={`inline-block px-2 py-0.5 rounded-md text-xs font-semibold capitalize ${STATUS_BADGE[sub.status]}`}>
@@ -316,7 +316,7 @@ export default function SubaccountsPage() {
                         onChange={(e) => setForm({ ...form, monthly_amount_cents: Number(e.target.value) || 0 })}
                         className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-brand-accent/50"
                       />
-                      <p className="text-xs text-black/40 mt-1">
+                      <p className="text-xs text-text-muted mt-1">
                         e.g. 9900 = $99.00. This is what you charge the client. ShortStack base fee is deducted via Stripe Connect.
                       </p>
                     </div>
@@ -330,7 +330,7 @@ export default function SubaccountsPage() {
                       Send Invite
                     </button>
                   </div>
-                  <p className="mt-4 text-xs text-black/40 flex items-start gap-1.5">
+                  <p className="mt-4 text-xs text-text-muted flex items-start gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                     Email delivery for invites is deferred to v2 -- see PR notes.
                   </p>

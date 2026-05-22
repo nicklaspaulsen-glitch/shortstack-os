@@ -190,7 +190,7 @@ export default function PaymentLinksPage() {
                       </div>
                       {link.url ? (
                         <div className="space-y-2">
-                          <div className="text-[10px] font-mono text-text-muted bg-black/20 rounded-md px-2 py-1.5 truncate" title={link.url}>
+                          <div className="text-[10px] font-mono text-text-muted bg-white/5 rounded-md px-2 py-1.5 truncate" title={link.url}>
                             {link.url}
                           </div>
                           <div className="flex gap-2">
@@ -215,7 +215,7 @@ export default function PaymentLinksPage() {
                       ) : (
                         <div className="text-[10px] text-text-muted leading-relaxed">
                           Set env var:{" "}
-                          <code className="text-[10px] font-mono text-text-primary bg-black/30 px-1.5 py-0.5 rounded">
+                          <code className="text-[10px] font-mono text-text-primary bg-white/8 px-1.5 py-0.5 rounded">
                             {link.env_var}
                           </code>
                         </div>

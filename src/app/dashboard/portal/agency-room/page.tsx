@@ -80,7 +80,7 @@ export default function PortalAgencyRoomPage() {
     // Either logged in as an agency staff member with no impersonation, or a
     // brand-new client account that isn't yet linked to a `clients` row.
     return (
-      <div className="space-y-5 p-6">
+      <div className="space-y-5">
         {/* -- Your Agency Room command strip -- */}
         <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
           <div className="min-w-0">
@@ -102,7 +102,7 @@ export default function PortalAgencyRoomPage() {
   }
 
   return (
-    <div className="space-y-5 p-6">
+    <div className="space-y-5">
       {/* -- Your Agency Room command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">

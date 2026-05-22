@@ -470,7 +470,7 @@ export default function CompetitiveMonitorPage() {
                               <span className={`text-[10px] px-2 py-0.5 rounded-full ${meta.color}`}>{meta.label}</span>
                             </div>
                             <div className="flex items-center gap-2 text-xs text-text-muted mb-2">
-                              <span className="font-medium text-black/65">{change.competitorName}</span>
+                              <span className="font-medium text-text-secondary">{change.competitorName}</span>
                               <span>&#183;</span>
                               <span>{formatTime(change.detectedAt)}</span>
                             </div>

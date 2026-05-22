@@ -942,7 +942,7 @@ export default function LandingPagesPage() {
      ------------------------------------------------------------------ */
 
   return (
-    <div className="min-h-screen p-6 max-w-[1400px] mx-auto space-y-6">
+    <div className="min-h-screen max-w-[1400px] mx-auto space-y-6">
       {/* -- AI Landing Page Generator command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">

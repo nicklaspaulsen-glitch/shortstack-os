@@ -137,7 +137,7 @@ export default function AbTestDetailPage() {
   const totalViews = variants.reduce((acc, v) => acc + v.views, 0);
 
   return (
-    <div className="p-6 space-y-5 max-w-6xl mx-auto">
+    <div className="space-y-5 max-w-6xl mx-auto">
       {/* -- test.name command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">

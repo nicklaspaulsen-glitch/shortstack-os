@@ -216,7 +216,7 @@ export default function LeadSourcesPage() {
                       <th className="px-4 py-3 w-16" />
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-black/[0.04]">
+                  <tbody className="divide-y divide-white/5">
                     {sources.map((s) =>
                       editId === s.id ? (
                         <tr key={s.id} className="bg-[rgba(212,255,0,0.04)]">

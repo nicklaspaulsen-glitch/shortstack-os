@@ -219,7 +219,7 @@ export default function DedupPage() {
                   return (
                     <motion.div key={group.key} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl overflow-hidden">
                       {/* Header */}
-                      <div className="px-5 py-3 border-b border-black/6 flex items-center justify-between gap-3">
+                      <div className="px-5 py-3 border-b border-white/5 flex items-center justify-between gap-3">
                         <div className="flex items-center gap-2">
                           {group.matchType === "phone"
                             ? <Phone className="w-4 h-4 text-blue-400" />
@@ -241,13 +241,13 @@ export default function DedupPage() {
 
                       {/* Side-by-side diff */}
                       <div className="p-5">
-                        <div className="grid grid-cols-[100px_1fr_1fr] gap-2 text-[10px] font-semibold uppercase tracking-wider text-text-muted/60 mb-2 pb-2 border-b border-black/6">
+                        <div className="grid grid-cols-[100px_1fr_1fr] gap-2 text-[10px] font-semibold uppercase tracking-wider text-text-muted/60 mb-2 pb-2 border-b border-white/5">
                           <span>Field</span>
                           <span className="text-text-primary/40">Keep (most complete)</span>
                           <span className="text-emerald-700/60">Merge from</span>
                         </div>
 
-                        <div className="divide-y divide-black/4">
+                        <div className="divide-y divide-white/5">
                           <FieldRow label="Business" a={winner.business_name} b={loser?.business_name ?? null} />
                           <FieldRow label="Owner" a={winner.owner_name} b={loser?.owner_name ?? null} />
                           <FieldRow label="Phone" a={winner.phone} b={loser?.phone ?? null} />
