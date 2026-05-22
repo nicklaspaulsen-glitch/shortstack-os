@@ -236,7 +236,7 @@ export default function ClientContentPage() {
           <button
             onClick={submitRevision}
             disabled={submittingRevision || !revisionNote.trim()}
-            className="text-xs px-4 py-2 rounded-lg bg-brand-accent text-[#020711] font-semibold hover:bg-[#E8FF4D] transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
+            className="text-xs px-4 py-2 rounded-full bg-brand-accent text-[#020711] font-semibold hover:bg-[#E8FF4D] transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
           >
             <MessageSquare size={12} />
             {submittingRevision ? "Sending..." : "Send revision"}

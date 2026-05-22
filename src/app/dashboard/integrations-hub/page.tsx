@@ -346,7 +346,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
               href={integration.configUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold px-3 py-2 rounded-lg bg-brand-accent text-[#020711] hover:bg-[#E8FF4D] transition-all"
+              className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold px-3 py-2 rounded-full bg-brand-accent text-[#020711] hover:bg-[#E8FF4D] transition-all"
               style={{ boxShadow: "0 4px 10px -3px rgba(212,255,0,0.25)" }}
             >
               <ExternalLink size={11} />
