@@ -81,8 +81,8 @@ export default function ContactSupportPage() {
     <MotionPage className="min-h-screen bg-background text-text-primary">{/* -- Contact Support command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Help &amp; Support</p>
-        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Contact Support</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Help &amp; Support</p>
+        <h1 className="text-2xl font-display font-bold text-text-primary">Contact Support</h1>
       </div>
     </div><div className="mx-auto max-w-5xl space-y-6 px-6 pb-12 pt-5">
               {/* Three support channels */}

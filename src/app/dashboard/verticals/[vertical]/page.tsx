@@ -264,8 +264,8 @@ export default function VerticalDetailPage({ params }: PageProps) {
       <MotionPage>{/* -- Loading vertical… command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
-          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">LOADING VERTICAL…</p>
-          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Loading vertical…</h1>
+          <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">LOADING VERTICAL…</p>
+          <h1 className="text-2xl font-display font-bold text-text-primary">Loading vertical…</h1>
         </div>
       </div><div className="max-w-5xl mx-auto">
                   <div className="rounded-xl bg-white/8 h-96 animate-pulse" />
@@ -280,8 +280,8 @@ export default function VerticalDetailPage({ params }: PageProps) {
       {/* -- data.template.display_name command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
-          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Industry Vertical</p>
-          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">{data.template.display_name}</h1>
+          <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Industry Vertical</p>
+          <h1 className="text-2xl font-display font-bold text-text-primary">{data.template.display_name}</h1>
         </div>
       </div>
 

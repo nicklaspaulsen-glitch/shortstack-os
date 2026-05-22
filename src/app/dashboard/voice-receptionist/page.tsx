@@ -613,8 +613,8 @@ export default function VoiceReceptionistPage() {
     <MotionPage className="min-h-screen bg-background text-text-primary">{/* -- AI Voice Receptionist command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Beta</p>
-        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">AI Voice Receptionist</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Beta</p>
+        <h1 className="text-2xl font-display font-bold text-text-primary">AI Voice Receptionist</h1>
       </div>
     </div><div className="mx-auto max-w-6xl space-y-6 px-6 pb-10 pt-6">
               {/* First-call setup wizard � self-hides once a client is fully

@@ -404,8 +404,8 @@ export default function SocialManagerPage() {
       {/* -- Social Manager command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
-          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Social Command</p>
-          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Social Manager</h1>
+          <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Social Command</p>
+          <h1 className="text-2xl font-display font-bold text-text-primary">Social Manager</h1>
         </div>
       </div>
       <div className="flex items-center justify-end flex-wrap gap-3">

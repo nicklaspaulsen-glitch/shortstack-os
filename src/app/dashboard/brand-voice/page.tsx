@@ -293,8 +293,8 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
     <MotionPage className="space-y-6"><AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />{/* -- Brand Voice Manager command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Brand Identity</p>
-        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Brand Voice Manager</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Brand Identity</p>
+        <h1 className="text-2xl font-display font-bold text-text-primary">Brand Voice Manager</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button onClick={() => setShowNewProfile(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1">

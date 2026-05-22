@@ -199,8 +199,8 @@ export default function AgentOfficePage() {
         {/* -- Agent Office command strip -- */}
         <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
           <div className="min-w-0">
-            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Live Status</p>
-            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Agent Office</h1>
+            <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Live Status</p>
+            <h1 className="text-2xl font-display font-bold text-text-primary">Agent Office</h1>
           </div>
         </div>
       </div>
@@ -212,7 +212,7 @@ export default function AgentOfficePage() {
       {/* -- Agent Office command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
-          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">
+          <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">
             <span className="inline-flex items-center gap-1.5">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime-400/80" />
@@ -221,7 +221,7 @@ export default function AgentOfficePage() {
               LIVE
             </span>
           </p>
-          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Agent Office</h1>
+          <h1 className="text-2xl font-display font-bold text-text-primary">Agent Office</h1>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <div className="flex flex-wrap items-center gap-2">

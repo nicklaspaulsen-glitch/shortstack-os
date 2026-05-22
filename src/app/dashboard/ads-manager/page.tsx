@@ -115,10 +115,10 @@ export default function AdsManagerPage() {
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0 flex items-center gap-3">
           <div>
-            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+            <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1 truncate">
               Paid Media
             </p>
-            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+            <h1 className="text-2xl font-display font-bold text-text-primary truncate">
               Ads Manager
             </h1>
           </div>

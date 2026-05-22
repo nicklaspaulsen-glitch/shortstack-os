@@ -125,9 +125,9 @@ export default function ClientDetailPage() {
             <ArrowLeft size={18} />
           </Link>
           <div className="min-w-0">
-            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Managing Client</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Managing Client</p>
             <div className="flex items-center gap-2.5 flex-wrap">
-              <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">{client.business_name}</h1>
+              <h1 className="text-2xl font-display font-bold text-text-primary truncate">{client.business_name}</h1>
               <span className={`flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-bold border ${client.is_active ? "bg-success/10 text-success border-success/25" : "bg-danger/10 text-danger border-danger/25"}`}>
                 {client.is_active ? "Active" : "Inactive"}
               </span>

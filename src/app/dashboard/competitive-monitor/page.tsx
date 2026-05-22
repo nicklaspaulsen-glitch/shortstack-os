@@ -260,8 +260,8 @@ export default function CompetitiveMonitorPage() {
     <MotionPage className="space-y-6">{/* -- Competitive Monitor command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Market Intelligence</p>
-        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Competitive Monitor</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Market Intelligence</p>
+        <h1 className="text-2xl font-display font-bold text-text-primary">Competitive Monitor</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button onClick={() => setShowAddForm(!showAddForm)} className="flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/20 text-text-primary rounded-lg hover:bg-white/15 transition text-sm font-medium">

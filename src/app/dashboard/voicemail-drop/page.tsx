@@ -138,8 +138,8 @@ export default function VoicemailDropPage() {
     <MotionPage className="flex flex-col gap-6 max-w-4xl mx-auto">{/* -- Voicemail Drop command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Drop Campaigns</p>
-        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Voicemail Drop</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Drop Campaigns</p>
+        <h1 className="text-2xl font-display font-bold text-text-primary">Voicemail Drop</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>

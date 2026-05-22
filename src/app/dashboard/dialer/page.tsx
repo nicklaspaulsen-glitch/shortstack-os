@@ -27,8 +27,8 @@ export default function DialerPage() {
     <MotionPage className="min-h-screen pb-12">{/* -- Dialer command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Voice &amp; Messaging</p>
-        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Dialer</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Voice &amp; Messaging</p>
+        <h1 className="text-2xl font-display font-bold text-text-primary">Dialer</h1>
       </div>
     </div><div className="mx-auto mt-6 max-w-7xl px-4 sm:px-6">
               <div className="glass rounded-xl overflow-hidden">

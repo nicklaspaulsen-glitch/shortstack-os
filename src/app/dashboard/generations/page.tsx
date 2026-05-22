@@ -123,10 +123,10 @@ export default function GenerationsPage() {
     <MotionPage className="space-y-5">{/* -- Generations command strip (slim editorial header, no PageHero) -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
-          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+          <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1 truncate">
             Content Output
           </p>
-          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+          <h1 className="text-2xl font-display font-bold text-text-primary truncate">
             Generations
           </h1>
         </div>

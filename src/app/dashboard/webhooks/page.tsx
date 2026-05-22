@@ -223,8 +223,8 @@ export default function WebhooksPage() {
     <MotionPage className="space-y-5">{/* -- Webhooks command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Endpoint Manager</p>
-        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Webhooks</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Endpoint Manager</p>
+        <h1 className="text-2xl font-display font-bold text-text-primary">Webhooks</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button onClick={() => { setShowCreate(true); setTab("Endpoints"); }} className="px-3 py-1.5 rounded-lg bg-white/8 border border-white/15 text-text-primary text-xs font-semibold hover:bg-white/12 transition-all flex items-center gap-1.5">

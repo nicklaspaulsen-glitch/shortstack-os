@@ -245,8 +245,8 @@ export default function IntakePage() {
     <MotionPage className="flex flex-col h-full min-h-screen">{/* -- Intake Forms command strip -- */}
               <div className="flex items-center gap-4 px-4 py-3 sm:py-4 border-b border-border-subtle">
                 <div className="min-w-0">
-                  <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Intake</p>
-                  <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Intake Forms</h1>
+                  <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Intake</p>
+                  <h1 className="text-2xl font-display font-bold text-text-primary">Intake Forms</h1>
                 </div>
               </div><div className="flex-1 max-w-6xl mx-auto w-full">
               {/* Tabs */}

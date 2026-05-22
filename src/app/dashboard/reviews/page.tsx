@@ -115,8 +115,8 @@ export default function ReviewsPage() {
     <MotionPage className="min-h-screen bg-background text-text-primary">{/* -- Reviews command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Reputation Management</p>
-        <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Reviews</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Reputation Management</p>
+        <h1 className="text-2xl font-display font-bold text-text-primary">Reviews</h1>
       </div>
     </div>{/* Tab bar */}<div className="mx-auto max-w-5xl px-6 pt-5">
               <div className="flex gap-1 border-b border-border-subtle/40 mb-6">
