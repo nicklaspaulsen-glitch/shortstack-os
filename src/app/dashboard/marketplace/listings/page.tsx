@@ -308,7 +308,7 @@ export default function ListingsPage() {
                   <button
                     onClick={handleSubmit}
                     disabled={submitting || !draft.title || !draft.description}
-                    className="flex items-center gap-2 rounded-lg bg-brand-accent px-4 py-2 text-xs font-bold text-[#0D1120] hover:bg-brand-accent/80 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex items-center gap-2 rounded-full bg-brand-accent px-4 py-2 text-xs font-bold text-[#0D1120] hover:bg-brand-accent/80 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {submitting && <Loader2 size={12} className="animate-spin" />}
                     Create listing

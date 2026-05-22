@@ -240,7 +240,7 @@ export default function WhiteLabelPage() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-brand-accent/90 text-black transition-all disabled:opacity-60"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-brand-accent hover:bg-brand-accent/90 text-black transition-all disabled:opacity-60"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save Settings
@@ -381,7 +381,7 @@ export default function WhiteLabelPage() {
                 <button
                   onClick={handleAddDomain}
                   disabled={domainBusy || !domainInput.trim()}
-                  className="px-4 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/90 text-black text-sm font-semibold disabled:opacity-60 transition-all whitespace-nowrap"
+                  className="px-4 py-2.5 rounded-full bg-brand-accent hover:bg-brand-accent/90 text-black text-sm font-semibold disabled:opacity-60 transition-all whitespace-nowrap"
                 >
                   {domainBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : "Attach"}
                 </button>

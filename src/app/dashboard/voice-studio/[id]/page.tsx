@@ -351,7 +351,7 @@ export default function VoiceCloneDetailPage() {
                           type="button"
                           onClick={onTest}
                           disabled={testing || testText.trim().length === 0}
-                          className="flex items-center gap-1.5 rounded-lg bg-brand-accent px-3 py-1.5 text-xs font-medium text-[#0D1120] hover:bg-brand-accent/80 disabled:cursor-not-allowed disabled:bg-white/8 disabled:text-text-muted"
+                          className="flex items-center gap-1.5 rounded-full bg-brand-accent px-3 py-1.5 text-xs font-medium text-[#0D1120] hover:bg-brand-accent/80 disabled:cursor-not-allowed disabled:bg-white/8 disabled:text-text-muted"
                         >
                           {testing ? (
                             <Loader2 size={12} className="animate-spin" />

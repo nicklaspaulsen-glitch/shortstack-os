@@ -528,7 +528,7 @@ export default function TelegramPage() {
                   </div>
                   <button
                     onClick={openNewModal}
-                    className="px-4 py-2 bg-brand-accent text-[#020711] rounded-lg text-sm font-semibold hover:bg-brand-accent/80 transition-all flex items-center gap-2"
+                    className="px-4 py-2 bg-brand-accent text-[#020711] rounded-full text-sm font-semibold hover:bg-brand-accent/80 transition-all flex items-center gap-2"
                   >
                     <Plus size={14} />
                     New Routine
@@ -549,7 +549,7 @@ export default function TelegramPage() {
                         <div className="flex gap-2">
                           <button
                             onClick={openNewModal}
-                            className="px-4 py-2 bg-brand-accent text-[#020711] rounded-lg text-sm font-semibold hover:bg-brand-accent/80 flex items-center gap-2"
+                            className="px-4 py-2 bg-brand-accent text-[#020711] rounded-full text-sm font-semibold hover:bg-brand-accent/80 flex items-center gap-2"
                           >
                             <Plus size={14} /> New Routine
                           </button>
@@ -1046,7 +1046,7 @@ export default function TelegramPage() {
                       </button>
                       <button
                         onClick={handleSaveRoutine}
-                        className="px-5 py-2 bg-brand-accent text-[#020711] rounded-lg text-sm font-semibold hover:bg-brand-accent/80 transition-all flex items-center gap-2"
+                        className="px-5 py-2 bg-brand-accent text-[#020711] rounded-full text-sm font-semibold hover:bg-brand-accent/80 transition-all flex items-center gap-2"
                       >
                         <Save size={14} /> Save Routine
                       </button>

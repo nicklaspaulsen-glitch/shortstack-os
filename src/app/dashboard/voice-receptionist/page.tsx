@@ -1176,7 +1176,7 @@ function CalendarIntegrationCard() {
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Link
               href="/dashboard/calendar"
-              className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent text-[#020711] px-3 py-2 text-[11.5px] font-semibold hover:bg-[#E8FF4D]"
+              className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent text-[#020711] px-3 py-2 text-[11.5px] font-semibold hover:bg-[#E8FF4D]"
             >
               <CalendarIcon size={12} /> Connect calendar
             </Link>

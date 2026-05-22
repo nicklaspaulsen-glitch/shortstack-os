@@ -803,7 +803,7 @@ export default function ContentPage() {
                   <button
                     onClick={approveAndPublishAll}
                     disabled={approvingAll}
-                    className="text-[11px] px-3 py-1.5 rounded-lg bg-brand-accent text-black font-semibold flex items-center gap-1.5 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="text-[11px] px-3 py-1.5 rounded-full bg-brand-accent text-black font-semibold flex items-center gap-1.5 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {approvingAll ? <Loader size={12} className="animate-spin" /> : <Send size={12} />}
                     Approve all + publish on schedule

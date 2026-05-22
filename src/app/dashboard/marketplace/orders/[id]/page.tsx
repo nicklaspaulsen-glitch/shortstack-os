@@ -256,7 +256,7 @@ export default function OrderDetailPage() {
           <button
             onClick={handleDeliver}
             disabled={delivering}
-            className="mt-3 flex items-center gap-2 rounded-lg bg-brand-accent px-4 py-2 text-xs font-bold text-[#0D1120] hover:bg-brand-accent/80 disabled:opacity-50"
+            className="mt-3 flex items-center gap-2 rounded-full bg-brand-accent px-4 py-2 text-xs font-bold text-[#0D1120] hover:bg-brand-accent/80 disabled:opacity-50"
           >
             {delivering ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
             Mark delivered
@@ -289,7 +289,7 @@ export default function OrderDetailPage() {
           <button
             onClick={handleReview}
             disabled={reviewing}
-            className="mt-3 flex items-center gap-2 rounded-lg bg-brand-accent px-4 py-2 text-xs font-bold text-[#0D1120] hover:bg-brand-accent/80 disabled:opacity-50"
+            className="mt-3 flex items-center gap-2 rounded-full bg-brand-accent px-4 py-2 text-xs font-bold text-[#0D1120] hover:bg-brand-accent/80 disabled:opacity-50"
           >
             {reviewing ? (
               <Loader2 size={12} className="animate-spin" />

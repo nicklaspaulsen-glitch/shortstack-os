@@ -212,7 +212,7 @@ export default function CustomDashboardPage() {
             <button
               onClick={() => saveLayout(widgets)}
               disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-[#D4FF00] text-[#020711] transition-all disabled:opacity-60"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-brand-accent hover:bg-[#D4FF00] text-[#020711] transition-all disabled:opacity-60"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save Layout

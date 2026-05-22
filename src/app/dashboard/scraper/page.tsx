@@ -1841,7 +1841,7 @@ export default function ScraperPage() {
                         setShowOutreachModal(false);
                         toast.success("Outreach configured! Will start processing leads.");
                       }}
-                      className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/90 text-black text-xs font-semibold transition-all"
+                      className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-accent hover:bg-brand-accent/90 text-black text-xs font-semibold transition-all"
                     >
                       <Send size={13} /> Save &amp; Start Outreach
                     </button>

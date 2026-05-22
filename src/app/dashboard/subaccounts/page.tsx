@@ -143,7 +143,7 @@ export default function SubaccountsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button
                   onClick={() => setShowInvite(true)}
-                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-[#E8FF4D] text-black transition-all"
+                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-brand-accent hover:bg-[#E8FF4D] text-black transition-all"
                 >
                   <Plus className="w-4 h-4" />
                   Invite Subaccount
@@ -195,7 +195,7 @@ export default function SubaccountsPage() {
                 </p>
                 <button
                   onClick={() => setShowInvite(true)}
-                  className="mt-5 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-[#E8FF4D] text-black transition-all"
+                  className="mt-5 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-brand-accent hover:bg-[#E8FF4D] text-black transition-all"
                 >
                   <Plus className="w-4 h-4" />
                   Invite First Subaccount
@@ -327,7 +327,7 @@ export default function SubaccountsPage() {
                     <button onClick={() => setShowInvite(false)} className="flex-1 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/8 text-text-primary text-sm font-medium">
                       Cancel
                     </button>
-                    <button onClick={handleInvite} disabled={inviting} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-brand-accent hover:bg-[#E8FF4D] text-black text-sm font-semibold disabled:opacity-60">
+                    <button onClick={handleInvite} disabled={inviting} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-full bg-brand-accent hover:bg-[#E8FF4D] text-black text-sm font-semibold disabled:opacity-60">
                       {inviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
                       Send Invite
                     </button>

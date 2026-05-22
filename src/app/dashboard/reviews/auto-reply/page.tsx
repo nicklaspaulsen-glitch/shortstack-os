@@ -212,7 +212,7 @@ export default function ReviewsAutoReplyPage() {
                   </Link>
                   <button
                     onClick={() => setShowCompose((v) => !v)}
-                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-brand-accent/80 text-[#0D1120] transition-all"
+                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-brand-accent hover:bg-brand-accent/80 text-[#0D1120] transition-all"
                   >
                     <Sparkles size={14} /> New Draft
                   </button>
@@ -310,7 +310,7 @@ export default function ReviewsAutoReplyPage() {
                     <button
                       onClick={handleGenerate}
                       disabled={generating}
-                      className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold bg-brand-accent hover:bg-brand-accent/80 text-[#0D1120] disabled:opacity-50 transition-all"
+                      className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-brand-accent hover:bg-brand-accent/80 text-[#0D1120] disabled:opacity-50 transition-all"
                     >
                       {generating ? (
                         <Loader2 size={14} className="animate-spin" />

@@ -229,7 +229,7 @@ export default function MailSetupPage() {
                         setStep(1);
                         setNewDomain("");
                       }}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] transition hover:bg-brand-accent/80"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] transition hover:bg-brand-accent/80"
                     >
                       <Plus size={14} /> Add domain
                     </button>
@@ -252,7 +252,7 @@ export default function MailSetupPage() {
                           setMode("new");
                           setStep(1);
                         }}
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711]"
+                        className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711]"
                       >
                         <Plus size={14} /> Add your first domain
                       </button>
@@ -299,7 +299,7 @@ export default function MailSetupPage() {
                         <button
                           onClick={() => selected.resend_id && verifyDomain(selected.resend_id)}
                           disabled={polling}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] disabled:opacity-60"
+                          className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] disabled:opacity-60"
                         >
                           {polling ? (
                             <>
@@ -394,7 +394,7 @@ export default function MailSetupPage() {
                         <button
                           onClick={() => setStep(2)}
                           disabled={!validDomain}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] disabled:opacity-40"
+                          className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] disabled:opacity-40"
                         >
                           Review <ArrowRight size={14} />
                         </button>
@@ -435,7 +435,7 @@ export default function MailSetupPage() {
                         <button
                           onClick={createDomain}
                           disabled={submitting}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-5 py-2 text-sm font-semibold text-[#020711] disabled:opacity-60"
+                          className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-5 py-2 text-sm font-semibold text-[#020711] disabled:opacity-60"
                         >
                           {submitting ? (
                             <>
@@ -488,7 +488,7 @@ export default function MailSetupPage() {
                         <button
                           onClick={() => selected.resend_id && verifyDomain(selected.resend_id)}
                           disabled={polling}
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] disabled:opacity-60"
+                          className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] disabled:opacity-60"
                         >
                           {polling ? (
                             <>

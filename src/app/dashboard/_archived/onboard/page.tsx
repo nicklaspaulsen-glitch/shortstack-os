@@ -508,7 +508,7 @@ export default function OnboardPage() {
             <div className="flex items-center justify-center gap-3">
               <a
                 href="/dashboard"
-                className="px-5 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:bg-brand-accent/80 inline-flex items-center gap-1.5"
+                className="px-5 py-2.5 bg-brand-accent text-white rounded-full text-sm font-semibold hover:bg-brand-accent/80 inline-flex items-center gap-1.5"
               >
                 <Rocket size={14} /> Go to Dashboard
               </a>
@@ -627,7 +627,7 @@ export default function OnboardPage() {
                   if (quickLaunchedId) router.push(`/dashboard/clients/${quickLaunchedId}`);
                   else router.push("/dashboard/clients");
                 }}
-                className="px-5 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:bg-brand-accent/80 flex items-center gap-1.5">
+                className="px-5 py-2.5 bg-brand-accent text-white rounded-full text-sm font-semibold hover:bg-brand-accent/80 flex items-center gap-1.5">
                 <Eye size={14} /> View Client Profile
               </button>
             </div>
@@ -749,7 +749,7 @@ export default function OnboardPage() {
                   }
                 }}
                 disabled={!quickForm.business_name.trim() || !quickForm.contact_name.trim() || !quickForm.email.trim()}
-                className="flex items-center gap-2 px-6 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-bold hover:bg-brand-accent/80 disabled:opacity-40 transition-all">
+                className="flex items-center gap-2 px-6 py-2.5 bg-brand-accent text-white rounded-full text-sm font-bold hover:bg-brand-accent/80 disabled:opacity-40 transition-all">
                 <UserPlus size={14} /> Create Client
               </button>
             </div>
@@ -832,7 +832,7 @@ export default function OnboardPage() {
                 if (launchedClientId) router.push(`/dashboard/clients/${launchedClientId}`);
                 else router.push("/dashboard/clients");
               }}
-              className="px-5 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:bg-brand-accent/80 flex items-center gap-1.5">
+              className="px-5 py-2.5 bg-brand-accent text-white rounded-full text-sm font-semibold hover:bg-brand-accent/80 flex items-center gap-1.5">
               <Eye size={14} /> View Client Profile
             </button>
           </div>
@@ -1223,7 +1223,7 @@ export default function OnboardPage() {
                       <option value="editor">Editor</option>
                       <option value="viewer">Viewer</option>
                     </select>
-                    <button onClick={addAccessUser} className="px-4 py-2 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:bg-brand-accent/80 flex items-center gap-1">
+                    <button onClick={addAccessUser} className="px-4 py-2 bg-brand-accent text-white rounded-full text-sm font-semibold hover:bg-brand-accent/80 flex items-center gap-1">
                       <Plus size={14} /> Add
                     </button>
                   </div>
@@ -1440,13 +1440,13 @@ export default function OnboardPage() {
 
               {step < STEP_META.length - 1 ? (
                 <button onClick={() => canProceed() && setStep(step + 1)} disabled={!canProceed()}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:bg-brand-accent/80 disabled:opacity-40 transition-all">
+                  className="flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white rounded-full text-sm font-semibold hover:bg-brand-accent/80 disabled:opacity-40 transition-all">
                   Next <ArrowRight size={14} />
                 </button>
               ) : (
                 <div className="flex flex-col items-end gap-1">
                   <button onClick={launchClient} disabled={launching}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-bold hover:bg-brand-accent/80 transition-all disabled:opacity-50">
+                    className="flex items-center gap-2 px-6 py-2.5 bg-brand-accent text-white rounded-full text-sm font-bold hover:bg-brand-accent/80 transition-all disabled:opacity-50">
                     {launching ? <Loader2 size={14} className="animate-spin" /> : <Rocket size={14} />}
                     {launching ? "Launching..." : "Launch Client"}
                   </button>

@@ -385,7 +385,7 @@ function BootstrapPanel({
         <button
           onClick={onSubmit}
           disabled={busy || sampleCount === 0}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold bg-brand-accent hover:bg-brand-accent/90 text-[#020711] disabled:opacity-50 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-brand-accent hover:bg-brand-accent/90 text-[#020711] disabled:opacity-50 transition-colors"
         >
           <Sparkles size={13} />
           Capture & recompute

@@ -338,7 +338,7 @@ export default function CompetitorTrackerPage() {
                   <button
                     onClick={save}
                     disabled={saving}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-accent hover:bg-[#D4FF00] text-[#020711] text-sm font-medium disabled:opacity-50"
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-brand-accent hover:bg-[#D4FF00] text-[#020711] text-sm font-medium disabled:opacity-50"
 >
                     {saving && <Loader size={13} className="animate-spin" />}
                     {editItem ? "Save" : "Add"}

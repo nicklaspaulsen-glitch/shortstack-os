@@ -6303,7 +6303,7 @@ export default function VideoEditorPage() {
                           <button
                             onClick={generateAiMusic}
                             disabled={aiMusicLoading}
-                            className="w-full flex items-center justify-center gap-1.5 text-[10px] font-semibold py-1.5 rounded-lg bg-brand-accent text-[#020711] hover:bg-brand-accent/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="w-full flex items-center justify-center gap-1.5 text-[10px] font-semibold py-1.5 rounded-full bg-brand-accent text-[#020711] hover:bg-brand-accent/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                           >
                             {aiMusicLoading ? <Loader2 size={10} className="animate-spin" /> : <Waves size={10} />}
                             {aiMusicLoading ? "Generating�" : "Generate music"}

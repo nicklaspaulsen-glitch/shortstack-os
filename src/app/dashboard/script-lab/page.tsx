@@ -2614,7 +2614,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   ))}
                 </div>
                 <button onClick={generateStoryboard} disabled={generatingStoryboard}
-                  className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-brand-accent text-[#020711] shadow-lg shadow-[rgba(212,255,0,0.25)] hover:bg-[#E8FF4D] hover:shadow-[rgba(212,255,0,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100">
+                  className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full bg-brand-accent text-[#020711] shadow-lg shadow-[rgba(212,255,0,0.25)] hover:bg-[#E8FF4D] hover:shadow-[rgba(212,255,0,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100">
                   {generatingStoryboard ? <Loader size={13} className="animate-spin" /> : <Clapperboard size={13} className="animate-pulse" />}
                   {generatingStoryboard ? "Generating..." : "Generate Storyboard"}
                   <Sparkles size={11} className="opacity-70" />
