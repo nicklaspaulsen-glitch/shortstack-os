@@ -36,32 +36,36 @@ test.describe("Landing Pages", () => {
   });
 
   // ── Page loads ────────────────────────────────────────────────
-  test("renders page heading and template gallery", async ({ page }) => {
-    // Page heading — "Landing Pages" or similar
+  test("renders page heading and guided-mode CTA", async ({ page }) => {
+    // Page heading — "AI Landing Page Generator"
     await expect(
       page.getByRole("heading", { name: /landing/i }).first(),
     ).toBeVisible();
 
-    // At least one template card from the gallery is visible
-    await expect(page.getByText("SaaS Landing").first()).toBeVisible({
-      timeout: 5000,
-    });
+    // Default (non-advanced) mode shows the guided CTA, not the template gallery
+    const guidedCta = page.getByText(/build a landing page|create landing page/i).first();
+    await expect(guidedCta).toBeVisible({ timeout: 5000 });
   });
 
-  // ── Template gallery: key niches ─────────────────────────────
-  test("template gallery shows key niche categories", async ({ page }) => {
-    const niches = [
-      "SaaS Landing",
-      "Agency Portfolio",
-      "Restaurant",
-      "Event",
-    ];
-    // Allow extra time for the first niche — large client-side React component.
-    const [firstNiche, ...restNiches] = niches;
-    await expect(page.getByText(firstNiche, { exact: false }).first()).toBeVisible({
-      timeout: 10000,
-    });
-    for (const niche of restNiches) {
+  // ── Template gallery: key niches (advanced mode) ─────────────
+  test("template gallery shows key niche categories in advanced mode", async ({ page }) => {
+    // Switch to advanced mode — the AdvancedToggle is always visible
+    const advToggle = page.getByRole("button", { name: /advanced|full form/i }).first();
+    if (await advToggle.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await advToggle.click();
+      await page.waitForTimeout(400);
+    }
+
+    // In advanced mode, click "Skip to Templates" to reach step 2
+    const skipBtn = page.getByRole("button", { name: /skip to templates/i }).first();
+    if (await skipBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await skipBtn.click();
+      await page.waitForTimeout(400);
+    }
+
+    // Template cards should now be visible
+    const niches = ["SaaS Landing", "Agency Portfolio", "Restaurant", "Event"];
+    for (const niche of niches) {
       const card = page.getByText(niche, { exact: false }).first();
       await expect(card).toBeVisible({ timeout: 5000 });
     }
@@ -173,8 +177,22 @@ test.describe("Landing Pages", () => {
     // If 0 pages, test passes — covered by the empty-state test above
   });
 
-  // ── Template CVR + launch time ────────────────────────────────
+  // ── Template CVR + launch time (advanced mode) ─────────────────
   test("template cards show CVR and launch time metadata", async ({ page }) => {
+    // Switch to advanced mode to reveal the template gallery
+    const advToggle = page.getByRole("button", { name: /advanced|full form/i }).first();
+    if (await advToggle.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await advToggle.click();
+      await page.waitForTimeout(400);
+    }
+
+    // In advanced mode, click "Skip to Templates" to reach step 2
+    const skipBtn = page.getByRole("button", { name: /skip to templates/i }).first();
+    if (await skipBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await skipBtn.click();
+      await page.waitForTimeout(400);
+    }
+
     // Each template card has "Avg X% CVR" + "X min to live"
     const cvrBadge = page.getByText(/avg.*cvr/i).first();
     await expect(cvrBadge).toBeVisible({ timeout: 5000 });

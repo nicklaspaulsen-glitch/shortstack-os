@@ -117,6 +117,7 @@ test.describe("Thumbnail Editor Pro", () => {
       .first();
     if (await stockBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
       await stockBtn.click();
+      await page.waitForTimeout(300);
 
       const panel = page
         .getByText(/search photos|stock/i)
@@ -124,11 +125,20 @@ test.describe("Thumbnail Editor Pro", () => {
         .first();
       await expect(panel).toBeVisible({ timeout: 3000 });
 
-      const closeBtn = page
-        .getByRole("button", { name: /close|×|back/i })
-        .first();
-      if (await closeBtn.isVisible({ timeout: 1000 }).catch(() => false)) {
-        await closeBtn.click();
+      // Close the panel — use Escape key as a reliable alternative
+      // to clicking a close button that may become stale
+      await page.keyboard.press("Escape");
+      await page.waitForTimeout(300);
+
+      // If Escape didn't close, try clicking a close button
+      const panelStillVisible = await panel.isVisible({ timeout: 500 }).catch(() => false);
+      if (panelStillVisible) {
+        const closeBtn = page
+          .getByRole("button", { name: /close|×|back/i })
+          .first();
+        if (await closeBtn.isVisible({ timeout: 1000 }).catch(() => false)) {
+          await closeBtn.click({ force: true });
+        }
       }
     }
   });

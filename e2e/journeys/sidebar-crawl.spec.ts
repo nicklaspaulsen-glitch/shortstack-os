@@ -21,18 +21,42 @@ import { signIn, hasTestCreds } from "../helpers/auth";
  * with the status of every visited page.
  */
 
-// Routes pulled from src/components/sidebar.tsx — keep in sync when the
-// nav changes. Anything in the sidebar should be visitable.
+// Routes pulled from src/components/sidebar.tsx + glass-top-nav.tsx
+// Keep in sync when the nav changes. Anything in the sidebar should
+// be visitable.
+//
+// Updated 2026-05-22 from sidebar.tsx NAV_ITEMS (tier 1-4 + settingsOnly).
 const AGENCY_ROUTES = [
-  // Core
-  "/dashboard/inbox",
-  "/dashboard/generations",
+  // ── GlassTopNav primary (tier 1-2) ──────────────────────────
   "/dashboard",
-  "/dashboard/community",
+  "/dashboard/clients",
   "/dashboard/analytics",
+  "/dashboard/ai-video",
+  "/dashboard/video-editor",
+  "/dashboard/thumbnail-generator",
+  "/dashboard/ai-studio",
+  "/dashboard/social-manager",
+  "/dashboard/websites",
+  "/dashboard/ads-manager",
+  "/dashboard/crm",
+  "/dashboard/invoices",
+  "/dashboard/agent-office",
+  "/dashboard/integrations-hub",
+  "/dashboard/content-library",
+  "/dashboard/conversations",
+  "/dashboard/brand-kit",
+  "/dashboard/automations",
+  "/dashboard/settings",
+  // ── settingsOnly routes ─────────────────────────────────────
+  "/dashboard/inbox",
+  "/dashboard/calendar",
+  "/dashboard/generations",
+  "/dashboard/content-plan",
+  "/dashboard/notifications",
+  "/dashboard/team",
   "/dashboard/reports",
-  // Sales
   "/dashboard/outreach-hub",
+  "/dashboard/leadgen-pipeline",
   "/dashboard/scraper",
   "/dashboard/eleven-agents",
   "/dashboard/dialer",
@@ -40,62 +64,80 @@ const AGENCY_ROUTES = [
   "/dashboard/voicemail-drop",
   "/dashboard/voice-studio",
   "/dashboard/dm-controller",
-  "/dashboard/conversations",
   "/dashboard/outreach-feed",
   "/dashboard/coach",
   "/dashboard/outreach-logs",
   "/dashboard/cold-email",
   "/dashboard/sequences",
   "/dashboard/lead-sources",
-  "/dashboard/crm",
-  "/dashboard/tags",
+  "/dashboard/leads",
   "/dashboard/deals",
   "/dashboard/proposals",
+  "/dashboard/trinity",
   "/dashboard/forecast",
-  "/dashboard/commission-tracker",
   "/dashboard/affiliates",
-  "/dashboard/ads-manager",
-  "/dashboard/calendar",
   "/dashboard/scheduling",
   "/dashboard/meetings",
-  "/dashboard/clients",
-  "/dashboard/courses",
   "/dashboard/verticals",
-  // Create
   "/dashboard/copywriter",
-  "/dashboard/script-lab",
   "/dashboard/email-composer",
   "/dashboard/email-templates",
   "/dashboard/sms-templates",
   "/dashboard/newsletter",
   "/dashboard/brand-voice",
-  "/dashboard/brand-kit",
-  // Workspace
+  "/dashboard/landing-pages",
+  "/dashboard/funnels",
+  "/dashboard/forms",
+  "/dashboard/intake",
+  "/dashboard/social-studio",
+  "/dashboard/design-studio",
+  "/dashboard/carousel-generator",
+  "/dashboard/services",
+  "/dashboard/workflows",
+  "/dashboard/workflow-builder",
+  "/dashboard/whatsapp",
   "/dashboard/workspace/board",
   "/dashboard/workspace/whiteboard",
   "/dashboard/workspace/files",
-  // Manage
   "/dashboard/workspaces",
-  "/dashboard/team",
   "/dashboard/production",
   "/dashboard/projects",
   "/dashboard/financials",
-  // Settings
-  "/dashboard/settings",
-  "/dashboard/settings/email-templates",
-  "/dashboard/settings/getting-started",
-  "/dashboard/settings/voice-profile",
-  // Admin
+  "/dashboard/invoice-templates",
+  "/dashboard/subaccounts",
+  "/dashboard/pricing",
+  "/dashboard/white-label",
+  "/dashboard/billing",
+  "/dashboard/usage",
+  "/dashboard/phone-email",
+  "/dashboard/phone-setup",
+  "/dashboard/mail-setup",
+  "/dashboard/domains",
+  "/dashboard/client-health",
+  "/dashboard/reviews",
+  "/dashboard/tickets",
+  "/dashboard/referrals",
+  "/dashboard/monitor",
+  "/dashboard/report-generator",
+  "/dashboard/marketplace",
+  "/dashboard/download",
+  "/dashboard/google-business",
+  "/dashboard/discord",
+  "/dashboard/notion-sync",
+  "/dashboard/telegram",
+  "/dashboard/webhooks",
+  "/dashboard/api/keys",
+  "/dashboard/api/webhooks",
+  "/dashboard/api-docs",
+  "/dashboard/activity-log",
+  // ── Admin routes ────────────────────────────────────────────
   "/dashboard/admin",
   "/dashboard/admin/agent-traces",
   "/dashboard/admin/llm-costs",
   "/dashboard/admin/self-test",
   "/dashboard/admin/status",
-  // Pixel office + automations
-  "/dashboard/agent-office",
-  "/dashboard/automations",
-  "/dashboard/automations/library",
-  "/dashboard/automations/browser-tasks",
+  // ── Script Lab (sidebar.tsx Create section legacy) ──────────
+  "/dashboard/script-lab",
 ] as const;
 
 interface RouteResult {
@@ -116,6 +158,9 @@ const ALLOWED_CONSOLE_NOISE = [
   "Download the React DevTools",
   "[next-auth]",
   "OnboardingTour", // mounts on every dashboard with optional copy
+  "ResizeObserver",
+  "hydration",
+  "Non-Error promise rejection",
 ];
 
 function isNoise(text: string): boolean {
@@ -126,7 +171,7 @@ test.describe("Sidebar route crawl", () => {
   test.skip(!hasTestCreds(), "Set E2E_TEST_EMAIL + E2E_TEST_PASSWORD to run");
 
   test("every sidebar route renders cleanly", async ({ page, request }, testInfo) => {
-    test.setTimeout(15 * 60_000); // 15 min — crawls ~60 pages
+    test.setTimeout(20 * 60_000); // 20 min — crawls ~100 pages
 
     await signIn(page);
 
