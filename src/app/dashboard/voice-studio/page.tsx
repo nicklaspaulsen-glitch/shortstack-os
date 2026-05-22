@@ -1118,7 +1118,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
                 "flex-shrink-0 flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-medium transition-colors duration-150",
                 preWarmActive
                   ? "border border-brand-accent/30 bg-brand-accent/10 text-brand-accent cursor-wait"
-                  : "border border-border-subtle bg-white/[0.02] text-text-secondary hover:text-[#D4FF00] hover:bg-white/[0.05] cursor-pointer",
+                  : "border border-border-subtle bg-white/[0.02] text-text-secondary hover:text-brand-accent hover:bg-white/[0.05] cursor-pointer",
               ].join(" ")}
             >
               {preWarmActive ? (
@@ -1417,7 +1417,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                 title={favorited ? "Remove from favorites" : "Add to favorites"}
                 className={[
                   "flex items-center justify-center w-5 h-5 transition-colors duration-150 cursor-pointer",
-                  favorited ? "text-yellow-400" : "text-[#52525B] hover:text-yellow-400",
+                  favorited ? "text-yellow-400" : "text-text-muted hover:text-yellow-400",
                 ].join(" ")}
               >
                 <Star size={12} fill={favorited ? "currentColor" : "none"} />
@@ -1455,7 +1455,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               {tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded px-1.5 py-0.5 text-[9px] font-medium border border-border-subtle bg-white/[0.03] text-[#52525B]"
+                  className="rounded px-1.5 py-0.5 text-[9px] font-medium border border-border-subtle bg-white/[0.03] text-text-muted"
                 >
                   {tag}
                 </span>
@@ -1531,7 +1531,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                       onChange={(e) => set(parseFloat(e.target.value))}
                       className="flex-1 h-1 cursor-pointer accent-[#D4FF00]"
                     />
-                    <span className="w-6 shrink-0 text-right text-[9px] tabular-nums text-[#52525B]">
+                    <span className="w-6 shrink-0 text-right text-[9px] tabular-nums text-text-muted">
                       {val.toFixed(2)}
                     </span>
                   </div>

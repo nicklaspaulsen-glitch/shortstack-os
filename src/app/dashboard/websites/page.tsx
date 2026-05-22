@@ -72,13 +72,13 @@ interface PriceQuote {
 }
 
 const STATUS_BADGE: Record<string, string> = {
-  draft:      "bg-white/[0.05] text-[#A8A8B2] border-white/10",
+  draft:      "bg-white/[0.05] text-text-secondary border-white/10",
   generating: "bg-[rgba(212,255,0,0.10)] text-brand-accent border-[rgba(212,255,0,0.25)]",
   preview:    "bg-amber-500/15 text-amber-300 border-amber-500/25",
   deploying:  "bg-[rgba(212,255,0,0.10)] text-brand-accent border-[rgba(212,255,0,0.25)]",
   live:       "bg-emerald-500/15 text-emerald-300 border-emerald-500/25",
   failed:     "bg-red-500/15 text-red-300 border-red-500/25",
-  archived:   "bg-white/[0.05] text-[#A8A8B2] border-white/10",
+  archived:   "bg-white/[0.05] text-text-secondary border-white/10",
   expired:    "bg-orange-500/15 text-orange-300 border-orange-500/25",
 };
 
