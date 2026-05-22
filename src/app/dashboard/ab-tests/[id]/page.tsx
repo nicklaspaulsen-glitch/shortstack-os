@@ -183,6 +183,7 @@ export default function AbTestDetailPage() {
       </div>
 
       <div className="glass rounded-xl overflow-hidden">
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-white/4 text-xs uppercase tracking-wider text-text-muted">
             <tr>
@@ -241,6 +242,7 @@ export default function AbTestDetailPage() {
             })}
           </tbody>
         </table>
+        </div>
       </div>
 
       {test.status !== "completed" && (

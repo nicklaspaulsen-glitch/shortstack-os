@@ -560,6 +560,7 @@ export default function BillingPage() {
                     </p>
                   </div>
                 ) : (
+                  <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-border-subtle bg-surface-light/30">
@@ -630,6 +631,7 @@ export default function BillingPage() {
                       })}
                     </tbody>
                   </table>
+                  </div>
                 )}
               </PrismPanel>
             </section></MotionPage>

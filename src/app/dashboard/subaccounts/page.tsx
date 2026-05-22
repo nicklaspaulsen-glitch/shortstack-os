@@ -203,6 +203,7 @@ export default function SubaccountsPage() {
               </div>
             ) : (
               <div className="glass rounded-xl overflow-hidden">
+                <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="bg-white/4 text-xs uppercase tracking-widest text-text-muted">
                     <tr>
@@ -259,6 +260,7 @@ export default function SubaccountsPage() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               </div>
             )}{showInvite && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">

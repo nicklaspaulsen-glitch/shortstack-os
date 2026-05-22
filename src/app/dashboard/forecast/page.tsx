@@ -220,6 +220,7 @@ export default function ForecastPage() {
                           <p className="text-sm font-semibold text-text-primary">Likely to Close This Month</p>
                           <p className="text-xs text-text-muted mt-0.5">Deals with =70% probability closing in {new Date().toLocaleString("default", { month: "long" })}</p>
                         </div>
+                        <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                           <thead>
                             <tr className="border-b border-white/8 text-text-muted text-xs">
@@ -257,6 +258,7 @@ export default function ForecastPage() {
                             ))}
                           </motion.tbody>
                         </table>
+                        </div>
                       </PrismPanel>
                     )}
 
@@ -265,6 +267,7 @@ export default function ForecastPage() {
                       <div className="px-4 py-3 border-b border-white/8">
                         <p className="text-sm font-semibold text-text-primary">Full Open Pipeline</p>
                       </div>
+                      <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
                           <tr className="border-b border-white/8 text-text-muted text-xs">
@@ -310,6 +313,7 @@ export default function ForecastPage() {
                             ))}
                         </motion.tbody>
                       </table>
+                      </div>
                     </PrismPanel>
                   </>
                 )}

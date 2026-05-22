@@ -400,6 +400,7 @@ export default function CoachPage() {
                   </motion.div>
                 ) : (
                   <motion.div variants={cardVariants} className="glass rounded-xl overflow-hidden">
+                    <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead className="bg-white/4 text-xs uppercase tracking-wider text-text-muted">
                         <tr>
@@ -438,6 +439,7 @@ export default function CoachPage() {
                         ))}
                       </tbody>
                     </table>
+                    </div>
                   </motion.div>
                 )}
               </motion.div>

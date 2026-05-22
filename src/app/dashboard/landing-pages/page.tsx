@@ -1349,6 +1349,7 @@ export default function LandingPagesPage() {
           </div>
 
           <div className="glass rounded-xl overflow-hidden">
+            <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border-subtle">
@@ -1418,6 +1419,7 @@ export default function LandingPagesPage() {
                 ))}
               </tbody>
             </table>
+            </div>
             {filteredPages.length === 0 && (
               <div className="text-center py-12 text-text-muted text-sm">No pages found matching your search.</div>
             )}

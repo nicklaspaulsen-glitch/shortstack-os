@@ -535,6 +535,7 @@ function ReviewRequests() {
             </div>
           ) : (
             <div className="glass rounded-xl overflow-hidden">
+              <div className="overflow-x-auto">
               <table className="w-full text-[12px]">
                 <thead>
                   <tr className="border-b border-border-subtle/40 text-left text-[10px] uppercase tracking-wider text-text-muted">
@@ -561,6 +562,7 @@ function ReviewRequests() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           )}
         </>

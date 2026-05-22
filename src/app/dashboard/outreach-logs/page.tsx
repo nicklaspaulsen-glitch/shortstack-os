@@ -731,7 +731,8 @@ export default function OutreachLogsPage() {
                     />
                   ) : viewMode === "compact" ? (
                     /* -- Compact table view -- */
-                    <div className="glass rounded-xl p-4 overflow-hidden p-0">
+                    <div className="glass rounded-xl overflow-hidden">
+                      <div className="overflow-x-auto">
                       <table className="w-full">
                         <thead>
                           <tr className="border-b border-border-subtle text-[9px] text-text-muted uppercase tracking-wider">
@@ -801,6 +802,7 @@ export default function OutreachLogsPage() {
                           })}
                         </tbody>
                       </table>
+                      </div>
                     </div>
                   ) : (
                     /* -- Detailed card view -- */

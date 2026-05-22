@@ -70,6 +70,7 @@ function PreviewModal({ template, onClose }: { template: InvoiceTemplate; onClos
 
         {/* Line items */}
         <div className="p-8">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-subtle text-text-muted text-xs">
@@ -90,6 +91,7 @@ function PreviewModal({ template, onClose }: { template: InvoiceTemplate; onClos
               ))}
             </tbody>
           </table>
+          </div>
 
           {/* Totals */}
           <div className="mt-6 border-t border-border-subtle pt-4 space-y-2 text-sm">

@@ -206,6 +206,7 @@ export default function LeadSourcesPage() {
               </motion.div>
             ) : (
               <motion.div className="glass rounded-xl overflow-hidden" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border-subtle text-text-muted text-xs">
@@ -280,6 +281,7 @@ export default function LeadSourcesPage() {
                     )}
                   </tbody>
                 </table>
+                </div>
               </motion.div>
             )}</MotionPage>
   );

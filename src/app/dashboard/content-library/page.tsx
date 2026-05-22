@@ -758,6 +758,7 @@ export default function ContentLibraryPage() {
       {/* Asset List */}
       {filteredAssets.length > 0 && viewMode === "list" && (
         <div className="glass rounded-xl overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/10">
@@ -819,6 +820,7 @@ export default function ContentLibraryPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 

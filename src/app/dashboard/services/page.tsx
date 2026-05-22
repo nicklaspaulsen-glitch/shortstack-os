@@ -223,6 +223,7 @@ export default function ServicesPage() {
               </div>
             ) : (
               <div className="glass rounded-xl overflow-hidden">
+                <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-white/8 text-text-muted text-xs">
@@ -278,6 +279,7 @@ export default function ServicesPage() {
                     )}
                   </tbody>
                 </table>
+                </div>
               </div>
             )}</MotionPage>
   );

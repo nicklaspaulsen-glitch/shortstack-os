@@ -359,7 +359,7 @@ export default function ClientOutreachPage() {
                 </div>
               </div>
             )}{/* History Tab */}{tab === "history" && (
-              <div className="glass rounded-xl p-0 overflow-hidden">
+              <div className="glass rounded-xl overflow-hidden">
                 {loadingHistory ? (
                   <div className="text-center py-12 text-text-muted">
                     <Loader size={16} className="animate-spin mx-auto mb-2" /> Loading history...
@@ -370,6 +370,7 @@ export default function ClientOutreachPage() {
                     <p className="text-xs">No outreach history yet. Launch your first campaign above.</p>
                   </div>
                 ) : (
+                  <div className="overflow-x-auto">
                   <table className="w-full text-xs">
                     <thead>
                       <tr className="border-b border-border-subtle bg-white/[0.06]">
@@ -401,6 +402,7 @@ export default function ClientOutreachPage() {
                       ))}
                     </tbody>
                   </table>
+                  </div>
                 )}
               </div>
             )}{/* Templates Tab */}{tab === "templates" && (

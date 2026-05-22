@@ -632,6 +632,7 @@ function AffiliatesTab({
         </div>
       ) : (
         <div className="glass rounded-xl overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-muted/10 text-xs uppercase text-text-muted">
               <tr>
@@ -650,6 +651,7 @@ function AffiliatesTab({
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
@@ -1173,6 +1175,7 @@ function PayoutsTab({
         </div>
       ) : (
         <div className="glass rounded-xl overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-muted/10 text-xs uppercase text-text-muted">
               <tr>
@@ -1216,6 +1219,7 @@ function PayoutsTab({
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
