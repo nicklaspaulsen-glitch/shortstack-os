@@ -1688,7 +1688,7 @@ export default function ScraperPage() {
                 <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
                 <div
                   className="relative w-[95%] max-w-2xl max-h-[85vh] border border-white/10 rounded-2xl shadow-xl flex flex-col overflow-hidden"
-                  style={{ background: "rgba(255,255,255,0.94)", backdropFilter: "blur(24px) saturate(1.5)", WebkitBackdropFilter: "blur(24px) saturate(1.5)", boxShadow: "0 1px 0 rgba(255,255,255,1) inset, 0 20px 60px rgba(0,0,0,0.10), 0 0 48px -12px rgba(212,255,0,0.14)" }}
+                  style={{ background: "rgba(13,17,32,0.95)", backdropFilter: "blur(24px) saturate(1.5)", WebkitBackdropFilter: "blur(24px) saturate(1.5)", boxShadow: "0 1px 0 rgba(255,255,255,0.06) inset, 0 20px 60px rgba(0,0,0,0.50), 0 0 48px -12px rgba(212,255,0,0.14)" }}
                   onClick={e => e.stopPropagation()}
                 >
                   {/* Modal Header */}

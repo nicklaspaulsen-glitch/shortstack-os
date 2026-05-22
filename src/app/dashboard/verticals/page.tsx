@@ -128,7 +128,7 @@ export default function VerticalsIndexPage() {
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">VERTICAL TEMPLATES</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Vertical Templates</h1>
       </div>
-    </div><div className="max-w-7xl mx-auto px-6 py-10">
+    </div><div className="max-w-7xl mx-auto">
               {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {Array.from({ length: 3 }).map((_, i) => (

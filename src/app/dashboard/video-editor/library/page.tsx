@@ -97,7 +97,7 @@ export default function PresetLibraryPage() {
     MUSIC_LIBRARY.length;
 
   return (
-    <MotionPage className="min-h-screen bg-background text-text-primary"><div className="mx-auto max-w-[1400px] px-6 py-8">
+    <MotionPage className="min-h-screen bg-background text-text-primary"><div className="mx-auto max-w-[1400px]">
               {/* Header */}
               <div className="mb-6 flex items-center justify-between gap-4">
                 <div>

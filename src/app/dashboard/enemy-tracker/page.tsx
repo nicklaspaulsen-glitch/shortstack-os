@@ -1472,7 +1472,7 @@ export default function EnemyTrackerPage() {
   ];
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex flex-col h-[calc(100vh-200px)] overflow-hidden">
       {/* ── Slim editorial header ───────────────────────────────────── */}
       <div className="flex items-center justify-between gap-4 px-4 py-3 sm:py-4 border-b border-[var(--border-subtle)] shrink-0">
         <div className="min-w-0">

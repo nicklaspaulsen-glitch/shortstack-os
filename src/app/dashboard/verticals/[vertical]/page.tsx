@@ -267,7 +267,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
           <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">LOADING VERTICAL…</p>
           <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Loading vertical…</h1>
         </div>
-      </div><div className="max-w-5xl mx-auto px-6 py-10">
+      </div><div className="max-w-5xl mx-auto">
                   <div className="rounded-xl bg-white/8 h-96 animate-pulse" />
                 </div></MotionPage>
     );
@@ -285,7 +285,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-10 space-y-10">
+      <div className="max-w-5xl mx-auto space-y-10">
         {/* Module selection */}
         <section>
           <div className="flex items-center justify-between mb-4">

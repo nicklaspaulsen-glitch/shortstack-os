@@ -651,8 +651,7 @@ export default function SequencesPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22 }}
-                className="glass rounded-xl overflow-hidden p-4"
-                style={{ border: "1px solid rgba(0,0,0,0.12)" }}
+                className="glass rounded-xl overflow-hidden p-4 border border-border-subtle"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">

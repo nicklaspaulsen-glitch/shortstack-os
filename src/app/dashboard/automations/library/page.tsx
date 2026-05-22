@@ -134,7 +134,7 @@ export default function WorkflowLibraryPage() {
         <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Templates &amp; Blueprints</p>
         <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Workflow Library</h1>
       </div>
-    </div><div className="mx-auto max-w-6xl px-6 py-8">
+    </div><div className="mx-auto max-w-6xl">
               {/* Filters */}
               <div className="mb-6 flex flex-wrap items-center gap-3">
                 <div className="relative flex-1 min-w-[240px]">

@@ -117,7 +117,7 @@ export default function DesignStudioPage() {
   // No design loaded � show picker
   if (!designId && !design) {
     return (
-      <MotionPage className="min-h-screen flex flex-col bg-[#FAFAFB]">{/* -- Design Studio command strip -- */}
+      <MotionPage className="min-h-screen flex flex-col">{/* -- Design Studio command strip -- */}
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0">
           <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">DESIGN STUDIO</p>
@@ -171,7 +171,7 @@ export default function DesignStudioPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FAFAFB]">
+      <div className="min-h-screen flex items-center justify-center">
         <Loader2 size={32} className="animate-spin text-brand-accent" />
       </div>
     );
