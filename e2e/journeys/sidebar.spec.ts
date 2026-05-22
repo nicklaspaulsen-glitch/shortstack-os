@@ -2,14 +2,14 @@ import { test, expect } from "@playwright/test";
 import { hasTestCreds, signIn } from "../helpers/auth";
 
 /**
- * Sidebar journey — verifies nav tier visibility, "Show more" toggle, and
- * the mobile hamburger menu.
+ * Navigation journey — verifies the GlassTopNav renders, key links are
+ * accessible, and the mobile hamburger works.
  *
- * Tier model (from src/components/sidebar.tsx):
- *   tier 1 — Core: always visible (Dashboard, Inbox, Clients, Analytics, CRM, Calendar)
- *   tier 2 — Main features: visible by default
- *   tier 3 — Advanced: hidden until "Show more" is toggled
- *   tier 4 — Settings/admin footer strip
+ * The original sidebar (TrinitySidebar) is hidden when the glass shell is
+ * active. The primary navigation is now GlassTopNav with two pill rows:
+ *   Row "create" — Studio, Thumbs, Video, Editor, Social, Stats
+ *   Row "system" — Library, Comments, Brand kit, Automations, Settings
+ * Plus icon-only utility links: Dashboard home, Analytics, Notifications.
  *
  * Run:
  *   E2E_TEST_EMAIL=... E2E_TEST_PASSWORD=... \
@@ -18,76 +18,71 @@ import { hasTestCreds, signIn } from "../helpers/auth";
 
 test.describe.configure({ mode: "serial" });
 
-// Core items that must always be visible — source: trinity-sidebar.tsx NAV_GROUPS.
-// These are hardcoded in the sidebar (no server-side enable/disable filtering).
-// "Inbox" was removed: it was in the old sidebar.tsx which is no longer used.
-const TIER_1_LABELS = ["Dashboard", "Clients", "Analytics"] as const;
+// Navigation pills that must be visible in the GlassTopNav "create" row.
+const CREATE_PILLS = ["Studio", "Thumbs", "Video", "Editor", "Social", "Stats"] as const;
 
-// A sample item that indicates the sidebar is fully rendered.
-const TIER_3_SAMPLE = "Dialer";
+// Utility links in the top bar (icon-only, matched by aria-label).
+const UTILITY_LINKS = ["Dashboard home", "Analytics"] as const;
 
-test.describe("sidebar journey", () => {
+test.describe("navigation journey", () => {
   test.beforeEach(({ page: _ }) => {
     if (!hasTestCreds()) {
       test.skip(
         true,
-        "E2E_TEST_EMAIL / E2E_TEST_PASSWORD not set — skipping sidebar tests",
+        "E2E_TEST_EMAIL / E2E_TEST_PASSWORD not set — skipping navigation tests",
       );
     }
   });
 
-  test("tier-1 sidebar items are always visible after login", async ({ page }) => {
+  test("GlassTopNav renders with main navigation landmark", async ({ page }) => {
     await signIn(page);
 
-    // Give the sidebar time to hydrate
-    await expect(page.getByRole("navigation").first()).toBeVisible({
-      timeout: 10_000,
-    });
+    // The GlassTopNav renders as <nav aria-label="Main navigation">
+    const nav = page.getByRole("navigation", { name: /main navigation/i }).first();
+    await expect(nav).toBeVisible({ timeout: 10_000 });
+  });
 
-    for (const label of TIER_1_LABELS) {
-      // Use getByRole("link") scoped to text — avoids false positives from page body
-      const link = page.getByRole("link", { name: new RegExp(`^${label}$`, "i") }).first();
+  test("utility links (Dashboard, Analytics) are present", async ({ page }) => {
+    await signIn(page);
+
+    for (const label of UTILITY_LINKS) {
+      // These are icon-only links with aria-label
+      const link = page.getByRole("link", { name: new RegExp(label, "i") }).first();
       await expect(link).toBeVisible({ timeout: 5_000 });
     }
   });
 
-  test("Show-more toggle reveals tier-3 items", async ({ page }) => {
+  test("create-row pills are visible after login", async ({ page }) => {
     await signIn(page);
 
-    await expect(page.getByRole("navigation").first()).toBeVisible({
-      timeout: 10_000,
-    });
+    // Wait for the nav to hydrate
+    await expect(
+      page.getByRole("navigation", { name: /main navigation/i }).first(),
+    ).toBeVisible({ timeout: 10_000 });
 
-    // The tier-3 item should not be visible before expanding
-    const tier3Link = page.getByRole("link", { name: new RegExp(`^${TIER_3_SAMPLE}$`, "i") }).first();
-    const visibleBefore = await tier3Link.isVisible().catch(() => false);
-
-    if (visibleBefore) {
-      // If the item is already visible (sidebar state persisted from a prior
-      // test run / localStorage), just verify it is present and skip the
-      // toggle check — the important thing is it renders.
-      await expect(tier3Link).toBeVisible();
-      return;
+    for (const label of CREATE_PILLS) {
+      // Use non-anchored regex: pill accessible name may include badge text
+      // e.g. "Thumbs 42" or "Social 11"
+      const pill = page.getByRole("link", { name: new RegExp(label, "i") }).first();
+      await expect(pill).toBeVisible({ timeout: 5_000 });
     }
+  });
 
-    // Find the "Show more" button — the sidebar renders it as a button with
-    // text matching /show more/i or an expand chevron.
-    const showMoreBtn = page
-      .getByRole("button", { name: /show more/i })
-      .first();
+  test("system-row pills are visible after login", async ({ page }) => {
+    await signIn(page);
 
-    const showMoreExists = await showMoreBtn.isVisible().catch(() => false);
-    if (!showMoreExists) {
-      // If no Show-more button exists the user may be on a plan where all
-      // items are visible — skip gracefully.
-      test.skip(true, "No 'Show more' button found — all items may already be visible");
-      return;
+    // System pills: Library, Comments, Brand kit, Automations, Settings
+    const systemPills = ["Library", "Comments", "Brand kit", "Automations", "Settings"];
+
+    await expect(
+      page.getByRole("navigation", { name: /main navigation/i }).first(),
+    ).toBeVisible({ timeout: 10_000 });
+
+    for (const label of systemPills) {
+      // Non-anchored: some pills have badge text appended
+      const pill = page.getByRole("link", { name: new RegExp(label, "i") }).first();
+      await expect(pill).toBeVisible({ timeout: 5_000 });
     }
-
-    await showMoreBtn.click();
-
-    // After clicking, the tier-3 item should become visible
-    await expect(tier3Link).toBeVisible({ timeout: 5_000 });
   });
 
   test("mobile: hamburger opens the sidebar overlay", async ({ page }) => {
@@ -96,8 +91,8 @@ test.describe("sidebar journey", () => {
 
     await signIn(page);
 
-    // On mobile the sidebar should be collapsed by default.
-    // Look for a hamburger / menu button (aria-label or icon button).
+    // On mobile the GlassTopNav may collapse or a hamburger may appear.
+    // Check for a hamburger / menu button.
     const hamburger = page
       .getByRole("button", { name: /open.*menu|menu|toggle.*sidebar|hamburger/i })
       .or(page.locator('[aria-label*="menu" i], [aria-label*="sidebar" i]').first())
@@ -106,8 +101,8 @@ test.describe("sidebar journey", () => {
     const hamburgerVisible = await hamburger.isVisible({ timeout: 8_000 }).catch(() => false);
 
     if (!hamburgerVisible) {
-      // Some responsive implementations keep the sidebar always-mounted and
-      // slide it in/out. Verify the sidebar nav is at least reachable.
+      // Some responsive implementations keep navigation always-mounted.
+      // Verify the nav landmark is at least reachable.
       const nav = page.getByRole("navigation").first();
       await expect(nav).toBeAttached({ timeout: 5_000 });
       return;
@@ -115,11 +110,11 @@ test.describe("sidebar journey", () => {
 
     await hamburger.click();
 
-    // After opening, a tier-1 item should appear in the viewport
-    const dashboardLink = page
-      .getByRole("link", { name: /^dashboard$/i })
+    // After opening, a navigation link should appear in the viewport
+    const anyNavLink = page
+      .getByRole("link", { name: /studio|dashboard|settings/i })
       .first();
 
-    await expect(dashboardLink).toBeVisible({ timeout: 5_000 });
+    await expect(anyNavLink).toBeVisible({ timeout: 5_000 });
   });
 });
