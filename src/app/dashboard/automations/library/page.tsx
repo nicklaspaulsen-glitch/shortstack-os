@@ -247,7 +247,7 @@ export default function WorkflowLibraryPage() {
                           <button
                             onClick={() => install(t.id)}
                             disabled={installing === t.id}
-                            className="flex-1 rounded-lg bg-brand-accent px-3 py-2 text-xs font-semibold text-[#0D1120] transition hover:bg-brand-accent/80 disabled:opacity-60"
+                            className="flex-1 rounded-full bg-brand-accent px-3 py-2 text-xs font-semibold text-[#0D1120] transition hover:bg-brand-accent/80 disabled:opacity-60"
                           >
                             {installing === t.id ? "Installing..." : "Install"}
                           </button>

@@ -195,7 +195,7 @@ export default function DealsPage() {
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => setShowCreateModal(!showCreateModal)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-[#E8FF4D] transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-[#E8FF4D] transition-all"
 >
             <Plus size={13} /> New Deal
           </button>

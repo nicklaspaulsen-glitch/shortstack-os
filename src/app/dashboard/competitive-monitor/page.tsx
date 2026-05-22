@@ -338,7 +338,7 @@ export default function CompetitiveMonitorPage() {
                   </div>
                 </div>
                 <div className="flex gap-2 mt-4">
-                  <motion.button whileHover={{ scale: 1.03 }} onClick={addCompetitor} className="px-4 py-2 bg-brand-accent text-[#020711] rounded-lg text-sm font-medium hover:bg-[#E8FF4D] transition">Add Competitor</motion.button>
+                  <motion.button whileHover={{ scale: 1.03 }} onClick={addCompetitor} className="px-4 py-2 bg-brand-accent text-[#020711] rounded-full text-sm font-medium hover:bg-[#E8FF4D] transition">Add Competitor</motion.button>
                   <button onClick={() => setShowAddForm(false)} className="px-4 py-2 bg-surface-light border border-border-subtle text-text-muted rounded-lg text-sm hover:text-text-primary transition">Cancel</button>
                 </div>
               </motion.div>
@@ -674,7 +674,7 @@ export default function CompetitiveMonitorPage() {
                       </div>
                     </div>
                     <div className="flex gap-2 mt-4">
-                      <motion.button whileHover={{ scale: 1.03 }} onClick={addAlertRule} className="px-4 py-2 bg-brand-accent text-[#020711] rounded-lg text-sm font-medium hover:bg-[#E8FF4D] transition">Create Rule</motion.button>
+                      <motion.button whileHover={{ scale: 1.03 }} onClick={addAlertRule} className="px-4 py-2 bg-brand-accent text-[#020711] rounded-full text-sm font-medium hover:bg-[#E8FF4D] transition">Create Rule</motion.button>
                       <button onClick={() => setShowAddAlert(false)} className="px-4 py-2 bg-surface-light border border-border-subtle text-text-muted rounded-lg text-sm hover:text-text-primary transition">Cancel</button>
                     </div>
                   </motion.div>

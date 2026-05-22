@@ -855,7 +855,7 @@ export default function EmailComposerPage() {
               <>
                 <button
                   onClick={() => setWizardOpen(true)}
-                  className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-[#0D1120] shadow-lg shadow-brand-accent/20 hover:shadow-brand-accent/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                  className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full bg-brand-accent hover:bg-brand-accent/80 text-[#0D1120] shadow-lg shadow-brand-accent/20 hover:shadow-brand-accent/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
 >
                   <Sparkles size={12} className="animate-pulse" />
                   New with AI
@@ -1207,7 +1207,7 @@ export default function EmailComposerPage() {
                   whileTap={{ scale: 0.97 }}
                   onClick={() => handleSend()}
                   disabled={sending || sendingTest}
-                  className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-semibold shadow-lg shadow-[rgba(212,255,0,0.15)] hover:shadow-[rgba(212,255,0,0.30)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-full bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-semibold shadow-lg shadow-[rgba(212,255,0,0.15)] hover:shadow-[rgba(212,255,0,0.30)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
 >
                   {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
                   {sending ? "Sending..." : "Send"}

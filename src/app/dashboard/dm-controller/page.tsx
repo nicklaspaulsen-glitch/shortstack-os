@@ -856,7 +856,7 @@ export default function DMControllerPage() {
                     <h2 className="text-sm font-semibold">Active Campaigns</h2>
                     <p className="text-[10px] text-text-muted">Run multiple DM campaigns in parallel — each with its own template & volume.</p>
                   </div>
-                  <button onClick={() => setWizardOpen(true)} className="px-3 py-1.5 rounded-lg bg-brand-accent text-[#020711] text-[11px] font-semibold flex items-center gap-1.5 hover:scale-[1.02] transition-transform">
+                  <button onClick={() => setWizardOpen(true)} className="px-3 py-1.5 rounded-full bg-brand-accent text-[#020711] text-[11px] font-semibold flex items-center gap-1.5 hover:scale-[1.02] transition-transform">
                     <Plus size={12} /> New Campaign
                   </button>
                 </div>
@@ -865,7 +865,7 @@ export default function DMControllerPage() {
                     <EmptyIllustration icon={<Target size={40} />} />
                     <h3 className="text-sm font-semibold mt-3">No campaigns yet</h3>
                     <p className="text-[11px] text-text-muted mt-1">Spin up your first campaign in under 60 seconds.</p>
-                    <button onClick={() => setWizardOpen(true)} className="mt-4 px-4 py-2 rounded-lg bg-brand-accent text-[#020711] text-[11px] font-semibold inline-flex items-center gap-1.5">
+                    <button onClick={() => setWizardOpen(true)} className="mt-4 px-4 py-2 rounded-full bg-brand-accent text-[#020711] text-[11px] font-semibold inline-flex items-center gap-1.5">
                       <Plus size={12} /> Create campaign
                     </button>
                   </div>
@@ -1302,7 +1302,7 @@ export default function DMControllerPage() {
                         config: "Customize me",
                         enabled: false,
                       }, ...rs])}
-                      className="px-2.5 py-1 rounded-lg bg-brand-accent text-[#020711] text-[10px] font-semibold flex items-center gap-1">
+                      className="px-2.5 py-1 rounded-full bg-brand-accent text-[#020711] text-[10px] font-semibold flex items-center gap-1">
                       <Plus size={10} /> Add rule
                     </button>
                   </div>
@@ -1428,7 +1428,7 @@ export default function DMControllerPage() {
                           setBlacklistInput("");
                         }
                       }}
-                      className="px-3 py-1.5 rounded-lg bg-brand-accent text-[#020711] text-[10px] font-semibold flex items-center gap-1">
+                      className="px-3 py-1.5 rounded-full bg-brand-accent text-[#020711] text-[10px] font-semibold flex items-center gap-1">
                       <Plus size={10} /> Add
                     </button>
                   </div>

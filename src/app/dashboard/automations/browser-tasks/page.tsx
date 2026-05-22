@@ -222,7 +222,7 @@ export default function BrowserTasksPage() {
                 <button
                   onClick={submit}
                   disabled={submitting}
-                  className="inline-flex items-center gap-1.5 rounded-md bg-brand-accent px-4 py-2 text-sm font-semibold text-[#0D1120] transition hover:bg-brand-accent/80 disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-[#0D1120] transition hover:bg-brand-accent/80 disabled:opacity-50"
                 >
                   {submitting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
                   Queue task

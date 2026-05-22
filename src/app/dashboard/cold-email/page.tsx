@@ -440,7 +440,7 @@ export default function ColdEmailPage() {
                     <button
                       onClick={handleCreate}
                       disabled={creating || !name.trim() || !templateSeed.trim()}
-                      className="text-[10px] px-4 py-1.5 rounded-lg bg-brand-accent text-[#020711] font-medium hover:bg-brand-accent/80 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                      className="text-[10px] px-4 py-1.5 rounded-full bg-brand-accent text-[#020711] font-medium hover:bg-brand-accent/80 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                     >
                       {creating ? "Building�" : "Create Campaign"}
                     </button>

@@ -696,7 +696,7 @@ export default function CarouselGeneratorPage() {
                   {advancedMode && (
                     <button
                       onClick={() => setWizardOpen(true)}
-                      className="relative group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-accent text-[#020711] text-xs font-bold shadow-lg shadow-[rgba(212,255,0,0.2)] hover:bg-[#E8FF4D] hover:shadow-[rgba(212,255,0,0.4)] hover-lift transition-all"
+                      className="relative group flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-accent text-[#020711] text-xs font-bold shadow-lg shadow-[rgba(212,255,0,0.2)] hover:bg-[#E8FF4D] hover:shadow-[rgba(212,255,0,0.4)] hover-lift transition-all"
                     >
                       <Sparkles size={13} className="animate-pulse" />
                       + New with AI
