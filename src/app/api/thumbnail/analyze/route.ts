@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
-import { checkFetchUrl } from "@/lib/security/ssrf";
+import { resolveAndCheckUrl } from "@/lib/security/ssrf";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
 import {
   anthropic,
@@ -127,8 +127,8 @@ export async function POST(request: NextRequest) {
   }
 
   // SSRF guard: reject loopback / private-IP / metadata-endpoint URLs.
-  // data:image/… is fine (not a network fetch); https on public hosts only.
-  const ssrfErr = checkFetchUrl(imageUrl);
+  // Layer 1 (hostname string) + Layer 2 (DNS resolution) to close rebinding.
+  const ssrfErr = await resolveAndCheckUrl(imageUrl);
   if (ssrfErr) {
     return NextResponse.json(
       { ok: false, error: `image_url rejected: ${ssrfErr}` },

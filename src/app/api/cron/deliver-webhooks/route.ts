@@ -17,7 +17,7 @@ import {
   isPermanentFailure,
   signWebhookPayload,
 } from "@/lib/api/webhook-events";
-import { checkFetchUrl, resolveAndCheckUrl } from "@/lib/security/ssrf";
+import { resolveAndCheckUrl } from "@/lib/security/ssrf";
 
 export const maxDuration = 60;
 

@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { WEBHOOK_EVENTS } from "@/lib/api/webhook-events";
-import { checkFetchUrl, resolveAndCheckUrl } from "@/lib/security/ssrf";
+import { resolveAndCheckUrl } from "@/lib/security/ssrf";
 
 const VALID_EVENTS = new Set<string>(WEBHOOK_EVENTS);
 

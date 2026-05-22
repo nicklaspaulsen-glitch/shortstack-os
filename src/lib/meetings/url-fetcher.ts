@@ -9,10 +9,10 @@
  *   - Google Meet recordings live in the recorder's Google Drive. We
  *     only support pre-shared MP4 URLs in v1; Drive OAuth is v2.
  *
- * SSRF-hardened via `assertSafeFetchUrl` so callers can't redirect us
- * to internal IPs.
+ * SSRF-hardened via `resolveAndCheckUrl` (Layer 1 hostname + Layer 2 DNS
+ * resolution) so callers can't redirect us to internal IPs.
  */
-import { assertSafeFetchUrl } from "@/lib/security/ssrf";
+import { resolveAndCheckUrl } from "@/lib/security/ssrf";
 
 const MAX_BYTES = 250 * 1024 * 1024; // mirror upload route cap
 
@@ -63,8 +63,10 @@ async function resolveMediaUrl(input: string): Promise<string> {
 
   if (source === "loom_url") {
     // Loom share pages embed the mp4 in og:video metadata.
-    const safe = assertSafeFetchUrl(input);
-    const html = await fetch(safe, { redirect: "follow" }).then((r) => r.text());
+    // Layer 1 + Layer 2 SSRF check (DNS resolution) to close rebinding gap.
+    const ssrfErr = await resolveAndCheckUrl(input);
+    if (ssrfErr) throw new Error(`URL rejected (SSRF): ${ssrfErr}`);
+    const html = await fetch(input, { redirect: "follow" }).then((r) => r.text());
     const match = html.match(/property=["']og:video["']\s+content=["']([^"']+)["']/);
     if (match) return match[1];
     // Fallback: try the v1 transcoded mp4 endpoint based on share-id pattern.
@@ -86,9 +88,11 @@ async function resolveMediaUrl(input: string): Promise<string> {
 export async function fetchMeetingFromUrl(input: string): Promise<FetchedRecording> {
   const sourceType = classifyMeetingUrl(input);
   const directUrl = await resolveMediaUrl(input);
-  const safeUrl = assertSafeFetchUrl(directUrl);
+  // Layer 1 + Layer 2 SSRF check (DNS resolution) to close rebinding gap.
+  const ssrfErr = await resolveAndCheckUrl(directUrl);
+  if (ssrfErr) throw new Error(`URL rejected (SSRF): ${ssrfErr}`);
 
-  const res = await fetch(safeUrl, {
+  const res = await fetch(directUrl, {
     redirect: "follow",
     // 5 min cap mirrors the route maxDuration. Vercel kills us at 5 min anyway.
     signal: AbortSignal.timeout(5 * 60 * 1000),
@@ -124,7 +128,7 @@ export async function fetchMeetingFromUrl(input: string): Promise<FetchedRecordi
   const fromHeader = cdMatch?.[1];
   const fromUrl = (() => {
     try {
-      const last = new URL(safeUrl).pathname.split("/").filter(Boolean).pop();
+      const last = new URL(directUrl).pathname.split("/").filter(Boolean).pop();
       return last ? decodeURIComponent(last) : null;
     } catch {
       return null;
