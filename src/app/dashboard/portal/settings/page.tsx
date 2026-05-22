@@ -353,7 +353,7 @@ function DangerZone() {
 
       {showCancel && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowCancel(false)}>
-          <div className="glass rounded-xl p-4 max-w-md w-full p-5 space-y-3" onClick={e => e.stopPropagation()}>
+          <div className="glass rounded-xl p-5 max-w-md w-full space-y-3" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-red-400 flex items-center gap-2">
                 <AlertTriangle size={14} /> Cancel Subscription

@@ -1006,7 +1006,7 @@ export default function FinancialsPage() {
                 {/* Add Subscription Modal */}
                 {showAddSub && (
                   <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowAddSub(false)}>
-                    <div className="glass rounded-xl p-4 max-w-lg w-full p-5 space-y-3" onClick={e => e.stopPropagation()}>
+                    <div className="glass rounded-xl p-5 max-w-lg w-full space-y-3" onClick={e => e.stopPropagation()}>
                       <div className="flex items-center justify-between">
                         <h3 className="text-sm font-semibold">Add Subscription</h3>
                         <button onClick={() => setShowAddSub(false)} className="text-text-muted hover:text-text-primary" aria-label="Close dialog"><X size={16} /></button>

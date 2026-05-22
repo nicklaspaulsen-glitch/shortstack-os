@@ -184,7 +184,7 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-      <div className="glass rounded-xl p-4 w-full max-w-2xl p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+      <div className="glass rounded-xl p-5 w-full max-w-2xl space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold flex items-center gap-2"><Upload size={14} className="text-brand-accent" /> Import CSV</h2>
           <button onClick={onClose} className="p-1 rounded hover:bg-white/[0.06] text-text-muted hover:text-text-primary"><X size={14} /></button>
@@ -329,7 +329,7 @@ function AddLeadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-      <div className="glass rounded-xl p-4 w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+      <div className="glass rounded-xl p-5 w-full max-w-lg space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold flex items-center gap-2"><UserPlus size={14} className="text-brand-accent" /> Add Lead</h2>
           <button onClick={onClose} className="p-1 rounded hover:bg-white/[0.06] text-text-muted hover:text-text-primary"><X size={14} /></button>

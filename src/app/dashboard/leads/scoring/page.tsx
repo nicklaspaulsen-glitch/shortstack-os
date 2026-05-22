@@ -236,7 +236,7 @@ function ScoreDetailModal({
       onClick={onClose}
     >
       <div
-        className="glass rounded-xl p-4 w-full max-w-2xl mx-4 max-h-[85vh] overflow-y-auto p-5 space-y-4"
+        className="glass rounded-xl p-5 w-full max-w-2xl mx-4 max-h-[85vh] overflow-y-auto space-y-4"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between">
