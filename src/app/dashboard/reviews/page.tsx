@@ -256,7 +256,7 @@ function ReviewManager() {
         </div>
         <button
           onClick={() => setShowNew(true)}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] transition hover:opacity-90"
+          className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] transition hover:opacity-90"
         >
           <Plus size={14} /> Log review
         </button>
@@ -277,7 +277,7 @@ function ReviewManager() {
             icon={<Star size={36} />}
             title={reviews.length === 0 ? "No reviews yet" : "No reviews match this filter"}
             description={reviews.length === 0 ? "Log a review manually to track responses." : "Try a different filter, or log a new review."}
-            action={reviews.length === 0 ? <button onClick={() => setShowNew(true)} className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711]"><Plus size={14} /> Log review</button> : null}
+            action={reviews.length === 0 ? <button onClick={() => setShowNew(true)} className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711]"><Plus size={14} /> Log review</button> : null}
           />
         </div>
       ) : (
@@ -424,7 +424,7 @@ function ReviewRequests() {
                 action={
                   <button
                     onClick={() => { setEditing(null); setShowForm(true); }}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711]"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711]"
                   >
                     <Plus size={14} /> New config
                   </button>
@@ -512,7 +512,7 @@ function ReviewRequests() {
                 <button
                   onClick={sendManual}
                   disabled={sending || !manualConfigId || !manualClientId}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] disabled:opacity-40"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] disabled:opacity-40"
                 >
                   {sending ? <Loader size={13} className="animate-spin" /> : <Send size={13} />}
                   Send now
