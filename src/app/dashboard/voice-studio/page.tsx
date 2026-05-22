@@ -178,7 +178,7 @@ export default function VoiceStudioPage() {
     <MotionPage className="min-h-screen pb-12">
       {/* Voice Studio header — editorial style + frequency visualizer accent */}
       <div className="relative overflow-hidden">
-        <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4 relative z-10">
+        <div className="flex items-center justify-between gap-4 relative z-10">
           <div className="min-w-0">
             <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1 truncate">Audio Identity</p>
             <h1 className="text-2xl font-display font-bold text-text-primary truncate">Voice Studio</h1>
@@ -195,18 +195,18 @@ export default function VoiceStudioPage() {
               </motion.span>
             )}
             {stats.presetCount > 0 && (
-              <span className="hidden md:flex items-center gap-1 text-[9px] text-[#71717A] px-2 py-1 rounded-md bg-white/[0.02] border border-border-subtle">
+              <span className="hidden md:flex items-center gap-1 text-[9px] text-text-secondary px-2 py-1 rounded-md bg-white/[0.02] border border-border-subtle">
                 {stats.presetCount} presets
               </span>
             )}
             {/* Usage this month — driven by renders loaded lazily on the renders tab */}
-            <span className="hidden lg:flex items-center gap-1 text-[9px] text-[#71717A] px-2 py-1 rounded-md bg-white/[0.02] border border-border-subtle">
+            <span className="hidden lg:flex items-center gap-1 text-[9px] text-text-secondary px-2 py-1 rounded-md bg-white/[0.02] border border-border-subtle">
               {stats.rendersThisMonth > 0 ? `${stats.rendersThisMonth} renders this month` : "No renders yet"}
             </span>
             <button
               type="button"
               onClick={refresh}
-              className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-white/[0.03] px-2.5 py-1.5 text-[11px] font-medium text-[#71717A] hover:text-text-primary hover:bg-white/[0.06] transition-colors duration-150"
+              className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-white/[0.03] px-2.5 py-1.5 text-[11px] font-medium text-text-secondary hover:text-text-primary hover:bg-white/[0.06] transition-colors duration-150"
             >
               <RefreshCw size={11} /> Refresh
             </button>
@@ -256,7 +256,7 @@ export default function VoiceStudioPage() {
 
               <div className="mt-6">
                 {loading && (
-                  <div className="flex items-center justify-center py-12 text-[#71717A]">
+                  <div className="flex items-center justify-center py-12 text-text-secondary">
                     <Loader2 size={20} className="animate-spin" />
                   </div>
                 )}
@@ -283,11 +283,11 @@ function MyVoicesTab({
       <UploadCard onCreated={onChange} />
       {clones.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-border-subtle bg-white/[0.02] p-12 text-center">
-          <Mic size={32} className="text-[#71717A]" />
+          <Mic size={32} className="text-text-secondary" />
           <h3 className="mt-4 text-base font-medium text-text-primary">
             No clones yet
           </h3>
-          <p className="mt-1 max-w-sm text-sm text-[#71717A]">
+          <p className="mt-1 max-w-sm text-sm text-text-secondary">
             Upload a 30-second clean recording above and we&apos;ll train a clone you
             can drop into cold calls, voicemails, SMS, and DMs.
           </p>
@@ -409,7 +409,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
         <div className="flex-1 space-y-4">
           <div>
             <h3 className="text-base font-semibold text-text-primary">Train a new clone</h3>
-            <p className="mt-1 text-sm text-[#71717A]">
+            <p className="mt-1 text-sm text-text-secondary">
               Drop a clean 30 to 90 second sample. Free path uses your RunPod
               endpoint. ElevenLabs is the paid fallback when RunPod isn&apos;t
               configured.
@@ -443,19 +443,19 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               placeholder="Label (e.g. 'My voice — natural')"
-              className="rounded-lg border border-border-subtle bg-white/[0.06] px-3 py-2 text-sm text-text-primary placeholder:text-[#71717A] focus:border-brand-accent/40 focus:outline-none"
+              className="rounded-lg border border-border-subtle bg-white/[0.06] px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-accent/40 focus:outline-none"
             />
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Description (optional)"
-              className="rounded-lg border border-border-subtle bg-white/[0.06] px-3 py-2 text-sm text-text-primary placeholder:text-[#71717A] focus:border-brand-accent/40 focus:outline-none"
+              className="rounded-lg border border-border-subtle bg-white/[0.06] px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-accent/40 focus:outline-none"
             />
           </div>
 
           <div className="rounded-lg border border-border-subtle bg-white/[0.02] p-3">
-            <div className="text-xs uppercase tracking-wider text-[#71717A]">
+            <div className="text-xs uppercase tracking-wider text-text-secondary">
               Consent
             </div>
             <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
@@ -476,7 +476,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
                   className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
                     consentKind === opt.key
                       ? "border-white/[0.15] bg-white/[0.06] text-brand-accent"
-                      : "border-border-subtle bg-white/[0.02] text-[#71717A] hover:bg-white/[0.05]"
+                      : "border-border-subtle bg-white/[0.02] text-text-secondary hover:bg-white/[0.05]"
                   }`}
                 >
                   {opt.label}
@@ -489,7 +489,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
                 value={signedBy}
                 onChange={(e) => setSignedBy(e.target.value)}
                 placeholder="Signed by (legal name)"
-                className="mt-2 w-full rounded-lg border border-border-subtle bg-white/[0.06] px-3 py-2 text-sm text-text-primary placeholder:text-[#71717A] focus:border-brand-accent/40 focus:outline-none"
+                className="mt-2 w-full rounded-lg border border-border-subtle bg-white/[0.06] px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-accent/40 focus:outline-none"
               />
             )}
           </div>
@@ -846,7 +846,7 @@ function AudioPlayer({ src, autoPlay = false }: { src: string; autoPlay?: boolea
           style={{ width: `${progress * 100}%`, transition: "width 100ms linear" }}
         />
       </div>
-      <span className="flex-shrink-0 text-[9px] tabular-nums text-[#71717A]">
+      <span className="flex-shrink-0 text-[9px] tabular-nums text-text-secondary">
         {duration > 0 ? (playing ? fmt(progress * duration) : fmt(duration)) : "--:--"}
       </span>
     </div>
@@ -1037,9 +1037,9 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   if (presets.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border border-border-subtle bg-white/[0.02] p-12 text-center">
-        <Library size={28} className="text-[#71717A]" />
+        <Library size={28} className="text-text-secondary" />
         <h3 className="mt-3 text-base font-medium text-text-primary">No presets yet</h3>
-        <p className="mt-1 max-w-sm text-sm text-[#71717A]">
+        <p className="mt-1 max-w-sm text-sm text-text-secondary">
           Preset voices are seeded automatically on first dashboard load. Hit the button below if none appeared.
         </p>
         {onRefresh && (
@@ -1063,7 +1063,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
         {/* Search row - count badge here so it does not compete with lang select */}
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
-            <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#71717A]" />
+            <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-text-secondary" />
             <input
               type="search"
               value={searchQuery}
@@ -1072,7 +1072,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               className="rounded-lg w-full border border-border-subtle bg-white/[0.03] py-1.5 pl-8 pr-3 text-xs text-text-primary placeholder-[#A1A1AA] focus:outline-none focus:border-brand-accent/40 focus:ring-1 focus:ring-brand-accent/30"
             />
           </div>
-          <span className="flex-shrink-0 rounded-full border border-border-subtle bg-white/[0.03] px-2.5 py-1 text-[10px] font-medium text-[#71717A] tabular-nums">
+          <span className="flex-shrink-0 rounded-full border border-border-subtle bg-white/[0.03] px-2.5 py-1 text-[10px] font-medium text-text-secondary tabular-nums">
             {filtered.length}/{presets.length}
           </span>
           <button
@@ -1083,7 +1083,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               "flex-shrink-0 flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-medium transition-colors duration-150 cursor-pointer",
               previewOnly
                 ? "border border-white/[0.15] bg-white/[0.06] text-brand-accent"
-                : "border border-border-subtle bg-white/[0.02] text-[#71717A] hover:text-text-primary hover:bg-white/[0.05]",
+                : "border border-border-subtle bg-white/[0.02] text-text-secondary hover:text-text-primary hover:bg-white/[0.05]",
             ].join(" ")}
           >
             <Play size={9} />
@@ -1097,7 +1097,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               "flex-shrink-0 flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-medium transition-colors duration-150 cursor-pointer",
               favoritesOnly
                 ? "border border-white/[0.15] bg-white/[0.06] text-yellow-400"
-                : "border border-border-subtle bg-white/[0.02] text-[#71717A] hover:text-text-primary hover:bg-white/[0.05]",
+                : "border border-border-subtle bg-white/[0.02] text-text-secondary hover:text-text-primary hover:bg-white/[0.05]",
             ].join(" ")}
           >
             <Star size={9} fill={favoritesOnly ? "currentColor" : "none"} />
@@ -1118,7 +1118,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
                 "flex-shrink-0 flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-medium transition-colors duration-150",
                 preWarmActive
                   ? "border border-brand-accent/30 bg-brand-accent/10 text-brand-accent cursor-wait"
-                  : "border border-border-subtle bg-white/[0.02] text-[#71717A] hover:text-[#D4FF00] hover:bg-white/[0.05] cursor-pointer",
+                  : "border border-border-subtle bg-white/[0.02] text-text-secondary hover:text-[#D4FF00] hover:bg-white/[0.05] cursor-pointer",
               ].join(" ")}
             >
               {preWarmActive ? (
@@ -1137,7 +1137,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
         </div>
         {/* Gender row */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="w-14 flex-shrink-0 text-[10px] uppercase tracking-wider text-[#71717A]">Gender</span>
+          <span className="w-14 flex-shrink-0 text-[10px] uppercase tracking-wider text-text-secondary">Gender</span>
           {(["all", "female", "male"] as const).map((g) => (
             <button
               key={g}
@@ -1147,7 +1147,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
                 "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
                 genderFilter === g
                   ? "border border-white/[0.15] bg-white/[0.06] text-brand-accent"
-                  : "border border-border-subtle bg-white/[0.02] text-[#71717A] hover:text-text-primary hover:bg-white/[0.05]",
+                  : "border border-border-subtle bg-white/[0.02] text-text-secondary hover:text-text-primary hover:bg-white/[0.05]",
               ].join(" ")}
             >
               {g === "all" ? "All" : g.charAt(0).toUpperCase() + g.slice(1)}
@@ -1185,7 +1185,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             <select
               value={langFilter}
               onChange={(e) => setLangFilter(e.target.value)}
-              className="flex-shrink-0 rounded-lg border border-border-subtle bg-white/[0.03] px-2 py-1 text-xs text-[#71717A] focus:outline-none focus:ring-1 focus:ring-brand-accent/50 cursor-pointer"
+              className="flex-shrink-0 rounded-lg border border-border-subtle bg-white/[0.03] px-2 py-1 text-xs text-text-secondary focus:outline-none focus:ring-1 focus:ring-brand-accent/50 cursor-pointer"
             >
               {languages.map((l) => (
                 <option key={l} value={l} className="bg-white">
@@ -1199,7 +1199,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
 
       {filtered.length === 0 ? (
         <div className="rounded-xl border border-border-subtle bg-white/[0.02] p-8 text-center">
-          <p className="text-sm text-[#71717A]">No presets match the current filters.</p>
+          <p className="text-sm text-text-secondary">No presets match the current filters.</p>
           <button
             type="button"
             onClick={resetFilters}
@@ -1428,11 +1428,11 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                 Featured
               </span>
             )}
-            <span className="rounded-full border border-border-subtle bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#71717A]">
+            <span className="rounded-full border border-border-subtle bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-wider text-text-secondary">
               {lang}
             </span>
             {gender && (
-              <span className="rounded-full border border-border-subtle bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[#71717A]">
+              <span className="rounded-full border border-border-subtle bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-wider text-text-secondary">
                 {gender === "female" ? "F" : "M"}
               </span>
             )}
@@ -1445,7 +1445,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
         {/* Info */}
         <h3 className="mt-3 text-sm font-semibold text-text-primary">{preset.label}</h3>
         {preset.description && (
-          <p className="mt-1 text-xs text-[#71717A] leading-relaxed">{preset.description}</p>
+          <p className="mt-1 text-xs text-text-secondary leading-relaxed">{preset.description}</p>
         )}
         {(() => {
           const tags = presetUseCases(category);
@@ -1490,7 +1490,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                 />
               ))}
             </div>
-            <span className="text-[10px] text-[#71717A] group-hover/play:text-brand-accent transition-colors duration-200 flex items-center gap-1">
+            <span className="text-[10px] text-text-secondary group-hover/play:text-brand-accent transition-colors duration-200 flex items-center gap-1">
               {testing
                 ? <><Loader2 size={10} className="animate-spin" />{" "}Generating...</>
                 : <><Play size={10} />{" "}Click to preview</>}
@@ -1508,7 +1508,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               rows={3}
               maxLength={300}
               placeholder="Type what you want the voice to say…"
-              className="w-full rounded-lg border border-border-subtle bg-white/[0.06] px-3 py-2 text-xs text-text-primary placeholder-[#71717A] focus:outline-none focus:ring-1 focus:ring-brand-accent/50 resize-none"
+              className="w-full rounded-lg border border-border-subtle bg-white/[0.06] px-3 py-2 text-xs text-text-primary placeholder-text-muted focus:outline-none focus:ring-1 focus:ring-brand-accent/50 resize-none"
             />
             {/* Voice-settings sliders — ElevenLabs/preset only */}
             {(preset.provider === "preset" || preset.provider === "elevenlabs") && (
@@ -1521,7 +1521,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                   ] as Array<{ label: string; hint: string; val: number; set: (v: number) => void; min: number; max: number; step: number }>
                 ).map(({ label, hint, val, set, min, max, step }) => (
                   <div key={hint} className="flex items-center gap-2">
-                    <span className="w-11 shrink-0 text-[9px] font-medium text-[#71717A]">{label}</span>
+                    <span className="w-11 shrink-0 text-[9px] font-medium text-text-secondary">{label}</span>
                     <input
                       type="range"
                       min={min}
@@ -1587,7 +1587,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             )}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] text-[#71717A]">{testText.length}/300</span>
+                <span className="text-[10px] text-text-secondary">{testText.length}/300</span>
                 <button
                   type="button"
                   title="Try a different sample phrase"
@@ -1597,7 +1597,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                     setTestText(next);
                     onTextChanged(next);
                   }}
-                  className="text-[10px] text-[#71717A] hover:text-brand-accent transition-colors duration-150 cursor-pointer underline-offset-2 hover:underline"
+                  className="text-[10px] text-text-secondary hover:text-brand-accent transition-colors duration-150 cursor-pointer underline-offset-2 hover:underline"
                 >
                   Shuffle
                 </button>
@@ -1614,7 +1614,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                 <button
                   type="button"
                   onClick={() => setEditMode(false)}
-                  className="rounded-lg border border-border-subtle bg-white/[0.03] px-2.5 py-1 text-[10px] text-[#71717A] hover:text-text-primary cursor-pointer"
+                  className="rounded-lg border border-border-subtle bg-white/[0.03] px-2.5 py-1 text-[10px] text-text-secondary hover:text-text-primary cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -1624,17 +1624,17 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
         ) : (
           <div className="mt-3">
             <div className="flex items-center justify-between gap-1 mb-0.5">
-              <span className="text-[9px] font-medium uppercase tracking-wider text-[#71717A]">Sample phrase</span>
+              <span className="text-[9px] font-medium uppercase tracking-wider text-text-secondary">Sample phrase</span>
               <button
                 type="button"
                 onClick={() => setEditMode(true)}
-                className="flex-shrink-0 rounded border border-border-subtle bg-white/[0.03] px-2 py-0.5 text-[11px] text-[#71717A] hover:border-brand-accent/40 hover:text-brand-accent transition-colors duration-150 cursor-pointer"
+                className="flex-shrink-0 rounded border border-border-subtle bg-white/[0.03] px-2 py-0.5 text-[11px] text-text-secondary hover:border-brand-accent/40 hover:text-brand-accent transition-colors duration-150 cursor-pointer"
                 aria-label="Edit test phrase"
               >
                 Edit
               </button>
             </div>
-            <p className="truncate text-[11px] text-[#71717A] italic">{testText}</p>
+            <p className="truncate text-[11px] text-text-secondary italic">{testText}</p>
           </div>
         )}
 
@@ -1676,7 +1676,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               "flex items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed",
               saved
                 ? "border-border-subtle bg-white/[0.04] text-brand-accent"
-                : "border-border-subtle bg-white/[0.03] text-[#71717A] hover:bg-white/[0.06] hover:text-text-primary",
+                : "border-border-subtle bg-white/[0.03] text-text-secondary hover:bg-white/[0.06] hover:text-text-primary",
             ].join(" ")}
           >
             {saving ? <Loader2 size={12} className="animate-spin" /> : saved ? <CheckCircle2 size={12} /> : <Sparkles size={12} />}
@@ -1698,9 +1698,9 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
   if (renders.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border border-border-subtle bg-white/[0.02] p-12 text-center">
-        <Headphones size={28} className="text-[#71717A]" />
+        <Headphones size={28} className="text-text-secondary" />
         <h3 className="mt-3 text-base font-medium text-text-primary">No renders yet</h3>
-        <p className="mt-1 max-w-sm text-sm text-[#71717A]">
+        <p className="mt-1 max-w-sm text-sm text-text-secondary">
           Renders show up here once your clones synthesise audio for cold calls,
           voicemails, SMS, or DMs.
         </p>
@@ -1724,7 +1724,7 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex-1 min-w-[200px]">
                   <p className="text-sm text-text-primary">{r.text_preview}</p>
-                  <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-[#71717A]">
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-text-secondary">
                     <span>
                       {new Date(r.rendered_at).toLocaleString(undefined, {
                         dateStyle: "short",
@@ -1736,7 +1736,7 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
                     )}
                     <span>· used {r.use_count}·</span>
                     {r.context && (
-                      <span className="rounded-full border border-border-subtle bg-white/[0.04] px-2 py-0.5 uppercase tracking-wider text-[#71717A]">
+                      <span className="rounded-full border border-border-subtle bg-white/[0.04] px-2 py-0.5 uppercase tracking-wider text-text-secondary">
                         {r.context}
                       </span>
                     )}
@@ -1746,7 +1746,7 @@ function RendersTab({ renders }: { renders: VoiceRenderRow[] }) {
                   <button
                     type="button"
                     onClick={() => setPlayingId(isOpen ? null : r.id)}
-                    className="flex flex-shrink-0 items-center gap-1.5 rounded-lg border border-border-subtle bg-white/[0.03] px-3 py-1.5 text-xs text-[#71717A] hover:bg-white/[0.06] hover:text-text-primary transition-colors duration-150 cursor-pointer"
+                    className="flex flex-shrink-0 items-center gap-1.5 rounded-lg border border-border-subtle bg-white/[0.03] px-3 py-1.5 text-xs text-text-secondary hover:bg-white/[0.06] hover:text-text-primary transition-colors duration-150 cursor-pointer"
                     aria-label={isOpen ? "Close audio player" : "Play render"}
                   >
                     {isOpen ? <Pause size={12} /> : <Play size={12} />}
