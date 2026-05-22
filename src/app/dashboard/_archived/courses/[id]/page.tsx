@@ -445,7 +445,7 @@ export default function CourseBuilderPage() {
                 <button
                   onClick={() => { triggerLessonSave(); void saveLessonNow(); }}
                   disabled={saving}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] rounded-lg text-sm transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] rounded-full text-sm transition-colors"
                 >
                   <Save size={14} />
                   Save
@@ -649,7 +649,7 @@ export default function CourseBuilderPage() {
             <button
               onClick={() => void saveSettings()}
               disabled={saving}
-              className="w-full py-2 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+              className="w-full py-2 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] rounded-full text-sm font-medium transition-colors flex items-center justify-center gap-2"
             >
               <Save size={14} />
               Save Settings
@@ -688,7 +688,7 @@ export default function CourseBuilderPage() {
                   <button
                     onClick={() => void enrollClient()}
                     disabled={enrolling || !enrollClientId}
-                    className="w-full py-1.5 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] rounded-lg text-sm transition-colors"
+                    className="w-full py-1.5 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] rounded-full text-sm transition-colors"
                   >
                     {enrolling ? "Enrolling…" : "Enroll"}
                   </button>

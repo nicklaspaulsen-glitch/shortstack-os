@@ -151,7 +151,7 @@ const navItems: NavItem[] = [
   { label: "Inbox",              href: "/dashboard/inbox",              icon: <NavIcon3D name="Inbox"           size={16} />, roles: ["admin", "team_member"],                    settingsOnly: true },
   { label: "Calendar",           href: "/dashboard/calendar",           icon: <NavIcon3D name="Calendar"        size={16} />, roles: ["admin", "team_member"],                    settingsOnly: true },
   { label: "Generations",        href: "/dashboard/generations",        icon: <NavIcon3D name="Sparkles"        size={16} />, roles: ["admin", "team_member"],                    settingsOnly: true },
-  { label: "Community",          href: "/dashboard/community",          icon: <NavIcon3D name="Users"           size={16} />, roles: ["admin", "team_member", "client"],          settingsOnly: true },
+  // Community — archived (May 2026)
   { label: "Content Plan",       href: "/dashboard/content-plan",       icon: <NavIcon3D name="Calendar"        size={16} />, roles: ["admin", "team_member"],                    settingsOnly: true },
   { label: "Notifications",      href: "/dashboard/notifications",      icon: <NavIcon3D name="Bell"            size={16} />, roles: ["admin", "team_member"],                    settingsOnly: true },
   { label: "Team",               href: "/dashboard/team",               icon: <NavIcon3D name="UsersRound"      size={16} />, roles: ["admin"],                                   settingsOnly: true },
@@ -180,7 +180,7 @@ const navItems: NavItem[] = [
   { label: "Affiliates",         href: "/dashboard/affiliates",         icon: <NavIcon3D name="Award"           size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Scheduling",         href: "/dashboard/scheduling",         icon: <NavIcon3D name="Calendar"        size={16} />, roles: ["admin", "team_member"],                    settingsOnly: true },
   { label: "Meetings",           href: "/dashboard/meetings",           icon: <NavIcon3D name="Calendar"        size={16} />, roles: ["admin", "team_member"],                    settingsOnly: true },
-  { label: "Courses",            href: "/dashboard/courses",            icon: <NavIcon3D name="BookOpen"        size={16} />, roles: ["admin"],                                   settingsOnly: true },
+  // Courses — archived (May 2026)
   { label: "Vertical Templates", href: "/dashboard/verticals",          icon: <NavIcon3D name="Briefcase"       size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "AI Copywriter",      href: "/dashboard/copywriter",         icon: <NavIcon3D name="Pen"             size={16} />, roles: ["admin", "team_member"],                    settingsOnly: true },
   { label: "Email Composer",     href: "/dashboard/email-composer",     icon: <NavIcon3D name="Mail"            size={16} />, roles: ["admin", "team_member"],                    settingsOnly: true },
@@ -223,7 +223,7 @@ const navItems: NavItem[] = [
   { label: "Reviews",            href: "/dashboard/reviews",            icon: <NavIcon3D name="Star"            size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Tickets",            href: "/dashboard/tickets",            icon: <NavIcon3D name="LifeBuoy"        size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Referrals",          href: "/dashboard/referrals",          icon: <NavIcon3D name="Gift"            size={16} />, roles: ["admin"],                                   settingsOnly: true },
-  { label: "ROI Calculator",     href: "/dashboard/roi-calculator",     icon: <NavIcon3D name="Calculator"      size={16} />, roles: ["admin"],                                   settingsOnly: true },
+  // ROI Calculator — archived (May 2026)
   { label: "Monitor",            href: "/dashboard/monitor",            icon: <NavIcon3D name="Activity"        size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Reports Gen",        href: "/dashboard/report-generator",   icon: <NavIcon3D name="FileBarChart2"   size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Marketplace",        href: "/dashboard/marketplace",        icon: <NavIcon3D name="Store"           size={16} />, roles: ["admin"],                                   settingsOnly: true },
