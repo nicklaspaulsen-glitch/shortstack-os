@@ -1300,7 +1300,7 @@ export default function CRMPage() {
 
                 {/* -- TABLE VIEW -- */}
                 {viewMode === "table" && (
-                  <div className="glass p-0 overflow-hidden border border-[rgba(255,255,255,0.70)]">
+                  <div className="glass p-0 overflow-hidden border border-border-subtle">
                     <div className="overflow-x-auto">
                       <table className={`w-full ${dText}`}>
                         <thead>
@@ -1688,7 +1688,7 @@ export default function CRMPage() {
 
               {/* -- DETAIL SIDEBAR -- */}
               {detailLead && (
-                <div ref={detailPanelRef} className="glass w-[350px] shrink-0 p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-[rgba(255,255,255,0.70)]">
+                <div ref={detailPanelRef} className="glass w-[350px] shrink-0 p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block border border-border-subtle">
                   <div className="px-4 py-3 border-b border-border-subtle bg-surface-light/50 flex items-center justify-between">
                     <h3 className="text-xs font-bold truncate">{detailLead.business_name}</h3>
                     <button onClick={() => setDetailLeadId(null)} className="text-text-muted hover:text-text-primary" aria-label="Close detail panel"><X size={14} /></button>

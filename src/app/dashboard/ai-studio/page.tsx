@@ -1986,7 +1986,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
         </div>
         <motion.div
           className="rounded-xl p-4 min-h-[200px] flex items-center justify-center"
-          style={{ background: !result ? "#FAFAFB" : bgColor ? bgColor : "repeating-conic-gradient(#e0e0e0 0% 25%, #f8f8f8 0% 50%) 50% / 16px 16px", border: "1px solid rgba(255,255,255,0.70)" }}
+          style={{ background: !result ? "#131827" : bgColor ? bgColor : "repeating-conic-gradient(#1a1a2e 0% 25%, #131827 0% 50%) 50% / 16px 16px", border: "1px solid rgba(212,255,0,0.08)" }}
           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, delay: 0.08 }}
         >
           {result ? (
