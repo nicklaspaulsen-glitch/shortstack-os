@@ -394,7 +394,7 @@ export default function CourseBuilderPage() {
         </div>
       </div>
 
-      <div className="flex flex-1 max-w-[1600px] mx-auto w-full px-4 py-6 gap-4">
+      <div className="flex flex-1 max-w-[1600px] mx-auto w-full gap-4">
         {/* ── LEFT: Module tree ── */}
         <aside className="w-72 flex-shrink-0 flex flex-col gap-3">
           <div className="bg-white/5 border border-border-subtle rounded-xl p-3 flex-1 overflow-y-auto max-h-[calc(100vh-220px)]">

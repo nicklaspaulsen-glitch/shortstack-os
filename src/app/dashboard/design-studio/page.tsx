@@ -179,7 +179,7 @@ export default function DesignStudioPage() {
 
   // Editor mode
   return (
-    <div className="h-screen flex flex-col bg-[#0a0a14] overflow-hidden">
+    <div className="h-[calc(100vh-200px)] flex flex-col bg-[#0a0a14] overflow-hidden">
       <TopBar onSave={handleSave} />
       <div className="flex flex-1 overflow-hidden">
         <LeftRail />
