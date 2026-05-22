@@ -149,7 +149,7 @@ export default function DomainsPage() {
                       toast.dismiss(t.id);
                       window.location.href = `/dashboard/mail-setup?domain=${encodeURIComponent(domain)}`;
                     }}
-                    className="px-3 py-1 rounded-md bg-brand-accent text-[#020711] text-[11px] font-semibold"
+                    className="px-3 py-1 rounded-full bg-brand-accent text-[#020711] text-[11px] font-semibold"
                   >
                     Set up mail
                   </button>
@@ -530,7 +530,7 @@ export default function DomainsPage() {
                               <button
                                 onClick={() => purchaseDomain(r.domain, "yearly", r.price || undefined)}
                                 disabled={anyRowLoading}
-                                className="relative text-[10px] px-2 py-2 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-bold flex flex-col items-center hover:shadow-lg hover:shadow-[rgba(212,255,0,0.20)] disabled:opacity-60 disabled:cursor-not-allowed"
+                                className="relative text-[10px] px-2 py-2 rounded-full bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-bold flex flex-col items-center hover:shadow-lg hover:shadow-[rgba(212,255,0,0.20)] disabled:opacity-60 disabled:cursor-not-allowed"
                               >
                                 {rowYearlyLoading ? (
                                   <Loader size={12} className="animate-spin my-1" />

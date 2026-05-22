@@ -221,7 +221,7 @@ export default function WebhooksPage() {
                   <button
                     onClick={handleCreate}
                     disabled={creating || !newUrl.trim() || newEvents.length === 0}
-                    className="text-[10px] px-4 py-1.5 rounded-lg bg-brand-accent text-[#020711] font-medium hover:bg-brand-accent/80 disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="text-[10px] px-4 py-1.5 rounded-full bg-brand-accent text-[#020711] font-medium hover:bg-brand-accent/80 disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {creating ? "Creating…" : "Create Webhook"}
                   </button>

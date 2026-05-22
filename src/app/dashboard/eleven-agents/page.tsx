@@ -369,7 +369,7 @@ export default function ElevenAgentsPage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <button onClick={handleCreateAgent} disabled={createLoading || !createForm.name.trim()}
-                          className="px-4 py-2 rounded-lg bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center gap-2">
+                          className="px-4 py-2 rounded-full bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center gap-2">
                           {createLoading ? <><Loader2 size={12} className="animate-spin" /> Creating...</> : <><Plus size={12} /> Create Agent</>}
                         </button>
                         <button onClick={handleLoadDefaults} className="px-3 py-2 rounded-lg border border-border-subtle text-xs text-text-muted hover:text-text-secondary transition-all">

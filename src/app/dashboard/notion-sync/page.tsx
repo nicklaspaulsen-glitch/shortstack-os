@@ -160,7 +160,7 @@ export default function NotionSyncPage() {
               <button
                 onClick={handleSyncNow}
                 disabled={syncing}
-                className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-brand-accent hover:bg-[#E8FF4D] text-black transition-all disabled:opacity-60"
+                className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-brand-accent hover:bg-[#E8FF4D] text-black transition-all disabled:opacity-60"
               >
                 {syncing ? (
                   <Loader2 className="w-4 h-4 animate-spin" />

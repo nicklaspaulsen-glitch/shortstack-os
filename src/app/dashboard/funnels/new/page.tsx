@@ -252,7 +252,7 @@ export default function NewFunnelPage() {
                       if (!name.trim()) { toast.error("Enter a funnel name"); return; }
                       setStep(2);
                     }}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-semibold text-sm transition-colors"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-semibold text-sm transition-colors"
                   >
                     Review Steps
                     <ChevronRight size={15} />
@@ -316,7 +316,7 @@ export default function NewFunnelPage() {
                   <button
                     onClick={handleCreate}
                     disabled={creating}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] font-semibold text-sm transition-colors"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] font-semibold text-sm transition-colors"
                   >
                     {creating ? "Creating…" : "Create Funnel"}
                     <GitBranch size={15} />

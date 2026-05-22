@@ -173,7 +173,7 @@ export default function FunnelsPage() {
                 </div>
                 <button
                   onClick={() => router.push("/dashboard/funnels/new")}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-accent hover:bg-brand-accent/80 text-[#020711] text-sm font-semibold transition-colors"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-accent hover:bg-brand-accent/80 text-[#020711] text-sm font-semibold transition-colors"
                 >
                   <Plus size={15} />
                   Create Funnel
