@@ -47,7 +47,7 @@ function FieldRow({ label, a, b }: { label: string; a: string | null; b: string 
     <div className={`grid grid-cols-[100px_1fr_1fr] gap-2 py-1.5 text-xs ${differs ? "text-text-primary" : "text-text-muted"}`}>
       <span className="text-text-muted/70 font-medium">{label}</span>
       <span className={differs && a ? "text-text-primary" : ""}>{a ?? "—"}</span>
-      <span className={differs && b ? "text-emerald-700" : ""}>{b ?? "—"}</span>
+      <span className={differs && b ? "text-emerald-400" : ""}>{b ?? "—"}</span>
     </div>
   );
 }
@@ -173,13 +173,13 @@ export default function DedupPage() {
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10, duration: 0.36 }}
                 className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Duplicate Groups</p>
-                <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${pendingGroups.length > 0 ? "text-amber-700" : "text-emerald-700"}`}>{pendingGroups.length}</p>
+                <p className={`font-display text-2xl font-bold tracking-[-0.02em] tabular-nums ${pendingGroups.length > 0 ? "text-amber-400" : "text-emerald-400"}`}>{pendingGroups.length}</p>
               </motion.div>
               {/* Support tile: Merged */}
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14, duration: 0.36 }}
                 className="bg-white border border-[rgba(0,0,0,0.07)] rounded-2xl p-5 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Merged</p>
-                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-700 tabular-nums">{merged.size}</p>
+                <p className="font-display text-2xl font-bold tracking-[-0.02em] text-emerald-400 tabular-nums">{merged.size}</p>
                 <p className="text-[10px] text-text-muted mt-1">this session</p>
               </motion.div>
             </div>{loading ? (
@@ -232,7 +232,7 @@ export default function DedupPage() {
                         <button
                           onClick={() => handleMerge(group)}
                           disabled={isMerging}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 text-xs font-medium border border-emerald-500/25 transition-colors disabled:opacity-50"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 text-xs font-medium border border-emerald-500/25 transition-colors disabled:opacity-50"
                         >
                           {isMerging ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
                           {isMerging ? "Merging…" : "Merge"}
@@ -244,7 +244,7 @@ export default function DedupPage() {
                         <div className="grid grid-cols-[100px_1fr_1fr] gap-2 text-[10px] font-semibold uppercase tracking-wider text-text-muted/60 mb-2 pb-2 border-b border-white/5">
                           <span>Field</span>
                           <span className="text-text-primary/40">Keep (most complete)</span>
-                          <span className="text-emerald-700/60">Merge from</span>
+                          <span className="text-emerald-400/60">Merge from</span>
                         </div>
 
                         <div className="divide-y divide-white/5">
