@@ -668,12 +668,13 @@ export default function ClientsPage() {
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0 flex items-center gap-3">
           <div>
-            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">
+            <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">
               Client Management
             </p>
-            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">
+            <h1 className="text-2xl font-display font-bold text-text-primary">
               Clients
             </h1>
+            <p className="text-sm text-text-secondary mt-1">Contracts, billing & health at a glance</p>
           </div>
           {/* Live count + MRR badges beside the title */}
           {clients.length> 0 && (
@@ -1422,7 +1423,7 @@ export default function ClientsPage() {
             const revenue = getClientRevenue(expandedRow);
             const note = clientNotes[expandedRow];
             return (
-              <div className="border border-t-0 border-border-subtle rounded-b-xl px-4 pb-4" style={{ background: "rgba(248,250,252,0.80)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
+              <div className="border border-t-0 border-border-subtle rounded-b-xl px-4 pb-4" style={{ background: "rgba(13,17,32,0.85)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}>
                 <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
                   {[
                     { label: "MRR", value: formatCurrency(revenue.mrr ?? 0), color: "#D4FF00" },

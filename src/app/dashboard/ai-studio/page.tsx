@@ -151,10 +151,10 @@ export default function AIStudioPage() {
       <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
         <div className="min-w-0 flex items-center gap-3">
           <div>
-            <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+            <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1 truncate">
               Generative Media
             </p>
-            <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+            <h1 className="text-2xl font-display font-bold text-text-primary leading-none truncate">
               AI Studio
             </h1>
           </div>
@@ -200,7 +200,7 @@ export default function AIStudioPage() {
 
       {/* -- GUIDED MODE ------------------------------------------- */}
       {!advancedMode && (
-        <div className="space-y-4 px-6 py-6">
+        <div className="space-y-4">
           {/* Tab bar: Image | Video | AI Tools */}
           <div
             className="tab-pill-strip"
@@ -285,7 +285,7 @@ export default function AIStudioPage() {
 
       {/* -- ADVANCED MODE ------------------------------------------- */}
       {advancedMode && (
-      <div className="px-4 py-4 min-h-[calc(100vh-120px)]">
+      <div className="min-h-[calc(100vh-120px)]">
 
         {/* Wizard image results � inline strip above the workspace */}
         {wizardImages.length > 0 && (
@@ -1822,15 +1822,15 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <ArrowUpRight size={16} className="text-green-400" />
+        <ArrowUpRight size={16} className="text-brand-accent" />
         <h2 className="text-sm font-bold text-text-primary">AI Image Upscaler</h2>
-        <span className="text-[9px] bg-green-500/10 text-green-400 px-2 py-0.5 rounded-full">Real-ESRGAN</span>
+        <span className="text-[9px] bg-[rgba(212,255,0,0.10)] text-brand-accent px-2 py-0.5 rounded-full">Real-ESRGAN</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border-subtle rounded-xl p-8 text-center cursor-pointer hover:border-green-400/30 transition-all">
+            className="border-2 border-dashed border-border-subtle rounded-xl p-8 text-center cursor-pointer hover:border-[rgba(212,255,0,0.30)] transition-all">
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && handleFile(e.target.files[0])} />
             {preview ? (
               /* eslint-disable-next-line @next/next/no-img-element */
@@ -1877,7 +1877,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={result} alt="Upscaled" className="max-h-[250px] mx-auto rounded-lg" />
               <a href={result} download={`upscaled_${scale}x.png`}
-                className="inline-flex items-center gap-1 mt-2 text-[10px] text-green-400 hover:underline">
+                className="inline-flex items-center gap-1 mt-2 text-[10px] text-brand-accent hover:underline">
                 <Download size={10} /> Download
               </a>
             </div>
@@ -1944,15 +1944,15 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Scissors size={16} className="text-pink-400" />
+        <Scissors size={16} className="text-brand-accent" />
         <h2 className="text-sm font-bold text-text-primary">Background Remover</h2>
-        <span className="text-[9px] bg-pink-500/10 text-pink-400 px-2 py-0.5 rounded-full">REMBG / SAM</span>
+        <span className="text-[9px] bg-[rgba(212,255,0,0.10)] text-brand-accent px-2 py-0.5 rounded-full">REMBG / SAM</span>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border-subtle rounded-xl p-8 text-center cursor-pointer hover:border-pink-400/30 transition-all">
+            className="border-2 border-dashed border-border-subtle rounded-xl p-8 text-center cursor-pointer hover:border-[rgba(212,255,0,0.30)] transition-all">
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => { const f = e.target.files?.[0]; if (f) { setFile(f); setPreview(URL.createObjectURL(f)); setResult(null); } }} />
             {preview ? (
               /* eslint-disable-next-line @next/next/no-img-element */
@@ -1968,10 +1968,10 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
           <div className="flex items-center gap-3 mt-3">
             <div className="flex items-center gap-2">
               <span className="text-[10px] text-text-muted">BG Color:</span>
-              <button onClick={() => setBgColor("")} className={`w-6 h-6 rounded border ${!bgColor ? "border-pink-400" : "border-border-subtle"}`}
+              <button onClick={() => setBgColor("")} className={`w-6 h-6 rounded border ${!bgColor ? "border-brand-accent" : "border-border-subtle"}`}
                 style={{ background: "repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 8px 8px" }} title="Transparent" />
               {["#ffffff", "#000000", "#f0f0f0"].map(c => (
-                <button key={c} onClick={() => setBgColor(c)} className={`w-6 h-6 rounded border ${bgColor === c ? "border-pink-400" : "border-border-subtle"}`}
+                <button key={c} onClick={() => setBgColor(c)} className={`w-6 h-6 rounded border ${bgColor === c ? "border-brand-accent" : "border-border-subtle"}`}
                   style={{ background: c }} />
               ))}
               <input type="color" value={bgColor || "#ffffff"} onChange={e => setBgColor(e.target.value)} className="w-6 h-6 rounded cursor-pointer" />
@@ -1994,7 +1994,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={result} alt="Result" className="max-h-[250px] mx-auto" />
               <a href={result} download="removed-bg.png"
-                className="inline-flex items-center gap-1 mt-2 text-[10px] text-pink-400 hover:underline">
+                className="inline-flex items-center gap-1 mt-2 text-[10px] text-brand-accent hover:underline">
                 <Download size={10} /> Download PNG
               </a>
             </div>
@@ -2301,9 +2301,9 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Volume2 size={16} className="text-orange-400" />
+        <Volume2 size={16} className="text-brand-accent" />
         <h2 className="text-sm font-bold text-text-primary">Voice Clone + TTS</h2>
-        <span className="text-[9px] bg-orange-500/10 text-orange-400 px-2 py-0.5 rounded-full">XTTS v2</span>
+        <span className="text-[9px] bg-[rgba(212,255,0,0.10)] text-brand-accent px-2 py-0.5 rounded-full">XTTS v2</span>
       </motion.div>
 
       <div className="tab-pill-strip mb-4">
@@ -2318,7 +2318,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
       {mode === "clone" ? (
         <div className="space-y-3">
           <div onClick={() => fileRef.current?.click()}
-            className="border-2 border-dashed border-border-subtle rounded-xl p-6 text-center cursor-pointer hover:border-orange-400/30 transition-all">
+            className="border-2 border-dashed border-border-subtle rounded-xl p-6 text-center cursor-pointer hover:border-[rgba(212,255,0,0.30)] transition-all">
             <input ref={fileRef} type="file" accept="audio/*" multiple className="hidden" onChange={e => {
               const files = Array.from(e.target.files || []);
               if (files.length) setVoiceFiles(prev => [...prev, ...files]);
@@ -2332,7 +2332,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
             <div className="flex flex-wrap gap-1.5">
               {voiceFiles.map((f, i) => (
                 <div key={i} className="flex items-center gap-1 bg-surface-light border border-border-subtle rounded-lg px-2 py-1 text-[10px] text-text-primary">
-                  <FileAudio size={10} className="text-orange-400" />
+                  <FileAudio size={10} className="text-brand-accent" />
                   <span className="truncate max-w-[120px]">{f.name}</span>
                   <button onClick={() => setVoiceFiles(prev => prev.filter((_, j) => j !== i))} className="text-text-muted hover:text-red-400" aria-label={`Remove ${f.name}`}>
                     <X size={10} />
@@ -2377,7 +2377,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
             {result ? (
               <div className="w-full text-center space-y-3">
                 <audio src={result} controls className="w-full" />
-                <a href={result} download="voice-clone.wav" className="inline-flex items-center gap-1 text-[10px] text-orange-400 hover:underline">
+                <a href={result} download="voice-clone.wav" className="inline-flex items-center gap-1 text-[10px] text-brand-accent hover:underline">
                   <Download size={10} /> Download
                 </a>
               </div>

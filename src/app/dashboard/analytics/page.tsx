@@ -381,14 +381,15 @@ export default function AnalyticsPage() {
     <MotionPage className="space-y-4">
 
       {/* -- Analytics command strip (slim editorial header, no PageHero) -- */}
-      <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
+      <div className="flex items-center justify-between gap-4">
         <div className="min-w-0">
-          <p className="font-editorial text-[11px] italic text-text-muted mb-0.5 truncate">
+          <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1 truncate">
             Performance Overview
           </p>
-          <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none truncate">
+          <h1 className="text-2xl font-display font-bold text-text-primary truncate">
             Analytics
           </h1>
+          <p className="text-sm text-text-secondary mt-1">Track leads, revenue, and outreach metrics</p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {/* Date-range pills */}
@@ -413,7 +414,7 @@ export default function AnalyticsPage() {
           <button
             type="button"
             onClick={() => setCompareEnabled(v => !v)}
-            className={`hidden sm:flex items-center gap-1.5 text-[10px] border px-2.5 py-1.5 rounded-md transition-colors ${compareEnabled ? "border-brand-accent/40 text-brand-accent bg-brand-accent/5" : "border-border-subtle text-text-muted hover:text-text-primary"}`}
+            className={`hidden sm:flex items-center gap-1.5 text-[10px] border px-2.5 py-1.5 rounded-full transition-colors ${compareEnabled ? "border-brand-accent/40 text-brand-accent bg-brand-accent/5" : "border-border-subtle text-text-muted hover:text-text-primary"}`}
             title="Compare to previous period"
           >
             <span className={`w-3 h-3 rounded-sm border flex items-center justify-center ${compareEnabled ? "bg-brand-accent border-brand-accent" : "border-text-muted"}`}>
@@ -424,7 +425,7 @@ export default function AnalyticsPage() {
           {/* Export CSV */}
           <button
             onClick={handleExport}
-            className="flex items-center gap-1.5 text-[10px] text-text-muted hover:text-text-primary transition-colors border border-border-subtle px-2.5 py-1.5 rounded-md"
+            className="flex items-center gap-1.5 text-[10px] text-text-muted hover:text-text-primary transition-colors border border-border-subtle px-2.5 py-1.5 rounded-full"
             title="Export report as JSON"
           >
             <Download size={11} />
