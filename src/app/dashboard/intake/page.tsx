@@ -248,7 +248,7 @@ export default function IntakePage() {
                   <p className="font-editorial text-[11px] italic text-text-muted mb-0.5">Intake</p>
                   <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-text-primary leading-none">Intake Forms</h1>
                 </div>
-              </div><div className="flex-1 p-4 md:p-6 max-w-6xl mx-auto w-full">
+              </div><div className="flex-1 max-w-6xl mx-auto w-full">
               {/* Tabs */}
               <div className="flex items-center gap-1 mb-6">
                 {(["forms", "submissions"] as const).map((tab) => (

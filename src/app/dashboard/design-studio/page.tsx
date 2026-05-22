@@ -229,7 +229,7 @@ function RecentDesigns() {
           className="rounded-xl overflow-hidden hover:border-brand-accent/30 transition-colors group"
 
         >
-          <div className="relative aspect-video bg-[#F2F2F4] flex items-center justify-center">
+          <div className="relative aspect-video bg-white/5 flex items-center justify-center">
             {d.thumbnail_url ? (
               <Image
                 src={d.thumbnail_url}

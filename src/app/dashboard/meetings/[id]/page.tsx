@@ -326,7 +326,7 @@ export default function MeetingDetailPage() {
 
           {/* Decisions */}
           {meeting.decisions && meeting.decisions.length > 0 && (
-            <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] p-4 space-y-2">
+            <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] space-y-2">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-brand-accent flex items-center gap-1.5">
                 <Lightbulb size={11} /> Decisions
               </h3>

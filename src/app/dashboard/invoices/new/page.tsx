@@ -414,7 +414,7 @@ export default function NewSmartInvoicePage() {
                 className="input w-full text-xs resize-none"
               />
             </div>{paymentLink && (
-              <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] p-4 flex items-center justify-between gap-3">
+              <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] flex items-center justify-between gap-3">
                 <div>
                   <p className="text-[11px] font-semibold">Stripe payment link ready</p>
                   <a

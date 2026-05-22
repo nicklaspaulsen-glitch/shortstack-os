@@ -384,7 +384,7 @@ export default function ClientUploadsPage() {
             />
           ) : (
             published.map(item => (
-              <div key={item.id} className="glass rounded-xl p-4 card-hover p-4">
+              <div key={item.id} className="glass rounded-xl p-4 card-hover">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <h3 className="text-xs font-semibold truncate">{item.video_title}</h3>

@@ -627,7 +627,7 @@ export default function WorkflowsPage() {
                     <motion.div
                       key={preset.id}
                       variants={itemVariants}
-                      className="glass rounded-xl p-4 card-hover p-4 flex flex-col spotlight-card"
+                      className="glass rounded-xl p-4 card-hover flex flex-col spotlight-card"
                       onMouseMove={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
                         e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);

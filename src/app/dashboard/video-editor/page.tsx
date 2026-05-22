@@ -8002,7 +8002,7 @@ function VideoPresetsTab({ onSelect }: { onSelect: (preset: VideoPreset) => void
           <button
             key={preset.id}
             onClick={() => onSelect(preset)}
-            className="glass rounded-xl p-4 card-hover text-left p-4"
+            className="glass rounded-xl p-4 card-hover text-left"
           >
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-[11px] font-semibold">{preset.name}</h3>
