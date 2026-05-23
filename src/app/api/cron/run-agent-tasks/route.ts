@@ -72,15 +72,106 @@ const APP_URL =
 // ── Task handlers ────────────────────────────────────────────────────────────
 
 /**
- * find_leads: Scrape Google Places for the owner's configured niche/location.
- * Falls back to the leadgen/ai-agent "find" mode via internal fetch to
- * /api/leadgen/voice-outreach is the wrong route — we use the scraper lib directly.
+ * find_leads: Scrape Google Places for the owner's configured niche/location,
+ * then extract social media handles from each business's website.
  *
- * However, the scraper lib is global (not per-owner). For per-owner lead
- * finding, we use the ai-agent route's "find" mode. Since that route needs
- * user-session auth, we inline a simplified version here using the same
- * Google Places lib.
+ * Only inserts leads that have a DM-able social media presence (Instagram,
+ * Facebook, TikTok, Twitter/X, LinkedIn). Businesses without discoverable
+ * social profiles are skipped — they can't be outreached via Zernio DMs.
+ *
+ * Enrichment pipeline per place:
+ *   1. Fetch the business website HTML
+ *   2. Regex-extract social media profile URLs
+ *   3. Pick the best platform (prefer Instagram > Facebook > TikTok > Twitter > LinkedIn)
+ *   4. Extract the handle from the URL
+ *   5. Also scrape email as fallback contact
+ *   6. Insert with the real social platform + handle
  */
+
+// Social media URL patterns — ordered by DM-friendliness
+const SOCIAL_PATTERNS: Array<{
+  platform: string;
+  regex: RegExp;
+  handleExtractor: (url: string) => string | null;
+}> = [
+  {
+    platform: "instagram",
+    regex: /https?:\/\/(?:www\.)?instagram\.com\/([a-zA-Z0-9._]{1,30})\/?/gi,
+    handleExtractor: (url: string) => {
+      const m = url.match(/instagram\.com\/([a-zA-Z0-9._]{1,30})/i);
+      return m?.[1] && !["p", "reel", "explore", "accounts", "stories", "about", "developer"].includes(m[1].toLowerCase())
+        ? m[1] : null;
+    },
+  },
+  {
+    platform: "facebook",
+    regex: /https?:\/\/(?:www\.)?facebook\.com\/([a-zA-Z0-9.]{1,50})\/?/gi,
+    handleExtractor: (url: string) => {
+      const m = url.match(/facebook\.com\/([a-zA-Z0-9.]{1,50})/i);
+      return m?.[1] && !["sharer", "share", "dialog", "plugins", "login", "help", "groups", "events", "watch", "marketplace", "gaming"].includes(m[1].toLowerCase())
+        ? m[1] : null;
+    },
+  },
+  {
+    platform: "tiktok",
+    regex: /https?:\/\/(?:www\.)?tiktok\.com\/@([a-zA-Z0-9._]{1,24})\/?/gi,
+    handleExtractor: (url: string) => {
+      const m = url.match(/tiktok\.com\/@([a-zA-Z0-9._]{1,24})/i);
+      return m?.[1] ?? null;
+    },
+  },
+  {
+    platform: "twitter",
+    regex: /https?:\/\/(?:www\.)?(?:twitter\.com|x\.com)\/([a-zA-Z0-9_]{1,15})\/?/gi,
+    handleExtractor: (url: string) => {
+      const m = url.match(/(?:twitter\.com|x\.com)\/([a-zA-Z0-9_]{1,15})/i);
+      return m?.[1] && !["intent", "share", "search", "hashtag", "home", "explore", "i"].includes(m[1].toLowerCase())
+        ? m[1] : null;
+    },
+  },
+  {
+    platform: "linkedin",
+    regex: /https?:\/\/(?:www\.)?linkedin\.com\/(?:company|in)\/([a-zA-Z0-9_-]{1,100})\/?/gi,
+    handleExtractor: (url: string) => {
+      const m = url.match(/linkedin\.com\/(?:company|in)\/([a-zA-Z0-9_-]{1,100})/i);
+      return m?.[1] ?? null;
+    },
+  },
+];
+
+type SocialProfile = {
+  platform: string;
+  handle: string;
+  profileUrl: string;
+};
+
+function extractSocialProfiles(html: string): SocialProfile[] {
+  const found: SocialProfile[] = [];
+  const seenPlatforms = new Set<string>();
+
+  for (const pattern of SOCIAL_PATTERNS) {
+    if (seenPlatforms.has(pattern.platform)) continue;
+
+    // Use exec loop instead of matchAll (avoids downlevelIteration requirement)
+    pattern.regex.lastIndex = 0;
+    let match: RegExpExecArray | null;
+    while ((match = pattern.regex.exec(html)) !== null) {
+      const handle = pattern.handleExtractor(match[0]);
+      if (handle && !seenPlatforms.has(pattern.platform)) {
+        found.push({
+          platform: pattern.platform,
+          handle,
+          profileUrl: match[0].replace(/\/$/, ""),
+        });
+        seenPlatforms.add(pattern.platform);
+        break; // one handle per platform is enough
+      }
+    }
+  }
+
+  return found;
+}
+
 const handleFindLeads: TaskHandler = async (supabase, task) => {
   const count = (task.payload.count as number) || 10;
 
@@ -95,7 +186,6 @@ const handleFindLeads: TaskHandler = async (supabase, task) => {
   const niche = (metadata.target_niche as string) || "local business";
   const location = (metadata.target_location as string) || "United States";
 
-  // Use Google Places API directly
   const placesKey = process.env.GOOGLE_PLACES_API_KEY;
   if (!placesKey) {
     return { ok: false, error: "GOOGLE_PLACES_API_KEY not configured" };
@@ -103,8 +193,13 @@ const handleFindLeads: TaskHandler = async (supabase, task) => {
 
   const searchQuery = `${niche} in ${location}`;
   let foundCount = 0;
+  let skippedNoSocial = 0;
 
   try {
+    // Request more results than needed since we'll filter out businesses
+    // without social media presence
+    const fetchCount = Math.min(count * 3, 20);
+
     const res = await fetch(
       "https://places.googleapis.com/v1/places:searchText",
       {
@@ -117,7 +212,7 @@ const handleFindLeads: TaskHandler = async (supabase, task) => {
         },
         body: JSON.stringify({
           textQuery: searchQuery,
-          maxResultCount: Math.min(count, 20),
+          maxResultCount: fetchCount,
         }),
         signal: AbortSignal.timeout(30_000),
       },
@@ -128,6 +223,8 @@ const handleFindLeads: TaskHandler = async (supabase, task) => {
     };
 
     for (const place of data.places ?? []) {
+      if (foundCount >= count) break;
+
       const name =
         (place.displayName as { text?: string })?.text || "Unknown Business";
       const phone = (place.nationalPhoneNumber as string) || null;
@@ -142,29 +239,61 @@ const handleFindLeads: TaskHandler = async (supabase, task) => {
 
       if ((existing ?? 0) > 0) continue;
 
-      // Enrich email from website
+      // Scrape website for social media profiles + email
+      let socialProfiles: SocialProfile[] = [];
       let email: string | null = null;
+      let siteHtml = "";
+
       if (website) {
         try {
           const siteRes = await fetch(website, {
-            headers: { "User-Agent": "Mozilla/5.0" },
-            signal: AbortSignal.timeout(5000),
+            headers: {
+              "User-Agent": "Mozilla/5.0 (compatible; ShortStackBot/1.0)",
+              Accept: "text/html",
+            },
+            signal: AbortSignal.timeout(8000),
+            redirect: "follow",
           });
-          const html = await siteRes.text();
-          const match = html.match(
+          siteHtml = await siteRes.text();
+
+          // Extract social media profiles
+          socialProfiles = extractSocialProfiles(siteHtml);
+
+          // Extract email as supplementary contact
+          const emailMatch = siteHtml.match(
             /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/,
           );
-          if (match) email = match[0];
+          if (emailMatch) email = emailMatch[0];
         } catch {
-          // email enrichment failure is non-critical
+          // website scrape failure is non-critical — skip this lead
         }
       }
 
+      // Only insert leads with a DM-able social presence
+      if (socialProfiles.length === 0) {
+        skippedNoSocial++;
+        continue;
+      }
+
+      // Pick the best social profile (first match = highest priority per SOCIAL_PATTERNS order)
+      const primary = socialProfiles[0];
+
+      // Also dedup by handle + platform
+      const { count: handleExists } = await supabase
+        .from("lead_pipeline")
+        .select("id", { count: "exact", head: true })
+        .eq("owner_id", task.owner_id)
+        .eq("platform", primary.platform)
+        .ilike("handle", primary.handle);
+
+      if ((handleExists ?? 0) > 0) continue;
+
       await supabase.from("lead_pipeline").insert({
         owner_id: task.owner_id,
-        platform: "google_places",
-        handle: phone || name.toLowerCase().replace(/\s+/g, "-"),
+        platform: primary.platform,
+        handle: primary.handle,
         display_name: name,
+        profile_url: primary.profileUrl,
         stage: "outreach_pending",
         source: "agent_task_find_leads",
         lead_info: {
@@ -175,6 +304,8 @@ const handleFindLeads: TaskHandler = async (supabase, task) => {
           email,
           rating: place.rating,
           review_count: place.userRatingCount,
+          social_profiles: socialProfiles,
+          discovery_source: "google_places",
         },
       });
 
@@ -189,7 +320,11 @@ const handleFindLeads: TaskHandler = async (supabase, task) => {
 
   return {
     ok: true,
-    detail: { found: foundCount, query: searchQuery },
+    detail: {
+      found: foundCount,
+      skipped_no_social: skippedNoSocial,
+      query: searchQuery,
+    },
   };
 };
 
