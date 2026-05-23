@@ -179,6 +179,8 @@ export async function POST(request: NextRequest) {
     client_id,
     plan_only,
     music_mood,
+    model_backend,
+    i2v_source_image,
   } = await request.json();
 
   // ── Tier-based video length cap (per-render ceiling, not monthly) ──
@@ -210,11 +212,33 @@ export async function POST(request: NextRequest) {
   const attempted: string[] = [];
   let lastError: string | undefined;
 
+  // ── Model-backend routing ──
+  // The UI sends model_backend (e.g. "ltx", "wan2", "flux-i2v") to pin a
+  // specific fal.ai model instead of running the full waterfall.
+  // "higgsfield" and undefined both fall through to the existing Mochi→fal cascade.
+  const FAL_BACKEND_MAP: Record<string, string> = {
+    wan2:       "fal-ai/wan/t2v/480p",
+    ltx:        "fal-ai/ltx-video",
+    hunyuan:    "fal-ai/hunyuan-video",
+    "flux-i2v": "fal-ai/flux/image-to-video",
+  };
+  const falTargetModelId: string | undefined =
+    model_backend ? FAL_BACKEND_MAP[model_backend] : undefined;
+
+  // Kling requires a separate API key — surface a clear error rather than
+  // silently falling through to a different backend.
+  if (model_backend === "kling" && !plan_only) {
+    return NextResponse.json(
+      { success: false, error: "Kling AI integration coming soon. Select a different model." },
+      { status: 400 },
+    );
+  }
+
   // Option 1: Remotion (self-hosted on Railway) — skip if plan_only.
   // Require explicit REMOTION_RENDER_URL — no hardcoded fallback so we
   // don't commit infrastructure topology to git.
   const remotionUrl = process.env.REMOTION_RENDER_URL ?? "";
-  if (remotionUrl && !plan_only) {
+  if (!falTargetModelId && remotionUrl && !plan_only) {
     attempted.push("remotion");
     try {
       const res = await fetch(`${remotionUrl}/api/render`, {
@@ -260,9 +284,10 @@ export async function POST(request: NextRequest) {
   }
 
   // Option 2: Mochi Video Generator on RunPod Serverless (AI text-to-video)
+  // Skipped when user has explicitly selected a fal.ai-hosted backend.
   const videoUrl = process.env.HIGGSFIELD_URL;
   const runpodKey = process.env.RUNPOD_API_KEY;
-  if (videoUrl && runpodKey && !plan_only) {
+  if (!falTargetModelId && videoUrl && runpodKey && !plan_only) {
     attempted.push("mochi");
     try {
       // Map aspect ratio to Mochi-compatible dimensions
@@ -369,22 +394,43 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Option 2.5: fal.ai open-source video gen (LTX-Video → CogVideoX → Wan2.1)
-  // Free/cheap open-source models hosted on fal.ai — no RunPod dependency
+  // Option 2.5: fal.ai open-source video gen
+  // When model_backend is set to a fal.ai backend, only that model is tried.
+  // Otherwise cascade: LTX-Video → CogVideoX → Wan2.1 as waterfall fallback.
   const falKey = process.env.FAL_KEY;
   if (falKey && !plan_only) {
-    const FAL_MODELS = [
+    const FAL_FALLBACK_MODELS = [
       { id: "fal-ai/ltx-video",    name: "LTX-Video"  },
       { id: "fal-ai/cogvideox-5b", name: "CogVideoX"  },
       { id: "fal-ai/wan/t2v/480p", name: "Wan2.1-T2V" },
     ] as const;
 
-    for (const model of FAL_MODELS) {
+    // Use pinned model or fall back to the cascade
+    const falModelsToTry: ReadonlyArray<{ id: string; name: string }> = falTargetModelId
+      ? [{ id: falTargetModelId, name: model_backend as string }]
+      : FAL_FALLBACK_MODELS;
+
+    for (const model of falModelsToTry) {
       attempted.push(`fal-${model.name}`);
       try {
         const falPrompt =
           (script && script.length > 20 ? script.slice(0, 500) : "") ||
           `${title || "Untitled"} — ${style || "modern"} style`;
+
+        // Image-to-video models require a source image URL instead of a text prompt alone
+        const isI2V = model_backend === "flux-i2v" && typeof i2v_source_image === "string" && i2v_source_image.length > 0;
+        const falPayload = isI2V
+          ? {
+              image_url: i2v_source_image as string,
+              prompt: falPrompt,
+              num_inference_steps: 50,
+            }
+          : {
+              prompt: falPrompt,
+              negative_prompt:
+                "blurry, low quality, watermark, text overlay, frozen, no motion, amateur",
+              num_inference_steps: 50,
+            };
 
         const res = await fetch(`https://queue.fal.run/${model.id}`, {
           method: "POST",
@@ -392,12 +438,7 @@ export async function POST(request: NextRequest) {
             "Content-Type": "application/json",
             Authorization: `Key ${falKey}`,
           },
-          body: JSON.stringify({
-            prompt: falPrompt,
-            negative_prompt:
-              "blurry, low quality, watermark, text overlay, frozen, no motion, amateur",
-            num_inference_steps: 50,
-          }),
+          body: JSON.stringify(falPayload),
         });
 
         if (!res.ok) {
