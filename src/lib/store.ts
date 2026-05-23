@@ -29,6 +29,17 @@ interface AppStore {
   setManagedClient: (client: ManagedClient | null) => void;
 }
 
+// Restore impersonated client from sessionStorage (tab-scoped — clears on close)
+function getPersistedImpersonation(): ImpersonatedClient | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem("ss_impersonated_client");
+    return raw ? (JSON.parse(raw) as ImpersonatedClient) : null;
+  } catch {
+    return null;
+  }
+}
+
 // Restore managed client from localStorage (survives tab close) with sessionStorage fallback
 function getPersistedManagedClient(): ManagedClient | null {
   if (typeof window === "undefined") return null;
@@ -41,12 +52,18 @@ function getPersistedManagedClient(): ManagedClient | null {
 }
 
 export const useAppStore = create<AppStore>((set) => ({
-  impersonatedClient: null,
-  isImpersonating: false,
-  setImpersonatedClient: (client) => set({
-    impersonatedClient: client,
-    isImpersonating: client !== null,
-  }),
+  impersonatedClient: getPersistedImpersonation(),
+  isImpersonating: getPersistedImpersonation() !== null,
+  setImpersonatedClient: (client) => {
+    if (typeof window !== "undefined") {
+      if (client) {
+        sessionStorage.setItem("ss_impersonated_client", JSON.stringify(client));
+      } else {
+        sessionStorage.removeItem("ss_impersonated_client");
+      }
+    }
+    set({ impersonatedClient: client, isImpersonating: client !== null });
+  },
 
   managedClient: getPersistedManagedClient(),
   isManaging: getPersistedManagedClient() !== null,

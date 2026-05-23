@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 interface ModalProps {
@@ -50,7 +51,7 @@ export default function Modal({ isOpen, onClose, title, children, size = "md" }:
     xl: "max-w-4xl",
   };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={onClose} />
       <div className={`relative w-full ${sizeClasses[size]} mx-4 bg-surface border border-border-subtle/50 rounded-xl shadow-2xl shadow-black/50 max-h-[85vh] overflow-y-auto`}>
@@ -65,6 +66,7 @@ export default function Modal({ isOpen, onClose, title, children, size = "md" }:
         </div>
         <div className="p-5">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

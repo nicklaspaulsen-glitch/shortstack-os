@@ -1552,6 +1552,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
   const [size, setSize] = useState(initial?.size || "1024x1024");
   const [images, setImages] = useState<string[]>([]);
   const [setupRequired, setSetupRequired] = useState(false);
+  const [genError, setGenError] = useState<string | null>(null);
   const lastAutoRef = useRef<number | undefined>(undefined);
   // Ref so the auto-generate effect can call the latest generate handler
   // with explicit overrides (avoids stale state after setState in same tick).
@@ -1606,6 +1607,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
     setProcessing(true);
     setImages([]);
     setSetupRequired(false);
+    setGenError(null);
     try {
       const [w, h] = useSize.split("x").map(Number);
       const res = await fetch("/api/ai-studio/image-gen", {
@@ -1621,6 +1623,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
       const data = await res.json();
       if (data.images) {
         setImages(data.images);
+        setGenError(null);
         toast.success(`Generated ${data.images.length} image(s)`);
       } else if (data.job_id) {
         toast.success("Generating... check back in a moment");
@@ -1628,11 +1631,15 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
         setSetupRequired(true);
         toast.error("API key not configured");
       } else {
-        toast.error(data.error || "Generation failed");
+        const msg = data.error || "Generation failed";
+        setGenError(msg);
+        toast.error(msg);
       }
     } catch (err) {
       console.error("[ai-studio/image-gen] failed:", err);
-      toast.error("Generation failed");
+      const msg = "Connection error — try again";
+      setGenError(msg);
+      toast.error(msg);
     } finally {
       setProcessing(false);
     }
@@ -1665,6 +1672,22 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                 : "Image generation isn't enabled on this workspace yet. Reach out to your platform admin to switch it on."}
             </p>
           </div>
+        </div>
+      )}
+
+      {genError && !setupRequired && (
+        <div className="mb-4 p-3 rounded-xl border border-red-500/20 bg-red-500/5 flex items-start gap-2">
+          <AlertTriangle size={14} className="text-red-400 mt-0.5 shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-medium text-red-400">Generation failed</p>
+            <p className="text-[10px] text-text-muted mt-0.5 break-words">{genError}</p>
+          </div>
+          <button
+            onClick={() => { setGenError(null); void runGenerate(); }}
+            className="text-[10px] text-brand-accent hover:text-brand-accent/80 font-semibold shrink-0 ml-2"
+          >
+            Retry
+          </button>
         </div>
       )}
 
