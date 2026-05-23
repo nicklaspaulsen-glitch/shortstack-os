@@ -979,6 +979,7 @@ export default function WebsitesPage() {
               steps={steps}
               onClose={() => setWizardOpen(false)}
               onComplete={handleWizardComplete}
+              sidePanel={(d, s) => <WizardLivePreview data={d} stepIdx={s} />}
             />{/* -------------------- Niche template gallery -------------------- */}<div className="space-y-3">
               <div className="flex items-end justify-between flex-wrap gap-2">
                 <div>
@@ -1510,6 +1511,230 @@ export default function WebsitesPage() {
             {/* AI training config for website generation */}
             <PageTrainingPanel pageKey="websites" pageLabel="Websites" />
           </MotionPage>
+  );
+}
+
+/* --------- Wizard live preview — dynamic wireframe that updates per step ------ */
+
+function WizardLivePreview({ data, stepIdx }: { data: Record<string, unknown>; stepIdx: number }) {
+  const primary = String(data.brand_primary || "#D4FF00");
+  const accent = String(data.brand_accent || "#0F172A");
+  const heroStyle = String(data.hero_style || "big-headline-image");
+  const bizName = String(data.business_name || "Your Site");
+  const valueProp = String(data.value_prop || "");
+  const ctaGoal = String(data.cta_goal || "book-call");
+  const styleName = String(data.style_vibe || "dark-cinematic");
+  const sections = (Array.isArray(data.sections) ? data.sections : ["about", "features", "testimonials", "faq"]) as string[];
+
+  const ctaLabels: Record<string, string> = {
+    "book-call": "Book a Call",
+    "buy-product": "Shop Now",
+    "join-waitlist": "Join Waitlist",
+    "download": "Download",
+    "contact": "Contact Us",
+    "schedule-demo": "Get Demo",
+  };
+  const ctaText = ctaLabels[ctaGoal] || "Get Started";
+
+  const isLight = styleName === "minimal-clean" || styleName === "pastel-soft" || styleName === "editorial";
+  const bg = isLight ? "#F8FAFC" : accent;
+  const textCol = isLight ? "#0F172A" : "#FFFFFF";
+  const mutedCol = isLight ? "#64748B" : "rgba(255,255,255,0.45)";
+  const borderCol = isLight ? "rgba(15,23,42,0.08)" : "rgba(255,255,255,0.08)";
+
+  return (
+    <div className="rounded-2xl border border-border-subtle overflow-hidden bg-[#0a0c14] shadow-2xl shadow-black/40">
+      {/* Browser chrome */}
+      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.06] bg-[#0d0f18]">
+        <div className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F]" />
+        </div>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-white/[0.05] border border-white/[0.06] text-[9px] text-white/30 max-w-[200px] truncate">
+            <Globe size={8} className="text-white/20 shrink-0" />
+            {bizName.toLowerCase().replace(/\s+/g, "")}.shortstack.work
+          </div>
+        </div>
+      </div>
+
+      {/* Wireframe site preview */}
+      <div
+        className="p-0 transition-colors duration-500 overflow-hidden"
+        style={{ backgroundColor: bg, minHeight: 480 }}
+      >
+        {/* Nav */}
+        <div className="flex items-center justify-between px-5 py-3" style={{ borderBottom: `1px solid ${borderCol}` }}>
+          <div className="flex items-center gap-1.5">
+            <div className="w-4 h-4 rounded" style={{ backgroundColor: primary, opacity: 0.9 }} />
+            <div className="h-2 w-14 rounded-full" style={{ backgroundColor: textCol, opacity: 0.25 }} />
+          </div>
+          <div className="flex items-center gap-3">
+            {["", "", ""].map((_, i) => (
+              <div key={i} className="h-1.5 w-8 rounded-full" style={{ backgroundColor: textCol, opacity: 0.15 }} />
+            ))}
+            <div
+              className="h-5 px-3 rounded-full flex items-center text-[7px] font-semibold"
+              style={{ backgroundColor: primary, color: bg }}
+            >
+              {ctaText}
+            </div>
+          </div>
+        </div>
+
+        {/* Hero */}
+        <div
+          className="px-5 py-8 transition-all duration-300"
+          style={{
+            background: heroStyle === "interactive-gradient"
+              ? `linear-gradient(135deg, ${primary}22, ${accent}, ${primary}11)`
+              : heroStyle === "video-bg" || heroStyle === "fullscreen-photo"
+              ? `linear-gradient(to bottom, ${accent}ee, ${accent})`
+              : "transparent",
+          }}
+        >
+          {heroStyle === "split-screen" ? (
+            <div className="flex gap-4">
+              <div className="flex-1 space-y-3">
+                <div className="h-3 w-3/4 rounded-full" style={{ backgroundColor: textCol, opacity: 0.35 }} />
+                <div className="h-5 w-full rounded" style={{ backgroundColor: textCol, opacity: 0.15 }} />
+                <div className="h-2 w-2/3 rounded-full" style={{ backgroundColor: mutedCol }} />
+                <div className="h-6 w-20 rounded-full mt-4" style={{ backgroundColor: primary, opacity: 0.9 }} />
+              </div>
+              <div className="w-2/5 rounded-lg" style={{ backgroundColor: `${primary}15`, minHeight: 80 }} />
+            </div>
+          ) : (
+            <div className="text-center space-y-3">
+              {heroStyle === "3d-spline" && (
+                <div className="w-16 h-16 mx-auto rounded-xl flex items-center justify-center mb-2" style={{ backgroundColor: `${primary}15` }}>
+                  <Cpu size={18} style={{ color: primary, opacity: 0.5 }} />
+                </div>
+              )}
+              <div className="h-4 w-3/4 mx-auto rounded-full" style={{ backgroundColor: textCol, opacity: 0.3 }} />
+              <div className="h-2.5 w-1/2 mx-auto rounded-full" style={{ backgroundColor: textCol, opacity: 0.12 }} />
+              {valueProp && (
+                <p className="text-[8px] max-w-[180px] mx-auto leading-tight" style={{ color: mutedCol }}>
+                  {valueProp.slice(0, 80)}{valueProp.length > 80 ? "..." : ""}
+                </p>
+              )}
+              <div className="flex items-center justify-center gap-2 mt-3">
+                <div className="h-6 px-4 rounded-full text-[7px] font-semibold flex items-center" style={{ backgroundColor: primary, color: bg }}>
+                  {ctaText}
+                </div>
+                <div className="h-6 px-3 rounded-full text-[7px] flex items-center border" style={{ borderColor: borderCol, color: mutedCol }}>
+                  Learn more
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Dynamic sections */}
+        <div className="space-y-0">
+          {sections.map((section) => (
+            <div key={section} className="px-5 py-5" style={{ borderTop: `1px solid ${borderCol}` }}>
+              <div className="h-2 w-16 rounded-full mb-3" style={{ backgroundColor: primary, opacity: 0.5 }} />
+              <div className="h-1.5 w-24 rounded-full mb-3" style={{ backgroundColor: textCol, opacity: 0.2 }} />
+
+              {section === "features" || section === "services" ? (
+                <div className="grid grid-cols-3 gap-2">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="rounded-lg p-2 space-y-1.5" style={{ backgroundColor: `${textCol}08`, border: `1px solid ${borderCol}` }}>
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: `${primary}20` }} />
+                      <div className="h-1.5 w-3/4 rounded-full" style={{ backgroundColor: textCol, opacity: 0.15 }} />
+                      <div className="h-1 w-full rounded-full" style={{ backgroundColor: textCol, opacity: 0.07 }} />
+                    </div>
+                  ))}
+                </div>
+              ) : section === "testimonials" ? (
+                <div className="flex gap-2">
+                  {[0, 1].map((i) => (
+                    <div key={i} className="flex-1 rounded-lg p-2 space-y-1.5" style={{ backgroundColor: `${textCol}05`, border: `1px solid ${borderCol}` }}>
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-4 h-4 rounded-full" style={{ backgroundColor: `${primary}20` }} />
+                        <div className="h-1 w-10 rounded-full" style={{ backgroundColor: textCol, opacity: 0.15 }} />
+                      </div>
+                      <div className="h-1 w-full rounded-full" style={{ backgroundColor: textCol, opacity: 0.07 }} />
+                      <div className="h-1 w-2/3 rounded-full" style={{ backgroundColor: textCol, opacity: 0.05 }} />
+                    </div>
+                  ))}
+                </div>
+              ) : section === "pricing" ? (
+                <div className="grid grid-cols-3 gap-2">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="rounded-lg p-2 space-y-1.5"
+                      style={{
+                        backgroundColor: i === 1 ? `${primary}10` : `${textCol}05`,
+                        border: `1px solid ${borderCol}`,
+                        outline: i === 1 ? `1px solid ${primary}40` : undefined,
+                      }}
+                    >
+                      <div className="h-1.5 w-8 rounded-full" style={{ backgroundColor: textCol, opacity: 0.15 }} />
+                      <div className="h-3 w-6 rounded" style={{ backgroundColor: textCol, opacity: 0.2 }} />
+                      <div className="h-4 w-full rounded-full" style={{ backgroundColor: i === 1 ? primary : `${textCol}15`, opacity: i === 1 ? 0.8 : 1 }} />
+                    </div>
+                  ))}
+                </div>
+              ) : section === "faq" ? (
+                <div className="space-y-1.5">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="flex items-center justify-between rounded-lg px-2 py-1.5" style={{ border: `1px solid ${borderCol}` }}>
+                      <div className="h-1 w-20 rounded-full" style={{ backgroundColor: textCol, opacity: 0.12 }} />
+                      <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: textCol, opacity: 0.15 }} />
+                    </div>
+                  ))}
+                </div>
+              ) : section === "gallery" ? (
+                <div className="grid grid-cols-4 gap-1.5">
+                  {[0, 1, 2, 3].map((i) => (
+                    <div key={i} className="aspect-square rounded" style={{ backgroundColor: `${primary}${10 + i * 5}` }} />
+                  ))}
+                </div>
+              ) : section === "contact" ? (
+                <div className="flex gap-2">
+                  <div className="flex-1 space-y-1.5">
+                    <div className="h-5 w-full rounded" style={{ backgroundColor: `${textCol}08`, border: `1px solid ${borderCol}` }} />
+                    <div className="h-5 w-full rounded" style={{ backgroundColor: `${textCol}08`, border: `1px solid ${borderCol}` }} />
+                    <div className="h-10 w-full rounded" style={{ backgroundColor: `${textCol}08`, border: `1px solid ${borderCol}` }} />
+                    <div className="h-5 w-16 rounded-full" style={{ backgroundColor: primary, opacity: 0.8 }} />
+                  </div>
+                  <div className="w-1/3 rounded-lg" style={{ backgroundColor: `${textCol}05`, border: `1px solid ${borderCol}` }} />
+                </div>
+              ) : (
+                /* about, team, blog-preview, or fallback */
+                <div className="space-y-1.5">
+                  <div className="h-1.5 w-full rounded-full" style={{ backgroundColor: textCol, opacity: 0.07 }} />
+                  <div className="h-1.5 w-4/5 rounded-full" style={{ backgroundColor: textCol, opacity: 0.05 }} />
+                  <div className="h-1.5 w-3/5 rounded-full" style={{ backgroundColor: textCol, opacity: 0.05 }} />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="px-5 py-4" style={{ borderTop: `1px solid ${borderCol}`, backgroundColor: `${textCol}03` }}>
+          <div className="flex items-center justify-between">
+            <div className="h-1.5 w-16 rounded-full" style={{ backgroundColor: textCol, opacity: 0.1 }} />
+            <div className="flex gap-2">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: textCol, opacity: 0.08 }} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Live indicator */}
+      <div className="flex items-center justify-between px-4 py-2 border-t border-white/[0.06] bg-[#0d0f18]">
+        <div className="flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-[9px] text-white/30">Live preview</span>
+        </div>
+        <span className="text-[9px] text-white/20">Updates as you build</span>
+      </div>
+    </div>
   );
 }
 

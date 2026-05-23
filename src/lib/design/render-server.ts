@@ -10,7 +10,7 @@
  */
 
 import type { DesignDoc, ExportFormat, Layer, Page } from "./types";
-import { checkFetchUrl } from "@/lib/security/ssrf";
+import { resolveAndCheckUrl } from "@/lib/security/ssrf";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -38,24 +38,12 @@ function getSupabaseStorageHost(): string | null {
 }
 
 /**
- * Returns true if the URL is safe to pass to Satori for server-side fetching.
- * Requires https://, no private IPs, and hostname in the allowlist.
+ * Returns true if the hostname is in the image allowlist.
+ * This is a fast sync check — the DNS-resolving SSRF guard runs separately.
  */
-function isAllowedImageUrl(src: string): boolean {
-  // First run the generic SSRF check (blocks private IPs, metadata endpoints, etc.)
-  const ssrfError = checkFetchUrl(src);
-  if (ssrfError !== null) return false;
+function isHostAllowed(hostname: string): boolean {
+  const host = hostname.toLowerCase();
 
-  let parsed: URL;
-  try {
-    parsed = new URL(src);
-  } catch {
-    return false;
-  }
-
-  const host = parsed.hostname.toLowerCase();
-
-  // Check static allowlist
   for (const allowed of ALLOWED_IMAGE_HOSTS) {
     if (typeof allowed === "string") {
       if (host === allowed) return true;
@@ -64,11 +52,85 @@ function isAllowedImageUrl(src: string): boolean {
     }
   }
 
-  // Check dynamic Supabase storage host
   const supabaseHost = getSupabaseStorageHost();
   if (supabaseHost && host === supabaseHost.toLowerCase()) return true;
 
   return false;
+}
+
+/**
+ * Returns true if the URL passes both the hostname allowlist AND
+ * the async DNS-resolving SSRF guard (Layer 1 + Layer 2).
+ */
+async function isAllowedImageUrlAsync(src: string): Promise<boolean> {
+  // data: URIs are always safe (no server-side fetch of external resources)
+  if (src.startsWith("data:")) return true;
+
+  let parsed: URL;
+  try {
+    parsed = new URL(src);
+  } catch {
+    return false;
+  }
+
+  // Hostname must be in the allowlist
+  if (!isHostAllowed(parsed.hostname)) return false;
+
+  // Layer 1 (string-based) + Layer 2 (DNS resolution) SSRF check
+  const ssrfError = await resolveAndCheckUrl(src);
+  if (ssrfError !== null) return false;
+
+  return true;
+}
+
+/**
+ * Walk the layer tree, collect all image src URLs, and run the async
+ * SSRF check (Layer 1 + Layer 2 DNS resolution) on each in parallel.
+ * Returns a Set of URLs that are BLOCKED — the sync render path checks
+ * membership with O(1) lookup instead of doing async work.
+ */
+async function preValidateImageUrls(layers: Layer[]): Promise<Set<string>> {
+  const blocked = new Set<string>();
+
+  // Collect all image URLs from the layer tree
+  const imageEntries: Array<{ layerId: string; src: string }> = [];
+  for (const layer of layers) {
+    if (layer.kind === "image" && layer.src) {
+      imageEntries.push({ layerId: layer.id, src: layer.src });
+    }
+  }
+
+  if (imageEntries.length === 0) return blocked;
+
+  // Validate all URLs in parallel (DNS resolution + SSRF check)
+  const results = await Promise.allSettled(
+    imageEntries.map(async ({ layerId, src }) => {
+      const allowed = await isAllowedImageUrlAsync(src);
+      if (!allowed) {
+        console.warn(
+          "[design-studio/render] blocked disallowed image src for layer",
+          layerId,
+        );
+        blocked.add(src);
+      }
+    }),
+  );
+
+  // Log any unexpected errors during validation (shouldn't happen, but
+  // defensive — a failing check blocks the URL rather than allowing it)
+  for (let i = 0; i < results.length; i++) {
+    const result = results[i];
+    if (result.status === "rejected") {
+      const entry = imageEntries[i];
+      console.warn(
+        `[design-studio/render] image validation failed for layer ${entry.layerId}:`,
+        result.reason instanceof Error ? result.reason.message : String(result.reason),
+      );
+      blocked.add(entry.src);
+    }
+  }
+
+  return blocked;
 }
 
 /** 1×1 transparent PNG data URL used as a placeholder for blocked/invalid src */
@@ -149,8 +211,17 @@ export async function renderDesign(
   const page = doc.pages[pageIndex];
   if (!page) throw new Error(`Page index ${pageIndex} not found in doc`);
 
+  // Pre-validate all image URLs with async DNS-resolving SSRF guard
+  // (Layer 1 + Layer 2) BEFORE entering the sync Satori render path.
+  // The returned set is checked synchronously during element building.
+  const visibleLayers = page.layerIds
+    .map((id) => page.layers[id])
+    .filter(Boolean)
+    .filter((l) => !l.hidden);
+  const blockedUrls = await preValidateImageUrls(visibleLayers);
+
   // Build the HTML element tree for Satori
-  const html = buildPageHtml(page, width, height);
+  const html = buildPageHtml(page, width, height, blockedUrls);
 
   let pngBuffer: Buffer;
 
@@ -206,14 +277,14 @@ type SatoriElement = {
   };
 };
 
-function buildPageHtml(page: Page, width: number, height: number): SatoriElement {
+function buildPageHtml(page: Page, width: number, height: number, blockedUrls: Set<string>): SatoriElement {
   const orderedLayers = page.layerIds
     .map((id) => page.layers[id])
     .filter(Boolean)
     .filter((l) => !l.hidden);
 
   const children: SatoriElement[] = orderedLayers.map((l) =>
-    buildLayerElement(l),
+    buildLayerElement(l, blockedUrls),
   );
 
   return {
@@ -233,7 +304,7 @@ function buildPageHtml(page: Page, width: number, height: number): SatoriElement
   };
 }
 
-function buildLayerElement(layer: Layer): SatoriElement {
+function buildLayerElement(layer: Layer, blockedUrls: Set<string>): SatoriElement {
   const baseStyle: Record<string, string | number> = {
     position: "absolute",
     left: `${layer.x}px`,
@@ -273,18 +344,11 @@ function buildLayerElement(layer: Layer): SatoriElement {
   }
 
   if (layer.kind === "image") {
-    // SSRF: validate layer.src before Satori fetches it server-side.
-    // Bad URLs are replaced with a transparent 1×1 placeholder so we never
-    // expose the render server to internal network endpoints.
-    const safeSrc = layer.src && isAllowedImageUrl(layer.src)
+    // SSRF: layer.src was pre-validated by preValidateImageUrls() with async
+    // DNS resolution (Layer 1 + 2). Blocked URLs are in the set — check is O(1).
+    const safeSrc = layer.src && !blockedUrls.has(layer.src)
       ? layer.src
-      : (() => {
-          console.warn(
-            "[design-studio/render] blocked disallowed image src for layer",
-            layer.id,
-          );
-          return PLACEHOLDER_SRC;
-        })();
+      : PLACEHOLDER_SRC;
 
     return {
       type: "img",

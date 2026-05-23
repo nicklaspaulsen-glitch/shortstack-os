@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
       // Fetch lead to confirm it exists and current stage
       const { data: lead } = await supabase
         .from("lead_pipeline")
-        .select("id, stage, display_name, handle, owner_id")
+        .select("id, stage, display_name, handle, owner_id, lead_info")
         .eq("id", leadId)
         .eq("owner_id", ownerId)
         .maybeSingle();
@@ -140,6 +140,23 @@ export async function POST(request: NextRequest) {
       }).catch((err) =>
         console.warn("[webhooks/stripe-leadgen] onboard trigger failed:", err),
       );
+
+      // If the lead needs ads management, enqueue setup_ads task
+      const leadInfo = (lead.lead_info ?? {}) as Record<string, unknown>;
+      const serviceNeeds = (leadInfo.service_needs as string[]) ?? [];
+      if (serviceNeeds.includes("ads_management")) {
+        const { error: adsErr } = await supabase.from("agent_task_queue").insert({
+          owner_id: ownerId,
+          task_type: "setup_ads",
+          agent_key: "ads-autopilot",
+          priority: 10,
+          payload: { lead_id: leadId },
+          pipeline_id: leadId,
+          status: "queued",
+          scheduled_for: new Date().toISOString(),
+        });
+        if (adsErr) console.warn("[webhooks/stripe-leadgen] setup_ads enqueue failed:", adsErr);
+      }
     }
 
     await completeEvent(supabase, "stripe_leadgen", event.id);

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient, createServerSupabase } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe/client";
+import { sendDM as zernioDM } from "@/lib/services/zernio";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -141,6 +142,24 @@ export async function POST(request: NextRequest) {
   // Telegram notify
   await notifyTelegram(`💳 Payment link sent to ${name} ($${amount}) — waiting for payment!`);
 
+  // Schedule payment follow-up reminder (2 days from now)
+  try {
+    const followupAt = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString();
+    await supabase.from("agent_task_queue").insert({
+      owner_id: ownerId,
+      task_type: "payment_followup",
+      agent_key: "content-pipeline",
+      priority: 20,
+      payload: { lead_id, attempt: 1 },
+      pipeline_id: lead_id,
+      status: "queued",
+      scheduled_for: followupAt,
+    });
+  } catch (err) {
+    // Payment follow-up scheduling is non-critical
+    console.warn("[leadgen/payment] Failed to schedule payment followup:", err);
+  }
+
   return NextResponse.json({
     ok: true,
     stage: "payment_sent",
@@ -152,17 +171,8 @@ export async function POST(request: NextRequest) {
 }
 
 async function sendDM(platform: string, handle: string, message: string): Promise<void> {
-  const key = process.env.ZERNIO_API_KEY;
-  if (!key) return;
-  try {
-    await fetch("https://api.zernio.com/v1/dm/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": key },
-      body: JSON.stringify({ platform, handle, message }),
-    });
-  } catch (err) {
-    console.error("[leadgen/payment] Zernio send failed:", err);
-  }
+  const result = await zernioDM({ platform, handle, message });
+  if (!result.ok) console.error("[leadgen/payment] Zernio send failed:", result.error);
 }
 
 async function notifyTelegram(msg: string): Promise<void> {

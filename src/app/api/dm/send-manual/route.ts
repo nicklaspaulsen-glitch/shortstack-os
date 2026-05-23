@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { sendDM as zernioDM } from "@/lib/services/zernio";
 
 const VALID_PLATFORMS = [
   "instagram",
@@ -90,77 +91,49 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  // Live send — Zernio's DM endpoint shape (per integration docs). Some
-  // platforms aren't fully supported; Zernio returns a 4xx in that case
-  // and we surface the error string back to the UI.
-  try {
-    const res = await fetch("https://api.zernio.com/v1/dms", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${zernioKey}`,
-      },
-      body: JSON.stringify({
-        platform,
-        recipient: handle,
-        text: message,
-      }),
-    });
-    const data: Record<string, unknown> = await res.json().catch(() => ({}));
+  // Live send via centralized Zernio DM client.
+  const dmResult = await zernioDM({ platform, handle, message });
 
-    if (!res.ok) {
-      // Persist the failure so the user can see what went wrong.
-      await service.from("outreach_log").insert({
-        platform,
-        business_name: null,
-        recipient_handle: handle,
-        message_text: message,
-        status: "failed",
-        sent_at: null,
-        metadata: {
-          direction: "outbound",
-          via: "dialer-dm",
-          owner_id: writerOwner,
-          error: typeof data.message === "string" ? data.message : `Zernio ${res.status}`,
-        },
-      });
-      return NextResponse.json(
-        {
-          success: false,
-          error:
-            (typeof data.message === "string" ? data.message : null) ||
-            `Zernio error ${res.status}`,
-        },
-        { status: 502 },
-      );
-    }
-
+  if (!dmResult.ok) {
     await service.from("outreach_log").insert({
       platform,
       business_name: null,
       recipient_handle: handle,
       message_text: message,
-      status: "sent",
-      sent_at: new Date().toISOString(),
+      status: "failed",
+      sent_at: null,
       metadata: {
         direction: "outbound",
         via: "dialer-dm",
         owner_id: writerOwner,
-        zernio_id: typeof data.id === "string" ? data.id : null,
+        error: dmResult.error,
       },
     });
-
-    return NextResponse.json({
-      success: true,
-      platform,
-      handle,
-      zernio_id: typeof data.id === "string" ? data.id : null,
-    });
-  } catch (err) {
-    console.error("[dm/send-manual] zernio request failed:", err);
     return NextResponse.json(
-      { success: false, error: "Zernio request failed" },
+      { success: false, error: dmResult.error || "Zernio send failed" },
       { status: 502 },
     );
   }
+
+  await service.from("outreach_log").insert({
+    platform,
+    business_name: null,
+    recipient_handle: handle,
+    message_text: message,
+    status: "sent",
+    sent_at: new Date().toISOString(),
+    metadata: {
+      direction: "outbound",
+      via: "dialer-dm",
+      owner_id: writerOwner,
+      zernio_id: dmResult.messageId ?? null,
+    },
+  });
+
+  return NextResponse.json({
+    success: true,
+    platform,
+    handle,
+    zernio_id: dmResult.messageId ?? null,
+  });
 }

@@ -28,6 +28,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { sendEmail } from "@/lib/email";
+import { sendDM as zernioDM } from "@/lib/services/zernio";
 import {
   getEmailCopy,
   getSmsCopy,
@@ -477,27 +478,12 @@ const sendDmAction: LibraryActionDef = {
 
     const apiKey = process.env.ZERNIO_API_KEY;
     if (apiKey) {
-      try {
-        const res = await fetch("https://api.zernio.com/v1/dm/send", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ platform, to: handle, message }),
-        });
-        const json = (await res.json()) as { id?: string; error?: string };
-        return {
-          ok: res.ok,
-          ref_id: json.id,
-          error: res.ok ? undefined : json.error || `Zernio ${res.status}`,
-        };
-      } catch (err) {
-        return {
-          ok: false,
-          error: err instanceof Error ? err.message : "Zernio request failed",
-        };
-      }
+      const result = await zernioDM({ platform, handle, message });
+      return {
+        ok: result.ok,
+        ref_id: result.messageId,
+        error: result.error,
+      };
     }
     // No Zernio configured — log into trinity_log so the user can see what
     // would have gone out. We don't write to outreach_log here because its

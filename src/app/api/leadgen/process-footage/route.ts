@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { sendDM as zernioDM } from "@/lib/services/zernio";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -195,18 +196,14 @@ export async function POST(request: NextRequest) {
     });
   } else {
     // No footage and no AI request — ask the lead for footage
-    const zernioKey = process.env.ZERNIO_API_KEY;
-    if (zernioKey) {
-      await fetch("https://api.zernio.com/v1/dm/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-api-key": zernioKey },
-        body: JSON.stringify({
-          platform: lead.platform,
-          handle: lead.handle,
-          message:
-            "Hey! To start editing, could you send over your footage? Just drop it right here in the chat and I'll get started immediately 📹",
-        }),
-      }).catch((err) => console.warn("[leadgen/process-footage] DM request failed:", err));
+    const dmResult = await zernioDM({
+      platform: lead.platform,
+      handle: lead.handle,
+      message:
+        "Hey! To start editing, could you send over your footage? Just drop it right here in the chat and I'll get started immediately 📹",
+    });
+    if (!dmResult.ok) {
+      console.warn("[leadgen/process-footage] DM request failed:", dmResult.error);
     }
 
     return NextResponse.json({ ok: true, status: "awaiting_footage" });

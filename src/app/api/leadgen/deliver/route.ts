@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient, createServerSupabase } from "@/lib/supabase/server";
+import { sendDM as zernioDM } from "@/lib/services/zernio";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -96,8 +97,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: updateErr.message }, { status: 500 });
   }
 
-  // Send delivery DM
-  await sendDM(row.platform, row.handle, finalMessage);
+  // Send delivery DM via Zernio
+  const dmResult = await zernioDM({ platform: row.platform, handle: row.handle, message: finalMessage });
+  if (!dmResult.ok) {
+    console.error("[leadgen/deliver] Zernio DM send failed:", dmResult.error);
+  }
 
   // Trinity log
   await supabase.from("trinity_log").insert({
@@ -110,26 +114,30 @@ export async function POST(request: NextRequest) {
   // Telegram
   await notifyTelegram(`✅ Work delivered to ${name}!\n${deliverable_urls.length} file(s) sent via DM.`);
 
+  // Schedule re-engagement task 3 days from now to close the "rinse and repeat" loop
+  try {
+    const reengageAt = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+    await supabase.from("agent_task_queue").insert({
+      owner_id: ownerId,
+      task_type: "reengage",
+      agent_key: "content-pipeline",
+      priority: 30, // low priority, not urgent
+      payload: { lead_id },
+      pipeline_id: lead_id,
+      status: "queued",
+      scheduled_for: reengageAt,
+    });
+  } catch (err) {
+    // Re-engagement scheduling is non-critical
+    console.warn("[leadgen/deliver] Failed to schedule re-engagement:", err);
+  }
+
   return NextResponse.json({
     ok: true,
     stage: "delivered",
     message: finalMessage,
     deliverable_urls,
   });
-}
-
-async function sendDM(platform: string, handle: string, message: string): Promise<void> {
-  const key = process.env.ZERNIO_API_KEY;
-  if (!key) return;
-  try {
-    await fetch("https://api.zernio.com/v1/dm/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": key },
-      body: JSON.stringify({ platform, handle, message }),
-    });
-  } catch (err) {
-    console.error("[leadgen/deliver] Zernio send failed:", err);
-  }
 }
 
 async function notifyTelegram(msg: string): Promise<void> {

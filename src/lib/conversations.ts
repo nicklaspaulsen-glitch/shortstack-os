@@ -17,6 +17,10 @@ export type ConversationChannel =
   | "whatsapp"
   | "telegram"
   | "instagram"
+  | "facebook"
+  | "twitter"
+  | "tiktok"
+  | "linkedin"
   | "slack"
   | "discord"
   | "web_chat";

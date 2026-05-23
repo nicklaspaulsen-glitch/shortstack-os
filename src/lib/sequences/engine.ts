@@ -29,6 +29,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendMessage } from "@/lib/email";
+import { sendDM as zernioDM } from "@/lib/services/zernio";
 import { anthropic, MODEL_HAIKU } from "@/lib/ai/claude-helpers";
 import {
   type BranchStep,
@@ -509,26 +510,15 @@ async function runDmStep(
     return { status: "advanced", note: "DM queued (Zernio not configured)", step };
   }
 
-  const res = await fetch("https://api.zernio.com/v1/dms", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${zernioKey}`,
-    },
-    body: JSON.stringify({
-      platform: step.platform,
-      recipient: handle,
-      text: rendered,
-    }),
-  });
-  const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
-  if (!res.ok) {
+  const dmResult = await zernioDM({ platform: step.platform, handle, message: rendered });
+  if (!dmResult.ok) {
     return {
       status: "failed",
-      note: typeof data.message === "string" ? data.message : `Zernio ${res.status}`,
+      note: dmResult.error || "Zernio send failed",
       step,
     };
   }
+  const data: Record<string, unknown> = { id: dmResult.messageId };
 
   await supabase.from("outreach_log").insert({
     lead_id: lead.id,

@@ -19,6 +19,104 @@ async function zernioFetch(endpoint: string, options: RequestInit = {}) {
   });
 }
 
+// ─── DM Messaging ──────────────────────────────────────────────────────
+
+/** Platforms Zernio can send DMs on. */
+export const ZERNIO_DM_PLATFORMS = [
+  "instagram",
+  "facebook",
+  "twitter",
+  "tiktok",
+  "linkedin",
+  "telegram",
+] as const;
+export type ZernioDmPlatform = (typeof ZERNIO_DM_PLATFORMS)[number];
+
+export interface ZernioDmResult {
+  ok: boolean;
+  messageId?: string;
+  error?: string;
+}
+
+/**
+ * Send a text DM to a user on any Zernio-supported platform.
+ * Centralised — every DM in the system flows through here.
+ */
+export async function sendDM(params: {
+  platform: string;
+  handle: string;
+  message: string;
+  /** Optional voice note URL (Zernio attaches as audio if provided). */
+  audioUrl?: string;
+  /** Optional media attachments. */
+  mediaUrls?: string[];
+}): Promise<ZernioDmResult> {
+  const apiKey = process.env.ZERNIO_API_KEY;
+  if (!apiKey) {
+    return { ok: false, error: "ZERNIO_API_KEY not configured" };
+  }
+
+  try {
+    const body: Record<string, unknown> = {
+      platform: params.platform,
+      handle: params.handle,
+      message: params.message,
+    };
+    if (params.audioUrl) body.audioUrl = params.audioUrl;
+    if (params.mediaUrls?.length) body.media = params.mediaUrls;
+
+    const res = await fetch("https://api.zernio.com/v1/dm/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+      },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(15_000),
+    });
+
+    const data = await res.json().catch(() => ({})) as Record<string, unknown>;
+
+    if (!res.ok) {
+      return {
+        ok: false,
+        error: (data.message || data.error || `HTTP ${res.status}`) as string,
+      };
+    }
+
+    return {
+      ok: true,
+      messageId: (data.id || data.messageId) as string | undefined,
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : String(err),
+    };
+  }
+}
+
+/**
+ * Send a voice DM via Zernio. Synthesises audio URL + optional text caption.
+ * Works on any platform Zernio supports (broader than the old voice-dm-router
+ * which only handled instagram/facebook/telegram).
+ */
+export async function sendVoiceDM(params: {
+  platform: string;
+  handle: string;
+  audioUrl: string;
+  caption?: string;
+}): Promise<ZernioDmResult> {
+  return sendDM({
+    platform: params.platform,
+    handle: params.handle,
+    message: params.caption || "Hey! Listen to my quick message 👋",
+    audioUrl: params.audioUrl,
+  });
+}
+
+// ─── Profile Management ────────────────────────────────────────────────
+
 // Get all connected social profiles
 export async function getProfiles(): Promise<Array<{
   id: string;

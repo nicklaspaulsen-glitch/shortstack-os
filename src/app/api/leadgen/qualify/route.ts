@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { callLLMTraced } from "@/lib/ai/llm-router";
+import { sendDM as zernioDM } from "@/lib/services/zernio";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -34,6 +35,8 @@ interface QualifyBody {
   attachments?: Array<{ url: string; type?: string; filename?: string }>;
 }
 
+type ServiceNeed = 'video_editing' | 'ads_management' | 'content_creation';
+
 interface LeadInfo {
   name?: string;
   business_type?: string;
@@ -43,6 +46,7 @@ interface LeadInfo {
   goals?: string;
   contact_email?: string;
   has_files?: boolean;
+  service_needs?: ServiceNeed[];
 }
 
 interface MessageEntry {
@@ -219,7 +223,12 @@ This is turn ${userTurns} of the conversation.`;
     // Extract information from the conversation using a second fast call
     if (userTurns >= 2) {
       const extractPrompt = `From this conversation, extract any of these fields if mentioned:
-name, business_type, niche, challenge, budget, goals, contact_email
+name, business_type, niche, challenge, budget, goals, contact_email, service_needs
+
+For service_needs, classify the lead's challenge/goals into an array of one or more:
+- "video_editing" — they need video editing, content repurposing, short-form clips, reels
+- "ads_management" — they need help running ads, ad campaigns, paid media, Facebook/Instagram/TikTok ads
+- "content_creation" — they need content strategy, social media content, thumbnails, graphics
 
 Conversation:
 ${conversationText}
@@ -282,8 +291,20 @@ Output ONLY valid JSON with only the fields you can confidently identify from th
     })
     .eq("id", lead_id);
 
+  // Auto-send the AI reply to the lead via DM
+  if (aiReply && lead.platform && lead.handle) {
+    const dmResult = await zernioDM({
+      platform: lead.platform,
+      handle: lead.handle,
+      message: aiReply,
+    });
+    if (!dmResult.ok) {
+      console.error("[leadgen/qualify] auto-reply DM send failed:", dmResult.error);
+    }
+  }
+
   // If just qualified, fire payment link — lead must pay before content work starts.
-  // Fire-and-forget so this doesn't block the DM reply.
+  // Fire-and-forget so this doesn't block the response.
   if (newStage === "qualified" && lead.stage !== "qualified") {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
     fetch(`${appUrl}/api/leadgen/payment`, {

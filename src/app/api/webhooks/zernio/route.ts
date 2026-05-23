@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import { upsertInboundMessage } from "@/lib/conversations";
+import { upsertInboundMessage, type ConversationChannel } from "@/lib/conversations";
 import { exitRunsForContact } from "@/lib/sequences/engine";
 import { captureVoiceSample } from "@/lib/ai/voice-profile";
+import { internalPost } from "@/lib/internal-fetch";
+import { sendDM as zernioDM } from "@/lib/services/zernio";
 import crypto from "crypto";
 
 // Zernio webhook → Conversations.
@@ -84,10 +86,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, skipped: "missing_ids" });
   }
 
-  // Platform mapping: Zernio spans multiple networks, but for the inbox we
-  // currently only model Instagram. Other platforms are logged but skip
-  // the conversation write (extend when we add tiktok/linkedin threads).
-  const channel = payload.platform === "instagram" ? "instagram" : null;
+  // Platform mapping: Zernio spans all 6 supported DM platforms.
+  const SUPPORTED_PLATFORMS: ConversationChannel[] = ["instagram", "facebook", "twitter", "tiktok", "linkedin", "telegram"];
+  const channel: ConversationChannel | null = payload.platform && SUPPORTED_PLATFORMS.includes(payload.platform as ConversationChannel)
+    ? (payload.platform as ConversationChannel)
+    : null;
   if (!channel) return NextResponse.json({ ok: true, skipped: "unsupported_platform" });
 
   const supabase = createServiceClient();
@@ -165,19 +168,17 @@ export async function POST(request: NextRequest) {
       .from("lead_pipeline")
       .select("id, stage, owner_id")
       .eq("owner_id", ownerId)
-      .eq("platform", "instagram")
+      .eq("platform", channel)
       .ilike("handle", senderHandle)
       .not("stage", "in", '("dead","converted","closed","delivered")')
       .limit(1)
       .maybeSingle();
 
     if (pipelineLead?.id) {
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
-      const webhookKey = process.env.WEBHOOK_SECRET || "";
       const stage = pipelineLead.stage as string;
 
       // ── Early stages: outreach_sent / replied / qualifying / qualified ──
-      // Route to AI qualification agent
+      // Route to AI qualification agent (which auto-sends the reply DM)
       if (
         ["outreach_sent", "replied", "qualifying", "qualified",
          "payment_sent", "payment_received"].includes(stage) &&
@@ -191,41 +192,33 @@ export async function POST(request: NextRequest) {
             .eq("id", pipelineLead.id);
         }
 
-        fetch(`${appUrl}/api/leadgen/qualify`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "x-webhook-key": webhookKey },
-          body: JSON.stringify({
-            lead_id: pipelineLead.id,
-            message: payload.text,
-            attachments: (payload.attachments || []).map((a) => ({
-              url: a.url,
-              type: a.type,
-              filename: a.filename,
-            })),
-          }),
-        }).catch((err) =>
-          console.warn("[zernio-webhook] leadgen qualify trigger failed:", err),
-        );
+        const qualifyResult = await internalPost("/api/leadgen/qualify", {
+          lead_id: pipelineLead.id,
+          message: payload.text,
+          attachments: (payload.attachments || []).map((a) => ({
+            url: a.url,
+            type: a.type,
+            filename: a.filename,
+          })),
+        });
+        if (!qualifyResult.ok) {
+          console.error("[zernio-webhook] leadgen qualify failed:", qualifyResult.data);
+        }
       }
 
       // ── Onboarding stage: collecting credentials ───────────────────────
       else if (stage === "onboarding" && payload.text) {
-        fetch(`${appUrl}/api/leadgen/onboard`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "x-webhook-key": webhookKey },
-          body: JSON.stringify({
-            lead_id: pipelineLead.id,
-            owner_id: pipelineLead.owner_id,
-            inbound_message: payload.text,
-          }),
-        }).catch((err) =>
-          console.warn("[zernio-webhook] leadgen onboard trigger failed:", err),
-        );
+        const onboardResult = await internalPost("/api/leadgen/onboard", {
+          lead_id: pipelineLead.id,
+          owner_id: pipelineLead.owner_id,
+          inbound_message: payload.text,
+        });
+        if (!onboardResult.ok) {
+          console.error("[zernio-webhook] leadgen onboard failed:", onboardResult.data);
+        }
       }
 
       // ── Scripting stage: waiting for footage ───────────────────────────
-      // Route to footage processor when the lead sends a video attachment
-      // (or a text message indicating they want AI-generated content)
       else if (stage === "scripting") {
         const hasVideoAttachment = (payload.attachments || []).some((a) => {
           if (a.type && a.type.startsWith("video/")) return true;
@@ -253,20 +246,129 @@ export async function POST(request: NextRequest) {
           const needsThumbnail =
             payload.text ? /thumbnail/i.test(payload.text) : false;
 
-          fetch(`${appUrl}/api/leadgen/process-footage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "x-webhook-key": webhookKey },
-            body: JSON.stringify({
-              lead_id: pipelineLead.id,
-              owner_id: pipelineLead.owner_id,
-              footage_url: videoAttachment?.url || "",
-              needs_thumbnail: needsThumbnail,
-              brief: payload.text || "",
-              attachments: payload.attachments || [],
-            }),
-          }).catch((err) =>
-            console.warn("[zernio-webhook] leadgen process-footage trigger failed:", err),
+          const processResult = await internalPost("/api/leadgen/process-footage", {
+            lead_id: pipelineLead.id,
+            owner_id: pipelineLead.owner_id,
+            footage_url: videoAttachment?.url || "",
+            needs_thumbnail: needsThumbnail,
+            brief: payload.text || "",
+            attachments: payload.attachments || [],
+          });
+          if (!processResult.ok) {
+            console.error("[zernio-webhook] process-footage failed:", processResult.data);
+          }
+        } else if (payload.text) {
+          // Non-video message during scripting — acknowledge and ask for footage
+          await zernioDM({
+            platform: channel,
+            handle: senderHandle,
+            message: "Got your message! Whenever you're ready, just drop the footage here and I'll start editing right away.",
+          });
+        }
+      }
+
+      // ── Editing stage: lead messages during active editing ─────────────
+      else if (stage === "editing" && payload.text) {
+        // If they send new footage, route to process-footage (revision)
+        const hasVideo = (payload.attachments || []).some((a) => {
+          if (a.type && a.type.startsWith("video/")) return true;
+          const ext = (a.filename ?? "").split(".").pop()?.toLowerCase() ?? "";
+          return ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(ext);
+        });
+
+        if (hasVideo) {
+          const videoAttachment = (payload.attachments || []).find((a) =>
+            a.type?.startsWith("video/") ||
+            ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(
+              (a.filename ?? "").split(".").pop()?.toLowerCase() ?? "",
+            ),
           );
+          await internalPost("/api/leadgen/process-footage", {
+            lead_id: pipelineLead.id,
+            owner_id: pipelineLead.owner_id,
+            footage_url: videoAttachment?.url || "",
+            brief: payload.text || "Additional footage for current edit",
+            attachments: payload.attachments || [],
+          });
+        } else {
+          // Acknowledge — their edit is in progress
+          await zernioDM({
+            platform: channel,
+            handle: senderHandle,
+            message: "Your edit is in progress! I'll send it over as soon as it's ready. If you have any specific requests, just let me know here.",
+          });
+        }
+      }
+
+      // ── Content Ready stage: waiting for client approval ──────────────
+      else if (stage === "content_ready" && payload.text) {
+        const lower = payload.text.toLowerCase();
+        const isApproval = /\b(looks? great|approved?|perfect|love it|ship it|go ahead|yes|send it|publish)\b/i.test(lower);
+        const isRevision = /\b(change|fix|redo|revise|update|adjust|modify|different|wrong|not right)\b/i.test(lower);
+
+        if (isApproval) {
+          // Move to delivered and trigger delivery
+          await internalPost("/api/leadgen/deliver", {
+            lead_id: pipelineLead.id,
+            owner_id: pipelineLead.owner_id,
+          });
+        } else if (isRevision) {
+          // Move back to editing and notify
+          await supabase
+            .from("lead_pipeline")
+            .update({ stage: "editing" })
+            .eq("id", pipelineLead.id);
+          await zernioDM({
+            platform: channel,
+            handle: senderHandle,
+            message: "No problem! I'll make those changes. Can you be specific about what you'd like adjusted?",
+          });
+        } else {
+          // Generic response — ask for clarification
+          await zernioDM({
+            platform: channel,
+            handle: senderHandle,
+            message: "Thanks for the feedback! Want me to go ahead and send the final version, or would you like any changes?",
+          });
+        }
+      }
+
+      // ── Delivered stage: revision requests or new project ──────────────
+      else if (stage === "delivered" && payload.text) {
+        const hasVideo = (payload.attachments || []).some((a) => {
+          if (a.type && a.type.startsWith("video/")) return true;
+          const ext = (a.filename ?? "").split(".").pop()?.toLowerCase() ?? "";
+          return ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(ext);
+        });
+
+        if (hasVideo) {
+          // New footage after delivery — start a new edit cycle
+          const videoAttachment = (payload.attachments || []).find((a) =>
+            a.type?.startsWith("video/") ||
+            ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(
+              (a.filename ?? "").split(".").pop()?.toLowerCase() ?? "",
+            ),
+          );
+          await supabase
+            .from("lead_pipeline")
+            .update({ stage: "scripting" })
+            .eq("id", pipelineLead.id);
+          await internalPost("/api/leadgen/process-footage", {
+            lead_id: pipelineLead.id,
+            owner_id: pipelineLead.owner_id,
+            footage_url: videoAttachment?.url || "",
+            brief: payload.text || "New footage for next edit",
+            attachments: payload.attachments || [],
+          });
+        } else {
+          // Text reply after delivery — route back to qualify for re-engagement
+          const qualifyResult = await internalPost("/api/leadgen/qualify", {
+            lead_id: pipelineLead.id,
+            message: payload.text,
+          });
+          if (!qualifyResult.ok) {
+            console.error("[zernio-webhook] post-delivery qualify failed:", qualifyResult.data);
+          }
         }
       }
     }

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { synthesize, getDefaultClone } from "@/lib/voice/clone-router";
-import { sendVoiceDm } from "@/lib/voice/voice-dm-router";
+import { sendVoiceDM as zernioVoiceDM, ZERNIO_DM_PLATFORMS } from "@/lib/services/zernio";
+import { sendVoiceDm as legacyVoiceDm } from "@/lib/voice/voice-dm-router";
 import type { VoiceDmPlatform } from "@/lib/voice/voice-dm-router";
 
 export const runtime = "nodejs";
@@ -38,9 +39,8 @@ interface VoiceOutreachBody {
   n8n_execution_id?: string;
 }
 
-const VALID_PLATFORMS: ReadonlyArray<VoiceDmPlatform> = [
-  "instagram", "facebook", "telegram",
-];
+// Accept any Zernio-supported DM platform (instagram, facebook, twitter, tiktok, linkedin, telegram)
+const VALID_PLATFORMS: readonly string[] = ZERNIO_DM_PLATFORMS;
 
 export async function POST(request: NextRequest) {
   // Auth: WEBHOOK_SECRET
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
 
   if (!owner_id) return NextResponse.json({ error: "Missing owner_id" }, { status: 400 });
   if (!handle?.trim()) return NextResponse.json({ error: "Missing handle" }, { status: 400 });
-  if (!platform || !(VALID_PLATFORMS as string[]).includes(platform)) {
+  if (!platform || !VALID_PLATFORMS.includes(platform as typeof VALID_PLATFORMS[number])) {
     return NextResponse.json(
       { error: `platform must be one of: ${VALID_PLATFORMS.join(", ")}` },
       { status: 400 },
@@ -167,13 +167,33 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: `Voice synthesis failed: ${reason}` }, { status: 500 });
   }
 
-  // Send voice DM
-  const dmResult = await sendVoiceDm({
-    platform: platform as VoiceDmPlatform,
-    recipient: handle.replace(/^@/, ""),
+  // Send voice DM — Zernio first (all platforms), legacy fallback for instagram/facebook/telegram
+  const normalHandle = handle.replace(/^@/, "");
+  const zResult = await zernioVoiceDM({
+    platform,
+    handle: normalHandle,
     audioUrl,
     caption: "Hey! Listen to my quick message 👋",
   });
+
+  let dmResult: { ok: boolean; queued?: boolean; reason?: string; messageId?: string };
+  if (zResult.ok) {
+    dmResult = { ok: true, messageId: zResult.messageId };
+  } else {
+    // Zernio failed — try legacy voice-dm-router for supported platforms
+    const legacyPlatforms: VoiceDmPlatform[] = ["instagram", "facebook", "telegram"];
+    if (legacyPlatforms.includes(platform as VoiceDmPlatform)) {
+      const legacy = await legacyVoiceDm({
+        platform: platform as VoiceDmPlatform,
+        recipient: normalHandle,
+        audioUrl,
+        caption: "Hey! Listen to my quick message 👋",
+      });
+      dmResult = legacy;
+    } else {
+      dmResult = { ok: false, reason: zResult.error || "Zernio voice DM failed" };
+    }
+  }
 
   const stage = dmResult.ok ? "outreach_sent" : (dmResult.queued ? "outreach_sent" : "outreach_pending");
 

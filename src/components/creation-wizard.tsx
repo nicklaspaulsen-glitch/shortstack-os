@@ -82,6 +82,7 @@ export function CinematicWizard({
   onComplete,
   submitLabel = "Create",
   icon,
+  sidePanel,
 }: CreationWizardProps) {
   const [stepIdx, setStepIdx] = useState(0);
   const [data, setData] = useState<Record<string, unknown>>(initialData);
@@ -186,60 +187,70 @@ export function CinematicWizard({
         />
       </div>
 
-      {/* Main content — centered in viewport */}
-      <div className="flex-1 flex items-center justify-center px-6 sm:px-16 md:px-24 overflow-y-auto py-10">
-        <div className="w-full max-w-2xl">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`cinematic-${stepIdx}-${renderKey}`}
-              initial={{ opacity: 0, x: dir * 64 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -dir * 48 }}
-              transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
-            >
-              {/* Question */}
-              <div className="mb-8">
-                {currentStep.icon && (
-                  <div className="inline-flex w-11 h-11 rounded-xl bg-[rgba(212,255,0,0.1)] items-center justify-center text-[#D4FF00] mb-5">
-                    {currentStep.icon}
+      {/* Main content — centered in viewport, optional split layout with side panel */}
+      <div className={`flex-1 flex overflow-y-auto py-10 ${sidePanel ? "px-6 sm:px-10" : "items-center justify-center px-6 sm:px-16 md:px-24"}`}>
+        <div className={sidePanel ? "flex-1 grid grid-cols-1 lg:grid-cols-5 gap-8 items-start max-w-[1400px] mx-auto" : "w-full max-w-2xl"}>
+          {/* Left: question + field */}
+          <div className={sidePanel ? "lg:col-span-2 flex flex-col justify-center min-h-[400px]" : ""}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`cinematic-${stepIdx}-${renderKey}`}
+                initial={{ opacity: 0, x: dir * 64 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -dir * 48 }}
+                transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+              >
+                {/* Question */}
+                <div className="mb-8">
+                  {currentStep.icon && (
+                    <div className="inline-flex w-11 h-11 rounded-xl bg-[rgba(212,255,0,0.1)] items-center justify-center text-[#D4FF00] mb-5">
+                      {currentStep.icon}
+                    </div>
+                  )}
+                  <h2 className={`font-bold text-white tracking-tight leading-tight mb-3 ${sidePanel ? "text-xl sm:text-2xl" : "text-[2rem] sm:text-[2.5rem]"}`}>
+                    {currentStep.title}
+                  </h2>
+                  {currentStep.description && (
+                    <p className="text-[15px] text-white/40 leading-relaxed max-w-lg">
+                      {currentStep.description}
+                    </p>
+                  )}
+                </div>
+
+                {/* Field */}
+                <FieldRenderer
+                  field={currentStep.field}
+                  value={data[currentStep.field.key]}
+                  onChange={v => setValue(currentStep.field.key, v)}
+                />
+
+                {/* AI helper */}
+                {currentStep.aiHelper && (
+                  <div className="mt-5 relative group">
+                    <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-[#D4FF00] via-[#E8FF4D] to-[#AACC00] opacity-30 blur-md group-hover:opacity-60 transition-opacity" />
+                    <button
+                      onClick={runAiHelper}
+                      disabled={aiLoading}
+                      className="relative w-full flex items-center justify-center gap-2.5 py-3.5 px-5 rounded-xl bg-[#0D1827] border border-[rgba(212,255,0,0.25)] text-white text-sm font-medium hover:bg-[rgba(212,255,0,0.1)] hover:border-[rgba(212,255,0,0.45)] transition-all disabled:opacity-50"
+                    >
+                      {aiLoading ? (
+                        <><RefreshCw size={14} className="animate-spin" /> Thinking...</>
+                      ) : (
+                        <><Sparkles size={14} className="text-indigo-300" /> {currentStep.aiHelper.label}</>
+                      )}
+                    </button>
                   </div>
                 )}
-                <h2 className="text-[2rem] sm:text-[2.5rem] font-bold text-white tracking-tight leading-tight mb-3">
-                  {currentStep.title}
-                </h2>
-                {currentStep.description && (
-                  <p className="text-[15px] text-white/40 leading-relaxed max-w-lg">
-                    {currentStep.description}
-                  </p>
-                )}
-              </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-              {/* Field */}
-              <FieldRenderer
-                field={currentStep.field}
-                value={data[currentStep.field.key]}
-                onChange={v => setValue(currentStep.field.key, v)}
-              />
-
-              {/* AI helper */}
-              {currentStep.aiHelper && (
-                <div className="mt-5 relative group">
-                  <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-[#D4FF00] via-[#E8FF4D] to-[#AACC00] opacity-30 blur-md group-hover:opacity-60 transition-opacity" />
-                  <button
-                    onClick={runAiHelper}
-                    disabled={aiLoading}
-                    className="relative w-full flex items-center justify-center gap-2.5 py-3.5 px-5 rounded-xl bg-[#0D1827] border border-[rgba(212,255,0,0.25)] text-white text-sm font-medium hover:bg-[rgba(212,255,0,0.1)] hover:border-[rgba(212,255,0,0.45)] transition-all disabled:opacity-50"
-                  >
-                    {aiLoading ? (
-                      <><RefreshCw size={14} className="animate-spin" /> Thinking...</>
-                    ) : (
-                      <><Sparkles size={14} className="text-indigo-300" /> {currentStep.aiHelper.label}</>
-                    )}
-                  </button>
-                </div>
-              )}
-            </motion.div>
-          </AnimatePresence>
+          {/* Right: persistent live preview panel */}
+          {sidePanel && (
+            <div className="hidden lg:block lg:col-span-3 sticky top-10">
+              {sidePanel(data, stepIdx)}
+            </div>
+          )}
         </div>
       </div>
 
@@ -304,6 +315,9 @@ export interface CreationWizardProps {
   onComplete: (data: Record<string, unknown>) => Promise<void> | void;
   submitLabel?: string;
   icon?: React.ReactNode;
+  /** Persistent side panel shown alongside wizard steps (CinematicWizard only).
+   *  Receives current wizard data so the preview can update in real-time. */
+  sidePanel?: (data: Record<string, unknown>, stepIdx: number) => React.ReactNode;
 }
 
 /* ── Component ───────────────────────────────────────────────────────── */
