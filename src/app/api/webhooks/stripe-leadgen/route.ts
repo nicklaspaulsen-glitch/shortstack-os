@@ -27,13 +27,16 @@ export const runtime = "nodejs";
 export const maxDuration = 30;
 
 export async function POST(request: NextRequest) {
-  const secret =
-    process.env.STRIPE_LEADGEN_WEBHOOK_SECRET ||
-    process.env.STRIPE_WEBHOOK_SECRET;
+  // Fail-closed: only accept requests if the correct per-endpoint secret is
+  // configured. Do NOT fall back to STRIPE_WEBHOOK_SECRET — that secret is
+  // scoped to /api/billing/webhook and has a different HMAC value. Using it
+  // here would accept any signature Stripe generates for the billing endpoint
+  // while silently rejecting every real leadgen event (wrong shared secret).
+  const secret = process.env.STRIPE_LEADGEN_WEBHOOK_SECRET;
 
   if (!secret) {
     console.error(
-      "[webhooks/stripe-leadgen] STRIPE_LEADGEN_WEBHOOK_SECRET is not set — rejecting. Configure in Vercel.",
+      "[webhooks/stripe-leadgen] STRIPE_LEADGEN_WEBHOOK_SECRET is not set — rejecting. Configure in Vercel (Stripe endpoint ID: we_1TaGFzBk5Rfdf2oONCKtZG1l).",
     );
     return NextResponse.json({ error: "Webhook not configured" }, { status: 503 });
   }
