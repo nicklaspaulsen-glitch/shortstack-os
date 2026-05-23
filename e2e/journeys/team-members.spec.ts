@@ -79,18 +79,50 @@ test.describe("team members journey", () => {
       .filter({ has: page.getByText(SENTINEL_EMAIL) })
       .first();
 
-    // Try clicking an edit button, then delete from the edit modal
-    const editBtn = memberRow.getByRole("button", { name: /edit|manage/i }).first();
-    if (await editBtn.count() > 0) {
-      await editBtn.click();
-      const deleteBtn = page.getByRole("button", { name: /delete|remove/i }).first();
-      if (await deleteBtn.count() > 0) {
-        page.on("dialog", (d) => d.accept());
-        await deleteBtn.click();
-        await expect(page.getByText(SENTINEL_EMAIL)).not.toBeVisible({ timeout: 10_000 });
+    // Clean up: click the "Remove" icon button directly on the member row.
+    // Scoped to the row so we don't accidentally grab a Remove button that
+    // sits behind an open modal backdrop (which would cause an intercept error).
+    //
+    // The app uses a custom React confirmation modal, not window.confirm, so
+    // page.on("dialog") doesn't help — we explicitly look for and click the
+    // confirmation button after the Remove click.
+    const removeBtn = memberRow
+      .getByRole("button", { name: /remove/i })
+      .first();
+    const removeBtnCount = await removeBtn.count();
+    if (removeBtnCount > 0) {
+      await removeBtn.click();
+      // Handle custom React confirmation modal if it appears.
+      const confirmBtn = page
+        .getByRole("button", { name: /confirm|yes|yes,?\s*remove|delete member/i })
+        .first();
+      if (await confirmBtn.isVisible({ timeout: 3_000 }).catch(() => false)) {
+        await confirmBtn.click();
+      }
+      await expect(page.getByText(SENTINEL_EMAIL)).not.toBeVisible({ timeout: 10_000 });
+    } else {
+      // Remove button not found in the row — try the edit modal path as fallback.
+      const editBtn = memberRow.getByRole("button", { name: /edit|manage/i }).first();
+      if (await editBtn.count() > 0) {
+        await editBtn.click();
+        // Scope deleteBtn inside the modal overlay to avoid the row's Remove button.
+        const modal = page.locator('[role="dialog"], .fixed.inset-0').first();
+        const deleteBtn = modal
+          .getByRole("button", { name: /delete|remove member/i })
+          .first();
+        if (await deleteBtn.count() > 0) {
+          await deleteBtn.click();
+          const confirmBtn = page
+            .getByRole("button", { name: /confirm|yes|yes,?\s*remove/i })
+            .first();
+          if (await confirmBtn.isVisible({ timeout: 3_000 }).catch(() => false)) {
+            await confirmBtn.click();
+          }
+          await expect(page.getByText(SENTINEL_EMAIL)).not.toBeVisible({ timeout: 10_000 });
+        }
       }
     }
-    // If delete is unavailable in the UI, the sentinel account is harmless —
+    // If no delete path is reachable, the sentinel account is harmless —
     // it uses an @example.com address and has no meaningful permissions.
   });
 });
