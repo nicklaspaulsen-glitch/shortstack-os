@@ -657,7 +657,11 @@ export default function ClientsPage() {
 
   if (loading) return (
     <div className="space-y-4">
-      <div className="animate-pulse h-28 rounded-xl bg-white/[0.04] border border-border-subtle" />
+      {/* h1 is present during loading so screen readers announce the page context immediately */}
+      <div className="flex items-center gap-3 px-1 py-3 sm:py-4">
+        <h1 className="text-2xl font-display font-bold text-text-primary">Clients</h1>
+      </div>
+      <div className="animate-pulse h-20 rounded-xl bg-white/[0.04] border border-border-subtle" />
       <TableSkeleton rows={8} />
     </div>
   );
