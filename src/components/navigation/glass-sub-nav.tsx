@@ -47,9 +47,9 @@ const SUBNAV_CONFIG: Record<string, SubNavConfig> = {
     tabs: ["Overview", "Videos", "Audience", "Revenue"],
     chips: ["Last 28d", "Compare"],
   },
-  "/dashboard/media-library": {
+  "/dashboard/content-library": {
     crumb: "Distribute · Library",
-    tabs: ["Videos", "Thumbnails", "Music", "Stock"],
+    tabs: ["All", "Videos", "Images", "Captions"],
     chips: ["Sort: recent", "Upload"],
   },
   "/dashboard/conversations": {
