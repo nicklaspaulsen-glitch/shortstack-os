@@ -1,21 +1,22 @@
 "use client";
 
 /**
- * PresetEditExamplePanel — shared slide-in side-panel used across all three
- * preset library categories (video, thumbnail, telegram).
+ * PresetEditExamplePanel — shared slide-in side-panel used across all four
+ * preset library categories (video, thumbnail, telegram, voice).
  *
  * Props are a discriminated union so each category gets the right live preview
  * without any `any` leaks:
  *   - kind: "video"     → animated SVG mock of the effect/style
  *   - kind: "thumbnail" → sample thumbnail with editable overlay copy
  *   - kind: "telegram"  → fake Telegram message bubble with editable variables
+ *   - kind: "voice"     → audio player, TTS quality signals, voice settings
  *
  * "Save as custom" button calls /api/custom-presets POST. Requires auth;
  * shows an error toast if the user is unauthenticated.
  */
 
-import { useCallback, useState, type ReactNode } from "react";
-import { X, Save, Loader, Check } from "lucide-react";
+import { useCallback, useState, useRef, useMemo, useEffect, type ReactNode } from "react";
+import { X, Save, Loader, Check, Mic, Play, Pause, Loader2, TrendingUp, Shuffle } from "lucide-react";
 import toast from "react-hot-toast";
 import { PresetSvgPlaceholder } from "./preset-svg-placeholder";
 
@@ -51,10 +52,24 @@ interface TelegramPresetData {
   variables: string[];
 }
 
+interface VoicePresetData {
+  id: string;
+  name: string;
+  category: string;
+  language: string;
+  gender: "female" | "male" | "neutral";
+  description?: string;
+  useCases: string[];
+  defaultExampleText: string;
+  suggestedScripts: string[];
+  previewUrl?: string;
+}
+
 type PresetPanelProps =
   | { kind: "video"; preset: VideoPresetData; onClose: () => void }
   | { kind: "thumbnail"; preset: ThumbnailPresetData; onClose: () => void }
-  | { kind: "telegram"; preset: TelegramPresetData; onClose: () => void };
+  | { kind: "telegram"; preset: TelegramPresetData; onClose: () => void }
+  | { kind: "voice"; preset: VoicePresetData; onClose: () => void };
 
 /* ─── Helpers ─────────────────────────────────────────────────── */
 
@@ -63,7 +78,7 @@ type PresetPanelProps =
  * Mirrors server-side limits (defense-in-depth + better UX — rejects oversized
  * payloads with an error toast before hitting the network).
  */
-const VALID_PRESET_CATEGORIES = ["video", "thumbnail", "telegram"] as const;
+const VALID_PRESET_CATEGORIES = ["video", "thumbnail", "telegram", "voice"] as const;
 type ValidPresetCategory = (typeof VALID_PRESET_CATEGORIES)[number];
 const PRESET_ID_REGEX = /^[a-zA-Z0-9_-]+$/;
 const MAX_PRESET_CONFIG_BYTES = 16 * 1024; // 16 KB
@@ -565,6 +580,389 @@ function TelegramEditExample({
   );
 }
 
+/* ─── Voice edit example ──────────────────────────────────────── */
+
+interface TtsSignal {
+  label: string;
+  pass: boolean;
+}
+
+function evaluateTtsSignals(text: string): TtsSignal[] {
+  const trimmed = text.trim();
+  const words = trimmed.split(/\s+/).filter(Boolean);
+  const hasPunctuationPause = /[,;:—–]/.test(trimmed);
+  const capsWords = words.filter((w) => w.length >= 4 && w === w.toUpperCase() && /[A-Z]/.test(w));
+
+  return [
+    { label: "Complete", pass: /[.!?]$/.test(trimmed) },
+    { label: "Length", pass: trimmed.length >= 10 && trimmed.length <= 250 },
+    { label: "Clean", pass: !/[&@#/\\]/.test(trimmed) },
+    { label: "No Shout", pass: capsWords.length === 0 },
+    { label: "Flow", pass: hasPunctuationPause || words.length <= 12 },
+  ];
+}
+
+function VoiceEditExample({
+  preset,
+  onClose,
+}: {
+  preset: VoicePresetData;
+  onClose: () => void;
+}) {
+  const [testText, setTestText] = useState(preset.defaultExampleText);
+  const [customName, setCustomName] = useState(preset.name);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [stability, setStability] = useState(0.7);
+  const [similarityBoost, setSimilarityBoost] = useState(0.8);
+  const [styleExag, setStyleExag] = useState(0.0);
+  const [audioUrl, setAudioUrl] = useState<string | null>(preset.previewUrl ?? null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audioProgress, setAudioProgress] = useState(0);
+  const [scriptIndex, setScriptIndex] = useState(0);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const ttsSignals = useMemo(() => evaluateTtsSignals(testText), [testText]);
+  const ttsScore = useMemo(() => {
+    const passed = ttsSignals.filter((s) => s.pass).length;
+    return Math.round((passed / ttsSignals.length) * 100);
+  }, [ttsSignals]);
+
+  const ttsScoreColor = useMemo(() => {
+    if (ttsScore >= 80) return "#4ade80";
+    if (ttsScore >= 50) return "#fbbf24";
+    return "#f87171";
+  }, [ttsScore]);
+
+  // Clean up audio on unmount
+  useEffect(() => {
+    return () => {
+      if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  const handlePlayPause = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      audio.pause();
+      if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+      setIsPlaying(false);
+    } else {
+      audio.play().catch((err) => {
+        console.error("[VoiceEditExample] audio play failed", err);
+      });
+      setIsPlaying(true);
+      progressIntervalRef.current = setInterval(() => {
+        if (audio.duration > 0) {
+          setAudioProgress((audio.currentTime / audio.duration) * 100);
+        }
+      }, 100);
+    }
+  }, [isPlaying]);
+
+  const handleAudioEnded = useCallback(() => {
+    setIsPlaying(false);
+    setAudioProgress(0);
+    if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+  }, []);
+
+  // Load/swap audio source when URL changes
+  useEffect(() => {
+    if (!audioUrl) return;
+    const audio = new Audio(audioUrl);
+    audio.addEventListener("ended", handleAudioEnded);
+    audioRef.current = audio;
+    setAudioProgress(0);
+    setIsPlaying(false);
+    return () => {
+      audio.pause();
+      audio.removeEventListener("ended", handleAudioEnded);
+    };
+  }, [audioUrl, handleAudioEnded]);
+
+  const handleShuffle = useCallback(() => {
+    if (preset.suggestedScripts.length === 0) return;
+    const nextIndex = (scriptIndex + 1) % preset.suggestedScripts.length;
+    setScriptIndex(nextIndex);
+    setTestText(preset.suggestedScripts[nextIndex]);
+  }, [preset.suggestedScripts, scriptIndex]);
+
+  const handleGenerate = useCallback(async () => {
+    setGenerating(true);
+    try {
+      const res = await fetch(`/api/voice/clones/${preset.id}/test`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: testText,
+          stability,
+          similarityBoost,
+          style: styleExag,
+        }),
+      });
+      const data: { r2_url?: string; error?: string } = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error ?? "Generation failed");
+      }
+      if (data.r2_url) {
+        setAudioUrl(data.r2_url);
+        toast.success("Preview generated");
+      }
+    } catch (err) {
+      console.error("[VoiceEditExample] generate failed", err);
+      toast.error(err instanceof Error ? err.message : "Generation failed");
+    } finally {
+      setGenerating(false);
+    }
+  }, [preset.id, testText, stability, similarityBoost, styleExag]);
+
+  const handleSave = useCallback(async () => {
+    setSaving(true);
+    try {
+      await saveAsCustom({
+        base_preset_id: preset.id,
+        category: preset.category,
+        name: customName.trim() || preset.name,
+        config: {
+          language: preset.language,
+          gender: preset.gender,
+          description: preset.description,
+          useCases: preset.useCases,
+          defaultExampleText: testText,
+          stability,
+          similarityBoost,
+          styleExag,
+        },
+      });
+      setSaved(true);
+      toast.success("Saved as custom preset");
+      setTimeout(() => setSaved(false), 2500);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Save failed");
+    } finally {
+      setSaving(false);
+    }
+  }, [preset, customName, testText, stability, similarityBoost, styleExag]);
+
+  const sliders = [
+    { label: "Clarity", value: stability, setter: setStability, min: 0, max: 1, step: 0.01 },
+    { label: "Match", value: similarityBoost, setter: setSimilarityBoost, min: 0, max: 1, step: 0.01 },
+    { label: "Style", value: styleExag, setter: setStyleExag, min: 0, max: 0.5, step: 0.01 },
+  ];
+
+  const details = [
+    { label: "Language", value: preset.language },
+    { label: "Gender", value: preset.gender },
+    { label: "Category", value: preset.category },
+    { label: "Use cases", value: preset.useCases.join(", ") },
+  ];
+
+  return (
+    <PanelShell
+      title={preset.name}
+      subtitle={`Voice preset · ${preset.category}`}
+      onClose={onClose}
+      footer={
+        <div className="flex items-center gap-2">
+          <input
+            value={customName}
+            onChange={(e) => setCustomName(e.target.value)}
+            placeholder="Custom preset name..."
+            className="flex-1 bg-surface border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[rgba(212,255,0,0.4)]"
+          />
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={saving}
+            className="shrink-0 flex items-center gap-1.5 rounded-lg bg-[#D4FF00] text-[#020711] px-4 py-2 text-sm font-semibold hover:bg-[#AACC00] disabled:opacity-60 transition"
+          >
+            {saving ? (
+              <Loader size={13} className="animate-spin" />
+            ) : saved ? (
+              <Check size={13} />
+            ) : (
+              <Save size={13} />
+            )}
+            {saved ? "Saved!" : "Save as custom"}
+          </button>
+        </div>
+      }
+    >
+      {/* Audio preview player */}
+      <div className="rounded-xl border border-[rgba(212,255,0,0.14)] bg-[rgba(13,17,32,0.85)] backdrop-blur-md p-4">
+        <div className="flex items-center gap-3 mb-3">
+          <Mic size={16} className="text-[#D4FF00] shrink-0" />
+          <span className="text-xs font-medium text-text-secondary uppercase tracking-wide">Voice preview</span>
+        </div>
+        {audioUrl ? (
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={handlePlayPause}
+                className="shrink-0 w-9 h-9 rounded-full bg-[#D4FF00] text-[#020711] flex items-center justify-center hover:bg-[#AACC00] transition"
+                aria-label={isPlaying ? "Pause" : "Play"}
+              >
+                {isPlaying ? <Pause size={14} /> : <Play size={14} className="ml-0.5" />}
+              </button>
+              <div className="flex-1 h-1.5 rounded-full bg-surface-light overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-[#D4FF00] transition-all duration-100"
+                  style={{ width: `${audioProgress}%` }}
+                />
+              </div>
+              <span className="text-[10px] text-text-muted tabular-nums shrink-0">
+                {Math.round(audioProgress)}%
+              </span>
+            </div>
+          </div>
+        ) : (
+          <p className="text-xs text-text-muted italic">
+            No preview available — generate one below.
+          </p>
+        )}
+      </div>
+
+      {/* Test text */}
+      <div>
+        <div className="flex items-center justify-between mb-1.5">
+          <label className="text-xs text-text-muted">Test text</label>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-text-muted tabular-nums">{testText.length}/300</span>
+            {preset.suggestedScripts.length > 0 && (
+              <button
+                type="button"
+                onClick={handleShuffle}
+                className="flex items-center gap-1 text-[10px] text-[#D4FF00] hover:text-[#E8FF4D] transition"
+                aria-label="Shuffle suggested script"
+              >
+                <Shuffle size={11} />
+                <span>Shuffle</span>
+              </button>
+            )}
+          </div>
+        </div>
+        <textarea
+          value={testText}
+          onChange={(e) => {
+            if (e.target.value.length <= 300) setTestText(e.target.value);
+          }}
+          rows={3}
+          placeholder="Type what you want this voice to say..."
+          className="w-full bg-surface-light border border-border-subtle rounded-lg px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-[rgba(212,255,0,0.4)] resize-none"
+        />
+      </div>
+
+      {/* Voice settings sliders */}
+      <div className="space-y-3">
+        <p className="text-xs text-text-muted font-medium">Voice settings</p>
+        {sliders.map(({ label, value, setter, min, max, step }) => (
+          <div key={label}>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[11px] text-text-secondary">{label}</span>
+              <span className="text-[10px] text-text-muted tabular-nums font-mono">{value.toFixed(2)}</span>
+            </div>
+            <input
+              type="range"
+              min={min}
+              max={max}
+              step={step}
+              value={value}
+              onChange={(e) => setter(parseFloat(e.target.value))}
+              className="w-full h-1.5 rounded-full appearance-none bg-surface-light cursor-pointer accent-[#D4FF00]"
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* TTS quality signals */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <TrendingUp size={13} className="text-text-muted" />
+          <span className="text-xs text-text-muted font-medium">TTS quality signals</span>
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {ttsSignals.map(({ label, pass }) => (
+            <span
+              key={label}
+              className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-medium border"
+              style={{
+                backgroundColor: pass ? "rgba(74,222,128,0.1)" : "rgba(248,113,113,0.1)",
+                borderColor: pass ? "rgba(74,222,128,0.25)" : "rgba(248,113,113,0.25)",
+                color: pass ? "#4ade80" : "#f87171",
+              }}
+            >
+              {pass ? <Check size={9} /> : <X size={9} />}
+              {label}
+            </span>
+          ))}
+        </div>
+        {/* Score bar */}
+        <div className="flex items-center gap-2">
+          <div className="flex-1 h-1.5 rounded-full bg-surface-light overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-300"
+              style={{ width: `${ttsScore}%`, backgroundColor: ttsScoreColor }}
+            />
+          </div>
+          <span
+            className="text-[10px] font-semibold tabular-nums"
+            style={{ color: ttsScoreColor }}
+          >
+            {ttsScore}%
+          </span>
+        </div>
+      </div>
+
+      {/* Details grid */}
+      <div className="grid grid-cols-2 gap-2">
+        {details.map(({ label, value }) => (
+          <div
+            key={label}
+            className="rounded-lg border border-border-subtle/50 bg-surface-light/40 px-3 py-2.5"
+          >
+            <p className="text-[10px] text-text-muted uppercase tracking-wide">{label}</p>
+            <p className="text-sm font-medium text-text-primary mt-0.5 capitalize">
+              {value || "—"}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* Description */}
+      {preset.description && (
+        <div className="rounded-lg border border-border-subtle/50 bg-surface-light/30 px-3 py-2.5 text-[11px] text-text-muted leading-relaxed">
+          {preset.description}
+        </div>
+      )}
+
+      {/* Generate preview button */}
+      <button
+        type="button"
+        onClick={handleGenerate}
+        disabled={generating || testText.trim().length === 0}
+        className="w-full flex items-center justify-center gap-2 rounded-lg border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-[#D4FF00] px-4 py-2.5 text-sm font-semibold hover:bg-[rgba(212,255,0,0.14)] disabled:opacity-50 transition"
+      >
+        {generating ? (
+          <Loader2 size={14} className="animate-spin" />
+        ) : (
+          <Mic size={14} />
+        )}
+        {generating ? "Generating..." : "Generate preview"}
+      </button>
+    </PanelShell>
+  );
+}
+
 /* ─── Public export — discriminated-union router ─────────────── */
 
 export function PresetEditExamplePanel(props: PresetPanelProps) {
@@ -573,6 +971,9 @@ export function PresetEditExamplePanel(props: PresetPanelProps) {
   }
   if (props.kind === "thumbnail") {
     return <ThumbnailEditExample preset={props.preset} onClose={props.onClose} />;
+  }
+  if (props.kind === "voice") {
+    return <VoiceEditExample preset={props.preset} onClose={props.onClose} />;
   }
   return <TelegramEditExample preset={props.preset} onClose={props.onClose} />;
 }

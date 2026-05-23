@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { MotionPage } from "@/components/motion/motion-page";
+import { AudioPlayer } from "@/components/ui/audio-player";
 
 const R2_BASE = process.env.NEXT_PUBLIC_R2_PUBLIC_URL ?? "";
 
@@ -363,8 +364,7 @@ export default function VoiceCloneDetailPage() {
                       </div>
                       {testUrl && (
                         <div className="mt-3 rounded-lg border border-border-subtle bg-white/5 p-3">
-                          {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-                          <audio src={testUrl} controls className="w-full" />
+                          <AudioPlayer src={testUrl} autoPlay />
                         </div>
                       )}
                     </section>
@@ -439,15 +439,7 @@ export default function VoiceCloneDetailPage() {
                               </div>
                               {isPlaying && audioUrl && (
                                 <div className="mt-2">
-                                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-                                  <audio
-                                    key={s.id}
-                                    src={audioUrl}
-                                    controls
-                                    autoPlay
-                                    className="w-full h-8"
-                                    onEnded={() => setPlayingSampleId(null)}
-                                  />
+                                  <AudioPlayer key={s.id} src={audioUrl} autoPlay />
                                 </div>
                               )}
                             </li>
@@ -506,15 +498,7 @@ export default function VoiceCloneDetailPage() {
                               </div>
                               {isPlaying && audioUrl && (
                                 <div className="mt-2 pl-9">
-                                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-                                  <audio
-                                    key={r.id}
-                                    src={audioUrl}
-                                    controls
-                                    autoPlay
-                                    className="w-full h-8"
-                                    onEnded={() => setPlayingRenderId(null)}
-                                  />
+                                  <AudioPlayer key={r.id} src={audioUrl} autoPlay />
                                 </div>
                               )}
                             </li>
