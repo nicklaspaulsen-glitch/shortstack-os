@@ -70,19 +70,21 @@ test.describe("team members journey", () => {
     ).toBeVisible({ timeout: 25_000 });
 
     // ── Verify the new member appears in the list ───────────────────────────
-    await expect(page.getByText(SENTINEL_EMAIL).first()).toBeVisible({ timeout: 15_000 });
+    // Wait for the toast to clear before scoping into the list, so there's
+    // only one element containing the email.
+    await expect(page.getByText(/team member created/i)).not.toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(SENTINEL_EMAIL).first()).toBeVisible({ timeout: 10_000 });
 
     // ── Clean up: remove the sentinel member ───────────────────────────────
-    // Find the member row and click its Remove icon button.
+    // memberRow is scoped to the table/card row — it won't match toasts or
+    // other page elements that also contain the email.
     const memberRow = page
       .locator("tr, [class*='member'], [class*='card']")
       .filter({ has: page.getByText(SENTINEL_EMAIL) })
       .first();
 
-    // The Remove button triggers window.confirm() — a native browser dialog.
-    // Register the handler BEFORE clicking so Playwright intercepts the dialog
-    // as it fires. Without pre-registration the dialog auto-dismisses as
-    // "dismissed" and the deletion never runs.
+    // The Remove button calls window.confirm() (native browser dialog).
+    // Register the handler BEFORE clicking — dialog fires synchronously on click.
     page.on("dialog", (d) => d.accept());
 
     const removeBtn = memberRow
@@ -91,8 +93,10 @@ test.describe("team members journey", () => {
 
     if (await removeBtn.count() > 0) {
       await removeBtn.click();
-      // Dialog is auto-accepted by the handler above. Wait for the row to leave.
-      await expect(page.getByText(SENTINEL_EMAIL)).not.toBeVisible({ timeout: 15_000 });
+      // Assert on the scoped memberRow locator (not page.getByText) to avoid
+      // a strict-mode violation if any other element on the page happens to
+      // contain the email at the same time (e.g. a notification toast).
+      await expect(memberRow).not.toBeVisible({ timeout: 20_000 });
     }
     // If no Remove button is reachable the sentinel account is harmless —
     // it uses an @example.com address and has no meaningful permissions.
