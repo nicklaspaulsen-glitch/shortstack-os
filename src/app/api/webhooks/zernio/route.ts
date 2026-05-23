@@ -9,24 +9,23 @@ import crypto from "crypto";
 
 // Zernio webhook → Conversations.
 //
-// Zernio forwards inbound Instagram (and other platform) DMs. Expected
-// payload shape (verified against Zernio docs April 2026):
+// Zernio forwards inbound DMs across Instagram, Facebook, Telegram,
+// WhatsApp. Actual payload (verified against OpenAPI spec May 2026):
 //   {
-//     platform: "instagram",
-//     profile_id: "abc123",       — the zernio_profile_id on clients
-//     thread_id: "ig_thread_xyz",
-//     message_id: "...",
-//     from: { id: "sender_ig_id", username: "their_handle" },
-//     to: { id: "recipient_ig_id", username: "our_handle" },
-//     text: "Hey!",
-//     attachments: [{ url, type }],
-//     timestamp: "2026-04-23T..."
+//     id: "evt_abc123",                    — dedup key
+//     event: "message.received",           — event type
+//     message: InboxWebhookMessage,        — the DM content
+//     conversation: InboxWebhookConversation,
+//     account: InboxWebhookAccount,        — the receiving social account
+//     metadata?: { ... },                  — interactive message metadata
+//     timestamp: "2026-05-23T..."          — ISO-8601
 //   }
 //
-// Owner resolution: match `profile_id` against clients.zernio_profile_id,
-// then use that client's profile_id as the agency owner.
+// Owner resolution: match `account.id` against social_accounts.account_id
+// to find the client_id, then resolve the agency owner via clients.profile_id.
+// Fallback: match account.id against clients.zernio_profile_id directly.
 //
-// Register at: https://zernio.com/app/settings/webhooks
+// Register at: https://zernio.com/dashboard/webhooks
 // URL:         https://app.shortstack.work/api/webhooks/zernio
 // Set ZERNIO_WEBHOOK_SECRET for HMAC verification.
 
@@ -56,16 +55,70 @@ function verifyZernioSignature(raw: string, signature: string | null): boolean {
   }
 }
 
-type ZernioInbound = {
-  platform?: string;
-  profile_id?: string;
-  thread_id?: string;
-  message_id?: string;
-  from?: { id?: string; username?: string };
-  to?: { id?: string; username?: string };
-  text?: string;
-  attachments?: Array<{ url: string; type?: string; filename?: string }>;
-  timestamp?: string;
+// ── Zernio webhook payload types (from OpenAPI spec) ──────────────────────
+
+type ZernioWebhookSender = {
+  id: string;
+  name?: string;
+  username?: string;
+  picture?: string;
+  phoneNumber?: string;
+  businessScopedUserId?: string;
+  parentBusinessScopedUserId?: string;
+  whatsappUsername?: string;
+  instagramProfile?: string;
+};
+
+type ZernioWebhookAttachment = {
+  type: string;
+  url: string;
+  payload?: unknown;
+};
+
+type ZernioWebhookMessage = {
+  id: string;
+  conversationId: string;
+  platform: "instagram" | "facebook" | "telegram" | "whatsapp";
+  platformMessageId: string;
+  direction: "incoming" | "outgoing";
+  text: string | null;
+  attachments: ZernioWebhookAttachment[];
+  sender: ZernioWebhookSender;
+  sentAt: string; // ISO-8601
+  isRead: boolean;
+};
+
+type ZernioWebhookConversation = {
+  id: string;
+  platformConversationId: string;
+  participantId?: string;
+  participantName?: string;
+  participantUsername?: string;
+  participantPicture?: string;
+  status: "active" | "archived";
+};
+
+type ZernioWebhookAccount = {
+  id: string;
+  platform: string;
+  username: string;
+  displayName?: string;
+};
+
+type ZernioWebhookPayload = {
+  id: string; // webhook event ID — use as dedup key
+  event: string; // "message.received", "post.created", etc.
+  message: ZernioWebhookMessage;
+  conversation: ZernioWebhookConversation;
+  account: ZernioWebhookAccount;
+  metadata?: {
+    quickReplyPayload?: string;
+    postbackPayload?: string;
+    postbackTitle?: string;
+    callbackData?: string;
+    interactiveType?: string;
+  };
+  timestamp: string; // ISO-8601
 };
 
 export async function POST(request: NextRequest) {
@@ -75,64 +128,116 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
-  let payload: ZernioInbound;
+  let webhook: ZernioWebhookPayload;
   try {
-    payload = JSON.parse(rawBody);
+    webhook = JSON.parse(rawBody);
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  if (!payload.thread_id || !payload.profile_id) {
-    return NextResponse.json({ ok: true, skipped: "missing_ids" });
+  // Only process incoming message events — skip post.*, message.sent, etc.
+  if (webhook.event !== "message.received") {
+    return NextResponse.json({ ok: true, skipped: "event_not_message_received", event: webhook.event });
   }
 
-  // Platform mapping: Zernio spans all 6 supported DM platforms.
-  const SUPPORTED_PLATFORMS: ConversationChannel[] = ["instagram", "facebook", "twitter", "tiktok", "linkedin", "telegram"];
-  const channel: ConversationChannel | null = payload.platform && SUPPORTED_PLATFORMS.includes(payload.platform as ConversationChannel)
-    ? (payload.platform as ConversationChannel)
-    : null;
-  if (!channel) return NextResponse.json({ ok: true, skipped: "unsupported_platform" });
+  // Skip outgoing messages (our own replies echoed back)
+  if (webhook.message?.direction === "outgoing") {
+    return NextResponse.json({ ok: true, skipped: "outgoing_message" });
+  }
+
+  const msg = webhook.message;
+  const conv = webhook.conversation;
+  const acct = webhook.account;
+
+  if (!msg || !conv || !acct) {
+    return NextResponse.json({ ok: true, skipped: "missing_payload_fields" });
+  }
+
+  // Platform mapping — Zernio supports instagram, facebook, telegram, whatsapp.
+  // Our ConversationChannel also includes twitter, tiktok, linkedin.
+  const SUPPORTED_PLATFORMS: ConversationChannel[] = [
+    "instagram", "facebook", "twitter", "tiktok", "linkedin", "telegram",
+  ];
+  const channel: ConversationChannel | null =
+    msg.platform && SUPPORTED_PLATFORMS.includes(msg.platform as ConversationChannel)
+      ? (msg.platform as ConversationChannel)
+      : null;
+  if (!channel) {
+    return NextResponse.json({ ok: true, skipped: "unsupported_platform", platform: msg.platform });
+  }
 
   const supabase = createServiceClient();
 
-  // Resolve owner: the Zernio profile belongs to a client, which points to
-  // an agency profile_id.
-  const { data: client } = await supabase
-    .from("clients")
-    .select("id, profile_id")
-    .eq("zernio_profile_id", payload.profile_id)
+  // ── Owner resolution ──────────────────────────────────────────────────────
+  // Path 1: account.id → social_accounts.account_id → client_id → profile_id
+  // Path 2 (fallback): account.id → clients.zernio_profile_id → profile_id
+  let ownerId: string | null = null;
+  let contactId: string | null = null;
+
+  // Path 1: match via social_accounts (populated by Zernio account sync)
+  const { data: socialAcct } = await supabase
+    .from("social_accounts")
+    .select("client_id")
+    .eq("account_id", acct.id)
+    .eq("is_active", true)
+    .limit(1)
     .maybeSingle();
-  const ownerId = (client as { profile_id?: string } | null)?.profile_id;
-  const contactId = (client as { id?: string } | null)?.id ?? null;
+
+  if (socialAcct?.client_id) {
+    const { data: client } = await supabase
+      .from("clients")
+      .select("id, profile_id")
+      .eq("id", socialAcct.client_id)
+      .maybeSingle();
+    ownerId = (client as { profile_id?: string } | null)?.profile_id ?? null;
+    contactId = (client as { id?: string } | null)?.id ?? null;
+  }
+
+  // Path 2 (fallback): match account.id against clients.zernio_profile_id
+  if (!ownerId) {
+    const { data: client } = await supabase
+      .from("clients")
+      .select("id, profile_id")
+      .eq("zernio_profile_id", acct.id)
+      .maybeSingle();
+    ownerId = (client as { profile_id?: string } | null)?.profile_id ?? null;
+    contactId = (client as { id?: string } | null)?.id ?? null;
+  }
 
   if (!ownerId) {
+    console.warn("[webhooks/zernio] No owner found for account:", acct.id, acct.username);
     return NextResponse.json({ ok: true, skipped: "no_owner" });
   }
 
-  const sentAt = payload.timestamp ? new Date(payload.timestamp) : new Date();
+  // ── Extract normalized fields ─────────────────────────────────────────────
+  const threadId = conv.platformConversationId || conv.id;
+  const messageId = msg.platformMessageId || msg.id;
+  const senderHandle = msg.sender?.username || conv.participantUsername;
+  const senderIdentifier = senderHandle || msg.sender?.id || "unknown";
+  const recipientIdentifier = acct.username;
+  const messageText = msg.text || undefined;
+  const sentAt = msg.sentAt ? new Date(msg.sentAt) : new Date();
+  const attachments = (msg.attachments || []).map((a) => ({
+    url: a.url,
+    mimetype: a.type,
+  }));
 
   await upsertInboundMessage({
     supabase,
     userId: ownerId,
     channel,
-    externalThreadId: payload.thread_id,
-    fromIdentifier: payload.from?.username || payload.from?.id || "unknown",
-    toIdentifier: payload.to?.username || payload.to?.id,
-    body: payload.text,
-    externalMessageId: payload.message_id,
-    attachments: (payload.attachments || []).map((a) => ({
-      url: a.url,
-      filename: a.filename,
-      mimetype: a.type,
-    })),
+    externalThreadId: threadId,
+    fromIdentifier: senderIdentifier,
+    toIdentifier: recipientIdentifier,
+    body: messageText,
+    externalMessageId: messageId,
+    attachments,
     contactId,
     sentAt,
   });
 
-  // Multi-channel sequences: try to map the sender's IG handle to a lead
-  // (leads.instagram_url) and exit any active sequence runs. Soft-fail —
-  // most DMs won't map to a tracked lead, that's expected.
-  const senderHandle = payload.from?.username;
+  // Multi-channel sequences: try to map the sender's handle to a lead
+  // (leads.instagram_url) and exit any active sequence runs. Soft-fail.
   if (senderHandle) {
     const { data: matchedLead } = await supabase
       .from("leads")
@@ -148,21 +253,19 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Capture client DM voice — anchor to the contact (client) when we have one.
-  // Fire-and-forget: storage failures must never break the inbound webhook.
-  if (contactId && payload.text) {
+  // Capture client DM voice — fire-and-forget.
+  if (contactId && messageText) {
     captureVoiceSample({
       agencyOwnerId: ownerId,
       subjectKind: "client",
       subjectId: contactId,
       source: "reply_dm",
-      body: payload.text,
+      body: messageText,
       channel: "dm",
     }).catch((err) => console.warn("[voice-capture/zernio]", err));
   }
 
   // ── Lead Pipeline routing ─────────────────────────────────────────────────
-  // Match the sender to a lead in the pipeline and route based on their stage.
   if (senderHandle && ownerId) {
     const { data: pipelineLead } = await supabase
       .from("lead_pipeline")
@@ -176,15 +279,14 @@ export async function POST(request: NextRequest) {
 
     if (pipelineLead?.id) {
       const stage = pipelineLead.stage as string;
+      const msgAttachments = msg.attachments || [];
 
       // ── Early stages: outreach_sent / replied / qualifying / qualified ──
-      // Route to AI qualification agent (which auto-sends the reply DM)
       if (
         ["outreach_sent", "replied", "qualifying", "qualified",
          "payment_sent", "payment_received"].includes(stage) &&
-        payload.text
+        messageText
       ) {
-        // Advance to "replied" on first inbound
         if (stage === "outreach_sent") {
           await supabase
             .from("lead_pipeline")
@@ -194,11 +296,10 @@ export async function POST(request: NextRequest) {
 
         const qualifyResult = await internalPost("/api/leadgen/qualify", {
           lead_id: pipelineLead.id,
-          message: payload.text,
-          attachments: (payload.attachments || []).map((a) => ({
+          message: messageText,
+          attachments: msgAttachments.map((a) => ({
             url: a.url,
             type: a.type,
-            filename: a.filename,
           })),
         });
         if (!qualifyResult.ok) {
@@ -207,11 +308,11 @@ export async function POST(request: NextRequest) {
       }
 
       // ── Onboarding stage: collecting credentials ───────────────────────
-      else if (stage === "onboarding" && payload.text) {
+      else if (stage === "onboarding" && messageText) {
         const onboardResult = await internalPost("/api/leadgen/onboard", {
           lead_id: pipelineLead.id,
           owner_id: pipelineLead.owner_id,
-          inbound_message: payload.text,
+          inbound_message: messageText,
         });
         if (!onboardResult.ok) {
           console.error("[zernio-webhook] leadgen onboard failed:", onboardResult.data);
@@ -220,45 +321,37 @@ export async function POST(request: NextRequest) {
 
       // ── Scripting stage: waiting for footage ───────────────────────────
       else if (stage === "scripting") {
-        const hasVideoAttachment = (payload.attachments || []).some((a) => {
-          if (a.type && a.type.startsWith("video/")) return true;
-          const ext =
-            (a.filename ?? "").split(".").pop()?.toLowerCase() ??
-            a.url.split(".").pop()?.split("?")[0].toLowerCase() ??
-            "";
-          return ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(ext);
-        });
+        const hasVideoAttachment = msgAttachments.some((a) =>
+          a.type?.startsWith("video/") ||
+          ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(
+            a.url.split(".").pop()?.split("?")[0]?.toLowerCase() ?? "",
+          ),
+        );
 
         const isAiRequest =
-          payload.text &&
-          /ai generat|generate|create.*video|make.*video/i.test(payload.text);
+          messageText && /ai generat|generate|create.*video|make.*video/i.test(messageText);
 
         if (hasVideoAttachment || isAiRequest) {
-          const videoAttachment = (payload.attachments || []).find((a) => {
-            if (a.type && a.type.startsWith("video/")) return true;
-            const ext =
-              (a.filename ?? "").split(".").pop()?.toLowerCase() ??
-              a.url.split(".").pop()?.split("?")[0].toLowerCase() ??
-              "";
-            return ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(ext);
-          });
-
-          const needsThumbnail =
-            payload.text ? /thumbnail/i.test(payload.text) : false;
+          const videoAttachment = msgAttachments.find((a) =>
+            a.type?.startsWith("video/") ||
+            ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(
+              a.url.split(".").pop()?.split("?")[0]?.toLowerCase() ?? "",
+            ),
+          );
+          const needsThumbnail = messageText ? /thumbnail/i.test(messageText) : false;
 
           const processResult = await internalPost("/api/leadgen/process-footage", {
             lead_id: pipelineLead.id,
             owner_id: pipelineLead.owner_id,
             footage_url: videoAttachment?.url || "",
             needs_thumbnail: needsThumbnail,
-            brief: payload.text || "",
-            attachments: payload.attachments || [],
+            brief: messageText || "",
+            attachments: msgAttachments,
           });
           if (!processResult.ok) {
             console.error("[zernio-webhook] process-footage failed:", processResult.data);
           }
-        } else if (payload.text) {
-          // Non-video message during scripting — acknowledge and ask for footage
+        } else if (messageText) {
           await zernioDM({
             platform: channel,
             handle: senderHandle,
@@ -268,30 +361,29 @@ export async function POST(request: NextRequest) {
       }
 
       // ── Editing stage: lead messages during active editing ─────────────
-      else if (stage === "editing" && payload.text) {
-        // If they send new footage, route to process-footage (revision)
-        const hasVideo = (payload.attachments || []).some((a) => {
-          if (a.type && a.type.startsWith("video/")) return true;
-          const ext = (a.filename ?? "").split(".").pop()?.toLowerCase() ?? "";
-          return ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(ext);
-        });
+      else if (stage === "editing" && messageText) {
+        const hasVideo = msgAttachments.some((a) =>
+          a.type?.startsWith("video/") ||
+          ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(
+            a.url.split(".").pop()?.split("?")[0]?.toLowerCase() ?? "",
+          ),
+        );
 
         if (hasVideo) {
-          const videoAttachment = (payload.attachments || []).find((a) =>
+          const videoAttachment = msgAttachments.find((a) =>
             a.type?.startsWith("video/") ||
             ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(
-              (a.filename ?? "").split(".").pop()?.toLowerCase() ?? "",
+              a.url.split(".").pop()?.split("?")[0]?.toLowerCase() ?? "",
             ),
           );
           await internalPost("/api/leadgen/process-footage", {
             lead_id: pipelineLead.id,
             owner_id: pipelineLead.owner_id,
             footage_url: videoAttachment?.url || "",
-            brief: payload.text || "Additional footage for current edit",
-            attachments: payload.attachments || [],
+            brief: messageText || "Additional footage for current edit",
+            attachments: msgAttachments,
           });
         } else {
-          // Acknowledge — their edit is in progress
           await zernioDM({
             platform: channel,
             handle: senderHandle,
@@ -301,19 +393,17 @@ export async function POST(request: NextRequest) {
       }
 
       // ── Content Ready stage: waiting for client approval ──────────────
-      else if (stage === "content_ready" && payload.text) {
-        const lower = payload.text.toLowerCase();
+      else if (stage === "content_ready" && messageText) {
+        const lower = messageText.toLowerCase();
         const isApproval = /\b(looks? great|approved?|perfect|love it|ship it|go ahead|yes|send it|publish)\b/i.test(lower);
         const isRevision = /\b(change|fix|redo|revise|update|adjust|modify|different|wrong|not right)\b/i.test(lower);
 
         if (isApproval) {
-          // Move to delivered and trigger delivery
           await internalPost("/api/leadgen/deliver", {
             lead_id: pipelineLead.id,
             owner_id: pipelineLead.owner_id,
           });
         } else if (isRevision) {
-          // Move back to editing and notify
           await supabase
             .from("lead_pipeline")
             .update({ stage: "editing" })
@@ -324,7 +414,6 @@ export async function POST(request: NextRequest) {
             message: "No problem! I'll make those changes. Can you be specific about what you'd like adjusted?",
           });
         } else {
-          // Generic response — ask for clarification
           await zernioDM({
             platform: channel,
             handle: senderHandle,
@@ -334,19 +423,19 @@ export async function POST(request: NextRequest) {
       }
 
       // ── Delivered stage: revision requests or new project ──────────────
-      else if (stage === "delivered" && payload.text) {
-        const hasVideo = (payload.attachments || []).some((a) => {
-          if (a.type && a.type.startsWith("video/")) return true;
-          const ext = (a.filename ?? "").split(".").pop()?.toLowerCase() ?? "";
-          return ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(ext);
-        });
+      else if (stage === "delivered" && messageText) {
+        const hasVideo = msgAttachments.some((a) =>
+          a.type?.startsWith("video/") ||
+          ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(
+            a.url.split(".").pop()?.split("?")[0]?.toLowerCase() ?? "",
+          ),
+        );
 
         if (hasVideo) {
-          // New footage after delivery — start a new edit cycle
-          const videoAttachment = (payload.attachments || []).find((a) =>
+          const videoAttachment = msgAttachments.find((a) =>
             a.type?.startsWith("video/") ||
             ["mp4", "mov", "avi", "webm", "mkv", "m4v"].includes(
-              (a.filename ?? "").split(".").pop()?.toLowerCase() ?? "",
+              a.url.split(".").pop()?.split("?")[0]?.toLowerCase() ?? "",
             ),
           );
           await supabase
@@ -357,14 +446,13 @@ export async function POST(request: NextRequest) {
             lead_id: pipelineLead.id,
             owner_id: pipelineLead.owner_id,
             footage_url: videoAttachment?.url || "",
-            brief: payload.text || "New footage for next edit",
-            attachments: payload.attachments || [],
+            brief: messageText || "New footage for next edit",
+            attachments: msgAttachments,
           });
         } else {
-          // Text reply after delivery — route back to qualify for re-engagement
           const qualifyResult = await internalPost("/api/leadgen/qualify", {
             lead_id: pipelineLead.id,
-            message: payload.text,
+            message: messageText,
           });
           if (!qualifyResult.ok) {
             console.error("[zernio-webhook] post-delivery qualify failed:", qualifyResult.data);
@@ -374,5 +462,5 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, event_id: webhook.id });
 }
