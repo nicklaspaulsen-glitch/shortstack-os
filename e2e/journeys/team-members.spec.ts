@@ -73,56 +73,28 @@ test.describe("team members journey", () => {
     await expect(page.getByText(SENTINEL_EMAIL).first()).toBeVisible({ timeout: 15_000 });
 
     // ── Clean up: remove the sentinel member ───────────────────────────────
-    // Find the member row and click its edit/delete control
+    // Find the member row and click its Remove icon button.
     const memberRow = page
       .locator("tr, [class*='member'], [class*='card']")
       .filter({ has: page.getByText(SENTINEL_EMAIL) })
       .first();
 
-    // Clean up: click the "Remove" icon button directly on the member row.
-    // Scoped to the row so we don't accidentally grab a Remove button that
-    // sits behind an open modal backdrop (which would cause an intercept error).
-    //
-    // The app uses a custom React confirmation modal, not window.confirm, so
-    // page.on("dialog") doesn't help — we explicitly look for and click the
-    // confirmation button after the Remove click.
+    // The Remove button triggers window.confirm() — a native browser dialog.
+    // Register the handler BEFORE clicking so Playwright intercepts the dialog
+    // as it fires. Without pre-registration the dialog auto-dismisses as
+    // "dismissed" and the deletion never runs.
+    page.on("dialog", (d) => d.accept());
+
     const removeBtn = memberRow
       .getByRole("button", { name: /remove/i })
       .first();
-    const removeBtnCount = await removeBtn.count();
-    if (removeBtnCount > 0) {
+
+    if (await removeBtn.count() > 0) {
       await removeBtn.click();
-      // Handle custom React confirmation modal if it appears.
-      const confirmBtn = page
-        .getByRole("button", { name: /confirm|yes|yes,?\s*remove|delete member/i })
-        .first();
-      if (await confirmBtn.isVisible({ timeout: 3_000 }).catch(() => false)) {
-        await confirmBtn.click();
-      }
-      await expect(page.getByText(SENTINEL_EMAIL)).not.toBeVisible({ timeout: 10_000 });
-    } else {
-      // Remove button not found in the row — try the edit modal path as fallback.
-      const editBtn = memberRow.getByRole("button", { name: /edit|manage/i }).first();
-      if (await editBtn.count() > 0) {
-        await editBtn.click();
-        // Scope deleteBtn inside the modal overlay to avoid the row's Remove button.
-        const modal = page.locator('[role="dialog"], .fixed.inset-0').first();
-        const deleteBtn = modal
-          .getByRole("button", { name: /delete|remove member/i })
-          .first();
-        if (await deleteBtn.count() > 0) {
-          await deleteBtn.click();
-          const confirmBtn = page
-            .getByRole("button", { name: /confirm|yes|yes,?\s*remove/i })
-            .first();
-          if (await confirmBtn.isVisible({ timeout: 3_000 }).catch(() => false)) {
-            await confirmBtn.click();
-          }
-          await expect(page.getByText(SENTINEL_EMAIL)).not.toBeVisible({ timeout: 10_000 });
-        }
-      }
+      // Dialog is auto-accepted by the handler above. Wait for the row to leave.
+      await expect(page.getByText(SENTINEL_EMAIL)).not.toBeVisible({ timeout: 15_000 });
     }
-    // If no delete path is reachable, the sentinel account is harmless —
+    // If no Remove button is reachable the sentinel account is harmless —
     // it uses an @example.com address and has no meaningful permissions.
   });
 });
