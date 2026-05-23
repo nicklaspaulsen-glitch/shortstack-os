@@ -671,10 +671,9 @@ export default function ClientsPage() {
             <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">
               Client Management
             </p>
-            <h1 className="text-2xl font-display font-bold text-text-primary">
+            <h1 className="text-2xl font-display font-bold text-text-primary leading-none truncate">
               Clients
             </h1>
-            <p className="text-sm text-text-secondary mt-1">Contracts, billing & health at a glance</p>
           </div>
           {/* Live count + MRR badges beside the title */}
           {clients.length> 0 && (
@@ -721,19 +720,31 @@ export default function ClientsPage() {
       {/* -- Editorial bento stats (Phase 2: 4-tile white card grid) ---------- */}
       {clients.length > 0 && (
         <div className="grid grid-cols-2 lg:grid-cols-[5fr_2fr_2fr_2fr] gap-3">
-          {/* MRR focal tile */}
+          {/* MRR focal tile — dramatic hero stat matching analytics canonical */}
           <motion.div
-            className="col-span-2 lg:col-span-1 glass-card-heavy rounded-2xl p-5 flex items-center gap-4"
+            className="col-span-2 lg:col-span-1 glass-card-heavy rounded-2xl relative overflow-hidden"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.38, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div>
-              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Monthly Recurring Revenue</p>
-              <p className="font-display text-3xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">
-                {formatCurrency(totalMRR)}
+            {/* Lime gradient top rail */}
+            <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "linear-gradient(90deg, transparent 0%, #AACC00 30%, #D4FF00 50%, #AACC00 70%, transparent 100%)" }} />
+            {/* Subtle glow bleed */}
+            <div className="pointer-events-none absolute top-0 left-0 right-0 h-16" style={{ background: "linear-gradient(180deg, rgba(212,255,0,0.04) 0%, transparent 100%)" }} />
+            <div className="relative px-5 pt-5 pb-4">
+              <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-text-muted mb-2">
+                Monthly Recurring Revenue
               </p>
-              <p className="text-[11px] text-text-muted mt-1.5">
+              <motion.p
+                className="font-display font-black leading-[0.88] text-brand-accent"
+                style={{ fontSize: "clamp(36px, 6vw, 56px)", letterSpacing: "-0.04em", fontVariantNumeric: "tabular-nums" }}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.52, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {formatCurrency(totalMRR)}
+              </motion.p>
+              <p className="text-[11px] text-text-muted mt-2.5">
                 {activeClients.length} active &middot; {Math.round((activeClients.length / (clients.length || 1)) * 100)}% retention
               </p>
             </div>
@@ -746,12 +757,14 @@ export default function ClientsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.38, delay: 0.10, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted">Total Clients</p>
-            <p className="font-display text-2xl font-bold tracking-[-0.03em] text-text-primary tabular-nums mt-2">
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Clients</p>
+            <p className="font-display text-2xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">
               {clients.length}
             </p>
-            <p className="text-[11px] text-text-muted mt-1">
-              {clients.filter(c => !c.is_active).length} inactive
+            <p className="text-[11px] text-text-muted mt-1.5">
+              {clients.filter(c => !c.is_active).length > 0
+                ? <span>{clients.filter(c => !c.is_active).length} inactive</span>
+                : <span className="text-brand-accent/70">all active</span>}
             </p>
           </motion.div>
 
@@ -762,16 +775,21 @@ export default function ClientsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.38, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted">Active</p>
-            <p className="font-display text-2xl font-bold tracking-[-0.03em] text-text-primary tabular-nums mt-2">
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Active</p>
+            <p className="font-display text-2xl font-bold tracking-[-0.03em] text-text-primary tabular-nums">
               {activeClients.length}
             </p>
-            <p className="text-[11px] text-text-muted mt-1">currently live</p>
+            <p className="text-[11px] text-text-muted mt-1.5">
+              {Math.round((activeClients.length / (clients.length || 1)) * 100)}% of portfolio
+            </p>
           </motion.div>
 
           {/* Support tile: At Risk */}
           {(() => {
             const atRiskCount = clients.filter(c => c.health_score < 40).length;
+            const atRiskMRR = clients
+              .filter(c => c.health_score < 40)
+              .reduce((s, c) => s + (c.mrr || 0), 0);
             return (
               <motion.div
                 className="glass-card rounded-2xl p-4 flex flex-col justify-between"
@@ -779,11 +797,15 @@ export default function ClientsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
               >
-                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted">At Risk</p>
-                <p className={`font-display text-2xl font-bold tracking-[-0.03em] tabular-nums mt-2 ${atRiskCount > 0 ? "text-[#EF4444]" : "text-text-primary"}`}>
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">At Risk</p>
+                <p className={`font-display text-2xl font-bold tracking-[-0.03em] tabular-nums ${atRiskCount > 0 ? "text-[#EF4444]" : "text-text-primary"}`}>
                   {atRiskCount}
                 </p>
-                <p className="text-[11px] text-text-muted mt-1">health &lt; 40</p>
+                <p className="text-[11px] text-text-muted mt-1.5">
+                  {atRiskCount > 0
+                    ? <span className="text-[#EF4444]/70">{formatCurrency(atRiskMRR)} at risk</span>
+                    : "all healthy"}
+                </p>
               </motion.div>
             );
           })()}
