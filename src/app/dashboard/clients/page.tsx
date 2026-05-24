@@ -35,13 +35,13 @@ const TAG_PRESETS: ClientTag[] = [
   { label: "Needs Attention", color: "#F59E0B" },
 ];
 
-function HealthArc({ score }: { score: number }) {
+function HealthArc({ score, size = 42 }: { score: number; size?: number }) {
   const pct = Math.min(100, Math.max(0, score ?? 0));
   const r = 16, circ = 2 * Math.PI * r;
   const dash = (pct / 100) * circ;
   const color = pct>= 70 ? "#D4FF00" : pct>= 40 ? "#F59E0B" : "#F43F5E";
   return (
-    <svg width="42" height="42" viewBox="0 0 42 42" className="-rotate-90">
+    <svg width={size} height={size} viewBox="0 0 42 42" className="-rotate-90">
       <circle cx="21" cy="21" r={r} fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="3" />
       <circle cx="21" cy="21" r={r} fill="none" stroke={color} strokeWidth="3"
         strokeDasharray={`${dash} ${circ}`} strokeLinecap="round" />
@@ -1066,21 +1066,12 @@ export default function ClientsPage() {
                 {/* Feature 1: Health indicator + initials badge � wider layout for featured tile */}
                 <div className={`flex items-start gap-3 mb-3 mt-1 ${isFeatured ? "md:flex-row md:items-center" : ""}`}>
                   <div className="shrink-0 flex flex-col items-center gap-1.5">
-                    {/* Avatar with health ring overlay on compact cards */}
+                    {/* Avatar */}
                     <div className="relative">
                       <ClientInitialsBadge name={c.business_name || "?"} />
-                      {!isFeatured && (
-                        <div
-                          className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white"
-                          style={{
-                            background: c.health_score>= 70 ? '#22C55E' : c.health_score>= 40 ? '#F59E0B' : '#EF4444',
-                          }}
-                          title={`Health: ${c.health_score}`}
- />
-                      )}
                     </div>
-                    {/* Health arc only on featured tile (has space for it) */}
-                    {isFeatured && <HealthArc score={c.health_score} />}
+                    {/* Health arc on all card-view tiles — larger on featured */}
+                    <HealthArc score={c.health_score} size={isFeatured ? 56 : 42} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">

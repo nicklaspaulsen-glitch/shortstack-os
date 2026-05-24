@@ -1,5 +1,5 @@
 "use client";
-import { ArrowsClockwise, ArrowsOut, BookBookmark, ChatCircle, CheckCircle, CircleNotch, File, Headphones, Lightning, MagnifyingGlass, Microphone, PaperPlaneTilt, Pause, Phone, Play, Sparkle, Star, Trash, TrendUp, UploadSimple, Voicemail, Warning } from "@phosphor-icons/react";
+import { ArrowsClockwise, ArrowsOut, BookBookmark, CaretDown, ChatCircle, CheckCircle, CircleNotch, File, Headphones, Lightning, MagnifyingGlass, Microphone, PaperPlaneTilt, Pause, Phone, Play, Sparkle, Star, Trash, TrendUp, UploadSimple, Voicemail, Warning } from "@phosphor-icons/react";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -852,6 +852,23 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
     setFavoritesOnly(false);
   }, []);
 
+  // More-filters popover (lang + use-case)
+  const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
+  const moreFiltersRef = useRef<HTMLDivElement>(null);
+  const secondaryFilterCount = useMemo(
+    () => (langFilter !== "all" ? 1 : 0) + (useCaseFilter !== "all" ? 1 : 0),
+    [langFilter, useCaseFilter],
+  );
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (moreFiltersRef.current && !moreFiltersRef.current.contains(e.target as Node)) {
+        setMoreFiltersOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
   // ── Batch pre-warm ────────────────────────────────────────────────────────
   // Iterates through all presets that lack a cached preview URL and generates
   // one via the test endpoint. Sequential (not parallel) to respect ElevenLabs
@@ -1071,28 +1088,31 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             </button>
           )}
         </div>
-        {/* Gender row */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="w-14 flex-shrink-0 text-[10px] uppercase tracking-wider text-text-secondary">Gender</span>
-          {(["all", "female", "male"] as const).map((g) => (
-            <button
-              key={g}
-              type="button"
-              onClick={() => setGenderFilter(g)}
-              className={[
-                "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
-                genderFilter === g
-                  ? "border border-white/[0.15] bg-white/[0.06] text-brand-accent"
-                  : "border border-border-subtle bg-white/[0.02] text-text-secondary hover:text-text-primary hover:bg-white/[0.05]",
-              ].join(" ")}
-            >
-              {g === "all" ? "All" : g.charAt(0).toUpperCase() + g.slice(1)}
-            </button>
-          ))}
-        </div>
-        {/* Category + language row */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex flex-1 flex-wrap gap-1.5">
+        {/* Combined pill strip — gender then category — + More popover for lang/use-case */}
+        <div className="flex items-center gap-2 min-w-0">
+          <div
+            className="flex flex-1 items-center gap-1.5 overflow-x-auto min-w-0"
+            style={{ scrollbarWidth: "none" }}
+          >
+            {/* Gender pills */}
+            {(["all", "female", "male"] as const).map((g) => (
+              <button
+                key={`g-${g}`}
+                type="button"
+                onClick={() => setGenderFilter(g)}
+                className={[
+                  "flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer",
+                  genderFilter === g
+                    ? "border border-white/[0.15] bg-white/[0.06] text-brand-accent"
+                    : "border border-border-subtle bg-white/[0.02] text-text-secondary hover:text-text-primary hover:bg-white/[0.05]",
+                ].join(" ")}
+              >
+                {g === "all" ? "All" : g.charAt(0).toUpperCase() + g.slice(1)}
+              </button>
+            ))}
+            {/* divider */}
+            <div className="flex-shrink-0 w-px h-3.5 bg-border-subtle" aria-hidden="true" />
+            {/* Category pills */}
             {PRESET_CATEGORIES.map((c) => {
               const isActive = categoryFilter === c;
               return (
@@ -1100,7 +1120,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
                   key={c}
                   type="button"
                   onClick={() => setCategoryFilter(c)}
-                  className="relative rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/60"
+                  className="relative flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/60"
                   style={{ color: isActive ? "#D4FF00" : "#52525B" }}
                 >
                   {isActive && (
@@ -1117,30 +1137,73 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               );
             })}
           </div>
-          {languages.length > 1 && (
-            <select
-              value={langFilter}
-              onChange={(e) => setLangFilter(e.target.value)}
-              className="flex-shrink-0 rounded-lg border border-border-subtle bg-white/[0.03] px-2 py-1 text-xs text-text-secondary focus:outline-none focus:ring-1 focus:ring-brand-accent/50 cursor-pointer"
-            >
-              {languages.map((l) => (
-                <option key={l} value={l} className="bg-white">
-                  {l === "all" ? "All langs" : l.toUpperCase()}
-                </option>
-              ))}
-            </select>
-          )}
-          {allUseCaseTags.length > 0 && (
-            <select
-              value={useCaseFilter}
-              onChange={(e) => setUseCaseFilter(e.target.value)}
-              className="flex-shrink-0 rounded-lg border border-border-subtle bg-white/[0.03] px-2 py-1 text-xs text-text-secondary focus:outline-none focus:ring-1 focus:ring-brand-accent/50 cursor-pointer"
-            >
-              <option value="all" className="bg-white">All use cases</option>
-              {allUseCaseTags.map((tag) => (
-                <option key={tag} value={tag} className="bg-white">{tag}</option>
-              ))}
-            </select>
+          {/* More filters popover — lang + use-case */}
+          {(languages.length > 1 || allUseCaseTags.length > 0) && (
+            <div ref={moreFiltersRef} className="relative flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => setMoreFiltersOpen((v) => !v)}
+                className={[
+                  "flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-medium transition-colors duration-150 cursor-pointer",
+                  moreFiltersOpen || secondaryFilterCount > 0
+                    ? "border border-brand-accent/30 bg-brand-accent/10 text-brand-accent"
+                    : "border border-border-subtle bg-white/[0.02] text-text-secondary hover:text-text-primary hover:bg-white/[0.05]",
+                ].join(" ")}
+              >
+                More{secondaryFilterCount > 0 && <span className="tabular-nums ml-0.5">({secondaryFilterCount})</span>}
+                <CaretDown
+                  size={9}
+                  style={{ transform: moreFiltersOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 150ms ease" }}
+                />
+              </button>
+              {moreFiltersOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute right-0 top-full mt-1.5 z-20 rounded-xl p-3 space-y-2.5 min-w-[180px]"
+                  style={{ background: "rgba(13,17,32,0.96)", border: "1px solid rgba(255,255,255,0.08)", backdropFilter: "blur(16px)" }}
+                >
+                  {languages.length > 1 && (
+                    <div className="space-y-1">
+                      <span className="text-[9px] font-semibold uppercase tracking-wider text-text-muted block">Language</span>
+                      <select
+                        value={langFilter}
+                        onChange={(e) => setLangFilter(e.target.value)}
+                        className="w-full rounded-lg border border-border-subtle bg-white/[0.03] px-2 py-1 text-xs text-text-secondary focus:outline-none focus:ring-1 focus:ring-brand-accent/50 cursor-pointer"
+                      >
+                        {languages.map((l) => (
+                          <option key={l} value={l}>{l === "all" ? "All languages" : l.toUpperCase()}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                  {allUseCaseTags.length > 0 && (
+                    <div className="space-y-1">
+                      <span className="text-[9px] font-semibold uppercase tracking-wider text-text-muted block">Use case</span>
+                      <select
+                        value={useCaseFilter}
+                        onChange={(e) => setUseCaseFilter(e.target.value)}
+                        className="w-full rounded-lg border border-border-subtle bg-white/[0.03] px-2 py-1 text-xs text-text-secondary focus:outline-none focus:ring-1 focus:ring-brand-accent/50 cursor-pointer"
+                      >
+                        <option value="all">All use cases</option>
+                        {allUseCaseTags.map((tag) => (
+                          <option key={tag} value={tag}>{tag}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                  {secondaryFilterCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => { setLangFilter("all"); setUseCaseFilter("all"); setMoreFiltersOpen(false); }}
+                      className="text-[9px] text-text-secondary hover:text-brand-accent transition-colors cursor-pointer"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </motion.div>
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -1435,38 +1498,32 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
           );
         })()}
         {!testUrl && !editMode && (
-          <button
-            type="button"
-            onClick={() => { if (!testing) onTest(); }}
-            disabled={testing}
-            aria-label={testing ? "Generating preview..." : "Click to preview this voice"}
-            className="mt-3 w-full flex flex-col items-center gap-1.5 py-3 rounded-lg border border-dashed border-border-subtle bg-white/[0.02] hover:border-[rgba(212,255,0,0.25)] hover:bg-[rgba(212,255,0,0.03)] transition-colors duration-200 cursor-pointer disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-accent/40 group/play"
-          >
-            {/* waveform bars - animate when hovering or generating */}
-            <div className="flex items-end justify-center gap-[2px] h-6 opacity-40 group-hover/play:opacity-80 transition-opacity duration-200" aria-hidden="true">
-              {[5, 9, 6, 13, 7, 11, 4, 14, 8, 10, 5, 12, 7, 9, 4].map((h, i) => (
+          <div className="mt-3 flex items-end justify-between gap-2 min-h-[20px]">
+            {/* Ambient waveform — decorative shimmer, not a primary CTA */}
+            <div className="flex items-end gap-[2px] h-5" aria-hidden="true">
+              {[5, 9, 6, 13, 7, 11, 4, 14, 8].map((h, i) => (
                 <div
                   key={i}
                   style={{
-                    width: 2.5,
+                    width: 2,
                     height: h,
                     background: "#D4FF00",
                     borderRadius: 2,
                     transformOrigin: "bottom",
-                    animation: isHovering || testing
-                      ? `waveBar ${0.55 + (i % 5) * 0.07}s ease-in-out infinite`
-                      : `waveBar ${2.4 + (i % 5) * 0.28}s ease-in-out infinite`,
-                    animationDelay: `${(i * (isHovering || testing ? 0.045 : 0.11)).toFixed(3)}s`,
+                    opacity: 0.08,
+                    animation: `waveBar ${2.4 + (i % 5) * 0.28}s ease-in-out infinite`,
+                    animationDelay: `${(i * 0.11).toFixed(3)}s`,
                   }}
                 />
               ))}
             </div>
-            <span className="text-[10px] text-text-secondary group-hover/play:text-brand-accent transition-colors duration-200 flex items-center gap-1">
-              {testing
-                ? <><CircleNotch size={10} className="animate-spin" />{" "}Generating...</>
-                : <><Play size={10} />{" "}Click to preview</>}
-            </span>
-          </button>
+            {testing && (
+              <span className="text-[10px] text-text-secondary flex items-center gap-1 ml-auto">
+                <CircleNotch size={9} className="animate-spin" />
+                Generating…
+              </span>
+            )}
+          </div>
         )}
 
         {/* Edit test text */}
@@ -1594,20 +1651,20 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             </div>
           </div>
         ) : (
-          <div className="mt-3">
+          <button
+            type="button"
+            onClick={() => setEditMode(true)}
+            aria-label="Customize sample phrase"
+            className="group/edit mt-3 w-full text-left rounded-lg border border-transparent px-2 py-1.5 -mx-2 transition-all duration-200 hover:border-brand-accent/20 hover:bg-white/[0.02] cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-accent/40"
+          >
             <div className="flex items-center justify-between gap-1 mb-0.5">
               <span className="text-[9px] font-medium uppercase tracking-wider text-text-secondary">Sample phrase</span>
-              <button
-                type="button"
-                onClick={() => setEditMode(true)}
-                className="flex-shrink-0 rounded border border-border-subtle bg-white/[0.03] px-2 py-0.5 text-[11px] text-text-secondary hover:border-brand-accent/40 hover:text-brand-accent transition-colors duration-150 cursor-pointer"
-                aria-label="Edit test phrase"
-              >
-                Edit
-              </button>
+              <span className="flex-shrink-0 text-[9px] text-text-muted opacity-0 group-hover/edit:opacity-100 transition-opacity duration-150 flex items-center gap-0.5">
+                Customize →
+              </span>
             </div>
             <p className="truncate text-[11px] text-text-secondary italic">{testText}</p>
-          </div>
+          </button>
         )}
 
         {/* Audio player - shown above actions; kept visible while re-generating */}

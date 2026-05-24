@@ -41,12 +41,15 @@ const TT = {
 
 // --- InsightPanel: always-visible bento tile -------------------------------
 function InsightPanel({
-  icon, label, badge, children,
+  icon, label, badge, focal, children,
 }: {
-  icon: React.ReactNode; label: string; badge?: React.ReactNode; children: React.ReactNode;
+  icon: React.ReactNode; label: string; badge?: React.ReactNode; focal?: boolean; children: React.ReactNode;
 }) {
   return (
-    <div className="glass-card overflow-hidden flex flex-col">
+    <div className={`${focal ? "glass-card-heavy" : "glass-card"} overflow-hidden flex flex-col relative`}>
+      {focal && (
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent 0%, #AACC00 30%, #D4FF00 50%, #AACC00 70%, transparent 100%)" }} />
+      )}
       <div className="flex items-center gap-2 px-5 pt-4 pb-3 border-b border-border-subtle">
         <span className="text-text-muted">{icon}</span>
         <span className="font-display text-xs font-semibold text-text-secondary tracking-[-0.005em] uppercase tracking-[0.08em]">{label}</span>
@@ -1035,6 +1038,7 @@ export default function AnalyticsPage() {
             transition={{ duration: 0.22, delay: 0.1 }}
           >
             <InsightPanel
+              focal
               icon={<TrendUp size={13} />}
               label="Revenue Forecast"
               badge={revenueForecast.length > 0 ? (
@@ -1158,7 +1162,7 @@ export default function AnalyticsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, delay: 0.15 }}
           >
-            <InsightPanel icon={<Warning size={13} />} label="Churn Risk">
+            <InsightPanel icon={<Warning size={13} />} label="Churn Risk" focal>
               <div className="space-y-2">
                 {churnRiskClients.length === 0 ? (
                   <div className="flex flex-col items-center gap-2 py-6 text-center">

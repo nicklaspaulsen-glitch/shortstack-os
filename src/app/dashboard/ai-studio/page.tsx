@@ -59,6 +59,18 @@ const TOOL_CATEGORIES: Record<ToolId, "visual" | "audio" | "utility"> = {
 };
 type ToolCategory = "all" | "visual" | "audio" | "utility";
 
+const TOOL_HISTORY_COLORS: Record<string, string> = {
+  "transcribe": "#6366F1",
+  "image-gen": "#D4FF00",
+  "upscale": "#10B981",
+  "remove-bg": "#F59E0B",
+  "img-to-video": "#8B5CF6",
+  "music-gen": "#EC4899",
+  "voice-clone": "#06B6D4",
+  "train-lora": "#F97316",
+  "batch-gen": "#D4FF00",
+};
+
 export default function AIStudioPage() {
   const supabaseMain = useMemo(() => createClient(), []);
   const [activeTool, setActiveTool] = useState<ToolId>("transcribe");
@@ -568,10 +580,19 @@ export default function AIStudioPage() {
                     ) : (
                       <div className="flex flex-col gap-1 p-2.5">
                         <div className="flex items-center gap-1.5">
-                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${job.status === "completed" ? "bg-emerald-500" : job.status === "failed" ? "bg-red-500" : "bg-brand-accent/80 animate-pulse"}`} />
-                          <span className="text-[9px] font-semibold text-text-muted truncate">{job.type}</span>
+                          <span
+                            className="w-1.5 h-1.5 rounded-full shrink-0"
+                            style={{ background: TOOL_HISTORY_COLORS[job.type] ?? "#52525B", opacity: 0.85 }}
+                          />
+                          <span className="text-[9px] font-semibold truncate"
+                            style={{ color: TOOL_HISTORY_COLORS[job.type] ? `${TOOL_HISTORY_COLORS[job.type]}CC` : "#52525B" }}>
+                            {job.type.replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase())}
+                          </span>
                         </div>
-                        <p className="text-[8px] text-text-muted font-mono truncate">{job.status}</p>
+                        <div className="flex items-center gap-1">
+                          <span className={`w-1 h-1 rounded-full shrink-0 ${job.status === "completed" ? "bg-emerald-500" : job.status === "failed" ? "bg-red-500" : "bg-brand-accent/80 animate-pulse"}`} />
+                          <p className="text-[8px] text-text-muted font-mono truncate">{job.status}</p>
+                        </div>
                       </div>
                     )}
                     {/* Status overlay on visual jobs */}
