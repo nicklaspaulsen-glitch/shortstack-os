@@ -195,4 +195,146 @@ test.describe("Social Manager — Social Command", () => {
     const heading = page.getByRole("heading", { name: /Social Manager/i }).first();
     await expect(heading).toBeVisible({ timeout: 8000 });
   });
+
+  // ── 9. AI Tools tab renders content generation UI ─────────────────────────
+  test("AI Tools tab renders content generation panel", async ({ page }) => {
+    // Click the AI Tools tab
+    const aiToolsTab = page
+      .getByRole("button", { name: /^AI Tools$/i })
+      .first();
+
+    if (!(await aiToolsTab.isVisible({ timeout: 4000 }).catch(() => false))) {
+      test.skip();
+      return;
+    }
+
+    await aiToolsTab.click();
+    await page.waitForTimeout(800);
+
+    // The AI Tools tab should show content generation options:
+    // "Generate Week" / "Content Plan" / "Generate Posts" or similar
+    const hasGenPanel =
+      (await page
+        .getByText(/generate|content plan|week|posts|captions/i)
+        .first()
+        .isVisible({ timeout: 4000 })
+        .catch(() => false)) ||
+      (await page
+        .getByRole("button", { name: /generate|create content|plan/i })
+        .first()
+        .isVisible({ timeout: 3000 })
+        .catch(() => false));
+
+    // Or an empty / "connect accounts first" state is also valid
+    const hasEmptyState =
+      (await page
+        .getByText(/connect|no client|select a client/i)
+        .first()
+        .isVisible({ timeout: 2000 })
+        .catch(() => false));
+
+    expect(hasGenPanel || hasEmptyState).toBe(true);
+  });
+
+  // ── 10. Hashtags tab renders research UI ─────────────────────────────────
+  test("Hashtags tab renders hashtag research panel", async ({ page }) => {
+    const hashtagsTab = page
+      .getByRole("button", { name: /^Hashtags$/i })
+      .first();
+
+    if (!(await hashtagsTab.isVisible({ timeout: 4000 }).catch(() => false))) {
+      test.skip();
+      return;
+    }
+
+    await hashtagsTab.click();
+    await page.waitForTimeout(800);
+
+    // Hashtag tab should show research input or clusters
+    const hasResearchUI =
+      (await page
+        .getByPlaceholder(/hashtag|keyword|topic/i)
+        .first()
+        .isVisible({ timeout: 4000 })
+        .catch(() => false)) ||
+      (await page
+        .getByText(/research|clusters|trending|popular hashtags/i)
+        .first()
+        .isVisible({ timeout: 4000 })
+        .catch(() => false)) ||
+      (await page
+        .getByRole("button", { name: /research|analyze|find hashtags/i })
+        .first()
+        .isVisible({ timeout: 3000 })
+        .catch(() => false));
+
+    // Empty / connect-first state is also valid
+    const hasEmptyState =
+      (await page
+        .getByText(/connect|no client|select a client|no accounts/i)
+        .first()
+        .isVisible({ timeout: 2000 })
+        .catch(() => false));
+
+    expect(hasResearchUI || hasEmptyState).toBe(true);
+  });
+
+  // ── 11. AI Generate content week — UI flow (no real posts created) ────────
+  test("AI Tools — generate week of content renders draft list or triggers AI", async ({ page }) => {
+    test.setTimeout(60_000);
+
+    // Navigate to AI Tools tab
+    const aiToolsTab = page
+      .getByRole("button", { name: /^AI Tools$/i })
+      .first();
+
+    if (!(await aiToolsTab.isVisible({ timeout: 4000 }).catch(() => false))) {
+      test.skip();
+      return;
+    }
+
+    await aiToolsTab.click();
+    await page.waitForTimeout(600);
+
+    // Click "Generate Week" or equivalent button
+    const generateBtn = page
+      .getByRole("button", { name: /generate week|generate content|create plan|7 days|one week/i })
+      .first();
+
+    if (!(await generateBtn.isVisible({ timeout: 4000 }).catch(() => false))) {
+      // Feature may require a connected client — skip gracefully
+      test.skip();
+      return;
+    }
+
+    await generateBtn.click({ force: true });
+    await page.waitForTimeout(1000);
+
+    // After clicking, expect one of:
+    // 1. A loading state (AI generating)
+    // 2. A list of draft posts (7 entries)
+    // 3. A "select client first" prompt
+    const hasLoading =
+      await page
+        .locator('[class*="animate-spin"], [class*="skeleton"], [class*="loading"]')
+        .first()
+        .isVisible({ timeout: 3000 })
+        .catch(() => false);
+
+    const hasDrafts =
+      await page
+        .getByText(/draft|post 1|monday|tuesday|caption/i)
+        .first()
+        .isVisible({ timeout: 8000 })
+        .catch(() => false);
+
+    const hasPromptToConnect =
+      await page
+        .getByText(/connect|select client|no client/i)
+        .first()
+        .isVisible({ timeout: 2000 })
+        .catch(() => false);
+
+    expect(hasLoading || hasDrafts || hasPromptToConnect).toBe(true);
+  });
 });

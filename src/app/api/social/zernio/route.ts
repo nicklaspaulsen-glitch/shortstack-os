@@ -144,30 +144,62 @@ export async function GET(request: NextRequest) {
         .eq("account_id", account.id)
         .single();
 
+      const accountName = account.name || account.username || account.platform;
+      const isConnected = account.status === "connected";
+      const baseFields: Record<string, unknown> = {
+        client_id: clientId,
+        platform: account.platform,
+        account_name: accountName,
+        account_id: account.id,
+        is_active: isConnected,
+        metadata: {
+          oauth: true,
+          zernio: true,
+          synced_at: new Date().toISOString(),
+        },
+      };
+
+      // Write access_token if Zernio returns one in the accounts listing.
+      // Zernio may omit this field in some configurations — never overwrite
+      // a good token with undefined.
+      if (account.access_token) {
+        baseFields.access_token = account.access_token;
+      }
+      if (account.refresh_token) {
+        baseFields.refresh_token = account.refresh_token;
+      }
+      if (account.expires_at) {
+        baseFields.token_expires_at = account.expires_at;
+      }
+
       if (!existing) {
-        await supabase.from("social_accounts").insert({
-          client_id: clientId,
-          platform: account.platform,
-          account_name: account.name || account.username || account.platform,
-          account_id: account.id,
-          is_active: account.status === "connected",
-          metadata: {
-            oauth: true,
-            zernio: true,
+        if (!account.access_token) {
+          baseFields.metadata = {
+            ...(baseFields.metadata as Record<string, unknown>),
             connected_at: new Date().toISOString(),
             connected_by: user.id,
-          },
-        });
+            token_pending: true, // will be filled by zernio-callback webhook
+          };
+        }
+        await supabase.from("social_accounts").insert(baseFields);
       } else {
-        await supabase.from("social_accounts").update({
-          account_name: account.name || account.username || account.platform,
-          is_active: account.status === "connected",
+        const updateFields: Record<string, unknown> = {
+          account_name: accountName,
+          is_active: isConnected,
           metadata: {
             oauth: true,
             zernio: true,
             synced_at: new Date().toISOString(),
           },
-        }).eq("id", existing.id);
+        };
+        if (account.access_token) updateFields.access_token = account.access_token;
+        if (account.refresh_token) updateFields.refresh_token = account.refresh_token;
+        if (account.expires_at) updateFields.token_expires_at = account.expires_at;
+
+        await supabase
+          .from("social_accounts")
+          .update(updateFields)
+          .eq("id", existing.id);
       }
     }
 

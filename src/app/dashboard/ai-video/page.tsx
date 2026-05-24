@@ -91,15 +91,15 @@ const MODELS = [
 
 /** OSS model backends — exposed in advanced mode. All route to /api/video/render;
  *  the backend field is passed as model_backend and the server picks the right
- *  RunPod endpoint. "higgsfield" is the default (current production). */
+ *  RunPod/fal endpoint. "higgsfield" routes to the RunPod Mochi endpoint by default. */
 const MODEL_BACKENDS = [
   {
     id: "higgsfield",
-    name: "Higgsfield",
+    name: "Mochi",
     badge: "Default",
     badgeColor: "#D4FF00",
-    specs: "Highest quality · 4K · 90s max",
-    note: null,
+    specs: "Open-source · 720p · Fast inference",
+    note: "via RunPod",
   },
   {
     id: "wan2",
