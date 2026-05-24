@@ -1,5 +1,6 @@
+"use client";
+
 import { Calendar, ChartBar, ChatCircle, Check, CheckCircle, CircleNotch, Clock, Copy, CurrencyDollar, FileText, FloppyDisk, Funnel, Gear, Lightning, Pause, PencilSimple, Play, Plus, Pulse, Robot, Sparkle, Trash, TrendUp, Users, WarningCircle, WifiHigh, WifiSlash, X, XCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";

@@ -1,5 +1,6 @@
+"use client";
+
 import { CheckCircle, CircleNotch, Clock, EnvelopeSimple, Eye, PaperPlaneTilt, Play, Sparkle, TrendUp, Warning, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";

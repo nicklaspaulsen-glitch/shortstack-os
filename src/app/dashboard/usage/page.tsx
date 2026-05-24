@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsClockwise, Calendar, CaretRight, ChartBar, CircleNotch, Clock, Envelope, Globe, Image, Lightning, MagnifyingGlass, Package, PaintBrush, Plus, Pulse, Robot, Shield, Sparkle, TrendUp, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";

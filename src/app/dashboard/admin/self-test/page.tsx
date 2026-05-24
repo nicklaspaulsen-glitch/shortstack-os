@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowLeft, ArrowsClockwise, CheckCircle, Lock, Play, ShieldCheck, Warning, XCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Admin-only: Tier-1 self-test dashboard.

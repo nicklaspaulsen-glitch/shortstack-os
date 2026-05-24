@@ -1,5 +1,6 @@
+"use client";
+
 import { Check, DotsSixVertical, FilmStrip, Heart, MagicWand, MagnifyingGlass, MusicNote, Pause, Play, Scissors, SpeakerHigh, Star, TextT, X } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * PresetPickerPanel — right-side slide-out sidebar that exposes every preset

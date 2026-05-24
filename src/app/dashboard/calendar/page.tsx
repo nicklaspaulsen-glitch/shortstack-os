@@ -1,5 +1,6 @@
+"use client";
+
 import { Calendar, CaretLeft, CaretRight, Check, CircleNotch, Clock, Eye, Funnel, MapPin, Phone, Plus, Repeat, Star, Users, Video, WarningCircle, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";

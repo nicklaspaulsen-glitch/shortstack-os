@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowSquareOut, Bell, Calendar, ChartBar, Chat, Check, CircleNotch, Code, Copy, HardDrive, Lightning, Link, LinkBreak, MagnifyingGlass, Megaphone, PaperPlaneTilt, Plus, Robot, Shield, SignIn, Smiley, Sparkle, Target, Terminal, TrendUp, Users, Warning } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";

@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, ArrowSquareOut, ArrowsClockwise, Briefcase, Calendar, Camera, ChartBar, Check, CheckCircle, CircleNotch, Clock, Copy, Cpu, Crown, CurrencyDollar, DeviceMobile, DeviceMobileCamera, DeviceTablet, Eye, EyeSlash, Flask, ForkKnife, Globe, GraduationCap, House, Layout, Link, MagicWand, Megaphone, Monitor, Newspaper, Palette, Plus, Rocket, ShareNetwork, ShieldCheck, ShoppingBag, Sparkle, Storefront, Target, Trash, TrendUp, Users, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback, useMemo, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";

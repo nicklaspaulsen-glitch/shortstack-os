@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowSquareOut, ArrowsClockwise, Bell, Briefcase, Calendar, CaretDown, CaretUp, ChartBar, ChartPie, Chat, Check, CircleNotch, Clock, CodeSimple, Eye, FileText, Fire, Funnel, Globe, Lightbulb, Lightning, PaperPlaneTilt, Pause, Play, Plus, Pulse, Shield, Sparkle, SquaresFour, Stack, Target, Trash, Warning } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";

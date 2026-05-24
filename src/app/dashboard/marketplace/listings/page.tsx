@@ -1,5 +1,6 @@
+"use client";
+
 import { CircleNotch, Pause, Play, Plus, Storefront, X } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Sellers manage their service listings here.  Lists their own services

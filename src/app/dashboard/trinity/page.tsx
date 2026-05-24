@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, ChartBar, CheckCircle, ClockCounterClockwise, Eye, PaperPlaneTilt, Shield, Stack, Star, XCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";

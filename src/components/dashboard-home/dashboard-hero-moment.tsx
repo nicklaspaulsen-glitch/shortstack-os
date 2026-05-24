@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight } from "@phosphor-icons/react";
-﻿"use client";
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";

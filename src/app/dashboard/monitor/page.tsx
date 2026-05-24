@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsClockwise, CheckCircle, Clock, Pulse, Warning, WifiHigh, XCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";

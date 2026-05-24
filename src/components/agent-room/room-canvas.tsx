@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowCounterClockwise, ArrowsClockwise, CircleNotch, Cube, Square } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AGENTS, ZONES, type AgentDef } from "./roster";

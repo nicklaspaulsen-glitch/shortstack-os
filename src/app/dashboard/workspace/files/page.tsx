@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsOutCardinal, CaretDown, CaretRight, CircleNotch, File, FilePlus, FileText, FileVideo, Folder, FolderPlus, Image, Link, Lock, PencilSimple, Trash, UploadSimple } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Workspace Files — Drive-style file system on Cloudflare R2.

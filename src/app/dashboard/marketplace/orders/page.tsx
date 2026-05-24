@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, Briefcase, Receipt, ShoppingBag } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Buyer + seller order tracking dashboard.  Tabs let the user toggle

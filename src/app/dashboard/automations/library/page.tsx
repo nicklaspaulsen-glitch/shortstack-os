@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, Check, CircleNotch, Clock, Funnel, Lightning, MagnifyingGlass } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";

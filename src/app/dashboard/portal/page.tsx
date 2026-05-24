@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, ArrowSquareOut, Building, Calendar, ChartBar, Chat, CheckCircle, Circle, CircleNotch, CreditCard, File, FileText, FilmStrip, FolderOpen, Globe, Image, Lightning, MapPin, MusicNote, Package, Phone, Robot, Sparkle, Star, Target } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";

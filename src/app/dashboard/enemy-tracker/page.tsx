@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowUpRight, ArrowsClockwise, Bookmark, CaretDown, ChartBar, ChatCircle, CheckCircle, CircleNotch, Clock, Copy, Eye, Fire, FolderPlus, Heart, Lightbulb, Lightning, MagicWand, MagnifyingGlass, Microphone, Pause, Play, Plus, ShareNetwork, Sparkle, Target, TrendUp, Users, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";

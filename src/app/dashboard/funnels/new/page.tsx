@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, CaretLeft, CaretRight, Check, GitBranch, Lightning, Plus, ShoppingCart, Sparkle, TrendUp, Users, Video } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";

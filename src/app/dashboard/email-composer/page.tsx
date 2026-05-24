@@ -1,5 +1,6 @@
+"use client";
+
 import { Calendar, Check, CheckCircle, CircleNotch, Clock, Code, Copy, CursorClick, DeviceMobile, Envelope, Eye, FloppyDisk, Hash, Image, Info, Link as LinkIcon, ListBullets, MagicWand, Monitor, Palette, PaperPlaneTilt, Paperclip, Plus, Sparkle, TextB, TextItalic, TextT, TrendUp, Users, Warning, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";

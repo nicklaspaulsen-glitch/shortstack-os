@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsClockwise, CaretLeft, CaretRight, CircleNotch, Fire, SealCheck, Snowflake, Sun, Target, TrendUp, X } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * AI Lead Scoring — dedicated page.

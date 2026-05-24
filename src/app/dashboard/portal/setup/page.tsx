@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, At, Briefcase, Camera, Chat, Check, Globe, Hash, Question, Video, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";

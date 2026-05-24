@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowUpRight, ArrowsClockwise, ChatCircle, Check, CircleNotch, Copy, Sparkle, Trophy, Users } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Referrals — earn commission every time someone you referred pays for

@@ -1,5 +1,6 @@
+"use client";
+
 import { Barbell, Briefcase, Calculator, Car, CaretDown, CaretUp, ChartBar, Chat, Check, CircleDashed, CircleNotch, Clock, Copy, DeviceMobile, Envelope, Eye, Factory, FileText, FloppyDisk, ForkKnife, Gear, Globe, GraduationCap, HardHat, Hash, Heart, House, Lightning, ListChecks, Megaphone, Monitor, Package, PaperPlaneTilt, Pause, PhoneCall, Play, Plus, Pulse, Scales, Scissors, Shield, ShoppingCart, Sparkle, Stack, Star, Storefront, Target, ToggleLeft, ToggleRight, Trash, TrendUp, Users, WarningCircle, Wrench, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";

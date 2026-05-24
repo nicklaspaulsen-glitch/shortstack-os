@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsClockwise, CaretDown, CaretRight, CheckCircle, Clock, Code, Copy, DownloadSimple, Eye, EyeSlash, FileText, Globe, Key, Lightning, Lock, MagnifyingGlass, Play, Pulse, Shield, Terminal, ToggleLeft, ToggleRight, Trash, Warning } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";

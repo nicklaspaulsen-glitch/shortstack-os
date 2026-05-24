@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, ChatCircle, Clock, Envelope, Sparkle } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Contact Support — honest landing page that points users to real support

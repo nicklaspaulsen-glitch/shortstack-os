@@ -1,5 +1,6 @@
+"use client";
+
 import { Chats } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Client-portal Outreach Feed.

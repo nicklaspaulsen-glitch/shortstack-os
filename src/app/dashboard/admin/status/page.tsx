@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowSquareOut, ArrowsClockwise, CheckCircle, Clock, Lock, Pencil, Plus, ShieldCheck, Trash, Warning } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Admin Status Page — incident management for the public /status/[ownerSlug]

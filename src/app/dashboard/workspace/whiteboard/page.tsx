@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowSquareOut, CheckCircle, Clock, Eye, FilmStrip, Hourglass, ListChecks, PaperPlaneTilt, Pulse, SquaresFour, TrendUp } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import EmptyState from "@/components/empty-state";

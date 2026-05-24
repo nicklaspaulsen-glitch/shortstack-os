@@ -1,5 +1,6 @@
+"use client";
+
 import { CaretDown, CaretUp, ChartBar, Chat, CheckSquare, CircleNotch, Code, Copy, DownloadSimple, Envelope, Eye, File, FileText, Gear, Globe, Hash, Lightning, Link, ListBullets, Palette, Phone, Plus, Shield, Sparkle, Star, Target, TextT, Trash, UploadSimple } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";

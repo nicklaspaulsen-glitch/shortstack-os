@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, Calendar, Chat, CheckCircle, Clock, Eye, FilmStrip, Flag, Plus, Warning, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";

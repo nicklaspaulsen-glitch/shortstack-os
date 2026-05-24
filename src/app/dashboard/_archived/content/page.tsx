@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsClockwise, Calendar, CaretRight, ChartBar, Check, CircleNotch, Clock, File, FileText, FilmStrip, GitBranch, Lightning, MagnifyingGlass, PaperPlaneTilt, PencilSimple, Shield, Sparkle, Stack, Star, Target, ThumbsUp, Tray, TrendUp, UploadSimple, User, Warning, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState, useRef } from "react";
 import { useManagedClient } from "@/lib/use-managed-client";

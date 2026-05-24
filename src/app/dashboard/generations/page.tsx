@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsClockwise, CircleNotch, Copy, Envelope, FileText, FilmStrip, Globe, Image, MagnifyingGlass, Megaphone, ShareNetwork, Sparkle, Stack, Trash } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";

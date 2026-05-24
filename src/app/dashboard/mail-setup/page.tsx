@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowClockwise, ArrowLeft, ArrowRight, Check, CheckCircle, CircleNotch, Copy, Envelope, Globe, Plus, Sparkle, Trash, Warning } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Envelope Setup — agency-facing page to add a custom email subdomain

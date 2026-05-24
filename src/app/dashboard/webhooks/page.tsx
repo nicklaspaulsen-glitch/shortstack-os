@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, Chat, CheckCircle, CircleNotch, Copy, CreditCard, FileText, Funnel, Key, Lightning, PaperPlaneTilt, Pause, Play, Plus, Shield, Trash, Users, WarningCircle, PlugsConnected } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";

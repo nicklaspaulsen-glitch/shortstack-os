@@ -1,5 +1,6 @@
+"use client";
+
 import { CheckCircle, CircleNotch, Clock, Link as LinkIcon, Microphone, Plus, Sparkle, UploadSimple, Warning } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";

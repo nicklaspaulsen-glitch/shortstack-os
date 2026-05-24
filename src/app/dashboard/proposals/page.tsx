@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowLeft, CheckCircle, CircleNotch, Clock, CurrencyDollar, FileText, PaperPlaneTilt, Plus, Trash, TrendUp } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Proposals — send branded proposals to prospects.

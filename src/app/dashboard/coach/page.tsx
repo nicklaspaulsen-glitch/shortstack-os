@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, CircleNotch, Envelope, Medal, Phone, Sparkle, TrendUp, Video } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * AI Sales Coach � overview page.

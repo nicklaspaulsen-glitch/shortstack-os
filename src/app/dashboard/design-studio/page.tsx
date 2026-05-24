@@ -1,5 +1,6 @@
+"use client";
+
 import { CircleNotch, PenNib, Plus } from "@phosphor-icons/react";
-﻿"use client";
 
 import React, { useEffect, useCallback } from "react";
 import Image from "next/image";

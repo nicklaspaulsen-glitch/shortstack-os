@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowLeft, ArrowRight, CircleNotch, Envelope, Eye, EyeSlash, Lightning, Lock, User } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, Suspense, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";

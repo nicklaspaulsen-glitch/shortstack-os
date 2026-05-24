@@ -1,5 +1,6 @@
+"use client";
+
 import { Bell, Chat, CircleNotch, Eye, FloppyDisk, Gear, Robot, Shield, Trash, Warning, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";

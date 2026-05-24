@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowClockwise, ArrowCounterClockwise, ArrowsOut, CaretDown, DownloadSimple, Eraser, File, Image, ImageSquare, MagicWand, MagnifyingGlassMinus, MagnifyingGlassPlus, Ruler, Shapes, Sparkle, SquaresFour, TextT, UploadSimple } from "@phosphor-icons/react";
-﻿"use client";
 
 // Top bar: undo/redo, preset picker, AI fill/remove/upscale, export,
 // grid/rulers toggles, and zoom controls. The page.tsx owns the state

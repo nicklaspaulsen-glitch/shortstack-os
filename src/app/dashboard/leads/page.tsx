@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowDownRight, ArrowsClockwise, Bell, CaretLeft, CaretRight, ChartBar, Chat, Check, CheckCircle, CircleNotch, Clock, DownloadSimple, Envelope, File, FileCsv, Fire, GitBranch, Globe, Lightning, MagnifyingGlass, MapPin, Phone, Stack, Star, Tag, Target, TrendUp, UploadSimple, UserPlus, Users, Warning, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback, useRef, DragEvent, ChangeEvent, FormEvent } from "react";
 import toast from "react-hot-toast";

@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowCounterClockwise, BookOpen, CaretLeft, CaretRight, ChatCircle, Check, CircleNotch, Copy, DownloadSimple, Image, Lightbulb, Lightning, ListBullets, MagicWand, Palette, PencilSimple, Question, Sparkle, SquaresFour, Stack, Target, TextT, TrendUp, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useRef, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";

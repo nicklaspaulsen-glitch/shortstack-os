@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, ArrowsClockwise, CaretRight, ChartBar, CheckCircle, Clock, Copy, CreditCard, FileText, Globe, Lightning, MagnifyingGlass, PaperPlaneTilt, Plus, Sparkle, Warning, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";

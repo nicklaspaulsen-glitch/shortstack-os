@@ -1,5 +1,6 @@
+"use client";
+
 import { CheckCircle, Clock, Copy, Database, DownloadSimple, Envelope, Eye, Gear, Lock, MagnifyingGlass, Pencil, Pulse, Shield, SignIn, Trash, UserPlus, Warning, WarningCircle, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";

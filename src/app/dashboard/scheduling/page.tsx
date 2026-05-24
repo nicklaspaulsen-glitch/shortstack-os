@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowSquareOut, Brain, Calendar, ChartBar, Check, CircleNotch, Clock, Copy, Envelope, Gear, Globe, Lightning, Link, MapPin, PencilSimple, Plus, Shield, Shuffle, Sparkle, Star, Timer, Users, Warning, WarningCircle, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";

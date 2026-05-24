@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsClockwise, At, BookOpen, Briefcase, CaretDown, CaretRight, CaretUp, Chat, CheckCircle, CircleNotch, Clock, CreditCard, CurrencyDollar, Eye, FileText, Handshake, Lightning, Microphone, Package, PaperPlaneTilt, Paperclip, Play, Scissors, Star, Target, TrendUp, User, Users, WarningCircle, X, XCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";

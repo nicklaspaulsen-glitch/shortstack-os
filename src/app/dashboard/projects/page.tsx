@@ -1,5 +1,6 @@
+"use client";
+
 import { Calendar, Chat, CircleNotch, Plus, SquaresFour, Trash, User, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";

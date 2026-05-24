@@ -1,5 +1,6 @@
+"use client";
+
 import { CheckCircle, Clock, Copy, Key, Plus, Shield, Trash, Warning } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import { MotionPage } from "@/components/motion/motion-page";

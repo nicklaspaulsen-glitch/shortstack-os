@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsLeftRight, DownloadSimple, Trash, Warning } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Danger Zone — irreversible account actions surface.

@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowLeft, ArrowSquareOut, Chat, CheckCircle, CircleNotch, Clock, ClockCounterClockwise, PaperPlaneTilt, Plus, SlidersHorizontal, Star, Trash } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Reviews — two tabs:

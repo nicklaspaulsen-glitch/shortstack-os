@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowClockwise, ArrowsClockwise, Calendar, CaretLeft, CaretRight, ChartBar, Chat, CheckCircle, CircleNotch, Clock, Eye, Funnel, Heart, ImageSquare, Lightning, ListBullets, MagicWand, PencilSimple, ShareNetwork, Sparkle, SquaresFour, Target, ThumbsDown, ThumbsUp, Trash, TrendUp, Users, Warning, X, XCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";

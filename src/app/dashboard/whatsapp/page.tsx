@@ -1,5 +1,6 @@
+"use client";
+
 import { Calendar, CaretDown, ChatCircle, CheckCircle, CircleNotch, Clock, PaperPlaneTilt, Phone, Plus, Tray, Users, WarningCircle, X, XCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";

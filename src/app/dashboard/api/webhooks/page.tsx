@@ -1,5 +1,6 @@
+"use client";
+
 import { CheckCircle, Copy, Eye, EyeSlash, PaperPlaneTilt, Plus, Power, Trash, Warning, PlugsConnected } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import { MotionPage } from "@/components/motion/motion-page";

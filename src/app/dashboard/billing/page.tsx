@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowSquareOut, ArrowUpRight, CircleNotch, CreditCard, Crown, DeviceMobile, DownloadSimple, Envelope, Phone, Plus, Robot, Sparkle, Users } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Agency-owner billing hub. Shows:

@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowSquareOut, ArrowsClockwise, Bell, CaretRight, Check, CheckCircle, CircleNotch, Eye, Funnel, Info, Lightning, MagnifyingGlass, PaperPlaneTilt, Pulse, Sparkle, Warning, XCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";

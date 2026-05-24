@@ -1,5 +1,6 @@
+"use client";
+
 import { CaretDown, Chat, CircleNotch, DownloadSimple, Envelope, Funnel, Globe, Lightning, MagnifyingGlass, MapPin, Phone, Sparkle, Star, Target, Users } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";

@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, Check } from "@phosphor-icons/react";
-﻿"use client";
 
 import Link from "next/link";
 import { BRAND } from "@/lib/brand-config";

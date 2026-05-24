@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, ArrowsClockwise, ArrowsDownUp, Bell, Bookmark, CalendarCheck, Camera, CaretDown, CaretUp, ChartBar, Chat, ChatCircle, CheckSquare, Clock, Coins, Columns, DownloadSimple, Envelope, Eye, EyeSlash, Funnel, Globe, Hash, Lightning, List, MagnifyingGlass, PaperPlaneTilt, Phone, PhoneCall, Plus, Robot, SlidersHorizontal, Square, SquaresFour, Stack, Star, Tag, Target, TextAlignJustify, Timer, Trash, TrendUp, UploadSimple, Users, Warning, X } from "@phosphor-icons/react";
-﻿"use client";
 // CRM settings tab now persists to Supabase (automations, tags, notes, follow-ups, segments).
 
 import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";

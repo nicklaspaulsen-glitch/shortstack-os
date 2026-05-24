@@ -1,5 +1,6 @@
+"use client";
+
 import { Aperture, ArrowCounterClockwise, ArrowSquareOut, ArrowsOut, ArrowsOutCardinal, BookOpen, Briefcase, CalendarDots, Camera, CaretDown, ChartBar, ChatCircle, Check, CheckCircle, CircleHalf, CircleNotch, Clock, ClockCounterClockwise, Coffee, Confetti, Copy, Database, DeviceMobile, DotsSixVertical, DownloadSimple, Envelope, Eye, EyeSlash, Eyedropper, FileText, FilmStrip, Flag, Gift, Globe, Heart, Image, ImageSquare, Laptop, Leaf, Lightning, MagicWand, MagnifyingGlass, Medal, Monitor, Moon, MusicNote, Package, PaintBrush, Palette, PenNib, Play, Plus, Podcast, QrCode, Quotes, Repeat, Scissors, SealCheck, Shield, ShoppingBag, Shuffle, SlidersHorizontal, Snowflake, Sparkle, SquaresFour, Stack, Star, Sun, TShirt, Target, TextT, ThumbsUp, Trash, TrendUp, UploadSimple, Users, Warning, Wheelchair, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";

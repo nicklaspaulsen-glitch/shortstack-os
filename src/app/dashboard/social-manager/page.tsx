@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowBendUpLeft, ArrowRight, ArrowsClockwise, At, BookOpen, Briefcase, Calendar, Camera, ChartBar, ChartLine, ChartPie, Chat, Check, CheckCircle, CircleDashed, CircleNotch, Clock, Columns, Copy, DownloadSimple, Eye, FileText, FilmStrip, Fire, Gear, GitDiff, Globe, Handshake, Hash, Heart, Image, Lightbulb, Lightning, Link, MagicWand, MagnifyingGlass, MusicNote, PaperPlaneTilt, Pause, Play, Plus, Pulse, Question, Repeat, Robot, ShareNetwork, Shield, Sparkle, SquaresFour, Stack, Target, ThumbsUp, ToggleLeft, ToggleRight, Tray, TrendUp, UploadSimple, UserPlus, Users, Video, WarningCircle, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";

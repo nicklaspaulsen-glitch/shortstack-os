@@ -1,5 +1,6 @@
+"use client";
+
 import { Funnel, Plus, SquaresFour } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { motion } from "framer-motion";

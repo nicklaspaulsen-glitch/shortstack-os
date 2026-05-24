@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsDownUp, CheckSquare, CircleNotch, Copy, DownloadSimple, Eye, File, FileText, FloppyDisk, FolderOpen, FolderPlus, Image, ListBullets, MagnifyingGlass, MusicNote, Palette, PencilSimple, Square, SquaresFour, Stack, Star, Tag, Trash, UploadSimple, Video, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import {

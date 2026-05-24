@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowLeft, ArrowRight, ArrowUpRight, Chat, Check, CheckCircle, CircleNotch, Gear, Globe, MagnifyingGlass, PaperPlaneTilt, Phone, Sparkle, Users, Warning } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Phone Setup — client-facing page to provision a Twilio phone number

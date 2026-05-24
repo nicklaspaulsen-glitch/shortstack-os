@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, ArrowSquareOut, ArrowsClockwise, ArrowsLeftRight, BookOpen, Camera, Chat, CheckCircle, CircleNotch, Clock, Copy, Cube, DownloadSimple, Envelope, Eye, FileText, FilmSlate, FilmStrip, Fire, Hash, Headphones, Image, Lightning, ListChecks, MagicWand, MagnifyingGlass, Microphone, MusicNote, PenNib, Pulse, Question, Quotes, Repeat, Sparkle, SpeakerHigh, Stack, Target, TextT, TrendUp, Users, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";

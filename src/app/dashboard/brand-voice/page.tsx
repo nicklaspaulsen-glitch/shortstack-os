@@ -1,5 +1,6 @@
+"use client";
+
 import { BookOpen, CaretDown, CaretRight, Check, CheckCircle, CircleNotch, Copy, Eye, FileText, FloppyDisk, MagicWand, MagnifyingGlass, Microphone, Palette, Plus, Shield, Sliders, Sparkle, SpeakerHigh, Star, TextT, ThumbsDown, ThumbsUp, ToggleLeft, ToggleRight, Trash, TrendUp, Users, WarningCircle, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";

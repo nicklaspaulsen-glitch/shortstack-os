@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowSquareOut, Bell, CheckCircle, CursorClick, DownloadSimple, Envelope, Globe, Keyboard, Laptop, Lightning, Monitor, Shield, Terminal, Warning, WifiHigh } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";

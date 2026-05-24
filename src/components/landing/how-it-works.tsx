@@ -1,5 +1,6 @@
+"use client";
+
 import { ChartBar, CheckCircle, Lightning, MagicWand, Phone, Plug, Sparkle, TrendUp } from "@phosphor-icons/react";
-﻿"use client";
 
 
 import {

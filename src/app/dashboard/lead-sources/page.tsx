@@ -1,5 +1,6 @@
+"use client";
+
 import { Check, CircleNotch, Funnel, Pencil, Plus, Trash, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";

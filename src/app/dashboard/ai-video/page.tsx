@@ -1,5 +1,6 @@
+"use client";
+
 import { Camera, CaretDown, CaretRight, CircleNotch, Clock, DownloadSimple, File, FilmStrip, Image, Lightning, Lock, MagicWand, Monitor, MusicNote, Palette, PencilSimple, Play, Sparkle, Stack, Target, TextT, TrendUp, UploadSimple, UserCircle, WarningCircle, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";

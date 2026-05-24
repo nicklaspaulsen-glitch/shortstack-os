@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowLeft, ArrowSquareOut, Check, Copy, MagicWand, MusicNote, Pause, Play, Scissors, SpeakerHigh, TextT } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Preset Library — preview + try every font, transition, effect, SFX, and

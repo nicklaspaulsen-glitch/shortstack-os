@@ -1,5 +1,6 @@
+"use client";
+
 import { CaretRight, ChartBar, CircleNotch, CreditCard, DownloadSimple, Envelope, Eye, Gear, Globe, Key, Lightning, MagnifyingGlass, Pulse, Robot, Shield, Users, Warning } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";

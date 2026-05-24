@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, Calculator, Calendar, CaretRight, ChartBar, CheckCircle, CircleNotch, Clock, CreditCard, CurrencyDollar, FileText, Lightning, Plus, Shield, Star, Target, TrendDown, TrendUp, Warning } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, type Variants } from "framer-motion";

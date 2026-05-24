@@ -1,5 +1,6 @@
+"use client";
+
 import { CaretDown, CaretUp, CheckCircle, Circle, X } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * OnboardingChecklist — Persistent new-user activation widget.

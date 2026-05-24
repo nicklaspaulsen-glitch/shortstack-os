@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowCounterClockwise, ArrowRight, Barbell, Briefcase, Buildings, CalendarDots, CaretDown, CaretUp, ChartBar, Check, Clock, Copy, DotsSixVertical, Envelope, Eye, EyeSlash, FileText, ForkKnife, Globe, House, Image, Layout, MagnifyingGlass, Megaphone, Monitor, Pencil, Plus, Question, Rocket, Shield, ShoppingBag, Sparkle, Target, Trash, TrendUp, UploadSimple, Users, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useCallback, useRef, useMemo } from "react";
 import { motion } from "framer-motion";

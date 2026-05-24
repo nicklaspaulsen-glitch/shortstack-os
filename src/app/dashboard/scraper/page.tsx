@@ -1,5 +1,6 @@
+"use client";
+
 import { Bookmark, Briefcase, Building, Calendar, CaretDoubleRight, CaretDown, CaretRight, Chat, CheckCircle, CircleNotch, Clock, CurrencyDollar, Database, DownloadSimple, Envelope, Eye, Flask, FloppyDisk, Funnel, Globe, Hash, Lightbulb, Lightning, MagnifyingGlass, MapPin, Megaphone, PaperPlaneTilt, Phone, Play, Plus, Stack, Star, Tag, Target, Trash, UserPlus, Users, WifiHigh, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect } from "react";
 import {

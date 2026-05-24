@@ -1,5 +1,6 @@
+"use client";
+
 import { CircleNotch, TrendUp, WarningCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, type Variants } from "framer-motion";

@@ -1,5 +1,6 @@
+"use client";
+
 import { Calendar, ChartBar, CircleNotch, Copy, DeviceMobile, DownloadSimple, Envelope, Eye, FileText, GitBranch, MagnifyingGlass, Monitor, Moon, PaperPlaneTilt, PencilSimple, Plus, Sparkle, Star, Tag, Trash, TrendUp, UploadSimple, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";

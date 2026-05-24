@@ -1,5 +1,6 @@
+"use client";
+
 import { CaretDown, CaretRight, Copy, DotsThree, Eye, EyeSlash, Folder, FolderOpen, Image as ImageIcon, Lock, LockOpen, Shapes, Sparkle, Square, Stack, TextT, Trash } from "@phosphor-icons/react";
-﻿"use client";
 
 // Right-side layers panel. Drag-to-reorder, visibility/lock/opacity/blend
 // controls per layer, right-click context menu, tiny thumbnail preview

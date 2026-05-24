@@ -1,5 +1,6 @@
+"use client";
+
 import { Airplane, Brain, CheckCircle, CircleNotch, Clock, ClockCounterClockwise, EyeSlash, FloppyDisk, Power, XCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Trinity proposals inbox + autonomous-mode settings.

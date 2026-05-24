@@ -1,5 +1,6 @@
+"use client";
+
 import { Calendar, ChartBar, Chat, CheckCircle, CircleNotch, Clock, Copy, Eye, Gear, Link, MagnifyingGlass, PaperPlaneTilt, PencilSimple, Plus, Shield, Smiley, Sparkle, Trash, TrendUp, Warning, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";

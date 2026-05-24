@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowSquareOut, ArrowUpRight, ArrowsClockwise, ArrowsDownUp, CaretDown, CaretRight, Check, CheckCircle, CircleNotch, Clock, Columns, CreditCard, DownloadSimple, Envelope, Eye, FileText, Funnel, Lightning, List, MagnifyingGlass, Note, Phone, Plus, SquaresFour, Tag, UserCheck, UserPlus, Warning, XCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";

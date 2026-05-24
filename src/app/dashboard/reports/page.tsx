@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsClockwise, CaretDown, CaretUp, Check, CircleNotch, ClipboardText, Clock, Copy, DownloadSimple, Envelope, FileText, ShareNetwork, Sparkle, TrendDown, TrendUp, Users } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";

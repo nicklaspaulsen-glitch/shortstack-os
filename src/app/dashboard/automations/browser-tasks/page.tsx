@@ -1,5 +1,6 @@
+"use client";
+
 import { CaretRight, CheckCircle, CircleNotch, Clock, Globe, Plus, Sparkle, XCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";

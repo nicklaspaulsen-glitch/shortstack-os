@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsClockwise, CaretDown, CaretUp, Check, Eye, EyeSlash, Image, Palette, PencilSimple, Plus, Sparkle, Stack, TextT, Trash, User, X } from "@phosphor-icons/react";
-﻿"use client";
 
 /* ────────────────────────────────────────────────────────────────
  * LayerPanel — Adobe-Premiere-style "layers" sidebar for thumbnails.

@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, Buildings, Check, Code, Crown, FilmStrip, Globe, Headphones, Infinity, Lightning, Lock, PenNib, Phone, Plus, Robot, Shield, Sparkle, TrendUp, Users } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";

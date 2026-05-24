@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowLeft, CircleNotch, CreditCard, MagicWand, PaperPlaneTilt, Plus, Sparkle, Trash } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";

@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowSquareOut, ArrowUpRight, ArrowsClockwise, Check, CheckCircle, CircleNotch, Copy, Envelope, EnvelopeSimple, EnvelopeSimpleOpen, Globe, Info, MagnifyingGlass, PencilSimple, Plus, ShieldCheck, Sparkle, Trash, Warning, WarningCircle, XCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";

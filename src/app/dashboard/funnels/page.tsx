@@ -1,5 +1,6 @@
+"use client";
+
 import { Archive, CaretRight, CheckCircle, Clock, Copy, Eye, MagnifyingGlass, Pencil, Plus, Stack, Trash } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";

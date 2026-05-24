@@ -1,5 +1,6 @@
+"use client";
+
 import { ChartBar, CheckCircle, Clock, Crown, Envelope, Eye, EyeSlash, Gear, Key, Lock, LockOpen, MagnifyingGlass, Pencil, Pulse, Shield, Trash, UserPlus, Users, Warning, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";

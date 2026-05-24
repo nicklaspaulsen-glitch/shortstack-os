@@ -1,5 +1,6 @@
+"use client";
+
 import { CircleNotch, PaperPlaneTilt, Sparkle, X } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * TrinityPrompt — Cmd+K quick-prompt modal for the top navbar.

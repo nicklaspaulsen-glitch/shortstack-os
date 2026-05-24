@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowLeft, ArrowsClockwise, Check, CircleNotch, PaperPlaneTilt, Sparkle, Star, WarningCircle, X } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Reviews — AI Auto-Reply (Phase 2 polish).

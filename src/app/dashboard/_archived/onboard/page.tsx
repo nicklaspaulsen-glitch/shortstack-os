@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowLeft, ArrowRight, BookOpen, Briefcase, Buildings, CaretDown, CaretUp, Check, CheckCircle, CircleNotch, Crown, Envelope, Eye, File, Globe, GraduationCap, House, Image, Layout, Lightning, Palette, Phone, Plus, Rocket, ShieldCheck, ShoppingBag, Sparkle, Stack, Target, TextT, UploadSimple, UserPlus, Users, Video, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";

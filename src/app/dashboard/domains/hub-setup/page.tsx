@@ -1,5 +1,6 @@
+"use client";
+
 import { CaretRight, Chat, CircleNotch, Envelope, Globe, Info, Phone, ShieldCheck, Sparkle, SquaresFour } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";

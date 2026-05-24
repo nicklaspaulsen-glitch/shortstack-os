@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowUpRight, CaretRight, CheckCircle, CircleNotch, Copy, CurrencyDollar, Envelope, Medal, Pause, Play, Plus, Pulse, Users, X } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Affiliates dashboard — agency-side admin for the affiliate program.

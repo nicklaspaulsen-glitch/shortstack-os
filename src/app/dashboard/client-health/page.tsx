@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowDownRight, ArrowUpRight, Bell, Calendar, CaretRight, ChartBar, Chat, CheckCircle, Clock, CurrencyDollar, Eye, Heart, Lightbulb, Lightning, Pulse, ShieldWarning, Star, Target, ThumbsUp, TrendDown, TrendUp, Users, Warning } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";

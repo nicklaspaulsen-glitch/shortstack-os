@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowDown, ArrowRight, ChartBar, Chat, Check, CheckCircle, CircleNotch, Clock, Copy, Envelope, Eye, Gear, GitBranch, Lightning, Pause, Phone, Play, Plus, Pulse, ShareNetwork, Sparkle, Target, Trash, Users, XCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";

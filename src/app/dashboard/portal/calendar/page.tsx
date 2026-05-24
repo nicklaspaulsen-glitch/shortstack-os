@@ -1,5 +1,6 @@
+"use client";
+
 import { Calendar, Camera, CaretLeft, CaretRight, CircleNotch, FilmStrip, Globe, PaperPlaneTilt, Plus, Sparkle } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";

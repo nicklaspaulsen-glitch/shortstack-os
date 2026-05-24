@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsClockwise, ChartBar, Check, Copy, Envelope, Gear, Globe, HardDrive, Lightning, MagnifyingGlass, PaperPlaneTilt, Phone, Plus, Pulse, Shield, Trash, TrendUp, Users, WarningCircle, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";

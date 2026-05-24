@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsClockwise, CheckCircle, CircleNotch, Crosshair, Globe, PencilSimple, Plus, Trash, WarningCircle, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";

@@ -1,5 +1,6 @@
+"use client";
+
 import { Buildings, CircleNotch, Envelope, Pause, Play, Plus, Trash, WarningCircle, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";

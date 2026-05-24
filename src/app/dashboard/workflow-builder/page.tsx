@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowClockwise, ArrowCounterClockwise, ArrowRight, At, Bell, Calendar, CalendarCheck, CaretDown, CaretRight, Check, CheckSquare, Clock, Copy, DeviceMobile, DotsSixVertical, DownloadSimple, Envelope, Eye, FileText, FloppyDisk, Gauge, Gear, GitBranch, Globe, Layout, Lightning, Link, ListPlus, MagnifyingGlass, Phone, Play, PlugsConnected, Pulse, Robot, Sparkle, SquaresFour, Tag, Timer, Trash, UserPlus, Users, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useCallback, useRef, useMemo, useEffect, DragEvent } from "react";
 import { motion } from "framer-motion";

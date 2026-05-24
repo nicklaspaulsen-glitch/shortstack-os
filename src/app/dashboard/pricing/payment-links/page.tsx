@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowLeft, ArrowSquareOut, Check, Copy, Link, Lock } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Admin-only: copy-able Stripe Payment Links for each plan/cycle.

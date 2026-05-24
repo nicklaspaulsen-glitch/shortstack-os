@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, ArrowSquareOut, ArrowsClockwise, Calendar, CheckCircle, CircleNotch, Clock, FileText, FloppyDisk, Microphone, Phone, PhoneCall, Prohibit, Sparkle, UploadSimple, UserCheck, WarningCircle, X } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Voice Receptionist � 24/7 AI phone agent that answers, qualifies, and books.

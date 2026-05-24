@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowDown, ArrowUp, BookOpen, Briefcase, Calendar, CaretDown, CaretUp, ChartBar, Check, CircleNotch, Clock, Copy, CursorClick, DeviceMobile, DotsSixVertical, Eye, FileText, Gift, Image, Layout, Lightning, Link, MagicWand, Megaphone, Monitor, PaperPlaneTilt, Sparkle, TextT, Trash, TrendUp, Users, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useRef, useMemo } from "react";
 import { motion } from "framer-motion";

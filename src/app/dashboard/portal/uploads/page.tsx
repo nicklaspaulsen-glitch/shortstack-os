@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowSquareOut, CaretRight, CircleNotch, DownloadSimple, Eye, File, FileText, FilmStrip, FolderOpen, Globe, Heart, Image, Link, MusicNote, ShareNetwork, TrendUp, UploadSimple, Users } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";

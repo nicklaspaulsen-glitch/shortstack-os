@@ -1,5 +1,6 @@
+"use client";
+
 import { CircleNotch, Pause, Phone, Play, Plus, ShieldWarning, Trash, UploadSimple, Voicemail, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";

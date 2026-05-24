@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowLeft, CircleNotch, FileAudio, Microphone, UploadSimple } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
