@@ -1021,7 +1021,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="MagnifyingGlass presets..."
+              placeholder="Search presets…"
               className="rounded-lg w-full border border-border-subtle bg-white/[0.03] py-1.5 pl-8 pr-3 text-xs text-text-primary placeholder-[#A1A1AA] focus:outline-none focus:border-brand-accent/40 focus:ring-1 focus:ring-brand-accent/30"
             />
           </div>
