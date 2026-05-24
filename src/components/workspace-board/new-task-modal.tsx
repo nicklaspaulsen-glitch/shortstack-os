@@ -12,6 +12,7 @@ import {
   type TaskType,
 } from "@/lib/workspace/board";
 import type { ClientLite, MemberLite } from "./board-card";
+import MentionInput from "@/components/ui/mention-input";
 
 interface NewTaskModalProps {
   open: boolean;
@@ -143,12 +144,12 @@ export function NewTaskModal({
                 <label className="block text-xs font-medium uppercase tracking-wider text-text-muted mb-1.5">
                   Description
                 </label>
-                <textarea
+                <MentionInput
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={setDescription}
                   rows={3}
                   className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border-subtle focus:border-[rgba(212,255,0,0.4)] focus:outline-none text-sm resize-none"
-                  placeholder="Optional context — links, requirements, references..."
+                  placeholder="Optional context — @ to mention an agent..."
                 />
               </div>
 

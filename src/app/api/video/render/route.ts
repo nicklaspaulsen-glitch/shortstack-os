@@ -213,9 +213,10 @@ export async function POST(request: NextRequest) {
   let lastError: string | undefined;
 
   // ── Model-backend routing ──
-  // The UI sends model_backend (e.g. "ltx", "wan2", "flux-i2v") to pin a
-  // specific fal.ai model instead of running the full waterfall.
-  // "higgsfield" and undefined both fall through to the existing Mochi→fal cascade.
+  // The UI sends model_backend (e.g. "ltx", "wan2", "flux-i2v", "higgsfield") to
+  // pin a specific backend instead of running the full waterfall.
+  // "higgsfield" routes to the dedicated Higgsfield block below when
+  // HIGGSFIELD_API_KEY is set; falls through to Mochi otherwise.
   const FAL_BACKEND_MAP: Record<string, string> = {
     wan2:       "fal-ai/wan/t2v/480p",
     ltx:        "fal-ai/ltx-video",
@@ -232,6 +233,89 @@ export async function POST(request: NextRequest) {
       { success: false, error: "Kling AI integration coming soon. Select a different model." },
       { status: 400 },
     );
+  }
+
+  // Higgsfield Creative AI — dedicated backend gated on HIGGSFIELD_API_KEY.
+  // Distinct from HIGGSFIELD_URL which is the RunPod Mochi endpoint.
+  const higgsKey = process.env.HIGGSFIELD_API_KEY;
+  if (model_backend === "higgsfield" && higgsKey && !plan_only) {
+    attempted.push("higgsfield");
+    let higgWidth = 960,
+      higgHeight = 540;
+    if (aspect_ratio === "9:16") {
+      higgWidth = 540;
+      higgHeight = 960;
+    } else if (aspect_ratio === "1:1") {
+      higgWidth = 720;
+      higgHeight = 720;
+    } else if (aspect_ratio === "4:5") {
+      higgWidth = 720;
+      higgHeight = 900;
+    }
+    const higgFrames = Math.min(Math.max(Math.round((Number(duration) || 5) * 24), 24), 200);
+    const higgPrompt = buildVideoPrompt({
+      title: title || "cinematic video",
+      script: script || "",
+      style: style || "cinematic",
+      type: type || "reel",
+      musicMood: music_mood || "dramatic",
+    });
+    try {
+      const higgRes = await fetch("https://api.higgsfield.ai/v1/render", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${higgsKey}`,
+        },
+        body: JSON.stringify({
+          prompt: higgPrompt,
+          ...(i2v_source_image ? { image_url: i2v_source_image } : {}),
+          width: higgWidth,
+          height: higgHeight,
+          num_frames: higgFrames,
+          fps: 24,
+          seed: Math.floor(Math.random() * 2 ** 32),
+        }),
+      });
+      if (!higgRes.ok) {
+        const errText = await higgRes.text().catch(() => "(no body)");
+        lastError = `Higgsfield HTTP ${higgRes.status}: ${errText.slice(0, 120)}`;
+        console.error("[video/render] Higgsfield error:", lastError);
+      } else {
+        const higgData = (await higgRes.json()) as {
+          id?: string;
+          render_id?: string;
+          status?: string;
+          url?: string;
+          video_url?: string;
+        };
+        const completedUrl = higgData.url ?? higgData.video_url;
+        if (completedUrl) {
+          await supabase.from("trinity_log").insert({
+            action_type: "content",
+            description: `Higgsfield video rendered: ${title}`,
+            client_id: client_id ?? null,
+            status: "completed",
+            result: { url: completedUrl, source: "higgsfield" },
+          });
+          return NextResponse.json({ success: true, source: "higgsfield", url: completedUrl });
+        }
+        const jobId = higgData.id ?? higgData.render_id;
+        if (jobId) {
+          return NextResponse.json({
+            success: true,
+            source: "higgsfield",
+            render_id: jobId,
+            status: "processing",
+            status_url: `/api/video/status?provider=higgsfield&id=${jobId}`,
+          });
+        }
+        lastError = "Higgsfield returned no url or job id";
+      }
+    } catch (err) {
+      lastError = `Higgsfield: ${err instanceof Error ? err.message : String(err)}`;
+      console.error("[video/render] Higgsfield request failed:", err);
+    }
   }
 
   // Option 1: Remotion (self-hosted on Railway) — skip if plan_only.
