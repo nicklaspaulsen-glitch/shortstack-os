@@ -1,5 +1,5 @@
 "use client";
-import { ArrowUpRight, Bell, Briefcase, Clock, FileText, Lightning, MagnifyingGlass, Moon, PaperPlaneTilt, Pulse, Sparkle, Sun, Target, TrendUp, UserPlus, Users } from "@phosphor-icons/react";
+import { ArrowUpRight, Bell, Briefcase, Clock, FileText, MagnifyingGlass, Moon, PaperPlaneTilt, Pulse, Sparkle, Sun, UserPlus } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
@@ -14,6 +14,15 @@ import TrinityOrb from "@/components/dashboard/trinity-orb";
 // ─── Below-the-fold lazy ──────────────────────────────────────────────────────
 const DowntimeBanner = dynamic(
   () => import("@/components/dashboard/downtime-banner"),
+  { ssr: false }
+);
+
+// 3D metric orbs — R3F scene, SSR disabled (Three.js is client-only)
+const MetricOrbs3D = dynamic(
+  () =>
+    import("@/components/dashboard/metric-orbs-3d").then((m) => ({
+      default: m.MetricOrbs3D,
+    })),
   { ssr: false }
 );
 
@@ -102,164 +111,6 @@ function useAgencyStats() {
   return stats;
 }
 
-// ─── Stat Card (Realtyhub-inspired) ──────────────────────────────────────────
-
-interface RHStatCardProps {
-  label: string;
-  value: string | number;
-  sub: string;
-  pct: number;
-  change?: string;
-  changeUp?: boolean;
-  color: string;
-  icon: React.ElementType;
-}
-
-function RHStatCard({
-  label,
-  value,
-  sub,
-  pct,
-  change,
-  changeUp,
-  color,
-  icon: Icon,
-}: RHStatCardProps) {
-  return (
-    <div
-      style={{
-        background: "var(--sidebar-item-bg)",
-        border: "1px solid var(--sidebar-border)",
-        borderRadius: 16,
-        padding: "20px 22px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 14,
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      {/* Ambient glow */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          top: -28,
-          right: -28,
-          width: 110,
-          height: 110,
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${color}14 0%, transparent 70%)`,
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Icon + change badge */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          position: "relative",
-        }}
-      >
-        <div
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 12,
-            background: `${color}18`,
-            border: `1px solid ${color}28`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Icon size={20} style={{ color }} />
-        </div>
-        {change && (
-          <span
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 3,
-              padding: "3px 9px",
-              borderRadius: 99,
-              background: changeUp
-                ? "rgba(34,197,94,0.12)"
-                : "rgba(248,113,113,0.12)",
-              border: `1px solid ${
-                changeUp ? "rgba(34,197,94,0.25)" : "rgba(248,113,113,0.25)"
-              }`,
-              fontSize: 11,
-              fontWeight: 700,
-              color: changeUp ? "#22C55E" : "#F87171",
-            }}
-          >
-            {changeUp && <TrendUp size={10} />}
-            {change}
-          </span>
-        )}
-      </div>
-
-      {/* Number + label */}
-      <div style={{ position: "relative" }}>
-        <p
-          style={{
-            margin: 0,
-            fontSize: 32,
-            fontWeight: 800,
-            color: "var(--sidebar-text-primary)",
-            letterSpacing: "-0.04em",
-            lineHeight: 1,
-            fontFamily: "var(--font-satoshi, 'Satoshi', sans-serif)",
-            fontVariantNumeric: "tabular-nums",
-          }}
-        >
-          {value}
-        </p>
-        <p
-          style={{
-            margin: "5px 0 0",
-            fontSize: 13.5,
-            fontWeight: 600,
-            color: "var(--sidebar-text-primary)",
-          }}
-        >
-          {label}
-        </p>
-        <p
-          style={{
-            margin: "2px 0 0",
-            fontSize: 11,
-            color: "var(--sidebar-text-secondary)",
-          }}
-        >
-          {sub}
-        </p>
-      </div>
-
-      {/* Progress bar */}
-      <div
-        style={{
-          height: 4,
-          borderRadius: 2,
-          background: "var(--sidebar-border)",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            height: "100%",
-            width: `${pct}%`,
-            background: `linear-gradient(90deg, ${color}BB, ${color})`,
-            borderRadius: 2,
-          }}
-        />
-      </div>
-    </div>
-  );
-}
 
 // ─── Pipeline Board (live Supabase data) ─────────────────────────────────────
 
@@ -931,44 +782,6 @@ function AgencyDashboard() {
     }
   }, [refreshProfile]);
 
-  const statCards: RHStatCardProps[] = [
-    {
-      label: "Active Clients",
-      value: stats?.clients ?? "—",
-      sub: "total registered",
-      pct: stats ? Math.min(Math.round((stats.clients / 50) * 100), 100) : 60,
-      color: "#14B8A6",
-      icon: Users,
-    },
-    {
-      label: "Total Leads",
-      value: stats?.leads ?? "—",
-      sub: "in pipeline",
-      pct: stats ? Math.min(Math.round((stats.leads / 100) * 100), 100) : 75,
-      color: "#A78BFA",
-      icon: Target,
-    },
-    {
-      label: "Workflows",
-      value: stats?.workflows ?? "—",
-      sub: "automations running",
-      pct: stats
-        ? Math.min(Math.round((stats.workflows / 20) * 100), 100)
-        : 45,
-      color: "#F97316",
-      icon: Lightning,
-    },
-    {
-      label: "AI Credits",
-      value: "∞",
-      sub: "unlimited plan",
-      pct: 100,
-      change: "Pro",
-      changeUp: true,
-      color: "#22C55E",
-      icon: Sparkle,
-    },
-  ];
 
   return (
     <div className="min-h-screen" style={{ paddingBottom: 48 }}>
@@ -1112,12 +925,13 @@ function AgencyDashboard() {
         </div>
       </div>
 
-      {/* ── Row 1: 4 stat cards ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
-
-        {statCards.map((card) => (
-          <RHStatCard key={card.label} {...card} />
-        ))}
+      {/* ── Row 1: 3D metric orbs ── */}
+      <div style={{ marginBottom: 20 }}>
+        <MetricOrbs3D
+          clients={stats?.clients ?? null}
+          leads={stats?.leads ?? null}
+          workflows={stats?.workflows ?? null}
+        />
       </div>
 
       {/* ── Row 2: Pipeline kanban ── */}
