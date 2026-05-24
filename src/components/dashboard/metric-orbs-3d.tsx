@@ -139,40 +139,45 @@ function Orb({ data }: { data: OrbData }) {
 // ─── Scene contents ───────────────────────────────────────────────────────────
 
 function OrbScene({ clients, leads, workflows }: MetricOrbs3DProps) {
-  const orbs: OrbData[] = [
-    {
-      label: "Clients",
-      value: clients ?? "—",
-      sub: "active",
-      color: "#14B8A6",
-      x: -3.6,
-      floatSpeed: 1.4,
-    },
-    {
-      label: "Leads",
-      value: leads ?? "—",
-      sub: "in pipeline",
-      color: "#A78BFA",
-      x: -1.2,
-      floatSpeed: 1.7,
-    },
-    {
-      label: "Workflows",
-      value: workflows ?? "—",
-      sub: "running",
-      color: "#F97316",
-      x: 1.2,
-      floatSpeed: 1.5,
-    },
-    {
-      label: "AI Credits",
-      value: "∞",
-      sub: "unlimited",
-      color: "#22C55E",
-      x: 3.6,
-      floatSpeed: 1.9,
-    },
-  ];
+  // Memoised so Orb keys are stable and THREE.Color instances inside each Orb
+  // are not re-created on every parent render.
+  const orbs: OrbData[] = useMemo(
+    () => [
+      {
+        label: "Clients",
+        value: clients ?? "—",
+        sub: "active",
+        color: "#14B8A6",
+        x: -3.6,
+        floatSpeed: 1.4,
+      },
+      {
+        label: "Leads",
+        value: leads ?? "—",
+        sub: "in pipeline",
+        color: "#A78BFA",
+        x: -1.2,
+        floatSpeed: 1.7,
+      },
+      {
+        label: "Workflows",
+        value: workflows ?? "—",
+        sub: "running",
+        color: "#F97316",
+        x: 1.2,
+        floatSpeed: 1.5,
+      },
+      {
+        label: "AI Credits",
+        value: "∞",
+        sub: "unlimited",
+        color: "#22C55E",
+        x: 3.6,
+        floatSpeed: 1.9,
+      },
+    ],
+    [clients, leads, workflows]
+  );
 
   return (
     <>
