@@ -121,6 +121,23 @@ type ZernioWebhookPayload = {
   timestamp: string; // ISO-8601
 };
 
+// Shape of account.connected / account.refreshed / account.disconnected payloads
+// (different from message.received — uses profile_id instead of message/conversation)
+type ZernioAccountEventPayload = {
+  event: string;
+  profile_id?: string;
+  account?: {
+    id?: string;
+    platform?: string;
+    name?: string;
+    username?: string;
+    access_token?: string;
+    refresh_token?: string;
+    expires_at?: string;
+    status?: string;
+  };
+};
+
 export async function POST(request: NextRequest) {
   const rawBody = await request.text();
   const sig = request.headers.get("x-zernio-signature") || request.headers.get("x-webhook-signature");
@@ -133,6 +150,86 @@ export async function POST(request: NextRequest) {
     webhook = JSON.parse(rawBody);
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  // Handle account connection / disconnection events.
+  // Zernio fires these when a user completes (or revokes) OAuth on a social
+  // platform. Upsert the social_accounts row with the fresh token so that
+  // /api/social/post can use it for direct platform API calls without a
+  // separate polling cycle.
+  if (
+    webhook.event === "account.connected" ||
+    webhook.event === "account.refreshed" ||
+    webhook.event === "account.disconnected"
+  ) {
+    const acctEvt = webhook as unknown as ZernioAccountEventPayload;
+    const profileId = acctEvt.profile_id;
+    const acctInfo = acctEvt.account;
+
+    if (!profileId || !acctInfo?.id || !acctInfo?.platform) {
+      console.warn("[webhooks/zernio] account event missing required fields", { event: webhook.event });
+      return NextResponse.json({ ok: true, skipped: "missing_account_fields" });
+    }
+
+    const svc = createServiceClient();
+
+    const { data: clientRow } = await svc
+      .from("clients")
+      .select("id")
+      .eq("zernio_profile_id", profileId)
+      .maybeSingle();
+
+    if (!clientRow) {
+      console.warn("[webhooks/zernio] unknown profile_id:", profileId);
+      // Return 200 so Zernio doesn't retry indefinitely for unrecognised profiles.
+      return NextResponse.json({ ok: true, skipped: "unknown_profile" });
+    }
+
+    const clientId = clientRow.id;
+
+    if (webhook.event === "account.disconnected") {
+      await svc
+        .from("social_accounts")
+        .update({ is_active: false, access_token: null })
+        .eq("client_id", clientId)
+        .eq("platform", acctInfo.platform)
+        .eq("account_id", acctInfo.id);
+      console.log(`[webhooks/zernio] account.disconnected: client=${clientId} platform=${acctInfo.platform}`);
+      return NextResponse.json({ ok: true });
+    }
+
+    // account.connected / account.refreshed — upsert with the fresh token
+    const accountName = acctInfo.name || acctInfo.username || acctInfo.platform;
+    const upsertData: Record<string, unknown> = {
+      client_id: clientId,
+      platform: acctInfo.platform,
+      account_id: acctInfo.id,
+      account_name: accountName,
+      is_active: true,
+      metadata: {
+        oauth: true,
+        zernio: true,
+        zernio_event: webhook.event,
+        synced_at: new Date().toISOString(),
+      },
+    };
+    if (acctInfo.access_token) upsertData.access_token = acctInfo.access_token;
+    if (acctInfo.refresh_token) upsertData.refresh_token = acctInfo.refresh_token;
+    if (acctInfo.expires_at) upsertData.token_expires_at = acctInfo.expires_at;
+
+    const { error: upsertErr } = await svc
+      .from("social_accounts")
+      .upsert(upsertData, { onConflict: "client_id,platform,account_id", ignoreDuplicates: false });
+
+    if (upsertErr) {
+      console.error("[webhooks/zernio] account upsert failed:", upsertErr.message);
+      return NextResponse.json({ error: "DB write failed" }, { status: 500 });
+    }
+
+    console.log(
+      `[webhooks/zernio] ${webhook.event}: client=${clientId} platform=${acctInfo.platform} account=${acctInfo.id} hasToken=${!!acctInfo.access_token}`,
+    );
+    return NextResponse.json({ ok: true });
   }
 
   // Only process incoming message events — skip post.*, message.sent, etc.
