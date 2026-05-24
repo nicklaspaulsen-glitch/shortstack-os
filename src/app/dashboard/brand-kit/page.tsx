@@ -1,15 +1,8 @@
+import { ArrowSquareOut, ArrowsClockwise, BracketsCurly, CaretDown, CaretRight, Chat, Check, CircleNotch, ClipboardText, Copy, DownloadSimple, Envelope, Eye, FileCode, FileText, FilmStrip, FloppyDisk, Globe, Hash, Image, Layout, Lightning, Link, MagnifyingGlass, Megaphone, Palette, ShareNetwork, Sparkle, TextT } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import {
-  Globe, Palette, Type, Image as ImageIcon, Sparkles, Save,
-  Loader, Search, Download, Copy, Check, ExternalLink,
-  Megaphone, FileText, Film, Mail, MessageSquare,
-  Layout, Eye, Share2, Zap,
-  ChevronRight, RefreshCw, Link2, Hash,
-  ChevronDown, Braces, ClipboardList, FileCode
-} from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
@@ -36,13 +29,13 @@ interface BrandData {
 const GENERATE_PRESETS = [
   { id: "social-ad", label: "Social Ad", icon: <Megaphone size={16} />, desc: "Facebook/Instagram ad creative from brand colors & imagery" },
   { id: "story-post", label: "Story Post", icon: <Layout size={16} />, desc: "Instagram/TikTok story with brand palette and fonts" },
-  { id: "carousel", label: "Carousel", icon: <Film size={16} />, desc: "Multi-slide carousel using extracted visuals" },
-  { id: "email-header", label: "Email Header", icon: <Mail size={16} />, desc: "Branded email header banner" },
-  { id: "logo-variations", label: "Logo Variations", icon: <Sparkles size={16} />, desc: "AI variations of the brand logo" },
-  { id: "video-intro", label: "Video Intro", icon: <Film size={16} />, desc: "5-second branded intro animation" },
+  { id: "carousel", label: "Carousel", icon: <FilmStrip size={16} />, desc: "Multi-slide carousel using extracted visuals" },
+  { id: "email-header", label: "Email Header", icon: <Envelope size={16} />, desc: "Branded email header banner" },
+  { id: "logo-variations", label: "Logo Variations", icon: <Sparkle size={16} />, desc: "AI variations of the brand logo" },
+  { id: "video-intro", label: "Video Intro", icon: <FilmStrip size={16} />, desc: "5-second branded intro animation" },
   { id: "business-card", label: "Business Card", icon: <FileText size={16} />, desc: "Print-ready business card design" },
-  { id: "social-banner", label: "Social Banner", icon: <Share2 size={16} />, desc: "Cover photos for Facebook, LinkedIn, YouTube" },
-  { id: "ad-copy", label: "Ad Copy", icon: <MessageSquare size={16} />, desc: "Headlines and body copy matching brand voice" },
+  { id: "social-banner", label: "Social Banner", icon: <ShareNetwork size={16} />, desc: "Cover photos for Facebook, LinkedIn, YouTube" },
+  { id: "ad-copy", label: "Ad Copy", icon: <Chat size={16} />, desc: "Headlines and body copy matching brand voice" },
   { id: "landing-page", label: "Landing Page", icon: <Globe size={16} />, desc: "Wireframe mockup with extracted brand elements" },
 ];
 
@@ -131,7 +124,7 @@ export default function BrandKitPage() {
     try {
       const res = await fetch("/api/brand-scrape", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ url: url.trim() }),
       });
       const data = await res.json();
@@ -269,11 +262,11 @@ export default function BrandKitPage() {
   }
 
   const tabs: { key: MainTab; label: string; icon: React.ReactNode; disabled?: boolean }[] = [
-    { key: "extract", label: "Extract", icon: <Search size={14} /> },
+    { key: "extract", label: "Extract", icon: <MagnifyingGlass size={14} /> },
     { key: "colors", label: "Colors", icon: <Palette size={14} />, disabled: !brand },
-    { key: "typography", label: "Typography", icon: <Type size={14} />, disabled: !brand },
-    { key: "media", label: "Media", icon: <ImageIcon size={14} />, disabled: !brand },
-    { key: "generate", label: "Generate", icon: <Sparkles size={14} />, disabled: !brand },
+    { key: "typography", label: "Typography", icon: <TextT size={14} />, disabled: !brand },
+    { key: "media", label: "Media", icon: <Image size={14} />, disabled: !brand },
+    { key: "generate", label: "Generate", icon: <Sparkle size={14} />, disabled: !brand },
   ];
 
   return (
@@ -290,17 +283,17 @@ export default function BrandKitPage() {
                         onClick={() => setShowExportMenu((v) => !v)}
                         className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5"
 >
-                        <Download size={13} /> Export Kit
-                        <ChevronDown size={12} className={showExportMenu ? "rotate-180 transition-transform" : "transition-transform"} />
+                        <DownloadSimple size={13} /> Export Kit
+                        <CaretDown size={12} className={showExportMenu ? "rotate-180 transition-transform" : "transition-transform"} />
                       </button>
                       {showExportMenu && (
                         <div className="absolute right-0 top-full mt-2 w-56 bg-surface border border-border-subtle/30 rounded-xl shadow-2xl z-50 py-1 overflow-hidden">
                           <button onClick={exportAsJSON} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(212,255,0,0.05)] transition-colors">
-                            <Braces size={14} className="text-brand-accent shrink-0" />
+                            <BracketsCurly size={14} className="text-brand-accent shrink-0" />
                             <div><p className="font-medium">Export as JSON</p><p className="text-[10px] text-text-muted">Full brand data file</p></div>
                           </button>
                           <button onClick={copyBrandSummary} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(212,255,0,0.05)] transition-colors">
-                            <ClipboardList size={14} className="text-brand-accent shrink-0" />
+                            <ClipboardText size={14} className="text-brand-accent shrink-0" />
                             <div><p className="font-medium">Copy Brand Summary</p><p className="text-[10px] text-text-muted">Formatted text to clipboard</p></div>
                           </button>
                           <button onClick={exportCSSVariables} className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-[rgba(212,255,0,0.05)] transition-colors">
@@ -314,7 +307,7 @@ export default function BrandKitPage() {
                       onClick={() => { setBrand(null); setUrl(""); setTab("extract"); if (typeof window !== "undefined") { localStorage.removeItem("ss_brand_kit_data"); localStorage.removeItem("ss_brand_kit_url"); } }}
                       className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5"
 >
-                      <RefreshCw size={13} /> New Scan
+                      <ArrowsClockwise size={13} /> New Scan
                     </button>
                   </div>
                 )}
@@ -336,13 +329,13 @@ export default function BrandKitPage() {
                         toast.success("Brand kit saved");
                       } catch (err) {
                         console.error("Manual brand save failed:", err);
-                        toast.error("Save failed");
+                        toast.error("FloppyDisk failed");
                       }
                       setSavingManual(false);
                     }}
                     className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1"
 >
-                    <Save size={10} /> {savingManual ? "Saving..." : "Save"}
+                    <FloppyDisk size={10} /> {savingManual ? "Saving..." : "FloppyDisk"}
                   </button>
                 </div>
               </div>
@@ -382,7 +375,7 @@ export default function BrandKitPage() {
                   </p>
                   <div className="max-w-lg mx-auto flex gap-2">
                     <div className="relative flex-1">
-                      <Link2 size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                      <Link size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                       <input
                         type="url"
                         placeholder="https://example.com"
@@ -400,7 +393,7 @@ export default function BrandKitPage() {
                       disabled={loading}
                       className="btn-primary px-6 py-2.5 text-sm flex items-center gap-2"
 >
-                      {loading ? <Loader size={14} className="animate-spin" /> : <Zap size={14} />}
+                      {loading ? <CircleNotch size={14} className="animate-spin" /> : <Lightning size={14} />}
                       {loading ? "Scanning..." : "Extract"}
                     </motion.button>
                   </div>
@@ -438,7 +431,7 @@ export default function BrandKitPage() {
                     { icon: <Globe size={18} />, title: "1. Paste URL", desc: "Enter any website address" },
                     { icon: <Eye size={18} />, title: "2. We Analyze", desc: "Colors, fonts, images, socials" },
                     { icon: <Palette size={18} />, title: "3. Brand Kit", desc: "Complete brand profile ready" },
-                    { icon: <Sparkles size={18} />, title: "4. Generate", desc: "Create on-brand content" },
+                    { icon: <Sparkle size={18} />, title: "4. Generate", desc: "Create on-brand content" },
                   ].map((step, i) => (
                     <motion.div key={i} variants={tileVariants} whileHover={{ y: -2 }} className="glass rounded-xl p-4 text-center relative overflow-hidden spotlight-card" onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                       <div style={{ height: 3, background: PRISM_RAINBOW_GRADIENT }} className="absolute top-0 inset-x-0" />
@@ -512,10 +505,10 @@ export default function BrandKitPage() {
 
                     <div className="flex items-center gap-2">
                       <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setTab("colors")} className="btn-primary text-xs px-4 py-2 flex items-center gap-1.5">
-                        <Palette size={13} /> View Colors <ChevronRight size={12} />
+                        <Palette size={13} /> View Colors <CaretRight size={12} />
                       </motion.button>
                       <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setTab("generate")} className="btn-secondary text-xs px-4 py-2 flex items-center gap-1.5">
-                        <Sparkles size={13} /> Generate Content <ChevronRight size={12} />
+                        <Sparkle size={13} /> Generate Content <CaretRight size={12} />
                       </motion.button>
                     </div>
                   </motion.div>
@@ -629,7 +622,7 @@ export default function BrandKitPage() {
                 {brand.socialLinks.length> 0 && (
                   <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                      <Share2 size={14} className="text-brand-accent" /> Social Profiles Found
+                      <ShareNetwork size={14} className="text-brand-accent" /> Social Profiles Found
                     </h3>
                     <motion.div variants={containerVariants} className="flex flex-wrap gap-2">
                       {brand.socialLinks.map((s, i) => (
@@ -642,7 +635,7 @@ export default function BrandKitPage() {
                           rel="noopener noreferrer"
                           className="flex items-center gap-2 rounded-lg px-3 py-2 hover:border-[rgba(212,255,0,0.25)] transition-all text-xs" style={{ background: "rgba(255,255,255,0.88)", border: "1px solid rgba(0,0,0,0.10)" }}
 >
-                          <ExternalLink size={12} className="text-brand-accent" />
+                          <ArrowSquareOut size={12} className="text-brand-accent" />
                           {s.platform}
                         </motion.a>
                       ))}
@@ -659,7 +652,7 @@ export default function BrandKitPage() {
 >
                 <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                   <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
-                    <Type size={14} className="text-brand-accent" /> Extracted Fonts
+                    <TextT size={14} className="text-brand-accent" /> Extracted Fonts
                   </h3>
                   {brand.fonts.length === 0 ? (
                     <p className="text-xs text-text-muted text-center py-8">No custom fonts detected. The site may use system fonts or load fonts dynamically.</p>
@@ -720,7 +713,7 @@ export default function BrandKitPage() {
                 {brand.ctaTexts.length> 0 && (
                   <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                      <Zap size={14} className="text-brand-accent" /> Call-to-Action Texts
+                      <Lightning size={14} className="text-brand-accent" /> Call-to-Action Texts
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {brand.ctaTexts.map((cta, i) => (
@@ -743,7 +736,7 @@ export default function BrandKitPage() {
                 {brand.ogImage && (
                   <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                      <Share2 size={14} className="text-brand-accent" /> Social Preview Image (OG)
+                      <ShareNetwork size={14} className="text-brand-accent" /> Social Preview Image (OG)
                     </h3>
                     <div className="rounded-lg overflow-hidden border border-border-subtle/20 max-w-2xl">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -755,7 +748,7 @@ export default function BrandKitPage() {
                 {/* All images */}
                 <motion.div variants={tileVariants} className="glass rounded-xl p-6">
                   <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
-                    <ImageIcon size={14} className="text-brand-accent" /> Extracted Images
+                    <Image size={14} className="text-brand-accent" /> Extracted Images
                     <span className="text-[10px] text-text-muted bg-white/5 px-1.5 py-0.5 rounded">{brand.images.length}</span>
                   </h3>
                   {brand.images.length === 0 ? (
@@ -779,7 +772,7 @@ export default function BrandKitPage() {
  />
                           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                             <a href={img} target="_blank" rel="noopener noreferrer" className="p-1.5 bg-white/10 rounded-lg hover:bg-white/15">
-                              <ExternalLink size={14} className="text-white" />
+                              <ArrowSquareOut size={14} className="text-white" />
                             </a>
                             <button
                               onClick={() => { navigator.clipboard.writeText(img); toast.success("Image URL copied!"); }}
@@ -821,7 +814,7 @@ export default function BrandKitPage() {
                 {/* Presets grid */}
                 <motion.div variants={tileVariants}>
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                    <Sparkles size={14} className="text-brand-accent" /> Content Presets
+                    <Sparkle size={14} className="text-brand-accent" /> Content Presets
                   </h3>
                   <p className="text-xs text-text-muted mb-4">
                     Choose what to generate using the extracted brand data. Each preset uses your colors, fonts, and imagery automatically.
@@ -848,7 +841,7 @@ export default function BrandKitPage() {
                               ? "bg-[rgba(212,255,0,0.12)] text-brand-accent"
                               : "bg-white/5 text-text-muted group-hover:text-brand-accent"
                           } transition-colors`}>
-                            {selectedPreset === preset.id && generating ? <Loader size={16} className="animate-spin" /> : preset.icon}
+                            {selectedPreset === preset.id && generating ? <CircleNotch size={16} className="animate-spin" /> : preset.icon}
                           </div>
                           <div>
                             <p className="text-xs font-semibold">{preset.label}</p>

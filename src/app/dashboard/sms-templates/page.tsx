@@ -1,13 +1,8 @@
+import { Calendar, ChartBar, Chat, CheckCircle, CircleNotch, Clock, Copy, Eye, Gear, Link, MagnifyingGlass, PaperPlaneTilt, PencilSimple, Plus, Shield, Smiley, Sparkle, Trash, TrendUp, Warning, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import {
-  MessageSquare, Plus, Copy, Sparkles, Trash2, Edit3,
-  Search, Shield, Link2, BarChart3, Clock, Send,
-  AlertTriangle, CheckCircle, Smile, Calendar, Eye,
-  TrendingUp, Settings, X, Loader2
-} from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
@@ -132,11 +127,11 @@ export default function SMSTemplatesPage() {
   const replyRate = totalDelivered > 0 ? ((totalReplies / totalDelivered) * 100).toFixed(1) : "0";
 
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
-    { key: "library", label: "Template Library", icon: <MessageSquare size={14} /> },
+    { key: "library", label: "Template Library", icon: <Chat size={14} /> },
     { key: "preview", label: "Preview", icon: <Eye size={14} /> },
     { key: "compliance", label: "TCPA Compliance", icon: <Shield size={14} /> },
-    { key: "analytics", label: "SMS Analytics", icon: <BarChart3 size={14} /> },
-    { key: "links", label: "Short Links", icon: <Link2 size={14} /> },
+    { key: "analytics", label: "SMS Analytics", icon: <ChartBar size={14} /> },
+    { key: "links", label: "Short Links", icon: <Link size={14} /> },
     { key: "schedule", label: "Schedule", icon: <Calendar size={14} /> },
   ];
 
@@ -150,7 +145,7 @@ export default function SMSTemplatesPage() {
       <div className="flex items-center gap-2 shrink-0">
         <>
                   <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5">
-                    <Sparkles size={12} /> Generate with AI
+                    <Sparkle size={12} /> Generate with AI
                   </button>
                   <button onClick={() => setShowAdd(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1.5">
                     <Plus size={12} /> New
@@ -199,7 +194,7 @@ export default function SMSTemplatesPage() {
                 <div className="flex items-center justify-end gap-2 pt-1">
                   <button onClick={() => { setShowAiModal(false); setAiVariants([]); }} className="btn-ghost text-xs">Close</button>
                   <button onClick={handleGenerateSms} disabled={aiLoading} className="btn-primary text-xs flex items-center gap-1.5">
-                    {aiLoading ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} {aiLoading ? "Generating..." : "Generate 3 Variants"}
+                    {aiLoading ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />} {aiLoading ? "Generating..." : "Generate 3 Variants"}
                   </button>
                 </div>
 
@@ -252,8 +247,8 @@ export default function SMSTemplatesPage() {
                 {/* Filters */}
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="relative flex-1 min-w-[200px]">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-                    <input value={search} onChange={e => setSearch(e.target.value)} className="input w-full pl-9 text-xs" placeholder="Search templates..." aria-label="Search SMS templates" />
+                    <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                    <input value={search} onChange={e => setSearch(e.target.value)} className="input w-full pl-9 text-xs" placeholder="MagnifyingGlass templates..." aria-label="MagnifyingGlass SMS templates" />
                   </div>
                   <div className="flex gap-1.5 flex-wrap">
                     {categories.map(c => (
@@ -288,7 +283,7 @@ export default function SMSTemplatesPage() {
                     </div>
                     <div className="relative">
                       <textarea value={newTemplate.body} onChange={e => setNewTemplate({ ...newTemplate, body: e.target.value })} className="input w-full h-20 text-xs" placeholder="SMS body..." />
-                      <button onClick={() => setShowEmoji(!showEmoji)} className="absolute right-2 bottom-2 text-text-muted hover:text-brand-accent"><Smile size={14} /></button>
+                      <button onClick={() => setShowEmoji(!showEmoji)} className="absolute right-2 bottom-2 text-text-muted hover:text-brand-accent"><Smiley size={14} /></button>
                     </div>
                     {showEmoji && (
                       <div className="p-2 rounded-lg bg-surface-light border border-border-subtle">
@@ -348,8 +343,8 @@ export default function SMSTemplatesPage() {
                         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button onClick={() => { navigator.clipboard.writeText(template.body); }} className="p-1 rounded hover:bg-white/5 text-text-muted hover:text-text-primary"><Copy size={10} /></button>
                           <button onClick={() => setPreviewTemplate(template)} className="p-1 rounded hover:bg-white/5 text-text-muted hover:text-text-primary"><Eye size={10} /></button>
-                          <button onClick={() => setEditing(editing === template.id ? null : template.id)} className="p-1 rounded hover:bg-white/5 text-text-muted hover:text-text-primary"><Edit3 size={10} /></button>
-                          <button onClick={() => setTemplates(prev => prev.filter(t => t.id !== template.id))} className="p-1 rounded hover:bg-red-400/10 text-text-muted hover:text-red-400"><Trash2 size={10} /></button>
+                          <button onClick={() => setEditing(editing === template.id ? null : template.id)} className="p-1 rounded hover:bg-white/5 text-text-muted hover:text-text-primary"><PencilSimple size={10} /></button>
+                          <button onClick={() => setTemplates(prev => prev.filter(t => t.id !== template.id))} className="p-1 rounded hover:bg-red-400/10 text-text-muted hover:text-red-400"><Trash size={10} /></button>
                         </div>
                       </div>
 
@@ -393,7 +388,7 @@ export default function SMSTemplatesPage() {
                     <div className="bg-gray-800 rounded-[1.5rem] overflow-hidden">
                       <div className="bg-gray-700 p-3 flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full bg-[rgba(212,255,0,0.12)] flex items-center justify-center">
-                          <MessageSquare size={12} className="text-brand-accent" />
+                          <Chat size={12} className="text-brand-accent" />
                         </div>
                         <div>
                           <p className="text-[10px] font-semibold text-white">ShortStack</p>
@@ -407,7 +402,7 @@ export default function SMSTemplatesPage() {
                               {previewTemplate.body
                                 .replace(/\{name\}/g, "John")
                                 .replace(/\{first_name\}/g, "John")
-                                .replace(/\{business_name\}/g, "Bright Smile Dental")
+                                .replace(/\{business_name\}/g, "Bright Smiley Dental")
                                 .replace(/\{industry\}/g, "dental")
                                 .replace(/\{link\}/g, "srtst.ck/abc123")
                                 .replace(/\{time\}/g, "2:00 PM")
@@ -418,7 +413,7 @@ export default function SMSTemplatesPage() {
                           </div>
                         ) : (
                           <div className="text-center py-12">
-                            <MessageSquare size={24} className="mx-auto mb-2 text-gray-600" />
+                            <Chat size={24} className="mx-auto mb-2 text-gray-600" />
                             <p className="text-[10px] text-gray-500">Select a template from the Library tab to preview</p>
                           </div>
                         )}
@@ -469,7 +464,7 @@ export default function SMSTemplatesPage() {
                         <div key={i} className="flex items-center justify-between p-2.5 rounded bg-surface-light">
                           <div className="flex items-center gap-2 text-[10px]">
                             {check.status === "pass" ? <CheckCircle size={12} className="text-green-400" /> :
-                             check.status === "warning" ? <AlertTriangle size={12} className="text-yellow-400" /> :
+                             check.status === "warning" ? <Warning size={12} className="text-yellow-400" /> :
                              <X size={12} className="text-red-400" />}
                             <span>{check.rule}</span>
                           </div>
@@ -485,7 +480,7 @@ export default function SMSTemplatesPage() {
                   {/* Opt-out Footer Manager */}
                   <PrismPanel padding="p-4">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                      <Settings size={14} className="text-brand-accent" /> Opt-out Footer Manager
+                      <Gear size={14} className="text-brand-accent" /> Opt-out Footer Manager
                     </h3>
                     <p className="text-[10px] text-text-muted mb-3">This footer is automatically appended to all outgoing SMS.</p>
                     <div className="space-y-2">
@@ -588,12 +583,12 @@ export default function SMSTemplatesPage() {
               <div className="space-y-4">
                 <PrismPanel padding="p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                    <Link2 size={14} className="text-brand-accent" /> Short Link Generator
+                    <Link size={14} className="text-brand-accent" /> Short Link Generator
                   </h3>
                   <p className="text-[10px] text-text-muted mb-3">Create short, trackable links for your SMS messages</p>
                   <div className="flex gap-2 mb-4">
                     <input value={shortLinkInput} onChange={e => setShortLinkInput(e.target.value)} className="input flex-1 text-xs" placeholder="Paste your long URL here..." />
-                    <button className="btn-primary text-xs flex items-center gap-1.5"><Link2 size={12} /> Shorten</button>
+                    <button className="btn-primary text-xs flex items-center gap-1.5"><Link size={12} /> Shorten</button>
                   </div>
                   <div className="space-y-1.5">
                     <div className="grid grid-cols-4 text-[9px] text-text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
@@ -625,7 +620,7 @@ export default function SMSTemplatesPage() {
                         <option>Europe/Stockholm (CET)</option>
                       </select>
                       <button className="btn-primary w-full text-xs flex items-center justify-center gap-1.5">
-                        <Clock size={12} /> Schedule Send
+                        <Clock size={12} /> Schedule PaperPlaneTilt
                       </button>
                     </div>
                   </PrismPanel>

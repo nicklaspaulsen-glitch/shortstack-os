@@ -1,19 +1,10 @@
+import { ArrowRight, Check, CircleNotch, Clock, Funnel, Lightning, MagnifyingGlass } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import {
-  ArrowRight,
-  Check,
-  Clock,
-  Filter,
-  Loader,
-  Search,
-  Sparkles,
-  Zap,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // ── Types ────────────────────────────────────────────────────────────────
@@ -138,19 +129,19 @@ export default function WorkflowLibraryPage() {
               {/* Filters */}
               <div className="mb-6 flex flex-wrap items-center gap-3">
                 <div className="relative flex-1 min-w-[240px]">
-                  <Search
+                  <MagnifyingGlass
                     size={14}
                     className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
                   />
                   <input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search templates..."
+                    placeholder="MagnifyingGlass templates..."
                     className="w-full rounded-lg glass pl-9 pr-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-accent focus:outline-none"
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Filter size={14} className="text-text-muted" />
+                  <Funnel size={14} className="text-text-muted" />
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
@@ -175,7 +166,7 @@ export default function WorkflowLibraryPage() {
               {/* Cards */}
               {loading ? (
                 <div className="flex items-center justify-center py-24 text-text-muted">
-                  <Loader className="animate-spin" size={20} />
+                  <CircleNotch className="animate-spin" size={20} />
                 </div>
               ) : filtered.length === 0 ? (
                 <div className="rounded-xl border border-border-subtle bg-white/5 px-6 py-16 text-center text-text-muted">
@@ -214,7 +205,7 @@ export default function WorkflowLibraryPage() {
 
                       <div className="mb-4 flex flex-wrap gap-2 text-[11px] text-text-muted">
                         <span className="inline-flex items-center gap-1">
-                          <Zap size={11} /> {t.step_count} steps
+                          <Lightning size={11} /> {t.step_count} steps
                         </span>
                         <span className="inline-flex items-center gap-1">
                           <Clock size={11} /> ~{t.estimated_setup_minutes} min setup

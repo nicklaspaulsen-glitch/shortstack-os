@@ -1,3 +1,4 @@
+import { ArrowSquareOut, ArrowUpRight, ArrowsClockwise, ArrowsDownUp, CaretDown, CaretRight, Check, CheckCircle, CircleNotch, Clock, Columns, CreditCard, DownloadSimple, Envelope, Eye, FileText, Funnel, Lightning, List, MagnifyingGlass, Note, Phone, Plus, SquaresFour, Tag, UserCheck, UserPlus, Warning, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
@@ -10,13 +11,6 @@ import DataTable from "@/components/ui/data-table";
 import Modal from "@/components/ui/modal";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import {
-  FileText, Plus, Search, ArrowUpRight,
-  UserPlus, Download, CreditCard, RefreshCw, ExternalLink, Loader, Zap,
-  Tag, Check, ChevronDown, ChevronRight, Mail, Phone, Eye,
-  Filter, ArrowUpDown, LayoutGrid, LayoutList, AlertTriangle,
-  Clock, CheckCircle, XCircle, StickyNote, Columns, UserCheck
-} from "lucide-react";
 import { useAppStore } from "@/lib/store";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
@@ -837,13 +831,13 @@ export default function ClientsPage() {
       {/* Enhanced Clients Tab Toolbar */}
       {tab === "clients" && (
         <div className="space-y-3">
-          {/* Search + Controls Row */}
+          {/* MagnifyingGlass + Controls Row */}
           <div className="flex items-center gap-3 flex-wrap">
             <div className="relative flex-1 max-w-md">
-              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+              <MagnifyingGlass size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
               <input
                 type="text"
-                placeholder="Search clients..."
+                placeholder="MagnifyingGlass clients..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="input w-full pl-10"
@@ -853,7 +847,7 @@ export default function ClientsPage() {
             {/* Feature 9: Advanced Filters Toggle */}
             <button onClick={() => setShowFilters(!showFilters)}
               className={`btn-secondary text-xs flex items-center gap-1.5 ${showFilters ? "bg-brand-accent/10 text-brand-accent border-brand-accent/25" : ""}`}>
-              <Filter size={14} /> Filters
+              <Funnel size={14} /> Filters
               {(filterIndustry || filterStatus !== "all" || filterTag || filterMrrMin || filterMrrMax) && (
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-accent" />
               )}
@@ -873,7 +867,7 @@ export default function ClientsPage() {
                   className={`tab-pill flex items-center gap-0.5${sortField === s.field ? " active" : ""}`}>
                   {s.label}
                   {sortField === s.field && (
-                    <ArrowUpDown size={8} className={sortDir === "desc" ? "rotate-180" : ""} />
+                    <ArrowsDownUp size={8} className={sortDir === "desc" ? "rotate-180" : ""} />
                   )}
                 </button>
               ))}
@@ -883,18 +877,18 @@ export default function ClientsPage() {
             <div className="tab-pill-strip">
               <button onClick={() => setViewMode("table")}
                 className={`tab-pill p-1.5${viewMode === "table" ? " active" : ""}`}>
-                <LayoutList size={14} />
+                <List size={14} />
               </button>
               <button onClick={() => setViewMode("card")}
                 className={`tab-pill p-1.5${viewMode === "card" ? " active" : ""}`}>
-                <LayoutGrid size={14} />
+                <SquaresFour size={14} />
               </button>
             </div>
 
             {/* Feature 10: Export */}
             <button onClick={() => handleExportCSV(filteredClients)}
               className="btn-secondary text-xs flex items-center gap-1.5">
-              <Download size={14} /> Export
+              <DownloadSimple size={14} /> Export
             </button>
 
             {/* Feature 12: Compare button */}
@@ -986,13 +980,13 @@ export default function ClientsPage() {
               <span className="text-xs font-medium">{selectedClients.size} selected</span>
               <div className="flex items-center gap-1.5 flex-wrap">
                 <button onClick={() => handleBulkAction("email")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
-                  <Mail size={10} /> Email
+                  <Envelope size={10} /> Email
                 </button>
                 <button onClick={() => handleBulkAction("sms")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
                   <Phone size={10} /> SMS
                 </button>
                 <button onClick={() => handleBulkAction("export")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
-                  <Download size={10} /> Export
+                  <DownloadSimple size={10} /> Export
                 </button>
                 <button onClick={() => handleBulkAction("tag")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
                   <Tag size={10} /> Bulk Tag
@@ -1102,7 +1096,7 @@ export default function ClientsPage() {
                           className="inline-flex items-center gap-0.5 text-[7px] px-1.5 py-0.5 rounded-full font-bold bg-brand-accent/10 text-brand-accent border border-brand-accent/20 tracking-wide"
                           title={`Zernio connected · ${c.zernio_profile_id}`}
                         >
-                          <Zap size={6} /> SOCIAL
+                          <Lightning size={6} /> SOCIAL
                         </span>
                       ) : null}
                     </div>
@@ -1179,7 +1173,7 @@ export default function ClientsPage() {
                 <div className="flex items-center justify-between text-[10px] border-t border-border-subtle pt-2">
                   <div className="flex items-center gap-1.5">
                     {contractInfo.warning ? (
-                      <span className="text-warning flex items-center gap-0.5"><AlertTriangle size={10} /> {contractInfo.daysLeft}d left</span>
+                      <span className="text-warning flex items-center gap-0.5"><Warning size={10} /> {contractInfo.daysLeft}d left</span>
                     ) : (
                       <StatusBadge status={c.is_active ? "active" : "inactive"} />
                     )}
@@ -1207,7 +1201,7 @@ export default function ClientsPage() {
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-surface via-surface/95 to-transparent p-3 pt-6 rounded-b-xl flex items-center justify-center gap-2"
                     onClick={e => e.stopPropagation()}>
                     <button onClick={() => window.open(`mailto:${c.email}`)} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
-                      <Mail size={10} /> Email
+                      <Envelope size={10} /> Email
                     </button>
                     <button onClick={() => c.phone && window.open(`tel:${c.phone}`)} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
                       <Phone size={10} /> Call
@@ -1324,7 +1318,7 @@ export default function ClientsPage() {
                             className="inline-flex items-center gap-0.5 text-[8px] px-1.5 py-0.5 rounded-full font-medium bg-brand-accent/10 text-brand-accent border border-brand-accent/20"
                             title={`Zernio connected · ${c.zernio_profile_id}`}
                           >
-                            <Zap size={7} /> Social
+                            <Lightning size={7} /> Social
                           </span>
                         ) : null}
                       </div>
@@ -1357,7 +1351,7 @@ export default function ClientsPage() {
                 return (
                   <div className="flex items-center gap-1.5">
                     <StatusBadge status={c.contract_status} />
-                    {info.warning && <AlertTriangle size={10} className="text-warning" />}
+                    {info.warning && <Warning size={10} className="text-warning" />}
                   </div>
                 );
               }},
@@ -1387,7 +1381,7 @@ export default function ClientsPage() {
                 const action = getNextAction(c);
                 return (
                   <span className={`text-[10px] flex items-center gap-1 ${action.urgent ? "text-warning font-medium" : "text-text-muted"}`}>
-                    {action.urgent ? <AlertTriangle size={9} /> : <Clock size={9} />}
+                    {action.urgent ? <Warning size={9} /> : <Clock size={9} />}
                     {action.action}
                   </span>
                 );
@@ -1414,7 +1408,7 @@ export default function ClientsPage() {
                 <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
                   {/* Feature 2: Quick Actions */}
                   <button onClick={() => window.open(`mailto:${c.email}`)} className="p-1 rounded hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors" title="Email">
-                    <Mail size={12} />
+                    <Envelope size={12} />
                   </button>
                   <button onClick={() => c.phone && window.open(`tel:${c.phone}`)} className="p-1 rounded hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors" title="Call">
                     <Phone size={12} />
@@ -1423,7 +1417,7 @@ export default function ClientsPage() {
                     <Tag size={12} />
                   </button>
                   <button onClick={() => { setEditingNote(c.id); setNoteText(clientNotes[c.id] || ""); }} className="p-1 rounded hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors" title="Notes">
-                    <StickyNote size={12} />
+                    <Note size={12} />
                   </button>
                   <button onClick={() => toggleCompare(c.id)}
                     className={`p-1 rounded hover:bg-surface-light transition-colors ${compareClients.includes(c.id) ? "text-brand-accent" : "text-text-muted hover:text-text-primary"}`} title="Compare">
@@ -1432,7 +1426,7 @@ export default function ClientsPage() {
                   {/* Feature 5: Expand row for activity timeline */}
                   <button onClick={() => setExpandedRow(expandedRow === c.id ? null : c.id)}
                     className="p-1 rounded hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors" title="Activity">
-                    {expandedRow === c.id ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+                    {expandedRow === c.id ? <CaretDown size={12} /> : <CaretRight size={12} />}
                   </button>
                 </div>
               )},
@@ -1608,7 +1602,7 @@ export default function ClientsPage() {
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${
                         hasSub ? "bg-success/10 text-success" : hasStripe ? "bg-warning/10 text-warning" : "bg-surface-light text-text-muted"
                       }`}>
-                        {hasSub ? <Zap size={14} /> : <CreditCard size={14} />}
+                        {hasSub ? <Lightning size={14} /> : <CreditCard size={14} />}
                       </div>
                       <div className="min-w-0">
                         <p className="font-medium text-sm truncate">{client.business_name}</p>
@@ -1639,21 +1633,21 @@ export default function ClientsPage() {
                           <button onClick={() => syncStripeCustomer(client.id)}
                             disabled={billingLoading === `sync-${client.id}`}
                             className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
-                            {billingLoading === `sync-${client.id}` ? <Loader size={10} className="animate-spin" /> : <RefreshCw size={10} />}
+                            {billingLoading === `sync-${client.id}` ? <CircleNotch size={10} className="animate-spin" /> : <ArrowsClockwise size={10} />}
                             Connect Stripe
                           </button>
                         )}
                         {hasStripe && !hasSub && (
                           <button onClick={() => setShowSubscribeModal(client)}
                             className="btn-primary text-[10px] px-2 py-1 flex items-center gap-1">
-                            <Zap size={10} /> Subscribe
+                            <Lightning size={10} /> Subscribe
                           </button>
                         )}
                         {hasStripe && (
                           <button onClick={() => openBillingPortal(client.id)}
                             disabled={billingLoading === `portal-${client.id}`}
                             className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
-                            {billingLoading === `portal-${client.id}` ? <Loader size={10} className="animate-spin" /> : <ExternalLink size={10} />}
+                            {billingLoading === `portal-${client.id}` ? <CircleNotch size={10} className="animate-spin" /> : <ArrowSquareOut size={10} />}
                             Portal
                           </button>
                         )}
@@ -1780,7 +1774,7 @@ export default function ClientsPage() {
                   <button onClick={() => syncStripeCustomer(selectedClient.id)}
                     disabled={billingLoading === `sync-${selectedClient.id}`}
                     className="btn-secondary text-xs flex items-center gap-1.5">
-                    {billingLoading === `sync-${selectedClient.id}` ? <Loader size={14} className="animate-spin" /> : <CreditCard size={14} />}
+                    {billingLoading === `sync-${selectedClient.id}` ? <CircleNotch size={14} className="animate-spin" /> : <CreditCard size={14} />}
                     Connect to Stripe
                   </button>
                 ) : (
@@ -1791,18 +1785,18 @@ export default function ClientsPage() {
                     {!selectedClient.stripe_subscription_id && (
                       <button onClick={() => { setSelectedClient(null); setShowSubscribeModal(selectedClient); }}
                         className="btn-primary text-xs flex items-center gap-1.5">
-                        <Zap size={14} /> Create Subscription
+                        <Lightning size={14} /> Create Subscription
                       </button>
                     )}
                     {selectedClient.stripe_subscription_id && (
                       <span className="badge bg-brand-accent/10 text-brand-accent text-xs flex items-center gap-1">
-                        <Zap size={12} /> Subscribed
+                        <Lightning size={12} /> Subscribed
                       </span>
                     )}
                     <button onClick={() => openBillingPortal(selectedClient.id)}
                       disabled={billingLoading === `portal-${selectedClient.id}`}
                       className="btn-secondary text-xs flex items-center gap-1.5">
-                      {billingLoading === `portal-${selectedClient.id}` ? <Loader size={14} className="animate-spin" /> : <ExternalLink size={14} />}
+                      {billingLoading === `portal-${selectedClient.id}` ? <CircleNotch size={14} className="animate-spin" /> : <ArrowSquareOut size={14} />}
                       Billing Portal
                     </button>
                   </>
@@ -1838,7 +1832,7 @@ export default function ClientsPage() {
                   toast.error("Failed to generate contract", { id: tid });
                 }
               }} className="btn-secondary flex items-center gap-2">
-                <Download size={16} /> Generate Contract PDF
+                <DownloadSimple size={16} /> Generate Contract PDF
               </button>
             </div>
           </div>
@@ -1949,7 +1943,7 @@ export default function ClientsPage() {
             <div className="flex justify-end gap-3">
               <button type="button" onClick={() => setShowSubscribeModal(null)} className="btn-pill-ghost">Cancel</button>
               <button type="submit" disabled={!!billingLoading} className="btn-pill flex items-center gap-2">
-                {billingLoading ? <Loader size={14} className="animate-spin" /> : <CreditCard size={16} />}
+                {billingLoading ? <CircleNotch size={14} className="animate-spin" /> : <CreditCard size={16} />}
                 Create Checkout Link
               </button>
             </div>
@@ -2024,7 +2018,7 @@ export default function ClientsPage() {
               <div className="flex justify-end gap-3">
                 <button onClick={() => setEditingNote(null)} className="btn-secondary">Cancel</button>
                 <button onClick={() => saveNote(editingNote)} className="btn-primary flex items-center gap-2">
-                  <StickyNote size={14} /> Save Note
+                  <Note size={14} /> Save Note
                 </button>
               </div>
             </div>

@@ -1,15 +1,11 @@
 "use client";
+import { Bell, Briefcase, Chat, CheckCircle, CreditCard, FilmStrip, Info, Lightning, Pulse, Trash, Warning, XCircle } from "@phosphor-icons/react";
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { formatRelativeTime } from "@/lib/utils";
 import Link from "next/link";
-import {
-  Bell, Zap, CheckCircle, CreditCard, Activity,
-  Film, MessageSquare, Briefcase, Trash2,
-  Info, AlertTriangle, CheckCircle2, XCircle,
-} from "lucide-react";
 
 interface Notification {
   id: string;
@@ -26,16 +22,16 @@ interface Notification {
 const TYPE_ICONS: Record<string, React.ReactNode> = {
   // New standard types
   info:    <Info size={14} className="text-indigo-400" />,
-  warning: <AlertTriangle size={14} className="text-warning" />,
-  success: <CheckCircle2 size={14} className="text-success" />,
+  warning: <Warning size={14} className="text-warning" />,
+  success: <CheckCircle size={14} className="text-success" />,
   error:   <XCircle size={14} className="text-danger" />,
   // Legacy / domain-specific types
-  lead:    <Zap size={14} className="text-[#D4FF00]" />,
+  lead:    <Lightning size={14} className="text-[#D4FF00]" />,
   task:    <CheckCircle size={14} className="text-success" />,
   invoice: <CreditCard size={14} className="text-warning" />,
-  system:  <Activity size={14} className="text-[#D4FF00]" />,
-  content: <Film size={14} className="text-pink-400" />,
-  message: <MessageSquare size={14} className="text-indigo-400" />,
+  system:  <Pulse size={14} className="text-[#D4FF00]" />,
+  content: <FilmStrip size={14} className="text-pink-400" />,
+  message: <Chat size={14} className="text-indigo-400" />,
   deal:    <Briefcase size={14} className="text-emerald-400" />,
 };
 
@@ -178,7 +174,7 @@ export default function Notifications() {
                     onClick={clearAll}
                     className="text-text-muted hover:text-danger ml-2"
                   >
-                    <Trash2 size={12} />
+                    <Trash size={12} />
                   </button>
                 )}
               </div>

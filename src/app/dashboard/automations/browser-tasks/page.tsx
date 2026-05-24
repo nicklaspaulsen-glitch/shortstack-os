@@ -1,19 +1,9 @@
+import { CaretRight, CheckCircle, CircleNotch, Clock, Globe, Plus, Sparkle, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import {
-  Bot,
-  Plus,
-  Globe,
-  Clock,
-  CheckCircle2,
-  XCircle,
-  Loader2,
-  ChevronRight,
-  Sparkles,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface BrowserTask {
@@ -44,8 +34,8 @@ interface BrowserTaskTemplate {
 
 const STATUS_STYLES: Record<BrowserTask["status"], { label: string; bg: string; fg: string; icon: React.ReactNode }> = {
   queued: { label: "Queued", bg: "bg-amber-500/15", fg: "text-amber-400", icon: <Clock size={12} /> },
-  running: { label: "Running", bg: "bg-[rgba(212,255,0,0.08)]", fg: "text-brand-accent", icon: <Loader2 size={12} className="animate-spin" /> },
-  completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-400", icon: <CheckCircle2 size={12} /> },
+  running: { label: "Running", bg: "bg-[rgba(212,255,0,0.08)]", fg: "text-brand-accent", icon: <CircleNotch size={12} className="animate-spin" /> },
+  completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-400", icon: <CheckCircle size={12} /> },
   failed: { label: "Failed", bg: "bg-rose-500/15", fg: "text-rose-400", icon: <XCircle size={12} /> },
   cancelled: { label: "Cancelled", bg: "bg-zinc-500/15", fg: "text-text-muted", icon: <XCircle size={12} /> },
 };
@@ -224,14 +214,14 @@ export default function BrowserTasksPage() {
                   disabled={submitting}
                   className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-[#0D1120] transition hover:bg-brand-accent/80 disabled:opacity-50"
                 >
-                  {submitting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+                  {submitting ? <CircleNotch size={14} className="animate-spin" /> : <Plus size={14} />}
                   Queue task
                 </button>
               </div>
             </div>{/* Templates */}{templates.length > 0 && (
               <div className="glass rounded-xl p-5">
                 <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-text-secondary">
-                  <Sparkles size={15} /> Try a template
+                  <Sparkle size={15} /> Try a template
                 </div>
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
                   {templates.map((t) => (
@@ -271,7 +261,7 @@ export default function BrowserTasksPage() {
               </div>
               {loading ? (
                 <div className="flex items-center justify-center px-5 py-10 text-sm text-text-muted">
-                  <Loader2 size={16} className="mr-2 animate-spin" /> Loading…
+                  <CircleNotch size={16} className="mr-2 animate-spin" /> Loading…
                 </div>
               ) : tasks.length === 0 ? (
                 <div className="px-5 py-10 text-center text-sm text-text-muted">
@@ -298,7 +288,7 @@ export default function BrowserTasksPage() {
                           </span>
                           <span className="hidden text-xs text-text-muted md:inline">{fmtCost(t.total_cost_usd)}</span>
                           <span className="hidden text-xs text-text-muted lg:inline">{fmtDate(t.created_at)}</span>
-                          <ChevronRight size={14} className="text-text-muted" />
+                          <CaretRight size={14} className="text-text-muted" />
                         </Link>
                       </li>
                     );

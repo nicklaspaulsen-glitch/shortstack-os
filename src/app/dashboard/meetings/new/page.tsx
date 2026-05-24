@@ -1,9 +1,9 @@
+import { ArrowLeft, CircleNotch, FileAudio, Microphone, UploadSimple } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Upload, Loader2, Mic, FileAudio } from "lucide-react";
 import toast from "react-hot-toast";
 import { ALLOWED_VOICE_SAMPLE, buildAccept, validateFile } from "@/lib/file-types";
 import { useAuth } from "@/lib/auth-context";
@@ -55,7 +55,7 @@ export default function NewMeetingPage() {
       if (!createRes.ok) throw new Error("Couldn't create meeting");
       const { meeting } = await createRes.json();
 
-      // 2. Upload audio with progress via XHR (fetch doesn't stream upload progress).
+      // 2. UploadSimple audio with progress via XHR (fetch doesn't stream upload progress).
       setStage("uploading");
       await new Promise<void>((resolve, reject) => {
         const form = new FormData();
@@ -68,7 +68,7 @@ export default function NewMeetingPage() {
         xhr.onload = () => {
           if (xhr.status >= 200 && xhr.status < 300) resolve();
           else {
-            let msg = `Upload failed (${xhr.status})`;
+            let msg = `UploadSimple failed (${xhr.status})`;
             try {
               const parsed = JSON.parse(xhr.responseText);
               if (parsed.error) msg = parsed.error;
@@ -107,7 +107,7 @@ export default function NewMeetingPage() {
       router.push(`/dashboard/meetings/${meeting.id}`);
     } catch (err) {
       console.error("[new meeting] error:", err);
-      toast.error(err instanceof Error ? err.message : "Upload failed");
+      toast.error(err instanceof Error ? err.message : "UploadSimple failed");
       setStage("idle");
     } finally {
       setBusy(false);
@@ -187,7 +187,7 @@ export default function NewMeetingPage() {
                     </div>
                   ) : (
                     <>
-                      <Upload size={24} className="mx-auto mb-2 text-text-muted" />
+                      <UploadSimple size={24} className="mx-auto mb-2 text-text-muted" />
                       <p className="text-[11px] font-medium">Drop an audio file here</p>
                       <p className="text-[10px] text-text-muted mt-1">
                         MP3, WAV, M4A, OGG, WebM up to 250 MB
@@ -206,7 +206,7 @@ export default function NewMeetingPage() {
                     />
                   </div>
                   <p className="text-[10px] text-text-muted flex items-center gap-1.5">
-                    <Loader2 size={10} className="animate-spin" /> {stageLabel}
+                    <CircleNotch size={10} className="animate-spin" /> {stageLabel}
                   </p>
                 </div>
               )}
@@ -217,11 +217,11 @@ export default function NewMeetingPage() {
                 className="btn-primary w-full text-xs flex items-center justify-center gap-1.5 disabled:opacity-40"
               >
                 {busy ? (
-                  <Loader2 size={12} className="animate-spin" />
+                  <CircleNotch size={12} className="animate-spin" />
                 ) : (
-                  <Mic size={12} />
+                  <Microphone size={12} />
                 )}
-                {busy ? stageLabel : "Upload + transcribe"}
+                {busy ? stageLabel : "UploadSimple + transcribe"}
               </button>
             </div></MotionPage>
   );

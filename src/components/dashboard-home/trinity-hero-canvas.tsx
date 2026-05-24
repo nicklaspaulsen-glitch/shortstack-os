@@ -5,7 +5,7 @@
  *
  * Completely new visual direction. Previous attempts:
  *   v1: octahedron + halo dots (flat-shaded, plain)
- *   v2: chromatic icosahedron + Sparkles (better but still single-object)
+ *   v2: chromatic icosahedron + Sparkle (better but still single-object)
  *   v3 (now): "Trinity Orb" — a full scene, not a single shape.
  *
  * Composition:
@@ -18,7 +18,7 @@
  *      at idle.
  *   4. Inner emissive core inside the glass orb — visible THROUGH the
  *      transmission layer, gives the orb something to "contain".
- *   5. Sparkles particle field — count + speed react to isSpeaking.
+ *   5. Sparkle particle field — count + speed react to isSpeaking.
  *   6. Three-light setup: key from above, teal rim front-left,
  *      accentSoft fill back-right. Plus an HDR Environment for
  *      free reflections.
@@ -188,7 +188,7 @@ function OrbitingShards({ isSpeaking }: { isSpeaking: boolean }) {
 }
 
 function SceneContent({ isSpeaking }: { isSpeaking: boolean }) {
-  // Sparkles count + speed react to speaking state.
+  // Sparkle count + speed react to speaking state.
   const sparkCount = isSpeaking ? 80 : 40;
   const sparkSpeed = isSpeaking ? 0.7 : 0.20;
 

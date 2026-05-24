@@ -1,7 +1,8 @@
 "use client";
+import { Calendar, Envelope, Graph, Lightning, PhoneCall, Sparkle, UserPlus } from "@phosphor-icons/react";
 
 import Link from "next/link";
-import { Calendar, Mail, PhoneCall, Sparkles, UserPlus, Workflow, Zap } from "lucide-react";
+
 import { tokens, themeTokens } from "@/lib/brand/tokens";
 import { BentoTile } from "./bento-tile";
 
@@ -15,16 +16,16 @@ import { BentoTile } from "./bento-tile";
 interface Action {
   href: string;
   label: string;
-  Icon: typeof Zap;
+  Icon: typeof Lightning;
 }
 
 const ACTIONS: Action[] = [
   { href: "/dashboard/leads/new", label: "New lead", Icon: UserPlus },
-  { href: "/dashboard/conversations", label: "Send email", Icon: Mail },
+  { href: "/dashboard/conversations", label: "Send email", Icon: Envelope },
   { href: "/dashboard/voice-receptionist", label: "Make call", Icon: PhoneCall },
   { href: "/dashboard/calendar", label: "Schedule", Icon: Calendar },
-  { href: "/dashboard/social-studio", label: "Generate post", Icon: Sparkles },
-  { href: "/dashboard/automations", label: "Run workflow", Icon: Workflow },
+  { href: "/dashboard/social-studio", label: "Generate post", Icon: Sparkle },
+  { href: "/dashboard/automations", label: "Run workflow", Icon: Graph },
 ];
 
 interface Props {
@@ -35,7 +36,7 @@ export default function QuickActionsGrid({ index = 0 }: Props) {
   return (
     <BentoTile
       title="Quick actions"
-      icon={<Zap size={14} />}
+      icon={<Lightning size={14} />}
       span="lg:col-span-4 lg:row-span-1"
       index={index}
     >

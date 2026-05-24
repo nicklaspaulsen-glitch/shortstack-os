@@ -1,5 +1,5 @@
+import { House, MagnifyingGlass } from "@phosphor-icons/react";
 import Link from "next/link";
-import { Home, Search } from "lucide-react";
 
 /**
  * Branded 404 for `/dashboard/*` routes. Rendered when a dashboard route
@@ -24,14 +24,14 @@ export default function DashboardNotFound() {
             href="/dashboard"
             className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5"
           >
-            <Home size={12} />
+            <House size={12} />
             Dashboard home
           </Link>
           <Link
             href="/dashboard/crm"
             className="btn-secondary text-xs py-2 px-4 flex items-center gap-1.5"
           >
-            <Search size={12} />
+            <MagnifyingGlass size={12} />
             Open CRM
           </Link>
         </div>

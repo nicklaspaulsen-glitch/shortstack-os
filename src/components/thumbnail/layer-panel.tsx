@@ -1,3 +1,4 @@
+import { ArrowsClockwise, CaretDown, CaretUp, Check, Eye, EyeSlash, Image, Palette, PencilSimple, Plus, Sparkle, Stack, TextT, Trash, User, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 /* ────────────────────────────────────────────────────────────────
@@ -26,11 +27,6 @@
  * ────────────────────────────────────────────────────────────────*/
 
 import { useMemo, useState } from "react";
-import {
-  Eye, EyeOff, Edit3, Palette, User, Type, Sparkles,
-  Layers as LayersIcon, Image as ImageIcon, RefreshCw,
-  ChevronDown, ChevronUp, Check, Plus, Trash2,
-} from "lucide-react";
 import { THUMBNAIL_STYLES } from "@/lib/thumbnail-styles";
 
 /* ─── Types ────────────────────────────────────────────────── */
@@ -101,7 +97,7 @@ const COLOR_SWATCHES: Array<{ id: string; name: string; colors: [string, string]
 ];
 
 const EFFECT_DEFAULTS: LayerEffect[] = [
-  { id: "grain",    label: "Film Grain", enabled: false, intensity: 30 },
+  { id: "grain",    label: "FilmStrip Grain", enabled: false, intensity: 30 },
   { id: "bloom",    label: "Bloom / Glow", enabled: false, intensity: 50 },
   { id: "vignette", label: "Vignette", enabled: false, intensity: 40 },
   { id: "sharpen",  label: "Sharpen", enabled: false, intensity: 50 },
@@ -247,15 +243,15 @@ export function LayerPanel({
         className="flex items-center justify-between gap-2 w-full text-left"
       >
         <div className="flex items-center gap-2">
-          <LayersIcon size={14} className="text-[#D4FF00]" />
+          <Stack size={14} className="text-[#D4FF00]" />
           <span className="text-[11px] font-semibold uppercase tracking-wider text-text-primary">
-            Layers
+            Stack
           </span>
           <span className="text-[9px] text-text-muted rounded-full bg-surface-light px-2 py-0.5">
             {1 + 1 + (layers.texts?.length || 0) + effects.filter((e) => e.enabled).length + (layers.faceSwap?.sourceUrl ? 1 : 0)}
           </span>
         </div>
-        {collapsed ? <ChevronDown size={14} className="text-text-muted" /> : <ChevronUp size={14} className="text-text-muted" />}
+        {collapsed ? <CaretDown size={14} className="text-text-muted" /> : <CaretUp size={14} className="text-text-muted" />}
       </button>
 
       {!collapsed && (
@@ -349,7 +345,7 @@ export function LayerPanel({
           <div>
             <div className="flex items-center justify-between px-1 py-1">
               <span className="text-[9px] uppercase tracking-wider text-text-muted flex items-center gap-1.5">
-                <Type size={10} /> Text overlays ({(layers.texts || []).length})
+                <TextT size={10} /> Text overlays ({(layers.texts || []).length})
               </span>
               <button
                 type="button"
@@ -367,7 +363,7 @@ export function LayerPanel({
             {(layers.texts || []).map((t) => (
               <LayerRow
                 key={t.id}
-                icon={<Type size={12} />}
+                icon={<TextT size={12} />}
                 name={t.text || "Empty text"}
                 description={`${t.fontFamily || "Inter"} · ${t.fontSize || 48}px`}
                 visible={t.visible !== false}
@@ -428,7 +424,7 @@ export function LayerPanel({
 
           {/* ── Effects ── */}
           <LayerRow
-            icon={<Sparkles size={12} />}
+            icon={<Sparkle size={12} />}
             name="Effects"
             description={`${effects.filter((e) => e.enabled).length} active`}
             visible={effects.some((e) => e.enabled)}
@@ -475,7 +471,7 @@ export function LayerPanel({
 
           {/* ── Style preset ── */}
           <LayerRow
-            icon={<ImageIcon size={12} />}
+            icon={<Image size={12} />}
             name="Style Preset"
             description={styleOptions.find((s) => s.id === layers.style?.id)?.name || layers.style?.name || "—"}
             visible
@@ -543,7 +539,7 @@ export function LayerPanel({
               disabled={regenerating}
               className="mt-2 w-full flex items-center justify-center gap-1.5 rounded-lg bg-[#D4FF00] text-[#020711] text-[11px] font-semibold py-2 hover:bg-[#D4FF00] disabled:opacity-50 transition"
             >
-              <RefreshCw size={12} className={regenerating ? "animate-spin" : ""} />
+              <ArrowsClockwise size={12} className={regenerating ? "animate-spin" : ""} />
               {regenerating ? "Regenerating…" : "Regenerate with edits"}
             </button>
           )}
@@ -581,7 +577,7 @@ function LayerRow({
             className="text-text-muted hover:text-text-primary transition-colors"
             aria-label={visible ? "Hide layer" : "Show layer"}
           >
-            {visible ? <Eye size={12} /> : <EyeOff size={12} />}
+            {visible ? <Eye size={12} /> : <EyeSlash size={12} />}
           </button>
         ) : (
           <span className="w-3 h-3" />
@@ -600,7 +596,7 @@ function LayerRow({
             onClick={onEdit}
             className="text-text-muted hover:text-text-primary rounded border border-border-subtle px-1.5 py-0.5 text-[9px] flex items-center gap-1"
           >
-            {editing ? <><Check size={9} /> Done</> : <><Edit3 size={9} /> Edit</>}
+            {editing ? <><Check size={9} /> Done</> : <><PencilSimple size={9} /> Edit</>}
           </button>
         )}
         {onDelete && (
@@ -610,7 +606,7 @@ function LayerRow({
             className="text-text-muted hover:text-danger"
             aria-label="Delete layer"
           >
-            <Trash2 size={11} />
+            <Trash size={11} />
           </button>
         )}
       </div>

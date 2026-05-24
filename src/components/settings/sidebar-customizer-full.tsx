@@ -1,4 +1,6 @@
 "use client";
+import type { Icon } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowDown, ArrowUp, Bell, Briefcase, Calculator, Calendar, CaretDown, CaretRight, ChartBar, Chat, Check, CheckSquare, CircleNotch, Crown, CurrencyDollar, DotsSixVertical, Envelope, Eye, EyeSlash, FileText, FilmStrip, FloppyDisk, Gift, Globe, Heart, House, Image, Lightning, MagicWand, MagnifyingGlass, Medal, Palette, PaperPlaneTilt, PencilLine, Phone, Plus, PushPin, Robot, SidebarSimple, SlidersHorizontal, Sparkle, Square, SquaresFour, Stack, Star, Target, Trash, Tray, Users, X } from "@phosphor-icons/react";
 
 /**
  * Full-featured sidebar customizer used in Settings > Sidebar.
@@ -10,9 +12,9 @@
  *  - Per-item controls: pin, rename, custom icon
  *  - Bulk actions: select all/none, AI Recommended, reset, presets (Minimal,
  *    Content Creator, Agency Power, Sales Only, Finance Ops, Custom)
- *  - Search bar across all nav items
+ *  - MagnifyingGlass bar across all nav items
  *  - Live preview mirrors the real sidebar visuals
- *  - Save / Discard Changes sticky bottom bar
+ *  - FloppyDisk / Discard Changes sticky bottom bar
  *
  * Data model expected at /api/user/sidebar-preferences:
  *  {
@@ -32,16 +34,6 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Search, Sparkles, CheckSquare, Square, RotateCcw, Save, X, Plus, Pin,
-  Eye, EyeOff, GripVertical, ChevronDown, ChevronRight, Trash2,
-  Loader2, Layers, Settings2, Check, ArrowUp, ArrowDown, Wand2, PencilLine,
-  Palette, PanelLeft, Home, Film, Users, Phone, DollarSign, BarChart3,
-  Briefcase, Mail, Globe, Bot, Zap, Target, Crown, LayoutDashboard, Inbox,
-  MessageSquare, Star, Calendar, FileText, Image as ImageIcon, Send, Gift,
-  Heart, Calculator, Award, Bell,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import { SIDEBAR_CATEGORIES, ALL_SIDEBAR_ITEMS } from "@/lib/user-types";
 
@@ -98,18 +90,18 @@ function labelForHref(href: string): string {
 /* Icon picker — curated set of lucide icons                            */
 /* ═══════════════════════════════════════════════════════════════════ */
 
-const ICON_SET: Record<string, LucideIcon> = {
-  Home, Film, Users, Phone, DollarSign, BarChart3, Briefcase, Mail,
-  Globe, Bot, Zap, Target, Crown, LayoutDashboard, Inbox, MessageSquare,
-  Star, Calendar, FileText, ImageIcon, Send, Gift, Heart, Calculator,
-  Award, Bell, Layers, Sparkles, Settings2, Palette, PanelLeft,
+const ICON_SET: Record<string, Icon> = {
+  House, FilmStrip, Users, Phone, CurrencyDollar, ChartBar, Briefcase, Envelope,
+  Globe, Robot, Lightning, Target, Crown, SquaresFour, Tray, Chat,
+  Star, Calendar, FileText, Image, PaperPlaneTilt, Gift, Heart, Calculator,
+  Medal, Bell, Stack, Sparkle, SlidersHorizontal, Palette, SidebarSimple,
 };
 
 const ICON_NAMES = Object.keys(ICON_SET);
 
-/** Render a lucide icon by name (falls back to Layers). */
+/** Render a lucide icon by name (falls back to Stack). */
 function IconByName({ name, size = 14, className }: { name: string; size?: number; className?: string }) {
-  const Cmp = ICON_SET[name] || Layers;
+  const Cmp = ICON_SET[name] || Stack;
   return <Cmp size={size} className={className} />;
 }
 
@@ -294,7 +286,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                 id: String(g.id || newId()),
                 name: String(g.name || g.label || "Group"),
                 label: String(g.label || g.name || "Group"),
-                icon: String(g.icon || "Layers"),
+                icon: String(g.icon || "Stack"),
                 color: String(g.color || "#D4FF00"),
                 order: typeof g.order === "number" ? g.order : 0,
                 items: Array.isArray(g.items) ? (g.items as unknown[]).filter((x): x is string => typeof x === "string") : [],
@@ -424,7 +416,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
     setAiLoading(false);
   }
 
-  /* ── Pin / unpin ───────────────────────────────────────────────── */
+  /* ── PushPin / unpin ───────────────────────────────────────────────── */
   const togglePin = useCallback((href: string) => {
     setPrefs(p => {
       const pinned = new Set(p.pins);
@@ -481,7 +473,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
         id: newId("grp"),
         name: name.trim(),
         label: name.trim(),
-        icon: icon || "Layers",
+        icon: icon || "Stack",
         color: color || "#D4FF00",
         order: nextOrder,
         items: [],
@@ -624,7 +616,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
 
   const pinnedItems = prefs.pins.filter(h => isEnabled(h));
 
-  /* ── Save / Discard ────────────────────────────────────────────── */
+  /* ── FloppyDisk / Discard ────────────────────────────────────────────── */
   async function save() {
     if (!isDirty) return;
     setSaving(true);
@@ -638,7 +630,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
       setBaseline(prefs);
       toast.success("Sidebar saved");
     } catch {
-      toast.error("Save failed — check your connection");
+      toast.error("FloppyDisk failed — check your connection");
     }
     setSaving(false);
   }
@@ -665,7 +657,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
   if (!loaded) {
     return (
       <div className="glass rounded-xl p-4 flex items-center gap-2 text-text-muted text-sm">
-        <Loader2 size={14} className="animate-spin" /> Loading your sidebar preferences...
+        <CircleNotch size={14} className="animate-spin" /> Loading your sidebar preferences...
       </div>
     );
   }
@@ -680,13 +672,13 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
             disabled={aiLoading}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[rgba(212,255,0,0.12)] to-amber-400/15 border border-[rgba(212,255,0,0.25)] text-[#D4FF00] text-xs font-semibold hover:from-[rgba(212,255,0,0.18)] hover:to-amber-400/20 transition-all disabled:opacity-50"
           >
-            {aiLoading ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+            {aiLoading ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
             {aiLoading ? "Thinking..." : "AI Recommended"}
           </button>
           <button onClick={selectAll} className="btn-secondary text-xs flex items-center gap-1.5"><CheckSquare size={12} /> Select All</button>
           <button onClick={selectNone} className="btn-secondary text-xs flex items-center gap-1.5"><Square size={12} /> Select None</button>
-          <button onClick={hideAll} className="btn-secondary text-xs flex items-center gap-1.5"><EyeOff size={12} /> Hide All</button>
-          <button onClick={resetAll} className="btn-secondary text-xs flex items-center gap-1.5"><RotateCcw size={12} /> Reset</button>
+          <button onClick={hideAll} className="btn-secondary text-xs flex items-center gap-1.5"><EyeSlash size={12} /> Hide All</button>
+          <button onClick={resetAll} className="btn-secondary text-xs flex items-center gap-1.5"><ArrowCounterClockwise size={12} /> Reset</button>
           <div className="w-px h-6 bg-border-subtle mx-1" />
           {PRESETS.map(p => (
             <button
@@ -721,15 +713,15 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
         <div className="lg:col-span-4 card space-y-2">
           <div className="flex items-center gap-2">
             <h3 className="!mb-0 flex items-center gap-1.5 flex-1">
-              <Layers size={14} className="text-[#D4FF00]" /> Library
+              <Stack size={14} className="text-[#D4FF00]" /> Library
             </h3>
             <span className="text-[10px] text-text-muted">{filteredLibrary.length}</span>
           </div>
           <div className="relative">
-            <Search size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted" />
+            <MagnifyingGlass size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted" />
             <input
               type="text"
-              placeholder="Search nav items..."
+              placeholder="MagnifyingGlass nav items..."
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="input w-full pl-7 text-xs"
@@ -762,28 +754,28 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                   } ${draggedItem === item.href ? "opacity-30" : ""}`}
                   title={item.href}
                 >
-                  <GripVertical size={11} className="text-text-muted/50 shrink-0" />
-                  <IconByName name={prefs.icon_overrides[item.href] || "Layers"} size={12} className="text-text-muted shrink-0" />
+                  <DotsSixVertical size={11} className="text-text-muted/50 shrink-0" />
+                  <IconByName name={prefs.icon_overrides[item.href] || "Stack"} size={12} className="text-text-muted shrink-0" />
                   <span className="truncate flex-1">
                     <span className="text-text-primary">{prefs.renames[item.href] || item.label}</span>
                     <span className="ml-1 text-[9px] text-text-muted/60">· {item.section}</span>
                   </span>
-                  {pinned && <Pin size={10} className="text-[#D4FF00] shrink-0" />}
-                  {assigned && <Layers size={10} className="text-indigo-400 shrink-0" />}
+                  {pinned && <PushPin size={10} className="text-[#D4FF00] shrink-0" />}
+                  {assigned && <Stack size={10} className="text-indigo-400 shrink-0" />}
                   <button
                     onClick={() => toggleItem(item.href)}
                     className="p-0.5 rounded text-text-muted hover:text-text-primary transition-colors shrink-0"
                     title={enabled ? "Hide from sidebar" : "Show in sidebar"}
                   >
-                    {enabled ? <Eye size={11} /> : <EyeOff size={11} />}
+                    {enabled ? <Eye size={11} /> : <EyeSlash size={11} />}
                   </button>
                   <div className="hidden group-hover:flex items-center gap-0.5 shrink-0">
                     <button
                       onClick={() => togglePin(item.href)}
                       className="p-0.5 rounded text-text-muted hover:text-[#D4FF00] transition-colors"
-                      title={pinned ? "Unpin" : "Pin to top"}
+                      title={pinned ? "Unpin" : "PushPin to top"}
                     >
-                      <Pin size={11} className={pinned ? "text-[#D4FF00]" : ""} />
+                      <PushPin size={11} className={pinned ? "text-[#D4FF00]" : ""} />
                     </button>
                     <button
                       onClick={() => setRenameItemHref(item.href)}
@@ -797,7 +789,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                       className="p-0.5 rounded text-text-muted hover:text-text-primary transition-colors"
                       title="Change icon"
                     >
-                      <Wand2 size={11} />
+                      <MagicWand size={11} />
                     </button>
                   </div>
                 </div>
@@ -816,7 +808,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
         <div className="lg:col-span-5 card space-y-2">
           <div className="flex items-center gap-2">
             <h3 className="!mb-0 flex items-center gap-1.5 flex-1">
-              <Settings2 size={14} className="text-[#D4FF00]" /> Your Layout
+              <SlidersHorizontal size={14} className="text-[#D4FF00]" /> Your Layout
             </h3>
             <button
               onClick={() => setNewGroupOpen({})}
@@ -830,7 +822,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
           {pinnedItems.length > 0 && (
             <div className="rounded-xl border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.04)] p-2">
               <div className="flex items-center gap-1.5 mb-1.5">
-                <Pin size={10} className="text-[#D4FF00]" />
+                <PushPin size={10} className="text-[#D4FF00]" />
                 <span className="text-[10px] uppercase tracking-wider font-semibold text-[#D4FF00]">Pinned</span>
               </div>
               <div className="space-y-0.5">
@@ -871,7 +863,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
                       id: groupId,
                       name: "My Group",
                       label: "My Group",
-                      icon: "Layers",
+                      icon: "Stack",
                       color: "#D4FF00",
                       order: p.custom_groups.length,
                       items: [href],
@@ -934,7 +926,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
             }`}
           >
             <div className="flex items-center gap-1.5 mb-1.5">
-              <ChevronRight size={10} className="text-text-muted" />
+              <CaretRight size={10} className="text-text-muted" />
               <span className="text-[10px] uppercase tracking-wider font-semibold text-text-muted">Unassigned (will appear in &quot;Other&quot;)</span>
               <span className="ml-auto text-[10px] text-text-muted">{unassignedItems.length}</span>
             </div>
@@ -966,7 +958,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
         </div>
       </div>
 
-      {/* ── Save/Discard sticky bar ─────────────────────────────── */}
+      {/* ── FloppyDisk/Discard sticky bar ─────────────────────────────── */}
       {isDirty && (
         <div className="sticky bottom-2 z-30">
           <div className="glass rounded-xl p-4 flex items-center gap-3 shadow-2xl border-[rgba(212,255,0,0.25)]">
@@ -978,8 +970,8 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
               disabled={saving}
               className="btn-pill text-xs flex items-center gap-1.5 disabled:opacity-50"
             >
-              {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
-              {saving ? "Saving..." : "Save Changes"}
+              {saving ? <CircleNotch size={12} className="animate-spin" /> : <FloppyDisk size={12} />}
+              {saving ? "Saving..." : "FloppyDisk Changes"}
             </button>
           </div>
         </div>
@@ -1009,8 +1001,8 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
         <IconPickerModal
           currentIcon={
             iconPickerFor.kind === "item"
-              ? (prefs.icon_overrides[iconPickerFor.href] || "Layers")
-              : (prefs.custom_groups.find(g => g.id === iconPickerFor.groupId)?.icon || "Layers")
+              ? (prefs.icon_overrides[iconPickerFor.href] || "Stack")
+              : (prefs.custom_groups.find(g => g.id === iconPickerFor.groupId)?.icon || "Stack")
           }
           search={iconSearch}
           onSearch={setIconSearch}
@@ -1046,7 +1038,7 @@ function LayoutItemRow({
   href, prefs, compact, onTogglePin, onRename, onChangeIcon, onToggleVisibility, onDragStart, onDragEnd,
 }: LayoutItemRowProps) {
   const label = prefs.renames[href] || labelForHref(href);
-  const iconName = prefs.icon_overrides[href] || "Layers";
+  const iconName = prefs.icon_overrides[href] || "Stack";
   const pinned = prefs.pins.includes(href);
 
   return (
@@ -1056,21 +1048,21 @@ function LayoutItemRow({
       onDragEnd={onDragEnd}
       className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs group hover:bg-surface-light/70 transition-colors cursor-grab ${compact ? "" : ""}`}
     >
-      <GripVertical size={10} className="text-text-muted/50 shrink-0" />
+      <DotsSixVertical size={10} className="text-text-muted/50 shrink-0" />
       <IconByName name={iconName} size={11} className="text-text-muted shrink-0" />
       <span className="truncate flex-1 text-text-primary">{label}</span>
       <div className="hidden group-hover:flex items-center gap-0.5 shrink-0">
-        <button onClick={onTogglePin} title={pinned ? "Unpin" : "Pin to top"} className="p-0.5 rounded text-text-muted hover:text-[#D4FF00]">
-          <Pin size={10} className={pinned ? "text-[#D4FF00]" : ""} />
+        <button onClick={onTogglePin} title={pinned ? "Unpin" : "PushPin to top"} className="p-0.5 rounded text-text-muted hover:text-[#D4FF00]">
+          <PushPin size={10} className={pinned ? "text-[#D4FF00]" : ""} />
         </button>
         <button onClick={onRename} title="Rename" className="p-0.5 rounded text-text-muted hover:text-text-primary">
           <PencilLine size={10} />
         </button>
         <button onClick={onChangeIcon} title="Change icon" className="p-0.5 rounded text-text-muted hover:text-text-primary">
-          <Wand2 size={10} />
+          <MagicWand size={10} />
         </button>
         <button onClick={onToggleVisibility} title="Hide" className="p-0.5 rounded text-text-muted hover:text-danger">
-          <EyeOff size={10} />
+          <EyeSlash size={10} />
         </button>
       </div>
     </div>
@@ -1127,7 +1119,7 @@ function GroupCard({
         style={{ borderLeft: `3px solid ${group.color}` }}
       >
         <button onClick={() => setOpen(o => !o)} className="p-0.5 text-text-muted hover:text-text-primary">
-          {open ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
+          {open ? <CaretDown size={11} /> : <CaretRight size={11} />}
         </button>
         <button onClick={onChangeIcon} className="p-0.5 rounded hover:bg-surface-light transition-colors" title="Change icon">
           <IconByName name={group.icon} size={13} className="text-[#D4FF00]" />
@@ -1151,7 +1143,7 @@ function GroupCard({
           <button onClick={onMoveUp} disabled={isFirst} className="p-0.5 rounded text-text-muted hover:text-text-primary disabled:opacity-30" title="Move up"><ArrowUp size={10} /></button>
           <button onClick={onMoveDown} disabled={isLast} className="p-0.5 rounded text-text-muted hover:text-text-primary disabled:opacity-30" title="Move down"><ArrowDown size={10} /></button>
           <button onClick={onAddSubgroup} className="p-0.5 rounded text-text-muted hover:text-[#D4FF00]" title="Add subgroup"><Plus size={10} /></button>
-          <button onClick={onDelete} className="p-0.5 rounded text-text-muted hover:text-danger" title="Delete group"><Trash2 size={10} /></button>
+          <button onClick={onDelete} className="p-0.5 rounded text-text-muted hover:text-danger" title="Delete group"><Trash size={10} /></button>
         </div>
       </div>
 
@@ -1186,7 +1178,7 @@ function GroupCard({
               <div key={sg.id} className="mt-1 ml-2 rounded-lg border border-border-subtle/60 bg-surface/50">
                 <div className="flex items-center gap-1.5 px-1.5 py-1">
                   <button onClick={() => setSubOpen(p => ({ ...p, [sg.id]: !sOpen }))} className="p-0.5 text-text-muted">
-                    {sOpen ? <ChevronDown size={10} /> : <ChevronRight size={10} />}
+                    {sOpen ? <CaretDown size={10} /> : <CaretRight size={10} />}
                   </button>
                   <SubgroupNameEditor
                     name={sg.name}
@@ -1194,7 +1186,7 @@ function GroupCard({
                   />
                   <span className="text-[10px] text-text-muted">{sg.items.length}</span>
                   <button onClick={() => onDeleteSubgroup(sg.id)} className="p-0.5 rounded text-text-muted hover:text-danger ml-auto" title="Delete subgroup">
-                    <Trash2 size={10} />
+                    <Trash size={10} />
                   </button>
                 </div>
                 {sOpen && (
@@ -1290,7 +1282,7 @@ function LivePreview({ prefs }: { prefs: SidebarPrefs }) {
         {prefs.pins.length > 0 && (
           <div className="mb-1.5">
             <div className="flex items-center gap-1 px-2 pt-1 pb-0.5">
-              <Pin size={8} className="text-[#D4FF00]" />
+              <PushPin size={8} className="text-[#D4FF00]" />
               <span className="text-[8px] uppercase tracking-[0.2em] font-semibold text-[#D4FF00]">Pinned</span>
             </div>
             {prefs.pins.filter(isEnabled).map(href => (
@@ -1354,7 +1346,7 @@ function LivePreview({ prefs }: { prefs: SidebarPrefs }) {
 
 function PreviewRow({ href, prefs, indent }: { href: string; prefs: SidebarPrefs; indent?: boolean }) {
   const label = prefs.renames[href] || labelForHref(href);
-  const iconName = prefs.icon_overrides[href] || "Layers";
+  const iconName = prefs.icon_overrides[href] || "Stack";
   return (
     <div className={`flex items-center gap-1.5 py-0.5 text-[10px] text-text-muted rounded-md hover:bg-surface-light/70 ${indent ? "pl-4 pr-2" : "px-2"}`}>
       <IconByName name={iconName} size={10} className="shrink-0" />
@@ -1375,7 +1367,7 @@ function NewGroupModal({
   onCreate: (data: { name: string; icon: string; color: string; parentGroupId?: string }) => void;
 }) {
   const [name, setName] = useState("");
-  const [icon, setIcon] = useState("Layers");
+  const [icon, setIcon] = useState("Stack");
   const [color, setColor] = useState("#D4FF00");
   const [iconSearch, setIconSearch] = useState("");
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -1435,7 +1427,7 @@ function NewGroupModal({
                 <input
                   value={iconSearch}
                   onChange={e => setIconSearch(e.target.value)}
-                  placeholder="Search icons..."
+                  placeholder="MagnifyingGlass icons..."
                   className="input w-full text-xs mb-2"
                 />
                 <div className="grid grid-cols-8 gap-1 max-h-36 overflow-y-auto scrollbar-none">
@@ -1508,7 +1500,7 @@ function RenameModal({
           <button onClick={() => onSave("")} className="btn-pill-ghost text-xs">Reset</button>
           <button onClick={onClose} className="btn-pill-ghost text-xs">Cancel</button>
           <button onClick={() => onSave(name)} className="btn-pill text-xs flex items-center gap-1">
-            <Check size={12} /> Save
+            <Check size={12} /> FloppyDisk
           </button>
         </div>
       </div>
@@ -1543,7 +1535,7 @@ function IconPickerModal({
             autoFocus
             value={search}
             onChange={e => onSearch(e.target.value)}
-            placeholder="Search icons..."
+            placeholder="MagnifyingGlass icons..."
             className="input w-full text-xs"
           />
           <div className="grid grid-cols-8 gap-1 max-h-64 overflow-y-auto scrollbar-none">

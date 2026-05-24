@@ -1,13 +1,10 @@
 "use client";
+import { CaretDown, CheckCircle, CurrencyDollar, FileText, MagnifyingGlass, UserCheck, Users, Warning, X } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useAppStore } from "@/lib/store";
 import { formatCurrency } from "@/lib/utils";
-import {
-  ChevronDown, Search, Users, FileText, DollarSign,
-  CheckCircle, AlertTriangle, UserCheck, X
-} from "lucide-react";
 
 interface EnrichedClient {
   id: string;
@@ -94,7 +91,7 @@ export default function ClientSwitcher() {
       >
         {managedClient ? <UserCheck size={13} /> : <Users size={13} />}
         <span>{managedClient ? managedClient.business_name : "Switch Client"}</span>
-        <ChevronDown size={12} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+        <CaretDown size={12} className={`transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
       {/* Panel */}
@@ -114,13 +111,13 @@ export default function ClientSwitcher() {
               </button>
             </div>
 
-            {/* Search */}
+            {/* MagnifyingGlass */}
             <div className="px-3 py-2 border-b border-border-subtle/20">
               <div className="relative">
-                <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
+                <MagnifyingGlass size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   type="text"
-                  placeholder="Search clients..."
+                  placeholder="MagnifyingGlass clients..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="input w-full pl-8 py-1.5 text-xs"
@@ -189,7 +186,7 @@ export default function ClientSwitcher() {
                     <div className="grid grid-cols-2 gap-2">
                       <div className="bg-surface-light/50 rounded-lg p-2 border border-border-subtle/20">
                         <div className="flex items-center gap-1 mb-0.5">
-                          <DollarSign size={10} className="text-[#D4FF00]" />
+                          <CurrencyDollar size={10} className="text-[#D4FF00]" />
                           <span className="text-[9px] text-text-muted uppercase">MRR</span>
                         </div>
                         <p className="text-xs font-bold font-mono">{formatCurrency(activeClient.mrr)}</p>
@@ -211,9 +208,9 @@ export default function ClientSwitcher() {
                       <div className="bg-surface-light/50 rounded-lg p-2 border border-border-subtle/20">
                         <div className="flex items-center gap-1 mb-0.5">
                           {activeClient.invoices_pending > 0 ? (
-                            <AlertTriangle size={10} className="text-warning" />
+                            <Warning size={10} className="text-warning" />
                           ) : (
-                            <DollarSign size={10} className="text-success" />
+                            <CurrencyDollar size={10} className="text-success" />
                           )}
                           <span className="text-[9px] text-text-muted uppercase">Invoices</span>
                         </div>

@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
   if (botToken) {
     try {
       const r = await fetch(`https://discord.com/api/v10/guilds/${guildId}?with_counts=true`, {
-        headers: { Authorization: `Bot ${botToken}` },
+        headers: { Authorization: `Robot ${botToken}` },
       });
       if (r.ok) {
         const g = await r.json();

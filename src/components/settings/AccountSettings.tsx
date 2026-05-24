@@ -1,4 +1,5 @@
 "use client";
+import { ArrowSquareOut, Camera, CheckCircle, CircleNotch, CreditCard, FloppyDisk, Gear, Image, Lightning, Monitor, Palette, Robot, SpeakerHigh, SpeakerX } from "@phosphor-icons/react";
 
 /**
  * AccountSettings — Profile (nickname, avatar), subscription info, desktop
@@ -6,7 +7,6 @@
  * and layout density. Loaded eagerly (it's the default/first tab).
  */
 
-import { Camera, Save, Settings, CreditCard, Monitor, Palette, Bot, Volume2, VolumeX, CheckCircle2, Zap, ExternalLink, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { getPlanConfig } from "@/lib/plan-config";
 import { applyTheme } from "@/components/theme-provider";
@@ -56,7 +56,7 @@ export default function AccountSettings({
       {/* Profile — Nickname & Avatar */}
       <div className="glass rounded-xl p-4" id="profile-section">
         <h2 className="flex items-center gap-2">
-          <Settings size={14} className="text-[#D4FF00]" /> Profile
+          <Gear size={14} className="text-[#D4FF00]" /> Profile
         </h2>
         <p className="text-[10px] text-text-muted mb-3">Customize how you appear in the sidebar and across the app</p>
         <div className="flex items-start gap-4">
@@ -107,7 +107,7 @@ export default function AccountSettings({
                 className="input w-full text-xs"
               />
               <p className="text-[9px] text-text-muted/70 mt-1 flex items-center gap-1">
-                <CheckCircle2 size={8} /> Auto-saves as you type
+                <CheckCircle size={8} /> Auto-saves as you type
               </p>
             </div>
             <div className="pt-2 border-t border-border-subtle/30 flex items-center gap-2">
@@ -136,7 +136,7 @@ export default function AccountSettings({
                 }}
                 className="btn-pill text-[10px] flex items-center gap-1"
               >
-                <Save size={10} /> {savingProfile ? "Saving..." : "Save"}
+                <FloppyDisk size={10} /> {savingProfile ? "Saving..." : "FloppyDisk"}
               </button>
             </div>
           </div>
@@ -156,7 +156,7 @@ export default function AccountSettings({
               <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border-subtle">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${plan.color}18` }}>
-                    <Zap size={14} style={{ color: plan.color }} />
+                    <Lightning size={14} style={{ color: plan.color }} />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
@@ -196,7 +196,7 @@ export default function AccountSettings({
                   }}
                   className="btn-pill text-[10px] flex items-center gap-1"
                 >
-                  {plan.price_monthly === 0 ? "Change Plan" : "Manage"} <ExternalLink size={9} />
+                  {plan.price_monthly === 0 ? "Change Plan" : "Manage"} <ArrowSquareOut size={9} />
                 </button>
               </div>
             );
@@ -204,13 +204,13 @@ export default function AccountSettings({
         </div>
       )}
 
-      {/* Desktop App Settings — only show in Electron */}
+      {/* Desktop App Gear — only show in Electron */}
       {typeof window !== "undefined" && !!(window as unknown as { electronAPI?: unknown }).electronAPI && (
         <div className="glass rounded-xl p-4">
           <h2 className="flex items-center gap-2">
             <Monitor size={14} className="text-[#D4FF00]" /> Desktop App
           </h2>
-          <p className="text-[10px] text-text-muted mb-3">Settings for the Trinity desktop application</p>
+          <p className="text-[10px] text-text-muted mb-3">Gear for the Trinity desktop application</p>
           <div className="space-y-2">
             {[
               { key: "ss_auto_startup", label: "Auto-Start on Login", desc: "Launch Trinity when your computer starts" },
@@ -241,7 +241,7 @@ export default function AccountSettings({
       {/* Display & Zoom */}
       <div className="glass rounded-xl p-4">
         <h2 className="flex items-center gap-2">
-          <Settings size={14} className="text-[#D4FF00]" /> Display
+          <Gear size={14} className="text-[#D4FF00]" /> Display
         </h2>
         <div className="space-y-3">
           <div>
@@ -320,7 +320,7 @@ export default function AccountSettings({
       {/* Sound Effects */}
       <div className="glass rounded-xl p-4">
         <h2 className="flex items-center gap-2">
-          {sfxEnabled ? <Volume2 size={14} className="text-[#D4FF00]" /> : <VolumeX size={14} className="text-text-muted" />}
+          {sfxEnabled ? <SpeakerHigh size={14} className="text-[#D4FF00]" /> : <SpeakerX size={14} className="text-text-muted" />}
           Sound Effects
         </h2>
         <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border-subtle">
@@ -338,7 +338,7 @@ export default function AccountSettings({
       {/* Widget Visibility */}
       <div className="glass rounded-xl p-4">
         <h2 className="flex items-center gap-2">
-          <Bot size={14} className="text-[#D4FF00]" /> Floating Widgets
+          <Robot size={14} className="text-[#D4FF00]" /> Floating Widgets
         </h2>
         <p className="text-[10px] text-text-muted mb-3">Show or hide the floating assistant bubbles. You can also drag them to any position.</p>
         <div className="space-y-2">
@@ -415,7 +415,7 @@ export default function AccountSettings({
       {/* Layout Options */}
       <div className="glass rounded-xl p-4">
         <h2 className="flex items-center gap-2">
-          <Settings size={14} className="text-[#D4FF00]" /> Layout &amp; Density
+          <Gear size={14} className="text-[#D4FF00]" /> Layout &amp; Density
         </h2>
         <p className="text-[10px] text-text-muted mb-3">Customize how compact or spacious the interface feels</p>
         <div className="space-y-4">

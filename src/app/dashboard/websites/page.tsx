@@ -1,18 +1,9 @@
+import { ArrowRight, ArrowSquareOut, ArrowsClockwise, Briefcase, Calendar, Camera, ChartBar, Check, CheckCircle, CircleNotch, Clock, Copy, Cpu, Crown, CurrencyDollar, DeviceMobile, DeviceMobileCamera, DeviceTablet, Eye, EyeSlash, Flask, ForkKnife, Globe, GraduationCap, House, Layout, Link, MagicWand, Megaphone, Monitor, Newspaper, Palette, Plus, Rocket, ShareNetwork, ShieldCheck, ShoppingBag, Sparkle, Storefront, Target, Trash, TrendUp, Users, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback, useMemo, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
-import {
-  Globe, Sparkles, Loader, ExternalLink, Copy, Eye, Plus,
-  Palette, Layout, Trash2, Wand2, Briefcase, Users, Store,
-  MonitorSmartphone, UtensilsCrossed, Home, Building2, Target,
-  Camera, GraduationCap, Newspaper, RefreshCw, CheckCircle,
-  Link2, ShoppingBag, ShieldCheck, Megaphone, Clock,
-  Crown, X, Share2, DollarSign, BarChart3, FlaskConical,
-  EyeOff, Check, Rocket, Calendar, Monitor, Tablet, Smartphone,
-  TrendingUp, ArrowRight, Cpu,
-} from "lucide-react";
 import {
   Home2, ShoppingBag as IxShoppingBag, MonitorMobbile, Camera as IxCamera,
   Teacher, People, Buildings, Shop, Category,
@@ -101,11 +92,11 @@ const TIER_COLOR: Record<string, string> = {
 };
 
 const ALL_ADDONS = [
-  { key: "custom_domain", label: "Custom domain", price: 5, icon: <Link2 size={11} /> },
+  { key: "custom_domain", label: "Custom domain", price: 5, icon: <Link size={11} /> },
   { key: "priority_support", label: "Priority support", price: 25, icon: <Crown size={11} /> },
-  { key: "advanced_analytics", label: "Advanced analytics", price: 10, icon: <BarChart3 size={11} /> },
-  { key: "ab_testing", label: "A/B testing", price: 15, icon: <FlaskConical size={11} /> },
-  { key: "white_label", label: "White-label (no watermark)", price: 20, icon: <EyeOff size={11} /> },
+  { key: "advanced_analytics", label: "Advanced analytics", price: 10, icon: <ChartBar size={11} /> },
+  { key: "ab_testing", label: "A/B testing", price: 15, icon: <Flask size={11} /> },
+  { key: "white_label", label: "White-label (no watermark)", price: 20, icon: <EyeSlash size={11} /> },
 ];
 
 /* --------------------------- Niche template gallery ---------------------------
@@ -483,7 +474,7 @@ export default function WebsitesPage() {
           { value: "coach", label: "Coach / Course", description: "Coaching, personal brand", icon: <Teacher size={16} variant="Bulk" color="#c084fc" />, preview: "bg-gradient-to-br from-purple-500/40 to-fuchsia-500/40" },
           { value: "blog", label: "Blog / Content", description: "Editorial & newsletter", icon: <Newspaper size={14} />, preview: "bg-gradient-to-br from-emerald-500/40 to-teal-500/40" },
           { value: "agency", label: "Agency", description: "Services company", icon: <People size={16} variant="Bulk" color="#f87171" />, preview: "bg-gradient-to-br from-red-500/40 to-orange-500/40" },
-          { value: "restaurant", label: "Restaurant", description: "Menu, reservations", icon: <UtensilsCrossed size={14} />, preview: "bg-gradient-to-br from-amber-500/40 to-red-500/40" },
+          { value: "restaurant", label: "Restaurant", description: "Menu, reservations", icon: <ForkKnife size={14} />, preview: "bg-gradient-to-br from-amber-500/40 to-red-500/40" },
           { value: "real_estate", label: "Real Estate", description: "Listings, agent brand", icon: <Buildings size={16} variant="Bulk" color="#94a3b8" />, preview: "bg-gradient-to-br from-slate-600/40 to-amber-500/40" },
           { value: "other", label: "Other", description: "Something else", icon: <Shop size={16} variant="Bulk" color="#9ca3af" />, preview: "bg-gradient-to-br from-slate-500/40 to-slate-700/40" },
         ],
@@ -493,7 +484,7 @@ export default function WebsitesPage() {
       id: "business_name",
       title: "What's the business name?",
       description: "We'll use this as the brand name across the site.",
-      icon: <Wand2 size={16} />,
+      icon: <MagicWand size={16} />,
       field: { type: "text", key: "business_name", placeholder: "e.g., Bright Smile Dental" },
     },
     {
@@ -532,7 +523,7 @@ export default function WebsitesPage() {
       id: "value_prop",
       title: "What makes you different?",
       description: "1-2 sentences. This becomes your hero subheadline.",
-      icon: <Sparkles size={16} />,
+      icon: <Sparkle size={16} />,
       field: { type: "textarea", key: "value_prop", placeholder: "e.g., Same-day appointments, insurance-accepted, family-friendly vibe" },
       aiHelper: {
         label: "AI suggest based on my answers",
@@ -655,7 +646,7 @@ export default function WebsitesPage() {
       id: "domain_strategy",
       title: "Domain strategy",
       description: "You can change this later. Free demo first, then upgrade.",
-      icon: <Link2 size={16} />,
+      icon: <Link size={16} />,
       field: {
         type: "choice-cards",
         key: "domain_strategy",
@@ -941,7 +932,7 @@ export default function WebsitesPage() {
             {/* Social proof strip */}<div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border-subtle bg-gradient-to-r from-[rgba(212,255,0,0.03)] via-transparent to-emerald-500/[0.04]">
               <div className="flex items-center gap-4 flex-wrap">
                 <div className="flex items-center gap-1.5 text-[11px] text-text-primary">
-                  <TrendingUp size={12} className="text-emerald-400" />
+                  <TrendUp size={12} className="text-emerald-400" />
                   <span className="font-semibold">1,240+ sites</span>
                   <span className="text-text-muted">launched this month</span>
                 </div>
@@ -1080,7 +1071,7 @@ export default function WebsitesPage() {
                       </span>
                       {/* CVR metric */}
                       <span className="absolute top-2.5 right-2.5 text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/90 backdrop-blur-md text-black border border-emerald-400/30 font-semibold flex items-center gap-1">
-                        <TrendingUp size={9} /> {t.cvr}
+                        <TrendUp size={9} /> {t.cvr}
                       </span>
 
                       {/* Bottom overlay content — hidden when wireframe/Spline preview is shown */}
@@ -1169,7 +1160,7 @@ export default function WebsitesPage() {
                         rel="noopener"
                         className="btn-pill-ghost text-xs flex items-center gap-1"
                       >
-                        <ExternalLink size={11} /> View demo
+                        <ArrowSquareOut size={11} /> View demo
                       </a>
                     )}
                     <button
@@ -1202,14 +1193,14 @@ export default function WebsitesPage() {
                       aria-label="Regenerate website"
                       className="btn-pill-ghost text-xs flex items-center gap-1 disabled:opacity-50"
                     >
-                      {regenerating ? <Loader size={10} className="animate-spin" /> : <RefreshCw size={10} />}
+                      {regenerating ? <CircleNotch size={10} className="animate-spin" /> : <ArrowsClockwise size={10} />}
                       Regenerate
                     </button>
                     <button
                       onClick={() => shareDemo(active)}
                       className="btn-pill-ghost text-xs flex items-center gap-1"
                     >
-                      <Share2 size={10} /> Share Demo
+                      <ShareNetwork size={10} /> Share Demo
                     </button>
                     <button
                       onClick={() => openPricing(active)}
@@ -1222,12 +1213,12 @@ export default function WebsitesPage() {
                       disabled={deploying || !indexHtml}
                       className="text-[10px] px-3 py-1.5 rounded-lg bg-white/[0.08] border border-white/10 text-white hover:bg-white/[0.14] flex items-center gap-1 disabled:opacity-50"
                     >
-                      {deploying ? <Loader size={10} className="animate-spin" /> : <VercelIcon size={10} />}
+                      {deploying ? <CircleNotch size={10} className="animate-spin" /> : <VercelIcon size={10} />}
                       Deploy
                     </button>
                     {active.vercel_url && (
                       <a href={active.vercel_url} target="_blank" rel="noopener" className="text-[10px] px-3 py-1.5 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary flex items-center gap-1">
-                        <ExternalLink size={10} /> Open
+                        <ArrowSquareOut size={10} /> Open
                       </a>
                     )}
                   </div>
@@ -1250,8 +1241,8 @@ export default function WebsitesPage() {
                     <div className="tab-pill-strip">
                       {[
                         { id: "desktop" as const, label: "Desktop", Icon: Monitor },
-                        { id: "tablet" as const, label: "Tablet", Icon: Tablet },
-                        { id: "mobile" as const, label: "Mobile", Icon: Smartphone },
+                        { id: "tablet" as const, label: "DeviceTablet", Icon: DeviceTablet },
+                        { id: "mobile" as const, label: "Mobile", Icon: DeviceMobile },
                       ].map((v) => (
                         <button
                           key={v.id}
@@ -1271,7 +1262,7 @@ export default function WebsitesPage() {
                         rel="noopener"
                         className="btn-pill-ghost text-xs flex items-center gap-1"
                       >
-                        <ExternalLink size={10} /> Open in new tab
+                        <ArrowSquareOut size={10} /> Open in new tab
                       </a>
                     )}
                   </div>
@@ -1292,7 +1283,7 @@ export default function WebsitesPage() {
                   </div>
                 ) : (
                   <div className="py-10 text-center text-xs text-text-muted">
-                    <Loader size={18} className="animate-spin mx-auto mb-2" />
+                    <CircleNotch size={18} className="animate-spin mx-auto mb-2" />
                     Generating&hellip;
                   </div>
                 )}
@@ -1432,7 +1423,7 @@ export default function WebsitesPage() {
                                     <Rocket size={10} /> Go Live
                                   </button>
                                   <button onClick={() => shareDemo(p)} className="text-[10px] px-2 py-1 rounded-md border border-border-subtle text-text-muted hover:text-text-primary flex items-center gap-1">
-                                    <Share2 size={10} />
+                                    <ShareNetwork size={10} />
                                   </button>
                                 </>
                               )}
@@ -1443,12 +1434,12 @@ export default function WebsitesPage() {
                               )}
                               {status === "live" && p.monthly_price && (
                                 <span className="text-[10px] px-2 py-1 rounded-md bg-green-500/10 text-green-400 border border-green-500/30 inline-flex items-center gap-1">
-                                  <DollarSign size={10} />{p.monthly_price}/mo
+                                  <CurrencyDollar size={10} />{p.monthly_price}/mo
                                 </span>
                               )}
                             </div>
                             <button onClick={() => deleteProject(p.id)} aria-label={`Delete ${p.name}`} className="p-1 rounded-md hover:bg-red-500/10 text-text-muted hover:text-red-400">
-                              <Trash2 size={10} />
+                              <Trash size={10} />
                             </button>
                           </div>
                         </div>
@@ -1461,7 +1452,7 @@ export default function WebsitesPage() {
               {[
                 { icon: <Layout size={12} />, title: "1. Pick a niche", body: "Nine battle-tested templates, each one prewired for the conversion pattern that niche responds to." },
                 { icon: <Rocket size={12} />, title: "2. Share the demo", body: "Auto-deployed to a live URL in under 3 minutes. Send it to your client — free for 14 days, no card." },
-                { icon: <DollarSign size={12} />, title: "3. Go live, get paid", body: "Connect a domain and subscribe. Transparent monthly pricing based on what's actually in the site." },
+                { icon: <CurrencyDollar size={12} />, title: "3. Go live, get paid", body: "Connect a domain and subscribe. Transparent monthly pricing based on what's actually in the site." },
               ].map((item, index) => (
                 <motion.div
                   key={item.title}
@@ -1792,7 +1783,7 @@ function PricingModal({
               <iframe srcDoc={indexHtml} className="w-full h-full" title="Live preview" sandbox="allow-scripts" />
             ) : (
               <div className="h-full flex items-center justify-center text-text-muted text-xs">
-                <Loader size={16} className="animate-spin" />
+                <CircleNotch size={16} className="animate-spin" />
               </div>
             )}
           </div>
@@ -1805,7 +1796,7 @@ function PricingModal({
               <p className="text-lg font-bold capitalize">{tier}</p>
               <div className="flex items-baseline gap-1 mt-2">
                 {quoteLoading ? (
-                  <Loader size={20} className="animate-spin" />
+                  <CircleNotch size={20} className="animate-spin" />
                 ) : (
                   <>
                     <span className="text-3xl font-bold">${display ?? "…"}</span>
@@ -1887,7 +1878,7 @@ function PricingModal({
                 disabled={subscribing || quoteLoading || !quote}
                 className="btn-pill w-full flex items-center justify-center gap-1.5 disabled:opacity-50"
               >
-                {subscribing ? <Loader size={12} className="animate-spin" /> : <Rocket size={12} />}
+                {subscribing ? <CircleNotch size={12} className="animate-spin" /> : <Rocket size={12} />}
                 Go Live &mdash; ${display}{cyclePer}
               </button>
               <button

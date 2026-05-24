@@ -1,17 +1,9 @@
 "use client";
+import type { Icon } from "@phosphor-icons/react";
+import { ArrowRight, ArrowsClockwise, Calendar, CaretRight, ChartBar, Chat, CheckCircle, CircleDashed, CircleNotch, Clock, Copy, DotsThreeVertical, Eye, FileText, Fire, Flag, Gear, GitBranch, Lightbulb, Lightning, MagicWand, MinusCircle, PaperPlaneTilt, Pause, PauseCircle, PencilSimple, Play, Plus, Prohibit, Pulse, Question, Shield, ShieldWarning, Sparkle, Star, Target, ThumbsDown, ThumbsUp, Timer, Trash, Tray, TrendUp, UserCheck, Users, Warning, X } from "@phosphor-icons/react";
 
 import { useState, useMemo, useEffect, useRef, Fragment } from "react";
-import {
-  Send, Play, Pause, Settings, CheckCircle, Zap, Copy, Clock,
-  AlertTriangle, BarChart3, GitBranch, Ban, Target,
-  TrendingUp, Plus, Trash2, ArrowRight, ShieldAlert, Sparkles,
-  Inbox, MessageSquare, Activity, Users, Eye, Edit3, MoreVertical,
-  Flame, Shield, Timer, RefreshCw, ThumbsUp, ThumbsDown, MinusCircle,
-  PauseCircle, Wand2, CircleDot, UserCheck, Calendar,
-  Loader2, X, ChevronRight, FileText, Lightbulb, Star, Flag,
-} from "lucide-react";
 import { motion } from "framer-motion";
-import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import {
   InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon,
@@ -52,11 +44,11 @@ const SERVICES = [
 ];
 
 const TEMPLATE_GOALS = [
-  { id: "cold_intro",    label: "Cold Intro",     icon: Send,      color: "text-indigo-400" },
-  { id: "followup",      label: "Follow-Up",      icon: RefreshCw, color: "text-amber-400"  },
-  { id: "promo",         label: "Promo",          icon: Flame,     color: "text-orange-400" },
+  { id: "cold_intro",    label: "Cold Intro",     icon: PaperPlaneTilt,      color: "text-indigo-400" },
+  { id: "followup",      label: "Follow-Up",      icon: ArrowsClockwise, color: "text-amber-400"  },
+  { id: "promo",         label: "Promo",          icon: Fire,     color: "text-orange-400" },
   { id: "event",         label: "Event Invite",   icon: Calendar,  color: "text-purple-400" },
-  { id: "reengage",      label: "Re-engagement",  icon: Sparkles,  color: "text-pink-400"   },
+  { id: "reengage",      label: "Re-engagement",  icon: Sparkle,  color: "text-pink-400"   },
 ] as const;
 
 /* ------------------------------------------------------------------ */
@@ -177,10 +169,10 @@ const INITIAL_TEMPLATES: DMTemplate[] = [
 
 const INITIAL_INBOX: InboxReply[] = [
   { id: "i1", platform: "instagram", from: "@brightsmile_dental",   preview: "Sure, what kind of results?",            full: "Sure, what kind of results? We've tried a few agencies and nothing stuck.", timestamp: "3m ago", sentiment: "question",  campaignId: "c1", status: "new", original: "quick idea for Bright Smile Dental..." },
-  { id: "i2", platform: "linkedin",  from: "Daniel R. · Roofing Co", preview: "Interesting. Send me the breakdown.",   full: "Interesting. Send me the breakdown when you get a chance. Ideally with a case study.", timestamp: "14m ago", sentiment: "positive",  campaignId: "c3", status: "new", original: "quick idea for Roofing Co..." },
+  { id: "i2", platform: "linkedin",  from: "Daniel R. · Roofing Co", preview: "Interesting. PaperPlaneTilt me the breakdown.",   full: "Interesting. PaperPlaneTilt me the breakdown when you get a chance. Ideally with a case study.", timestamp: "14m ago", sentiment: "positive",  campaignId: "c3", status: "new", original: "quick idea for Roofing Co..." },
   { id: "i3", platform: "facebook",  from: "Lisa @ Miami HVAC",      preview: "Not interested, thanks.",                full: "Not interested, thanks. We already have an agency.", timestamp: "1h ago", sentiment: "negative",  campaignId: "c2", status: "closed", original: "quick idea for Miami HVAC..." },
   { id: "i4", platform: "instagram", from: "@iron_gym_chi",          preview: "What does this cost?",                   full: "What does this cost? I want to understand the pricing before a call.", timestamp: "2h ago", sentiment: "question",  campaignId: "c1", status: "needs_human", original: "quick idea for Iron Gym..." },
-  { id: "i5", platform: "linkedin",  from: "Sarah P. · Legal",       preview: "Love the angle. Send Thursday times.",   full: "Love the angle. Send Thursday times — afternoon works best.", timestamp: "5h ago", sentiment: "positive",  campaignId: "c3", status: "handed_off", original: "quick idea for Legal..." },
+  { id: "i5", platform: "linkedin",  from: "Sarah P. · Legal",       preview: "Love the angle. PaperPlaneTilt Thursday times.",   full: "Love the angle. PaperPlaneTilt Thursday times — afternoon works best.", timestamp: "5h ago", sentiment: "positive",  campaignId: "c3", status: "handed_off", original: "quick idea for Legal..." },
 ];
 
 const INITIAL_RULES: AutomationRule[] = [
@@ -260,7 +252,7 @@ export default function DMControllerPage() {
   const [optimizing, setOptimizing] = useState<string | null>(null);
   const [optimizeResult, setOptimizeResult] = useState<{ id: string; result: { optimized_template?: string; predicted_reply_lift_pct?: number; safety_score?: number; improvements?: string[]; alternate_hooks?: string[] } } | null>(null);
 
-  /* ---- Inbox / Conversation ---- */
+  /* ---- Tray / Conversation ---- */
   const [inbox, setInbox] = useState<InboxReply[]>(INITIAL_INBOX);
   const [openReplyId, setOpenReplyId] = useState<string | null>(null);
   const [aiReplies, setAiReplies] = useState<AIReply[] | null>(null);
@@ -437,15 +429,15 @@ export default function DMControllerPage() {
   }, [config.customMessage, config.niches, config.services]);
 
   /* ---- Tabs ---- */
-  const tabs: { id: TabId; label: string; icon: LucideIcon }[] = [
-    { id: "setup",       label: "Setup",      icon: Settings     },
+  const tabs: { id: TabId; label: string; icon: Icon }[] = [
+    { id: "setup",       label: "Setup",      icon: Gear     },
     { id: "campaigns",   label: `Campaigns (${campaigns.length})`, icon: Target },
     { id: "templates",   label: `Templates (${templates.length})`, icon: Copy   },
-    { id: "inbox",       label: `Inbox (${inbox.filter(i => i.status === "new").length})`, icon: Inbox },
-    { id: "analytics",   label: "Analytics",  icon: BarChart3    },
-    { id: "automation",  label: "Automation", icon: Zap          },
+    { id: "inbox",       label: `Tray (${inbox.filter(i => i.status === "new").length})`, icon: Tray },
+    { id: "analytics",   label: "Analytics",  icon: ChartBar    },
+    { id: "automation",  label: "Automation", icon: Lightning          },
     { id: "compliance",  label: "Compliance", icon: Shield       },
-    { id: "live",        label: "Live",       icon: Activity     },
+    { id: "live",        label: "Live",       icon: Pulse     },
   ];
 
   /* ---- Wizard steps ---- */
@@ -551,19 +543,19 @@ export default function DMControllerPage() {
                 </div>
       </div>
     </div>{/* Stat strip */}<div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
-              <StatTile label="Total Sent"           value={totalSent.toLocaleString()}    icon={<Send size={12} />}           tone="blue"   index={0} />
-              <StatTile label="Reply Rate"           value={`${replyRate}%`}               icon={<MessageSquare size={12} />}  tone="green"  index={1} />
+              <StatTile label="Total Sent"           value={totalSent.toLocaleString()}    icon={<PaperPlaneTilt size={12} />}           tone="blue"   index={0} />
+              <StatTile label="Reply Rate"           value={`${replyRate}%`}               icon={<Chat size={12} />}  tone="green"  index={1} />
               <StatTile label="Positive Replies"     value={`${positiveReplyRate}%`}       icon={<ThumbsUp size={12} />}       tone="blue"   index={2} />
               <StatTile label="Booked Calls"         value={totalBooked.toLocaleString()}  icon={<UserCheck size={12} />}      tone="purple" index={3} />
               <StatTile label="Active Campaigns"     value={campaigns.filter(c => c.status === "running").length} icon={<Target size={12} />} tone="pink" index={4} />
             </div>{/* Compliance stripe */}<div className="flex gap-2 overflow-x-auto pb-1">
               <Pill tone="ok"    icon={<CheckCircle size={10} />}>No compliance flags · {config.platforms.length} platform{config.platforms.length === 1 ? "" : "s"} active</Pill>
-              {config.warmup && <Pill tone="info" icon={<Flame size={10} />}>Warm-up mode ON · ramping 7 days</Pill>}
+              {config.warmup && <Pill tone="info" icon={<Fire size={10} />}>Warm-up mode ON · ramping 7 days</Pill>}
               <Pill tone={safety.rating === "green" ? "ok" : safety.rating === "amber" ? "warn" : "bad"} icon={<Shield size={10} />}>
                 Safety score: {safety.score}/100
               </Pill>
               <Pill tone="info" icon={<Timer size={10} />}>
-                Send window: {config.sendWindowStart}–{config.sendWindowEnd}
+                PaperPlaneTilt window: {config.sendWindowStart}–{config.sendWindowEnd}
               </Pill>
             </div>{/* Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
               {tabs.map(t => (
@@ -623,9 +615,9 @@ export default function DMControllerPage() {
                     </div>
                   </div>
 
-                  {/* Settings */}
+                  {/* Gear */}
                   <div className="glass rounded-xl p-4">
-                    <h2 className="text-xs font-semibold mb-2 flex items-center gap-2"><Settings size={13} className="text-brand-accent" /> Settings</h2>
+                    <h2 className="text-xs font-semibold mb-2 flex items-center gap-2"><Gear size={13} className="text-brand-accent" /> Gear</h2>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">DMs per platform</label>
@@ -653,7 +645,7 @@ export default function DMControllerPage() {
                       </div>
                     </div>
                     <div className="mt-3">
-                      <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">Send Window</label>
+                      <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">PaperPlaneTilt Window</label>
                       <div className="grid grid-cols-2 gap-2">
                         <div>
                           <label className="text-[8px] text-text-muted">Start</label>
@@ -667,7 +659,7 @@ export default function DMControllerPage() {
                     </div>
                     <div className="mt-3 flex items-center justify-between p-3 rounded-lg border border-border-subtle">
                       <div className="flex items-center gap-2">
-                        <Flame size={14} className="text-orange-400" />
+                        <Fire size={14} className="text-orange-400" />
                         <div>
                           <p className="text-xs font-semibold">Warm-up mode</p>
                           <p className="text-[10px] text-text-muted">Ramps DM volume over 7 days to avoid spam filters.</p>
@@ -807,7 +799,7 @@ export default function DMControllerPage() {
                       )}>
                         {running
                           ? <Clock size={24} className="text-green-400 animate-spin" />
-                          : <Send size={24} className="text-brand-accent" />}
+                          : <PaperPlaneTilt size={24} className="text-brand-accent" />}
                       </div>
                       <h3 className="text-sm font-bold mb-1">
                         {running ? "Sending DMs…" : totalDMs === 0 ? "No targets" : "Ready to Launch"}
@@ -837,7 +829,7 @@ export default function DMControllerPage() {
 
                   {/* Requirements */}
                   <div className="glass rounded-xl p-4">
-                    <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Zap size={12} className="text-yellow-400" /> Requirements</h3>
+                    <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Lightning size={12} className="text-yellow-400" /> Requirements</h3>
                     <div className="space-y-1.5 text-[10px] text-text-muted">
                       <p>1. Chrome open with extension</p>
                       <p>2. Logged into social accounts</p>
@@ -888,8 +880,8 @@ export default function DMControllerPage() {
                               </div>
                               <div className="mt-1.5 flex items-center gap-3 text-[10px] text-text-muted flex-wrap">
                                 <span className="flex items-center gap-1"><Users size={9} /> {c.leads} leads</span>
-                                <span className="flex items-center gap-1"><Send size={9} /> {c.sent} sent</span>
-                                <span className="flex items-center gap-1 text-green-400"><MessageSquare size={9} /> {c.replied} replies · {replyRate}%</span>
+                                <span className="flex items-center gap-1"><PaperPlaneTilt size={9} /> {c.sent} sent</span>
+                                <span className="flex items-center gap-1 text-green-400"><Chat size={9} /> {c.replied} replies · {replyRate}%</span>
                                 <span className="flex items-center gap-1 text-brand-accent"><UserCheck size={9} /> {c.booked} booked</span>
                                 <span className="flex items-center gap-1"><Clock size={9} /> {c.lastActivity}</span>
                               </div>
@@ -911,15 +903,15 @@ export default function DMControllerPage() {
                               </button>
                               <button onClick={() => setActiveTab("analytics")} title="Analytics"
                                 className="p-2 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.25)] transition-all">
-                                <BarChart3 size={12} />
+                                <ChartBar size={12} />
                               </button>
                               <button onClick={() => setActiveTab("setup")} title="Edit"
                                 className="p-2 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.25)] transition-all">
-                                <Edit3 size={12} />
+                                <PencilSimple size={12} />
                               </button>
                               <button onClick={() => deleteCampaign(c.id)} title="Delete"
                                 className="p-2 rounded-lg border border-border-subtle hover:border-red-400/40 hover:text-red-400 transition-all">
-                                <Trash2 size={12} />
+                                <Trash size={12} />
                               </button>
                             </div>
                           </div>
@@ -988,7 +980,7 @@ export default function DMControllerPage() {
                               <p className="text-[9px] text-text-muted uppercase tracking-wider mt-0.5">{goal?.label}</p>
                             </div>
                             <button onClick={() => setTemplates(ts => ts.filter(x => x.id !== t.id))} className="text-text-muted hover:text-red-400 p-1">
-                              <Trash2 size={11} />
+                              <Trash size={11} />
                             </button>
                           </div>
 
@@ -1002,7 +994,7 @@ export default function DMControllerPage() {
 
                           {isOptimized && optimizeResult?.result && (
                             <div className="p-2.5 rounded-lg border border-purple-400/30 bg-purple-400/[0.04] text-[10px] space-y-1.5">
-                              <div className="flex items-center gap-1.5 text-purple-300 font-semibold"><Wand2 size={10} /> AI Optimized</div>
+                              <div className="flex items-center gap-1.5 text-purple-300 font-semibold"><MagicWand size={10} /> AI Optimized</div>
                               {optimizeResult.result.optimized_template && (
                                 <p className="text-text-primary leading-relaxed">&quot;{optimizeResult.result.optimized_template}&quot;</p>
                               )}
@@ -1017,7 +1009,7 @@ export default function DMControllerPage() {
                               {optimizeResult.result.improvements && optimizeResult.result.improvements.length > 0 && (
                                 <ul className="space-y-0.5 text-text-muted">
                                   {optimizeResult.result.improvements.slice(0, 3).map((it, i) => (
-                                    <li key={i} className="flex gap-1"><ChevronRight size={9} className="shrink-0 mt-0.5" /> {it}</li>
+                                    <li key={i} className="flex gap-1"><CaretRight size={9} className="shrink-0 mt-0.5" /> {it}</li>
                                   ))}
                                 </ul>
                               )}
@@ -1030,7 +1022,7 @@ export default function DMControllerPage() {
                               disabled={isOptimizing}
                               className="flex-1 text-[10px] px-2 py-1.5 rounded-lg border border-purple-400/30 bg-purple-400/[0.04] text-purple-300 hover:bg-purple-400/10 transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
                             >
-                              {isOptimizing ? <Loader2 size={10} className="animate-spin" /> : <Wand2 size={10} />}
+                              {isOptimizing ? <CircleNotch size={10} className="animate-spin" /> : <MagicWand size={10} />}
                               {isOptimizing ? "Optimizing…" : "AI Rewrite in brand voice"}
                             </button>
                             <button
@@ -1057,7 +1049,7 @@ export default function DMControllerPage() {
                 <div className="lg:col-span-2 space-y-2 max-h-[70vh] overflow-y-auto pr-1">
                   {inbox.length === 0 ? (
                     <div className="glass rounded-xl p-8 text-center">
-                      <EmptyIllustration icon={<Inbox size={36} />} />
+                      <EmptyIllustration icon={<Tray size={36} />} />
                       <p className="text-xs text-text-muted mt-2">No replies yet. Start a campaign to see inbound DMs.</p>
                     </div>
                   ) : inbox.map(r => (
@@ -1113,13 +1105,13 @@ export default function DMControllerPage() {
                       {/* AI Replies */}
                       <div className="pt-2 border-t border-border-subtle">
                         <div className="flex items-center justify-between mb-2">
-                          <h4 className="text-xs font-semibold flex items-center gap-1.5"><Sparkles size={11} className="text-purple-400" /> AI Reply Drafts</h4>
+                          <h4 className="text-xs font-semibold flex items-center gap-1.5"><Sparkle size={11} className="text-purple-400" /> AI Reply Drafts</h4>
                           <button
                             onClick={() => generateAIReplies(openReply)}
                             disabled={aiReplyLoading}
                             className="text-[10px] px-2.5 py-1 rounded-lg border border-purple-400/30 bg-purple-400/[0.04] text-purple-300 hover:bg-purple-400/10 flex items-center gap-1.5 disabled:opacity-50"
                           >
-                            {aiReplyLoading ? <Loader2 size={10} className="animate-spin" /> : <Wand2 size={10} />}
+                            {aiReplyLoading ? <CircleNotch size={10} className="animate-spin" /> : <MagicWand size={10} />}
                             {aiReplyLoading ? "Drafting…" : aiReplies ? "Regenerate" : "Suggest Reply"}
                           </button>
                         </div>
@@ -1167,7 +1159,7 @@ export default function DMControllerPage() {
                   ) : (
                     <div className="glass rounded-xl p-10 text-center h-full flex items-center justify-center">
                       <div>
-                        <EmptyIllustration icon={<MessageSquare size={40} />} />
+                        <EmptyIllustration icon={<Chat size={40} />} />
                         <h3 className="text-sm font-semibold mt-3">Select a reply</h3>
                         <p className="text-[11px] text-text-muted mt-1">Pick a conversation from the left to view & respond.</p>
                       </div>
@@ -1211,7 +1203,7 @@ export default function DMControllerPage() {
 
                 {/* Per-platform breakdown */}
                 <div className="glass rounded-xl p-4">
-                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><TrendingUp size={12} className="text-brand-accent" /> By Platform</h3>
+                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><TrendUp size={12} className="text-brand-accent" /> By Platform</h3>
                   <div className="space-y-3">
                     {PLATFORMS.map(p => {
                       const rows = campaigns.filter(c => c.platform === p.id);
@@ -1293,7 +1285,7 @@ export default function DMControllerPage() {
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-xs font-semibold flex items-center gap-2"><Zap size={12} className="text-brand-accent" /> Automation Rules</h3>
+                    <h3 className="text-xs font-semibold flex items-center gap-2"><Lightning size={12} className="text-brand-accent" /> Automation Rules</h3>
                     <button
                       onClick={() => setRules(rs => [{
                         id: `r${Date.now()}`,
@@ -1313,9 +1305,9 @@ export default function DMControllerPage() {
                       {rules.map(r => (
                         <div key={r.id} className="flex items-center gap-3 p-3 rounded-lg border border-border-subtle">
                           <div className="shrink-0 w-8 h-8 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
-                            {r.type === "auto_reply"    && <MessageSquare size={14} className="text-brand-accent" />}
-                            {r.type === "auto_followup" && <RefreshCw size={14} className="text-brand-accent" />}
-                            {r.type === "auto_tag"      && <Sparkles size={14} className="text-brand-accent" />}
+                            {r.type === "auto_reply"    && <Chat size={14} className="text-brand-accent" />}
+                            {r.type === "auto_followup" && <ArrowsClockwise size={14} className="text-brand-accent" />}
+                            {r.type === "auto_tag"      && <Sparkle size={14} className="text-brand-accent" />}
                             {r.type === "auto_handoff"  && <UserCheck size={14} className="text-brand-accent" />}
                           </div>
                           <div className="flex-1 min-w-0">
@@ -1333,8 +1325,8 @@ export default function DMControllerPage() {
                               r.enabled ? "left-[22px]" : "left-0.5"
                             )} />
                           </button>
-                          <button className="p-1.5 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary" aria-label="Edit rule"><Edit3 size={11} /></button>
-                          <button onClick={() => setRules(rs => rs.filter(x => x.id !== r.id))} className="p-1.5 rounded-lg border border-border-subtle text-text-muted hover:text-red-400" aria-label="Delete rule"><Trash2 size={11} /></button>
+                          <button className="p-1.5 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary" aria-label="Edit rule"><PencilSimple size={11} /></button>
+                          <button onClick={() => setRules(rs => rs.filter(x => x.id !== r.id))} className="p-1.5 rounded-lg border border-border-subtle text-text-muted hover:text-red-400" aria-label="Delete rule"><Trash size={11} /></button>
                         </div>
                       ))}
                     </div>
@@ -1344,9 +1336,9 @@ export default function DMControllerPage() {
                 <div className="glass rounded-xl p-4">
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><GitBranch size={12} className="text-brand-accent" /> Available Automation Types</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <TypeCard title="Auto-reply to keywords"  desc="Match inbound keywords → fire template response instantly" icon={<MessageSquare size={14} />} />
-                    <TypeCard title="Auto-follow-up after X days"  desc="Send a scheduled follow-up if no reply within N days" icon={<RefreshCw size={14} />} />
-                    <TypeCard title="Auto-tag by sentiment"  desc="Tag replies hot / warm / cold based on detected sentiment" icon={<Sparkles size={14} />} />
+                    <TypeCard title="Auto-reply to keywords"  desc="Match inbound keywords → fire template response instantly" icon={<Chat size={14} />} />
+                    <TypeCard title="Auto-follow-up after X days"  desc="PaperPlaneTilt a scheduled follow-up if no reply within N days" icon={<ArrowsClockwise size={14} />} />
+                    <TypeCard title="Auto-tag by sentiment"  desc="Tag replies hot / warm / cold based on detected sentiment" icon={<Sparkle size={14} />} />
                     <TypeCard title="Auto-hand-off when qualified" desc="Pause bot & ping a human when qualify signals detected" icon={<UserCheck size={14} />} />
                   </div>
                 </div>
@@ -1382,7 +1374,7 @@ export default function DMControllerPage() {
 
                 {/* Warm-up progress per account */}
                 <div className="glass rounded-xl p-4">
-                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Flame size={12} className="text-orange-400" /> Warm-Up Progress</h3>
+                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Fire size={12} className="text-orange-400" /> Warm-Up Progress</h3>
                   <div className="space-y-2">
                     {PLATFORMS.map((p, idx) => {
                       const day = Math.min(7, idx + 2);
@@ -1405,7 +1397,7 @@ export default function DMControllerPage() {
                 {/* Blacklist · usernames */}
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-xs font-semibold flex items-center gap-2"><Ban size={12} className="text-red-400" /> Username Blacklist</h3>
+                    <h3 className="text-xs font-semibold flex items-center gap-2"><Prohibit size={12} className="text-red-400" /> Username Blacklist</h3>
                     <span className="text-[10px] text-text-muted">{blacklist.length} entries</span>
                   </div>
                   <div className="flex items-center gap-2 mb-3">
@@ -1439,14 +1431,14 @@ export default function DMControllerPage() {
                       {blacklist.map((b, i) => (
                         <div key={i} className="flex items-center justify-between p-2.5 rounded-lg border border-border-subtle">
                           <div className="flex items-center gap-2.5">
-                            <Ban size={12} className="text-red-400" />
+                            <Prohibit size={12} className="text-red-400" />
                             <div>
                               <p className="text-xs">{b.name}</p>
                               <p className="text-[9px] text-text-muted">{b.platform} · {b.reason} · {b.date}</p>
                             </div>
                           </div>
                           <button onClick={() => setBlacklist(bl => bl.filter((_, idx) => idx !== i))} className="text-text-muted hover:text-red-400">
-                            <Trash2 size={11} />
+                            <Trash size={11} />
                           </button>
                         </div>
                       ))}
@@ -1457,7 +1449,7 @@ export default function DMControllerPage() {
                 {/* Keyword blacklist */}
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-xs font-semibold flex items-center gap-2"><AlertTriangle size={12} className="text-amber-400" /> Keyword Blocklist</h3>
+                    <h3 className="text-xs font-semibold flex items-center gap-2"><Warning size={12} className="text-amber-400" /> Keyword Blocklist</h3>
                     <span className="text-[10px] text-text-muted">{keywordBlacklist.length} entries</span>
                   </div>
                   <div className="flex items-center gap-2 mb-3">
@@ -1497,7 +1489,7 @@ export default function DMControllerPage() {
                     </div>
                   </div>
                   <div className="glass rounded-xl p-4">
-                    <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><ShieldAlert size={12} className="text-red-400" /> Do-not-contact</h3>
+                    <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><ShieldWarning size={12} className="text-red-400" /> Do-not-contact</h3>
                     <p className="text-[10px] text-text-muted mb-2">Legally-mandated exclusions. Sync with your CRM.</p>
                     <div className="text-[10px] text-text-muted text-center py-2">
                       0 DNC records.
@@ -1531,8 +1523,8 @@ export default function DMControllerPage() {
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-xs font-semibold flex items-center gap-2">
-                      <Activity size={12} className={cn(running ? "text-green-400" : "text-text-muted")} />
-                      Real-time Activity
+                      <Pulse size={12} className={cn(running ? "text-green-400" : "text-text-muted")} />
+                      Real-time Pulse
                     </h3>
                     <div className="flex items-center gap-2">
                       <button onClick={() => setLiveEvents([])} className="text-[10px] px-2.5 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary">Clear</button>
@@ -1546,7 +1538,7 @@ export default function DMControllerPage() {
                   <div ref={liveRef} className="max-h-[50vh] overflow-y-auto space-y-1">
                     {liveEvents.length === 0 ? (
                       <div className="text-center py-10">
-                        <EmptyIllustration icon={<Activity size={36} />} />
+                        <EmptyIllustration icon={<Pulse size={36} />} />
                         <p className="text-xs text-text-muted mt-2">No activity. {running ? "Events will stream in real-time." : "Start a campaign to see live events."}</p>
                       </div>
                     ) : liveEvents.map(ev => (
@@ -1668,7 +1660,7 @@ function SentimentBadge({ sentiment }: { sentiment: InboxReply["sentiment"] }) {
   const cfg = {
     positive: { cls: "bg-green-400/10 text-green-400 border-green-400/30",  label: "Positive", icon: ThumbsUp    },
     negative: { cls: "bg-red-400/10 text-red-400 border-red-400/30",        label: "Negative", icon: ThumbsDown  },
-    question: { cls: "bg-[rgba(99,102,241,0.10)] text-indigo-400 border-[rgba(99,102,241,0.20)]",     label: "Question", icon: MessageSquare},
+    question: { cls: "bg-[rgba(99,102,241,0.10)] text-indigo-400 border-[rgba(99,102,241,0.20)]",     label: "Question", icon: Chat},
     neutral:  { cls: "bg-white/5 text-text-muted border-border-subtle", label: "Neutral", icon: MinusCircle },
   }[sentiment];
   const Icon = cfg.icon;
@@ -1727,8 +1719,8 @@ function InsightBubble({ tone, children }: { tone: "positive" | "warning" | "inf
     warning:  "border-amber-400/20 bg-amber-400/[0.03] text-text-primary",
     info:     "border-[rgba(99,102,241,0.20)] bg-[rgba(99,102,241,0.04)] text-text-primary",
   }[tone];
-  const icon = tone === "positive" ? <TrendingUp size={11} className="text-green-400" /> :
-               tone === "warning"  ? <AlertTriangle size={11} className="text-amber-400" /> :
+  const icon = tone === "positive" ? <TrendUp size={11} className="text-green-400" /> :
+               tone === "warning"  ? <Warning size={11} className="text-amber-400" /> :
                                      <FileText size={11} className="text-indigo-400" />;
   return (
     <div className={cn("p-2.5 rounded-lg border text-[11px] leading-relaxed flex items-start gap-2", cls)}>
@@ -1777,10 +1769,10 @@ function Heatmap() {
 
 function LiveIcon({ kind }: { kind: LiveEvent["kind"] }) {
   if (kind === "open")   return <Eye size={11} className="text-indigo-400 shrink-0" />;
-  if (kind === "typing") return <MoreVertical size={11} className="text-amber-400 shrink-0" />;
-  if (kind === "sent")   return <Send size={11} className="text-green-400 shrink-0" />;
-  if (kind === "reply")  return <MessageSquare size={11} className="text-brand-accent shrink-0" />;
-  return <AlertTriangle size={11} className="text-text-muted shrink-0" />;
+  if (kind === "typing") return <DotsThreeVertical size={11} className="text-amber-400 shrink-0" />;
+  if (kind === "sent")   return <PaperPlaneTilt size={11} className="text-green-400 shrink-0" />;
+  if (kind === "reply")  return <Chat size={11} className="text-brand-accent shrink-0" />;
+  return <Warning size={11} className="text-text-muted shrink-0" />;
 }
 
 function LiveLabel({ kind }: { kind: LiveEvent["kind"] }) {
@@ -1829,7 +1821,7 @@ function HowItWorksFlow() {
           { n: 1, title: "Pick your lead source", desc: "Scraped leads from Lead Finder, a Campaign list, or CRM contacts", href: "/dashboard/scraper", link: "Lead Finder" },
           { n: 2, title: "Pick sender accounts", desc: "Which of YOUR connected IG/FB/LI/TikTok accounts will send the DMs", href: null, link: null },
           { n: 3, title: "Pick platform", desc: "Instagram, Facebook, LinkedIn, or TikTok — rotates across your senders", href: null, link: null },
-          { n: 4, title: "Write & launch", desc: "AI-generated or custom message, schedule, monitor replies in Inbox tab", href: null, link: null },
+          { n: 4, title: "Write & launch", desc: "AI-generated or custom message, schedule, monitor replies in Tray tab", href: null, link: null },
         ].map(step => (
           <div key={step.n} className="bg-surface-light/50 rounded-xl p-3 border border-border-subtle relative">
             <div className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-brand-accent text-[#020711] text-[10px] font-bold flex items-center justify-center">

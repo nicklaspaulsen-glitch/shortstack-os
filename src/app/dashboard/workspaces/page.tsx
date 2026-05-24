@@ -1,8 +1,8 @@
 "use client";
+import { Check, CheckCircle, CircleNotch, Plus, SquaresFour, Users, X } from "@phosphor-icons/react";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { LayoutGrid, Plus, Check, X, Loader2, Users, CheckCircle } from "lucide-react";
 import { CardSkeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
@@ -129,7 +129,7 @@ export default function WorkspacesPage() {
                 <div className="flex gap-2">
                   <button onClick={handleCreate} disabled={saving || !form.name.trim()}
                     className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
-                    {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Create
+                    {saving ? <CircleNotch size={13} className="animate-spin" /> : <Check size={13} />} Create
                   </button>
                   <button onClick={() => setShowCreate(false)}
                     className="btn-ghost flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg">
@@ -148,7 +148,7 @@ export default function WorkspacesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                <LayoutGrid size={40} className="text-text-muted opacity-30" />
+                <SquaresFour size={40} className="text-text-muted opacity-30" />
                 <p className="text-text-primary font-semibold">No workspaces yet</p>
                 <p className="text-text-muted text-sm max-w-xs">Create your first workspace to start isolating data per brand or client.</p>
                 <button onClick={() => setShowCreate(true)}

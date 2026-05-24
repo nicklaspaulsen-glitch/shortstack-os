@@ -1,10 +1,7 @@
 "use client";
+import { ChatCircle, CheckCircle, CircleNotch, Lightning, Microphone, PaperPlaneTilt, Plus, Sparkle, Trash, Warning } from "@phosphor-icons/react";
 
 import { useCallback, useEffect, useState } from "react";
-import {
-  MessageCircle, Send, Sparkles, Loader2, AlertTriangle, CheckCircle,
-  Plus, Trash2, Zap, Mic,
-} from "lucide-react";
 import StatCard from "@/components/ui/stat-card";
 import VoicePicker from "@/components/voice/VoicePicker";
 
@@ -78,7 +75,7 @@ export default function SMSConsoleTab() {
   const [templateLoading, setTemplateLoading] = useState(false);
   const [templateError, setTemplateError] = useState<string | null>(null);
 
-  // Send state
+  // PaperPlaneTilt state
   const [sending, setSending] = useState(false);
   const [polishing, setPolishing] = useState(false);
   const [resultBanner, setResultBanner] = useState<SendResult | null>(null);
@@ -172,7 +169,7 @@ export default function SMSConsoleTab() {
     setPolishing(false);
   }, [body, polishing]);
 
-  // ── Send single SMS ───────────────────────────────────────────────
+  // ── PaperPlaneTilt single SMS ───────────────────────────────────────────────
   const sendSingle = useCallback(async () => {
     if (!singleTo.trim() || !body.trim() || sending) return;
     setSending(true);
@@ -208,7 +205,7 @@ export default function SMSConsoleTab() {
         setBody("");
       } else {
         setStats((s) => ({ ...s, failed: s.failed + 1 }));
-        setResultBanner({ ok: false, text: data.error || "Send failed" });
+        setResultBanner({ ok: false, text: data.error || "PaperPlaneTilt failed" });
       }
     } catch (err) {
       setStats((s) => ({ ...s, failed: s.failed + 1 }));
@@ -217,7 +214,7 @@ export default function SMSConsoleTab() {
     setSending(false);
   }, [singleTo, singleName, body, sending, voiceMode, voiceCloneId]);
 
-  // ── Send bulk SMS ─────────────────────────────────────────────────
+  // ── PaperPlaneTilt bulk SMS ─────────────────────────────────────────────────
   const sendBulk = useCallback(async () => {
     if (bulkRecipients.length === 0 || !body.trim() || sending) return;
     setSending(true);
@@ -251,9 +248,9 @@ export default function SMSConsoleTab() {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatCard label="Sent" value={stats.sent} icon={<Send size={16} />} />
-        <StatCard label="Failed" value={stats.failed} icon={<AlertTriangle size={16} />} />
-        <StatCard label="Templates" value={templates.length} icon={<MessageCircle size={16} />} />
+        <StatCard label="Sent" value={stats.sent} icon={<PaperPlaneTilt size={16} />} />
+        <StatCard label="Failed" value={stats.failed} icon={<Warning size={16} />} />
+        <StatCard label="Templates" value={templates.length} icon={<ChatCircle size={16} />} />
       </div>
 
       <div className="flex gap-2">
@@ -317,12 +314,12 @@ export default function SMSConsoleTab() {
                       onClick={() => setBulkRecipients([])}
                       className="ml-auto flex items-center gap-1 text-xs text-text-muted hover:text-text-primary"
                     >
-                      <Trash2 size={12} /> Clear
+                      <Trash size={12} /> Clear
                     </button>
                   )}
                 </div>
                 <label className="mt-3 flex items-center gap-2 text-xs text-text-muted">
-                  <Zap size={12} /> Throttle (ms between sends):
+                  <Lightning size={12} /> Throttle (ms between sends):
                   <input
                     type="number"
                     value={throttleMs}
@@ -386,8 +383,8 @@ export default function SMSConsoleTab() {
                       onChange={(e) => setVoiceMode(e.target.checked)}
                       className="h-3 w-3 rounded border border-border-subtle bg-white/5 text-amber-500 focus:ring-amber-400"
                     />
-                    <Mic size={12} />
-                    Send as voice MMS (carrier-dependent)
+                    <Microphone size={12} />
+                    PaperPlaneTilt as voice MMS (carrier-dependent)
                   </label>
                   {voiceMode && (
                     <div className="mt-2">
@@ -416,9 +413,9 @@ export default function SMSConsoleTab() {
                 className="flex items-center gap-2 rounded-lg border border-border-subtle bg-white/8 px-3 py-2 text-sm font-medium text-text-primary hover:bg-white/12 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {polishing ? (
-                  <Loader2 size={14} className="animate-spin" />
+                  <CircleNotch size={14} className="animate-spin" />
                 ) : (
-                  <Sparkles size={14} />
+                  <Sparkle size={14} />
                 )}
                 Polish with AI
               </button>
@@ -432,8 +429,8 @@ export default function SMSConsoleTab() {
                 }
                 className="ml-auto flex items-center gap-2 rounded-lg bg-orange-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-white/5 disabled:text-text-muted"
               >
-                {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                {mode === "single" ? "Send SMS" : `Send to ${bulkRecipients.length}`}
+                {sending ? <CircleNotch size={14} className="animate-spin" /> : <PaperPlaneTilt size={14} />}
+                {mode === "single" ? "PaperPlaneTilt SMS" : `PaperPlaneTilt to ${bulkRecipients.length}`}
               </button>
             </div>
 
@@ -445,7 +442,7 @@ export default function SMSConsoleTab() {
                     : "border-rose-500/30 bg-rose-500/10 text-rose-400"
                 }`}
               >
-                {resultBanner.ok ? <CheckCircle size={16} /> : <AlertTriangle size={16} />}
+                {resultBanner.ok ? <CheckCircle size={16} /> : <Warning size={16} />}
                 <span>{resultBanner.text}</span>
               </div>
             )}
@@ -467,7 +464,7 @@ export default function SMSConsoleTab() {
             </div>
             {templateLoading && (
               <div className="flex items-center gap-2 text-xs text-text-muted">
-                <Loader2 size={12} className="animate-spin" /> Loading...
+                <CircleNotch size={12} className="animate-spin" /> Loading...
               </div>
             )}
             {templateError && (

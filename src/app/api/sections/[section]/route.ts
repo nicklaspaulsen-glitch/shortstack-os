@@ -438,7 +438,7 @@ export async function GET(
       }
       stats.social_accounts = socialAccounts;
 
-      // Webhooks live (table may not exist — graceful null)
+      // PlugsConnected live (table may not exist — graceful null)
       let webhooks: number | null = null;
       try {
         const { count } = await service

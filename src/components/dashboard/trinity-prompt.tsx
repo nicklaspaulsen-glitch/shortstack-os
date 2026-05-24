@@ -1,3 +1,4 @@
+import { CircleNotch, PaperPlaneTilt, Sparkle, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -13,7 +14,6 @@
  */
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Sparkles, Send, Loader, X } from "lucide-react";
 
 export default function TrinityPrompt() {
   const [open, setOpen] = useState(false);
@@ -112,7 +112,7 @@ export default function TrinityPrompt() {
             className="flex items-center gap-2 px-4 py-3 border-b"
             style={{ borderColor: "rgba(0,0,0,0.08)" }}
           >
-            <Sparkles
+            <Sparkle
               size={14}
               className="shrink-0"
               style={{ color: "#D4FF00" }}
@@ -166,7 +166,7 @@ export default function TrinityPrompt() {
             >
               {sending ? (
                 <span className="flex items-center gap-2 text-text-muted text-xs">
-                  <Loader size={12} className="animate-spin" style={{ color: "#D4FF00" }} />
+                  <CircleNotch size={12} className="animate-spin" style={{ color: "#D4FF00" }} />
                   Trinity is thinking…
                 </span>
               ) : (
@@ -195,11 +195,11 @@ export default function TrinityPrompt() {
               }}
             >
               {sending ? (
-                <Loader size={12} className="animate-spin" />
+                <CircleNotch size={12} className="animate-spin" />
               ) : (
-                <Send size={12} />
+                <PaperPlaneTilt size={12} />
               )}
-              Send
+              PaperPlaneTilt
             </button>
           </div>
         </div>

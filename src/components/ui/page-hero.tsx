@@ -59,7 +59,7 @@ function autoTheme3dFromPath(path: string): PageHero3DTheme {
   if (/\/(agent-supervisor|upgrade|pricing)(?:\/|$)/.test(path)) {
     return "crown";
   }
-  // Bot (telegram bot, AI chat)
+  // Robot (telegram bot, AI chat)
   if (/\/(telegram|telegram-bot|telegram-presets|whatsapp|sms-templates|trinity)(?:\/|$)/.test(path)) {
     return "bot";
   }

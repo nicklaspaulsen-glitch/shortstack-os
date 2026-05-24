@@ -1,21 +1,9 @@
 "use client";
+import { ArrowLeft, CircleNotch, Clock, CurrencyDollar, Lightbulb, MagicWand, Microphone, Play, Sparkle, Trash, Warning } from "@phosphor-icons/react";
 
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  Mic,
-  Loader2,
-  Wand2,
-  Play,
-  AlertTriangle,
-  Sparkles,
-  Lightbulb,
-  Clock,
-  Trash2,
-  DollarSign,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import TranscriptViewer, { TranscriptSegment } from "@/components/meetings/transcript-viewer";
 import ActionItems, { ActionItem } from "@/components/meetings/action-items";
@@ -175,7 +163,7 @@ export default function MeetingDetailPage() {
 
   if (loading) {
     return (
-      <MotionPage className="text-[11px] text-text-muted flex items-center gap-2"><Loader2 size={12} className="animate-spin" />Loading...
+      <MotionPage className="text-[11px] text-text-muted flex items-center gap-2"><CircleNotch size={12} className="animate-spin" />Loading...
               </MotionPage>
     );
   }
@@ -202,7 +190,7 @@ export default function MeetingDetailPage() {
               {meeting.source_type ? <span>· {sourceLabel(meeting.source_type)}</span> : null}
               {typeof meeting.cost_usd === "number" && meeting.cost_usd > 0 ? (
                 <span className="flex items-center gap-0.5">
-                  <DollarSign size={9} />
+                  <CurrencyDollar size={9} />
                   {meeting.cost_usd.toFixed(4)}
                 </span>
               ) : null}
@@ -213,7 +201,7 @@ export default function MeetingDetailPage() {
           onClick={remove}
           className="text-[10px] text-text-muted hover:text-red-400 flex items-center gap-1"
         >
-          <Trash2 size={10} /> Delete
+          <Trash size={10} /> Delete
         </button>
       </div>
 
@@ -244,9 +232,9 @@ export default function MeetingDetailPage() {
             className="btn-secondary text-xs flex items-center gap-1.5 disabled:opacity-40"
           >
             {transcribing ? (
-              <Loader2 size={12} className="animate-spin" />
+              <CircleNotch size={12} className="animate-spin" />
             ) : (
-              <Mic size={12} />
+              <Microphone size={12} />
             )}
             {meeting.transcript_raw ? "Re-transcribe" : "Transcribe"}
           </button>
@@ -256,15 +244,15 @@ export default function MeetingDetailPage() {
             className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-40"
           >
             {analyzing ? (
-              <Loader2 size={12} className="animate-spin" />
+              <CircleNotch size={12} className="animate-spin" />
             ) : (
-              <Wand2 size={12} />
+              <MagicWand size={12} />
             )}
             {meeting.summary ? "Re-analyze" : "Analyze with Claude"}
           </button>
           {meeting.status === "failed" && (
             <span className="text-[10px] px-2 py-1 rounded bg-red-400/10 text-red-400 flex items-center gap-1">
-              <AlertTriangle size={10} /> Last run failed
+              <Warning size={10} /> Last run failed
             </span>
           )}
         </div>
@@ -275,7 +263,7 @@ export default function MeetingDetailPage() {
         {/* Transcript */}
         <div className="lg:col-span-3 card p-4 space-y-2 max-h-[70vh] overflow-y-auto">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
-            <Mic size={11} /> Transcript
+            <Microphone size={11} /> Transcript
           </h3>
           <TranscriptViewer
             segments={segments}
@@ -307,7 +295,7 @@ export default function MeetingDetailPage() {
           {/* Summary */}
           <div className="glass rounded-xl p-4 space-y-2">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
-              <Sparkles size={11} /> Summary
+              <Sparkle size={11} /> Summary
             </h3>
             {meeting.summary ? (
               <p className="text-[11px] leading-relaxed whitespace-pre-wrap">{meeting.summary}</p>

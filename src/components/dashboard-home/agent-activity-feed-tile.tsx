@@ -1,6 +1,7 @@
 "use client";
+import { Robot } from "@phosphor-icons/react";
 
-import { Bot } from "lucide-react";
+
 import { useEffect, useState } from "react";
 import type { RealtimePostgresInsertPayload } from "@supabase/supabase-js";
 import { tokens, themeTokens } from "@/lib/brand/tokens";
@@ -74,7 +75,7 @@ export default function AgentActivityFeedTile({ ownerId, initialEvents, index = 
   return (
     <BentoTile
       title="Agent activity"
-      icon={<Bot size={14} />}
+      icon={<Robot size={14} />}
       span="lg:col-span-4 lg:row-span-2"
       link={{ href: "/dashboard/agent-office", label: "Office" }}
       index={index}

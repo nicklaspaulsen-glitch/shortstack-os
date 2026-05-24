@@ -1,7 +1,7 @@
 "use client";
+import { Sparkle, Users } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
-import { Users, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { useAppStore } from "@/lib/store";
@@ -89,7 +89,7 @@ export default function PortalAgencyRoomPage() {
           </div>
         </div>
         <div className="border border-border-subtle bg-white/[0.05] p-8 text-center">
-          <Sparkles className="mx-auto mb-3 text-brand-accent/60" size={32} />
+          <Sparkle className="mx-auto mb-3 text-brand-accent/60" size={32} />
           <h2 className="text-base font-semibold mb-1">Your room isn&apos;t set up yet</h2>
           <p className="text-[12px] text-text-muted max-w-md mx-auto">
             Once your agency finishes onboarding your account, this view will

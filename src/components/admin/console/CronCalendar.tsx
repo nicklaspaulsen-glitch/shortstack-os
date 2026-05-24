@@ -1,4 +1,5 @@
-import { Clock } from "lucide-react";
+import { Clock } from "@phosphor-icons/react";
+
 
 export interface CronEntry {
   path: string;

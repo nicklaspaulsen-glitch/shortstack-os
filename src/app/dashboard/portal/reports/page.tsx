@@ -1,4 +1,5 @@
 "use client";
+import { Calendar, ChartBar, FilmStrip, Lightning, TrendUp } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -6,9 +7,6 @@ import { useAuth } from "@/lib/auth-context";
 import StatCard from "@/components/ui/stat-card";
 import { PageLoading } from "@/components/ui/loading";
 import { formatRelativeTime } from "@/lib/utils";
-import {
-  BarChart3, TrendingUp, Film, Zap, Calendar
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 export default function ClientReportsPage() {
@@ -70,15 +68,15 @@ export default function ClientReportsPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="page-header mb-0 flex items-center gap-2"><BarChart3 size={18} className="text-emerald-400" /> Reports</h1>
+        <h1 className="page-header mb-0 flex items-center gap-2"><ChartBar size={18} className="text-emerald-400" /> Reports</h1>
         <p className="text-xs text-text-muted mt-0.5">Performance overview and activity log</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-        <StatCard label="Content Published" value={stats.contentPublished} icon={<Film size={14} />} change={`${stats.totalContent} total`} changeType="positive" />
-        <StatCard label="Active Campaigns" value={stats.campaigns} icon={<Zap size={14} />} />
-        <StatCard label="Task Completion" value={`${completionRate}%`} icon={<TrendingUp size={14} />} changeType={completionRate >= 80 ? "positive" : completionRate >= 50 ? "neutral" : "negative"} />
-        <StatCard label="AI Actions" value={recentActions.length} icon={<Zap size={14} />} change="this month" />
+        <StatCard label="Content Published" value={stats.contentPublished} icon={<FilmStrip size={14} />} change={`${stats.totalContent} total`} changeType="positive" />
+        <StatCard label="Active Campaigns" value={stats.campaigns} icon={<Lightning size={14} />} />
+        <StatCard label="Task Completion" value={`${completionRate}%`} icon={<TrendUp size={14} />} changeType={completionRate >= 80 ? "positive" : completionRate >= 50 ? "neutral" : "negative"} />
+        <StatCard label="AI Actions" value={recentActions.length} icon={<Lightning size={14} />} change="this month" />
       </div>
 
       {/* Progress bar */}
@@ -104,7 +102,7 @@ export default function ClientReportsPage() {
             recentActions.map((a, i) => (
               <div key={i} className="flex items-start gap-2.5 py-2 border-b border-border-subtle last:border-0">
                 <div className="w-6 h-6 bg-brand-accent/10 rounded-md flex items-center justify-center shrink-0 mt-0.5">
-                  <Zap size={10} className="text-brand-accent" />
+                  <Lightning size={10} className="text-brand-accent" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs text-text-secondary">{a.description as string}</p>

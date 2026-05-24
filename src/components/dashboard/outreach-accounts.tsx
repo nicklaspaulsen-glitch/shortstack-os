@@ -1,4 +1,5 @@
 "use client";
+import { ArrowsClockwise, Check, CircleDashed, Envelope, Gear, Lightning, Phone, Plus, Pulse, Shield, Trash, WarningCircle } from "@phosphor-icons/react";
 
 /**
  * OutreachAccounts — dashboard widget for quickly switching which emails,
@@ -10,10 +11,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Mail, Phone, Plus, Check, Settings, Shield, CircleDot, RefreshCw, Zap,
-  AlertCircle, Activity, Trash2,
-} from "lucide-react";
 import {
   FacebookIcon, InstagramIcon, LinkedInIcon, TikTokIcon, XTwitterIcon,
 } from "@/components/ui/platform-icons";
@@ -278,7 +275,7 @@ export default function OutreachAccounts() {
             className="flex items-center gap-1 px-2 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors text-[10px] font-medium disabled:opacity-50"
             title="Run health check on all accounts"
           >
-            <Activity size={10} className={checkingHealth ? "animate-pulse" : ""} />
+            <Pulse size={10} className={checkingHealth ? "animate-pulse" : ""} />
             {checkingHealth ? "Checking..." : "Check Health"}
           </button>
           {staleCount > 0 && (
@@ -288,15 +285,15 @@ export default function OutreachAccounts() {
               className="flex items-center gap-1 px-2 py-1.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors text-[10px] font-medium disabled:opacity-50"
               title={`Delete ${staleCount} stale account${staleCount > 1 ? "s" : ""} older than 7 days`}
             >
-              <Trash2 size={10} />
+              <Trash size={10} />
               {staleCount}
             </button>
           )}
           <button onClick={loadAll} className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors">
-            <RefreshCw size={11} className={loading ? "animate-spin" : ""} />
+            <ArrowsClockwise size={11} className={loading ? "animate-spin" : ""} />
           </button>
           <Link href="/dashboard/phone-email" className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors">
-            <Settings size={11} />
+            <Gear size={11} />
           </Link>
         </div>
       </div>
@@ -307,7 +304,7 @@ export default function OutreachAccounts() {
           <div className="glass rounded-xl p-4 max-w-sm w-full p-4 space-y-3" onClick={e => e.stopPropagation()}>
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-red-500/15 text-red-400 flex items-center justify-center">
-                <Trash2 size={14} />
+                <Trash size={14} />
               </div>
               <div>
                 <h3 className="text-sm font-semibold">Delete stale accounts?</h3>
@@ -325,7 +322,7 @@ export default function OutreachAccounts() {
                 disabled={cleaningUp}
                 className="flex-1 px-3 py-2 rounded-lg bg-red-500 text-white text-xs font-semibold hover:bg-red-600 disabled:opacity-50 flex items-center justify-center gap-1.5"
               >
-                {cleaningUp ? <RefreshCw size={11} className="animate-spin" /> : <Trash2 size={11} />}
+                {cleaningUp ? <ArrowsClockwise size={11} className="animate-spin" /> : <Trash size={11} />}
                 Delete {staleCount}
               </button>
             </div>
@@ -345,7 +342,7 @@ export default function OutreachAccounts() {
             activeTab === "email" ? "bg-surface text-text-primary shadow-sm" : "text-text-muted hover:text-text-primary"
           }`}
         >
-          <Mail size={11} /> Email <span className="text-[9px] text-text-muted">({emails.length})</span>
+          <Envelope size={11} /> Email <span className="text-[9px] text-text-muted">({emails.length})</span>
         </button>
         <button
           onClick={() => setActiveTab("phone")}
@@ -361,7 +358,7 @@ export default function OutreachAccounts() {
             activeTab === "social" ? "bg-surface text-text-primary shadow-sm" : "text-text-muted hover:text-text-primary"
           }`}
         >
-          <Zap size={11} /> Social <span className="text-[9px] text-text-muted">({socials.length})</span>
+          <Lightning size={11} /> Social <span className="text-[9px] text-text-muted">({socials.length})</span>
         </button>
       </div>
 
@@ -377,7 +374,7 @@ export default function OutreachAccounts() {
           {activeTab === "email" && (
             <>
               {emails.length === 0 ? (
-                <EmptyState icon={<Mail size={18} />} label="No email senders" linkText="Add email sender" link="/dashboard/phone-email" />
+                <EmptyState icon={<Envelope size={18} />} label="No email senders" linkText="Add email sender" link="/dashboard/phone-email" />
               ) : emails.map(sender => {
                 const health = sender.health_score ?? (sender.bounce_rate !== undefined ? 100 - (sender.bounce_rate * 10) : null);
                 const usagePct = sender.daily_limit ? Math.min(100, ((sender.sent_today || 0) / sender.daily_limit) * 100) : 0;
@@ -412,12 +409,12 @@ export default function OutreachAccounts() {
                           <span className={`text-[9px] flex items-center gap-0.5 ${
                             health >= 80 ? "text-emerald-400" : health >= 50 ? "text-amber-400" : "text-red-400"
                           }`}>
-                            <CircleDot size={6} /> {Math.round(health)}% health
+                            <CircleDashed size={6} /> {Math.round(health)}% health
                           </span>
                         )}
                         {sender.last_error && (
                           <span className="text-[9px] text-red-400 flex items-center gap-0.5 truncate" title={sender.last_error}>
-                            <AlertCircle size={8} /> {sender.last_error.slice(0, 30)}
+                            <WarningCircle size={8} /> {sender.last_error.slice(0, 30)}
                           </span>
                         )}
                       </div>
@@ -481,7 +478,7 @@ export default function OutreachAccounts() {
                       )}
                       {phone.last_error && (
                         <p className="text-[9px] text-red-400 flex items-center gap-0.5 mt-1 truncate" title={phone.last_error}>
-                          <AlertCircle size={8} /> {phone.last_error.slice(0, 40)}
+                          <WarningCircle size={8} /> {phone.last_error.slice(0, 40)}
                         </p>
                       )}
                     </div>
@@ -514,7 +511,7 @@ export default function OutreachAccounts() {
                   >
                     {acc.is_active !== false && <Check size={10} className="text-black" />}
                   </button>
-                  <span className="shrink-0">{SOCIAL_ICON[acc.platform] || <Zap size={14} />}</span>
+                  <span className="shrink-0">{SOCIAL_ICON[acc.platform] || <Lightning size={14} />}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
                       <StatusDot status={deriveLiveStatus(acc)} />

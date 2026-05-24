@@ -1,14 +1,9 @@
+import { ArrowRight, Calendar, Chat, CheckCircle, Clock, Eye, FilmStrip, Flag, Plus, Warning, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import {
-  Film, CheckCircle, MessageSquare,
-  ArrowRight, Clock, AlertTriangle,
-  Calendar, Eye, Plus, X,
-  Flag
-} from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -92,9 +87,9 @@ export default function ProductionPage() {
   })();
 
   const TABS: { id: ProductionTab; label: string; icon: React.ReactNode }[] = [
-    { id: "pipeline", label: "Pipeline", icon: <Film size={13} /> },
+    { id: "pipeline", label: "Pipeline", icon: <FilmStrip size={13} /> },
     { id: "calendar", label: "Calendar", icon: <Calendar size={13} /> },
-    { id: "standup", label: "Standup", icon: <MessageSquare size={13} /> },
+    { id: "standup", label: "Standup", icon: <Chat size={13} /> },
     { id: "approvals", label: "Approvals", icon: <CheckCircle size={13} /> },
   ];
 
@@ -160,7 +155,7 @@ export default function ProductionPage() {
               ))}
             </div>{/* Pipeline (Kanban) */}{tab === "pipeline" && items.length === 0 && (
               <EmptyState
-                icon={<Film size={24} />}
+                icon={<FilmStrip size={24} />}
                 title="No production items"
                 description="Create your first content task"
                 actionLabel="New Request"
@@ -311,11 +306,11 @@ export default function ProductionPage() {
                   transition={{ duration: 0.4, delay: 0.12 }}
                   className="glass rounded-xl"
                 >
-                  <h2 className="flex items-center gap-2"><AlertTriangle size={13} className="text-yellow-400" /> Bottleneck Analysis</h2>
+                  <h2 className="flex items-center gap-2"><Warning size={13} className="text-yellow-400" /> Bottleneck Analysis</h2>
                   <div className="space-y-2">
                     {bottlenecks.map(([status, count]) => (
                       <div key={status} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border-subtle">
-                        <AlertTriangle size={14} className="text-yellow-400" />
+                        <Warning size={14} className="text-yellow-400" />
                         <div className="flex-1">
                           <p className="text-xs font-semibold">{STATUS_CONFIG[status as KanbanStatus]?.label || status}</p>
                           <p className="text-[10px] text-text-muted">{count} items stuck in this stage</p>
@@ -334,7 +329,7 @@ export default function ProductionPage() {
                   transition={{ duration: 0.4 }}
                   className="glass rounded-xl"
                 >
-                  <h2 className="flex items-center gap-2"><MessageSquare size={13} className="text-brand-accent" /> Daily Standup Summary</h2>
+                  <h2 className="flex items-center gap-2"><Chat size={13} className="text-brand-accent" /> Daily Standup Summary</h2>
                   <p className="text-[10px] text-text-muted mb-3">{new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</p>
                   <div className="space-y-3">
                     {Array.from(new Set(items.map(i => i.assignee))).filter(Boolean).map(name => {
@@ -442,7 +437,7 @@ export default function ProductionPage() {
                   <div className="space-y-2">
                     {items.filter(i => i.status === "approved" || i.status === "review").map(item => (
                       <div key={item.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border-subtle">
-                        <Film size={14} className="text-brand-accent shrink-0" />
+                        <FilmStrip size={14} className="text-brand-accent shrink-0" />
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium truncate">{item.title}</p>
                           <p className="text-[9px] text-text-muted">{item.client}</p>

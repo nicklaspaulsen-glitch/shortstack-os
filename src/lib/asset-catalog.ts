@@ -436,7 +436,7 @@ export const CAPTION_STYLES_LIBRARY: CaptionStyle[] = [
   },
   {
     id: "film-style",
-    name: "Film Style",
+    name: "FilmStrip Style",
     css_preview: {
       fontFamily: "'Playfair Display', serif",
       color: "#F5F5F5",
@@ -549,7 +549,7 @@ export const EFFECTS_CATALOG: VideoEffect[] = [
   },
   {
     id: "film-grain",
-    name: "Film Grain",
+    name: "FilmStrip Grain",
     category: "filter",
     description: "Analog 35mm film noise texture",
     best_for: ["cinematic", "podcast"],

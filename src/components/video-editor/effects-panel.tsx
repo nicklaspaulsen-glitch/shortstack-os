@@ -1,4 +1,5 @@
 "use client";
+import { Diamond, Plus, Trash, X } from "@phosphor-icons/react";
 
 /* ────────────────────────────────────────────────────────────────
  * Effects panel — keyframeable properties per clip.
@@ -8,7 +9,7 @@
  * Add-keyframe adds at the current playhead minus the clip start.
  * ────────────────────────────────────────────────────────────────*/
 
-import { Diamond, Plus, Trash2, X } from "lucide-react";
+
 import type {
   EditorState,
   EditorAction,
@@ -172,7 +173,7 @@ export function EffectsPanel({ state, dispatch, onClose }: EffectsPanelProps) {
                         className="opacity-50 group-hover:opacity-100 hover:text-rose-400"
                         title="Remove keyframe"
                       >
-                        <Trash2 size={8} />
+                        <Trash size={8} />
                       </button>
                     </span>
                   ))}

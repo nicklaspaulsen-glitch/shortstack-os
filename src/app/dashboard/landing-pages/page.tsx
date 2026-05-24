@@ -1,17 +1,8 @@
+import { ArrowCounterClockwise, ArrowRight, Barbell, Briefcase, Buildings, CalendarDots, CaretDown, CaretUp, ChartBar, Check, Clock, Copy, DotsSixVertical, Envelope, Eye, EyeSlash, FileText, ForkKnife, Globe, House, Image, Layout, MagnifyingGlass, Megaphone, Monitor, Pencil, Plus, Question, Rocket, Shield, ShoppingBag, Sparkle, Target, Trash, TrendUp, UploadSimple, Users, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useCallback, useRef, useMemo } from "react";
 import { motion } from "framer-motion";
-import {
-  Globe, Sparkles, Layout, Eye, Pencil, Trash2, Copy, Rocket,
-  ChevronUp, ChevronDown, EyeOff, RotateCcw, Plus, X, Check,
-  ArrowRight, Monitor, Shield, Clock, BarChart3, Users,
-  TrendingUp, Search,
-  Building2, UtensilsCrossed, Home, Dumbbell, ShoppingBag,
-  Briefcase, CalendarDays, GripVertical,
-  Mail, FileText, Upload, Megaphone,
-  Image as ImageIcon,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import PageAI from "@/components/page-ai";
@@ -100,13 +91,13 @@ const COLOR_SCHEMES = [
 
 const TEMPLATES = [
   { id: "saas", name: "SaaS Landing", desc: "Hero + features + pricing + testimonials", icon: Monitor, color: "#D4FF00", gradient: "from-violet-600 to-cyan-500", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop", tagline: "Hero + pricing + testimonials + CTA", cvr: "Avg 2.8% CVR", avgLaunch: "6 min to live" },
-  { id: "agency", name: "Agency Portfolio", desc: "Hero + services + case studies + contact", icon: Building2, color: "#8b5cf6", gradient: "from-purple-600 to-pink-500", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop", tagline: "Services + case studies + contact", cvr: "Avg 3.1% CVR", avgLaunch: "5 min to live" },
-  { id: "restaurant", name: "Restaurant", desc: "Hero + menu highlights + location + reservations", icon: UtensilsCrossed, color: "#f59e0b", gradient: "from-amber-500 to-orange-500", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=400&fit=crop", tagline: "Menu highlights + reservations + location", cvr: "Avg 4.2% CVR", avgLaunch: "4 min to live" },
-  { id: "realestate", name: "Real Estate", desc: "Property showcase + search + agent contact", icon: Home, color: "#D4FF00", gradient: "from-emerald-500 to-teal-500", image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop", tagline: "Property showcase + agent contact", cvr: "Avg 2.4% CVR", avgLaunch: "7 min to live" },
-  { id: "fitness", name: "Fitness Studio", desc: "Classes + trainers + pricing + schedule", icon: Dumbbell, color: "#ef4444", gradient: "from-red-500 to-rose-500", image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop", tagline: "Classes + trainers + schedule + pricing", cvr: "Avg 3.6% CVR", avgLaunch: "5 min to live" },
+  { id: "agency", name: "Agency Portfolio", desc: "Hero + services + case studies + contact", icon: Buildings, color: "#8b5cf6", gradient: "from-purple-600 to-pink-500", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop", tagline: "Services + case studies + contact", cvr: "Avg 3.1% CVR", avgLaunch: "5 min to live" },
+  { id: "restaurant", name: "Restaurant", desc: "Hero + menu highlights + location + reservations", icon: ForkKnife, color: "#f59e0b", gradient: "from-amber-500 to-orange-500", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=400&fit=crop", tagline: "Menu highlights + reservations + location", cvr: "Avg 4.2% CVR", avgLaunch: "4 min to live" },
+  { id: "realestate", name: "Real Estate", desc: "Property showcase + search + agent contact", icon: House, color: "#D4FF00", gradient: "from-emerald-500 to-teal-500", image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop", tagline: "Property showcase + agent contact", cvr: "Avg 2.4% CVR", avgLaunch: "7 min to live" },
+  { id: "fitness", name: "Fitness Studio", desc: "Classes + trainers + pricing + schedule", icon: Barbell, color: "#ef4444", gradient: "from-red-500 to-rose-500", image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop", tagline: "Classes + trainers + schedule + pricing", cvr: "Avg 3.6% CVR", avgLaunch: "5 min to live" },
   { id: "ecommerce", name: "E-commerce", desc: "Product hero + features + reviews + CTA", icon: ShoppingBag, color: "#f97316", gradient: "from-orange-500 to-yellow-500", image: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&h=400&fit=crop", tagline: "Product hero + features + reviews", cvr: "Avg 2.9% CVR", avgLaunch: "6 min to live" },
   { id: "consultant", name: "Consultant", desc: "About + services + testimonials + booking", icon: Briefcase, color: "#D4FF00", gradient: "from-indigo-500 to-purple-500", image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&h=400&fit=crop", tagline: "About + services + testimonials + booking", cvr: "Avg 3.4% CVR", avgLaunch: "5 min to live" },
-  { id: "event", name: "Event", desc: "Countdown + speakers + schedule + tickets", icon: CalendarDays, color: "#ec4899", gradient: "from-pink-500 to-rose-500", image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=400&fit=crop", tagline: "Countdown + speakers + schedule + tickets", cvr: "Avg 5.1% CVR", avgLaunch: "4 min to live" },
+  { id: "event", name: "Event", desc: "Countdown + speakers + schedule + tickets", icon: CalendarDots, color: "#ec4899", gradient: "from-pink-500 to-rose-500", image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=400&fit=crop", tagline: "Countdown + speakers + schedule + tickets", cvr: "Avg 5.1% CVR", avgLaunch: "4 min to live" },
 ];
 
 const EMPTY_ANALYTICS = {
@@ -127,7 +118,7 @@ function defaultContent(): LandingPageContent {
     features: [
       { icon: "Zap", title: "Lightning Fast", description: "Optimized performance that loads in under 200ms. Your visitors never wait." },
       { icon: "Shield", title: "Enterprise Security", description: "Bank-level encryption and SOC 2 compliance to keep your data safe." },
-      { icon: "BarChart3", title: "Advanced Analytics", description: "Real-time dashboards and insights to make data-driven decisions." },
+      { icon: "ChartBar", title: "Advanced Analytics", description: "Real-time dashboards and insights to make data-driven decisions." },
       { icon: "Users", title: "Team Collaboration", description: "Built-in tools for seamless teamwork across departments and time zones." },
     ],
     testimonials: [
@@ -352,7 +343,7 @@ export default function LandingPagesPage() {
       id: "offer",
       title: "What are you selling?",
       description: "One or two sentences â€” product, service, membership, or a newsletter signup.",
-      icon: <Sparkles size={16} />,
+      icon: <Sparkle size={16} />,
       field: {
         type: "textarea",
         key: "offer",
@@ -721,7 +712,7 @@ export default function LandingPagesPage() {
                           style={{ color: scheme.text }}
                         >
                           {item.question}
-                          <ChevronDown className={`w-3.5 h-3.5 transition-transform ${openFaq === i ? "rotate-180" : ""}`} style={{ color: scheme.primary }} />
+                          <CaretDown className={`w-3.5 h-3.5 transition-transform ${openFaq === i ? "rotate-180" : ""}`} style={{ color: scheme.primary }} />
                         </button>
                         {openFaq === i && (
                           <div className="px-4 pb-3 text-xs opacity-70" style={{ color: scheme.text }}>{item.answer}</div>
@@ -770,24 +761,24 @@ export default function LandingPagesPage() {
       <div key={sec.key} className="glass rounded-xl p-4 mb-3">
         <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle">
           <div className="flex items-center gap-2">
-            <GripVertical className="w-4 h-4 text-text-muted cursor-grab" />
+            <DotsSixVertical className="w-4 h-4 text-text-muted cursor-grab" />
             <span className="text-sm font-semibold text-text-primary">{sec.label}</span>
           </div>
           <div className="flex items-center gap-1">
             <button onClick={() => moveSection(idx, "up")} className="p-1 hover:bg-surface-light rounded" title="Move up">
-              <ChevronUp className="w-3.5 h-3.5 text-text-muted" />
+              <CaretUp className="w-3.5 h-3.5 text-text-muted" />
             </button>
             <button onClick={() => moveSection(idx, "down")} className="p-1 hover:bg-surface-light rounded" title="Move down">
-              <ChevronDown className="w-3.5 h-3.5 text-text-muted" />
+              <CaretDown className="w-3.5 h-3.5 text-text-muted" />
             </button>
             <button onClick={() => toggleSection(sec.key)} className={`p-1 hover:bg-surface-light rounded ${!sec.visible ? "opacity-40" : ""}`} title={sec.visible ? "Hide" : "Show"}>
-              {sec.visible ? <Eye className="w-3.5 h-3.5 text-text-muted" /> : <EyeOff className="w-3.5 h-3.5 text-text-muted" />}
+              {sec.visible ? <Eye className="w-3.5 h-3.5 text-text-muted" /> : <EyeSlash className="w-3.5 h-3.5 text-text-muted" />}
             </button>
             <button onClick={() => toggleEdit(sec.key)} className={`p-1 hover:bg-surface-light rounded ${isEditing ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" : ""}`} title="Edit">
               <Pencil className="w-3.5 h-3.5" />
             </button>
             <button onClick={() => handleRegenSection(sec.key)} className="p-1 hover:bg-surface-light rounded" title="Regenerate with AI">
-              <RotateCcw className="w-3.5 h-3.5 text-text-muted" />
+              <ArrowCounterClockwise className="w-3.5 h-3.5 text-text-muted" />
             </button>
           </div>
         </div>
@@ -818,8 +809,8 @@ export default function LandingPagesPage() {
                   </div>
                 </div>
                 <div className="p-3 border border-dashed border-border-subtle rounded-lg flex items-center justify-center gap-2 text-text-muted text-xs cursor-pointer hover:border-brand-accent hover:text-brand-accent transition-colors">
-                  <ImageIcon className="w-4 h-4" />
-                  Upload Hero Image
+                  <Image className="w-4 h-4" />
+                  UploadSimple Hero Image
                 </div>
               </>
             )}
@@ -985,7 +976,7 @@ export default function LandingPagesPage() {
             onClick={() => setWizardOpen(true)}
             className="btn-pill px-6 py-3 bg-brand-accent hover:bg-[#E8FF4D] text-black font-medium transition-colors flex items-center gap-2"
           >
-            <Sparkles className="w-4 h-4" />
+            <Sparkle className="w-4 h-4" />
             Create landing page
           </button>
         </div>
@@ -995,10 +986,10 @@ export default function LandingPagesPage() {
       {/* Tabs */}
       <div className="tab-pill-strip">
         {([
-          { id: "create" as MainTab, label: "Create", icon: Sparkles },
+          { id: "create" as MainTab, label: "Create", icon: Sparkle },
           { id: "pages" as MainTab, label: "Generated Pages", icon: FileText },
           { id: "deploy" as MainTab, label: "Deployment", icon: Rocket },
-          { id: "analytics" as MainTab, label: "Analytics", icon: BarChart3 },
+          { id: "analytics" as MainTab, label: "Analytics", icon: ChartBar },
         ]).map(tab => (
           <button
             key={tab.id}
@@ -1039,7 +1030,7 @@ export default function LandingPagesPage() {
           {step === 1 && (
             <div className="glass rounded-xl p-6 space-y-6">
               <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-brand-accent" />
+                <Buildings className="w-5 h-5 text-brand-accent" />
                 Business Information
               </h2>
 
@@ -1122,11 +1113,11 @@ export default function LandingPagesPage() {
                 </div>
               </div>
 
-              {/* Logo Upload Placeholder */}
+              {/* Logo UploadSimple Placeholder */}
               <div>
                 <label className="text-xs text-text-muted mb-1.5 block font-medium">Logo</label>
                 <div className="border border-dashed border-border-subtle rounded-lg p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-brand-accent hover:bg-[rgba(212,255,0,0.05)] transition-colors">
-                  <Upload className="w-6 h-6 text-text-muted" />
+                  <UploadSimple className="w-6 h-6 text-text-muted" />
                   <span className="text-xs text-text-muted">Click to upload your logo (PNG, SVG)</span>
                   <span className="text-[10px] text-text-muted/50">Max 2MB</span>
                 </div>
@@ -1137,7 +1128,7 @@ export default function LandingPagesPage() {
                 style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-1.5">
-                    <TrendingUp size={11} className="text-brand-accent" />
+                    <TrendUp size={11} className="text-brand-accent" />
                     <span className="text-[11px] font-semibold text-text-primary">Brief Readiness</span>
                   </div>
                   <div
@@ -1196,7 +1187,7 @@ export default function LandingPagesPage() {
                   disabled={generating}
                   className="btn-pill flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {generating ? <RotateCcw className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                  {generating ? <ArrowCounterClockwise className="w-4 h-4 animate-spin" /> : <Sparkle className="w-4 h-4" />}
                   {generating ? "Generating..." : "Generate with AI"}
                 </button>
                 <button onClick={() => setStep(2)} className="btn-pill-ghost">
@@ -1343,8 +1334,8 @@ export default function LandingPagesPage() {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold text-text-primary">Generated Pages</h2>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-              <input value={pageSearch} onChange={e => setPageSearch(e.target.value)} placeholder="Search pages..." className="glass rounded-lg pl-9 pr-4 py-2 text-sm text-text-primary w-64 focus:border-brand-accent/40 focus:outline-none" />
+              <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+              <input value={pageSearch} onChange={e => setPageSearch(e.target.value)} placeholder="MagnifyingGlass pages..." className="glass rounded-lg pl-9 pr-4 py-2 text-sm text-text-primary w-64 focus:border-brand-accent/40 focus:outline-none" />
             </div>
           </div>
 
@@ -1411,7 +1402,7 @@ export default function LandingPagesPage() {
                           setPages(ps => ps.filter(p => p.id !== page.id));
                           toast.success("Page deleted");
                         }} className="p-1.5 hover:bg-surface-light rounded-md transition-colors" title="Delete">
-                          <Trash2 className="w-3.5 h-3.5 text-text-muted hover:text-red-400" />
+                          <Trash className="w-3.5 h-3.5 text-text-muted hover:text-red-400" />
                         </button>
                       </div>
                     </td>
@@ -1442,7 +1433,7 @@ export default function LandingPagesPage() {
                 disabled={deploying}
                 className="btn-pill w-full flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                {deploying ? <RotateCcw className="w-4 h-4 animate-spin" /> : <Rocket className="w-4 h-4" />}
+                {deploying ? <ArrowCounterClockwise className="w-4 h-4 animate-spin" /> : <Rocket className="w-4 h-4" />}
                 {deploying ? "Deploying..." : "Deploy to Vercel"}
               </button>
               <div>
@@ -1557,7 +1548,7 @@ export default function LandingPagesPage() {
             {/* Views Chart (CSS) */}
             <div className="glass rounded-xl p-6 col-span-2 space-y-4">
               <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-brand-accent" />
+                <ChartBar className="w-4 h-4 text-brand-accent" />
                 Views (Last 7 Days)
               </h3>
               <div className="flex items-end gap-2 h-40">

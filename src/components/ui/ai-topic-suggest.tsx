@@ -1,7 +1,7 @@
 "use client";
+import { ArrowsClockwise, CircleNotch, Sparkle } from "@phosphor-icons/react";
 
 import { useCallback, useEffect, useState } from "react";
-import { Loader2, Sparkles, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
 import { useQuotaWall } from "@/components/billing/quota-wall";
 
@@ -138,7 +138,7 @@ export default function AITopicSuggest({
     <div className={`space-y-2 ${className}`}>
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 text-[11px] font-medium text-text-primary/80">
-          <Sparkles size={12} className="text-[#D4FF00]" />
+          <Sparkle size={12} className="text-[#D4FF00]" />
           <span>{title ?? DEFAULT_TITLE[surface]}</span>
         </div>
         <button
@@ -148,7 +148,7 @@ export default function AITopicSuggest({
           className="flex items-center gap-1 text-[10px] text-text-muted hover:text-text-primary disabled:opacity-40 transition-colors"
           title="Regenerate suggestions"
         >
-          {loading ? <Loader2 size={11} className="animate-spin" /> : <RefreshCw size={11} />}
+          {loading ? <CircleNotch size={11} className="animate-spin" /> : <ArrowsClockwise size={11} />}
           <span>{loading ? "Thinking…" : "Refresh"}</span>
         </button>
       </div>

@@ -1,14 +1,8 @@
+import { ArrowSquareOut, Bell, Calendar, ChartBar, Chat, Check, CircleNotch, Code, Copy, HardDrive, Lightning, Link, LinkBreak, MagnifyingGlass, Megaphone, PaperPlaneTilt, Plus, Robot, Shield, SignIn, Smiley, Sparkle, Target, Terminal, TrendUp, Users, Warning } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Users, MessageSquare, Server, Shield,
-  Zap, Terminal, BarChart3,
-  Calendar, Code, Link, Megaphone, Plus,
-  Copy, TrendingUp, AlertTriangle,
-  Search, Send, Smile, LogIn, Bell, Sparkles, ExternalLink, Unlink, Loader, Bot
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { PrismPanel } from "@/components/prism";
 import { useAuth } from "@/lib/auth-context";
@@ -39,7 +33,7 @@ const NOTIFY_CATEGORIES: { key: string; label: string; desc: string }[] = [
   { key: "payment_received", label: "Payment received", desc: "Invoice is paid" },
 ];
 
-const tabs = ["Install", "Servers", "Commands", "Auto-Roles", "Welcome", "Moderation", "Analytics", "Events", "Embeds", "Webhooks", "Announcements", "Insights"] as const;
+const tabs = ["Install", "Servers", "Commands", "Auto-Roles", "Welcome", "Moderation", "Analytics", "Events", "Embeds", "PlugsConnected", "Announcements", "Insights"] as const;
 type Tab = (typeof tabs)[number];
 
 
@@ -163,7 +157,7 @@ export default function DiscordPage() {
   function PreviewBanner() {
     return (
       <MotionPage className="glass rounded-xl p-4 border-warning/20 bg-warning/5"><div className="flex items-start gap-2">
-                  <AlertTriangle size={12} className="text-warning shrink-0 mt-0.5" />
+                  <Warning size={12} className="text-warning shrink-0 mt-0.5" />
                   <p className="text-[10px] text-text-muted leading-relaxed">
                     <strong className="text-text-primary">Preview only.</strong> This tab&apos;s UI is wired up for review; server-side wiring for moderation, analytics, and custom commands ships later. For now use the <span className="text-text-primary">Install</span> tab to connect a server and receive real-time pings.
                   </p>
@@ -215,7 +209,7 @@ export default function DiscordPage() {
           className="flex items-start gap-3 glass rounded-2xl p-5"
         >
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Bot Status</p>
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Robot Status</p>
             <p className="font-display text-3xl font-bold tracking-[-0.03em] text-green-500 tabular-nums">Online</p>
           </div>
         </motion.div>
@@ -268,7 +262,7 @@ export default function DiscordPage() {
           <div className="rounded-xl p-6" style={{ background: "linear-gradient(135deg, rgba(88,101,242,0.08), rgba(88,101,242,0.03), transparent)", border: "1px solid rgba(212,255,0,0.08)" }}>
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-[#5865F2]/20 flex items-center justify-center shrink-0">
-                <Bot size={24} className="text-[#5865F2]" />
+                <Robot size={24} className="text-[#5865F2]" />
               </div>
               <div className="flex-1">
                 <h2 className="text-lg font-semibold mb-1">Install Trinity in your own Discord</h2>
@@ -282,7 +276,7 @@ export default function DiscordPage() {
                   disabled={installing}
                   className="inline-flex items-center gap-2 text-xs bg-[#5865F2] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#4752C4] disabled:opacity-60"
                 >
-                  {installing ? <Loader size={14} className="animate-spin" /> : <LogIn size={14} />}
+                  {installing ? <CircleNotch size={14} className="animate-spin" /> : <SignIn size={14} />}
                   Add Trinity to Discord
                 </button>
               </div>
@@ -298,14 +292,14 @@ export default function DiscordPage() {
                   desc: "Never miss a client signup, booked call, outreach reply, or paid invoice � it pings the channel you pick, the second it happens." },
                 { icon: Terminal, color: "text-brand-accent", title: "Slash commands anywhere",
                   desc: "Run /trinity-status, /trinity-check <client>, /trinity-lead add <business> from any channel. No dashboard switch." },
-                { icon: Sparkles, color: "text-purple-400", title: "AI-written weekly digest",
+                { icon: Sparkle, color: "text-purple-400", title: "AI-written weekly digest",
                   desc: "Every Monday at 9am, Trinity posts a plain-English summary of the past week's revenue, leads, and wins." },
-                { icon: MessageSquare, color: "text-green-400", title: "Tag @Trinity to ask questions",
+                { icon: Chat, color: "text-green-400", title: "Tag @Trinity to ask questions",
                   desc: "Team members can @-mention Trinity with a question � Claude answers with real data pulled from your workspace." },
                 { icon: Users, color: "text-cyan-400", title: "Everyone stays aligned",
                   desc: "Account managers, cold-call team, designers, clients � one Discord, one source of truth." },
                 { icon: Shield, color: "text-text-muted", title: "Minimal permissions",
-                  desc: "Trinity asks for Send Messages, Embed Links, Read History, and Slash Commands. Nothing else." },
+                  desc: "Trinity asks for PaperPlaneTilt Messages, Embed Links, Read History, and Slash Commands. Nothing else." },
               ].map((f, i) => (
                 <motion.div
                   key={i}
@@ -332,12 +326,12 @@ export default function DiscordPage() {
           <div>
             <div className="flex items-center justify-between mb-2">
               <h3 className="mb-0">Your installed servers</h3>
-              {loadingIntegrations && <Loader size={12} className="animate-spin text-text-muted" />}
+              {loadingIntegrations && <CircleNotch size={12} className="animate-spin text-text-muted" />}
             </div>
 
             {integrations.length === 0 && !loadingIntegrations && (
               <div className="glass rounded-xl p-6 text-center">
-                <Server size={20} className="mx-auto mb-2 text-text-muted opacity-50" />
+                <HardDrive size={20} className="mx-auto mb-2 text-text-muted opacity-50" />
                 <p className="text-xs text-text-muted">No servers connected yet. Click <strong className="text-text-primary">Add Trinity to Discord</strong> above to install.</p>
               </div>
             )}
@@ -387,7 +381,7 @@ export default function DiscordPage() {
                           onClick={() => removeIntegration(int.id)}
                           className="text-[10px] text-text-muted hover:text-danger flex items-center gap-1"
                         >
-                          <Unlink size={11} /> Remove
+                          <LinkBreak size={11} /> Remove
                         </button>
                       </div>
                     </div>
@@ -444,7 +438,7 @@ export default function DiscordPage() {
           {/* Day-to-day usage */}
           <PrismPanel padding="p-5">
             <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-              <Zap size={14} className="text-brand-accent" /> What agencies actually do with it
+              <Lightning size={14} className="text-brand-accent" /> What agencies actually do with it
             </h3>
             <ol className="space-y-2 text-[11px] text-text-muted leading-relaxed list-decimal list-inside">
               <li><strong className="text-text-primary">Morning standup at 9:30am:</strong> team opens #trinity-ops in Discord, sees the overnight AI digest (leads, replies, revenue), and plans the day.</li>
@@ -459,7 +453,7 @@ export default function DiscordPage() {
           {isPlatformAdmin && (
             <div className="glass rounded-xl p-4 border-warning/30 bg-warning/5">
               <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                <AlertTriangle size={14} className="text-warning" /> Required env vars (set in Vercel)
+                <Warning size={14} className="text-warning" /> Required env vars (set in Vercel)
               </h3>
               <ul className="space-y-1 text-[11px] font-mono">
                 <li><code className="text-text-primary">DISCORD_CLIENT_ID</code> <span className="text-text-muted">� app ID from the Discord Developer Portal</span></li>
@@ -474,7 +468,7 @@ export default function DiscordPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 mt-3 text-[11px] text-brand-accent hover:underline"
               >
-                <ExternalLink size={11} /> Open Discord Developer Portal
+                <ArrowSquareOut size={11} /> Open Discord Developer Portal
               </a>
             </div>
           )}
@@ -486,7 +480,7 @@ export default function DiscordPage() {
         <div className="space-y-4">
           <PreviewBanner />
           <div className="flex flex-col items-center justify-center py-10 text-center">
-            <Server size={20} className="text-text-muted mb-2" />
+            <HardDrive size={20} className="text-text-muted mb-2" />
             <p className="text-xs text-text-muted">No servers connected yet.</p>
             <p className="text-[10px] text-text-muted mt-1">Install the Trinity bot above and connect your Discord server.</p>
           </div>
@@ -613,7 +607,7 @@ export default function DiscordPage() {
         <div className="space-y-4">
           <PreviewBanner />
           <div className="glass rounded-xl p-4">
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Smile size={14} className="text-brand-accent" /> Welcome Message Editor</h3>
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Smiley size={14} className="text-brand-accent" /> Welcome Message Editor</h3>
             <div className="mb-3">
               <label className="text-[10px] text-text-muted font-semibold uppercase">Message Template</label>
               <textarea value={welcomeMsg} onChange={e => setWelcomeMsg(e.target.value)}
@@ -622,7 +616,7 @@ export default function DiscordPage() {
             </div>
             <div className="grid grid-cols-3 gap-3 mb-4">
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-light border border-border-subtle">
-                <span className="text-xs">Send DM</span>
+                <span className="text-xs">PaperPlaneTilt DM</span>
                 <div onClick={() => setWelcomeDm(!welcomeDm)}
                   className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${welcomeDm ? "bg-brand-accent" : "bg-white/20"}`}>
                   <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${welcomeDm ? "translate-x-[18px]" : "translate-x-0.5"}`} />
@@ -651,8 +645,8 @@ export default function DiscordPage() {
               <div className="flex items-start gap-2">
                 <div className="w-8 h-8 rounded-full bg-[#5865F2] flex items-center justify-center text-white text-xs font-bold">SS</div>
                 <div>
-                  <p className="text-xs font-semibold text-white">ShortStack Bot <span className="text-[9px] px-1 py-0.5 rounded bg-[#5865F2] text-white font-normal ml-1">BOT</span></p>
-                  <p className="text-xs text-[#dcddde] mt-0.5">{welcomeMsg.replace("{server}", currentServer?.name || "Server").replace("{user}", "@NewMember")}</p>
+                  <p className="text-xs font-semibold text-white">ShortStack Robot <span className="text-[9px] px-1 py-0.5 rounded bg-[#5865F2] text-white font-normal ml-1">BOT</span></p>
+                  <p className="text-xs text-[#dcddde] mt-0.5">{welcomeMsg.replace("{server}", currentServer?.name || "HardDrive").replace("{user}", "@NewMember")}</p>
                 </div>
               </div>
             </div>
@@ -692,9 +686,9 @@ export default function DiscordPage() {
           </div>
           {/* Mod log */}
           <div className="glass rounded-xl p-4">
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><AlertTriangle size={14} className="text-yellow-400" /> Recent Mod Actions</h3>
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Warning size={14} className="text-yellow-400" /> Recent Mod Actions</h3>
             <div className="p-6 text-center text-text-muted text-xs">
-              <AlertTriangle size={20} className="mx-auto mb-2 opacity-40" />
+              <Warning size={20} className="mx-auto mb-2 opacity-40" />
               <p>No mod actions yet. Once moderation rules are enabled and the bot is posted to a server, auto-mod events will show up here.</p>
             </div>
           </div>
@@ -751,7 +745,7 @@ export default function DiscordPage() {
           </div>
           {/* Daily Activity Chart */}
           <div className="glass rounded-xl p-4">
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-brand-accent" /> Daily Activity</h3>
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><ChartBar size={14} className="text-brand-accent" /> Daily Activity</h3>
             <div className="flex items-end gap-2 h-32">
               {dailyActivity.map(d => (
                 <div key={d.day} className="flex-1 flex flex-col items-center gap-1">
@@ -844,7 +838,7 @@ export default function DiscordPage() {
                   </div>
                 </div>
                 <button className="text-xs bg-[rgba(212,255,0,0.08)] text-brand-accent px-4 py-2 rounded-lg font-medium hover:bg-[rgba(212,255,0,0.12)] w-full">
-                  <Send size={12} className="inline mr-1.5" /> Send Embed
+                  <PaperPlaneTilt size={12} className="inline mr-1.5" /> PaperPlaneTilt Embed
                 </button>
               </div>
             </div>
@@ -887,8 +881,8 @@ export default function DiscordPage() {
         </div>
       )}
 
-      {/* Webhooks Tab */}
-      {activeTab === "Webhooks" && (
+      {/* PlugsConnected Tab */}
+      {activeTab === "PlugsConnected" && (
         <div className="space-y-4">
           <PreviewBanner />
           <p className="text-xs text-text-muted">Manage webhooks for external integrations and automated notifications.</p>
@@ -978,8 +972,8 @@ export default function DiscordPage() {
         <div className="space-y-4">
           <PreviewBanner />
           <div className="flex items-center gap-2 mb-2">
-            <Search size={14} className="text-text-muted" />
-            <input value={searchMembers} onChange={e => setSearchMembers(e.target.value)} placeholder="Search members..."
+            <MagnifyingGlass size={14} className="text-text-muted" />
+            <input value={searchMembers} onChange={e => setSearchMembers(e.target.value)} placeholder="MagnifyingGlass members..."
               className="text-xs rounded-lg px-3 py-1.5 flex-1 input" />
           </div>
           {/* Member Insights */}
@@ -992,7 +986,7 @@ export default function DiscordPage() {
           </div>
           {/* Engagement trends */}
           <div className="glass rounded-xl p-4">
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><TrendingUp size={14} className="text-green-400" /> Engagement Trends</h3>
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><TrendUp size={14} className="text-green-400" /> Engagement Trends</h3>
             <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
               {/* Focal tile */}
               <motion.div

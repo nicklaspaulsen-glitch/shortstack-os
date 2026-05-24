@@ -1,7 +1,7 @@
+import { ArrowRight, Shield } from "@phosphor-icons/react";
 ﻿"use client";
 
 import Link from "next/link";
-import { ArrowRight, Shield } from "lucide-react";
 import { BRAND } from "@/lib/brand-config";
 import Reveal from "./reveal";
 

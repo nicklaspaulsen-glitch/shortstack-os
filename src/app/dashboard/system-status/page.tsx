@@ -1,3 +1,5 @@
+import type { Icon } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowSquareOut, ArrowsClockwise, CheckCircle, Lightning, Lock, Play, ShieldCheck, Warning, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -22,19 +24,6 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
-import type { LucideIcon } from "lucide-react";
-import {
-  ShieldCheck,
-  AlertTriangle,
-  CheckCircle2,
-  XCircle,
-  RefreshCw,
-  ExternalLink,
-  Lock,
-  ArrowLeft,
-  Zap,
-  Play,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type Status = "ok" | "configured" | "missing" | "error";
@@ -67,10 +56,10 @@ interface StatusResponse {
   checked_at: string;
 }
 
-const STATUS_META: Record<Status, { color: string; bg: string; border: string; icon: LucideIcon; label: string }> = {
-  ok: { color: "text-success", bg: "bg-success/10", border: "border-success/30", icon: CheckCircle2, label: "Connected" },
-  configured: { color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]", border: "border-[rgba(212,255,0,0.25)]", icon: CheckCircle2, label: "Configured" },
-  missing: { color: "text-text-muted", bg: "bg-muted/10", border: "border-border-subtle", icon: AlertTriangle, label: "Not set" },
+const STATUS_META: Record<Status, { color: string; bg: string; border: string; icon: Icon; label: string }> = {
+  ok: { color: "text-success", bg: "bg-success/10", border: "border-success/30", icon: CheckCircle, label: "Connected" },
+  configured: { color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]", border: "border-[rgba(212,255,0,0.25)]", icon: CheckCircle, label: "Configured" },
+  missing: { color: "text-text-muted", bg: "bg-muted/10", border: "border-border-subtle", icon: Warning, label: "Not set" },
   error: { color: "text-danger", bg: "bg-danger/10", border: "border-danger/30", icon: XCircle, label: "Error" },
 };
 
@@ -176,7 +165,7 @@ export default function SystemStatusPage() {
           onClick={load}
           className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light"
         >
-          <RefreshCw size={12} /> Retry
+          <ArrowsClockwise size={12} /> Retry
         </button>
       </div>
     );
@@ -207,7 +196,7 @@ export default function SystemStatusPage() {
               disabled={refreshing || runningProbes}
               className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-white/5 border border-border-subtle text-text-primary hover:bg-white/10 disabled:opacity-50"
             >
-              <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
+              <ArrowsClockwise size={12} className={refreshing ? "animate-spin" : ""} />
               {refreshing ? "Checking…" : "Re-check"}
             </button>
           </div>
@@ -229,7 +218,7 @@ export default function SystemStatusPage() {
             summary.ready_to_launch ? "bg-success/20 text-success" : summary.blockers > 0 ? "bg-danger/20 text-danger" : "bg-[rgba(212,255,0,0.12)] text-brand-accent"
           }`}
         >
-          {summary.ready_to_launch ? <CheckCircle2 size={20} /> : summary.blockers > 0 ? <XCircle size={20} /> : <AlertTriangle size={20} />}
+          {summary.ready_to_launch ? <CheckCircle size={20} /> : summary.blockers > 0 ? <XCircle size={20} /> : <Warning size={20} />}
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-sm font-bold text-text-primary">
@@ -258,7 +247,7 @@ export default function SystemStatusPage() {
           <motion.div key={group.category} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: gi * 0.06, duration: 0.4 }} className="glass rounded-xl p-5">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-bold text-text-primary flex items-center gap-2">
-                <Zap size={14} className="text-brand-accent" />
+                <Lightning size={14} className="text-brand-accent" />
                 {group.category}
               </h2>
               <span className="text-[10px] text-text-muted">
@@ -312,7 +301,7 @@ export default function SystemStatusPage() {
                             rel="noreferrer"
                             className={`inline-flex items-center gap-1 text-[10px] mt-2 font-medium ${meta.color} hover:underline`}
                           >
-                            Get credential <ExternalLink size={9} />
+                            Get credential <ArrowSquareOut size={9} />
                           </a>
                         )}
                       </div>
@@ -336,7 +325,7 @@ export default function SystemStatusPage() {
           rel="noreferrer"
           className="inline-flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] border border-[rgba(212,255,0,0.2)] font-medium"
         >
-          Open Vercel <ExternalLink size={10} />
+          Open Vercel <ArrowSquareOut size={10} />
         </a>
       </div>
     </div>

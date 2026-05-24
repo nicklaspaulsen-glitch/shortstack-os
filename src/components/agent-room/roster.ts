@@ -377,7 +377,7 @@ export const AGENTS: AgentDef[] = [
     kind: "integration",
     zone: "integrations",
     emoji: "✈️",
-    role: "Bot + admin notifications.",
+    role: "Robot + admin notifications.",
     offset: { x: 0.75, y: 0.7 },
   },
   {

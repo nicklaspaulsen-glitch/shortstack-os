@@ -1,6 +1,7 @@
 "use client";
+import { PhoneCall } from "@phosphor-icons/react";
 
-import { PhoneCall } from "lucide-react";
+
 import { tokens, themeTokens } from "@/lib/brand/tokens";
 import { formatRelativeTime } from "@/lib/utils";
 import { BentoTile, BentoEmpty } from "./bento-tile";

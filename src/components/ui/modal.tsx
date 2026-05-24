@@ -1,8 +1,9 @@
 "use client";
+import { X } from "@phosphor-icons/react";
 
 import { ReactNode, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { X } from "lucide-react";
+
 
 interface ModalProps {
   isOpen: boolean;

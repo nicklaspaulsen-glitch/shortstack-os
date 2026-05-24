@@ -1,13 +1,8 @@
+import { Calendar, ChartBar, CircleNotch, Copy, DeviceMobile, DownloadSimple, Envelope, Eye, FileText, GitBranch, MagnifyingGlass, Monitor, Moon, PaperPlaneTilt, PencilSimple, Plus, Sparkle, Star, Tag, Trash, TrendUp, UploadSimple, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Mail, Copy, Send, X, FileText, Tag, Sparkles,
-  Search, Monitor, Smartphone, Eye, BarChart3,
-  Plus, Star, GitBranch, Download, Upload,
-  TrendingUp, Edit3, Trash2, Moon, Loader2
-} from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
@@ -173,12 +168,12 @@ export default function EmailTemplatesPage() {
   };
 
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
-    { key: "gallery", label: "Template Gallery", icon: <Mail size={14} /> },
-    { key: "editor", label: "Editor", icon: <Edit3 size={14} /> },
-    { key: "performance", label: "Performance", icon: <BarChart3 size={14} /> },
+    { key: "gallery", label: "Template Gallery", icon: <Envelope size={14} /> },
+    { key: "editor", label: "Editor", icon: <PencilSimple size={14} /> },
+    { key: "performance", label: "Performance", icon: <ChartBar size={14} /> },
     { key: "versions", label: "Versioning", icon: <GitBranch size={14} /> },
-    { key: "ai-generate", label: "AI Generator", icon: <Sparkles size={14} /> },
-    { key: "import-export", label: "Import/Export", icon: <Download size={14} /> },
+    { key: "ai-generate", label: "AI Generator", icon: <Sparkle size={14} /> },
+    { key: "import-export", label: "Import/Export", icon: <DownloadSimple size={14} /> },
   ];
 
   return (
@@ -205,8 +200,8 @@ export default function EmailTemplatesPage() {
                 {/* Filters */}
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="relative flex-1 min-w-[200px]">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-                    <input value={search} onChange={e => setSearch(e.target.value)} className="rounded-xl w-full pl-9 text-xs px-3 py-2 text-text-primary placeholder:text-text-muted outline-none bg-white/5 border border-border-subtle" placeholder="Search templates..." aria-label="Search email templates" />
+                    <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                    <input value={search} onChange={e => setSearch(e.target.value)} className="rounded-xl w-full pl-9 text-xs px-3 py-2 text-text-primary placeholder:text-text-muted outline-none bg-white/5 border border-border-subtle" placeholder="MagnifyingGlass templates..." aria-label="MagnifyingGlass email templates" />
                   </div>
                   <select value={sortBy} onChange={e => setSortBy(e.target.value as typeof sortBy)} className="rounded-xl text-xs px-3 py-2 text-text-primary outline-none bg-white/5 border border-border-subtle">
                     <option value="name">Sort: Name</option>
@@ -258,7 +253,7 @@ export default function EmailTemplatesPage() {
                           </span>
                           <div className="flex items-center gap-2 text-[8px] text-text-muted">
                             <span className="flex items-center gap-0.5"><Eye size={8} /> {template.opens}%</span>
-                            <span className="flex items-center gap-0.5"><Mail size={8} /> {template.replies}%</span>
+                            <span className="flex items-center gap-0.5"><Envelope size={8} /> {template.replies}%</span>
                           </div>
                         </div>
                         <p className="text-[8px] text-text-muted mt-1.5">v{template.version} | {template.lastEdited}</p>
@@ -295,8 +290,8 @@ export default function EmailTemplatesPage() {
                       <div className="flex gap-2">
                         <button className="btn-primary text-xs flex items-center gap-1.5"><Save size={12} /> Save</button>
                         <button className="btn-secondary text-xs flex items-center gap-1.5"><Copy size={12} /> Duplicate</button>
-                        <button className="btn-secondary text-xs flex items-center gap-1.5"><Send size={12} /> Send Test</button>
-                        <button className="btn-ghost text-xs flex items-center gap-1.5 text-red-400"><Trash2 size={12} /> Delete</button>
+                        <button className="btn-secondary text-xs flex items-center gap-1.5"><PaperPlaneTilt size={12} /> PaperPlaneTilt Test</button>
+                        <button className="btn-ghost text-xs flex items-center gap-1.5 text-red-400"><Trash size={12} /> Delete</button>
                       </div>
                     </div>
                     {/* Merge Tag Helper */}
@@ -319,7 +314,7 @@ export default function EmailTemplatesPage() {
                         <div className="flex gap-1">
                           {[
                             { key: "desktop", icon: <Monitor size={12} />, label: "Desktop" },
-                            { key: "mobile", icon: <Smartphone size={12} />, label: "Mobile" },
+                            { key: "mobile", icon: <DeviceMobile size={12} />, label: "Mobile" },
                             { key: "dark", icon: <Moon size={12} />, label: "Dark" },
                           ].map(m => (
                             <button key={m.key} onClick={() => setPreviewMode(m.key as typeof previewMode)}
@@ -343,7 +338,7 @@ export default function EmailTemplatesPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="glass rounded-xl text-center py-12" 
 >
-                    <Edit3 size={24} className="mx-auto mb-2 text-text-muted/30" />
+                    <PencilSimple size={24} className="mx-auto mb-2 text-text-muted/30" />
                     <p className="text-sm text-text-muted">Select a template from the Gallery to edit</p>
                   </motion.div>
                 )}
@@ -484,7 +479,7 @@ export default function EmailTemplatesPage() {
 >
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 bg-[rgba(212,255,0,0.08)] rounded-xl flex items-center justify-center">
-                      <Sparkles size={18} className="text-brand-accent" />
+                      <Sparkle size={18} className="text-brand-accent" />
                     </div>
                     <div>
                       <h3 className="text-sm font-semibold">AI Template Generator</h3>
@@ -535,7 +530,7 @@ export default function EmailTemplatesPage() {
                     </div>
 
                     <button onClick={handleGenerateTemplate} disabled={aiGenerating} className="btn-primary text-xs flex items-center gap-1.5">
-                      {aiGenerating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                      {aiGenerating ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
                       {aiGenerating ? "Generating..." : "Generate Template"}
                     </button>
                   </div>
@@ -592,7 +587,7 @@ export default function EmailTemplatesPage() {
               <div className="space-y-3">
                 {variantsLoading && (
                   <div className="flex items-center justify-center gap-2 text-xs text-text-muted py-8">
-                    <Loader2 size={14} className="animate-spin" /> Generating variants...
+                    <CircleNotch size={14} className="animate-spin" /> Generating variants...
                   </div>
                 )}
                 {!variantsLoading && variants.length === 0 && (
@@ -624,9 +619,9 @@ export default function EmailTemplatesPage() {
                     transition={{ delay: 0 }}
                     className="glass rounded-xl text-center p-6" 
 >
-                    <Upload size={24} className="mx-auto mb-2 text-brand-accent" />
+                    <UploadSimple size={24} className="mx-auto mb-2 text-brand-accent" />
                     <h3 className="text-sm font-semibold mb-1">Import Templates</h3>
-                    <p className="text-[10px] text-text-muted mb-3">Upload HTML or JSON template files</p>
+                    <p className="text-[10px] text-text-muted mb-3">UploadSimple HTML or JSON template files</p>
                     <div className="border-2 border-dashed border-border-subtle rounded-lg p-6 mb-3">
                       <p className="text-[10px] text-text-muted">Drag and drop files here or click to browse</p>
                       <p className="text-[8px] text-text-muted mt-1">Supports .html, .json, .mjml</p>
@@ -639,15 +634,15 @@ export default function EmailTemplatesPage() {
                     transition={{ delay: 0.05 }}
                     className="glass rounded-xl text-center p-6" 
 >
-                    <Download size={24} className="mx-auto mb-2 text-brand-accent" />
+                    <DownloadSimple size={24} className="mx-auto mb-2 text-brand-accent" />
                     <h3 className="text-sm font-semibold mb-1">Export Templates</h3>
-                    <p className="text-[10px] text-text-muted mb-3">Download your templates for backup or sharing</p>
+                    <p className="text-[10px] text-text-muted mb-3">DownloadSimple your templates for backup or sharing</p>
                     <div className="space-y-2">
                       <button className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
                         <FileText size={12} /> Export All as JSON
                       </button>
                       <button className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
-                        <Mail size={12} /> Export All as HTML
+                        <Envelope size={12} /> Export All as HTML
                       </button>
                       <button className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
                         <Copy size={12} /> Export Selected Only
@@ -724,9 +719,9 @@ export default function EmailTemplatesPage() {
                   </div>
                   <div className="flex items-center gap-2 p-4 border-t border-white/10">
                     <button className="btn-primary flex items-center gap-1.5 text-[10px]"><Copy size={12} /> Copy</button>
-                    <button onClick={handleGenerateVariants} className="btn-secondary flex items-center gap-1.5 text-[10px]"><Sparkles size={12} /> A/B Variants</button>
-                    <button onClick={() => { setActiveTab("editor"); }} className="btn-secondary flex items-center gap-1.5 text-[10px]"><Edit3 size={12} /> Full Editor</button>
-                    <button onClick={() => setSelectedTemplate(null)} className="btn-primary flex items-center gap-1.5 text-[10px] ml-auto"><Send size={12} /> Use Template</button>
+                    <button onClick={handleGenerateVariants} className="btn-secondary flex items-center gap-1.5 text-[10px]"><Sparkle size={12} /> A/B Variants</button>
+                    <button onClick={() => { setActiveTab("editor"); }} className="btn-secondary flex items-center gap-1.5 text-[10px]"><PencilSimple size={12} /> Full Editor</button>
+                    <button onClick={() => setSelectedTemplate(null)} className="btn-primary flex items-center gap-1.5 text-[10px] ml-auto"><PaperPlaneTilt size={12} /> Use Template</button>
                   </div>
                 </motion.div>
               </div>

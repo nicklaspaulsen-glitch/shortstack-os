@@ -22,9 +22,9 @@ export interface VideoPreset {
 
 export const VIDEO_PRESET_CATEGORIES = [
   { id: "hooks", name: "Hooks & Openers", icon: "Zap" },
-  { id: "content", name: "Content Formats", icon: "Film" },
+  { id: "content", name: "Content Formats", icon: "FilmStrip" },
   { id: "captions", name: "Caption Styles", icon: "Type" },
-  { id: "effects", name: "Effects & Transitions", icon: "Sparkles" },
+  { id: "effects", name: "Effects & Transitions", icon: "Sparkle" },
   { id: "ads", name: "Ad Templates", icon: "Target" },
   { id: "social", name: "Social Media", icon: "Globe" },
   { id: "agency", name: "Agency / Client", icon: "Briefcase" },

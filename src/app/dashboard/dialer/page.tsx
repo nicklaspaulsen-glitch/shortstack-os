@@ -1,7 +1,7 @@
 "use client";
+import { ChatCircle, PaperPlaneTilt, Phone } from "@phosphor-icons/react";
 
 import { useState } from "react";
-import { Phone, MessageCircle, Send } from "lucide-react";
 import { motion } from "framer-motion";
 import DialerTab from "./_components/DialerTab";
 import SMSConsoleTab from "./_components/SMSConsoleTab";
@@ -13,8 +13,8 @@ type Tab = (typeof TABS)[number];
 
 const TAB_ICON: Record<Tab, React.ReactNode> = {
   "Power Dialer": <Phone size={16} />,
-  "SMS Console": <MessageCircle size={16} />,
-  "DM Composer": <Send size={16} />,
+  "SMS Console": <ChatCircle size={16} />,
+  "DM Composer": <PaperPlaneTilt size={16} />,
 };
 
 // /dashboard/dialer — three-tab cockpit covering the Voice / SMS / DM gap

@@ -1,4 +1,5 @@
 "use client";
+import { ArrowRight, ArrowsClockwise, Calendar, Check, CircleNotch, Clock, Envelope, FileText, FilmStrip, Image, Info, Layout, Lightning, Megaphone, PaperPlaneTilt, Phone, Sparkle, Stack, TrendUp, X } from "@phosphor-icons/react";
 
 /**
  * AI Recommender — the big visible "Ready to make AI do your job?" button on
@@ -14,11 +15,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
-import {
-  Sparkles, X, Film, Image as ImageIcon, FileText, Mail, Send, Megaphone,
-  Phone, LayoutTemplate, Layers, Loader2, RefreshCw, Calendar, Clock,
-  Zap, ArrowRight, TrendingUp, Info,
-} from "lucide-react";
 import toast from "react-hot-toast";
 
 interface Recommendation {
@@ -35,9 +31,9 @@ interface Recommendation {
 }
 
 const ICON_MAP: Record<string, React.ReactNode> = {
-  Film: <Film size={16} />, Image: <ImageIcon size={16} />, FileText: <FileText size={16} />,
-  Mail: <Mail size={16} />, Send: <Send size={16} />, Megaphone: <Megaphone size={16} />,
-  Phone: <Phone size={16} />, LayoutTemplate: <LayoutTemplate size={16} />, Layers: <Layers size={16} />,
+  FilmStrip: <FilmStrip size={16} />, Image: <Image size={16} />, FileText: <FileText size={16} />,
+  Envelope: <Envelope size={16} />, PaperPlaneTilt: <PaperPlaneTilt size={16} />, Megaphone: <Megaphone size={16} />,
+  Phone: <Phone size={16} />, Layout: <Layout size={16} />, Stack: <Stack size={16} />,
 };
 
 const TYPE_INFO: Record<string, { label: string; description: string; emoji: string }> = {
@@ -176,7 +172,7 @@ export default function AiRecommender() {
         )}
         <div className="relative flex items-center gap-3 px-5 py-3.5">
           <div className="w-9 h-9 rounded-xl bg-black/15 backdrop-blur-sm flex items-center justify-center">
-            <Sparkles size={18} className="text-black" />
+            <Sparkle size={18} className="text-black" />
           </div>
           <div className="text-left flex-1">
             <p className="text-sm font-bold text-black">
@@ -211,7 +207,7 @@ export default function AiRecommender() {
               <div className="relative flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12  bg-gradient-to-br from-[#D4FF00] to-[#AACC00] flex items-center justify-center shadow-lg shadow-[rgba(212,255,0,0.3)]">
-                    <Sparkles size={22} className="text-black" />
+                    <Sparkle size={22} className="text-black" />
                   </div>
                   <div>
                     <h2 className="text-base font-semibold text-text-primary">AI Task Commander</h2>
@@ -229,7 +225,7 @@ export default function AiRecommender() {
             {/* Strategy banner */}
             {theme && (
               <div className="mx-6 mt-4 p-3 rounded-xl bg-gradient-to-r from-[rgba(212,255,0,0.05)] to-[rgba(212,255,0,0.03)] border border-[rgba(212,255,0,0.2)] flex items-start gap-3">
-                <TrendingUp size={14} className="text-[#D4FF00] shrink-0 mt-0.5" />
+                <TrendUp size={14} className="text-[#D4FF00] shrink-0 mt-0.5" />
                 <div className="flex-1">
                   <p className="text-[11px] font-semibold text-text-primary">{theme}</p>
                   {priorityFocus && <p className="text-[10px] text-text-muted mt-0.5">💡 {priorityFocus}</p>}
@@ -239,7 +235,7 @@ export default function AiRecommender() {
                   disabled={loading}
                   className="shrink-0 text-[10px] text-text-muted hover:text-[#D4FF00] flex items-center gap-1 transition-colors"
                 >
-                  <RefreshCw size={10} className={loading ? "animate-spin" : ""} /> Different ideas
+                  <ArrowsClockwise size={10} className={loading ? "animate-spin" : ""} /> Different ideas
                 </button>
               </div>
             )}
@@ -248,7 +244,7 @@ export default function AiRecommender() {
             <div className="flex-1 overflow-y-auto p-6">
               {loading && recommendations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-3">
-                  <Loader2 size={32} className="animate-spin text-[#D4FF00]" />
+                  <CircleNotch size={32} className="animate-spin text-[#D4FF00]" />
                   <p className="text-xs text-text-muted">AI is analyzing your business...</p>
                   <p className="text-[10px] text-text-muted/70 max-w-md text-center">
                     Checking your recent activity, business type, goals, and what would move the needle most.
@@ -257,7 +253,7 @@ export default function AiRecommender() {
               ) : recommendations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-4">
                   <div className="w-16 h-16  bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
-                    <Sparkles size={28} className="text-[#D4FF00]" />
+                    <Sparkle size={28} className="text-[#D4FF00]" />
                   </div>
                   <div className="text-center">
                     <p className="text-sm font-semibold mb-1">Ready when you are</p>
@@ -266,7 +262,7 @@ export default function AiRecommender() {
                     </p>
                   </div>
                   <button onClick={() => generate(false)} className="btn-primary text-xs flex items-center gap-1.5">
-                    <Sparkles size={12} /> Generate recommendations
+                    <Sparkle size={12} /> Generate recommendations
                   </button>
                 </div>
               ) : (
@@ -296,7 +292,7 @@ export default function AiRecommender() {
                     disabled={loading}
                     className="btn-secondary text-xs flex items-center gap-1.5"
                   >
-                    {loading ? <Loader2 size={11} className="animate-spin" /> : <RefreshCw size={11} />}
+                    {loading ? <CircleNotch size={11} className="animate-spin" /> : <ArrowsClockwise size={11} />}
                     Generate new
                   </button>
                 )}
@@ -381,7 +377,7 @@ export default function AiRecommender() {
 /* ─── Individual recommendation card ─── */
 function RecommendationCard({ rec, index }: { rec: Recommendation; index: number }) {
   const typeInfo = TYPE_INFO[rec.type] || { label: rec.type, description: "", emoji: "✨" };
-  const icon = ICON_MAP[rec.icon] || <Sparkles size={16} />;
+  const icon = ICON_MAP[rec.icon] || <Sparkle size={16} />;
   const [showInfo, setShowInfo] = useState(false);
 
   const impactColor = rec.impact === "high" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
@@ -429,7 +425,7 @@ function RecommendationCard({ rec, index }: { rec: Recommendation; index: number
         )}
 
         <div className="flex items-start gap-1.5 pt-1">
-          <Zap size={10} className="text-[#D4FF00] shrink-0 mt-0.5" />
+          <Lightning size={10} className="text-[#D4FF00] shrink-0 mt-0.5" />
           <p className="text-[10px] text-[rgba(212,255,0,0.8)] leading-relaxed italic">{rec.reason}</p>
         </div>
 

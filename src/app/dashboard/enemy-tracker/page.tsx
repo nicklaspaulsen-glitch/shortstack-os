@@ -1,37 +1,8 @@
+import { ArrowUpRight, ArrowsClockwise, Bookmark, CaretDown, ChartBar, ChatCircle, CheckCircle, CircleNotch, Clock, Copy, Eye, Fire, FolderPlus, Heart, Lightbulb, Lightning, MagicWand, MagnifyingGlass, Microphone, Pause, Play, Plus, ShareNetwork, Sparkle, Target, TrendUp, Users, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Target,
-  Plus,
-  Play,
-  Pause,
-  Heart,
-  MessageCircle,
-  Share2,
-  Eye,
-  Bookmark,
-  Copy,
-  Wand2,
-  FolderPlus,
-  X,
-  RefreshCw,
-  Flame,
-  TrendingUp,
-  Clock,
-  CheckCircle,
-  Sparkles,
-  BarChart3,
-  ArrowUpRight,
-  Users,
-  Mic,
-  Loader2,
-  Search,
-  ChevronDown,
-  Lightbulb,
-  Zap,
-} from "lucide-react";
 import { useRouter } from "next/navigation";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -833,7 +804,7 @@ function ContentCard({
             {fmt(item.metrics.saves)}
           </span>
           <span className="ml-auto flex items-center gap-0.5 text-indigo-400">
-            <BarChart3 className="w-3 h-3" />
+            <ChartBar className="w-3 h-3" />
             {engagementRate}%
           </span>
         </div>
@@ -1176,10 +1147,10 @@ function DetailPanel({
             {[
               { icon: Eye, label: "Views", val: fmt(item.metrics.views) },
               { icon: Heart, label: "Likes", val: fmt(item.metrics.likes) },
-              { icon: MessageCircle, label: "Comments", val: fmt(item.metrics.comments) },
-              { icon: Share2, label: "Shares", val: fmt(item.metrics.shares) },
+              { icon: ChatCircle, label: "Comments", val: fmt(item.metrics.comments) },
+              { icon: ShareNetwork, label: "Shares", val: fmt(item.metrics.shares) },
               { icon: Bookmark, label: "Saves", val: fmt(item.metrics.saves) },
-              { icon: BarChart3, label: "Eng. Rate", val: `${engRate}%` },
+              { icon: ChartBar, label: "Eng. Rate", val: `${engRate}%` },
             ].map(({ icon: Icon, label, val }) => (
               <div key={label} className="flex items-center justify-between">
                 <span className="flex items-center gap-1 text-white/40">
@@ -1201,7 +1172,7 @@ function DetailPanel({
           }}
         >
           <h4 className="text-xs font-semibold text-amber-400/80 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <Flame className="w-3.5 h-3.5" />
+            <Fire className="w-3.5 h-3.5" />
             Why It&apos;s Viral
           </h4>
           <p className="text-xs text-white/60 leading-relaxed">{item.whyViral}</p>
@@ -1218,7 +1189,7 @@ function DetailPanel({
                 key={i}
                 className="flex items-start gap-2 text-xs text-white/70 bg-white/[0.04] rounded-lg px-3 py-2"
               >
-                <TrendingUp className="w-3 h-3 text-indigo-400 mt-0.5 shrink-0" />
+                <TrendUp className="w-3 h-3 text-indigo-400 mt-0.5 shrink-0" />
                 {hook}
               </div>
             ))}
@@ -1234,7 +1205,7 @@ function DetailPanel({
           }}
         >
           <h4 className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <Mic className="w-3.5 h-3.5" />
+            <Microphone className="w-3.5 h-3.5" />
             Script / Transcript
           </h4>
           <p className="text-xs text-white/60 leading-relaxed italic">
@@ -1259,13 +1230,13 @@ function DetailPanel({
             style={{ color: "#fbbf24" }}
           >
             {loadingIdeas
-              ? <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
+              ? <CircleNotch className="w-3.5 h-3.5 animate-spin shrink-0" />
               : <Lightbulb className="w-3.5 h-3.5 shrink-0" />}
             <span className="flex-1 text-left">
               {loadingIdeas ? "Generating ideas for your niche…" : "Get Content Ideas for My Niche"}
             </span>
             {!loadingIdeas && ideas.length > 0 && (
-              <ChevronDown
+              <CaretDown
                 className="w-3.5 h-3.5 shrink-0 transition-transform duration-200"
                 style={{ transform: showIdeas ? "rotate(180deg)" : "rotate(0deg)" }}
               />
@@ -1310,7 +1281,7 @@ function DetailPanel({
                     className="w-full mt-3 flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition-all hover:brightness-110"
                     style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.20)", color: "#fbbf24" }}
                   >
-                    <Wand2 className="w-3.5 h-3.5" />
+                    <MagicWand className="w-3.5 h-3.5" />
                     Write Script from These Ideas
                   </button>
                 </div>
@@ -1351,9 +1322,9 @@ function DetailPanel({
             }}
           >
             {transcribing ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <CircleNotch className="w-3.5 h-3.5 animate-spin" />
             ) : (
-              <Mic className="w-3.5 h-3.5" />
+              <Microphone className="w-3.5 h-3.5" />
             )}
             {transcribing ? "Transcribing…" : "Transcribe"}
           </button>
@@ -1366,7 +1337,7 @@ function DetailPanel({
               color: "#020711",
             }}
           >
-            <Wand2 className="w-3.5 h-3.5" />
+            <MagicWand className="w-3.5 h-3.5" />
             Generate My Version in Script Lab
           </button>
 
@@ -1379,7 +1350,7 @@ function DetailPanel({
               color: "#a78bfa",
             }}
           >
-            <Sparkles className="w-3.5 h-3.5" />
+            <Sparkle className="w-3.5 h-3.5" />
             Match Thumbnail Style
           </button>
 
@@ -1631,10 +1602,10 @@ export default function EnemyTrackerPage() {
                 <span className="text-green-400 text-[10px] font-semibold uppercase tracking-wider">Live</span>
               </div>
               <span className="text-white/25">·</span>
-              <Flame className="w-3.5 h-3.5 text-orange-400" />
+              <Fire className="w-3.5 h-3.5 text-orange-400" />
               <span>{filtered.length} viral posts</span>
               <button className="ml-1 hover:text-white/70 transition-colors">
-                <RefreshCw className="w-3.5 h-3.5" />
+                <ArrowsClockwise className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
@@ -1655,7 +1626,7 @@ export default function EnemyTrackerPage() {
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
                     style={{ background: "rgba(212,255,0,0.15)", border: "1px solid rgba(212,255,0,0.25)" }}>
-                    <Zap className="w-4 h-4 text-indigo-400" />
+                    <Lightning className="w-4 h-4 text-indigo-400" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-semibold text-white mb-0.5">
@@ -1725,7 +1696,7 @@ export default function EnemyTrackerPage() {
             <div ref={sentinelRef} className="h-20 flex items-center justify-center">
               {loading && (
                 <div className="flex items-center gap-2 text-white/30 text-xs">
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <CircleNotch className="w-4 h-4 animate-spin" />
                   Loading more…
                 </div>
               )}

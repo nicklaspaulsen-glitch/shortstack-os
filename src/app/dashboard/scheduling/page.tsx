@@ -1,14 +1,8 @@
+import { ArrowSquareOut, Brain, Calendar, ChartBar, Check, CircleNotch, Clock, Copy, Envelope, Gear, Globe, Lightning, Link, MapPin, PencilSimple, Plus, Shield, Shuffle, Sparkle, Star, Timer, Users, Warning, WarningCircle, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import {
-  Calendar, Clock, Users, Link2, Copy, Globe,
-  Plus, Settings, Mail, Shuffle, BarChart3, Shield,
-  X, Check, ExternalLink, Edit3, AlertCircle, Loader2,
-  Sparkles, Brain, Timer, MapPin,
-  AlertTriangle, Zap, Star
-} from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import { ZoomIcon, CalendlyIcon, GoogleIcon } from "@/components/ui/platform-icons";
 import { PageSkeleton } from "@/components/ui/skeleton";
@@ -252,8 +246,8 @@ export default function SchedulingPage() {
     { id: "booking_pages", label: "Booking Pages", icon: <Calendar size={13} /> },
     { id: "availability", label: "Availability", icon: <Clock size={13} /> },
     { id: "ai_smart", label: "AI Smart", icon: <Brain size={13} /> },
-    { id: "analytics", label: "Analytics", icon: <BarChart3 size={13} /> },
-    { id: "settings", label: "Settings", icon: <Settings size={13} /> },
+    { id: "analytics", label: "Analytics", icon: <ChartBar size={13} /> },
+    { id: "settings", label: "Gear", icon: <Gear size={13} /> },
   ];
 
   if (loading) {
@@ -276,7 +270,7 @@ export default function SchedulingPage() {
               <Globe size={10} /><span className="font-medium">{detectedTimezone.split(" ")[0].split("/")[1]}</span>
             </div>
             <button onClick={() => setShowLinkGen(true)} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5">
-              <Link2 size={12} /> Get Booking Link
+              <Link size={12} /> Get Booking Link
             </button>
             <button onClick={() => setShowCreateModal(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1.5">
               <Plus size={12} /> New Meeting Type
@@ -374,7 +368,7 @@ export default function SchedulingPage() {
                             {mt.active ? "Active" : "Inactive"}
                           </button>
                           <button onClick={() => setEditingType(editingType === mt.id ? null : mt.id)} className="btn-ghost p-1" aria-label="Edit meeting type">
-                            <Edit3 size={10} className="text-text-muted" />
+                            <PencilSimple size={10} className="text-text-muted" />
                           </button>
                         </div>
                       </div>
@@ -395,7 +389,7 @@ export default function SchedulingPage() {
                           <Copy size={10} /> Copy Link
                         </button>
                         <a href={bookingLink(mt.id)} target="_blank" rel="noopener" className="btn-ghost text-[10px] px-2 py-1 flex items-center gap-1 text-text-muted hover:text-text-primary">
-                          <ExternalLink size={10} /> Preview
+                          <ArrowSquareOut size={10} /> Preview
                         </a>
                       </div>
 
@@ -521,7 +515,7 @@ export default function SchedulingPage() {
           {/* Confirmation Email Preview */}
           <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.4 }}>
             <div className="flex items-center justify-between">
-              <h2 className="flex items-center gap-2 mb-0"><Mail size={13} className="text-brand-accent" /> Confirmation Email Preview</h2>
+              <h2 className="flex items-center gap-2 mb-0"><Envelope size={13} className="text-brand-accent" /> Confirmation Email Preview</h2>
               <button onClick={() => setShowEmailPreview(!showEmailPreview)} className="btn-ghost text-[10px]">
                 {showEmailPreview ? "Hide" : "Show"} Preview
               </button>
@@ -678,7 +672,7 @@ export default function SchedulingPage() {
           {/* Smart Conflict Detection */}
           <div className="glass rounded-xl p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
-              <AlertTriangle size={13} className="text-amber-400" /> Smart Conflict Detection
+              <Warning size={13} className="text-amber-400" /> Smart Conflict Detection
             </h3>
             {CONFLICT_ALERTS.length === 0 ? (
               <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-400/[0.05] border border-emerald-400/20">
@@ -695,7 +689,7 @@ export default function SchedulingPage() {
                       alert.severity === "warning" ? "bg-amber-500/10" : "bg-[rgba(212,255,0,0.10)]"
                     }`}>
                       {alert.severity === "warning"
-                        ? <AlertTriangle size={14} className="text-amber-400" />
+                        ? <Warning size={14} className="text-amber-400" />
                         : <Globe size={14} className="text-brand-accent" />
                       }
                     </div>
@@ -769,7 +763,7 @@ export default function SchedulingPage() {
           {/* Meeting Prep Cards */}
           <div className="glass rounded-xl p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
-              <Sparkles size={13} className="text-brand-accent" /> AI Meeting Prep Cards
+              <Sparkle size={13} className="text-brand-accent" /> AI Meeting Prep Cards
             </h3>
             <p className="text-[10px] text-text-muted mb-3">AI-generated prep briefs for your upcoming meetings</p>
             <div className="space-y-3">
@@ -807,7 +801,7 @@ export default function SchedulingPage() {
           {/* Popular Times Heatmap */}
           <div className="glass rounded-xl p-4">
             <h2 className="flex items-center gap-2">
-              <Zap size={13} className="text-brand-accent" /> Popular Times Heatmap
+              <Lightning size={13} className="text-brand-accent" /> Popular Times Heatmap
             </h2>
             <p className="text-[10px] text-text-muted mb-3">Booking frequency by day and hour (last 90 days)</p>
             <div className="overflow-x-auto">
@@ -860,7 +854,7 @@ export default function SchedulingPage() {
 
           {/* Bookings by Type */}
           <div className="glass rounded-xl p-4">
-            <h2 className="flex items-center gap-2"><BarChart3 size={13} className="text-brand-accent" /> Bookings by Meeting Type</h2>
+            <h2 className="flex items-center gap-2"><ChartBar size={13} className="text-brand-accent" /> Bookings by Meeting Type</h2>
             {meetingTypes.length === 0 ? (
               <p className="text-xs text-text-muted text-center py-4">Create meeting types to see analytics.</p>
             ) : (
@@ -928,7 +922,7 @@ export default function SchedulingPage() {
         </div>
       )}
 
-      {/* ---- TAB: Settings ---- */}
+      {/* ---- TAB: Gear ---- */}
       {tab === "settings" && (
         <div className="space-y-4">
           {/* Round-Robin */}
@@ -986,7 +980,7 @@ export default function SchedulingPage() {
 
           {/* Policies */}
           <div className="glass rounded-xl p-4">
-            <h2 className="flex items-center gap-2"><AlertCircle size={13} className="text-red-400" /> Reschedule / Cancel Policy</h2>
+            <h2 className="flex items-center gap-2"><WarningCircle size={13} className="text-red-400" /> Reschedule / Cancel Policy</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Minimum Reschedule Notice</label>
@@ -1018,7 +1012,7 @@ export default function SchedulingPage() {
         <div className="fixed inset-0 bg-[rgba(0,0,0,0.35)] backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowLinkGen(false)}>
           <div className="bg-surface  border border-border-subtle w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold flex items-center gap-2"><Link2 size={14} className="text-brand-accent" /> Booking Link Generator</h3>
+              <h3 className="text-sm font-bold flex items-center gap-2"><Link size={14} className="text-brand-accent" /> Booking Link Generator</h3>
               <button onClick={() => setShowLinkGen(false)} className="text-text-muted hover:text-text-primary" aria-label="Close link generator"><X size={16} /></button>
             </div>
             {meetingTypes.filter(m => m.active).length === 0 ? (
@@ -1129,7 +1123,7 @@ export default function SchedulingPage() {
             <div className="flex justify-end gap-2 pt-2">
               <button onClick={() => setShowCreateModal(false)} className="btn-secondary text-xs">Cancel</button>
               <button onClick={handleCreate} disabled={!newMeeting.name || creating} className="btn-primary text-xs flex items-center gap-1.5">
-                {creating ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />}
+                {creating ? <CircleNotch size={12} className="animate-spin" /> : <Plus size={12} />}
                 {creating ? "Creating..." : "Create"}
               </button>
             </div>

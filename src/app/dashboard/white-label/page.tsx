@@ -1,14 +1,10 @@
 "use client";
+import { ArrowSquareOut, ArrowsClockwise, CheckCircle, CircleNotch, CurrencyDollar, Envelope, Eye, EyeSlash, FloppyDisk, Globe, Image, ShieldCheck, TextAlignLeft, ToggleLeft, ToggleRight, X } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import {
-  Globe, Mail, Image, ToggleLeft, ToggleRight, Save, Loader2,
-  AlignLeft, CheckCircle2, Eye, EyeOff, RefreshCw, ShieldCheck, X,
-  DollarSign, ExternalLink,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -216,7 +212,7 @@ export default function WhiteLabelPage() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-brand-accent" /></MotionPage>
+      <MotionPage className="flex items-center justify-center min-h-[60vh]"><CircleNotch className="w-8 h-8 animate-spin text-brand-accent" /></MotionPage>
     );
   }
 
@@ -234,7 +230,7 @@ export default function WhiteLabelPage() {
               onClick={() => setShowPreview(!showPreview)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-white/8 hover:bg-white/10 text-text-secondary transition-all"
             >
-              {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showPreview ? <EyeSlash className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               {showPreview ? "Hide Preview" : "Preview"}
             </button>
             <button
@@ -242,8 +238,8 @@ export default function WhiteLabelPage() {
               disabled={saving}
               className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-brand-accent hover:bg-brand-accent/90 text-black transition-all disabled:opacity-60"
             >
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Save Settings
+              {saving ? <CircleNotch className="w-4 h-4 animate-spin" /> : <FloppyDisk className="w-4 h-4" />}
+              FloppyDisk Settings
             </button>
           </div>
         </div>
@@ -383,7 +379,7 @@ export default function WhiteLabelPage() {
                   disabled={domainBusy || !domainInput.trim()}
                   className="px-4 py-2.5 rounded-full bg-brand-accent hover:bg-brand-accent/90 text-black text-sm font-semibold disabled:opacity-60 transition-all whitespace-nowrap"
                 >
-                  {domainBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : "Attach"}
+                  {domainBusy ? <CircleNotch className="w-4 h-4 animate-spin" /> : "Attach"}
                 </button>
               </div>
             </Field>
@@ -395,13 +391,13 @@ export default function WhiteLabelPage() {
                   <span className="font-mono text-text-primary text-sm">{config.custom_domain}</span>
                   {config.custom_domain_verified && (
                     <a href={`https://${config.custom_domain}`} target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-text-secondary" aria-label="Open">
-                      <ExternalLink className="w-3.5 h-3.5" />
+                      <ArrowSquareOut className="w-3.5 h-3.5" />
                     </a>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
                   <button onClick={handleVerifyDomain} disabled={domainBusy} className="flex items-center gap-1 px-3 py-1.5 rounded-md bg-white/8 hover:bg-white/10 text-text-secondary text-xs font-medium disabled:opacity-60">
-                    {domainBusy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                    {domainBusy ? <CircleNotch className="w-3.5 h-3.5 animate-spin" /> : <ArrowsClockwise className="w-3.5 h-3.5" />}
                     Verify
                   </button>
                   <button onClick={handleRemoveDomain} disabled={domainBusy} className="p-1.5 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400" title="Remove">
@@ -436,7 +432,7 @@ export default function WhiteLabelPage() {
 
               {config.custom_domain_verified && (
                 <div className="flex items-center gap-2 text-xs bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2 text-emerald-400">
-                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <CheckCircle className="w-4 h-4 shrink-0" />
                   Live with SSL. Your subaccounts can sign in at <span className="font-mono">https://{config.custom_domain}</span>.
                 </div>
               )}
@@ -481,7 +477,7 @@ export default function WhiteLabelPage() {
 
           <Field label="Markup percent" hint="Adds this percentage on top of the ShortStack base fee. e.g. 30 = you charge subaccounts 1.3x the base price.">
             <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-text-muted" />
+              <CurrencyDollar className="w-4 h-4 text-text-muted" />
               <input
                 type="number"
                 min={0}
@@ -497,7 +493,7 @@ export default function WhiteLabelPage() {
 
           {!stripeStatus?.connected && (
             <a href="/api/integrations/stripe-connect/onboard" className="text-xs text-brand-accent hover:underline flex items-center gap-1">
-              <ExternalLink className="w-3 h-3" />
+              <ArrowSquareOut className="w-3 h-3" />
               Connect your Stripe account to enable resell billing
             </a>
           )}
@@ -516,7 +512,7 @@ export default function WhiteLabelPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Email From Name" hint="Sender name shown in client email notifications">
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
+                <Envelope className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                 <input
                   type="text"
                   value={config.email_from_name}
@@ -538,7 +534,7 @@ export default function WhiteLabelPage() {
           </div>
           <Field label="Custom Login Page Text" hint="Shown below the logo on the sign-in page">
             <div className="relative">
-              <AlignLeft className="absolute left-3 top-3 w-4 h-4 text-text-muted" />
+              <TextAlignLeft className="absolute left-3 top-3 w-4 h-4 text-text-muted" />
               <textarea
                 value={config.login_text}
                 onChange={(e) => set("login_text", e.target.value)}
@@ -558,8 +554,8 @@ export default function WhiteLabelPage() {
           disabled={saving}
           className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-brand-accent hover:bg-brand-accent/90 text-black transition-all disabled:opacity-60"
         >
-          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-          Save White Label Settings
+          {saving ? <CircleNotch className="w-4 h-4 animate-spin" /> : <FloppyDisk className="w-4 h-4" />}
+          FloppyDisk White Label Settings
         </button>
       </div>
     </div>

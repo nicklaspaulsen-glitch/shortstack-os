@@ -1,3 +1,4 @@
+import { ArrowsClockwise, Calendar, CaretRight, ChartBar, Check, CircleNotch, Clock, File, FileText, FilmStrip, GitBranch, Lightning, MagnifyingGlass, PaperPlaneTilt, PencilSimple, Shield, Sparkle, Stack, Star, Target, ThumbsUp, Tray, TrendUp, UploadSimple, User, Warning, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -12,12 +13,7 @@ import Modal from "@/components/ui/modal";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { formatDate, formatDateTime } from "@/lib/utils";
-import {
-  Film, FileText, Inbox, Upload, User, Sparkles, Calendar,
-  Check, Edit3, Clock, Send, Search, BarChart3, RefreshCw,
-  AlertTriangle, Zap, TrendingUp, Shield, Layers, Loader,
-  ThumbsUp, GitBranch, Star, ChevronRight, X
-} from "lucide-react";
+
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -280,7 +276,7 @@ export default function ContentPage() {
       ]);
 
       try {
-        // Upload to Supabase storage (client-uploads bucket — same as portal uploads)
+        // UploadSimple to Supabase storage (client-uploads bucket — same as portal uploads)
         const path = `content-hub/${profile?.id || "anon"}/${Date.now()}-${file.name}`;
         const { error: uploadError } = await supabase.storage
           .from("client-uploads")
@@ -338,7 +334,7 @@ export default function ContentPage() {
         } : i)));
         toast.success(`AI package ready: ${file.name}`);
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Upload failed";
+        const msg = err instanceof Error ? err.message : "UploadSimple failed";
         setDropItems((prev) => prev.map((i) => (i.id === localId ? { ...i, status: "failed", error: msg } : i)));
         toast.error(`Failed: ${file.name}`);
       }
@@ -526,13 +522,13 @@ export default function ContentPage() {
 
   const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
     { key: "scripts", label: "Scripts", icon: <FileText size={16} /> },
-    { key: "requests", label: "Request Inbox", icon: <Inbox size={16} /> },
-    { key: "publish", label: "Publish Queue", icon: <Upload size={16} /> },
+    { key: "requests", label: "Request Tray", icon: <Tray size={16} /> },
+    { key: "publish", label: "Publish Queue", icon: <UploadSimple size={16} /> },
     { key: "calendar", label: "Calendar", icon: <Calendar size={16} /> },
     { key: "personal", label: "Personal Brand", icon: <User size={16} /> },
-    { key: "pipeline", label: "Pipeline", icon: <Layers size={16} /> },
-    { key: "analytics", label: "Analytics", icon: <BarChart3 size={16} /> },
-    { key: "seo", label: "SEO & Quality", icon: <Search size={16} /> },
+    { key: "pipeline", label: "Pipeline", icon: <Stack size={16} /> },
+    { key: "analytics", label: "Analytics", icon: <ChartBar size={16} /> },
+    { key: "seo", label: "SEO & Quality", icon: <MagnifyingGlass size={16} /> },
   ];
 
   if (loading && tab === "scripts") return (
@@ -559,7 +555,7 @@ export default function ContentPage() {
         <div className="flex items-center gap-2 shrink-0">
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <button onClick={() => setShowGenerateModal(true)} className="btn-primary flex items-center gap-2">
-              <Sparkles size={16} /> Generate Script
+              <Sparkle size={16} /> Generate Script
             </button>
           </motion.div>
         </div>
@@ -570,7 +566,7 @@ export default function ContentPage() {
         <div className="flex items-center justify-between mb-3">
           <div>
             <h2 className="flex items-center gap-2 mb-1">
-              <Sparkles size={18} className="text-brand-accent" /> Drop & Go — AI handles the rest
+              <Sparkle size={18} className="text-brand-accent" /> Drop & Go — AI handles the rest
             </h2>
             <p className="text-xs text-text-muted">Drop any file. AI writes titles, descriptions, hashtags, and best post times for every platform.</p>
           </div>
@@ -581,7 +577,7 @@ export default function ContentPage() {
                 disabled={planningWeek}
                 className="btn-primary flex items-center gap-1.5 disabled:opacity-50 bg-brand-accent text-xs px-3 py-1.5"
               >
-                {planningWeek && planPeriodDays === 7 ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                {planningWeek && planPeriodDays === 7 ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
                 Plan Week
               </button>
               <button
@@ -589,7 +585,7 @@ export default function ContentPage() {
                 disabled={planningWeek}
                 className="btn-ghost flex items-center gap-1.5 disabled:opacity-50 text-xs px-3 py-1.5 border border-[rgba(212, 255, 0,0.25)] text-brand-accent hover:bg-[rgba(212, 255, 0,0.08)] rounded-lg"
               >
-                {planningWeek && planPeriodDays === 30 ? <Loader size={12} className="animate-spin" /> : null}
+                {planningWeek && planPeriodDays === 30 ? <CircleNotch size={12} className="animate-spin" /> : null}
                 Plan Month
               </button>
               <button
@@ -597,7 +593,7 @@ export default function ContentPage() {
                 disabled={planningWeek}
                 className="btn-ghost flex items-center gap-1.5 disabled:opacity-50 text-xs px-3 py-1.5 border border-[rgba(212, 255, 0,0.25)] text-brand-accent hover:bg-[rgba(212, 255, 0,0.08)] rounded-lg"
               >
-                {planningWeek && planPeriodDays === 365 ? <Loader size={12} className="animate-spin" /> : null}
+                {planningWeek && planPeriodDays === 365 ? <CircleNotch size={12} className="animate-spin" /> : null}
                 Plan Year
               </button>
             </div>
@@ -613,7 +609,7 @@ export default function ContentPage() {
             dragOver ? "border-brand-accent bg-[rgba(212, 255, 0,0.05)]" : "border-[rgba(212, 255, 0,0.25)] hover:border-[rgba(212, 255, 0,0.4)]"
           }`}
         >
-          <Upload size={36} className="mx-auto mb-3 text-brand-accent" />
+          <UploadSimple size={36} className="mx-auto mb-3 text-brand-accent" />
           <p className="text-sm font-medium">Drag & drop images, videos, PDFs, or docs</p>
           <p className="text-xs text-text-muted mt-1">or click to browse — AI auto-packages each file. JPG, PNG, WebP, GIF, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV up to 100 MB.</p>
           <input
@@ -642,18 +638,18 @@ export default function ContentPage() {
                 {/* Header row */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2 min-w-0">
-                    {item.mime_type?.startsWith("video/") ? <Film size={14} className="text-purple-700 shrink-0" /> :
+                    {item.mime_type?.startsWith("video/") ? <FilmStrip size={14} className="text-purple-700 shrink-0" /> :
                       item.mime_type?.startsWith("image/") ? <FileText size={14} className="text-blue-700 shrink-0" /> :
                         <FileText size={14} className="text-brand-accent shrink-0" />}
                     <p className="text-sm font-medium truncate">{item.file_name}</p>
                     {item.status === "uploading" && (
                       <span className="text-[10px] text-text-muted flex items-center gap-1">
-                        <Loader size={10} className="animate-spin" /> Uploading...
+                        <CircleNotch size={10} className="animate-spin" /> Uploading...
                       </span>
                     )}
                     {item.status === "analyzing" && (
                       <span className="text-[10px] text-brand-accent flex items-center gap-1">
-                        <Loader size={10} className="animate-spin" /> Analyzing...
+                        <CircleNotch size={10} className="animate-spin" /> Analyzing...
                       </span>
                     )}
                     {item.status === "ready" && (
@@ -663,7 +659,7 @@ export default function ContentPage() {
                     )}
                     {item.status === "failed" && (
                       <span className="text-[10px] text-danger flex items-center gap-1">
-                        <AlertTriangle size={10} /> Failed
+                        <Warning size={10} /> Failed
                       </span>
                     )}
                   </div>
@@ -693,7 +689,7 @@ export default function ContentPage() {
                                 title="Find a better title"
                                 className="text-[rgba(212, 255, 0,0.6)] hover:text-brand-accent transition-colors disabled:opacity-40 shrink-0"
                               >
-                                {isRemixing ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                                {isRemixing ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
                               </button>
                             </div>
                           );
@@ -805,7 +801,7 @@ export default function ContentPage() {
                     disabled={approvingAll}
                     className="text-[11px] px-3 py-1.5 rounded-full bg-brand-accent text-black font-semibold flex items-center gap-1.5 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {approvingAll ? <Loader size={12} className="animate-spin" /> : <Send size={12} />}
+                    {approvingAll ? <CircleNotch size={12} className="animate-spin" /> : <PaperPlaneTilt size={12} />}
                     Approve all + publish on schedule
                   </button>
                 )}
@@ -858,7 +854,7 @@ export default function ContentPage() {
                     {/* Status indicator */}
                     <span className="shrink-0 flex items-center gap-1 min-w-[80px] justify-end">
                       {isPublishing && (
-                        <><Loader size={10} className="animate-spin text-blue-700" /><span className="text-blue-700">Publishing…</span></>
+                        <><CircleNotch size={10} className="animate-spin text-blue-700" /><span className="text-blue-700">Publishing…</span></>
                       )}
                       {!isPublishing && status === "posted" && (
                         <>
@@ -904,7 +900,7 @@ export default function ContentPage() {
                         title="Publish this entry right now"
                         className="shrink-0 text-[10px] px-2 py-1 rounded border border-[rgba(212, 255, 0,0.25)] hover:bg-[rgba(212, 255, 0,0.08)] text-brand-accent flex items-center gap-1 disabled:opacity-40"
                       >
-                        <Send size={10} /> Publish now
+                        <PaperPlaneTilt size={10} /> Publish now
                       </button>
                     )}
                   </motion.div>
@@ -920,7 +916,7 @@ export default function ContentPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm modal-backdrop" onClick={() => setShowPlanComplete(false)}>
           <div className="glass rounded-xl p-4 max-w-lg w-full p-6" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-lg font-bold mb-1 flex items-center gap-2">
-              <Sparkles size={18} className="text-brand-accent" /> Plan ready — what&apos;s next?
+              <Sparkle size={18} className="text-brand-accent" /> Plan ready — what&apos;s next?
             </h2>
             <p className="text-xs text-text-muted mb-5">
               {planPeriodDays === 7 && "Your 7-day schedule is live. "}
@@ -940,7 +936,7 @@ export default function ContentPage() {
                 }}
                 className="w-full text-left p-3 rounded-lg border border-border-subtle hover:border-[rgba(212, 255, 0,0.3)] hover:bg-[rgba(212, 255, 0,0.05)] transition flex items-start gap-3"
               >
-                <Upload size={16} className="text-brand-accent mt-0.5 shrink-0" />
+                <UploadSimple size={16} className="text-brand-accent mt-0.5 shrink-0" />
                 <div>
                   <p className="text-sm font-medium">I have more content to upload</p>
                   <p className="text-[10px] text-text-muted">Drop more files — I&apos;ll re-plan with the full set</p>
@@ -963,7 +959,7 @@ export default function ContentPage() {
                   onClick={() => { setShowPlanComplete(false); planForPeriod(365); }}
                   className="w-full text-left p-3 rounded-lg border border-[rgba(212, 255, 0,0.25)] bg-gradient-to-r from-[rgba(212, 255, 0,0.08)] to-[rgba(212, 255, 0,0.08)] hover:from-[rgba(212, 255, 0,0.08)] transition flex items-start gap-3"
                 >
-                  <Sparkles size={16} className="text-brand-accent mt-0.5 shrink-0" />
+                  <Sparkle size={16} className="text-brand-accent mt-0.5 shrink-0" />
                   <div>
                     <p className="text-sm font-medium">Plan the whole year</p>
                     <p className="text-[10px] text-text-muted">12-month strategy with weekly themes, seasonal moments, and gap-filling ideas for every week</p>
@@ -1093,7 +1089,7 @@ export default function ContentPage() {
                       {p.status === "pending" && (
                         <button onClick={() => { setShowPublishEditor(p); setEditingPublish({ video_title: p.video_title, description: p.description, hashtags: p.hashtags, thumbnail_text: p.thumbnail_text, scheduled_at: p.scheduled_at }); }}
                           className="btn-secondary text-xs py-1 px-3">
-                          <Edit3 size={12} /> Review
+                          <PencilSimple size={12} /> Review
                         </button>
                       )}
                       {(p.status === "pending" || p.status === "approved") && (
@@ -1109,7 +1105,7 @@ export default function ContentPage() {
                           if (data.success) { toast.success("Published!"); fetchData(); }
                           else toast.error(data.error || "Failed to publish");
                         }} className="btn-primary text-xs py-1 px-3 flex items-center gap-1">
-                          <Send size={12} /> Publish
+                          <PaperPlaneTilt size={12} /> Publish
                         </button>
                       )}
                     </div>
@@ -1144,7 +1140,7 @@ export default function ContentPage() {
               {/* Long Form Ideas */}
               <div>
                 <h2 className="flex items-center gap-2">
-                  <Film size={18} /> Long-Form Ideas (5 per Sunday)
+                  <FilmStrip size={18} /> Long-Form Ideas (5 per Sunday)
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {personalIdeas.filter((i) => i.idea_type === "long_form").length === 0 ? (
@@ -1183,7 +1179,7 @@ export default function ContentPage() {
               {/* Short Form Ideas */}
               <div>
                 <h2 className="flex items-center gap-2">
-                  <Send size={18} /> Short-Form Ideas (20 per Sunday)
+                  <PaperPlaneTilt size={18} /> Short-Form Ideas (20 per Sunday)
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                   {personalIdeas.filter((i) => i.idea_type === "short_form").length === 0 ? (
@@ -1227,7 +1223,7 @@ export default function ContentPage() {
               </div>
               {pipelineItems.length === 0 && (
                 <div className="glass rounded-xl p-4 text-center py-12">
-                  <Layers size={28} className="mx-auto mb-2 text-text-muted/30" />
+                  <Stack size={28} className="mx-auto mb-2 text-text-muted/30" />
                   <p className="text-sm text-text-muted">No content in the pipeline yet.</p>
                 </div>
               )}
@@ -1248,7 +1244,7 @@ export default function ContentPage() {
                           <span>{item.assignee}</span>
                         </div>
                         {item.due && <p className="text-[10px] text-text-muted mt-1 flex items-center gap-1"><Clock size={9} /> Due: {item.due}</p>}
-                        {item.seo_score > 0 && <p className="text-[10px] mt-1 flex items-center gap-1"><Search size={9} className="text-brand-accent" /> SEO: {item.seo_score}/100</p>}
+                        {item.seo_score > 0 && <p className="text-[10px] mt-1 flex items-center gap-1"><MagnifyingGlass size={9} className="text-brand-accent" /> SEO: {item.seo_score}/100</p>}
                       </div>
                     ))}
                   </div>
@@ -1264,14 +1260,14 @@ export default function ContentPage() {
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${i < 3 ? "bg-[rgba(212, 255, 0,0.08)] text-brand-accent border border-[rgba(212, 255, 0,0.2)]" : "bg-surface-light text-text-muted border border-border-subtle"}`}>{i + 1}</div>
                         <p className="text-[9px] text-text-muted mt-1">{step}</p>
                       </div>
-                      {i < 4 && <ChevronRight size={12} className="text-text-muted" />}
+                      {i < 4 && <CaretRight size={12} className="text-text-muted" />}
                     </div>
                   ))}
                 </div>
               </div>
               {/* Repurpose Suggestions */}
               <div className="glass rounded-xl p-4">
-                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><RefreshCw size={14} className="text-brand-accent" /> Repurpose Suggestions</h3>
+                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><ArrowsClockwise size={14} className="text-brand-accent" /> Repurpose Suggestions</h3>
                 <p className="text-xs text-text-muted text-center py-6">No repurpose suggestions yet. Add content to the pipeline to get started.</p>
               </div>
               {/* Version Control */}
@@ -1360,7 +1356,7 @@ export default function ContentPage() {
           {tab === "seo" && (
             <div className="space-y-4">
               <div className="glass rounded-xl p-4">
-                <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><Search size={14} className="text-brand-accent" /> SEO & Readability Checker</h3>
+                <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><MagnifyingGlass size={14} className="text-brand-accent" /> SEO & Readability Checker</h3>
                 <div className="space-y-3">
                   <div>
                     <label className="text-[10px] text-text-muted uppercase tracking-wider">Target Keyword (optional)</label>
@@ -1374,12 +1370,12 @@ export default function ContentPage() {
                       disabled={!seoText.trim() || enhancing === "seo"}
                       className="flex items-center gap-1 text-[10px] text-[rgba(212, 255, 0,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mt-1"
                     >
-                      {enhancing === "seo" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                      {enhancing === "seo" ? <CircleNotch size={10} className="animate-spin" /> : <Sparkle size={10} />}
                       AI Enhance for SEO
                     </button>
                   </div>
                   <button onClick={runSeoCheck} disabled={seoChecking} className="btn-primary flex items-center gap-2 disabled:opacity-50">
-                    {seoChecking ? <><div className="w-3 h-3 border-2 border-black/20 border-t-black rounded-full animate-spin" /> Checking...</> : <><Search size={14} /> Run SEO Check</>}
+                    {seoChecking ? <><div className="w-3 h-3 border-2 border-black/20 border-t-black rounded-full animate-spin" /> Checking...</> : <><MagnifyingGlass size={14} /> Run SEO Check</>}
                   </button>
                 </div>
                 {seoResults && (
@@ -1404,12 +1400,12 @@ export default function ContentPage() {
                     </div>
                     {seoResults.issues.length > 0 && (
                       <div className="p-3 bg-danger/5 border border-danger/10 rounded-lg">
-                        <p className="text-xs font-medium text-danger mb-2 flex items-center gap-1"><AlertTriangle size={12} /> Issues</p>
+                        <p className="text-xs font-medium text-danger mb-2 flex items-center gap-1"><Warning size={12} /> Issues</p>
                         {seoResults.issues.map((issue, i) => <p key={i} className="text-[10px] text-danger/80">- {issue}</p>)}
                       </div>
                     )}
                     <div className="p-3 bg-[rgba(212, 255, 0,0.05)] border border-[rgba(212, 255, 0,0.1)] rounded-lg">
-                      <p className="text-xs font-medium text-brand-accent mb-2 flex items-center gap-1"><Zap size={12} /> Suggestions</p>
+                      <p className="text-xs font-medium text-brand-accent mb-2 flex items-center gap-1"><Lightning size={12} /> Suggestions</p>
                       {seoResults.suggestions.map((s, i) => <p key={i} className="text-[10px] text-[rgba(212, 255, 0,0.8)]">- {s}</p>)}
                     </div>
                   </div>
@@ -1417,12 +1413,12 @@ export default function ContentPage() {
               </div>
               {/* AI Enhance */}
               <div className="glass rounded-xl p-4">
-                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Sparkles size={14} className="text-brand-accent" /> AI Enhance</h3>
+                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Sparkle size={14} className="text-brand-accent" /> AI Enhance</h3>
                 <p className="text-xs text-text-muted mb-3">Let AI improve your content for better SEO, readability, and engagement.</p>
                 <div className="grid grid-cols-3 gap-2">
                   {["Improve Readability", "Add Keywords", "Expand Content", "Shorten & Tighten", "Add CTA", "Fix Grammar"].map(action => (
                     <button key={action} onClick={() => toast.success(`AI enhancing: ${action}`)} className="p-3 border border-border-subtle rounded-lg text-xs text-left hover:border-[rgba(212, 255, 0,0.25)] transition-all">
-                      <Sparkles size={12} className="text-brand-accent mb-1" />
+                      <Sparkle size={12} className="text-brand-accent mb-1" />
                       {action}
                     </button>
                   ))}
@@ -1468,7 +1464,7 @@ export default function ContentPage() {
           <div className="flex justify-end gap-3 pt-4">
             <button type="button" onClick={() => setShowGenerateModal(false)} className="btn-secondary">Cancel</button>
             <button type="submit" className="btn-primary flex items-center gap-2">
-              <Sparkles size={16} /> Generate
+              <Sparkle size={16} /> Generate
             </button>
           </div>
         </form>
@@ -1522,7 +1518,7 @@ export default function ContentPage() {
                 disabled={!editingPublish.description?.trim() || enhancing === "desc"}
                 className="flex items-center gap-1 text-[10px] text-[rgba(212, 255, 0,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mt-1"
               >
-                {enhancing === "desc" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                {enhancing === "desc" ? <CircleNotch size={10} className="animate-spin" /> : <Sparkle size={10} />}
                 AI Enhance
               </button>
             </div>
@@ -1538,7 +1534,7 @@ export default function ContentPage() {
                 disabled={!editingPublish.hashtags?.length || enhancing === "hash"}
                 className="flex items-center gap-1 text-[10px] text-[rgba(212, 255, 0,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mt-1"
               >
-                {enhancing === "hash" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                {enhancing === "hash" ? <CircleNotch size={10} className="animate-spin" /> : <Sparkle size={10} />}
                 AI Enhance Hashtags
               </button>
             </div>
@@ -1580,7 +1576,7 @@ export default function ContentPage() {
             <div className="flex justify-end gap-3 pt-4 border-t border-border-subtle">
               <button onClick={() => setShowPublishEditor(null)} className="btn-secondary">Cancel</button>
               <button onClick={() => { /* Publish now logic */ }} className="btn-secondary flex items-center gap-2">
-                <Send size={16} /> Publish Now
+                <PaperPlaneTilt size={16} /> Publish Now
               </button>
               <button onClick={() => approvePublish(showPublishEditor)} className="btn-primary flex items-center gap-2">
                 <Check size={16} /> Approve & Schedule

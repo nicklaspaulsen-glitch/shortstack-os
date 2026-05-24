@@ -1,8 +1,8 @@
+import { Check, CircleNotch, Funnel, Pencil, Plus, Trash, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Filter, Plus, Pencil, Trash2, Check, X, Loader2 } from "lucide-react";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
@@ -186,7 +186,7 @@ export default function LeadSourcesPage() {
                 <div className="flex gap-2">
                   <button onClick={handleCreate} disabled={saving || !form.source_name.trim()}
                     className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
-                    {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Save
+                    {saving ? <CircleNotch size={13} className="animate-spin" /> : <Check size={13} />} Save
                   </button>
                   <button onClick={() => setShowCreate(false)}
                     className="btn-ghost flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg">
@@ -196,7 +196,7 @@ export default function LeadSourcesPage() {
               </motion.div>
             )}{loading ? <TableSkeleton rows={5} /> : sources.length === 0 ? (
               <motion.div className="glass rounded-xl p-12 flex flex-col items-center gap-4 text-center" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-                <Filter size={40} className="text-text-muted" />
+                <Funnel size={40} className="text-text-muted" />
                 <p className="text-text-primary font-semibold">No lead sources yet</p>
                 <p className="text-text-muted text-sm max-w-xs">Add your first source to start tracking where leads originate.</p>
                 <button onClick={() => setShowCreate(true)}
@@ -244,7 +244,7 @@ export default function LeadSourcesPage() {
                             <div className="flex items-center gap-1">
                               <button onClick={() => handleUpdate(s.id)} disabled={saving}
                                 className="p-1.5 rounded hover:bg-green-500/10 text-green-400">
-                                {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />}
+                                {saving ? <CircleNotch size={13} className="animate-spin" /> : <Check size={13} />}
                               </button>
                               <button onClick={() => setEditId(null)} className="p-1.5 rounded hover:bg-white/5 text-text-muted">
                                 <X size={13} />
@@ -272,7 +272,7 @@ export default function LeadSourcesPage() {
                               </button>
                               <button onClick={() => handleDelete(s.id)} disabled={deleting === s.id}
                                 className="p-1.5 rounded hover:bg-red-500/10 text-text-muted hover:text-red-400">
-                                {deleting === s.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                                {deleting === s.id ? <CircleNotch size={13} className="animate-spin" /> : <Trash size={13} />}
                               </button>
                             </div>
                           </td>

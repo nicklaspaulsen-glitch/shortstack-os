@@ -1,3 +1,4 @@
+import { ArrowRight, CircleNotch, Sparkle } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -14,7 +15,6 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { Loader2, Sparkles, ArrowRight } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   PLATFORM_COLORS,
@@ -81,7 +81,7 @@ export default function BudgetsPanel() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12 text-text-muted">
-        <Loader2 className="animate-spin mr-2" size={16} />
+        <CircleNotch className="animate-spin mr-2" size={16} />
         Loading budgets...
       </div>
     );
@@ -138,7 +138,7 @@ export default function BudgetsPanel() {
         <div className="rounded-lg border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.04)] p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-medium inline-flex items-center gap-1.5">
-              <Sparkles size={14} className="text-brand-accent" />
+              <Sparkle size={14} className="text-brand-accent" />
               AI-suggested allocation
             </h3>
             {suggested && suggested.length > 0 && (
@@ -148,7 +148,7 @@ export default function BudgetsPanel() {
                 className="inline-flex items-center gap-1 rounded border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] px-2.5 py-1 text-xs text-brand-accent hover:bg-[rgba(212,255,0,0.14)] disabled:opacity-50"
               >
                 {applying ? (
-                  <Loader2 className="animate-spin" size={12} />
+                  <CircleNotch className="animate-spin" size={12} />
                 ) : (
                   <ArrowRight size={12} />
                 )}

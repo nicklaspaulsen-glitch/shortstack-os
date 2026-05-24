@@ -1,6 +1,7 @@
 "use client";
+import { Envelope } from "@phosphor-icons/react";
 
-import { Mail } from "lucide-react";
+
 import { tokens, themeTokens } from "@/lib/brand/tokens";
 import { formatRelativeTime } from "@/lib/utils";
 import { BentoTile, BentoEmpty } from "./bento-tile";
@@ -24,7 +25,7 @@ export default function RecentEmailsTile({ emails, index = 0 }: Props) {
   return (
     <BentoTile
       title="Recent emails"
-      icon={<Mail size={14} />}
+      icon={<Envelope size={14} />}
       span="lg:col-span-4 lg:row-span-1"
       link={{ href: "/dashboard/conversations", label: "Inbox" }}
       index={index}

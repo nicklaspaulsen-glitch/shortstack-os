@@ -15,13 +15,13 @@
 
 import { useEffect, useState, useCallback } from "react";
 import {
-  CheckCircle2,
-  AlertCircle,
-  ExternalLink,
-  Loader,
-  RefreshCw,
-  Sparkles,
-} from "lucide-react";
+  CheckCircle,
+  WarningCircle,
+  ArrowSquareOut,
+  CircleNotch,
+  ArrowsClockwise,
+  Sparkle,
+} from "@phosphor-icons/react";
 import {
   SiMeta,
   SiGoogleads,
@@ -164,7 +164,7 @@ export default function ZernioConnectPanel() {
           className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
           style={{ background: "rgba(212,255,0,0.10)" }}
         >
-          <Sparkles size={16} style={{ color: "#D4FF00" }} />
+          <Sparkle size={16} style={{ color: "#D4FF00" }} />
         </div>
         <div className="text-[12.5px] leading-relaxed">
           <p className="font-semibold text-white mb-1">
@@ -209,9 +209,9 @@ export default function ZernioConnectPanel() {
           className="px-3 py-2 rounded-lg bg-white/[0.03] border border-border-subtle text-xs text-text-muted hover:text-text-primary hover:bg-white/[0.06] transition flex items-center gap-1.5 disabled:opacity-50"
         >
           {loadingConnections ? (
-            <Loader size={12} className="animate-spin" />
+            <CircleNotch size={12} className="animate-spin" />
           ) : (
-            <RefreshCw size={12} />
+            <ArrowsClockwise size={12} />
           )}
           Refresh
         </button>
@@ -243,8 +243,8 @@ export default function ZernioConnectPanel() {
               key={p.key}
               className="rounded-xl p-4 flex items-start gap-3 transition-all"
               style={{
-                background: "rgba(255,255,255,0.80)",
-                border: "1px solid rgba(0,0,0,0.08)",
+                background: `${p.color}0a`,
+                border: `1px solid ${p.color}1a`,
               }}
             >
               <div
@@ -280,27 +280,27 @@ export default function ZernioConnectPanel() {
                   style={{
                     background:
                       status === "connected"
-                        ? "rgba(0,0,0,0.04)"
+                        ? "rgba(255,255,255,0.05)"
                         : `${p.color}14`,
                     border:
                       status === "connected"
-                        ? "1px solid rgba(0,0,0,0.08)"
+                        ? "1px solid rgba(255,255,255,0.12)"
                         : `1px solid ${p.color}30`,
                     color:
-                      status === "connected" ? "var(--color-foreground)" : p.color,
+                      status === "connected" ? "#A8A8B8" : p.color,
                   }}
                 >
                   {isConnecting ? (
                     <>
-                      <Loader size={11} className="animate-spin" /> Opening…
+                      <CircleNotch size={11} className="animate-spin" /> Opening…
                     </>
                   ) : status === "connected" ? (
                     <>
-                      Reconnect <ExternalLink size={10} />
+                      Reconnect <ArrowSquareOut size={10} />
                     </>
                   ) : (
                     <>
-                      Connect via Zernio <ExternalLink size={10} />
+                      Connect via Zernio <ArrowSquareOut size={10} />
                     </>
                   )}
                 </button>
@@ -324,14 +324,14 @@ function ConnStatusBadge({ status }: { status: ZernioConnection["status"] }) {
   if (status === "connected") {
     return (
       <span className="text-[9.5px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1">
-        <CheckCircle2 size={9} /> Live
+        <CheckCircle size={9} weight="fill" /> Live
       </span>
     );
   }
   if (status === "expired" || status === "error") {
     return (
       <span className="text-[9.5px] font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1">
-        <AlertCircle size={9} /> {status}
+        <WarningCircle size={9} weight="fill" /> {status}
       </span>
     );
   }

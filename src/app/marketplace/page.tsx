@@ -1,4 +1,5 @@
 "use client";
+import { ArrowRight, Clock, Funnel, MagnifyingGlass, Storefront, Tag } from "@phosphor-icons/react";
 
 /**
  * Public Service Marketplace browse page.
@@ -9,7 +10,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { Search, Store, Filter, Tag, Clock, ArrowRight } from "lucide-react";
+
 
 interface ServiceRow {
   id: string;
@@ -102,7 +103,7 @@ export default function MarketplacePublicPage() {
       <header className="border-b border-white/5 bg-gradient-to-b from-[#1a1611] via-[#15120e] to-transparent">
         <div className="mx-auto max-w-6xl px-6 py-12">
           <div className="flex items-center gap-3 text-amber-300">
-            <Store size={24} />
+            <Storefront size={24} />
             <span className="text-sm font-semibold uppercase tracking-widest">
               Service Marketplace
             </span>
@@ -121,20 +122,20 @@ export default function MarketplacePublicPage() {
       <div className="sticky top-0 z-10 border-b border-white/5 bg-[#0a0c10]/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-4 md:flex-row md:items-center">
           <div className="relative flex-1">
-            <Search
+            <MagnifyingGlass
               size={16}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40"
             />
             <input
               type="search"
-              placeholder="Search services..."
+              placeholder="MagnifyingGlass services..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full rounded-lg border border-white/10 bg-white/[0.03] py-2 pl-9 pr-4 text-sm placeholder:text-white/30 focus:border-amber-300/40 focus:outline-none"
             />
           </div>
           <div className="flex items-center gap-2 overflow-x-auto">
-            <Filter size={14} className="text-white/40" />
+            <Funnel size={14} className="text-white/40" />
             {CATEGORIES.map((c) => (
               <button
                 key={c}
@@ -160,7 +161,7 @@ export default function MarketplacePublicPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="py-20 text-center">
-            <Store size={36} className="mx-auto mb-3 text-white/20" />
+            <Storefront size={36} className="mx-auto mb-3 text-white/20" />
             <p className="text-sm font-medium text-white/80">
               No services match your filters
             </p>

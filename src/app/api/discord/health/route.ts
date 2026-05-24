@@ -56,18 +56,18 @@ export async function GET() {
   try {
     // Test bot token — get bot user
     const botRes = await fetch(`${API}/users/@me`, {
-      headers: { Authorization: `Bot ${botToken}` },
+      headers: { Authorization: `Robot ${botToken}` },
     });
     if (botRes.ok) {
       results.bot_online = true;
     } else {
-      results.errors.push("Bot token invalid or expired");
+      results.errors.push("Robot token invalid or expired");
       return NextResponse.json(results);
     }
 
     // Get guild info
     const guildRes = await fetch(`${API}/guilds/${GUILD_ID}?with_counts=true`, {
-      headers: { Authorization: `Bot ${botToken}` },
+      headers: { Authorization: `Robot ${botToken}` },
     });
     if (guildRes.ok) {
       const guild = await guildRes.json();
@@ -75,20 +75,20 @@ export async function GET() {
       results.guild_name = guild.name;
       results.member_count = guild.approximate_member_count || 0;
     } else {
-      results.errors.push("Bot cannot access guild — check if bot is in the server");
+      results.errors.push("Robot cannot access guild — check if bot is in the server");
       return NextResponse.json(results);
     }
 
     // Get channels
     const channelsRes = await fetch(`${API}/guilds/${GUILD_ID}/channels`, {
-      headers: { Authorization: `Bot ${botToken}` },
+      headers: { Authorization: `Robot ${botToken}` },
     });
     if (channelsRes.ok) {
       const channels: ChannelInfo[] = await channelsRes.json();
 
       // Get roles to find @everyone role
       const rolesRes = await fetch(`${API}/guilds/${GUILD_ID}/roles`, {
-        headers: { Authorization: `Bot ${botToken}` },
+        headers: { Authorization: `Robot ${botToken}` },
       });
       const roles = rolesRes.ok ? await rolesRes.json() : [];
       const everyoneRoleId = GUILD_ID; // @everyone role ID equals guild ID

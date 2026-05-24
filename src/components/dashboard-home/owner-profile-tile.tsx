@@ -1,8 +1,8 @@
 "use client";
+import { Envelope, PhoneCall, UserPlus } from "@phosphor-icons/react";
 
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, PhoneCall, UserPlus } from "lucide-react";
 import { tokens, themeTokens } from "@/lib/brand/tokens";
 import { BentoTile } from "./bento-tile";
 import type { OwnerProfile } from "./types";
@@ -32,7 +32,7 @@ const QUICK: Array<{
   Icon: typeof UserPlus;
 }> = [
   { href: "/dashboard/leads/new", label: "New lead", Icon: UserPlus },
-  { href: "/dashboard/conversations", label: "Inbox", Icon: Mail },
+  { href: "/dashboard/conversations", label: "Inbox", Icon: Envelope },
   { href: "/dashboard/voice-receptionist", label: "Call", Icon: PhoneCall },
 ];
 

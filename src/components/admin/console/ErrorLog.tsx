@@ -1,7 +1,8 @@
 "use client";
+import { CaretDown, CaretRight, Warning } from "@phosphor-icons/react";
 
 import { useState } from "react";
-import { ChevronDown, ChevronRight, AlertTriangle } from "lucide-react";
+
 
 export interface TrinityErrorRow {
   id: string;
@@ -35,7 +36,7 @@ function ExpandableRow({ row }: { row: TrinityErrorRow }) {
         className="w-full flex items-start gap-2 py-2 px-1 text-left hover:bg-surface-light transition-colors rounded"
       >
         <span className="mt-0.5 shrink-0 text-text-muted">
-          {open ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+          {open ? <CaretDown size={12} /> : <CaretRight size={12} />}
         </span>
         <div className="flex-1 min-w-0 grid grid-cols-[1fr_auto] gap-2 items-start">
           <div className="min-w-0">
@@ -95,7 +96,7 @@ export default function ErrorLog({ rows }: ErrorLogProps) {
   return (
     <div className=" border border-border-subtle bg-surface p-4">
       <div className="flex items-center gap-2 mb-3">
-        <AlertTriangle size={14} className="text-danger" />
+        <Warning size={14} className="text-danger" />
         <h2 className="text-xs font-bold text-text-primary">
           Recent error log
           <span className="ml-2 text-text-muted font-normal">({rows.length})</span>

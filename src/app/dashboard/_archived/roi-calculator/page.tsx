@@ -1,19 +1,8 @@
 "use client";
+import { ArrowsClockwise, Bookmark, Calculator, CaretDown, Clock, CurrencyDollar, Info, Target, TrendUp, Users } from "@phosphor-icons/react";
 
 import { useState, useMemo } from "react";
 import { MotionPage } from "@/components/motion/motion-page";
-import {
-  Calculator,
-  TrendingUp,
-  DollarSign,
-  Users,
-  Clock,
-  Target,
-  RefreshCw,
-  Bookmark,
-  ChevronDown,
-  Info,
-} from "lucide-react";
 
 // ── Preset scenarios ────────────────────────────────────────────────────────
 
@@ -219,7 +208,7 @@ export default function RoiCalculatorPage() {
           onClick={() => setActivePreset(null)}
           className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs text-text-muted hover:text-text-primary border border-transparent hover:border-border-subtle transition-all"
         >
-          <RefreshCw size={10} />
+          <ArrowsClockwise size={10} />
           Custom
         </button>
       </div>
@@ -396,7 +385,7 @@ export default function RoiCalculatorPage() {
             className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light text-text-muted text-xs transition-all"
           >
             <span className="font-medium">Annualized projections</span>
-            <ChevronDown size={13} className={`transition-transform ${showDetail ? "rotate-180" : ""}`} />
+            <CaretDown size={13} className={`transition-transform ${showDetail ? "rotate-180" : ""}`} />
           </button>
 
           {showDetail && (
@@ -485,10 +474,10 @@ export default function RoiCalculatorPage() {
       {/* ── Metric legend ─────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {[
-          { icon: <DollarSign size={12} />, label: "MRR",    desc: "Monthly Recurring Revenue — your baseline income" },
+          { icon: <CurrencyDollar size={12} />, label: "MRR",    desc: "Monthly Recurring Revenue — your baseline income" },
           { icon: <Target size={12} />,      label: "LTV:CAC", desc: "Lifetime value vs. cost to acquire. 3x+ is healthy" },
           { icon: <Clock size={12} />,       label: "$/hr",   desc: "Effective hourly rate — a proxy for operational efficiency" },
-          { icon: <TrendingUp size={12} />,  label: "Margin", desc: "Revenue minus overhead. 40–60% is a solid agency target" },
+          { icon: <TrendUp size={12} />,  label: "Margin", desc: "Revenue minus overhead. 40–60% is a solid agency target" },
           { icon: <Users size={12} />,       label: "Util %", desc: "Team load vs. total capacity (160h/person/month assumed)" },
         ].slice(0, 4).map((item) => (
           <div key={item.label} className="flex items-start gap-2 px-3 py-2.5 rounded-lg bg-surface border border-border-subtle">

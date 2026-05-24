@@ -1,17 +1,10 @@
+import { BookOpen, CaretDown, CaretRight, Check, CheckCircle, CircleNotch, Copy, Eye, FileText, FloppyDisk, MagicWand, MagnifyingGlass, Microphone, Palette, Plus, Shield, Sliders, Sparkle, SpeakerHigh, Star, TextT, ThumbsDown, ThumbsUp, ToggleLeft, ToggleRight, Trash, TrendUp, Users, WarningCircle, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import {
-  Mic, Sparkles, Plus, Trash2, Check, X, Copy, Save,
-  ToggleLeft, ToggleRight, Sliders, BookOpen,
-  AlertCircle, CheckCircle, Type, Shield,
-  ChevronDown, ChevronRight, Search, Wand2,
-  FileText, Users, Star, Loader, Eye,
-  ThumbsUp, ThumbsDown, Volume2, Palette, TrendingUp
-} from "lucide-react";
 import toast from "react-hot-toast";
 import EmptyState from "@/components/empty-state";
 import { useAutoSave } from "@/lib/use-auto-save";
@@ -42,10 +35,10 @@ interface VoiceProfile {
 const VOICE_PRESETS = [
   { key: "professional", label: "Professional", icon: <Shield size={14} />, sliders: { formalCasual: 25, seriousPlayful: 30, technicalSimple: 40, reservedEnthusiastic: 35, authorityFriendly: 30 } },
   { key: "friendly", label: "Friendly", icon: <ThumbsUp size={14} />, sliders: { formalCasual: 70, seriousPlayful: 65, technicalSimple: 60, reservedEnthusiastic: 75, authorityFriendly: 80 } },
-  { key: "bold", label: "Bold", icon: <Volume2 size={14} />, sliders: { formalCasual: 55, seriousPlayful: 50, technicalSimple: 45, reservedEnthusiastic: 85, authorityFriendly: 40 } },
+  { key: "bold", label: "Bold", icon: <SpeakerHigh size={14} />, sliders: { formalCasual: 55, seriousPlayful: 50, technicalSimple: 45, reservedEnthusiastic: 85, authorityFriendly: 40 } },
   { key: "luxury", label: "Luxury", icon: <Star size={14} />, sliders: { formalCasual: 15, seriousPlayful: 20, technicalSimple: 50, reservedEnthusiastic: 40, authorityFriendly: 25 } },
   { key: "technical", label: "Technical", icon: <FileText size={14} />, sliders: { formalCasual: 20, seriousPlayful: 25, technicalSimple: 15, reservedEnthusiastic: 30, authorityFriendly: 35 } },
-  { key: "youthful", label: "Youthful", icon: <Sparkles size={14} />, sliders: { formalCasual: 85, seriousPlayful: 80, technicalSimple: 75, reservedEnthusiastic: 90, authorityFriendly: 70 } },
+  { key: "youthful", label: "Youthful", icon: <Sparkle size={14} />, sliders: { formalCasual: 85, seriousPlayful: 80, technicalSimple: 75, reservedEnthusiastic: 90, authorityFriendly: 70 } },
 ];
 
 const INITIAL_PROFILES: VoiceProfile[] = [];
@@ -232,7 +225,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
     try {
       const res = await fetch("/api/copywriter/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ prompt: text, context }),
       });
       const data = await res.json();
@@ -256,7 +249,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
   const TABS = [
     { key: "editor" as const, label: "Voice Editor", icon: <Sliders size={14} /> },
     { key: "samples" as const, label: "Samples & Rules", icon: <BookOpen size={14} /> },
-    { key: "vocabulary" as const, label: "Vocabulary", icon: <Type size={14} /> },
+    { key: "vocabulary" as const, label: "Vocabulary", icon: <TextT size={14} /> },
     { key: "checker" as const, label: "Voice Checker", icon: <CheckCircle size={14} /> },
   ];
 
@@ -318,13 +311,13 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         toast.success("Brand voice profiles saved");
                       } catch (err) {
                         console.error("Manual brand voice save failed:", err);
-                        toast.error("Save failed");
+                        toast.error("FloppyDisk failed");
                       }
                       setSavingManual(false);
                     }}
                     className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1"
                   >
-                    <Save size={10} /> {savingManual ? "Saving..." : "Save"}
+                    <FloppyDisk size={10} /> {savingManual ? "Saving..." : "FloppyDisk"}
                   </button>
                 </div>
               </div>
@@ -354,17 +347,17 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
               {/* Sidebar - Profile List */}
               <div className="col-span-12 md:col-span-3 space-y-3">
                 <div className="relative">
-                  <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
+                  <MagnifyingGlass size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                   <input
                     value={searchFilter}
                     onChange={e => setSearchFilter(e.target.value)}
-                    placeholder="Search profiles..."
+                    placeholder="MagnifyingGlass profiles..."
                     className="input text-xs pl-8 w-full"
                   />
                 </div>
                 {filteredProfiles.length === 0 && profiles.length === 0 && (
                   <EmptyState
-                    icon={<Mic size={24} />}
+                    icon={<Microphone size={24} />}
                     title="No brand voice profiles"
                     description="Create one from a website URL"
                     actionLabel="New Profile"
@@ -443,7 +436,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                               >
                                 {VOICE_PRESETS.find(p => p.key === profile.preset)?.icon}
                                 <span className="capitalize">{profile.preset}</span>
-                                <ChevronDown size={12} />
+                                <CaretDown size={12} />
                               </button>
                               {showPresetMenu && (
                                 <div className="absolute right-0 top-full mt-1 glass rounded-lg shadow-xl z-10 min-w-[160px]">
@@ -511,7 +504,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         <div className="glass rounded-xl p-4">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2">
-                              <Wand2 size={16} className="text-brand-accent" />
+                              <MagicWand size={16} className="text-brand-accent" />
                               <span className="text-sm font-semibold">AI-Generated Guidelines</span>
                             </div>
                             <button
@@ -519,7 +512,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                               disabled={generating}
                               className="btn-primary text-xs flex items-center gap-1"
                             >
-                              {generating ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                              {generating ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
                               {generating ? "Generating..." : "Generate"}
                             </button>
                           </div>
@@ -546,7 +539,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                           >
                             <div className="flex items-center justify-between mb-2">
                               <div className="flex items-center gap-1.5">
-                                <TrendingUp size={11} className="text-brand-accent" />
+                                <TrendUp size={11} className="text-brand-accent" />
                                 <span className="text-[11px] font-semibold text-text-primary">Profile Strength</span>
                               </div>
                               <div
@@ -617,7 +610,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                 <Eye size={12} className="text-text-muted mt-0.5 shrink-0" />
                                 <p className="text-xs text-text-muted flex-1">&quot;{s}&quot;</p>
                                 <button onClick={() => removeItem("samples", i)} className="text-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
-                                  <Trash2 size={12} />
+                                  <Trash size={12} />
                                 </button>
                               </div>
                             ))}
@@ -635,7 +628,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                 disabled={!newSample.trim() || enhancing === "sample"}
                                 className="flex items-center gap-1 text-[10px] text-[rgba(212,255,0,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40"
                               >
-                                {enhancing === "sample" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                                {enhancing === "sample" ? <CircleNotch size={10} className="animate-spin" /> : <Sparkle size={10} />}
                                 AI Enhance
                               </button>
                             </div>
@@ -686,7 +679,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                 <X size={12} className="text-red-400 shrink-0" />
                                 <span className="text-xs flex-1">{d}</span>
                                 <button onClick={() => removeItem("donts", i)} className="text-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
-                                  <Trash2 size={12} />
+                                  <Trash size={12} />
                                 </button>
                               </div>
                             ))}
@@ -739,7 +732,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         {/* Banned Words */}
                         <div className="glass rounded-xl p-4">
                           <div className="flex items-center gap-2 mb-3">
-                            <AlertCircle size={16} className="text-red-400" />
+                            <WarningCircle size={16} className="text-red-400" />
                             <span className="text-sm font-semibold">Banned Words</span>
                           </div>
                           <div className="flex flex-wrap gap-1.5 mb-3">
@@ -816,7 +809,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                             disabled={!checkerText.trim() || enhancing === "checker"}
                             className="flex items-center gap-1 text-[10px] text-[rgba(212,255,0,0.7)] hover:text-brand-accent transition-colors disabled:opacity-40 mb-3"
                           >
-                            {enhancing === "checker" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                            {enhancing === "checker" ? <CircleNotch size={10} className="animate-spin" /> : <Sparkle size={10} />}
                             AI Rewrite to Match Voice
                           </button>
                           <button
@@ -824,7 +817,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                             disabled={checking || !checkerText.trim()}
                             className="btn-primary text-xs flex items-center gap-1"
                           >
-                            {checking ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                            {checking ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
                             {checking ? "Analyzing..." : "Check Voice Consistency"}
                           </button>
                         </div>
@@ -854,7 +847,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                 <p className="text-[10px] text-red-400 font-semibold uppercase tracking-wider mb-1.5">Issues Found</p>
                                 {checkerResult.issues.map((issue, i) => (
                                   <div key={i} className="flex items-center gap-2 p-1.5 rounded bg-red-500/5 mb-1">
-                                    <AlertCircle size={12} className="text-red-400 shrink-0" />
+                                    <WarningCircle size={12} className="text-red-400 shrink-0" />
                                     <span className="text-xs text-red-600">{issue}</span>
                                   </div>
                                 ))}
@@ -865,7 +858,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                                 <p className="text-[10px] text-green-400 font-semibold uppercase tracking-wider mb-1.5">Suggestions</p>
                                 {checkerResult.suggestions.map((s, i) => (
                                   <div key={i} className="flex items-center gap-2 p-1.5 rounded bg-green-500/5 mb-1">
-                                    <ChevronRight size={12} className="text-green-400 shrink-0" />
+                                    <CaretRight size={12} className="text-green-400 shrink-0" />
                                     <span className="text-xs text-green-400">{s}</span>
                                   </div>
                                 ))}
@@ -878,7 +871,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                   </>
                 ) : (
                   <div className="glass rounded-xl p-4 text-center py-12">
-                    <Mic size={32} className="text-text-muted mx-auto mb-3" />
+                    <Microphone size={32} className="text-text-muted mx-auto mb-3" />
                     <p className="text-sm text-text-muted">Select a voice profile to get started</p>
                   </div>
                 )}

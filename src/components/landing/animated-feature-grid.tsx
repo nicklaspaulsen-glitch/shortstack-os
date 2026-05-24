@@ -1,11 +1,9 @@
 "use client";
+import { Brain, ChartBar, Chat, FilmStrip, Globe, Image, Lightning, Target, Users } from "@phosphor-icons/react";
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import {
-  Brain, Users, Film, Image as ImageIcon, MessageSquare, Target,
-  Zap, Globe, BarChart3,
-} from "lucide-react";
+
 
 const ACCENT = "#D4FF00";
 const ACCENT_LIGHT = "#D4FF00";
@@ -71,7 +69,7 @@ const FEATURES: Feature[] = [
   {
     title: "Video Editor",
     blurb: "Premiere-style timeline in your browser.",
-    Icon: Film,
+    Icon: FilmStrip,
     preview: (h) => (
       <div className="space-y-1.5">
         {[0, 1, 2].map((i) => (
@@ -90,7 +88,7 @@ const FEATURES: Feature[] = [
   {
     title: "Thumbnails",
     blurb: "Photoshop-caliber editor built in.",
-    Icon: ImageIcon,
+    Icon: Image,
     preview: (h) => (
       <div className="relative h-16 rounded overflow-hidden"
         style={{ background: `linear-gradient(135deg, ${ACCENT_LIGHT}, ${ACCENT})` }}>
@@ -106,7 +104,7 @@ const FEATURES: Feature[] = [
   {
     title: "Team Chat",
     blurb: "Slack-style DMs + channels, native.",
-    Icon: MessageSquare,
+    Icon: Chat,
     preview: (h) => (
       <div className="space-y-2">
         <motion.div
@@ -146,7 +144,7 @@ const FEATURES: Feature[] = [
   {
     title: "Automations",
     blurb: "Triggers, actions, and flows that never sleep.",
-    Icon: Zap,
+    Icon: Lightning,
     preview: (h) => (
       <div className="flex items-center justify-between gap-2">
         {[0, 1, 2, 3].map((i) => (
@@ -160,7 +158,7 @@ const FEATURES: Feature[] = [
             }}
             transition={{ duration: 1.2, repeat: h ? Infinity : 0, delay: i * 0.25 }}
           >
-            <Zap size={12} style={{ color: ACCENT }} />
+            <Lightning size={12} style={{ color: ACCENT }} />
           </motion.div>
         ))}
       </div>
@@ -191,7 +189,7 @@ const FEATURES: Feature[] = [
   {
     title: "Analytics",
     blurb: "Unified metrics across every channel.",
-    Icon: BarChart3,
+    Icon: ChartBar,
     preview: (h) => (
       <motion.svg viewBox="0 0 120 48" className="w-full h-16">
         <motion.path

@@ -1,4 +1,5 @@
 "use client";
+import { Lightning, X } from "@phosphor-icons/react";
 
 /**
  * Floating token-usage circle (bottom-right).
@@ -23,7 +24,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { X, Zap } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import Draggable from "@/components/ui/draggable";
 
@@ -259,7 +259,7 @@ export default function TokenUsageWidget() {
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <Zap
+            <Lightning
               size={12}
               style={{ color: ringColor }}
               className="transition-colors"

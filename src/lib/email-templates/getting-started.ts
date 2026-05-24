@@ -93,7 +93,7 @@ function coerceSections(raw: unknown): GettingStartedSection[] {
     .map((s) => ({
       title: typeof s.title === "string" ? s.title : "",
       body_md: typeof s.body_md === "string" ? s.body_md : "",
-      icon: typeof s.icon === "string" ? s.icon : "Sparkles",
+      icon: typeof s.icon === "string" ? s.icon : "Sparkle",
       links: Array.isArray(s.links)
         ? (s.links as unknown[])
             .filter((l): l is Record<string, unknown> => typeof l === "object" && l !== null)

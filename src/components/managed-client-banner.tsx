@@ -1,21 +1,18 @@
 "use client";
+import { CaretRight, ChartBar, CreditCard, FileText, FilmStrip, Lightning, PaperPlaneTilt, UserCheck, X } from "@phosphor-icons/react";
 
 import { useAppStore } from "@/lib/store";
 import { useAuth } from "@/lib/auth-context";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import {
-  X, UserCheck, ChevronRight, FileText, CreditCard,
-  Film, Send, BarChart3, Zap
-} from "lucide-react";
 
 const QUICK_LINKS = [
-  { label: "Content", href: "/dashboard/content", icon: <Film size={10} /> },
+  { label: "Content", href: "/dashboard/content", icon: <FilmStrip size={10} /> },
   { label: "Invoices", href: "/dashboard/invoices", icon: <CreditCard size={10} /> },
-  { label: "Deals", href: "/dashboard/deals", icon: <BarChart3 size={10} /> },
+  { label: "Deals", href: "/dashboard/deals", icon: <ChartBar size={10} /> },
   { label: "Scripts", href: "/dashboard/script-lab", icon: <FileText size={10} /> },
-  { label: "Social", href: "/dashboard/social-manager", icon: <Send size={10} /> },
-  { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={10} /> },
+  { label: "Social", href: "/dashboard/social-manager", icon: <PaperPlaneTilt size={10} /> },
+  { label: "Workflows", href: "/dashboard/workflows", icon: <Lightning size={10} /> },
 ];
 
 export default function ManagedClientBanner() {
@@ -34,7 +31,7 @@ export default function ManagedClientBanner() {
           <span className="text-[10px] text-[rgba(212,255,0,0.8)] font-semibold uppercase tracking-wider">
             Managing
           </span>
-          <ChevronRight size={10} className="text-[rgba(212,255,0,0.4)]" />
+          <CaretRight size={10} className="text-[rgba(212,255,0,0.4)]" />
           <span className="text-xs font-semibold text-[#D4FF00]">
             {managedClient.business_name}
           </span>

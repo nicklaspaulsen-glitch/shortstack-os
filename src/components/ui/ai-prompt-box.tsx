@@ -1,4 +1,5 @@
 "use client";
+import { ArrowUp, CircleNotch, Sparkle, X } from "@phosphor-icons/react";
 
 /**
  * AIPromptBox — premium AI prompt input surface.
@@ -21,7 +22,6 @@ import {
   type ChangeEvent,
 } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { ArrowUp, Sparkles, X, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AIPromptBoxProps {
@@ -159,7 +159,7 @@ export function AIPromptBox({
         <div className="flex items-start gap-3 px-4 pt-4 pb-2">
           {/* Sparkle icon */}
           <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-indigo-50">
-            <Sparkles className="h-3.5 w-3.5 text-[#D4FF00]" />
+            <Sparkle className="h-3.5 w-3.5 text-[#D4FF00]" />
           </div>
 
           <label htmlFor="ai-prompt-textarea" className="sr-only">
@@ -238,7 +238,7 @@ export function AIPromptBox({
             )}
           >
             {busy ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <CircleNotch className="h-4 w-4 animate-spin" />
             ) : (
               <ArrowUp className="h-4 w-4" />
             )}

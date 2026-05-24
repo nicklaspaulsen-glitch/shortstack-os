@@ -1,7 +1,8 @@
 "use client";
+import { ArrowRight, ChatCircle, MagnifyingGlass, Robot, ShareNetwork, Sparkle, SquaresFour, X } from "@phosphor-icons/react";
 
 import { useEffect, useState, useCallback } from "react";
-import { X, ArrowRight, Sparkles, LayoutDashboard, Bot, Search, Share2, MessageCircle } from "lucide-react";
+
 
 interface TourStep {
   title: string;
@@ -49,7 +50,7 @@ const STEPS: TourStep[] = [
   },
 ];
 
-const ICONS = [Sparkles, LayoutDashboard, Bot, Search, Share2, MessageCircle];
+const ICONS = [Sparkle, SquaresFour, Robot, MagnifyingGlass, ShareNetwork, ChatCircle];
 
 interface OnboardingTourProps {
   onComplete: () => void;

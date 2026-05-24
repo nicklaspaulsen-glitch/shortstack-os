@@ -1,28 +1,10 @@
 "use client";
+import { Bell, ChartBar, Chat, FilmStrip, FolderOpen, Gear, Image, Lightning, MagicWand, MagnifyingGlass, Moon, Palette, Plus, Scissors, ShareNetwork, SquaresFour, Stack, Sun } from "@phosphor-icons/react";
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  LayoutDashboard,
-  BarChart3,
-  Film,
-  Image,
-  Share2,
-  Settings,
-  Zap,
-  Search,
-  Bell,
-  Moon,
-  Sun,
-  MessageSquare,
-  Wand2,
-  Layers,
-  Scissors,
-  FolderOpen,
-  Palette,
-  Plus,
-} from "lucide-react";
+
 import { useAuth } from "@/lib/auth-context";
 
 // ── Nav map ────────────────────────────────────────────────────────────────
@@ -36,21 +18,21 @@ interface NavPill {
 
 /** "Create" row — content production tools */
 const CREATE_PILLS: NavPill[] = [
-  { label: "Studio",      href: "/dashboard/ai-studio",      icon: Layers },
+  { label: "Studio",      href: "/dashboard/ai-studio",      icon: Stack },
   { label: "Thumbs",      href: "/dashboard/thumbnail-generator", icon: Image, badge: "42" },
-  { label: "Video",       href: "/dashboard/ai-video",       icon: Film },
+  { label: "Video",       href: "/dashboard/ai-video",       icon: FilmStrip },
   { label: "Editor",      href: "/dashboard/video-editor",   icon: Scissors },
-  { label: "Social",      href: "/dashboard/social-studio",  icon: Share2,   badge: "11" },
-  { label: "Stats",       href: "/dashboard/analytics",      icon: BarChart3 },
+  { label: "Social",      href: "/dashboard/social-studio",  icon: ShareNetwork,   badge: "11" },
+  { label: "Stats",       href: "/dashboard/analytics",      icon: ChartBar },
 ];
 
 /** "System" row — business infrastructure */
 const SYSTEM_PILLS: NavPill[] = [
   { label: "Library",     href: "/dashboard/content-library", icon: FolderOpen },
-  { label: "Comments",    href: "/dashboard/conversations",  icon: MessageSquare, badge: "4" },
+  { label: "Comments",    href: "/dashboard/conversations",  icon: Chat, badge: "4" },
   { label: "Brand kit",   href: "/dashboard/brand-kit",      icon: Palette },
-  { label: "Automations", href: "/dashboard/automations",    icon: Zap,          badge: "5" },
-  { label: "Settings",    href: "/dashboard/settings",       icon: Settings },
+  { label: "Automations", href: "/dashboard/automations",    icon: Lightning,          badge: "5" },
+  { label: "Gear",    href: "/dashboard/settings",       icon: Gear },
 ];
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -143,7 +125,7 @@ export default function GlassTopNav() {
       aria-label="Main navigation"
       className="glass-top-nav"
     >
-      {/* ── Row 1: Brand + Search + Utilities ───────────────────────────────── */}
+      {/* ── Row 1: Brand + MagnifyingGlass + Utilities ───────────────────────────────── */}
       <div className="gtn-row gtn-row-1">
         {/* Brand */}
         <Link href="/dashboard" className="gtn-brand" aria-label="ShortStack dashboard home">
@@ -161,7 +143,7 @@ export default function GlassTopNav() {
           </span>
         </Link>
 
-        {/* Search bar */}
+        {/* MagnifyingGlass bar */}
         <div className="gtn-search" role="search">
           <button
             onClick={() => {
@@ -169,9 +151,9 @@ export default function GlassTopNav() {
               setTimeout(() => searchRef.current?.focus(), 50);
             }}
             className={`gtn-search-btn ${searchOpen ? "gtn-search-open" : ""}`}
-            aria-label="Search (Ctrl+K)"
+            aria-label="MagnifyingGlass (Ctrl+K)"
           >
-            <Search size={12} strokeWidth={2} className="gtn-search-icon" />
+            <MagnifyingGlass size={12} strokeWidth={2} className="gtn-search-icon" />
             {searchOpen ? (
               <input
                 ref={searchRef}
@@ -179,11 +161,11 @@ export default function GlassTopNav() {
                 onChange={e => setSearchVal(e.target.value)}
                 onBlur={() => { if (!searchVal) setSearchOpen(false); }}
                 className="gtn-search-input"
-                placeholder="Search anything…"
-                aria-label="Search"
+                placeholder="MagnifyingGlass anything…"
+                aria-label="MagnifyingGlass"
               />
             ) : (
-              <span className="gtn-search-placeholder">Search…</span>
+              <span className="gtn-search-placeholder">MagnifyingGlass…</span>
             )}
             <kbd className="gtn-search-kbd">⌘K</kbd>
           </button>
@@ -198,7 +180,7 @@ export default function GlassTopNav() {
             aria-label="Dashboard home"
             title="Dashboard"
           >
-            <LayoutDashboard size={14} strokeWidth={1.8} />
+            <SquaresFour size={14} strokeWidth={1.8} />
           </Link>
 
           {/* Analytics */}
@@ -208,7 +190,7 @@ export default function GlassTopNav() {
             aria-label="Analytics"
             title="Analytics"
           >
-            <BarChart3 size={14} strokeWidth={1.8} />
+            <ChartBar size={14} strokeWidth={1.8} />
           </Link>
 
           {/* Notifications */}
@@ -253,7 +235,7 @@ export default function GlassTopNav() {
             className="gtn-action-btn gtn-action-primary"
             aria-label="Generate with AI Studio"
           >
-            <Wand2 size={11} strokeWidth={2} />
+            <MagicWand size={11} strokeWidth={2} />
             Generate
           </Link>
           <span className="gtn-render-chip" title="3 renders in flight" aria-label="3 renders in flight">

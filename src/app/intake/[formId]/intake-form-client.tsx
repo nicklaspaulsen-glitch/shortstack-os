@@ -1,7 +1,7 @@
 "use client";
+import { CaretRight, CheckCircle, CircleNotch } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
-import { CheckCircle2, ChevronRight, Loader2 } from "lucide-react";
 
 interface FormField {
   id: string;
@@ -77,7 +77,7 @@ export default function IntakeFormClient({ formId }: { formId: string }) {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-white/30" />
+        <CircleNotch className="w-8 h-8 animate-spin text-white/30" />
       </div>
     );
   }
@@ -103,7 +103,7 @@ export default function IntakeFormClient({ formId }: { formId: string }) {
           className="w-16 h-16 rounded-full flex items-center justify-center"
           style={{ background: `${accent}22`, border: `1px solid ${accent}44` }}
         >
-          <CheckCircle2 size={28} style={{ color: accent }} />
+          <CheckCircle size={28} style={{ color: accent }} />
         </div>
         <h1 className="text-2xl font-semibold text-white">Thank you!</h1>
         <p className="text-sm text-white/50 max-w-xs leading-relaxed">
@@ -122,7 +122,7 @@ export default function IntakeFormClient({ formId }: { formId: string }) {
             className="inline-flex items-center justify-center w-12 h-12  mb-4"
             style={{ background: `${accent}18`, border: `1px solid ${accent}30` }}
           >
-            <ChevronRight size={20} style={{ color: accent }} />
+            <CaretRight size={20} style={{ color: accent }} />
           </div>
           <h1 className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: "Satoshi, sans-serif" }}>
             {form.name}
@@ -193,7 +193,7 @@ export default function IntakeFormClient({ formId }: { formId: string }) {
           >
             {submitting ? (
               <>
-                <Loader2 size={16} className="animate-spin" />
+                <CircleNotch size={16} className="animate-spin" />
                 Submitting…
               </>
             ) : (

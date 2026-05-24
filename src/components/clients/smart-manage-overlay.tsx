@@ -1,19 +1,15 @@
 "use client";
+import { ArrowsClockwise, CalendarDots, Chat, CheckCircle, CircleNotch, Envelope, FileText, Globe, GlobeHemisphereWest, Lightning, PauseCircle, Play, PlayCircle, Receipt, Sparkle, Star, UserPlus, Warning, X } from "@phosphor-icons/react";
 
+import type { Icon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
-import {
-  X, Sparkles, Loader2, Play, CheckCircle2, AlertTriangle,
-  RefreshCw, Receipt, PauseCircle, CalendarDays, Globe, Globe2,
-  Star, PlayCircle, Zap, Mail, MessageSquare, UserPlus, FileText,
-  type LucideIcon,
-} from "lucide-react";
 import toast from "react-hot-toast";
 
 // Map lucide icon names (string from the action catalog) to real
-// components. Anything unknown falls back to Sparkles.
-const ICON_MAP: Record<string, LucideIcon> = {
-  RefreshCw, Receipt, PauseCircle, Sparkles, CalendarDays, Globe, Globe2,
-  Star, PlayCircle, Zap, Mail, MessageSquare, UserPlus, FileText, AlertTriangle,
+// components. Anything unknown falls back to Sparkle.
+const ICON_MAP: Record<string, Icon> = {
+  ArrowsClockwise, Receipt, PauseCircle, Sparkle, CalendarDots, Globe, GlobeHemisphereWest,
+  Star, PlayCircle, Lightning, Envelope, Chat, UserPlus, FileText, Warning,
 };
 
 interface Suggestion {
@@ -36,20 +32,20 @@ interface SmartManageOverlayProps {
 // Catalog icon hints duplicated client-side so we can render the right
 // icon without fetching the catalog def for every suggestion.
 const ACTION_ICONS: Record<string, string> = {
-  refresh_social_token: "RefreshCw",
+  refresh_social_token: "ArrowsClockwise",
   send_invoice_reminder: "Receipt",
   pause_ad_campaign: "PauseCircle",
-  generate_content_batch: "Sparkles",
-  book_strategy_call: "CalendarDays",
+  generate_content_batch: "Sparkle",
+  book_strategy_call: "CalendarDots",
   resend_dns_records: "Globe",
-  renew_domain: "Globe2",
+  renew_domain: "GlobeHemisphereWest",
   request_review: "Star",
   send_onboarding_resume: "PlayCircle",
-  trigger_workflow: "Zap",
-  add_to_sequence: "Mail",
-  send_sms_followup: "MessageSquare",
+  trigger_workflow: "Lightning",
+  add_to_sequence: "Envelope",
+  send_sms_followup: "Chat",
   assign_to_team_member: "UserPlus",
-  escalate_ticket: "AlertTriangle",
+  escalate_ticket: "Warning",
   create_proposal: "FileText",
 };
 
@@ -160,7 +156,7 @@ export default function SmartManageOverlay({
         <div className="sticky top-0 z-10 bg-surface/95 backdrop-blur-sm border-b border-border-subtle/30 px-5 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center">
-              <Sparkles size={14} className="text-[#D4FF00]" />
+              <Sparkle size={14} className="text-[#D4FF00]" />
             </div>
             <div>
               <h2 className="text-sm font-semibold">Smart Manage</h2>
@@ -182,7 +178,7 @@ export default function SmartManageOverlay({
           {loading && (
             <>
               <div className="flex items-center gap-2 text-text-muted text-xs">
-                <Loader2 size={12} className="animate-spin" /> Trinity is analyzing this client...
+                <CircleNotch size={12} className="animate-spin" /> Trinity is analyzing this client...
               </div>
               {[0, 1, 2].map((i) => (
                 <div
@@ -206,8 +202,8 @@ export default function SmartManageOverlay({
           )}
 
           {!loading && suggestions.map((s, idx) => {
-            const iconName = s.icon || ACTION_ICONS[s.action] || "Sparkles";
-            const Icon = ICON_MAP[iconName] || Sparkles;
+            const iconName = s.icon || ACTION_ICONS[s.action] || "Sparkle";
+            const Icon = ICON_MAP[iconName] || Sparkle;
             const key = `${idx}-${s.action}`;
             const isRunning = !!running[key];
             const state = completed[key];
@@ -259,13 +255,13 @@ export default function SmartManageOverlay({
                     }`}
                   >
                     {isRunning ? (
-                      <><Loader2 size={10} className="animate-spin" /> Running...</>
+                      <><CircleNotch size={10} className="animate-spin" /> Running...</>
                     ) : state === "success" ? (
-                      <><CheckCircle2 size={10} /> Done</>
+                      <><CheckCircle size={10} /> Done</>
                     ) : state === "failed" ? (
-                      <><AlertTriangle size={10} /> Retry</>
+                      <><Warning size={10} /> Retry</>
                     ) : state === "todo" ? (
-                      <><AlertTriangle size={10} /> TODO</>
+                      <><Warning size={10} /> TODO</>
                     ) : (
                       <><Play size={10} /> Run</>
                     )}

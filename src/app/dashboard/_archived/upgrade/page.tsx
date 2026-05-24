@@ -1,4 +1,5 @@
 "use client";
+import { ArrowUpRight, Buildings, Check, CircleNotch, Crown, DeviceMobile, Envelope, Infinity, Lightning, Medal, Minus, Phone, Robot, ShieldCheck, Sparkle, TrendUp, Users } from "@phosphor-icons/react";
 
 /**
  * Plan comparison + upgrade page.
@@ -19,25 +20,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import {
-  ArrowUpRight,
-  Check,
-  Crown,
-  Infinity as InfinityIcon,
-  Zap,
-  TrendingUp,
-  Building2,
-  Sparkles,
-  Loader2,
-  Minus,
-  Mail,
-  Bot,
-  Users,
-  Smartphone,
-  Phone,
-  ShieldCheck,
-  Award,
-} from "lucide-react";
+
 import { useAuth } from "@/lib/auth-context";
 import { PLAN_TIERS, type PlanTier } from "@/lib/plan-config";
 import { LIMITS_BY_TIER, normalizePlanTier } from "@/lib/plan-limits";
@@ -56,10 +39,10 @@ function planRank(tier: string): number {
 
 // ── Plan feature copy ────────────────────────────────────────────────────────
 const PLAN_ICONS: Record<CheckoutTier, React.ReactNode> = {
-  Starter: <Zap size={18} />,
-  Growth: <TrendingUp size={18} />,
+  Starter: <Lightning size={18} />,
+  Growth: <TrendUp size={18} />,
   Pro: <Crown size={18} />,
-  Business: <Building2 size={18} />,
+  Business: <Buildings size={18} />,
   Unlimited: <InfinityIcon size={18} />,
 };
 
@@ -76,10 +59,10 @@ const PLAN_TAGLINE: Record<CheckoutTier, string> = {
 
 // ── Resource limits table (display) ──────────────────────────────────────────
 const LIMIT_ROWS: Array<{ key: keyof (typeof LIMITS_BY_TIER)["Starter"]; label: string; icon: React.ReactNode; suffix?: string }> = [
-  { key: "emails", label: "Emails / mo", icon: <Mail size={12} /> },
-  { key: "tokens", label: "AI Tokens / mo", icon: <Bot size={12} /> },
+  { key: "emails", label: "Emails / mo", icon: <Envelope size={12} /> },
+  { key: "tokens", label: "AI Tokens / mo", icon: <Robot size={12} /> },
   { key: "clients", label: "Active Clients", icon: <Users size={12} /> },
-  { key: "sms", label: "SMS / mo", icon: <Smartphone size={12} /> },
+  { key: "sms", label: "SMS / mo", icon: <DeviceMobile size={12} /> },
   { key: "call_minutes", label: "Call Minutes / mo", icon: <Phone size={12} />, suffix: "min" },
 ];
 
@@ -218,7 +201,7 @@ export default function UpgradePage() {
                   >
                     {isRecommended && !isCurrent && (
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
-                        <Award size={9} />
+                        <Medal size={9} />
                         Recommended
                       </div>
                     )}
@@ -267,7 +250,7 @@ export default function UpgradePage() {
                       } ${loadingTier === tier ? "opacity-70 cursor-wait" : ""}`}
                     >
                       {loadingTier === tier ? (
-                        <Loader2 size={12} className="animate-spin" />
+                        <CircleNotch size={12} className="animate-spin" />
                       ) : isCurrent ? (
                         <Check size={12} />
                       ) : isUpgrade ? (
@@ -318,7 +301,7 @@ export default function UpgradePage() {
               })}
             </div>{/* ─── Why upgrade? ──────────────────────────────────────────── */}<section className="glass rounded-xl p-6">
               <div className="flex items-center gap-2 mb-3">
-                <Sparkles size={16} className="text-brand-accent" />
+                <Sparkle size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-bold text-text-primary">Why upgrade?</h2>
               </div>
               <p className="text-xs text-text-muted mb-5 max-w-3xl leading-relaxed">

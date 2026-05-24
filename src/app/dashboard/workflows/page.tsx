@@ -1,4 +1,5 @@
 "use client";
+import { ArrowCounterClockwise, Bell, BookBookmark, BookOpen, Briefcase, Building, Calendar, CaretRight, ChartBar, ChatCircle, CircleNotch, Clock, CreditCard, Database, Envelope, Eye, FileText, GitBranch, Globe, Lightning, MagnifyingGlass, PaperPlaneTilt, Phone, Play, PlugsConnected, Plus, Robot, ShoppingCart, Sparkle, Star, Tag, Target, Trash, UploadSimple, UserPlus, Users, X } from "@phosphor-icons/react";
 
 import { useEffect, useState, useRef } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -8,15 +9,6 @@ import Modal from "@/components/ui/modal";
 import StatusBadge from "@/components/ui/status-badge";
 import { CardSkeleton } from "@/components/ui/skeleton";
 import { formatRelativeTime } from "@/lib/utils";
-import {
-  Zap, Plus, Sparkles, Play, Trash2, Bot,
-  MessageCircle, Mail, Clock, GitBranch, Phone,
-  Tag, FileText, Send, Webhook, Loader,
-  RotateCcw, Eye, Search, BookOpen, ChevronRight,
-  Users, UserPlus, Globe, CreditCard, Star,
-  Target, BarChart, Calendar, Bell, ShoppingCart,
-  Briefcase, Database, BarChart3, Building, Upload, Library
-} from "lucide-react";
 import { WORKFLOW_PRESETS, WORKFLOW_CATEGORIES, type WorkflowPreset } from "@/lib/workflow-presets";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -43,13 +35,13 @@ interface Workflow {
 const NODE_TYPES: Record<string, { icon: React.ReactNode; color: string; bg: string }> = {
   send_telegram: { icon: <TelegramIcon size={14} />, color: "text-indigo-400", bg: "border-[rgba(99,102,241,0.20)] bg-[rgba(99,102,241,0.05)]" },
   send_slack_message: { icon: <SlackIcon size={14} />, color: "text-purple-400", bg: "border-purple-400/20 bg-purple-400/5" },
-  send_email: { icon: <Mail size={14} />, color: "text-cyan-400", bg: "border-cyan-400/20 bg-cyan-400/5" },
+  send_email: { icon: <Envelope size={14} />, color: "text-cyan-400", bg: "border-cyan-400/20 bg-cyan-400/5" },
   send_sms: { icon: <Phone size={14} />, color: "text-green-400", bg: "border-green-400/20 bg-green-400/5" },
   create_task: { icon: <FileText size={14} />, color: "text-brand-accent", bg: "border-[rgba(212,255,0,0.20)] bg-[rgba(212,255,0,0.05)]" },
   update_lead_status: { icon: <Tag size={14} />, color: "text-orange-400", bg: "border-orange-400/20 bg-orange-400/5" },
-  generate_content: { icon: <Sparkles size={14} />, color: "text-pink-400", bg: "border-pink-400/20 bg-pink-400/5" },
+  generate_content: { icon: <Sparkle size={14} />, color: "text-pink-400", bg: "border-pink-400/20 bg-pink-400/5" },
   create_invoice: { icon: <FileText size={14} />, color: "text-emerald-400", bg: "border-emerald-400/20 bg-emerald-400/5" },
-  webhook: { icon: <Webhook size={14} />, color: "text-yellow-400", bg: "border-yellow-400/20 bg-yellow-400/5" },
+  webhook: { icon: <PlugsConnected size={14} />, color: "text-yellow-400", bg: "border-yellow-400/20 bg-yellow-400/5" },
   delay: { icon: <Clock size={14} />, color: "text-text-muted", bg: "border-border-subtle bg-surface-light/50" },
   ghl_add_tag: { icon: <Tag size={14} />, color: "text-teal-400", bg: "border-teal-400/20 bg-teal-400/5" },
   condition: { icon: <GitBranch size={14} />, color: "text-amber-400", bg: "border-amber-400/20 bg-amber-400/5" },
@@ -308,7 +300,7 @@ export default function WorkflowsPage() {
 
   function getNodeStyle(step: WorkflowStep) {
     const action = (step.config?.action as string) || step.type;
-    return NODE_TYPES[action] || { icon: <Zap size={14} />, color: "text-text-muted", bg: "border-border-subtle bg-surface-light/50" };
+    return NODE_TYPES[action] || { icon: <Lightning size={14} />, color: "text-text-muted", bg: "border-border-subtle bg-surface-light/50" };
   }
 
   function applyPreset(preset: WorkflowPreset) {
@@ -366,13 +358,13 @@ export default function WorkflowsPage() {
   }
 
   const CATEGORY_ICONS: Record<string, React.ReactNode> = {
-    "lead-gen": <Users size={12} />, onboarding: <UserPlus size={12} />, email: <Mail size={12} />,
+    "lead-gen": <Users size={12} />, onboarding: <UserPlus size={12} />, email: <Envelope size={12} />,
     social: <Globe size={12} />, crm: <GitBranch size={12} />, invoicing: <CreditCard size={12} />,
     content: <FileText size={12} />, reviews: <Star size={12} />, ads: <Target size={12} />,
-    seo: <BarChart size={12} />, scheduling: <Calendar size={12} />, notifications: <Bell size={12} />,
-    ecommerce: <ShoppingCart size={12} />, support: <MessageCircle size={12} />, hr: <Briefcase size={12} />,
-    data: <Database size={12} />, ai: <Sparkles size={12} />, reporting: <BarChart3 size={12} />,
-    webhooks: <Webhook size={12} />, agency: <Building size={12} />,
+    seo: <ChartBar size={12} />, scheduling: <Calendar size={12} />, notifications: <Bell size={12} />,
+    ecommerce: <ShoppingCart size={12} />, support: <ChatCircle size={12} />, hr: <Briefcase size={12} />,
+    data: <Database size={12} />, ai: <Sparkle size={12} />, reporting: <ChartBar size={12} />,
+    webhooks: <PlugsConnected size={12} />, agency: <Building size={12} />,
   };
 
   const filteredPresets = WORKFLOW_PRESETS.filter(p => {
@@ -410,7 +402,7 @@ export default function WorkflowsPage() {
         <>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <button onClick={() => setShowAiGen(true)} className="btn-pill flex items-center gap-1.5">
-                      <Sparkles size={13} /> Generate with AI
+                      <Sparkle size={13} /> Generate with AI
                     </button>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
@@ -420,17 +412,17 @@ export default function WorkflowsPage() {
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Link href="/dashboard/automations/library" className="btn-pill-ghost flex items-center gap-1.5 text-sm">
-                      <Library size={13} /> Templates
+                      <BookBookmark size={13} /> Templates
                     </Link>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <button onClick={() => toast("Import via JSON coming soon", { icon: "📥" })} className="btn-pill-ghost flex items-center gap-1.5">
-                      <Upload size={13} /> Import
+                      <UploadSimple size={13} /> Import
                     </button>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <button onClick={() => setTab("agent")} className="btn-pill-ghost flex items-center gap-1.5">
-                      <Bot size={13} /> Agent Mode
+                      <Robot size={13} /> Agent Mode
                     </button>
                   </motion.div>
                 </>
@@ -446,12 +438,12 @@ export default function WorkflowsPage() {
             />{/* Tabs (sticky) */}<div className="sticky top-0 z-10 bg-background/95 backdrop-blur pb-0 overflow-x-auto">
               <div className="tab-pill-strip">
                 {([
-                  { id: "builder" as const, label: "Builder", icon: Zap },
+                  { id: "builder" as const, label: "Builder", icon: Lightning },
                   { id: "presets" as const, label: `Presets (${WORKFLOW_PRESETS.length})`, icon: BookOpen },
                   { id: "triggers" as const, label: "Triggers & Actions", icon: GitBranch },
-                  { id: "agent" as const, label: "AI Agent", icon: Bot },
+                  { id: "agent" as const, label: "AI Agent", icon: Robot },
                   { id: "n8n" as const, label: "n8n Live", icon: Globe },
-                  { id: "analytics" as const, label: "Analytics", icon: BarChart3 },
+                  { id: "analytics" as const, label: "Analytics", icon: ChartBar },
                   { id: "sharing" as const, label: "Sharing", icon: Users },
                   { id: "history" as const, label: "History", icon: Clock },
                 ]).map(t => (
@@ -490,7 +482,7 @@ export default function WorkflowsPage() {
                             <Play size={12} /> Execute
                           </button>
                           <button onClick={() => setPreviewWorkflow(null)} aria-label="Dismiss workflow preview" className="btn-ghost text-xs">
-                            <Trash2 size={13} />
+                            <Trash size={13} />
                           </button>
                         </div>
                       </div>
@@ -498,7 +490,7 @@ export default function WorkflowsPage() {
                       {/* Trigger */}
                       <div className="flex items-center gap-2 mb-3">
                         <div className="w-7 h-7 bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.20)] rounded-lg flex items-center justify-center">
-                          <Zap size={12} className="text-brand-accent" />
+                          <Lightning size={12} className="text-brand-accent" />
                         </div>
                         <div className="flex-1 bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.15)] rounded-lg px-3 py-2">
                           <p className="text-[10px] text-brand-accent uppercase tracking-wider font-medium">Trigger</p>
@@ -570,15 +562,15 @@ export default function WorkflowsPage() {
               </div>
             )}{/* Presets Tab */}{tab === "presets" && (
               <div className="space-y-4">
-                {/* Search + filters */}
+                {/* MagnifyingGlass + filters */}
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="relative flex-1 min-w-[200px]">
-                    <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
+                    <MagnifyingGlass size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                     <input
                       type="text"
                       value={presetSearch}
                       onChange={(e) => setPresetSearch(e.target.value)}
-                      placeholder="Search presets..."
+                      placeholder="MagnifyingGlass presets..."
                       className="input w-full text-xs pl-8"
                     />
                   </div>
@@ -637,7 +629,7 @@ export default function WorkflowsPage() {
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="flex items-center gap-2">
                           <div className="w-8 h-8 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center shrink-0">
-                            {CATEGORY_ICONS[preset.category] || <Zap size={12} />}
+                            {CATEGORY_ICONS[preset.category] || <Lightning size={12} />}
                           </div>
                           <div className="min-w-0">
                             <h3 className="text-xs font-semibold truncate">{preset.name}</h3>
@@ -678,13 +670,13 @@ export default function WorkflowsPage() {
                           <div className="flex items-center gap-1 shrink-0">
                             <button onClick={() => applyPreset(preset)}
                               className="btn-secondary text-[9px] py-1 px-2.5 flex items-center gap-1">
-                              Use <ChevronRight size={9} />
+                              Use <CaretRight size={9} />
                             </button>
                             <button
                               onClick={() => installPresetToN8n(preset)}
                               title="Deploy this preset directly to n8n"
                               className="btn-ghost text-[9px] py-1 px-2 flex items-center gap-1 text-brand-accent hover:text-[#E8FF4D]">
-                              <Upload size={9} /> n8n
+                              <UploadSimple size={9} /> n8n
                             </button>
                           </div>
                         </div>
@@ -712,7 +704,7 @@ export default function WorkflowsPage() {
                   <div className="flex items-center justify-between pb-3 border-b border-border-subtle mb-3">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center">
-                        <Bot size={16} className="text-brand-accent" />
+                        <Robot size={16} className="text-brand-accent" />
                       </div>
                       <div>
                         <p className="text-xs font-semibold">Workflow Agent</p>
@@ -726,7 +718,7 @@ export default function WorkflowsPage() {
                       </select>
                       {agentChat.length > 0 && (
                         <button onClick={() => setAgentChat([])} aria-label="Clear agent chat history" className="btn-ghost text-[10px]">
-                          <RotateCcw size={12} />
+                          <ArrowCounterClockwise size={12} />
                         </button>
                       )}
                     </div>
@@ -736,7 +728,7 @@ export default function WorkflowsPage() {
                   <div className="flex-1 overflow-y-auto space-y-3 mb-3 max-h-[350px]">
                     {agentChat.length === 0 && (
                       <div className="text-center py-12">
-                        <Bot size={32} className="mx-auto mb-3 text-[rgba(212,255,0,0.3)]" />
+                        <Robot size={32} className="mx-auto mb-3 text-[rgba(212,255,0,0.3)]" />
                         <p className="text-xs text-text-muted mb-4">Tell me what you want to automate. I&apos;ll design it, show you the plan, and execute it.</p>
                         <div className="flex flex-wrap justify-center gap-1.5">
                           {[
@@ -795,7 +787,7 @@ export default function WorkflowsPage() {
                       <div className="flex justify-start">
                         <div className="bg-surface-light/50 border border-border-subtle rounded-lg px-3 py-2">
                           <div className="flex items-center gap-1.5">
-                            <Loader size={12} className="animate-spin text-brand-accent" />
+                            <CircleNotch size={12} className="animate-spin text-brand-accent" />
                             <span className="text-[10px] text-text-muted">Thinking...</span>
                           </div>
                         </div>
@@ -815,8 +807,8 @@ export default function WorkflowsPage() {
                       disabled={agentThinking}
                       aria-label="Workflow agent prompt"
                     />
-                    <button type="submit" disabled={!agentInput.trim() || agentThinking} className="btn-primary text-xs px-4 disabled:opacity-30" aria-label="Send message to workflow agent">
-                      <Send size={13} />
+                    <button type="submit" disabled={!agentInput.trim() || agentThinking} className="btn-primary text-xs px-4 disabled:opacity-30" aria-label="PaperPlaneTilt message to workflow agent">
+                      <PaperPlaneTilt size={13} />
                     </button>
                   </form>
                 </div>
@@ -832,15 +824,15 @@ export default function WorkflowsPage() {
                       Open n8n <Eye size={10} />
                     </a>
                     <button onClick={fetchN8n} className="btn-secondary text-[10px] flex items-center gap-1">
-                      <RotateCcw size={10} /> Refresh
+                      <ArrowCounterClockwise size={10} /> Refresh
                     </button>
                   </div>
                 </div>
                 {n8nLoading ? (
-                  <div className="glass rounded-xl p-4 text-center py-8"><Loader size={16} className="animate-spin text-brand-accent mx-auto" /></div>
+                  <div className="glass rounded-xl p-4 text-center py-8"><CircleNotch size={16} className="animate-spin text-brand-accent mx-auto" /></div>
                 ) : n8nWorkflows.length === 0 ? (
                   <div className="glass rounded-xl p-4 text-center py-8">
-                    <Zap size={20} className="mx-auto mb-2 text-[rgba(212,255,0,0.3)]" />
+                    <Lightning size={20} className="mx-auto mb-2 text-[rgba(212,255,0,0.3)]" />
                     <p className="text-xs text-text-muted">No n8n workflows found. Create one in the Builder tab or via Agent Mode.</p>
                     {isPlatformAdmin && (
                       <p className="text-[9px] text-text-muted mt-1">Make sure N8N_API_KEY is set in your environment variables.</p>
@@ -853,7 +845,7 @@ export default function WorkflowsPage() {
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${w.active ? "bg-success/10" : "bg-surface-light"}`}>
-                              <Zap size={14} className={w.active ? "text-success" : "text-text-muted"} />
+                              <Lightning size={14} className={w.active ? "text-success" : "text-text-muted"} />
                             </div>
                             <div>
                               <h3 className="text-xs font-semibold">{w.name}</h3>
@@ -881,7 +873,7 @@ export default function WorkflowsPage() {
                           <button onClick={() => deleteN8nWorkflow(w.id)}
                             aria-label={`Delete workflow: ${w.name}`}
                             className="btn-ghost text-[9px] py-1 px-2 text-danger hover:text-danger">
-                            <Trash2 size={9} />
+                            <Trash size={9} />
                           </button>
                         </div>
                       </div>
@@ -892,22 +884,22 @@ export default function WorkflowsPage() {
             )}{/* ================================================================== */}{/* TRIGGERS & ACTIONS TAB                                              */}{/* ================================================================== */}{tab === "triggers" && (
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
-                  <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Zap size={13} className="text-brand-accent" /> Trigger Library (15+)</p>
+                  <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Lightning size={13} className="text-brand-accent" /> Trigger BookBookmark (15+)</p>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                     {[
                       { name: "New Lead Scraped", icon: Users, color: "text-indigo-400", desc: "When scraper finds a lead" },
                       { name: "Client Created", icon: UserPlus, color: "text-green-400", desc: "New client is added" },
                       { name: "Deal Closed", icon: CreditCard, color: "text-brand-accent", desc: "Deal status changes to won" },
                       { name: "Form Submitted", icon: FileText, color: "text-purple-400", desc: "Website form submission" },
-                      { name: "Email Received", icon: Mail, color: "text-cyan-400", desc: "Incoming email from client" },
+                      { name: "Email Received", icon: Envelope, color: "text-cyan-400", desc: "Incoming email from client" },
                       { name: "Schedule Trigger", icon: Calendar, color: "text-orange-400", desc: "Time-based recurring trigger" },
-                      { name: "Webhook Received", icon: Webhook, color: "text-yellow-400", desc: "External webhook fires" },
+                      { name: "PlugsConnected Received", icon: PlugsConnected, color: "text-yellow-400", desc: "External webhook fires" },
                       { name: "Invoice Paid", icon: CreditCard, color: "text-emerald-400", desc: "Client pays invoice" },
                       { name: "Task Completed", icon: FileText, color: "text-pink-400", desc: "Team member completes task" },
                       { name: "Review Posted", icon: Star, color: "text-amber-400", desc: "New review on Google/Yelp" },
                       { name: "Lead Score Change", icon: Target, color: "text-red-400", desc: "Lead score threshold met" },
                       { name: "Appointment Booked", icon: Calendar, color: "text-teal-400", desc: "Client books appointment" },
-                      { name: "Chat Message", icon: MessageCircle, color: "text-violet-400", desc: "New chat from prospect" },
+                      { name: "Chat Message", icon: ChatCircle, color: "text-violet-400", desc: "New chat from prospect" },
                       { name: "Campaign Launched", icon: Globe, color: "text-indigo-400", desc: "New ad campaign starts" },
                       { name: "Manual Trigger", icon: Play, color: "text-text-muted", desc: "Run on-demand manually" },
                     ].map(trigger => (
@@ -920,9 +912,9 @@ export default function WorkflowsPage() {
                   </div>
                 </div>
                 <div className="glass rounded-xl p-4">
-                  <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Play size={13} className="text-brand-accent" /> Action Library (20+)</p>
+                  <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Play size={13} className="text-brand-accent" /> Action BookBookmark (20+)</p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                    {["Send Email", "Send SMS", "Send Telegram", "Send Slack Message", "Create Task", "Update Lead Status", "Add Tag", "Generate Content", "Create Invoice", "Fire Webhook", "Add to CRM", "Schedule Meeting", "Generate Report", "Push Notification", "Create Proposal", "Update Database", "Run AI Analysis", "Deploy Website", "Generate Social Posts", "Send Voice Message"].map((action, i) => (
+                    {["PaperPlaneTilt Email", "PaperPlaneTilt SMS", "PaperPlaneTilt Telegram", "PaperPlaneTilt Slack Message", "Create Task", "Update Lead Status", "Add Tag", "Generate Content", "Create Invoice", "Fire PlugsConnected", "Add to CRM", "Schedule Meeting", "Generate Report", "Push Notification", "Create Proposal", "Update Database", "Run AI Analysis", "Deploy Website", "Generate Social Posts", "PaperPlaneTilt Voice Message"].map((action, i) => (
                       <div key={action} className="px-3 py-2 rounded-lg border border-border-subtle text-[10px] font-medium flex items-center gap-1.5">
                         <span className={`w-2 h-2 rounded-full ${["bg-cyan-400", "bg-green-400", "bg-indigo-400", "bg-purple-400", "bg-brand-accent", "bg-orange-400", "bg-teal-400", "bg-pink-400", "bg-emerald-400", "bg-yellow-400"][i % 10]}`} />
                         {action}
@@ -968,7 +960,7 @@ export default function WorkflowsPage() {
                   <div className="glass rounded-xl p-3"><div className="flex items-center gap-1.5 mb-1"><Play size={12} className="text-brand-accent" /><p className="text-[10px] text-text-muted uppercase tracking-wider">Total Runs</p></div><p className="text-lg font-bold text-brand-accent">{workflowAnalytics.totalRuns}</p></div>
                   <div className="glass rounded-xl p-3"><div className="flex items-center gap-1.5 mb-1"><Target size={12} className="text-green-400" /><p className="text-[10px] text-text-muted uppercase tracking-wider">Success Rate</p></div><p className="text-lg font-bold text-green-400">{workflowAnalytics.successRate}%</p></div>
                   <div className="glass rounded-xl p-3"><div className="flex items-center gap-1.5 mb-1"><Clock size={12} className="text-indigo-400" /><p className="text-[10px] text-text-muted uppercase tracking-wider">Avg Duration</p></div><p className="text-lg font-bold text-brand-accent">{workflowAnalytics.avgDuration}</p></div>
-                  <div className="glass rounded-xl p-3"><div className="flex items-center gap-1.5 mb-1"><Zap size={12} className="text-brand-accent" /><p className="text-[10px] text-text-muted uppercase tracking-wider">Hours Saved</p></div><p className="text-lg font-bold text-brand-accent">{workflowAnalytics.savedHours}h</p></div>
+                  <div className="glass rounded-xl p-3"><div className="flex items-center gap-1.5 mb-1"><Lightning size={12} className="text-brand-accent" /><p className="text-[10px] text-text-muted uppercase tracking-wider">Hours Saved</p></div><p className="text-lg font-bold text-brand-accent">{workflowAnalytics.savedHours}h</p></div>
                 </div>
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center justify-between mb-3">
@@ -1004,7 +996,7 @@ export default function WorkflowsPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-text-muted">Share workflows with your team or the community</p>
-                  <button onClick={() => toast("Community sharing coming soon", { icon: "🚧" })} className="btn-primary text-[10px] flex items-center gap-1"><Send size={10} /> Share Workflow</button>
+                  <button onClick={() => toast("Community sharing coming soon", { icon: "🚧" })} className="btn-primary text-[10px] flex items-center gap-1"><PaperPlaneTilt size={10} /> Share Workflow</button>
                 </div>
                 <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Users size={13} className="text-brand-accent" /> Community Workflows</p>
@@ -1022,7 +1014,7 @@ export default function WorkflowsPage() {
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-[9px] text-text-muted">{sw.downloads} downloads</span>
-                          <button onClick={() => toast("Import coming soon", { icon: "🚧" })} className="btn-secondary text-[9px] flex items-center gap-1"><RotateCcw size={9} /> Import</button>
+                          <button onClick={() => toast("Import coming soon", { icon: "🚧" })} className="btn-secondary text-[9px] flex items-center gap-1"><ArrowCounterClockwise size={9} /> Import</button>
                         </div>
                       </div>
                     ))}
@@ -1030,12 +1022,12 @@ export default function WorkflowsPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="glass rounded-xl p-4">
-                    <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Send size={13} className="text-brand-accent" /> Export Workflows</p>
+                    <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><PaperPlaneTilt size={13} className="text-brand-accent" /> Export Workflows</p>
                     <p className="text-[10px] text-text-muted mb-3">Export as JSON to share or back up</p>
                     <button onClick={exportWorkflowsJson} className="btn-primary text-xs w-full flex items-center justify-center gap-1.5"><FileText size={12} /> Export All</button>
                   </div>
                   <div className="glass rounded-xl p-4">
-                    <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><RotateCcw size={13} className="text-brand-accent" /> Import Workflows</p>
+                    <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><ArrowCounterClockwise size={13} className="text-brand-accent" /> Import Workflows</p>
                     <p className="text-[10px] text-text-muted mb-3">Import from JSON or shared links</p>
                     <button onClick={() => toast("Import via JSON coming soon", { icon: "🚧" })} className="btn-secondary text-xs w-full flex items-center justify-center gap-1.5"><FileText size={12} /> Import JSON</button>
                   </div>
@@ -1062,7 +1054,7 @@ export default function WorkflowsPage() {
                     <div key={w.id} className="card-hover flex items-center justify-between p-3">
                       <div className="flex items-center gap-3">
                         <div className="relative w-8 h-8 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center">
-                          <Zap size={14} className="text-brand-accent" />
+                          <Lightning size={14} className="text-brand-accent" />
                           <span className={`absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full border border-background ${w.status === "completed" ? "bg-green-500" : "bg-zinc-500"}`} title={w.status === "completed" ? "Active" : "Paused"} />
                         </div>
                         <div>
@@ -1103,7 +1095,7 @@ export default function WorkflowsPage() {
                 <div className="flex justify-end gap-2 pt-2">
                   <button onClick={() => setShowCreate(false)} className="btn-secondary text-xs">Cancel</button>
                   <button onClick={generateWorkflow} disabled={generating || !prompt.trim()} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                    {generating ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                    {generating ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
                     {generating ? "Designing..." : "Design Workflow"}
                   </button>
                 </div>
@@ -1156,7 +1148,7 @@ function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => v
       <div className="glass rounded-xl p-5 max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles size={16} className="text-brand-accent" />
+            <Sparkle size={16} className="text-brand-accent" />
             <h3 className="text-sm font-semibold">AI Workflow Generator</h3>
             <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-brand-accent">Sonnet</span>
           </div>
@@ -1219,7 +1211,7 @@ function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => v
             <div className="flex justify-end gap-2 pt-2">
               <button onClick={onClose} className="btn-secondary text-xs">Cancel</button>
               <button onClick={generate} disabled={loading || !goal.trim()} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                {loading ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                {loading ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
                 {loading ? "Generating..." : "Generate Workflow"}
               </button>
             </div>

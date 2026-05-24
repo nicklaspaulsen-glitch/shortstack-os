@@ -1,8 +1,8 @@
+import { ArrowsClockwise, CheckCircle, Clock, Pulse, Warning, WifiHigh, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Activity, CheckCircle, AlertTriangle, XCircle, Clock, RefreshCw, Wifi } from "lucide-react";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -40,7 +40,7 @@ function timeAgo(ts: string | null): string {
 
 function StatusIcon({ status }: { status: string }) {
   if (status === "healthy") return <CheckCircle className="w-5 h-5 text-emerald-400" />;
-  if (status === "degraded") return <AlertTriangle className="w-5 h-5 text-brand-accent" />;
+  if (status === "degraded") return <Warning className="w-5 h-5 text-brand-accent" />;
   if (status === "down") return <XCircle className="w-5 h-5 text-red-400" />;
   return <Clock className="w-5 h-5 text-text-muted" />;
 }
@@ -136,7 +136,7 @@ export default function MonitorPage() {
                     onClick={load}
                     className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/8 hover:bg-white/10 text-text-secondary text-sm transition-colors border border-white/10"
                   >
-                    <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+                    <ArrowsClockwise className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
                     Refresh now
                   </button>
                 </div>
@@ -147,7 +147,7 @@ export default function MonitorPage() {
               transition={{ duration: 0.35 }}
               className={`flex items-center gap-3 px-5 py-4 rounded-xl border ${overallCls}`}
             >
-              <Wifi className="w-5 h-5" />
+              <WifiHigh className="w-5 h-5" />
               <span className="font-semibold">{overallLabel}</span>
               <span className="ml-auto text-xs opacity-70">Last updated {lastRefresh.toLocaleTimeString()}</span>
             </motion.div>{/* Summary counts */}<div className="grid grid-cols-3 gap-3">
@@ -183,7 +183,7 @@ export default function MonitorPage() {
               </div>
             ) : annotated.length === 0 ? (
               <div className="glass rounded-xl p-10 text-center text-text-muted">
-                <Activity className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                <Pulse className="w-10 h-10 mx-auto mb-3 opacity-30" />
                 <p>No services found. Health checks will appear here once running.</p>
               </div>
             ) : (

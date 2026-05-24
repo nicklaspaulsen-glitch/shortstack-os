@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
   const botName = meData.result.first_name;
 
   // Generate a fresh per-client webhook secret. Telegram forwards this in the
-  // X-Telegram-Bot-Api-Secret-Token header on every inbound update, which the
+  // X-Telegram-Robot-Api-Secret-Token header on every inbound update, which the
   // /api/telegram/client-bot handler constant-time compares against the stored
   // value. Rotating this column is a safe way to invalidate a leaked webhook.
   const webhookSecret = crypto.randomBytes(32).toString("hex");

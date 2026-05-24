@@ -1,42 +1,8 @@
 "use client";
+import { ArrowLeft, ArrowRight, ArrowSquareOut, At, Camera, CaretRight, ChartBar, Chat, Check, Clock, CurrencyDollar, Envelope, FileText, Globe, Hash, Image, Lightning, MapPin, Palette, Play, Plus, ShoppingBag, Sparkle, Stack, Star, Storefront, Tag, Target, TrendUp, Users, Video, WarningCircle, X } from "@phosphor-icons/react";
 
 import { useState, useEffect } from "react";
 import WebsiteScraper from "@/components/ui/website-scraper";
-import {
-  ArrowRight,
-  ArrowLeft,
-  Check,
-  Sparkles,
-  Target,
-  AlertCircle,
-  Users,
-  Palette,
-  Globe,
-  Zap,
-  Camera,
-  Play,
-  Plus,
-  X,
-  Star,
-  Clock,
-  DollarSign,
-  MapPin,
-  ShoppingBag,
-  Layers,
-  Store,
-  TrendingUp,
-  MessageSquare,
-  Mail,
-  FileText,
-  Video,
-  Image,
-  BarChart3,
-  Tag,
-  ExternalLink,
-  ChevronRight,
-  AtSign,
-  Hash,
-} from "lucide-react";
 
 /* ══════════════════════════════════════════════════════════════════
    TYPES
@@ -314,11 +280,11 @@ export default function ClientOnboardingWizard({
   /* ── Social account options ── */
   const SOCIAL_PLATFORMS = [
     { id: "instagram", label: "Instagram", icon: Camera },
-    { id: "facebook", label: "Facebook", icon: AtSign },
+    { id: "facebook", label: "Facebook", icon: At },
     { id: "tiktok", label: "TikTok", icon: Play },
     { id: "linkedin", label: "LinkedIn", icon: Hash },
     { id: "youtube", label: "YouTube", icon: Video },
-    { id: "twitter", label: "X / Twitter", icon: MessageSquare },
+    { id: "twitter", label: "X / Twitter", icon: Chat },
   ];
 
   const SOCIAL_STATUS_OPTIONS = [
@@ -330,20 +296,20 @@ export default function ClientOnboardingWizard({
   /* ── Integration cards ── */
   const INTEGRATIONS = [
     { id: "instagram", label: "Instagram", icon: Camera, color: "#E1306C", desc: "Posts, reels & insights" },
-    { id: "facebook", label: "Facebook", icon: AtSign, color: "#1877F2", desc: "Page & ad account" },
+    { id: "facebook", label: "Facebook", icon: At, color: "#1877F2", desc: "Page & ad account" },
     { id: "google_business", label: "Google Business", icon: Star, color: "#4285F4", desc: "Profile & reviews" },
     { id: "tiktok", label: "TikTok", icon: Play, color: "#010101", desc: "Videos & analytics" },
-    { id: "google_analytics", label: "Google Analytics", icon: BarChart3, color: "#E37400", desc: "Traffic & conversions" },
+    { id: "google_analytics", label: "Google Analytics", icon: ChartBar, color: "#E37400", desc: "Traffic & conversions" },
     { id: "meta_ads", label: "Meta Ads", icon: Target, color: "#1877F2", desc: "Facebook & IG ads" },
-    { id: "google_ads", label: "Google Ads", icon: TrendingUp, color: "#34A853", desc: "Search & display" },
+    { id: "google_ads", label: "Google Ads", icon: TrendUp, color: "#34A853", desc: "Search & display" },
   ];
 
   /* ── Content type icons ── */
   const CONTENT_TYPES = [
-    { id: "social_posts", label: "Social media posts", icon: MessageSquare },
+    { id: "social_posts", label: "Social media posts", icon: Chat },
     { id: "blog_articles", label: "Blog articles", icon: FileText },
     { id: "video_content", label: "Video content", icon: Video },
-    { id: "email_newsletters", label: "Email newsletters", icon: Mail },
+    { id: "email_newsletters", label: "Email newsletters", icon: Envelope },
     { id: "ad_creatives", label: "Ad creatives", icon: Image },
     { id: "website_copy", label: "Website copy", icon: Globe },
     { id: "review_responses", label: "Review responses", icon: Star },
@@ -362,7 +328,7 @@ export default function ClientOnboardingWizard({
           <div className="flex flex-col items-center text-center py-8 px-4">
             <div className="relative mb-8">
               <div className="w-20 h-20 rounded-3xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center breathe">
-                <Sparkles size={36} className="text-[#D4FF00]" />
+                <Sparkle size={36} className="text-[#D4FF00]" />
               </div>
               <div className="absolute -inset-3 rounded-[2rem] bg-[rgba(212,255,0,0.04)] -z-10" />
             </div>
@@ -423,10 +389,10 @@ export default function ClientOnboardingWizard({
                 <FieldLabel>Business type</FieldLabel>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {[
-                    { id: "Service", icon: Layers, label: "Service" },
+                    { id: "Service", icon: Stack, label: "Service" },
                     { id: "Product", icon: ShoppingBag, label: "Product" },
                     { id: "Hybrid", icon: Tag, label: "Hybrid" },
-                    { id: "Marketplace", icon: Store, label: "Marketplace" },
+                    { id: "Marketplace", icon: Storefront, label: "Marketplace" },
                   ].map(({ id, icon: Icon, label }) => (
                     <SelectCard
                       key={id}
@@ -469,7 +435,7 @@ export default function ClientOnboardingWizard({
                 <div className="flex flex-wrap gap-2">
                   {["Pre-revenue", "Under $100K", "$100K–$500K", "$500K–$1M", "$1M–$5M", "$5M+"].map((v) => (
                     <ChoiceBtn key={v} selected={data.revenue_range === v} onClick={() => set("revenue_range", v)}>
-                      <DollarSign size={12} className="inline mr-1" />
+                      <CurrencyDollar size={12} className="inline mr-1" />
                       {v}
                     </ChoiceBtn>
                   ))}
@@ -595,7 +561,7 @@ export default function ClientOnboardingWizard({
                       selected={data.challenges.includes(c)}
                       onClick={() => set("challenges", toggle(data.challenges, c))}
                     >
-                      <AlertCircle
+                      <WarningCircle
                         size={13}
                         className={`mb-1.5 ${data.challenges.includes(c) ? "text-[#D4FF00]" : "text-text-muted"}`}
                       />
@@ -1054,7 +1020,7 @@ export default function ClientOnboardingWizard({
                         }}
                       >
                         Connect
-                        <ExternalLink size={11} />
+                        <ArrowSquareOut size={11} />
                       </a>
                     )}
                   </div>
@@ -1153,7 +1119,7 @@ export default function ClientOnboardingWizard({
           <div className="text-center">
             <div className="relative inline-flex mb-6">
               <div className="w-20 h-20 rounded-3xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center">
-                <Zap size={36} className="text-[#D4FF00]" />
+                <Lightning size={36} className="text-[#D4FF00]" />
               </div>
               <div className="absolute -inset-4 rounded-[2.5rem] bg-[rgba(212,255,0,0.03)] -z-10 animate-pulse" />
             </div>
@@ -1193,7 +1159,7 @@ export default function ClientOnboardingWizard({
                 }}
                 className="btn-primary flex items-center gap-2 text-base px-8 py-3"
               >
-                <Zap size={18} />
+                <Lightning size={18} />
                 Yes, Launch AI Auto-Pilot!
               </button>
               <button
@@ -1299,7 +1265,7 @@ export default function ClientOnboardingWizard({
               {showSkip && (
                 <button onClick={next} className="text-sm text-text-muted hover:text-text-primary transition-colors font-medium">
                   Skip for now
-                  <ChevronRight size={14} className="inline ml-0.5" />
+                  <CaretRight size={14} className="inline ml-0.5" />
                 </button>
               )}
               {step > 1 && (

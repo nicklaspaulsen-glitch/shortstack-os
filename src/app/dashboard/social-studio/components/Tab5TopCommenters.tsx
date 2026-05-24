@@ -1,7 +1,7 @@
+import { ArrowBendUpLeft, Chat, CircleNotch, Sparkle, Users } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, MessageSquare, Reply, Sparkles, Users } from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
 import type { TopCommenter } from "@/lib/social-studio/types";
@@ -69,12 +69,12 @@ export default function Tab5TopCommenters() {
 
         {loading ? (
           <div className="flex items-center justify-center py-6 text-xs text-text-muted">
-            <Loader2 size={12} className="animate-spin mr-2" />
+            <CircleNotch size={12} className="animate-spin mr-2" />
             Loading commenters…
           </div>
         ) : commenters.length === 0 ? (
           <div className="py-8 text-center">
-            <MessageSquare size={20} className="mx-auto text-text-muted/50 mb-2" />
+            <Chat size={20} className="mx-auto text-text-muted/50 mb-2" />
             <p className="text-xs text-text-muted">
               No comments yet. Once Zernio webhooks start dropping comments here, they&apos;ll appear ranked by activity.
             </p>
@@ -111,8 +111,8 @@ export default function Tab5TopCommenters() {
                       onClick={() => onDraft(c)}
                       className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.25)] text-[10px] text-brand-accent hover:bg-[rgba(212,255,0,0.12)]"
                     >
-                      <Sparkles size={10} />
-                      Reply with AI
+                      <Sparkle size={10} />
+                      ArrowBendUpLeft with AI
                     </button>
                   </td>
                 </tr>
@@ -125,7 +125,7 @@ export default function Tab5TopCommenters() {
       <Modal
         isOpen={!!active}
         onClose={() => setActive(null)}
-        title={active ? `Reply to @${active.commenter_handle}` : "Reply"}
+        title={active ? `ArrowBendUpLeft to @${active.commenter_handle}` : "ArrowBendUpLeft"}
         size="md"
       >
         {active && (
@@ -139,7 +139,7 @@ export default function Tab5TopCommenters() {
               <label className="text-[10px] uppercase tracking-wider text-text-muted">Your draft reply</label>
               {drafting && !draftReply ? (
                 <div className="flex items-center gap-2 py-3 text-xs text-text-muted">
-                  <Loader2 size={12} className="animate-spin" />
+                  <CircleNotch size={12} className="animate-spin" />
                   AI drafting…
                 </div>
               ) : (
@@ -169,7 +169,7 @@ export default function Tab5TopCommenters() {
                   if (!draftReply) return;
                   try {
                     await navigator.clipboard.writeText(draftReply);
-                    toast.success("Reply copied to clipboard");
+                    toast.success("ArrowBendUpLeft copied to clipboard");
                   } catch {
                     toast.error("Couldn't copy — select manually");
                   }
@@ -177,7 +177,7 @@ export default function Tab5TopCommenters() {
                 disabled={!draftReply}
                 className="px-3 py-1.5 text-xs rounded-md bg-[rgba(212,255,0,0.12)] border border-[rgba(212,255,0,0.3)] text-brand-accent inline-flex items-center gap-1 disabled:opacity-50"
               >
-                <Reply size={10} />
+                <ArrowBendUpLeft size={10} />
                 Copy reply
               </button>
             </div>

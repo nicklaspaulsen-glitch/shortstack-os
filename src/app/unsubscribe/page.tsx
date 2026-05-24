@@ -1,5 +1,5 @@
+import { CheckCircle, Envelope, XCircle } from "@phosphor-icons/react";
 import Link from "next/link";
-import { CheckCircle, XCircle, Mail } from "lucide-react";
 
 interface Props {
   searchParams: Promise<{ success?: string; error?: string; email?: string }>;
@@ -17,7 +17,7 @@ export default async function UnsubscribePage({ searchParams }: Props) {
 
         {/* Brand wordmark */}
         <div className="flex items-center justify-center gap-2 mb-8">
-          <Mail className="w-5 h-5 text-[#D4FF00]" />
+          <Envelope className="w-5 h-5 text-[#D4FF00]" />
           <span className="text-sm font-semibold text-white/60 tracking-widest uppercase">
             ShortStack
           </span>

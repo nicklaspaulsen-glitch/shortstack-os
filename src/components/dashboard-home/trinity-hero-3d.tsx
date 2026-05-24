@@ -1,4 +1,5 @@
 "use client";
+import { Microphone, Sparkle } from "@phosphor-icons/react";
 
 /**
  * TrinityHero3D — dashboard home hero. A 3D crystal "Trinity" floats on
@@ -26,7 +27,6 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Sparkles, Mic } from "lucide-react";
 import { tokens } from "@/lib/brand/tokens";
 
 const TrinityHero3DCanvas = dynamic(() => import("./trinity-hero-canvas"), {
@@ -305,11 +305,11 @@ export default function TrinityHero3D({
               onClick={handleNudge}
               className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-light px-3 py-1.5 text-[12px] text-text-primary transition-all hover:border-brand-accent/40 hover:bg-brand-accent/10"
             >
-              <Sparkles size={12} />
+              <Sparkle size={12} />
               <span>Give me fresh ideas</span>
             </button>
             <span className="text-[11px] text-text-muted">
-              <Mic size={11} className="-mt-px mr-1 inline-block" />
+              <Microphone size={11} className="-mt-px mr-1 inline-block" />
               Voice replies coming soon
             </span>
           </div>

@@ -1,4 +1,5 @@
 "use client";
+import { CaretDown, CircleNotch, Eye, EyeSlash, Gear, MagnifyingGlass, Plus, Shield, UserPlus, X } from "@phosphor-icons/react";
 
 import { useState } from "react";
 import { useAppStore } from "@/lib/store";
@@ -6,10 +7,6 @@ import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { formatCurrency } from "@/lib/utils";
 import Modal from "@/components/ui/modal";
-import {
-  ChevronDown, Search, X, Eye, EyeOff, Shield,
-  UserPlus, Settings, Loader, Plus
-} from "lucide-react";
 import toast from "react-hot-toast";
 
 function PasswordInput({ name, placeholder, required, minLength }: { name: string; placeholder: string; required?: boolean; minLength?: number }) {
@@ -18,7 +15,7 @@ function PasswordInput({ name, placeholder, required, minLength }: { name: strin
     <div className="relative">
       <input name={name} type={show ? "text" : "password"} className="input w-full text-xs pr-9" placeholder={placeholder} required={required} minLength={minLength} />
       <button type="button" onClick={() => setShow(!show)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary transition-colors">
-        {show ? <EyeOff size={14} /> : <Eye size={14} />}
+        {show ? <EyeSlash size={14} /> : <Eye size={14} />}
       </button>
     </div>
   );
@@ -149,7 +146,7 @@ export default function AdminProfileSwitcher() {
           <p className="text-[10px] text-text-muted truncate">{impersonatedClient.contact_name}</p>
           <button onClick={() => setImpersonatedClient(null)}
             className="w-full mt-1.5 text-[10px] bg-warning/10 hover:bg-warning/20 text-warning px-2 py-1 rounded flex items-center justify-center gap-1 transition-colors">
-            <EyeOff size={10} /> Back to Admin
+            <EyeSlash size={10} /> Back to Admin
           </button>
         </div>
       </div>
@@ -170,7 +167,7 @@ export default function AdminProfileSwitcher() {
             <p className="text-[10px] text-text-muted font-medium">Accounts</p>
             <p className="text-[10px] text-text-muted/60">{clients.length > 0 ? `${clients.length} clients` : "Manage clients"}</p>
           </div>
-          <ChevronDown size={12} className={`text-text-muted transition-transform ${open ? "rotate-180" : ""}`} />
+          <CaretDown size={12} className={`text-text-muted transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
 
         {/* Dropdown */}
@@ -187,13 +184,13 @@ export default function AdminProfileSwitcher() {
                 </button>
               </div>
 
-              {/* Search */}
+              {/* MagnifyingGlass */}
               <div className="p-2 border-b border-border-subtle/20">
                 <div className="relative">
-                  <Search size={11} className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted" />
+                  <MagnifyingGlass size={11} className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted" />
                   <input
                     type="text"
-                    placeholder="Search clients..."
+                    placeholder="MagnifyingGlass clients..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="input w-full pl-7 py-1 text-[10px]"
@@ -234,7 +231,7 @@ export default function AdminProfileSwitcher() {
                         </button>
                         <button onClick={() => manageClient(client)}
                           className="text-[9px] bg-surface-light text-text-muted hover:text-text-primary px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
-                          <Settings size={9} /> Manage
+                          <Gear size={9} /> Manage
                         </button>
                         {!client.profile_id ? (
                           <button onClick={() => { setOpen(false); setShowCreateProfile(client); }}
@@ -283,7 +280,7 @@ export default function AdminProfileSwitcher() {
             <div className="flex justify-end gap-2 pt-1">
               <button type="button" onClick={() => setShowCreateProfile(null)} className="btn-secondary text-xs">Cancel</button>
               <button type="submit" disabled={creating} className="btn-primary text-xs flex items-center gap-1.5">
-                {creating ? <Loader size={12} className="animate-spin" /> : <UserPlus size={12} />}
+                {creating ? <CircleNotch size={12} className="animate-spin" /> : <UserPlus size={12} />}
                 {creating ? "Creating..." : "Create Account"}
               </button>
             </div>

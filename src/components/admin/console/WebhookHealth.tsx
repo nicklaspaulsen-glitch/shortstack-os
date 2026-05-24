@@ -1,4 +1,5 @@
-import { AlertTriangle, CheckCircle2 } from "lucide-react";
+import { CheckCircle, Warning } from "@phosphor-icons/react";
+
 
 export interface ProviderDedup {
   provider: string;
@@ -68,11 +69,11 @@ export default function WebhookHealth({ providers }: WebhookHealthProps) {
                 <td className="py-1.5 text-right">
                   {p.stuck ? (
                     <span className="inline-flex items-center gap-1 text-danger">
-                      <AlertTriangle size={10} /> stuck
+                      <Warning size={10} /> stuck
                     </span>
                   ) : (
                     <span className="inline-flex items-center gap-1 text-success">
-                      <CheckCircle2 size={10} /> ok
+                      <CheckCircle size={10} /> ok
                     </span>
                   )}
                 </td>

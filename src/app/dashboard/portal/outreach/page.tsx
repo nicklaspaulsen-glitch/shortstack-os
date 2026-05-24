@@ -1,12 +1,7 @@
 "use client";
+import { ArrowRight, Chat, CheckCircle, CircleNotch, Clock, DeviceMobile, Envelope, Globe, Lightning, PaperPlaneTilt, Phone, Robot, Sparkle, Target, XCircle } from "@phosphor-icons/react";
 
 import { useState, useEffect } from "react";
-import {
-  Mail, Phone, MessageSquare, Send, Loader, Zap,
-  CheckCircle, Clock, XCircle, ArrowRight,
-  Sparkles, Bot,
-  Smartphone, Globe,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
@@ -179,16 +174,16 @@ export default function ClientOutreachPage() {
   }
 
   const channels: Array<{ id: Channel; label: string; icon: React.ReactNode; color: string }> = [
-    { id: "email", label: "Email", icon: <Mail size={14} />, color: "text-indigo-400" },
-    { id: "dm", label: "Social DMs", icon: <MessageSquare size={14} />, color: "text-indigo-400" },
-    { id: "sms", label: "SMS", icon: <Smartphone size={14} />, color: "text-emerald-400" },
+    { id: "email", label: "Email", icon: <Envelope size={14} />, color: "text-indigo-400" },
+    { id: "dm", label: "Social DMs", icon: <Chat size={14} />, color: "text-indigo-400" },
+    { id: "sms", label: "SMS", icon: <DeviceMobile size={14} />, color: "text-emerald-400" },
     { id: "call", label: "AI Call", icon: <Phone size={14} />, color: "text-indigo-400" },
   ];
 
   return (
     <MotionPage className="space-y-6">{/* Header */}<div>
               <h1 className="text-xl font-bold flex items-center gap-2 text-text-primary">
-                <Send size={20} className="text-indigo-400" />
+                <PaperPlaneTilt size={20} className="text-indigo-400" />
                 Outreach Center
               </h1>
               <p className="text-xs text-text-muted mt-1">Launch multi-channel campaigns with AI-personalized messages</p>
@@ -216,7 +211,7 @@ export default function ClientOutreachPage() {
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Failed</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.failed}</p>
               </motion.div>
-            </div>{/* Channel Selector */}<div className="flex gap-2">
+            </div>{/* Channel Selector */}<div className="flex flex-wrap gap-2">
               {channels.map((ch) => (
                 <button
                   key={ch.id}
@@ -243,7 +238,7 @@ export default function ClientOutreachPage() {
                 </button>
               ))}
             </div>{/* Compose Tab */}{tab === "compose" && (
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 {/* Main compose area */}
                 <div className="col-span-2 space-y-3">
                   {channel === "email" && (
@@ -280,7 +275,7 @@ export default function ClientOutreachPage() {
                     disabled={sending}
                     className="btn-primary w-full py-3 text-sm flex items-center justify-center gap-2"
                   >
-                    {sending ? <Loader size={14} className="animate-spin" /> : <Zap size={14} />}
+                    {sending ? <CircleNotch size={14} className="animate-spin" /> : <Lightning size={14} />}
                     {sending ? "Launching..." : `Launch ${channel === "email" ? "Email" : channel === "dm" ? "DM" : channel === "sms" ? "SMS" : "Call"} Campaign`}
                   </button>
                 </div>
@@ -309,7 +304,7 @@ export default function ClientOutreachPage() {
                         <input type="checkbox" checked={useAI} onChange={(e) => setUseAI(e.target.checked)}
                           className="w-3.5 h-3.5 rounded border-border-subtle" />
                         <span className="text-[10px] flex items-center gap-1">
-                          <Sparkles size={10} className="text-indigo-400" /> AI Personalization
+                          <Sparkle size={10} className="text-indigo-400" /> AI Personalization
                         </span>
                       </label>
                     </div>
@@ -349,7 +344,7 @@ export default function ClientOutreachPage() {
                   {channel === "call" && (
                     <div className="glass rounded-xl p-4 bg-indigo-500/[0.10] border-indigo-500/[0.20]">
                       <p className="text-[10px] text-indigo-400 flex items-center gap-1 mb-1">
-                        <Bot size={10} /> AI-Powered Calls
+                        <Robot size={10} /> AI-Powered Calls
                       </p>
                       <p className="text-[9px] text-text-muted">
                         Calls use AI voice agents. Each lead will receive a natural conversation following your script.
@@ -362,11 +357,11 @@ export default function ClientOutreachPage() {
               <div className="glass rounded-xl overflow-hidden">
                 {loadingHistory ? (
                   <div className="text-center py-12 text-text-muted">
-                    <Loader size={16} className="animate-spin mx-auto mb-2" /> Loading history...
+                    <CircleNotch size={16} className="animate-spin mx-auto mb-2" /> Loading history...
                   </div>
                 ) : history.length === 0 ? (
                   <div className="text-center py-12 text-text-muted">
-                    <Send size={20} className="mx-auto mb-2 opacity-30" />
+                    <PaperPlaneTilt size={20} className="mx-auto mb-2 opacity-30" />
                     <p className="text-xs">No outreach history yet. Launch your first campaign above.</p>
                   </div>
                 ) : (
@@ -406,13 +401,13 @@ export default function ClientOutreachPage() {
                 )}
               </div>
             )}{/* Templates Tab */}{tab === "templates" && (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {Object.entries(MESSAGE_TEMPLATES).map(([ch, templates]) => (
                   <div key={ch} className="glass rounded-xl p-4">
                     <h3 className="text-xs font-semibold capitalize flex items-center gap-2 mb-3 text-text-primary">
-                      {ch === "email" && <Mail size={13} className="text-indigo-400" />}
-                      {ch === "dm" && <MessageSquare size={13} className="text-indigo-400" />}
-                      {ch === "sms" && <Smartphone size={13} className="text-emerald-400" />}
+                      {ch === "email" && <Envelope size={13} className="text-indigo-400" />}
+                      {ch === "dm" && <Chat size={13} className="text-indigo-400" />}
+                      {ch === "sms" && <DeviceMobile size={13} className="text-emerald-400" />}
                       {ch === "call" && <Phone size={13} className="text-indigo-400" />}
                       {ch} Templates
                     </h3>
@@ -420,7 +415,7 @@ export default function ClientOutreachPage() {
                       {templates.map((tpl) => (
                         <div key={tpl.name} className="p-2.5 rounded-lg bg-white/[0.06] border border-border-subtle">
                           <p className="text-[10px] font-medium mb-1 text-text-primary">{tpl.name}</p>
-                          <p className="text-[9px] text-text-muted line-clamp-3">{tpl.body}</p>
+                          <p className="text-[11px] text-text-muted line-clamp-3">{tpl.body}</p>
                           <button
                             onClick={() => { setChannel(ch as Channel); setBody(tpl.body); if ("subject" in tpl) setSubject(tpl.subject || ""); setTab("compose"); }}
                             className="text-[9px] text-indigo-400 hover:text-indigo-400 mt-1.5 flex items-center gap-0.5"

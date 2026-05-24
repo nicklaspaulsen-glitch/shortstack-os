@@ -1,4 +1,5 @@
 "use client";
+import { CaretDown, CaretUp, Play, X } from "@phosphor-icons/react";
 
 /**
  * TutorialSection
@@ -10,11 +11,10 @@
  */
 
 import { useEffect, useState, type ComponentType, type SVGProps } from "react";
-import { ChevronDown, ChevronUp, Play, X } from "lucide-react";
 
 // Lucide icons are React components that accept SVG props plus some lucide
 // specific props. This loose type keeps us compatible with both the classic
-// LucideIcon type and newer shapes.
+// Icon type and newer shapes.
 type LucideIconLike = ComponentType<SVGProps<SVGSVGElement> & { size?: number | string }>;
 
 export interface TutorialStep {
@@ -101,11 +101,11 @@ export default function TutorialSection({
           >
             {open ? (
               <>
-                Hide <ChevronUp size={12} />
+                Hide <CaretUp size={12} />
               </>
             ) : (
               <>
-                Show <ChevronDown size={12} />
+                Show <CaretDown size={12} />
               </>
             )}
           </button>

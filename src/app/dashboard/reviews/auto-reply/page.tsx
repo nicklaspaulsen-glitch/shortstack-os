@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowsClockwise, Check, CircleNotch, PaperPlaneTilt, Sparkle, Star, WarningCircle, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -11,17 +12,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  Star,
-  Sparkles,
-  Loader2,
-  Check,
-  X,
-  Send,
-  ArrowLeft,
-  RefreshCw,
-  AlertCircle,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import EmptyState from "@/components/ui/empty-state";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -214,7 +204,7 @@ export default function ReviewsAutoReplyPage() {
                     onClick={() => setShowCompose((v) => !v)}
                     className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-brand-accent hover:bg-brand-accent/80 text-[#0D1120] transition-all"
                   >
-                    <Sparkles size={14} /> New Draft
+                    <Sparkle size={14} /> New Draft
                   </button>
                 </div>
       </div>
@@ -245,7 +235,7 @@ export default function ReviewsAutoReplyPage() {
               {showCompose && (
                 <div className="glass rounded-xl p-5 space-y-3">
                   <p className="font-semibold text-text-primary text-sm flex items-center gap-2">
-                    <Sparkles size={14} className="text-brand-accent" /> Generate AI Reply
+                    <Sparkle size={14} className="text-brand-accent" /> Generate AI Reply
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <input
@@ -313,9 +303,9 @@ export default function ReviewsAutoReplyPage() {
                       className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-brand-accent hover:bg-brand-accent/80 text-[#0D1120] disabled:opacity-50 transition-all"
                     >
                       {generating ? (
-                        <Loader2 size={14} className="animate-spin" />
+                        <CircleNotch size={14} className="animate-spin" />
                       ) : (
-                        <Sparkles size={14} />
+                        <Sparkle size={14} />
                       )}{" "}
                       Generate Reply
                     </button>
@@ -335,13 +325,13 @@ export default function ReviewsAutoReplyPage() {
               {/* List */}
               {loading ? (
                 <div className="flex items-center justify-center py-16">
-                  <Loader2 size={28} className="animate-spin text-text-muted" />
+                  <CircleNotch size={28} className="animate-spin text-text-muted" />
                 </div>
               ) : drafts.length === 0 ? (
                 <EmptyState
                   title="No drafts yet"
                   description="Paste a review and Claude will generate a reply you can approve."
-                  icon={<Sparkles size={28} />}
+                  icon={<Sparkle size={28} />}
                 />
               ) : (
                 <div className="space-y-3">
@@ -380,7 +370,7 @@ export default function ReviewsAutoReplyPage() {
 
                         <div className="px-3 py-2 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.25)]">
                           <p className="text-[11px] uppercase tracking-wider text-brand-accent mb-1 flex items-center gap-1.5">
-                            <Sparkles size={10} /> AI Draft
+                            <Sparkle size={10} /> AI Draft
                           </p>
                           {isEditing ? (
                             <textarea
@@ -426,7 +416,7 @@ export default function ReviewsAutoReplyPage() {
                                 className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-text-secondary bg-white/5 hover:bg-white/8"
                                 disabled={d.status === "published"}
                               >
-                                <RefreshCw size={12} /> Edit
+                                <ArrowsClockwise size={12} /> Edit
                               </button>
                               {d.status === "pending" && (
                                 <button
@@ -441,7 +431,7 @@ export default function ReviewsAutoReplyPage() {
                                   onClick={() => void publish(d)}
                                   className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400"
                                 >
-                                  <Send size={12} /> Publish
+                                  <PaperPlaneTilt size={12} /> Publish
                                 </button>
                               )}
                               {d.status !== "published" && d.status !== "rejected" && (
@@ -463,7 +453,7 @@ export default function ReviewsAutoReplyPage() {
 
               {/* Footnote */}
               <div className="glass rounded-lg p-3 flex items-start gap-2 text-xs text-text-muted">
-                <AlertCircle size={14} className="text-amber-500 shrink-0 mt-0.5" />
+                <WarningCircle size={14} className="text-amber-500 shrink-0 mt-0.5" />
                 <p>
                   v1 stores approved replies locally. Auto-posting back to Google
                   Business / Yelp / Facebook is wired through the same OAuth as the

@@ -1,13 +1,9 @@
 "use client";
+import { ArrowUp, Calendar, ChartBar, CheckCircle, CurrencyDollar, DownloadSimple, FilmStrip, Fire, Lightning, Phone, Pulse, Star, Target, TrendUp, Trophy, Warning } from "@phosphor-icons/react";
 
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { formatCurrency, formatRelativeTime } from "@/lib/utils";
-import {
-  BarChart3, DollarSign, Zap, Film, Phone, ArrowUp,
-  TrendingUp, AlertTriangle, Target, Trophy, Calendar, Download, Activity,
-  Flame, Star, CheckCircle
-} from "lucide-react";
 import {
   AreaChart, Area, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
@@ -363,12 +359,12 @@ export default function AnalyticsPage() {
 
   const activityIcon = (type: string) => {
     switch (type) {
-      case "lead": return <Zap size={10} style={{ color: "#D4FF00" }} />;
-      case "payment": return <DollarSign size={10} style={{ color: "#10B981" }} />;
-      case "post": return <Film size={10} style={{ color: "var(--text-secondary)" }} />;
+      case "lead": return <Lightning size={10} style={{ color: "#D4FF00" }} />;
+      case "payment": return <CurrencyDollar size={10} style={{ color: "#10B981" }} />;
+      case "post": return <FilmStrip size={10} style={{ color: "var(--text-secondary)" }} />;
       case "deal": return <Trophy size={10} style={{ color: "#D4FF00" }} />;
       case "call": return <Phone size={10} style={{ color: "#6366F1" }} />;
-      default: return <Activity size={10} style={{ color: "var(--text-muted)" }} />;
+      default: return <Pulse size={10} style={{ color: "var(--text-muted)" }} />;
     }
   };
 
@@ -428,7 +424,7 @@ export default function AnalyticsPage() {
             className="flex items-center gap-1.5 text-[10px] text-text-muted hover:text-text-primary transition-colors border border-border-subtle px-2.5 py-1.5 rounded-full"
             title="Export report as JSON"
           >
-            <Download size={11} />
+            <DownloadSimple size={11} />
             Export CSV
           </button>
           {/* Live MRR badge */}
@@ -992,7 +988,7 @@ export default function AnalyticsPage() {
           <div className="glass-card rounded-xl px-6 pt-5 pb-5">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <SectionHeader eyebrow="Live Stream" heading="Real-time" accent="Activity" as="h2" />
+                <SectionHeader eyebrow="Live Stream" heading="Real-time" accent="Pulse" as="h2" />
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
@@ -1021,7 +1017,7 @@ export default function AnalyticsPage() {
                 </motion.div>
               )) : (
                 <div className="flex flex-col items-center justify-center py-8 gap-2 text-center">
-                  <Activity size={16} className="text-text-muted" />
+                  <Pulse size={16} className="text-text-muted" />
                   <p className="text-[11px] text-text-muted">No recent activity. New events appear here in real-time.</p>
                 </div>
               )}
@@ -1039,7 +1035,7 @@ export default function AnalyticsPage() {
             transition={{ duration: 0.22, delay: 0.1 }}
           >
             <InsightPanel
-              icon={<TrendingUp size={13} />}
+              icon={<TrendUp size={13} />}
               label="Revenue Forecast"
               badge={revenueForecast.length > 0 ? (
                 <span className="text-[9px] px-2 py-0.5 rounded-full bg-[rgba(212,255,0,0.10)] text-brand-accent">
@@ -1162,7 +1158,7 @@ export default function AnalyticsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, delay: 0.15 }}
           >
-            <InsightPanel icon={<AlertTriangle size={13} />} label="Churn Risk">
+            <InsightPanel icon={<Warning size={13} />} label="Churn Risk">
               <div className="space-y-2">
                 {churnRiskClients.length === 0 ? (
                   <div className="flex flex-col items-center gap-2 py-6 text-center">
@@ -1301,11 +1297,11 @@ export default function AnalyticsPage() {
               </div>
             </InsightPanel>
 
-            <InsightPanel icon={<DollarSign size={13} />} label="Client Lifetime Value">
+            <InsightPanel icon={<CurrencyDollar size={13} />} label="Client Lifetime Value">
               <div>
                 {clvData.length === 0 ? (
                   <div className="flex flex-col items-center gap-2 py-6 text-center">
-                    <DollarSign size={16} className="text-text-muted" />
+                    <CurrencyDollar size={16} className="text-text-muted" />
                     <p className="text-[11px] text-text-muted">No CLV data yet</p>
                     <p className="text-[9px] text-text-muted max-w-[200px]">CLV tiers appear once clients have payment records attached</p>
                     <Link href="/dashboard/clients" className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-brand-accent hover:opacity-80 transition-opacity">
@@ -1337,11 +1333,11 @@ export default function AnalyticsPage() {
               </div>
             </InsightPanel>
 
-            <InsightPanel icon={<BarChart3 size={13} />} label="Revenue by Service">
+            <InsightPanel icon={<ChartBar size={13} />} label="Revenue by Service">
               <div>
                 {revenueByService.length === 0 ? (
                   <div className="flex flex-col items-center gap-2 py-6 text-center">
-                    <BarChart3 size={16} className="text-text-muted" />
+                    <ChartBar size={16} className="text-text-muted" />
                     <p className="text-[11px] text-text-muted">No service breakdown yet</p>
                     <p className="text-[9px] text-text-muted max-w-[200px]">Revenue by service type appears once deals are tagged to a service category</p>
                   </div>
@@ -1372,7 +1368,7 @@ export default function AnalyticsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.22, delay: 0.25 }}
             >
-              <InsightPanel icon={<Flame size={13} />} label="Content Heatmap">
+              <InsightPanel icon={<Fire size={13} />} label="Content Heatmap">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>

@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowSquareOut, Chat, CheckCircle, CircleNotch, Clock, ClockCounterClockwise, PaperPlaneTilt, Plus, SlidersHorizontal, Star, Trash } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -9,20 +10,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  Star,
-  Plus,
-  Trash2,
-  ArrowLeft,
-  MessageSquare,
-  Loader,
-  ExternalLink,
-  CheckCircle2,
-  Send,
-  Clock,
-  Settings2,
-  History,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import EmptyState from "@/components/ui/empty-state";
@@ -138,7 +125,7 @@ export default function ReviewsPage() {
                       : "border-transparent text-text-muted hover:text-text-primary"
                   }`}
                 >
-                  <Send size={13} />
+                  <PaperPlaneTilt size={13} />
                   Review Requests
                 </button>
               </div>
@@ -270,7 +257,7 @@ function ReviewManager() {
       )}
 
       {loading ? (
-        <div className="flex items-center gap-2 text-sm text-text-muted"><Loader size={14} className="animate-spin" /> Loading…</div>
+        <div className="flex items-center gap-2 text-sm text-text-muted"><CircleNotch size={14} className="animate-spin" /> Loading…</div>
       ) : filtered.length === 0 ? (
         <div className="glass rounded-xl p-4">
           <EmptyState
@@ -380,18 +367,18 @@ function ReviewRequests() {
           onClick={() => setSubTab("config")}
           className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${subTab === "config" ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : "bg-surface-light/40 text-text-muted hover:text-text-primary"}`}
         >
-          <Settings2 size={12} /> Configs
+          <SlidersHorizontal size={12} /> Configs
         </button>
         <button
           onClick={() => setSubTab("history")}
           className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition ${subTab === "history" ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : "bg-surface-light/40 text-text-muted hover:text-text-primary"}`}
         >
-          <History size={12} /> Sent History
+          <ClockCounterClockwise size={12} /> Sent ClockCounterClockwise
         </button>
       </div>
 
       {loading ? (
-        <div className="flex items-center gap-2 text-sm text-text-muted"><Loader size={14} className="animate-spin" /> Loading…</div>
+        <div className="flex items-center gap-2 text-sm text-text-muted"><CircleNotch size={14} className="animate-spin" /> Loading…</div>
       ) : subTab === "config" ? (
         <>
           {/* Config list */}
@@ -418,7 +405,7 @@ function ReviewRequests() {
           {configs.length === 0 && !showForm ? (
             <div className="glass rounded-xl p-4">
               <EmptyState
-                icon={<Send size={36} />}
+                icon={<PaperPlaneTilt size={36} />}
                 title="No review request configs"
                 description="Create a config to automatically text or email clients a review link after their appointment ends."
                 action={
@@ -437,7 +424,7 @@ function ReviewRequests() {
                 <motion.div key={cfg.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="glass rounded-xl p-4">
                   <div className="flex items-start gap-3">
                     <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${cfg.enabled ? "bg-emerald-500/15 text-emerald-400" : "bg-surface-light/60 text-text-muted"}`}>
-                      <Send size={14} />
+                      <PaperPlaneTilt size={14} />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
@@ -469,7 +456,7 @@ function ReviewRequests() {
                         className="rounded bg-rose-500/10 px-2 py-1 text-rose-400 hover:bg-rose-500/20"
                         aria-label="Delete config"
                       >
-                        <Trash2 size={11} />
+                        <Trash size={11} />
                       </button>
                     </div>
                   </div>
@@ -481,7 +468,7 @@ function ReviewRequests() {
           {/* Manual send */}
           {configs.length > 0 && (
             <div className="glass rounded-xl p-5">
-              <h3 className="mb-3 text-sm font-semibold">Send Now (Manual)</h3>
+              <h3 className="mb-3 text-sm font-semibold">PaperPlaneTilt Now (Manual)</h3>
               <div className="flex flex-wrap items-end gap-3">
                 <div>
                   <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-text-muted">Config</label>
@@ -514,21 +501,21 @@ function ReviewRequests() {
                   disabled={sending || !manualConfigId || !manualClientId}
                   className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711] disabled:opacity-40"
                 >
-                  {sending ? <Loader size={13} className="animate-spin" /> : <Send size={13} />}
-                  Send now
+                  {sending ? <CircleNotch size={13} className="animate-spin" /> : <PaperPlaneTilt size={13} />}
+                  PaperPlaneTilt now
                 </button>
               </div>
             </div>
           )}
         </>
       ) : (
-        /* History tab */
+        /* ClockCounterClockwise tab */
         <>
           <p className="text-sm text-text-muted">All review requests sent (auto + manual), newest first.</p>
           {history.length === 0 ? (
             <div className="glass rounded-xl p-4">
               <EmptyState
-                icon={<History size={36} />}
+                icon={<ClockCounterClockwise size={36} />}
                 title="No requests sent yet"
                 description="Review requests will appear here once the cron fires or you send manually."
               />
@@ -710,7 +697,7 @@ function ConfigForm({
           disabled={saving || !reviewUrl.trim()}
           className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-5 py-2 text-sm font-semibold text-[#020711] disabled:opacity-40"
         >
-          {saving ? <Loader size={13} className="animate-spin" /> : <CheckCircle2 size={13} />}
+          {saving ? <CircleNotch size={13} className="animate-spin" /> : <CheckCircle size={13} />}
           Save config
         </button>
       </div>
@@ -765,7 +752,7 @@ function ReviewCard({
               <div className="mt-2 flex items-center justify-end gap-2">
                 <button onClick={() => { setReplying(false); setDraft(review.reply); }} className="rounded-lg px-3 py-1.5 text-xs text-text-muted hover:text-text-primary">Cancel</button>
                 <button onClick={() => { if (!draft.trim()) return; onReply(draft.trim()); setReplying(false); }} disabled={!draft.trim()} className="inline-flex items-center gap-1 rounded-full bg-brand-accent px-3 py-1.5 text-xs font-semibold text-[#020711] disabled:opacity-40">
-                  <MessageSquare size={11} /> Save reply
+                  <Chat size={11} /> Save reply
                 </button>
               </div>
             </div>
@@ -773,12 +760,12 @@ function ReviewCard({
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1">
           {!replying && review.status !== "resolved" && (
-            <button onClick={() => setReplying(true)} className="inline-flex items-center gap-1 rounded bg-[rgba(212,255,0,0.08)] px-2.5 py-1.5 text-[11px] text-brand-accent hover:bg-[rgba(212,255,0,0.14)]"><MessageSquare size={11} /> Reply</button>
+            <button onClick={() => setReplying(true)} className="inline-flex items-center gap-1 rounded bg-[rgba(212,255,0,0.08)] px-2.5 py-1.5 text-[11px] text-brand-accent hover:bg-[rgba(212,255,0,0.14)]"><Chat size={11} /> Reply</button>
           )}
           {review.status !== "resolved" && review.reply && !replying && (
-            <button onClick={onResolve} className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-2.5 py-1.5 text-[11px] text-emerald-400 hover:bg-emerald-500/25" title="Mark as resolved"><CheckCircle2 size={11} /> Resolve</button>
+            <button onClick={onResolve} className="inline-flex items-center gap-1 rounded bg-emerald-500/15 px-2.5 py-1.5 text-[11px] text-emerald-400 hover:bg-emerald-500/25" title="Mark as resolved"><CheckCircle size={11} /> Resolve</button>
           )}
-          <button onClick={onDelete} className="rounded bg-rose-500/10 px-2 py-1.5 text-rose-400 hover:bg-rose-500/20" title="Delete" aria-label="Delete review"><Trash2 size={11} /></button>
+          <button onClick={onDelete} className="rounded bg-rose-500/10 px-2 py-1.5 text-rose-400 hover:bg-rose-500/20" title="Delete" aria-label="Delete review"><Trash size={11} /></button>
         </div>
       </div>
     </div>
@@ -817,7 +804,7 @@ function NewReviewForm({ onClose, onCreated }: { onClose: () => void; onCreated:
           <button onClick={onClose} className="rounded p-1 text-text-muted hover:text-text-primary" aria-label="Back to reviews list"><ArrowLeft size={14} /></button>
           <h3 className="text-base font-semibold">Log review</h3>
         </div>
-        <Link href="/dashboard/google-business" className="inline-flex items-center gap-1 text-[11px] text-text-muted hover:text-brand-accent"><ExternalLink size={11} /> Google Business</Link>
+        <Link href="/dashboard/google-business" className="inline-flex items-center gap-1 text-[11px] text-text-muted hover:text-brand-accent"><ArrowSquareOut size={11} /> Google Business</Link>
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>

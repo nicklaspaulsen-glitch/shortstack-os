@@ -21,7 +21,7 @@ export async function GET() {
     if (!botToken || !s.guild_id) return s;
     try {
       const r = await fetch(`https://discord.com/api/v10/guilds/${s.guild_id}?with_counts=true`, {
-        headers: { Authorization: `Bot ${botToken}` },
+        headers: { Authorization: `Robot ${botToken}` },
       });
       if (r.ok) {
         const g = await r.json();

@@ -1,16 +1,10 @@
+import { Camera, CaretDown, CaretRight, CircleNotch, Clock, DownloadSimple, File, FilmStrip, Image, Lightning, Lock, MagicWand, Monitor, MusicNote, Palette, PencilSimple, Play, Sparkle, Stack, Target, TextT, TrendUp, UploadSimple, UserCircle, WarningCircle, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Film, Sparkles, Play, Download,
-  Clock, Monitor, Zap, Layers,
-  Wand2, Palette, Camera, Music, Type, Lock,
-  ChevronDown, ChevronRight, AlertCircle, Edit3, Loader2, Image,
-  TrendingUp, Upload, UserCircle, X, Target,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
@@ -34,7 +28,7 @@ import dynamic from "next/dynamic";
 // when a user clicks "Preview overlay" on a completed video.
 const RemotionOverlayPlayer = dynamic(
   () => import("@/components/video-editor/remotion-overlay-player"),
-  { ssr: false, loading: () => <div className="h-64 flex items-center justify-center text-text-muted text-xs"><Loader2 size={14} className="animate-spin mr-2" /> Loading preview…</div> },
+  { ssr: false, loading: () => <div className="h-64 flex items-center justify-center text-text-muted text-xs"><CircleNotch size={14} className="animate-spin mr-2" /> Loading preview…</div> },
 );
 
 // Lazy-load template picker — only shown in advanced mode.
@@ -83,14 +77,14 @@ const PROMPT_CATEGORIES = [
 // Changing the "style" here adjusts the downstream prompt enhancement, it does
 // NOT change the actual model endpoint (that still goes through /api/video/render).
 const MODELS = [
-  { id: "cinematic",   name: "Cinematic",   sub: "Film-like grade",   icon: Film,    preview: "linear-gradient(90deg,#0d0d14 0%,#1a2340 40%,#3d5a7a 70%,#8fa8be 100%)",   viralScore: 78, ctrTier: "high"   as const },
+  { id: "cinematic",   name: "Cinematic",   sub: "FilmStrip-like grade",   icon: FilmStrip,    preview: "linear-gradient(90deg,#0d0d14 0%,#1a2340 40%,#3d5a7a 70%,#8fa8be 100%)",   viralScore: 78, ctrTier: "high"   as const },
   { id: "realistic",  name: "Realistic",   sub: "Documentary",        icon: Camera,  preview: "linear-gradient(90deg,#2d1e12 0%,#6b4226 40%,#b5855a 70%,#d4a96a 100%)",   viralScore: 71, ctrTier: "medium" as const },
   { id: "animated",   name: "Animated",    sub: "3D / Pixar",         icon: Palette, preview: "linear-gradient(90deg,#4158D0 0%,#C850C0 50%,#FFCC70 100%)",               viralScore: 85, ctrTier: "high"   as const },
-  { id: "anime",      name: "Anime",       sub: "Japanese",           icon: Sparkles,preview: "linear-gradient(90deg,#5665E9 0%,#9251AE 40%,#F95B8E 100%)",               viralScore: 89, ctrTier: "high"   as const },
-  { id: "vintage",    name: "Vintage",     sub: "Film grain",         icon: Layers,  preview: "linear-gradient(90deg,#2C1810 0%,#7A3D1A 40%,#C4832A 70%,#E8C875 100%)",   viralScore: 62, ctrTier: "medium" as const },
-  { id: "dreamy",     name: "Dreamy",      sub: "Soft, ethereal",     icon: Wand2,   preview: "linear-gradient(90deg,#A18CD1 0%,#FBC2EB 50%,#A1C4FD 100%)",               viralScore: 74, ctrTier: "high"   as const },
-  { id: "hyper-real", name: "Hyper-Real",  sub: "Photorealistic CGI", icon: TrendingUp, preview: "linear-gradient(90deg,#0F2027 0%,#203A43 50%,#2C5364 100%)",            viralScore: 82, ctrTier: "high"   as const },
-  { id: "cyberpunk",  name: "Cyberpunk",   sub: "Neon dystopian",     icon: Zap,     preview: "linear-gradient(90deg,#0a0010 0%,#1a003a 30%,#6a00b8 60%,#ff007a 100%)",   viralScore: 91, ctrTier: "high"   as const },
+  { id: "anime",      name: "Anime",       sub: "Japanese",           icon: Sparkle,preview: "linear-gradient(90deg,#5665E9 0%,#9251AE 40%,#F95B8E 100%)",               viralScore: 89, ctrTier: "high"   as const },
+  { id: "vintage",    name: "Vintage",     sub: "FilmStrip grain",         icon: Stack,  preview: "linear-gradient(90deg,#2C1810 0%,#7A3D1A 40%,#C4832A 70%,#E8C875 100%)",   viralScore: 62, ctrTier: "medium" as const },
+  { id: "dreamy",     name: "Dreamy",      sub: "Soft, ethereal",     icon: MagicWand,   preview: "linear-gradient(90deg,#A18CD1 0%,#FBC2EB 50%,#A1C4FD 100%)",               viralScore: 74, ctrTier: "high"   as const },
+  { id: "hyper-real", name: "Hyper-Real",  sub: "Photorealistic CGI", icon: TrendUp, preview: "linear-gradient(90deg,#0F2027 0%,#203A43 50%,#2C5364 100%)",            viralScore: 82, ctrTier: "high"   as const },
+  { id: "cyberpunk",  name: "Cyberpunk",   sub: "Neon dystopian",     icon: Lightning,     preview: "linear-gradient(90deg,#0a0010 0%,#1a003a 30%,#6a00b8 60%,#ff007a 100%)",   viralScore: 91, ctrTier: "high"   as const },
   { id: "horror",     name: "Horror",      sub: "Dark, atmospheric",  icon: Target,  preview: "linear-gradient(90deg,#0a0000 0%,#1a0000 40%,#4a0000 70%,#8a0000 100%)",   viralScore: 77, ctrTier: "medium" as const },
   { id: "nature-doc", name: "Nature Doc",  sub: "BBC Earth style",    icon: Camera,  preview: "linear-gradient(90deg,#0a1a00 0%,#1a3a00 40%,#4a8a20 70%,#a0cc60 100%)",   viralScore: 68, ctrTier: "medium" as const },
 ];
@@ -226,7 +220,7 @@ const STYLE_VAULT: Array<{ id: string; cat: string; label: string; prompt: strin
   { id: "sv-mot-3",    cat: "Motivational",  label: "Quiet Discipline",      prompt: "Minimalist quiet scene, person in focused solitary work, soft morning window light, slow deliberate cuts, contemplative mood, understated strength, no hype no noise." },
   { id: "sv-mot-4",    cat: "Motivational",  label: "Origin Story",          prompt: "Personal origin story format, childhood photos implied, humble beginning b-roll, emotional confessional talking head, warm desaturated flashback tone, journey arc narrative." },
   // Social Proof / Brand
-  { id: "sv-brand-1",  cat: "Brand",         label: "Premium Brand Film",    prompt: "High-fashion brand film aesthetic, wide lens anamorphic flare, moody desaturated color grade, slow model walk, architectural setting, luxury product integration, aspirational silence." },
+  { id: "sv-brand-1",  cat: "Brand",         label: "Premium Brand FilmStrip",    prompt: "High-fashion brand film aesthetic, wide lens anamorphic flare, moody desaturated color grade, slow model walk, architectural setting, luxury product integration, aspirational silence." },
   { id: "sv-brand-2",  cat: "Brand",         label: "Behind the Scenes",     prompt: "Authentic BTS documentary feel, candid team moments, handheld B-roll, warm golden workshop light, craft and process revealed, genuine laughter and expertise visible." },
   { id: "sv-brand-3",  cat: "Brand",         label: "Brand Manifesto",       prompt: "Manifesto video, black screen with single word reveals, bold typographic animation, voice-over building to crescendo, montage of community or product in action, rallying emotional close." },
   { id: "sv-brand-4",  cat: "Brand",         label: "Community Story",       prompt: "User-generated feel, multiple real people sharing moments, colorful diverse environments, upbeat optimistic score, movement and energy, brand subtly present throughout." },
@@ -456,7 +450,7 @@ export default function AIVideoPage() {
     try {
       const res = await fetch("/api/ai/predict-viral", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ prompt: prompt.trim(), style, aspect_ratio: aspectRatio, face_swap: faceSwapMode }),
       });
       if (!res.ok) throw new Error("Prediction failed");
@@ -502,7 +496,7 @@ export default function AIVideoPage() {
     try {
       const res = await fetch("/api/ai/enhance-video-prompt", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ prompt: prompt.trim(), style }),
       });
       if (!res.ok) throw new Error("Enhancement failed");
@@ -541,7 +535,7 @@ export default function AIVideoPage() {
       id: "prompt",
       title: "Describe your scene",
       description: "One or two sentences. Mention subject, lighting, camera movement, mood.",
-      icon: <Type size={18} />,
+      icon: <TextT size={18} />,
       canProceed: prompt.trim().length > 0,
       component: (
         <div className="space-y-3">
@@ -555,7 +549,7 @@ export default function AIVideoPage() {
               <Target size={11} className="text-brand-accent" />
               <span>Not sure where to start?</span>
               <span className="text-brand-accent font-semibold ml-1">Use intent wizard</span>
-              <ChevronDown size={10} className={`ml-auto transition-transform duration-220 ${intentOpen ? "rotate-180" : ""}`} />
+              <CaretDown size={10} className={`ml-auto transition-transform duration-220 ${intentOpen ? "rotate-180" : ""}`} />
             </button>
             {intentOpen && (
               <div className="mt-2 rounded-xl border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.03)] p-3 space-y-3">
@@ -598,7 +592,7 @@ export default function AIVideoPage() {
                     onClick={() => { setPrompt(buildIntentPrompt()); setIntentOpen(false); }}
                     className="w-full flex items-center justify-center gap-2 text-[11px] font-semibold text-[#0D1120] py-2 rounded-xl bg-brand-accent hover:bg-brand-accent/80 transition-all cursor-pointer"
                   >
-                    <Sparkles size={11} /> Build prompt from answers
+                    <Sparkle size={11} /> Build prompt from answers
                   </button>
                 )}
               </div>
@@ -620,7 +614,7 @@ export default function AIVideoPage() {
                 disabled={enhancing}
                 className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1 text-[10px] text-brand-accent hover:text-white bg-[rgba(212,255,0,0.1)] hover:bg-[rgba(212,255,0,0.2)] border border-[rgba(212,255,0,0.2)] px-2.5 py-1 rounded-full transition-all disabled:opacity-50 cursor-pointer"
               >
-                {enhancing ? <Loader2 size={10} className="animate-spin" /> : <Wand2 size={10} />}
+                {enhancing ? <CircleNotch size={10} className="animate-spin" /> : <MagicWand size={10} />}
                 {enhancing ? "Enhancing…" : "Enhance ✨"}
               </button>
             )}
@@ -731,7 +725,7 @@ export default function AIVideoPage() {
       id: "review",
       title: "Ready to generate?",
       description: "Click the big button and your clip will start rendering on the GPU.",
-      icon: <Sparkles size={18} />,
+      icon: <Sparkle size={18} />,
       component: (
         <div className="space-y-3">
           <div className="glass rounded-xl p-4 bg-[rgba(212,255,0,0.04)] border-[rgba(212,255,0,0.2)]">
@@ -762,7 +756,7 @@ export default function AIVideoPage() {
       id: "what",
       title: "What do you want in your video?",
       description: "Describe the scene. Be visual � mention subjects, environment, lighting, camera movement.",
-      icon: <Type size={16} />,
+      icon: <TextT size={16} />,
       field: { type: "textarea", key: "prompt", placeholder: "e.g., A sleek red sports car driving through a neon-lit city at night, rain on the streets, cinematic camera" },
     },
     {
@@ -774,11 +768,11 @@ export default function AIVideoPage() {
         type: "choice-cards",
         key: "style",
         options: [
-          { value: "cinematic", label: "Cinematic", description: "Film-like, dramatic lighting", preview: "bg-gradient-to-br from-orange-500/40 to-teal-500/40" },
+          { value: "cinematic", label: "Cinematic", description: "FilmStrip-like, dramatic lighting", preview: "bg-gradient-to-br from-orange-500/40 to-teal-500/40" },
           { value: "realistic", label: "Realistic", description: "Natural, documentary feel", preview: "bg-gradient-to-br from-stone-500/40 to-slate-500/40" },
           { value: "animated", label: "Animated", description: "3D animation, Pixar-like", preview: "bg-gradient-to-br from-pink-500/40 to-purple-500/40" },
           { value: "anime", label: "Anime", description: "Japanese animation style", preview: "bg-gradient-to-br from-rose-400/40 to-indigo-500/40" },
-          { value: "vintage", label: "Vintage", description: "Film grain, retro colors", preview: "bg-gradient-to-br from-amber-500/40 to-red-700/40" },
+          { value: "vintage", label: "Vintage", description: "FilmStrip grain, retro colors", preview: "bg-gradient-to-br from-amber-500/40 to-red-700/40" },
           { value: "dreamy", label: "Dreamy", description: "Soft, ethereal", preview: "bg-gradient-to-br from-pink-300/40 to-purple-300/40" },
         ],
       },
@@ -818,7 +812,7 @@ export default function AIVideoPage() {
       id: "music",
       title: "Background music (optional)",
       description: "We'll match a royalty-free track to your mood.",
-      icon: <Music size={16} />,
+      icon: <MusicNote size={16} />,
       field: {
         type: "dropdown",
         key: "music",
@@ -864,7 +858,7 @@ export default function AIVideoPage() {
     try {
       const res = await fetch("/api/video/render", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           title: prompt.slice(0, 50),
           script: prompt,
@@ -984,7 +978,7 @@ export default function AIVideoPage() {
 
       const res = await fetch("/api/video/best-frame", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ frames, prompt: videoPrompt }),
       });
 
@@ -1088,7 +1082,7 @@ export default function AIVideoPage() {
         open={wizardOpen}
         title="Create Your AI Video"
         subtitle="Step-by-step � describe, pick style, hit generate."
-        icon={<Film size={18} />}
+        icon={<FilmStrip size={18} />}
         submitLabel="Apply & Generate"
         initialData={{ prompt, style, aspectRatio, duration: String(numFrames) }}
         steps={videoGenWizardSteps}
@@ -1143,7 +1137,7 @@ export default function AIVideoPage() {
                 className="flex items-center gap-1.5 text-[10px] font-medium mb-2 transition-colors cursor-pointer"
                 style={{ color: creatorIdeasOpen ? "#D4FF00" : "#4A4A5A" }}
               >
-                <TrendingUp size={10} />
+                <TrendUp size={10} />
                 Get creator-style ideas
                 <span style={{ fontSize: 8, opacity: 0.7 }}>{creatorIdeasOpen ? "▲" : "▼"}</span>
               </button>
@@ -1215,9 +1209,9 @@ export default function AIVideoPage() {
                   className="inline-flex items-center gap-1.5 text-[11px] text-brand-accent hover:text-white bg-[rgba(212,255,0,0.08)] hover:bg-[rgba(212,255,0,0.18)] border border-[rgba(212,255,0,0.2)] hover:border-[rgba(212,255,0,0.4)] px-3 py-1.5 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {enhancing ? (
-                    <Loader2 size={11} className="animate-spin" />
+                    <CircleNotch size={11} className="animate-spin" />
                   ) : (
-                    <Wand2 size={11} />
+                    <MagicWand size={11} />
                   )}
                   {enhancing ? "Enhancing…" : "Enhance ✨"}
                 </button>
@@ -1228,7 +1222,7 @@ export default function AIVideoPage() {
             {batchQueue.length > 1 && (
               <div className="mt-3 flex items-center justify-between px-3 py-2 rounded-xl border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.06)]">
                 <div className="flex items-center gap-2">
-                  <Film size={10} className="text-brand-accent" />
+                  <FilmStrip size={10} className="text-brand-accent" />
                   <p className="text-[10px] text-text-secondary">
                     <span className="font-medium text-text-primary">{batchQueueIdx + 1}/{batchQueue.length}</span> — {batchQueue[batchQueueIdx]?.label ?? "Clip"}
                   </p>
@@ -1253,7 +1247,7 @@ export default function AIVideoPage() {
               <div className="mt-3 px-3 py-2 rounded-xl bg-[rgba(16,185,129,0.04)] border border-[rgba(16,185,129,0.1)]">
                 <div className="flex items-center justify-between mb-1.5">
                   <p className="text-[8px] uppercase tracking-wider text-text-muted font-medium flex items-center gap-1">
-                    <TrendingUp size={7} className="text-[#10B981]" /> Signal scan
+                    <TrendUp size={7} className="text-[#10B981]" /> Signal scan
                   </p>
                   <div className="flex items-center gap-2">
                     <div className="h-1 w-16 rounded-full bg-white/[0.06]">
@@ -1357,10 +1351,10 @@ export default function AIVideoPage() {
                 onClick={() => setStyleVaultOpen(v => !v)}
                 className="flex items-center gap-1.5 text-[10px] text-text-muted hover:text-text-primary transition-colors cursor-pointer"
               >
-                <Layers size={10} className={styleVaultOpen ? "text-brand-accent" : ""} />
+                <Stack size={10} className={styleVaultOpen ? "text-brand-accent" : ""} />
                 Style Vault
                 <span className="text-[8px] text-text-muted opacity-60">24 proven prompts</span>
-                <ChevronDown size={10} className={`transition-transform ${styleVaultOpen ? "rotate-180 text-brand-accent" : ""}`} />
+                <CaretDown size={10} className={`transition-transform ${styleVaultOpen ? "rotate-180 text-brand-accent" : ""}`} />
               </button>
               {styleVaultOpen && (
                 <div className="mt-2 rounded-xl border border-border-subtle bg-[rgba(13,17,32,0.5)] overflow-hidden">
@@ -1432,8 +1426,8 @@ export default function AIVideoPage() {
               </div>
               {faceSwapMode && !faceSwapImage && (
                 <label className="flex items-center gap-1.5 text-[11px] text-text-muted hover:text-text-primary border border-border-subtle hover:border-border-strong bg-white/[0.03] hover:bg-white/[0.06] px-3 py-1.5 rounded-full cursor-pointer transition-all">
-                  {faceSwapUploading ? <Loader2 size={11} className="animate-spin" /> : <Upload size={11} />}
-                  {faceSwapUploading ? "Loading…" : "Upload face photo"}
+                  {faceSwapUploading ? <CircleNotch size={11} className="animate-spin" /> : <UploadSimple size={11} />}
+                  {faceSwapUploading ? "Loading…" : "UploadSimple face photo"}
                   <input
                     type="file"
                     accept="image/*"
@@ -1448,7 +1442,7 @@ export default function AIVideoPage() {
                 </label>
               )}
               {faceSwapMode && (
-                <p className="text-[9px] text-text-muted self-center">Upload a clear front-facing portrait. The AI will swap it into generated faces.</p>
+                <p className="text-[9px] text-text-muted self-center">UploadSimple a clear front-facing portrait. The AI will swap it into generated faces.</p>
               )}
             </div>
 
@@ -1540,7 +1534,7 @@ export default function AIVideoPage() {
                     </>
                   ) : (
                     <>
-                      <Sparkles size={18} strokeWidth={2.25} />
+                      <Sparkle size={18} strokeWidth={2.25} />
                       <span>Generate</span>
                     </>
                   )}
@@ -1552,7 +1546,7 @@ export default function AIVideoPage() {
                     disabled={viralPredicting}
                     className="inline-flex items-center gap-1.5 text-[10px] text-[#10B981] hover:text-white bg-[rgba(16,185,129,0.08)] hover:bg-[rgba(16,185,129,0.18)] border border-[rgba(16,185,129,0.2)] hover:border-[rgba(16,185,129,0.4)] px-3 py-1.5 rounded-full transition-all disabled:opacity-50 cursor-pointer"
                   >
-                    {viralPredicting ? <Loader2 size={10} className="animate-spin" /> : <TrendingUp size={10} />}
+                    {viralPredicting ? <CircleNotch size={10} className="animate-spin" /> : <TrendUp size={10} />}
                     {viralPredicting ? "Analysing…" : "Predict viral potential"}
                   </button>
                 )}
@@ -1572,7 +1566,7 @@ export default function AIVideoPage() {
                   <div className="mt-5 pt-5 border-t border-border-subtle">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
-                        <TrendingUp size={13} className="text-[#10B981]" />
+                        <TrendUp size={13} className="text-[#10B981]" />
                         <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-text-muted">Viral Prediction</p>
                       </div>
                       <button type="button" onClick={() => setViralResult(null)} className="text-text-muted hover:text-text-primary cursor-pointer"><X size={12} /></button>
@@ -1666,7 +1660,7 @@ export default function AIVideoPage() {
               onClick={() => setAdvancedOpen(v => !v)}
               className="flex items-center gap-1.5 text-[11px] text-text-muted hover:text-text-primary transition-colors px-1"
             >
-              {advancedOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+              {advancedOpen ? <CaretDown size={12} /> : <CaretRight size={12} />}
               Advanced settings
               <span className="text-text-muted ml-1">
                 � {(numFrames / 24).toFixed(1)}s � guidance {guidanceScale}
@@ -1722,7 +1716,7 @@ export default function AIVideoPage() {
               onClick={() => setTemplatesOpen(v => !v)}
               className="flex items-center gap-1.5 text-[11px] text-text-muted hover:text-text-primary transition-colors px-1"
             >
-              {templatesOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+              {templatesOpen ? <CaretDown size={12} /> : <CaretRight size={12} />}
               Text templates
               <span className="text-text-muted ml-1 text-[10px]">— Headline · Listicle · Quote</span>
             </button>
@@ -1757,7 +1751,7 @@ export default function AIVideoPage() {
           {/* GALLERY� fullbleed thumbs, no card chrome */}
           {results.length === 0 ? (
             <div className="text-center py-16 text-text-muted">
-              <Film size={28} strokeWidth={1} className="mx-auto mb-3 opacity-50" />
+              <FilmStrip size={28} strokeWidth={1} className="mx-auto mb-3 opacity-50" />
               <p className="text-sm font-light">Your generations will appear here.</p>
             </div>
           ) : (
@@ -1789,7 +1783,7 @@ export default function AIVideoPage() {
                         fallback={
                           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-black via-zinc-950 to-black text-red-300/70">
                             <div className="text-center px-3">
-                              <AlertCircle size={16} className="mx-auto mb-1.5" />
+                              <WarningCircle size={16} className="mx-auto mb-1.5" />
                               <p className="text-[10px] font-light">Failed to load</p>
                             </div>
                           </div>
@@ -1805,13 +1799,13 @@ export default function AIVideoPage() {
                         )}
                         {result.status === "plan" && (
                           <div className="text-center px-3 text-text-muted">
-                            <Sparkles size={16} className="mx-auto mb-1.5 text-brand-accent/70" />
+                            <Sparkle size={16} className="mx-auto mb-1.5 text-brand-accent/70" />
                             <p className="text-[10px] font-light">Plan ready</p>
                           </div>
                         )}
                         {result.status === "failed" && (
                           <div className="flex flex-col items-center gap-2 px-3 text-red-300/70 group/fail">
-                            <AlertCircle size={16} />
+                            <WarningCircle size={16} />
                             <p className="text-[10px] font-light">Failed</p>
                             {result.error && (
                               <p className="text-[9px] text-center text-red-300/50 line-clamp-3 opacity-0 group-hover/fail:opacity-100 transition-opacity duration-150">
@@ -1844,7 +1838,7 @@ export default function AIVideoPage() {
                               className="flex items-center gap-1 hover:text-text-primary transition-colors"
                               onClick={e => e.stopPropagation()}
                             >
-                              <Download size={10} /> Save
+                              <DownloadSimple size={10} /> Save
                             </a>
                             <button
                               disabled={handoffingId === result.id}
@@ -1868,8 +1862,8 @@ export default function AIVideoPage() {
                               className="flex items-center gap-1 hover:text-white transition-colors disabled:opacity-40"
                             >
                               {handoffingId === result.id
-                                ? <Loader2 size={10} className="animate-spin" />
-                                : <Edit3 size={10} />}
+                                ? <CircleNotch size={10} className="animate-spin" />
+                                : <PencilSimple size={10} />}
                               Edit
                             </button>
                             <button
@@ -1884,7 +1878,7 @@ export default function AIVideoPage() {
                               className="flex items-center gap-1 hover:text-brand-accent/80 transition-colors disabled:opacity-40"
                             >
                               {thumbnailCapturingId === result.id
-                                ? <Loader2 size={10} className="animate-spin" />
+                                ? <CircleNotch size={10} className="animate-spin" />
                                 : <Image size={10} />}
                               Thumb
                             </button>
@@ -1905,7 +1899,7 @@ export default function AIVideoPage() {
                               }}
                               className={`flex items-center gap-1 transition-colors ${overlayPreviewId === result.id ? "text-brand-accent" : "hover:text-brand-accent"}`}
                             >
-                              <Layers size={10} />
+                              <Stack size={10} />
                               Overlay
                             </button>
                           </div>
@@ -1930,7 +1924,7 @@ export default function AIVideoPage() {
       {!advancedMode && results.length > 0 && (
         <div className="space-y-3">
           <h2 className="flex items-center gap-2">
-            <Film size={14} className="text-brand-accent" /> Your generated videos
+            <FilmStrip size={14} className="text-brand-accent" /> Your generated videos
           </h2>
           {results.slice(0, 3).map(result => (
             <div key={result.id} className="glass rounded-xl p-4">
@@ -1951,7 +1945,7 @@ export default function AIVideoPage() {
                     )}
                     {result.status === "failed" && (
                       <span className="text-[8px] text-danger flex items-center gap-1" title={result.error}>
-                        <AlertCircle size={8} /> Failed{result.error ? ` � ${result.error.slice(0, 40)}` : ""}
+                        <WarningCircle size={8} /> Failed{result.error ? ` � ${result.error.slice(0, 40)}` : ""}
                       </span>
                     )}
                   </div>
@@ -1959,7 +1953,7 @@ export default function AIVideoPage() {
                 {result.url && (
                   <div className="flex items-center gap-2">
                     <a href={result.url} download className="btn-pill-ghost text-[10px] flex items-center gap-1">
-                      <Download size={10} /> Download
+                      <DownloadSimple size={10} /> DownloadSimple
                     </a>
                     <button
                       disabled={handoffingId === result.id}
@@ -1982,8 +1976,8 @@ export default function AIVideoPage() {
                       className="btn-pill text-[10px] flex items-center gap-1"
                     >
                       {handoffingId === result.id
-                        ? <Loader2 size={10} className="animate-spin" />
-                        : <Edit3 size={10} />}
+                        ? <CircleNotch size={10} className="animate-spin" />
+                        : <PencilSimple size={10} />}
                       Edit in Video Editor
                     </button>
                   </div>
@@ -2033,7 +2027,7 @@ export default function AIVideoPage() {
                     className="text-text-muted hover:text-text-primary transition-colors p-1 rounded-lg hover:bg-white/[0.05]"
                     aria-label="Close overlay preview"
                   >
-                    <ChevronDown size={14} />
+                    <CaretDown size={14} />
                   </button>
                 </div>
 
@@ -2076,7 +2070,7 @@ export default function AIVideoPage() {
       {/* Setup / GPU env note� admin-only; clients should never see env-var names */}
       {advancedMode && isPlatformAdmin && (
         <div className="flex items-center gap-2 text-[9px] text-text-primary/35 px-1">
-          <Zap size={10} />
+          <Lightning size={10} />
           <span>
             GPU rendering requires <code className="text-text-primary/55 bg-[rgba(212, 255, 0,0.08)] px-1 py-0.5 rounded">HIGGSFIELD_URL</code> + <code className="text-text-primary/55 bg-[rgba(212, 255, 0,0.08)] px-1 py-0.5 rounded">RUNPOD_API_KEY</code>. Without them, you&apos;ll get a scene plan instead.
           </span>

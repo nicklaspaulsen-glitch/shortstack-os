@@ -1,4 +1,5 @@
 "use client";
+import { Brain, CaretDown, Check, CircleNotch, FloppyDisk, Lightbulb, Plus, X } from "@phosphor-icons/react";
 
 /**
  * PageTrainingPanel — collapsible inline drawer for per-page AI training.
@@ -15,7 +16,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Brain, ChevronDown, Save, Loader2, Check, X, Plus, Lightbulb } from "lucide-react";
 import { CREATOR_STYLES } from "@/lib/ai/creator-styles";
 import type { PageContext } from "@/lib/ai/creator-styles";
 
@@ -369,7 +369,7 @@ export default function PageTrainingPanel({
             <span className="text-[9px] text-text-muted">{hints.description}</span>
           )}
         </div>
-        <ChevronDown
+        <CaretDown
           size={13}
           className="text-text-muted transition-transform duration-200"
           style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
@@ -623,7 +623,7 @@ export default function PageTrainingPanel({
                 )}
               </div>
 
-              {/* Save */}
+              {/* FloppyDisk */}
               <div className="flex justify-end pt-1">
                 <button
                   onClick={save}
@@ -639,13 +639,13 @@ export default function PageTrainingPanel({
                   }}
                 >
                   {saving ? (
-                    <Loader2 size={11} className="animate-spin" />
+                    <CircleNotch size={11} className="animate-spin" />
                   ) : saved ? (
                     <Check size={11} />
                   ) : (
-                    <Save size={11} />
+                    <FloppyDisk size={11} />
                   )}
-                  {saved ? "Saved" : saving ? "Saving…" : "Save training"}
+                  {saved ? "Saved" : saving ? "Saving…" : "FloppyDisk training"}
                 </button>
               </div>
             </div>

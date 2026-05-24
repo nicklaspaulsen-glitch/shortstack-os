@@ -1,7 +1,7 @@
 "use client";
+import { Pause, Play } from "@phosphor-icons/react";
 
 import { useRef, useState, useEffect } from "react";
-import { Play, Pause } from "lucide-react";
 
 export interface AudioPlayerProps {
   src: string;

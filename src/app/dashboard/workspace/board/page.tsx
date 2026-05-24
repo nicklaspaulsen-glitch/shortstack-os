@@ -1,7 +1,7 @@
+import { Funnel, Plus, SquaresFour } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { Kanban, Plus, Filter } from "lucide-react";
 import { motion } from "framer-motion";
 import { createBrowserClient } from "@supabase/ssr";
 import {
@@ -431,7 +431,7 @@ export default function WorkspaceBoardPage() {
                     onClick={() => setFiltersOpen((v) => !v)}
                     className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-border-subtle text-sm text-text-primary transition-colors"
                   >
-                    <Filter size={14} /> Filters
+                    <Funnel size={14} /> Filters
                   </motion.button>
                   <motion.button
                     type="button"

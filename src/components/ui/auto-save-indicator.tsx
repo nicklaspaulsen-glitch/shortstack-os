@@ -1,7 +1,7 @@
 "use client";
+import { Check, CircleNotch, WarningCircle } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
-import { Check, Loader2, AlertCircle } from "lucide-react";
 import type { AutoSaveStatus } from "@/lib/use-auto-save";
 
 interface AutoSaveIndicatorProps {
@@ -45,7 +45,7 @@ export default function AutoSaveIndicator({ status, lastSavedAt, error, classNam
     bgClass = "bg-[rgba(212,255,0,0.05)]";
     content = (
       <>
-        <Loader2 size={12} className="animate-spin" />
+        <CircleNotch size={12} className="animate-spin" />
         <span>Saving...</span>
       </>
     );
@@ -55,7 +55,7 @@ export default function AutoSaveIndicator({ status, lastSavedAt, error, classNam
     bgClass = "bg-red-500/5";
     content = (
       <>
-        <AlertCircle size={12} />
+        <WarningCircle size={12} />
         <span>{error || "Save failed"}</span>
       </>
     );

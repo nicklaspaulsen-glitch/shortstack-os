@@ -1,15 +1,11 @@
 "use client";
+import { Archive, ArrowLeft, ArrowRight, CaretLeft, CaretRight, ChartBar, CheckCircle, Clock, Eye, FloppyDisk, Gear, GitBranch, Globe, Link, Pencil, Plus, Trash, X } from "@phosphor-icons/react";
 
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
-import {
-  GitBranch, Plus, Save, Globe, ArrowLeft, ChevronLeft, ChevronRight,
-  Trash2, Eye, BarChart3, Settings, X, Link2,
-  CheckCircle2, Clock, Archive, Pencil, ArrowRight,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /* ═══════════════════════════════════════════════════════════ TYPES */
@@ -191,7 +187,7 @@ export default function FunnelCanvasPage() {
       toast.success("Step saved");
       void load();
     } catch {
-      toast.error("Save failed");
+      toast.error("FloppyDisk failed");
     } finally {
       setSaving(false);
     }
@@ -256,7 +252,7 @@ export default function FunnelCanvasPage() {
 
   const statusConfig = {
     draft: { icon: <Clock size={13} />, label: "Draft", color: "text-amber-400 bg-amber-500/10 border-amber-500/20" },
-    published: { icon: <CheckCircle2 size={13} />, label: "Published", color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" },
+    published: { icon: <CheckCircle size={13} />, label: "Published", color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" },
     archived: { icon: <Archive size={13} />, label: "Archived", color: "text-zinc-400 bg-zinc-500/10 border-zinc-500/20" },
   }[funnel.status];
 
@@ -307,7 +303,7 @@ export default function FunnelCanvasPage() {
             onClick={() => { setActiveTab(tab); if (tab === "analytics") void loadAnalytics(); }}
             className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === tab ? "tab-pill active" : "tab-pill"}`}
           >
-            {tab === "builder" ? <Settings size={14} /> : <BarChart3 size={14} />}
+            {tab === "builder" ? <Gear size={14} /> : <ChartBar size={14} />}
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
           </button>
         ))}
@@ -370,7 +366,7 @@ export default function FunnelCanvasPage() {
                       {/* Linked page */}
                       {linkedPage && (
                         <div className="flex items-center gap-1 text-text-muted text-[10px] mb-2">
-                          <Link2 size={9} />
+                          <Link size={9} />
                           <span className="truncate">{linkedPage.name}</span>
                         </div>
                       )}
@@ -398,20 +394,20 @@ export default function FunnelCanvasPage() {
                           disabled={idx === 0}
                           className="p-1 rounded hover:bg-white/8 text-text-muted hover:text-text-secondary disabled:opacity-20 transition-colors"
                         >
-                          <ChevronLeft size={12} />
+                          <CaretLeft size={12} />
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); void deleteStep(step.id); }}
                           className="p-1 rounded hover:bg-red-500/10 text-text-muted hover:text-red-400 transition-colors"
                         >
-                          <Trash2 size={12} />
+                          <Trash size={12} />
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); void moveStep(step.id, "right"); }}
                           disabled={idx === steps.length - 1}
                           className="p-1 rounded hover:bg-white/8 text-text-muted hover:text-text-secondary disabled:opacity-20 transition-colors"
                         >
-                          <ChevronRight size={12} />
+                          <CaretRight size={12} />
                         </button>
                       </div>
                     </div>
@@ -606,7 +602,7 @@ export default function FunnelCanvasPage() {
 
               <div>
                 <label className="block text-xs text-text-muted font-medium mb-1.5">
-                  <span className="flex items-center gap-1"><Link2 size={11} /> Linked Landing Page</span>
+                  <span className="flex items-center gap-1"><Link size={11} /> Linked Landing Page</span>
                 </label>
                 <select
                   value={panelPageId}
@@ -675,14 +671,14 @@ export default function FunnelCanvasPage() {
                 disabled={saving}
                 className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] font-semibold text-sm transition-colors"
               >
-                <Save size={14} />
-                {saving ? "Saving…" : "Save Step"}
+                <FloppyDisk size={14} />
+                {saving ? "Saving…" : "FloppyDisk Step"}
               </button>
               <button
                 onClick={() => void deleteStep(selectedStep.id)}
                 className="px-3 py-2.5 rounded-lg border border-red-500/20 hover:bg-red-500/10 text-red-400 transition-colors"
               >
-                <Trash2 size={14} />
+                <Trash size={14} />
               </button>
             </div>
           </div>

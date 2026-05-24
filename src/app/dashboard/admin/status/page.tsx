@@ -1,3 +1,4 @@
+import { ArrowSquareOut, ArrowsClockwise, CheckCircle, Clock, Lock, Pencil, Plus, ShieldCheck, Trash, Warning } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -17,18 +18,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import {
-  AlertTriangle,
-  CheckCircle2,
-  Clock,
-  ExternalLink,
-  Lock,
-  Pencil,
-  Plus,
-  RefreshCw,
-  ShieldCheck,
-  Trash2,
-} from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import StatCard from "@/components/ui/stat-card";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -271,14 +260,14 @@ export default function AdminStatusPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-white/5 hover:bg-white/10"
             >
-              <ExternalLink size={12} /> View public page
+              <ArrowSquareOut size={12} /> View public page
             </a>
             <button
               onClick={load}
               disabled={refreshing}
               className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-white/5 hover:bg-white/10 disabled:opacity-50"
             >
-              <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
+              <ArrowsClockwise size={12} className={refreshing ? "animate-spin" : ""} />
               Refresh
             </button>
             <button
@@ -295,7 +284,7 @@ export default function AdminStatusPage() {
         <StatCard
           label="Open incidents"
           value={openCount}
-          icon={<AlertTriangle size={16} />}
+          icon={<Warning size={16} />}
           premium={openCount > 0}
         />
         <StatCard
@@ -306,7 +295,7 @@ export default function AdminStatusPage() {
         <StatCard
           label="Resolved (recent)"
           value={resolvedCount}
-          icon={<CheckCircle2 size={16} />}
+          icon={<CheckCircle size={16} />}
         />
       </div>
 
@@ -373,7 +362,7 @@ export default function AdminStatusPage() {
                     })
                   }
                   className="mt-1 w-full px-3 py-2 rounded-lg border border-border-subtle bg-bg text-sm"
-                  placeholder="e.g. Email, Outreach, Webhooks"
+                  placeholder="e.g. Email, Outreach, PlugsConnected"
                 />
               </label>
             </div>
@@ -421,7 +410,7 @@ export default function AdminStatusPage() {
         </header>
         {openCount === 0 ? (
           <div className=" border border-success/30 bg-success/5 p-5 text-center">
-            <CheckCircle2 size={20} className="text-success mx-auto mb-2" />
+            <CheckCircle size={20} className="text-success mx-auto mb-2" />
             <p className="text-sm font-semibold">All systems operational</p>
             <p className="text-[11px] text-text-muted">
               No active incidents. Public status page shows green.
@@ -529,7 +518,7 @@ function IncidentCard({ incident, onEdit, onResolve, onDelete }: IncidentCardPro
               className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted hover:text-success"
               title="Resolve"
             >
-              <CheckCircle2 size={13} />
+              <CheckCircle size={13} />
             </button>
           )}
           <button
@@ -537,7 +526,7 @@ function IncidentCard({ incident, onEdit, onResolve, onDelete }: IncidentCardPro
             className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted hover:text-danger"
             title="Delete"
           >
-            <Trash2 size={13} />
+            <Trash size={13} />
           </button>
         </div>
       </div>

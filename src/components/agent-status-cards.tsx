@@ -1,11 +1,8 @@
 "use client";
+import { ChartBar, Clock, CreditCard, Eye, FileText, FilmStrip, Globe, Heart, MagnifyingGlass, Megaphone, PaperPlaneTilt, Shield, Sparkle, Star, UserPlus } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import {
-  Search, Send, Sparkles, Film, Megaphone, Star, Eye, BarChart3,
-  CreditCard, UserPlus, Globe, Heart, FileText, Clock, Shield
-} from "lucide-react";
 import Link from "next/link";
 
 interface AgentStatus {
@@ -21,12 +18,12 @@ interface AgentStatus {
 }
 
 const AGENT_CONFIGS = [
-  { id: "lead_gen", name: "Scout", role: "Lead Finder", icon: <Search size={14} />, gradient: "from-emerald-500 to-green-600", glow: "rgba(212,255,0,0.4)" },
-  { id: "outreach", name: "Echo", role: "Outreach", icon: <Send size={14} />, gradient: "from-blue-500 to-cyan-500", glow: "rgba(212,255,0,0.4)" },
-  { id: "content", name: "Pixel", role: "Content", icon: <Sparkles size={14} />, gradient: "from-purple-500 to-pink-500", glow: "rgba(168,85,247,0.4)" },
-  { id: "ads", name: "Blaze", role: "Ads", icon: <Film size={14} />, gradient: "from-orange-500 to-amber-500", glow: "rgba(249,115,22,0.4)" },
+  { id: "lead_gen", name: "Scout", role: "Lead Finder", icon: <MagnifyingGlass size={14} />, gradient: "from-emerald-500 to-green-600", glow: "rgba(212,255,0,0.4)" },
+  { id: "outreach", name: "Echo", role: "Outreach", icon: <PaperPlaneTilt size={14} />, gradient: "from-blue-500 to-cyan-500", glow: "rgba(212,255,0,0.4)" },
+  { id: "content", name: "Pixel", role: "Content", icon: <Sparkle size={14} />, gradient: "from-purple-500 to-pink-500", glow: "rgba(168,85,247,0.4)" },
+  { id: "ads", name: "Blaze", role: "Ads", icon: <FilmStrip size={14} />, gradient: "from-orange-500 to-amber-500", glow: "rgba(249,115,22,0.4)" },
   { id: "reviews", name: "Star", role: "Reviews", icon: <Star size={14} />, gradient: "from-yellow-400 to-amber-500", glow: "rgba(250,204,21,0.4)" },
-  { id: "analytics", name: "Lens", role: "Analytics", icon: <BarChart3 size={14} />, gradient: "from-cyan-500 to-blue-600", glow: "rgba(255,82,82,0.4)" },
+  { id: "analytics", name: "Lens", role: "Analytics", icon: <ChartBar size={14} />, gradient: "from-cyan-500 to-blue-600", glow: "rgba(255,82,82,0.4)" },
   { id: "custom", name: "Trinity", role: "Coordinator", icon: <Shield size={14} />, gradient: "from-blue-500 to-indigo-600", glow: "rgba(212,255,0,0.5)" },
   { id: "competitor", name: "Spy", role: "Competitor", icon: <Eye size={14} />, gradient: "from-red-500 to-rose-600", glow: "rgba(239,68,68,0.4)" },
   { id: "invoice", name: "Ledger", role: "Invoice", icon: <CreditCard size={14} />, gradient: "from-green-500 to-emerald-600", glow: "rgba(34,197,94,0.4)" },

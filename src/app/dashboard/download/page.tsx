@@ -1,24 +1,8 @@
+import { ArrowSquareOut, Bell, CheckCircle, CursorClick, DownloadSimple, Envelope, Globe, Keyboard, Laptop, Lightning, Monitor, Shield, Terminal, Warning, WifiHigh } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Download,
-  Monitor,
-  Laptop,
-  Globe,
-  Zap,
-  Keyboard,
-  MousePointer,
-  Wifi,
-  Bell,
-  Shield,
-  CheckCircle2,
-  ExternalLink,
-  Terminal,
-  AlertTriangle,
-  Mail,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /**
@@ -94,10 +78,10 @@ const PLATFORMS: PlatformCard[] = [
 ];
 
 const FEATURES = [
-  { icon: <Zap size={16} />, title: "Native performance", desc: "No browser tab — runs as a real app with full system access." },
+  { icon: <Lightning size={16} />, title: "Native performance", desc: "No browser tab — runs as a real app with full system access." },
   { icon: <Globe size={16} />, title: "Built-in Chrome browser", desc: "Research leads and scrape sites without leaving Trinity." },
-  { icon: <MousePointer size={16} />, title: "AI-assisted mouse + keyboard", desc: "Agents can click, type, and automate tasks for you." },
-  { icon: <Wifi size={16} />, title: "Offline support for drafts", desc: "Keep writing even when your connection drops." },
+  { icon: <CursorClick size={16} />, title: "AI-assisted mouse + keyboard", desc: "Agents can click, type, and automate tasks for you." },
+  { icon: <WifiHigh size={16} />, title: "Offline support for drafts", desc: "Keep writing even when your connection drops." },
   { icon: <Bell size={16} />, title: "OS-level notifications", desc: "Native toasts when deals close or an agent finishes a job." },
   { icon: <Shield size={16} />, title: "Sandboxed agent runtime", desc: "Local tool execution is gated by workspace + command filters." },
 ];
@@ -152,11 +136,11 @@ export default function DownloadDesktopPage() {
   const isAvailable = Boolean(manifest?.available);
 
   return (
-    <MotionPage className="space-y-6 pb-10">{/* -- Download Trinity for Desktop command strip -- */}
+    <MotionPage className="space-y-6 pb-10">{/* -- DownloadSimple Trinity for Desktop command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Desktop App</p>
-        <h1 className="text-2xl font-display font-bold text-text-primary">Download Trinity for Desktop</h1>
+        <h1 className="text-2xl font-display font-bold text-text-primary">DownloadSimple Trinity for Desktop</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <a
@@ -165,7 +149,7 @@ export default function DownloadDesktopPage() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/5 hover:bg-white/10 text-text-primary border border-border-subtle transition-colors"
                 >
-                  View all releases <ExternalLink size={12} />
+                  View all releases <ArrowSquareOut size={12} />
                 </a>
       </div>
     </div>{/* ── Unavailable banner (graceful fallback) ───────────────── */}{!loading && !isAvailable && (
@@ -175,7 +159,7 @@ export default function DownloadDesktopPage() {
                 transition={{ duration: 0.4 }}
                 className="flex items-start gap-3 glass rounded-xl border border-amber-500/30 p-4"
               >
-                <AlertTriangle size={18} className="shrink-0 mt-0.5 text-amber-500" />
+                <Warning size={18} className="shrink-0 mt-0.5 text-amber-500" />
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-semibold text-amber-400">
                     Installer temporarily unavailable
@@ -191,18 +175,18 @@ export default function DownloadDesktopPage() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 border border-amber-500/30"
                     >
-                      GitHub releases <ExternalLink size={11} />
+                      GitHub releases <ArrowSquareOut size={11} />
                     </a>
                     <a
                       href={SUPPORT_MAILTO}
                       className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-white/5 hover:bg-white/8 text-text-secondary border border-border-subtle"
                     >
-                      <Mail size={11} /> Contact support
+                      <Envelope size={11} /> Contact support
                     </a>
                   </div>
                 </div>
               </motion.div>
-            )}{/* ── Download cards ────────────────────────────────────────── */}<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            )}{/* ── DownloadSimple cards ────────────────────────────────────────── */}<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {PLATFORMS.map((p, index) => {
                 const isRecommended = detectedOS === p.id;
                 const entry = manifest?.files?.[p.id] ?? null;
@@ -240,7 +224,7 @@ export default function DownloadDesktopPage() {
                       >
                         {p.icon}
                       </div>
-                      <Download
+                      <DownloadSimple
                         size={18}
                         className="text-text-muted group-hover:text-brand-accent transition-colors"
                       />
@@ -254,7 +238,7 @@ export default function DownloadDesktopPage() {
                     <div className="flex items-center justify-between pt-3 border-t border-border-subtle">
                       <span className="text-[11px] text-text-muted">v{version}</span>
                       <span className="text-xs font-medium text-brand-accent group-hover:underline">
-                        Download
+                        DownloadSimple
                       </span>
                     </div>
                   </motion.a>
@@ -284,7 +268,7 @@ export default function DownloadDesktopPage() {
                     className="flex items-start gap-3 p-3 glass-md rounded-xl"
                   >
                     <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.25)]">
-                      <CheckCircle2 size={16} />
+                      <CheckCircle size={16} />
                     </div>
                     <div className="min-w-0">
                       <div className="text-sm font-semibold text-text-primary flex items-center gap-1.5">
@@ -322,7 +306,7 @@ export default function DownloadDesktopPage() {
                 rel="noopener noreferrer"
                 className="text-xs font-medium text-brand-accent hover:underline flex items-center gap-1"
               >
-                View changelog <ExternalLink size={11} />
+                View changelog <ArrowSquareOut size={11} />
               </a>
             </motion.div></MotionPage>
   );

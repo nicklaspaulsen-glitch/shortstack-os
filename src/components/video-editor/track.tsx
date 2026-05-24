@@ -1,10 +1,11 @@
 "use client";
+import { Eye, EyeSlash, Lock, LockOpen, SpeakerHigh, SpeakerX } from "@phosphor-icons/react";
 
 /* ────────────────────────────────────────────────────────────────
  * Track — horizontal lane hosting Clips.
  * ────────────────────────────────────────────────────────────────*/
 
-import { Eye, EyeOff, Lock, Unlock, Volume2, VolumeX } from "lucide-react";
+
 import type { Clip as ClipT, Track as TrackT } from "@/lib/video-editor/types";
 import { Clip } from "./clip";
 
@@ -56,7 +57,7 @@ export function Track({
             onClick={() => onToggleFlag("muted", !track.muted)}
             title={track.muted ? "Unmute" : "Mute"}
           >
-            {track.muted ? <VolumeX size={12} /> : <Volume2 size={12} />}
+            {track.muted ? <SpeakerX size={12} /> : <SpeakerHigh size={12} />}
           </button>
         )}
         {track.kind === "video" && (
@@ -66,16 +67,16 @@ export function Track({
             onClick={() => onToggleFlag("hidden", !track.hidden)}
             title={track.hidden ? "Show" : "Hide"}
           >
-            {track.hidden ? <EyeOff size={12} /> : <Eye size={12} />}
+            {track.hidden ? <EyeSlash size={12} /> : <Eye size={12} />}
           </button>
         )}
         <button
           type="button"
           className="p-0.5 text-neutral-400 hover:text-white"
           onClick={() => onToggleFlag("locked", !track.locked)}
-          title={track.locked ? "Unlock" : "Lock"}
+          title={track.locked ? "LockOpen" : "Lock"}
         >
-          {track.locked ? <Lock size={12} /> : <Unlock size={12} />}
+          {track.locked ? <Lock size={12} /> : <LockOpen size={12} />}
         </button>
       </div>
 

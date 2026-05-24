@@ -1,7 +1,8 @@
 "use client";
+import { Archive, Camera, CaretLeft, Chat, ChatCircle, CheckCircle, Circle, CircleNotch, Clock, DownloadSimple, Envelope, Globe, Hash, MagnifyingGlass, PaperPlaneTilt, Paperclip, Phone, Smiley, Tag, Tray, UserPlus } from "@phosphor-icons/react";
 
 /**
- * Unified Conversations Inbox
+ * Unified Conversations Tray
  *
  * Three-pane Gmail/Front-style inbox aggregating every messaging channel:
  *   email � sms � whatsapp � telegram � instagram � slack � discord � web_chat
@@ -29,29 +30,6 @@ import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-import {
-  Mail,
-  MessageSquare,
-  MessageCircle,
-  Send,
-  Camera,
-  Hash,
-  Inbox,
-  Search,
-  Archive,
-  Clock,
-  CheckCircle2,
-  Paperclip,
-  Smile,
-  UserPlus,
-  Tag,
-  Phone,
-  Globe,
-  Loader2,
-  Circle,
-  ChevronLeft,
-  Download,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // -- Types ------------------------------------------------------------
@@ -101,10 +79,10 @@ interface Message {
 
 // -- Channel chrome ---------------------------------------------------
 const CHANNEL_META: Record<Channel, { label: string; icon: React.ReactNode; tone: string }> = {
-  email: { label: "Email", icon: <Mail size={14} />, tone: "text-sky-400 bg-sky-500/10 border-sky-500/30" },
-  sms: { label: "SMS", icon: <MessageSquare size={14} />, tone: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" },
-  whatsapp: { label: "WhatsApp", icon: <MessageCircle size={14} />, tone: "text-green-400 bg-green-500/10 border-green-500/30" },
-  telegram: { label: "Telegram", icon: <Send size={14} />, tone: "text-cyan-400 bg-cyan-500/10 border-cyan-500/30" },
+  email: { label: "Email", icon: <Envelope size={14} />, tone: "text-sky-400 bg-sky-500/10 border-sky-500/30" },
+  sms: { label: "SMS", icon: <Chat size={14} />, tone: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30" },
+  whatsapp: { label: "WhatsApp", icon: <ChatCircle size={14} />, tone: "text-green-400 bg-green-500/10 border-green-500/30" },
+  telegram: { label: "Telegram", icon: <PaperPlaneTilt size={14} />, tone: "text-cyan-400 bg-cyan-500/10 border-cyan-500/30" },
   instagram: { label: "Instagram", icon: <Camera size={14} />, tone: "text-pink-400 bg-pink-500/10 border-pink-500/30" },
   slack: { label: "Slack", icon: <Hash size={14} />, tone: "text-violet-400 bg-violet-500/10 border-violet-500/30" },
   discord: { label: "Discord", icon: <Hash size={14} />, tone: "text-indigo-400 bg-indigo-500/10 border-indigo-500/30" },
@@ -281,7 +259,7 @@ export default function ConversationsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, selectedId]);
 
-  // -- Send outbound reply --------------------------------------------
+  // -- PaperPlaneTilt outbound reply --------------------------------------------
   async function handleSend() {
     if (!selectedId || !composerText.trim()) return;
     setSending(true);
@@ -292,7 +270,7 @@ export default function ConversationsPage() {
         body: JSON.stringify({ body: composerText.trim() }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Send failed");
+      if (!res.ok) throw new Error(data.error || "PaperPlaneTilt failed");
       setComposerText("");
       // Realtime will append the new message, but optimistically append too.
       setMessages((prev) => [
@@ -310,7 +288,7 @@ export default function ConversationsPage() {
         },
       ]);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Send failed");
+      toast.error(err instanceof Error ? err.message : "PaperPlaneTilt failed");
     } finally {
       setSending(false);
     }
@@ -388,7 +366,7 @@ export default function ConversationsPage() {
               <div className="p-4 border-b border-border-subtle">
                 <div className="flex items-center justify-between mb-3">
                   <h1 className="text-lg font-semibold flex items-center gap-2">
-                    <Inbox size={18} className="text-indigo-400" />
+                    <Tray size={18} className="text-indigo-400" />
                     Conversations
                   </h1>
                   <button
@@ -410,11 +388,11 @@ export default function ConversationsPage() {
                     className="p-1.5 text-text-muted hover:text-text-primary rounded border border-border-subtle hover:border-brand-accent/30 transition-colors"
                     title="Export Conversations"
                   >
-                    <Download size={13} />
+                    <DownloadSimple size={13} />
                   </button>
                 </div>
                 <div className="relative">
-                  <Search
+                  <MagnifyingGlass
                     size={14}
                     className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"
                   />
@@ -422,7 +400,7 @@ export default function ConversationsPage() {
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search�"
+                    placeholder="MagnifyingGlass�"
                     className="w-full bg-surface-light border border-border-subtle rounded-lg pl-9 pr-3 py-2 text-sm placeholder-white/30 focus:outline-none focus:border-brand-accent/40"
                   />
                 </div>
@@ -463,7 +441,7 @@ export default function ConversationsPage() {
                 ) : conversations.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-3">
                     <div className="w-12 h-12 bg-white/[0.05] border border-border-subtle flex items-center justify-center">
-                      <Inbox size={20} className="text-brand-accent/60" />
+                      <Tray size={20} className="text-brand-accent/60" />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-text-muted mb-1">No conversations yet</p>
@@ -504,7 +482,7 @@ export default function ConversationsPage() {
                           onClick={() => setMobileView("list")}
                           aria-label="Back to conversations"
                         >
-                          <ChevronLeft size={18} />
+                          <CaretLeft size={18} />
                         </button>
                         <ChannelPill channel={selected.channel} />
                         <span className="font-medium truncate">
@@ -543,7 +521,7 @@ export default function ConversationsPage() {
                         className="p-1.5 rounded hover:bg-white/[0.05]"
                         title="Close (c)"
                       >
-                        <CheckCircle2 size={15} />
+                        <CheckCircle size={15} />
                       </motion.button>
                     </div>
                   </header>
@@ -563,7 +541,7 @@ export default function ConversationsPage() {
                       </div>
                     ) : messages.length === 0 ? (
                       <div className="flex flex-col items-center justify-center h-full gap-2 py-16 text-center">
-                        <MessageCircle size={28} className="text-text-muted" />
+                        <ChatCircle size={28} className="text-text-muted" />
                         <p className="text-xs text-text-muted">No messages yet � say hello</p>
                       </div>
                     ) : (
@@ -586,7 +564,7 @@ export default function ConversationsPage() {
                         className="p-1.5 text-text-muted hover:text-text-secondary rounded"
                         title="Emoji"
                       >
-                        <Smile size={16} />
+                        <Smiley size={16} />
                       </button>
                       <textarea
                         ref={composerRef}
@@ -609,8 +587,8 @@ export default function ConversationsPage() {
                         disabled={sending || !composerText.trim()}
                         className="btn-pill flex items-center gap-1.5 disabled:opacity-40"
                       >
-                        {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                        Send
+                        {sending ? <CircleNotch size={14} className="animate-spin" /> : <PaperPlaneTilt size={14} />}
+                        PaperPlaneTilt
                       </motion.button>
                     </div>
                     <div className="text-[11px] text-text-muted mt-1.5 pl-2">
@@ -740,7 +718,7 @@ function ContactPanel({
             )}
             {contact.email && (
               <div className="text-text-secondary text-xs flex items-center gap-1.5">
-                <Mail size={11} /> {contact.email}
+                <Envelope size={11} /> {contact.email}
               </div>
             )}
             {contact.phone && (
@@ -791,7 +769,7 @@ function ContactPanel({
             onClick={() => onStatus("closed")}
             className="w-full text-left px-2.5 py-1.5 rounded text-xs hover:bg-white/[0.05] flex items-center gap-2"
           >
-            <CheckCircle2 size={12} /> Mark closed
+            <CheckCircle size={12} /> Mark closed
           </button>
           <button
             onClick={() => onStatus("archived")}

@@ -1,5 +1,7 @@
 "use client";
+import { ArrowRight, Briefcase, Check, Envelope, Headphones, PhoneCall, Plus, Receipt, Tray, UserCheck } from "@phosphor-icons/react";
 
+import type { Icon } from "@phosphor-icons/react";
 /**
  * Mailbox Planner — GHL-style mailbox catalog + cost preview.
  *
@@ -16,30 +18,18 @@
  */
 
 import { useState } from "react";
-import {
-  Inbox,
-  Mail,
-  HeadphonesIcon,
-  Briefcase,
-  Receipt,
-  PhoneCall,
-  UserCheck,
-  Check,
-  Plus,
-  ArrowRight,
-  type LucideIcon,
-} from "lucide-react";
+
 import toast from "react-hot-toast";
 
 interface MailboxTemplate {
   prefix: string;
   label: string;
   description: string;
-  // Lucide ships icons as ForwardRefExoticComponent — using LucideIcon
-  // here matches what `import { Mail } from "lucide-react"` actually
+  // Lucide ships icons as ForwardRefExoticComponent — using Icon
+  // here matches what `` actually
   // returns. The previous narrow ComponentType was failing the build
   // (see Vercel build c4708c7).
-  icon: LucideIcon;
+  icon: Icon;
   popular: boolean;
   /** USD/month per mailbox */
   cost: number;
@@ -50,7 +40,7 @@ const MAILBOX_TEMPLATES: MailboxTemplate[] = [
     prefix: "hello",
     label: "hello@",
     description: "General catch-all for new prospects + warm leads.",
-    icon: Mail,
+    icon: Envelope,
     popular: true,
     cost: 1,
   },
@@ -58,7 +48,7 @@ const MAILBOX_TEMPLATES: MailboxTemplate[] = [
     prefix: "support",
     label: "support@",
     description: "Inbound customer support — auto-routes to your ticketing.",
-    icon: HeadphonesIcon,
+    icon: Headphones,
     popular: true,
     cost: 1,
   },
@@ -82,7 +72,7 @@ const MAILBOX_TEMPLATES: MailboxTemplate[] = [
     prefix: "info",
     label: "info@",
     description: "Marketing newsletter sender + general inquiries.",
-    icon: Inbox,
+    icon: Tray,
     popular: false,
     cost: 1,
   },
@@ -162,7 +152,7 @@ export default function MailboxPlanner({ clients }: { clients: Client[] }) {
               border: "1px solid rgba(34,197,94,0.3)",
             }}
           >
-            <Inbox size={16} className="text-emerald-600" />
+            <Tray size={16} className="text-emerald-600" />
           </div>
           <div>
             <h2 className="text-base font-bold text-text-primary">

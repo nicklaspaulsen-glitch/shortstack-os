@@ -1,4 +1,5 @@
 "use client";
+import { ArrowsClockwise, MagicWand, Sparkle, TextT } from "@phosphor-icons/react";
 
 /**
  * Settings → Voice Profile
@@ -10,7 +11,6 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Sparkles, Wand2, Type, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -83,7 +83,7 @@ export default function VoiceProfileSettingsPage() {
     try {
       const res = await fetch("/api/voice-profile/bootstrap", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ samples }),
       });
       if (!res.ok) throw new Error((await res.json()).error || "bootstrap failed");
@@ -128,7 +128,7 @@ export default function VoiceProfileSettingsPage() {
                   disabled={busy || loading}
                   className="btn-pill flex items-center gap-2 disabled:opacity-50"
                 >
-                  <RefreshCw size={15} className={busy ? "animate-spin" : ""} />
+                  <ArrowsClockwise size={15} className={busy ? "animate-spin" : ""} />
                   Recompute
                 </button>
       </div>
@@ -241,7 +241,7 @@ function StatsPanel({ profile }: { profile: VoiceProfile }) {
   return (
     <div className="rounded-xl glass p-5">
       <div className="flex items-center gap-2 mb-4">
-        <Type size={16} className="text-indigo-600" />
+        <TextT size={16} className="text-indigo-600" />
         <h3 className="font-semibold text-sm">Voice Stats</h3>
       </div>
       <motion.div
@@ -305,7 +305,7 @@ function SignatureSection({ profile }: { profile: VoiceProfile }) {
   return (
     <div className="rounded-xl glass p-5 space-y-4">
       <div className="flex items-center gap-2">
-        <Sparkles size={16} className="text-indigo-600" />
+        <Sparkle size={16} className="text-indigo-600" />
         <h3 className="font-semibold text-sm">Signature</h3>
       </div>
       {groups.map((g) =>
@@ -333,7 +333,7 @@ function PromptSnippetPanel({ snippet }: { snippet: string }) {
   return (
     <div className="rounded-xl glass p-5">
       <div className="flex items-center gap-2 mb-3">
-        <Wand2 size={16} className="text-indigo-600" />
+        <MagicWand size={16} className="text-indigo-600" />
         <h3 className="font-semibold text-sm">Prompt Injection</h3>
       </div>
       <p className="text-xs text-text-muted mb-3">
@@ -363,7 +363,7 @@ function BootstrapPanel({
   return (
     <div className="rounded-xl glass p-5">
       <div className="flex items-center gap-2 mb-3">
-        <Wand2 size={16} className="text-indigo-600" />
+        <MagicWand size={16} className="text-indigo-600" />
         <h3 className="font-semibold text-sm">Bootstrap</h3>
       </div>
       <p className="text-xs text-text-muted mb-3">
@@ -387,7 +387,7 @@ function BootstrapPanel({
           disabled={busy || sampleCount === 0}
           className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold bg-brand-accent hover:bg-brand-accent/90 text-[#020711] disabled:opacity-50 transition-colors"
         >
-          <Sparkles size={13} />
+          <Sparkle size={13} />
           Capture & recompute
         </button>
       </div>

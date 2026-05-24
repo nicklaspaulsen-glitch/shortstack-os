@@ -1,15 +1,11 @@
 "use client";
+import { ArrowsClockwise, ChatCircle, CircleNotch, Clock, Envelope, GitBranch, Lightning, MagnifyingGlass, Phone, Play, Plus, Tag, ToggleLeft, ToggleRight, PlugsConnected } from "@phosphor-icons/react";
 
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import {
-  Zap, Plus, Search, ToggleLeft, ToggleRight,
-  Clock, Play, Webhook, Mail, MessageCircle,
-  Phone, Tag, GitBranch, RefreshCw, Loader
-} from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -32,10 +28,10 @@ interface Workflow {
 }
 
 const TRIGGER_ICONS: Record<string, React.ReactNode> = {
-  webhook: <Webhook size={13} />,
-  send_email: <Mail size={13} />,
+  webhook: <PlugsConnected size={13} />,
+  send_email: <Envelope size={13} />,
   send_sms: <Phone size={13} />,
-  send_telegram: <MessageCircle size={13} />,
+  send_telegram: <ChatCircle size={13} />,
   schedule: <Clock size={13} />,
   tag: <Tag size={13} />,
   condition: <GitBranch size={13} />,
@@ -51,7 +47,7 @@ function getTriggerIcon(type: string): React.ReactNode {
   for (const [key, icon] of Object.entries(TRIGGER_ICONS)) {
     if (type.toLowerCase().includes(key)) return icon;
   }
-  return <Zap size={13} />;
+  return <Lightning size={13} />;
 }
 
 function fmtDate(d: string): string {
@@ -168,12 +164,12 @@ export default function AutomationsPage() {
     <p className="text-[11px] text-text-muted mt-1.5">not running</p>
   </motion.div>
 </div>
-    {/* Search */}<div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+    {/* MagnifyingGlass */}<div className="relative">
+              <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Search automations…"
+                placeholder="MagnifyingGlass automations…"
                 className="w-full glass rounded-lg pl-8 pr-3 py-2 text-text-primary text-sm focus:outline-none focus:border-brand-accent/50"
               />
             </div>{loading ? (
@@ -244,7 +240,7 @@ export default function AutomationsPage() {
                               </span>
                             )}
                             <span className="flex items-center gap-1">
-                              <RefreshCw size={9} /> Updated {fmtDate(w.updated_at)}
+                              <ArrowsClockwise size={9} /> Updated {fmtDate(w.updated_at)}
                             </span>
                           </div>
                         </div>
@@ -268,7 +264,7 @@ export default function AutomationsPage() {
                             title={w.active ? "Pause" : "Enable"}
                           >
                             {toggling === w.id ? (
-                              <Loader size={16} className="animate-spin" />
+                              <CircleNotch size={16} className="animate-spin" />
                             ) : w.active ? (
                               <ToggleRight size={20} />
                             ) : (

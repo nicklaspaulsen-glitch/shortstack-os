@@ -1,9 +1,10 @@
+import { ArrowLeft, ArrowRight, CircleNotch, Envelope, Eye, EyeSlash, Lightning, Lock, User } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, Suspense, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Eye, EyeOff, ArrowRight, Mail, Lock, User, Loader, ArrowLeft, Zap } from "lucide-react";
+
 import toast from "react-hot-toast";
 import { PLAN_TIERS, PlanTier } from "@/lib/plan-config";
 import LoginHero from "@/components/brand/login-hero";
@@ -273,7 +274,7 @@ function LoginForm() {
                 style={{ borderColor: `${planConfig.color}30`, background: `${planConfig.color}0D` }}
               >
                 <div className="flex items-center justify-center gap-2 text-sm font-semibold" style={{ color: planConfig.color }}>
-                  <Zap size={14} />
+                  <Lightning size={14} />
                   {selectedPlan} Plan — ${planConfig.price_monthly.toLocaleString("en-US")}/mo
                 </div>
                 <p className="text-[11px] text-text-muted mt-1">
@@ -303,7 +304,7 @@ function LoginForm() {
                   {resetSent ? (
                     <div className="text-center py-2">
                       <div className="w-12 h-12 bg-status-success/10  flex items-center justify-center mx-auto mb-3 ring-1 ring-status-success/30">
-                        <Mail size={20} className="text-status-success" />
+                        <Envelope size={20} className="text-status-success" />
                       </div>
                       <h2 className="font-display text-[18px] text-text-primary mb-1">Check your email</h2>
                       <p className="text-[13px] text-text-secondary">
@@ -318,7 +319,7 @@ function LoginForm() {
                         <p className="text-[12px] text-text-muted mt-1">Enter your email to receive a reset link.</p>
                       </div>
                       <div className="relative">
-                        <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                        <Envelope size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                         <input
                           type="email" value={email} onChange={(e) => setEmail(e.target.value)}
                           className={inputClass} placeholder="you@company.com" required
@@ -330,7 +331,7 @@ function LoginForm() {
                         ref={submitBtnRef}
                         className="w-full text-[14px] font-medium py-3 rounded-lg bg-brand-lime text-bg-base hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_0_0_1px_rgba(255,255,255,0.3),0_0_24px_-6px_rgba(255,255,255,0.45)]"
                       >
-                        {loading ? <Loader size={14} className="animate-spin" /> : <Mail size={14} />}
+                        {loading ? <CircleNotch size={14} className="animate-spin" /> : <Envelope size={14} />}
                         {loading ? "Sending..." : "Send reset link"}
                       </button>
                     </form>
@@ -370,7 +371,7 @@ function LoginForm() {
                   <div>
                     <label className="block text-[10px] text-text-muted mb-1.5 uppercase tracking-[0.18em] font-medium">Email</label>
                     <div className="relative">
-                      <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                      <Envelope size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                       <input
                         type="email"
                         value={email}
@@ -412,7 +413,7 @@ function LoginForm() {
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary transition-colors duration-220"
                         aria-label={showPassword ? "Hide password" : "Show password"}
                       >
-                        {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                        {showPassword ? <EyeSlash size={15} /> : <Eye size={15} />}
                       </button>
                     </div>
                   </div>
@@ -463,7 +464,7 @@ function LoginForm() {
                     className="w-full text-[14px] font-semibold py-3 rounded-lg bg-brand-lime text-bg-base hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_0_0_1px_rgba(255,255,255,0.3),0_0_24px_-6px_rgba(255,255,255,0.45)] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_0_32px_-4px_rgba(255,255,255,0.6)]"
                     style={{ willChange: "transform" }}
                   >
-                    {loading ? <Loader size={14} className="animate-spin" /> : <ArrowRight size={14} />}
+                    {loading ? <CircleNotch size={14} className="animate-spin" /> : <ArrowRight size={14} />}
                     {loading ? "Loading..." : isSignUp ? "Create account" : "Sign in"}
                   </button>
                 </form>

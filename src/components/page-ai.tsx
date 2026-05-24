@@ -1,7 +1,7 @@
 "use client";
+import { ArrowsIn, Copy, PaperPlaneTilt, Robot, Sparkle, X } from "@phosphor-icons/react";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Bot, Send, X, Sparkles, Copy, Minimize2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface PageAIProps {
@@ -184,7 +184,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
 
         {/* Main gold-to-amber orb */}
         <div className="orb-body w-12 h-12 rounded-full flex items-center justify-center relative overflow-hidden">
-          <Sparkles size={18} className="text-white drop-shadow-[0_0_6px_rgba(255,220,130,0.9)] pointer-events-none relative z-10 group-hover:rotate-12 transition-transform" />
+          <Sparkle size={18} className="text-white drop-shadow-[0_0_6px_rgba(255,220,130,0.9)] pointer-events-none relative z-10 group-hover:rotate-12 transition-transform" />
           {/* Inner gloss highlight */}
           <span className="absolute top-1 left-2 w-3 h-2 bg-black/20 rounded-full blur-sm pointer-events-none" />
         </div>
@@ -278,7 +278,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
         onPointerUp={(e) => { const wasDrag = dragRef.current?.moved; dragRef.current = null; elRef.current?.releasePointerCapture(e.pointerId); if (!wasDrag) setMinimized(false); }}
         className="flex items-center gap-2 px-3 py-2 rounded-full bg-surface border border-[rgba(212,255,0,0.2)] text-xs text-[#D4FF00] hover:bg-surface-light transition-all cursor-grab active:cursor-grabbing touch-none select-none"
       >
-        <Bot size={14} /> {pageName} AI
+        <Robot size={14} /> {pageName} AI
         <span className="w-1.5 h-1.5 bg-success rounded-full animate-pulse" />
       </div>
     );
@@ -313,7 +313,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
       >
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
-            <Sparkles size={14} className="text-[#D4FF00]" />
+            <Sparkle size={14} className="text-[#D4FF00]" />
           </div>
           <div>
             <p className="text-xs font-semibold">{pageName} AI</p>
@@ -324,7 +324,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
         </div>
         <div className="flex items-center gap-1">
           <button onClick={() => setMinimized(true)} className="p-1 rounded hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors">
-            <Minimize2 size={12} />
+            <ArrowsIn size={12} />
           </button>
           <button onClick={() => { setOpen(false); setMessages([]); }} className="p-1 rounded hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors">
             <X size={12} />
@@ -336,7 +336,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2.5 max-h-[320px]">
         {messages.length === 0 && (
           <div className="text-center py-4">
-            <Sparkles size={20} className="mx-auto mb-2 text-[rgba(212,255,0,0.3)]" />
+            <Sparkle size={20} className="mx-auto mb-2 text-[rgba(212,255,0,0.3)]" />
             <p className="text-[10px] text-text-muted mb-3">Ask me anything about this page</p>
             <div className="space-y-1">
               {suggestions.map((s, i) => (
@@ -397,7 +397,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
           disabled={thinking} />
         <button type="submit" disabled={!input.trim() || thinking}
           className="w-7 h-7 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[#D4FF00] disabled:opacity-30 hover:bg-[rgba(212,255,0,0.12)] transition-colors">
-          <Send size={12} />
+          <PaperPlaneTilt size={12} />
         </button>
       </form>
 

@@ -1,13 +1,8 @@
+import { ArrowsClockwise, CaretDown, CaretRight, CheckCircle, Clock, Code, Copy, DownloadSimple, Eye, EyeSlash, FileText, Globe, Key, Lightning, Lock, MagnifyingGlass, Play, Pulse, Shield, Terminal, ToggleLeft, ToggleRight, Trash, Warning } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Code, Copy, Shield, ChevronDown, ChevronRight,
-  Play, Terminal, Key, AlertTriangle, Download, Clock,
-  CheckCircle, Search, FileText, Zap, Globe, Lock,
-  Trash2, Eye, EyeOff, Activity, ToggleLeft, ToggleRight, RefreshCw
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /* ── Types ── */
@@ -105,7 +100,7 @@ const API_CATEGORIES: Category[] = [
   },
   {
     name: "Agents",
-    icon: <Zap size={13} className="text-brand-accent" />,
+    icon: <Lightning size={13} className="text-brand-accent" />,
     endpoints: [
       { method: "GET", path: "/api/agents", description: "List all available AI agents", response: '{ "agents": [{ "id": "...", "name": "...", "status": "active" }] }', auth: true, rateLimit: "30/min" },
       { method: "POST", path: "/api/agents/chief", description: "Chat with the Chief AI Agent", body: '{ "message": "...", "history": [] }', response: '{ "response": "...", "data": { ... } }', auth: true, rateLimit: "10/min" },
@@ -114,8 +109,8 @@ const API_CATEGORIES: Category[] = [
     ],
   },
   {
-    name: "Webhooks",
-    icon: <Zap size={13} className="text-orange-400" />,
+    name: "PlugsConnected",
+    icon: <Lightning size={13} className="text-orange-400" />,
     endpoints: [
       { method: "GET", path: "/api/webhooks", description: "List configured webhooks", response: '{ "webhooks": [{ "id": "...", "url": "...", "events": [...] }] }', auth: true, rateLimit: "30/min" },
       { method: "POST", path: "/api/webhooks", description: "Create a new webhook endpoint", body: '{ "url": "https://...", "events": ["lead.created", "client.updated"] }', response: '{ "webhook": { "id": "...", "secret": "whsec_..." } }', auth: true, rateLimit: "10/min" },
@@ -156,7 +151,7 @@ const SDK_DOWNLOADS = [
   { name: "Ruby", version: "2.2.0", size: "31 KB", lang: "rb" },
 ];
 
-const TABS = ["Explorer", "Endpoints", "Auth Guide", "Rate Limits", "Code Examples", "Errors", "Webhooks", "Changelog", "SDKs", "API Keys"] as const;
+const TABS = ["Explorer", "Endpoints", "Auth Guide", "Rate Limits", "Code Examples", "Errors", "PlugsConnected", "Changelog", "SDKs", "API Keys"] as const;
 type Tab = typeof TABS[number];
 
 export default function ApiDocsPage() {
@@ -395,11 +390,11 @@ export default function ApiDocsPage() {
               </div>
             )}{/* ═══ ENDPOINTS TAB ═══ */}{activeTab === "Endpoints" && (
               <div className="space-y-3">
-                {/* Search */}
+                {/* MagnifyingGlass */}
                 <div className="relative">
-                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                  <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                   <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                    className="input w-full text-xs py-2.5 pl-9" placeholder="Search endpoints by path or description..." aria-label="Search API endpoints" />
+                    className="input w-full text-xs py-2.5 pl-9" placeholder="MagnifyingGlass endpoints by path or description..." aria-label="MagnifyingGlass API endpoints" />
                 </div>
 
                 {/* Method Legend */}
@@ -419,7 +414,7 @@ export default function ApiDocsPage() {
                     <motion.div key={cat.name} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 }} className="glass rounded-xl overflow-hidden p-0">
                       <button onClick={() => toggleSection(cat.name)}
                         className="w-full flex items-center gap-2.5 p-3 hover:bg-white/4 transition-colors">
-                        {isOpen ? <ChevronDown size={13} className="text-text-muted" /> : <ChevronRight size={13} className="text-text-muted" />}
+                        {isOpen ? <CaretDown size={13} className="text-text-muted" /> : <CaretRight size={13} className="text-text-muted" />}
                         {cat.icon}
                         <span className="text-xs font-semibold">{cat.name}</span>
                         <span className="text-[10px] text-text-muted ml-auto">{cat.endpoints.length} endpoint{cat.endpoints.length !== 1 ? "s" : ""}</span>
@@ -489,7 +484,7 @@ export default function ApiDocsPage() {
                       <pre className="bg-white/4 rounded-lg p-2.5 text-[10px] font-mono text-green-400">Cookie: sb-access-token=eyJhbG...; sb-refresh-token=...</pre>
                     </div>
                     <div className="p-3 rounded-lg border border-border-subtle bg-[rgba(212,255,0,0.04)]">
-                      <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><AlertTriangle size={12} className="text-brand-accent" /> Security Best Practices</h3>
+                      <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Warning size={12} className="text-brand-accent" /> Security Best Practices</h3>
                       <ul className="space-y-1.5 text-[10px] text-text-muted">
                         <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Never expose API keys in client-side code</li>
                         <li className="flex items-start gap-1.5"><CheckCircle size={10} className="text-green-400 mt-0.5 shrink-0" /> Use environment variables for key storage</li>
@@ -639,7 +634,7 @@ print(data['content'])`}
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <AlertTriangle size={14} className="text-brand-accent" />
+                    <Warning size={14} className="text-brand-accent" />
                     <h2 className="text-sm font-semibold">Error Code Reference</h2>
                   </div>
                   <p className="text-[10px] text-text-muted mb-3">All errors return a JSON body with an error message and optional details.</p>
@@ -669,11 +664,11 @@ print(data['content'])`}
                   </div>
                 </div>
               </div>
-            )}{/* ═══ WEBHOOKS TAB ═══ */}{activeTab === "Webhooks" && (
+            )}{/* ═══ WEBHOOKS TAB ═══ */}{activeTab === "PlugsConnected" && (
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <Zap size={14} className="text-brand-accent" />
+                    <Lightning size={14} className="text-brand-accent" />
                     <h2 className="text-sm font-semibold">Webhook Documentation</h2>
                   </div>
                   <p className="text-[10px] text-text-muted mb-4">Trinity sends webhook events to your configured URL when specific actions occur.</p>
@@ -756,7 +751,7 @@ const valid = signature === expected;`}</pre>
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <Download size={14} className="text-brand-accent" />
+                    <DownloadSimple size={14} className="text-brand-accent" />
                     <h2 className="text-sm font-semibold">SDK Downloads</h2>
                   </div>
                   <p className="text-[10px] text-text-muted mb-4">Official client libraries for popular languages. Install via package manager or download.</p>
@@ -778,7 +773,7 @@ const valid = signature === expected;`}</pre>
                               Install Guide
                             </button>
                             <button className="text-[9px] px-2 py-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)] hover:bg-[rgba(212,255,0,0.12)] transition-all flex items-center gap-1">
-                              <Download size={9} /> Download
+                              <DownloadSimple size={9} /> DownloadSimple
                             </button>
                           </div>
                         </div>
@@ -917,7 +912,7 @@ const valid = signature === expected;`}</pre>
                       </div>
                       <div className="flex items-center justify-between pt-1">
                         <div className="flex items-center gap-1.5 text-[10px] text-text-muted">
-                          <Activity size={10} />
+                          <Pulse size={10} />
                           Rate limit: <span className="text-text-primary font-medium">{RATE_LIMITS[newKeyPermission]}</span>
                         </div>
                         <div className="flex gap-2">
@@ -972,7 +967,7 @@ const valid = signature === expected;`}</pre>
                             {revealedKeys[k.id] ? k.key : maskKey(k.key)}
                           </span>
                           <button onClick={() => toggleRevealKey(k.id)} className="text-text-muted hover:text-text-primary transition-colors flex-shrink-0" title={revealedKeys[k.id] ? "Hide" : "Reveal"}>
-                            {revealedKeys[k.id] ? <EyeOff size={10} /> : <Eye size={10} />}
+                            {revealedKeys[k.id] ? <EyeSlash size={10} /> : <Eye size={10} />}
                           </button>
                           <button onClick={() => copyText(k.key, k.id)} className="text-text-muted hover:text-brand-accent transition-colors flex-shrink-0" title="Copy key">
                             {copiedKey === k.id ? <CheckCircle size={10} className="text-green-400" /> : <Copy size={10} />}
@@ -988,7 +983,7 @@ const valid = signature === expected;`}</pre>
 
                         {/* Rate Limit */}
                         <div className="text-[10px] text-text-muted flex items-center gap-1">
-                          <Activity size={9} className="flex-shrink-0" />
+                          <Pulse size={9} className="flex-shrink-0" />
                           {RATE_LIMITS[k.permissions]}
                         </div>
 
@@ -1024,7 +1019,7 @@ const valid = signature === expected;`}</pre>
                               ) : (
                                 <button onClick={() => setConfirmDeleteId(k.id)}
                                   className="text-[9px] px-2 py-1 rounded border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all flex items-center gap-1" title="Delete key">
-                                  <Trash2 size={9} />
+                                  <Trash size={9} />
                                 </button>
                               )}
                             </>
@@ -1049,7 +1044,7 @@ const valid = signature === expected;`}</pre>
                               ) : (
                                 <button onClick={() => setConfirmDeleteId(k.id)}
                                   className="text-[9px] px-2 py-1 rounded border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all flex items-center gap-1" title="Delete key">
-                                  <Trash2 size={9} />
+                                  <Trash size={9} />
                                 </button>
                               )}
                             </>
@@ -1071,10 +1066,10 @@ const valid = signature === expected;`}</pre>
                     <div className="space-y-2">
                       {[
                         { icon: <Lock size={10} />, text: "Never expose API keys in client-side code or public repos" },
-                        { icon: <RefreshCw size={10} />, text: "Rotate keys regularly -- revoke and regenerate every 90 days" },
+                        { icon: <ArrowsClockwise size={10} />, text: "Rotate keys regularly -- revoke and regenerate every 90 days" },
                         { icon: <Shield size={10} />, text: "Use minimum required permissions (prefer read-only)" },
                         { icon: <Eye size={10} />, text: "Monitor last-used timestamps for suspicious activity" },
-                        { icon: <AlertTriangle size={10} />, text: "Revoke keys immediately if you suspect a compromise" },
+                        { icon: <Warning size={10} />, text: "Revoke keys immediately if you suspect a compromise" },
                       ].map((tip, i) => (
                         <div key={i} className="flex items-start gap-2 text-[10px] text-text-muted">
                           <span className="text-brand-accent mt-0.5 flex-shrink-0">{tip.icon}</span>
@@ -1087,7 +1082,7 @@ const valid = signature === expected;`}</pre>
                   {/* Rate Limits by Permission */}
                   <div className="glass rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-3">
-                      <Activity size={13} className="text-brand-accent" />
+                      <Pulse size={13} className="text-brand-accent" />
                       <h3 className="text-xs font-semibold">Rate Limits by Permission Level</h3>
                     </div>
                     <div className="space-y-2">
@@ -1105,7 +1100,7 @@ const valid = signature === expected;`}</pre>
                     </div>
                     <div className="mt-3 p-2 rounded-lg bg-[rgba(212,255,0,0.04)] border border-[rgba(212,255,0,0.15)]">
                       <p className="text-[9px] text-brand-accent flex items-center gap-1.5">
-                        <AlertTriangle size={10} className="flex-shrink-0" />
+                        <Warning size={10} className="flex-shrink-0" />
                         Exceeding rate limits returns HTTP 429. Implement exponential backoff in your integration.
                       </p>
                     </div>

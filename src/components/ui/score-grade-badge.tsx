@@ -1,7 +1,7 @@
 "use client";
+import { Fire, SealCheck, Snowflake, Sun } from "@phosphor-icons/react";
 
 import type { ReactNode } from "react";
-import { Flame, Snowflake, Sun, BadgeCheck } from "lucide-react";
 
 export type ScoreGrade = "cold" | "warm" | "hot" | "customer";
 
@@ -33,14 +33,14 @@ const GRADE_STYLES: Record<ScoreGrade, GradeStyle> = {
     bg: "bg-orange-500/10 border-orange-500/20",
     text: "text-orange-400",
     dot: "bg-orange-400",
-    icon: <Flame size={9} />,
+    icon: <Fire size={9} />,
   },
   customer: {
     label: "Customer",
     bg: "bg-emerald-500/10 border-emerald-500/20",
     text: "text-emerald-400",
     dot: "bg-emerald-400",
-    icon: <BadgeCheck size={9} />,
+    icon: <SealCheck size={9} />,
   },
 };
 

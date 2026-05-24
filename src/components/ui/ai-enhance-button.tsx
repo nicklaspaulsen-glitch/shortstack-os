@@ -1,7 +1,7 @@
 "use client";
+import { CircleNotch, Sparkle } from "@phosphor-icons/react";
 
 import { useState } from "react";
-import { Loader2, Sparkles } from "lucide-react";
 import toast from "react-hot-toast";
 import { useQuotaWall } from "@/components/billing/quota-wall";
 
@@ -130,7 +130,7 @@ export default function AIEnhanceButton({
       className={`${baseClass} ${className}`}
       title="Improve this text with AI"
     >
-      {loading ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
+      {loading ? <CircleNotch size={10} className="animate-spin" /> : <Sparkle size={10} />}
       <span>{loading ? "Enhancing…" : label}</span>
     </button>
   );

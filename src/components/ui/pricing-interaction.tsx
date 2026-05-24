@@ -1,4 +1,5 @@
 "use client";
+import { Check, Lightning } from "@phosphor-icons/react";
 
 /**
  * PricingInteraction — hover-animated pricing plan cards.
@@ -12,7 +13,6 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Check, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ShineBorder } from "@/components/ui/shine-border";
 
@@ -140,7 +140,7 @@ function PlanCard({
               : "bg-[rgba(0,0,0,0.05)] text-text-primary hover:bg-[rgba(212,255,0,0.08)] hover:text-[#D4FF00]"
           )}
         >
-          {plan.featured && !isCurrent && <Zap className="h-4 w-4" />}
+          {plan.featured && !isCurrent && <Lightning className="h-4 w-4" />}
           {isCurrent ? "Current plan" : plan.cta}
         </motion.button>
       </div>

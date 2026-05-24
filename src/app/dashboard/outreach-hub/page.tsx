@@ -1,21 +1,8 @@
+import { Barbell, Briefcase, Calculator, Car, CaretDown, CaretUp, ChartBar, Chat, Check, CircleDashed, CircleNotch, Clock, Copy, DeviceMobile, Envelope, Eye, Factory, FileText, FloppyDisk, ForkKnife, Gear, Globe, GraduationCap, HardHat, Hash, Heart, House, Lightning, ListChecks, Megaphone, Monitor, Package, PaperPlaneTilt, Pause, PhoneCall, Play, Plus, Pulse, Scales, Scissors, Shield, ShoppingCart, Sparkle, Stack, Star, Storefront, Target, ToggleLeft, ToggleRight, Trash, TrendUp, Users, WarningCircle, Wrench, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
-import {
-  PhoneCall, Mail, MessageSquare, Send, Settings,
-  Sparkles, Loader2, Copy, Check, Save,
-  ChevronDown, ChevronUp, Plus, Trash2, X,
-  Globe, Smartphone, Clock, Target, Zap,
-  ToggleLeft, ToggleRight, Hash, AlertCircle, Eye,
-  Play, Pause, BarChart3, Star,
-  Megaphone, ListChecks, Users,
-  UtensilsCrossed, Heart, Home, Scale, Car, Wrench,
-  Dumbbell, Scissors, HardHat, Shield, Calculator,
-  Monitor, Briefcase, Factory, ShoppingCart, Package,
-  GraduationCap, Store, Layers,
-  CircleDot, Activity, FileText, TrendingUp,
-} from "lucide-react";
 import {
   InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon,
 } from "@/components/ui/platform-icons";
@@ -115,7 +102,7 @@ function AIEnhanceButton({ value, onResult, context }: { value: string; onResult
   return (
     <button onClick={enhance} disabled={loading || !value.trim()}
       className="text-[9px] px-2.5 py-1 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-30 flex items-center gap-1 transition-all border border-[rgba(212,255,0,0.1)] hover:border-[rgba(212,255,0,0.2)]">
-      {loading ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />}
+      {loading ? <CircleNotch size={9} className="animate-spin" /> : <Sparkle size={9} />}
       {loading ? "Enhancing..." : "AI Enhance"}
     </button>
   );
@@ -332,9 +319,9 @@ function TemplateCard({ template, onChange, onDelete, context }: {
             {copied ? <Check size={10} className="text-green-400" /> : <Copy size={10} className="text-text-muted" />}
           </button>
           <button onClick={e => { e.stopPropagation(); onDelete(); }} className="p-1 hover:bg-red-500/10 rounded" aria-label="Delete template">
-            <Trash2 size={10} className="text-text-muted hover:text-red-400" />
+            <Trash size={10} className="text-text-muted hover:text-red-400" />
           </button>
-          {expanded ? <ChevronUp size={12} className="text-text-muted" /> : <ChevronDown size={12} className="text-text-muted" />}
+          {expanded ? <CaretUp size={12} className="text-text-muted" /> : <CaretDown size={12} className="text-text-muted" />}
         </div>
       </div>
       {expanded && (
@@ -358,7 +345,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
               style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
-                  <TrendingUp size={9} style={{ color: emailQualityScore >= 71 ? "#4ade80" : emailQualityScore >= 43 ? "#fbbf24" : "#f87171" }} />
+                  <TrendUp size={9} style={{ color: emailQualityScore >= 71 ? "#4ade80" : emailQualityScore >= 43 ? "#fbbf24" : "#f87171" }} />
                   <span className="text-[9px] font-semibold text-text-secondary">Email Quality</span>
                 </div>
                 <span className="text-[10px] font-bold tabular-nums"
@@ -407,7 +394,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
               style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
-                  <TrendingUp size={9} style={{ color: smsQualityScore >= 80 ? "#4ade80" : smsQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
+                  <TrendUp size={9} style={{ color: smsQualityScore >= 80 ? "#4ade80" : smsQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
                   <span className="text-[9px] font-semibold text-text-secondary">SMS Quality</span>
                 </div>
                 <span className="text-[10px] font-bold tabular-nums"
@@ -450,7 +437,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
               style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
-                  <TrendingUp size={9} style={{ color: dmQualityScore >= 80 ? "#4ade80" : dmQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
+                  <TrendUp size={9} style={{ color: dmQualityScore >= 80 ? "#4ade80" : dmQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
                   <span className="text-[9px] font-semibold text-text-secondary">DM Quality</span>
                 </div>
                 <span className="text-[10px] font-bold tabular-nums"
@@ -493,7 +480,7 @@ function TemplateCard({ template, onChange, onDelete, context }: {
               style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
-                  <TrendingUp size={9} style={{ color: callQualityScore >= 80 ? "#4ade80" : callQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
+                  <TrendUp size={9} style={{ color: callQualityScore >= 80 ? "#4ade80" : callQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
                   <span className="text-[9px] font-semibold text-text-secondary">Script Quality</span>
                 </div>
                 <span className="text-[10px] font-bold tabular-nums"
@@ -710,13 +697,13 @@ const DEFAULT_DM_TEMPLATES: Template[] = [
 
 /* -- Industry Definitions -- */
 const B2B_INDUSTRIES = [
-  { id: "restaurants", label: "Restaurants & Food", icon: UtensilsCrossed },
+  { id: "restaurants", label: "Restaurants & Food", icon: ForkKnife },
   { id: "dental", label: "Dental & Medical", icon: Heart },
-  { id: "realestate", label: "Real Estate", icon: Home },
-  { id: "legal", label: "Legal Services", icon: Scale },
+  { id: "realestate", label: "Real Estate", icon: House },
+  { id: "legal", label: "Legal Services", icon: Scales },
   { id: "auto", label: "Auto Dealers", icon: Car },
-  { id: "homeservices", label: "Home Services", icon: Wrench },
-  { id: "fitness", label: "Fitness & Gyms", icon: Dumbbell },
+  { id: "homeservices", label: "House Services", icon: Wrench },
+  { id: "fitness", label: "Fitness & Gyms", icon: Barbell },
   { id: "salons", label: "Salons & Spas", icon: Scissors },
   { id: "construction", label: "Construction", icon: HardHat },
   { id: "insurance", label: "Insurance", icon: Shield },
@@ -725,11 +712,11 @@ const B2B_INDUSTRIES = [
   { id: "marketing", label: "Marketing Agencies", icon: Megaphone },
   { id: "manufacturing", label: "Manufacturing", icon: Factory },
   { id: "wholesale", label: "Wholesale/Distribution", icon: Package },
-  { id: "saas", label: "SaaS/Tech", icon: Layers },
+  { id: "saas", label: "SaaS/Tech", icon: Stack },
   { id: "ecommerce", label: "E-commerce", icon: ShoppingCart },
   { id: "education", label: "Education", icon: GraduationCap },
   { id: "professional", label: "Professional Services", icon: Briefcase },
-  { id: "retail", label: "Retail Stores", icon: Store },
+  { id: "retail", label: "Retail Stores", icon: Storefront },
 ];
 
 /* -- Campaign Presets -- */
@@ -737,11 +724,11 @@ const CAMPAIGN_PRESETS = [
   { name: "Local Restaurant Blitz", description: "High-volume outreach to restaurants needing digital presence", targetMode: "b2b" as TargetMode, industries: ["restaurants"], channels: { email: true, sms: true, calls: true, dms: false }, dailyTargets: { email: 30, sms: 20, calls: 15, dms: 0 } },
   { name: "Dental Practice Outreach", description: "Targeted campaign for dental offices seeking more patients", targetMode: "b2b" as TargetMode, industries: ["dental"], channels: { email: true, sms: true, calls: true, dms: true }, dailyTargets: { email: 20, sms: 15, calls: 10, dms: 5 } },
   { name: "Real Estate Agent Prospecting", description: "Connect with agents looking to grow their online brand", targetMode: "b2b" as TargetMode, industries: ["realestate"], channels: { email: true, sms: false, calls: true, dms: true }, dailyTargets: { email: 25, sms: 0, calls: 10, dms: 15 } },
-  { name: "E-commerce Store Growth", description: "Reach online store owners needing marketing help", targetMode: "b2b" as TargetMode, industries: ["ecommerce"], channels: { email: true, sms: false, calls: false, dms: true }, dailyTargets: { email: 40, sms: 0, calls: 0, dms: 20 } },
+  { name: "E-commerce Storefront Growth", description: "Reach online store owners needing marketing help", targetMode: "b2b" as TargetMode, industries: ["ecommerce"], channels: { email: true, sms: false, calls: false, dms: true }, dailyTargets: { email: 40, sms: 0, calls: 0, dms: 20 } },
   { name: "SaaS Demo Campaign", description: "Book demos with SaaS companies needing agency support", targetMode: "b2b" as TargetMode, industries: ["saas"], channels: { email: true, sms: false, calls: true, dms: true }, dailyTargets: { email: 30, sms: 0, calls: 8, dms: 10 } },
   { name: "Fitness Studio Launch", description: "Help gyms and studios fill memberships", targetMode: "b2b" as TargetMode, industries: ["fitness"], channels: { email: true, sms: true, calls: true, dms: true }, dailyTargets: { email: 20, sms: 15, calls: 10, dms: 10 } },
   { name: "Auto Dealer Leads", description: "Multi-channel outreach to auto dealerships", targetMode: "b2b" as TargetMode, industries: ["auto"], channels: { email: true, sms: true, calls: true, dms: false }, dailyTargets: { email: 15, sms: 10, calls: 12, dms: 0 } },
-  { name: "Home Services Push", description: "Target plumbers, HVAC, roofers and more", targetMode: "b2b" as TargetMode, industries: ["homeservices", "construction"], channels: { email: true, sms: true, calls: true, dms: false }, dailyTargets: { email: 25, sms: 20, calls: 15, dms: 0 } },
+  { name: "House Services Push", description: "Target plumbers, HVAC, roofers and more", targetMode: "b2b" as TargetMode, industries: ["homeservices", "construction"], channels: { email: true, sms: true, calls: true, dms: false }, dailyTargets: { email: 25, sms: 20, calls: 15, dms: 0 } },
 ];
 
 /* -- Pre-built Sequences -- */
@@ -749,8 +736,8 @@ const DEFAULT_SEQUENCES: OutreachSequence[] = [
   {
     id: "seq-gentle", name: "The Gentle Approach", description: "Spaced-out, low-pressure multi-channel sequence ideal for professional services", targetMode: "b2b",
     steps: [
-      { id: "s1", day: 1, channel: "email", action: "Send cold outreach email", templateRef: "email-cold", condition: "always" },
-      { id: "s2", day: 3, channel: "sms", action: "Send intro SMS", templateRef: "sms-intro", condition: "no_reply" },
+      { id: "s1", day: 1, channel: "email", action: "PaperPlaneTilt cold outreach email", templateRef: "email-cold", condition: "always" },
+      { id: "s2", day: 3, channel: "sms", action: "PaperPlaneTilt intro SMS", templateRef: "sms-intro", condition: "no_reply" },
       { id: "s3", day: 7, channel: "call", action: "Cold call with intro script", templateRef: "call-intro", condition: "no_reply" },
       { id: "s4", day: 10, channel: "dm", action: "LinkedIn DM outreach", templateRef: "dm-li-intro", condition: "no_reply" },
     ],
@@ -758,8 +745,8 @@ const DEFAULT_SEQUENCES: OutreachSequence[] = [
   {
     id: "seq-blitz", name: "The Blitz", description: "Fast-paced multi-channel approach for maximum touchpoints quickly", targetMode: "b2b",
     steps: [
-      { id: "s1", day: 1, channel: "email", action: "Send cold email + SMS same day", templateRef: "email-cold", condition: "always" },
-      { id: "s2", day: 1, channel: "sms", action: "Send intro SMS", templateRef: "sms-intro", condition: "always" },
+      { id: "s1", day: 1, channel: "email", action: "PaperPlaneTilt cold email + SMS same day", templateRef: "email-cold", condition: "always" },
+      { id: "s2", day: 1, channel: "sms", action: "PaperPlaneTilt intro SMS", templateRef: "sms-intro", condition: "always" },
       { id: "s3", day: 2, channel: "call", action: "Cold call follow-up", templateRef: "call-intro", condition: "no_reply" },
       { id: "s4", day: 3, channel: "email", action: "Follow-up email", templateRef: "email-followup", condition: "no_reply" },
       { id: "s5", day: 5, channel: "dm", action: "Social DM outreach", templateRef: "dm-ig-intro", condition: "no_reply" },
@@ -806,11 +793,11 @@ const DEFAULT_SEQUENCES: OutreachSequence[] = [
 /* -- Channel icon helper -- */
 function channelIcon(ch: string, size: number = 12) {
   switch (ch) {
-    case "email": return <Mail size={size} />;
-    case "sms": return <Smartphone size={size} />;
+    case "email": return <Envelope size={size} />;
+    case "sms": return <DeviceMobile size={size} />;
     case "call": return <PhoneCall size={size} />;
-    case "dm": return <MessageSquare size={size} />;
-    default: return <Send size={size} />;
+    case "dm": return <Chat size={size} />;
+    default: return <PaperPlaneTilt size={size} />;
   }
 }
 
@@ -884,7 +871,7 @@ export default function OutreachHubPage() {
   const [dmTemplates, setDmTemplates] = useState<Template[]>(DEFAULT_DM_TEMPLATES);
   const [templateFilter, setTemplateFilter] = useState<"all" | "b2b" | "b2c">("all");
 
-  /* -- Settings State -- */
+  /* -- Gear State -- */
   const [callSettings, setCallSettings] = useState({
     agentName: "Alex",
     voiceId: "default",
@@ -1072,7 +1059,7 @@ export default function OutreachHubPage() {
     return arr.includes(item) ? arr.filter(x => x !== item) : [...arr, item];
   }
 
-  /* -- Save All -- */
+  /* -- FloppyDisk All -- */
   const handleSave = useCallback(async () => {
     setSaving(true);
     try {
@@ -1105,8 +1092,8 @@ export default function OutreachHubPage() {
     { key: "campaigns", label: "Campaigns", icon: <Megaphone size={14} /> },
     { key: "sequences", label: "Sequences", icon: <ListChecks size={14} /> },
     { key: "templates", label: "Templates", icon: <FileText size={14} /> },
-    { key: "analytics", label: "Analytics", icon: <BarChart3 size={14} /> },
-    { key: "settings", label: "Settings", icon: <Settings size={14} /> },
+    { key: "analytics", label: "Analytics", icon: <ChartBar size={14} /> },
+    { key: "settings", label: "Gear", icon: <Gear size={14} /> },
   ];
 
   return (
@@ -1127,8 +1114,8 @@ export default function OutreachHubPage() {
                   disabled={saving}
                   className="btn-pill text-xs flex items-center gap-1.5 disabled:opacity-40"
                 >
-                  {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
-                  Save All
+                  {saving ? <CircleNotch size={12} className="animate-spin" /> : <FloppyDisk size={12} />}
+                  FloppyDisk All
                 </button>
               </div>
             </div>
@@ -1150,8 +1137,8 @@ export default function OutreachHubPage() {
                   </div>
                 </div>
                 {explainerOpen
-                  ? <ChevronUp size={14} className="text-text-muted" />
-                  : <ChevronDown size={14} className="text-text-muted" />}
+                  ? <CaretUp size={14} className="text-text-muted" />
+                  : <CaretDown size={14} className="text-text-muted" />}
               </button>
 
               {explainerOpen && (
@@ -1190,7 +1177,7 @@ export default function OutreachHubPage() {
                       n: 4,
                       title: "Track in Outreach Logs",
                       desc: "See replies, AI analysis, and follow-ups � all in one place.",
-                      icon: <BarChart3 size={14} />,
+                      icon: <ChartBar size={14} />,
                       href: "/dashboard/outreach-logs",
                       cta: "Open Logs",
                       color: "text-brand-accent bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)]",
@@ -1214,21 +1201,21 @@ export default function OutreachHubPage() {
                             onClick={step.ctaOnClick}
                             className="text-[10px] text-brand-accent hover:underline flex items-center gap-1 w-fit"
                           >
-                            {step.cta} <ChevronDown size={10} className="rotate-[-90deg]" />
+                            {step.cta} <CaretDown size={10} className="rotate-[-90deg]" />
                           </button>
                         ) : (
                           <a
                             href={step.href}
                             className="text-[10px] text-brand-accent hover:underline flex items-center gap-1 w-fit"
                           >
-                            {step.cta} <ChevronDown size={10} className="rotate-[-90deg]" />
+                            {step.cta} <CaretDown size={10} className="rotate-[-90deg]" />
                           </a>
                         )}
                       </div>
                       {/* Arrow between steps (desktop) */}
                       {idx < arr.length - 1 && (
                         <div className="hidden md:flex absolute top-1/2 -right-2 -translate-y-1/2 w-4 h-4 rounded-full bg-surface border border-border-subtle items-center justify-center z-10 text-text-muted">
-                          <ChevronDown size={10} className="rotate-[-90deg]" />
+                          <CaretDown size={10} className="rotate-[-90deg]" />
                         </div>
                       )}
                     </div>
@@ -1282,7 +1269,7 @@ export default function OutreachHubPage() {
 
                   >
                     <h3 className="text-sm font-semibold flex items-center gap-2">
-                      <Zap size={14} className="text-brand-accent" /> New Campaign
+                      <Lightning size={14} className="text-brand-accent" /> New Campaign
                     </h3>
 
                     {/* Presets */}
@@ -1355,10 +1342,10 @@ export default function OutreachHubPage() {
                       <label className="text-[10px] text-text-muted block mb-2">Channels</label>
                       <div className="flex gap-3">
                         {([
-                          { key: "email" as const, label: "Email", icon: <Mail size={14} /> },
-                          { key: "sms" as const, label: "SMS", icon: <Smartphone size={14} /> },
+                          { key: "email" as const, label: "Email", icon: <Envelope size={14} /> },
+                          { key: "sms" as const, label: "SMS", icon: <DeviceMobile size={14} /> },
                           { key: "calls" as const, label: "Calls", icon: <PhoneCall size={14} /> },
-                          { key: "dms" as const, label: "DMs", icon: <MessageSquare size={14} /> },
+                          { key: "dms" as const, label: "DMs", icon: <Chat size={14} /> },
                         ]).map(ch => (
                           <button key={ch.key} onClick={() => setNewCampaign(p => ({ ...p, channels: { ...p.channels, [ch.key]: !p.channels[ch.key] } }))}
                             className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs border transition-all ${
@@ -1472,7 +1459,7 @@ export default function OutreachHubPage() {
                         <button onClick={() => deleteCampaign(campaign.id)}
                           aria-label={`Delete campaign: ${campaign.name}`}
                           className="text-[10px] px-2 py-1.5 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10">
-                          <Trash2 size={10} />
+                          <Trash size={10} />
                         </button>
                       </div>
                     </div>
@@ -1551,7 +1538,7 @@ export default function OutreachHubPage() {
                       }}>
                       <div className="flex items-center justify-between mb-1">
                         <h3 className={`text-xs font-semibold ${activeSequence === seq.id ? "text-brand-accent" : ""}`}>{seq.name}</h3>
-                        {activeSequence === seq.id && <CircleDot size={12} className="text-brand-accent" />}
+                        {activeSequence === seq.id && <CircleDashed size={12} className="text-brand-accent" />}
                       </div>
                       <p className="text-[9px] text-text-muted mb-2">{seq.description}</p>
                       <div className="flex items-center gap-2">
@@ -1571,7 +1558,7 @@ export default function OutreachHubPage() {
                 {activeSequence && (
                   <PrismPanel padding="p-4" className="space-y-4">
                     <h3 className="text-xs font-semibold flex items-center gap-2">
-                      <Activity size={12} className="text-brand-accent" /> Sequence Timeline: {sequences.find(s => s.id === activeSequence)?.name}
+                      <Pulse size={12} className="text-brand-accent" /> Sequence Timeline: {sequences.find(s => s.id === activeSequence)?.name}
                     </h3>
                     <div className="relative pl-6">
                       {/* Vertical line */}
@@ -1610,7 +1597,7 @@ export default function OutreachHubPage() {
                 {showCustomBuilder && (
                   <div className="glass rounded-xl p-4 space-y-4">
                     <h3 className="text-xs font-semibold flex items-center gap-2">
-                      <Zap size={12} className="text-brand-accent" /> Build Custom Sequence
+                      <Lightning size={12} className="text-brand-accent" /> Build Custom Sequence
                     </h3>
                     <div>
                       <label className="text-[10px] text-text-muted block mb-1">Sequence Name</label>
@@ -1659,7 +1646,7 @@ export default function OutreachHubPage() {
                         <button onClick={() => setCustomSteps(prev => prev.filter((_, i) => i !== idx))}
                           aria-label="Remove this step"
                           className="p-1 hover:bg-red-500/10 rounded mt-3">
-                          <Trash2 size={12} className="text-text-muted hover:text-red-400" />
+                          <Trash size={12} className="text-text-muted hover:text-red-400" />
                         </button>
                       </div>
                     ))}
@@ -1671,7 +1658,7 @@ export default function OutreachHubPage() {
                       </button>
                       <button onClick={saveCustomSequence}
                         className="btn-pill text-xs flex items-center gap-1.5 ml-auto">
-                        <Save size={12} /> Save Sequence
+                        <FloppyDisk size={12} /> FloppyDisk Sequence
                       </button>
                     </div>
                   </div>
@@ -1689,9 +1676,9 @@ export default function OutreachHubPage() {
                   <div className="tab-pill-strip">
                     {([
                       { key: "calls" as TemplateSubTab, label: "Calls", icon: <PhoneCall size={12} />, count: callTemplates.length },
-                      { key: "sms" as TemplateSubTab, label: "SMS", icon: <Smartphone size={12} />, count: smsTemplates.length },
-                      { key: "email" as TemplateSubTab, label: "Email", icon: <Mail size={12} />, count: emailTemplates.length },
-                      { key: "dms" as TemplateSubTab, label: "DMs", icon: <MessageSquare size={12} />, count: dmTemplates.length },
+                      { key: "sms" as TemplateSubTab, label: "SMS", icon: <DeviceMobile size={12} />, count: smsTemplates.length },
+                      { key: "email" as TemplateSubTab, label: "Email", icon: <Envelope size={12} />, count: emailTemplates.length },
+                      { key: "dms" as TemplateSubTab, label: "DMs", icon: <Chat size={12} />, count: dmTemplates.length },
                     ]).map((t, index) => (
                       <motion.button
                         key={t.key}
@@ -1738,7 +1725,7 @@ export default function OutreachHubPage() {
                     </div>
                     <div className="space-y-3">
                       <h2 className="text-sm font-semibold flex items-center gap-2">
-                        <Settings size={14} className="text-text-muted" /> Call Settings
+                        <Gear size={14} className="text-text-muted" /> Call Gear
                       </h2>
                       <PrismPanel padding="p-4" className="space-y-4">
                         <div>
@@ -1806,7 +1793,7 @@ export default function OutreachHubPage() {
                     <div className="lg:col-span-2 space-y-3">
                       <div className="flex items-center justify-between">
                         <h2 className="text-sm font-semibold flex items-center gap-2">
-                          <Smartphone size={14} className="text-green-400" /> SMS Templates
+                          <DeviceMobile size={14} className="text-green-400" /> SMS Templates
                         </h2>
                         <button onClick={() => addTemplate("sms")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(212,255,0,0.2)] flex items-center gap-1">
                           <Plus size={10} /> Add Template
@@ -1821,7 +1808,7 @@ export default function OutreachHubPage() {
                     </div>
                     <div className="space-y-3">
                       <h2 className="text-sm font-semibold flex items-center gap-2">
-                        <Settings size={14} className="text-text-muted" /> SMS Settings
+                        <Gear size={14} className="text-text-muted" /> SMS Gear
                       </h2>
                       <PrismPanel padding="p-4" className="space-y-4">
                         <div className="flex items-center justify-between">
@@ -1845,7 +1832,7 @@ export default function OutreachHubPage() {
                             className="input w-full text-xs" />
                         </div>
                         <div>
-                          <label className="text-[10px] text-text-muted block mb-1">Send Window</label>
+                          <label className="text-[10px] text-text-muted block mb-1">PaperPlaneTilt Window</label>
                           <div className="flex items-center gap-2">
                             <input type="time" value={smsSettings.sendWindow.start}
                               onChange={e => setSmsSettings(p => ({ ...p, sendWindow: { ...p.sendWindow, start: e.target.value } }))}
@@ -1890,7 +1877,7 @@ export default function OutreachHubPage() {
                     <div className="lg:col-span-2 space-y-3">
                       <div className="flex items-center justify-between">
                         <h2 className="text-sm font-semibold flex items-center gap-2">
-                          <Mail size={14} className="text-brand-accent" /> Email Templates
+                          <Envelope size={14} className="text-brand-accent" /> Email Templates
                         </h2>
                         <button onClick={() => addTemplate("email")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(212,255,0,0.2)] flex items-center gap-1">
                           <Plus size={10} /> Add Template
@@ -1905,7 +1892,7 @@ export default function OutreachHubPage() {
                     </div>
                     <div className="space-y-3">
                       <h2 className="text-sm font-semibold flex items-center gap-2">
-                        <Settings size={14} className="text-text-muted" /> Email Settings
+                        <Gear size={14} className="text-text-muted" /> Email Gear
                       </h2>
                       <PrismPanel padding="p-4" className="space-y-4">
                         <div className="flex items-center justify-between">
@@ -1962,7 +1949,7 @@ export default function OutreachHubPage() {
                     <div className="lg:col-span-2 space-y-3">
                       <div className="flex items-center justify-between">
                         <h2 className="text-sm font-semibold flex items-center gap-2">
-                          <MessageSquare size={14} className="text-indigo-400" /> Social DM Templates
+                          <Chat size={14} className="text-indigo-400" /> Social DM Templates
                         </h2>
                         <button onClick={() => addTemplate("dms")} className="text-[10px] px-3 py-1.5 rounded-lg border border-dashed border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(212,255,0,0.2)] flex items-center gap-1">
                           <Plus size={10} /> Add Template
@@ -1990,7 +1977,7 @@ export default function OutreachHubPage() {
                     </div>
                     <div className="space-y-3">
                       <h2 className="text-sm font-semibold flex items-center gap-2">
-                        <Settings size={14} className="text-text-muted" /> DM Settings
+                        <Gear size={14} className="text-text-muted" /> DM Gear
                       </h2>
                       <PrismPanel padding="p-4" className="space-y-4">
                         <div className="flex items-center justify-between">
@@ -2036,7 +2023,7 @@ export default function OutreachHubPage() {
                             className="input w-full text-xs" />
                         </div>
                         <div>
-                          <label className="text-[10px] text-text-muted block mb-1">Send Window</label>
+                          <label className="text-[10px] text-text-muted block mb-1">PaperPlaneTilt Window</label>
                           <div className="flex items-center gap-2">
                             <input type="time" value={dmSettings.sendWindow.start}
                               onChange={e => setDmSettings(p => ({ ...p, sendWindow: { ...p.sendWindow, start: e.target.value } }))}
@@ -2124,14 +2111,14 @@ export default function OutreachHubPage() {
                 >
                   <div className="p-4 space-y-4">
                   <h3 className="text-xs font-semibold flex items-center gap-2">
-                    <BarChart3 size={12} className="text-brand-accent" /> Channel Performance
+                    <ChartBar size={12} className="text-brand-accent" /> Channel Performance
                   </h3>
                   <div className="space-y-3">
                     {[
-                      { channel: "Email", icon: <Mail size={14} />, color: "bg-brand-accent", sent: 0, opened: 0, replied: 0 },
-                      { channel: "SMS", icon: <Smartphone size={14} />, color: "bg-green-400", sent: 0, opened: 0, replied: 0 },
+                      { channel: "Email", icon: <Envelope size={14} />, color: "bg-brand-accent", sent: 0, opened: 0, replied: 0 },
+                      { channel: "SMS", icon: <DeviceMobile size={14} />, color: "bg-green-400", sent: 0, opened: 0, replied: 0 },
                       { channel: "Calls", icon: <PhoneCall size={14} />, color: "bg-emerald-400", sent: 0, opened: 0, replied: 0 },
-                      { channel: "DMs", icon: <MessageSquare size={14} />, color: "bg-indigo-400", sent: 0, opened: 0, replied: 0 },
+                      { channel: "DMs", icon: <Chat size={14} />, color: "bg-indigo-400", sent: 0, opened: 0, replied: 0 },
                     ].map(ch => (
                       <div key={ch.channel} className="space-y-1.5">
                         <div className="flex items-center gap-2 text-xs">
@@ -2225,10 +2212,10 @@ export default function OutreachHubPage() {
             {/* ------------------------------------------------------------ */}
             {tab === "settings" && (
               <div className="max-w-2xl space-y-4">
-                {/* Global AI Settings */}
+                {/* Global AI Gear */}
                 <PrismPanel padding="p-5" className="space-y-5">
                   <h2 className="text-sm font-semibold flex items-center gap-2">
-                    <Sparkles size={14} className="text-brand-accent" /> Global AI Settings
+                    <Sparkle size={14} className="text-brand-accent" /> Global AI Gear
                   </h2>
                   <p className="text-[10px] text-text-muted">These settings apply across all outreach channels. They control how the AI generates and personalizes messages.</p>
 
@@ -2292,18 +2279,18 @@ export default function OutreachHubPage() {
                 {/* Daily Limits */}
                 <PrismPanel padding="p-4" className="space-y-4">
                   <h2 className="text-sm font-semibold flex items-center gap-2">
-                    <AlertCircle size={14} className="text-brand-accent" /> Daily Limits
+                    <WarningCircle size={14} className="text-brand-accent" /> Daily Limits
                   </h2>
                   <p className="text-[10px] text-text-muted">Maximum number of outreach actions per day across all campaigns.</p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <div>
-                      <label className="text-[10px] text-text-muted block mb-1 flex items-center gap-1"><Mail size={10} /> Max Emails</label>
+                      <label className="text-[10px] text-text-muted block mb-1 flex items-center gap-1"><Envelope size={10} /> Max Emails</label>
                       <input type="number" value={dailyLimits.email} min={1} max={500}
                         onChange={e => setDailyLimits(p => ({ ...p, email: Number(e.target.value) }))}
                         className="input w-full text-xs" />
                     </div>
                     <div>
-                      <label className="text-[10px] text-text-muted block mb-1 flex items-center gap-1"><Smartphone size={10} /> Max SMS</label>
+                      <label className="text-[10px] text-text-muted block mb-1 flex items-center gap-1"><DeviceMobile size={10} /> Max SMS</label>
                       <input type="number" value={dailyLimits.sms} min={1} max={500}
                         onChange={e => setDailyLimits(p => ({ ...p, sms: Number(e.target.value) }))}
                         className="input w-full text-xs" />
@@ -2315,7 +2302,7 @@ export default function OutreachHubPage() {
                         className="input w-full text-xs" />
                     </div>
                     <div>
-                      <label className="text-[10px] text-text-muted block mb-1 flex items-center gap-1"><MessageSquare size={10} /> Max DMs</label>
+                      <label className="text-[10px] text-text-muted block mb-1 flex items-center gap-1"><Chat size={10} /> Max DMs</label>
                       <input type="number" value={dailyLimits.dms} min={1} max={200}
                         onChange={e => setDailyLimits(p => ({ ...p, dms: Number(e.target.value) }))}
                         className="input w-full text-xs" />
@@ -2353,7 +2340,7 @@ export default function OutreachHubPage() {
                 {/* Default Target Mode + Timezone + Working Hours */}
                 <PrismPanel padding="p-4" className="space-y-4">
                   <h2 className="text-sm font-semibold flex items-center gap-2">
-                    <Settings size={14} className="text-brand-accent" /> General
+                    <Gear size={14} className="text-brand-accent" /> General
                   </h2>
 
                   <div>

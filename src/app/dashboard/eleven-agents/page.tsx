@@ -1,12 +1,7 @@
 "use client";
+import { ArrowRight, ArrowsClockwise, Calendar, ChartBar, Check, CircleNotch, Clock, Copy, FileText, Microphone, Phone, PhoneCall, Plus, Shield, SpeakerHigh, Trash, TrendUp, Users, Warning, X } from "@phosphor-icons/react";
 
 import { useState, useEffect, useCallback } from "react";
-import {
-  Phone, PhoneCall, Plus, RefreshCw,
-  Clock, Trash2, X, Loader2, Check,
-  BarChart3, FileText, Mic, Users, AlertTriangle, Volume2,
-  TrendingUp, Calendar, Shield, ArrowRight, Copy
-} from "lucide-react";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -260,7 +255,7 @@ export default function ElevenAgentsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button onClick={() => { loadAgents(); loadVoices(); }} disabled={apiLoading}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/15 transition-all disabled:opacity-50">
-                  <RefreshCw size={12} className={apiLoading ? "animate-spin" : ""} /> {apiLoading ? "Loading..." : "Refresh"}
+                  <ArrowsClockwise size={12} className={apiLoading ? "animate-spin" : ""} /> {apiLoading ? "Loading..." : "Refresh"}
                 </button>
       </div>
     </div>{/* Editorial Bento */}<div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
@@ -309,7 +304,7 @@ export default function ElevenAgentsPage() {
                 {/* Error / Success Banners */}
                 {apiError && (
                   <div className="flex items-center gap-2 p-3 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 text-[11px]">
-                    <AlertTriangle size={14} />
+                    <Warning size={14} />
                     <span className="flex-1">{apiError}</span>
                     <button onClick={() => setApiError("")} className="hover:text-red-900"><X size={12} /></button>
                   </div>
@@ -327,7 +322,7 @@ export default function ElevenAgentsPage() {
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="text-sm font-semibold flex items-center gap-2">
                       <Phone size={14} /> Your Agents
-                      {apiLoading && <Loader2 size={12} className="animate-spin text-text-muted" />}
+                      {apiLoading && <CircleNotch size={12} className="animate-spin text-text-muted" />}
                       <span className="text-[9px] text-text-muted font-normal">({liveAgents.length} from ElevenLabs)</span>
                     </h2>
                     <button onClick={() => { setShowCreateForm(!showCreateForm); if (!showCreateForm) handleLoadDefaults(); }}
@@ -370,7 +365,7 @@ export default function ElevenAgentsPage() {
                       <div className="flex items-center gap-2">
                         <button onClick={handleCreateAgent} disabled={createLoading || !createForm.name.trim()}
                           className="px-4 py-2 rounded-full bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center gap-2">
-                          {createLoading ? <><Loader2 size={12} className="animate-spin" /> Creating...</> : <><Plus size={12} /> Create Agent</>}
+                          {createLoading ? <><CircleNotch size={12} className="animate-spin" /> Creating...</> : <><Plus size={12} /> Create Agent</>}
                         </button>
                         <button onClick={handleLoadDefaults} className="px-3 py-2 rounded-lg border border-border-subtle text-xs text-text-muted hover:text-text-secondary transition-all">
                           Load Default Script
@@ -404,7 +399,7 @@ export default function ElevenAgentsPage() {
                               </div>
                               <button onClick={() => handleDeleteAgent(agentId)}
                                 className="p-1.5 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-all">
-                                <Trash2 size={12} />
+                                <Trash size={12} />
                               </button>
                             </div>
                             <div className="grid grid-cols-3 gap-2 text-[9px] text-text-muted">
@@ -504,7 +499,7 @@ export default function ElevenAgentsPage() {
                       </h2>
                       <button onClick={() => loadAgents()} disabled={apiLoading}
                         className="text-[10px] px-3 py-1.5 rounded-lg border border-border-subtle text-text-muted hover:text-text-secondary transition-all disabled:opacity-50 flex items-center gap-1">
-                        <RefreshCw size={10} className={apiLoading ? "animate-spin" : ""} /> Refresh
+                        <ArrowsClockwise size={10} className={apiLoading ? "animate-spin" : ""} /> Refresh
                       </button>
                     </div>
                     <div className="rounded-xl border border-border-subtle overflow-hidden">
@@ -603,9 +598,9 @@ export default function ElevenAgentsPage() {
             )}{/* ═══ SENTIMENT TAB ═══ */}{activeTab === "Sentiment" && (
               <div className="space-y-4">
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
-                  <h2 className="text-sm font-semibold mb-3 flex items-center gap-2 text-text-primary"><TrendingUp size={14} className="text-brand-accent" /> Sentiment Analysis</h2>
+                  <h2 className="text-sm font-semibold mb-3 flex items-center gap-2 text-text-primary"><TrendUp size={14} className="text-brand-accent" /> Sentiment Analysis</h2>
                   <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <TrendingUp size={24} className="text-text-muted mb-2" />
+                    <TrendUp size={24} className="text-text-muted mb-2" />
                     <p className="text-xs text-text-muted">No sentiment data yet.</p>
                     <p className="text-[10px] text-text-muted mt-1">Sentiment is tracked automatically as calls complete.</p>
                   </div>
@@ -615,13 +610,13 @@ export default function ElevenAgentsPage() {
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="text-sm font-semibold flex items-center gap-2 text-text-primary">
-                    <Mic size={14} className="text-brand-accent" /> ElevenLabs Voices
-                    {voicesLoading && <Loader2 size={12} className="animate-spin text-text-muted" />}
+                    <Microphone size={14} className="text-brand-accent" /> ElevenLabs Voices
+                    {voicesLoading && <CircleNotch size={12} className="animate-spin text-text-muted" />}
                     <span className="text-[9px] text-text-muted font-normal">({liveVoices.length} available)</span>
                   </h2>
                   <button onClick={() => loadVoices()} disabled={voicesLoading}
                     className="text-[10px] px-3 py-1.5 rounded-lg border border-border-subtle text-text-muted hover:text-text-secondary transition-all disabled:opacity-50 flex items-center gap-1">
-                    <RefreshCw size={10} className={voicesLoading ? "animate-spin" : ""} /> Refresh
+                    <ArrowsClockwise size={10} className={voicesLoading ? "animate-spin" : ""} /> Refresh
                   </button>
                 </div>
                 <div className="space-y-2">
@@ -636,7 +631,7 @@ export default function ElevenAgentsPage() {
                     return (
                       <div key={voiceId} className="flex items-center gap-3 p-3 rounded-lg border border-border-subtle">
                         <div className="w-10 h-10 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
-                          <Volume2 size={16} className="text-brand-accent" />
+                          <SpeakerHigh size={16} className="text-brand-accent" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-[11px] font-medium text-text-primary">{name}</p>
@@ -657,7 +652,7 @@ export default function ElevenAgentsPage() {
                     );
                   }) : !voicesLoading ? (
                     <div className="p-6 text-center border border-dashed border-border-subtle rounded-lg">
-                      <Volume2 size={24} className="text-text-muted mx-auto mb-2" />
+                      <SpeakerHigh size={24} className="text-text-muted mx-auto mb-2" />
                       <p className="text-xs text-text-muted">No voices loaded</p>
                       <button onClick={() => loadVoices()}
                         className="mt-2 text-[10px] px-3 py-1.5 bg-[rgba(212,255,0,0.08)] text-brand-accent rounded-lg border border-[rgba(212,255,0,0.25)] hover:bg-[rgba(212,255,0,0.14)] transition-all">
@@ -753,7 +748,7 @@ export default function ElevenAgentsPage() {
             )}{/* ═══ ANALYTICS TAB ═══ */}{activeTab === "Analytics" && (
               <div className="space-y-4">
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
-                  <h2 className="text-sm font-semibold mb-3 flex items-center gap-2 text-text-primary"><BarChart3 size={14} className="text-brand-accent" /> Call Analytics</h2>
+                  <h2 className="text-sm font-semibold mb-3 flex items-center gap-2 text-text-primary"><ChartBar size={14} className="text-brand-accent" /> Call Analytics</h2>
                   <div className="space-y-3">
                     <div>
                       <p className="text-[9px] text-text-muted uppercase mb-2">Outcome Distribution</p>
@@ -800,7 +795,7 @@ export default function ElevenAgentsPage() {
                   ))}
                   <div className="p-3 rounded-lg border border-amber-500/30 bg-amber-500/10">
                     <div className="flex items-center gap-2 mb-1">
-                      <AlertTriangle size={12} className="text-amber-400" />
+                      <Warning size={12} className="text-amber-400" />
                       <span className="text-[10px] font-semibold text-amber-400">Important</span>
                     </div>
                     <p className="text-[10px] text-text-muted">Ensure all AI voice agents comply with local and federal regulations. Always disclose that the call is from an AI system when required by law.</p>

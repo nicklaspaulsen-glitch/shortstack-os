@@ -1,3 +1,5 @@
+import { ArrowRight, Briefcase, Check, GraduationCap, House, ShoppingBag } from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -11,15 +13,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import {
-  Briefcase,
-  Home,
-  GraduationCap,
-  ShoppingBag,
-  ArrowRight,
-  Check,
-  type LucideIcon,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface VerticalSummary {
@@ -42,8 +35,8 @@ interface VerticalSummary {
   };
 }
 
-const ICON_MAP: Record<string, LucideIcon> = {
-  Home,
+const ICON_MAP: Record<string, Icon> = {
+  House,
   GraduationCap,
   ShoppingBag,
   Briefcase,

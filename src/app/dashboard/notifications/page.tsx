@@ -1,3 +1,4 @@
+import { ArrowSquareOut, ArrowsClockwise, Bell, CaretRight, Check, CheckCircle, CircleNotch, Eye, Funnel, Info, Lightning, MagnifyingGlass, PaperPlaneTilt, Pulse, Sparkle, Warning, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -9,11 +10,6 @@ import PageAI from "@/components/page-ai";
 import EmptyState from "@/components/empty-state";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-import {
-  Bell, Search, Zap, Send, Sparkles, Activity, AlertTriangle,
-  CheckCircle2, Eye, ExternalLink, Loader, RefreshCw,
-  Info, XCircle, ChevronRight, Filter, Check,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /* -- Types -- */
@@ -33,11 +29,11 @@ interface Notification {
 /* -- Tab configuration -- */
 const TABS: { key: NotifType; label: string; icon: React.ReactNode }[] = [
   { key: "all",       label: "All",        icon: <Bell size={13} /> },
-  { key: "lead",      label: "Leads",      icon: <Zap size={13} /> },
-  { key: "outreach",  label: "Outreach",   icon: <Send size={13} /> },
-  { key: "autopilot", label: "Auto-Pilot", icon: <Sparkles size={13} /> },
-  { key: "system",    label: "System",     icon: <Activity size={13} /> },
-  { key: "alert",     label: "Alerts",     icon: <AlertTriangle size={13} /> },
+  { key: "lead",      label: "Leads",      icon: <Lightning size={13} /> },
+  { key: "outreach",  label: "Outreach",   icon: <PaperPlaneTilt size={13} /> },
+  { key: "autopilot", label: "Auto-Pilot", icon: <Sparkle size={13} /> },
+  { key: "system",    label: "System",     icon: <Pulse size={13} /> },
+  { key: "alert",     label: "Alerts",     icon: <Warning size={13} /> },
 ];
 
 /* -- Notification type styling -- */
@@ -49,35 +45,35 @@ const TYPE_CONFIG: Record<string, {
   label: string;
 }> = {
   lead: {
-    icon: <Zap size={16} />,
+    icon: <Lightning size={16} />,
     color: "text-emerald-400",
     bg: "bg-emerald-500/10",
     border: "border-emerald-500/30",
     label: "Lead",
   },
   outreach: {
-    icon: <Send size={16} />,
+    icon: <PaperPlaneTilt size={16} />,
     color: "text-brand-accent",
     bg: "bg-[rgba(212,255,0,0.08)]",
     border: "border-[rgba(212,255,0,0.25)]",
     label: "Outreach",
   },
   autopilot: {
-    icon: <Sparkles size={16} />,
+    icon: <Sparkle size={16} />,
     color: "text-brand-accent",
     bg: "bg-[rgba(212,255,0,0.08)]",
     border: "border-[rgba(212,255,0,0.25)]",
     label: "Auto-Pilot",
   },
   system: {
-    icon: <Activity size={16} />,
+    icon: <Pulse size={16} />,
     color: "text-text-muted",
     bg: "bg-gray-500/10",
     border: "border-gray-500/30",
     label: "System",
   },
   alert: {
-    icon: <AlertTriangle size={16} />,
+    icon: <Warning size={16} />,
     color: "text-red-400",
     bg: "bg-red-500/10",
     border: "border-red-500/30",
@@ -91,14 +87,14 @@ const TYPE_CONFIG: Record<string, {
     label: "Info",
   },
   success: {
-    icon: <CheckCircle2 size={16} />,
+    icon: <CheckCircle size={16} />,
     color: "text-emerald-400",
     bg: "bg-emerald-500/10",
     border: "border-emerald-500/30",
     label: "Success",
   },
   warning: {
-    icon: <AlertTriangle size={16} />,
+    icon: <Warning size={16} />,
     color: "text-brand-accent",
     bg: "bg-[rgba(212,255,0,0.08)]",
     border: "border-[rgba(212,255,0,0.25)]",
@@ -314,7 +310,7 @@ export default function NotificationsPage() {
                     className="p-2 rounded-xl text-text-primary bg-white/8 border border-white/12 hover:bg-white/10 transition-colors"
                     title="Refresh"
                   >
-                    <RefreshCw size={14} />
+                    <ArrowsClockwise size={14} />
                   </button>
                   {unreadCount > 0 && (
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
@@ -323,21 +319,21 @@ export default function NotificationsPage() {
                         disabled={markingAll}
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-text-primary bg-white/8 border border-white/12 hover:bg-white/10 transition-colors disabled:opacity-50"
                       >
-                        {markingAll ? <Loader size={12} className="animate-spin" /> : <Check size={12} />}
+                        {markingAll ? <CircleNotch size={12} className="animate-spin" /> : <Check size={12} />}
                         Mark All Read
                       </button>
                     </motion.div>
                   )}
                 </>
       </div>
-    </div>{/* --- Search + Filter Tabs --- */}<div className="space-y-3">
-              {/* Search */}
+    </div>{/* --- MagnifyingGlass + Funnel Tabs --- */}<div className="space-y-3">
+              {/* MagnifyingGlass */}
               <div className="relative">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   type="text"
-                  placeholder="Search notifications..."
-                  aria-label="Search notifications"
+                  placeholder="MagnifyingGlass notifications..."
+                  aria-label="MagnifyingGlass notifications"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="glass w-full pl-9 pr-4 py-2.5 rounded-lg text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-[rgba(212,255,0,0.25)] focus:border-[rgba(212,255,0,0.25)] transition-all"
@@ -372,21 +368,21 @@ export default function NotificationsPage() {
               <NotificationSkeleton />
             ) : error ? (
               <div className="glass rounded-xl p-8 text-center">
-                <AlertTriangle size={24} className="mx-auto mb-2 text-danger" />
+                <Warning size={24} className="mx-auto mb-2 text-danger" />
                 <p className="text-sm text-text-primary font-medium mb-1">Failed to load notifications</p>
                 <p className="text-xs text-text-muted mb-4">{error}</p>
                 <button
                   onClick={fetchNotifications}
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium text-brand-accent bg-[rgba(212,255,0,0.08)] hover:bg-[rgba(212,255,0,0.12)] transition-colors"
                 >
-                  <RefreshCw size={12} />
+                  <ArrowsClockwise size={12} />
                   Try Again
                 </button>
               </div>
             ) : filtered.length === 0 ? (
               searchQuery || activeTab !== "all" ? (
                 <div className="glass rounded-xl p-8 text-center">
-                  <Filter size={20} className="mx-auto mb-2 text-text-muted/30" />
+                  <Funnel size={20} className="mx-auto mb-2 text-text-muted/30" />
                   <p className="text-sm text-text-primary font-medium mb-1">No matching notifications</p>
                   <p className="text-xs text-text-muted">
                     {searchQuery ? `No results for "${searchQuery}"` : `No ${activeTab} notifications yet`}
@@ -486,13 +482,13 @@ export default function NotificationsPage() {
                                       className="text-[10px] text-brand-accent hover:text-brand-accent/80 flex items-center gap-1 font-medium transition-colors"
                                     >
                                       {actionLabel}
-                                      <ExternalLink size={9} />
+                                      <ArrowSquareOut size={9} />
                                     </Link>
                                   )}
                                   {actionLabel && !n.link && (
                                     <span className="text-[10px] text-[rgba(212,255,0,0.5)] flex items-center gap-1">
                                       {actionLabel}
-                                      <ChevronRight size={9} />
+                                      <CaretRight size={9} />
                                     </span>
                                   )}
                                 </div>

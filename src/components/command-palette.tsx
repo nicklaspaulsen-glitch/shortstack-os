@@ -1,15 +1,8 @@
 "use client";
+import { BookOpen, Briefcase, Buildings, Calendar, Camera, ChartBar, Chat, CircleNotch, Crown, Envelope, Eye, FileText, FilmStrip, Gear, GitBranch, Globe, Headphones, Image, Lightning, Link, MagnifyingGlass, Megaphone, Palette, PaperPlaneTilt, PenNib, Phone, Pulse, Robot, Sparkle, SquaresFour, Star, Sun, Target, Tray, UserCheck, Users } from "@phosphor-icons/react";
 
 import { useEffect, useState, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Search, LayoutDashboard, BarChart3, Zap, Users, FileText,
-  Sparkles, Bot, Film, Megaphone, Globe, Activity, Settings,
-  Send, Star, Mail, Eye, PenTool, Target, Crown,
-  Camera, Link2, Sun, Calendar, ImageIcon, Phone, Kanban,
-  Headphones, Palette, BookOpen, Inbox, MessageSquare, GitBranch,
-  Briefcase, Building2, UserCheck, Loader2,
-} from "lucide-react";
 
 interface CommandItem {
   id: string;
@@ -34,12 +27,12 @@ type FlatItem =
   | { kind: "record"; data: SearchResult };
 
 const RECORD_ICONS: Record<string, React.ReactNode> = {
-  lead: <Zap size={14} className="text-amber-400" />,
-  client: <Building2 size={14} className="text-[#D4FF00]" />,
+  lead: <Lightning size={14} className="text-amber-400" />,
+  client: <Buildings size={14} className="text-[#D4FF00]" />,
   deal: <Briefcase size={14} className="text-emerald-400" />,
-  content: <Film size={14} className="text-violet-400" />,
+  content: <FilmStrip size={14} className="text-violet-400" />,
   team: <UserCheck size={14} className="text-slate-400" />,
-  action: <Bot size={14} className="text-[#D4FF00]" />,
+  action: <Robot size={14} className="text-[#D4FF00]" />,
 };
 
 export default function CommandPalette() {
@@ -56,65 +49,65 @@ export default function CommandPalette() {
 
   const commands: CommandItem[] = [
     // ── Navigation ──
-    { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={14} />, action: () => nav("/dashboard"), category: "Navigate", keywords: "home main" },
-    { id: "analytics", label: "Analytics", icon: <BarChart3 size={14} />, action: () => nav("/dashboard/analytics"), category: "Navigate", keywords: "charts stats metrics" },
-    { id: "inbox", label: "Inbox", icon: <Inbox size={14} />, action: () => nav("/dashboard/inbox"), category: "Navigate", keywords: "messages unified notifications" },
+    { id: "dashboard", label: "Dashboard", icon: <SquaresFour size={14} />, action: () => nav("/dashboard"), category: "Navigate", keywords: "home main" },
+    { id: "analytics", label: "Analytics", icon: <ChartBar size={14} />, action: () => nav("/dashboard/analytics"), category: "Navigate", keywords: "charts stats metrics" },
+    { id: "inbox", label: "Tray", icon: <Tray size={14} />, action: () => nav("/dashboard/inbox"), category: "Navigate", keywords: "messages unified notifications" },
     { id: "clients", label: "Clients", icon: <Users size={14} />, action: () => nav("/dashboard/clients"), category: "Navigate", keywords: "manage portal accounts" },
     { id: "crm", label: "CRM", icon: <Users size={14} />, action: () => nav("/dashboard/crm"), category: "Navigate", keywords: "contacts leads pipeline" },
     { id: "deals", label: "Deals Pipeline", icon: <Briefcase size={14} />, action: () => nav("/dashboard/deals"), category: "Navigate", keywords: "pipeline sales revenue won lost" },
     { id: "calendar", label: "Calendar", icon: <Calendar size={14} />, action: () => nav("/dashboard/calendar"), category: "Navigate", keywords: "schedule appointment meeting" },
-    { id: "conversations", label: "Conversations", icon: <MessageSquare size={14} />, action: () => nav("/dashboard/conversations"), category: "Navigate", keywords: "chat sms replies" },
+    { id: "conversations", label: "Conversations", icon: <Chat size={14} />, action: () => nav("/dashboard/conversations"), category: "Navigate", keywords: "chat sms replies" },
     { id: "reports", label: "AI Reports", icon: <FileText size={14} />, action: () => nav("/dashboard/reports"), category: "Navigate", keywords: "report client weekly monthly" },
-    { id: "leads", label: "Lead Finder", icon: <Search size={14} />, action: () => nav("/dashboard/scraper"), category: "Navigate", keywords: "scrape search find google maps" },
-    { id: "engine", label: "Lead Engine", icon: <Zap size={14} />, action: () => nav("/dashboard/leads"), category: "Navigate", keywords: "outreach dms pipeline" },
+    { id: "leads", label: "Lead Finder", icon: <MagnifyingGlass size={14} />, action: () => nav("/dashboard/scraper"), category: "Navigate", keywords: "scrape search find google maps" },
+    { id: "engine", label: "Lead Engine", icon: <Lightning size={14} />, action: () => nav("/dashboard/leads"), category: "Navigate", keywords: "outreach dms pipeline" },
     { id: "outreach", label: "Outreach Hub", icon: <Target size={14} />, action: () => nav("/dashboard/outreach-hub"), category: "Navigate", keywords: "tiers hot warm cold" },
     { id: "proposals", label: "Proposals", icon: <FileText size={14} />, action: () => nav("/dashboard/proposals"), category: "Navigate", keywords: "pitch deck pdf" },
-    { id: "agents", label: "AI Agents", icon: <Sparkles size={14} />, action: () => nav("/dashboard/services"), category: "Navigate", keywords: "tools services" },
+    { id: "agents", label: "AI Agents", icon: <Sparkle size={14} />, action: () => nav("/dashboard/services"), category: "Navigate", keywords: "tools services" },
     { id: "social", label: "Social Manager", icon: <Camera size={14} />, action: () => nav("/dashboard/social-manager"), category: "Navigate", keywords: "post schedule autopilot" },
-    { id: "scriptlab", label: "Script Lab", icon: <Sparkles size={14} />, action: () => nav("/dashboard/script-lab"), category: "Navigate", keywords: "write viral framework hooks" },
+    { id: "scriptlab", label: "Script Lab", icon: <Sparkle size={14} />, action: () => nav("/dashboard/script-lab"), category: "Navigate", keywords: "write viral framework hooks" },
     { id: "websites", label: "Website Builder", icon: <Globe size={14} />, action: () => nav("/dashboard/websites"), category: "Navigate", keywords: "build deploy site" },
-    { id: "design", label: "Design Studio", icon: <PenTool size={14} />, action: () => nav("/dashboard/design"), category: "Navigate", keywords: "canva midjourney" },
-    { id: "thumbnails", label: "Thumbnail Generator", icon: <ImageIcon size={14} />, action: () => nav("/dashboard/thumbnail-generator"), category: "Navigate", keywords: "thumbnail youtube cover image ai" },
-    { id: "production", label: "Production", icon: <Film size={14} />, action: () => nav("/dashboard/production"), category: "Navigate", keywords: "edit video footage editors" },
-    { id: "content", label: "Content AI", icon: <Film size={14} />, action: () => nav("/dashboard/content"), category: "Navigate", keywords: "scripts generate" },
+    { id: "design", label: "Design Studio", icon: <PenNib size={14} />, action: () => nav("/dashboard/design"), category: "Navigate", keywords: "canva midjourney" },
+    { id: "thumbnails", label: "Thumbnail Generator", icon: <Image size={14} />, action: () => nav("/dashboard/thumbnail-generator"), category: "Navigate", keywords: "thumbnail youtube cover image ai" },
+    { id: "production", label: "Production", icon: <FilmStrip size={14} />, action: () => nav("/dashboard/production"), category: "Navigate", keywords: "edit video footage editors" },
+    { id: "content", label: "Content AI", icon: <FilmStrip size={14} />, action: () => nav("/dashboard/content"), category: "Navigate", keywords: "scripts generate" },
     { id: "ads", label: "Ads Manager", icon: <Megaphone size={14} />, action: () => nav("/dashboard/ads-manager"), category: "Navigate", keywords: "meta google tiktok campaigns" },
-    { id: "automations", label: "Automations", icon: <Zap size={14} />, action: () => nav("/dashboard/automations"), category: "Navigate", keywords: "dm manychat templates" },
-    { id: "workflows", label: "Workflows", icon: <Zap size={14} />, action: () => nav("/dashboard/workflows"), category: "Navigate", keywords: "automation agent builder flow" },
+    { id: "automations", label: "Automations", icon: <Lightning size={14} />, action: () => nav("/dashboard/automations"), category: "Navigate", keywords: "dm manychat templates" },
+    { id: "workflows", label: "Workflows", icon: <Lightning size={14} />, action: () => nav("/dashboard/workflows"), category: "Navigate", keywords: "automation agent builder flow" },
     { id: "flow-builder", label: "Flow Builder", icon: <GitBranch size={14} />, action: () => nav("/dashboard/workflow-builder"), category: "Navigate", keywords: "flow workflow visual builder" },
-    { id: "trinity", label: "Trinity AI", icon: <Bot size={14} />, action: () => nav("/dashboard/trinity"), category: "Navigate", keywords: "assistant chat voice" },
+    { id: "trinity", label: "Trinity AI", icon: <Robot size={14} />, action: () => nav("/dashboard/trinity"), category: "Navigate", keywords: "assistant chat voice" },
     { id: "reviews", label: "Reviews", icon: <Star size={14} />, action: () => nav("/dashboard/reviews"), category: "Navigate", keywords: "google review respond" },
-    { id: "templates", label: "Email Templates", icon: <Mail size={14} />, action: () => nav("/dashboard/email-templates"), category: "Navigate", keywords: "email template copy" },
+    { id: "templates", label: "Email Templates", icon: <Envelope size={14} />, action: () => nav("/dashboard/email-templates"), category: "Navigate", keywords: "email template copy" },
     { id: "spy", label: "Competitor Spy", icon: <Eye size={14} />, action: () => nav("/dashboard/competitor"), category: "Navigate", keywords: "analyze research competitor" },
     { id: "agenthq", label: "Agent HQ", icon: <Crown size={14} />, action: () => nav("/dashboard/agent-supervisor"), category: "Navigate", keywords: "supervisor nexus chief monitor" },
-    { id: "integrations", label: "Integrations", icon: <Link2 size={14} />, action: () => nav("/dashboard/integrations-hub"), category: "Navigate", keywords: "connect oauth instagram facebook" },
-    { id: "ai-studio", label: "AI Studio", icon: <Sparkles size={14} />, action: () => nav("/dashboard/ai-studio"), category: "Navigate", keywords: "image generate upscale transcribe" },
+    { id: "integrations", label: "Integrations", icon: <Link size={14} />, action: () => nav("/dashboard/integrations-hub"), category: "Navigate", keywords: "connect oauth instagram facebook" },
+    { id: "ai-studio", label: "AI Studio", icon: <Sparkle size={14} />, action: () => nav("/dashboard/ai-studio"), category: "Navigate", keywords: "image generate upscale transcribe" },
     { id: "domains", label: "Domains", icon: <Globe size={14} />, action: () => nav("/dashboard/domains"), category: "Navigate", keywords: "domain dns register" },
     { id: "ai-caller", label: "AI Caller", icon: <Phone size={14} />, action: () => nav("/dashboard/eleven-agents"), category: "Navigate", keywords: "elevenlabs voice call" },
     { id: "voice-ai", label: "Voice AI", icon: <Headphones size={14} />, action: () => nav("/dashboard/voice-receptionist"), category: "Navigate", keywords: "voice receptionist ai" },
-    { id: "generations", label: "Generations", icon: <Sparkles size={14} />, action: () => nav("/dashboard/generations"), category: "Navigate", keywords: "ai history output" },
+    { id: "generations", label: "Generations", icon: <Sparkle size={14} />, action: () => nav("/dashboard/generations"), category: "Navigate", keywords: "ai history output" },
     { id: "content-plan", label: "Content Plan", icon: <Calendar size={14} />, action: () => nav("/dashboard/content-plan"), category: "Navigate", keywords: "content calendar schedule" },
     { id: "brand-kit", label: "Brand Kit", icon: <Palette size={14} />, action: () => nav("/dashboard/brand-kit"), category: "Navigate", keywords: "brand kit logo colors fonts" },
     { id: "brand-voice", label: "Brand Voice", icon: <BookOpen size={14} />, action: () => nav("/dashboard/brand-voice"), category: "Navigate", keywords: "brand voice tone writing style" },
-    { id: "workspaces", label: "Workspaces", icon: <Kanban size={14} />, action: () => nav("/dashboard/workspaces"), category: "Navigate", keywords: "workspaces teams" },
-    { id: "discord", label: "Discord", icon: <MessageSquare size={14} />, action: () => nav("/dashboard/discord"), category: "Navigate", keywords: "discord community chat" },
-    { id: "monitor", label: "System Monitor", icon: <Activity size={14} />, action: () => nav("/dashboard/monitor"), category: "Navigate", keywords: "health integrations status" },
+    { id: "workspaces", label: "Workspaces", icon: <SquaresFour size={14} />, action: () => nav("/dashboard/workspaces"), category: "Navigate", keywords: "workspaces teams" },
+    { id: "discord", label: "Discord", icon: <Chat size={14} />, action: () => nav("/dashboard/discord"), category: "Navigate", keywords: "discord community chat" },
+    { id: "monitor", label: "System Monitor", icon: <Pulse size={14} />, action: () => nav("/dashboard/monitor"), category: "Navigate", keywords: "health integrations status" },
     { id: "briefing", label: "Morning Briefing", icon: <Sun size={14} />, action: () => nav("/dashboard/briefing"), category: "Navigate", keywords: "daily report morning" },
     { id: "invoices", label: "Invoices", icon: <FileText size={14} />, action: () => nav("/dashboard/invoices"), category: "Navigate", keywords: "billing payments stripe money" },
-    { id: "sequences", label: "Email Sequences", icon: <Mail size={14} />, action: () => nav("/dashboard/sequences"), category: "Navigate", keywords: "drip campaign email followup" },
+    { id: "sequences", label: "Email Sequences", icon: <Envelope size={14} />, action: () => nav("/dashboard/sequences"), category: "Navigate", keywords: "drip campaign email followup" },
     { id: "forms", label: "Form Builder", icon: <FileText size={14} />, action: () => nav("/dashboard/forms"), category: "Navigate", keywords: "lead capture embed form" },
     { id: "team", label: "Team", icon: <Users size={14} />, action: () => nav("/dashboard/team"), category: "Navigate", keywords: "team members editors staff" },
     { id: "scheduling", label: "Scheduling", icon: <Calendar size={14} />, action: () => nav("/dashboard/scheduling"), category: "Navigate", keywords: "calendly meeting booking" },
-    { id: "forecast", label: "Forecast", icon: <BarChart3 size={14} />, action: () => nav("/dashboard/forecast"), category: "Navigate", keywords: "forecast predict revenue" },
+    { id: "forecast", label: "Forecast", icon: <ChartBar size={14} />, action: () => nav("/dashboard/forecast"), category: "Navigate", keywords: "forecast predict revenue" },
     { id: "community", label: "Community", icon: <Users size={14} />, action: () => nav("/dashboard/community"), category: "Navigate", keywords: "community posts discuss forum" },
-    { id: "settings", label: "Settings", icon: <Settings size={14} />, action: () => nav("/dashboard/settings"), category: "Navigate", keywords: "theme zoom sound" },
+    { id: "settings", label: "Gear", icon: <Gear size={14} />, action: () => nav("/dashboard/settings"), category: "Navigate", keywords: "theme zoom sound" },
 
     // ── Quick Actions ──
     { id: "new-client", label: "Add New Client", icon: <Users size={14} />, action: () => nav("/dashboard/onboard"), category: "Action", keywords: "create onboard new client" },
     { id: "new-proposal", label: "Generate Proposal", icon: <FileText size={14} />, action: () => nav("/dashboard/proposals"), category: "Action", keywords: "pitch create pdf proposal" },
-    { id: "scrape-leads", label: "Scrape Leads", icon: <Search size={14} />, action: () => nav("/dashboard/scraper"), category: "Action", keywords: "find search google maps leads" },
-    { id: "gen-script", label: "Generate Script", icon: <Sparkles size={14} />, action: () => nav("/dashboard/script-lab"), category: "Action", keywords: "write viral content script" },
+    { id: "scrape-leads", label: "Scrape Leads", icon: <MagnifyingGlass size={14} />, action: () => nav("/dashboard/scraper"), category: "Action", keywords: "find search google maps leads" },
+    { id: "gen-script", label: "Generate Script", icon: <Sparkle size={14} />, action: () => nav("/dashboard/script-lab"), category: "Action", keywords: "write viral content script" },
     { id: "build-site", label: "Build Website", icon: <Globe size={14} />, action: () => nav("/dashboard/websites"), category: "Action", keywords: "create website deploy" },
-    { id: "send-blast", label: "Send Email Blast", icon: <Send size={14} />, action: () => nav("/dashboard/leads"), category: "Action", keywords: "cold email outreach" },
+    { id: "send-blast", label: "PaperPlaneTilt Email Blast", icon: <PaperPlaneTilt size={14} />, action: () => nav("/dashboard/leads"), category: "Action", keywords: "cold email outreach" },
     { id: "talk-nexus", label: "Talk to Nexus (Chief)", icon: <Crown size={14} />, action: () => nav("/dashboard/agent-supervisor"), category: "Action", keywords: "boss agent status" },
   ];
 
@@ -253,16 +246,16 @@ export default function CommandPalette() {
             className="flex items-center gap-3 px-4 py-3.5"
             style={{ borderBottom: "1px solid rgba(212, 255, 0,0.10)" }}
           >
-            <Search size={16} className="text-[#4A4A5A] shrink-0" />
+            <MagnifyingGlass size={16} className="text-[#4A4A5A] shrink-0" />
             <input
               ref={inputRef}
               type="text"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder="Search commands, clients, deals, content…"
+              placeholder="MagnifyingGlass commands, clients, deals, content…"
               className="flex-1 bg-transparent text-sm text-[#F0F0F4] placeholder-[#4A4A5A] outline-none"
             />
-            {liveLoading && <Loader2 size={13} className="text-[#4A4A5A] animate-spin shrink-0" />}
+            {liveLoading && <CircleNotch size={13} className="text-[#4A4A5A] animate-spin shrink-0" />}
             <kbd className="hidden sm:inline-flex text-[9px] text-[#4A4A5A] px-1.5 py-0.5 rounded font-mono"
               style={{ background: "rgba(212, 255, 0,0.08)", border: "1px solid rgba(212, 255, 0,0.12)" }}>
               ESC
@@ -337,7 +330,7 @@ export default function CommandPalette() {
                         background: isSelected ? "rgba(212,255,0,0.14)" : "transparent",
                       }}
                     >
-                      <span className="shrink-0">{RECORD_ICONS[r.type] ?? <Search size={14} className="text-[#4A4A5A]" />}</span>
+                      <span className="shrink-0">{RECORD_ICONS[r.type] ?? <MagnifyingGlass size={14} className="text-[#4A4A5A]" />}</span>
                       <div className="flex-1 min-w-0">
                         <p className={`text-xs font-medium truncate ${isSelected ? "text-[#93C5FD]" : "text-[#A8A8B2]"}`}>
                           {r.title}

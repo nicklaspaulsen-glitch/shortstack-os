@@ -1,4 +1,5 @@
 "use client";
+import { CircleNotch, Globe, XCircle } from "@phosphor-icons/react";
 
 /**
  * IntegrationsSettings — connected social accounts (via Zernio) and
@@ -6,7 +7,7 @@
  * social account data and renders the full integration grid.
  */
 
-import { Globe, Loader2, XCircle } from "lucide-react";
+
 import StatusBadge from "@/components/ui/status-badge";
 import InlineSocialConnect from "@/components/inline-social-connect";
 
@@ -53,7 +54,7 @@ export default function IntegrationsSettings({ socialAccounts, socialLoading, di
         <h3 className="text-xs text-text-muted uppercase tracking-wider mb-2">Connected Social Accounts</h3>
         {socialLoading ? (
           <div className="glass rounded-xl p-6 text-center">
-            <Loader2 size={16} className="animate-spin mx-auto text-text-muted" />
+            <CircleNotch size={16} className="animate-spin mx-auto text-text-muted" />
           </div>
         ) : socialAccounts.filter(a => a.is_active).length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -83,7 +84,7 @@ export default function IntegrationsSettings({ socialAccounts, socialLoading, di
                       className="text-xs text-red-400 hover:text-red-600 transition-colors px-2 py-1 rounded hover:bg-red-500/10 disabled:opacity-50"
                       title="Disconnect account">
                       {disconnectingSocial === account.id ? (
-                        <Loader2 size={12} className="animate-spin" />
+                        <CircleNotch size={12} className="animate-spin" />
                       ) : (
                         <XCircle size={14} />
                       )}

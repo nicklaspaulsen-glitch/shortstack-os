@@ -1,3 +1,4 @@
+import { BookOpen, Calendar, CaretRight, ChatCircle, Envelope, FileText, FolderOpen, Gear, Lightning, MapTrifold, Phone, Receipt, Shield, Sparkle, Star, Users } from "@phosphor-icons/react";
 /**
  * Public-facing /getting-started/[ownerSlug] page.
  *
@@ -11,24 +12,7 @@
 
 import { notFound } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
-import {
-  Sparkles,
-  Zap,
-  Map as MapIcon,
-  MessageCircle,
-  FolderOpen,
-  Receipt,
-  Calendar,
-  Users,
-  Shield,
-  Star,
-  Settings,
-  BookOpen,
-  Mail,
-  Phone,
-  FileText,
-  ChevronRight,
-} from "lucide-react";
+
 import { loadPublicGettingStartedDoc } from "@/lib/email-templates/getting-started";
 import type { GettingStartedSection, GettingStartedFaq } from "@/lib/email-templates/types";
 
@@ -48,20 +32,20 @@ interface BrandingPayload {
   support_email: string | null;
 }
 
-const ICON_MAP: Record<string, typeof Sparkles> = {
-  Sparkles,
-  Zap,
-  Map: MapIcon,
-  MessageCircle,
+const ICON_MAP: Record<string, typeof Sparkle> = {
+  Sparkle,
+  Lightning,
+  MapTrifold: MapTrifold,
+  ChatCircle,
   FolderOpen,
   Receipt,
   Calendar,
   Users,
   Shield,
   Star,
-  Settings,
+  Gear,
   BookOpen,
-  Mail,
+  Envelope,
   Phone,
   FileText,
 };
@@ -228,7 +212,7 @@ function SectionCard({
   agencyName: string;
   brandColor: string;
 }) {
-  const Icon = ICON_MAP[section.icon] || Sparkles;
+  const Icon = ICON_MAP[section.icon] || Sparkle;
 
   return (
     <article className="group  border border-slate-200 bg-white p-6 hover:shadow-md transition-shadow">
@@ -262,7 +246,7 @@ function SectionCard({
                 style={{ color: brandColor }}
               >
                 {link.label}
-                <ChevronRight size={13} />
+                <CaretRight size={13} />
               </a>
             </li>
           ))}
@@ -279,7 +263,7 @@ function FaqItem({ item }: { item: GettingStartedFaq }) {
     <details className="rounded-xl bg-white border border-slate-200 px-5 py-4 group">
       <summary className="cursor-pointer list-none flex items-center justify-between gap-3 font-semibold text-slate-900">
         <span>{item.q}</span>
-        <ChevronRight
+        <CaretRight
           size={16}
           className="text-text-muted transition-transform group-open:rotate-90"
         />

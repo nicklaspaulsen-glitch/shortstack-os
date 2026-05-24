@@ -1,7 +1,7 @@
 "use client";
+import { CaretDown, CircleNotch, MagicWand } from "@phosphor-icons/react";
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, Loader, Wand2 } from "lucide-react";
 
 interface PromptEnhancerProps {
   value: string;
@@ -96,7 +96,7 @@ export default function PromptEnhancer({
                 onClick={() => setShowSuggestions(!showSuggestions)}
                 className="flex items-center gap-1 text-[10px] text-text-muted hover:text-text-primary px-2 py-1 rounded-md hover:bg-surface-light transition-colors"
               >
-                <ChevronDown size={10} className={showSuggestions ? "rotate-180" : ""} />
+                <CaretDown size={10} className={showSuggestions ? "rotate-180" : ""} />
                 {suggestions.length} alternatives
               </button>
 
@@ -129,12 +129,12 @@ export default function PromptEnhancer({
           >
             {enhancing ? (
               <>
-                <Loader size={10} className="animate-spin" />
+                <CircleNotch size={10} className="animate-spin" />
                 Enhancing...
               </>
             ) : (
               <>
-                <Wand2 size={10} />
+                <MagicWand size={10} />
                 Enhance with AI
               </>
             )}

@@ -1,8 +1,8 @@
 "use client";
+import { CircleNotch } from "@phosphor-icons/react";
 
 import React from "react";
 import type { ImageLayer as ImageLayerType } from "@/lib/design/types";
-import { Loader2 } from "lucide-react";
 
 interface Props {
   layer: ImageLayerType;
@@ -70,7 +70,7 @@ export default function ImageLayer({ layer, isSelected, scale, onSelect }: Props
         >
           {hasJob ? (
             <>
-              <Loader2 size={24} className="animate-spin text-indigo-400" />
+              <CircleNotch size={24} className="animate-spin text-indigo-400" />
               <span>Generating…</span>
             </>
           ) : (

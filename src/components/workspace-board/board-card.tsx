@@ -1,7 +1,7 @@
 "use client";
+import { Calendar, ChatCircle, Paperclip } from "@phosphor-icons/react";
 
 import { motion } from "framer-motion";
-import { Calendar, MessageCircle, Paperclip } from "lucide-react";
 import type { TaskPriority, TaskType, WorkspaceTask } from "@/lib/workspace/board";
 
 /**
@@ -164,7 +164,7 @@ export function BoardCard({
           )}
           {commentCount !== undefined && commentCount > 0 && (
             <span className="inline-flex items-center gap-1">
-              <MessageCircle size={11} />
+              <ChatCircle size={11} />
               {commentCount}
             </span>
           )}

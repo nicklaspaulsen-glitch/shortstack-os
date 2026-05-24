@@ -1,10 +1,8 @@
 "use client";
+import { Envelope, FilmStrip, Image, Megaphone, Plus, Sparkle, Users, X } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Plus, X, Users, Sparkles, Mail, Film, Image as ImageIcon, Megaphone,
-} from "lucide-react";
 
 interface CreateAction {
   label: string;
@@ -15,10 +13,10 @@ interface CreateAction {
 
 const ACTIONS: CreateAction[] = [
   { label: "New Campaign",   icon: <Megaphone size={14} />,  href: "/dashboard/ads",                  color: "text-warning" },
-  { label: "New Thumbnail",  icon: <ImageIcon size={14} />,  href: "/dashboard/thumbnail-generator",  color: "text-emerald-400" },
-  { label: "New Video",      icon: <Film size={14} />,       href: "/dashboard/production",           color: "text-indigo-400" },
-  { label: "New Email",      icon: <Mail size={14} />,       href: "/dashboard/email-templates",      color: "text-amber-400" },
-  { label: "New Content",    icon: <Sparkles size={14} />,   href: "/dashboard/ai-studio",            color: "text-purple-400" },
+  { label: "New Thumbnail",  icon: <Image size={14} />,  href: "/dashboard/thumbnail-generator",  color: "text-emerald-400" },
+  { label: "New Video",      icon: <FilmStrip size={14} />,       href: "/dashboard/production",           color: "text-indigo-400" },
+  { label: "New Email",      icon: <Envelope size={14} />,       href: "/dashboard/email-templates",      color: "text-amber-400" },
+  { label: "New Content",    icon: <Sparkle size={14} />,   href: "/dashboard/ai-studio",            color: "text-purple-400" },
   { label: "New Client",     icon: <Users size={14} />,      href: "/dashboard/onboard",              color: "text-success" },
 ];
 

@@ -1,9 +1,10 @@
 "use client";
+import { ArrowRight, Check, Infinity } from "@phosphor-icons/react";
 
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Check, ArrowRight, Infinity } from "lucide-react";
+
 import { PLAN_TIERS, formatBytes } from "@/lib/plan-config";
 import { BRAND } from "@/lib/brand-config";
 
@@ -59,7 +60,7 @@ const PLANS = [
       "Everything in Growth",
       `${PLAN_TIERS.Pro.team_members} team members`,
       `AI Caller (${PLAN_TIERS.Pro.caller_minutes} min/mo)`,
-      "API access + Webhooks",
+      "API access + PlugsConnected",
       `Upload limit: ${formatBytes(PLAN_TIERS.Pro.max_storage_upload)}`,
       "Advanced analytics",
     ],

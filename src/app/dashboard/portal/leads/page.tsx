@@ -1,13 +1,8 @@
+import { CaretDown, Chat, CircleNotch, DownloadSimple, Envelope, Funnel, Globe, Lightning, MagnifyingGlass, MapPin, Phone, Sparkle, Star, Target, Users } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  Search, Zap, Download, Filter, MapPin, Star,
-  Mail, Phone, MessageSquare, Globe,
-  Sparkles, Target, Users, ChevronDown,
-  Loader,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
@@ -60,7 +55,7 @@ export default function ClientLeadEnginePage() {
   const [searching, setSearching] = useState(false);
   const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set());
 
-  // Search config
+  // MagnifyingGlass config
   const [niche, setNiche] = useState("");
   const [location, setLocation] = useState("");
   const [platform, setPlatform] = useState("google_maps");
@@ -140,7 +135,7 @@ export default function ClientLeadEnginePage() {
       toast.success(`Found ${data.leads_found || 0} leads`);
       await fetchExistingLeads();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Search failed");
+      toast.error(err instanceof Error ? err.message : "MagnifyingGlass failed");
     } finally {
       setSearching(false);
     }
@@ -232,7 +227,7 @@ export default function ClientLeadEnginePage() {
     <MotionPage className="space-y-6">{/* Header */}<div className="flex items-center justify-between">
               <div>
                 <h1 className="text-xl font-bold flex items-center gap-2">
-                  <Sparkles size={20} className="text-brand-accent" />
+                  <Sparkle size={20} className="text-brand-accent" />
                   AI Lead Engine
                 </h1>
                 <p className="text-xs text-text-muted mt-1">Find, score, and reach high-value prospects instantly</p>
@@ -244,7 +239,7 @@ export default function ClientLeadEnginePage() {
                   </span>
                 )}
                 <button onClick={downloadCSV} className="btn-secondary text-xs px-3 py-1.5 flex items-center gap-1.5">
-                  <Download size={12} /> Export
+                  <DownloadSimple size={12} /> Export
                 </button>
               </div>
             </div>{/* Stats Row */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
@@ -286,15 +281,15 @@ export default function ClientLeadEnginePage() {
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Avg Score</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{stats.avgScore}%</p>
               </motion.div>
-            </div>{/* Search Bar — The Engine */}<div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.2)]">
+            </div>{/* MagnifyingGlass Bar — The Engine */}<div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.2)]">
               <div className="flex items-center gap-2 mb-3">
-                <Zap size={14} className="text-brand-accent" />
+                <Lightning size={14} className="text-brand-accent" />
                 <span className="text-xs font-semibold">Find New Leads</span>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <div className="flex-1 relative">
-                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                  <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                   <input
                     type="text"
                     value={niche}
@@ -320,7 +315,7 @@ export default function ClientLeadEnginePage() {
                 <select
                   value={platform}
                   onChange={(e) => setPlatform(e.target.value)}
-                  className="input text-xs w-40"
+                  className="input text-xs sm:w-40 w-full"
                 >
                   {PLATFORMS.map((p) => (
                     <option key={p.id} value={p.id}>{p.label}</option>
@@ -331,7 +326,7 @@ export default function ClientLeadEnginePage() {
                   disabled={searching}
                   className="btn-primary text-xs px-5 flex items-center gap-2"
                 >
-                  {searching ? <Loader size={13} className="animate-spin" /> : <Sparkles size={13} />}
+                  {searching ? <CircleNotch size={13} className="animate-spin" /> : <Sparkle size={13} />}
                   {searching ? "Searching..." : "Find Leads"}
                 </button>
               </div>
@@ -341,11 +336,11 @@ export default function ClientLeadEnginePage() {
                 onClick={() => setShowFilters(!showFilters)}
                 className="flex items-center gap-1 text-[10px] text-text-muted hover:text-text-primary mt-2 transition-colors"
               >
-                <Filter size={10} /> Advanced Filters <ChevronDown size={10} className={`transition-transform ${showFilters ? "rotate-180" : ""}`} />
+                <Funnel size={10} /> Advanced Filters <CaretDown size={10} className={`transition-transform ${showFilters ? "rotate-180" : ""}`} />
               </button>
 
               {showFilters && (
-                <div className="grid grid-cols-4 gap-3 mt-3 pt-3 border-t border-border-subtle">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3 pt-3 border-t border-border-subtle">
                   <div>
                     <label className="text-[9px] text-text-muted uppercase block mb-1">Max Results</label>
                     <input type="number" value={maxResults} onChange={(e) => setMaxResults(+e.target.value)}
@@ -377,10 +372,10 @@ export default function ClientLeadEnginePage() {
                 <span className="text-xs font-medium text-brand-accent">{selectedLeads.size} leads selected</span>
                 <div className="flex-1" />
                 <button onClick={() => bulkAction("email")} className="text-[10px] px-3 py-1.5 rounded-lg bg-info/10 text-info hover:bg-info/20 flex items-center gap-1.5 transition-colors">
-                  <Mail size={11} /> Email All
+                  <Envelope size={11} /> Email All
                 </button>
                 <button onClick={() => bulkAction("dm")} className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] flex items-center gap-1.5 transition-colors">
-                  <MessageSquare size={11} /> DM All
+                  <Chat size={11} /> DM All
                 </button>
                 <button onClick={() => bulkAction("call")} className="text-[10px] px-3 py-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 flex items-center gap-1.5 transition-colors">
                   <Phone size={11} /> Call All
@@ -408,7 +403,7 @@ export default function ClientLeadEnginePage() {
                   <tbody>
                     {loading ? (
                       <tr><td colSpan={9} className="text-center py-12 text-text-muted">
-                        <Loader size={16} className="animate-spin mx-auto mb-2" /> Loading leads...
+                        <CircleNotch size={16} className="animate-spin mx-auto mb-2" /> Loading leads...
                       </td></tr>
                     ) : error ? (
                       <tr><td colSpan={9} className="text-center py-12 text-danger">
@@ -417,7 +412,7 @@ export default function ClientLeadEnginePage() {
                       </td></tr>
                     ) : leads.length === 0 ? (
                       <tr><td colSpan={9} className="text-center py-12 text-text-muted">
-                        <Sparkles size={20} className="mx-auto mb-2 text-[rgba(212,255,0,0.4)]" />
+                        <Sparkle size={20} className="mx-auto mb-2 text-[rgba(212,255,0,0.4)]" />
                         <p className="text-xs">No leads yet. Use the search above to find prospects.</p>
                       </td></tr>
                     ) : (
@@ -437,7 +432,7 @@ export default function ClientLeadEnginePage() {
                               <div className="space-y-0.5">
                                 {lead.email && (
                                   <p className="text-[10px] text-text-muted flex items-center gap-1">
-                                    <Mail size={9} className="text-info" /> {lead.email}
+                                    <Envelope size={9} className="text-info" /> {lead.email}
                                   </p>
                                 )}
                                 {lead.phone && (
@@ -486,7 +481,7 @@ export default function ClientLeadEnginePage() {
                                 {lead.email && (
                                   <button onClick={() => { setSelectedLeads(new Set([lead.id])); bulkAction("email"); }}
                                     className="p-1.5 rounded-lg hover:bg-info/10 text-text-muted hover:text-info transition-colors" title="Send Email">
-                                    <Mail size={12} />
+                                    <Envelope size={12} />
                                   </button>
                                 )}
                                 {lead.phone && (

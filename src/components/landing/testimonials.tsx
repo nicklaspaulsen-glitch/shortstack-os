@@ -1,7 +1,8 @@
 "use client";
+import { ArrowRight, Sparkle } from "@phosphor-icons/react";
 
 import Link from "next/link";
-import { Sparkles, ArrowRight } from "lucide-react";
+
 import { BRAND } from "@/lib/brand-config";
 import Reveal from "./reveal";
 
@@ -34,7 +35,7 @@ export default function Testimonials() {
                 border: "1px solid rgba(255,255,255,0.15)",
               }}
             >
-              <Sparkles size={11} />
+              <Sparkle size={11} />
               Real testimonials coming
             </div>
 

@@ -1,4 +1,5 @@
 "use client";
+import { ArrowDownRight, ArrowUpRight, ArrowsClockwise, Calendar, ChartBar, CheckCircle, Clock, CreditCard, CurrencyDollar, DownloadSimple, FileText, Globe, Minus, Package, Pencil, PiggyBank, Plus, Receipt, Shield, Stack, Target, Trash, TrendUp, Users, X } from "@phosphor-icons/react";
 
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
@@ -6,13 +7,6 @@ import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { formatCurrency } from "@/lib/utils";
 import Modal from "@/components/ui/modal";
-import {
-  DollarSign, TrendingUp, Users, Minus, Plus, Pencil, Trash2,
-  PiggyBank, BarChart3, Receipt, ArrowUpRight, ArrowDownRight,
-  FileText, Download, Package, X,
-  RefreshCw, CheckCircle, Globe, Shield,
-  Layers, CreditCard, Calendar, Clock, Target,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { StripeIcon, PayPalIcon, SquareIcon } from "@/components/ui/platform-icons";
 import { PRISM_GLASS, PRISM_BORDERS } from "@/components/prism/constants";
@@ -409,12 +403,12 @@ export default function FinancialsPage() {
   // ---------------------------------------------------------------------------
 
   const TABS = [
-    { id: "overview" as const, label: "Overview", icon: BarChart3 },
+    { id: "overview" as const, label: "Overview", icon: ChartBar },
     { id: "expenses" as const, label: "Expenses", icon: Receipt },
     { id: "subscriptions" as const, label: "Subscriptions", icon: Package },
     { id: "invoicing" as const, label: "Invoicing", icon: FileText },
-    { id: "forecasting" as const, label: "Forecasting", icon: TrendingUp },
-    { id: "export" as const, label: "Export", icon: Download },
+    { id: "forecasting" as const, label: "Forecasting", icon: TrendUp },
+    { id: "export" as const, label: "Export", icon: DownloadSimple },
   ];
 
   // Fetch subscriptions when tab opens
@@ -601,7 +595,7 @@ export default function FinancialsPage() {
                 {/* Revenue vs Expenses Bar */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                   <p className="text-xs font-semibold mb-4 flex items-center gap-1.5">
-                    <BarChart3 size={13} className="text-brand-accent" /> Revenue vs Expenses vs Profit
+                    <ChartBar size={13} className="text-brand-accent" /> Revenue vs Expenses vs Profit
                   </p>
                   <div className="space-y-3">
                     <div>
@@ -638,7 +632,7 @@ export default function FinancialsPage() {
                 {mrrTrend.length > 1 && (
                   <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                     <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                      <TrendingUp size={13} className="text-brand-accent" /> MRR Growth Trend
+                      <TrendUp size={13} className="text-brand-accent" /> MRR Growth Trend
                     </p>
                     <div className="flex items-end gap-1.5 h-32">
                       {mrrTrend.map((item, i) => {
@@ -661,7 +655,7 @@ export default function FinancialsPage() {
                 {/* Revenue by Plan Tier */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className=" border p-4" style={{ ...PRISM_GLASS, borderColor: PRISM_BORDERS.default }}>
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                    <Layers size={13} className="text-brand-accent" /> Revenue by Plan Tier
+                    <Stack size={13} className="text-brand-accent" /> Revenue by Plan Tier
                   </p>
                   <div className="space-y-2">
                     {revenueByTier.map(tier => (
@@ -872,7 +866,7 @@ export default function FinancialsPage() {
                           </div>
                           <div className="col-span-2 flex justify-end gap-1.5">
                             <button onClick={() => openEdit(exp)} className="p-1.5 rounded-md hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors" aria-label="Edit expense"><Pencil size={12} /></button>
-                            <button onClick={() => deleteExpense(exp.id)} className="p-1.5 rounded-md hover:bg-rose-500/10 text-text-muted hover:text-rose-400 transition-colors" aria-label="Delete expense"><Trash2 size={12} /></button>
+                            <button onClick={() => deleteExpense(exp.id)} className="p-1.5 rounded-md hover:bg-rose-500/10 text-text-muted hover:text-rose-400 transition-colors" aria-label="Delete expense"><Trash size={12} /></button>
                           </div>
                         </div>
                       ))}
@@ -1174,7 +1168,7 @@ export default function FinancialsPage() {
                   <button
                     onClick={() => toast("Automated reminders ship with the invoicing backend. For now, chase manually from the client's Billing tab.", { icon: "💡", duration: 6000 })}
                     className="card-hover p-3 text-left">
-                    <RefreshCw size={14} className="text-indigo-400 mb-1.5" />
+                    <ArrowsClockwise size={14} className="text-indigo-400 mb-1.5" />
                     <p className="text-xs font-semibold">Send Reminders</p>
                     <p className="text-[10px] text-text-muted">Coming soon</p>
                   </button>
@@ -1188,7 +1182,7 @@ export default function FinancialsPage() {
                   <button
                     onClick={() => toast("Batch invoice export is not yet wired. Export individual invoices from Stripe via Billing → Manage subscription.", { icon: "💡", duration: 6000 })}
                     className="card-hover p-3 text-left">
-                    <Download size={14} className="text-emerald-400 mb-1.5" />
+                    <DownloadSimple size={14} className="text-emerald-400 mb-1.5" />
                     <p className="text-xs font-semibold">Export Invoices</p>
                     <p className="text-[10px] text-text-muted">Coming soon</p>
                   </button>
@@ -1220,7 +1214,7 @@ export default function FinancialsPage() {
                 {/* Forecast Chart */}
                 <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                    <TrendingUp size={13} className="text-brand-accent" /> Revenue Forecast ({forecastMonths}-Month)
+                    <TrendUp size={13} className="text-brand-accent" /> Revenue Forecast ({forecastMonths}-Month)
                   </p>
                   <div className="flex items-end gap-2 h-40">
                     {forecast.map((item, i) => {
@@ -1242,7 +1236,7 @@ export default function FinancialsPage() {
                 {/* Forecast Table */}
                 <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-                    <BarChart3 size={13} className="text-brand-accent" /> Projected P&L
+                    <ChartBar size={13} className="text-brand-accent" /> Projected P&L
                   </p>
                   <div className="space-y-1.5">
                     <div className="grid grid-cols-4 gap-2 px-3 py-2 text-[10px] text-text-muted uppercase tracking-wider font-semibold">
@@ -1312,7 +1306,7 @@ export default function FinancialsPage() {
                 {/* Export Config */}
                 <div className="glass rounded-xl p-4">
                   <p className="text-xs font-semibold mb-4 flex items-center gap-1.5">
-                    <Download size={13} className="text-brand-accent" /> Financial Export
+                    <DownloadSimple size={13} className="text-brand-accent" /> Financial Export
                   </p>
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
@@ -1353,9 +1347,9 @@ export default function FinancialsPage() {
                 {/* Export Types */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
                   {[
-                    { label: "Revenue Report", desc: "MRR, ARR, growth trends", icon: TrendingUp, color: "text-brand-accent" },
+                    { label: "Revenue Report", desc: "MRR, ARR, growth trends", icon: TrendUp, color: "text-brand-accent" },
                     { label: "Expense Report", desc: "All tracked subscriptions", icon: Receipt, color: "text-rose-400" },
-                    { label: "Profit & Loss", desc: "Full P&L statement", icon: BarChart3, color: "text-emerald-400" },
+                    { label: "Profit & Loss", desc: "Full P&L statement", icon: ChartBar, color: "text-emerald-400" },
                     { label: "Invoice Report", desc: "All invoices & aging", icon: FileText, color: "text-indigo-400" },
                     { label: "Tax Summary", desc: "Tax-ready financials", icon: Shield, color: "text-orange-400" },
                     { label: "Client Revenue", desc: "Revenue by client/tier", icon: Users, color: "text-purple-400" },
@@ -1369,7 +1363,7 @@ export default function FinancialsPage() {
                       <p className="text-xs font-semibold">{report.label}</p>
                       <p className="text-[10px] text-text-muted mt-0.5">{report.desc}</p>
                       <p className="text-[10px] text-brand-accent mt-2 flex items-center gap-1">
-                        <Download size={10} /> Coming soon
+                        <DownloadSimple size={10} /> Coming soon
                       </p>
                     </button>
                   ))}
@@ -1396,7 +1390,7 @@ export default function FinancialsPage() {
                         onClick={() => toast(stripeSynced ? "Syncing..." : "Configure Stripe in Settings > Integrations")}
                         className="w-full text-[10px] py-1.5 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.14)] transition-all flex items-center justify-center gap-1"
                       >
-                        <RefreshCw size={10} /> {stripeSynced ? "Sync Now" : "Connect"}
+                        <ArrowsClockwise size={10} /> {stripeSynced ? "Sync Now" : "Connect"}
                       </button>
                     </div>
                     {/* PayPal */}
@@ -1538,7 +1532,7 @@ export default function FinancialsPage() {
                     Cancel
                   </button>
                   <button onClick={saveExpense} className="btn-primary text-xs flex items-center gap-1.5">
-                    <DollarSign size={12} /> {editing ? "Update" : "Add Expense"}
+                    <CurrencyDollar size={12} /> {editing ? "Update" : "Add Expense"}
                   </button>
                 </div>
               </div>

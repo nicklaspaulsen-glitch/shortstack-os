@@ -1,10 +1,9 @@
 "use client";
+import { ArrowRight, CheckCircle, Fire, Pause, Target, Warning } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  Target, Flame, AlertTriangle, Pause, CheckCircle2, ArrowRight,
-} from "lucide-react";
+
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface Priority {
@@ -25,10 +24,10 @@ const ACCENTS: Record<Priority["accent"], { bg: string; ring: string; iconBg: st
 
 function iconFor(kind: Priority["kind"]) {
   switch (kind) {
-    case "hot_lead":         return <Flame size={22} />;
-    case "client_risk":      return <AlertTriangle size={22} />;
+    case "hot_lead":         return <Fire size={22} />;
+    case "client_risk":      return <Warning size={22} />;
     case "stalled_sequence": return <Pause size={22} />;
-    case "all_clear":        return <CheckCircle2 size={22} />;
+    case "all_clear":        return <CheckCircle size={22} />;
   }
 }
 

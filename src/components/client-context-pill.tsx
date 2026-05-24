@@ -1,4 +1,5 @@
 "use client";
+import { ArrowsClockwise, Buildings, CaretDown, MagnifyingGlass, Users, X } from "@phosphor-icons/react";
 
 /**
  * ClientContextPill — a small floating pill in the corner that shows which
@@ -11,7 +12,6 @@
 import { useState, useEffect } from "react";
 import { useAppStore } from "@/lib/store";
 import { useAuth } from "@/lib/auth-context";
-import { X, ChevronDown, Users, Building2, RefreshCw, Search } from "lucide-react";
 
 interface ClientOption {
   id: string;
@@ -79,7 +79,7 @@ export default function ClientContextPill() {
             className="flex items-center gap-1 px-2 py-1 rounded-full bg-black/5 hover:bg-black/10 text-[10px] font-medium transition-colors ml-1"
             title="Switch client"
           >
-            <RefreshCw size={9} />
+            <ArrowsClockwise size={9} />
             Switch
           </button>
 
@@ -101,7 +101,7 @@ export default function ClientContextPill() {
           >
             <Users size={11} />
             <span>View as client</span>
-            <ChevronDown size={10} />
+            <CaretDown size={10} />
           </button>
         ) : null
       )}
@@ -119,7 +119,7 @@ export default function ClientContextPill() {
             {/* Header */}
             <div className="px-4 py-3 border-b border-border-subtle flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Building2 size={14} className="text-[#D4FF00]" />
+                <Buildings size={14} className="text-[#D4FF00]" />
                 <h3 className="text-sm font-semibold">Switch Client View</h3>
               </div>
               <button onClick={() => setOpen(false)} className="p-1 text-text-muted hover:text-text-primary">
@@ -127,14 +127,14 @@ export default function ClientContextPill() {
               </button>
             </div>
 
-            {/* Search */}
+            {/* MagnifyingGlass */}
             <div className="px-4 py-2 border-b border-border-subtle">
               <div className="relative">
-                <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
+                <MagnifyingGlass size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  placeholder="Search clients..."
+                  placeholder="MagnifyingGlass clients..."
                   className="w-full pl-7 pr-3 py-2 rounded-lg bg-surface-light border border-border-subtle text-xs focus:outline-none focus:border-[rgba(212,255,0,0.4)]"
                   autoFocus
                 />
@@ -164,7 +164,7 @@ export default function ClientContextPill() {
 
               {loading ? (
                 <div className="py-8 text-center text-xs text-text-muted flex items-center justify-center gap-2">
-                  <RefreshCw size={12} className="animate-spin" /> Loading...
+                  <ArrowsClockwise size={12} className="animate-spin" /> Loading...
                 </div>
               ) : filtered.length === 0 ? (
                 <div className="py-8 text-center text-xs text-text-muted">

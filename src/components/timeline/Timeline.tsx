@@ -1,4 +1,5 @@
 "use client";
+import { ArrowClockwise, ArrowCounterClockwise, FilmStrip, Keyboard, List, Magnet, MagnifyingGlassMinus, MagnifyingGlassPlus, MusicNote, Pause, Play, SkipBack, SkipForward, Sparkle, Stack, TextT, Trash } from "@phosphor-icons/react";
 
 /* ────────────────────────────────────────────────────────────────
  * <Timeline/> — production-grade reusable multi-track timeline.
@@ -35,25 +36,6 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  Trash2,
-  Magnet,
-  ZoomIn,
-  ZoomOut,
-  Undo2,
-  Redo2,
-  Film,
-  Music,
-  Type,
-  Sparkles,
-  Layers as LayersIcon,
-  Keyboard,
-  LayoutList,
-} from "lucide-react";
 
 import type {
   TimelineClip,
@@ -122,12 +104,12 @@ function formatTime(ms: number): string {
 
 function iconForKind(kind: TimelineTrackKind) {
   switch (kind) {
-    case "video": return <Film size={10} />;
-    case "audio": return <Music size={10} />;
-    case "caption": return <Type size={10} />;
-    case "effect": return <Sparkles size={10} />;
+    case "video": return <FilmStrip size={10} />;
+    case "audio": return <MusicNote size={10} />;
+    case "caption": return <TextT size={10} />;
+    case "effect": return <Sparkle size={10} />;
     case "custom":
-    default: return <LayersIcon size={10} />;
+    default: return <Stack size={10} />;
   }
 }
 
@@ -593,7 +575,7 @@ export function Timeline({
           title="Undo (Ctrl+Z)"
           aria-label="Undo"
         >
-          <Undo2 size={12} />
+          <ArrowCounterClockwise size={12} />
         </button>
         <button
           type="button"
@@ -603,7 +585,7 @@ export function Timeline({
           title="Redo (Ctrl+Shift+Z)"
           aria-label="Redo"
         >
-          <Redo2 size={12} />
+          <ArrowClockwise size={12} />
         </button>
 
         <div className="mx-2 text-[10px] font-mono text-text-primary">
@@ -620,7 +602,7 @@ export function Timeline({
             className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20"
             title="Delete selected (Del)"
           >
-            <Trash2 size={10} /> Delete
+            <Trash size={10} /> Delete
             <span className="text-[8px] text-text-muted">({selectedIds.length})</span>
           </button>
         )}
@@ -648,7 +630,7 @@ export function Timeline({
           }`}
           title="Toggle intro / body / outro section markers"
         >
-          <LayoutList size={10} /> Sections
+          <List size={10} /> Sections
         </button>
 
         {renderExtraToolbar?.()}
@@ -662,7 +644,7 @@ export function Timeline({
             aria-label="Zoom out"
             title="Zoom out (-)"
           >
-            <ZoomOut size={12} />
+            <MagnifyingGlassMinus size={12} />
           </button>
           <input
             type="range"
@@ -681,7 +663,7 @@ export function Timeline({
             aria-label="Zoom in"
             title="Zoom in (+)"
           >
-            <ZoomIn size={12} />
+            <MagnifyingGlassPlus size={12} />
           </button>
         </div>
 

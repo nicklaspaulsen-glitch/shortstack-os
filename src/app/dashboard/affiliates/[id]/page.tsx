@@ -1,4 +1,5 @@
 "use client";
+import { ArrowLeft, CheckCircle, CircleNotch, Copy, CurrencyDollar, Envelope, Medal } from "@phosphor-icons/react";
 
 /**
  * Per-affiliate detail page — agency-side.
@@ -12,15 +13,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import {
-  ArrowLeft,
-  Award,
-  Copy,
-  CheckCircle2,
-  Loader2,
-  DollarSign,
-  Mail,
-} from "lucide-react";
 
 import StatCard from "@/components/ui/stat-card";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -166,7 +158,7 @@ export default function AffiliateDetailPage() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center justify-center p-20 text-text-muted"><Loader2 className="animate-spin" size={20} /></MotionPage>
+      <MotionPage className="flex items-center justify-center p-20 text-text-muted"><CircleNotch className="animate-spin" size={20} /></MotionPage>
     );
   }
 
@@ -235,18 +227,18 @@ export default function AffiliateDetailPage() {
         <StatCard
           label="Total earned"
           value={fmtCents(affiliate.total_earned_cents)}
-          icon={<DollarSign size={14} />}
+          icon={<CurrencyDollar size={14} />}
           premium
         />
         <StatCard
           label="Pending"
           value={fmtCents(affiliate.pending_cents)}
-          icon={<DollarSign size={14} />}
+          icon={<CurrencyDollar size={14} />}
         />
         <StatCard
           label="Paid"
           value={fmtCents(affiliate.paid_cents)}
-          icon={<CheckCircle2 size={14} />}
+          icon={<CheckCircle size={14} />}
         />
         <StatCard
           label="Conversion"
@@ -254,7 +246,7 @@ export default function AffiliateDetailPage() {
             stats ? `${(stats.conversion_rate * 100).toFixed(1)}%` : "—"
           }
           change={stats ? `${stats.subscribed}/${stats.total_referrals}` : undefined}
-          icon={<Award size={14} />}
+          icon={<Medal size={14} />}
         />
       </div>
 

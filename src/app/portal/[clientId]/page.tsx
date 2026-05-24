@@ -1,37 +1,7 @@
 "use client";
+import { ArrowSquareOut, ArrowsClockwise, Bell, CalendarDots, CaretDown, CaretUp, Chat, ChatCircle, CheckCircle, CheckSquare, CircleNotch, Clock, FileText, Folder, Megaphone, PaperPlaneTilt, Phone, PlusCircle, Receipt, Robot, Rocket, Sparkle, Square, ThumbsDown, ThumbsUp, UploadSimple, User, WarningCircle, X } from "@phosphor-icons/react";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import {
-  FolderKanban,
-  Clock,
-  MessageSquare,
-  CalendarDays,
-  CheckCircle,
-  Rocket,
-  FileText,
-  RefreshCw,
-  Send,
-  Bot,
-  User,
-  Phone,
-  Upload,
-  MessageCircle,
-  Bell,
-  X,
-  Sparkles,
-  CheckSquare,
-  Square,
-  ThumbsUp,
-  ThumbsDown,
-  Receipt,
-  AlertCircle,
-  Loader2,
-  PlusCircle,
-  Megaphone,
-  ExternalLink,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
 import toast from "react-hot-toast";
 
 /* ══════════════════════════════════════════════════════════════════
@@ -348,7 +318,7 @@ export default function ClientPortalDashboard({
     (i) => i.status !== "paid" && i.status !== "void" && i.status !== "uncollectible",
   ).length;
 
-  /* ── Send chat message ── */
+  /* ── PaperPlaneTilt chat message ── */
   async function handleSendMessage() {
     const text = chatInput.trim();
     if (!text || chatSending) return;
@@ -535,7 +505,7 @@ export default function ClientPortalDashboard({
       {/* ═══════════════ Live Data banner ═══════════════ */}
       <div className="glass rounded-xl p-4 flex items-center gap-3 border-success/20 bg-success/[0.03]">
         <div className="h-8 w-8 rounded-xl bg-success/10 border border-success/20 flex items-center justify-center">
-          <Sparkles size={14} className="text-success" />
+          <Sparkle size={14} className="text-success" />
         </div>
         <div className="flex-1">
           <p className="text-xs font-semibold text-text-primary">Live data</p>
@@ -553,7 +523,7 @@ export default function ClientPortalDashboard({
           className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors"
           aria-label="Refresh"
         >
-          <RefreshCw size={14} />
+          <ArrowsClockwise size={14} />
         </button>
       </div>
 
@@ -648,7 +618,7 @@ export default function ClientPortalDashboard({
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <div className="h-10 w-10 rounded-xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center">
-                <Sparkles size={18} className="text-[#D4FF00]" />
+                <Sparkle size={18} className="text-[#D4FF00]" />
               </div>
               <div>
                 <p className="text-lg font-semibold text-text-primary">
@@ -669,7 +639,7 @@ export default function ClientPortalDashboard({
               )}
               {client?.email && (
                 <span className="flex items-center gap-1.5">
-                  <MessageSquare size={13} className="text-[rgba(212,255,0,0.7)]" />
+                  <Chat size={13} className="text-[rgba(212,255,0,0.7)]" />
                   <span className="text-text-primary font-medium">{client.email}</span>
                 </span>
               )}
@@ -731,7 +701,7 @@ export default function ClientPortalDashboard({
                     className="flex items-center gap-1 text-[11px] text-[#D4FF00] hover:text-[rgba(212,255,0,0.8)] font-medium transition-colors"
                   >
                     {ann.cta_label}
-                    <ExternalLink size={10} />
+                    <ArrowSquareOut size={10} />
                   </a>
                 )}
                 <p className="text-[9px] text-text-muted">{formatDate(ann.published_at)}</p>
@@ -746,7 +716,7 @@ export default function ClientPortalDashboard({
         <QuickStat
           label="Active Projects"
           value={overview?.projects.length ?? 0}
-          icon={<FolderKanban size={16} />}
+          icon={<Folder size={16} />}
           color="gold"
           loading={overviewLoading}
         />
@@ -783,7 +753,7 @@ export default function ClientPortalDashboard({
         </div>
         {overviewLoading ? (
           <div className="glass rounded-xl p-4 flex items-center gap-3 text-text-muted text-xs">
-            <Loader2 size={14} className="animate-spin" /> Loading projects…
+            <CircleNotch size={14} className="animate-spin" /> Loading projects…
           </div>
         ) : overviewError ? (
           <ErrorBlock message={overviewError} onRetry={loadOverview} />
@@ -831,7 +801,7 @@ export default function ClientPortalDashboard({
           </div>
         ) : (
           <EmptyBlock
-            icon={<FolderKanban size={18} />}
+            icon={<Folder size={18} />}
             title="No active projects yet"
             description="When your agency creates a project board for you it'll show up here."
           />
@@ -852,7 +822,7 @@ export default function ClientPortalDashboard({
           </div>
           {tasksLoading ? (
             <div className="flex items-center gap-3 text-text-muted text-xs">
-              <Loader2 size={14} className="animate-spin" /> Loading…
+              <CircleNotch size={14} className="animate-spin" /> Loading…
             </div>
           ) : tasks.length === 0 ? (
             <EmptyBlock
@@ -894,7 +864,7 @@ export default function ClientPortalDashboard({
                     )}
                     {t.due_date && (
                       <p className="text-[10px] text-text-muted mt-1 flex items-center gap-1">
-                        <CalendarDays size={10} />
+                        <CalendarDots size={10} />
                         Due: {formatDate(t.due_date)}
                       </p>
                     )}
@@ -917,11 +887,11 @@ export default function ClientPortalDashboard({
           </div>
           {overviewLoading ? (
             <div className="flex items-center gap-3 text-text-muted text-xs">
-              <Loader2 size={14} className="animate-spin" /> Loading…
+              <CircleNotch size={14} className="animate-spin" /> Loading…
             </div>
           ) : !overview?.milestones.length ? (
             <EmptyBlock
-              icon={<CalendarDays size={18} />}
+              icon={<CalendarDots size={18} />}
               title="No milestones due"
               description="Nothing coming up in the next 30 days."
               compact
@@ -964,7 +934,7 @@ export default function ClientPortalDashboard({
                     </div>
                     {m.dueDate && (
                       <p className="text-[10px] text-text-muted mt-1 flex items-center gap-1">
-                        <CalendarDays size={10} />
+                        <CalendarDots size={10} />
                         Due: {formatDate(m.dueDate)}
                       </p>
                     )}
@@ -988,7 +958,7 @@ export default function ClientPortalDashboard({
         </div>
         {contentLoading ? (
           <div className="glass rounded-xl p-4 flex items-center gap-3 text-text-muted text-xs">
-            <Loader2 size={14} className="animate-spin" /> Loading…
+            <CircleNotch size={14} className="animate-spin" /> Loading…
           </div>
         ) : contentItems.length === 0 ? (
           <EmptyBlock
@@ -1023,7 +993,7 @@ export default function ClientPortalDashboard({
                   </div>
                   {item.scheduled_at && (
                     <p className="text-[10px] text-text-muted flex items-center gap-1">
-                      <CalendarDays size={10} />
+                      <CalendarDots size={10} />
                       Scheduled: {formatDate(item.scheduled_at)}
                     </p>
                   )}
@@ -1066,7 +1036,7 @@ export default function ClientPortalDashboard({
         </div>
         {invoicesLoading ? (
           <div className="glass rounded-xl p-4 flex items-center gap-3 text-text-muted text-xs">
-            <Loader2 size={14} className="animate-spin" /> Loading…
+            <CircleNotch size={14} className="animate-spin" /> Loading…
           </div>
         ) : invoices.length === 0 ? (
           <EmptyBlock
@@ -1124,7 +1094,7 @@ export default function ClientPortalDashboard({
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <QuickActionButton
-            icon={<MessageCircle size={16} />}
+            icon={<ChatCircle size={16} />}
             label="Message Team"
             description="Open the chat with your agency"
             onClick={() => setChatOpen(true)}
@@ -1136,13 +1106,13 @@ export default function ClientPortalDashboard({
             onClick={() => handleQuickAction("Schedule Call")}
           />
           <QuickActionButton
-            icon={<Upload size={16} />}
-            label="Upload Files"
+            icon={<UploadSimple size={16} />}
+            label="UploadSimple Files"
             description="Share assets or documents"
-            onClick={() => handleQuickAction("Upload Files")}
+            onClick={() => handleQuickAction("UploadSimple Files")}
           />
           <QuickActionButton
-            icon={<RefreshCw size={16} />}
+            icon={<ArrowsClockwise size={16} />}
             label="Request Revision"
             description="Reject a pending content item"
             onClick={() => handleQuickAction("Request Revision")}
@@ -1239,11 +1209,11 @@ export default function ClientPortalDashboard({
                 className="flex items-center gap-1.5 btn-pill text-xs px-4 py-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {requestSubmitting ? (
-                  <Loader2 size={12} className="animate-spin" />
+                  <CircleNotch size={12} className="animate-spin" />
                 ) : (
-                  <Send size={12} />
+                  <PaperPlaneTilt size={12} />
                 )}
-                {requestSubmitting ? "Sending…" : "Send Request"}
+                {requestSubmitting ? "Sending…" : "PaperPlaneTilt Request"}
               </button>
             </div>
           </div>
@@ -1252,7 +1222,7 @@ export default function ClientPortalDashboard({
         {/* Previous requests */}
         {workRequestsLoading ? (
           <div className="flex items-center gap-2 text-xs text-text-muted py-2">
-            <Loader2 size={12} className="animate-spin" /> Loading requests…
+            <CircleNotch size={12} className="animate-spin" /> Loading requests…
           </div>
         ) : workRequests.length === 0 ? (
           <div className="glass-panel rounded-xl p-6 text-center border border-border-subtle">
@@ -1271,7 +1241,7 @@ export default function ClientPortalDashboard({
                       ) : req.proposal_status === "sent" ? (
                         <Clock size={14} className="text-[#D4FF00]" />
                       ) : req.proposal_status === "generating" ? (
-                        <Loader2 size={14} className="animate-spin text-text-muted" />
+                        <CircleNotch size={14} className="animate-spin text-text-muted" />
                       ) : (
                         <Clock size={14} className="text-text-muted" />
                       )}
@@ -1314,9 +1284,9 @@ export default function ClientPortalDashboard({
                         aria-label={expandedProposalId === req.id ? "Collapse proposal" : "Expand proposal"}
                       >
                         {expandedProposalId === req.id ? (
-                          <ChevronUp size={14} />
+                          <CaretUp size={14} />
                         ) : (
-                          <ChevronDown size={14} />
+                          <CaretDown size={14} />
                         )}
                       </button>
                     )}
@@ -1361,7 +1331,7 @@ export default function ClientPortalDashboard({
                         rel="noopener noreferrer"
                         className="flex items-center justify-center gap-2 btn-pill w-full text-xs py-2 mt-1"
                       >
-                        <ExternalLink size={12} />
+                        <ArrowSquareOut size={12} />
                         Approve & Pay
                       </a>
                     )}
@@ -1391,7 +1361,7 @@ export default function ClientPortalDashboard({
             : undefined
         }
       >
-        {chatOpen ? <X size={20} /> : <Bot size={20} />}
+        {chatOpen ? <X size={20} /> : <Robot size={20} />}
         {!chatOpen && unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-danger text-[10px] font-bold text-white px-1 border-2 border-white">
             {unreadCount}
@@ -1410,7 +1380,7 @@ export default function ClientPortalDashboard({
           >
             <div className="relative">
               <div className="h-9 w-9 rounded-xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center">
-                <MessageSquare size={16} className="text-[#D4FF00]" />
+                <Chat size={16} className="text-[#D4FF00]" />
               </div>
               <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-success rounded-full border-2 border-surface" />
             </div>
@@ -1433,11 +1403,11 @@ export default function ClientPortalDashboard({
           <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-[280px]">
             {messagesLoading && messages.length === 0 ? (
               <div className="flex items-center gap-2 text-text-muted text-xs">
-                <Loader2 size={12} className="animate-spin" /> Loading messages…
+                <CircleNotch size={12} className="animate-spin" /> Loading messages…
               </div>
             ) : messages.length === 0 ? (
               <div className="text-center py-6">
-                <Bot size={24} className="text-text-muted/40 mx-auto mb-2" />
+                <Robot size={24} className="text-text-muted/40 mx-auto mb-2" />
                 <p className="text-xs text-text-muted">
                   Start the conversation — your agency will reply here.
                 </p>
@@ -1494,7 +1464,7 @@ export default function ClientPortalDashboard({
                     : "bg-surface-light text-text-muted cursor-not-allowed"
                 }`}
               >
-                <Send size={14} />
+                <PaperPlaneTilt size={14} />
               </button>
             </div>
           </div>
@@ -1550,7 +1520,7 @@ function QuickStat({
       <div>
         <p className="text-xl font-bold text-text-primary tracking-tight tabular-nums">
           {loading ? (
-            <Loader2 size={16} className="animate-spin text-text-muted" />
+            <CircleNotch size={16} className="animate-spin text-text-muted" />
           ) : (
             value
           )}
@@ -1620,7 +1590,7 @@ function ErrorBlock({ message, onRetry }: { message: string; onRetry: () => void
   return (
     <div className="glass rounded-xl p-4 flex items-start gap-3 border-danger/20 bg-danger/[0.03]">
       <div className="h-9 w-9 rounded-xl bg-danger/10 border border-danger/20 flex items-center justify-center shrink-0">
-        <AlertCircle size={16} className="text-danger" />
+        <WarningCircle size={16} className="text-danger" />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-xs font-semibold text-text-primary">Couldn&apos;t load</p>

@@ -1,4 +1,5 @@
 "use client";
+import { CircleNotch, PaperPlaneTilt, Sparkle } from "@phosphor-icons/react";
 
 /**
  * TrinityOrb — the dashboard centerpiece.
@@ -23,7 +24,6 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
-import { Send, Sparkles, Loader } from "lucide-react";
 import TrinityOrbVisual from "@/components/trinity/TrinityVisual";
 import type { ChatMsg } from "@/components/trinity/types";
 import { speak as ttsSpeak, stopAllAudio as ttsStop } from "@/components/trinity/tts";
@@ -78,7 +78,7 @@ interface Props {
 const DEFAULT_SUGGESTIONS = [
   "How am I doing this month?",
   "Search for plumber leads in Dallas",
-  "Send a $500 invoice to my newest client",
+  "PaperPlaneTilt a $500 invoice to my newest client",
   "Schedule an Instagram post for tomorrow",
   "Generate a 30-day content plan for Acme",
   "What are my latest replies?",
@@ -247,7 +247,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
         />
         <div className={`mt-3 transition-all ${active ? "opacity-80" : "opacity-100"}`}>
           <p className="text-[10px] uppercase tracking-[0.22em] text-text-muted flex items-center gap-1.5 justify-center">
-            <Sparkles size={10} className="text-[#D4FF00]" />
+            <Sparkle size={10} className="text-[#D4FF00]" />
             Trinity
           </p>
           <h2 className={`font-bold tracking-tight mt-1 ${active ? "text-sm" : "text-xl sm:text-2xl"}`}>
@@ -309,8 +309,8 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
             disabled={sending || !input.trim()}
             className="h-[46px] px-4 bg-[#D4FF00] text-[#020711] font-semibold text-xs flex items-center gap-1.5 hover:bg-[#AACC00] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
-            {sending ? <Loader size={14} className="animate-spin" /> : <Send size={14} />}
-            <span className="hidden sm:inline">Send</span>
+            {sending ? <CircleNotch size={14} className="animate-spin" /> : <PaperPlaneTilt size={14} />}
+            <span className="hidden sm:inline">PaperPlaneTilt</span>
           </button>
         </form>
 

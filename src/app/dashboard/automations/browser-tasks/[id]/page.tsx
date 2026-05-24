@@ -1,22 +1,10 @@
 "use client";
+import { ArrowLeft, ArrowSquareOut, ArrowsClockwise, CheckCircle, CircleNotch, Clock, Globe, Play, Trash, XCircle } from "@phosphor-icons/react";
 
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import {
-  Bot,
-  ArrowLeft,
-  Loader2,
-  CheckCircle2,
-  XCircle,
-  Clock,
-  RefreshCw,
-  Trash2,
-  Play,
-  Globe,
-  ExternalLink,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface RecordingEntry {
@@ -49,8 +37,8 @@ interface BrowserTask {
 
 const STATUS_STYLES: Record<BrowserTask["status"], { label: string; bg: string; fg: string; icon: React.ReactNode }> = {
   queued: { label: "Queued", bg: "bg-amber-500/15", fg: "text-amber-400", icon: <Clock size={14} /> },
-  running: { label: "Running", bg: "bg-sky-500/15", fg: "text-sky-400", icon: <Loader2 size={14} className="animate-spin" /> },
-  completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-400", icon: <CheckCircle2 size={14} /> },
+  running: { label: "Running", bg: "bg-sky-500/15", fg: "text-sky-400", icon: <CircleNotch size={14} className="animate-spin" /> },
+  completed: { label: "Completed", bg: "bg-emerald-500/15", fg: "text-emerald-400", icon: <CheckCircle size={14} /> },
   failed: { label: "Failed", bg: "bg-rose-500/15", fg: "text-rose-400", icon: <XCircle size={14} /> },
   cancelled: { label: "Cancelled", bg: "bg-zinc-500/15", fg: "text-zinc-400", icon: <XCircle size={14} /> },
 };
@@ -177,7 +165,7 @@ export default function BrowserTaskDetailPage() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center justify-center py-20 text-sm text-text-muted"><Loader2 size={18} className="mr-2 animate-spin" />Loading task…
+      <MotionPage className="flex items-center justify-center py-20 text-sm text-text-muted"><CircleNotch size={18} className="mr-2 animate-spin" />Loading task…
               </MotionPage>
     );
   }
@@ -248,7 +236,7 @@ export default function BrowserTaskDetailPage() {
             disabled={!!busy}
             className="inline-flex items-center gap-1.5 rounded-md bg-emerald-500/20 px-3 py-1.5 text-xs font-medium text-emerald-400 hover:bg-emerald-500/30 disabled:opacity-50"
           >
-            {busy === "run" ? <Loader2 size={12} className="animate-spin" /> : <Play size={12} />}
+            {busy === "run" ? <CircleNotch size={12} className="animate-spin" /> : <Play size={12} />}
             Run now
           </button>
         )}
@@ -258,7 +246,7 @@ export default function BrowserTaskDetailPage() {
             disabled={!!busy}
             className="inline-flex items-center gap-1.5 rounded-md bg-white/5 px-3 py-1.5 text-xs font-medium text-text-secondary hover:bg-white/10 disabled:opacity-50"
           >
-            <RefreshCw size={12} /> Re-queue
+            <ArrowsClockwise size={12} /> Re-queue
           </button>
         )}
         {(task.status === "running" || task.status === "queued") && (
@@ -275,7 +263,7 @@ export default function BrowserTaskDetailPage() {
           disabled={!!busy}
           className="ml-auto inline-flex items-center gap-1.5 rounded-md bg-white/5 px-3 py-1.5 text-xs font-medium text-text-muted hover:bg-rose-500/10 hover:text-rose-400 disabled:opacity-50"
         >
-          <Trash2 size={12} /> Delete
+          <Trash size={12} /> Delete
         </button>
       </div>
 
@@ -283,7 +271,7 @@ export default function BrowserTaskDetailPage() {
       {isLive && lastRec && (
         <div className="rounded-xl border border-sky-500/30 bg-sky-500/5 p-5">
           <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-sky-400">
-            <Loader2 size={14} className="animate-spin" /> Live — step {lastRec.step + 1}
+            <CircleNotch size={14} className="animate-spin" /> Live — step {lastRec.step + 1}
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {r2Url(lastRec.screenshot_r2_key) ? (
@@ -315,7 +303,7 @@ export default function BrowserTaskDetailPage() {
       {task.status === "completed" && task.result_text && (
         <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5">
           <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-emerald-400">
-            <CheckCircle2 size={14} /> Result
+            <CheckCircle size={14} /> Result
           </div>
           <div className="text-sm text-text-primary whitespace-pre-wrap">{task.result_text}</div>
           {task.result_data && (
@@ -372,7 +360,7 @@ export default function BrowserTaskDetailPage() {
                           rel="noopener noreferrer"
                           className="mt-1 inline-flex items-center gap-1 text-[11px] text-text-muted hover:text-text-primary"
                         >
-                          <ExternalLink size={10} /> open full
+                          <ArrowSquareOut size={10} /> open full
                         </a>
                       )}
                     </div>

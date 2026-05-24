@@ -1,49 +1,17 @@
 "use client"
+import type { Icon } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, Brain, Briefcase, Calendar, ChartBar, Chat, CreditCard, CurrencyDollar, FileText, FilmStrip, Gear, GitBranch, Globe, Image, Lightning, MagnifyingGlass, Microphone, PaperPlaneTilt, Pencil, Phone, Plug, Receipt, Robot, ShareNetwork, Sparkle, SquaresFour, Stack, Target, Users, UsersThree, X } from "@phosphor-icons/react";
 
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import type { LucideIcon } from "lucide-react"
-import {
-  LayoutDashboard,
-  Users,
-  BarChart3,
-  X,
-  Settings,
-  Briefcase,
-  Send,
-  Target,
-  FileCheck,
-  Pen,
-  Sparkles,
-  Globe,
-  Share2,
-  Calendar,
-  Mic,
-  Film,
-  Image,
-  UsersRound,
-  Zap,
-  RotateCcw,
-  Brain,
-  GitBranch,
-  Plug,
-  MessageSquare,
-  Phone,
-  Receipt,
-  DollarSign,
-  Search,
-  Layers,
-  CreditCard,
-  Bot,
-} from "lucide-react"
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 interface NavItem {
   label: string
   href: string
-  icon: LucideIcon
+  icon: Icon
   badge?: string
   count?: number
 }
@@ -64,8 +32,8 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Overview",
     items: [
-      { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-      { label: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
+      { label: "Dashboard", href: "/dashboard", icon: SquaresFour },
+      { label: "Analytics", href: "/dashboard/analytics", icon: ChartBar },
     ],
   },
   {
@@ -74,45 +42,45 @@ const NAV_GROUPS: NavGroup[] = [
       { label: "Clients", href: "/dashboard/clients", icon: Users },
       { label: "CRM", href: "/dashboard/crm", icon: Briefcase },
       { label: "Leads", href: "/dashboard/leads", icon: Target },
-      { label: "Proposals", href: "/dashboard/proposals", icon: FileCheck },
-      { label: "Outreach Hub", href: "/dashboard/outreach-hub", icon: Send },
-      { label: "Conversations", href: "/dashboard/conversations", icon: MessageSquare },
+      { label: "Proposals", href: "/dashboard/proposals", icon: FileText },
+      { label: "Outreach Hub", href: "/dashboard/outreach-hub", icon: PaperPlaneTilt },
+      { label: "Conversations", href: "/dashboard/conversations", icon: Chat },
       { label: "Trinity AI", href: "/dashboard/trinity", icon: Brain },
     ],
   },
   {
     label: "AI & Create",
     items: [
-      { label: "AI Studio", href: "/dashboard/ai-studio", icon: Sparkles, badge: "HOT" },
-      { label: "AI Video", href: "/dashboard/ai-video", icon: Film, badge: "NEW" },
-      { label: "Voice Studio", href: "/dashboard/voice-studio", icon: Mic },
-      { label: "Agent Office", href: "/dashboard/agent-office", icon: UsersRound },
+      { label: "AI Studio", href: "/dashboard/ai-studio", icon: Sparkle, badge: "HOT" },
+      { label: "AI Video", href: "/dashboard/ai-video", icon: FilmStrip, badge: "NEW" },
+      { label: "Voice Studio", href: "/dashboard/voice-studio", icon: Microphone },
+      { label: "Agent Office", href: "/dashboard/agent-office", icon: UsersThree },
       { label: "AI Caller", href: "/dashboard/eleven-agents", icon: Phone },
-      { label: "Copywriter", href: "/dashboard/copywriter", icon: Pen },
-      { label: "Social Studio", href: "/dashboard/social-studio", icon: Share2 },
+      { label: "Copywriter", href: "/dashboard/copywriter", icon: Pencil },
+      { label: "Social Studio", href: "/dashboard/social-studio", icon: ShareNetwork },
       { label: "Websites", href: "/dashboard/websites", icon: Globe },
       { label: "Thumbnails", href: "/dashboard/thumbnail-generator", icon: Image },
-      { label: "Video Editor", href: "/dashboard/video-editor", icon: Film },
-      { label: "AI Agents", href: "/dashboard/services", icon: Bot },
+      { label: "Video Editor", href: "/dashboard/video-editor", icon: FilmStrip },
+      { label: "AI Agents", href: "/dashboard/services", icon: Robot },
     ],
   },
   {
     label: "Automate",
     items: [
-      { label: "Workflows", href: "/dashboard/workflows", icon: Zap },
-      { label: "Automations", href: "/dashboard/automations", icon: RotateCcw },
+      { label: "Workflows", href: "/dashboard/workflows", icon: Lightning },
+      { label: "Automations", href: "/dashboard/automations", icon: ArrowCounterClockwise },
       { label: "Flow Builder", href: "/dashboard/workflow-builder", icon: GitBranch },
       { label: "Dialer", href: "/dashboard/dialer", icon: Phone },
-      { label: "Lead Finder", href: "/dashboard/scraper", icon: Search },
+      { label: "Lead Finder", href: "/dashboard/scraper", icon: MagnifyingGlass },
     ],
   },
   {
     label: "Connect",
     items: [
       { label: "Integrations", href: "/dashboard/integrations-hub", icon: Plug },
-      { label: "WhatsApp", href: "/dashboard/whatsapp", icon: MessageSquare },
-      { label: "Telegram", href: "/dashboard/telegram", icon: MessageSquare },
-      { label: "Discord", href: "/dashboard/discord", icon: MessageSquare },
+      { label: "WhatsApp", href: "/dashboard/whatsapp", icon: Chat },
+      { label: "Telegram", href: "/dashboard/telegram", icon: Chat },
+      { label: "Discord", href: "/dashboard/discord", icon: Chat },
       { label: "Google Business", href: "/dashboard/google-business", icon: Globe },
     ],
   },
@@ -121,10 +89,10 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { label: "Calendar", href: "/dashboard/calendar", icon: Calendar },
       { label: "Invoices", href: "/dashboard/invoices", icon: Receipt },
-      { label: "Financials", href: "/dashboard/financials", icon: DollarSign },
-      { label: "Team", href: "/dashboard/team", icon: UsersRound },
+      { label: "Financials", href: "/dashboard/financials", icon: CurrencyDollar },
+      { label: "Team", href: "/dashboard/team", icon: UsersThree },
       { label: "Billing", href: "/dashboard/billing", icon: CreditCard },
-      { label: "Settings", href: "/dashboard/settings", icon: Settings },
+      { label: "Gear", href: "/dashboard/settings", icon: Gear },
     ],
   },
 ]
@@ -282,7 +250,7 @@ function SidebarBody({ pathname }: { pathname: string }) {
               flexShrink: 0,
             }}
           >
-            <Layers size={16} style={{ color: "#D4FF00" }} />
+            <Stack size={16} style={{ color: "#D4FF00" }} />
           </div>
 
           <div>

@@ -1,14 +1,9 @@
+import { ArrowRight, Calculator, Calendar, CaretRight, ChartBar, CheckCircle, CircleNotch, Clock, CreditCard, CurrencyDollar, FileText, Lightning, Plus, Shield, Star, Target, TrendDown, TrendUp, Warning } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, type Variants } from "framer-motion";
 import { useManagedClient } from "@/lib/use-managed-client";
-import {
-  DollarSign, Plus, TrendingUp, TrendingDown, Target,
-  Clock, FileText, Calculator, BarChart3,
-  ChevronRight, Star, Zap, AlertTriangle, CheckCircle,
-  Calendar, ArrowRight, Shield, Loader2, CreditCard
-} from "lucide-react";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import toast from "react-hot-toast";
 import CollapsibleStats from "@/components/ui/collapsible-stats";
@@ -165,10 +160,10 @@ export default function DealsPage() {
   const weightedPipeline = openDeals.reduce((s, d) => s + (Number(d.value) * d.probability / 100), 0);
 
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
-    { key: "pipeline", label: "Pipeline Board", icon: <BarChart3 size={14} /> },
-    { key: "forecast", label: "Revenue Forecast", icon: <TrendingUp size={14} /> },
+    { key: "pipeline", label: "Pipeline Board", icon: <ChartBar size={14} /> },
+    { key: "forecast", label: "Revenue Forecast", icon: <TrendUp size={14} /> },
     { key: "analysis", label: "Win/Loss Analysis", icon: <Target size={14} /> },
-    { key: "scoring", label: "Deal Scoring", icon: <Zap size={14} /> },
+    { key: "scoring", label: "Deal Scoring", icon: <Lightning size={14} /> },
     { key: "templates", label: "Contracts", icon: <FileText size={14} /> },
     { key: "commission", label: "Commissions", icon: <Calculator size={14} /> },
   ];
@@ -202,7 +197,7 @@ export default function DealsPage() {
         </div>
       </div>{/* Stats Row — collapsible (state persists) */}<CollapsibleStats
               storageKey="deals"
-              icon={<BarChart3 size={14} className="text-brand-accent" />}
+              icon={<ChartBar size={14} className="text-brand-accent" />}
               title="Deal Stats"
               summary={
                 <>
@@ -302,7 +297,7 @@ export default function DealsPage() {
                     {STAGES.filter(s => !s.key.startsWith("closed")).map(s => <option key={s.key} value={s.key}>{s.label}</option>)}
                   </select>
                   <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={handleCreate} disabled={creating || !dealForm.title || !dealForm.company} className="btn-primary text-xs disabled:opacity-50 flex items-center justify-center gap-1">
-                    {creating && <Loader2 size={12} className="animate-spin" />}
+                    {creating && <CircleNotch size={12} className="animate-spin" />}
                     {creating ? "Creating..." : "Create"}
                   </motion.button>
                 </div>
@@ -417,7 +412,7 @@ export default function DealsPage() {
                         <p className="text-[9px] text-text-muted mb-1">{v.stage}</p>
                         <p className="text-sm font-bold">{v.avg}</p>
                         <p className={`text-[8px] flex items-center justify-center gap-0.5 ${v.trend === "faster" ? "text-emerald-400" : "text-rose-400"}`}>
-                          {v.trend === "faster" ? <TrendingDown size={8} /> : <TrendingUp size={8} />} {v.trend}
+                          {v.trend === "faster" ? <TrendDown size={8} /> : <TrendUp size={8} />} {v.trend}
                         </p>
                       </motion.div>
                     ))}
@@ -485,7 +480,7 @@ export default function DealsPage() {
                   {/* Loss Reasons */}
                   <PrismPanel padding="p-4" delay={0.06}>
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                      <AlertTriangle size={14} className="text-rose-400" /> Loss Reasons
+                      <Warning size={14} className="text-rose-400" /> Loss Reasons
                     </h3>
                     <div className="text-center py-8 text-text-muted text-xs">No loss data yet.</div>
                   </PrismPanel>
@@ -501,7 +496,7 @@ export default function DealsPage() {
             )}{/* ===== DEAL SCORING ===== */}{activeTab === "scoring" && (
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <Zap size={14} className="text-brand-accent" /> AI Deal Scoring
+                  <Lightning size={14} className="text-brand-accent" /> AI Deal Scoring
                 </h3>
                 <motion.div
                   className="space-y-2"
@@ -551,7 +546,7 @@ export default function DealsPage() {
                           <p className="text-sm font-bold text-brand-accent">{formatCurrency(amt)}</p>
                           <p className="text-[9px] text-text-muted">Close: {deal.expected_close_date || "N/A"}</p>
                         </div>
-                        <ChevronRight size={14} className="text-text-muted flex-shrink-0" />
+                        <CaretRight size={14} className="text-text-muted flex-shrink-0" />
                       </motion.div>
                     );
                   })}
@@ -572,7 +567,7 @@ export default function DealsPage() {
                     ].map((rule, i) => (
                       <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border-subtle opacity-60" style={{ background: "rgba(255,255,255,0.05)" }}>
                         <div className="flex items-center gap-2">
-                          <Zap size={12} className="text-brand-accent" />
+                          <Lightning size={12} className="text-brand-accent" />
                           <div>
                             <p className="text-[10px] font-semibold">When: {rule.trigger}</p>
                             <p className="text-[9px] text-text-muted">Then: {rule.action}</p>
@@ -614,7 +609,7 @@ export default function DealsPage() {
                               <p className="text-[9px] text-text-muted">{t.pages} pages</p>
                             </div>
                           </div>
-                          <ChevronRight size={12} className="text-text-muted" />
+                          <CaretRight size={12} className="text-text-muted" />
                         </motion.div>
                       ))}
                     </div>
@@ -650,7 +645,7 @@ export default function DealsPage() {
                         onClick={() => toast("Proposal PDF generation coming soon — needs API")}
                         className="btn-primary w-full text-xs flex items-center justify-center gap-1.5"
 >
-                        <Zap size={12} /> Generate Proposal PDF
+                        <Lightning size={12} /> Generate Proposal PDF
                       </motion.button>
                     </div>
                   </PrismPanel>

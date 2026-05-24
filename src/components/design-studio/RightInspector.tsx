@@ -1,12 +1,10 @@
 "use client";
+import { ArrowDown, ArrowUp, CircleNotch, Copy, Eye, EyeSlash, Image, Lock, LockOpen, Sparkle, Trash, X } from "@phosphor-icons/react";
 
 import React from "react";
 import { useDesignStore } from "@/lib/design/store";
 import type { Layer, TextLayer, ImageLayer, ShapeLayer } from "@/lib/design/types";
-import {
-  Trash2, Copy, Eye, EyeOff, Lock, Unlock, ArrowUp, ArrowDown,
-  Loader2, Sparkles,
-} from "lucide-react";
+
 import toast from "react-hot-toast";
 
 export default function RightInspector() {
@@ -96,14 +94,14 @@ export default function RightInspector() {
               className="p-1 rounded hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
               title={layer.hidden ? "Show" : "Hide"}
             >
-              {layer.hidden ? <EyeOff size={12} /> : <Eye size={12} />}
+              {layer.hidden ? <EyeSlash size={12} /> : <Eye size={12} />}
             </button>
             <button
               onClick={() => update({ locked: !layer.locked } as Partial<Layer>)}
               className="p-1 rounded hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
-              title={layer.locked ? "Unlock" : "Lock"}
+              title={layer.locked ? "LockOpen" : "Lock"}
             >
-              {layer.locked ? <Lock size={12} /> : <Unlock size={12} />}
+              {layer.locked ? <Lock size={12} /> : <LockOpen size={12} />}
             </button>
             <button
               onClick={() => duplicateLayer(selectedId)}
@@ -117,7 +115,7 @@ export default function RightInspector() {
               className="p-1 rounded hover:bg-white/10 text-red-400 hover:text-red-300 transition-colors"
               title="Delete"
             >
-              <Trash2 size={12} />
+              <Trash size={12} />
             </button>
           </div>
 
@@ -374,13 +372,13 @@ function ImageControls({
           onClick={() => onAiOp("rembg")}
           className="w-full flex items-center gap-2 py-1.5 px-2 rounded bg-white/5 hover:bg-white/10 text-xs text-gray-300 hover:text-white transition-colors"
         >
-          <Sparkles size={12} /> Remove Background
+          <Sparkle size={12} /> Remove Background
         </button>
         <button
           onClick={() => onAiOp("upscale")}
           className="w-full flex items-center gap-2 py-1.5 px-2 rounded bg-white/5 hover:bg-white/10 text-xs text-gray-300 hover:text-white transition-colors"
         >
-          <Sparkles size={12} /> Upscale
+          <Sparkle size={12} /> Upscale
         </button>
       </div>
     </div>

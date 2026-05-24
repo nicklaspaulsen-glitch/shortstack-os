@@ -1,4 +1,5 @@
 "use client";
+import { ChartBar, Envelope, Phone, Pulse, SquaresFour, Stack, Users } from "@phosphor-icons/react";
 
 /**
  * /dashboard/agent-office — live AI team office.
@@ -25,7 +26,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { Activity, Users, Phone, Mail, BarChart3, Boxes, LayoutGrid } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { AGENTS, AGENT_BY_KEY } from "@/lib/pixel-office/agents";
 import type { AgentAction } from "@/lib/pixel-office/event-mapper";
@@ -232,7 +232,7 @@ export default function AgentOfficePage() {
                 className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "kumo" ? "bg-brand-accent text-[#020711] shadow" : "text-text-muted hover:text-text-secondary"}`}
                 title="2D Pixel view"
               >
-                <LayoutGrid size={10} />
+                <SquaresFour size={10} />
                 2D
               </button>
               <button
@@ -240,15 +240,15 @@ export default function AgentOfficePage() {
                 className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest transition-all ${viewMode === "3d" ? "bg-brand-accent text-[#020711] shadow" : "text-text-muted hover:text-text-secondary"}`}
                 title="3D Scene view"
               >
-                <Boxes size={10} />
+                <Stack size={10} />
                 3D
               </button>
             </div>
             <StatTile icon={<Phone size={11} />} label="Calls today" value={snapshot?.stats.callsToday ?? "—"} accent="#5e5bff" />
             <StatTile icon={<Users size={11} />} label="Leads scored" value={snapshot?.stats.leadsScored ?? "—"} accent="#7fe5b8" />
-            <StatTile icon={<Mail size={11} />} label="Emails sent" value={snapshot?.stats.emailsSent ?? "—"} accent="#ff8a4c" />
-            <StatTile icon={<Activity size={11} />} label="Trinity actions" value={snapshot?.stats.proposalsExecuted ?? "—"} accent="#D4FF00" />
-            <StatTile icon={<BarChart3 size={11} />} label="Posts published" value={snapshot?.stats.contentPosted ?? "—"} accent="#ffc062" />
+            <StatTile icon={<Envelope size={11} />} label="Emails sent" value={snapshot?.stats.emailsSent ?? "—"} accent="#ff8a4c" />
+            <StatTile icon={<Pulse size={11} />} label="Trinity actions" value={snapshot?.stats.proposalsExecuted ?? "—"} accent="#D4FF00" />
+            <StatTile icon={<ChartBar size={11} />} label="Posts published" value={snapshot?.stats.contentPosted ?? "—"} accent="#ffc062" />
           </div>
         </div>
       </div>

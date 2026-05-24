@@ -1,7 +1,8 @@
+import { ArrowClockwise, ArrowLeft, ArrowRight, Check, CheckCircle, CircleNotch, Copy, Envelope, Globe, Plus, Sparkle, Trash, Warning } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
- * Mail Setup — agency-facing page to add a custom email subdomain
+ * Envelope Setup — agency-facing page to add a custom email subdomain
  * (like `mail.yourclient.com`) so outbound email uses the agency's
  * brand instead of the shared ShortStack domain.
  *
@@ -15,21 +16,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Mail,
-  ArrowLeft,
-  ArrowRight,
-  Loader,
-  Copy,
-  Check,
-  CheckCircle2,
-  AlertTriangle,
-  RotateCw,
-  Trash2,
-  Globe,
-  Sparkles,
-  Plus,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import MailboxPlanner from "@/components/mail-setup/mailbox-planner";
@@ -205,11 +191,11 @@ export default function MailSetupPage() {
   );
 
   return (
-    <MotionPage className="min-h-screen bg-background text-text-primary">{/* -- Mail Setup command strip -- */}
+    <MotionPage className="min-h-screen bg-background text-text-primary">{/* -- Envelope Setup command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Email Setup</p>
-        <h1 className="text-2xl font-display font-bold text-text-primary">Mail Setup</h1>
+        <h1 className="text-2xl font-display font-bold text-text-primary">Envelope Setup</h1>
       </div>
     </div><div className="mx-auto max-w-5xl px-6 pb-10 space-y-6">
               {/* Mailbox Planner — GHL-style mailbox catalog with cost preview.
@@ -237,11 +223,11 @@ export default function MailSetupPage() {
 
                   {loading ? (
                     <div className="flex items-center gap-2 text-sm text-text-muted">
-                      <Loader size={14} className="animate-spin" /> Loading…
+                      <CircleNotch size={14} className="animate-spin" /> Loading…
                     </div>
                   ) : domains.length === 0 ? (
                     <div className="rounded-xl border border-dashed border-border-subtle/50 glass p-10 text-center">
-                      <Mail size={28} className="mx-auto mb-3 text-text-muted" />
+                      <Envelope size={28} className="mx-auto mb-3 text-text-muted" />
                       <h3 className="mb-1 text-base font-semibold">No custom domains yet</h3>
                       <p className="mx-auto mb-4 max-w-md text-sm text-text-muted">
                         Add your first subdomain to send email from your own brand. Outbound messages
@@ -303,11 +289,11 @@ export default function MailSetupPage() {
                         >
                           {polling ? (
                             <>
-                              <Loader size={14} className="animate-spin" /> Verifying…
+                              <CircleNotch size={14} className="animate-spin" /> Verifying…
                             </>
                           ) : (
                             <>
-                              <RotateCw size={14} /> Verify DNS
+                              <ArrowClockwise size={14} /> Verify DNS
                             </>
                           )}
                         </button>
@@ -376,7 +362,7 @@ export default function MailSetupPage() {
                       )}
 
                       <div className="mt-6 flex items-start gap-2 rounded-lg bg-[rgba(212,255,0,0.08)] p-3 text-[11px] text-brand-accent">
-                        <AlertTriangle size={13} className="mt-0.5 shrink-0" />
+                        <Warning size={13} className="mt-0.5 shrink-0" />
                         <p>
                           Use a subdomain you CONTROL. You&apos;ll need to add 3–5 DNS records to
                           complete verification. Don&apos;t use your root domain — it affects your
@@ -439,11 +425,11 @@ export default function MailSetupPage() {
                         >
                           {submitting ? (
                             <>
-                              <Loader size={14} className="animate-spin" /> Creating…
+                              <CircleNotch size={14} className="animate-spin" /> Creating…
                             </>
                           ) : (
                             <>
-                              <Sparkles size={14} /> Register domain
+                              <Sparkle size={14} /> Register domain
                             </>
                           )}
                         </button>
@@ -454,7 +440,7 @@ export default function MailSetupPage() {
                   {step === 3 && selected && (
                     <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-6">
                       <div className="mb-4 flex items-center gap-2">
-                        <CheckCircle2 size={20} className="text-emerald-400" />
+                        <CheckCircle size={20} className="text-emerald-400" />
                         <h2 className="text-lg font-semibold">
                           Domain registered — add these DNS records
                         </h2>
@@ -492,11 +478,11 @@ export default function MailSetupPage() {
                         >
                           {polling ? (
                             <>
-                              <Loader size={14} className="animate-spin" /> Verifying…
+                              <CircleNotch size={14} className="animate-spin" /> Verifying…
                             </>
                           ) : (
                             <>
-                              <RotateCw size={14} /> Verify DNS
+                              <ArrowClockwise size={14} /> Verify DNS
                             </>
                           )}
                         </button>
@@ -592,7 +578,7 @@ function DomainRow({
           title="Remove domain"
           aria-label="Remove domain"
         >
-          <Trash2 size={11} />
+          <Trash size={11} />
         </button>
       </div>
     </div>

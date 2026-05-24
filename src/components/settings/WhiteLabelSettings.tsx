@@ -1,4 +1,5 @@
 "use client";
+import { ArrowCounterClockwise, CircleNotch, Eye, FloppyDisk, Globe, Palette, Trash, UploadSimple, Warning } from "@phosphor-icons/react";
 
 /**
  * WhiteLabelSettings — company branding config (name, logo, colors, favicon,
@@ -7,7 +8,6 @@
  */
 
 import { useRef, useState } from "react";
-import { Palette, Globe, Eye, Save, RotateCcw, Upload, AlertTriangle, Trash2, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 const LOGO_ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp", "image/svg+xml"];
@@ -68,13 +68,13 @@ function LogoDropZone({
       const res = await fetch("/api/white-label/logo-upload", { method: "POST", body: fd });
       const data = await res.json();
       if (!res.ok) {
-        const msg = data?.error || "Upload failed";
+        const msg = data?.error || "UploadSimple failed";
         setWarn(msg); toast.error(msg);
       } else if (data.logo_url) {
         onUploaded(data.logo_url); toast.success("Logo uploaded");
-      } else { toast.error("Upload returned no URL"); }
+      } else { toast.error("UploadSimple returned no URL"); }
     } catch {
-      toast.error("Upload network error");
+      toast.error("UploadSimple network error");
       setWarn("Network error during upload");
     } finally { setUploading(false); }
   }
@@ -112,7 +112,7 @@ function LogoDropZone({
             // eslint-disable-next-line @next/next/no-img-element
             <img src={logoUrl} alt="Logo preview" className="w-full h-full object-contain" />
           ) : (
-            <Upload size={18} className="text-text-muted" />
+            <UploadSimple size={18} className="text-text-muted" />
           )}
         </div>
         <div className="flex-1 min-w-0">
@@ -122,11 +122,11 @@ function LogoDropZone({
           <p className="text-[10px] text-text-muted mt-0.5">PNG, JPEG or SVG · max 2 MB</p>
           {warn && (
             <p className="text-[10px] text-danger mt-1 flex items-center gap-1">
-              <AlertTriangle size={10} /> {warn}
+              <Warning size={10} /> {warn}
             </p>
           )}
         </div>
-        {uploading && <Loader2 size={16} className="text-[#D4FF00] animate-spin shrink-0" />}
+        {uploading && <CircleNotch size={16} className="text-[#D4FF00] animate-spin shrink-0" />}
         {logoUrl && !uploading && (
           <button
             type="button"
@@ -134,7 +134,7 @@ function LogoDropZone({
             className="text-[10px] flex items-center gap-1 px-2 py-1 rounded-md border border-border-subtle hover:border-danger/40 hover:text-danger text-text-muted shrink-0"
             title="Remove the current logo"
           >
-            <Trash2 size={10} /> Remove logo
+            <Trash size={10} /> Remove logo
           </button>
         )}
         <input ref={inputRef} type="file" accept={LOGO_ALLOWED_TYPES.join(",")} onChange={onSelect} className="hidden" />
@@ -162,7 +162,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
               <p className="text-[9px] text-text-muted mt-1">Displayed in the sidebar, page titles, and client-facing UI</p>
             </div>
 
-            {/* Logo Upload */}
+            {/* Logo UploadSimple */}
             <div>
               <label className="block text-[10px] text-text-muted uppercase tracking-wider mb-1">Logo</label>
               <LogoDropZone
@@ -292,16 +292,16 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
               }}
               className="btn-primary text-xs flex items-center gap-2"
             >
-              <Save size={12} /> {wlSaving ? "Saving..." : "Save White Label"}
+              <FloppyDisk size={12} /> {wlSaving ? "Saving..." : "FloppyDisk White Label"}
             </button>
             <button
               onClick={() => {
                 setWhiteLabel({ company_name: "", logo_url: "", primary_color: "#D4FF00", accent_color: "#AACC00", favicon_url: "", login_text: "", show_powered_by: true, domain: "", support_email: "" });
-                toast.success("Reset to defaults — click Save to apply");
+                toast.success("Reset to defaults — click FloppyDisk to apply");
               }}
               className="btn-secondary text-xs flex items-center gap-2"
             >
-              <RotateCcw size={12} /> Reset to Defaults
+              <ArrowCounterClockwise size={12} /> Reset to Defaults
             </button>
           </div>
         </div>

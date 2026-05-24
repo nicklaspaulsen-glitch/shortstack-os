@@ -1,13 +1,8 @@
 "use client";
+import { ArrowBendUpLeft, ArrowUpRight, ArrowsClockwise, Calendar, ChartBar, Chat, Clock, Eye, Gear, Globe, Image, MapPin, PaperPlaneTilt, PenNib, Plus, Sparkle, Star, Tag } from "@phosphor-icons/react";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import {
-  MapPin, Star, Send, RefreshCw, Reply, PenTool, Eye,
-  BarChart3, Image, Clock, Calendar, Plus,
-  Globe, Settings,
-  ArrowUpRight, Sparkles, MessageSquare, Tag,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /* ------------------------------------------------------------------ */
@@ -66,11 +61,11 @@ export default function GoogleBusinessPage() {
 
   const tabs = [
     { id: "reviews" as const, label: "Reviews", icon: Star },
-    { id: "posts" as const, label: "Posts", icon: PenTool },
-    { id: "insights" as const, label: "Insights", icon: BarChart3 },
-    { id: "qa" as const, label: "Q&A", icon: MessageSquare },
+    { id: "posts" as const, label: "Posts", icon: PenNib },
+    { id: "insights" as const, label: "Insights", icon: ChartBar },
+    { id: "qa" as const, label: "Q&A", icon: Chat },
     { id: "photos" as const, label: "Photos", icon: Image },
-    { id: "settings" as const, label: "Settings", icon: Settings },
+    { id: "settings" as const, label: "Gear", icon: Gear },
   ];
 
   return (
@@ -82,7 +77,7 @@ export default function GoogleBusinessPage() {
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button className="px-3 py-1.5 rounded-lg border border-border-subtle bg-white/5 text-text-primary text-xs hover:bg-white/10 transition-all flex items-center gap-1.5">
-                  <RefreshCw size={12} /> Refresh
+                  <ArrowsClockwise size={12} /> Refresh
                 </button>
       </div>
     </div>{/* Stats */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
@@ -108,14 +103,14 @@ export default function GoogleBusinessPage() {
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Total Reviews</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{reviews.length}</p>
               </motion.div>
-              {/* Support — Needs Reply */}
+              {/* Support — Needs ArrowBendUpLeft */}
               <motion.div
                 className="glass rounded-2xl p-5"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.14, duration: 0.3 }}
               >
-                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Needs Reply</p>
+                <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">Needs ArrowBendUpLeft</p>
                 <p className="font-display text-2xl font-bold tracking-[-0.02em] text-text-primary tabular-nums">{needsReply}</p>
               </motion.div>
               {/* Support — Profile Views */}
@@ -186,14 +181,14 @@ export default function GoogleBusinessPage() {
                             <textarea value={replyText} onChange={e => setReplyText(e.target.value)}
                               className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs text-text-primary h-16" placeholder="Write a reply..." />
                             <div className="flex gap-1.5">
-                              <button className="px-2 py-1 rounded-lg bg-[#4285F4] text-white text-[10px] font-medium flex items-center gap-1"><Send size={8} /> Reply</button>
-                              <button onClick={() => generateReply(review)} className="px-2 py-1 rounded-lg border border-border-subtle text-[10px] text-text-muted flex items-center gap-1"><Sparkles size={8} /> AI Reply</button>
+                              <button className="px-2 py-1 rounded-lg bg-[#4285F4] text-white text-[10px] font-medium flex items-center gap-1"><PaperPlaneTilt size={8} /> ArrowBendUpLeft</button>
+                              <button onClick={() => generateReply(review)} className="px-2 py-1 rounded-lg border border-border-subtle text-[10px] text-text-muted flex items-center gap-1"><Sparkle size={8} /> AI ArrowBendUpLeft</button>
                               <button onClick={() => { setReplyingTo(null); setReplyText(""); }} className="px-2 py-1 rounded-lg border border-border-subtle text-[10px] text-text-muted">Cancel</button>
                             </div>
                           </div>
                         )}
                         {!review.replied && replyingTo !== review.id && (
-                          <button onClick={() => setReplyingTo(review.id)} className="mt-2 text-[10px] text-[#4285F4] hover:underline flex items-center gap-1"><Reply size={10} /> Reply</button>
+                          <button onClick={() => setReplyingTo(review.id)} className="mt-2 text-[10px] text-[#4285F4] hover:underline flex items-center gap-1"><ArrowBendUpLeft size={10} /> ArrowBendUpLeft</button>
                         )}
                       </div>
                     </div>
@@ -216,7 +211,7 @@ export default function GoogleBusinessPage() {
                   <textarea value={postContent} onChange={e => setPostContent(e.target.value)}
                     className="w-full rounded-lg border border-border-subtle bg-surface px-3 py-2 text-xs text-text-primary h-24" placeholder="Share an update, promotion, or news..." />
                   <div className="flex gap-2">
-                    <button className="px-3 py-1.5 rounded-lg bg-[#4285F4] text-white text-xs font-semibold flex items-center gap-1.5"><Send size={12} /> Publish</button>
+                    <button className="px-3 py-1.5 rounded-lg bg-[#4285F4] text-white text-xs font-semibold flex items-center gap-1.5"><PaperPlaneTilt size={12} /> Publish</button>
                     <button className="px-3 py-1.5 rounded-lg border border-border-subtle text-xs text-text-muted flex items-center gap-1.5"><Calendar size={12} /> Schedule</button>
                   </div>
                 </motion.div>
@@ -238,15 +233,15 @@ export default function GoogleBusinessPage() {
               </div>
             )}{/* ---- TAB: Insights ---- */}{activeTab === "insights" && (
               <div className="flex flex-col items-center justify-center py-16 text-center">
-                <BarChart3 size={24} className="text-text-muted mb-2" />
+                <ChartBar size={24} className="text-text-muted mb-2" />
                 <p className="text-sm text-text-muted">No insights data available yet.</p>
                 <p className="text-[10px] text-text-muted mt-1">Connect your Google Business Profile to see performance data.</p>
               </div>
             )}{/* ---- TAB: Q&A ---- */}{activeTab === "qa" && (
               <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4, scale: 1.01 }}>
-                <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><MessageSquare size={12} className="text-[#4285F4]" /> Q&A Manager</h3>
+                <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Chat size={12} className="text-[#4285F4]" /> Q&A Manager</h3>
                 <div className="flex flex-col items-center justify-center py-10 text-center">
-                  <MessageSquare size={24} className="text-text-muted mb-2" />
+                  <Chat size={24} className="text-text-muted mb-2" />
                   <p className="text-xs text-text-muted">No questions yet.</p>
                 </div>
               </motion.div>
@@ -267,7 +262,7 @@ export default function GoogleBusinessPage() {
                   <p className="text-[10px] text-text-muted mt-2">No photos uploaded yet.</p>
                 </motion.div>
               </div>
-            )}{/* ---- TAB: Settings ---- */}{activeTab === "settings" && (
+            )}{/* ---- TAB: Gear ---- */}{activeTab === "settings" && (
               <div className="space-y-4">
                 {/* Categories */}
                 <motion.div className="glass rounded-xl p-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4, scale: 1.01 }}>

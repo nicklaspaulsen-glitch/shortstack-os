@@ -1,3 +1,4 @@
+import { ArrowsDownUp, CheckSquare, CircleNotch, Copy, DownloadSimple, Eye, File, FileText, FloppyDisk, FolderOpen, FolderPlus, Image, ListBullets, MagnifyingGlass, MusicNote, Palette, PencilSimple, Square, SquaresFour, Stack, Star, Tag, Trash, UploadSimple, Video, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
@@ -8,13 +9,6 @@ import {
 } from "@/lib/file-types";
 import { useAuth } from "@/lib/auth-context";
 import { motion } from "framer-motion";
-import {
-  FolderOpen, Upload, Search, Grid, List, Image as ImageIcon,
-  Video, Music, FileText, File, Palette, Tag, Trash2, Eye,
-  Download, X, Layers, Star, Copy,
-  CheckSquare, Square, FolderPlus, ArrowUpDown, Loader,
-  Edit3, Save, Loader2,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { PrismPanel } from "@/components/prism";
@@ -138,18 +132,18 @@ function dbCollectionToView(c: DbCollection): Collection {
 
 const CATEGORIES = [
   { key: "all", label: "All Assets", icon: <FolderOpen size={14} /> },
-  { key: "image", label: "Images", icon: <ImageIcon size={14} /> },
+  { key: "image", label: "Images", icon: <Image size={14} /> },
   { key: "video", label: "Videos", icon: <Video size={14} /> },
-  { key: "audio", label: "Audio", icon: <Music size={14} /> },
+  { key: "audio", label: "Audio", icon: <MusicNote size={14} /> },
   { key: "document", label: "Documents", icon: <FileText size={14} /> },
   { key: "template", label: "Templates", icon: <File size={14} /> },
   { key: "brand", label: "Brand Assets", icon: <Palette size={14} /> },
 ];
 
 const TYPE_ICON: Record<string, React.ReactNode> = {
-  image: <ImageIcon size={16} className="text-indigo-400" />,
+  image: <Image size={16} className="text-indigo-400" />,
   video: <Video size={16} className="text-purple-400" />,
-  audio: <Music size={16} className="text-orange-400" />,
+  audio: <MusicNote size={16} className="text-orange-400" />,
   document: <FileText size={16} className="text-green-400" />,
   template: <File size={16} className="text-pink-400" />,
   brand: <Palette size={16} className="text-brand-accent" />,
@@ -220,7 +214,7 @@ export default function ContentLibraryPage() {
     Promise.all([fetchAssets(), fetchCollections()]).finally(() => setLoading(false));
   }, [fetchAssets, fetchCollections]);
 
-  // -- Upload logic --
+  // -- UploadSimple logic --
 
   const CONTENT_LIB_MAX_BYTES = 100 * 1024 * 1024; // 100 MB
 
@@ -241,7 +235,7 @@ export default function ContentLibraryPage() {
 
         const res = await fetch("/api/content-library", { method: "POST", body: form });
         if (!res.ok) {
-          const err2 = await res.json().catch(() => ({ error: "Upload failed" }));
+          const err2 = await res.json().catch(() => ({ error: "UploadSimple failed" }));
           toast.error(`Failed to upload ${file.name}: ${err2.error}`);
           continue;
         }
@@ -447,7 +441,7 @@ export default function ContentLibraryPage() {
   if (loading) {
     return (
       <MotionPage className="flex items-center justify-center py-20"><div className="text-center">
-                  <Loader size={24} className="animate-spin text-brand-accent mx-auto mb-3" />
+                  <CircleNotch size={24} className="animate-spin text-brand-accent mx-auto mb-3" />
                   <p className="text-sm text-text-muted">Loading content library...</p>
                 </div></MotionPage>
     );
@@ -464,10 +458,10 @@ export default function ContentLibraryPage() {
         <div className="flex items-center gap-2 shrink-0">
           <>
             <button onClick={() => setShowCollections(!showCollections)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-text-primary text-xs font-medium hover:bg-white/15 transition-all flex items-center gap-1">
-              <Layers size={14} /> Collections
+              <Stack size={14} /> Collections
             </button>
             <label className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1 cursor-pointer">
-              <Upload size={14} /> Upload
+              <UploadSimple size={14} /> UploadSimple
               <input
                 ref={fileInputRef}
                 type="file"
@@ -511,7 +505,7 @@ export default function ContentLibraryPage() {
         </div>
       </div>
 
-      {/* Upload Drop Zone */}
+      {/* UploadSimple Drop Zone */}
       <div
         onDragOver={e => { e.preventDefault(); e.stopPropagation(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
@@ -526,12 +520,12 @@ export default function ContentLibraryPage() {
       >
         {uploading ? (
           <div className="flex items-center justify-center gap-2">
-            <Loader size={18} className="animate-spin text-brand-accent" />
+            <CircleNotch size={18} className="animate-spin text-brand-accent" />
             <span className="text-sm text-text-muted">Uploading files...</span>
           </div>
         ) : (
           <>
-            <Upload size={24} className={`mx-auto mb-2 ${dragging ? "text-brand-accent" : "text-text-muted"}`} />
+            <UploadSimple size={24} className={`mx-auto mb-2 ${dragging ? "text-brand-accent" : "text-text-muted"}`} />
             <p className="text-xs text-text-muted">Drop files here or click to upload</p>
             <p className="text-[10px] text-text-muted mt-1">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV � up to 100 MB</p>
           </>
@@ -543,7 +537,7 @@ export default function ContentLibraryPage() {
         <PrismPanel padding="p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Layers size={16} className="text-brand-accent" />
+              <Stack size={16} className="text-brand-accent" />
               <span className="text-sm font-semibold">Collections</span>
             </div>
             <button onClick={() => setShowNewCollection(!showNewCollection)} className="text-xs text-brand-accent hover:underline flex items-center gap-1">
@@ -611,13 +605,13 @@ export default function ContentLibraryPage() {
 
         <div className="flex-1" />
 
-        {/* Search */}
+        {/* MagnifyingGlass */}
         <div className="relative">
-          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
+          <MagnifyingGlass size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
           <input
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            placeholder="Search by name or tag..."
+            placeholder="MagnifyingGlass by name or tag..."
             className="input text-xs pl-8 w-48"
           />
         </div>
@@ -634,16 +628,16 @@ export default function ContentLibraryPage() {
 
         {/* Sort */}
         <button onClick={() => setSortBy(sortBy === "date" ? "name" : sortBy === "name" ? "size" : "date")} className="btn-ghost text-xs flex items-center gap-1">
-          <ArrowUpDown size={12} /> {sortBy === "date" ? "Date" : sortBy === "name" ? "Name" : "Size"}
+          <ArrowsDownUp size={12} /> {sortBy === "date" ? "Date" : sortBy === "name" ? "Name" : "Size"}
         </button>
 
         {/* View Toggle */}
         <div className="flex bg-white/5 rounded-lg p-0.5">
           <button onClick={() => setViewMode("grid")} className={`p-1.5 rounded ${viewMode === "grid" ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : "text-text-muted"}`}>
-            <Grid size={14} />
+            <SquaresFour size={14} />
           </button>
           <button onClick={() => setViewMode("list")} className={`p-1.5 rounded ${viewMode === "list" ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : "text-text-muted"}`}>
-            <List size={14} />
+            <ListBullets size={14} />
           </button>
         </div>
       </div>
@@ -666,7 +660,7 @@ export default function ContentLibraryPage() {
             <button onClick={bulkTag} className="btn-ghost text-xs" aria-label="Apply tag to selected assets"><Tag size={12} /></button>
           </div>
           <button onClick={bulkDelete} className="text-xs text-red-400 hover:text-red-600 flex items-center gap-1">
-            <Trash2 size={12} /> Delete
+            <Trash size={12} /> Delete
           </button>
           <button onClick={() => setSelectedAssets(new Set())} className="text-xs text-text-muted hover:text-text-primary" aria-label="Clear selection">
             <X size={14} />
@@ -681,13 +675,13 @@ export default function ContentLibraryPage() {
             type={assets.length === 0 ? "no-files" : "no-content"}
             title={assets.length === 0 ? "No assets yet" : "No matching assets"}
             description={assets.length === 0
-              ? "Upload files using the drop zone above or the Upload button."
+              ? "UploadSimple files using the drop zone above or the UploadSimple button."
               : "Try adjusting your filters or search query."}
           />
         </PrismPanel>
       )}
 
-      {/* Asset Grid */}
+      {/* Asset SquaresFour */}
       {filteredAssets.length > 0 && viewMode === "grid" && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
           {filteredAssets.map((asset, i) => (
@@ -755,7 +749,7 @@ export default function ContentLibraryPage() {
         </div>
       )}
 
-      {/* Asset List */}
+      {/* Asset ListBullets */}
       {filteredAssets.length > 0 && viewMode === "list" && (
         <div className="glass rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
@@ -812,7 +806,7 @@ export default function ContentLibraryPage() {
                         <Eye size={14} />
                       </button>
                       <button onClick={() => deleteAsset(asset.id)} className="text-text-muted hover:text-red-400">
-                        <Trash2 size={14} />
+                        <Trash size={14} />
                       </button>
                     </div>
                   </td>
@@ -914,7 +908,7 @@ export default function ContentLibraryPage() {
                     onClick={() => setEditText(previewAsset.name)}
                     className="btn-ghost text-xs flex items-center gap-1 text-brand-accent"
                   >
-                    <Edit3 size={12} /> Edit content
+                    <PencilSimple size={12} /> Edit content
                   </button>
                 ) : (
                   <div className="space-y-2">
@@ -931,8 +925,8 @@ export default function ContentLibraryPage() {
                         onClick={() => saveEditedContent(previewAsset.id, editText)}
                         className="btn-primary text-xs flex items-center gap-1"
                       >
-                        {savingEdit ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
-                        Save
+                        {savingEdit ? <CircleNotch size={12} className="animate-spin" /> : <FloppyDisk size={12} />}
+                        FloppyDisk
                       </button>
                       <button onClick={() => setEditText(null)} className="btn-ghost text-xs">Cancel</button>
                     </div>
@@ -942,13 +936,13 @@ export default function ContentLibraryPage() {
             )}
             <div className="flex gap-2">
               <a href={previewAsset.url} target="_blank" rel="noopener noreferrer" className="btn-primary text-xs flex items-center gap-1 flex-1 justify-center" download>
-                <Download size={12} /> Download
+                <DownloadSimple size={12} /> DownloadSimple
               </a>
               <button onClick={() => { navigator.clipboard.writeText(previewAsset.url); toast.success("Link copied"); }} className="btn-ghost text-xs flex items-center gap-1">
                 <Copy size={12} /> Copy Link
               </button>
               <button onClick={() => { deleteAsset(previewAsset.id); setPreviewAsset(null); }} className="btn-ghost text-xs flex items-center gap-1 text-red-400 hover:text-red-600">
-                <Trash2 size={12} /> Delete
+                <Trash size={12} /> Delete
               </button>
             </div>
           </div>

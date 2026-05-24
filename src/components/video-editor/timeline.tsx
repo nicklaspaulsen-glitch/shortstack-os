@@ -1,4 +1,5 @@
 "use client";
+import { Check, ClosedCaptioning, Lightbulb, Pulse, X } from "@phosphor-icons/react";
 
 /* ────────────────────────────────────────────────────────────────
  * Video-editor timeline bridge.
@@ -10,20 +11,13 @@
  *   1. Re-exports all shared types so existing page imports still resolve.
  *   2. Provides a thin `VideoTimeline` wrapper that accepts the legacy
  *      `onProjectChange` prop name + video-editor extras (suggestions,
- *      Captions/Suggest toolbar buttons) via `renderExtraToolbar`.
+ *      ClosedCaptioning/Suggest toolbar buttons) via `renderExtraToolbar`.
  *   3. Also exports `Timeline` as an alias for backward compat with the
  *      page's `import { Timeline as VideoTimeline }` statement.
  *   4. Keeps video-editor-specific helpers: DEFAULT_TRACKS,
  *      buildProjectFromStoryboard, TimelineSuggestion.
  * ────────────────────────────────────────────────────────────────*/
 
-import {
-  Captions as CaptionsIcon,
-  Lightbulb,
-  Activity,
-  Check as CheckIcon,
-  X as XIcon,
-} from "lucide-react";
 
 // ── Shared Timeline (aliased to avoid redeclaration conflict) ─
 import { Timeline as _SharedTimeline, useTimelineHistory } from "@/components/timeline";
@@ -64,7 +58,7 @@ export const DEFAULT_TRACKS = [
   { id: "a1",  label: "A1 · Music", kind: "audio"   as const, accent: "#22C55E" },
   { id: "a2",  label: "A2 · SFX",   kind: "audio"   as const, accent: "#F59E0B" },
   { id: "a3",  label: "A3 · VO",    kind: "audio"   as const, accent: "#EC4899" },
-  { id: "cap", label: "Captions",   kind: "caption" as const, accent: "#A855F7" },
+  { id: "cap", label: "ClosedCaptioning",   kind: "caption" as const, accent: "#A855F7" },
   { id: "fx",  label: "FX",         kind: "effect"  as const, accent: "#EF4444" },
 ];
 
@@ -119,7 +113,7 @@ function VideoTimeline({
           className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-border-subtle text-text-muted hover:text-text-primary"
           title="Auto-transcribe primary video & render caption keyframes"
         >
-          <CaptionsIcon size={10} /> Captions
+          <ClosedCaptioning size={10} /> ClosedCaptioning
         </button>
       )}
 
@@ -139,7 +133,7 @@ function VideoTimeline({
           className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-border-subtle text-text-muted"
           title={`Detected BPM: ${bpm}`}
         >
-          <Activity size={10} /> {bpm} BPM
+          <Pulse size={10} /> {bpm} BPM
         </span>
       )}
 
@@ -158,7 +152,7 @@ function VideoTimeline({
               className="ml-0.5 rounded bg-emerald-500 hover:bg-emerald-400 text-white h-3 w-3 flex items-center justify-center"
               title={`Accept: ${sug.reasoning}`}
             >
-              <CheckIcon size={7} />
+              <Check size={7} />
             </button>
           )}
           {onRejectSuggestion && (
@@ -168,7 +162,7 @@ function VideoTimeline({
               className="rounded bg-red-500/80 hover:bg-red-500 text-white h-3 w-3 flex items-center justify-center"
               title="Reject"
             >
-              <XIcon size={7} />
+              <X size={7} />
             </button>
           )}
         </span>

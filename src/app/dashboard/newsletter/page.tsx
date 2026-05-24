@@ -1,18 +1,9 @@
+import { ArrowDown, ArrowUp, BookOpen, Briefcase, Calendar, CaretDown, CaretUp, ChartBar, Check, CircleNotch, Clock, Copy, CursorClick, DeviceMobile, DotsSixVertical, Eye, FileText, Gift, Image, Layout, Lightning, Link, MagicWand, Megaphone, Monitor, PaperPlaneTilt, Sparkle, TextT, Trash, TrendUp, Users, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useRef, useMemo } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import {
-  Send, Sparkles, Eye, Monitor, Smartphone,
-  Trash2, GripVertical, Image as ImageIcon,
-  Type, MousePointerClick, Link2, Clock, Calendar,
-  BarChart3, Users, ChevronDown, ChevronUp,
-  Layout, Megaphone, BookOpen,
-  Briefcase, Gift, Zap, Copy, Check, X,
-  ArrowUp, ArrowDown, Loader2,
-  Wand2, FileText, TrendingUp,
-} from "lucide-react";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
@@ -169,7 +160,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
 
 const TEMPLATES: NewsletterTemplate[] = [
   { id: "agency_update",  name: "Agency Update",   icon: <Megaphone size={16} />, description: "Monthly update with wins, news, and upcoming plans",       subject: "Monthly Agency Update", blocks: [] },
-  { id: "product_launch",  name: "Product Launch",  icon: <Zap size={16} />,       description: "Announce a new product, feature, or service",              subject: "Introducing [Product Name] - Built For You", blocks: [] },
+  { id: "product_launch",  name: "Product Launch",  icon: <Lightning size={16} />,       description: "Announce a new product, feature, or service",              subject: "Introducing [Product Name] - Built For You", blocks: [] },
   { id: "weekly_digest",   name: "Weekly Digest",   icon: <BookOpen size={16} />,  description: "Curated weekly roundup of insights and quick wins",        subject: "Your Weekly Marketing Digest", blocks: [] },
   { id: "event_invite",    name: "Event Invite",    icon: <Calendar size={16} />,  description: "Invite subscribers to webinars, workshops, or events",     subject: "You're Invited: [Event Name]", blocks: [] },
   { id: "case_study",      name: "Case Study",      icon: <Briefcase size={16} />, description: "Showcase client results with a compelling story",          subject: "How We Drove [Result] for [Client]", blocks: [] },
@@ -270,7 +261,7 @@ export default function NewsletterPage() {
     try {
       const res = await fetch("/api/newsletter/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ type: "section_copy", context, tone: "professional", audience: "subscribers" }),
       });
       const data = await res.json();
@@ -294,7 +285,7 @@ export default function NewsletterPage() {
       const context = blocks.find(b => b.type === "hero")?.content.headline || subject || "agency newsletter";
       const res = await fetch("/api/newsletter/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ type: "subject_line", context, tone: "professional", audience: "subscribers" }),
       });
       const data = await res.json();
@@ -330,7 +321,7 @@ export default function NewsletterPage() {
     try {
       const res = await fetch("/api/newsletter/send", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           subject,
           html_body: renderNewsletterHtml(),
@@ -349,7 +340,7 @@ export default function NewsletterPage() {
           toast.success(`Newsletter sent to ${list?.count || 0} recipients!`);
         }
       } else {
-        toast.error(data.error || "Send failed");
+        toast.error(data.error || "PaperPlaneTilt failed");
       }
     } catch (err) {
       // Don't fake success on network errors � the user needs to know the
@@ -399,7 +390,7 @@ export default function NewsletterPage() {
     { key: "builder",   label: "Builder",   icon: <Layout size={14} /> },
     { key: "templates", label: "Templates", icon: <Copy size={14} /> },
     { key: "preview",   label: "Preview",   icon: <Eye size={14} /> },
-    { key: "stats",     label: "Stats",     icon: <BarChart3 size={14} /> },
+    { key: "stats",     label: "Stats",     icon: <ChartBar size={14} /> },
   ];
 
   const selectedList = RECIPIENT_LISTS.find(l => l.id === recipientList);
@@ -424,7 +415,7 @@ export default function NewsletterPage() {
     try {
       const res = await fetch("/api/newsletter/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           type: "full_draft",
           context: topic,
@@ -507,7 +498,7 @@ export default function NewsletterPage() {
       id: "styling",
       title: "Length and tone",
       description: "Shorter reads better; longer drafts give subscribers more to chew on.",
-      icon: <Type size={18} />,
+      icon: <TextT size={18} />,
       component: (
         <div className="space-y-4">
           <div>
@@ -573,7 +564,7 @@ export default function NewsletterPage() {
       id: "review",
       title: "Ready to draft?",
       description: "We'll write the subject, headline, and section copy. You'll be able to tweak every block in the builder.",
-      icon: <Wand2 size={18} />,
+      icon: <MagicWand size={18} />,
       component: (
         <div className="glass rounded-xl p-4 bg-[rgba(212,255,0,0.05)] border-[rgba(212,255,0,0.2)] space-y-2">
           <p className="text-sm">
@@ -640,8 +631,8 @@ export default function NewsletterPage() {
                   <Eye size={12} /> Preview
                 </button>
                 <button onClick={handleSend} disabled={sending} className="px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1.5">
-                  {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
-                  {sendMode === "schedule" ? "Schedule" : "Send"}
+                  {sending ? <CircleNotch size={12} className="animate-spin" /> : <PaperPlaneTilt size={12} />}
+                  {sendMode === "schedule" ? "Schedule" : "PaperPlaneTilt"}
                 </button>
               </>
             )}
@@ -722,7 +713,7 @@ export default function NewsletterPage() {
                   onClick={generateSubjectLines}
                   className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] transition-all flex items-center gap-1"
                 >
-                  {aiLoading === "subject" ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />} AI Ideas
+                  {aiLoading === "subject" ? <CircleNotch size={9} className="animate-spin" /> : <Sparkle size={9} />} AI Ideas
                 </button>
               </div>
             </div>
@@ -759,14 +750,14 @@ export default function NewsletterPage() {
                   {/* Block toolbar */}
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <GripVertical size={14} className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity cursor-grab" />
+                      <DotsSixVertical size={14} className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity cursor-grab" />
                       <span className="text-[9px] uppercase tracking-wider font-semibold text-text-muted">{blockLabel(block.type)}</span>
                     </div>
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button onClick={() => moveBlock(index, "up")} className="p-1 rounded text-text-muted hover:text-text-primary hover:bg-surface-light" title="Move up"><ArrowUp size={12} /></button>
                       <button onClick={() => moveBlock(index, "down")} className="p-1 rounded text-text-muted hover:text-text-primary hover:bg-surface-light" title="Move down"><ArrowDown size={12} /></button>
                       {block.type !== "header" && block.type !== "footer" && (
-                        <button onClick={() => removeBlock(block.id)} className="p-1 rounded text-text-muted hover:text-red-400 hover:bg-red-400/5" title="Remove"><Trash2 size={12} /></button>
+                        <button onClick={() => removeBlock(block.id)} className="p-1 rounded text-text-muted hover:text-red-400 hover:bg-red-400/5" title="Remove"><Trash size={12} /></button>
                       )}
                     </div>
                   </div>
@@ -820,7 +811,7 @@ export default function NewsletterPage() {
                         disabled={aiLoading === block.id}
                         className="text-[9px] px-2 py-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] transition-all flex items-center gap-1"
                       >
-                        {aiLoading === block.id ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />} Write with AI
+                        {aiLoading === block.id ? <CircleNotch size={9} className="animate-spin" /> : <Sparkle size={9} />} Write with AI
                       </button>
                     </div>
                   )}
@@ -843,7 +834,7 @@ export default function NewsletterPage() {
                       </div>
                       {!block.content.url && (
                         <div className="h-28 rounded-lg bg-surface-light border border-dashed border-border-subtle flex items-center justify-center text-text-muted text-[10px]">
-                          <ImageIcon size={14} className="mr-2" /> Image preview will appear here
+                          <Image size={14} className="mr-2" /> Image preview will appear here
                         </div>
                       )}
                     </div>
@@ -915,9 +906,9 @@ export default function NewsletterPage() {
               {(["text", "image", "button", "divider"] as const).map(type => (
                 <button key={type} onClick={() => addBlock(type)}
                   className="text-[10px] px-3 py-1.5 rounded-lg bg-surface border border-border-subtle hover:border-[rgba(212,255,0,0.2)] hover:text-brand-accent transition-all flex items-center gap-1.5">
-                  {type === "text" && <Type size={10} />}
-                  {type === "image" && <ImageIcon size={10} />}
-                  {type === "button" && <MousePointerClick size={10} />}
+                  {type === "text" && <TextT size={10} />}
+                  {type === "image" && <Image size={10} />}
+                  {type === "button" && <CursorClick size={10} />}
                   {type === "divider" && <span className="text-[8px]">---</span>}
                   {type.charAt(0).toUpperCase() + type.slice(1)}
                 </button>
@@ -938,7 +929,7 @@ export default function NewsletterPage() {
                     {selectedList?.label}
                     <span className="text-text-muted">({selectedList?.count})</span>
                   </span>
-                  {showRecipientDropdown ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                  {showRecipientDropdown ? <CaretUp size={12} /> : <CaretDown size={12} />}
                 </button>
                 {showRecipientDropdown && (
                   <div className="absolute z-10 top-full left-0 right-0 mt-1 rounded-xl bg-surface border border-border-subtle shadow-lg overflow-hidden">
@@ -957,13 +948,13 @@ export default function NewsletterPage() {
               </div>
             </div>
 
-            {/* Send options */}
+            {/* PaperPlaneTilt options */}
             <div className="glass rounded-xl p-4">
-              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-text-muted flex items-center gap-1.5"><Send size={10} /> Send Options</h3>
+              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-text-muted flex items-center gap-1.5"><PaperPlaneTilt size={10} /> PaperPlaneTilt Options</h3>
               <div className="flex gap-1 mb-3">
                 <button onClick={() => setSendMode("now")}
                   className={`flex-1 text-[10px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${sendMode === "now" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)]" : "text-text-muted border border-border-subtle"}`}>
-                  <Zap size={10} /> Send Now
+                  <Lightning size={10} /> PaperPlaneTilt Now
                 </button>
                 <button onClick={() => setSendMode("schedule")}
                   className={`flex-1 text-[10px] px-3 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${sendMode === "schedule" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)]" : "text-text-muted border border-border-subtle"}`}>
@@ -985,20 +976,20 @@ export default function NewsletterPage() {
               )}
               <button onClick={handleSend} disabled={sending}
                 className="btn-primary w-full text-xs flex items-center justify-center gap-1.5 mt-3">
-                {sending ? <Loader2 size={12} className="animate-spin" /> : sendMode === "schedule" ? <Clock size={12} /> : <Send size={12} />}
-                {sending ? "Processing..." : sendMode === "schedule" ? "Schedule Newsletter" : "Send Newsletter"}
+                {sending ? <CircleNotch size={12} className="animate-spin" /> : sendMode === "schedule" ? <Clock size={12} /> : <PaperPlaneTilt size={12} />}
+                {sending ? "Processing..." : sendMode === "schedule" ? "Schedule Newsletter" : "PaperPlaneTilt Newsletter"}
               </button>
             </div>
 
-            {/* Send Readiness Scorer */}
+            {/* PaperPlaneTilt Readiness Scorer */}
             <div
               className="rounded-xl p-3"
               style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
-                  <TrendingUp size={11} className="text-brand-accent" />
-                  <span className="text-[11px] font-semibold text-text-primary">Send Readiness</span>
+                  <TrendUp size={11} className="text-brand-accent" />
+                  <span className="text-[11px] font-semibold text-text-primary">PaperPlaneTilt Readiness</span>
                 </div>
                 <div
                   className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold tabular-nums"
@@ -1080,7 +1071,7 @@ export default function NewsletterPage() {
                   <Eye size={10} /> Preview newsletter
                 </button>
                 <button onClick={() => setActiveTab("stats")} className="w-full text-left p-2 rounded-lg text-[10px] transition-all hover:bg-surface-light flex items-center gap-2 text-text-muted hover:text-text-primary">
-                  <BarChart3 size={10} /> View past stats
+                  <ChartBar size={10} /> View past stats
                 </button>
               </div>
             </div>
@@ -1127,7 +1118,7 @@ export default function NewsletterPage() {
             <button onClick={() => setPreviewMode("mobile")}
               className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
                 previewMode === "mobile" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)]" : "text-text-muted border border-border-subtle"
-              }`}><Smartphone size={12} /> Mobile</button>
+              }`}><DeviceMobile size={12} /> Mobile</button>
           </div>
 
           {/* Email client chrome */}
@@ -1189,7 +1180,7 @@ export default function NewsletterPage() {
                             <img src={block.content.url} alt={block.content.alt || ""} className="max-w-full rounded-lg mx-auto" />
                           ) : (
                             <div className="h-36 rounded-lg flex items-center justify-center text-[11px]" style={{ background: "#f0eeea", color: "#9ca3af" }}>
-                              <ImageIcon size={14} className="mr-1.5" /> Image placeholder
+                              <Image size={14} className="mr-1.5" /> Image placeholder
                             </div>
                           )}
                           {block.content.caption && <p className="text-[10px] mt-2" style={{ color: "#9ca3af" }}>{block.content.caption}</p>}
@@ -1290,7 +1281,7 @@ export default function NewsletterPage() {
           {/* Past newsletters table */}
           <motion.div className="glass rounded-xl" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24, duration: 0.4 }}>
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-              <BarChart3 size={14} className="text-brand-accent" /> Past Newsletters
+              <ChartBar size={14} className="text-brand-accent" /> Past Newsletters
             </h3>
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
@@ -1351,7 +1342,7 @@ export default function NewsletterPage() {
             </motion.div>
             <motion.div className="glass rounded-xl spotlight-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
               <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
-                <Link2 size={12} className="text-brand-accent" /> Best Click Rate
+                <Link size={12} className="text-brand-accent" /> Best Click Rate
               </h3>
               {(() => {
                 const best = [...PAST_NEWSLETTERS].sort((a, b) => parseFloat(b.clickRate) - parseFloat(a.clickRate))[0];

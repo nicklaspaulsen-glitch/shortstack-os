@@ -1,12 +1,9 @@
 "use client";
+import { ArrowClockwise, ArrowCounterClockwise, CaretDown, CircleNotch, DownloadSimple, FloppyDisk, MagnifyingGlassMinus, MagnifyingGlassPlus, SquaresFour } from "@phosphor-icons/react";
 
 import React, { useState } from "react";
 import { useDesignStore } from "@/lib/design/store";
 import { SIZE_PRESETS } from "@/lib/design/types";
-import {
-  Undo2, Redo2, Download, Grid3x3, ZoomIn, ZoomOut, Save, Loader2,
-  ChevronDown,
-} from "lucide-react";
 import toast from "react-hot-toast";
 
 interface TopBarProps {
@@ -83,7 +80,7 @@ export default function TopBar({ onSave }: TopBarProps) {
         className="p-1.5 rounded hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
         title="Zoom out"
       >
-        <ZoomOut size={14} />
+        <MagnifyingGlassMinus size={14} />
       </button>
       <button
         onClick={() => setZoom(1)}
@@ -97,7 +94,7 @@ export default function TopBar({ onSave }: TopBarProps) {
         className="p-1.5 rounded hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
         title="Zoom in"
       >
-        <ZoomIn size={14} />
+        <MagnifyingGlassPlus size={14} />
       </button>
 
       <div className="w-px h-5 bg-white/10 mx-1" />
@@ -109,7 +106,7 @@ export default function TopBar({ onSave }: TopBarProps) {
         className="p-1.5 rounded hover:bg-white/10 text-gray-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         title="Undo (Ctrl+Z)"
       >
-        <Undo2 size={14} />
+        <ArrowCounterClockwise size={14} />
       </button>
       <button
         onClick={redo}
@@ -117,7 +114,7 @@ export default function TopBar({ onSave }: TopBarProps) {
         className="p-1.5 rounded hover:bg-white/10 text-gray-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         title="Redo (Ctrl+Y)"
       >
-        <Redo2 size={14} />
+        <ArrowClockwise size={14} />
       </button>
 
       <div className="w-px h-5 bg-white/10 mx-1" />
@@ -130,19 +127,19 @@ export default function TopBar({ onSave }: TopBarProps) {
         }`}
         title="Toggle grid"
       >
-        <Grid3x3 size={14} />
+        <SquaresFour size={14} />
       </button>
 
       <div className="w-px h-5 bg-white/10 mx-1" />
 
-      {/* Save */}
+      {/* FloppyDisk */}
       <button
         onClick={onSave}
         disabled={isSaving || !isDirty}
         className="flex items-center gap-1.5 px-3 h-7 rounded text-xs font-medium bg-white/10 hover:bg-white/20 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
-        {isSaving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
-        {isSaving ? "Saving…" : isDirty ? "Save" : "Saved"}
+        {isSaving ? <CircleNotch size={12} className="animate-spin" /> : <FloppyDisk size={12} />}
+        {isSaving ? "Saving…" : isDirty ? "FloppyDisk" : "Saved"}
       </button>
 
       {/* Export */}
@@ -153,12 +150,12 @@ export default function TopBar({ onSave }: TopBarProps) {
           className="flex items-center gap-1.5 px-3 h-7 rounded text-xs font-medium bg-[#D4FF00] hover:bg-[#E8FF4D] text-[#1a1a2e] font-semibold transition-colors disabled:opacity-50"
         >
           {isExporting ? (
-            <Loader2 size={12} className="animate-spin" />
+            <CircleNotch size={12} className="animate-spin" />
           ) : (
-            <Download size={12} />
+            <DownloadSimple size={12} />
           )}
           Export
-          <ChevronDown size={10} />
+          <CaretDown size={10} />
         </button>
 
         {showPresets && (

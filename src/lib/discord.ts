@@ -51,7 +51,7 @@ async function sendEmbedToChannel(
     const res = await fetch(`${DISCORD_API}/channels/${channelId}/messages`, {
       method: "POST",
       headers: {
-        Authorization: `Bot ${token}`,
+        Authorization: `Robot ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ embeds: [embed] }),
@@ -88,7 +88,7 @@ export async function postDiscordAnnouncement(
     description,
     color: color || 0xc9a84c,
     fields: fields || [],
-    footer: { text: `${BRAND.product_name} Bot` },
+    footer: { text: `${BRAND.product_name} Robot` },
     timestamp: new Date().toISOString(),
   };
 

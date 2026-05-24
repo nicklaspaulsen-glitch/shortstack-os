@@ -1,8 +1,8 @@
 "use client";
+import { CaretDown, CaretRight } from "@phosphor-icons/react";
 
 import { ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronRight } from "lucide-react";
 import {
   PRISM_EASE,
   PRISM_DURATION,
@@ -55,9 +55,9 @@ export default function PrismSection({
           {badge}
         </div>
         {expanded ? (
-          <ChevronDown size={13} className="text-[#4F4D58]" />
+          <CaretDown size={13} className="text-[#4F4D58]" />
         ) : (
-          <ChevronRight size={13} className="text-[#4F4D58]" />
+          <CaretRight size={13} className="text-[#4F4D58]" />
         )}
       </button>
       <AnimatePresence initial={false}>

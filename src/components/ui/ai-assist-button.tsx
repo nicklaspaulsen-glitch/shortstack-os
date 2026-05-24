@@ -1,4 +1,5 @@
 "use client";
+import { ArrowsClockwise, CircleNotch, Sparkle, X } from "@phosphor-icons/react";
 
 /**
  * AiAssistButton — drop-in "✨ AI write this" button for any text input or
@@ -23,7 +24,6 @@
  */
 
 import { useState, useRef, useEffect } from "react";
-import { Sparkles, Loader, X, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface Props {
@@ -136,12 +136,12 @@ export function AiAssistButton({
       >
         {busy ? (
           <>
-            <Loader size={11} className="animate-spin" />
+            <CircleNotch size={11} className="animate-spin" />
             {!compact && "Stop"}
           </>
         ) : (
           <>
-            <Sparkles size={11} />
+            <Sparkle size={11} />
             {!compact && label}
           </>
         )}
@@ -158,7 +158,7 @@ export function AiAssistButton({
         >
           <div className="p-3">
             <div className="flex items-center gap-2 mb-2.5">
-              <Sparkles size={11} style={{ color: "#D4FF00" }} />
+              <Sparkle size={11} style={{ color: "#D4FF00" }} />
               <p className="text-[11px] font-bold text-text-primary">
                 AI Assist
               </p>
@@ -189,7 +189,7 @@ export function AiAssistButton({
                   color: "#D4FF00",
                 }}
               >
-                <Sparkles size={10} /> Generate
+                <Sparkle size={10} /> Generate
               </button>
               {value && (
                 <button
@@ -202,7 +202,7 @@ export function AiAssistButton({
                   }}
                   title="Regenerate — try a different angle"
                 >
-                  <RefreshCw size={10} />
+                  <ArrowsClockwise size={10} />
                 </button>
               )}
             </div>

@@ -1,3 +1,4 @@
+import { ArrowsClockwise, CheckCircle, CircleNotch, Crosshair, Globe, PencilSimple, Plus, Trash, WarningCircle, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
@@ -5,10 +6,7 @@ import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import Modal from "@/components/ui/modal";
 import toast from "react-hot-toast";
-import {
-  Crosshair, Plus, Trash2, Edit2, Loader,
-  Globe, RefreshCw, CheckCircle, AlertCircle, X
-} from "lucide-react";
+
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface Competitor {
@@ -260,7 +258,7 @@ export default function CompetitorTrackerPage() {
                           )}
                           {diff && (
                             <div className="mt-1.5 flex items-center gap-1.5 text-xs text-amber-700">
-                              <AlertCircle size={11} />
+                              <WarningCircle size={11} />
                               <span className="truncate">{diff}</span>
                             </div>
                           )}
@@ -281,9 +279,9 @@ export default function CompetitorTrackerPage() {
                             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[rgba(212, 255, 0,0.08)] hover:bg-[rgba(212, 255, 0,0.14)] text-brand-accent text-xs transition-colors disabled:opacity-50"
 >
                             {checking === c.id ? (
-                              <Loader size={12} className="animate-spin" />
+                              <CircleNotch size={12} className="animate-spin" />
                             ) : (
-                              <RefreshCw size={12} />
+                              <ArrowsClockwise size={12} />
                             )}
                             Check now
                           </button>
@@ -291,13 +289,13 @@ export default function CompetitorTrackerPage() {
                             onClick={() => openEdit(c)}
                             className="p-1.5 rounded-lg hover:bg-[rgba(0,0,0,0.06)] text-text-muted hover:text-[#374151] transition-colors"
 >
-                            <Edit2 size={15} />
+                            <PencilSimple size={15} />
                           </button>
                           <button
                             onClick={() => deleteItem(c.id)}
                             className="p-1.5 rounded-lg hover:bg-red-50 text-text-muted hover:text-red-600 transition-colors"
 >
-                            <Trash2 size={15} />
+                            <Trash size={15} />
                           </button>
                         </div>
                       </div>
@@ -340,7 +338,7 @@ export default function CompetitorTrackerPage() {
                     disabled={saving}
                     className="flex items-center gap-2 px-4 py-2 rounded-full bg-brand-accent hover:bg-[#D4FF00] text-[#020711] text-sm font-medium disabled:opacity-50"
 >
-                    {saving && <Loader size={13} className="animate-spin" />}
+                    {saving && <CircleNotch size={13} className="animate-spin" />}
                     {editItem ? "Save" : "Add"}
                   </button>
                 </div>

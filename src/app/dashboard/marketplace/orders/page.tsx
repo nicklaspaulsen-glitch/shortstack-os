@@ -1,3 +1,4 @@
+import { ArrowRight, Briefcase, Receipt, ShoppingBag } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -7,7 +8,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { Receipt, ArrowRight, ShoppingBag, Briefcase } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface OrderRow {

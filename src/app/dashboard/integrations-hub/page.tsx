@@ -1,3 +1,4 @@
+import { ArrowSquareOut, ArrowsClockwise, Key, Plug } from "@phosphor-icons/react";
 /**
  * Integrations Hub � Nango-powered tenant OAuth dashboard + API-key integrations.
  *
@@ -28,7 +29,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Plug, Sparkles, RefreshCw, ExternalLink, Key } from "lucide-react";
 import toast from "react-hot-toast";
 import ConnectModal from "@/components/integrations/connect-modal";
 import IntegrationCard, {
@@ -283,7 +283,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
             style={{ background: "rgba(255,255,255,0.05)" }}
           >
             {isZernio ? (
-              <ExternalLink size={18} className="text-brand-accent" />
+              <ArrowSquareOut size={18} className="text-brand-accent" />
             ) : (
               <Key size={18} className="text-brand-accent" />
             )}
@@ -349,7 +349,7 @@ function ApiKeyPanel({ integration, onClose }: ApiKeyPanelProps) {
               className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold px-3 py-2 rounded-full bg-brand-accent text-[#020711] hover:bg-[#E8FF4D] transition-all"
               style={{ boxShadow: "0 4px 10px -3px rgba(212,255,0,0.25)" }}
             >
-              <ExternalLink size={11} />
+              <ArrowSquareOut size={11} />
               {isZernio ? "Open Zernio" : "Get API Key"}
             </a>
           )}
@@ -627,7 +627,7 @@ export default function IntegrationsHubPage() {
                   disabled={loadingConnections}
                   className="flex items-center gap-1.5 text-[10px] bg-white/5 border border-border-subtle text-text-primary px-2.5 py-1 rounded-md hover:bg-white/10 transition-all disabled:opacity-50"
                 >
-                  <RefreshCw
+                  <ArrowsClockwise
                     size={10}
                     className={loadingConnections ? "animate-spin" : ""}
                   />

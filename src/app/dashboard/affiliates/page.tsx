@@ -1,3 +1,4 @@
+import { ArrowUpRight, CaretRight, CheckCircle, CircleNotch, Copy, CurrencyDollar, Envelope, Medal, Pause, Play, Plus, Pulse, Users, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -17,22 +18,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import {
-  Award,
-  Plus,
-  Users,
-  Activity,
-  DollarSign,
-  Loader2,
-  ArrowUpRight,
-  CheckCircle2,
-  X,
-  Pause,
-  Play,
-  Mail,
-  Copy,
-  ChevronRight,
-} from "lucide-react";
 
 import { motion } from "framer-motion";
 import StatCard from "@/components/ui/stat-card";
@@ -203,10 +188,10 @@ export default function AffiliatesPage() {
       </div>
     </div><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {[
-                <StatCard key="programs" label="Programs" value={programs.length} icon={<Award size={14} />} />,
+                <StatCard key="programs" label="Programs" value={programs.length} icon={<Medal size={14} />} />,
                 <StatCard key="affiliates" label="Affiliates" value={totalAffiliates} change={totalAffiliates > 0 ? `${approvedAffiliates} approved` : "Invite your first one"} changeType={approvedAffiliates > 0 ? "positive" : "neutral"} icon={<Users size={14} />} />,
-                <StatCard key="pending" label="Pending payouts" value={fmtCents(totalPendingCents)} icon={<Activity size={14} />} premium />,
-                <StatCard key="paid" label="Paid out" value={fmtCents(totalPaidCents)} icon={<DollarSign size={14} />} premium />,
+                <StatCard key="pending" label="Pending payouts" value={fmtCents(totalPendingCents)} icon={<Pulse size={14} />} premium />,
+                <StatCard key="paid" label="Paid out" value={fmtCents(totalPaidCents)} icon={<CurrencyDollar size={14} />} premium />,
               ].map((card, i) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
                   {card}
@@ -235,7 +220,7 @@ export default function AffiliatesPage() {
               ))}
             </div>{loading ? (
               <div className="flex items-center justify-center p-20 text-text-muted">
-                <Loader2 className="animate-spin" size={20} />
+                <CircleNotch className="animate-spin" size={20} />
               </div>
             ) : tab === "programs" ? (
               <ProgramsTab programs={programs} onChanged={refresh} />
@@ -284,7 +269,7 @@ function ProgramsTab({
 
       {programs.length === 0 ? (
         <div className=" border border-dashed border-border-subtle bg-card/40 p-12 text-center">
-          <Award size={32} className="mx-auto text-[rgba(212,255,0,0.6)] mb-3" />
+          <Medal size={32} className="mx-auto text-[rgba(212,255,0,0.6)] mb-3" />
           <h3 className="text-lg font-semibold mb-1">No programs yet</h3>
           <p className="text-sm text-text-muted mb-4">
             Create your first program to start recruiting affiliates.
@@ -621,7 +606,7 @@ function AffiliatesTab({
           onClick={() => setShowInvite(true)}
           className="flex items-center gap-2 px-4 py-2 bg-brand-accent text-[#020711] text-sm font-semibold rounded-full"
         >
-          <Mail size={16} /> Invite affiliate
+          <Envelope size={16} /> Invite affiliate
         </button>
       </div>
 
@@ -730,7 +715,7 @@ function AffiliateRow({
       <td className="px-4 py-3">
         {affiliate.stripe_account_id ? (
           <span className="inline-flex items-center gap-1 text-xs text-success">
-            <CheckCircle2 size={12} /> Connected
+            <CheckCircle size={12} /> Connected
           </span>
         ) : (
           <span className="text-xs text-text-muted">Not connected</span>
@@ -760,7 +745,7 @@ function AffiliateRow({
             href={`/dashboard/affiliates/${affiliate.id}`}
             className="text-text-muted hover:text-text-primary"
           >
-            <ChevronRight size={16} />
+            <CaretRight size={16} />
           </Link>
         </div>
       </td>
@@ -1163,7 +1148,7 @@ function PayoutsTab({
             disabled={running || readyCount === 0}
             className="flex items-center gap-2 px-4 py-2 text-sm bg-brand-accent text-[#020711] font-semibold rounded-full disabled:opacity-60"
           >
-            <DollarSign size={14} />
+            <CurrencyDollar size={14} />
             {running ? "Paying…" : "Pay all"}
           </button>
         </div>
@@ -1202,7 +1187,7 @@ function PayoutsTab({
                   <td className="px-4 py-3">
                     {e.affiliate.stripe_account_id ? (
                       <span className="text-xs text-success inline-flex items-center gap-1">
-                        <CheckCircle2 size={12} /> Connected
+                        <CheckCircle size={12} /> Connected
                       </span>
                     ) : (
                       <span className="text-xs text-danger">Not connected</span>

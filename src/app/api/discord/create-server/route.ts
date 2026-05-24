@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
-// Create a Discord server for a client using the Discord Bot API
+// Create a Discord server for a client using the Discord Robot API
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     // Create guild (server)
     const guildRes = await fetch("https://discord.com/api/v10/guilds", {
       method: "POST",
-      headers: { Authorization: `Bot ${botToken}`, "Content-Type": "application/json" },
+      headers: { Authorization: `Robot ${botToken}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         name: server_name || "ShortStack Client Server",
         channels: (channels || [
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       if (defaultChannel) {
         const inviteRes = await fetch(`https://discord.com/api/v10/channels/${defaultChannel.id}/invites`, {
           method: "POST",
-          headers: { Authorization: `Bot ${botToken}`, "Content-Type": "application/json" },
+          headers: { Authorization: `Robot ${botToken}`, "Content-Type": "application/json" },
           body: JSON.stringify({ max_age: 0, max_uses: 0 }),
         });
         const invite = await inviteRes.json();

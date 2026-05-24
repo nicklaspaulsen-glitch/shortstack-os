@@ -1,4 +1,5 @@
 "use client";
+import { ArrowSquareOut, CheckCircle, CircleNotch, Copy, CurrencyDollar, Medal, ShareNetwork } from "@phosphor-icons/react";
 
 /**
  * Affiliate-side portal — the affiliate's own home for stats, ref link, and
@@ -11,15 +12,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import {
-  Award,
-  Copy,
-  CheckCircle2,
-  ExternalLink,
-  Loader2,
-  DollarSign,
-  Share2,
-} from "lucide-react";
 
 interface AffiliateRow {
   id: string;
@@ -160,7 +152,7 @@ export default function AffiliatePortalPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh] text-text-muted">
-        <Loader2 className="animate-spin" size={20} />
+        <CircleNotch className="animate-spin" size={20} />
       </div>
     );
   }
@@ -168,7 +160,7 @@ export default function AffiliatePortalPage() {
   if (affiliates.length === 0) {
     return (
       <div className="max-w-3xl mx-auto py-16 px-6 text-center space-y-4">
-        <Award size={40} className="mx-auto text-[rgba(212,255,0,0.6)]" />
+        <Medal size={40} className="mx-auto text-[rgba(212,255,0,0.6)]" />
         <h1 className="text-2xl font-semibold">Affiliate portal</h1>
         <p className="text-text-muted">
           You're not enrolled in any affiliate program yet. If you've been invited
@@ -193,7 +185,7 @@ export default function AffiliatePortalPage() {
     <div className="max-w-5xl mx-auto py-10 px-6 space-y-8">
       <div className="flex items-center gap-3">
         <div className="p-3  bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.25)]">
-          <Award size={24} className="text-[#D4FF00]" />
+          <Medal size={24} className="text-[#D4FF00]" />
         </div>
         <div>
           <h1 className="text-2xl font-semibold">Your affiliate portal</h1>
@@ -230,7 +222,7 @@ export default function AffiliatePortalPage() {
             disabled={connectingStripe}
             className="flex items-center gap-2 px-4 py-2 bg-[#D4FF00] text-[#020711] text-sm font-semibold rounded-lg disabled:opacity-60"
           >
-            <ExternalLink size={14} />
+            <ArrowSquareOut size={14} />
             {connectingStripe ? "Opening…" : "Connect Stripe"}
           </button>
         </div>
@@ -381,7 +373,7 @@ function AffiliateProgramBlock({ affiliate }: { affiliate: AffiliateRow }) {
           onClick={share}
           className="px-3 py-2 border border-border-subtle rounded-lg text-sm flex items-center gap-2"
         >
-          <Share2 size={14} /> Share
+          <ShareNetwork size={14} /> Share
         </button>
       </div>
 

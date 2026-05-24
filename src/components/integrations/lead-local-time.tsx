@@ -1,4 +1,5 @@
 "use client";
+import { Clock } from "@phosphor-icons/react";
 
 // Small inline display: country flag + local time for a lead, derived from
 // the geo-IP enrichment performed at form-submit / lead-create time.
@@ -11,7 +12,7 @@
 // is cheap; we avoid setInterval if `timezone` is missing.
 
 import { useEffect, useState } from "react";
-import { Clock } from "lucide-react";
+
 
 export interface LeadGeoMetadata {
   country_code?: string;

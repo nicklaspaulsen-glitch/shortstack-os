@@ -1,4 +1,5 @@
 "use client";
+import { ArrowDown, ArrowSquareOut, ArrowUp, BookOpen, Calendar, CircleNotch, Eye, EyeSlash, FileText, FloppyDisk, Plus, Question, Sparkle, Trash, Users } from "@phosphor-icons/react";
 
 /**
  * Settings → Getting Started doc editor.
@@ -9,18 +10,6 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
-import {
-  BookOpen,
-  Plus,
-  Trash2,
-  ArrowUp,
-  ArrowDown,
-  Save,
-  ExternalLink,
-  Loader2,
-  Eye,
-  EyeOff,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -49,7 +38,7 @@ interface GettingStartedDoc {
 }
 
 const ICON_OPTIONS = [
-  "Sparkles",
+  "Sparkle",
   "Zap",
   "Map",
   "MessageCircle",
@@ -110,7 +99,7 @@ export default function GettingStartedSettingsPage() {
       toast.success("Doc saved");
       await reload();
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Save failed";
+      const msg = err instanceof Error ? err.message : "FloppyDisk failed";
       toast.error(msg);
     } finally {
       setSaving(false);
@@ -124,7 +113,7 @@ export default function GettingStartedSettingsPage() {
       ...doc,
       sections: [
         ...doc.sections,
-        { title: "New section", body_md: "", icon: "Sparkles", links: [] },
+        { title: "New section", body_md: "", icon: "Sparkle", links: [] },
       ],
     });
   }
@@ -181,14 +170,14 @@ export default function GettingStartedSettingsPage() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-2 border border-border-subtle text-text-primary text-sm hover:border-border-strong transition-colors"
                   >
-                    <ExternalLink size={13} /> View public page
+                    <ArrowSquareOut size={13} /> View public page
                   </a>
                 ) : null
       </div>
     </div><div className="px-6 lg:px-10 mt-6 max-w-4xl">
               {loading || !doc ? (
                 <div className="flex items-center justify-center py-24 text-text-secondary">
-                  <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                  <CircleNotch className="w-5 h-5 animate-spin mr-2" />
                   Loading...
                 </div>
               ) : (
@@ -308,7 +297,7 @@ export default function GettingStartedSettingsPage() {
                               className="text-text-muted hover:text-red-400 transition-colors"
                               title="Remove"
                             >
-                              <Trash2 size={14} />
+                              <Trash size={14} />
                             </button>
                           </div>
                           <input
@@ -341,7 +330,7 @@ export default function GettingStartedSettingsPage() {
                       onClick={() => setDoc({ ...doc, is_public: !doc.is_public })}
                       className="inline-flex items-center gap-2 text-sm text-text-primary"
                     >
-                      {doc.is_public ? <Eye size={14} /> : <EyeOff size={14} />}
+                      {doc.is_public ? <Eye size={14} /> : <EyeSlash size={14} />}
                       <span>
                         {doc.is_public
                           ? "Public — anyone with the link can see it"
@@ -353,8 +342,8 @@ export default function GettingStartedSettingsPage() {
                       disabled={saving}
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-lime text-black text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
                     >
-                      {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
-                      Save changes
+                      {saving ? <CircleNotch size={14} className="animate-spin" /> : <FloppyDisk size={14} />}
+                      FloppyDisk changes
                     </button>
                   </section>
                 </div>
@@ -410,7 +399,7 @@ function SectionEditor({
             className="p-1.5 rounded-md text-text-muted hover:text-red-400 hover:bg-surface-2 transition-colors"
             title="Remove"
           >
-            <Trash2 size={14} />
+            <Trash size={14} />
           </button>
         </div>
       </div>

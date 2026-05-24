@@ -206,7 +206,7 @@ export const CLIENT_AGENTS: ClientAgentDef[] = [
   },
   {
     id: "automations",
-    name: "Workflow Bot",
+    name: "Workflow Robot",
     kind: "worker",
     zone: "reports",
     emoji: "⚡",

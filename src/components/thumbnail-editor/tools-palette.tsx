@@ -1,50 +1,36 @@
 "use client";
+import { Circle, Crop, CursorClick, Eraser, Eyedropper, Hand, Lasso, MagicWand, MagnifyingGlassPlus, PaintBrush, Shapes, Square, TextT, X } from "@phosphor-icons/react";
 
+import type { Icon } from "@phosphor-icons/react";
 // Left-hand vertical tool rail, shortcuts mapped to
 // V/M/L/W/C/T/U/B/E/I/H/Z per spec. Tool state lives in the editor
 // reducer; this component is pure UI over `activeTool` + dispatch.
 
 import { useEffect } from "react";
-import {
-  MousePointer2,
-  Square,
-  Circle,
-  Lasso,
-  Wand2,
-  Crop,
-  Type,
-  Shapes,
-  Brush,
-  Eraser,
-  Pipette,
-  Hand,
-  ZoomIn,
-  type LucideIcon,
-} from "lucide-react";
 import type { ToolId } from "@/lib/thumbnail-editor/types";
 
 interface ToolDef {
   id: ToolId;
   label: string;
-  icon: LucideIcon;
+  icon: Icon;
   shortcut: string; // single key
   group?: string; // visual separator group
 }
 
 export const TOOLS: ToolDef[] = [
-  { id: "move", label: "Move", icon: MousePointer2, shortcut: "v", group: "select" },
+  { id: "move", label: "Move", icon: CursorClick, shortcut: "v", group: "select" },
   { id: "marquee-rect", label: "Rect Marquee", icon: Square, shortcut: "m", group: "select" },
   { id: "marquee-ellipse", label: "Ellipse Marquee", icon: Circle, shortcut: "m", group: "select" },
   { id: "lasso", label: "Lasso", icon: Lasso, shortcut: "l", group: "select" },
-  { id: "magic-wand", label: "Magic Wand", icon: Wand2, shortcut: "w", group: "select" },
+  { id: "magic-wand", label: "Magic Wand", icon: MagicWand, shortcut: "w", group: "select" },
   { id: "crop", label: "Crop", icon: Crop, shortcut: "c", group: "crop" },
-  { id: "text", label: "Text", icon: Type, shortcut: "t", group: "draw" },
+  { id: "text", label: "Text", icon: TextT, shortcut: "t", group: "draw" },
   { id: "shape", label: "Shape", icon: Shapes, shortcut: "u", group: "draw" },
-  { id: "brush", label: "Brush", icon: Brush, shortcut: "b", group: "paint" },
+  { id: "brush", label: "PaintBrush", icon: PaintBrush, shortcut: "b", group: "paint" },
   { id: "eraser", label: "Eraser", icon: Eraser, shortcut: "e", group: "paint" },
-  { id: "eyedropper", label: "Eyedropper", icon: Pipette, shortcut: "i", group: "util" },
+  { id: "eyedropper", label: "Eyedropper", icon: Eyedropper, shortcut: "i", group: "util" },
   { id: "hand", label: "Hand", icon: Hand, shortcut: "h", group: "util" },
-  { id: "zoom", label: "Zoom", icon: ZoomIn, shortcut: "z", group: "util" },
+  { id: "zoom", label: "Zoom", icon: MagnifyingGlassPlus, shortcut: "z", group: "util" },
 ];
 
 interface ToolsPaletteProps {

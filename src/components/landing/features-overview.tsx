@@ -1,26 +1,14 @@
 "use client";
+import type { Icon } from "@phosphor-icons/react";
+import { ChartBar, CreditCard, Envelope, FileText, Globe, NotePencil, PenNib, Phone, Robot, ShieldCheck, Stack, Target, Users, X } from "@phosphor-icons/react";
 
-import {
-  BarChart3,
-  Bot,
-  CreditCard,
-  FileSignature,
-  FileText,
-  Globe,
-  Layers,
-  Mail,
-  PenTool,
-  Phone,
-  ShieldCheck,
-  Target,
-  Users,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+
+
 import Reveal from "./reveal";
 import SectionHeading from "./section-heading";
 
 interface Feature {
-  icon: LucideIcon;
+  icon: Icon;
   title: string;
   description: string;
   color: string;
@@ -41,7 +29,7 @@ const FEATURES: Feature[] = [
     ],
   },
   {
-    icon: Mail,
+    icon: Envelope,
     title: "AI Outreach",
     description:
       "Cold email, DM, and LinkedIn sequences that write and adapt themselves. Built-in warmup, deliverability monitoring, and reply-handling.",
@@ -63,7 +51,7 @@ const FEATURES: Feature[] = [
     ],
   },
   {
-    icon: PenTool,
+    icon: PenNib,
     title: "Content Auto-Generation",
     description:
       "Scripts, captions, ad copy, blog posts, email newsletters, and design assets — generated in your voice, on-brand, at scale.",
@@ -96,7 +84,7 @@ const FEATURES: Feature[] = [
     ],
   },
   {
-    icon: Layers,
+    icon: Stack,
     title: "CRM & Deal Tracking",
     description:
       "Pipeline views, contact timelines, won/lost reporting, forecasting. Syncs with every inbound channel automatically.",
@@ -118,7 +106,7 @@ const FEATURES: Feature[] = [
     ],
   },
   {
-    icon: FileSignature,
+    icon: NotePencil,
     title: "Contracts & e-Sign",
     description:
       "Legally-binding e-signature with audit trails. Reusable templates, auto-fill from CRM, reminder sequences for stalling signers.",
@@ -151,7 +139,7 @@ const FEATURES: Feature[] = [
     ],
   },
   {
-    icon: Bot,
+    icon: Robot,
     title: "20+ AI Agents",
     description:
       "Agents for content, SEO, ad optimization, customer support, reporting, and more — chainable into autopilot workflows that run 24/7.",
@@ -162,7 +150,7 @@ const FEATURES: Feature[] = [
     ],
   },
   {
-    icon: BarChart3,
+    icon: ChartBar,
     title: "White-Label Reports",
     description:
       "Automated monthly and weekly reports your clients actually forward around. Custom branding, custom KPIs, scheduled delivery.",

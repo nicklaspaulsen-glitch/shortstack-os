@@ -1,3 +1,4 @@
+import { ArrowLeft, CheckCircle, CircleNotch, Clock, CurrencyDollar, FileText, PaperPlaneTilt, Plus, Trash, TrendUp } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -12,18 +13,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
-import {
-  FileCheck,
-  Plus,
-  Trash2,
-  ArrowLeft,
-  Clock,
-  CheckCircle2,
-  Send,
-  DollarSign,
-  Loader,
-  TrendingUp,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import EmptyState from "@/components/ui/empty-state";
@@ -199,12 +188,12 @@ export default function ProposalsPage() {
               {/* List */}
               {loading ? (
                 <div className="flex items-center gap-2 text-sm text-text-muted">
-                  <Loader size={14} className="animate-spin" /> Loading…
+                  <CircleNotch size={14} className="animate-spin" /> Loading…
                 </div>
               ) : proposals.length === 0 ? (
                 <div className="glass rounded-xl p-6">
                   <EmptyState
-                    icon={<FileCheck size={36} />}
+                    icon={<FileText size={36} />}
                     title="No proposals yet"
                     description="Draft your first proposal — track who signed, who ghosted, and close more deals."
                     action={
@@ -295,7 +284,7 @@ function ProposalCard({
     >
       <div className="flex items-center gap-3 p-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent">
-          <FileCheck size={16} />
+          <FileText size={16} />
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
@@ -308,7 +297,7 @@ function ProposalCard({
           </div>
           <p className="mt-0.5 truncate text-[11px] text-text-muted">
             {proposal.client_name} · {proposal.client_email} ·{" "}
-            <DollarSign size={10} className="inline" />
+            <CurrencyDollar size={10} className="inline" />
             {proposal.amount.toLocaleString()} {proposal.currency} ·{" "}
             <Clock size={10} className="inline" />{" "}
             {new Date(proposal.created_at).toLocaleDateString()}
@@ -323,7 +312,7 @@ function ProposalCard({
               className="inline-flex items-center gap-1 rounded bg-[rgba(212,255,0,0.08)] px-2.5 py-1.5 text-[11px] text-brand-accent hover:bg-[rgba(212,255,0,0.14)]"
               title="Mark as sent"
             >
-              <Send size={11} /> Send
+              <PaperPlaneTilt size={11} /> PaperPlaneTilt
             </motion.button>
           )}
           <motion.button
@@ -334,7 +323,7 @@ function ProposalCard({
             title="Delete"
             aria-label="Delete proposal"
           >
-            <Trash2 size={11} />
+            <Trash size={11} />
           </motion.button>
         </div>
       </div>
@@ -527,7 +516,7 @@ function NewProposalForm({
           style={{ background: "rgba(19,24,39,0.60)", border: "1px solid rgba(212,255,0,0.12)" }}>
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-1.5">
-              <TrendingUp size={10} style={{ color: proposalScore >= 80 ? "#4ade80" : proposalScore >= 50 ? "#fbbf24" : "#f87171" }} />
+              <TrendUp size={10} style={{ color: proposalScore >= 80 ? "#4ade80" : proposalScore >= 50 ? "#fbbf24" : "#f87171" }} />
               <span className="text-[9px] font-semibold tracking-wide text-text-secondary">Proposal Strength</span>
             </div>
             <span className="text-[10px] font-bold tabular-nums"
@@ -584,10 +573,10 @@ function NewProposalForm({
           className="btn-pill inline-flex items-center gap-1.5 disabled:opacity-40"
         >
           {submitting ? (
-            <Loader size={14} className="animate-spin" />
+            <CircleNotch size={14} className="animate-spin" />
           ) : (
             <>
-              <CheckCircle2 size={14} /> Save draft
+              <CheckCircle size={14} /> Save draft
             </>
           )}
         </motion.button>

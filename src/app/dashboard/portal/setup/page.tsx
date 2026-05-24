@@ -1,13 +1,10 @@
+import { ArrowRight, At, Briefcase, Camera, Chat, Check, Globe, Hash, Question, Video, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import Image from "next/image";
-import {
-  Check, ArrowRight, MessageSquare, HelpCircle, X,
-  Camera, Video, Globe, Briefcase, AtSign, Hash
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -17,7 +14,7 @@ const SOCIAL_PLATFORMS = [
   { id: "tiktok", name: "TikTok", icon: <Hash size={24} />, color: "text-text-primary" },
   { id: "youtube", name: "YouTube", icon: <Video size={24} />, color: "text-red-500" },
   { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={24} />, color: "text-indigo-400" },
-  { id: "twitter", name: "X (Twitter)", icon: <AtSign size={24} />, color: "text-text-primary" },
+  { id: "twitter", name: "X (Twitter)", icon: <At size={24} />, color: "text-text-primary" },
 ];
 
 export default function ClientSetupPage() {
@@ -114,7 +111,7 @@ export default function ClientSetupPage() {
         </button>
         <button onClick={() => toast("Contact your account manager for help connecting accounts.")}
           className="text-sm text-brand-accent hover:text-brand-accent/80 flex items-center gap-1">
-          <HelpCircle size={14} /> Need help setting it up?
+          <Question size={14} /> Need help setting it up?
         </button>
       </div>
     </div>,
@@ -122,7 +119,7 @@ export default function ClientSetupPage() {
     // Step 3: Meet Trinity
     <div key="trinity" className="text-center space-y-6">
       <div className="w-16 h-16 bg-[rgba(212,255,0,0.08)] flex items-center justify-center mx-auto">
-        <MessageSquare size={32} className="text-brand-accent" />
+        <Chat size={32} className="text-brand-accent" />
       </div>
       <div>
         <h2 className="text-xl font-bold text-text-primary">Meet Your AI Assistant</h2>

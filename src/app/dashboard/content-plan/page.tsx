@@ -1,13 +1,7 @@
+import { ArrowClockwise, ArrowsClockwise, Calendar, CaretLeft, CaretRight, ChartBar, Chat, CheckCircle, CircleNotch, Clock, Eye, Funnel, Heart, ImageSquare, Lightning, ListBullets, MagicWand, PencilSimple, ShareNetwork, Sparkle, SquaresFour, Target, ThumbsDown, ThumbsUp, Trash, TrendUp, Users, Warning, X, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  Calendar, Grid3x3, List as ListIcon, Sparkles, TrendingUp,
-  AlertTriangle, ImageDown, Trash2, RotateCw, RefreshCw,
-  BarChart3, Clock, CheckCircle, XCircle, Edit3, Eye,
-  MessageSquare, Heart, Share2, Zap, ChevronLeft, ChevronRight,
-  Loader2, Filter, ThumbsUp, ThumbsDown, Users, Target, Wand2,
-} from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
@@ -119,7 +113,7 @@ function statusIcon(s: string) {
   if (s === "scheduled") return <Clock size={11} />;
   if (s === "failed") return <XCircle size={11} />;
   if (s === "ready_to_publish") return <Eye size={11} />;
-  return <Edit3 size={11} />;
+  return <PencilSimple size={11} />;
 }
 
 function sentimentBadge(s: string | undefined) {
@@ -481,7 +475,7 @@ export default function ContentPlanPage() {
       id: "review",
       title: "Ready to generate?",
       description: "We'll draft a full calendar of posts across the selected platforms. You can edit every post in Advanced mode.",
-      icon: <Wand2 size={18} />,
+      icon: <MagicWand size={18} />,
       component: (
         <div className="glass rounded-xl p-4 bg-[rgba(212,255,0,0.04)] border-[rgba(212,255,0,0.20)] space-y-2">
           <div className="flex items-center gap-2 text-sm">
@@ -541,7 +535,7 @@ export default function ContentPlanPage() {
               onClick={() => { loadPosts(); loadInsights(); }}
               className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-muted font-medium hover:bg-white/8 transition-all"
             >
-              <RefreshCw size={12} /> Refresh
+              <ArrowsClockwise size={12} /> Refresh
             </button>
           )}
         </div>
@@ -564,7 +558,7 @@ export default function ContentPlanPage() {
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-5">
         {/* -- LEFT: Main column ----------------------------- */}
         <div className="space-y-4 min-w-0">
-          {/* Status Filter Tabs */}
+          {/* Status Funnel Tabs */}
           <div className="flex flex-wrap gap-1 bg-surface rounded-xl p-1 overflow-x-auto">
             {(["all", "scheduled", "posted", "draft", "failed", "needs_review"] as StatusFilter[]).map(s => (
               <button
@@ -583,10 +577,10 @@ export default function ContentPlanPage() {
             ))}
           </div>
 
-          {/* Platform Filter Chips + View Toggle */}
+          {/* Platform Funnel Chips + View Toggle */}
           <div className="flex flex-wrap items-center gap-3 justify-between">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <Filter size={12} className="text-text-muted" />
+              <Funnel size={12} className="text-text-muted" />
               {([
                 { id: "all" as PlatformFilter, label: "All" },
                 { id: "instagram" as PlatformFilter, label: "Instagram", icon: <InstagramIcon size={12} /> },
@@ -612,9 +606,9 @@ export default function ContentPlanPage() {
 
             <div className="flex items-center gap-1 bg-surface rounded-lg p-1">
               {([
-                { id: "grid" as ViewMode, icon: <Grid3x3 size={12} />, label: "Grid" },
+                { id: "grid" as ViewMode, icon: <SquaresFour size={12} />, label: "Grid" },
                 { id: "calendar" as ViewMode, icon: <Calendar size={12} />, label: "Calendar" },
-                { id: "list" as ViewMode, icon: <ListIcon size={12} />, label: "List" },
+                { id: "list" as ViewMode, icon: <ListBullets size={12} />, label: "ListBullets" },
               ]).map(v => (
                 <button
                   key={v.id}
@@ -649,21 +643,21 @@ export default function ContentPlanPage() {
                   disabled={bulkRunning}
                   className="btn-secondary text-[10px] py-1 px-2.5 flex items-center gap-1.5"
                 >
-                  <RotateCw size={10} /> Regenerate
+                  <ArrowClockwise size={10} /> Regenerate
                 </button>
                 <button
                   onClick={() => bulkAction("analyze")}
                   disabled={bulkRunning}
                   className="btn-secondary text-[10px] py-1 px-2.5 flex items-center gap-1.5"
                 >
-                  <Sparkles size={10} /> Analyze
+                  <Sparkle size={10} /> Analyze
                 </button>
                 <button
                   onClick={() => bulkAction("delete")}
                   disabled={bulkRunning}
                   className="text-[10px] py-1 px-2.5 rounded-lg bg-red-400/10 text-red-400 border border-red-400/20 hover:bg-red-400/20 flex items-center gap-1.5"
                 >
-                  <Trash2 size={10} /> Delete
+                  <Trash size={10} /> Delete
                 </button>
               </div>
             </div>
@@ -721,14 +715,14 @@ export default function ContentPlanPage() {
           <PrismPanel rainbow padding="px-6 py-4">
             <div className="flex items-center justify-between mb-2.5">
               <h3 className="text-xs font-semibold flex items-center gap-1.5">
-                <Sparkles size={12} className="text-brand-accent" /> AI Insights
+                <Sparkle size={12} className="text-brand-accent" /> AI Insights
               </h3>
               <button
                 onClick={loadInsights}
                 disabled={insightsLoading}
                 className="text-[10px] text-text-muted hover:text-brand-accent transition-colors flex items-center gap-1 disabled:opacity-40"
               >
-                {insightsLoading ? <Loader2 size={10} className="animate-spin" /> : <RefreshCw size={10} />}
+                {insightsLoading ? <CircleNotch size={10} className="animate-spin" /> : <ArrowsClockwise size={10} />}
                 Refresh
               </button>
             </div>
@@ -739,7 +733,7 @@ export default function ContentPlanPage() {
 
           <InsightSection
             title="Top performing this week"
-            icon={<TrendingUp size={12} className="text-emerald-400" />}
+            icon={<TrendUp size={12} className="text-emerald-400" />}
             emptyText="No top-performer data yet."
             loading={insightsLoading}
           >
@@ -761,7 +755,7 @@ export default function ContentPlanPage() {
 
           <InsightSection
             title="What's trending in your niche"
-            icon={<Zap size={12} className="text-amber-400" />}
+            icon={<Lightning size={12} className="text-amber-400" />}
             emptyText="No trending topics right now."
             loading={insightsLoading}
           >
@@ -781,7 +775,7 @@ export default function ContentPlanPage() {
 
           <InsightSection
             title="Posts that need attention"
-            icon={<AlertTriangle size={12} className="text-red-400" />}
+            icon={<Warning size={12} className="text-red-400" />}
             emptyText="All posts look healthy."
             loading={insightsLoading}
           >
@@ -799,7 +793,7 @@ export default function ContentPlanPage() {
 
           <InsightSection
             title="Thumbnail improvement suggestions"
-            icon={<ImageDown size={12} className="text-indigo-400" />}
+            icon={<ImageSquare size={12} className="text-indigo-400" />}
             emptyText="No thumbnail suggestions."
             loading={insightsLoading}
           >
@@ -927,8 +921,8 @@ function PostGrid({
           {/* Engagement */}
           <div className="flex items-center gap-3 text-[10px] text-text-muted border-t border-border-subtle pt-2">
             <span className="flex items-center gap-1"><Heart size={10} /> {formatNum(p.likes)}</span>
-            <span className="flex items-center gap-1"><MessageSquare size={10} /> {formatNum(p.comments)}</span>
-            <span className="flex items-center gap-1"><Share2 size={10} /> {formatNum(p.shares)}</span>
+            <span className="flex items-center gap-1"><Chat size={10} /> {formatNum(p.comments)}</span>
+            <span className="flex items-center gap-1"><ShareNetwork size={10} /> {formatNum(p.shares)}</span>
             {p.views > 0 && <span className="flex items-center gap-1"><Eye size={10} /> {formatNum(p.views)}</span>}
           </div>
         </motion.div>
@@ -1078,10 +1072,10 @@ function PostCalendar({
         </h3>
         <div className="flex items-center gap-1">
           <button onClick={onPrev} className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary">
-            <ChevronLeft size={14} />
+            <CaretLeft size={14} />
           </button>
           <button onClick={onNext} className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary">
-            <ChevronRight size={14} />
+            <CaretRight size={14} />
           </button>
         </div>
       </div>
@@ -1244,8 +1238,8 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
             {/* Engagement block */}
             <div className="grid grid-cols-4 gap-2 border-t border-border-subtle/50 pt-2">
               <Stat label="Likes" value={formatNum(post.likes)} icon={<Heart size={12} />} />
-              <Stat label="Comments" value={formatNum(post.comments)} icon={<MessageSquare size={12} />} />
-              <Stat label="Shares" value={formatNum(post.shares)} icon={<Share2 size={12} />} />
+              <Stat label="Comments" value={formatNum(post.comments)} icon={<Chat size={12} />} />
+              <Stat label="Shares" value={formatNum(post.shares)} icon={<ShareNetwork size={12} />} />
               <Stat label="Views" value={formatNum(post.views)} icon={<Eye size={12} />} />
             </div>
           </div>
@@ -1264,7 +1258,7 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
         {/* Top comments */}
         <div>
           <h4 className="text-[11px] font-semibold mb-2 text-text-muted uppercase tracking-wide flex items-center gap-1.5">
-            <MessageSquare size={11} /> Top {Math.max(topComments.length, 1)} comment{topComments.length === 1 ? "" : "s"}
+            <Chat size={11} /> Top {Math.max(topComments.length, 1)} comment{topComments.length === 1 ? "" : "s"}
           </h4>
           {topComments.length === 0 ? (
             <p className="text-[10px] text-text-muted italic">No comments surfaced yet.</p>
@@ -1289,14 +1283,14 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
         <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.20)] bg-[rgba(212,255,0,0.05)]">
           <div className="flex items-center justify-between mb-2">
             <h4 className="text-[11px] font-semibold flex items-center gap-1.5 text-text-primary">
-              <Sparkles size={12} className="text-brand-accent" /> AI analysis
+              <Sparkle size={12} className="text-brand-accent" /> AI analysis
             </h4>
             <button
               onClick={analyzeWithAi}
               disabled={aiLoading}
               className="btn-secondary text-[10px] py-1 px-2.5 flex items-center gap-1.5 disabled:opacity-40"
             >
-              {aiLoading ? <Loader2 size={10} className="animate-spin" /> : <BarChart3 size={10} />}
+              {aiLoading ? <CircleNotch size={10} className="animate-spin" /> : <ChartBar size={10} />}
               {aiLoading ? "Analyzing..." : ai ? "Re-analyze" : "Analyze"}
             </button>
           </div>
@@ -1322,13 +1316,13 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
             onClick={() => toast("Edit-in-modal is coming soon ï¿½ open the post page to edit", { icon: "??" })}
             className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5"
           >
-            <Edit3 size={11} /> Edit
+            <PencilSimple size={11} /> Edit
           </button>
           <button
             onClick={() => toast("Paid boost is coming soon", { icon: "??" })}
             className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5"
           >
-            <Zap size={11} /> Boost
+            <Lightning size={11} /> Boost
           </button>
           <button
             onClick={() => toast("Reschedule is coming soon", { icon: "??" })}
@@ -1340,20 +1334,20 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
             onClick={() => toast("Thumbnail regen is coming soon", { icon: "??" })}
             className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5"
           >
-            <RotateCw size={11} /> Regenerate thumbnail
+            <ArrowClockwise size={11} /> Regenerate thumbnail
           </button>
           <button
             onClick={analyzeWithAi}
             disabled={aiLoading}
             className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5 disabled:opacity-50"
           >
-            <Sparkles size={11} /> Improve with AI
+            <Sparkle size={11} /> Improve with AI
           </button>
           <button
             onClick={() => toast("Delete-from-modal is coming soon ï¿½ use bulk delete for now", { icon: "??" })}
             className="ml-auto text-[11px] py-1.5 px-3 rounded-lg bg-red-400/10 text-red-400 border border-red-400/20 hover:bg-red-400/20 flex items-center gap-1.5"
           >
-            <Trash2 size={11} /> Delete
+            <Trash size={11} /> Delete
           </button>
         </div>
       </div>

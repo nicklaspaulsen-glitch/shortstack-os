@@ -84,7 +84,7 @@ export const SMART_MANAGE_ACTIONS: Record<SmartManageActionType, SmartManageActi
   generate_content_batch: {
     type: "generate_content_batch",
     label: "Generate content batch",
-    icon: "Sparkles",
+    icon: "Sparkle",
     handler_route: "/api/content-plan/auto-generate",
     http_method: "POST",
     input_schema: { client_id: "string", count: "number", platform: "string" },

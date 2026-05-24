@@ -1,12 +1,7 @@
 "use client";
+import { ArrowLeft, BookOpen, CaretDown, CaretRight, Check, CircleNotch, Copy, DotsSixVertical, Eye, EyeSlash, FileText, FloppyDisk, Paperclip, Plus, Question, Trash, Users, Video } from "@phosphor-icons/react";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import {
-  BookOpen, ChevronRight, ChevronDown, Plus, Trash2,
-  Video, FileText, HelpCircle, Paperclip, Save,
-  Eye, EyeOff, Users, Copy, Check, GripVertical,
-  ArrowLeft, Loader2,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -60,7 +55,7 @@ interface Client {
 const CONTENT_TYPE_ICON: Record<string, React.ReactNode> = {
   video: <Video size={14} />,
   text: <FileText size={14} />,
-  quiz: <HelpCircle size={14} />,
+  quiz: <Question size={14} />,
   file: <Paperclip size={14} />,
 };
 
@@ -206,7 +201,7 @@ export default function CourseBuilderPage() {
     }
   };
 
-  // ─── Save course settings ───
+  // ─── FloppyDisk course settings ───
   const saveSettings = async () => {
     setSaving(true);
     try {
@@ -349,7 +344,7 @@ export default function CourseBuilderPage() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center justify-center py-24"><Loader2 size={32} className="text-brand-accent animate-spin" /></MotionPage>
+      <MotionPage className="flex items-center justify-center py-24"><CircleNotch size={32} className="text-brand-accent animate-spin" /></MotionPage>
     );
   }
 
@@ -373,7 +368,7 @@ export default function CourseBuilderPage() {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <div className="flex items-center gap-2">
-            {saving && <Loader2 size={14} className="text-text-muted animate-spin" />}
+            {saving && <CircleNotch size={14} className="text-text-muted animate-spin" />}
             <Link
               href="/dashboard/courses"
               className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/8 text-text-secondary rounded-lg text-sm transition-colors"
@@ -447,8 +442,8 @@ export default function CourseBuilderPage() {
                   disabled={saving}
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] rounded-full text-sm transition-colors"
                 >
-                  <Save size={14} />
-                  Save
+                  <FloppyDisk size={14} />
+                  FloppyDisk
                 </button>
               </div>
 
@@ -639,7 +634,7 @@ export default function CourseBuilderPage() {
                         : "bg-white/5 text-text-muted hover:bg-white/8"
                     }`}
                   >
-                    {s === "published" ? <Eye size={11} /> : <EyeOff size={11} />}
+                    {s === "published" ? <Eye size={11} /> : <EyeSlash size={11} />}
                     {s}
                   </button>
                 ))}
@@ -651,8 +646,8 @@ export default function CourseBuilderPage() {
               disabled={saving}
               className="w-full py-2 bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] rounded-full text-sm font-medium transition-colors flex items-center justify-center gap-2"
             >
-              <Save size={14} />
-              Save Settings
+              <FloppyDisk size={14} />
+              FloppyDisk Settings
             </button>
 
             <hr className="border-border-subtle" />
@@ -667,7 +662,7 @@ export default function CourseBuilderPage() {
                   <Users size={14} />
                   Enroll a client
                 </span>
-                <ChevronDown
+                <CaretDown
                   size={14}
                   className={`transition-transform ${showEnrollPanel ? "rotate-180" : ""}`}
                 />
@@ -750,15 +745,15 @@ function ModuleItem({
     <div className="rounded-lg overflow-hidden">
       {/* Module header */}
       <div className="group flex items-center gap-1 px-2 py-1.5 bg-white/5 hover:bg-white/8 rounded-lg cursor-pointer transition-colors">
-        <GripVertical size={12} className="text-[#D1D5DB] flex-shrink-0" />
+        <DotsSixVertical size={12} className="text-[#D1D5DB] flex-shrink-0" />
         <button
           onClick={onToggle}
           className="flex-1 flex items-center gap-1 text-left min-w-0"
         >
           {expanded ? (
-            <ChevronDown size={13} className="text-text-muted flex-shrink-0" />
+            <CaretDown size={13} className="text-text-muted flex-shrink-0" />
           ) : (
-            <ChevronRight size={13} className="text-text-muted flex-shrink-0" />
+            <CaretRight size={13} className="text-text-muted flex-shrink-0" />
           )}
           <span className="text-sm font-medium text-text-primary truncate">{mod.title}</span>
           <span className="ml-auto text-xs text-text-muted flex-shrink-0">
@@ -777,7 +772,7 @@ function ModuleItem({
           className="opacity-0 group-hover:opacity-100 p-0.5 text-text-muted hover:text-red-400 transition-all"
           title="Delete module"
         >
-          <Trash2 size={12} />
+          <Trash size={12} />
         </button>
       </div>
 
@@ -816,7 +811,7 @@ function LessonItem({
         selected ? "bg-[rgba(212,255,0,0.10)] border border-[rgba(212,255,0,0.25)]" : "hover:bg-white/5"
       }`}
     >
-      <GripVertical size={11} className="text-[#D1D5DB] flex-shrink-0" />
+      <DotsSixVertical size={11} className="text-[#D1D5DB] flex-shrink-0" />
       <button onClick={onSelect} className="flex-1 flex items-center gap-1.5 min-w-0 text-left">
         <span className={`flex-shrink-0 ${selected ? "text-brand-accent" : "text-text-muted"}`}>
           {CONTENT_TYPE_ICON[lesson.content_type]}
@@ -833,7 +828,7 @@ function LessonItem({
         className="opacity-0 group-hover:opacity-100 p-0.5 text-[#D1D5DB] hover:text-red-500 transition-all"
         title="Delete lesson"
       >
-        <Trash2 size={11} />
+        <Trash size={11} />
       </button>
     </div>
   );

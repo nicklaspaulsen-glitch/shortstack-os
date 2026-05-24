@@ -1,13 +1,8 @@
+import { Calendar, CaretLeft, CaretRight, Check, CircleNotch, Clock, Eye, Funnel, MapPin, Phone, Plus, Repeat, Star, Users, Video, WarningCircle, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import {
-  Calendar, Clock, Plus, Phone, Video, MapPin,
-  ChevronLeft, ChevronRight, Check, X, Filter,
-  Users,
-  Repeat, Eye, Star, AlertCircle, Loader2
-} from "lucide-react";
 import { PrismPanel } from "@/components/prism";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { GoogleIcon, OutlookIcon } from "@/components/ui/platform-icons";
@@ -300,7 +295,7 @@ export default function CalendarPage() {
   const TABS: { id: CalendarTab; label: string; icon: React.ReactNode }[] = [
     { id: "calendar", label: "Calendar", icon: <Calendar size={13} /> },
     { id: "agenda", label: "Today's Agenda", icon: <Clock size={13} /> },
-    { id: "deadlines", label: "Deadlines", icon: <AlertCircle size={13} /> },
+    { id: "deadlines", label: "Deadlines", icon: <WarningCircle size={13} /> },
   ];
 
   return (
@@ -316,7 +311,7 @@ export default function CalendarPage() {
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <button onClick={() => setShowFilters(!showFilters)} aria-label="Toggle calendar filters" className="btn-pill-ghost flex items-center gap-1.5">
-                <Filter size={12} /> Filters
+                <Funnel size={12} /> Filters
               </button>
               <button onClick={() => setShowCreate(true)} className="btn-pill flex items-center gap-1.5">
                 <Plus size={12} /> New Event
@@ -349,7 +344,7 @@ export default function CalendarPage() {
                     </div>
                   </div>
 
-                  {/* Team Filter */}
+                  {/* Team Funnel */}
                   <div>
                     <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Team Member</label>
                     <select value={selectedTeam} onChange={e => setSelectedTeam(e.target.value)} className="input w-full text-xs">
@@ -357,7 +352,7 @@ export default function CalendarPage() {
                     </select>
                   </div>
 
-                  {/* Client Filter */}
+                  {/* Client Funnel */}
                   <div>
                     <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Client</label>
                     <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="input w-full text-xs">
@@ -420,14 +415,14 @@ export default function CalendarPage() {
               <>
                 {/* Week Navigation */}
                 <div className="flex items-center justify-between">
-                  <button onClick={prevWeek} className="btn-ghost p-2" aria-label="Previous week"><ChevronLeft size={16} /></button>
+                  <button onClick={prevWeek} className="btn-ghost p-2" aria-label="Previous week"><CaretLeft size={16} /></button>
                   <div className="flex items-center gap-3">
                     <span className="text-sm font-semibold">
                       {weekDays[0].toLocaleDateString("en-US", { month: "short", day: "numeric" })} � {weekDays[6].toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                     </span>
                     <button onClick={goToday} className="btn-secondary text-[10px] px-2 py-0.5">Today</button>
                   </div>
-                  <button onClick={nextWeek} className="btn-ghost p-2" aria-label="Next week"><ChevronRight size={16} /></button>
+                  <button onClick={nextWeek} className="btn-ghost p-2" aria-label="Next week"><CaretRight size={16} /></button>
                 </div>
 
                 {/* Month View */}
@@ -670,7 +665,7 @@ export default function CalendarPage() {
             )}{/* Deadlines Tab */}{!loading && tab === "deadlines" && (
               <div className="space-y-3">
                 <PrismPanel padding="p-4">
-                  <h2 className="flex items-center gap-2"><AlertCircle size={13} className="text-red-400" /> Upcoming Deadlines</h2>
+                  <h2 className="flex items-center gap-2"><WarningCircle size={13} className="text-red-400" /> Upcoming Deadlines</h2>
                   {upcomingDeadlines.length === 0 ? (
                     <p className="text-xs text-text-muted text-center py-8">No upcoming deadlines</p>
                   ) : (
@@ -687,7 +682,7 @@ export default function CalendarPage() {
                             className="flex items-center gap-3 p-3 rounded-lg border border-border-subtle"
                           >
                             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${daysLeft <= 1 ? "bg-red-400/10" : daysLeft <= 3 ? "bg-yellow-400/10" : "bg-indigo-400/10"}`}>
-                              <AlertCircle size={16} className={daysLeft <= 1 ? "text-red-400" : daysLeft <= 3 ? "text-yellow-400" : "text-indigo-400"} />
+                              <WarningCircle size={16} className={daysLeft <= 1 ? "text-red-400" : daysLeft <= 3 ? "text-yellow-400" : "text-indigo-400"} />
                             </div>
                             <div className="flex-1">
                               <p className="text-xs font-semibold">{dl.title}</p>
@@ -826,7 +821,7 @@ export default function CalendarPage() {
                   <div className="flex justify-end gap-2 pt-1">
                     <button onClick={() => setShowCreate(false)} className="btn-secondary text-xs">Cancel</button>
                     <button onClick={createEvent} disabled={!newEvent.title || saving} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                      {saving ? <Loader2 size={12} className="animate-spin" /> : <Calendar size={12} />}
+                      {saving ? <CircleNotch size={12} className="animate-spin" /> : <Calendar size={12} />}
                       {saving ? "Saving..." : "Create Event"}
                     </button>
                   </div>

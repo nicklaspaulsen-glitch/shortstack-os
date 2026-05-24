@@ -1,15 +1,12 @@
 "use client";
+import { ArrowRight, Chat, Check, CheckCircle, Circle, CircleNotch, CreditCard, Crown, Envelope, Gear, Globe, Lightning, Monitor, Robot, Rocket, Users } from "@phosphor-icons/react";
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  Rocket, CheckCircle, Circle, ArrowRight,
-  Users, Zap, Bot, Globe, CreditCard, Settings,
-  MessageSquare, Mail, Loader, Crown, Monitor
-} from "lucide-react";
+
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface Step {
@@ -22,15 +19,15 @@ interface Step {
 }
 
 const STEPS: Step[] = [
-  { id: "profile", title: "Complete Your Profile", description: "Add your name, avatar, and timezone", icon: <Settings size={16} />, link: "/dashboard/profile", linkLabel: "Edit Profile" },
+  { id: "profile", title: "Complete Your Profile", description: "Add your name, avatar, and timezone", icon: <Gear size={16} />, link: "/dashboard/profile", linkLabel: "Edit Profile" },
   { id: "plan", title: "Choose a Plan", description: "Select Starter, Growth, or Enterprise", icon: <Crown size={16} />, link: "/dashboard/pricing", linkLabel: "View Plans" },
   { id: "client", title: "Add Your First Client", description: "Onboard a client with the wizard", icon: <Users size={16} />, link: "/dashboard/onboard", linkLabel: "Onboard Client" },
-  { id: "leads", title: "Scrape Some Leads", description: "Use Lead Finder to discover prospects", icon: <Zap size={16} />, link: "/dashboard/scraper", linkLabel: "Find Leads" },
-  { id: "outreach", title: "Set Up Outreach", description: "Configure your email and SMS templates", icon: <Mail size={16} />, link: "/dashboard/sms-templates", linkLabel: "SMS Templates" },
-  { id: "agents", title: "Configure AI Agents", description: "Set lead targets, platforms, and schedules", icon: <Bot size={16} />, link: "/dashboard/agent-controls", linkLabel: "Agent Controls" },
+  { id: "leads", title: "Scrape Some Leads", description: "Use Lead Finder to discover prospects", icon: <Lightning size={16} />, link: "/dashboard/scraper", linkLabel: "Find Leads" },
+  { id: "outreach", title: "Set Up Outreach", description: "Configure your email and SMS templates", icon: <Envelope size={16} />, link: "/dashboard/sms-templates", linkLabel: "SMS Templates" },
+  { id: "agents", title: "Configure AI Agents", description: "Set lead targets, platforms, and schedules", icon: <Robot size={16} />, link: "/dashboard/agent-controls", linkLabel: "Agent Controls" },
   { id: "social", title: "Connect Social Accounts", description: "Link Instagram, Facebook, Google, etc", icon: <Globe size={16} />, link: "/dashboard/integrations-hub", linkLabel: "Connect" },
-  { id: "stripe", title: "Set Up Payments", description: "Configure Stripe for client billing", icon: <CreditCard size={16} />, link: "/dashboard/settings", linkLabel: "Settings" },
-  { id: "telegram", title: "Connect Telegram", description: "Get notifications and control agents remotely", icon: <MessageSquare size={16} />, link: "/dashboard/settings", linkLabel: "Settings" },
+  { id: "stripe", title: "Set Up Payments", description: "Configure Stripe for client billing", icon: <CreditCard size={16} />, link: "/dashboard/settings", linkLabel: "Gear" },
+  { id: "telegram", title: "Connect Telegram", description: "Get notifications and control agents remotely", icon: <Chat size={16} />, link: "/dashboard/settings", linkLabel: "Gear" },
   { id: "extension", title: "Install Browser Extension", description: "AI assistant that works on any webpage for your clients", icon: <Monitor size={16} />, link: "/dashboard/settings", linkLabel: "Get Extension" },
 ];
 
@@ -159,7 +156,7 @@ export default function GettingStartedPage() {
               )}
             </motion.div>{loading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader size={20} className="animate-spin text-brand-accent" />
+                <CircleNotch size={20} className="animate-spin text-brand-accent" />
               </div>
             ) : (
               <div className="space-y-2">

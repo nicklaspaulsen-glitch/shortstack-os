@@ -1,7 +1,7 @@
 "use client";
+import { Bug, ChatCircle, Heart, Question, Sparkle, X } from "@phosphor-icons/react";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { MessageCirclePlus, X, Bug, Sparkles, Heart, HelpCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 
@@ -29,9 +29,9 @@ const TYPE_OPTIONS: Array<{
   Icon: LucideLike;
 }> = [
   { value: "bug", label: "Bug", Icon: Bug as LucideLike },
-  { value: "feature", label: "Feature Request", Icon: Sparkles as LucideLike },
+  { value: "feature", label: "Feature Request", Icon: Sparkle as LucideLike },
   { value: "praise", label: "Praise", Icon: Heart as LucideLike },
-  { value: "question", label: "Question", Icon: HelpCircle as LucideLike },
+  { value: "question", label: "Question", Icon: Question as LucideLike },
 ];
 
 function ConfettiBurst() {
@@ -168,7 +168,7 @@ export default function FeedbackButton() {
           boxShadow: `0 8px 24px rgba(212,255,0,0.40), 0 0 0 1px rgba(212,255,0,0.25)`,
         }}
       >
-        <MessageCirclePlus size={20} strokeWidth={2.2} />
+        <ChatCircle size={20} strokeWidth={2.2} />
       </motion.button>
 
       <AnimatePresence>

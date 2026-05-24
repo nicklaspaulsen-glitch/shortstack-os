@@ -1,8 +1,8 @@
 "use client";
+import { Check, CircleNotch, Copy, Package, Pencil, Plus, ToggleLeft, ToggleRight, Trash, X } from "@phosphor-icons/react";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Package, Plus, Pencil, Trash2, Check, X, Loader2, Copy, ToggleLeft, ToggleRight } from "lucide-react";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
@@ -77,7 +77,7 @@ function ServiceForm({
       <div className="flex gap-2 pt-1">
         <button onClick={onSubmit} disabled={saving || !value.name.trim()}
           className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
-          {saving ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} {submitLabel}
+          {saving ? <CircleNotch size={13} className="animate-spin" /> : <Check size={13} />} {submitLabel}
         </button>
         <button onClick={onCancel} className="btn-ghost flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg">
           <X size={13} /> Cancel
@@ -266,11 +266,11 @@ export default function ServicesPage() {
                               </button>
                               <button onClick={() => handleDuplicate(s)} disabled={duplicating === s.id}
                                 className="p-1.5 rounded hover:bg-white/8 text-text-muted hover:text-text-secondary" title="Duplicate">
-                                {duplicating === s.id ? <Loader2 size={13} className="animate-spin" /> : <Copy size={13} />}
+                                {duplicating === s.id ? <CircleNotch size={13} className="animate-spin" /> : <Copy size={13} />}
                               </button>
                               <button onClick={() => handleDelete(s.id)} disabled={deleting === s.id}
                                 className="p-1.5 rounded hover:bg-red-500/20 text-text-muted hover:text-red-400" title="Delete">
-                                {deleting === s.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                                {deleting === s.id ? <CircleNotch size={13} className="animate-spin" /> : <Trash size={13} />}
                               </button>
                             </div>
                           </td>

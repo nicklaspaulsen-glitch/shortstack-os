@@ -1,30 +1,19 @@
 "use client";
+import { CaretRight, ChartBar, Chat, FileText, Folder, List, Question, SignOut, SquaresFour, X } from "@phosphor-icons/react";
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useWhiteLabel } from "@/lib/white-label-context";
-import {
-  LayoutDashboard,
-  FolderKanban,
-  BarChart3,
-  MessageSquare,
-  FileText,
-  HelpCircle,
-  Menu,
-  X,
-  ChevronRight,
-  LogOut,
-} from "lucide-react";
 
 /* ── Navigation items for the client portal ── */
 const NAV_ITEMS = [
-  { label: "Dashboard", icon: LayoutDashboard, segment: "" },
-  { label: "Projects", icon: FolderKanban, segment: "/projects" },
-  { label: "Reports", icon: BarChart3, segment: "/reports" },
-  { label: "Messages", icon: MessageSquare, segment: "/messages", badge: 3 },
+  { label: "Dashboard", icon: SquaresFour, segment: "" },
+  { label: "Projects", icon: Folder, segment: "/projects" },
+  { label: "Reports", icon: ChartBar, segment: "/reports" },
+  { label: "Messages", icon: Chat, segment: "/messages", badge: 3 },
   { label: "Documents", icon: FileText, segment: "/documents" },
-  { label: "Support", icon: HelpCircle, segment: "/support" },
+  { label: "Support", icon: Question, segment: "/support" },
 ];
 
 export default function PortalLayout({
@@ -102,7 +91,7 @@ export default function PortalLayout({
             onClick={() => setSidebarOpen(true)}
             className="p-2 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors"
           >
-            <Menu size={18} />
+            <List size={18} />
           </button>
           <div className="h-7 w-7 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center overflow-hidden">
             {logoUrl ? (
@@ -191,7 +180,7 @@ function SidebarContent({
                   {item.badge}
                 </span>
               )}
-              {active && <ChevronRight size={14} className="text-[rgba(212,255,0,0.6)]" />}
+              {active && <CaretRight size={14} className="text-[rgba(212,255,0,0.6)]" />}
             </Link>
           );
         })}
@@ -209,7 +198,7 @@ function SidebarContent({
             <p className="text-[10px] text-text-muted truncate">admin@acmecorp.com</p>
           </div>
           <button className="p-1.5 rounded-lg text-text-muted hover:text-danger hover:bg-danger/5 transition-colors" title="Sign out">
-            <LogOut size={14} />
+            <SignOut size={14} />
           </button>
         </div>
 

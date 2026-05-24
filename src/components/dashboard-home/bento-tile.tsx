@@ -1,9 +1,10 @@
 "use client";
+import { CaretRight } from "@phosphor-icons/react";
 
 import { ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+
 import { tokens, themeTokens } from "@/lib/brand/tokens";
 import BrainMark from "@/components/brand/brain-mark";
 
@@ -118,7 +119,7 @@ export function BentoTile({
             style={{ color: accentColor }}
           >
             {link.label}
-            <ChevronRight size={12} />
+            <CaretRight size={12} />
           </Link>
         )}
       </header>

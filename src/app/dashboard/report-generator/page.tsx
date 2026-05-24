@@ -1,22 +1,9 @@
+import { ArrowsClockwise, Calendar, Check, CircleNotch, Clock, ClockCounterClockwise, DownloadSimple, Envelope, Eye, FileText, ListChecks, Users } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
-import {
-  Users,
-  Calendar,
-  ListChecks,
-  Eye,
-  Download,
-  Mail,
-  Loader,
-  Clock,
-  FileText,
-  Check,
-  History,
-  RefreshCw,
-} from "lucide-react";
 import { Wizard, type WizardStepDef } from "@/components/ui/wizard";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -210,7 +197,7 @@ export default function ReportGeneratorPage() {
     <div className="space-y-3">
       <label className="text-[10px] text-text-muted uppercase tracking-wider font-medium">Client</label>
       {loadingClients ? (
-        <div className="flex items-center gap-2 text-xs text-text-muted"><Loader size={12} className="animate-spin" /> Loading clients…</div>
+        <div className="flex items-center gap-2 text-xs text-text-muted"><CircleNotch size={12} className="animate-spin" /> Loading clients…</div>
       ) : clients.length === 0 ? (
         <div className="p-4 rounded-xl bg-surface-light border border-border-subtle/30 text-xs text-text-muted">
           No clients yet. Add one in the Clients page first.
@@ -378,7 +365,7 @@ export default function ReportGeneratorPage() {
             className="accent-[#D4FF00]"
             disabled={!selectedClientObj?.email}
           />
-          <Mail size={11} className="text-brand-accent" />
+          <Envelope size={11} className="text-brand-accent" />
           <span className={selectedClientObj?.email ? "text-text-primary" : "text-text-muted"}>
             Email PDF to client{selectedClientObj?.email ? ` (${selectedClientObj.email})` : " (client email missing)"}
           </span>
@@ -448,7 +435,7 @@ export default function ReportGeneratorPage() {
             onClick={() => { fetchClients(); fetchHistory(); }}
             className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/10 border border-border-subtle text-text-primary font-medium hover:bg-white/15 transition-all"
           >
-            <RefreshCw size={12} /> Refresh
+            <ArrowsClockwise size={12} /> Refresh
           </button>
         </div>
       </div>
@@ -495,14 +482,14 @@ export default function ReportGeneratorPage() {
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.4 }} className="glass overflow-hidden spotlight-card" whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
           <div className="p-5">
             <div className="flex items-center gap-2 mb-3">
-              <History size={14} className="text-text-muted" />
+              <ClockCounterClockwise size={14} className="text-text-muted" />
               <h2 className="text-sm font-semibold text-text-primary">Past reports</h2>
               <span className="text-[9px] text-text-muted bg-surface-light px-2 py-0.5 rounded-full">{history.length}</span>
             </div>
 
             {loadingHistory ? (
               <div className="flex items-center justify-center py-8">
-                <Loader size={14} className="animate-spin text-text-muted" />
+                <CircleNotch size={14} className="animate-spin text-text-muted" />
               </div>
             ) : history.length === 0 ? (
               <div className="text-[11px] text-text-muted py-4 text-center">No reports generated yet.</div>
@@ -531,9 +518,9 @@ export default function ReportGeneratorPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 text-[10px] text-brand-accent hover:underline shrink-0"
-                          title="Download (signed URL, 7-day expiry)"
+                          title="DownloadSimple (signed URL, 7-day expiry)"
                         >
-                          <Download size={10} />
+                          <DownloadSimple size={10} />
                           PDF
                         </a>
                       )}

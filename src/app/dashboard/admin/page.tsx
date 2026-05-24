@@ -1,4 +1,5 @@
 "use client";
+import { CurrencyDollar, Flask, Pulse, Shield } from "@phosphor-icons/react";
 
 /**
  * Admin dashboard index — links to all admin-only sub-pages.
@@ -8,25 +9,24 @@
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import Link from "next/link";
-import { Activity, DollarSign, FlaskConical, Shield } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 const ADMIN_LINKS = [
   {
     href: "/dashboard/admin/agent-traces",
-    icon: Activity,
+    icon: Pulse,
     title: "Agent Traces",
     description: "LLM call history mirrored from Langfuse — filter by surface, status, and cost.",
   },
   {
     href: "/dashboard/admin/llm-costs",
-    icon: DollarSign,
+    icon: CurrencyDollar,
     title: "LLM Costs",
     description: "Per-model token usage and cost breakdown across all AI surfaces.",
   },
   {
     href: "/dashboard/admin/self-test",
-    icon: FlaskConical,
+    icon: Flask,
     title: "Self-Test",
     description: "Run a full integration health check across all connected services.",
   },

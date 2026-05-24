@@ -1,9 +1,10 @@
 "use client";
+import { CheckCircle, CircleNotch, WarningCircle } from "@phosphor-icons/react";
 
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Loader, CheckCircle2, AlertCircle } from "lucide-react";
+
 
 export default function ExtensionAuthPage() {
   return (
@@ -131,35 +132,35 @@ function ExtensionAuthInner() {
 
         {status === "checking" && (
           <div className="flex flex-col items-center gap-3 text-text-muted">
-            <Loader className="animate-spin" size={32} />
+            <CircleNotch className="animate-spin" size={32} />
             <p>Checking your session…</p>
           </div>
         )}
 
         {status === "needs_login" && (
           <div className="flex flex-col items-center gap-3 text-text-muted">
-            <Loader className="animate-spin" size={32} />
+            <CircleNotch className="animate-spin" size={32} />
             <p>Redirecting to login…</p>
           </div>
         )}
 
         {status === "handshaking" && (
           <div className="flex flex-col items-center gap-3 text-text-muted">
-            <Loader className="animate-spin" size={32} />
+            <CircleNotch className="animate-spin" size={32} />
             <p>Handshaking with the extension…</p>
           </div>
         )}
 
         {status === "success" && (
           <div className="flex flex-col items-center gap-3 text-success">
-            <CheckCircle2 size={40} />
+            <CheckCircle size={40} />
             <p className="text-text-primary">Extension connected! You can close this tab.</p>
           </div>
         )}
 
         {status === "error" && (
           <div className="flex flex-col items-center gap-3 text-error">
-            <AlertCircle size={40} />
+            <WarningCircle size={40} />
             <p className="text-text-primary">Connection failed.</p>
             {errorMsg && <p className="text-xs text-text-muted max-w-xs">{errorMsg}</p>}
           </div>

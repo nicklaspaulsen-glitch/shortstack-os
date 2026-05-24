@@ -1,7 +1,8 @@
 "use client";
+import { Fire } from "@phosphor-icons/react";
 
 import Link from "next/link";
-import { Flame } from "lucide-react";
+
 import { tokens, themeTokens } from "@/lib/brand/tokens";
 import { formatRelativeTime } from "@/lib/utils";
 import { BentoTile, BentoEmpty } from "./bento-tile";
@@ -40,7 +41,7 @@ export default function HotLeadsTile({ leads, index = 0 }: Props) {
   return (
     <BentoTile
       title="Hot leads"
-      icon={<Flame size={14} />}
+      icon={<Fire size={14} />}
       span="lg:col-span-4 lg:row-span-2"
       link={{ href: "/dashboard/leads", label: "All leads" }}
       index={index}

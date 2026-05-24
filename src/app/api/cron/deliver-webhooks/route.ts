@@ -132,7 +132,7 @@ export async function GET(request: NextRequest) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "User-Agent": "ShortStack-Webhooks/1.0",
+          "User-Agent": "ShortStack-PlugsConnected/1.0",
           "x-shortstack-signature": signature,
           "x-shortstack-event": d.event,
           "x-shortstack-delivery-id": d.id,

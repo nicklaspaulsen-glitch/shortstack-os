@@ -1,3 +1,4 @@
+import { ArrowsClockwise, CheckSquare, CircleNotch, Pause, PencilSimple, Play, Square } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -11,15 +12,6 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  Loader2,
-  Pause,
-  Play,
-  Edit3,
-  RefreshCw,
-  CheckSquare,
-  Square,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import {
   PLATFORM_COLORS,
@@ -253,7 +245,7 @@ export default function CampaignsTable() {
           disabled={refreshing}
           className="ml-auto bg-[rgba(13,17,32,0.7)] border border-border-subtle rounded px-2.5 py-1.5 text-sm hover:bg-[rgba(212, 255, 0,0.08)] inline-flex items-center gap-1.5 disabled:opacity-50"
         >
-          <RefreshCw size={13} className={refreshing ? "animate-spin" : ""} />
+          <ArrowsClockwise size={13} className={refreshing ? "animate-spin" : ""} />
           Refresh
         </button>
       </div>
@@ -290,7 +282,7 @@ export default function CampaignsTable() {
 
       {loading ? (
         <div className="flex items-center justify-center py-12 text-text-muted">
-          <Loader2 className="animate-spin mr-2" size={16} />
+          <CircleNotch className="animate-spin mr-2" size={16} />
           Loading campaigns...
         </div>
       ) : error ? (
@@ -432,7 +424,7 @@ export default function CampaignsTable() {
                         className="rounded border border-border-subtle bg-[rgba(13,17,32,0.7)] px-1.5 py-0.5 text-xs hover:bg-[rgba(212, 255, 0,0.08)]"
                         title="Edit budget"
                       >
-                        <Edit3 size={11} />
+                        <PencilSimple size={11} />
                       </button>
                     </div>
                   </td>

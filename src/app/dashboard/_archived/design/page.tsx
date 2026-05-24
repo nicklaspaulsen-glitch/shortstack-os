@@ -1,23 +1,11 @@
+import { Aperture, ArrowCounterClockwise, ArrowSquareOut, ArrowsOut, ArrowsOutCardinal, BookOpen, Briefcase, CalendarDots, Camera, CaretDown, ChartBar, ChatCircle, Check, CheckCircle, CircleHalf, CircleNotch, Clock, ClockCounterClockwise, Coffee, Confetti, Copy, Database, DeviceMobile, DotsSixVertical, DownloadSimple, Envelope, Eye, EyeSlash, Eyedropper, FileText, FilmStrip, Flag, Gift, Globe, Heart, Image, ImageSquare, Laptop, Leaf, Lightning, MagicWand, MagnifyingGlass, Medal, Monitor, Moon, MusicNote, Package, PaintBrush, Palette, PenNib, Play, Plus, Podcast, QrCode, Quotes, Repeat, Scissors, SealCheck, Shield, ShoppingBag, Shuffle, SlidersHorizontal, Snowflake, Sparkle, SquaresFour, Stack, Star, Sun, TShirt, Target, TextT, ThumbsUp, Trash, TrendUp, UploadSimple, Users, Warning, Wheelchair, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import {
-  Sparkles, Copy, ExternalLink, Image as ImageIcon, Award, Flag, Monitor,
-  Camera, MessageCircle, Play, Briefcase, Music, Wand2, Palette, Loader, PenTool,
-  Grid, Layers, Mail, FileText, Podcast, RotateCcw,
-  Paintbrush, Maximize2, Eye, EyeOff, Scissors, ShoppingBag, QrCode,
-  History, Pipette, Type, Repeat, SlidersHorizontal, Search, BarChart3,
-  Star, CalendarDays, Film, Database, Download, CheckCircle, Heart,
-  Shuffle, Upload, Sun, Moon, Zap, Leaf,
-  ChevronDown, Plus, Trash2, GripVertical, X,
-  Coffee, Smartphone, Laptop, Shirt, Package, Globe, Shield, Clock,
-  TrendingUp, Users, ThumbsUp, Quote, BadgeCheck, Snowflake, Gift,
-  PartyPopper, Accessibility, Contrast, AlertTriangle, BookOpen, Move,
-  Brush, ImagePlus, Aperture
-} from "lucide-react";
+
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import PromptEnhancer from "@/components/prompt-enhancer";
@@ -61,15 +49,15 @@ interface TemplatePreset {
 }
 
 const SECTIONS = [
-  { key: "thumbnails", label: "Thumbnails", icon: <ImageIcon size={16} />, description: "YouTube & video thumbnails" },
+  { key: "thumbnails", label: "Thumbnails", icon: <Image size={16} />, description: "YouTube & video thumbnails" },
   { key: "social", label: "Social Posts", icon: <Camera size={16} />, description: "Posts for all platforms" },
-  { key: "carousels", label: "Carousels", icon: <RotateCcw size={16} />, description: "Multi-slide carousel posts" },
+  { key: "carousels", label: "Carousels", icon: <ArrowCounterClockwise size={16} />, description: "Multi-slide carousel posts" },
   { key: "ads", label: "Ad Creatives", icon: <Flag size={16} />, description: "Facebook, Google & display ads" },
-  { key: "logos", label: "Logos & Marks", icon: <Award size={16} />, description: "Logos, icons & brand marks" },
+  { key: "logos", label: "Logos & Marks", icon: <Medal size={16} />, description: "Logos, icons & brand marks" },
   { key: "banners", label: "Banners", icon: <Monitor size={16} />, description: "Website & social banners" },
-  { key: "infographics", label: "Infographics", icon: <Grid size={16} />, description: "Data visualization & info layouts" },
-  { key: "presentations", label: "Presentations", icon: <Layers size={16} />, description: "Slide decks & pitch decks" },
-  { key: "email_headers", label: "Email Headers", icon: <Mail size={16} />, description: "Newsletter & email graphics" },
+  { key: "infographics", label: "Infographics", icon: <SquaresFour size={16} />, description: "Data visualization & info layouts" },
+  { key: "presentations", label: "Presentations", icon: <Stack size={16} />, description: "Slide decks & pitch decks" },
+  { key: "email_headers", label: "Email Headers", icon: <Envelope size={16} />, description: "Newsletter & email graphics" },
   { key: "podcast_covers", label: "Podcast Covers", icon: <Podcast size={16} />, description: "Podcast & audio artwork" },
   { key: "brochures", label: "Brochures", icon: <FileText size={16} />, description: "Print-ready marketing materials" },
   { key: "mockups", label: "Mockups", icon: <Monitor size={16} />, description: "Device & product mockups" },
@@ -79,17 +67,17 @@ const TEMPLATES: TemplatePreset[] = [
   // Social
   { label: "Instagram Post", icon: <Camera size={12} />, width: 1080, height: 1080, style: "vibrant, social media aesthetic, clean typography", category: "social" },
   { label: "Instagram Story", icon: <Camera size={12} />, width: 1080, height: 1920, style: "bold, full-screen, vertical, eye-catching", category: "social" },
-  { label: "TikTok Cover", icon: <Music size={12} />, width: 1080, height: 1920, style: "trendy, Gen-Z aesthetic, bold colors", category: "social" },
-  { label: "Pinterest Pin", icon: <ImageIcon size={12} />, width: 1000, height: 1500, style: "aesthetic, pin-worthy, clean layout", category: "social" },
-  { label: "Facebook Post", icon: <MessageCircle size={12} />, width: 1200, height: 630, style: "engaging, conversational, clear text", category: "social" },
+  { label: "TikTok Cover", icon: <MusicNote size={12} />, width: 1080, height: 1920, style: "trendy, Gen-Z aesthetic, bold colors", category: "social" },
+  { label: "Pinterest Pin", icon: <Image size={12} />, width: 1000, height: 1500, style: "aesthetic, pin-worthy, clean layout", category: "social" },
+  { label: "Facebook Post", icon: <ChatCircle size={12} />, width: 1200, height: 630, style: "engaging, conversational, clear text", category: "social" },
   { label: "LinkedIn Post", icon: <Briefcase size={12} />, width: 1200, height: 1200, style: "professional, thought leadership, clean", category: "social" },
   // Carousels
-  { label: "IG Carousel Slide", icon: <RotateCcw size={12} />, width: 1080, height: 1080, style: "cohesive multi-slide, numbered, educational, swipe-worthy", category: "carousels" },
-  { label: "IG Carousel (4:5)", icon: <RotateCcw size={12} />, width: 1080, height: 1350, style: "tall carousel slide, bold headers, listicle layout", category: "carousels" },
-  { label: "LinkedIn Carousel", icon: <RotateCcw size={12} />, width: 1080, height: 1080, style: "corporate carousel, data-driven, chart-ready", category: "carousels" },
-  { label: "Carousel Cover Slide", icon: <RotateCcw size={12} />, width: 1080, height: 1080, style: "attention-grabbing cover, bold hook text, swipe CTA", category: "carousels" },
+  { label: "IG Carousel Slide", icon: <ArrowCounterClockwise size={12} />, width: 1080, height: 1080, style: "cohesive multi-slide, numbered, educational, swipe-worthy", category: "carousels" },
+  { label: "IG Carousel (4:5)", icon: <ArrowCounterClockwise size={12} />, width: 1080, height: 1350, style: "tall carousel slide, bold headers, listicle layout", category: "carousels" },
+  { label: "LinkedIn Carousel", icon: <ArrowCounterClockwise size={12} />, width: 1080, height: 1080, style: "corporate carousel, data-driven, chart-ready", category: "carousels" },
+  { label: "Carousel Cover Slide", icon: <ArrowCounterClockwise size={12} />, width: 1080, height: 1080, style: "attention-grabbing cover, bold hook text, swipe CTA", category: "carousels" },
   // Ads
-  { label: "Facebook Ad", icon: <MessageCircle size={12} />, width: 1200, height: 628, style: "professional, high-converting ad creative, bold CTA", category: "ads" },
+  { label: "Facebook Ad", icon: <ChatCircle size={12} />, width: 1200, height: 628, style: "professional, high-converting ad creative, bold CTA", category: "ads" },
   { label: "Google Display Ad", icon: <Flag size={12} />, width: 300, height: 250, style: "high-converting, clear CTA, bold", category: "ads" },
   { label: "Google Leaderboard", icon: <Flag size={12} />, width: 728, height: 90, style: "minimal, direct, clear CTA banner", category: "ads" },
   { label: "Instagram Ad", icon: <Camera size={12} />, width: 1080, height: 1080, style: "native-feeling, engaging, thumb-stopping", category: "ads" },
@@ -97,48 +85,48 @@ const TEMPLATES: TemplatePreset[] = [
   { label: "YouTube Thumbnail", icon: <Play size={12} />, width: 1280, height: 720, style: "eye-catching, bold text overlay, expressive", category: "thumbnails" },
   { label: "Podcast Episode Art", icon: <Podcast size={12} />, width: 1280, height: 720, style: "guest photo, episode number, bold branding", category: "thumbnails" },
   // Logos & Marks
-  { label: "Primary Logo", icon: <Award size={12} />, width: 1000, height: 1000, style: "clean, scalable, versatile, professional brand mark", category: "logos" },
-  { label: "Logo Icon / Favicon", icon: <Award size={12} />, width: 512, height: 512, style: "simple, recognizable at small sizes, icon mark", category: "logos" },
-  { label: "Logo Wordmark", icon: <Award size={12} />, width: 2000, height: 600, style: "typography-focused, clean wordmark, brand font", category: "logos" },
-  { label: "Logo + Tagline", icon: <Award size={12} />, width: 1500, height: 800, style: "full lockup with tagline, professional", category: "logos" },
-  { label: "App Icon", icon: <Award size={12} />, width: 1024, height: 1024, style: "iOS/Android app icon, rounded corners, bold, simple", category: "logos" },
+  { label: "Primary Logo", icon: <Medal size={12} />, width: 1000, height: 1000, style: "clean, scalable, versatile, professional brand mark", category: "logos" },
+  { label: "Logo Icon / Favicon", icon: <Medal size={12} />, width: 512, height: 512, style: "simple, recognizable at small sizes, icon mark", category: "logos" },
+  { label: "Logo Wordmark", icon: <Medal size={12} />, width: 2000, height: 600, style: "typography-focused, clean wordmark, brand font", category: "logos" },
+  { label: "Logo + Tagline", icon: <Medal size={12} />, width: 1500, height: 800, style: "full lockup with tagline, professional", category: "logos" },
+  { label: "App Icon", icon: <Medal size={12} />, width: 1024, height: 1024, style: "iOS/Android app icon, rounded corners, bold, simple", category: "logos" },
   // Banners
   { label: "LinkedIn Banner", icon: <Briefcase size={12} />, width: 1584, height: 396, style: "corporate, professional, clean gradient", category: "banners" },
-  { label: "Twitter Header", icon: <MessageCircle size={12} />, width: 1500, height: 500, style: "clean, professional, brand-focused", category: "banners" },
+  { label: "Twitter Header", icon: <ChatCircle size={12} />, width: 1500, height: 500, style: "clean, professional, brand-focused", category: "banners" },
   { label: "YouTube Channel Art", icon: <Play size={12} />, width: 2560, height: 1440, style: "bold, channel branding, subscribe CTA", category: "banners" },
   { label: "Website Hero", icon: <Monitor size={12} />, width: 1920, height: 800, style: "hero section, compelling, conversion-focused", category: "banners" },
   // Other
-  { label: "Email Header", icon: <Mail size={12} />, width: 600, height: 200, style: "clean, on-brand, professional", category: "email_headers" },
+  { label: "Email Header", icon: <Envelope size={12} />, width: 600, height: 200, style: "clean, on-brand, professional", category: "email_headers" },
   { label: "Podcast Cover", icon: <Podcast size={12} />, width: 3000, height: 3000, style: "bold, recognizable, clear text", category: "podcast_covers" },
-  { label: "Presentation Slide", icon: <Layers size={12} />, width: 1920, height: 1080, style: "modern, clean, corporate", category: "presentations" },
+  { label: "Presentation Slide", icon: <Stack size={12} />, width: 1920, height: 1080, style: "modern, clean, corporate", category: "presentations" },
   { label: "Phone Mockup", icon: <Monitor size={12} />, width: 1080, height: 1920, style: "device frame, app screenshot, professional", category: "mockups" },
   { label: "Desktop Mockup", icon: <Monitor size={12} />, width: 1920, height: 1080, style: "laptop/desktop frame, website screenshot", category: "mockups" },
-  { label: "T-Shirt Mockup", icon: <Monitor size={12} />, width: 1200, height: 1200, style: "apparel mockup, flat lay, clean background", category: "mockups" },
-  { label: "Business Card", icon: <Grid size={12} />, width: 1050, height: 600, style: "3.5x2 inches, professional, minimal, premium", category: "brochures" },
+  { label: "T-TShirt Mockup", icon: <Monitor size={12} />, width: 1200, height: 1200, style: "apparel mockup, flat lay, clean background", category: "mockups" },
+  { label: "Business Card", icon: <SquaresFour size={12} />, width: 1050, height: 600, style: "3.5x2 inches, professional, minimal, premium", category: "brochures" },
   { label: "Flyer / Poster", icon: <FileText size={12} />, width: 1080, height: 1527, style: "A4, event flyer, bold headline, clear CTA", category: "brochures" },
   { label: "Menu Design", icon: <FileText size={12} />, width: 1080, height: 1527, style: "restaurant menu, elegant, organized sections", category: "brochures" },
   { label: "Invoice Template", icon: <FileText size={12} />, width: 1080, height: 1527, style: "professional invoice, clean, branded", category: "brochures" },
   // Infographics
-  { label: "Stat Infographic", icon: <Grid size={12} />, width: 1080, height: 1920, style: "vertical, data-rich, charts, icons, numbered", category: "infographics" },
-  { label: "Timeline Infographic", icon: <Grid size={12} />, width: 1080, height: 1920, style: "chronological, milestones, connected steps", category: "infographics" },
-  { label: "Process Flow", icon: <Grid size={12} />, width: 1200, height: 800, style: "step-by-step, arrows, numbered stages", category: "infographics" },
-  { label: "Comparison Chart", icon: <Grid size={12} />, width: 1080, height: 1080, style: "side-by-side, pros/cons, feature comparison", category: "infographics" },
-  { label: "Pie Chart Visual", icon: <Grid size={12} />, width: 1080, height: 1080, style: "circular data visualization, percentage breakdown", category: "infographics" },
+  { label: "Stat Infographic", icon: <SquaresFour size={12} />, width: 1080, height: 1920, style: "vertical, data-rich, charts, icons, numbered", category: "infographics" },
+  { label: "Timeline Infographic", icon: <SquaresFour size={12} />, width: 1080, height: 1920, style: "chronological, milestones, connected steps", category: "infographics" },
+  { label: "Process Flow", icon: <SquaresFour size={12} />, width: 1200, height: 800, style: "step-by-step, arrows, numbered stages", category: "infographics" },
+  { label: "Comparison Chart", icon: <SquaresFour size={12} />, width: 1080, height: 1080, style: "side-by-side, pros/cons, feature comparison", category: "infographics" },
+  { label: "Pie Chart Visual", icon: <SquaresFour size={12} />, width: 1080, height: 1080, style: "circular data visualization, percentage breakdown", category: "infographics" },
   // Presentations
-  { label: "Pitch Deck Slide", icon: <Layers size={12} />, width: 1920, height: 1080, style: "startup pitch, clean, data-focused, investor-ready", category: "presentations" },
-  { label: "Case Study Slide", icon: <Layers size={12} />, width: 1920, height: 1080, style: "before/after results, metrics, professional", category: "presentations" },
-  { label: "Team Intro Slide", icon: <Layers size={12} />, width: 1920, height: 1080, style: "team photos, roles, grid layout", category: "presentations" },
+  { label: "Pitch Deck Slide", icon: <Stack size={12} />, width: 1920, height: 1080, style: "startup pitch, clean, data-focused, investor-ready", category: "presentations" },
+  { label: "Case Study Slide", icon: <Stack size={12} />, width: 1920, height: 1080, style: "before/after results, metrics, professional", category: "presentations" },
+  { label: "Team Intro Slide", icon: <Stack size={12} />, width: 1920, height: 1080, style: "team photos, roles, grid layout", category: "presentations" },
   // More social
-  { label: "Twitter/X Post", icon: <MessageCircle size={12} />, width: 1200, height: 675, style: "concise, bold statement, minimal design", category: "social" },
-  { label: "Threads Post", icon: <MessageCircle size={12} />, width: 1080, height: 1080, style: "text-heavy, thread-style, numbered points", category: "social" },
-  { label: "WhatsApp Status", icon: <MessageCircle size={12} />, width: 1080, height: 1920, style: "vertical, eye-catching, personal feel", category: "social" },
+  { label: "Twitter/X Post", icon: <ChatCircle size={12} />, width: 1200, height: 675, style: "concise, bold statement, minimal design", category: "social" },
+  { label: "Threads Post", icon: <ChatCircle size={12} />, width: 1080, height: 1080, style: "text-heavy, thread-style, numbered points", category: "social" },
+  { label: "WhatsApp Status", icon: <ChatCircle size={12} />, width: 1080, height: 1920, style: "vertical, eye-catching, personal feel", category: "social" },
   // More ads
-  { label: "TikTok Ad", icon: <Music size={12} />, width: 1080, height: 1920, style: "native TikTok feel, UGC-style, authentic", category: "ads" },
+  { label: "TikTok Ad", icon: <MusicNote size={12} />, width: 1080, height: 1920, style: "native TikTok feel, UGC-style, authentic", category: "ads" },
   { label: "Story Ad (FB/IG)", icon: <Camera size={12} />, width: 1080, height: 1920, style: "full-screen, swipe-up CTA, engaging", category: "ads" },
   { label: "Retargeting Ad", icon: <Flag size={12} />, width: 1080, height: 1080, style: "reminder-style, social proof, urgency", category: "ads" },
   // Email
-  { label: "Newsletter Banner", icon: <Mail size={12} />, width: 600, height: 300, style: "engaging, brand colors, clear CTA", category: "email_headers" },
-  { label: "Email Footer", icon: <Mail size={12} />, width: 600, height: 150, style: "social links, contact info, minimal", category: "email_headers" },
+  { label: "Newsletter Banner", icon: <Envelope size={12} />, width: 600, height: 300, style: "engaging, brand colors, clear CTA", category: "email_headers" },
+  { label: "Email Footer", icon: <Envelope size={12} />, width: 600, height: 150, style: "social links, contact info, minimal", category: "email_headers" },
   // Podcast
   { label: "Episode Art Square", icon: <Podcast size={12} />, width: 1080, height: 1080, style: "episode number, guest name, bold visual", category: "podcast_covers" },
   { label: "Audiogram Template", icon: <Podcast size={12} />, width: 1080, height: 1080, style: "waveform, captions, speaker photo", category: "podcast_covers" },
@@ -206,12 +194,12 @@ interface BrandKit {
 const RESIZE_PRESETS = [
   { label: "Instagram Post", w: 1080, h: 1080, icon: <Camera size={12} /> },
   { label: "Instagram Story", w: 1080, h: 1920, icon: <Camera size={12} /> },
-  { label: "Facebook Post", w: 1200, h: 630, icon: <MessageCircle size={12} /> },
-  { label: "Twitter/X Post", w: 1200, h: 675, icon: <MessageCircle size={12} /> },
+  { label: "Facebook Post", w: 1200, h: 630, icon: <ChatCircle size={12} /> },
+  { label: "Twitter/X Post", w: 1200, h: 675, icon: <ChatCircle size={12} /> },
   { label: "LinkedIn Post", w: 1200, h: 1200, icon: <Briefcase size={12} /> },
-  { label: "Pinterest Pin", w: 1000, h: 1500, icon: <ImagePlus size={12} /> },
+  { label: "Pinterest Pin", w: 1000, h: 1500, icon: <ImageSquare size={12} /> },
   { label: "YouTube Thumb", w: 1280, h: 720, icon: <Play size={12} /> },
-  { label: "TikTok", w: 1080, h: 1920, icon: <Music size={12} /> },
+  { label: "TikTok", w: 1080, h: 1920, icon: <MusicNote size={12} /> },
 ];
 
 // ---------- Layer Types ----------
@@ -226,13 +214,13 @@ interface DesignLayer {
 
 // ---------- Mockup Products ----------
 const MOCKUP_PRODUCTS = [
-  { id: "tshirt", label: "T-Shirt", icon: <Shirt size={14} /> },
+  { id: "tshirt", label: "T-TShirt", icon: <TShirt size={14} /> },
   { id: "mug", label: "Coffee Mug", icon: <Coffee size={14} /> },
-  { id: "phone", label: "Phone Case", icon: <Smartphone size={14} /> },
+  { id: "phone", label: "Phone Case", icon: <DeviceMobile size={14} /> },
   { id: "laptop", label: "Laptop Screen", icon: <Laptop size={14} /> },
   { id: "tote", label: "Tote Bag", icon: <ShoppingBag size={14} /> },
-  { id: "poster", label: "Wall Poster", icon: <ImageIcon size={14} /> },
-  { id: "hoodie", label: "Hoodie", icon: <Shirt size={14} /> },
+  { id: "poster", label: "Wall Poster", icon: <Image size={14} /> },
+  { id: "hoodie", label: "Hoodie", icon: <TShirt size={14} /> },
   { id: "box", label: "Product Box", icon: <Package size={14} /> },
 ];
 
@@ -244,7 +232,7 @@ const PHOTO_FILTERS = [
   { name: "B&W Classic", css: "grayscale(1) contrast(1.2)" },
   { name: "Warm Glow", css: "sepia(0.2) saturate(1.3) brightness(1.05)" },
   { name: "Cool Tone", css: "saturate(0.8) hue-rotate(15deg) brightness(1.05)" },
-  { name: "High Contrast", css: "contrast(1.8) brightness(0.9)" },
+  { name: "High CircleHalf", css: "contrast(1.8) brightness(0.9)" },
   { name: "Soft Focus", css: "blur(0.5px) brightness(1.1) saturate(0.9)" },
   { name: "Moody", css: "brightness(0.8) contrast(1.3) saturate(0.7)" },
   { name: "Cinematic", css: "contrast(1.2) saturate(0.85) brightness(0.9) sepia(0.1)" },
@@ -276,28 +264,28 @@ const ICON_CATEGORIES = [
 
 // ---------- Infographic Types ----------
 const INFOGRAPHIC_TYPES = [
-  { id: "stats", label: "Statistics Dashboard", icon: <BarChart3 size={14} />, desc: "Key metrics with big numbers" },
+  { id: "stats", label: "Statistics Dashboard", icon: <ChartBar size={14} />, desc: "Key metrics with big numbers" },
   { id: "timeline", label: "Timeline", icon: <Clock size={14} />, desc: "Chronological events or steps" },
   { id: "comparison", label: "Comparison Chart", icon: <SlidersHorizontal size={14} />, desc: "Side-by-side feature comparison" },
-  { id: "process", label: "Process Flow", icon: <TrendingUp size={14} />, desc: "Step-by-step workflow" },
+  { id: "process", label: "Process Flow", icon: <TrendUp size={14} />, desc: "Step-by-step workflow" },
   { id: "pie", label: "Pie/Donut Chart", icon: <Aperture size={14} />, desc: "Percentage breakdown visual" },
   { id: "hierarchy", label: "Hierarchy/Org Chart", icon: <Users size={14} />, desc: "Organizational structure" },
 ];
 
 // ---------- Social Proof Widget Types ----------
 const SOCIAL_PROOF_TYPES = [
-  { id: "testimonial", label: "Testimonial Card", icon: <Quote size={14} /> },
+  { id: "testimonial", label: "Testimonial Card", icon: <Quotes size={14} /> },
   { id: "review_stars", label: "Review Stars", icon: <Star size={14} /> },
-  { id: "trust_badge", label: "Trust Badge", icon: <BadgeCheck size={14} /> },
-  { id: "counter", label: "Stats Counter", icon: <TrendingUp size={14} /> },
-  { id: "logo_wall", label: "Client Logo Wall", icon: <Grid size={14} /> },
+  { id: "trust_badge", label: "Trust Badge", icon: <SealCheck size={14} /> },
+  { id: "counter", label: "Stats Counter", icon: <TrendUp size={14} /> },
+  { id: "logo_wall", label: "Client Logo Wall", icon: <SquaresFour size={14} /> },
   { id: "before_after", label: "Before/After", icon: <SlidersHorizontal size={14} /> },
 ];
 
 // ---------- Seasonal Template Packs ----------
 const SEASONAL_PACKS = [
   { id: "christmas", label: "Christmas / Holidays", icon: <Gift size={14} />, colors: ["#c0392b", "#27ae60", "#f1c40f", "#ecf0f1", "#2c3e50"] },
-  { id: "new_year", label: "New Year", icon: <PartyPopper size={14} />, colors: ["#f1c40f", "#2c3e50", "#ecf0f1", "#8e44ad", "#000000"] },
+  { id: "new_year", label: "New Year", icon: <Confetti size={14} />, colors: ["#f1c40f", "#2c3e50", "#ecf0f1", "#8e44ad", "#000000"] },
   { id: "valentine", label: "Valentine's Day", icon: <Heart size={14} />, colors: ["#e74c3c", "#ff6b81", "#fdcb6e", "#ffffff", "#2c3e50"] },
   { id: "spring", label: "Spring / Easter", icon: <Leaf size={14} />, colors: ["#55efc4", "#81ecec", "#fdcb6e", "#ff7979", "#badc58"] },
   { id: "summer", label: "Summer Vibes", icon: <Sun size={14} />, colors: ["#f39c12", "#e74c3c", "#3498db", "#1abc9c", "#ffffff"] },
@@ -305,7 +293,7 @@ const SEASONAL_PACKS = [
   { id: "fall", label: "Autumn / Thanksgiving", icon: <Leaf size={14} />, colors: ["#d35400", "#e67e22", "#f39c12", "#27ae60", "#6c3483"] },
   { id: "winter", label: "Winter Wonderland", icon: <Snowflake size={14} />, colors: ["#3498db", "#ecf0f1", "#bdc3c7", "#2c3e50", "#ffffff"] },
   { id: "back_to_school", label: "Back to School", icon: <BookOpen size={14} />, colors: ["#e74c3c", "#3498db", "#f1c40f", "#2ecc71", "#2c3e50"] },
-  { id: "black_friday", label: "Black Friday / Cyber", icon: <Zap size={14} />, colors: ["#000000", "#f1c40f", "#e74c3c", "#ffffff", "#2c3e50"] },
+  { id: "black_friday", label: "Black Friday / Cyber", icon: <Lightning size={14} />, colors: ["#000000", "#f1c40f", "#e74c3c", "#ffffff", "#2c3e50"] },
 ];
 
 // ---------- Design System Token Defaults ----------
@@ -397,7 +385,7 @@ export default function DesignStudioPage() {
   const [qrSize, setQrSize] = useState(256);
   const [qrIncludeLogo, setQrIncludeLogo] = useState(true);
 
-  // Version History
+  // Version ClockCounterClockwise
   // TODO: fetch from API
   const [versionHistory] = useState<Array<{ id: string; label: string; date: string; changes: string }>>([]);
   const [selectedVersion, setSelectedVersion] = useState("");
@@ -465,7 +453,7 @@ export default function DesignStudioPage() {
   const [batchExportSizes, setBatchExportSizes] = useState<string[]>(["1080x1080"]);
   const [batchExporting, setBatchExporting] = useState(false);
 
-  // Accessibility Checker
+  // Wheelchair Checker
   const [a11yFgColor, setA11yFgColor] = useState("#ffffff");
   const [a11yBgColor, setA11yBgColor] = useState("#1a1a2e");
   const [a11yFontSize, setA11yFontSize] = useState(16);
@@ -605,7 +593,7 @@ export default function DesignStudioPage() {
 
       const res = await fetch("/api/content/generate-image", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           description: prompt,
           type: sectionTypeMap[section] || section,
@@ -661,7 +649,7 @@ export default function DesignStudioPage() {
       try {
         const res = await fetch("/api/content/generate-image", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-TextT": "application/json" },
           body: JSON.stringify({
             description: prompt,
             type: sectionTypeMap[activeSection || "social"] || "social_post",
@@ -702,7 +690,7 @@ export default function DesignStudioPage() {
 
   /* --- Guided Mode: pick a design kind + vibe ? generate first prompt --- */
   const GUIDED_KINDS: Array<{ id: string; label: string; desc: string; sectionKey: string; templateLabel: string; icon: React.ReactNode }> = [
-    { id: "logo", label: "Logo", desc: "Brand mark or wordmark", sectionKey: "logos", templateLabel: "Primary Logo", icon: <Award size={18} /> },
+    { id: "logo", label: "Logo", desc: "Brand mark or wordmark", sectionKey: "logos", templateLabel: "Primary Logo", icon: <Medal size={18} /> },
     { id: "banner", label: "Banner", desc: "Website or social header", sectionKey: "banners", templateLabel: "Website Hero", icon: <Monitor size={18} /> },
     { id: "social", label: "Social post", desc: "IG, LinkedIn, TikTok", sectionKey: "social", templateLabel: "Instagram Post", icon: <Camera size={18} /> },
     { id: "thumbnail", label: "Thumbnail", desc: "YouTube cover art", sectionKey: "thumbnails", templateLabel: "YouTube Thumbnail", icon: <Play size={18} /> },
@@ -747,7 +735,7 @@ export default function DesignStudioPage() {
 
       const res = await fetch("/api/content/generate-image", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           description: prompt,
           type: sectionTypeMap[kind.sectionKey] || kind.sectionKey,
@@ -817,7 +805,7 @@ export default function DesignStudioPage() {
       id: "vibe",
       title: "Pick a vibe",
       description: "This picks a style + matching color palette � you can change both in Advanced.",
-      icon: <Wand2 size={18} />,
+      icon: <MagicWand size={18} />,
       component: (
         <ChoiceCards
           columns={3}
@@ -837,7 +825,7 @@ export default function DesignStudioPage() {
       id: "prompt",
       title: "What should it show?",
       description: "One or two sentences about the subject. AI will turn this into a Midjourney-ready prompt.",
-      icon: <Sparkles size={18} />,
+      icon: <Sparkle size={18} />,
       canProceed: guidedPrompt.trim().length > 0,
       component: (
         <textarea
@@ -869,7 +857,7 @@ export default function DesignStudioPage() {
                   {advancedMode && (
                     <a href="https://www.canva.com" target="_blank" rel="noopener noreferrer"
                       className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
-                      <ExternalLink size={12} /> Canva
+                      <ArrowSquareOut size={12} /> Canva
                     </a>
                   )}
                 </>
@@ -930,7 +918,7 @@ export default function DesignStudioPage() {
                     <span className="text-[9px] text-text-muted">{selectedTemplate.width}x{selectedTemplate.height}</span>
                     <span className="text-[9px] text-text-muted truncate max-w-xs">{selectedTemplate.style}</span>
                     <button onClick={() => { setSelectedTemplate(null); setStyle(""); }}
-                      className="text-[9px] text-brand-accent hover:text-brand-accent-light ml-auto flex items-center gap-1"><RotateCcw size={9} /> Clear</button>
+                      className="text-[9px] text-brand-accent hover:text-brand-accent-light ml-auto flex items-center gap-1"><ArrowCounterClockwise size={9} /> Clear</button>
                   </div>
                 )}
 
@@ -943,14 +931,14 @@ export default function DesignStudioPage() {
                       ))}
                     </div>
                     <button onClick={() => setSelectedPalette(null)}
-                      className="text-[9px] text-text-muted hover:text-text-primary ml-auto flex items-center gap-1"><RotateCcw size={9} /> Clear</button>
+                      className="text-[9px] text-text-muted hover:text-text-primary ml-auto flex items-center gap-1"><ArrowCounterClockwise size={9} /> Clear</button>
                   </div>
                 )}
 
                 {/* Industry style hint */}
                 {getIndustryStyle() && (
                   <div className="flex items-center gap-2 text-[9px] text-brand-accent bg-[rgba(212, 255, 0,0.03)] border border-[rgba(212, 255, 0,0.1)] rounded-lg px-3 py-1.5">
-                    <Wand2 size={10} />
+                    <MagicWand size={10} />
                     <span>AI will use industry-specific style: <span className="font-medium">{getIndustryStyle().substring(0, 80)}...</span></span>
                   </div>
                 )}
@@ -1014,7 +1002,7 @@ export default function DesignStudioPage() {
                       <div className="flex gap-2">
                         <button onClick={() => generateDesign(section.key)} disabled={generating === section.key}
                           className="btn-primary flex-1 flex items-center justify-center gap-2 rounded-lg text-xs">
-                          {generating === section.key ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                          {generating === section.key ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
                           {generating === section.key ? "Generating..." : "Generate with AI"}
                         </button>
                       </div>
@@ -1027,7 +1015,7 @@ export default function DesignStudioPage() {
                 {activeSection && (
                   <button onClick={batchGenerate} disabled={batchGenerating || !prompts[activeSection]}
                     className="w-full text-xs py-2.5 flex items-center justify-center gap-2 rounded-xl border border-[rgba(212, 255, 0,0.25)] bg-[rgba(212, 255, 0,0.05)] text-brand-accent hover:bg-[rgba(212, 255, 0,0.08)] transition-all font-medium disabled:opacity-50">
-                    {batchGenerating ? <Loader size={14} className="animate-spin" /> : <Layers size={14} />}
+                    {batchGenerating ? <CircleNotch size={14} className="animate-spin" /> : <Stack size={14} />}
                     {batchGenerating ? "Generating all sizes..." : "Batch Generate for All Sizes"}
                   </button>
                 )}
@@ -1038,7 +1026,7 @@ export default function DesignStudioPage() {
                     <div className="p-5">
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="flex items-center gap-2 mb-0">
-                        <ImageIcon size={16} /> Generated Prompts ({generated.length})
+                        <Image size={16} /> Generated Prompts ({generated.length})
                       </h2>
                       <button onClick={() => {
                         const all = generated.map(g => `[${g.section} - ${g.dimensions}]\n${g.prompt}`).join("\n\n");
@@ -1073,7 +1061,7 @@ export default function DesignStudioPage() {
                               </button>
                               <a href="https://www.canva.com" target="_blank" rel="noopener noreferrer"
                                 className="btn-secondary flex items-center gap-1 text-[10px] px-3 py-1.5 rounded-lg text-center justify-center">
-                                <ExternalLink size={10} /> Canva
+                                <ArrowSquareOut size={10} /> Canva
                               </a>
                             </div>
                           </div>
@@ -1151,7 +1139,7 @@ export default function DesignStudioPage() {
                 </div>
 
                 <div className="glass rounded-xl p-5">
-                  <h3 className="flex items-center gap-2"><Wand2 size={12} className="text-brand-accent" /> Industry Styles</h3>
+                  <h3 className="flex items-center gap-2"><MagicWand size={12} className="text-brand-accent" /> Industry Styles</h3>
                   <p className="text-[10px] text-text-muted mb-3">When you select a client, AI automatically uses an industry-appropriate style</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {Object.entries(INDUSTRY_STYLES).map(([industry, style]) => (
@@ -1171,25 +1159,25 @@ export default function DesignStudioPage() {
                 {/* Tools Navigation */}
                 <div className="flex flex-wrap gap-1.5">
                   {[
-                    { id: "brand-kit", label: "Brand Kit", icon: <Paintbrush size={11} /> },
-                    { id: "smart-resize", label: "Smart Resize", icon: <Maximize2 size={11} /> },
-                    { id: "layers", label: "Layer Editor", icon: <Layers size={11} /> },
+                    { id: "brand-kit", label: "Brand Kit", icon: <PaintBrush size={11} /> },
+                    { id: "smart-resize", label: "Smart Resize", icon: <ArrowsOut size={11} /> },
+                    { id: "layers", label: "Layer Editor", icon: <Stack size={11} /> },
                     { id: "bg-remover", label: "BG Remover", icon: <Scissors size={11} /> },
-                    { id: "mockups", label: "Mockups", icon: <Shirt size={11} /> },
+                    { id: "mockups", label: "Mockups", icon: <TShirt size={11} /> },
                     { id: "qr-code", label: "QR Code", icon: <QrCode size={11} /> },
-                    { id: "version-history", label: "Versions", icon: <History size={11} /> },
-                    { id: "color-extract", label: "Color Extract", icon: <Pipette size={11} /> },
-                    { id: "typography", label: "Typography", icon: <Type size={11} /> },
+                    { id: "version-history", label: "Versions", icon: <ClockCounterClockwise size={11} /> },
+                    { id: "color-extract", label: "Color Extract", icon: <Eyedropper size={11} /> },
+                    { id: "typography", label: "Typography", icon: <TextT size={11} /> },
                     { id: "patterns", label: "Patterns", icon: <Repeat size={11} /> },
                     { id: "filters", label: "Photo Filters", icon: <Aperture size={11} /> },
-                    { id: "icons", label: "Icon Library", icon: <Search size={11} /> },
-                    { id: "infographics", label: "Infographics", icon: <BarChart3 size={11} /> },
+                    { id: "icons", label: "Icon Library", icon: <MagnifyingGlass size={11} /> },
+                    { id: "infographics", label: "Infographics", icon: <ChartBar size={11} /> },
                     { id: "social-proof", label: "Social Proof", icon: <ThumbsUp size={11} /> },
-                    { id: "seasonal", label: "Seasonal Packs", icon: <CalendarDays size={11} /> },
-                    { id: "animation", label: "Animation", icon: <Film size={11} /> },
+                    { id: "seasonal", label: "Seasonal Packs", icon: <CalendarDots size={11} /> },
+                    { id: "animation", label: "Animation", icon: <FilmStrip size={11} /> },
                     { id: "design-tokens", label: "Design Tokens", icon: <Database size={11} /> },
-                    { id: "batch-export", label: "Batch Export", icon: <Download size={11} /> },
-                    { id: "accessibility", label: "Accessibility", icon: <Accessibility size={11} /> },
+                    { id: "batch-export", label: "Batch Export", icon: <DownloadSimple size={11} /> },
+                    { id: "accessibility", label: "Wheelchair", icon: <Wheelchair size={11} /> },
                     { id: "mood-board", label: "Mood Board", icon: <Heart size={11} /> },
                     { id: "style-transfer", label: "AI Style Transfer", icon: <Shuffle size={11} /> },
                   ].map(tool => (
@@ -1206,7 +1194,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "brand-kit" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Paintbrush size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><PaintBrush size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Brand Kit Manager</h3>
                         <p className="text-[10px] text-text-muted">Save and apply brand colors, fonts, and logos across all designs</p>
@@ -1228,7 +1216,7 @@ export default function DesignStudioPage() {
                             ))}
                           </div>
                           <div className="flex items-center gap-3 text-[9px] text-text-muted">
-                            <span><Type size={9} className="inline mr-1" />{kit.fonts.heading}</span>
+                            <span><TextT size={9} className="inline mr-1" />{kit.fonts.heading}</span>
                             <span>{kit.fonts.body}</span>
                           </div>
                         </div>
@@ -1274,7 +1262,7 @@ export default function DesignStudioPage() {
                     {brandKits.find(k => k.id === activeBrandKit) && (
                       <div className="border border-[rgba(212, 255, 0,0.15)] bg-[rgba(212, 255, 0,0.02)] rounded-xl p-3 space-y-3">
                         <h4 className="text-[11px] font-semibold flex items-center gap-2">
-                          <Wand2 size={12} className="text-brand-accent" /> Active Kit: {brandKits.find(k => k.id === activeBrandKit)?.name}
+                          <MagicWand size={12} className="text-brand-accent" /> Active Kit: {brandKits.find(k => k.id === activeBrandKit)?.name}
                         </h4>
                         <div className="grid grid-cols-5 gap-2">
                           {brandKits.find(k => k.id === activeBrandKit)?.colors.map((c, i) => (
@@ -1292,7 +1280,7 @@ export default function DesignStudioPage() {
                             <Palette size={10} /> Apply to Designs
                           </button>
                           <button className="btn-secondary text-[10px] flex items-center gap-1.5">
-                            <Upload size={10} /> Upload Logo
+                            <UploadSimple size={10} /> UploadSimple Logo
                           </button>
                         </div>
                       </div>
@@ -1304,7 +1292,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "smart-resize" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Maximize2 size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><ArrowsOut size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Smart Resize</h3>
                         <p className="text-[10px] text-text-muted">One-click resize your design for multiple platforms simultaneously</p>
@@ -1349,7 +1337,7 @@ export default function DesignStudioPage() {
                       <button disabled={!resizeSource.trim() || selectedResizes.length === 0}
                         onClick={() => { toast.success(`Resizing to ${selectedResizes.length} sizes...`); }}
                         className="btn-primary text-[10px] flex items-center gap-1.5 flex-1 justify-center disabled:opacity-50">
-                        <Maximize2 size={10} /> Resize to {selectedResizes.length} Platform{selectedResizes.length !== 1 ? "s" : ""}
+                        <ArrowsOut size={10} /> Resize to {selectedResizes.length} Platform{selectedResizes.length !== 1 ? "s" : ""}
                       </button>
                     </div>
                   </motion.div>
@@ -1359,7 +1347,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "layers" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Layers size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Stack size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Layer Editor</h3>
                         <p className="text-[10px] text-text-muted">Manage layer ordering, visibility, and opacity for your designs</p>
@@ -1369,10 +1357,10 @@ export default function DesignStudioPage() {
                     <div className="space-y-1.5">
                       {designLayers.map((layer, index) => (
                         <div key={layer.id} className="flex items-center gap-2 p-2.5 rounded-xl border border-border-subtle hover:border-[rgba(212, 255, 0,0.2)] transition-all bg-surface-light/30">
-                          <GripVertical size={12} className="text-text-muted cursor-grab" />
+                          <DotsSixVertical size={12} className="text-text-muted cursor-grab" />
                           <button onClick={() => setDesignLayers(prev => prev.map(l => l.id === layer.id ? { ...l, visible: !l.visible } : l))}
                             className="text-text-muted hover:text-text-primary transition-colors">
-                            {layer.visible ? <Eye size={13} /> : <EyeOff size={13} className="text-text-muted/40" />}
+                            {layer.visible ? <Eye size={13} /> : <EyeSlash size={13} className="text-text-muted/40" />}
                           </button>
                           <div className={`w-2 h-2 rounded-full ${layer.type === "text" ? "bg-blue-400" : layer.type === "image" ? "bg-green-400" : layer.type === "shape" ? "bg-purple-400" : "bg-orange-400"}`} />
                           <span className={`text-[10px] flex-1 ${layer.visible ? "text-text-primary" : "text-text-muted/50 line-through"}`}>{layer.name}</span>
@@ -1385,7 +1373,7 @@ export default function DesignStudioPage() {
                           </div>
                           <button onClick={() => setDesignLayers(prev => prev.map(l => l.id === layer.id ? { ...l, locked: !l.locked } : l))}
                             className={`text-[10px] ${layer.locked ? "text-brand-accent" : "text-text-muted hover:text-text-primary"}`}>
-                            {layer.locked ? <Shield size={11} /> : <Move size={11} />}
+                            {layer.locked ? <Shield size={11} /> : <ArrowsOutCardinal size={11} />}
                           </button>
                           {index > 0 && (
                             <button onClick={() => {
@@ -1393,7 +1381,7 @@ export default function DesignStudioPage() {
                               [newLayers[index], newLayers[index - 1]] = [newLayers[index - 1], newLayers[index]];
                               setDesignLayers(newLayers);
                             }} className="text-text-muted hover:text-text-primary text-[9px]">
-                              <ChevronDown size={11} className="rotate-180" />
+                              <CaretDown size={11} className="rotate-180" />
                             </button>
                           )}
                           {index < designLayers.length - 1 && (
@@ -1402,7 +1390,7 @@ export default function DesignStudioPage() {
                               [newLayers[index], newLayers[index + 1]] = [newLayers[index + 1], newLayers[index]];
                               setDesignLayers(newLayers);
                             }} className="text-text-muted hover:text-text-primary text-[9px]">
-                              <ChevronDown size={11} />
+                              <CaretDown size={11} />
                             </button>
                           )}
                         </div>
@@ -1435,14 +1423,14 @@ export default function DesignStudioPage() {
 
                     <div className="border-2 border-dashed border-border-subtle rounded-xl p-8 text-center hover:border-[rgba(212, 255, 0,0.25)] transition-all cursor-pointer"
                       onClick={() => setBgRemoveFile("sample-photo.jpg")}>
-                      <Upload size={24} className="text-text-muted mx-auto mb-2" />
+                      <UploadSimple size={24} className="text-text-muted mx-auto mb-2" />
                       <p className="text-xs text-text-muted">Click to upload or drag & drop an image</p>
                       <p className="text-[9px] text-text-muted/60 mt-1">Supports PNG, JPG, WEBP up to 10MB</p>
                     </div>
 
                     {bgRemoveFile && (
                       <div className="flex items-center gap-3 bg-surface-light rounded-xl p-3">
-                        <ImageIcon size={16} className="text-brand-accent" />
+                        <Image size={16} className="text-brand-accent" />
                         <span className="text-xs flex-1">{bgRemoveFile}</span>
                         <button onClick={() => { setBgRemoveFile(""); setBgRemoveStatus("idle"); }}
                           className="text-text-muted hover:text-text-primary"><X size={14} /></button>
@@ -1451,7 +1439,7 @@ export default function DesignStudioPage() {
 
                     {bgRemoveStatus === "processing" && (
                       <div className="flex items-center gap-3 bg-[rgba(212, 255, 0,0.03)] border border-[rgba(212, 255, 0,0.15)] rounded-xl p-3">
-                        <Loader size={14} className="text-brand-accent animate-spin" />
+                        <CircleNotch size={14} className="text-brand-accent animate-spin" />
                         <span className="text-xs text-brand-accent">Removing background with AI...</span>
                       </div>
                     )}
@@ -1460,13 +1448,13 @@ export default function DesignStudioPage() {
                       <div className="flex items-center gap-3 bg-green-500/[0.06] border border-green-500/20 rounded-xl p-3">
                         <CheckCircle size={14} className="text-green-400" />
                         <span className="text-xs text-green-400">Background removed successfully!</span>
-                        <button className="btn-primary text-[10px] ml-auto flex items-center gap-1"><Download size={10} /> Download</button>
+                        <button className="btn-primary text-[10px] ml-auto flex items-center gap-1"><DownloadSimple size={10} /> DownloadSimple</button>
                       </div>
                     )}
 
                     <button onClick={handleBgRemove} disabled={!bgRemoveFile || bgRemoveStatus === "processing"}
                       className="btn-primary text-xs flex items-center justify-center gap-2 w-full disabled:opacity-50">
-                      {bgRemoveStatus === "processing" ? <Loader size={12} className="animate-spin" /> : <Scissors size={12} />}
+                      {bgRemoveStatus === "processing" ? <CircleNotch size={12} className="animate-spin" /> : <Scissors size={12} />}
                       {bgRemoveStatus === "processing" ? "Processing..." : "Remove Background"}
                     </button>
                   </motion.div>
@@ -1476,7 +1464,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "mockups" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Shirt size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><TShirt size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Mockup Generator</h3>
                         <p className="text-[10px] text-text-muted">Place your designs on realistic product mockups</p>
@@ -1514,13 +1502,13 @@ export default function DesignStudioPage() {
                     </div>
 
                     <div className="border-2 border-dashed border-border-subtle rounded-xl p-6 text-center hover:border-[rgba(212, 255, 0,0.25)] transition-all cursor-pointer">
-                      <Upload size={20} className="text-text-muted mx-auto mb-1.5" />
-                      <p className="text-[10px] text-text-muted">Upload your design to place on mockup</p>
+                      <UploadSimple size={20} className="text-text-muted mx-auto mb-1.5" />
+                      <p className="text-[10px] text-text-muted">UploadSimple your design to place on mockup</p>
                     </div>
 
                     <button onClick={handleMockupGenerate} disabled={mockupGenerating}
                       className="btn-primary text-xs flex items-center justify-center gap-2 w-full disabled:opacity-50">
-                      {mockupGenerating ? <Loader size={12} className="animate-spin" /> : <Shirt size={12} />}
+                      {mockupGenerating ? <CircleNotch size={12} className="animate-spin" /> : <TShirt size={12} />}
                       {mockupGenerating ? "Generating Mockup..." : `Generate ${MOCKUP_PRODUCTS.find(p => p.id === selectedMockup)?.label} Mockup`}
                     </button>
                   </motion.div>
@@ -1585,22 +1573,22 @@ export default function DesignStudioPage() {
                         <QrCode size={12} /> Generate QR Code
                       </button>
                       <button className="btn-secondary text-xs flex items-center gap-1.5">
-                        <Download size={12} /> PNG
+                        <DownloadSimple size={12} /> PNG
                       </button>
                       <button className="btn-secondary text-xs flex items-center gap-1.5">
-                        <Download size={12} /> SVG
+                        <DownloadSimple size={12} /> SVG
                       </button>
                     </div>
                   </motion.div>
                 )}
 
-                {/* ========== 7. Design Version History ========== */}
+                {/* ========== 7. Design Version ClockCounterClockwise ========== */}
                 {toolsTab === "version-history" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><History size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><ClockCounterClockwise size={16} /></div>
                       <div>
-                        <h3 className="font-medium text-sm">Design Version History</h3>
+                        <h3 className="font-medium text-sm">Design Version ClockCounterClockwise</h3>
                         <p className="text-[10px] text-text-muted">Track design iterations and compare versions with visual diff</p>
                       </div>
                     </div>
@@ -1656,7 +1644,7 @@ export default function DesignStudioPage() {
                         </div>
                         <div className="flex gap-2">
                           <button className="btn-primary text-[10px] flex items-center gap-1.5 flex-1 justify-center">
-                            <RotateCcw size={10} /> Restore Version
+                            <ArrowCounterClockwise size={10} /> Restore Version
                           </button>
                           <button className="btn-secondary text-[10px] flex items-center gap-1.5">
                             <SlidersHorizontal size={10} /> Diff Overlay
@@ -1671,7 +1659,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "color-extract" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Pipette size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Eyedropper size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Color Palette Extractor</h3>
                         <p className="text-[10px] text-text-muted">Extract a color palette from any uploaded image</p>
@@ -1680,14 +1668,14 @@ export default function DesignStudioPage() {
 
                     <div className="border-2 border-dashed border-border-subtle rounded-xl p-8 text-center hover:border-[rgba(212, 255, 0,0.25)] transition-all cursor-pointer"
                       onClick={handleExtractColors}>
-                      <Upload size={24} className="text-text-muted mx-auto mb-2" />
-                      <p className="text-xs text-text-muted">Upload an image to extract its color palette</p>
+                      <UploadSimple size={24} className="text-text-muted mx-auto mb-2" />
+                      <p className="text-xs text-text-muted">UploadSimple an image to extract its color palette</p>
                       <p className="text-[9px] text-text-muted/60 mt-1">Works with photos, designs, logos, artwork</p>
                     </div>
 
                     {extractingColors && (
                       <div className="flex items-center gap-3 bg-[rgba(212, 255, 0,0.03)] border border-[rgba(212, 255, 0,0.15)] rounded-xl p-3">
-                        <Loader size={14} className="text-brand-accent animate-spin" />
+                        <CircleNotch size={14} className="text-brand-accent animate-spin" />
                         <span className="text-xs text-brand-accent">Analyzing image colors...</span>
                       </div>
                     )}
@@ -1722,7 +1710,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "typography" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Type size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><TextT size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Typography Pairing</h3>
                         <p className="text-[10px] text-text-muted">AI-curated font combinations for professional designs</p>
@@ -1764,7 +1752,7 @@ export default function DesignStudioPage() {
                             toast.success("Fonts applied to brand kit!");
                           }
                         }} className="btn-secondary text-[10px] flex items-center gap-1.5">
-                          <Paintbrush size={10} /> Apply to Brand Kit
+                          <PaintBrush size={10} /> Apply to Brand Kit
                         </button>
                       </div>
                     )}
@@ -1827,7 +1815,7 @@ export default function DesignStudioPage() {
                       <button onClick={() => toast.success("Pattern generated!")} className="btn-primary text-xs flex items-center gap-2 flex-1 justify-center">
                         <Repeat size={12} /> Generate Pattern
                       </button>
-                      <button className="btn-secondary text-xs flex items-center gap-1.5"><Download size={12} /> Export</button>
+                      <button className="btn-secondary text-xs flex items-center gap-1.5"><DownloadSimple size={12} /> Export</button>
                     </div>
                   </motion.div>
                 )}
@@ -1878,15 +1866,15 @@ export default function DesignStudioPage() {
                 {toolsTab === "icons" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Search size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><MagnifyingGlass size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Icon Library Browser</h3>
-                        <p className="text-[10px] text-text-muted">Search and insert icons from a curated library</p>
+                        <p className="text-[10px] text-text-muted">MagnifyingGlass and insert icons from a curated library</p>
                       </div>
                     </div>
 
                     <input value={iconSearch} onChange={e => setIconSearch(e.target.value)}
-                      className="input text-xs py-2 w-full" placeholder="Search icons (e.g., chart, heart, star)..." aria-label="Search icons" />
+                      className="input text-xs py-2 w-full" placeholder="MagnifyingGlass icons (e.g., chart, heart, star)..." aria-label="MagnifyingGlass icons" />
 
                     <div className="flex flex-wrap gap-1.5">
                       {ICON_CATEGORIES.map(cat => (
@@ -1917,7 +1905,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "infographics" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><BarChart3 size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><ChartBar size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Infographic Builder</h3>
                         <p className="text-[10px] text-text-muted">Build data visualizations with templates for charts, stats, and timelines</p>
@@ -1945,7 +1933,7 @@ export default function DesignStudioPage() {
                           <input value={item.value} onChange={e => setInfographicData(prev => prev.map((d, idx) => idx === i ? { ...d, value: e.target.value } : d))}
                             className="input text-[10px] py-1.5 w-24" placeholder="Value" />
                           <button onClick={() => setInfographicData(prev => prev.filter((_, idx) => idx !== i))}
-                            className="text-text-muted hover:text-red-400"><Trash2 size={12} /></button>
+                            className="text-text-muted hover:text-red-400"><Trash size={12} /></button>
                         </div>
                       ))}
                       <button onClick={() => setInfographicData(prev => [...prev, { label: "", value: "" }])}
@@ -1954,7 +1942,7 @@ export default function DesignStudioPage() {
 
                     <button onClick={() => toast.success("Infographic generated!")}
                       className="btn-primary text-xs flex items-center justify-center gap-2 w-full">
-                      <BarChart3 size={12} /> Generate Infographic
+                      <ChartBar size={12} /> Generate Infographic
                     </button>
                   </motion.div>
                 )}
@@ -1988,7 +1976,7 @@ export default function DesignStudioPage() {
                           className="input text-xs w-full" placeholder="Author name and title..." />
                         {/* Preview */}
                         <div className="bg-surface-light rounded-xl p-4 border border-border-subtle">
-                          <Quote size={16} className="text-brand-accent mb-2" />
+                          <Quotes size={16} className="text-brand-accent mb-2" />
                           <p className="text-xs italic leading-relaxed">{testimonialText || "Your testimonial will appear here..."}</p>
                           <div className="flex items-center gap-2 mt-3">
                             <div className="w-8 h-8 rounded-full bg-[rgba(212, 255, 0,0.12)] flex items-center justify-center text-brand-accent text-[10px] font-bold">
@@ -2037,7 +2025,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "seasonal" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><CalendarDays size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><CalendarDots size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Seasonal Template Packs</h3>
                         <p className="text-[10px] text-text-muted">Holiday, seasonal, and event-specific design templates with themed palettes</p>
@@ -2072,7 +2060,7 @@ export default function DesignStudioPage() {
                         </button>
                         <button onClick={() => toast.success("Seasonal templates loaded!")}
                           className="btn-secondary text-[10px] flex items-center gap-1.5">
-                          <Grid size={10} /> Browse Templates
+                          <SquaresFour size={10} /> Browse Templates
                         </button>
                       </div>
                     )}
@@ -2083,7 +2071,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "animation" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Film size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><FilmStrip size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Animation Preview</h3>
                         <p className="text-[10px] text-text-muted">Preview your design as animated GIF or video with transitions</p>
@@ -2117,7 +2105,7 @@ export default function DesignStudioPage() {
                           "animate-pulse"
                         ) : ""
                       }`} style={{ animationDuration: `${2 / animationSpeed}s` }}>
-                        <Sparkles size={24} className="text-brand-accent" />
+                        <Sparkle size={24} className="text-brand-accent" />
                       </div>
                     </div>
 
@@ -2127,10 +2115,10 @@ export default function DesignStudioPage() {
                         {animationPlaying ? <><X size={12} /> Stop Preview</> : <><Play size={12} /> Play Animation</>}
                       </button>
                       <button className="btn-secondary text-xs flex items-center gap-1.5">
-                        <Download size={12} /> Export GIF
+                        <DownloadSimple size={12} /> Export GIF
                       </button>
                       <button className="btn-secondary text-xs flex items-center gap-1.5">
-                        <Film size={12} /> Export MP4
+                        <FilmStrip size={12} /> Export MP4
                       </button>
                     </div>
                   </motion.div>
@@ -2166,7 +2154,7 @@ export default function DesignStudioPage() {
                                 </div>
                                 <button onClick={() => setDesignTokens(prev => prev.filter(t => t.id !== token.id))}
                                   className="text-text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                                  <Trash2 size={10} />
+                                  <Trash size={10} />
                                 </button>
                               </div>
                             ))}
@@ -2218,7 +2206,7 @@ export default function DesignStudioPage() {
                 {toolsTab === "batch-export" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Download size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><DownloadSimple size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Batch Export</h3>
                         <p className="text-[10px] text-text-muted">Export your design in multiple sizes and formats at once</p>
@@ -2273,19 +2261,19 @@ export default function DesignStudioPage() {
 
                     <button onClick={handleBatchExport} disabled={batchExporting || batchExportFormats.length === 0 || batchExportSizes.length === 0}
                       className="btn-primary text-xs flex items-center justify-center gap-2 w-full disabled:opacity-50">
-                      {batchExporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
+                      {batchExporting ? <CircleNotch size={12} className="animate-spin" /> : <DownloadSimple size={12} />}
                       {batchExporting ? "Exporting..." : `Export ${batchExportFormats.length * batchExportSizes.length} Files`}
                     </button>
                   </motion.div>
                 )}
 
-                {/* ========== 19. Accessibility Checker ========== */}
+                {/* ========== 19. Wheelchair Checker ========== */}
                 {toolsTab === "accessibility" && (
                   <motion.div className="glass rounded-xl space-y-4 p-5" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Accessibility size={16} /></div>
+                      <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><Wheelchair size={16} /></div>
                       <div>
-                        <h3 className="font-medium text-sm">Accessibility Checker</h3>
+                        <h3 className="font-medium text-sm">Wheelchair Checker</h3>
                         <p className="text-[10px] text-text-muted">Check contrast ratios and WCAG compliance for text/background combinations</p>
                       </div>
                     </div>
@@ -2332,9 +2320,9 @@ export default function DesignStudioPage() {
                       return (
                         <div className="space-y-3">
                           <div className="flex items-center gap-3 bg-surface-light rounded-xl p-3">
-                            <Contrast size={16} className="text-brand-accent" />
+                            <CircleHalf size={16} className="text-brand-accent" />
                             <div>
-                              <span className="text-xs font-semibold">Contrast Ratio: {ratio.toFixed(2)}:1</span>
+                              <span className="text-xs font-semibold">CircleHalf Ratio: {ratio.toFixed(2)}:1</span>
                               <p className="text-[9px] text-text-muted">Minimum 4.5:1 for normal text, 3:1 for large text (WCAG AA)</p>
                             </div>
                           </div>
@@ -2347,7 +2335,7 @@ export default function DesignStudioPage() {
                             ].map(item => (
                               <div key={item.label} className={`rounded-xl p-2.5 border text-center ${item.pass ? "border-green-500/20 bg-green-500/[0.06]" : "border-red-500/20 bg-red-500/[0.06]"}`}>
                                 <div className="flex items-center justify-center gap-1 mb-0.5">
-                                  {item.pass ? <CheckCircle size={11} className="text-green-400" /> : <AlertTriangle size={11} className="text-red-400" />}
+                                  {item.pass ? <CheckCircle size={11} className="text-green-400" /> : <Warning size={11} className="text-red-400" />}
                                   <span className={`text-[10px] font-semibold ${item.pass ? "text-green-400" : "text-red-400"}`}>{item.pass ? "Pass" : "Fail"}</span>
                                 </div>
                                 <span className="text-[9px] font-medium block">{item.label}</span>
@@ -2357,7 +2345,7 @@ export default function DesignStudioPage() {
                           </div>
                           {!rating.aa && (
                             <div className="flex items-center gap-2 text-[10px] text-amber-400 bg-amber-500/[0.06] border border-amber-500/20 rounded-xl px-3 py-2">
-                              <AlertTriangle size={12} />
+                              <Warning size={12} />
                               <span>This color combination does not meet WCAG AA standards. Consider increasing contrast.</span>
                             </div>
                           )}
@@ -2394,7 +2382,7 @@ export default function DesignStudioPage() {
                           )}
                           {item.type === "image" && (
                             <div className="h-20 rounded-lg bg-surface-light border border-border-subtle flex items-center justify-center mb-1.5">
-                              <ImageIcon size={16} className="text-text-muted" />
+                              <Image size={16} className="text-text-muted" />
                             </div>
                           )}
                           {item.type === "note" && (
@@ -2438,8 +2426,8 @@ export default function DesignStudioPage() {
                           toast.success("Image placeholder added");
                         }}>
                         <div className="text-center">
-                          <Upload size={14} className="text-text-muted mx-auto mb-1" />
-                          <span className="text-[9px] text-text-muted">Upload Image</span>
+                          <UploadSimple size={14} className="text-text-muted mx-auto mb-1" />
+                          <span className="text-[9px] text-text-muted">UploadSimple Image</span>
                         </div>
                       </div>
                     </div>
@@ -2472,14 +2460,14 @@ export default function DesignStudioPage() {
                           onClick={() => setStyleTransferSource("content-image.jpg")}>
                           {styleTransferSource ? (
                             <div className="flex items-center gap-2 justify-center">
-                              <ImageIcon size={14} className="text-brand-accent" />
+                              <Image size={14} className="text-brand-accent" />
                               <span className="text-[10px]">{styleTransferSource}</span>
                               <button onClick={(e) => { e.stopPropagation(); setStyleTransferSource(""); }} className="text-text-muted hover:text-text-primary"><X size={12} /></button>
                             </div>
                           ) : (
                             <>
-                              <Upload size={20} className="text-text-muted mx-auto mb-1" />
-                              <p className="text-[9px] text-text-muted">Upload content image</p>
+                              <UploadSimple size={20} className="text-text-muted mx-auto mb-1" />
+                              <p className="text-[9px] text-text-muted">UploadSimple content image</p>
                             </>
                           )}
                         </div>
@@ -2490,14 +2478,14 @@ export default function DesignStudioPage() {
                           onClick={() => setStyleTransferStyle("style-reference.jpg")}>
                           {styleTransferStyle ? (
                             <div className="flex items-center gap-2 justify-center">
-                              <Brush size={14} className="text-brand-accent" />
+                              <PaintBrush size={14} className="text-brand-accent" />
                               <span className="text-[10px]">{styleTransferStyle}</span>
                               <button onClick={(e) => { e.stopPropagation(); setStyleTransferStyle(""); }} className="text-text-muted hover:text-text-primary"><X size={12} /></button>
                             </div>
                           ) : (
                             <>
-                              <Upload size={20} className="text-text-muted mx-auto mb-1" />
-                              <p className="text-[9px] text-text-muted">Upload style reference</p>
+                              <UploadSimple size={20} className="text-text-muted mx-auto mb-1" />
+                              <p className="text-[9px] text-text-muted">UploadSimple style reference</p>
                             </>
                           )}
                         </div>
@@ -2531,7 +2519,7 @@ export default function DesignStudioPage() {
 
                     {styleTransferring && (
                       <div className="flex items-center gap-3 bg-[rgba(212, 255, 0,0.03)] border border-[rgba(212, 255, 0,0.15)] rounded-xl p-3">
-                        <Loader size={14} className="text-brand-accent animate-spin" />
+                        <CircleNotch size={14} className="text-brand-accent animate-spin" />
                         <span className="text-xs text-brand-accent">Applying style transfer ({styleTransferStrength}% strength)...</span>
                       </div>
                     )}
@@ -2539,7 +2527,7 @@ export default function DesignStudioPage() {
                     <button onClick={handleStyleTransfer}
                       disabled={styleTransferring || (!styleTransferSource && !styleTransferStyle)}
                       className="btn-primary text-xs flex items-center justify-center gap-2 w-full disabled:opacity-50">
-                      {styleTransferring ? <Loader size={12} className="animate-spin" /> : <Shuffle size={12} />}
+                      {styleTransferring ? <CircleNotch size={12} className="animate-spin" /> : <Shuffle size={12} />}
                       {styleTransferring ? "Applying Style..." : "Apply Style Transfer"}
                     </button>
                   </motion.div>

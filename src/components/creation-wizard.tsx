@@ -1,4 +1,5 @@
 "use client";
+import { ArrowsClockwise, CaretLeft, CaretRight, Check, FilmStrip, Image, Lightning, MagicWand, MusicNote, Palette, Question, Sparkle, TextT, X } from "@phosphor-icons/react";
 
 /**
  * Generic step-by-step creation wizard.
@@ -10,12 +11,11 @@
  * Choice-card rendering note: option `emoji` values are mapped to Lucide
  * icons via `@/lib/ui/emoji-icon-map` and rendered in a gold-tinted 40x40
  * square at the top-left of each card. Raw emoji are never rendered — the
- * fallback is <Sparkles/>. See also <EmojiIcon/> for the helper.
+ * fallback is <Sparkle/>. See also <EmojiIcon/> for the helper.
  */
 
 import { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Check, Sparkles, X, Zap, Image as ImageIcon, Type, Palette, Film, Music, Wand2, RefreshCw } from "lucide-react";
 import { mergeNonEmpty } from "@/lib/merge-patch";
 import { EmojiIcon } from "@/lib/ui/emoji-icon-map";
 
@@ -234,9 +234,9 @@ export function CinematicWizard({
                       className="relative w-full flex items-center justify-center gap-2.5 py-3.5 px-5 rounded-xl bg-[#0D1827] border border-[rgba(212,255,0,0.25)] text-white text-sm font-medium hover:bg-[rgba(212,255,0,0.1)] hover:border-[rgba(212,255,0,0.45)] transition-all disabled:opacity-50"
                     >
                       {aiLoading ? (
-                        <><RefreshCw size={14} className="animate-spin" /> Thinking...</>
+                        <><ArrowsClockwise size={14} className="animate-spin" /> Thinking...</>
                       ) : (
-                        <><Sparkles size={14} className="text-indigo-300" /> {currentStep.aiHelper.label}</>
+                        <><Sparkle size={14} className="text-indigo-300" /> {currentStep.aiHelper.label}</>
                       )}
                     </button>
                   </div>
@@ -262,7 +262,7 @@ export function CinematicWizard({
           disabled={stepIdx === 0}
           className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm text-white/35 hover:text-white/80 disabled:opacity-20 transition-colors"
         >
-          <ChevronLeft size={14} /> Back
+          <CaretLeft size={14} /> Back
         </button>
 
         {/* Step dots */}
@@ -288,7 +288,7 @@ export function CinematicWizard({
             disabled={!canAdvance()}
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#D4FF00] text-[#020711] text-sm font-semibold hover:bg-[#D4FF00] disabled:opacity-35 transition-colors shadow-lg shadow-[rgba(212,255,0,0.18)]"
           >
-            Continue <ChevronRight size={14} />
+            Continue <CaretRight size={14} />
           </button>
         ) : (
           <button
@@ -296,7 +296,7 @@ export function CinematicWizard({
             disabled={!canAdvance() || submitting}
             className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#D4FF00] text-[#020711] text-sm font-semibold hover:bg-[#D4FF00] disabled:opacity-35 transition-colors shadow-lg shadow-[rgba(212,255,0,0.18)]"
           >
-            {submitting ? <RefreshCw size={14} className="animate-spin" /> : <Sparkles size={14} />}
+            {submitting ? <ArrowsClockwise size={14} className="animate-spin" /> : <Sparkle size={14} />}
             {submitting ? "Creating..." : submitLabel}
           </button>
         )}
@@ -398,7 +398,7 @@ export default function CreationWizard({
         <div className="relative px-6 py-4 border-b border-border-subtle bg-gradient-to-br from-[rgba(212,255,0,0.08)] via-transparent to-transparent">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[#D4FF00]">
-              {icon || <Sparkles size={18} />}
+              {icon || <Sparkle size={18} />}
             </div>
             <div className="flex-1 min-w-0">
               <h2 className="text-sm font-semibold text-text-primary">{title}</h2>
@@ -506,12 +506,12 @@ export default function CreationWizard({
                     >
                       {aiLoading ? (
                         <>
-                          <RefreshCw size={14} className="animate-spin" />
+                          <ArrowsClockwise size={14} className="animate-spin" />
                           <span>Thinking...</span>
                         </>
                       ) : (
                         <>
-                          <Sparkles size={14} className="animate-pulse" />
+                          <Sparkle size={14} className="animate-pulse" />
                           <span className="tracking-wide">{currentStep.aiHelper.label}</span>
                           <span className="ml-1 text-[9px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold">Recommended</span>
                         </>
@@ -529,7 +529,7 @@ export default function CreationWizard({
           {currentStep.preview && (
             <div className="w-72 md:w-80 shrink-0 border-l border-border-subtle bg-surface-light/40 p-5 overflow-y-auto hidden md:block">
               <div className="flex items-center gap-1.5 text-[10px] text-text-muted uppercase tracking-wider mb-3 font-semibold">
-                <Sparkles size={9} className="text-[#D4FF00]" /> Live Preview
+                <Sparkle size={9} className="text-[#D4FF00]" /> Live Preview
               </div>
               <div className="space-y-2">
                 {currentStep.preview(data)}
@@ -545,7 +545,7 @@ export default function CreationWizard({
             disabled={stepIdx === 0}
             className="flex items-center gap-1 px-3 py-2 rounded-lg text-xs text-text-muted hover:text-text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
-            <ChevronLeft size={12} /> Back
+            <CaretLeft size={12} /> Back
           </button>
 
           {currentStep.field.optional && (
@@ -568,7 +568,7 @@ export default function CreationWizard({
               disabled={!canAdvance()}
               className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#D4FF00] to-[#AACC00] text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.3)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Next <ChevronRight size={12} />
+              Next <CaretRight size={12} />
             </button>
           ) : (
             <button
@@ -576,7 +576,7 @@ export default function CreationWizard({
               disabled={!canAdvance() || submitting}
               className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#D4FF00] to-[#AACC00] text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.3)] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              {submitting ? <RefreshCw size={12} className="animate-spin" /> : <Sparkles size={12} />}
+              {submitting ? <ArrowsClockwise size={12} className="animate-spin" /> : <Sparkle size={12} />}
               {submitting ? "Creating..." : submitLabel}
             </button>
           )}
@@ -732,7 +732,7 @@ function FieldRenderer({
                   <div className={`relative h-14 rounded-lg mb-2.5 ${opt.preview}`} />
                 )}
                 <div className="relative flex items-start gap-2.5">
-                  {/* 40×40 gold-tinted square with a lucide icon (or Sparkles fallback) */}
+                  {/* 40×40 gold-tinted square with a lucide icon (or Sparkle fallback) */}
                   {(opt.emoji || opt.icon) && (
                     <div
                       className={`w-10 h-10 shrink-0 rounded-lg flex items-center justify-center transition-colors ${
@@ -822,7 +822,7 @@ function FieldRenderer({
               <img src={value as string} alt="Upload" className="max-h-48 mx-auto rounded-lg" />
             ) : (
               <>
-                <ImageIcon size={28} className="mx-auto mb-2 text-text-muted" />
+                <Image size={28} className="mx-auto mb-2 text-text-muted" />
                 <p className="text-sm font-medium">Click to upload</p>
                 <p className="text-[10px] text-text-muted mt-1">PNG, JPG, WEBP</p>
               </>
@@ -835,12 +835,12 @@ function FieldRenderer({
 
 /* ── Exported icon helpers (use in step configs) ─────────────────────── */
 export const WizardIcons = {
-  Type,
-  ImageIcon,
+  TextT,
+  Image,
   Palette,
-  Film,
-  Music,
-  Wand2,
-  Sparkles,
-  Zap,
+  FilmStrip,
+  MusicNote,
+  MagicWand,
+  Sparkle,
+  Lightning,
 };

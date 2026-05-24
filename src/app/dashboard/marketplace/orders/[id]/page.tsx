@@ -1,16 +1,9 @@
 "use client";
+import { ArrowLeft, CheckCircle, CircleNotch, PaperPlaneTilt, Receipt, Star } from "@phosphor-icons/react";
 
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  CheckCircle,
-  Star,
-  Receipt,
-  Loader2,
-  Send,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -258,7 +251,7 @@ export default function OrderDetailPage() {
             disabled={delivering}
             className="mt-3 flex items-center gap-2 rounded-full bg-brand-accent px-4 py-2 text-xs font-bold text-[#0D1120] hover:bg-brand-accent/80 disabled:opacity-50"
           >
-            {delivering ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+            {delivering ? <CircleNotch size={12} className="animate-spin" /> : <PaperPlaneTilt size={12} />}
             Mark delivered
           </button>
         </div>
@@ -292,7 +285,7 @@ export default function OrderDetailPage() {
             className="mt-3 flex items-center gap-2 rounded-full bg-brand-accent px-4 py-2 text-xs font-bold text-[#0D1120] hover:bg-brand-accent/80 disabled:opacity-50"
           >
             {reviewing ? (
-              <Loader2 size={12} className="animate-spin" />
+              <CircleNotch size={12} className="animate-spin" />
             ) : (
               <CheckCircle size={12} />
             )}

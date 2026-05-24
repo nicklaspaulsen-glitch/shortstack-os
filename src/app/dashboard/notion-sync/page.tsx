@@ -1,13 +1,10 @@
+import { ArrowSquareOut, ArrowsClockwise, CheckCircle, CircleNotch, Clock, Link, LinkBreak, ToggleLeft, ToggleRight, WarningCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import {
-  RefreshCw, CheckCircle2, Link2, Clock, ToggleLeft, ToggleRight,
-  Loader2, ExternalLink, Unlink, AlertCircle,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -103,7 +100,7 @@ export default function NotionSyncPage() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-brand-accent" /></MotionPage>
+      <MotionPage className="flex items-center justify-center min-h-[60vh]"><CircleNotch className="w-8 h-8 animate-spin text-brand-accent" /></MotionPage>
     );
   }
 
@@ -123,7 +120,7 @@ export default function NotionSyncPage() {
           {/* Status card */}
           <motion.div className="glass rounded-xl border border-emerald-500/20 p-5 flex items-start gap-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-              <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+              <CheckCircle className="w-5 h-5 text-emerald-400" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-text-secondary">Connected to Notion</p>
@@ -151,7 +148,7 @@ export default function NotionSyncPage() {
             {/* Sync now */}
             <motion.div className="glass rounded-xl p-5 flex flex-col gap-3 spotlight-card" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
               <div className="flex items-center gap-2">
-                <RefreshCw className="w-4 h-4 text-brand-accent" />
+                <ArrowsClockwise className="w-4 h-4 text-brand-accent" />
                 <p className="text-sm font-semibold text-text-secondary">Sync Now</p>
               </div>
               <p className="text-xs text-text-muted">
@@ -163,9 +160,9 @@ export default function NotionSyncPage() {
                 className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-brand-accent hover:bg-[#E8FF4D] text-black transition-all disabled:opacity-60"
               >
                 {syncing ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <CircleNotch className="w-4 h-4 animate-spin" />
                 ) : (
-                  <RefreshCw className="w-4 h-4" />
+                  <ArrowsClockwise className="w-4 h-4" />
                 )}
                 {syncing ? "Syncing�" : "Sync Now"}
               </button>
@@ -208,7 +205,7 @@ export default function NotionSyncPage() {
                 "Tasks & projects ? Notion tasks",
               ].map((item) => (
                 <div key={item} className="flex items-center gap-2 text-sm text-text-muted">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
                   {item}
                 </div>
               ))}
@@ -223,9 +220,9 @@ export default function NotionSyncPage() {
               className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-red-400 border border-red-400/20 bg-red-400/5 hover:bg-red-400/10 transition-all disabled:opacity-60"
             >
               {disconnecting ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <CircleNotch className="w-4 h-4 animate-spin" />
               ) : (
-                <Unlink className="w-4 h-4" />
+                <LinkBreak className="w-4 h-4" />
               )}
               Disconnect Notion
             </button>
@@ -246,8 +243,8 @@ export default function NotionSyncPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-xl">
             {[
-              { icon: <RefreshCw className="w-5 h-5" />, label: "Two-way sync", desc: "Changes in either direction stay in sync" },
-              { icon: <Link2 className="w-5 h-5" />, label: "Field mapping", desc: "Map ShortStack fields to Notion properties" },
+              { icon: <ArrowsClockwise className="w-5 h-5" />, label: "Two-way sync", desc: "Changes in either direction stay in sync" },
+              { icon: <Link className="w-5 h-5" />, label: "Field mapping", desc: "Map ShortStack fields to Notion properties" },
               { icon: <Clock className="w-5 h-5" />, label: "Auto-sync", desc: "Background sync every 15 minutes" },
             ].map((f, fi) => (
               <motion.div key={f.label} className="glass-md rounded-xl overflow-hidden spotlight-card" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: fi * 0.06, duration: 0.4 }} whileHover={{ y: -4, scale: 1.01 }} onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
@@ -276,7 +273,7 @@ export default function NotionSyncPage() {
             >
               <NotionIcon />
               Connect Notion Workspace
-              <ExternalLink className="w-4 h-4 ml-1 opacity-60" />
+              <ArrowSquareOut className="w-4 h-4 ml-1 opacity-60" />
             </button>
             <p className="text-xs text-text-muted">
               Coming soon � you&apos;ll be able to sync clients, leads, and content.
@@ -284,7 +281,7 @@ export default function NotionSyncPage() {
           </div>
 
           <div className="flex items-start gap-2 text-xs text-brand-accent bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.25)] rounded-lg px-4 py-3 max-w-md">
-            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+            <WarningCircle className="w-4 h-4 shrink-0 mt-0.5" />
             Notion OAuth is coming soon � join the waitlist to be notified when it goes live.
           </div>
         </div>

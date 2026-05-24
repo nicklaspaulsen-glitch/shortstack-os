@@ -94,7 +94,7 @@ export const EFFECTS_LIBRARY: VideoEffect[] = [
   },
   {
     id: "fx_color_faded_film",
-    name: "Faded Film",
+    name: "Faded FilmStrip",
     category: "color",
     description: "Lifted blacks + soft saturation drop.",
     paramHints: [{ name: "fade", type: "slider", min: 0, max: 100, default: 50 }],
@@ -268,7 +268,7 @@ export const EFFECTS_LIBRARY: VideoEffect[] = [
   // ---------- PARTICLE (12) ----------
   {
     id: "fx_particle_sparkles",
-    name: "Sparkles",
+    name: "Sparkle",
     category: "particle",
     description: "Small floating stars around subject.",
     paramHints: [
@@ -393,7 +393,7 @@ export const EFFECTS_LIBRARY: VideoEffect[] = [
     id: "fx_overlay_dust",
     name: "Dust Overlay",
     category: "overlay",
-    description: "Film dust + scratches plate.",
+    description: "FilmStrip dust + scratches plate.",
     paramHints: [{ name: "amount", type: "slider", min: 0, max: 100, default: 40 }],
   },
   {
@@ -412,7 +412,7 @@ export const EFFECTS_LIBRARY: VideoEffect[] = [
   },
   {
     id: "fx_overlay_scratch_film",
-    name: "Film Scratches",
+    name: "FilmStrip Scratches",
     category: "overlay",
     description: "Vertical scratch marks.",
     paramHints: [{ name: "amount", type: "slider", min: 0, max: 100, default: 35 }],

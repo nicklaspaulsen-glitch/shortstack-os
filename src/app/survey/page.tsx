@@ -1,8 +1,8 @@
 "use client";
+import { CheckCircle } from "@phosphor-icons/react";
 
 import { useState } from "react";
 import Image from "next/image";
-import { CheckCircle } from "lucide-react";
 
 export default function SurveyPage() {
   const [step, setStep] = useState<"rate" | "feedback" | "done">("rate");

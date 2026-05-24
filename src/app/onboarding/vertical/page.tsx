@@ -1,5 +1,7 @@
 "use client";
+import { ArrowRight, Briefcase, CircleNotch, GraduationCap, House, ShoppingBag, SkipForward, Sparkle } from "@phosphor-icons/react";
 
+import type { Icon } from "@phosphor-icons/react";
 /**
  * Onboarding — vertical pick.
  *
@@ -12,17 +14,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Home,
-  GraduationCap,
-  ShoppingBag,
-  ArrowRight,
-  Loader2,
-  SkipForward,
-  Sparkles,
-  Briefcase,
-  type LucideIcon,
-} from "lucide-react";
 import toast from "react-hot-toast";
 
 interface VerticalSummary {
@@ -44,8 +35,8 @@ interface VerticalSummary {
   };
 }
 
-const ICON_MAP: Record<string, LucideIcon> = {
-  Home,
+const ICON_MAP: Record<string, Icon> = {
+  House,
   GraduationCap,
   ShoppingBag,
   Briefcase,
@@ -139,7 +130,7 @@ export default function OnboardingVerticalPage() {
       <main className="flex-1 max-w-6xl mx-auto px-6 py-16 w-full">
         <header className="text-center mb-12">
           <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-widest uppercase text-amber-300 mb-4">
-            <Sparkles size={12} />
+            <Sparkle size={12} />
             One more step
           </span>
           <h1 className="text-3xl md:text-5xl font-semibold text-white mb-4 tracking-tight">
@@ -195,7 +186,7 @@ export default function OnboardingVerticalPage() {
                   <div className="inline-flex items-center gap-2 text-sm font-medium text-white">
                     {isApplying ? (
                       <>
-                        <Loader2 size={14} className="animate-spin" />
+                        <CircleNotch size={14} className="animate-spin" />
                         Setting up your account…
                       </>
                     ) : (

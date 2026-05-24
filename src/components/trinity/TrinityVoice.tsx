@@ -1,4 +1,5 @@
 "use client";
+import { Microphone, MicrophoneSlash } from "@phosphor-icons/react";
 
 /**
  * TrinityVoice — the microphone button that uses the Web Speech API to
@@ -8,7 +9,6 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { Mic, MicOff } from "lucide-react";
 import type { SpeechCtor, SpeechRecognitionLite } from "./types";
 
 interface Props {
@@ -75,7 +75,7 @@ export default function TrinityVoice({ listening, onListeningChange, onTranscrip
           : "bg-surface-light text-text-muted hover:text-[#D4FF00] hover:bg-[rgba(212,255,0,0.08)]"
       }`}
     >
-      {listening ? <MicOff size={14} /> : <Mic size={14} />}
+      {listening ? <MicrophoneSlash size={14} /> : <Microphone size={14} />}
     </button>
   );
 }

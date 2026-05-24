@@ -1,18 +1,7 @@
+import { CheckCircle, Copy, Eye, EyeSlash, PaperPlaneTilt, Plus, Power, Trash, Warning, PlugsConnected } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
-import {
-  Webhook,
-  Plus,
-  Send,
-  Trash2,
-  Power,
-  AlertTriangle,
-  CheckCircle,
-  Copy,
-  Eye,
-  EyeOff,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface WebhookRow {
@@ -154,11 +143,11 @@ export default function WebhooksPage() {
   }
 
   return (
-    <MotionPage className="space-y-5">{/* -- Webhooks command strip -- */}
+    <MotionPage className="space-y-5">{/* -- PlugsConnected command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Endpoint Manager</p>
-        <h1 className="text-2xl font-display font-bold text-text-primary">Webhooks</h1>
+        <h1 className="text-2xl font-display font-bold text-text-primary">PlugsConnected</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button
@@ -166,19 +155,19 @@ export default function WebhooksPage() {
                   className="text-[11px] px-3 py-1.5 rounded-lg bg-white/8 text-text-primary border border-border-subtle hover:bg-white/12 transition-all flex items-center gap-1.5"
                 >
                   <Plus size={11} />
-                  New Webhook
+                  New PlugsConnected
                 </button>
       </div>
     </div>{error && (
               <div className="glass rounded-xl p-3 border-red-500/30 bg-red-500/5 text-[11px] text-red-400 flex items-center gap-2">
-                <AlertTriangle size={13} />
+                <Warning size={13} />
                 <span>{error}</span>
               </div>
             )}{showCreate && (
               <div className="glass rounded-xl p-4 space-y-3 border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.05)]">
                 <div className="flex items-center gap-2">
-                  <Webhook size={13} className="text-brand-accent" />
-                  <h2 className="text-xs font-semibold text-brand-accent">New Webhook</h2>
+                  <PlugsConnected size={13} className="text-brand-accent" />
+                  <h2 className="text-xs font-semibold text-brand-accent">New PlugsConnected</h2>
                 </div>
                 <div>
                   <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1">
@@ -223,7 +212,7 @@ export default function WebhooksPage() {
                     disabled={creating || !newUrl.trim() || newEvents.length === 0}
                     className="text-[10px] px-4 py-1.5 rounded-full bg-brand-accent text-[#020711] font-medium hover:bg-brand-accent/80 disabled:opacity-40 disabled:cursor-not-allowed"
                   >
-                    {creating ? "Creating…" : "Create Webhook"}
+                    {creating ? "Creating…" : "Create PlugsConnected"}
                   </button>
                 </div>
               </div>
@@ -232,7 +221,7 @@ export default function WebhooksPage() {
                 <div className="glass rounded-xl p-8 text-center text-[11px] text-text-muted">Loading…</div>
               ) : webhooks.length === 0 ? (
                 <div className="glass rounded-xl p-10 text-center">
-                  <Webhook size={22} className="mx-auto mb-2 text-text-muted opacity-40" />
+                  <PlugsConnected size={22} className="mx-auto mb-2 text-text-muted opacity-40" />
                   <p className="text-[11px] text-text-muted">No webhooks yet. Add one to start receiving events.</p>
                 </div>
               ) : (
@@ -263,7 +252,7 @@ export default function WebhooksPage() {
                           disabled={testingId === w.id || !w.active}
                           className="text-[9px] px-2 py-1 rounded border border-[rgba(212,255,0,0.25)] text-brand-accent hover:bg-[rgba(212,255,0,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
                         >
-                          <Send size={9} />
+                          <PaperPlaneTilt size={9} />
                           {testingId === w.id ? "Sending…" : "Test"}
                         </button>
                         <button
@@ -281,7 +270,7 @@ export default function WebhooksPage() {
                           onClick={() => handleDelete(w.id)}
                           className="text-[9px] px-2 py-1 rounded border border-red-500/25 text-red-400 hover:bg-red-500/10 transition-all flex items-center gap-1"
                         >
-                          <Trash2 size={9} />
+                          <Trash size={9} />
                           Delete
                         </button>
                       </div>
@@ -319,7 +308,7 @@ export default function WebhooksPage() {
                           }
                           className="text-text-muted hover:text-text-primary"
                         >
-                          {revealedSecrets[w.id] ? <EyeOff size={10} /> : <Eye size={10} />}
+                          {revealedSecrets[w.id] ? <EyeSlash size={10} /> : <Eye size={10} />}
                         </button>
                         <button
                           onClick={() => copySecret(w.secret, w.id)}

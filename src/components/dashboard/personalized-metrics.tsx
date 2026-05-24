@@ -1,49 +1,32 @@
 "use client";
+import { Calendar, CheckSquare, CurrencyDollar, Eye, Heart, House, Lightning, Pulse, Rocket, ShoppingCart, Sparkle, Target, TrendUp, Trophy, UserCheck, Users } from "@phosphor-icons/react";
 
+import type { Icon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  TrendingUp,
-  Eye,
-  Users as UsersIcon,
-  Heart,
-  Home as HomeIcon,
-  Calendar as CalendarIcon,
-  Trophy,
-  DollarSign,
-  Rocket,
-  UserCheck,
-  ShoppingCart,
-  Target as TargetIcon,
-  Activity,
-  CheckSquare,
-  Zap,
-  Sparkles,
-  type LucideIcon,
-} from "lucide-react";
 import { METRIC_LABELS, type DashboardMetricKey, USER_TYPES } from "@/lib/user-types";
 
 /* ─── Metric → icon mapping ────────────────────────────────────────── */
-const METRIC_ICONS: Record<DashboardMetricKey, LucideIcon> = {
-  clients: UsersIcon,
-  mrr: DollarSign,
-  outreach: Zap,
-  leads: TargetIcon,
+const METRIC_ICONS: Record<DashboardMetricKey, Icon> = {
+  clients: Users,
+  mrr: CurrencyDollar,
+  outreach: Lightning,
+  leads: Target,
   views: Eye,
-  subscribers: UsersIcon,
+  subscribers: Users,
   engagement: Heart,
-  content_pieces: Sparkles,
-  listings: HomeIcon,
-  showings: CalendarIcon,
+  content_pieces: Sparkle,
+  listings: House,
+  showings: Calendar,
   closings: Trophy,
-  sessions_booked: CalendarIcon,
-  revenue: DollarSign,
-  churn: TrendingUp,
+  sessions_booked: Calendar,
+  revenue: CurrencyDollar,
+  churn: TrendUp,
   signups: UserCheck,
-  activations: Zap,
+  activations: Lightning,
   orders: ShoppingCart,
-  aov: DollarSign,
-  conversion: TrendingUp,
+  aov: CurrencyDollar,
+  conversion: TrendUp,
   tasks_done: CheckSquare,
 };
 
@@ -119,7 +102,7 @@ export default function PersonalizedMetrics({ userType: providedType }: Props) {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
-            <Sparkles size={13} className="text-[#D4FF00]" />
+            <Sparkle size={13} className="text-[#D4FF00]" />
           </div>
           <div>
             <p className="text-xs font-bold text-text-primary">
@@ -140,7 +123,7 @@ export default function PersonalizedMetrics({ userType: providedType }: Props) {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {meta.dashboardMetrics.map((key) => {
-          const Icon = METRIC_ICONS[key] || Activity;
+          const Icon = METRIC_ICONS[key] || Pulse;
           const accent = METRIC_ACCENT[key] || "text-[#D4FF00]";
           const label = METRIC_LABELS[key]?.label ?? key;
           const hint = METRIC_LABELS[key]?.hint ?? "";

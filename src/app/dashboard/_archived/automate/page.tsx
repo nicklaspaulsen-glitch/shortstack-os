@@ -1,13 +1,10 @@
 "use client";
+import { ArrowCounterClockwise, Calendar, Clock, GitBranch, Lightning, Link, ListNumbers, PlugsConnected, Plus, Robot } from "@phosphor-icons/react";
 
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import SectionHub from "@/components/dashboard/section-hub";
 import type { RollingPreviewItem } from "@/components/RollingPreview";
-import {
-  Zap, GitBranch, Bot, ListOrdered, Clock,
-  Link2, Webhook, Plus, RotateCcw,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // Text-card previews — automations are workflows and triggers, so we
@@ -16,13 +13,13 @@ const AUTOMATE_HUB_PREVIEW: RollingPreviewItem[] = [
   { id: "ah1", tag: "Workflow", title: "New lead → Slack + CRM + first-touch email", text: "Triggered when a prospect fills your contact form. Fires in under 2s." },
   { id: "ah2", tag: "Sequence", title: "5-step nurture after trial signup", text: "Days 1 / 3 / 7 / 14 / 21 — adjusts cadence based on engagement." },
   { id: "ah3", tag: "Scheduled", title: "Post LinkedIn carousel every Tue 9am", text: "Auto-generates graphic from latest blog post and schedules in buffer." },
-  { id: "ah4", tag: "Webhook", title: "Stripe charge → send invoice + issue license", text: "End-to-end checkout plumbing with no servers to manage." },
+  { id: "ah4", tag: "PlugsConnected", title: "Stripe charge → send invoice + issue license", text: "End-to-end checkout plumbing with no servers to manage." },
   { id: "ah5", tag: "Agent", title: "Inbox triage every 15 minutes", text: "Classifies, auto-replies to simple asks, flags priority messages for you." },
   { id: "ah6", tag: "Integration", title: "Sync Notion tasks ↔ Todoist ↔ Calendar", text: "Bi-directional sync with conflict-resolution and change history." },
   { id: "ah7", tag: "Workflow", title: "Cold DM → auto-book a Cal.com demo", text: "Replies with availability, books the slot, adds to CRM — all autonomous." },
   { id: "ah8", tag: "Sequence", title: "Win-back sleeping customers (30+ days)", text: "Detects dormancy, sends 3 personalised touches, re-engages 18% on avg." },
   { id: "ah9", tag: "Scheduled", title: "Monthly revenue report to the team", text: "Pulls Stripe, GA4 and HubSpot data; ships a branded PDF on day 1." },
-  { id: "ah10", tag: "Webhook", title: "GitHub issue → create Linear ticket", text: "With assignee mapping and label inheritance — no more duplicate entry." },
+  { id: "ah10", tag: "PlugsConnected", title: "GitHub issue → create Linear ticket", text: "With assignee mapping and label inheritance — no more duplicate entry." },
   { id: "ah11", tag: "Agent", title: "Daily brief: what moved, what's next", text: "Agent aggregates KPIs and blockers across tools and ships a 60-second read." },
   { id: "ah12", tag: "Integration", title: "Shopify refund → Zendesk + accounting", text: "Closes the loop on refunds so nothing slips through the cracks." },
 ];
@@ -38,7 +35,7 @@ export default function AutomateHubPage() {
             title="Automate"
             eyebrow="Section · AI & workflows"
             subtitle="Wire up agents, workflows, and integrations so your business runs itself."
-            heroIcon={<Zap size={22} />}
+            heroIcon={<Lightning size={22} />}
             heroGradient="blue"
             preview={{
               items: AUTOMATE_HUB_PREVIEW,
@@ -49,15 +46,15 @@ export default function AutomateHubPage() {
             }}
             quickActions={[
               { label: "Create Workflow", href: "/dashboard/workflows", icon: Plus },
-              { label: "New Agent", href: "/dashboard/services", icon: Bot },
+              { label: "New Agent", href: "/dashboard/services", icon: Robot },
               { label: "Schedule Task", href: "/dashboard/automations", icon: Clock },
-              { label: "Add Integration", href: "/dashboard/integrations-hub", icon: Link2 },
+              { label: "Add Integration", href: "/dashboard/integrations-hub", icon: Link },
             ]}
             stats={[
-              { label: "Active Workflows", key: "active_workflows", icon: Zap, color: "text-brand-accent" },
-              { label: "Runs (7d)", key: "runs_week", icon: RotateCcw, color: "text-emerald-500" },
-              { label: "Agents", key: "agents", icon: Bot, color: "text-brand-accent" },
-              { label: "Integrations", key: "integrations", icon: Link2, color: "text-brand-accent" },
+              { label: "Active Workflows", key: "active_workflows", icon: Lightning, color: "text-brand-accent" },
+              { label: "Runs (7d)", key: "runs_week", icon: ArrowCounterClockwise, color: "text-emerald-500" },
+              { label: "Agents", key: "agents", icon: Robot, color: "text-brand-accent" },
+              { label: "Integrations", key: "integrations", icon: Link, color: "text-brand-accent" },
             ]}
             tools={[
               {
@@ -65,7 +62,7 @@ export default function AutomateHubPage() {
                 label: "Workflows",
                 description: "Multi-step automations that run on triggers.",
                 href: "/dashboard/workflows",
-                icon: Zap,
+                icon: Lightning,
               },
               {
                 slug: "workflow-builder",
@@ -79,7 +76,7 @@ export default function AutomateHubPage() {
                 label: "Agents",
                 description: "Long-running AI agents that act on your behalf.",
                 href: "#",
-                icon: Bot,
+                icon: Robot,
                 comingSoon: true,
               },
               {
@@ -87,7 +84,7 @@ export default function AutomateHubPage() {
                 label: "Sequences",
                 description: "Timed drip sequences across channels.",
                 href: "/dashboard/sequences",
-                icon: ListOrdered,
+                icon: ListNumbers,
               },
               {
                 slug: "scheduled-tasks",
@@ -102,14 +99,14 @@ export default function AutomateHubPage() {
                 label: "Integrations",
                 description: "Connect your existing tools and socials.",
                 href: "/dashboard/integrations-hub",
-                icon: Link2,
+                icon: Link,
               },
               {
                 slug: "webhooks",
-                label: "Webhooks",
+                label: "PlugsConnected",
                 description: "Trigger workflows from external events.",
                 href: "/dashboard/webhooks",
-                icon: Webhook,
+                icon: PlugsConnected,
               },
             ]}
           />

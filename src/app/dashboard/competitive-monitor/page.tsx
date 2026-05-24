@@ -1,19 +1,9 @@
+import { ArrowSquareOut, ArrowsClockwise, Bell, Briefcase, Calendar, CaretDown, CaretUp, ChartBar, ChartPie, Chat, Check, CircleNotch, Clock, CodeSimple, Eye, FileText, Fire, Funnel, Globe, Lightbulb, Lightning, PaperPlaneTilt, Pause, Play, Plus, Pulse, Shield, Sparkle, SquaresFour, Stack, Target, Trash, Warning } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
-import {
-  Shield, Plus, Trash2, Globe, Eye,
-  BarChart3, Bell,
-  Sparkles, Loader, ChevronDown, ChevronUp,
-  ExternalLink, Pause, Play, RefreshCw,
-  Activity, Zap, FileText, Code2, Briefcase,
-  MessageSquare, Clock, Calendar,
-  AlertTriangle,
-  Send, Filter, Target, Lightbulb,
-  Flame, LayoutGrid, PieChart,
-} from "lucide-react";
 import { PrismPanel } from "@/components/prism";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
@@ -68,12 +58,12 @@ interface AlertRule {
 const CHANGE_TYPE_META: Record<ChangeType, { label: string; icon: typeof Globe; color: string }> = {
   new_page:          { label: "New Page",          icon: Globe,          color: "text-brand-accent bg-[rgba(212,255,0,0.08)]" },
   content_update:    { label: "Content Update",    icon: FileText,       color: "text-emerald-400 bg-emerald-500/10" },
-  pricing_change:    { label: "Pricing Change",    icon: BarChart3,      color: "text-red-400 bg-red-500/10" },
-  new_feature:       { label: "New Feature",       icon: Zap,            color: "text-brand-accent bg-[rgba(212,255,0,0.08)]" },
+  pricing_change:    { label: "Pricing Change",    icon: ChartBar,      color: "text-red-400 bg-red-500/10" },
+  new_feature:       { label: "New Feature",       icon: Lightning,            color: "text-brand-accent bg-[rgba(212,255,0,0.08)]" },
   new_blog_post:     { label: "New Blog Post",     icon: FileText,       color: "text-brand-accent bg-[rgba(212,255,0,0.08)]" },
-  social_post:       { label: "Social Post",       icon: MessageSquare,  color: "text-pink-400 bg-pink-500/10" },
+  social_post:       { label: "Social Post",       icon: Chat,  color: "text-pink-400 bg-pink-500/10" },
   job_posting:       { label: "Job Posting",       icon: Briefcase,      color: "text-brand-accent bg-[rgba(212,255,0,0.08)]" },
-  tech_stack_change: { label: "Tech Stack Change", icon: Code2,          color: "text-orange-400 bg-orange-500/10" },
+  tech_stack_change: { label: "Tech Stack Change", icon: CodeSimple,          color: "text-orange-400 bg-orange-500/10" },
 };
 
 const SEVERITY_META: Record<Severity, { label: string; color: string }> = {
@@ -238,7 +228,7 @@ export default function CompetitiveMonitorPage() {
     error: "text-red-400 bg-red-500/10",
   };
 
-  // --- Activity heatmap data (competitors x weeks) ------------------
+  // --- Pulse heatmap data (competitors x weeks) ------------------
   const heatmapData = competitors.slice(0, 7).map(c => ({
     name: c.name,
     weeks: [
@@ -250,8 +240,8 @@ export default function CompetitiveMonitorPage() {
   }));
 
   const TABS: { key: Tab; label: string; icon: typeof Globe }[] = [
-    { key: "changes", label: "Changes Feed", icon: Activity },
-    { key: "comparison", label: "Comparison", icon: BarChart3 },
+    { key: "changes", label: "Changes Feed", icon: Pulse },
+    { key: "comparison", label: "Comparison", icon: ChartBar },
     { key: "alerts", label: "Alerts", icon: Bell },
     { key: "insights", label: "Insights", icon: Lightbulb },
   ];
@@ -363,7 +353,7 @@ export default function CompetitiveMonitorPage() {
                         <div>
                           <div className="font-medium text-sm">{comp.name}</div>
                           <a href={comp.url} target="_blank" rel="noopener noreferrer" className="text-xs text-text-muted hover:text-brand-accent flex items-center gap-1">
-                            {comp.url.replace("https://", "")} <ExternalLink className="w-3 h-3" />
+                            {comp.url.replace("https://", "")} <ArrowSquareOut className="w-3 h-3" />
                           </a>
                         </div>
                       </div>
@@ -383,7 +373,7 @@ export default function CompetitiveMonitorPage() {
                     </div>
                     <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition">
                       <button onClick={() => checkNow(comp.id)} disabled={checkingId === comp.id} className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-[rgba(212,255,0,0.08)] text-brand-accent rounded text-[10px] font-medium hover:bg-[rgba(212,255,0,0.12)] transition disabled:opacity-50">
-                        {checkingId === comp.id ? <Loader className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />} Check
+                        {checkingId === comp.id ? <CircleNotch className="w-3 h-3 animate-spin" /> : <ArrowsClockwise className="w-3 h-3" />} Check
                       </button>
                       <button onClick={() => togglePause(comp.id)} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-text-muted rounded text-[10px] hover:text-text-primary transition">
                         {comp.status === "paused" ? <Play className="w-3 h-3" /> : <Pause className="w-3 h-3" />}
@@ -392,7 +382,7 @@ export default function CompetitiveMonitorPage() {
                         <Eye className="w-3 h-3" />
                       </button>
                       <button onClick={() => removeCompetitor(comp.id)} className="flex items-center justify-center px-2 py-1.5 bg-surface-light text-text-muted rounded text-[10px] hover:text-red-400 transition">
-                        <Trash2 className="w-3 h-3" />
+                        <Trash className="w-3 h-3" />
                       </button>
                     </div>
                   </motion.div>
@@ -423,7 +413,7 @@ export default function CompetitiveMonitorPage() {
               <div className="space-y-4">
                 {/* Filters */}
                 <div className="flex flex-wrap gap-2 items-center">
-                  <Filter className="w-4 h-4 text-text-muted" />
+                  <Funnel className="w-4 h-4 text-text-muted" />
                   <select value={filterCompetitor} onChange={e => setFilterCompetitor(e.target.value)} className="px-3 py-1.5 bg-surface-light border border-border-subtle rounded-lg text-xs focus:border-[rgba(212,255,0,0.5)] focus:outline-none">
                     <option value="all">All Competitors</option>
                     {competitors.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -479,7 +469,7 @@ export default function CompetitiveMonitorPage() {
                             {/* AI Summary */}
                             <div className="mt-2 p-2.5 bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.1)] rounded-lg">
                               <div className="flex items-center gap-1.5 text-[10px] text-brand-accent font-medium mb-1">
-                                <Sparkles className="w-3 h-3" /> AI Analysis
+                                <Sparkle className="w-3 h-3" /> AI Analysis
                               </div>
                               <p className="text-xs text-text-muted leading-relaxed">{change.aiSummary}</p>
                             </div>
@@ -492,7 +482,7 @@ export default function CompetitiveMonitorPage() {
                                 aria-expanded={isExpanded}
                                 aria-controls={`competitor-change-${change.id}`}
                               >
-                                {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                                {isExpanded ? <CaretUp className="w-3 h-3" /> : <CaretDown className="w-3 h-3" />}
                                 {isExpanded ? "Hide" : "View"} before/after
                               </button>
                             )}
@@ -548,7 +538,7 @@ export default function CompetitiveMonitorPage() {
 
                 {/* Spider chart representation */}
                 <PrismPanel padding="p-5">
-                  <h3 className="text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-brand-accent" /> Competitive Positioning</h3>
+                  <h3 className="text-sm flex items-center gap-2 mb-4"><ChartPie className="w-4 h-4 text-brand-accent" /> Competitive Positioning</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Simple radar visualization */}
                     <div className="relative flex items-center justify-center py-8">
@@ -598,9 +588,9 @@ export default function CompetitiveMonitorPage() {
                 {/* AI Analysis */}
                 <PrismPanel padding="p-5">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm flex items-center gap-2 mb-0"><Sparkles className="w-4 h-4 text-brand-accent" /> AI Competitive Analysis</h3>
+                    <h3 className="text-sm flex items-center gap-2 mb-0"><Sparkle className="w-4 h-4 text-brand-accent" /> AI Competitive Analysis</h3>
                     <button onClick={generateAiAnalysis} disabled={generatingAnalysis} className="flex items-center gap-2 px-3 py-1.5 bg-[rgba(212,255,0,0.08)] text-brand-accent rounded-lg text-xs font-medium hover:bg-[rgba(212,255,0,0.12)] transition disabled:opacity-50">
-                      {generatingAnalysis ? <Loader className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                      {generatingAnalysis ? <CircleNotch className="w-3.5 h-3.5 animate-spin" /> : <Sparkle className="w-3.5 h-3.5" />}
                       Generate AI Analysis
                     </button>
                   </div>
@@ -709,14 +699,14 @@ export default function CompetitiveMonitorPage() {
                             <span>Applies to: {rule.competitor === "all" ? "All competitors" : competitors.find(c => c.id === rule.competitor)?.name || rule.competitor}</span>
                             <span>&#183;</span>
                             <span className="flex items-center gap-1">
-                              <Send className="w-3 h-3" /> {rule.channels.join(", ")}
+                              <PaperPlaneTilt className="w-3 h-3" /> {rule.channels.join(", ")}
                             </span>
                           </div>
                         </div>
                         <div className="flex gap-2">
                           <button onClick={() => testAlert(rule.id)} className="px-3 py-1.5 bg-surface-light border border-border-subtle text-text-muted rounded-lg text-xs hover:text-brand-accent transition">Test</button>
                           <button onClick={() => setAlertRules(prev => prev.filter(r => r.id !== rule.id))} className="px-2 py-1.5 bg-surface-light border border-border-subtle text-text-muted rounded-lg text-xs hover:text-red-400 transition">
-                            <Trash2 className="w-3.5 h-3.5" />
+                            <Trash className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </motion.div>
@@ -728,16 +718,16 @@ export default function CompetitiveMonitorPage() {
               <div className="space-y-6">
                 {/* AI Market Summary */}
                 <PrismPanel padding="p-5">
-                  <h3 className="text-sm flex items-center gap-2 mb-3"><Sparkles className="w-4 h-4 text-brand-accent" /> AI Market Summary</h3>
+                  <h3 className="text-sm flex items-center gap-2 mb-3"><Sparkle className="w-4 h-4 text-brand-accent" /> AI Market Summary</h3>
                   <div className="text-sm text-text-muted leading-relaxed space-y-2">
                     <p>The agency SaaS market continues to consolidate around AI-first platforms. Over the past week, <strong className="text-text-primary">3 of 8 tracked competitors</strong> made AI-related announcements. Pricing is trending upward (AgencyFlow +34%), while MarketMind bucks the trend with a free tier launch. The enterprise segment is heating up with both AgencyFlow and ClientPulse making upmarket moves.</p>
                     <p>Your positioning remains strong on <span className="text-emerald-400">pricing</span> and <span className="text-emerald-400">review ratings</span>, but you are falling behind on <span className="text-red-400">social media presence</span> and <span className="text-red-400">content velocity</span>. The biggest opportunity window is the 2-4 week period before competitors ship their announced features.</p>
                   </div>
                 </PrismPanel>
 
-                {/* Activity Heatmap */}
+                {/* Pulse Heatmap */}
                 <PrismPanel padding="p-5">
-                  <h3 className="text-sm flex items-center gap-2 mb-4"><LayoutGrid className="w-4 h-4 text-brand-accent" /> Competitor Activity Heatmap (Last 4 Weeks)</h3>
+                  <h3 className="text-sm flex items-center gap-2 mb-4"><SquaresFour className="w-4 h-4 text-brand-accent" /> Competitor Pulse Heatmap (Last 4 Weeks)</h3>
                   <div className="overflow-x-auto">
                     <div className="min-w-[500px]">
                       <div className="flex items-center gap-2 mb-2 pl-28">
@@ -773,7 +763,7 @@ export default function CompetitiveMonitorPage() {
 
                 {/* Top Threats */}
                 <div>
-                  <h3 className="text-sm flex items-center gap-2 mb-3"><Flame className="w-4 h-4 text-red-400" /> Top Threats</h3>
+                  <h3 className="text-sm flex items-center gap-2 mb-3"><Fire className="w-4 h-4 text-red-400" /> Top Threats</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {[
                       { competitor: "SocialSpark", title: "AI Content Calendar Launch", desc: "Direct feature overlap with your content scheduling. They shipped first and are marketing aggressively. You have a 2-4 week window before adoption solidifies.", severity: "critical" },
@@ -790,7 +780,7 @@ export default function CompetitiveMonitorPage() {
                         className="glass rounded-xl p-4 spotlight-card" style={{ border: "1px solid rgba(239,68,68,0.1)" }}
                       >
                         <div className="flex items-center gap-2 mb-2">
-                          <AlertTriangle className="w-4 h-4 text-red-400" />
+                          <Warning className="w-4 h-4 text-red-400" />
                           <span className="text-xs font-medium text-red-400">{threat.competitor}</span>
                           <span className={`text-[10px] px-1.5 py-0.5 rounded-full ml-auto ${threat.severity === "critical" ? "bg-red-500/10 text-red-400" : "bg-[rgba(212,255,0,0.08)] text-brand-accent"}`}>{threat.severity}</span>
                         </div>
@@ -832,7 +822,7 @@ export default function CompetitiveMonitorPage() {
 
                 {/* Market Share Estimation */}
                 <PrismPanel padding="p-5">
-                  <h3 className="text-sm flex items-center gap-2 mb-4"><PieChart className="w-4 h-4 text-brand-accent" /> Estimated Market Share (Agency SaaS Segment)</h3>
+                  <h3 className="text-sm flex items-center gap-2 mb-4"><ChartPie className="w-4 h-4 text-brand-accent" /> Estimated Market Share (Agency SaaS Segment)</h3>
                   <div className="space-y-3">
                     {[
                       { name: "AgencyFlow", share: 22, color: "#D4FF00" },

@@ -1,19 +1,8 @@
+import { CheckCircle, CircleNotch, Clock, EnvelopeSimple, Eye, PaperPlaneTilt, Play, Sparkle, TrendUp, Warning, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import {
-  Send,
-  MailPlus,
-  Sparkles,
-  Play,
-  Eye,
-  AlertTriangle,
-  Loader2,
-  CheckCircle,
-  Clock,
-  TrendingUp,
-} from "lucide-react";
 import AITopicSuggest from "@/components/ui/ai-topic-suggest";
 import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -182,11 +171,11 @@ export default function ColdEmailPage() {
       const res = await fetch(`/api/cold-email/jobs/${id}/send`, { method: "POST" });
       if (!res.ok) {
         const json = await res.json();
-        throw new Error(json.error ?? "Send failed");
+        throw new Error(json.error ?? "PaperPlaneTilt failed");
       }
       await loadJobs();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Send failed");
+      setError(err instanceof Error ? err.message : "PaperPlaneTilt failed");
     }
   }
 
@@ -232,14 +221,14 @@ export default function ColdEmailPage() {
                     onClick={() => setShowCreate((v) => !v)}
                     className="text-[11px] px-3 py-1.5 rounded-lg bg-white/10 text-text-primary border border-white/20 hover:bg-white/15 transition-all flex items-center gap-1.5"
                   >
-                    <Sparkles size={11} />
+                    <Sparkle size={11} />
                     New Campaign
                   </button>
                 </motion.div>
       </div>
     </div>{error && (
               <PrismPanel padding="px-3 py-3" className="border-red-500/30 bg-red-500/5 text-[11px] text-red-400 flex items-center gap-2">
-                <AlertTriangle size={13} />
+                <Warning size={13} />
                 <span>{error}</span>
               </PrismPanel>
             )}{showCreate && (
@@ -251,7 +240,7 @@ export default function ColdEmailPage() {
                 style={{ borderColor: "rgba(212,255,0,0.12)" }}
               >
                 <div className="flex items-center gap-2">
-                  <Sparkles size={13} className="text-brand-accent" />
+                  <Sparkle size={13} className="text-brand-accent" />
                   <h2 className="text-xs font-semibold text-brand-accent">New Campaign</h2>
                 </div>
 
@@ -315,7 +304,7 @@ export default function ColdEmailPage() {
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-1.5">
-                        <TrendingUp size={11} className="text-brand-accent" />
+                        <TrendUp size={11} className="text-brand-accent" />
                         <span className="text-[11px] font-semibold text-text-primary">Seed Quality</span>
                       </div>
                       <div
@@ -452,7 +441,7 @@ export default function ColdEmailPage() {
                 <div className="p-8 text-center text-[11px] text-text-muted">Loading�</div>
               ) : jobs.length === 0 ? (
                 <div className="p-10 text-center">
-                  <MailPlus size={22} className="mx-auto mb-2 text-text-muted opacity-40" />
+                  <EnvelopeSimple size={22} className="mx-auto mb-2 text-text-muted opacity-40" />
                   <p className="text-[11px] text-text-muted">
                     No campaigns yet. Create one to start cold-email at scale.
                   </p>
@@ -512,7 +501,7 @@ export default function ColdEmailPage() {
                                 className="text-[9px] px-2 py-1 rounded border border-[rgba(212,255,0,0.25)] text-brand-accent hover:bg-[rgba(212,255,0,0.08)] transition-all flex items-center gap-1 disabled:opacity-40"
                               >
                                 {previewing === j.id ? (
-                                  <Loader2 size={9} className="animate-spin" />
+                                  <CircleNotch size={9} className="animate-spin" />
                                 ) : (
                                   <Eye size={9} />
                                 )}
@@ -532,8 +521,8 @@ export default function ColdEmailPage() {
                               onClick={() => handleSend(j.id)}
                               className="text-[9px] px-2 py-1 rounded border border-[rgba(212,255,0,0.25)] text-brand-accent hover:bg-[rgba(212,255,0,0.08)] transition-all flex items-center gap-1"
                             >
-                              <Send size={9} />
-                              Send
+                              <PaperPlaneTilt size={9} />
+                              PaperPlaneTilt
                             </button>
                           )}
                         </div>
@@ -568,7 +557,7 @@ export default function ColdEmailPage() {
                             <div key={s.personalization_id} className="glass rounded-xl p-3 space-y-1.5">
                               {s.error ? (
                                 <div className="text-[10px] text-red-400 flex items-center gap-1.5">
-                                  <AlertTriangle size={10} />
+                                  <Warning size={10} />
                                   {s.error}
                                 </div>
                               ) : (

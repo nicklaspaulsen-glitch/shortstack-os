@@ -1,6 +1,7 @@
 "use client";
+import { Buildings, Rocket, Wrench } from "@phosphor-icons/react";
 
-import { Building2, Rocket, Wrench } from "lucide-react";
+
 import { BRAND } from "@/lib/brand-config";
 import Reveal from "./reveal";
 import SectionHeading from "./section-heading";
@@ -10,7 +11,7 @@ const MILESTONES = [
     year: "2021",
     title: "We started as an agency",
     body: `${BRAND.company_name} began as a boutique digital marketing agency — SEO, paid ads, content, and retainers for small and mid-sized businesses. We lived the grind our clients live.`,
-    icon: Building2,
+    icon: Buildings,
   },
   {
     year: "2023",

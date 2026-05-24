@@ -1,13 +1,10 @@
 "use client";
+import { Archive, BookOpen, CheckCircle, CircleNotch, Clock, CurrencyDollar, Eye, EyeSlash, MagnifyingGlass, Plus, Users } from "@phosphor-icons/react";
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import {
-  Plus, BookOpen, Users, DollarSign, Clock, CheckCircle2,
-  Archive, Loader2, Search, Eye, EyeOff,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type CourseStatus = "draft" | "published" | "archived";
@@ -34,7 +31,7 @@ const STATUS_CONFIG: Record<CourseStatus, { label: string; color: string; icon: 
   published: {
     label: "Published",
     color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
-    icon: <CheckCircle2 size={11} />,
+    icon: <CheckCircle size={11} />,
   },
   archived: {
     label: "Archived",
@@ -111,12 +108,12 @@ export default function CoursesPage() {
           disabled={creating}
           className="btn-pill flex items-center gap-2"
         >
-          {creating ? <Loader2 size={14} className="animate-spin" /> : <Plus size={15} />}
+          {creating ? <CircleNotch size={14} className="animate-spin" /> : <Plus size={15} />}
           New Course
         </button>
       </div>
 
-      {/* Tabs + Search */}
+      {/* Tabs + MagnifyingGlass */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="flex items-center gap-1 bg-white/4 border border-white/8 rounded-lg p-1">
           {TABS.map((tab) => (
@@ -135,11 +132,11 @@ export default function CoursesPage() {
         </div>
 
         <div className="relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+          <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search courses…"
+            placeholder="MagnifyingGlass courses…"
             className="glass rounded-lg pl-9 pr-4 py-2 text-sm placeholder-text-text-muted outline-none focus:border-brand-accent w-56"
           />
         </div>
@@ -166,7 +163,7 @@ export default function CoursesPage() {
             disabled={creating}
             className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-accent hover:bg-[#E8FF4D] text-[#020711] text-sm font-semibold transition-colors"
           >
-            {creating ? <Loader2 size={14} className="animate-spin" /> : <Plus size={15} />}
+            {creating ? <CircleNotch size={14} className="animate-spin" /> : <Plus size={15} />}
             Create Course
           </button>
         </div>
@@ -218,7 +215,7 @@ export default function CoursesPage() {
                         ? <span className="text-emerald-400 text-sm font-bold">Free</span>
                         : (
                           <>
-                            <DollarSign size={12} className="text-text-muted" />
+                            <CurrencyDollar size={12} className="text-text-muted" />
                             {course.price}
                           </>
                         )}
@@ -232,7 +229,7 @@ export default function CoursesPage() {
                       ) : course.access_type === "drip" ? (
                         <Clock size={13} />
                       ) : (
-                        <EyeOff size={13} />
+                        <EyeSlash size={13} />
                       )}
                     </div>
                     <div className="text-text-muted text-[10px] mt-0.5 capitalize">{course.access_type}</div>

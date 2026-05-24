@@ -1,10 +1,8 @@
+import { Calendar, Chat, CircleNotch, Plus, SquaresFour, Trash, User, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
-import {
-  Kanban, Plus, Loader2, X, Trash2, Calendar, User, MessageSquare,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import EmptyState from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -509,7 +507,7 @@ export default function ProjectsPage() {
             )}{/* ── Empty state ──────────────────────────────────── */}{!loadingBoards && boards.length === 0 && (
               <div className="glass rounded-xl py-10">
                 <EmptyState
-                  icon={<Kanban size={48} />}
+                  icon={<SquaresFour size={48} />}
                   title="Create your first board"
                   description="Boards hold your project's tasks across Backlog, To Do, In Progress, Review, and Done columns. Drag to move, click to edit."
                   action={
@@ -552,11 +550,11 @@ export default function ProjectsPage() {
                   </div>
                 ))}
               </div>
-            )}{/* ── Kanban columns ───────────────────────────────── */}{!loadingBoards && activeBoard && (
+            )}{/* ── SquaresFour columns ───────────────────────────────── */}{!loadingBoards && activeBoard && (
               <>
                 {loadingTasks && (
                   <div className="flex items-center justify-center py-12 gap-2 text-text-muted">
-                    <Loader2 size={16} className="animate-spin" /> Loading tasks...
+                    <CircleNotch size={16} className="animate-spin" /> Loading tasks...
                   </div>
                 )}
 
@@ -759,7 +757,7 @@ export default function ProjectsPage() {
                       disabled={creatingBoard || !newBoardName.trim()}
                       className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50"
                     >
-                      {creatingBoard && <Loader2 size={12} className="animate-spin" />}
+                      {creatingBoard && <CircleNotch size={12} className="animate-spin" />}
                       Create
                     </button>
                   </div>
@@ -809,7 +807,7 @@ export default function ProjectsPage() {
                       disabled={submittingQuickTask || !quickTaskTitle.trim()}
                       className="btn-primary ml-auto text-xs disabled:opacity-50 flex items-center gap-1.5"
                     >
-                      {submittingQuickTask && <Loader2 size={12} className="animate-spin" />}
+                      {submittingQuickTask && <CircleNotch size={12} className="animate-spin" />}
                       Add task
                     </button>
                   </div>
@@ -837,7 +835,7 @@ export default function ProjectsPage() {
                         className="p-1.5 rounded-lg hover:bg-red-400/10 text-red-400 transition-colors"
                         title="Delete task"
                       >
-                        <Trash2 size={12} />
+                        <Trash size={12} />
                       </button>
                       <button
                         onClick={() => setSelectedTask(null)}
@@ -941,11 +939,11 @@ export default function ProjectsPage() {
                     {/* Comments */}
                     <div className="pt-3 border-t border-border-subtle space-y-2">
                       <h4 className="text-[10px] font-semibold text-text-muted uppercase tracking-wider flex items-center gap-1.5">
-                        <MessageSquare size={10} /> Comments
+                        <Chat size={10} /> Comments
                       </h4>
                       {loadingComments ? (
                         <div className="flex items-center gap-2 text-text-muted text-[10px]">
-                          <Loader2 size={10} className="animate-spin" /> Loading...
+                          <CircleNotch size={10} className="animate-spin" /> Loading...
                         </div>
                       ) : taskComments.length === 0 ? (
                         <p className="text-[10px] text-text-muted">No comments yet.</p>

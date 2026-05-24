@@ -1,8 +1,8 @@
+import { Bell, Chat, CircleNotch, Eye, FloppyDisk, Gear, Robot, Shield, Trash, Warning, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { Settings, Shield, MessageSquare, Bot, Eye, Bell, Save, Loader, AlertTriangle, Trash2, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -66,7 +66,7 @@ export default function ClientSettingsPage() {
         body: JSON.stringify({ settings }),
       });
       const data = await res.json();
-      if (data.success) toast.success("Settings saved!");
+      if (data.success) toast.success("Gear saved!");
       else toast.error("Failed to save");
     } catch {
       toast.error("Connection error");
@@ -84,7 +84,7 @@ export default function ClientSettingsPage() {
   };
 
   if (loading) return (
-    <MotionPage className="flex items-center justify-center py-20"><Loader size={20} className="animate-spin text-brand-accent" /></MotionPage>
+    <MotionPage className="flex items-center justify-center py-20"><CircleNotch size={20} className="animate-spin text-brand-accent" /></MotionPage>
   );
 
   return (
@@ -92,13 +92,13 @@ export default function ClientSettingsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="page-header mb-0 flex items-center gap-2">
-            <Settings size={18} className="text-brand-accent" /> Account Settings
+            <Gear size={18} className="text-brand-accent" /> Account Gear
           </h1>
           <p className="text-xs text-text-muted mt-0.5">Control what our AI can do on your behalf</p>
         </div>
         <button onClick={saveSettings} disabled={saving} className="btn-primary text-xs flex items-center gap-1.5">
-          {saving ? <Loader size={12} className="animate-spin" /> : <Save size={12} />}
-          {saving ? "Saving..." : "Save Settings"}
+          {saving ? <CircleNotch size={12} className="animate-spin" /> : <FloppyDisk size={12} />}
+          {saving ? "Saving..." : "FloppyDisk Gear"}
         </button>
       </div>
 
@@ -114,11 +114,11 @@ export default function ClientSettingsPage() {
           <div className="flex items-start justify-between p-3 bg-surface-light rounded-lg border border-border-subtle">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center shrink-0 mt-0.5">
-                <MessageSquare size={14} className="text-brand-accent" />
+                <Chat size={14} className="text-brand-accent" />
               </div>
               <div>
                 <p className="text-xs font-semibold">DM Outreach</p>
-                <p className="text-[10px] text-text-muted mt-0.5">Allow AI to send direct messages to potential leads on your social accounts. Messages are crafted by AI and reviewed before sending.</p>
+                <p className="text-xs text-text-muted mt-0.5">Allow AI to send direct messages to potential leads on your social accounts. Messages are crafted by AI and reviewed before sending.</p>
                 {settings.allow_dm_outreach && (
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {["instagram", "facebook", "linkedin", "tiktok"].map(p => (
@@ -136,7 +136,7 @@ export default function ClientSettingsPage() {
               </div>
             </div>
             <button onClick={() => setSettings({ ...settings, allow_dm_outreach: !settings.allow_dm_outreach })}
-              className={`w-10 h-5 rounded-full transition-all shrink-0 ${settings.allow_dm_outreach ? "bg-brand-accent" : "bg-surface-light border border-border-subtle"}`}>
+              className={`w-10 h-5 rounded-full transition-all shrink-0 p-0.5 -m-2 [touch-action:manipulation] ${settings.allow_dm_outreach ? "bg-brand-accent" : "bg-surface-light border border-border-subtle"}`}>
               <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${settings.allow_dm_outreach ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
           </div>
@@ -145,15 +145,15 @@ export default function ClientSettingsPage() {
           <div className="flex items-start justify-between p-3 bg-surface-light rounded-lg border border-border-subtle">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-success/10 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
-                <Bot size={14} className="text-success" />
+                <Robot size={14} className="text-success" />
               </div>
               <div>
                 <p className="text-xs font-semibold">AI Content Posting</p>
-                <p className="text-[10px] text-text-muted mt-0.5">Allow AI to publish content directly to your social media accounts based on your content calendar.</p>
+                <p className="text-xs text-text-muted mt-0.5">Allow AI to publish content directly to your social media accounts based on your content calendar.</p>
               </div>
             </div>
             <button onClick={() => setSettings({ ...settings, allow_ai_posting: !settings.allow_ai_posting })}
-              className={`w-10 h-5 rounded-full transition-all shrink-0 ${settings.allow_ai_posting ? "bg-brand-accent" : "bg-surface-light border border-border-subtle"}`}>
+              className={`w-10 h-5 rounded-full transition-all shrink-0 p-0.5 -m-2 [touch-action:manipulation] ${settings.allow_ai_posting ? "bg-brand-accent" : "bg-surface-light border border-border-subtle"}`}>
               <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${settings.allow_ai_posting ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
           </div>
@@ -166,11 +166,11 @@ export default function ClientSettingsPage() {
               </div>
               <div>
                 <p className="text-xs font-semibold">Analytics Access</p>
-                <p className="text-[10px] text-text-muted mt-0.5">Allow the AI to read your social media analytics for reporting and optimization suggestions.</p>
+                <p className="text-xs text-text-muted mt-0.5">Allow the AI to read your social media analytics for reporting and optimization suggestions.</p>
               </div>
             </div>
             <button onClick={() => setSettings({ ...settings, allow_analytics_access: !settings.allow_analytics_access })}
-              className={`w-10 h-5 rounded-full transition-all shrink-0 ${settings.allow_analytics_access ? "bg-brand-accent" : "bg-surface-light border border-border-subtle"}`}>
+              className={`w-10 h-5 rounded-full transition-all shrink-0 p-0.5 -m-2 [touch-action:manipulation] ${settings.allow_analytics_access ? "bg-brand-accent" : "bg-surface-light border border-border-subtle"}`}>
               <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${settings.allow_analytics_access ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
           </div>
@@ -179,15 +179,15 @@ export default function ClientSettingsPage() {
           <div className="flex items-start justify-between p-3 bg-surface-light rounded-lg border border-border-subtle">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-warning/10 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
-                <Bot size={14} className="text-warning" />
+                <Robot size={14} className="text-warning" />
               </div>
               <div>
                 <p className="text-xs font-semibold">Ad Campaign Management</p>
-                <p className="text-[10px] text-text-muted mt-0.5">Allow AI to create, modify, and optimize ad campaigns on your connected ad platforms.</p>
+                <p className="text-xs text-text-muted mt-0.5">Allow AI to create, modify, and optimize ad campaigns on your connected ad platforms.</p>
               </div>
             </div>
             <button onClick={() => setSettings({ ...settings, allow_ad_management: !settings.allow_ad_management })}
-              className={`w-10 h-5 rounded-full transition-all shrink-0 ${settings.allow_ad_management ? "bg-brand-accent" : "bg-surface-light border border-border-subtle"}`}>
+              className={`w-10 h-5 rounded-full transition-all shrink-0 p-0.5 -m-2 [touch-action:manipulation] ${settings.allow_ad_management ? "bg-brand-accent" : "bg-surface-light border border-border-subtle"}`}>
               <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${settings.allow_ad_management ? "translate-x-5" : "translate-x-0.5"}`} />
             </button>
           </div>
@@ -217,7 +217,7 @@ export default function ClientSettingsPage() {
                   [item.key]: !settings.notification_preferences[item.key],
                 },
               })}
-                className={`w-10 h-5 rounded-full transition-all ${settings.notification_preferences[item.key] ? "bg-brand-accent" : "bg-surface-light border border-border-subtle"}`}>
+                className={`w-10 h-5 rounded-full transition-all p-0.5 -m-2 [touch-action:manipulation] ${settings.notification_preferences[item.key] ? "bg-brand-accent" : "bg-surface-light border border-border-subtle"}`}>
                 <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${settings.notification_preferences[item.key] ? "translate-x-5" : "translate-x-0.5"}`} />
               </button>
             </div>
@@ -314,7 +314,7 @@ function DangerZone() {
   return (
     <div className="glass rounded-xl p-4 border-red-500/30 bg-red-500/[0.03]">
       <div className="flex items-start gap-3 mb-3">
-        <AlertTriangle size={16} className="text-red-400 shrink-0 mt-0.5" />
+        <Warning size={16} className="text-red-400 shrink-0 mt-0.5" />
         <div>
           <h3 className="text-sm font-semibold text-red-400">Danger Zone</h3>
           <p className="text-[10px] text-text-muted">Cancel your subscription and request account deletion.</p>
@@ -324,7 +324,7 @@ function DangerZone() {
       {cancellation ? (
         <div className="bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.25)] rounded-lg p-3 space-y-2">
           <div className="flex items-start gap-2">
-            <AlertTriangle size={14} className="text-brand-accent shrink-0 mt-0.5" />
+            <Warning size={14} className="text-brand-accent shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="text-xs font-semibold text-brand-accent">Subscription Cancelled</p>
               <p className="text-[10px] text-text-muted mt-0.5">
@@ -334,7 +334,7 @@ function DangerZone() {
             </div>
           </div>
           <button onClick={handleRestore} disabled={loading} className="btn-primary text-xs w-full">
-            {loading ? <Loader size={12} className="animate-spin inline mr-1" /> : null}
+            {loading ? <CircleNotch size={12} className="animate-spin inline mr-1" /> : null}
             Restore Subscription
           </button>
         </div>
@@ -346,7 +346,7 @@ function DangerZone() {
             This cannot be undone after 30 days.
           </p>
           <button onClick={() => setShowCancel(true)} className="text-xs px-3 py-2 rounded-lg bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500/20 flex items-center gap-2">
-            <Trash2 size={12} /> Cancel Subscription
+            <Trash size={12} /> Cancel Subscription
           </button>
         </>
       )}
@@ -356,7 +356,7 @@ function DangerZone() {
           <div className="glass rounded-xl p-5 max-w-md w-full space-y-3" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-red-400 flex items-center gap-2">
-                <AlertTriangle size={14} /> Cancel Subscription
+                <Warning size={14} /> Cancel Subscription
               </h3>
               <button onClick={() => setShowCancel(false)}><X size={16} /></button>
             </div>
@@ -383,7 +383,7 @@ function DangerZone() {
               <button onClick={() => setShowCancel(false)} className="btn-secondary text-xs flex-1">Keep subscription</button>
               <button onClick={handleCancel} disabled={loading || confirmText !== "DELETE"}
                 className="text-xs flex-1 px-3 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-1">
-                {loading ? <Loader size={12} className="animate-spin" /> : <Trash2 size={12} />}
+                {loading ? <CircleNotch size={12} className="animate-spin" /> : <Trash size={12} />}
                 Cancel Subscription
               </button>
             </div>

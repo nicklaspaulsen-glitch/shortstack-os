@@ -1,4 +1,5 @@
 "use client";
+import { ArrowSquareOut, CircleNotch, CreditCard, Lightning, Plus, Shield, Warning, XCircle } from "@phosphor-icons/react";
 
 /**
  * BillingSettings — current plan, cancel subscription, agency Stripe Connect,
@@ -6,7 +7,6 @@
  * who never visit the billing tab don't ship this chunk.
  */
 
-import { Zap, ExternalLink, Shield, AlertTriangle, CreditCard, Plus, Loader2, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { getPlanConfig } from "@/lib/plan-config";
 import AgencyStripeConnect from "@/components/settings/agency-stripe-connect";
@@ -77,10 +77,10 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
           </div>
           <div className="flex items-center gap-2">
             <a href="/dashboard/pricing" className="btn-primary text-xs flex items-center gap-1">
-              <Zap size={11} /> Change Plan
+              <Lightning size={11} /> Change Plan
             </a>
             <button onClick={openBillingPortal} disabled={portalLoading} className="btn-secondary text-xs flex items-center gap-1">
-              {portalLoading ? <Loader2 size={11} className="animate-spin" /> : <ExternalLink size={11} />}
+              {portalLoading ? <CircleNotch size={11} className="animate-spin" /> : <ArrowSquareOut size={11} />}
               Manage in Stripe
             </button>
           </div>
@@ -93,7 +93,7 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
       {/* Cancel Subscription */}
       <div className="glass rounded-xl p-4 border-red-500/20 bg-red-500/[0.02]">
         <div className="flex items-start gap-3">
-          <AlertTriangle size={14} className="text-red-400 shrink-0 mt-0.5" />
+          <Warning size={14} className="text-red-400 shrink-0 mt-0.5" />
           <div className="flex-1">
             <h3 className="text-sm font-semibold text-red-400">Cancel Subscription</h3>
             <p className="text-[10px] text-text-muted mt-0.5">
@@ -101,7 +101,7 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
             </p>
           </div>
           <button onClick={openBillingPortal} disabled={portalLoading} className="text-xs px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500/20 flex items-center gap-1.5">
-            {portalLoading ? <Loader2 size={11} className="animate-spin" /> : <XCircle size={11} />}
+            {portalLoading ? <CircleNotch size={11} className="animate-spin" /> : <XCircle size={11} />}
             Cancel via Stripe
           </button>
         </div>
@@ -115,7 +115,7 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
         <h3 className="">Usage This Month</h3>
         {!planUsageLoaded ? (
           <div className="flex items-center gap-2 text-xs text-text-muted py-6 justify-center">
-            <Loader2 size={12} className="animate-spin" /> Loading usage...
+            <CircleNotch size={12} className="animate-spin" /> Loading usage...
           </div>
         ) : (
           <PlanUsageWidget planUsage={planUsage} />
@@ -142,7 +142,7 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
             </div>
             <button onClick={openBillingPortal} disabled={portalLoading}
               className="ml-auto text-xs text-[#D4FF00] hover:underline flex items-center gap-1 disabled:opacity-50">
-              {portalLoading ? <Loader2 size={10} className="animate-spin" /> : <ExternalLink size={10} />}
+              {portalLoading ? <CircleNotch size={10} className="animate-spin" /> : <ArrowSquareOut size={10} />}
               Update
             </button>
           </div>
@@ -154,7 +154,7 @@ export default function BillingSettings({ profile, planUsage, planUsageLoaded, p
             </div>
             <button onClick={openBillingPortal} disabled={portalLoading}
               className="text-xs bg-[rgba(212,255,0,0.08)] text-[#D4FF00] border border-[rgba(212,255,0,0.2)] px-3 py-1.5 rounded-lg hover:bg-[rgba(212,255,0,0.12)] transition flex items-center gap-1 disabled:opacity-50">
-              {portalLoading ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />}
+              {portalLoading ? <CircleNotch size={10} className="animate-spin" /> : <Plus size={10} />}
               Add Payment Method
             </button>
           </div>

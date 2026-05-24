@@ -1,3 +1,4 @@
+import { Bell, FolderOpen, Keyboard, Link, Monitor, Sparkle, X } from "@phosphor-icons/react";
 /**
  * DesktopIndicator — a small green-dot + "Desktop" pill shown in the
  * sidebar footer when the dashboard is running inside the Electron
@@ -9,15 +10,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Monitor,
-  Bell,
-  Keyboard,
-  FolderOpen,
-  Link2,
-  X,
-  Sparkles,
-} from "lucide-react";
 import { isDesktop, openDropboxFolder } from "@/lib/desktop-bridge";
 
 export default function DesktopIndicator({ collapsed }: { collapsed?: boolean }) {
@@ -59,7 +51,7 @@ export default function DesktopIndicator({ collapsed }: { collapsed?: boolean })
             {/* Header */}
             <div className="px-4 py-3 border-b border-border-subtle flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Sparkles size={14} className="text-emerald-400" />
+                <Sparkle size={14} className="text-emerald-400" />
                 <h3 className="text-sm font-semibold">
                   Desktop app{" "}
                   <span className="text-emerald-400">connected</span>
@@ -109,7 +101,7 @@ export default function DesktopIndicator({ collapsed }: { collapsed?: boolean })
                 body="Anything you drop into the folder gets uploaded to the client you're currently viewing."
               />
               <FeatureRow
-                icon={<Link2 size={14} className="text-pink-400" />}
+                icon={<Link size={14} className="text-pink-400" />}
                 title="Protocol links"
                 body="shortstack:// links open the right page in the desktop app — great for emails, Slack, and agent handoffs."
               />

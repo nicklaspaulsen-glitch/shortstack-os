@@ -1,3 +1,4 @@
+import { ArrowRight, ArrowSquareOut, ArrowsClockwise, Calendar, CheckCircle, CircleNotch, Clock, FileText, FloppyDisk, Microphone, Phone, PhoneCall, Prohibit, Sparkle, UploadSimple, UserCheck, WarningCircle, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -33,25 +34,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import {
-  PhoneCall,
-  Phone,
-  Mic,
-  Calendar as CalendarIcon,
-  Clock,
-  Loader2,
-  AlertCircle,
-  CheckCircle2,
-  Sparkles,
-  Upload,
-  ExternalLink,
-  FileText,
-  UserCheck,
-  Ban,
-  ArrowRight,
-  RefreshCw,
-  Save,
-} from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
@@ -243,14 +225,14 @@ function fmtRelative(iso: string): string {
 function outcomeMeta(outcome: CallOutcome): {
   label: string;
   className: string;
-  icon: typeof CheckCircle2;
+  icon: typeof CheckCircle;
 } {
   switch (outcome) {
     case "booked":
       return {
         label: "Booked",
         className: "bg-emerald-500/15 text-emerald-600",
-        icon: CalendarIcon,
+        icon: Calendar,
       };
     case "qualified":
       return {
@@ -268,19 +250,19 @@ function outcomeMeta(outcome: CallOutcome): {
       return {
         label: "Spam",
         className: "bg-rose-500/15 text-rose-600",
-        icon: Ban,
+        icon: Prohibit,
       };
     case "missed":
       return {
         label: "Missed",
         className: "bg-[rgba(212,255,0,0.08)] text-brand-accent",
-        icon: AlertCircle,
+        icon: WarningCircle,
       };
     case "dropped":
       return {
         label: "Dropped",
         className: "bg-[rgba(212,255,0,0.08)] text-brand-accent",
-        icon: AlertCircle,
+        icon: WarningCircle,
       };
     case "pending":
       return {
@@ -520,7 +502,7 @@ export default function VoiceReceptionistPage() {
     }
   }
 
-  // -- Save config --------------------------------------------------
+  // -- FloppyDisk config --------------------------------------------------
   function saveConfig() {
     setSavingConfig(true);
     try {
@@ -633,7 +615,7 @@ export default function VoiceReceptionistPage() {
                   transition={{ duration: 0.22 }}
                   className="flex items-start gap-3 rounded-xl border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] p-4"
                 >
-                  <AlertCircle size={18} className="mt-0.5 shrink-0 text-brand-accent" />
+                  <WarningCircle size={18} className="mt-0.5 shrink-0 text-brand-accent" />
                   <div className="text-[12px] leading-relaxed">
                     <p className="font-semibold text-brand-accent">
                       {liveBackend
@@ -676,7 +658,7 @@ export default function VoiceReceptionistPage() {
                     onClick={loadAll}
                     className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-3 py-2 text-[11px] font-medium text-text-muted hover:bg-surface-light hover:text-text-primary"
                   >
-                    <RefreshCw size={12} /> Refresh
+                    <ArrowsClockwise size={12} /> Refresh
                   </motion.button>
                 </div>
                 <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3 mb-4">
@@ -711,7 +693,7 @@ export default function VoiceReceptionistPage() {
                 <div className="mb-4 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[rgba(212,255,0,0.10)] text-brand-accent">
-                      <Mic size={14} />
+                      <Microphone size={14} />
                     </div>
                     <div>
                       <h2 className="text-sm font-semibold">Agent setup</h2>
@@ -771,7 +753,7 @@ export default function VoiceReceptionistPage() {
                     {/* Voice-clone upload � honest about not being wired */}
                     <div className="rounded-lg border border-dashed border-border-subtle/50 bg-surface-light/20 p-4">
                       <div className="mb-1 flex items-center justify-between">
-                        <p className="text-[12px] font-semibold">Upload voice sample</p>
+                        <p className="text-[12px] font-semibold">UploadSimple voice sample</p>
                         <span className="rounded-full bg-muted/20 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-text-muted">
                           Coming soon
                         </span>
@@ -784,7 +766,7 @@ export default function VoiceReceptionistPage() {
                         disabled
                         className="mt-3 inline-flex cursor-not-allowed items-center gap-1.5 rounded-lg bg-surface-light/60 px-3 py-1.5 text-[11px] font-medium text-text-muted opacity-60"
                       >
-                        <Upload size={11} /> Upload sample (.mp3 / .wav)
+                        <UploadSimple size={11} /> UploadSimple sample (.mp3 / .wav)
                       </button>
                     </div>
                   </div>
@@ -873,11 +855,11 @@ export default function VoiceReceptionistPage() {
                     className="btn-pill-ghost inline-flex items-center gap-1.5 disabled:opacity-50"
                   >
                     {savingConfig ? (
-                      <Loader2 size={12} className="animate-spin" />
+                      <CircleNotch size={12} className="animate-spin" />
                     ) : (
-                      <Save size={12} />
+                      <FloppyDisk size={12} />
                     )}
-                    Save settings
+                    FloppyDisk settings
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
@@ -888,11 +870,11 @@ export default function VoiceReceptionistPage() {
                   >
                     {creatingAgent ? (
                       <>
-                        <Loader2 size={13} className="animate-spin" /> Creating�
+                        <CircleNotch size={13} className="animate-spin" /> Creating�
                       </>
                     ) : (
                       <>
-                        <Sparkles size={13} /> {hasAgent ? "Create another agent" : "Create agent on ElevenLabs"}
+                        <Sparkle size={13} /> {hasAgent ? "Create another agent" : "Create agent on ElevenLabs"}
                       </>
                     )}
                   </motion.button>
@@ -927,7 +909,7 @@ export default function VoiceReceptionistPage() {
 
                 {loading ? (
                   <div className="flex items-center justify-center gap-2 py-10 text-sm text-text-muted">
-                    <Loader2 size={14} className="animate-spin" /> Loading calls�
+                    <CircleNotch size={14} className="animate-spin" /> Loading calls�
                   </div>
                 ) : calls.length === 0 ? (
                   <EmptyState
@@ -986,7 +968,7 @@ export default function VoiceReceptionistPage() {
                                     href={c.crmLink}
                                     className="inline-flex items-center gap-1 text-[11px] text-brand-accent hover:underline"
                                   >
-                                    Open <ExternalLink size={10} />
+                                    Open <ArrowSquareOut size={10} />
                                   </Link>
                                 ) : (
                                   <span className="text-[10px] text-text-muted/70">�</span>
@@ -1119,7 +1101,7 @@ function CalendarIntegrationCard() {
     >
       <div className="mb-3 flex items-center gap-2">
         <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-600">
-          <CalendarIcon size={14} />
+          <Calendar size={14} />
         </div>
         <div>
           <h2 className="text-sm font-semibold">Calendar for booking</h2>
@@ -1131,12 +1113,12 @@ function CalendarIntegrationCard() {
 
       {state === "loading" ? (
         <div className="flex items-center gap-2 text-[12px] text-text-muted">
-          <Loader2 size={12} className="animate-spin" /> Checking connection�
+          <CircleNotch size={12} className="animate-spin" /> Checking connection�
         </div>
       ) : state === "connected" ? (
         <div className="flex items-center justify-between gap-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
           <div className="flex items-center gap-2">
-            <CheckCircle2 size={15} className="text-emerald-600" />
+            <CheckCircle size={15} className="text-emerald-600" />
             <div>
               <p className="text-[12.5px] font-semibold text-text-primary">
                 Connected
@@ -1159,7 +1141,7 @@ function CalendarIntegrationCard() {
       ) : (
         <div className="flex flex-col items-start gap-3 rounded-lg border border-dashed border-border-subtle/50 bg-surface-light/20 p-4">
           <div className="flex items-start gap-2">
-            <AlertCircle
+            <WarningCircle
               size={15}
               className="mt-0.5 shrink-0 text-brand-accent"
             />
@@ -1178,7 +1160,7 @@ function CalendarIntegrationCard() {
               href="/dashboard/calendar"
               className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent text-[#020711] px-3 py-2 text-[11.5px] font-semibold hover:bg-[#E8FF4D]"
             >
-              <CalendarIcon size={12} /> Connect calendar
+              <Calendar size={12} /> Connect calendar
             </Link>
           </motion.div>
         </div>

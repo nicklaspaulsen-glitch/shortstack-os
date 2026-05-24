@@ -1,12 +1,9 @@
+import { ArrowRight, CaretLeft, CaretRight, Check, GitBranch, Lightning, Plus, ShoppingCart, Sparkle, TrendUp, Users, Video } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import {
-  GitBranch, ChevronRight, ChevronLeft, Sparkles, Users, Video,
-  ShoppingCart, TrendingUp, Zap, Check, Plus, ArrowRight,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface StepTemplate {
@@ -52,7 +49,7 @@ const TEMPLATES: FunnelTemplate[] = [
     id: "product-launch",
     name: "Product Launch",
     description: "Build hype with a VSL, collect orders, and upsell.",
-    icon: <Zap size={20} />,
+    icon: <Lightning size={20} />,
     color: "text-amber-400 bg-amber-400/10 border-amber-400/20",
     steps: [
       { title: "Sales Video", step_type: "vsl" },
@@ -79,7 +76,7 @@ const TEMPLATES: FunnelTemplate[] = [
     id: "high-ticket",
     name: "High-Ticket",
     description: "Application funnel to pre-qualify before booking a strategy call.",
-    icon: <TrendingUp size={20} />,
+    icon: <TrendUp size={20} />,
     color: "text-rose-400 bg-rose-400/10 border-rose-400/20",
     steps: [
       { title: "Application Page", step_type: "opt-in" },
@@ -171,7 +168,7 @@ export default function NewFunnelPage() {
                     {step > s.n ? <Check size={14} /> : <span className="w-4 h-4 rounded-full bg-current/20 flex items-center justify-center text-xs">{s.n}</span>}
                     {s.label}
                   </div>
-                  {idx < 1 && <ChevronRight size={14} className="text-[#D1D5DB]" />}
+                  {idx < 1 && <CaretRight size={14} className="text-[#D1D5DB]" />}
                 </div>
               ))}
             </div>{step === 1 && (
@@ -202,7 +199,7 @@ export default function NewFunnelPage() {
                 {/* Templates */}
                 <div className="glass rounded-xl p-5 space-y-4">
                   <div className="flex items-center gap-2">
-                    <Sparkles size={15} className="text-purple-600" />
+                    <Sparkle size={15} className="text-purple-600" />
                     <h2 className="text-text-primary font-semibold text-base">Choose a Template</h2>
                     <span className="text-text-muted text-xs ml-1">(optional)</span>
                   </div>
@@ -255,7 +252,7 @@ export default function NewFunnelPage() {
                     className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-semibold text-sm transition-colors"
                   >
                     Review Steps
-                    <ChevronRight size={15} />
+                    <CaretRight size={15} />
                   </button>
                 </div>
               </div>
@@ -310,7 +307,7 @@ export default function NewFunnelPage() {
                     onClick={() => setStep(1)}
                     className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-white/10 text-text-muted hover:text-text-primary text-sm font-medium transition-colors"
                   >
-                    <ChevronLeft size={15} />
+                    <CaretLeft size={15} />
                     Back
                   </button>
                   <button

@@ -1,4 +1,5 @@
 "use client";
+import { ArrowRight, Check, CircleNotch, Image, Sparkle, X } from "@phosphor-icons/react";
 
 /**
  * AiFirstStarter — Pikzel-AI-style entry flow for the thumbnail editor.
@@ -20,13 +21,7 @@
  */
 
 import { useState } from "react";
-import {
-  Sparkles,
-  Loader,
-  ArrowRight,
-  X,
-  ImageIcon,
-} from "lucide-react";
+
 import toast from "react-hot-toast";
 
 interface Props {
@@ -380,7 +375,7 @@ export default function AiFirstStarter({
               border: "1px solid rgba(212,255,0,0.3)",
             }}
           >
-            <Sparkles size={18} style={{ color: "#D4FF00" }} />
+            <Sparkle size={18} style={{ color: "#D4FF00" }} />
           </div>
           <div>
             <h2 className="text-lg font-bold text-white">
@@ -485,12 +480,12 @@ export default function AiFirstStarter({
           >
             {busy ? (
               <>
-                <Loader size={14} className="animate-spin" />
+                <CircleNotch size={14} className="animate-spin" />
                 Generating 4 options…
               </>
             ) : (
               <>
-                <Sparkles size={14} />
+                <Sparkle size={14} />
                 Generate 4 thumbnails
                 <ArrowRight size={14} />
               </>
@@ -559,7 +554,7 @@ export default function AiFirstStarter({
                         className="absolute inset-0 flex items-center justify-center"
                         style={{ background: "rgba(11,13,18,0.4)" }}
                       >
-                        <Loader size={20} className="animate-spin text-amber-300" />
+                        <CircleNotch size={20} className="animate-spin text-amber-300" />
                       </div>
                     )}
                   </button>
@@ -631,7 +626,7 @@ export default function AiFirstStarter({
               }}
               className="mt-4 text-[11.5px] text-neutral-400 hover:text-white transition flex items-center gap-1.5"
             >
-              <ImageIcon size={11} /> None of these — try a different prompt
+              <Image size={11} /> None of these — try a different prompt
             </button>
           </div>
         )}

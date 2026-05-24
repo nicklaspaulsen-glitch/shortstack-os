@@ -1,10 +1,11 @@
+import { ArrowLeft, ArrowSquareOut, Check, Copy, MagicWand, MusicNote, Pause, Play, Scissors, SpeakerHigh, TextT } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
  * Preset Library — preview + try every font, transition, effect, SFX, and
  * music track in the video-editor's preset bank before using it in a project.
  *
- * Tabs: Fonts | Transitions | Effects | SFX | Music
+ * Tabs: Fonts | Transitions | Effects | SFX | MusicNote
  * - Search/filter bar on every tab (live, no submit).
  * - Shimmer skeleton while loading.
  * - SVG placeholder fallback for missing thumbnails.
@@ -14,19 +15,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Play,
-  Pause,
-  Copy,
-  Check,
-  Music,
-  Wand2,
-  Scissors,
-  Type as TypeIcon,
-  Volume2,
-  ArrowLeft,
-  ExternalLink,
-} from "lucide-react";
 import {
   FONTS_LIBRARY,
   TRANSITIONS_LIBRARY,
@@ -123,7 +111,7 @@ export default function PresetLibraryPage() {
                 <TabButton
                   id="fonts"
                   active={tab}
-                  icon={<TypeIcon size={13} />}
+                  icon={<TextT size={13} />}
                   label="Fonts"
                   count={FONTS_LIBRARY.length}
                   onClick={setTab}
@@ -139,7 +127,7 @@ export default function PresetLibraryPage() {
                 <TabButton
                   id="effects"
                   active={tab}
-                  icon={<Wand2 size={13} />}
+                  icon={<MagicWand size={13} />}
                   label="Effects"
                   count={EFFECTS_LIBRARY.length}
                   onClick={setTab}
@@ -147,7 +135,7 @@ export default function PresetLibraryPage() {
                 <TabButton
                   id="sfx"
                   active={tab}
-                  icon={<Volume2 size={13} />}
+                  icon={<SpeakerHigh size={13} />}
                   label="SFX"
                   count={SFX_LIBRARY.length}
                   onClick={setTab}
@@ -155,8 +143,8 @@ export default function PresetLibraryPage() {
                 <TabButton
                   id="music"
                   active={tab}
-                  icon={<Music size={13} />}
-                  label="Music"
+                  icon={<MusicNote size={13} />}
+                  label="MusicNote"
                   count={MUSIC_LIBRARY.length}
                   onClick={setTab}
                 />
@@ -478,7 +466,7 @@ function FontCard({
             className="rounded bg-surface-light/80 p-1 text-text-muted hover:text-brand-accent transition"
             title="Edit example"
           >
-            <ExternalLink size={12} />
+            <ArrowSquareOut size={12} />
           </button>
           <button
             onClick={onCopy}
@@ -613,7 +601,7 @@ function TransitionCard({
             className="rounded bg-surface-light/80 p-1 text-text-muted hover:text-brand-accent transition"
             title="Edit example"
           >
-            <ExternalLink size={12} />
+            <ArrowSquareOut size={12} />
           </button>
           <button
             onClick={onCopy}
@@ -740,7 +728,7 @@ function EffectCard({
             className="rounded bg-surface-light/80 p-1 text-text-muted hover:text-brand-accent transition"
             title="Edit example"
           >
-            <ExternalLink size={12} />
+            <ArrowSquareOut size={12} />
           </button>
           <button
             onClick={onCopy}
@@ -841,7 +829,7 @@ function SfxTab({
   );
 }
 
-/* ─────────────────────────── Music tab ─────────────────────────── */
+/* ─────────────────────────── MusicNote tab ─────────────────────────── */
 
 function MusicTab({
   query,
@@ -901,7 +889,7 @@ function MusicTab({
   );
 }
 
-/* ─────────────────────────── Audio card (SFX + Music) ─────────────────────────── */
+/* ─────────────────────────── Audio card (SFX + MusicNote) ─────────────────────────── */
 
 function AudioCard({
   id,

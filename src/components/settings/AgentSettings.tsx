@@ -1,4 +1,5 @@
 "use client";
+import { FloppyDisk } from "@phosphor-icons/react";
 
 /**
  * AgentSettings — per-client AI agent configuration grid + global AI
@@ -6,7 +7,6 @@
  * who configure outreach and the component imports StatusBadge + modal JSX.
  */
 
-import { Bot, Save } from "lucide-react";
 import StatusBadge from "@/components/ui/status-badge";
 import Modal from "@/components/ui/modal";
 
@@ -178,7 +178,7 @@ export default function AgentSettings({ agentConfigs, editingAgent, setEditingAg
             <div className="flex justify-end gap-3 pt-4 border-t border-border-subtle">
               <button onClick={() => setEditingAgent(null)} className="btn-secondary">Cancel</button>
               <button onClick={() => saveAgentConfig(editingAgent)} className="btn-primary flex items-center gap-2">
-                <Save size={16} /> Save Configuration
+                <FloppyDisk size={16} /> FloppyDisk Configuration
               </button>
             </div>
           </div>

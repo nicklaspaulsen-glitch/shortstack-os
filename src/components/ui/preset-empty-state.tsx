@@ -1,6 +1,6 @@
 "use client";
+import { ArrowCounterClockwise, Sparkle, X } from "@phosphor-icons/react";
 
-import { RotateCcw } from "lucide-react";
 
 interface PresetEmptyStateProps {
   onReset: () => void;
@@ -71,7 +71,7 @@ export function PresetEmptyState({ onReset, label = "presets" }: PresetEmptyStat
         <line x1="52" y1="52" x2="68" y2="68" stroke="url(#pe-blue)" strokeWidth="3" strokeLinecap="round" />
         <line x1="68" y1="52" x2="52" y2="68" stroke="url(#pe-blue)" strokeWidth="3" strokeLinecap="round" />
 
-        {/* Sparkles */}
+        {/* Sparkle */}
         <path d="M110 35 L112 41 L118 43 L112 45 L110 51 L108 45 L102 43 L108 41 Z" fill="url(#pe-gold)" opacity="0.8" />
         <path d="M25 90 L26.5 94 L30.5 96 L26.5 98 L25 102 L23.5 98 L19.5 96 L23.5 94 Z" fill="url(#pe-blue)" opacity="0.6" />
         <circle cx="118" cy="75" r="2.5" fill="url(#pe-gold)" opacity="0.5" />
@@ -90,7 +90,7 @@ export function PresetEmptyState({ onReset, label = "presets" }: PresetEmptyStat
         onClick={onReset}
         className="flex items-center gap-2 rounded-lg border border-border-subtle bg-surface-light px-4 py-2 text-sm text-text-muted hover:text-text-primary hover:border-[rgba(212,255,0,0.3)] transition-all"
       >
-        <RotateCcw size={13} />
+        <ArrowCounterClockwise size={13} />
         Reset filters
       </button>
     </div>

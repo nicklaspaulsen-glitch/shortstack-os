@@ -1,4 +1,5 @@
 "use client";
+import { ChartBar, ChartPie, Megaphone, Plug, Plus, Sparkle, Target } from "@phosphor-icons/react";
 
 /**
  * Unified Ads Manager — single dashboard for Meta + Google + TikTok ads.
@@ -21,15 +22,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
-import {
-  Megaphone,
-  BarChart3,
-  Target,
-  Sparkles,
-  PieChart,
-  Plug,
-  Plus,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 import PageTrainingPanel from "@/components/ui/page-training-panel";
 
@@ -63,7 +55,7 @@ const TABS: Array<{
   {
     id: "overview",
     label: "Overview",
-    icon: BarChart3,
+    icon: ChartBar,
     description: "Aggregate metrics across Meta + Google + TikTok",
   },
   {
@@ -75,13 +67,13 @@ const TABS: Array<{
   {
     id: "insights",
     label: "Insights",
-    icon: Sparkles,
+    icon: Sparkle,
     description: "AI-generated optimization suggestions",
   },
   {
     id: "budgets",
     label: "Budgets",
-    icon: PieChart,
+    icon: ChartPie,
     description: "Per-platform allocation + AI rebalance",
   },
   {

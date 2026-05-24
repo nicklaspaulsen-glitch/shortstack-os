@@ -1,17 +1,7 @@
+import { ArrowCounterClockwise, Calendar, CircleNotch, CloudArrowUp, File, Image, MagicWand, PaperPlaneTilt, Sparkle, TrendUp } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useCallback, useRef, useState, useMemo } from "react";
-import {
-  Sparkles,
-  UploadCloud,
-  Loader2,
-  Wand2,
-  Calendar as CalendarIcon,
-  Send,
-  RefreshCcw,
-  Image as ImageIcon,
-  TrendingUp,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { ALL_PLATFORMS, PLATFORM_META } from "@/lib/social-studio/constants";
 import type {
@@ -384,7 +374,7 @@ export default function Tab2AIUpload() {
       >
         <div className="flex flex-col items-center gap-3">
           <div className="w-14 h-14  bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.25)] flex items-center justify-center">
-            <UploadCloud size={26} className="text-brand-accent" />
+            <CloudArrowUp size={26} className="text-brand-accent" />
           </div>
           <div>
             <h3 className="text-base font-semibold tracking-tight">
@@ -400,7 +390,7 @@ export default function Tab2AIUpload() {
               onClick={() => fileInputRef.current?.click()}
               className="px-3 py-1.5 rounded-md text-xs border border-border-subtle/40 hover:bg-elevated inline-flex items-center gap-1.5"
             >
-              <ImageIcon size={12} />
+              <Image size={12} />
               Choose file
             </button>
             <input
@@ -413,7 +403,7 @@ export default function Tab2AIUpload() {
           </div>
           {uploading && (
             <div className="text-xs text-text-muted inline-flex items-center gap-1.5">
-              <Loader2 size={12} className="animate-spin" />
+              <CircleNotch size={12} className="animate-spin" />
               Uploading to storage...
             </div>
           )}
@@ -460,7 +450,7 @@ export default function Tab2AIUpload() {
             disabled={analyzing || uploading || (!asset && !textInput.trim())}
             className="btn-pill-ghost text-xs inline-flex items-center gap-2 disabled:opacity-50"
           >
-            {analyzing ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+            {analyzing ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
             {analyzing ? "AI thinking..." : "Run AI"}
           </button>
         </div>
@@ -471,7 +461,7 @@ export default function Tab2AIUpload() {
           <div className="rounded-xl border border-border-subtle/40 bg-surface p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Wand2 size={14} className="text-brand-accent" />
+                <MagicWand size={14} className="text-brand-accent" />
                 <h3 className="text-sm font-semibold tracking-tight">AI summary</h3>
               </div>
               <button
@@ -480,7 +470,7 @@ export default function Tab2AIUpload() {
                 disabled={analyzing}
                 className="text-[10px] inline-flex items-center gap-1 text-text-muted hover:text-text-primary"
               >
-                <RefreshCcw size={10} className={analyzing ? "animate-spin" : ""} />
+                <ArrowCounterClockwise size={10} className={analyzing ? "animate-spin" : ""} />
                 Regenerate
               </button>
             </div>
@@ -520,7 +510,7 @@ export default function Tab2AIUpload() {
             <div className="rounded-xl border border-border-subtle/40 bg-surface p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <TrendingUp size={13} className="text-brand-accent" />
+                  <TrendUp size={13} className="text-brand-accent" />
                   <span className="text-xs font-semibold text-text-primary">Post Strength</span>
                 </div>
                 <div
@@ -664,7 +654,7 @@ export default function Tab2AIUpload() {
 
                     <div>
                       <label className="text-[10px] uppercase tracking-wider text-text-muted inline-flex items-center gap-1">
-                        <CalendarIcon size={10} />
+                        <Calendar size={10} />
                         Schedule for
                       </label>
                       <input
@@ -692,7 +682,7 @@ export default function Tab2AIUpload() {
               disabled={scheduling}
               className="px-4 py-2 rounded-md border border-border-subtle/40 text-xs hover:bg-elevated inline-flex items-center gap-2 disabled:opacity-50"
             >
-              {scheduling ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+              {scheduling ? <CircleNotch size={12} className="animate-spin" /> : <PaperPlaneTilt size={12} />}
               Publish all now
             </button>
             <button
@@ -701,7 +691,7 @@ export default function Tab2AIUpload() {
               disabled={scheduling}
               className="btn-pill-ghost text-xs inline-flex items-center gap-2 disabled:opacity-50"
             >
-              {scheduling ? <Loader2 size={12} className="animate-spin" /> : <CalendarIcon size={12} />}
+              {scheduling ? <CircleNotch size={12} className="animate-spin" /> : <Calendar size={12} />}
               Schedule all
             </button>
           </div>

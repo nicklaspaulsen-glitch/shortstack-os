@@ -1,7 +1,7 @@
 "use client";
+import { ArrowsIn, Chat, PaperPlaneTilt, X } from "@phosphor-icons/react";
 
 import { useState, useRef, useEffect } from "react";
-import { MessageSquare, Send, X, Minimize2 } from "lucide-react";
 import Image from "next/image";
 import Draggable from "@/components/ui/draggable";
 
@@ -103,7 +103,7 @@ export default function ClientChatWidget() {
 
           {/* Main gradient orb */}
           <div className="trinity-body w-14 h-14 rounded-full flex items-center justify-center relative overflow-hidden">
-            <MessageSquare size={22} className="text-black relative z-10 group-hover:rotate-6 transition-transform" />
+            <Chat size={22} className="text-black relative z-10 group-hover:rotate-6 transition-transform" />
             {/* Inner gloss */}
             <span className="absolute top-1.5 left-2 w-3.5 h-2 bg-white/50 rounded-full blur-sm pointer-events-none" />
           </div>
@@ -173,7 +173,7 @@ export default function ClientChatWidget() {
         </div>
         <div className="flex gap-1">
           <button onClick={() => setIsOpen(false)} className="p-1 rounded hover:bg-border text-text-muted hover:text-text-primary transition-colors">
-            <Minimize2 size={14} />
+            <ArrowsIn size={14} />
           </button>
           <button onClick={() => setIsOpen(false)} className="p-1 rounded hover:bg-border text-text-muted hover:text-text-primary transition-colors">
             <X size={14} />
@@ -233,7 +233,7 @@ export default function ClientChatWidget() {
           />
           <button type="submit" disabled={sending || !input.trim()}
             className="w-9 h-9 bg-[#D4FF00] rounded-full flex items-center justify-center hover:bg-[#AACC00] disabled:opacity-30 transition-all shrink-0">
-            <Send size={14} className="text-white" />
+            <PaperPlaneTilt size={14} className="text-white" />
           </button>
         </form>
       </div>

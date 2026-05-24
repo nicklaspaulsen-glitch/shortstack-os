@@ -1,13 +1,10 @@
 "use client";
+import { CaretDown, Circle, CircleNotch, Image, Layout, Palette, Shapes, Sparkle, Square, TextT, UploadSimple } from "@phosphor-icons/react";
 
 import React, { useState } from "react";
 import { useDesignStore, makeTextLayer, makeImageLayer, makeShapeLayer } from "@/lib/design/store";
 import { SIZE_PRESETS } from "@/lib/design/types";
 import type { DesignTemplateRow } from "@/lib/design/types";
-import {
-  LayoutTemplate, Palette, Sparkles, Upload, Shapes,
-  Type, ImageIcon, Square, Circle, Loader2, ChevronDown,
-} from "lucide-react";
 import toast from "react-hot-toast";
 
 type Tab = "templates" | "brand" | "generate" | "elements";
@@ -43,7 +40,7 @@ export default function LeftRail() {
     try {
       const res = await fetch("/api/design-studio/templates", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ template_id: tplId }),
       });
       if (!res.ok) throw new Error("Clone failed");
@@ -61,7 +58,7 @@ export default function LeftRail() {
     try {
       const res = await fetch("/api/design-studio/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           prompt: prompt.trim(),
           design_id: design.id,
@@ -95,9 +92,9 @@ export default function LeftRail() {
   }
 
   const tabs: { id: Tab; icon: React.ReactNode; label: string }[] = [
-    { id: "templates", icon: <LayoutTemplate size={16} />, label: "Templates" },
+    { id: "templates", icon: <Layout size={16} />, label: "Templates" },
     { id: "brand", icon: <Palette size={16} />, label: "Brand" },
-    { id: "generate", icon: <Sparkles size={16} />, label: "AI Generate" },
+    { id: "generate", icon: <Sparkle size={16} />, label: "AI Generate" },
     { id: "elements", icon: <Shapes size={16} />, label: "Elements" },
   ];
 
@@ -132,7 +129,7 @@ export default function LeftRail() {
           <div>
             {loadingTemplates ? (
               <div className="flex justify-center py-8">
-                <Loader2 size={20} className="animate-spin text-gray-500" />
+                <CircleNotch size={20} className="animate-spin text-gray-500" />
               </div>
             ) : templates.length === 0 ? (
               <p className="text-xs text-gray-500 text-center py-8">No templates found</p>
@@ -238,7 +235,7 @@ export default function LeftRail() {
               disabled={generating || !prompt.trim() || !design}
               className="w-full flex items-center justify-center gap-2 py-2 rounded bg-[#D4FF00] hover:bg-[#E8FF4D] text-[#1a1a2e] text-xs font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {generating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+              {generating ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
               {generating ? "Generating…" : "Generate"}
             </button>
           </div>
@@ -268,7 +265,7 @@ export default function LeftRail() {
                     }}
                     className="w-full flex items-center gap-2 px-2 py-1.5 rounded hover:bg-white/8 text-xs text-gray-300 hover:text-white transition-colors"
                   >
-                    <Type size={12} className="shrink-0 text-gray-500" />
+                    <TextT size={12} className="shrink-0 text-gray-500" />
                     {item.label}
                   </button>
                 ))}
@@ -311,7 +308,7 @@ export default function LeftRail() {
                 }}
                 className="w-full flex items-center gap-2 px-2 py-1.5 rounded hover:bg-white/8 text-xs text-gray-300 hover:text-white transition-colors"
               >
-                <ImageIcon size={12} className="shrink-0 text-gray-500" />
+                <Image size={12} className="shrink-0 text-gray-500" />
                 Add image placeholder
               </button>
             </div>

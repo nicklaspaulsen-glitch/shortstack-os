@@ -1,7 +1,8 @@
 "use client";
+import { Gear } from "@phosphor-icons/react";
 
 import Link from "next/link";
-import { Settings } from "lucide-react";
+
 import { useAuth } from "@/lib/auth-context";
 
 /**
@@ -32,14 +33,14 @@ export default function BottomWidget() {
         <span className="corner-role">{role}</span>
       </div>
 
-      {/* Settings cog */}
+      {/* Gear cog */}
       <Link
         href="/dashboard/settings"
         className="corner-cog"
-        aria-label="Settings"
-        title="Settings"
+        aria-label="Gear"
+        title="Gear"
       >
-        <Settings size={13} strokeWidth={1.8} />
+        <Gear size={13} strokeWidth={1.8} />
       </Link>
     </div>
   );

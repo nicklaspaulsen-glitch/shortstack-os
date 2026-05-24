@@ -1,4 +1,5 @@
 "use client";
+import { ArrowUpRight } from "@phosphor-icons/react";
 
 /**
  * AgentOfficeTile — Apr 28 v12 reuse.
@@ -10,7 +11,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
 import KumoScene, { AgentLegendPills } from "@/components/agent-office/kumo-scene";
 
 interface AgentActivity {

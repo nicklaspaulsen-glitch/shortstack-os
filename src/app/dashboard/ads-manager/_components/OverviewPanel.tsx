@@ -1,4 +1,5 @@
 "use client";
+import { CircleNotch, CurrencyDollar, Target, TrendUp, Trophy } from "@phosphor-icons/react";
 
 /**
  * OverviewPanel � top-level Ads Manager dashboard.
@@ -22,7 +23,6 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { DollarSign, Target, TrendingUp, Trophy, Loader2 } from "lucide-react";
 import StatCard from "@/components/ui/stat-card";
 import {
   PLATFORM_COLORS,
@@ -81,7 +81,7 @@ export default function OverviewPanel() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12 text-text-muted">
-        <Loader2 className="animate-spin mr-2" size={16} />
+        <CircleNotch className="animate-spin mr-2" size={16} />
         Loading overview...
       </div>
     );
@@ -103,7 +103,7 @@ export default function OverviewPanel() {
         <StatCard
           label="Total spend (30d)"
           value={fmtCurrency(totals.spend)}
-          icon={<DollarSign size={14} />}
+          icon={<CurrencyDollar size={14} />}
           premium
         />
         <StatCard
@@ -114,7 +114,7 @@ export default function OverviewPanel() {
         <StatCard
           label="Avg ROAS"
           value={totals.roas !== null ? `${totals.roas.toFixed(2)}x` : "-"}
-          icon={<TrendingUp size={14} />}
+          icon={<TrendUp size={14} />}
           changeType={totals.roas && totals.roas >= 2 ? "positive" : "neutral"}
         />
         <StatCard

@@ -1,4 +1,5 @@
 "use client";
+import { ArrowRight, CircleNotch, Lightbulb, Sparkle } from "@phosphor-icons/react";
 
 /**
  * AI Workflow Hero — prominent natural-language workflow generator that
@@ -16,7 +17,6 @@
  */
 
 import { useState } from "react";
-import { Sparkles, Loader, ArrowRight, Lightbulb } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface Workflow {
@@ -131,7 +131,7 @@ export default function AiWorkflowHero({
               border: "1px solid rgba(212,255,0,0.3)",
             }}
           >
-            <Sparkles size={16} style={{ color: "#D4FF00" }} />
+            <Sparkle size={16} style={{ color: "#D4FF00" }} />
           </div>
           <div>
             <h2 className="text-base font-bold text-text-primary">
@@ -183,12 +183,12 @@ export default function AiWorkflowHero({
           >
             {generating ? (
               <>
-                <Loader size={14} className="animate-spin" />
+                <CircleNotch size={14} className="animate-spin" />
                 Designing…
               </>
             ) : (
               <>
-                <Sparkles size={14} />
+                <Sparkle size={14} />
                 Generate workflow
                 <ArrowRight size={14} />
               </>

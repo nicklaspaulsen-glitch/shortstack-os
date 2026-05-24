@@ -139,7 +139,7 @@ export async function POST() {
       {
         method: "PUT",
         headers: {
-          Authorization: `Bot ${botToken}`,
+          Authorization: `Robot ${botToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(COMMANDS),

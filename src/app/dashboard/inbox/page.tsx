@@ -1,20 +1,10 @@
 "use client";
+import { Archive, ArrowBendUpLeft, ArrowBendUpRight, ArrowDown, ArrowUp, ArrowsClockwise, BookOpen, Calendar, CaretRight, ChartBar, Check, CircleNotch, Clock, Copy, DownloadSimple, Envelope, FileText, FilmStrip, Lightbulb, Lightning, MagnifyingGlass, Megaphone, PaperPlaneTilt, Play, PushPin, PushPinSlash, SlidersHorizontal, Star, Tag, Target, Trash, Tray, WarningCircle, X } from "@phosphor-icons/react";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import {
-  Inbox, Search, Star, Download, Copy,
-  Film, Mail, Lightbulb, BarChart3,
-  FileCheck, ChevronRight,
-  X, Archive, Pin, PinOff, RefreshCw,
-  Calendar, ArrowDown, ArrowUp, Check,
-  Loader, AlertCircle, BookOpen,
-  SlidersHorizontal, Tag, Megaphone,
-  Reply, Forward, Trash2, Send,
-  Zap, Play, Clock, Target
-} from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
@@ -55,15 +45,15 @@ interface InboxItem {
 
 /* -- Category Config -- */
 const CATEGORIES: { key: InboxCategory; label: string; icon: React.ReactNode; color: string; bg: string }[] = [
-  { key: "all", label: "All Items", icon: <Inbox size={14} />, color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.10)]" },
-  { key: "scripts", label: "Scripts", icon: <Film size={14} />, color: "text-indigo-400", bg: "bg-[rgba(212,255,0,0.10)]" },
-  { key: "emails", label: "Email Drafts", icon: <Mail size={14} />, color: "text-purple-400", bg: "bg-purple-500/10" },
+  { key: "all", label: "All Items", icon: <Tray size={14} />, color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.10)]" },
+  { key: "scripts", label: "Scripts", icon: <FilmStrip size={14} />, color: "text-indigo-400", bg: "bg-[rgba(212,255,0,0.10)]" },
+  { key: "emails", label: "Email Drafts", icon: <Envelope size={14} />, color: "text-purple-400", bg: "bg-purple-500/10" },
   { key: "outreach", label: "Outreach", icon: <Megaphone size={14} />, color: "text-emerald-400", bg: "bg-emerald-500/10" },
-  { key: "contracts", label: "Contracts", icon: <FileCheck size={14} />, color: "text-amber-400", bg: "bg-amber-500/10" },
+  { key: "contracts", label: "Contracts", icon: <FileText size={14} />, color: "text-amber-400", bg: "bg-amber-500/10" },
   { key: "ideas", label: "Ideas", icon: <Lightbulb size={14} />, color: "text-yellow-400", bg: "bg-yellow-500/10" },
-  { key: "reports", label: "Reports", icon: <BarChart3 size={14} />, color: "text-cyan-400", bg: "bg-cyan-500/10" },
+  { key: "reports", label: "Reports", icon: <ChartBar size={14} />, color: "text-cyan-400", bg: "bg-cyan-500/10" },
   { key: "briefings", label: "Briefings", icon: <BookOpen size={14} />, color: "text-rose-400", bg: "bg-rose-500/10" },
-  { key: "exports", label: "Exports", icon: <Download size={14} />, color: "text-teal-400", bg: "bg-teal-500/10" },
+  { key: "exports", label: "Exports", icon: <DownloadSimple size={14} />, color: "text-teal-400", bg: "bg-teal-500/10" },
 ];
 
 function getCategoryConfig(type: InboxCategory) {
@@ -530,11 +520,11 @@ export default function InboxPage() {
     <div className="h-[calc(100vh-4rem)] flex flex-col max-w-[1400px] w-full mx-auto overflow-x-hidden">
       {/* Header */}
       <div className="px-4 md:px-6 pt-4 md:pt-6 pb-3 space-y-4 shrink-0 min-w-0">
-        {/* -- Inbox command strip -- */}
+        {/* -- Tray command strip -- */}
         <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
           <div className="min-w-0">
             <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Message Center</p>
-            <h1 className="text-2xl font-display font-bold text-text-primary">Inbox</h1>
+            <h1 className="text-2xl font-display font-bold text-text-primary">Tray</h1>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <>
@@ -543,17 +533,17 @@ export default function InboxPage() {
                   onClick={() => setView("inbox")}
                   className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "inbox" ? "bg-white/10 text-text-primary" : "text-text-muted hover:text-text-primary"}`}
                 >
-                  <Inbox size={11} /> Inbox
+                  <Tray size={11} /> Tray
                 </button>
                 <button
                   onClick={() => setView("auto-runs")}
                   className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "auto-runs" ? "bg-white/10 text-text-primary" : "text-text-muted hover:text-text-primary"}`}
                 >
-                  <Zap size={11} /> Auto-Runs
+                  <Lightning size={11} /> Auto-Runs
                 </button>
               </div>
               <button onClick={view === "auto-runs" ? fetchAutoRuns : fetchInbox} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-text-primary transition-all" title="Refresh" aria-label="Refresh">
-                <RefreshCw size={14} className={loading || autoRunsLoading ? "animate-spin" : ""} aria-hidden="true" />
+                <ArrowsClockwise size={14} className={loading || autoRunsLoading ? "animate-spin" : ""} aria-hidden="true" />
               </button>
               {view === "inbox" && (
                 <button onClick={() => setShowArchived(!showArchived)} className={`px-3 py-1.5 rounded-lg text-xs text-text-primary transition-all ${showArchived ? "bg-white/15" : "bg-white/5 hover:bg-white/10"}`}>
@@ -608,15 +598,15 @@ export default function InboxPage() {
           </div>
         )}
 
-        {/* Search & Filters � inbox view only */}
+        {/* MagnifyingGlass & Filters � inbox view only */}
         {view === "inbox" && (<>
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Search inbox..."
+              placeholder="MagnifyingGlass inbox..."
               className="input text-xs pl-9 w-full glass rounded-lg"
             />
             {search && (
@@ -649,8 +639,8 @@ export default function InboxPage() {
           <div className="flex items-center gap-2 flex-wrap">
             {[
               { key: "starred", label: "Starred", icon: <Star size={10} />, active: filterStarred, toggle: () => setFilterStarred(!filterStarred) },
-              { key: "unread", label: "Unread", icon: <AlertCircle size={10} />, active: filterUnread, toggle: () => setFilterUnread(!filterUnread) },
-              { key: "pinned", label: "Pinned", icon: <Pin size={10} />, active: filterPinned, toggle: () => setFilterPinned(!filterPinned) },
+              { key: "unread", label: "Unread", icon: <WarningCircle size={10} />, active: filterUnread, toggle: () => setFilterUnread(!filterUnread) },
+              { key: "pinned", label: "Pinned", icon: <PushPin size={10} />, active: filterPinned, toggle: () => setFilterPinned(!filterPinned) },
             ].map(f => (
               <button
                 key={f.key}
@@ -744,7 +734,7 @@ export default function InboxPage() {
           <div className="flex-1 overflow-y-auto space-y-0.5">
             {loading ? (
               <div className="flex items-center justify-center py-20">
-                <Loader size={20} className="animate-spin text-brand-accent" />
+                <CircleNotch size={20} className="animate-spin text-brand-accent" />
               </div>
             ) : filtered.length === 0 ? (
               <EmptyState
@@ -803,7 +793,7 @@ export default function InboxPage() {
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        {item.pinned && <Pin size={10} className="text-brand-accent shrink-0" />}
+                        {item.pinned && <PushPin size={10} className="text-brand-accent shrink-0" />}
                         {!item.read && <span className="w-1.5 h-1.5 rounded-full bg-brand-accent shrink-0" />}
                         <span className={`text-xs truncate ${!item.read ? "font-semibold text-text-primary" : "text-text-secondary"}`}>
                           {item.title}
@@ -822,8 +812,8 @@ export default function InboxPage() {
                     <div className="shrink-0 text-right">
                       <p className="text-[10px] text-text-muted">{timeAgo(item.date)}</p>
                       <div className="flex items-center gap-0.5 mt-1 opacity-0 group-hover:opacity-100 transition-all">
-                        <button onClick={e => { e.stopPropagation(); togglePin(item.id); }} className="p-1 rounded hover:bg-white/8 text-text-muted hover:text-text-primary transition-all" title={item.pinned ? "Unpin" : "Pin"}>
-                          {item.pinned ? <PinOff size={10} /> : <Pin size={10} />}
+                        <button onClick={e => { e.stopPropagation(); togglePin(item.id); }} className="p-1 rounded hover:bg-white/8 text-text-muted hover:text-text-primary transition-all" title={item.pinned ? "Unpin" : "PushPin"}>
+                          {item.pinned ? <PushPinSlash size={10} /> : <PushPin size={10} />}
                         </button>
                         <button onClick={e => { e.stopPropagation(); archiveItem(item.id); }} className="p-1 rounded hover:bg-white/8 text-text-muted hover:text-red-400 transition-all" title="Archive">
                           <Archive size={10} />
@@ -859,7 +849,7 @@ export default function InboxPage() {
                 <X size={14} />
               </button>
               <button onClick={() => setSelectedItem(null)} className="p-1.5 rounded-lg hover:bg-white/8 text-text-muted hover:text-text-secondary transition-all lg:hidden">
-                <ChevronRight size={14} />
+                <CaretRight size={14} />
               </button>
             </div>
 
@@ -871,7 +861,7 @@ export default function InboxPage() {
               </motion.button>
               {selectedItem.downloadable && (
                 <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => downloadItem(selectedItem)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/8 text-xs transition-all">
-                  <Download size={12} /> Download
+                  <DownloadSimple size={12} /> DownloadSimple
                 </motion.button>
               )}
               <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => toggleStar(selectedItem.id)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/8 text-xs transition-all">
@@ -879,8 +869,8 @@ export default function InboxPage() {
                 {selectedItem.starred ? "Unstar" : "Star"}
               </motion.button>
               <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => togglePin(selectedItem.id)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/8 text-xs transition-all">
-                {selectedItem.pinned ? <PinOff size={12} /> : <Pin size={12} />}
-                {selectedItem.pinned ? "Unpin" : "Pin"}
+                {selectedItem.pinned ? <PushPinSlash size={12} /> : <PushPin size={12} />}
+                {selectedItem.pinned ? "Unpin" : "PushPin"}
               </motion.button>
               <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => archiveItem(selectedItem.id)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-all ml-auto">
                 <Archive size={12} /> Archive
@@ -929,11 +919,11 @@ export default function InboxPage() {
         <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-4 md:pb-6">
           {autoRunsLoading ? (
             <div className="flex items-center justify-center py-20">
-              <Loader size={20} className="animate-spin text-brand-accent" />
+              <CircleNotch size={20} className="animate-spin text-brand-accent" />
             </div>
           ) : autoRuns.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <Zap size={36} className="text-text-muted/30 mb-3" />
+              <Lightning size={36} className="text-text-muted/30 mb-3" />
               <p className="text-sm text-text-muted font-medium">No automated runs yet</p>
               <p className="text-[10px] text-text-muted mt-1">Configure auto-run in Lead Finder to see activity here.</p>
             </div>
@@ -941,10 +931,10 @@ export default function InboxPage() {
             <div className="space-y-2">
               {autoRuns.map((run, index) => {
                 const iconMap: Record<string, React.ReactNode> = {
-                  scraper: <Search size={14} className="text-brand-accent" />,
-                  outreach: <Send size={14} className="text-emerald-400" />,
-                  email: <Mail size={14} className="text-purple-400" />,
-                  automation: <Zap size={14} className="text-cyan-400" />,
+                  scraper: <MagnifyingGlass size={14} className="text-brand-accent" />,
+                  outreach: <PaperPlaneTilt size={14} className="text-emerald-400" />,
+                  email: <Envelope size={14} className="text-purple-400" />,
+                  automation: <Lightning size={14} className="text-cyan-400" />,
                 };
                 const statusColors: Record<string, string> = {
                   running: "bg-[rgba(99,102,241,0.15)] text-indigo-400",
@@ -967,7 +957,7 @@ export default function InboxPage() {
                   >
                     {/* Icon */}
                     <div className="mt-0.5 w-8 h-8 rounded-lg bg-white/6 flex items-center justify-center shrink-0">
-                      {iconMap[run.type] || <Zap size={14} className="text-text-muted" />}
+                      {iconMap[run.type] || <Lightning size={14} className="text-text-muted" />}
                     </div>
 
                     {/* Content */}
@@ -1069,7 +1059,7 @@ export default function InboxPage() {
                 {overlayItem.content || <span className="text-text-muted italic">No content body available</span>}
               </div>
 
-              {/* Inline Reply */}
+              {/* Inline ArrowBendUpLeft */}
               {showReply && (
                 <div className="mt-4 space-y-3">
                   <div className="border border-[rgba(212,255,0,0.25)] rounded-xl overflow-hidden glass">
@@ -1101,7 +1091,7 @@ export default function InboxPage() {
                         disabled={!replyText.trim()}
                         className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-brand-accent hover:bg-brand-accent/90 text-[#020711] text-xs font-semibold transition-all disabled:opacity-50"
                       >
-                        <Send size={12} /> Copy Draft
+                        <PaperPlaneTilt size={12} /> Copy Draft
                       </button>
                     </div>
                   </div>
@@ -1119,7 +1109,7 @@ export default function InboxPage() {
                     : "bg-[rgba(212,255,0,0.08)] hover:bg-[rgba(212,255,0,0.14)] text-brand-accent border border-[rgba(212,255,0,0.25)]"
                 }`}
               >
-                <Reply size={14} /> Reply
+                <ArrowBendUpLeft size={14} /> ArrowBendUpLeft
               </button>
               <button
                 onClick={() => {
@@ -1128,7 +1118,7 @@ export default function InboxPage() {
                 }}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/8 text-text-secondary hover:text-text-primary text-xs font-medium transition-all border border-border-subtle"
               >
-                <Forward size={14} /> Forward
+                <ArrowBendUpRight size={14} /> ArrowBendUpRight
               </button>
               <div className="flex-1" />
               <button
@@ -1148,7 +1138,7 @@ export default function InboxPage() {
                 }}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-medium transition-all border border-red-500/20"
               >
-                <Trash2 size={14} /> Delete
+                <Trash size={14} /> Delete
               </button>
             </div>
           </div>
@@ -1156,7 +1146,7 @@ export default function InboxPage() {
       )}
 
       <PageAI
-        pageName="Inbox"
+        pageName="Tray"
         context={`Unified inbox with ${stats.total} items (${stats.unread} unread, ${stats.starred} starred). Categories: ${Object.entries(categoryCounts).filter(([k, v]) => k !== "all" && v > 0).map(([k, v]) => `${k}: ${v}`).join(", ")}. Viewing: ${category}, sorted by ${sortField} ${sortDir}.`}
         suggestions={[
           "Summarize my unread items",

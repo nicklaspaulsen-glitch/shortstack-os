@@ -1,13 +1,9 @@
+import { ArrowRight, Buildings, Check, Code, Crown, FilmStrip, Globe, Headphones, Infinity, Lightning, Lock, PenNib, Phone, Plus, Robot, Shield, Sparkle, TrendUp, Users } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
-import {
-  Check, Zap, TrendingUp, Crown, Building2, Infinity,
-  Plus, ArrowRight, Globe, PenTool, Film, Bot, Phone,
-  Shield, Code, Users, Headphones, Lock, Sparkles,
-} from "lucide-react";
 import { PLAN_TIERS, formatBytes, type PlanTier } from "@/lib/plan-config";
 import { LIMITS_BY_TIER } from "@/lib/plan-limits";
 import { formatLimit, getTierFeatures } from "@/lib/plan-display";
@@ -24,10 +20,10 @@ const PLAN_META: Array<{
   popular?: boolean;
   highlight?: string;
 }> = [
-  { key: "Starter", description: "For solo agencies getting started with AI", icon: <Zap size={20} /> },
-  { key: "Growth", description: "For growing agencies scaling operations", icon: <TrendingUp size={20} /> },
+  { key: "Starter", description: "For solo agencies getting started with AI", icon: <Lightning size={20} /> },
+  { key: "Growth", description: "For growing agencies scaling operations", icon: <TrendUp size={20} /> },
   { key: "Pro", description: "For established agencies running at scale", icon: <Crown size={20} />, popular: true, highlight: "Most Popular" },
-  { key: "Business", description: "For large agencies & multi-brand operations", icon: <Building2 size={20} /> },
+  { key: "Business", description: "For large agencies & multi-brand operations", icon: <Buildings size={20} /> },
   { key: "Unlimited", description: "Unlimited everything. No caps. No limits.", icon: <Infinity size={20} />, highlight: "Best Value" },
 ];
 
@@ -70,9 +66,9 @@ interface AddOn {
 const ADD_ONS: AddOn[] = [
   { name: "Pro Website Build", price: "$2,000", type: "one-time", description: "Custom AI-built website with hosting", icon: <Globe size={16} /> },
   { name: "Landing Page", price: "$500", type: "one-time", description: "High-converting landing page", icon: <Globe size={16} /> },
-  { name: "Brand Kit Design", price: "$1,500", type: "one-time", description: "Full brand identity package", icon: <PenTool size={16} /> },
-  { name: "Video Production", price: "$299/mo", type: "monthly", description: "4 professional videos per month", icon: <Film size={16} /> },
-  { name: "Extra AI Tokens", price: "$5/100K", type: "monthly", description: "Additional tokens beyond plan limit", icon: <Bot size={16} /> },
+  { name: "Brand Kit Design", price: "$1,500", type: "one-time", description: "Full brand identity package", icon: <PenNib size={16} /> },
+  { name: "Video Production", price: "$299/mo", type: "monthly", description: "4 professional videos per month", icon: <FilmStrip size={16} /> },
+  { name: "Extra AI Tokens", price: "$5/100K", type: "monthly", description: "Additional tokens beyond plan limit", icon: <Robot size={16} /> },
   { name: "AI Caller Minutes", price: "$0.12/min", type: "monthly", description: "Additional calling minutes", icon: <Phone size={16} /> },
 ];
 
@@ -271,12 +267,12 @@ export default function PricingPage() {
               },
               {
                 label: "AI Tokens",
-                icon: <Bot size={14} className="text-brand-accent" />,
+                icon: <Robot size={14} className="text-brand-accent" />,
                 values: PLANS.map(p => ({ name: p.name, val: p.tokens })),
               },
               {
                 label: "Upload Limit",
-                icon: <Film size={14} className="text-brand-accent" />,
+                icon: <FilmStrip size={14} className="text-brand-accent" />,
                 values: PLANS.map(p => ({
                   name: p.name,
                   val: formatBytes(PLAN_TIERS[p.key as keyof typeof PLAN_TIERS].max_storage_upload),
@@ -340,7 +336,7 @@ export default function PricingPage() {
         {/* Token usage explainer */}
         <div className="glass-panel p-6">
           <div className="flex items-center gap-2 mb-1">
-            <Sparkles size={14} className="text-brand-accent" />
+            <Sparkle size={14} className="text-brand-accent" />
             <h2 className="text-sm font-bold text-text-primary font-display">How AI tokens work</h2>
           </div>
           <p className="text-xs text-text-muted mb-5 leading-relaxed">

@@ -1,8 +1,9 @@
+import { Check, DotsSixVertical, FilmStrip, Heart, MagicWand, MagnifyingGlass, MusicNote, Pause, Play, Scissors, SpeakerHigh, Star, TextT, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
  * PresetPickerPanel — right-side slide-out sidebar that exposes every preset
- * library (SFX / Music / VFX / Transitions / B-roll / Fonts / Favourites) with
+ * library (SFX / MusicNote / VFX / Transitions / B-roll / Fonts / Favourites) with
  * previews and drag-to-timeline support.
  *
  *  Keyboard:   Cmd+K / Ctrl+K toggles the panel.
@@ -27,22 +28,6 @@ import {
   type ReactNode,
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Search,
-  Play,
-  Pause,
-  Star,
-  X,
-  Music,
-  Wand2,
-  Scissors,
-  Film,
-  Type as TypeIcon,
-  Volume2,
-  GripVertical,
-  Check,
-  Heart,
-} from "lucide-react";
 import {
   FONTS_LIBRARY,
   TRANSITIONS_LIBRARY,
@@ -341,7 +326,7 @@ export function PresetPickerPanel({
         } else {
           await fetch("/api/favourites", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-TextT": "application/json" },
             body: JSON.stringify({ kind, item_id: id }),
           });
         }
@@ -412,7 +397,7 @@ export function PresetPickerPanel({
       {/* Header */}
       <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-border-subtle bg-surface-light/30">
         <div className="flex items-center gap-2">
-          <Wand2 size={14} className="text-[#D4FF00]" />
+          <MagicWand size={14} className="text-[#D4FF00]" />
           <span className="text-xs font-semibold">Preset Picker</span>
           <span className="text-[9px] text-text-muted hidden sm:inline">
             Cmd/Ctrl+K
@@ -430,25 +415,25 @@ export function PresetPickerPanel({
 
       {/* Tabs */}
       <div className="flex flex-wrap gap-1 px-2 py-1.5 border-b border-border-subtle bg-surface/50">
-        <TabBtn id="sfx" current={tab} onSelect={setTab} icon={<Volume2 size={11} />} label="SFX" count={SFX_LIBRARY.length} />
-        <TabBtn id="music" current={tab} onSelect={setTab} icon={<Music size={11} />} label="Music" count={MUSIC_LIBRARY.length} />
-        <TabBtn id="vfx" current={tab} onSelect={setTab} icon={<Wand2 size={11} />} label="VFX" count={EFFECTS_LIBRARY.length} />
+        <TabBtn id="sfx" current={tab} onSelect={setTab} icon={<SpeakerHigh size={11} />} label="SFX" count={SFX_LIBRARY.length} />
+        <TabBtn id="music" current={tab} onSelect={setTab} icon={<MusicNote size={11} />} label="MusicNote" count={MUSIC_LIBRARY.length} />
+        <TabBtn id="vfx" current={tab} onSelect={setTab} icon={<MagicWand size={11} />} label="VFX" count={EFFECTS_LIBRARY.length} />
         <TabBtn id="transition" current={tab} onSelect={setTab} icon={<Scissors size={11} />} label="Trans" count={TRANSITIONS_LIBRARY.length} />
-        <TabBtn id="broll" current={tab} onSelect={setTab} icon={<Film size={11} />} label="B-roll" count={(brollCandidates?.length ?? FALLBACK_BROLL.length)} />
-        <TabBtn id="font" current={tab} onSelect={setTab} icon={<TypeIcon size={11} />} label="Fonts" count={FONTS_LIBRARY.length} />
+        <TabBtn id="broll" current={tab} onSelect={setTab} icon={<FilmStrip size={11} />} label="B-roll" count={(brollCandidates?.length ?? FALLBACK_BROLL.length)} />
+        <TabBtn id="font" current={tab} onSelect={setTab} icon={<TextT size={11} />} label="Fonts" count={FONTS_LIBRARY.length} />
         <TabBtn id="fav" current={tab} onSelect={setTab} icon={<Star size={11} />} label="★" count={favs.size} highlight />
       </div>
 
-      {/* Search */}
+      {/* MagnifyingGlass */}
       <div className="px-2 py-2 border-b border-border-subtle">
         <div className="relative">
-          <Search
+          <MagnifyingGlass
             size={11}
             className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted"
           />
           <input
             type="search"
-            placeholder={`Search ${tab === "fav" ? "favourites" : tab}…`}
+            placeholder={`MagnifyingGlass ${tab === "fav" ? "favourites" : tab}…`}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="input w-full pl-7 text-[11px] py-1.5"
@@ -800,7 +785,7 @@ function SfxTab({
   );
 }
 
-/* ─────────────────────────── Music tab ─────────────────────────── */
+/* ─────────────────────────── MusicNote tab ─────────────────────────── */
 
 function MusicTab({
   query,
@@ -1545,7 +1530,7 @@ function FavouritesTab({
               key={`music-${it.rec.id}`}
               id={it.rec.id}
               title={it.rec.title}
-              sub={`Music · ${it.rec.mood} · ${it.rec.bpm}BPM`}
+              sub={`MusicNote · ${it.rec.mood} · ${it.rec.bpm}BPM`}
               url={it.rec.url}
               draggable
               onDragStart={startDrag("music", it.rec.id, {
@@ -1585,7 +1570,7 @@ function FavouritesTab({
               onDoubleClick={() => onToggleFav("vfx", fx.id)}
               className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(212,255,0,0.4)]"
             >
-              <Wand2 size={12} className="text-[#D4FF00]" />
+              <MagicWand size={12} className="text-[#D4FF00]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{fx.name}</p>
                 <p className="text-[8px] text-text-muted">VFX · {fx.category}</p>
@@ -1637,7 +1622,7 @@ function FavouritesTab({
               onDoubleClick={() => onToggleFav("font", f.id)}
               className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2 hover:border-[rgba(212,255,0,0.4)]"
             >
-              <TypeIcon size={12} className="text-[#D4FF00]" />
+              <TextT size={12} className="text-[#D4FF00]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{f.family}</p>
                 <p className="text-[8px] text-text-muted">Font · {f.category}</p>
@@ -1660,7 +1645,7 @@ function FavouritesTab({
               key={`broll-${b.id}`}
               className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-2"
             >
-              <Film size={12} className="text-[#D4FF00]" />
+              <FilmStrip size={12} className="text-[#D4FF00]" />
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] font-semibold truncate">{b.label}</p>
                 <p className="text-[8px] text-text-muted">B-roll · pinned</p>
@@ -1752,7 +1737,7 @@ function AudioRow({
       data-preset-item-id={id}
       className="flex items-center gap-2 rounded-md border border-border-subtle/50 bg-surface-light/30 p-1.5 hover:border-[rgba(212,255,0,0.4)] cursor-grab active:cursor-grabbing"
     >
-      <GripVertical size={10} className="text-text-muted shrink-0" />
+      <DotsSixVertical size={10} className="text-text-muted shrink-0" />
       <button
         type="button"
         onClick={toggle}

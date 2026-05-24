@@ -1,4 +1,5 @@
 "use client";
+import { Plus, X } from "@phosphor-icons/react";
 
 /**
  * FloatingActionMenu — Framer Motion spring-animated FAB with staggered actions.
@@ -16,7 +17,6 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface FABAction {

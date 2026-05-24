@@ -1,14 +1,7 @@
+import { ArrowDownRight, ArrowsClockwise, Bell, CaretLeft, CaretRight, ChartBar, Chat, Check, CheckCircle, CircleNotch, Clock, DownloadSimple, Envelope, File, FileCsv, Fire, GitBranch, Globe, Lightning, MagnifyingGlass, MapPin, Phone, Stack, Star, Tag, Target, TrendUp, UploadSimple, UserPlus, Users, Warning, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback, useRef, DragEvent, ChangeEvent, FormEvent } from "react";
-import {
-  Zap, MessageSquare, Search, Phone, Mail, Star,
-  TrendingUp, Users, Target, ArrowDownRight,
-  CheckCircle, AlertTriangle, Tag, Upload, Download, Flame,
-  Clock, UserPlus, BarChart3, MapPin, Globe,
-  RefreshCw, Bell, Layers, GitBranch, Loader, ChevronLeft, ChevronRight as ChevronRightIcon,
-  X, FileSpreadsheet, Check
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
@@ -186,11 +179,11 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
       <div className="glass rounded-xl p-5 w-full max-w-2xl space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold flex items-center gap-2"><Upload size={14} className="text-brand-accent" /> Import CSV</h2>
+          <h2 className="text-sm font-semibold flex items-center gap-2"><UploadSimple size={14} className="text-brand-accent" /> Import CSV</h2>
           <button onClick={onClose} className="p-1 rounded hover:bg-white/[0.06] text-text-muted hover:text-text-primary"><X size={14} /></button>
         </div>
 
-        {/* Upload step */}
+        {/* UploadSimple step */}
         {step === "upload" && (
           <div
             onDragOver={e => { e.preventDefault(); e.stopPropagation(); setDragOver(true); }}
@@ -201,7 +194,7 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
               dragOver ? "border-brand-accent bg-[rgba(212,255,0,0.05)]" : "border-border-subtle hover:border-[rgba(212,255,0,0.25)]"
             }`}
           >
-            <FileSpreadsheet size={32} className="mx-auto mb-3 text-text-muted" />
+            <FileCsv size={32} className="mx-auto mb-3 text-text-muted" />
             <p className="text-xs font-medium mb-1">Drag & drop a CSV file here</p>
             <p className="text-[10px] text-text-muted">or click to browse</p>
             <p className="text-[9px] text-text-muted mt-3">Expected columns: business_name, email, phone, industry, city, state, source, status, website</p>
@@ -260,7 +253,7 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
             <div className="flex justify-end gap-2">
               <button onClick={() => { setStep("upload"); setRows([]); }} className="btn-secondary text-xs">Back</button>
               <button onClick={doImport} className="btn-primary text-xs flex items-center gap-1.5">
-                <Upload size={12} /> Import {rows.length} Leads
+                <UploadSimple size={12} /> Import {rows.length} Leads
               </button>
             </div>
           </div>
@@ -269,7 +262,7 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
         {/* Importing step */}
         {step === "importing" && (
           <div className="flex flex-col items-center justify-center py-10 gap-3">
-            <Loader size={24} className="animate-spin text-brand-accent" />
+            <CircleNotch size={24} className="animate-spin text-brand-accent" />
             <p className="text-xs text-text-muted">Importing {rows.length} leads...</p>
           </div>
         )}
@@ -408,7 +401,7 @@ function AddLeadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
           <div className="flex justify-end gap-2 pt-1">
             <button type="button" onClick={onClose} className="btn-secondary text-xs">Cancel</button>
             <button type="submit" disabled={submitting} className="btn-primary text-xs flex items-center gap-1.5">
-              {submitting ? <Loader size={12} className="animate-spin" /> : <UserPlus size={12} />}
+              {submitting ? <CircleNotch size={12} className="animate-spin" /> : <UserPlus size={12} />}
               {submitting ? "Adding..." : "Add Lead"}
             </button>
           </div>
@@ -528,7 +521,7 @@ function LeadDetailPanel({
             disabled={scoring}
             className="flex items-center gap-1 rounded-lg bg-white/[0.06] border border-border-subtle px-2.5 py-1 text-[10px] font-medium text-brand-accent hover:bg-white/[0.10] disabled:opacity-50 transition-colors cursor-pointer"
           >
-            {scoring ? <Loader size={9} className="animate-spin" /> : <Zap size={9} />}
+            {scoring ? <CircleNotch size={9} className="animate-spin" /> : <Lightning size={9} />}
             Score with AI
           </button>
         )}
@@ -550,7 +543,7 @@ function LeadDetailPanel({
         )}
         {lead.email && (
           <a href={`mailto:${lead.email}`} className="flex items-center gap-2 text-[11px] text-text-secondary hover:text-brand-accent transition-colors">
-            <Mail size={11} className="text-text-muted flex-shrink-0" />
+            <Envelope size={11} className="text-text-muted flex-shrink-0" />
             <span className="truncate">{lead.email}</span>
           </a>
         )}
@@ -622,13 +615,13 @@ function LeadDetailPanel({
           }`}
           title={lead.email || "No email"}
         >
-          <Mail size={10} /> Email
+          <Envelope size={10} /> Email
         </a>
         <a
           href="/dashboard/dm-controller"
           className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-border-subtle bg-white/[0.02] py-1.5 text-[11px] font-medium text-text-muted hover:bg-white/[0.06] hover:text-text-secondary transition-colors"
         >
-          <MessageSquare size={10} /> DM
+          <Chat size={10} /> DM
         </a>
       </div>
 
@@ -789,10 +782,10 @@ export default function LeadEnginePage() {
     { key: "leads", label: "All Leads", icon: <Users size={14} /> },
     { key: "scoring", label: "Lead Scoring", icon: <Target size={14} /> },
     { key: "routing", label: "Smart Routing", icon: <GitBranch size={14} /> },
-    { key: "attribution", label: "Source Attribution", icon: <BarChart3 size={14} /> },
-    { key: "nurture", label: "Nurture Sequences", icon: <Mail size={14} /> },
-    { key: "enrichment", label: "Enrichment", icon: <Zap size={14} /> },
-    { key: "funnel", label: "Conversion Funnel", icon: <TrendingUp size={14} /> },
+    { key: "attribution", label: "Source Attribution", icon: <ChartBar size={14} /> },
+    { key: "nurture", label: "Nurture Sequences", icon: <Envelope size={14} /> },
+    { key: "enrichment", label: "Enrichment", icon: <Lightning size={14} /> },
+    { key: "funnel", label: "Conversion Funnel", icon: <TrendUp size={14} /> },
     { key: "tags", label: "Tags & Alerts", icon: <Tag size={14} /> },
   ];
 
@@ -817,10 +810,10 @@ export default function LeadEnginePage() {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <button onClick={() => setShowImportModal(true)} className="btn-pill-ghost flex items-center gap-1.5">
-            <Upload size={12} /> Import
+            <UploadSimple size={12} /> Import
           </button>
           <button onClick={handleExport} disabled={exporting} className="btn-pill-ghost flex items-center gap-1.5 disabled:opacity-40">
-            {exporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
+            {exporting ? <CircleNotch size={12} className="animate-spin" /> : <DownloadSimple size={12} />}
             {exporting ? "…" : "Export"}
           </button>
           <button onClick={() => setShowAddModal(true)} className="btn-pill flex items-center gap-1.5">
@@ -829,7 +822,7 @@ export default function LeadEnginePage() {
         </div>
       </div>{/* Stats � collapsible (state persists) */}<CollapsibleStats
               storageKey="leads"
-              icon={<BarChart3 size={14} className="text-brand-accent" />}
+              icon={<ChartBar size={14} className="text-brand-accent" />}
               title="Lead Stats"
               summary={
                 <>
@@ -921,8 +914,8 @@ export default function LeadEnginePage() {
                 {/* Filters (sticky) */}
                 <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex flex-wrap gap-2 py-2">
                   <div className="relative flex-1 min-w-[200px]">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-                    <input type="text" placeholder="Search leads..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="input glass w-full pl-9 text-xs" />
+                    <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                    <input type="text" placeholder="MagnifyingGlass leads..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="input glass w-full pl-9 text-xs" />
                   </div>
                   <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="input text-xs">
                     <option value="">All Statuses</option>
@@ -945,7 +938,7 @@ export default function LeadEnginePage() {
                         : "border-border-subtle text-text-muted hover:border-[rgba(212,255,0,0.1)] hover:text-text-primary"
                     }`}
                   >
-                    <Flame size={11} /> High priority (70+)
+                    <Fire size={11} /> High priority (70+)
                   </button>
                   {/* Sort by score toggle */}
                   <button
@@ -1039,13 +1032,13 @@ export default function LeadEnginePage() {
                           <p className="text-[9px] text-text-muted">{lead.industry || "Unknown"} | {lead.city || "N/A"}</p>
                         </div>
                         <div className="col-span-2">
-                          <p className="text-text-muted flex items-center gap-1 truncate"><Mail size={9} /> {lead.email || "---"}</p>
+                          <p className="text-text-muted flex items-center gap-1 truncate"><Envelope size={9} /> {lead.email || "---"}</p>
                           <p className="text-text-muted flex items-center gap-1"><Phone size={9} /> {lead.phone || "---"}</p>
                         </div>
                         <span className="text-text-muted">{lead.source || "---"}</span>
                         <div className="text-center flex items-center justify-center">
                           {scoringLeads.has(lead.id) ? (
-                            <Loader size={12} className="animate-spin text-brand-accent" />
+                            <CircleNotch size={12} className="animate-spin text-brand-accent" />
                           ) : (
                             <ScoreBadge score={lead.score} onClick={() => scoreOneLead(lead)} />
                           )}
@@ -1086,13 +1079,13 @@ export default function LeadEnginePage() {
                             aria-label={lead.email ? `Email ${lead.business_name}` : "No email address"}
                             className={`p-1 rounded hover:bg-white/[0.05] text-text-muted hover:text-brand-accent ${!lead.email ? "opacity-40 cursor-not-allowed" : ""}`}
                             title={lead.email || "No email"}
-                          ><Mail size={10} /></a>
+                          ><Envelope size={10} /></a>
                           <Link
                             href="/dashboard/dm-controller"
                             aria-label={`Send DM to ${lead.business_name}`}
                             className="p-1 rounded hover:bg-white/[0.05] text-text-muted hover:text-brand-accent"
                             title="DM via DM Controller"
-                          ><MessageSquare size={10} /></Link>
+                          ><Chat size={10} /></Link>
                         </div>
                       </div>
                       {/* Expanded drawer � score breakdown + qualification */}
@@ -1114,7 +1107,7 @@ export default function LeadEnginePage() {
                                   disabled={scoringLeads.has(lead.id)}
                                   className="text-[9px] px-2.5 py-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] transition-all flex items-center gap-1 disabled:opacity-50"
                                 >
-                                  {scoringLeads.has(lead.id) ? <Loader size={9} className="animate-spin" /> : <Zap size={9} />}
+                                  {scoringLeads.has(lead.id) ? <CircleNotch size={9} className="animate-spin" /> : <Lightning size={9} />}
                                   Score now
                                 </button>
                               )}
@@ -1187,14 +1180,14 @@ export default function LeadEnginePage() {
                     <div className="flex items-center gap-2">
                       <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
                         className="p-1.5 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.2)] disabled:opacity-30 transition-all">
-                        <ChevronLeft size={14} />
+                        <CaretLeft size={14} />
                       </button>
                       <span className="text-xs font-mono text-text-muted">
                         {page} / {totalPages}
                       </span>
                       <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}
                         className="p-1.5 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.2)] disabled:opacity-30 transition-all">
-                        <ChevronRightIcon size={14} />
+                        <CaretRight size={14} />
                       </button>
                     </div>
                   </div>
@@ -1203,7 +1196,7 @@ export default function LeadEnginePage() {
                 {/* Duplicate Detection */}
                 <div className="glass rounded-xl p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                    <Layers size={14} className="text-yellow-400" /> Duplicate Detection
+                    <Stack size={14} className="text-yellow-400" /> Duplicate Detection
                   </h3>
                   <div className="text-center py-8 text-text-muted text-xs">No duplicates detected.</div>
                 </div>
@@ -1271,7 +1264,7 @@ export default function LeadEnginePage() {
                         {leads.filter(l => (l.lead_score ?? 0) >= 80).map(lead => (
                           <div key={lead.id} className="flex items-center justify-between p-2 rounded bg-red-400/5 border border-red-400/10 text-[10px]">
                             <div className="flex items-center gap-2">
-                              <Flame size={10} className="text-red-400" />
+                              <Fire size={10} className="text-red-400" />
                               <span className="font-semibold">{lead.business_name}</span>
                               <span className="text-text-muted">Score: {lead.lead_score}</span>
                             </div>
@@ -1320,14 +1313,14 @@ export default function LeadEnginePage() {
             )}{/* ===== SOURCE ATTRIBUTION ===== */}{activeTab === "attribution" && (
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <BarChart3 size={14} className="text-brand-accent" /> Lead Source Attribution
+                  <ChartBar size={14} className="text-brand-accent" /> Lead Source Attribution
                 </h3>
                 <div className="text-center py-12 text-text-muted text-xs">No source attribution data yet.</div>
               </div>
             )}{/* ===== NURTURE SEQUENCES ===== */}{activeTab === "nurture" && (
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <Mail size={14} className="text-brand-accent" /> Lead Nurture Sequences
+                  <Envelope size={14} className="text-brand-accent" /> Lead Nurture Sequences
                 </h3>
                 <div className="text-center py-12 text-text-muted text-xs">No nurture sequences configured yet.</div>
               </div>
@@ -1335,12 +1328,12 @@ export default function LeadEnginePage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <Zap size={14} className="text-brand-accent" /> Lead Enrichment Panel
+                    <Lightning size={14} className="text-brand-accent" /> Lead Enrichment Panel
                   </h3>
                   <button
                     onClick={() => toast("Bulk enrichment coming soon � needs API")}
                     className="btn-primary text-xs flex items-center gap-1.5"
-                  ><RefreshCw size={12} /> Enrich All Missing</button>
+                  ><ArrowsClockwise size={12} /> Enrich All Missing</button>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                   {[
@@ -1373,7 +1366,7 @@ export default function LeadEnginePage() {
                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
                           lead.email && lead.phone ? "bg-green-400/10" : "bg-yellow-400/10"
                         }`}>
-                          {lead.email && lead.phone ? <CheckCircle size={12} className="text-green-400" /> : <AlertTriangle size={12} className="text-yellow-400" />}
+                          {lead.email && lead.phone ? <CheckCircle size={12} className="text-green-400" /> : <Warning size={12} className="text-yellow-400" />}
                         </div>
                         <div>
                           <p className="font-semibold">{lead.business_name}</p>
@@ -1398,7 +1391,7 @@ export default function LeadEnginePage() {
             )}{/* ===== CONVERSION FUNNEL ===== */}{activeTab === "funnel" && (
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <TrendingUp size={14} className="text-brand-accent" /> Lead Conversion Funnel
+                  <TrendUp size={14} className="text-brand-accent" /> Lead Conversion Funnel
                 </h3>
                 <div className="flex flex-col items-center gap-2">
                   {[

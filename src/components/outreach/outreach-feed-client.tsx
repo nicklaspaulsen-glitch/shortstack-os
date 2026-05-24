@@ -1,4 +1,5 @@
 "use client";
+import { CaretLeft, CircleNotch, MagnifyingGlass, PaperPlaneTilt, Phone, PhoneCall, Sparkle, X } from "@phosphor-icons/react";
 
 /**
  * Unified Outreach Feed — chat-bubble client.
@@ -25,16 +26,6 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  ChevronLeft,
-  Loader2,
-  Phone,
-  PhoneCall,
-  Search,
-  Send,
-  Sparkles,
-  X,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import OutcomeChip from "./outcome-chip";
 import ChannelIcon from "./channel-icon";
@@ -222,14 +213,14 @@ export default function OutreachFeedClient({
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Send failed");
+      if (!res.ok) throw new Error(data.error || "PaperPlaneTilt failed");
       toast.success(`Sent via ${channel}`);
       setComposer("");
       setComposerSubject("");
       // Refresh thread.
       if (selectedKey) await fetchThread(selectedKey);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Send failed");
+      toast.error(err instanceof Error ? err.message : "PaperPlaneTilt failed");
     } finally {
       setSending(false);
     }
@@ -271,12 +262,12 @@ export default function OutreachFeedClient({
       <aside className="w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-[rgba(0,0,0,0.06)] flex flex-col">
         <div className="p-4 border-b border-[rgba(0,0,0,0.06)] space-y-3">
           <div className="relative">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search contacts"
+              placeholder="MagnifyingGlass contacts"
               className="w-full pl-9 pr-3 py-2 rounded-lg bg-white border border-[rgba(0,0,0,0.10)] text-sm text-[#111827] placeholder-[#9CA3AF] focus:outline-none focus:border-[#D4FF00]"
             />
           </div>
@@ -313,7 +304,7 @@ export default function OutreachFeedClient({
         <div className="flex-1 overflow-y-auto">
           {loadingList ? (
             <div className="flex items-center justify-center h-32 text-text-muted text-xs">
-              <Loader2 size={14} className="animate-spin mr-2" /> Loading…
+              <CircleNotch size={14} className="animate-spin mr-2" /> Loading…
             </div>
           ) : conversations.length === 0 ? (
             <div className="text-center text-text-muted text-xs px-6 py-8">
@@ -370,7 +361,7 @@ export default function OutreachFeedClient({
             {selectedKey ? (
               loadingThread ? (
                 <span className="inline-flex items-center">
-                  <Loader2 size={14} className="animate-spin mr-2" /> Loading thread…
+                  <CircleNotch size={14} className="animate-spin mr-2" /> Loading thread…
                 </span>
               ) : (
                 "Thread unavailable"
@@ -389,7 +380,7 @@ export default function OutreachFeedClient({
                 className="md:hidden text-[#6B7280] hover:text-[#111827]"
                 aria-label="Back to list"
               >
-                <ChevronLeft size={18} />
+                <CaretLeft size={18} />
               </button>
               <div className="flex-1 min-w-0">
                 <h2 className="text-base font-semibold text-[#111827] truncate">{selected.contact_name}</h2>
@@ -410,7 +401,7 @@ export default function OutreachFeedClient({
             {thread.summary?.summary && (
               <div className="px-5 pt-3">
                 <div className="flex items-start gap-2 rounded-xl border border-[rgba(212,255,0,0.20)] bg-[rgba(212,255,0,0.05)] px-3 py-2.5">
-                  <Sparkles size={14} className="text-[#D4FF00] mt-0.5 shrink-0" />
+                  <Sparkle size={14} className="text-[#D4FF00] mt-0.5 shrink-0" />
                   <div className="text-xs text-[#374151] leading-relaxed flex-1">
                     <p>{thread.summary.summary}</p>
                     {thread.summary.suggested_action && (
@@ -518,8 +509,8 @@ export default function OutreachFeedClient({
                       disabled={sending || !composer.trim()}
                       className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#D4FF00] text-[#020711] text-sm font-semibold hover:bg-[#D4FF00] disabled:opacity-40 disabled:cursor-not-allowed"
                     >
-                      {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                      Send
+                      {sending ? <CircleNotch size={14} className="animate-spin" /> : <PaperPlaneTilt size={14} />}
+                      PaperPlaneTilt
                     </button>
                   </div>
                 </div>

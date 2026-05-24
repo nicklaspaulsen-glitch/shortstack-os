@@ -1,7 +1,7 @@
 "use client";
+import { Check, CircleNotch, Plus } from "@phosphor-icons/react";
 
 import { useState } from "react";
-import { Loader2, Plus, Check } from "lucide-react";
 import {
   InstagramIcon,
   FacebookIcon,
@@ -132,7 +132,7 @@ export default function InlineSocialConnect({
                   : "flex items-center gap-1 text-[10px] px-2 py-1 rounded-full bg-surface-light border border-border-subtle hover:border-[rgba(212,255,0,0.4)] hover:text-foreground text-text-muted transition"
               }
             >
-              {isLoading ? <Loader2 size={10} className="animate-spin" /> : connected ? <Check size={10} /> : meta.icon(10)}
+              {isLoading ? <CircleNotch size={10} className="animate-spin" /> : connected ? <Check size={10} /> : meta.icon(10)}
               {meta.name}
             </button>
           );
@@ -166,7 +166,7 @@ export default function InlineSocialConnect({
             />
             <div className="relative flex items-center gap-2">
               {isLoading ? (
-                <Loader2 size={18} className="animate-spin" />
+                <CircleNotch size={18} className="animate-spin" />
               ) : connected ? (
                 <Check size={18} />
               ) : (

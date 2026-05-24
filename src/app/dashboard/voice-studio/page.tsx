@@ -1,29 +1,7 @@
 "use client";
+import { ArrowsClockwise, ArrowsOut, BookBookmark, ChatCircle, CheckCircle, CircleNotch, File, Headphones, Lightning, MagnifyingGlass, Microphone, PaperPlaneTilt, Pause, Phone, Play, Sparkle, Star, Trash, TrendUp, UploadSimple, Voicemail, Warning } from "@phosphor-icons/react";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Mic,
-  Upload,
-  Play,
-  Pause,
-  Loader2,
-  AlertTriangle,
-  Trash2,
-  Phone,
-  Voicemail,
-  MessageCircle,
-  Send,
-  Sparkles,
-  CheckCircle2,
-  Library,
-  Headphones,
-  RefreshCw,
-  Search,
-  Star,
-  Zap,
-  TrendingUp,
-  Expand,
-} from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -89,9 +67,9 @@ const SURFACE_FLAGS: Array<{
   {
     key: "is_default_for_sms",
     label: "SMS",
-    icon: <MessageCircle size={12} />,
+    icon: <ChatCircle size={12} />,
   },
-  { key: "is_default_for_dm", label: "DM", icon: <Send size={12} /> },
+  { key: "is_default_for_dm", label: "DM", icon: <PaperPlaneTilt size={12} /> },
 ];
 
 const TEST_PROMPT_DEFAULT =
@@ -211,7 +189,7 @@ export default function VoiceStudioPage() {
               onClick={refresh}
               className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-white/[0.03] px-2.5 py-1.5 text-[11px] font-medium text-text-secondary hover:text-text-primary hover:bg-white/[0.06] transition-colors duration-150"
             >
-              <RefreshCw size={11} /> Refresh
+              <ArrowsClockwise size={11} /> Refresh
             </button>
           </div>
         </div>
@@ -252,7 +230,7 @@ export default function VoiceStudioPage() {
 
               {error && (
                 <div className="mt-6 flex items-start gap-3 rounded-lg border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-400">
-                  <AlertTriangle size={18} className="mt-0.5 flex-shrink-0 text-rose-400" />
+                  <Warning size={18} className="mt-0.5 flex-shrink-0 text-rose-400" />
                   <div>{error}</div>
                 </div>
               )}
@@ -260,7 +238,7 @@ export default function VoiceStudioPage() {
               <div className="mt-6">
                 {loading && (
                   <div className="flex items-center justify-center py-12 text-text-secondary">
-                    <Loader2 size={20} className="animate-spin" />
+                    <CircleNotch size={20} className="animate-spin" />
                   </div>
                 )}
                 {!loading && tab === "my_voices" && (
@@ -286,12 +264,12 @@ function MyVoicesTab({
       <UploadCard onCreated={onChange} />
       {clones.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-border-subtle bg-white/[0.02] p-12 text-center">
-          <Mic size={32} className="text-text-secondary" />
+          <Microphone size={32} className="text-text-secondary" />
           <h3 className="mt-4 text-base font-medium text-text-primary">
             No clones yet
           </h3>
           <p className="mt-1 max-w-sm text-sm text-text-secondary">
-            Upload a 30-second clean recording above and we&apos;ll train a clone you
+            UploadSimple a 30-second clean recording above and we&apos;ll train a clone you
             can drop into cold calls, voicemails, SMS, and DMs.
           </p>
         </div>
@@ -383,7 +361,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || `Upload failed (${res.status})`);
+        throw new Error(data.error || `UploadSimple failed (${res.status})`);
       }
       toast.success(
         data.status === "ready"
@@ -397,7 +375,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
       setSubmitMsg(null);
       onCreated();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Upload failed");
+      toast.error(err instanceof Error ? err.message : "UploadSimple failed");
     } finally {
       setSubmitting(false);
     }
@@ -407,7 +385,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
     <div className="glass relative rounded-xl overflow-hidden p-6">
       <div className="flex items-start gap-4">
         <div className="rounded-lg border border-border-subtle bg-white/[0.04] p-2.5">
-          <Upload size={20} className="text-brand-accent" />
+          <UploadSimple size={20} className="text-brand-accent" />
         </div>
         <div className="flex-1 space-y-4">
           <div>
@@ -427,14 +405,14 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
             onChange={(e) => handleFiles(e.target.files)}
             className="hidden"
           />
-          {/* -- Upload drop zone -- */}
+          {/* -- UploadSimple drop zone -- */}
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
             className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-white/[0.10] px-4 py-6 text-sm text-brand-accent hover:border-white/[0.18] transition-colors"
             style={{ background: "rgba(255,255,255,0.03)" }}
           >
-            <Upload size={16} />
+            <UploadSimple size={16} />
             {files.length === 0
               ? "Choose audio samples (mp3, wav, m4a, ogg)"
               : `${files.length} sample${files.length === 1 ? "" : "s"} selected — click to replace`}
@@ -508,9 +486,9 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
               className="btn-pill ml-auto flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {submitting ? (
-                <Loader2 size={14} className="animate-spin" />
+                <CircleNotch size={14} className="animate-spin" />
               ) : (
-                <Sparkles size={14} />
+                <Sparkle size={14} />
               )}
               {submitting ? "Training..." : "Train clone"}
             </button>
@@ -662,7 +640,7 @@ function CloneRow({
             aria-label={`Delete ${clone.label}`}
             className="flex-shrink-0 rounded-lg p-1.5 text-text-muted hover:text-rose-400 hover:bg-rose-500/10 transition-colors duration-150"
           >
-            <Trash2 size={13} />
+            <Trash size={13} />
           </button>
         </div>
 
@@ -670,13 +648,13 @@ function CloneRow({
         <div className="mt-3">
           {clone.status === "training" && (
             <div className="flex items-center gap-2 py-2 px-3 rounded-lg border border-[rgba(212,255,0,0.12)] bg-[rgba(212,255,0,0.04)]">
-              <Loader2 size={12} className="animate-spin text-brand-accent flex-shrink-0" />
+              <CircleNotch size={12} className="animate-spin text-brand-accent flex-shrink-0" />
               <span className="text-xs text-text-secondary">Training your voice clone...</span>
             </div>
           )}
           {clone.status === "failed" && (
             <div className="flex items-center gap-2 py-2 px-3 rounded-lg border border-rose-500/20 bg-rose-500/[0.05]">
-              <AlertTriangle size={12} className="text-rose-400 flex-shrink-0" />
+              <Warning size={12} className="text-rose-400 flex-shrink-0" />
               <span className="text-xs text-rose-400">Clone training failed</span>
             </div>
           )}
@@ -710,7 +688,7 @@ function CloneRow({
                 </div>
                 <span className="text-xs text-text-muted group-hover:text-text-secondary transition-colors flex items-center gap-1.5">
                   {testing ? (
-                    <><Loader2 size={11} className="animate-spin" /> Generating preview...</>
+                    <><CircleNotch size={11} className="animate-spin" /> Generating preview...</>
                   ) : (
                     <><Play size={11} /> Preview voice</>
                   )}
@@ -763,7 +741,7 @@ function StatusChip({ status }: { status: VoiceClone["status"] }) {
       className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${meta.cls}`}
     >
       {status === "training" && (
-        <Loader2 size={10} className="animate-spin" />
+        <CircleNotch size={10} className="animate-spin" />
       )}
       {meta.label}
     </span>
@@ -995,7 +973,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   if (presets.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border border-border-subtle bg-white/[0.02] p-12 text-center">
-        <Library size={28} className="text-text-secondary" />
+        <BookBookmark size={28} className="text-text-secondary" />
         <h3 className="mt-3 text-base font-medium text-text-primary">No presets yet</h3>
         <p className="mt-1 max-w-sm text-sm text-text-secondary">
           Preset voices are seeded automatically on first dashboard load. Hit the button below if none appeared.
@@ -1006,7 +984,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             onClick={onRefresh}
             className="btn-pill mt-4 flex items-center gap-2"
           >
-            <RefreshCw size={14} />
+            <ArrowsClockwise size={14} />
             Seed preset library
           </button>
         )}
@@ -1018,15 +996,15 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
     <div className="space-y-4">
       {/* Filter bar */}
       <div className="glass space-y-2.5 rounded-xl p-3">
-        {/* Search row - count badge here so it does not compete with lang select */}
+        {/* MagnifyingGlass row - count badge here so it does not compete with lang select */}
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
-            <Search size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-text-secondary" />
+            <MagnifyingGlass size={13} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-text-secondary" />
             <input
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search presets..."
+              placeholder="MagnifyingGlass presets..."
               className="rounded-lg w-full border border-border-subtle bg-white/[0.03] py-1.5 pl-8 pr-3 text-xs text-text-primary placeholder-[#A1A1AA] focus:outline-none focus:border-brand-accent/40 focus:ring-1 focus:ring-brand-accent/30"
             />
           </div>
@@ -1081,12 +1059,12 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
             >
               {preWarmActive ? (
                 <>
-                  <Loader2 size={9} className="animate-spin" />
+                  <CircleNotch size={9} className="animate-spin" />
                   <span className="tabular-nums">{preWarmDone}/{preWarmTotal}</span>
                 </>
               ) : (
                 <>
-                  <Zap size={9} />
+                  <Lightning size={9} />
                   <span className="tabular-nums">{preWarmGapCount}</span>
                 </>
               )}
@@ -1400,7 +1378,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border-subtle bg-white/[0.04] text-brand-accent">
-            <Mic size={16} />
+            <Microphone size={16} />
           </div>
           <div className="flex items-center gap-1.5 flex-wrap justify-end">
             {onToggleFavorite && (
@@ -1485,7 +1463,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             </div>
             <span className="text-[10px] text-text-secondary group-hover/play:text-brand-accent transition-colors duration-200 flex items-center gap-1">
               {testing
-                ? <><Loader2 size={10} className="animate-spin" />{" "}Generating...</>
+                ? <><CircleNotch size={10} className="animate-spin" />{" "}Generating...</>
                 : <><Play size={10} />{" "}Click to preview</>}
             </span>
           </button>
@@ -1537,7 +1515,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                 style={{ background: "rgba(19,24,39,0.55)", border: "1px solid rgba(212,255,0,0.08)" }}>
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-1">
-                    <TrendingUp size={8} style={{ color: ttsQualityScore >= 80 ? "#4ade80" : ttsQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
+                    <TrendUp size={8} style={{ color: ttsQualityScore >= 80 ? "#4ade80" : ttsQualityScore >= 50 ? "#fbbf24" : "#f87171" }} />
                     <span className="text-[8px] font-semibold tracking-wide text-text-muted">TTS READY</span>
                   </div>
                   <span className="text-[9px] font-bold tabular-nums"
@@ -1638,7 +1616,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             <AudioPlayer src={testUrl ?? prevUrlRef.current ?? ""} />
             {testing && (
               <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-white/[0.06]">
-                <Loader2 size={16} className="animate-spin text-brand-accent" />
+                <CircleNotch size={16} className="animate-spin text-brand-accent" />
               </div>
             )}
           </div>
@@ -1653,7 +1631,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
             className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-border-subtle bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-white/[0.06] transition-colors duration-150 cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
           >
             {testing ? (
-              <Loader2 size={12} className="animate-spin" />
+              <CircleNotch size={12} className="animate-spin" />
             ) : (
               <Play size={12} />
             )}
@@ -1668,7 +1646,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
               title="Open voice details"
               className="flex items-center gap-1 rounded-lg border border-border-subtle bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-text-secondary hover:bg-white/[0.06] hover:text-text-primary transition-colors duration-150 cursor-pointer"
             >
-              <Expand size={12} />
+              <ArrowsOut size={12} />
               Details
             </button>
           )}
@@ -1686,7 +1664,7 @@ function PresetCard({ preset, cachedUrl, cachedText, onUrlCached, onTextChanged,
                 : "border-border-subtle bg-white/[0.03] text-text-secondary hover:bg-white/[0.06] hover:text-text-primary",
             ].join(" ")}
           >
-            {saving ? <Loader2 size={12} className="animate-spin" /> : saved ? <CheckCircle2 size={12} /> : <Sparkles size={12} />}
+            {saving ? <CircleNotch size={12} className="animate-spin" /> : saved ? <CheckCircle size={12} /> : <Sparkle size={12} />}
             {saved ? "Saved" : "Use"}
           </button>
         </div>

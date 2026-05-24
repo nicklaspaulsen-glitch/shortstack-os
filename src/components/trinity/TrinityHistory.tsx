@@ -1,4 +1,5 @@
 "use client";
+import { CheckCircle, XCircle } from "@phosphor-icons/react";
 
 /**
  * TrinityHistory — the scrolling conversation thread. Lives in its own
@@ -8,7 +9,6 @@
  */
 
 import { useEffect, useRef } from "react";
-import { CheckCircle, XCircle } from "lucide-react";
 import type { ChatMsg } from "./types";
 
 interface Props {

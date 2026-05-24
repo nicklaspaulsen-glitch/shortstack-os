@@ -273,7 +273,7 @@ If the user's message contains action words (call, email, scrape, send, outreach
   }
 
   if (text.toLowerCase().startsWith("/help")) {
-    reply = `ShortStack Bot Commands:\n
+    reply = `ShortStack Robot Commands:\n
 /status — System overview
 /clients — Active clients + MRR
 /revenue — Revenue report

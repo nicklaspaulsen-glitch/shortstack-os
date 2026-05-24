@@ -1,4 +1,5 @@
 "use client";
+import { ArrowSquareOut, CheckCircle, CircleNotch, Copy, CurrencyDollar, Link as LinkIcon, PaperPlaneTilt, Plus, Receipt, Trash, Warning } from "@phosphor-icons/react";
 
 /**
  * Client Billing & Payments panel — renders inside the client detail page as a
@@ -9,7 +10,7 @@
  * Features:
  *   - Create a Stripe Payment Link for a one-off charge (amount + name).
  *     Returns a copyable URL.
- *   - Send a Stripe invoice (one or more line items + due-date) via the
+ *   - PaperPlaneTilt a Stripe invoice (one or more line items + due-date) via the
  *     agency's connected Stripe — Stripe emails the hosted invoice URL.
  *   - Lists past payment links and past invoices w/ live status.
  *
@@ -20,9 +21,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import {
-  Link2, Send, Plus, Trash2, Copy, ExternalLink, Loader2, AlertTriangle, DollarSign, Receipt, CheckCircle2,
-} from "lucide-react";
 import Link from "next/link";
 
 type PaymentLink = {
@@ -207,7 +205,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
   if (loadingStatus) {
     return (
       <div className="glass rounded-xl p-4 flex items-center gap-2 animate-pulse">
-        <Loader2 size={14} className="animate-spin text-text-muted" />
+        <CircleNotch size={14} className="animate-spin text-text-muted" />
         <p className="text-xs text-text-muted">Checking Stripe connection...</p>
       </div>
     );
@@ -217,7 +215,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
     return (
       <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)]">
         <div className="flex items-start gap-3">
-          <DollarSign size={18} className="text-[#D4FF00] shrink-0 mt-0.5" />
+          <CurrencyDollar size={18} className="text-[#D4FF00] shrink-0 mt-0.5" />
           <div className="flex-1">
             <h3 className="text-sm font-semibold">Connect Stripe to bill this client</h3>
             <p className="text-[10px] text-text-muted mt-1">
@@ -229,7 +227,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
             href="/dashboard/settings?tab=billing"
             className="btn-primary text-xs flex items-center gap-1.5 whitespace-nowrap"
           >
-            <Link2 size={12} /> Connect Stripe
+            <LinkIcon size={12} /> Connect Stripe
           </Link>
         </div>
       </div>
@@ -244,7 +242,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
       {!fullyOnboarded && (
         <div className="glass rounded-xl p-4 border-warning/30 bg-warning/[0.05]">
           <div className="flex items-start gap-2.5">
-            <AlertTriangle size={14} className="text-warning shrink-0 mt-0.5" />
+            <Warning size={14} className="text-warning shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="text-xs font-semibold text-warning">Finish Stripe onboarding</p>
               <p className="text-[10px] text-text-muted mt-0.5">
@@ -264,7 +262,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
       {/* ── Create Payment Link ────────────────────────────── */}
       <div className="glass rounded-xl p-4">
         <h3 className="flex items-center gap-2">
-          <Link2 size={14} className="text-[#D4FF00]" /> Create Payment Link
+          <LinkIcon size={14} className="text-[#D4FF00]" /> Create Payment Link
         </h3>
         <p className="text-[10px] text-text-muted mb-3">
           Generate a Stripe-hosted checkout URL you can paste anywhere — DMs, email, SMS, proposal docs.
@@ -291,7 +289,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
             disabled={creatingLink || !chargesEnabled}
             className="btn-primary text-xs flex items-center justify-center gap-1.5"
           >
-            {creatingLink ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />}
+            {creatingLink ? <CircleNotch size={12} className="animate-spin" /> : <Plus size={12} />}
             Generate link
           </button>
         </div>
@@ -336,7 +334,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
                   className="text-xs p-2 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary"
                   aria-label="Open checkout"
                 >
-                  <ExternalLink size={12} />
+                  <ArrowSquareOut size={12} />
                 </a>
               </div>
             ))}
@@ -344,10 +342,10 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
         )}
       </div>
 
-      {/* ── Send Invoice ──────────────────────────────────── */}
+      {/* ── PaperPlaneTilt Invoice ──────────────────────────────────── */}
       <div className="glass rounded-xl p-4">
         <h3 className="flex items-center gap-2">
-          <Receipt size={14} className="text-[#D4FF00]" /> Send Invoice
+          <Receipt size={14} className="text-[#D4FF00]" /> PaperPlaneTilt Invoice
         </h3>
         <p className="text-[10px] text-text-muted mb-3">
           Stripe will email the client a hosted invoice page. Payment lands in your account.
@@ -385,7 +383,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
                   className="text-xs p-2 rounded-lg text-text-muted hover:text-danger"
                   aria-label="Remove line"
                 >
-                  <Trash2 size={12} />
+                  <Trash size={12} />
                 </button>
               )}
             </div>
@@ -426,8 +424,8 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
           disabled={sendingInvoice || !chargesEnabled}
           className="btn-primary text-xs flex items-center gap-1.5"
         >
-          {sendingInvoice ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
-          Send invoice to client
+          {sendingInvoice ? <CircleNotch size={12} className="animate-spin" /> : <PaperPlaneTilt size={12} />}
+          PaperPlaneTilt invoice to client
         </button>
       </div>
 
@@ -449,7 +447,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
               >
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium truncate">
-                    {inv.status === "paid" && <CheckCircle2 size={10} className="inline text-success mr-1" />}
+                    {inv.status === "paid" && <CheckCircle size={10} className="inline text-success mr-1" />}
                     {inv.agency_stripe_invoice_id}
                   </p>
                   <p className="text-[9px] text-text-muted">
@@ -479,7 +477,7 @@ export default function ClientBillingPanel({ clientId }: { clientId: string }) {
                     className="text-xs p-2 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary"
                     aria-label="Open hosted invoice"
                   >
-                    <ExternalLink size={12} />
+                    <ArrowSquareOut size={12} />
                   </a>
                 )}
               </div>

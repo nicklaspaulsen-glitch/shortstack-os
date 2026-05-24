@@ -1,4 +1,5 @@
 "use client";
+import { ArrowsClockwise, ArrowsOut, CheckCircle, CircleNotch, DownloadSimple, Image, MagicWand, Palette, PencilSimple, Plus, SlidersHorizontal, Sparkle, Stack, TextT, Trash, Users, X } from "@phosphor-icons/react";
 
 /**
  * Image Wizard
@@ -18,25 +19,6 @@
  */
 
 import { useEffect, useMemo, useState } from "react";
-import {
-  Image as ImageIcon,
-  Layers,
-  Maximize2,
-  Users,
-  Type,
-  Palette,
-  Wand2,
-  Sparkles,
-  Download,
-  RefreshCw,
-  Settings2,
-  X,
-  Trash2,
-  Plus,
-  Edit3,
-  CheckCircle2,
-  Loader2,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 
@@ -210,7 +192,7 @@ export default function ImageWizard({
         id: "creation_type",
         title: "What are you creating?",
         description: "Pick the format — we'll set sensible dimensions for you.",
-        icon: <ImageIcon size={16} />,
+        icon: <Image size={16} />,
         field: { type: "choice-cards", key: "creation_type", options: CREATION_TYPES },
       },
       {
@@ -229,7 +211,7 @@ export default function ImageWizard({
         id: "subject",
         title: "Main subject",
         description: "Describe the main element of the image in your own words.",
-        icon: <Edit3 size={16} />,
+        icon: <PencilSimple size={16} />,
         field: {
           type: "textarea",
           key: "subject",
@@ -248,14 +230,14 @@ export default function ImageWizard({
         id: "mood",
         title: "Mood & emotion",
         description: "How should it feel? Pick one or more.",
-        icon: <Sparkles size={16} />,
+        icon: <Sparkle size={16} />,
         field: { type: "chip-select", key: "mood", options: MOODS },
       },
       {
         id: "composition",
         title: "Composition",
         description: "Where should the subject sit in the frame?",
-        icon: <Maximize2 size={16} />,
+        icon: <ArrowsOut size={16} />,
         field: { type: "choice-cards", key: "composition", options: COMPOSITIONS, optional: true },
       },
       {
@@ -269,21 +251,21 @@ export default function ImageWizard({
         id: "text_overlay",
         title: "Text overlay?",
         description: "If yes, we'll leave clean space and Claude will mention text in the prompt.",
-        icon: <Type size={16} />,
+        icon: <TextT size={16} />,
         field: { type: "toggle", key: "text_overlay_enabled", optional: true },
       },
       {
         id: "extras",
         title: "Extras",
         description: "Optional finishing touches.",
-        icon: <Settings2 size={16} />,
+        icon: <SlidersHorizontal size={16} />,
         field: { type: "chip-select", key: "extras", options: EXTRAS, optional: true },
       },
       {
         id: "review_step",
         title: "Review & build prompt",
         description: "Claude (Haiku) will turn your answers into an optimized FLUX prompt next.",
-        icon: <Wand2 size={16} />,
+        icon: <MagicWand size={16} />,
         field: {
           type: "textarea",
           key: "extra_notes",
@@ -312,7 +294,7 @@ export default function ImageWizard({
     try {
       const res = await fetch("/api/images/build-prompt", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify(data),
       });
       const built = (await res.json()) as BuildPromptResult & { error?: string };
@@ -347,7 +329,7 @@ export default function ImageWizard({
       const reqs = Array.from({ length: variantCount }).map(() =>
         fetch("/api/images/create", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-TextT": "application/json" },
           body: JSON.stringify({
             prompt: editedPrompt,
             negative_prompt: editedNegative,
@@ -424,7 +406,7 @@ export default function ImageWizard({
         const slideAnswers = { ...answers, subject };
         const buildRes = await fetch("/api/images/build-prompt", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-TextT": "application/json" },
           body: JSON.stringify(slideAnswers),
         });
         const built = (await buildRes.json()) as BuildPromptResult;
@@ -432,7 +414,7 @@ export default function ImageWizard({
 
         const genRes = await fetch("/api/images/create", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-TextT": "application/json" },
           body: JSON.stringify({
             prompt: built.prompt,
             negative_prompt: built.negative_prompt,
@@ -489,7 +471,7 @@ export default function ImageWizard({
     try {
       const buildRes = await fetch("/api/images/build-prompt", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify(slideAnswers),
       });
       const built = (await buildRes.json()) as BuildPromptResult;
@@ -498,7 +480,7 @@ export default function ImageWizard({
       const dims = dimensionsFor(answers);
       const genRes = await fetch("/api/images/create", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           prompt: built.prompt,
           negative_prompt: built.negative_prompt,
@@ -543,7 +525,7 @@ export default function ImageWizard({
         open={open}
         title="Image Generator — Guided Mode"
         subtitle="Claude writes the perfect prompt. FLUX generates the image."
-        icon={<Wand2 size={18} />}
+        icon={<MagicWand size={18} />}
         submitLabel={isBuilding ? "Building prompt…" : "Build prompt with Claude"}
         steps={steps}
         initialData={initialAnswers}
@@ -592,7 +574,7 @@ export default function ImageWizard({
       <FullModal onClose={onClose}>
         <div className="flex flex-col items-center justify-center py-16 px-6">
           <div className="w-20 h-20  bg-gradient-to-br from-[rgba(212,255,0,0.12)] to-amber-500/10 flex items-center justify-center mb-4">
-            <Loader2 size={32} className="text-[#D4FF00] animate-spin" />
+            <CircleNotch size={32} className="text-[#D4FF00] animate-spin" />
           </div>
           <h2 className="text-base font-semibold text-text-primary mb-1.5">Generating with FLUX on RunPod</h2>
           <p className="text-xs text-text-muted text-center max-w-md">
@@ -670,7 +652,7 @@ function ReviewModal({
     <FullModal onClose={onClose}>
       <div className="px-6 py-4 border-b border-border-subtle flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-[rgba(212,255,0,0.08)] flex items-center justify-center text-[#D4FF00]">
-          <Wand2 size={18} />
+          <MagicWand size={18} />
         </div>
         <div className="flex-1 min-w-0">
           <h2 className="text-sm font-semibold text-text-primary">{title}</h2>
@@ -726,7 +708,7 @@ function PromptReview({
 
       <div>
         <label className="text-[11px] font-semibold text-text-primary uppercase tracking-wider flex items-center gap-1.5 mb-2">
-          <Wand2 size={11} className="text-[#D4FF00]" /> AI-built prompt
+          <MagicWand size={11} className="text-[#D4FF00]" /> AI-built prompt
         </label>
         <textarea
           value={prompt}
@@ -759,7 +741,7 @@ function PromptReview({
         onClick={onGenerate}
         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#D4FF00] to-amber-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.18)] transition-all"
       >
-        <Sparkles size={14} /> Generate with FLUX
+        <Sparkle size={14} /> Generate with FLUX
       </button>
     </div>
   );
@@ -784,7 +766,7 @@ function CarouselSetup({
     <div className="max-w-2xl mx-auto space-y-5">
       <div className="bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.2)] rounded-xl p-4">
         <div className="flex items-center gap-2 mb-1.5">
-          <Layers size={14} className="text-[#D4FF00]" />
+          <Stack size={14} className="text-[#D4FF00]" />
           <h3 className="text-xs font-semibold text-text-primary">Shared style locked in</h3>
         </div>
         <p className="text-[11px] text-text-muted">
@@ -821,7 +803,7 @@ function CarouselSetup({
                 onClick={() => setSubjects(subjects.filter((_, j) => j !== i))}
                 className="p-2 text-text-muted hover:text-red-400 mt-1.5"
               >
-                <Trash2 size={14} />
+                <Trash size={14} />
               </button>
             )}
           </div>
@@ -843,7 +825,7 @@ function CarouselSetup({
         disabled={subjects.filter(s => s.trim()).length === 0}
         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#D4FF00] to-amber-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.18)] transition-all disabled:opacity-40"
       >
-        <Sparkles size={14} /> Generate {subjects.filter(s => s.trim()).length} slide
+        <Sparkle size={14} /> Generate {subjects.filter(s => s.trim()).length} slide
         {subjects.filter(s => s.trim()).length === 1 ? "" : "s"}
       </button>
     </div>
@@ -876,13 +858,13 @@ function ResultPanel({
     <div className="flex flex-col h-full">
       <div className="px-6 py-4 border-b border-border-subtle flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400">
-          <CheckCircle2 size={18} />
+          <CheckCircle size={18} />
         </div>
         <div className="flex-1 min-w-0">
           <h2 className="text-sm font-semibold text-text-primary">
             {isCarousel ? `${results.length}-slide carousel ready` : "Image ready"}
           </h2>
-          <p className="text-[11px] text-text-muted">Download, regenerate, tweak, or save to library.</p>
+          <p className="text-[11px] text-text-muted">DownloadSimple, regenerate, tweak, or save to library.</p>
         </div>
         <button onClick={onClose} className="p-2 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary">
           <X size={14} />
@@ -915,14 +897,14 @@ function ResultPanel({
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[10px] text-text-primary hover:bg-surface"
                 >
-                  <Download size={11} /> Download
+                  <DownloadSimple size={11} /> DownloadSimple
                 </a>
                 {isCarousel && (
                   <button
                     onClick={() => onRegenerateOne(i)}
                     className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[10px] text-text-primary hover:bg-surface"
                   >
-                    <RefreshCw size={11} /> Regen
+                    <ArrowsClockwise size={11} /> Regen
                   </button>
                 )}
                 {isCarousel && results.length > 1 && (
@@ -930,7 +912,7 @@ function ResultPanel({
                     onClick={() => onRemove(i)}
                     className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[10px] text-red-400 hover:bg-red-500/10 ml-auto"
                   >
-                    <Trash2 size={11} />
+                    <Trash size={11} />
                   </button>
                 )}
                 <span className="ml-auto text-[9px] text-text-muted font-mono">
@@ -947,20 +929,20 @@ function ResultPanel({
           onClick={onTweak}
           className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-light"
         >
-          <Edit3 size={12} /> Tweak answers
+          <PencilSimple size={12} /> Tweak answers
         </button>
         <button
           onClick={onRegenerateAll}
           className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-text-primary hover:bg-surface-light"
         >
-          <RefreshCw size={12} /> Regenerate
+          <ArrowsClockwise size={12} /> Regenerate
         </button>
         <div className="flex-1" />
         <button
           onClick={onClose}
           className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-[#D4FF00] to-amber-500 text-white text-xs font-semibold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.18)]"
         >
-          <CheckCircle2 size={12} /> Done
+          <CheckCircle size={12} /> Done
         </button>
       </div>
     </div>

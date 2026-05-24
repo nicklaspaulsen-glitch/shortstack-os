@@ -1,7 +1,8 @@
 "use client";
+import { ArrowsClockwise, CaretDown, CaretUp, Warning, WarningCircle, X } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
-import { AlertTriangle, AlertCircle, X, ChevronDown, ChevronUp, RefreshCw } from "lucide-react";
+
 
 interface ServiceStatus {
   key: string;
@@ -74,7 +75,7 @@ export default function DowntimeBanner() {
         <div className={`relative flex items-center justify-center w-8 h-8 rounded-lg ${
           isDown ? "bg-red-500/15 text-red-400" : "bg-amber-500/15 text-amber-400"
         }`}>
-          {isDown ? <AlertCircle size={15} /> : <AlertTriangle size={15} />}
+          {isDown ? <WarningCircle size={15} /> : <Warning size={15} />}
           <span className={`absolute inset-0 rounded-lg animate-ping ${
             isDown ? "bg-red-500/30" : "bg-amber-500/30"
           } opacity-30`} />
@@ -93,7 +94,7 @@ export default function DowntimeBanner() {
                 className="text-[9px] text-text-muted hover:text-text-primary flex items-center gap-0.5"
               >
                 {expanded ? "Hide" : "Show all"}
-                {expanded ? <ChevronUp size={9} /> : <ChevronDown size={9} />}
+                {expanded ? <CaretUp size={9} /> : <CaretDown size={9} />}
               </button>
             )}
           </div>
@@ -110,7 +111,7 @@ export default function DowntimeBanner() {
             className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-black/5 transition-colors"
             title="Re-check"
           >
-            <RefreshCw size={12} className={checking ? "animate-spin" : ""} />
+            <ArrowsClockwise size={12} className={checking ? "animate-spin" : ""} />
           </button>
           <button
             onClick={() => dismiss(primaryService.key)}

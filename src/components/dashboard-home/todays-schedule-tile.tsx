@@ -1,6 +1,7 @@
 "use client";
+import { Calendar, Chat, Sparkle, Users } from "@phosphor-icons/react";
 
-import { Calendar, MessageSquare, Sparkles, Users } from "lucide-react";
+
 import { tokens, themeTokens } from "@/lib/brand/tokens";
 import { BentoTile, BentoEmpty } from "./bento-tile";
 import type { ScheduledItem } from "./types";
@@ -22,13 +23,13 @@ function formatTime(iso: string): string {
 function kindIcon(kind: ScheduledItem["kind"]) {
   switch (kind) {
     case "post":
-      return <Sparkles size={11} />;
+      return <Sparkle size={11} />;
     case "meeting":
       return <Users size={11} />;
     case "calendar":
       return <Calendar size={11} />;
     default:
-      return <MessageSquare size={11} />;
+      return <Chat size={11} />;
   }
 }
 

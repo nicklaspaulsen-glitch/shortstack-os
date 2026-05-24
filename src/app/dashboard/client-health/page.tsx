@@ -1,13 +1,8 @@
+import { ArrowDownRight, ArrowUpRight, Bell, Calendar, CaretRight, ChartBar, Chat, CheckCircle, Clock, CurrencyDollar, Eye, Heart, Lightbulb, Lightning, Pulse, ShieldWarning, Star, Target, ThumbsUp, TrendDown, TrendUp, Users, Warning } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Activity, Heart, AlertTriangle, CheckCircle, Users, DollarSign,
-  ChevronRight, TrendingUp, TrendingDown, Clock, Bell, Star,
-  BarChart3, ShieldAlert, ThumbsUp, MessageSquare, Zap, Eye,
-  ArrowUpRight, ArrowDownRight, Target, Lightbulb, Calendar
-} from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -147,11 +142,11 @@ export default function ClientHealthPage() {
   const atRiskMRR = clients.filter(c => c.health_score < 50).reduce((s, c) => s + c.mrr, 0);
 
   const tabs = [
-    { id: "overview" as const, label: "Overview", icon: Activity },
-    { id: "algorithm" as const, label: "Algorithm", icon: Zap },
+    { id: "overview" as const, label: "Overview", icon: Pulse },
+    { id: "algorithm" as const, label: "Algorithm", icon: Lightning },
     { id: "alerts" as const, label: "Alerts", icon: Bell },
     { id: "nps" as const, label: "NPS & Survey", icon: ThumbsUp },
-    { id: "history" as const, label: "History", icon: BarChart3 },
+    { id: "history" as const, label: "History", icon: ChartBar },
   ];
 
   return (
@@ -217,7 +212,7 @@ export default function ClientHealthPage() {
                 {/* Engagement Trend Chart */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass rounded-xl p-4">
                   <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
-                    <TrendingUp size={14} className="text-brand-accent" /> Engagement Trend (Last 6 Months)
+                    <TrendUp size={14} className="text-brand-accent" /> Engagement Trend (Last 6 Months)
                   </h3>
                   <div className="flex items-end gap-1 h-24">
                     {HEALTH_HISTORY.map((m, i) => (
@@ -287,9 +282,9 @@ export default function ClientHealthPage() {
                             </span>
                             <span className="text-[8px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-1.5 py-0.5 rounded">{client.package_tier}</span>
                             {client.trend > 0 ? (
-                              <span className="flex items-center text-[8px] text-green-400"><TrendingUp size={8} /> +{client.trend}%</span>
+                              <span className="flex items-center text-[8px] text-green-400"><TrendUp size={8} /> +{client.trend}%</span>
                             ) : client.trend < 0 ? (
-                              <span className="flex items-center text-[8px] text-red-400"><TrendingDown size={8} /> {client.trend}%</span>
+                              <span className="flex items-center text-[8px] text-red-400"><TrendDown size={8} /> {client.trend}%</span>
                             ) : null}
                           </div>
                           <p className="text-[10px] text-text-muted">{client.contact_name} &middot; Last contact: {client.last_contact}</p>
@@ -312,7 +307,7 @@ export default function ClientHealthPage() {
                             <p className="text-xs font-bold font-mono">{client.engagement}%</p>
                           </div>
                         </div>
-                        <ChevronRight size={14} className={`text-text-muted transition-transform ${selectedClient?.id === client.id ? "rotate-90" : ""}`} />
+                        <CaretRight size={14} className={`text-text-muted transition-transform ${selectedClient?.id === client.id ? "rotate-90" : ""}`} />
                       </div>
 
                       {/* Progress bar */}
@@ -337,14 +332,14 @@ export default function ClientHealthPage() {
                         <div className="mt-3 pt-3 border-t border-border-subtle/20 grid grid-cols-1 md:grid-cols-3 gap-4">
                           {/* Risk Factors */}
                           <div>
-                            <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><ShieldAlert size={10} className="text-red-400" /> Risk Factors</h4>
+                            <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><ShieldWarning size={10} className="text-red-400" /> Risk Factors</h4>
                             {client.risk_factors.length === 0 ? (
                               <p className="text-[10px] text-green-400">No risk factors detected</p>
                             ) : (
                               <div className="space-y-1">
                                 {client.risk_factors.map((r, i) => (
                                   <div key={i} className="text-[10px] text-red-600 flex items-start gap-1">
-                                    <AlertTriangle size={9} className="shrink-0 mt-0.5" /> {r}
+                                    <Warning size={9} className="shrink-0 mt-0.5" /> {r}
                                   </div>
                                 ))}
                               </div>
@@ -353,7 +348,7 @@ export default function ClientHealthPage() {
 
                           {/* Revenue Trend */}
                           <div>
-                            <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><DollarSign size={10} className="text-brand-accent" /> Revenue Trend</h4>
+                            <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><CurrencyDollar size={10} className="text-brand-accent" /> Revenue Trend</h4>
                             <div className="flex items-end gap-0.5 h-12">
                               {client.revenue_trend.map((v, i) => (
                                 <div key={i} className="flex-1 rounded-t bg-[rgba(212,255,0,0.12)]" style={{ height: `${(v / Math.max(...client.revenue_trend)) * 100}%` }} />
@@ -390,7 +385,7 @@ export default function ClientHealthPage() {
               <div className="space-y-4">
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
                   <h3 className="text-sm font-semibold mb-1 flex items-center gap-2">
-                    <Zap size={14} className="text-brand-accent" /> Health Score Algorithm
+                    <Lightning size={14} className="text-brand-accent" /> Health Score Algorithm
                   </h3>
                   <p className="text-xs text-text-muted mb-4">The health score is calculated as a weighted average of these factors (0-100 scale).</p>
                   <div className="space-y-3">
@@ -412,7 +407,7 @@ export default function ClientHealthPage() {
                 {/* Score Breakdown Per Client */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass rounded-xl p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                    <BarChart3 size={14} className="text-brand-accent" /> Client Score Breakdown
+                    <ChartBar size={14} className="text-brand-accent" /> Client Score Breakdown
                   </h3>
                   <div className="overflow-x-auto">
                     <table className="w-full text-[10px]">
@@ -467,8 +462,8 @@ export default function ClientHealthPage() {
                           alert.type === "critical" ? "bg-red-400/10" :
                           alert.type === "warning" ? "bg-yellow-400/10" : "bg-indigo-400/10"
                         }`}>
-                          {alert.type === "critical" ? <AlertTriangle size={13} className="text-red-400" /> :
-                           alert.type === "warning" ? <AlertTriangle size={13} className="text-yellow-400" /> :
+                          {alert.type === "critical" ? <Warning size={13} className="text-red-400" /> :
+                           alert.type === "warning" ? <Warning size={13} className="text-yellow-400" /> :
                            <Eye size={13} className="text-indigo-400" />}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -488,7 +483,7 @@ export default function ClientHealthPage() {
                   </div>
                 </motion.div>
 
-                {/* Activity Frequency Monitor */}
+                {/* Pulse Frequency Monitor */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass rounded-xl p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                     <Clock size={14} className="text-brand-accent" /> Last Contact Tracker
@@ -521,7 +516,7 @@ export default function ClientHealthPage() {
                   {[
                     { icon: <Star size={20} className="text-brand-accent mx-auto mb-2" />, value: avgNPS, color: "text-brand-accent", label: "Average NPS Score" },
                     { icon: <ThumbsUp size={20} className="text-green-400 mx-auto mb-2" />, value: clients.filter(c => c.nps >= 9).length, color: "text-green-400", label: "Promoters (9-10)" },
-                    { icon: <MessageSquare size={20} className="text-yellow-400 mx-auto mb-2" />, value: clients.filter(c => c.nps >= 7 && c.nps < 9).length, color: "text-yellow-400", label: "Passives (7-8)" },
+                    { icon: <Chat size={20} className="text-yellow-400 mx-auto mb-2" />, value: clients.filter(c => c.nps >= 7 && c.nps < 9).length, color: "text-yellow-400", label: "Passives (7-8)" },
                   ].map((tile, i) => (
                     <PrismPanel key={i} delay={i * 0.06} padding="p-4">
                       <div className="text-center">
@@ -595,7 +590,7 @@ export default function ClientHealthPage() {
               <div className="space-y-4">
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass rounded-xl p-4">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                    <BarChart3 size={14} className="text-brand-accent" /> Health Score History
+                    <ChartBar size={14} className="text-brand-accent" /> Health Score History
                   </h3>
                   <div className="flex items-end gap-2 h-32">
                     {HEALTH_HISTORY.map((m, i) => (

@@ -1,20 +1,15 @@
 "use client";
+import type { Icon } from "@phosphor-icons/react";
+import { BellRinging, Clock, FileMagnifyingGlass, Fire, Stack, Warning } from "@phosphor-icons/react";
 
-import {
-  AlertTriangle,
-  BellRing,
-  Clock,
-  FileQuestion,
-  Flame,
-  Layers,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+
+
 import { BRAND } from "@/lib/brand-config";
 import Reveal from "./reveal";
 import SectionHeading from "./section-heading";
 
 interface Pain {
-  icon: LucideIcon;
+  icon: Icon;
   title: string;
   body: string;
   /** Tags shown at the bottom — concrete pain bullet points. */
@@ -23,14 +18,14 @@ interface Pain {
 
 const PAINS: Pain[] = [
   {
-    icon: Layers,
+    icon: Stack,
     title: "Your tool stack is a mess",
     body:
       "GoHighLevel, ClickUp, Notion, Loom, Canva, Airtable, Zapier, ManyChat, Calendly, a separate CRM… ten tabs open and no single source of truth. Every subscription renews on a different day and nobody is ever 100% sure which tool has the latest client info.",
     tags: ["10+ logins", "$500+/mo", "no source of truth"],
   },
   {
-    icon: FileQuestion,
+    icon: FileMagnifyingGlass,
     title: "\"What did you do this week?\"",
     body:
       "Clients ask for updates and you're scrambling to stitch together screenshots, numbers, and notes from five dashboards. By the time you send the report, the work is already a week old and the client is already skeptical.",
@@ -44,21 +39,21 @@ const PAINS: Pain[] = [
     tags: ["calendar slips", "freelancer cost", "client churn risk"],
   },
   {
-    icon: Flame,
+    icon: Fire,
     title: "Outreach is getting burned",
     body:
       "Cold-email templates die in weeks. Spam filters eat half your sends. DMs get flagged. Every time you finally find an angle that works, someone else copy-pastes it and kills the inbox before your follow-ups even land.",
     tags: ["templates die", "deliverability", "DMs flagged"],
   },
   {
-    icon: AlertTriangle,
+    icon: Warning,
     title: "Scaling = drowning, not marketing",
     body:
       "The moment you pass 10 clients, you stop doing actual marketing and start doing admin: onboarding forms, proposals, contract chase-ups, invoice reminders, Slack questions, portal logins. You built an agency. You got a project management job.",
     tags: ["admin > marketing", "no leverage", "owner stuck"],
   },
   {
-    icon: BellRing,
+    icon: BellRinging,
     title: "No clean system to onboard and retain",
     body:
       "Every new client is a manual setup: spin up a folder, send the contract, invoice them, give them a dashboard link, explain three tools, send a Loom. Then six months in they ask, \"what are we actually paying you for?\" and you don't have a clean answer.",

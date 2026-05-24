@@ -130,7 +130,7 @@ export const TRANSITIONS_LIBRARY: Transition[] = [
   },
   {
     id: "tr_fade_film",
-    name: "Film Fade",
+    name: "FilmStrip Fade",
     category: "fade",
     duration_ms: 700,
     description: "Fade with a subtle grain/flicker overlay.",
@@ -762,7 +762,7 @@ export const TRANSITIONS_LIBRARY: Transition[] = [
   },
   {
     id: "tr_film_burn",
-    name: "Film Burn",
+    name: "FilmStrip Burn",
     category: "creative",
     duration_ms: 700,
     description: "Old-film burn, curl, and sear between clips.",
@@ -770,7 +770,7 @@ export const TRANSITIONS_LIBRARY: Transition[] = [
   },
   {
     id: "tr_film_flash",
-    name: "Film Flash",
+    name: "FilmStrip Flash",
     category: "creative",
     duration_ms: 150,
     description: "Blown-out single-frame photo-flash.",

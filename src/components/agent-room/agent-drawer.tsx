@@ -1,8 +1,8 @@
 "use client";
+import { ArrowUpRight, Clock, Lightning, Pulse, Warning, X } from "@phosphor-icons/react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { X, ArrowUpRight, Activity, AlertTriangle, Clock, Zap } from "lucide-react";
 import type { AgentDef } from "./roster";
 import type { AgentStatus } from "./agent-avatar";
 
@@ -77,7 +77,7 @@ export default function AgentDrawer({ agent, status, integrationEnvStatus, run, 
               {/* Integration env-var hint */}
               {agent.kind !== "worker" && integrationEnvStatus === "missing" && (
                 <div className="p-3 rounded-lg bg-amber-50 border border-amber-500/20 text-xs text-amber-700 flex gap-2">
-                  <AlertTriangle size={14} className="mt-0.5 shrink-0" />
+                  <Warning size={14} className="mt-0.5 shrink-0" />
                   <div>
                     Missing environment variables — the integration is
                     offline until you set them in Vercel.
@@ -88,13 +88,13 @@ export default function AgentDrawer({ agent, status, integrationEnvStatus, run, 
               {/* Runs summary */}
               <div className="grid grid-cols-3 gap-2">
                 <StatCard
-                  icon={<Zap size={12} />}
+                  icon={<Lightning size={12} />}
                   label="Runs / hr"
                   value={run?.total_runs_1h ?? 0}
                   tint="text-emerald-400"
                 />
                 <StatCard
-                  icon={<AlertTriangle size={12} />}
+                  icon={<Warning size={12} />}
                   label="Errors / hr"
                   value={run?.error_count_1h ?? 0}
                   tint={run && run.error_count_1h > 0 ? "text-red-400" : "text-white/70"}
@@ -148,7 +148,7 @@ function StatusPill({ status }: { status: AgentStatus }) {
     live: {
       bg: "bg-emerald-400/15 text-emerald-700 border-emerald-400/30",
       label: "Live — ran in the last 5 min",
-      icon: <Activity size={12} />,
+      icon: <Pulse size={12} />,
     },
     recent: {
       bg: "bg-amber-400/15 text-amber-700 border-amber-400/30",
@@ -163,12 +163,12 @@ function StatusPill({ status }: { status: AgentStatus }) {
     error: {
       bg: "bg-red-400/15 text-red-600 border-red-400/30",
       label: "Error — half or more recent runs failed",
-      icon: <AlertTriangle size={12} />,
+      icon: <Warning size={12} />,
     },
     disabled: {
       bg: "bg-slate-700/50 text-slate-300 border-slate-600/40",
       label: "Disabled — no credentials configured",
-      icon: <AlertTriangle size={12} />,
+      icon: <Warning size={12} />,
     },
   };
   const s = map[status];

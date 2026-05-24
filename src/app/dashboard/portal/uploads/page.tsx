@@ -1,3 +1,4 @@
+import { ArrowSquareOut, CaretRight, CircleNotch, DownloadSimple, Eye, File, FileText, FilmStrip, FolderOpen, Globe, Heart, Image, Link, MusicNote, ShareNetwork, TrendUp, UploadSimple, Users } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
@@ -7,12 +8,6 @@ import { PageLoading } from "@/components/ui/loading";
 import EmptyState from "@/components/ui/empty-state";
 import StatusBadge from "@/components/ui/status-badge";
 import { formatDate, formatRelativeTime } from "@/lib/utils";
-import {
-  Upload, FolderOpen, Film, FileText, Link2,
-  Globe, Eye, Download, Loader,
-  ImageIcon, Music, File, ChevronRight, ExternalLink,
-  TrendingUp, Users, Heart, Share2
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { getMaxStorageUpload, formatBytes } from "@/lib/plan-config";
 import { ALLOWED_GENERAL_UPLOADS, buildAccept, validateFile } from "@/lib/file-types";
@@ -164,8 +159,8 @@ export default function ClientUploadsPage() {
           body: form,
         });
         if (!res.ok) {
-          const err = await res.json().catch(() => ({ error: "Upload failed" }));
-          toast.error(`${file.name}: ${err.error || "Upload failed"}`);
+          const err = await res.json().catch(() => ({ error: "UploadSimple failed" }));
+          toast.error(`${file.name}: ${err.error || "UploadSimple failed"}`);
           continue;
         }
         toast.success(`Uploaded: ${file.name}`);
@@ -188,10 +183,10 @@ export default function ClientUploadsPage() {
 
   function getFileIcon(type: string) {
     if (type.startsWith("image") || ["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(type)) return <MotionPage>
-                                                                                                              <ImageIcon size={14} className="text-indigo-600" />
+                                                                                                              <Image size={14} className="text-indigo-600" />
                                                                                                             </MotionPage>;
-    if (type.startsWith("video") || ["mp4", "mov", "avi", "webm"].includes(type)) return <Film size={14} className="text-purple-400" />;
-    if (type.startsWith("audio") || ["mp3", "wav", "ogg"].includes(type)) return <Music size={14} className="text-pink-400" />;
+    if (type.startsWith("video") || ["mp4", "mov", "avi", "webm"].includes(type)) return <FilmStrip size={14} className="text-purple-400" />;
+    if (type.startsWith("audio") || ["mp3", "wav", "ogg"].includes(type)) return <MusicNote size={14} className="text-pink-400" />;
     if (["pdf", "doc", "docx", "txt"].includes(type)) return <FileText size={14} className="text-text-secondary" />;
     return <File size={14} className="text-text-muted" />;
   }
@@ -242,14 +237,14 @@ export default function ClientUploadsPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="glass rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Upload size={14} className="text-brand-accent" />
+            <UploadSimple size={14} className="text-brand-accent" />
             <span className="text-[9px] text-text-muted uppercase tracking-wider">Uploads</span>
           </div>
           <p className="text-2xl font-bold font-mono">{analytics.totalUploads}</p>
         </div>
         <div className="glass rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Film size={14} className="text-purple-400" />
+            <FilmStrip size={14} className="text-purple-400" />
             <span className="text-[9px] text-text-muted uppercase tracking-wider">Content</span>
           </div>
           <p className="text-2xl font-bold font-mono">{analytics.totalContent}</p>
@@ -263,7 +258,7 @@ export default function ClientUploadsPage() {
         </div>
         <div className="glass rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp size={14} className="text-indigo-600" />
+            <TrendUp size={14} className="text-indigo-600" />
             <span className="text-[9px] text-text-muted uppercase tracking-wider">This Week</span>
           </div>
           <p className="text-2xl font-bold font-mono">{analytics.recentActivity}</p>
@@ -286,7 +281,7 @@ export default function ClientUploadsPage() {
       )}
 
       {/* Tabs */}
-      <div className="tab-pill-strip w-fit">
+      <div className="tab-pill-strip w-fit overflow-x-auto max-w-full">
         {(["uploads", "published", "content", "social"] as const).map(t => (
           <button key={t} onClick={() => setTab(t)}
             className={`tab-pill${tab === t ? " active" : ""}`}>
@@ -323,13 +318,13 @@ export default function ClientUploadsPage() {
           >
             {uploading ? (
               <div className="flex flex-col items-center gap-2">
-                <Loader size={24} className="animate-spin text-brand-accent" />
+                <CircleNotch size={24} className="animate-spin text-brand-accent" />
                 <p className="text-xs text-text-muted">Uploading files...</p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2">
                 <div className="w-12 h-12 bg-[rgba(212,255,0,0.08)] rounded-xl flex items-center justify-center">
-                  <Upload size={20} className="text-brand-accent" />
+                  <UploadSimple size={20} className="text-brand-accent" />
                 </div>
                 <p className="text-sm font-medium">Drop files here or click to upload</p>
                 <p className="text-[10px] text-text-muted">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV — max {maxUploadLabel}</p>
@@ -342,7 +337,7 @@ export default function ClientUploadsPage() {
             <EmptyState
               icon={<FolderOpen size={24} />}
               title="No uploads yet"
-              description="Upload files to share with your agency team"
+              description="UploadSimple files to share with your agency team"
             />
           ) : (
             <div className="space-y-2">
@@ -363,7 +358,7 @@ export default function ClientUploadsPage() {
                   {upload.file_url && (
                     <a href={upload.file_url} target="_blank" rel="noopener noreferrer"
                       className="btn-ghost text-[10px] p-1.5">
-                      <Download size={12} />
+                      <DownloadSimple size={12} />
                     </a>
                   )}
                 </div>
@@ -408,7 +403,7 @@ export default function ClientUploadsPage() {
                       {Object.entries(item.published_urls).map(([platform, url]) => (
                         <a key={platform} href={url} target="_blank" rel="noopener noreferrer"
                           className="btn-secondary text-[9px] py-1 px-2 flex items-center gap-1">
-                          <ExternalLink size={9} /> {platform}
+                          <ArrowSquareOut size={9} /> {platform}
                         </a>
                       ))}
                     </div>
@@ -433,7 +428,7 @@ export default function ClientUploadsPage() {
             content.map(item => (
               <div key={item.id} className="glass rounded-xl p-4 card-hover p-3 flex items-center gap-3">
                 <div className="w-9 h-9 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center shrink-0">
-                  <Film size={14} className="text-brand-accent" />
+                  <FilmStrip size={14} className="text-brand-accent" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium truncate">{item.title}</p>
@@ -451,7 +446,7 @@ export default function ClientUploadsPage() {
                 {item.drive_folder_url && (
                   <a href={item.drive_folder_url} target="_blank" rel="noopener noreferrer"
                     className="btn-ghost text-[10px] p-1.5">
-                    <Link2 size={12} />
+                    <Link size={12} />
                   </a>
                 )}
               </div>
@@ -466,7 +461,7 @@ export default function ClientUploadsPage() {
           {zernioProfiles.length === 0 ? (
             <div className="card-static text-center py-12">
               <div className="w-16 h-16 bg-[rgba(212,255,0,0.08)] flex items-center justify-center mx-auto mb-4">
-                <Share2 size={28} className="text-brand-accent" />
+                <ShareNetwork size={28} className="text-brand-accent" />
               </div>
               <h3 className="text-sm font-semibold mb-1">Social accounts not connected</h3>
               <p className="text-xs text-text-muted max-w-xs mx-auto mb-4">
@@ -527,7 +522,7 @@ export default function ClientUploadsPage() {
                     <p className="text-sm font-bold font-mono">—</p>
                   </div>
                   <div className="text-center p-3 bg-white/[0.04] rounded-xl">
-                    <ChevronRight size={16} className="text-brand-accent mx-auto mb-1" />
+                    <CaretRight size={16} className="text-brand-accent mx-auto mb-1" />
                     <p className="text-[9px] text-text-muted">Clicks</p>
                     <p className="text-sm font-bold font-mono">—</p>
                   </div>

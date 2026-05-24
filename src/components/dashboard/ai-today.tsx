@@ -1,4 +1,5 @@
 "use client";
+import { ArrowRight, ArrowsClockwise, Chat, CurrencyDollar, PenNib, Phone, SlidersHorizontal, Sparkle, Target, TrendUp } from "@phosphor-icons/react";
 
 /**
  * AI Today widget — surfaces the top 3 most useful actions for THIS user
@@ -13,18 +14,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  Sparkles,
-  Target,
-  PenTool,
-  Phone,
-  TrendingUp,
-  MessageSquare,
-  SlidersHorizontal,
-  DollarSign,
-  ArrowRight,
-  RefreshCw,
-} from "lucide-react";
 
 interface Action {
   title: string;
@@ -37,12 +26,12 @@ interface Action {
 
 const ICON_MAP = {
   leads: Target,
-  content: PenTool,
+  content: PenNib,
   calls: Phone,
-  deals: TrendingUp,
-  inbox: MessageSquare,
+  deals: TrendUp,
+  inbox: Chat,
   setup: SlidersHorizontal,
-  money: DollarSign,
+  money: CurrencyDollar,
 } as const;
 
 const URGENCY_COLORS = {
@@ -86,7 +75,7 @@ export default function AiToday() {
             className="w-8 h-8 rounded-lg flex items-center justify-center animate-pulse"
             style={{ background: "rgba(212,255,0,0.08)" }}
           >
-            <Sparkles size={14} style={{ color: "#D4FF00" }} />
+            <Sparkle size={14} style={{ color: "#D4FF00" }} />
           </div>
           <div className="flex-1">
             <div className="h-3 w-24 bg-white/[0.04] rounded animate-pulse mb-1.5" />
@@ -128,7 +117,7 @@ export default function AiToday() {
               border: "1px solid rgba(212,255,0,0.25)",
             }}
           >
-            <Sparkles size={15} style={{ color: "#D4FF00" }} />
+            <Sparkle size={15} style={{ color: "#D4FF00" }} />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -154,7 +143,7 @@ export default function AiToday() {
           className="text-[11px] text-text-muted hover:text-text-primary flex items-center gap-1 px-2 py-1 rounded-md hover:bg-white/[0.03] transition disabled:opacity-50"
           title="Re-run AI suggestions"
         >
-          <RefreshCw
+          <ArrowsClockwise
             size={11}
             className={refreshing ? "animate-spin" : ""}
           />

@@ -1,8 +1,8 @@
 "use client";
+import { X } from "@phosphor-icons/react";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
 import {
   TASK_PRIORITIES,
   TASK_TYPES,

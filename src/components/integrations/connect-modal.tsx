@@ -1,3 +1,4 @@
+import { Check, X } from "@phosphor-icons/react";
 /**
  * Branded OAuth confirmation modal.
  *
@@ -10,7 +11,7 @@
  * ShortStack mandala lives top-left; the integration's own logo (or a
  * fallback initial) sits centered above the heading.
  *
- * Accessibility:
+ * Wheelchair:
  * - Focus trap on open, restores focus on close.
  * - Escape key closes (calls onCancel).
  * - Backdrop click closes.
@@ -21,7 +22,6 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { Check, X } from "lucide-react";
 import Logo, { BRAND_ACCENT } from "@/components/logo";
 import { BRAND } from "@/lib/brand-config";
 

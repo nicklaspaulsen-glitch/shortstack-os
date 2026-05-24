@@ -1,4 +1,5 @@
 "use client";
+import { ArrowLeft, CheckCircle, Circle, CircleNotch, Clock, Envelope } from "@phosphor-icons/react";
 
 /**
  * AI Sales Coach — analysis detail page.
@@ -16,15 +17,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import {
-  ArrowLeft,
-  CheckCircle2,
-  Circle,
-  Clock,
-  Loader2,
-  Mail,
-  Sparkles,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface CoachInsight {
@@ -208,7 +200,7 @@ export default function CoachAnalysisDetail() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center gap-2 text-text-muted text-sm"><Loader2 className="h-4 w-4 animate-spin" />Loading analysis…
+      <MotionPage className="flex items-center gap-2 text-text-muted text-sm"><CircleNotch className="h-4 w-4 animate-spin" />Loading analysis…
               </MotionPage>
     );
   }
@@ -246,7 +238,7 @@ export default function CoachAnalysisDetail() {
             onClick={() => window.alert("Email digest not yet wired to send — coming next.")}
             className="inline-flex items-center gap-2 rounded-md border border-border-subtle bg-white/5 px-3 py-1.5 text-xs font-medium text-text-primary hover:bg-white/10"
           >
-            <Mail className="h-3.5 w-3.5" />
+            <Envelope className="h-3.5 w-3.5" />
             Email this analysis
           </button>
         </div>
@@ -404,7 +396,7 @@ export default function CoachAnalysisDetail() {
                         }`}
                       >
                         {done ? (
-                          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-accent" />
+                          <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-brand-accent" />
                         ) : (
                           <Circle className="mt-0.5 h-4 w-4 shrink-0 text-text-muted" />
                         )}

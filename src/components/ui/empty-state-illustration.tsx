@@ -83,7 +83,7 @@ export function EmptyLeadsIllustration({ size = 200 }: { size?: number }) {
         <circle cx="90" cy="120" r="32" fill={`url(#${id}-surface)`} stroke={`url(#${id}-gold)`} strokeWidth="4" />
         <circle cx="90" cy="120" r="24" fill="none" stroke={`url(#${id}-gold)`} strokeWidth="1.5" opacity="0.35" />
         <line x1="113" y1="143" x2="135" y2="165" stroke={`url(#${id}-gold)`} strokeWidth="7" strokeLinecap="round" />
-        {/* Sparkles inside lens */}
+        {/* Sparkle inside lens */}
         <circle cx="82" cy="112" r="2" fill="white" opacity="0.8" />
         <circle cx="96" cy="124" r="1.2" fill="white" opacity="0.6" />
       </g>
@@ -137,7 +137,7 @@ export function EmptyContentIllustration({ size = 200 }: { size?: number }) {
         <rect x="72" y="128" width="40" height="3" rx="1.5" fill={`url(#${id}-gold)`} opacity="0.2" />
         <rect x="72" y="140" width="54" height="3" rx="1.5" fill={`url(#${id}-gold)`} opacity="0.2" />
       </g>
-      {/* Sparkles */}
+      {/* Sparkle */}
       <g>
         <path d="M155 55 L158 61 L164 64 L158 67 L155 73 L152 67 L146 64 L152 61 Z" fill={`url(#${id}-gold)`} />
         <path d="M40 110 L42 114 L46 116 L42 118 L40 122 L38 118 L34 116 L38 114 Z" fill={`url(#${id}-blue)`} />

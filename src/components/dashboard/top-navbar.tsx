@@ -1,7 +1,7 @@
 "use client";
+import { Calendar, CaretRight, Sparkle } from "@phosphor-icons/react";
 
 import { usePathname } from "next/navigation";
-import { ChevronRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
@@ -220,7 +220,7 @@ export default function TopNavbar() {
               return (
                 <span key={crumb.href} className="flex items-center gap-1 min-w-0">
                   {i > 0 && (
-                    <ChevronRight size={11} className="shrink-0 text-text-muted/40" aria-hidden />
+                    <CaretRight size={11} className="shrink-0 text-text-muted/40" aria-hidden />
                   )}
                   {isLast ? (
                     <span
@@ -262,7 +262,7 @@ export default function TopNavbar() {
             }}
             title="Open Trinity quick prompt"
           >
-            <Sparkles size={11} />
+            <Sparkle size={11} />
             <span className="hidden sm:inline">Ask Trinity</span>
             <span
               className="text-[9px] font-mono opacity-60 border rounded px-1 hidden md:inline"

@@ -1,4 +1,5 @@
 "use client";
+import { ArrowLeft, ArrowSquareOut, Calendar, CaretDown, CaretRight, ChartBar, Chat, CheckCircle, Circle, CircleNotch, CreditCard, DownloadSimple, File, FileText, FilmStrip, FolderOpen, Image, Lightning, Megaphone, MusicNote, Palette, Phone, Plus, Robot, Rocket, Sparkle, Target } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -10,13 +11,6 @@ import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import { PageLoading } from "@/components/ui/loading";
 import { formatCurrency, formatDate, formatRelativeTime } from "@/lib/utils";
-import {
-  ArrowLeft, FileText, CreditCard, CheckCircle, Circle,
-  Film, Megaphone, Download, Sparkles, Plus, Loader, Rocket,
-  Target, Palette, BarChart3, ChevronDown, ChevronRight, Zap,
-  Phone, MessageSquare, Bot, FolderOpen, ImageIcon, Music, File as FileIcon,
-  ExternalLink
-} from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import SocialConnect from "@/components/social-connect";
@@ -141,7 +135,7 @@ export default function ClientDetailPage() {
             className="btn-pill text-xs flex items-center gap-1.5"
             aria-label="Open Smart Manage"
           >
-            <Sparkles size={13} /> Smart Manage
+            <Sparkle size={13} /> Smart Manage
           </button>
           <button onClick={async () => {
             const tid = "welcome-doc";
@@ -158,7 +152,7 @@ export default function ClientDetailPage() {
               } else toast.error("Failed", { id: tid });
             } catch { toast.error("Failed", { id: tid }); }
           }} className="btn-pill-ghost text-xs flex items-center gap-1.5">
-            <Download size={13} /> Welcome Doc
+            <DownloadSimple size={13} /> Welcome Doc
           </button>
           <button onClick={async () => {
             const tid = "contract-pdf";
@@ -267,7 +261,7 @@ export default function ClientDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* AI Actions */}
           <div className="glass rounded-xl border border-border-subtle p-4">
-            <h3 className="flex items-center gap-2 text-sm font-semibold text-text-primary mb-3"><Sparkles size={15} className="text-brand-accent" /> AI Agent Activity</h3>
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-text-primary mb-3"><Sparkle size={15} className="text-brand-accent" /> AI Agent Activity</h3>
             <div className="space-y-1 max-h-80 overflow-y-auto">
               {aiActions.length === 0 ? (
                 <p className="text-text-muted text-sm">No AI actions for this client yet</p>
@@ -330,7 +324,7 @@ export default function ClientDetailPage() {
                     // the user downloads a script.
                     setTimeout(() => URL.revokeObjectURL(url), 1000);
                   }
-                }} aria-label={`Download ${s.title} as PDF`} className="text-brand-accent text-xs hover:text-brand-accent/80"><Download size={14} /></button>
+                }} aria-label={`DownloadSimple ${s.title} as PDF`} className="text-brand-accent text-xs hover:text-brand-accent/80"><DownloadSimple size={14} /></button>
               )},
             ]}
             data={scripts}
@@ -466,7 +460,7 @@ export default function ClientDetailPage() {
             <SocialConnect clientId={id as string} clientName={client?.business_name} />
           </div>
 
-          {/* Telegram Bot */}
+          {/* Telegram Robot */}
           <TelegramBotSetup clientId={id as string} client={client} onUpdate={fetchAll} />
 
         </div>
@@ -625,11 +619,11 @@ function ClientPhoneSection({
               </span>
               {status.eleven_agent_id ? (
                 <span className="text-[9px] px-2 py-0.5 rounded-full border bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.25)] flex items-center gap-1">
-                  <Bot size={9} /> AI agent ready
+                  <Robot size={9} /> AI agent ready
                 </span>
               ) : (
                 <span className="text-[9px] px-2 py-0.5 rounded-full border bg-slate-500/10 text-text-muted border-slate-500/30 flex items-center gap-1">
-                  <Bot size={9} /> AI agent not configured
+                  <Robot size={9} /> AI agent not configured
                 </span>
               )}
             </div>
@@ -643,7 +637,7 @@ function ClientPhoneSection({
           <div className="grid grid-cols-2 gap-2 mt-2">
             <div className="rounded-xl border border-border-subtle bg-surface-light p-3">
               <div className="flex items-center gap-1.5 text-[10px] text-text-muted mb-0.5">
-                <MessageSquare size={10} /> SMS this month
+                <Chat size={10} /> SMS this month
               </div>
               <p className="text-base font-bold">{status.usage.sms_this_month}</p>
             </div>
@@ -685,7 +679,7 @@ function ClientPhoneSection({
               disabled={provisioning || capHit}
               className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50"
             >
-              {provisioning ? <Loader size={12} className="animate-spin" /> : <Plus size={12} />}
+              {provisioning ? <CircleNotch size={12} className="animate-spin" /> : <Plus size={12} />}
               {provisioning ? "Provisioning..." : "Provision a number"}
             </button>
           </div>
@@ -721,14 +715,14 @@ function formatFileBytes(bytes: number): string {
 function fileIconFor(type: string) {
   const t = (type || "").toLowerCase();
   if (t.startsWith("image") || ["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(t))
-    return <ImageIcon size={14} className="text-indigo-400" />;
+    return <Image size={14} className="text-indigo-400" />;
   if (t.startsWith("video") || ["mp4", "mov", "avi", "webm", "mkv"].includes(t))
-    return <Film size={14} className="text-brand-accent" />;
+    return <FilmStrip size={14} className="text-brand-accent" />;
   if (t.startsWith("audio") || ["mp3", "wav", "ogg", "m4a", "flac"].includes(t))
-    return <Music size={14} className="text-pink-400" />;
+    return <MusicNote size={14} className="text-pink-400" />;
   if (["pdf", "doc", "docx", "txt"].includes(t) || t.includes("document"))
     return <FileText size={14} className="text-brand-accent" />;
-  return <FileIcon size={14} className="text-text-muted" />;
+  return <File size={14} className="text-text-muted" />;
 }
 
 function ClientFilesSection({ clientId, readOnly = false }: { clientId: string; readOnly?: boolean }) {
@@ -802,7 +796,7 @@ function ClientFilesSection({ clientId, readOnly = false }: { clientId: string; 
                   </div>
                   <p className="text-[9px] text-text-muted mt-0.5">{formatRelativeTime(f.uploaded_at)}</p>
                 </div>
-                {f.url && <ExternalLink size={10} className="text-text-muted shrink-0" />}
+                {f.url && <ArrowSquareOut size={10} className="text-text-muted shrink-0" />}
               </a>
             );
           })}
@@ -812,7 +806,7 @@ function ClientFilesSection({ clientId, readOnly = false }: { clientId: string; 
   );
 }
 
-/* ─── Telegram Bot Setup Component ────────────────────────────────── */
+/* ─── Telegram Robot Setup Component ────────────────────────────────── */
 function TelegramBotSetup({ clientId, client, onUpdate }: { clientId: string; client: Client | null; onUpdate: () => void }) {
   const [token, setToken] = useState("");
   const [setting, setSetting] = useState(false);
@@ -830,7 +824,7 @@ function TelegramBotSetup({ clientId, client, onUpdate }: { clientId: string; cl
       });
       const data = await res.json();
       if (data.success) {
-        toast.success(`Bot @${data.bot_username} connected!`);
+        toast.success(`Robot @${data.bot_username} connected!`);
         setToken("");
         onUpdate();
       } else {
@@ -850,7 +844,7 @@ function TelegramBotSetup({ clientId, client, onUpdate }: { clientId: string; cl
         body: JSON.stringify({ client_id: clientId }),
       });
       const data = await res.json();
-      if (data.success) { toast.success("Bot removed"); onUpdate(); }
+      if (data.success) { toast.success("Robot removed"); onUpdate(); }
     } catch { toast.error("Error"); }
     setRemoving(false);
   }
@@ -861,7 +855,7 @@ function TelegramBotSetup({ clientId, client, onUpdate }: { clientId: string; cl
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="text-[#26A5E4]">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
         </svg>
-        Client Telegram Bot
+        Client Telegram Robot
       </h3>
 
       {hasBot ? (
@@ -870,7 +864,7 @@ function TelegramBotSetup({ clientId, client, onUpdate }: { clientId: string; cl
             <div className="w-2 h-2 rounded-full bg-success" />
             <div className="flex-1">
               <p className="text-xs font-medium">@{(client as unknown as Record<string, unknown>)?.telegram_bot_username as string}</p>
-              <p className="text-[9px] text-text-muted">Bot connected and active</p>
+              <p className="text-[9px] text-text-muted">Robot connected and active</p>
             </div>
             <button onClick={removeBot} disabled={removing}
               className="text-[9px] text-danger hover:text-danger/80 transition-colors">
@@ -901,7 +895,7 @@ function TelegramBotSetup({ clientId, client, onUpdate }: { clientId: string; cl
             />
             <button onClick={setupBot} disabled={setting}
               className="btn-primary text-[10px] px-3 py-1.5 shrink-0">
-              {setting ? "Setting up..." : "Connect Bot"}
+              {setting ? "Setting up..." : "Connect Robot"}
             </button>
           </div>
         </div>
@@ -957,7 +951,7 @@ const ONBOARDING_PHASES = [
   },
   {
     phase: "Launch & Growth",
-    icon: <BarChart3 size={14} />,
+    icon: <ChartBar size={14} />,
     color: "text-emerald-400",
     bg: "bg-emerald-400/10",
     tasks: [
@@ -972,7 +966,7 @@ const ONBOARDING_PHASES = [
   },
   {
     phase: "Optimization & Scaling",
-    icon: <Zap size={14} />,
+    icon: <Lightning size={14} />,
     color: "text-pink-400",
     bg: "bg-pink-400/10",
     tasks: [
@@ -1091,7 +1085,7 @@ function ClientTasksTab({ clientId, tasks, onRefresh }: {
             {onboardingTasks.length === 0 && (
               <button onClick={seedOnboardingTasks} disabled={seeding}
                 className="btn-primary text-[10px] py-1.5 px-3 flex items-center gap-1">
-                {seeding ? <Loader size={10} className="animate-spin" /> : <Rocket size={10} />}
+                {seeding ? <CircleNotch size={10} className="animate-spin" /> : <Rocket size={10} />}
                 {seeding ? "Creating..." : "Initialize Checklist"}
               </button>
             )}
@@ -1158,7 +1152,7 @@ function ClientTasksTab({ clientId, tasks, onRefresh }: {
                   </div>
                   <div className="flex items-center gap-2">
                     {allDone && <span className="text-[8px] text-success font-bold bg-success/10 px-2 py-0.5 rounded-full">DONE</span>}
-                    {isExpanded ? <ChevronDown size={14} className="text-text-muted" /> : <ChevronRight size={14} className="text-text-muted" />}
+                    {isExpanded ? <CaretDown size={14} className="text-text-muted" /> : <CaretRight size={14} className="text-text-muted" />}
                   </div>
                 </button>
 
@@ -1207,7 +1201,7 @@ function ClientTasksTab({ clientId, tasks, onRefresh }: {
             />
             <button onClick={addCustomTask} disabled={addingTask || !newTaskTitle.trim()}
               className="btn-primary text-[10px] py-1.5 px-3 flex items-center gap-1">
-              {addingTask ? <Loader size={10} className="animate-spin" /> : <Plus size={10} />}
+              {addingTask ? <CircleNotch size={10} className="animate-spin" /> : <Plus size={10} />}
               Add
             </button>
           </div>

@@ -1,28 +1,11 @@
 "use client";
+import { ArrowUpRight, Bell, Briefcase, Clock, FileText, Lightning, MagnifyingGlass, Moon, PaperPlaneTilt, Pulse, Sparkle, Sun, Target, TrendUp, UserPlus, Users } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import {
-  Briefcase,
-  FileText,
-  Send,
-  Sparkles,
-  Bell,
-  Sun,
-  Moon,
-  Search,
-  Users,
-  Target,
-  Zap,
-  Activity,
-  TrendingUp,
-  ArrowUpRight,
-  UserPlus,
-  Clock,
-} from "lucide-react";
 
 import { useAuth } from "@/lib/auth-context";
 import { createClient as createSupabaseClient } from "@/lib/supabase/client";
@@ -213,7 +196,7 @@ function RHStatCard({
               color: changeUp ? "#22C55E" : "#F87171",
             }}
           >
-            {changeUp && <TrendingUp size={10} />}
+            {changeUp && <TrendUp size={10} />}
             {change}
           </span>
         )}
@@ -333,7 +316,7 @@ function PipelineBoard() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <Activity size={15} style={{ color: "var(--sidebar-icon-active)" }} />
+          <Pulse size={15} style={{ color: "var(--sidebar-icon-active)" }} />
           <span
             style={{
               fontSize: 12,
@@ -973,7 +956,7 @@ function AgencyDashboard() {
         ? Math.min(Math.round((stats.workflows / 20) * 100), 100)
         : 45,
       color: "#F97316",
-      icon: Zap,
+      icon: Lightning,
     },
     {
       label: "AI Credits",
@@ -983,7 +966,7 @@ function AgencyDashboard() {
       change: "Pro",
       changeUp: true,
       color: "#22C55E",
-      icon: Sparkles,
+      icon: Sparkle,
     },
   ];
 
@@ -1029,9 +1012,9 @@ function AgencyDashboard() {
 
         {/* Toolbar */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          {/* Search trigger */}
+          {/* MagnifyingGlass trigger */}
           <button
-            aria-label="Search (⌘K)"
+            aria-label="MagnifyingGlass (⌘K)"
             onClick={() => {
               const e = new KeyboardEvent("keydown", {
                 key: "k",
@@ -1054,8 +1037,8 @@ function AgencyDashboard() {
               whiteSpace: "nowrap",
             }}
           >
-            <Search size={14} />
-            <span className="hidden sm:inline">Search</span>
+            <MagnifyingGlass size={14} />
+            <span className="hidden sm:inline">MagnifyingGlass</span>
             <kbd
               style={{
                 display: "none",
@@ -1212,13 +1195,13 @@ function ClientDashboard() {
             },
             {
               label: "Content",
-              icon: <Sparkles size={22} />,
+              icon: <Sparkle size={22} />,
               color: "text-brand-accent",
               route: "/dashboard/portal/content",
             },
             {
               label: "Contact Us",
-              icon: <Send size={22} />,
+              icon: <PaperPlaneTilt size={22} />,
               color: "text-success",
               route: "/dashboard/portal/support",
             },

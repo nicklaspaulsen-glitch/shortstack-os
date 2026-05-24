@@ -1,15 +1,9 @@
+import { Calendar, ChartBar, ChatCircle, Check, CheckCircle, CircleNotch, Clock, Copy, CurrencyDollar, FileText, FloppyDisk, Funnel, Gear, Lightning, Pause, PencilSimple, Play, Plus, Pulse, Robot, Sparkle, Trash, TrendUp, Users, WarningCircle, WifiHigh, WifiSlash, X, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
-import {
-  Bot, Settings, Plus, Trash2, Play, Pause, Edit3, X,
-  Wifi, WifiOff, Clock, AlertCircle, Save, Loader,
-  Zap, DollarSign, TrendingUp, Users, FileText,
-  Calendar, BarChart3, Activity, CheckCircle2, XCircle,
-  Copy, Sparkles, MessageCircle, Filter
-} from "lucide-react";
 import EmptyState from "@/components/ui/empty-state";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
@@ -84,7 +78,7 @@ const ROUTINE_TEMPLATES: Template[] = [
     schedule: "0 17 * * 5",
     message_template:
       "📨 *Weekly Outreach Recap*\n\nTotal sent: {{sent_count}}\nReplied: {{reply_count}}\nBooked: {{booked_count}}",
-    icon: <MessageCircle size={18} />,
+    icon: <ChatCircle size={18} />,
     color: "text-emerald-400",
   },
   {
@@ -95,7 +89,7 @@ const ROUTINE_TEMPLATES: Template[] = [
     schedule: "manual",
     message_template:
       "💸 *New Deal Closed!*\n\nClient: {{client_name}}\nValue: ${{deal_value}}",
-    icon: <DollarSign size={18} />,
+    icon: <CurrencyDollar size={18} />,
     color: "text-brand-accent",
   },
   {
@@ -106,7 +100,7 @@ const ROUTINE_TEMPLATES: Template[] = [
     schedule: "*/15 * * * *",
     message_template:
       "🚨 *Service Down*\n\n{{service_name}} is currently unreachable.",
-    icon: <AlertCircle size={18} />,
+    icon: <WarningCircle size={18} />,
     color: "text-red-400",
   },
   {
@@ -117,7 +111,7 @@ const ROUTINE_TEMPLATES: Template[] = [
     schedule: "manual",
     message_template:
       "📤 *Content Published*\n\n{{client_name}} — {{content_title}}",
-    icon: <Sparkles size={18} />,
+    icon: <Sparkle size={18} />,
     color: "text-brand-accent",
   },
   {
@@ -139,7 +133,7 @@ const ROUTINE_TEMPLATES: Template[] = [
     schedule: "0 19 * * 0",
     message_template:
       "📊 *Weekly Financial Summary*\n\nMRR: ${{mrr}}\nNew deals: {{new_deals}}\nChurn: {{churn_count}}",
-    icon: <TrendingUp size={18} />,
+    icon: <TrendUp size={18} />,
     color: "text-emerald-400",
   },
   {
@@ -160,7 +154,7 @@ const ROUTINE_TEMPLATES: Template[] = [
     routine_type: "custom",
     schedule: "manual",
     message_template: "Hello from your bot!",
-    icon: <Zap size={18} />,
+    icon: <Lightning size={18} />,
     color: "text-brand-accent",
   },
 ];
@@ -222,7 +216,7 @@ function fmtTime(iso: string | null): string {
 function iconForType(type: string): React.ReactNode {
   const t = ROUTINE_TEMPLATES.find(tp => tp.routine_type === type);
   if (t) return t.icon;
-  return <Zap size={16} />;
+  return <Lightning size={16} />;
 }
 
 function colorForType(type: string): string {
@@ -244,12 +238,12 @@ export default function TelegramPage() {
   const [editing, setEditing] = useState<Routine | null>(null);
   const [showModal, setShowModal] = useState(false);
 
-  // Activity state
+  // Pulse state
   const [activity, setActivity] = useState<ActivityEntry[]>([]);
   const [loadingActivity, setLoadingActivity] = useState(false);
   const [activityFilter, setActivityFilter] = useState<string>("");
 
-  // Settings state
+  // Gear state
   const [botConnected, setBotConnected] = useState<boolean | null>(null);
   const [botUsername, setBotUsername] = useState<string>("");
   const [masterEnabled, setMasterEnabled] = useState(true);
@@ -461,7 +455,7 @@ export default function TelegramPage() {
 
   async function handleSendTestFromModal() {
     if (!editing?.id) {
-      toast.error("Save first, then test");
+      toast.error("FloppyDisk first, then test");
       return;
     }
     handleRunNow(editing);
@@ -470,10 +464,10 @@ export default function TelegramPage() {
   // ─── Tab config ──────────────────────────────────────────────────────────
 
   const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
-    { key: "routines", label: "Routines", icon: <Zap size={16} /> },
-    { key: "activity", label: "Live Activity", icon: <Activity size={16} /> },
-    { key: "templates", label: "Templates", icon: <Sparkles size={16} /> },
-    { key: "settings", label: "Settings", icon: <Settings size={16} /> },
+    { key: "routines", label: "Routines", icon: <Lightning size={16} /> },
+    { key: "activity", label: "Live Pulse", icon: <Pulse size={16} /> },
+    { key: "templates", label: "Templates", icon: <Sparkle size={16} /> },
+    { key: "settings", label: "Gear", icon: <Gear size={16} /> },
   ];
 
   const activeCount = routines.filter(r => r.enabled && !r.paused).length;
@@ -491,7 +485,7 @@ export default function TelegramPage() {
       <div className="flex items-center gap-2 shrink-0">
         <>
                   <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${botConnected ? "bg-emerald-500/30 text-white border border-emerald-300/40" : "bg-red-500/20 text-white border border-red-300/30"}`}>
-                    {botConnected ? <Wifi size={12} /> : <WifiOff size={12} />}
+                    {botConnected ? <WifiHigh size={12} /> : <WifiSlash size={12} />}
                     {botConnected === null ? "Checking..." : botConnected ? "Connected" : "Disconnected"}
                   </span>
                   {botUsername && (
@@ -523,7 +517,7 @@ export default function TelegramPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="mb-0">Bot Routines</h3>
+                    <h3 className="mb-0">Robot Routines</h3>
                     <p className="text-xs text-text-muted mt-0.5">Scheduled tasks that send you Telegram messages.</p>
                   </div>
                   <button
@@ -537,7 +531,7 @@ export default function TelegramPage() {
 
                 {loadingRoutines ? (
                   <div className="glass rounded-xl p-4 flex items-center justify-center py-12">
-                    <Loader size={18} className="animate-spin text-brand-accent" />
+                    <CircleNotch size={18} className="animate-spin text-brand-accent" />
                   </div>
                 ) : routines.length === 0 ? (
                   <div className="glass rounded-xl p-4">
@@ -557,7 +551,7 @@ export default function TelegramPage() {
                             onClick={() => setTab("templates")}
                             className="px-4 py-2 bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)] rounded-lg text-sm font-medium hover:bg-[rgba(212,255,0,0.12)] flex items-center gap-2"
                           >
-                            <Sparkles size={14} /> Browse Templates
+                            <Sparkle size={14} /> Browse Templates
                           </button>
                         </div>
                       }
@@ -601,7 +595,7 @@ export default function TelegramPage() {
                               <span>Runs: {r.run_count ?? 0}</span>
                               {(r.success_count ?? 0) > 0 && (
                                 <span className="text-emerald-400 flex items-center gap-1">
-                                  <CheckCircle2 size={10} /> {r.success_count}
+                                  <CheckCircle size={10} /> {r.success_count}
                                 </span>
                               )}
                               {(r.fail_count ?? 0) > 0 && (
@@ -625,21 +619,21 @@ export default function TelegramPage() {
                               title="Run now"
                               className="p-2 rounded-lg bg-surface-light border border-border-subtle text-text-muted hover:text-brand-accent hover:border-[rgba(212,255,0,0.2)] transition-colors"
                             >
-                              <Zap size={14} />
+                              <Lightning size={14} />
                             </button>
                             <button
                               onClick={() => openEditModal(r)}
                               title="Edit"
                               className="p-2 rounded-lg bg-surface-light border border-border-subtle text-text-muted hover:text-text-primary hover:border-[rgba(212,255,0,0.2)] transition-colors"
                             >
-                              <Edit3 size={14} />
+                              <PencilSimple size={14} />
                             </button>
                             <button
                               onClick={() => handleDelete(r)}
                               title="Delete"
                               className="p-2 rounded-lg bg-surface-light border border-border-subtle text-text-muted hover:text-red-400 hover:border-red-400/20 transition-colors"
                             >
-                              <Trash2 size={14} />
+                              <Trash size={14} />
                             </button>
                           </div>
                         </motion.div>
@@ -651,7 +645,7 @@ export default function TelegramPage() {
             )}{/* ═══════════ LIVE ACTIVITY TAB ═══════════ */}{tab === "activity" && (
               <div className="space-y-4">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Filter size={14} className="text-text-muted" />
+                  <Funnel size={14} className="text-text-muted" />
                   <select
                     value={activityFilter}
                     onChange={e => setActivityFilter(e.target.value)}
@@ -673,12 +667,12 @@ export default function TelegramPage() {
 
                 {loadingActivity ? (
                   <div className="glass rounded-xl p-4 flex items-center justify-center py-12">
-                    <Loader size={18} className="animate-spin text-brand-accent" />
+                    <CircleNotch size={18} className="animate-spin text-brand-accent" />
                   </div>
                 ) : activity.length === 0 ? (
                   <div className="glass rounded-xl p-4">
                     <EmptyState
-                      icon={<Activity size={48} />}
+                      icon={<Pulse size={48} />}
                       title="No activity yet"
                       description="Once your routines start firing you'll see each message your bot sends here."
                     />
@@ -699,7 +693,7 @@ export default function TelegramPage() {
                           className="glass-md rounded-xl !p-3 flex items-start gap-3"
                         >
                           <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isOk ? "bg-emerald-500/10 text-emerald-400" : a.status === "failed" ? "bg-red-500/10 text-red-400" : "bg-surface-light text-text-muted"}`}>
-                            <Bot size={14} />
+                            <Robot size={14} />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
@@ -767,15 +761,15 @@ export default function TelegramPage() {
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
                   <h3 className="flex items-center gap-2">
-                    <Wifi size={14} className="text-brand-accent" />
-                    Bot Connection
+                    <WifiHigh size={14} className="text-brand-accent" />
+                    Robot Connection
                   </h3>
                   <div className="mt-3 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className={`w-3 h-3 rounded-full ${botConnected ? "bg-emerald-400 animate-pulse" : "bg-red-400"}`} />
                       <div>
                         <p className="text-sm font-medium text-text-primary">
-                          {botConnected === null ? "Checking..." : botConnected ? `Connected${botUsername ? ` as @${botUsername}` : ""}` : "Bot token missing or invalid"}
+                          {botConnected === null ? "Checking..." : botConnected ? `Connected${botUsername ? ` as @${botUsername}` : ""}` : "Robot token missing or invalid"}
                         </p>
                         {isPlatformAdmin ? (
                           <p className="text-xs text-text-muted">Uses <code className="text-brand-accent">TELEGRAM_BOT_TOKEN</code> env var</p>
@@ -795,7 +789,7 @@ export default function TelegramPage() {
 
                 <div className="glass rounded-xl p-4">
                   <h3 className="flex items-center gap-2">
-                    <MessageCircle size={14} className="text-brand-accent" />
+                    <ChatCircle size={14} className="text-brand-accent" />
                     Default Chat ID
                   </h3>
                   <p className="text-xs text-text-muted mt-1">
@@ -812,7 +806,7 @@ export default function TelegramPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="mb-0 flex items-center gap-2">
-                        <Zap size={14} className="text-brand-accent" />
+                        <Lightning size={14} className="text-brand-accent" />
                         Master Toggle
                       </h3>
                       <p className="text-xs text-text-muted mt-0.5">Pause every routine at once</p>
@@ -847,7 +841,7 @@ export default function TelegramPage() {
                 <div className="glass rounded-xl p-4">
                   <h3 className="flex items-center gap-2">
                     <Clock size={14} className="text-brand-accent" />
-                    Activity Retention
+                    Pulse Retention
                   </h3>
                   <p className="text-xs text-text-muted mt-1">How long to keep message history</p>
                   <div className="mt-3 flex gap-2">
@@ -869,7 +863,7 @@ export default function TelegramPage() {
 
                 <div className="glass rounded-xl p-4 border-red-500/20">
                   <h3 className="flex items-center gap-2 text-red-400">
-                    <Trash2 size={14} />
+                    <Trash size={14} />
                     Danger Zone
                   </h3>
                   <p className="text-xs text-text-muted mt-1">Permanently remove routines and activity history</p>
@@ -1035,7 +1029,7 @@ export default function TelegramPage() {
                       onClick={handleSendTestFromModal}
                       className="px-4 py-2 bg-surface-light border border-border-subtle rounded-lg text-sm font-medium text-text-muted hover:text-brand-accent hover:border-[rgba(212,255,0,0.2)] transition-all flex items-center gap-2"
                     >
-                      <Zap size={14} /> Test
+                      <Lightning size={14} /> Test
                     </button>
                     <div className="flex items-center gap-2">
                       <button
@@ -1048,7 +1042,7 @@ export default function TelegramPage() {
                         onClick={handleSaveRoutine}
                         className="px-5 py-2 bg-brand-accent text-[#020711] rounded-full text-sm font-semibold hover:bg-brand-accent/80 transition-all flex items-center gap-2"
                       >
-                        <Save size={14} /> Save Routine
+                        <FloppyDisk size={14} /> FloppyDisk Routine
                       </button>
                     </div>
                   </div>
@@ -1056,7 +1050,7 @@ export default function TelegramPage() {
               </div>
             )}{/* PageAI Assistant */}<PageAI
               pageName="Telegram"
-              context={`${routines.length} routines (${activeCount} active, ${pausedCount} paused). Bot ${botConnected ? "connected" : "disconnected"}.`}
+              context={`${routines.length} routines (${activeCount} active, ${pausedCount} paused). Robot ${botConnected ? "connected" : "disconnected"}.`}
               suggestions={[
                 "Help me write a message template for a daily revenue summary",
                 "What's a good schedule for an outreach recap?",
@@ -1064,7 +1058,7 @@ export default function TelegramPage() {
                 "Suggest a routine for tracking churn risk",
               ]}
             />{/* Hidden stat imports to ensure unused icons aren't flagged while keeping the toolbar flexible */}<div className="hidden">
-              <BarChart3 />
+              <ChartBar />
             </div></MotionPage>
   );
 }

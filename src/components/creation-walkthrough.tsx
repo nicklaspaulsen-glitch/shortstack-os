@@ -1,18 +1,8 @@
 "use client";
+import { CaretRight, Check, CircleNotch, DownloadSimple, FloppyDisk, PencilSimple, SkipForward, Sparkle, X } from "@phosphor-icons/react";
 
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import {
-  X,
-  Check,
-  ChevronRight,
-  Loader2,
-  Edit3,
-  Sparkles,
-  SkipForward,
-  Save,
-  Download,
-} from "lucide-react";
 
 export interface WalkthroughStepSetting {
   key: string;
@@ -134,7 +124,7 @@ export default function CreationWalkthrough({
       if (stepStatus === "in_progress") {
         return (
           <span className="w-5 h-5 rounded-full bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.4)] flex items-center justify-center shrink-0">
-            <Loader2 size={11} className="text-[#D4FF00] animate-spin" />
+            <CircleNotch size={11} className="text-[#D4FF00] animate-spin" />
           </span>
         );
       }
@@ -274,7 +264,7 @@ export default function CreationWalkthrough({
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-border-subtle bg-surface-light/40">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-[rgba(212,255,0,0.08)] rounded-xl flex items-center justify-center">
-              <Sparkles size={16} className="text-[#D4FF00]" />
+              <Sparkle size={16} className="text-[#D4FF00]" />
             </div>
             <div>
               <h2 className="text-sm font-semibold">{title}</h2>
@@ -369,7 +359,7 @@ export default function CreationWalkthrough({
                       onClick={onSave}
                       className="btn-primary text-xs flex items-center gap-1.5"
                     >
-                      <Save size={13} /> Save
+                      <FloppyDisk size={13} /> FloppyDisk
                     </button>
                   )}
                   {onExport && (
@@ -377,7 +367,7 @@ export default function CreationWalkthrough({
                       onClick={onExport}
                       className="btn-secondary text-xs flex items-center gap-1.5"
                     >
-                      <Download size={13} /> Export
+                      <DownloadSimple size={13} /> Export
                     </button>
                   )}
                   {onFinish && (
@@ -406,7 +396,7 @@ export default function CreationWalkthrough({
                 {/* In-progress indicator */}
                 {stepStatus === "in_progress" && (
                   <div className="card-static border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.05)] flex items-center gap-3">
-                    <Loader2 size={16} className="text-[#D4FF00] animate-spin" />
+                    <CircleNotch size={16} className="text-[#D4FF00] animate-spin" />
                     <div className="flex-1">
                       <div className="text-xs text-[#D4FF00] font-medium">
                         {current.progressText ?? "Working on it"}
@@ -449,11 +439,11 @@ export default function CreationWalkthrough({
                         onClick={() => setShowSettings((v) => !v)}
                         className="flex items-center gap-1.5 text-[11px] text-[#D4FF00] hover:text-[rgba(212,255,0,0.8)] font-medium"
                       >
-                        <Edit3 size={12} />
+                        <PencilSimple size={12} />
                         {showSettings
                           ? "Hide settings"
                           : "Tweak settings and re-run"}
-                        <ChevronRight
+                        <CaretRight
                           size={12}
                           className={`transition-transform ${
                             showSettings ? "rotate-90" : ""
@@ -514,7 +504,7 @@ export default function CreationWalkthrough({
                           ? "Finish"
                           : "Approve & Continue"}
                         {safeIndex < steps.length - 1 && (
-                          <ChevronRight size={12} />
+                          <CaretRight size={12} />
                         )}
                       </button>
                     )}

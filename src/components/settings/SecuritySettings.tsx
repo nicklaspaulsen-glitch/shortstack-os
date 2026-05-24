@@ -1,4 +1,5 @@
 "use client";
+import { Lock, Shield } from "@phosphor-icons/react";
 
 /**
  * SecuritySettings — 2FA toggle, active sessions, password reset.
@@ -7,7 +8,7 @@
  * settings bundle.
  */
 
-import { Shield, Lock } from "lucide-react";
+
 import toast from "react-hot-toast";
 
 interface Session {

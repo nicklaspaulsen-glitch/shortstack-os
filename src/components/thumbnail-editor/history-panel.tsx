@@ -1,4 +1,5 @@
 "use client";
+import { ArrowClockwise, ArrowCounterClockwise, Clock } from "@phosphor-icons/react";
 
 // Photoshop-style history list. Newest entry sits at the top; clicking
 // an entry jumps back to that snapshot (future entries stay available for
@@ -6,7 +7,6 @@
 // reducer, not the UI.
 
 import { useMemo } from "react";
-import { Clock, Undo2, Redo2 } from "lucide-react";
 import type { HistoryEntry, HistoryState } from "@/lib/thumbnail-editor/types";
 import { flattenHistory } from "@/lib/thumbnail-editor/reducer";
 
@@ -41,7 +41,7 @@ export default function HistoryPanel({
             className="p-1 rounded hover:bg-neutral-800 disabled:opacity-30"
             title="Undo"
           >
-            <Undo2 className="w-3.5 h-3.5" />
+            <ArrowCounterClockwise className="w-3.5 h-3.5" />
           </button>
           <button
             type="button"
@@ -50,7 +50,7 @@ export default function HistoryPanel({
             className="p-1 rounded hover:bg-neutral-800 disabled:opacity-30"
             title="Redo"
           >
-            <Redo2 className="w-3.5 h-3.5" />
+            <ArrowClockwise className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>

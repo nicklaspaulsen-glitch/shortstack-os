@@ -1,4 +1,5 @@
 "use client";
+import { ArrowsClockwise, Brain, CaretDown, ChartBar, Check, Copy, Lightbulb, Lightning, Star, Target } from "@phosphor-icons/react";
 
 /**
  * SmartBar — AI Director intelligence panel for creative pages.
@@ -15,18 +16,6 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Brain,
-  Zap,
-  Lightbulb,
-  BarChart3,
-  ChevronDown,
-  Copy,
-  Check,
-  RefreshCw,
-  Target,
-  Star,
-} from "lucide-react";
 
 export type SmartBarContext = "video-gen" | "video-editor" | "thumbnail";
 
@@ -267,7 +256,7 @@ const THUMBNAIL_FORMULAS = [
 const IDEAS_BY_CONTEXT: Record<SmartBarContext, string[]> = {
   "video-gen": [
     "Show the same product at 3 price points side by side — no commentary, let the camera do the talking",
-    "Film the 'villain origin story' of the biggest myth in your industry — then debunk it at the end",
+    "FilmStrip the 'villain origin story' of the biggest myth in your industry — then debunk it at the end",
     "Day 1 vs Day 365: same location, same camera angle, same lighting — only the person changes",
     "What your competitor won't show you — raw, unedited behind-the-scenes with no voiceover",
     "Silent demo — zero voiceover, just the product performing for 30 focused seconds",
@@ -391,7 +380,7 @@ export default function SmartBar({
           >
             AI
           </span>
-          <ChevronDown
+          <CaretDown
             className="w-3.5 h-3.5 text-white/25 transition-transform duration-200"
             style={{ transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}
           />
@@ -683,7 +672,7 @@ export default function SmartBar({
                       className="w-full flex items-center justify-center gap-1.5 py-2 mt-1 rounded-lg text-[10px] font-medium transition-all hover:bg-white/[0.04] text-white/30"
                       style={{ border: "1px dashed rgba(255,255,255,0.10)" }}
                     >
-                      <RefreshCw className="w-3 h-3" /> Refresh ideas
+                      <ArrowsClockwise className="w-3 h-3" /> Refresh ideas
                     </button>
                   </motion.div>
                 )}

@@ -2,7 +2,7 @@
  * Voice DM router — abstraction over per-platform direct-message voice
  * delivery. Implementations:
  *   instagram → Meta Graph API conversations endpoint (audio attachment)
- *   telegram  → Bot API sendVoice (best-effort fallback to sendAudio)
+ *   telegram  → Robot API sendVoice (best-effort fallback to sendAudio)
  *   whatsapp  → stubbed; requires WA Business approved templates
  *   linkedin  → not supported (no voice DM API)
  *   facebook  → Meta Graph (Messenger) — same shape as instagram
@@ -13,7 +13,7 @@
  * Live integrations are wired with whatever creds the user already has:
  *   META_PAGE_TOKEN     — Facebook + Instagram Graph
  *   IG_USER_ID          — Instagram business account id
- *   TELEGRAM_BOT_TOKEN  — Telegram Bot API
+ *   TELEGRAM_BOT_TOKEN  — Telegram Robot API
  *
  * If creds are missing we return queued=true so the route can persist a
  * record in outreach_log for later replay (mirrors /api/dm/send-manual).

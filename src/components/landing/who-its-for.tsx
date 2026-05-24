@@ -1,12 +1,6 @@
 "use client";
+import { Briefcase, Buildings, MapPin, User, Users } from "@phosphor-icons/react";
 
-import {
-  Briefcase,
-  Building2,
-  MapPin,
-  User,
-  Users,
-} from "lucide-react";
 import { BRAND } from "@/lib/brand-config";
 import Reveal from "./reveal";
 import SectionHeading from "./section-heading";
@@ -25,7 +19,7 @@ const AUDIENCES = [
       "You're a one-person show billing 5–20 clients and the only way to scale without hiring is automation you can trust.",
   },
   {
-    icon: Building2,
+    icon: Buildings,
     title: "Franchise marketing teams",
     body:
       "Central brand, dozens of locations. White-label sub-portals, location-specific reporting, and shared content libraries.",

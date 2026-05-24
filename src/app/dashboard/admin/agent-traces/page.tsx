@@ -1,4 +1,5 @@
 "use client";
+import { ArrowSquareOut, ArrowsClockwise, Lock, Pulse, Warning } from "@phosphor-icons/react";
 
 /**
  * Admin/founder agent-traces dashboard.
@@ -15,13 +16,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Activity,
-  AlertTriangle,
-  ExternalLink,
-  Lock,
-  RefreshCw,
-} from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import StatCard from "@/components/ui/stat-card";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -176,7 +170,7 @@ export default function AgentTracesDashboard() {
           onClick={load}
           className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light"
         >
-          <RefreshCw size={12} /> Retry
+          <ArrowsClockwise size={12} /> Retry
         </button>
       </div>
     );
@@ -196,7 +190,7 @@ export default function AgentTracesDashboard() {
             disabled={refreshing}
             className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-white/5 hover:bg-white/8 disabled:opacity-50"
           >
-            <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
+            <ArrowsClockwise size={12} className={refreshing ? "animate-spin" : ""} />
             Refresh
           </button>
         </div>
@@ -223,7 +217,7 @@ export default function AgentTracesDashboard() {
                 ? "neutral"
                 : "positive"
           }
-          icon={(stats?.error_rate ?? 0) > 0.05 ? <AlertTriangle size={16} /> : undefined}
+          icon={(stats?.error_rate ?? 0) > 0.05 ? <Warning size={16} /> : undefined}
         />
         <StatCard
           label="Avg latency"
@@ -320,7 +314,7 @@ export default function AgentTracesDashboard() {
                     <td className="px-4 py-2.5 whitespace-nowrap">
                       <span className="inline-flex items-center gap-1">
                         {row.agent_surface}
-                        <ExternalLink size={10} className="text-text-muted" />
+                        <ArrowSquareOut size={10} className="text-text-muted" />
                       </span>
                     </td>
                     <td className="px-4 py-2.5 text-text-muted">{row.task_type ?? "—"}</td>
@@ -352,7 +346,7 @@ export default function AgentTracesDashboard() {
                           className="inline-flex items-center gap-1 text-danger"
                           title={row.error_message ?? undefined}
                         >
-                          <AlertTriangle size={10} /> Error
+                          <Warning size={10} /> Error
                         </span>
                       ) : (
                         <span className="text-warning">Fallback</span>

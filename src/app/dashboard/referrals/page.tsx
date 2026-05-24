@@ -1,3 +1,4 @@
+import { ArrowUpRight, ArrowsClockwise, ChatCircle, Check, CircleNotch, Copy, Sparkle, Trophy, Users } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -18,17 +19,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import {
-  Copy,
-  RefreshCw,
-  Sparkles,
-  MessageCircle,
-  Check,
-  Trophy,
-  Users,
-  ArrowUpRight,
-  Loader2,
-} from "lucide-react";
 
 // Brand icons — inline SVG because lucide-react dropped the brand marks in
 // v0.344+. These are the official simple-icons glyphs; they scale cleanly
@@ -251,7 +241,7 @@ export default function ReferralsPage() {
                       className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-text-primary text-xs font-medium border border-border-subtle hover:bg-[rgba(212,255,0,0.08)] hover:text-brand-accent transition-colors disabled:opacity-60"
                       title="Regenerate code (invalidates old link)"
                     >
-                      {regenLoading ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
+                      {regenLoading ? <CircleNotch size={12} className="animate-spin" /> : <ArrowsClockwise size={12} />}
                       Regenerate
                     </button>
                   </div>
@@ -322,7 +312,7 @@ export default function ReferralsPage() {
                       className="w-9 h-9 rounded-xl bg-surface border border-border-subtle flex items-center justify-center text-text-muted hover:text-emerald-400 hover:border-emerald-500/30 transition-colors"
                       title="Share on WhatsApp"
                     >
-                      <MessageCircle size={14} />
+                      <ChatCircle size={14} />
                     </a>
                   </div>
                 )}
@@ -418,7 +408,7 @@ export default function ReferralsPage() {
                 ) : referrals.length === 0 ? (
                   <div className="p-8 text-center">
                     <div className="w-12 h-12 mx-auto  bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.12)] flex items-center justify-center mb-3">
-                      <Sparkles size={18} className="text-brand-accent" />
+                      <Sparkle size={18} className="text-brand-accent" />
                     </div>
                     <p className="text-sm font-medium text-text-primary mb-1">No referrals yet</p>
                     <p className="text-xs text-text-muted max-w-xs mx-auto">
@@ -533,7 +523,7 @@ export default function ReferralsPage() {
               </div>
             </section>{/* Footer help */}<div className="glass rounded-xl p-5 flex items-start gap-4 flex-wrap">
               <div className="w-10 h-10 rounded-xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.12)] flex items-center justify-center shrink-0">
-                <Sparkles size={16} className="text-brand-accent" />
+                <Sparkle size={16} className="text-brand-accent" />
               </div>
               <div className="flex-1 min-w-[220px]">
                 <h3 className="text-sm font-semibold text-text-primary mb-1">How it works</h3>

@@ -1,13 +1,11 @@
 "use client";
+import { ArrowsClockwise, Check, CheckCircle, ClipboardText, Copy, Database, Link, Play, Sparkle, WarningCircle } from "@phosphor-icons/react";
 
 import { useAuth } from "@/lib/auth-context";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { motion } from "framer-motion";
-import {
-  Play, Database, RefreshCw, Copy, Check, Link2,
-  ClipboardList, Sparkles, AlertCircle, CheckCircle2
-} from "lucide-react";
+
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -104,7 +102,7 @@ export default function DemoManagementPage() {
                   transition={{ duration: 0.4 }}
                   className="glass rounded-xl p-6 text-center"
                 >
-                  <AlertCircle className="w-8 h-8 text-red-500 mx-auto mb-2" />
+                  <WarningCircle className="w-8 h-8 text-red-500 mx-auto mb-2" />
                   <p className="text-xs text-[#6B7280]">Admin access required</p>
                 </motion.div></MotionPage>
     );
@@ -128,13 +126,13 @@ export default function DemoManagementPage() {
         className="glass rounded-xl p-4"
       >
         <div className="flex items-center gap-2 mb-3">
-          <ClipboardList className="w-3.5 h-3.5 text-brand-accent" />
+          <ClipboardText className="w-3.5 h-3.5 text-brand-accent" />
           <h2 className="text-xs font-semibold text-[#111827]">Demo Client Status</h2>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center py-8">
-            <RefreshCw className="w-4 h-4 text-brand-accent animate-spin" />
+            <ArrowsClockwise className="w-4 h-4 text-brand-accent animate-spin" />
           </div>
         ) : demoClient ? (
           <div className="space-y-2">
@@ -188,7 +186,7 @@ export default function DemoManagementPage() {
               </div>
             </div>
             <div className="flex items-center gap-1.5 pt-1">
-              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+              <CheckCircle className="w-3 h-3 text-emerald-600" />
               <span className="text-[10px] text-emerald-600">Demo client active</span>
               <span className="text-[9px] text-text-muted ml-auto">ID: {demoClient.id.slice(0, 8)}...</span>
             </div>
@@ -221,7 +219,7 @@ export default function DemoManagementPage() {
           </p>
           {seeding && (
             <div className="flex items-center gap-1.5 mt-2">
-              <RefreshCw className="w-3 h-3 text-brand-accent animate-spin" />
+              <ArrowsClockwise className="w-3 h-3 text-brand-accent animate-spin" />
               <span className="text-[9px] text-brand-accent">Seeding...</span>
             </div>
           )}
@@ -235,7 +233,7 @@ export default function DemoManagementPage() {
         >
           <div className="flex items-center gap-2 mb-2">
             <div className="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center group-hover:bg-amber-100 transition-colors">
-              <RefreshCw className="w-3.5 h-3.5 text-amber-600" />
+              <ArrowsClockwise className="w-3.5 h-3.5 text-amber-600" />
             </div>
             <span className="text-xs font-semibold text-[#111827]">Reset Demo</span>
           </div>
@@ -253,7 +251,7 @@ export default function DemoManagementPage() {
         className="glass rounded-xl p-4"
       >
         <div className="flex items-center gap-2 mb-3">
-          <Link2 className="w-3.5 h-3.5 text-brand-accent" />
+          <Link className="w-3.5 h-3.5 text-brand-accent" />
           <h2 className="text-xs font-semibold text-[#111827]">Share Demo Link</h2>
         </div>
         <div className="flex items-center gap-2">
@@ -279,7 +277,7 @@ export default function DemoManagementPage() {
         className="glass rounded-xl p-4"
       >
         <div className="flex items-center gap-2 mb-3">
-          <Sparkles className="w-3.5 h-3.5 text-brand-accent" />
+          <Sparkle className="w-3.5 h-3.5 text-brand-accent" />
           <h2 className="text-xs font-semibold text-[#111827]">How to Use Demo Mode</h2>
         </div>
         <div className="space-y-2">

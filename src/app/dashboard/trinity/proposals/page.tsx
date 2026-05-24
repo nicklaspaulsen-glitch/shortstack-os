@@ -1,3 +1,4 @@
+import { Airplane, Brain, CheckCircle, CircleNotch, Clock, ClockCounterClockwise, EyeSlash, FloppyDisk, Power, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -7,23 +8,11 @@
  *  - Veto window slider
  *  - Per-action enable toggles
  *  - List of pending proposals with Approve / Veto buttons
- *  - History tab for executed/vetoed/expired
+ *  - ClockCounterClockwise tab for executed/vetoed/expired
  */
 
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import {
-  Brain,
-  CheckCircle,
-  XCircle,
-  Clock,
-  Power,
-  EyeOff,
-  Plane,
-  Save,
-  Loader2,
-  History,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -72,13 +61,13 @@ const MODE_TILES: { mode: Mode; label: string; desc: string; icon: React.ReactNo
     mode: "shadow",
     label: "Shadow",
     desc: "Trinity proposes — you approve before anything runs.",
-    icon: <EyeOff size={16} />,
+    icon: <EyeSlash size={16} />,
   },
   {
     mode: "autopilot",
     label: "Autopilot",
     desc: "Trinity acts after the veto window unless you stop it.",
-    icon: <Plane size={16} />,
+    icon: <Airplane size={16} />,
   },
 ];
 
@@ -330,7 +319,7 @@ export default function TrinityProposalsPage() {
 
               {savingSettings && (
                 <div className="mt-3 flex items-center gap-2 text-xs text-text-muted">
-                  <Loader2 size={12} className="animate-spin" /> Saving...
+                  <CircleNotch size={12} className="animate-spin" /> Saving...
                 </div>
               )}
             </div>{/* Tabs */}<div className="flex items-center gap-1 rounded-lg border border-border-subtle bg-surface p-1">
@@ -353,8 +342,8 @@ export default function TrinityProposalsPage() {
                     : "text-text-muted hover:text-text-primary"
                 }`}
               >
-                <History size={12} />
-                History
+                <ClockCounterClockwise size={12} />
+                ClockCounterClockwise
               </button>
             </div>{loadingProposals ? (
               <div className="py-12 text-center text-sm text-text-muted">Loading...</div>
@@ -403,7 +392,7 @@ export default function TrinityProposalsPage() {
                               className="flex items-center gap-1 rounded-lg bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-50"
                             >
                               {acting ? (
-                                <Loader2 size={12} className="animate-spin" />
+                                <CircleNotch size={12} className="animate-spin" />
                               ) : (
                                 <CheckCircle size={12} />
                               )}

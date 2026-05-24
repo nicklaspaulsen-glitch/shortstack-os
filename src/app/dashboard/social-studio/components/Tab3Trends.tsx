@@ -1,7 +1,7 @@
+import { ArrowCounterClockwise, CircleNotch, Hash, Lightbulb, Sparkle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Hash, Lightbulb, Loader2, RefreshCcw, Sparkles } from "lucide-react";
 import toast from "react-hot-toast";
 import { ALL_PLATFORMS } from "@/lib/social-studio/constants";
 import type { ContentIdea, SocialPlatform, TrendsResponse } from "@/lib/social-studio/types";
@@ -52,7 +52,7 @@ export default function Tab3Trends() {
       <div className="rounded-xl border border-border-subtle/40 bg-surface p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles size={14} className="text-brand-accent" />
+            <Sparkle size={14} className="text-brand-accent" />
             <h3 className="text-sm font-semibold tracking-tight">Niche</h3>
           </div>
           <button
@@ -61,7 +61,7 @@ export default function Tab3Trends() {
             disabled={loading}
             className="text-[10px] inline-flex items-center gap-1 text-text-muted hover:text-text-primary disabled:opacity-50"
           >
-            <RefreshCcw size={10} className={loading ? "animate-spin" : ""} />
+            <ArrowCounterClockwise size={10} className={loading ? "animate-spin" : ""} />
             Refresh
           </button>
         </div>
@@ -107,7 +107,7 @@ export default function Tab3Trends() {
         </div>
         {loading && !data ? (
           <div className="flex items-center justify-center py-6 text-xs text-text-muted">
-            <Loader2 size={12} className="animate-spin mr-2" />
+            <CircleNotch size={12} className="animate-spin mr-2" />
             Pulling trends…
           </div>
         ) : (
@@ -145,7 +145,7 @@ export default function Tab3Trends() {
         </div>
         {loading && !data ? (
           <div className="flex items-center justify-center py-6 text-xs text-text-muted">
-            <Loader2 size={12} className="animate-spin mr-2" />
+            <CircleNotch size={12} className="animate-spin mr-2" />
             Generating fresh ideas…
           </div>
         ) : (

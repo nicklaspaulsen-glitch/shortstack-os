@@ -1,15 +1,8 @@
 "use client";
+import { ArrowUpRight, Brain, CaretDown, CircleNotch, Copy, Crop, DotsThree, DownloadSimple, File, FileAudio, FilmStrip, Heart, Image, ImageSquare, Lightning, MagicWand, MagnifyingGlass, Microphone, MusicNote, Palette, PencilSimple, Play, Scissors, Sparkle, SpeakerHigh, Stack, Target, TextT, TrendUp, UploadSimple, Warning, X } from "@phosphor-icons/react";
 
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Mic, ImagePlus, Scissors, Film, Music, Volume2, Layers, Sparkles,
-  Upload, Download, Play, Loader, X,
-  Wand2, Zap, Copy, Palette, AlertTriangle,
-  ArrowUpRight, FileAudio, Brain,
-  Target, Edit3, Type as TypeIcon, Ratio, Loader2,
-  Heart, MoreHorizontal, Search, ChevronDown, TrendingUp,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { tabSwitch } from "@/components/motion/motion-page";
@@ -40,15 +33,15 @@ interface JobResult {
 
 // -- Tool configs -------------------------------------------------
 const TOOLS = [
-  { id: "transcribe",  name: "Transcribe",      desc: "Audio/video to text with timestamps",  icon: Mic,        color: "#D4FF00", tag: "Whisper V3",   inputLabel: "Audio / Video file",     outputLabel: "Text transcript"       },
+  { id: "transcribe",  name: "Transcribe",      desc: "Audio/video to text with timestamps",  icon: Microphone,        color: "#D4FF00", tag: "Whisper V3",   inputLabel: "Audio / Video file",     outputLabel: "Text transcript"       },
   { id: "image-gen",  name: "Image Gen",        desc: "Generate images from text prompts",    icon: Palette,    color: "#D4FF00", tag: "FLUX/DALL-E",  inputLabel: "Text prompt",            outputLabel: "Generated image"       },
   { id: "upscale",    name: "Upscale",          desc: "4× AI image upscaling",                icon: ArrowUpRight, color: "#D4FF00", tag: "Real-ESRGAN", inputLabel: "Low-res image",          outputLabel: "4× sharp image"        },
   { id: "remove-bg",  name: "Remove BG",        desc: "One-click background removal",         icon: Scissors,   color: "#D4FF00", tag: "REMBG/SAM",    inputLabel: "Photo with background",  outputLabel: "Transparent PNG"       },
-  { id: "img-to-video", name: "Image to Video", desc: "Animate still images into video",      icon: Film,       color: "#D4FF00", tag: "SVD",          inputLabel: "Still image",            outputLabel: "Short video clip"      },
-  { id: "music-gen",  name: "Music Gen",        desc: "AI background music for videos",       icon: Music,      color: "#D4FF00", tag: "MusicGen",     inputLabel: "Style description",      outputLabel: "Background track",     newBadge: true },
-  { id: "voice-clone", name: "Voice Clone",     desc: "Clone voice from 6s audio sample",    icon: Volume2,    color: "#D4FF00", tag: "XTTS v2",      inputLabel: "6s voice sample",        outputLabel: "Cloned voice model"    },
+  { id: "img-to-video", name: "Image to Video", desc: "Animate still images into video",      icon: FilmStrip,       color: "#D4FF00", tag: "SVD",          inputLabel: "Still image",            outputLabel: "Short video clip"      },
+  { id: "music-gen",  name: "MusicNote Gen",        desc: "AI background music for videos",       icon: MusicNote,      color: "#D4FF00", tag: "MusicGen",     inputLabel: "Style description",      outputLabel: "Background track",     newBadge: true },
+  { id: "voice-clone", name: "Voice Clone",     desc: "Clone voice from 6s audio sample",    icon: SpeakerHigh,    color: "#D4FF00", tag: "XTTS v2",      inputLabel: "6s voice sample",        outputLabel: "Cloned voice model"    },
   { id: "train-lora", name: "Brand LoRA",       desc: "Train custom image style models",      icon: Brain,      color: "#D4FF00", tag: "LoRA",         inputLabel: "15–20 reference photos", outputLabel: "Custom style model",   badge: "Business+" },
-  { id: "batch-gen",  name: "Batch Generate",   desc: "50+ images in one go",                 icon: Layers,     color: "#D4FF00", tag: "FLUX/SDXL",   inputLabel: "Prompt + variants",      outputLabel: "50+ images"            },
+  { id: "batch-gen",  name: "Batch Generate",   desc: "50+ images in one go",                 icon: Stack,     color: "#D4FF00", tag: "FLUX/SDXL",   inputLabel: "Prompt + variants",      outputLabel: "50+ images"            },
 ] as const;
 
 type ToolId = typeof TOOLS[number]["id"];
@@ -186,7 +179,7 @@ export default function AIStudioPage() {
               }}
               className="btn-pill text-xs flex items-center gap-1.5"
             >
-              <Sparkles size={13} />
+              <Sparkle size={13} />
               New with AI
             </button>
           )}
@@ -216,7 +209,7 @@ export default function AIStudioPage() {
                 }}
                 className={`tab-pill${studioTab === tab ? " active" : ""} text-[11px]`}
               >
-                {tab === "image" ? <ImagePlus size={11} /> : <Film size={11} />}
+                {tab === "image" ? <ImageSquare size={11} /> : <FilmStrip size={11} />}
                 {tab === "image" ? "Image" : "Video"}
               </button>
             ))}
@@ -229,7 +222,7 @@ export default function AIStudioPage() {
               }}
               className={`tab-pill${studioTab === "tools" ? " active" : ""} text-[11px]`}
             >
-              <Sparkles size={11} /> AI Tools
+              <Sparkle size={11} /> AI Tools
             </button>
           </div>
 
@@ -257,7 +250,7 @@ export default function AIStudioPage() {
                   <div className="relative p-6 sm:p-8">
                     <div className="flex items-start gap-4">
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(212,255,0,0.10)" }}>
-                        <Film size={18} className="text-brand-accent" />
+                        <FilmStrip size={18} className="text-brand-accent" />
                       </div>
                       <div className="min-w-0 flex-1 space-y-3">
                         <div>
@@ -303,7 +296,7 @@ export default function AIStudioPage() {
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Sparkles size={13} className="text-brand-accent" />
+                <Sparkle size={13} className="text-brand-accent" />
                 <span className="text-sm font-semibold text-text-primary">Latest generation</span>
                 <span className="text-[10px] text-text-muted">{wizardImages.length} image{wizardImages.length > 1 ? "s" : ""}</span>
               </div>
@@ -727,7 +720,7 @@ function ToolDiscoveryGrid({ onSelect }: { onSelect: (id: ToolId) => void }) {
   return (
     <div className="space-y-6">
 
-      {/* ── Tool Quick-Access Search (21st.dev ActionSearchBar) ── */}
+      {/* ── Tool Quick-Access MagnifyingGlass (21st.dev ActionSearchBar) ── */}
       <ActionSearchBar
         actions={toolActions}
         placeholder="Quick-access a tool..."
@@ -914,7 +907,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
   const [segments, setSegments] = useState<{ start: number; end: number; text: string }[]>([]);
 
   const handleTranscribe = async () => {
-    if (!file) return toast.error("Upload an audio/video file first");
+    if (!file) return toast.error("UploadSimple an audio/video file first");
     setProcessing(true);
     setTranscript(null);
     try {
@@ -965,7 +958,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Mic size={16} className="text-brand-accent" />
+        <Microphone size={16} className="text-brand-accent" />
         <h2 className="text-sm font-bold text-text-primary">Speech to Text</h2>
         <span className="text-[9px] bg-brand-accent/10 text-brand-accent px-2 py-0.5 rounded-full">Whisper Large V3</span>
       </motion.div>
@@ -978,7 +971,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
             className="border-2 border-dashed border-border-subtle rounded-xl p-8 text-center cursor-pointer hover:border-brand-accent/30 hover:bg-brand-accent/[0.02] transition-all"
           >
             <input ref={fileRef} type="file" accept="audio/*,video/*" className="hidden" onChange={e => setFile(e.target.files?.[0] || null)} />
-            <Upload size={24} className="mx-auto mb-2 text-text-muted" />
+            <UploadSimple size={24} className="mx-auto mb-2 text-text-muted" />
             <p className="text-xs text-text-primary font-medium">{file ? file.name : "Drop audio/video file"}</p>
             <p className="text-[10px] text-text-muted mt-1">MP3, WAV, MP4, WebM, M4A, OGG, FLAC</p>
           </div>
@@ -1002,7 +995,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
             <motion.button onClick={handleTranscribe} disabled={processing || !file}
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               className="btn-pill text-xs flex items-center gap-1.5">
-              {processing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />}
+              {processing ? <CircleNotch size={12} className="animate-spin" /> : <Play size={12} />}
               Transcribe
             </motion.button>
           </div>
@@ -1028,7 +1021,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
                   onClick={() => toast.success("Saved to library")}
                   className="text-[10px] text-brand-accent/70 hover:text-brand-accent flex items-center gap-1 border border-[rgba(212,255,0,0.20)] px-1.5 py-0.5 rounded"
                 >
-                  <Download size={10} /> Save to Library
+                  <DownloadSimple size={10} /> Save to Library
                 </button>
               </div>
             )}
@@ -1051,7 +1044,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
               )}
             </div>
           ) : (
-            <p className="text-xs text-text-muted">Upload a file and click Transcribe to get started.</p>
+            <p className="text-xs text-text-muted">UploadSimple a file and click Transcribe to get started.</p>
           )}
         </motion.div>
       </div>
@@ -1100,7 +1093,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
       const [w, h] = size.split("x").map(Number);
       const res = await fetch("/api/ai-studio/image-gen", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ prompt, width: w, height: h, style: style || undefined }),
       });
       const data = await res.json();
@@ -1229,7 +1222,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
             className="w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold text-text-secondary hover:bg-white/[0.04] transition-colors"
           >
             <span>Style{style ? ` — ${panelStyles.find(s => s.value === style)?.label}` : ""}</span>
-            <ChevronDown size={12} className={`transition-transform ${expandedSection === "style" ? "rotate-180" : ""}`} />
+            <CaretDown size={12} className={`transition-transform ${expandedSection === "style" ? "rotate-180" : ""}`} />
           </button>
           <AnimatePresence>
             {expandedSection === "style" && (
@@ -1264,8 +1257,8 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
             onClick={() => setExpandedSection(expandedSection === "aspect" ? null : "aspect")}
             className="w-full flex items-center justify-between px-3 py-2.5 text-[11px] font-semibold text-text-secondary hover:bg-white/[0.04] transition-colors"
           >
-            <span>Aspect Ratio — {panelSizes.find(s => s.value === size)?.label}</span>
-            <ChevronDown size={12} className={`transition-transform ${expandedSection === "aspect" ? "rotate-180" : ""}`} />
+            <span>Aspect Crop — {panelSizes.find(s => s.value === size)?.label}</span>
+            <CaretDown size={12} className={`transition-transform ${expandedSection === "aspect" ? "rotate-180" : ""}`} />
           </button>
           <AnimatePresence>
             {expandedSection === "aspect" && (
@@ -1303,7 +1296,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
           className="btn-pill w-full text-xs flex items-center justify-center gap-2"
           style={{ boxShadow: "0 0 20px rgba(212,255,0,0.22)" }}
         >
-          {processing ? <Loader size={13} className="animate-spin" /> : <Sparkles size={13} />}
+          {processing ? <CircleNotch size={13} className="animate-spin" /> : <Sparkle size={13} />}
           {processing ? "Generating..." : "Generate Image"}
         </motion.button>
 
@@ -1315,7 +1308,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
           >
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
-                <TrendingUp size={11} className="text-brand-accent" />
+                <TrendUp size={11} className="text-brand-accent" />
                 <span className="text-[10px] font-semibold text-text-secondary">Prompt quality</span>
               </div>
               <span
@@ -1388,7 +1381,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
             <div className="relative w-16 h-16">
               <div className="absolute inset-0 rounded-full"
                 style={{ background: "rgba(212,255,0,0.12)", boxShadow: "0 0 40px rgba(212,255,0,0.20)" }} />
-              <Loader size={26} className="text-brand-accent animate-spin absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+              <CircleNotch size={26} className="text-brand-accent animate-spin absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
             </div>
             <div className="text-center">
               <p className="text-sm font-semibold text-text-primary">Generating your image</p>
@@ -1442,7 +1435,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                 className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95"
                 style={{ background: "rgba(19,24,39,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(212,255,0,0.18)" }}
               >
-                <Download size={14} className="text-text-muted" />
+                <DownloadSimple size={14} className="text-text-muted" />
               </a>
               <button
                 disabled={handoffingIdx === 0}
@@ -1461,8 +1454,8 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
                 style={{ background: "rgba(19,24,39,0.85)", backdropFilter: "blur(12px)", border: "1px solid rgba(212,255,0,0.18)" }}
               >
                 {handoffingIdx === 0
-                  ? <Loader2 size={14} className="text-text-muted animate-spin" />
-                  : <MoreHorizontal size={14} className="text-text-muted" />
+                  ? <CircleNotch size={14} className="text-text-muted animate-spin" />
+                  : <DotsThree size={14} className="text-text-muted" />
                 }
               </button>
             </div>
@@ -1479,7 +1472,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
           <div className="flex flex-col items-center gap-4 opacity-50 relative z-10">
             <div className="w-20 h-20 rounded-3xl flex items-center justify-center"
               style={{ background: "rgba(212,255,0,0.08)", border: "1px solid rgba(212,255,0,0.12)" }}>
-              <ImagePlus size={32} className="text-brand-accent" />
+              <ImageSquare size={32} className="text-brand-accent" />
             </div>
             <div className="text-center">
               <p className="text-base font-semibold text-text-secondary">Your image will appear here</p>
@@ -1496,11 +1489,11 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
             <h3 className="text-[10px] font-semibold text-text-secondary uppercase tracking-wider">History</h3>
           </div>
           <div className="relative">
-            <Search size={10} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+            <MagnifyingGlass size={10} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
             <input
               value={historySearch}
               onChange={e => setHistorySearch(e.target.value)}
-              placeholder="Search..."
+              placeholder="MagnifyingGlass..."
               className="w-full pl-7 pr-3 py-1.5 text-[10px] rounded-lg focus:outline-none focus:border-brand-accent/30 transition-colors"
               style={{ background: "rgba(19,24,39,0.70)", border: "1px solid rgba(212,255,0,0.12)", color: "var(--text-secondary)" }}
             />
@@ -1612,7 +1605,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
       const [w, h] = useSize.split("x").map(Number);
       const res = await fetch("/api/ai-studio/image-gen", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           prompt: usePrompt,
           width: w,
@@ -1663,7 +1656,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
 
       {setupRequired && (
         <div className="mb-4 p-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 flex items-start gap-2">
-          <AlertTriangle size={14} className="text-yellow-400 mt-0.5 shrink-0" />
+          <Warning size={14} className="text-yellow-400 mt-0.5 shrink-0" />
           <div>
             <p className="text-xs font-medium text-yellow-400">Setup Required</p>
             <p className="text-[10px] text-text-muted mt-0.5">
@@ -1677,7 +1670,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
 
       {genError && !setupRequired && (
         <div className="mb-4 p-3 rounded-xl border border-red-500/20 bg-red-500/5 flex items-start gap-2">
-          <AlertTriangle size={14} className="text-red-400 mt-0.5 shrink-0" />
+          <Warning size={14} className="text-red-400 mt-0.5 shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-xs font-medium text-red-400">Generation failed</p>
             <p className="text-[10px] text-text-muted mt-0.5 break-words">{genError}</p>
@@ -1719,7 +1712,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
           </div>
 
           <div>
-            <span className="text-[10px] text-text-muted mb-1 block">Aspect Ratio</span>
+            <span className="text-[10px] text-text-muted mb-1 block">Aspect Crop</span>
             <div className="flex gap-1.5">
               {sizes.map(s => (
                 <button key={s.value} onClick={() => setSize(s.value)}
@@ -1735,7 +1728,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
           <motion.button onClick={handleGenerate} disabled={processing || !prompt.trim()}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
-            {processing ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+            {processing ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
             Generate Image
           </motion.button>
         </div>
@@ -1758,7 +1751,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                   <div className="flex items-center justify-center gap-3 mt-1">
                     <a href={img} target="_blank" rel="noopener noreferrer" download={`generated-${i + 1}.png`}
                       className="inline-flex items-center gap-1 text-[10px] text-brand-accent hover:underline">
-                      <Download size={10} /> Download
+                      <DownloadSimple size={10} /> DownloadSimple
                     </a>
                     <button
                       disabled={handoffingIdx === i}
@@ -1781,8 +1774,8 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                       className="inline-flex items-center gap-1 text-[10px] text-brand-accent hover:underline disabled:opacity-40"
                     >
                       {handoffingIdx === i
-                        ? <Loader2 size={10} className="animate-spin" />
-                        : <Edit3 size={10} />}
+                        ? <CircleNotch size={10} className="animate-spin" />
+                        : <PencilSimple size={10} />}
                       Open in Studio
                     </button>
                   </div>
@@ -1818,7 +1811,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
   };
 
   const handleUpscale = async () => {
-    if (!file) return toast.error("Upload an image first");
+    if (!file) return toast.error("UploadSimple an image first");
     setProcessing(true);
     try {
       const fd = new FormData();
@@ -1881,7 +1874,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
               <img src={preview} alt="Preview" className="max-h-[200px] mx-auto rounded-lg" />
             ) : (
               <>
-                <ImagePlus size={24} className="mx-auto mb-2 text-text-muted" />
+                <ImageSquare size={24} className="mx-auto mb-2 text-text-muted" />
                 <p className="text-xs text-text-primary font-medium">Drop image to upscale</p>
                 <p className="text-[10px] text-text-muted mt-1">JPG, PNG, WebP � max 20MB</p>
               </>
@@ -1905,7 +1898,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
             <motion.button onClick={handleUpscale} disabled={processing || !file}
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               className="ml-auto btn-pill text-xs flex items-center gap-1.5">
-              {processing ? <Loader size={12} className="animate-spin" /> : <Wand2 size={12} />}
+              {processing ? <CircleNotch size={12} className="animate-spin" /> : <MagicWand size={12} />}
               Upscale
             </motion.button>
           </div>
@@ -1922,7 +1915,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
               <img src={result} alt="Upscaled" className="max-h-[250px] mx-auto rounded-lg" />
               <a href={result} download={`upscaled_${scale}x.png`}
                 className="inline-flex items-center gap-1 mt-2 text-[10px] text-brand-accent hover:underline">
-                <Download size={10} /> Download
+                <DownloadSimple size={10} /> DownloadSimple
               </a>
             </div>
           ) : (
@@ -1943,7 +1936,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
   const [bgColor, setBgColor] = useState<string>("");
 
   const handleRemoveBg = async () => {
-    if (!file) return toast.error("Upload an image first");
+    if (!file) return toast.error("UploadSimple an image first");
     setProcessing(true);
     try {
       const fd = new FormData();
@@ -2023,7 +2016,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
             <motion.button onClick={handleRemoveBg} disabled={processing || !file}
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               className="ml-auto btn-pill text-xs flex items-center gap-1.5">
-              {processing ? <Loader size={12} className="animate-spin" /> : <Scissors size={12} />}
+              {processing ? <CircleNotch size={12} className="animate-spin" /> : <Scissors size={12} />}
               Remove BG
             </motion.button>
           </div>
@@ -2039,7 +2032,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
               <img src={result} alt="Result" className="max-h-[250px] mx-auto" />
               <a href={result} download="removed-bg.png"
                 className="inline-flex items-center gap-1 mt-2 text-[10px] text-brand-accent hover:underline">
-                <Download size={10} /> Download PNG
+                <DownloadSimple size={10} /> DownloadSimple PNG
               </a>
             </div>
           ) : (
@@ -2061,7 +2054,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
   const [result, setResult] = useState<string | null>(null);
 
   const handleGenerate = async () => {
-    if (!file) return toast.error("Upload an image first");
+    if (!file) return toast.error("UploadSimple an image first");
     setProcessing(true);
     try {
       const fd = new FormData();
@@ -2092,7 +2085,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Film size={16} className="text-brand-accent" />
+        <FilmStrip size={16} className="text-brand-accent" />
         <h2 className="text-sm font-bold text-text-primary">Image to Video</h2>
         <span className="text-[9px] bg-[rgba(212,255,0,0.12)] text-brand-accent px-2 py-0.5 rounded-full">Stable Video Diffusion</span>
       </motion.div>
@@ -2107,7 +2100,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
               <img src={preview} alt="" className="max-h-[200px] mx-auto rounded-lg" />
             ) : (
               <>
-                <Film size={24} className="mx-auto mb-2 text-text-muted" />
+                <FilmStrip size={24} className="mx-auto mb-2 text-text-muted" />
                 <p className="text-xs text-text-primary font-medium">Drop still image to animate</p>
                 <p className="text-[10px] text-text-muted mt-1">Product shots, logos, hero images</p>
               </>
@@ -2131,7 +2124,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
           <motion.button onClick={handleGenerate} disabled={processing || !file}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="btn-pill w-full mt-3 text-xs flex items-center justify-center gap-1.5">
-            {processing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />}
+            {processing ? <CircleNotch size={12} className="animate-spin" /> : <Play size={12} />}
             Animate Image
           </motion.button>
         </div>
@@ -2168,14 +2161,14 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
     try {
       const res = await fetch("/api/ai/music-gen", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ prompt, mood, genre, duration }),
       });
       const data = await res.json();
       if (data.audio) {
         const audio = data.audio.startsWith("data:") ? data.audio : `data:audio/wav;base64,${data.audio}`;
         setResult(audio);
-        toast.success("Music generated!");
+        toast.success("MusicNote generated!");
       } else if (data.job_id) {
         toast.success("Generating...");
       } else {
@@ -2195,8 +2188,8 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Music size={16} className="text-brand-accent" />
-        <h2 className="text-sm font-bold text-text-primary">AI Music Generator</h2>
+        <MusicNote size={16} className="text-brand-accent" />
+        <h2 className="text-sm font-bold text-text-primary">AI MusicNote Generator</h2>
         <span className="text-[9px] bg-[rgba(212,255,0,0.10)] text-brand-accent px-2 py-0.5 rounded-full">MusicGen</span>
         <span className="text-[9px] text-text-muted ml-auto">Royalty-free output</span>
       </motion.div>
@@ -2236,8 +2229,8 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
           <motion.button onClick={handleGenerate} disabled={processing || !prompt}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
-            {processing ? <Loader size={12} className="animate-spin" /> : <Music size={12} />}
-            Generate Music
+            {processing ? <CircleNotch size={12} className="animate-spin" /> : <MusicNote size={12} />}
+            Generate MusicNote
           </motion.button>
         </div>
 
@@ -2249,12 +2242,12 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
           {result ? (
             <div className="w-full text-center space-y-3">
               <div className="w-16 h-16 mx-auto rounded-full bg-[rgba(212,255,0,0.10)] flex items-center justify-center">
-                <Music size={24} className="text-brand-accent" />
+                <MusicNote size={24} className="text-brand-accent" />
               </div>
               <audio src={result} controls className="w-full" />
               <a href={result} download="ai-music.wav"
                 className="inline-flex items-center gap-1 text-[10px] text-brand-accent hover:underline">
-                <Download size={10} /> Download WAV
+                <DownloadSimple size={10} /> DownloadSimple WAV
               </a>
             </div>
           ) : (
@@ -2278,7 +2271,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
   const [selectedVoice, setSelectedVoice] = useState<string>("");
 
   const handleClone = async () => {
-    if (voiceFiles.length === 0) return toast.error("Upload at least one voice sample (6+ seconds)");
+    if (voiceFiles.length === 0) return toast.error("UploadSimple at least one voice sample (6+ seconds)");
     setProcessing(true);
     let successCount = 0;
     try {
@@ -2345,7 +2338,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Volume2 size={16} className="text-brand-accent" />
+        <SpeakerHigh size={16} className="text-brand-accent" />
         <h2 className="text-sm font-bold text-text-primary">Voice Clone + TTS</h2>
         <span className="text-[9px] bg-[rgba(212,255,0,0.10)] text-brand-accent px-2 py-0.5 rounded-full">XTTS v2</span>
       </motion.div>
@@ -2369,7 +2362,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
               e.target.value = "";
             }} />
             <FileAudio size={24} className="mx-auto mb-2 text-text-muted" />
-            <p className="text-xs text-text-primary font-medium">{voiceFiles.length > 0 ? `${voiceFiles.length} sample${voiceFiles.length > 1 ? "s" : ""} selected` : "Upload voice samples (6+ seconds each)"}</p>
+            <p className="text-xs text-text-primary font-medium">{voiceFiles.length > 0 ? `${voiceFiles.length} sample${voiceFiles.length > 1 ? "s" : ""} selected` : "UploadSimple voice samples (6+ seconds each)"}</p>
             <p className="text-[10px] text-text-muted mt-1">Clone multiple voices in one batch</p>
           </div>
           {voiceFiles.length > 0 && (
@@ -2390,7 +2383,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
           <motion.button onClick={handleClone} disabled={processing || voiceFiles.length === 0}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
-            {processing ? <Loader size={12} className="animate-spin" /> : <Volume2 size={12} />}
+            {processing ? <CircleNotch size={12} className="animate-spin" /> : <SpeakerHigh size={12} />}
             Clone {voiceFiles.length > 1 ? `${voiceFiles.length} Voices` : "Voice"}
           </motion.button>
         </div>
@@ -2409,7 +2402,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
             <motion.button onClick={handleSpeak} disabled={processing || !text}
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
-              {processing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />}
+              {processing ? <CircleNotch size={12} className="animate-spin" /> : <Play size={12} />}
               Generate Speech
             </motion.button>
           </div>
@@ -2422,7 +2415,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
               <div className="w-full text-center space-y-3">
                 <audio src={result} controls className="w-full" />
                 <a href={result} download="voice-clone.wav" className="inline-flex items-center gap-1 text-[10px] text-brand-accent hover:underline">
-                  <Download size={10} /> Download
+                  <DownloadSimple size={10} /> DownloadSimple
                 </a>
               </div>
             ) : (
@@ -2500,9 +2493,9 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
           <div onClick={() => fileRef.current?.click()}
             className="border-2 border-dashed border-border-subtle rounded-xl p-6 text-center cursor-pointer hover:border-[rgba(212,255,0,0.30)] transition-all">
             <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
-            <Layers size={24} className="mx-auto mb-2 text-text-muted" />
+            <Stack size={24} className="mx-auto mb-2 text-text-muted" />
             <p className="text-xs text-text-primary font-medium">
-              {images.length > 0 ? `${images.length} images selected` : "Upload 10-20 reference images"}
+              {images.length > 0 ? `${images.length} images selected` : "UploadSimple 10-20 reference images"}
             </p>
             <p className="text-[10px] text-text-muted mt-1">Same style, consistent quality</p>
           </div>
@@ -2542,7 +2535,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
           <motion.button onClick={handleTrain} disabled={processing || images.length < 5}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
-            {processing ? <Loader size={12} className="animate-spin" /> : <Zap size={12} />}
+            {processing ? <CircleNotch size={12} className="animate-spin" /> : <Lightning size={12} />}
             Start Training (~{Math.ceil(steps / 100)} min)
           </motion.button>
         </div>
@@ -2555,7 +2548,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
           <h3 className="text-xs font-semibold text-text-primary mb-3">How it works</h3>
           <div className="space-y-2">
             {[
-              { step: 1, text: "Upload 10-20 images in your client's brand style" },
+              { step: 1, text: "UploadSimple 10-20 images in your client's brand style" },
               { step: 2, text: "Set a trigger word (used in prompts to activate the style)" },
               { step: 3, text: "Training runs on GPU (~15-30 min)" },
               { step: 4, text: "Use the trained LoRA in Design Studio & Thumbnail Generator" },
@@ -2597,7 +2590,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
     try {
       const res = await fetch("/api/ai/batch-generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ prompts: validPrompts, style, sizes: [size], model }),
       });
       const data = await res.json();
@@ -2621,7 +2614,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
         className="flex items-center gap-2 mb-4"
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
-        <Layers size={16} className="text-brand-accent" />
+        <Stack size={16} className="text-brand-accent" />
         <h2 className="text-sm font-bold text-text-primary">Batch Image Generation</h2>
         <span className="text-[9px] bg-[rgba(212,255,0,0.10)] text-brand-accent px-2 py-0.5 rounded-full">FLUX / SDXL</span>
       </motion.div>
@@ -2676,7 +2669,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
           <motion.button onClick={handleGenerate} disabled={processing}
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
-            {processing ? <Loader size={12} className="animate-spin" /> : <Zap size={12} />}
+            {processing ? <CircleNotch size={12} className="animate-spin" /> : <Lightning size={12} />}
             Generate {prompts.filter(p => p.trim()).length} Images
           </motion.button>
         </div>
@@ -2740,7 +2733,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
       id: "subject",
       title: "What's the subject?",
       description: "Describe the main thing, person, or scene in the image.",
-      icon: <Edit3 size={16} />,
+      icon: <PencilSimple size={16} />,
       field: {
         type: "text",
         key: "subject",
@@ -2754,7 +2747,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
             const useCase = useCaseArr[0] || "hero image";
             const res = await fetch("/api/ai/enhance-prompt", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: { "Content-TextT": "application/json" },
               body: JSON.stringify({
                 text: `Suggest one compelling, visually specific subject description for a ${useCase} image. Return a single sentence under 25 words describing the subject and setting. No quotes, no intro.`,
                 type: "general",
@@ -2803,7 +2796,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
       id: "ratio",
       title: "Aspect ratio",
       description: "Pick the dimensions � we'll pass them straight to FLUX.",
-      icon: <Ratio size={16} />,
+      icon: <Crop size={16} />,
       field: {
         type: "chip-select",
         key: "ratio",
@@ -2819,7 +2812,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
       id: "prompt",
       title: "Final prompt",
       description: "Edit the prompt or let Claude write a full FLUX-ready version.",
-      icon: <TypeIcon size={16} />,
+      icon: <TextT size={16} />,
       field: {
         type: "textarea",
         key: "prompt",
@@ -2844,7 +2837,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
 
             const res = await fetch("/api/ai/enhance-prompt", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: { "Content-TextT": "application/json" },
               body: JSON.stringify({
                 text: `Build a FLUX-ready image prompt for a ${useCase} in ${styleVal} style. Subject: "${base}". Return a single dense prompt (under 80 words) with lighting, composition, mood, and technical detail. Plain text, no quotes.`,
                 type: "design",
@@ -2894,7 +2887,7 @@ function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardP
       open={open}
       title="Create Image"
       subtitle="AI-guided 5-step flow � FLUX renders the final image."
-      icon={<Sparkles size={18} />}
+      icon={<Sparkle size={18} />}
       submitLabel="Generate Image"
       steps={steps}
       onClose={onClose}

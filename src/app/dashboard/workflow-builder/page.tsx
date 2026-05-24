@@ -1,3 +1,4 @@
+import { ArrowClockwise, ArrowCounterClockwise, ArrowRight, At, Bell, Calendar, CalendarCheck, CaretDown, CaretRight, Check, CheckSquare, Clock, Copy, DeviceMobile, DotsSixVertical, DownloadSimple, Envelope, Eye, FileText, FloppyDisk, Gauge, Gear, GitBranch, Globe, Layout, Lightning, Link, ListPlus, MagnifyingGlass, Phone, Play, PlugsConnected, Pulse, Robot, Sparkle, SquaresFour, Tag, Timer, Trash, UserPlus, Users, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useCallback, useRef, useMemo, useEffect, DragEvent } from "react";
@@ -12,15 +13,6 @@ import {
   MarkerType,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import {
-  Search, Save, Play, Undo2, Redo2, LayoutGrid,
-  Trash2, X, ChevronRight, ChevronDown, GripVertical,
-  UserPlus, FileText, Webhook, Clock, Mail, CalendarCheck,
-  Phone, Bot, CheckSquare, Tag,
-  Globe, Sparkles, ListPlus, GitBranch, AtSign, Smartphone,
-  Timer, Bell, Activity, Download, Zap, Copy, LayoutTemplate,
-  Gauge, Link2, ArrowRight, Settings, Eye,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { NotionIcon, SlackIcon } from "@/components/ui/platform-icons";
@@ -53,32 +45,32 @@ const NODE_DEFS: NodeDef[] = [
   // Triggers (green)
   { id: "new_lead",        label: "New Lead",         description: "Fires when a new lead enters the CRM",     icon: <UserPlus size={14} />,     category: "trigger" },
   { id: "form_submitted",  label: "Form Submitted",   description: "Fires when a form is completed",           icon: <FileText size={14} />,     category: "trigger" },
-  { id: "webhook_received",label: "Webhook Received",  description: "Fires on incoming webhook POST",           icon: <Webhook size={14} />,      category: "trigger" },
+  { id: "webhook_received",label: "PlugsConnected Received",  description: "Fires on incoming webhook POST",           icon: <PlugsConnected size={14} />,      category: "trigger" },
   { id: "schedule",        label: "Schedule (Cron)",   description: "Runs on a cron schedule",                  icon: <Clock size={14} />,        category: "trigger" },
-  { id: "email_received",  label: "Email Received",    description: "Fires when an email arrives",              icon: <Mail size={14} />,         category: "trigger" },
+  { id: "email_received",  label: "Email Received",    description: "Fires when an email arrives",              icon: <Envelope size={14} />,         category: "trigger" },
   { id: "booking_created", label: "Booking Created",   description: "Fires when a booking is made",             icon: <CalendarCheck size={14} />,category: "trigger" },
   // Actions (blue)
-  { id: "send_email",      label: "Send Email",        description: "Send an email to a contact",               icon: <Mail size={14} />,         category: "action" },
+  { id: "send_email",      label: "Send Email",        description: "Send an email to a contact",               icon: <Envelope size={14} />,         category: "action" },
   { id: "send_sms",        label: "Send SMS",          description: "Send an SMS via Twilio or provider",       icon: <Phone size={14} />,        category: "action" },
-  { id: "ai_call",         label: "AI Call",           description: "Place an AI voice call via ElevenAgents",  icon: <Bot size={14} />,          category: "action" },
+  { id: "ai_call",         label: "AI Call",           description: "Place an AI voice call via ElevenAgents",  icon: <Robot size={14} />,          category: "action" },
   { id: "create_task",     label: "Create Task",       description: "Create a task for the team",               icon: <CheckSquare size={14} />,  category: "action" },
   { id: "update_crm",      label: "Update CRM Status", description: "Change a lead or deal status",             icon: <Tag size={14} />,          category: "action" },
   { id: "log_notion",      label: "Log to Notion",     description: "Create a page in your Notion database",    icon: <NotionIcon size={14} />,   category: "action" },
   { id: "post_slack",      label: "Post to Slack",     description: "Send a message to a Slack channel",        icon: <SlackIcon size={14} />,    category: "action" },
-  { id: "send_webhook",    label: "Send Webhook",      description: "Send a POST request to any URL",           icon: <Globe size={14} />,        category: "action" },
-  { id: "generate_content",label: "Generate Content",  description: "Generate text with Claude AI",             icon: <Sparkles size={14} />,     category: "action" },
+  { id: "send_webhook",    label: "Send PlugsConnected",      description: "Send a POST request to any URL",           icon: <Globe size={14} />,        category: "action" },
+  { id: "generate_content",label: "Generate Content",  description: "Generate text with Claude AI",             icon: <Sparkle size={14} />,     category: "action" },
   { id: "add_to_sequence", label: "Add to Sequence",   description: "Enroll contact in an outreach sequence",   icon: <ListPlus size={14} />,     category: "action" },
   // Conditions (amber)
   { id: "if_else",         label: "If / Else",         description: "Branch based on a field comparison",       icon: <GitBranch size={14} />,    category: "condition" },
-  { id: "has_email",       label: "Has Email",         description: "Check if contact has an email address",    icon: <AtSign size={14} />,       category: "condition" },
-  { id: "has_phone",       label: "Has Phone",         description: "Check if contact has a phone number",      icon: <Smartphone size={14} />,   category: "condition" },
+  { id: "has_email",       label: "Has Email",         description: "Check if contact has an email address",    icon: <At size={14} />,       category: "condition" },
+  { id: "has_phone",       label: "Has Phone",         description: "Check if contact has a phone number",      icon: <DeviceMobile size={14} />,   category: "condition" },
   { id: "lead_score_gt",   label: "Lead Score > X",    description: "Check if lead score exceeds threshold",    icon: <Gauge size={14} />,        category: "condition" },
   { id: "status_equals",   label: "Status Equals",     description: "Check if status matches a specific value", icon: <Tag size={14} />,          category: "condition" },
   { id: "wait_delay",      label: "Wait / Delay",      description: "Pause execution for a specified duration",  icon: <Timer size={14} />,        category: "condition" },
   // Outputs (purple)
   { id: "send_notification",label: "Send Notification", description: "Push notification to team",                icon: <Bell size={14} />,         category: "output" },
-  { id: "log_event",       label: "Log Event",         description: "Write to the activity log",                icon: <Activity size={14} />,     category: "output" },
-  { id: "export_data",     label: "Export Data",       description: "Export results to CSV or JSON",             icon: <Download size={14} />,     category: "output" },
+  { id: "log_event",       label: "Log Event",         description: "Write to the activity log",                icon: <Pulse size={14} />,     category: "output" },
+  { id: "export_data",     label: "Export Data",       description: "Export results to CSV or JSON",             icon: <DownloadSimple size={14} />,     category: "output" },
 ];
 
 const NODE_DEF_MAP = Object.fromEntries(NODE_DEFS.map(n => [n.id, n]));
@@ -92,7 +84,7 @@ interface FieldDef { key: string; label: string; type: "text" | "select" | "numb
 const NODE_CONFIG_FIELDS: Record<string, FieldDef[]> = {
   new_lead:         [{ key: "source", label: "Lead Source", type: "select", options: ["Any", "Website", "Referral", "Ads", "Scraper"] }],
   form_submitted:   [{ key: "form_id", label: "Form ID", type: "text", placeholder: "form_abc123" }],
-  webhook_received: [{ key: "url", label: "Webhook URL", type: "text", placeholder: "https://..." }, { key: "secret", label: "Secret", type: "text" }],
+  webhook_received: [{ key: "url", label: "PlugsConnected URL", type: "text", placeholder: "https://..." }, { key: "secret", label: "Secret", type: "text" }],
   schedule:         [{ key: "cron", label: "Cron Expression", type: "text", placeholder: "0 9 * * 1-5" }, { key: "timezone", label: "Timezone", type: "select", options: ["UTC", "America/New_York", "America/Chicago", "America/Los_Angeles", "Europe/London"] }],
   email_received:   [{ key: "from_filter", label: "From Contains", type: "text", placeholder: "example.com" }],
   booking_created:  [{ key: "calendar", label: "Calendar", type: "select", options: ["Any", "Main", "Sales", "Support"] }],
@@ -188,13 +180,13 @@ const TEMPLATES: Template[] = [
     edges: [mkEdge("t4_1","t4_2"), mkEdge("t4_2","t4_3"), mkEdge("t4_3","t4_4"), mkEdge("t4_4","t4_5")],
   },
   {
-    id: "t5", name: "Webhook Handler", description: "Receive external webhook, check conditions, act, and notify.",
+    id: "t5", name: "PlugsConnected Handler", description: "Receive external webhook, check conditions, act, and notify.",
     nodeCount: 4,
     nodes: [
       mkNode("t5_1", "webhook_received", 300, 0),
       mkNode("t5_2", "if_else", 300, 120, { field: "payload.type", operator: "equals", value: "order" }),
       mkNode("t5_3", "create_task", 300, 240, { title: "Process webhook order" }),
-      mkNode("t5_4", "send_notification", 300, 360, { title: "Webhook processed" }),
+      mkNode("t5_4", "send_notification", 300, 360, { title: "PlugsConnected processed" }),
     ],
     edges: [mkEdge("t5_1","t5_2"), mkEdge("t5_2","t5_3"), mkEdge("t5_3","t5_4")],
   },
@@ -260,7 +252,7 @@ const TEMPLATES: Template[] = [
     edges: [mkEdge("t10_1","t10_2"), mkEdge("t10_2","t10_3"), mkEdge("t10_2","t10_4"), mkEdge("t10_4","t10_5"), mkEdge("t10_4","t10_6")],
   },
   {
-    id: "t11", name: "Review Response Bot", description: "Analyze new reviews with AI � thank positive reviewers publicly and alert the team on negatives.",
+    id: "t11", name: "Review Response Robot", description: "Analyze new reviews with AI � thank positive reviewers publicly and alert the team on negatives.",
     nodeCount: 5,
     nodes: [
       mkNode("t11_1", "webhook_received", 300, 0, { url: "https://reviews-api/new-review" }),
@@ -686,7 +678,7 @@ function WorkflowBuilderInner() {
 
   const [saving, setSaving] = useState(false);
 
-  // Save workflow � POSTs to /api/workflows which upserts on (user_id, name).
+  // FloppyDisk workflow � POSTs to /api/workflows which upserts on (user_id, name).
   const saveWorkflow = useCallback(async () => {
     const name = workflowName.trim();
     if (!name) {
@@ -702,7 +694,7 @@ function WorkflowBuilderInner() {
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        throw new Error(body?.error || `Save failed (${res.status})`);
+        throw new Error(body?.error || `FloppyDisk failed (${res.status})`);
       }
       toast.success("Workflow saved to your account");
     } catch (err) {
@@ -807,7 +799,7 @@ function WorkflowBuilderInner() {
     <div className="flex flex-col h-[calc(100vh-14rem)]">
       {/* -- Top Toolbar -- */}
       <div className="shrink-0 h-11 border-b border-border-subtle glass flex items-center px-3 gap-2">
-        <Zap size={16} className="text-brand-accent" />
+        <Lightning size={16} className="text-brand-accent" />
         {editingName ? (
           <input
             autoFocus
@@ -829,9 +821,9 @@ function WorkflowBuilderInner() {
           onClick={saveWorkflow}
           disabled={saving}
           className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors disabled:opacity-50"
-          title="Save (Ctrl+S)"
+          title="FloppyDisk (Ctrl+S)"
         >
-          <Save size={13} /> {saving ? "Saving..." : "Save"}
+          <FloppyDisk size={13} /> {saving ? "Saving..." : "FloppyDisk"}
         </button>
 
         {simulating ? (
@@ -847,22 +839,22 @@ function WorkflowBuilderInner() {
         <div className="w-px h-5 bg-border-subtle mx-1" />
 
         <button onClick={undo} disabled={!canUndo} className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Undo (Ctrl+Z)" aria-label="Undo (Ctrl+Z)">
-          <Undo2 size={14} />
+          <ArrowCounterClockwise size={14} />
         </button>
         <button onClick={redo} disabled={!canRedo} className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Redo (Ctrl+Shift+Z)" aria-label="Redo (Ctrl+Shift+Z)">
-          <Redo2 size={14} />
+          <ArrowClockwise size={14} />
         </button>
 
         <div className="w-px h-5 bg-border-subtle mx-1" />
 
         <button onClick={autoLayout} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors" title="Auto Layout">
-          <LayoutGrid size={13} /> Layout
+          <SquaresFour size={13} /> Layout
         </button>
 
         <div className="flex-1" />
 
         <button onClick={() => setShowTemplates(true)} className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-medium bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)] hover:bg-[rgba(212,255,0,0.12)] transition-colors">
-          <LayoutTemplate size={13} /> Templates
+          <Layout size={13} /> Templates
         </button>
       </div>
 
@@ -872,11 +864,11 @@ function WorkflowBuilderInner() {
         <div className="shrink-0 w-[250px] border-r border-border-subtle glass overflow-y-auto">
           <div className="p-3">
             <div className="relative mb-3">
-              <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
+              <MagnifyingGlass size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
               <input
                 value={paletteSearch}
                 onChange={e => setPaletteSearch(e.target.value)}
-                placeholder="Search nodes..."
+                placeholder="MagnifyingGlass nodes..."
                 className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-surface-light border border-border-subtle text-xs text-text-primary placeholder:text-text-muted/50 outline-none focus:border-brand-accent transition-colors"
               />
             </div>
@@ -892,7 +884,7 @@ function WorkflowBuilderInner() {
                     onClick={() => setCollapsedCategories(p => ({ ...p, [cat]: !p[cat] }))}
                     className="flex items-center gap-1.5 w-full text-[10px] font-semibold uppercase tracking-wider text-text-muted hover:text-text-primary mb-1.5 transition-colors"
                   >
-                    {collapsed ? <ChevronRight size={11} /> : <ChevronDown size={11} />}
+                    {collapsed ? <CaretRight size={11} /> : <CaretDown size={11} />}
                     <span className={`w-2 h-2 rounded-full ${colors.dot}`} />
                     {CATEGORY_LABELS[cat]}
                     <span className="ml-auto text-text-muted/50 font-normal normal-case">{items.length}</span>
@@ -912,7 +904,7 @@ function WorkflowBuilderInner() {
                             hover:bg-surface-light hover:border-border-subtle transition-all text-left group
                           `}
                         >
-                          <GripVertical size={10} className="text-text-muted/30 group-hover:text-text-muted/60 shrink-0" />
+                          <DotsSixVertical size={10} className="text-text-muted/30 group-hover:text-text-muted/60 shrink-0" />
                           <div className={`shrink-0 w-6 h-6 rounded-md flex items-center justify-center ${colors.bg} ${colors.text}`}>
                             {def.icon}
                           </div>
@@ -972,7 +964,7 @@ function WorkflowBuilderInner() {
               <Panel position="top-center">
                 <div className="mt-32 text-center">
                   <div className="w-14 h-14  bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center mx-auto mb-4">
-                    <Zap size={24} className="text-brand-accent" />
+                    <Lightning size={24} className="text-brand-accent" />
                   </div>
                   <h3 className="text-sm font-semibold text-text-primary mb-1">Build your workflow</h3>
                   <p className="text-[11px] text-text-muted max-w-[240px] mx-auto mb-4">Drag nodes from the left panel onto the canvas, or start with a template.</p>
@@ -980,7 +972,7 @@ function WorkflowBuilderInner() {
                     onClick={() => setShowTemplates(true)}
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.2)] hover:bg-[rgba(212,255,0,0.12)] transition-colors"
                   >
-                    <LayoutTemplate size={14} /> Browse Templates
+                    <Layout size={14} /> Browse Templates
                   </button>
                 </div>
               </Panel>
@@ -1024,7 +1016,7 @@ function WorkflowBuilderInner() {
               {configFields.length > 0 ? (
                 <div className="space-y-3">
                   <div className="text-[10px] font-semibold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
-                    <Settings size={10} /> Configuration
+                    <Gear size={10} /> Configuration
                   </div>
                   {configFields.map(field => (
                     <div key={field.key}>
@@ -1090,7 +1082,7 @@ function WorkflowBuilderInner() {
                   }}
                   className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-[11px] text-red-400 hover:text-red-500 hover:bg-red-500/10 transition-colors"
                 >
-                  <Trash2 size={12} /> Delete Node
+                  <Trash size={12} /> Delete Node
                 </button>
               </div>
 
@@ -1105,8 +1097,8 @@ function WorkflowBuilderInner() {
 
       {/* -- Bottom Stats Bar -- */}
       <div className="shrink-0 h-8 border-t border-border-subtle glass flex items-center px-4 gap-4 text-[10px] text-text-muted">
-        <span className="flex items-center gap-1"><Zap size={10} className="text-brand-accent" /> {stats.total} nodes</span>
-        <span className="flex items-center gap-1"><Link2 size={10} /> {stats.connections} connections</span>
+        <span className="flex items-center gap-1"><Lightning size={10} className="text-brand-accent" /> {stats.total} nodes</span>
+        <span className="flex items-center gap-1"><Link size={10} /> {stats.connections} connections</span>
         <span className="flex items-center gap-1"><ArrowRight size={10} /> {stats.triggers} trigger{stats.triggers !== 1 ? "s" : ""}</span>
         <span className="flex items-center gap-1"><Clock size={10} /> Est. {stats.estTime}</span>
         <div className="flex-1" />
@@ -1122,7 +1114,7 @@ function WorkflowBuilderInner() {
             <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle">
               <div>
                 <h2 className="text-sm font-bold text-text-primary flex items-center gap-2">
-                  <LayoutTemplate size={16} className="text-brand-accent" /> Workflow Templates
+                  <Layout size={16} className="text-brand-accent" /> Workflow Templates
                 </h2>
                 <p className="text-[11px] text-text-muted mt-0.5">Start with a pre-built workflow and customize it to your needs.</p>
               </div>
@@ -1146,7 +1138,7 @@ function WorkflowBuilderInner() {
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div className="w-9 h-9 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center">
-                      <Zap size={16} className="text-brand-accent" />
+                      <Lightning size={16} className="text-brand-accent" />
                     </div>
                     <span className="text-[10px] text-text-muted bg-surface px-2 py-0.5 rounded-full border border-border-subtle">{tpl.nodeCount} nodes</span>
                   </div>

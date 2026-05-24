@@ -1,13 +1,7 @@
+import { ArrowSquareOut, CaretDown, CaretRight, ChartBar, Chat, CheckCircle, CircleNotch, Clock, Copy, Envelope, Eye, Gear, Hash, Lightning, ListBullets, Phone, Plus, Sparkle, Star, Trash, Users, X, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
-import {
-  Plus, Copy, Trash2, Eye, BarChart3, ExternalLink,
-  CheckCircle2, Clock, XCircle, Users, Sparkles,
-  ChevronRight, Loader2, Settings, Mail, Phone,
-  MessageSquare, List, Hash, Star, ChevronDown,
-  X, Zap
-} from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
@@ -64,7 +58,7 @@ function ScoreBadge({ score }: { score: number | null }) {
       className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold"
       style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}
     >
-      <Sparkles size={10} />
+      <Sparkle size={10} />
       {score}
     </span>
   );
@@ -72,18 +66,18 @@ function ScoreBadge({ score }: { score: number | null }) {
 
 const STATUS_META = {
   new:          { label: "New",          color: "#D4FF00", icon: <Clock size={10} /> },
-  contacted:    { label: "Contacted",    color: "#f59e0b", icon: <Mail size={10} /> },
-  qualified:    { label: "Qualified",    color: "#22c55e", icon: <CheckCircle2 size={10} /> },
+  contacted:    { label: "Contacted",    color: "#f59e0b", icon: <Envelope size={10} /> },
+  qualified:    { label: "Qualified",    color: "#22c55e", icon: <CheckCircle size={10} /> },
   disqualified: { label: "Disqualified", color: "#ef4444", icon: <XCircle size={10} /> },
   converted:    { label: "Converted",    color: "#D4FF00", icon: <Star size={10} /> },
 };
 
 const FIELD_TYPES: { value: FormField["type"]; label: string; icon: React.ReactNode }[] = [
   { value: "text",     label: "Short text",  icon: <Hash size={14} /> },
-  { value: "textarea", label: "Long text",   icon: <MessageSquare size={14} /> },
-  { value: "email",    label: "Email",       icon: <Mail size={14} /> },
+  { value: "textarea", label: "Long text",   icon: <Chat size={14} /> },
+  { value: "email",    label: "Email",       icon: <Envelope size={14} /> },
   { value: "phone",    label: "Phone",       icon: <Phone size={14} /> },
-  { value: "select",   label: "Dropdown",    icon: <List size={14} /> },
+  { value: "select",   label: "Dropdown",    icon: <ListBullets size={14} /> },
   { value: "radio",    label: "Multiple choice", icon: <Star size={14} /> },
 ];
 
@@ -294,12 +288,12 @@ export default function IntakePage() {
                 <div>
                   {loading ? (
                     <div className="flex items-center justify-center py-20">
-                      <Loader2 className="w-6 h-6 animate-spin text-text-muted" />
+                      <CircleNotch className="w-6 h-6 animate-spin text-text-muted" />
                     </div>
                   ) : forms.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
                       <div className="w-14 h-14  bg-white/6 border border-border-subtle flex items-center justify-center">
-                        <Zap size={22} className="text-brand-accent/60" />
+                        <Lightning size={22} className="text-brand-accent/60" />
                       </div>
                       <div>
                         <p className="text-sm font-medium text-text-secondary mb-1">No intake forms yet</p>
@@ -334,7 +328,7 @@ export default function IntakePage() {
                                 className="w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center"
                                 style={{ background: `${form.brand_color}18`, border: `1px solid ${form.brand_color}30` }}
                               >
-                                <ChevronRight size={14} style={{ color: form.brand_color }} />
+                                <CaretRight size={14} style={{ color: form.brand_color }} />
                               </div>
                               <div className="flex-1 min-w-0">
                                 <h3 className="text-sm font-semibold text-text-primary truncate">{form.name}</h3>
@@ -374,7 +368,7 @@ export default function IntakePage() {
                                 className="text-text-muted hover:text-text-secondary transition-colors flex-shrink-0"
                                 title="Preview form"
                               >
-                                <ExternalLink size={12} />
+                                <ArrowSquareOut size={12} />
                               </a>
                             </div>
 
@@ -384,7 +378,7 @@ export default function IntakePage() {
                                 onClick={() => openBuilder(form)}
                                 className="flex items-center gap-1 px-2.5 py-1.5 bg-white/5 hover:bg-white/8 text-text-secondary text-xs rounded-lg transition-colors"
                               >
-                                <Settings size={11} />
+                                <Gear size={11} />
                                 Edit
                               </button>
                               <button
@@ -394,7 +388,7 @@ export default function IntakePage() {
                                 }}
                                 className="flex items-center gap-1 px-2.5 py-1.5 bg-white/5 hover:bg-white/8 text-text-secondary text-xs rounded-lg transition-colors"
                               >
-                                <BarChart3 size={11} />
+                                <ChartBar size={11} />
                                 Submissions
                               </button>
                               <button
@@ -413,7 +407,7 @@ export default function IntakePage() {
                                 onClick={() => deleteForm(form.id)}
                                 className="ml-auto flex items-center gap-1 px-2.5 py-1.5 hover:bg-red-500/10 text-text-muted hover:text-red-400 text-xs rounded-lg transition-colors"
                               >
-                                <Trash2 size={11} />
+                                <Trash size={11} />
                               </button>
                             </div>
                           </motion.div>
@@ -485,7 +479,7 @@ export default function IntakePage() {
               <div className="space-y-5 max-h-[70vh] overflow-y-auto pr-1">
                 {/* Basic settings */}
                 <div className="space-y-3">
-                  <p className="text-[11px] font-medium text-text-muted uppercase tracking-widest">Settings</p>
+                  <p className="text-[11px] font-medium text-text-muted uppercase tracking-widest">Gear</p>
 
                   <div className="space-y-1.5">
                     <label className="text-xs text-text-secondary">Form name</label>
@@ -591,7 +585,7 @@ export default function IntakePage() {
                   disabled={saving || !bName.trim()}
                   className="flex items-center gap-2 px-4 py-2 bg-brand-accent hover:bg-brand-accent/80 text-[#020711] text-sm font-medium rounded-full transition-colors disabled:opacity-50"
                 >
-                  {saving && <Loader2 size={14} className="animate-spin" />}
+                  {saving && <CircleNotch size={14} className="animate-spin" />}
                   {editingForm ? "Save changes" : "Create form"}
                 </button>
               </div>
@@ -614,7 +608,7 @@ export default function IntakePage() {
                   {subDetail.ai_summary && (
                     <div className="bg-white/6 border border-border-subtle rounded-xl p-3">
                       <p className="text-[10px] font-medium text-brand-accent mb-1.5 flex items-center gap-1">
-                        <Sparkles size={10} /> AI Summary
+                        <Sparkle size={10} /> AI Summary
                       </p>
                       <p className="text-xs text-text-secondary leading-relaxed">{subDetail.ai_summary}</p>
                     </div>
@@ -703,7 +697,7 @@ function FieldEditor({
           onClick={() => setExpanded((p) => !p)}
           className="text-text-muted hover:text-text-secondary transition-colors"
         >
-          <ChevronDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
+          <CaretDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
         </button>
         <button onClick={onRemove} className="text-text-muted hover:text-red-400 transition-colors">
           <X size={14} />

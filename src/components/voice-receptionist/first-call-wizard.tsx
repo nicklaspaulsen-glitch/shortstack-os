@@ -1,4 +1,5 @@
 "use client";
+import { ArrowRight, ArrowSquareOut, Check, CheckCircle, Circle, CircleNotch, PhoneCall, Sparkle, Users, X } from "@phosphor-icons/react";
 
 /**
  * First-Call Wizard — guided 3-step setup for Voice Receptionist.
@@ -19,17 +20,7 @@
  */
 
 import { useEffect, useState, useCallback } from "react";
-import {
-  CheckCircle2,
-  Circle,
-  Loader,
-  PhoneCall,
-  Sparkles,
-  X,
-  ArrowRight,
-  ExternalLink,
-  Users,
-} from "lucide-react";
+
 import toast from "react-hot-toast";
 
 interface Client {
@@ -211,7 +202,7 @@ export default function FirstCallWizard() {
               border: "1px solid rgba(168,85,247,0.3)",
             }}
           >
-            <Sparkles size={16} className="text-purple-600" />
+            <Sparkle size={16} className="text-purple-600" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -270,7 +261,7 @@ export default function FirstCallWizard() {
                     : "rgba(255,255,255,0.4)",
                 }}
               >
-                {done ? <CheckCircle2 size={12} /> : n}
+                {done ? <CheckCircle size={12} /> : n}
               </div>
               {n < 3 && (
                 <div
@@ -360,7 +351,7 @@ export default function FirstCallWizard() {
               className="px-4 py-2 rounded-lg bg-purple-500/15 border border-purple-500/30 text-purple-700 text-sm font-semibold hover:bg-purple-500/25 transition disabled:opacity-50 flex items-center justify-center gap-1.5"
             >
               {savingTwilio ? (
-                <Loader size={12} className="animate-spin" />
+                <CircleNotch size={12} className="animate-spin" />
               ) : (
                 <ArrowRight size={12} />
               )}
@@ -373,7 +364,7 @@ export default function FirstCallWizard() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-[11px] text-purple-600 hover:underline mt-2"
           >
-            Open Twilio Console <ExternalLink size={9} />
+            Open Twilio Console <ArrowSquareOut size={9} />
           </a>
         </StepRow>
 
@@ -382,7 +373,7 @@ export default function FirstCallWizard() {
           n={3}
           done={!!selectedClient?.eleven_agent_id}
           active={step === 3}
-          icon={<Sparkles size={14} />}
+          icon={<Sparkle size={14} />}
           title="Create the AI receptionist"
           subtitle={
             selectedClient?.eleven_agent_id
@@ -392,7 +383,7 @@ export default function FirstCallWizard() {
         >
           {selectedClient?.eleven_agent_id ? (
             <div className="flex items-center gap-2 text-[11px] text-emerald-700">
-              <CheckCircle2 size={12} />
+              <CheckCircle size={12} />
               Agent ready — call your Twilio number to test live.
             </div>
           ) : (
@@ -412,9 +403,9 @@ export default function FirstCallWizard() {
               }}
             >
               {creatingAgent ? (
-                <Loader size={12} className="animate-spin" />
+                <CircleNotch size={12} className="animate-spin" />
               ) : (
-                <Sparkles size={12} />
+                <Sparkle size={12} />
               )}
               Create AI receptionist
             </button>
@@ -485,7 +476,7 @@ function StepRow({
             color: done ? "#86efac" : "#d8b4fe",
           }}
         >
-          {done ? <CheckCircle2 size={12} /> : icon}
+          {done ? <CheckCircle size={12} /> : icon}
         </div>
         <h4 className="text-[13px] font-bold text-text-primary">
           Step {n} — {title}

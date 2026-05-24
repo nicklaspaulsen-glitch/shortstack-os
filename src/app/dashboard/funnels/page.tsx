@@ -1,14 +1,10 @@
+import { Archive, CaretRight, CheckCircle, Clock, Copy, Eye, MagnifyingGlass, Pencil, Plus, Stack, Trash } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import {
-  Plus, Eye, Search,
-  Clock, CheckCircle2, Archive, Trash2, Copy, Pencil,
-  ChevronRight, Layers,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type FunnelStatus = "draft" | "published" | "archived";
@@ -34,7 +30,7 @@ const STATUS_CONFIG: Record<FunnelStatus, { label: string; color: string; icon: 
   published: {
     label: "Published",
     color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
-    icon: <CheckCircle2 size={11} />,
+    icon: <CheckCircle size={11} />,
   },
   archived: {
     label: "Archived",
@@ -130,7 +126,7 @@ export default function FunnelsPage() {
                   New Funnel
                 </button>
       </div>
-    </div>{/* Tabs + Search */}<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+    </div>{/* Tabs + MagnifyingGlass */}<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div className="flex items-center gap-1 bg-white/4 border border-white/8 rounded-lg p-1">
                 {TABS.map((tab) => (
                   <button
@@ -148,11 +144,11 @@ export default function FunnelsPage() {
               </div>
 
               <div className="relative">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search funnels…"
+                  placeholder="MagnifyingGlass funnels…"
                   className="glass rounded-lg pl-9 pr-4 py-2 text-sm placeholder-text-text-muted outline-none focus:border-brand-accent w-56"
                 />
               </div>
@@ -165,7 +161,7 @@ export default function FunnelsPage() {
             ) : filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 gap-4">
                 <div className="w-16 h-16  bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.15)] flex items-center justify-center">
-                  <Layers size={28} className="text-brand-accent" />
+                  <Stack size={28} className="text-brand-accent" />
                 </div>
                 <div className="text-center">
                   <p className="text-text-primary font-semibold text-lg">No funnels yet</p>
@@ -258,9 +254,9 @@ export default function FunnelsPage() {
                             className="p-1.5 rounded-md hover:bg-red-500/10 text-text-muted hover:text-red-600 transition-colors"
                             title="Delete"
                           >
-                            <Trash2 size={13} />
+                            <Trash size={13} />
                           </button>
-                          <ChevronRight size={13} className="text-text-muted ml-1" />
+                          <CaretRight size={13} className="text-text-muted ml-1" />
                         </div>
                       </div>
                     </motion.div>

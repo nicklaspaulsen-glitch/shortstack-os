@@ -1,13 +1,9 @@
 "use client";
+import { ArrowSquareOut, ArrowsClockwise, Chat, CheckCircle, CircleNotch, Copy, Envelope, Globe, Info, Phone, ShieldCheck, SquaresFour, Warning } from "@phosphor-icons/react";
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams } from "next/navigation";
 import toast from "react-hot-toast";
-import {
-  Mail, Phone, Globe, LayoutDashboard, MessageSquare,
-  CheckCircle, AlertTriangle, RefreshCw, Loader, Copy,
-  ExternalLink, Sparkles, ShieldCheck, Info,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /**
@@ -46,11 +42,11 @@ interface JobResponse {
 }
 
 const SERVICE_META: Record<ServiceKey, { label: string; icon: React.ReactNode }> = {
-  email: { label: "Branded email", icon: <Mail size={14} /> },
+  email: { label: "Branded email", icon: <Envelope size={14} /> },
   phone: { label: "Phone number", icon: <Phone size={14} /> },
   website: { label: "Website", icon: <Globe size={14} /> },
-  portal: { label: "Client portal", icon: <LayoutDashboard size={14} /> },
-  chat: { label: "Chat widget", icon: <MessageSquare size={14} /> },
+  portal: { label: "Client portal", icon: <SquaresFour size={14} /> },
+  chat: { label: "Chat widget", icon: <Chat size={14} /> },
 };
 
 function dotColor(status: ServiceSummary["status"]): string {
@@ -131,7 +127,7 @@ export default function HubStatusPage() {
 
   if (!job) {
     return (
-      <MotionPage className="text-center text-text-muted text-sm"><Loader className="inline animate-spin mr-2" size={14} />Loading job status…
+      <MotionPage className="text-center text-text-muted text-sm"><CircleNotch className="inline animate-spin mr-2" size={14} />Loading job status…
               </MotionPage>
     );
   }
@@ -237,8 +233,8 @@ function ServiceCard({
                   "bg-slate-500/10 text-text-muted"
           }`}>
             {summary.status === "done" ? <CheckCircle size={14} /> :
-              summary.status === "failed" ? <AlertTriangle size={14} /> :
-                summary.status === "in_progress" ? <Loader size={14} className="animate-spin" /> :
+              summary.status === "failed" ? <Warning size={14} /> :
+                summary.status === "in_progress" ? <CircleNotch size={14} className="animate-spin" /> :
                   meta.icon}
           </div>
           <div>
@@ -252,7 +248,7 @@ function ServiceCard({
             disabled={retrying}
             className="text-[10px] px-2.5 py-1 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 flex items-center gap-1 disabled:opacity-50"
           >
-            <RefreshCw size={10} className={retrying ? "animate-spin" : ""} />
+            <ArrowsClockwise size={10} className={retrying ? "animate-spin" : ""} />
             {retrying ? "Retrying…" : "Retry"}
           </button>
         )}
@@ -287,7 +283,7 @@ function ServiceDoneDetail({
       <div className="mt-3 pt-3 border-t border-border-subtle/60 space-y-2">
         {sandbox && (
           <div className="px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-400 flex items-center gap-2">
-            <AlertTriangle size={11} /> Sandbox — DNS not written to GoDaddy OTE. Works on production.
+            <Warning size={11} /> Sandbox — DNS not written to GoDaddy OTE. Works on production.
           </div>
         )}
         <div className="flex items-center justify-between">
@@ -350,7 +346,7 @@ function ServiceDoneDetail({
           href={editorUrl}
           className="text-[10px] px-2.5 py-1 rounded-lg border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] flex items-center gap-1"
         >
-          Open builder <ExternalLink size={10} />
+          Open builder <ArrowSquareOut size={10} />
         </a>
       </div>
     );

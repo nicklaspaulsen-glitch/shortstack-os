@@ -1,5 +1,7 @@
 "use client";
+import { ArrowLeft, ArrowRight, Bell, CheckCircle, Clock, Hammer, Sparkle } from "@phosphor-icons/react";
 
+import type { Icon } from "@phosphor-icons/react";
 /**
  * ComingSoon — shared "In Development" layout for stub routes.
  *
@@ -17,16 +19,6 @@
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
-import {
-  Sparkles,
-  ArrowLeft,
-  Bell,
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  Hammer,
-  type LucideIcon,
-} from "lucide-react";
 import toast from "react-hot-toast";
 
 export interface ComingSoonProps {
@@ -35,7 +27,7 @@ export interface ComingSoonProps {
   /** One-line pitch shown under the title */
   tagline: string;
   /** lucide icon for the hero */
-  icon: LucideIcon;
+  icon: Icon;
   /** Optional ETA string: "Q2 2026", "~2 weeks", "In beta", etc. */
   eta?: string;
   /** 4-6 bullet points describing what's shipping */
@@ -152,7 +144,7 @@ export function ComingSoon({
         {/* Twinkling sparkle field */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
           {SPARKLE_POSITIONS.map((p, i) => (
-            <Sparkles
+            <Sparkle
               key={i}
               size={p.size}
               className="absolute text-text-muted coming-soon-twinkle"
@@ -249,7 +241,7 @@ export function ComingSoon({
                 key={i}
                 className="flex items-start gap-2.5 text-[12.5px] text-text-primary leading-snug"
               >
-                <CheckCircle2
+                <CheckCircle
                   size={15}
                   className="text-[#D4FF00] shrink-0 mt-0.5"
                   strokeWidth={2.2}
@@ -279,7 +271,7 @@ export function ComingSoon({
           {joined ? (
             <div className="flex-1 flex flex-col items-center justify-center text-center py-4">
               <div className="w-12 h-12  bg-success/10 border border-success/20 flex items-center justify-center text-success mb-3">
-                <CheckCircle2 size={22} />
+                <CheckCircle size={22} />
               </div>
               <p className="text-[13px] font-semibold text-text-primary">
                 You&apos;re on the list

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
-// AI Auto-Reply Bot — Automatically replies to social media comments for clients
+// AI Auto-Reply Robot — Automatically replies to social media comments for clients
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();

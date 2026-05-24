@@ -1,11 +1,8 @@
+import { Buildings, CircleNotch, Envelope, Pause, Play, Plus, Trash, WarningCircle, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import {
-  Building2, Plus, X, Loader2, Mail, Pause, Play, Trash2,
-  AlertCircle,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -184,11 +181,11 @@ export default function SubaccountsPage() {
               </motion.div>
             </div>{loading ? (
               <div className="flex items-center justify-center py-16">
-                <Loader2 className="w-6 h-6 animate-spin text-brand-accent" />
+                <CircleNotch className="w-6 h-6 animate-spin text-brand-accent" />
               </div>
             ) : subs.length === 0 ? (
               <div className="rounded-xl border border-dashed border-white/10 p-10 text-center">
-                <Building2 className="w-10 h-10 text-text-muted/40 mx-auto mb-3" />
+                <Buildings className="w-10 h-10 text-text-muted/40 mx-auto mb-3" />
                 <p className="text-text-muted text-sm">No subaccounts yet.</p>
                 <p className="text-text-muted text-xs mt-1">
                   Invite your first client to get started -- they sign up under your brand and you keep the markup.
@@ -226,7 +223,7 @@ export default function SubaccountsPage() {
                         <td className="px-4 py-3">
                           <p className="text-text-primary font-medium">{sub.name}</p>
                           <p className="text-xs text-text-muted flex items-center gap-1 mt-0.5">
-                            <Mail className="w-3 h-3" />
+                            <Envelope className="w-3 h-3" />
                             {sub.email}
                           </p>
                         </td>
@@ -251,7 +248,7 @@ export default function SubaccountsPage() {
                             )}
                             {sub.status !== "cancelled" && (
                               <button onClick={() => cancel(sub.id)} className="p-1.5 rounded hover:bg-red-500/20 text-red-400" title="Cancel">
-                                <Trash2 className="w-4 h-4" />
+                                <Trash className="w-4 h-4" />
                               </button>
                             )}
                           </div>
@@ -269,7 +266,7 @@ export default function SubaccountsPage() {
                     <X className="w-4 h-4" />
                   </button>
                   <div className="flex items-center gap-2 mb-1">
-                    <Building2 className="w-5 h-5 text-brand-accent" />
+                    <Buildings className="w-5 h-5 text-brand-accent" />
                     <h2 className="text-lg font-bold text-text-primary">Invite Subaccount</h2>
                   </div>
                   <p className="text-xs text-text-muted mb-5">
@@ -328,12 +325,12 @@ export default function SubaccountsPage() {
                       Cancel
                     </button>
                     <button onClick={handleInvite} disabled={inviting} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-full bg-brand-accent hover:bg-[#E8FF4D] text-black text-sm font-semibold disabled:opacity-60">
-                      {inviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
+                      {inviting ? <CircleNotch className="w-4 h-4 animate-spin" /> : <Envelope className="w-4 h-4" />}
                       Send Invite
                     </button>
                   </div>
                   <p className="mt-4 text-xs text-text-muted flex items-start gap-1.5">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                    <WarningCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                     Email delivery for invites is deferred to v2 -- see PR notes.
                   </p>
                 </div>

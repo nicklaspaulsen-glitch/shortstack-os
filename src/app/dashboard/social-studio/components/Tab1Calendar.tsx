@@ -1,7 +1,7 @@
+import { Calendar, CircleNotch, FloppyDisk, Funnel, Trash, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Calendar, Filter, Loader2, X, Save, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import StatCard from "@/components/ui/stat-card";
 import Modal from "@/components/ui/modal";
@@ -218,7 +218,7 @@ export default function Tab1Calendar() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <Filter size={12} className="text-text-muted" />
+            <Funnel size={12} className="text-text-muted" />
             <span className="text-[10px] uppercase tracking-wider text-text-muted">Status</span>
             {STATUS_OPTIONS.map((s) => {
               const meta = STATUS_META[s];
@@ -335,7 +335,7 @@ export default function Tab1Calendar() {
 
         {loading && (
           <div className="flex items-center justify-center gap-2 mt-4 text-xs text-text-muted">
-            <Loader2 size={12} className="animate-spin" />
+            <CircleNotch size={12} className="animate-spin" />
             Loading lineup...
           </div>
         )}
@@ -433,7 +433,7 @@ export default function Tab1Calendar() {
                 disabled={savingId === selected.id || selected.status === "cancelled"}
                 className="inline-flex items-center gap-1.5 text-xs text-danger hover:underline disabled:opacity-50"
               >
-                <Trash2 size={12} />
+                <Trash size={12} />
                 Cancel post
               </button>
               <div className="flex items-center gap-2">
@@ -452,11 +452,11 @@ export default function Tab1Calendar() {
                   className="px-3 py-1.5 text-xs rounded-md bg-[rgba(212,255,0,0.12)] text-brand-accent border border-[rgba(212,255,0,0.25)] hover:bg-[rgba(212,255,0,0.18)] disabled:opacity-50"
                 >
                   {savingId === selected.id ? (
-                    <Loader2 size={12} className="inline mr-1 animate-spin" />
+                    <CircleNotch size={12} className="inline mr-1 animate-spin" />
                   ) : (
-                    <Save size={12} className="inline mr-1" />
+                    <FloppyDisk size={12} className="inline mr-1" />
                   )}
-                  Save
+                  FloppyDisk
                 </button>
               </div>
             </div>

@@ -1,4 +1,5 @@
 "use client";
+import { SpeakerHigh, SpeakerX, Square } from "@phosphor-icons/react";
 
 /**
  * TrinitySettings — the TTS mute + stop-speaking controls docked in the
@@ -8,7 +9,6 @@
  * shell needs.
  */
 
-import { Volume2, VolumeX, Square } from "lucide-react";
 
 interface Props {
   ttsSupported: boolean;
@@ -44,7 +44,7 @@ export default function TrinitySettings({ ttsSupported, muted, speaking, onToggl
             : "bg-surface-light text-[#D4FF00] hover:bg-[rgba(212,255,0,0.08)]"
         }`}
       >
-        {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+        {muted ? <SpeakerX size={14} /> : <SpeakerHigh size={14} />}
       </button>
     </div>
   );

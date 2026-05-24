@@ -1,11 +1,8 @@
 "use client";
+import { CaretRight, Envelope, FileText, FilmStrip, Globe, Image, ShareNetwork, Sparkle, Stack } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  Sparkles, Mail, Share2, Film, Image as ImageIcon, FileText,
-  Globe, Layers, ChevronRight,
-} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface RecentItem {
@@ -19,16 +16,16 @@ interface RecentItem {
 }
 
 const TYPE_META: Record<string, { label: string; icon: React.ReactNode; gradient: string; color: string }> = {
-  email:        { label: "Email",        icon: <Mail size={11} />,      gradient: "from-amber-500/30 to-orange-500/20",  color: "text-amber-400" },
-  social_post:  { label: "Social Post",  icon: <Share2 size={11} />,    gradient: "from-rose-500/30 to-pink-500/20",     color: "text-rose-400" },
-  video:        { label: "Video",        icon: <Film size={11} />,      gradient: "from-blue-500/30 to-indigo-500/20",   color: "text-indigo-400" },
-  thumbnail:    { label: "Thumbnail",    icon: <ImageIcon size={11} />, gradient: "from-emerald-500/30 to-green-500/20", color: "text-emerald-400" },
+  email:        { label: "Email",        icon: <Envelope size={11} />,      gradient: "from-amber-500/30 to-orange-500/20",  color: "text-amber-400" },
+  social_post:  { label: "Social Post",  icon: <ShareNetwork size={11} />,    gradient: "from-rose-500/30 to-pink-500/20",     color: "text-rose-400" },
+  video:        { label: "Video",        icon: <FilmStrip size={11} />,      gradient: "from-blue-500/30 to-indigo-500/20",   color: "text-indigo-400" },
+  thumbnail:    { label: "Thumbnail",    icon: <Image size={11} />, gradient: "from-emerald-500/30 to-green-500/20", color: "text-emerald-400" },
   script:       { label: "Script",       icon: <FileText size={11} />,  gradient: "from-cyan-500/30 to-teal-500/20",     color: "text-cyan-400" },
   landing_page: { label: "Landing Page", icon: <Globe size={11} />,     gradient: "from-teal-500/30 to-emerald-500/20",  color: "text-teal-400" },
-  form:         { label: "Form",         icon: <Layers size={11} />,    gradient: "from-violet-500/30 to-purple-500/20", color: "text-violet-400" },
-  sequence:     { label: "Sequence",     icon: <Mail size={11} />,      gradient: "from-fuchsia-500/30 to-pink-500/20",  color: "text-fuchsia-400" },
+  form:         { label: "Form",         icon: <Stack size={11} />,    gradient: "from-violet-500/30 to-purple-500/20", color: "text-violet-400" },
+  sequence:     { label: "Sequence",     icon: <Envelope size={11} />,      gradient: "from-fuchsia-500/30 to-pink-500/20",  color: "text-fuchsia-400" },
   blog:         { label: "Blog",         icon: <FileText size={11} />,  gradient: "from-indigo-500/30 to-blue-500/20",   color: "text-indigo-400" },
-  other:        { label: "Generation",   icon: <Sparkles size={11} />,  gradient: "from-[rgba(212,255,0,0.18)] to-amber-500/20",        color: "text-[#D4FF00]" },
+  other:        { label: "Generation",   icon: <Sparkle size={11} />,  gradient: "from-[rgba(212,255,0,0.18)] to-amber-500/20",        color: "text-[#D4FF00]" },
 };
 
 function timeAgo(dateStr: string): string {
@@ -61,13 +58,13 @@ export default function RecentGenerations() {
     <div className="card-static">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-sm font-semibold flex items-center gap-2">
-          <Sparkles size={14} className="text-[#D4FF00]" /> Recent AI Generations
+          <Sparkle size={14} className="text-[#D4FF00]" /> Recent AI Generations
           <span className="text-[9px] text-text-muted font-normal bg-[rgba(212,255,0,0.08)] text-[#D4FF00] px-2 py-0.5 rounded-full">
             Latest
           </span>
         </h2>
         <Link href="/dashboard/generations" className="text-[10px] text-[#D4FF00] hover:underline flex items-center gap-0.5 font-medium">
-          View all <ChevronRight size={10} />
+          View all <CaretRight size={10} />
         </Link>
       </div>
 
@@ -83,7 +80,7 @@ export default function RecentGenerations() {
         </div>
       ) : items.length === 0 ? (
         <div className="text-center py-8">
-          <Sparkles size={28} className="mx-auto mb-2 text-text-muted/30" />
+          <Sparkle size={28} className="mx-auto mb-2 text-text-muted/30" />
           <p className="text-xs text-text-muted font-medium mb-1">No generations yet</p>
           <p className="text-[10px] text-text-muted max-w-xs mx-auto mb-3">
             Use any AI tool in Trinity and your output will land here.
@@ -92,7 +89,7 @@ export default function RecentGenerations() {
             href="/dashboard/ai-studio"
             className="inline-flex items-center gap-1 text-[10px] text-[#D4FF00] hover:underline font-medium"
           >
-            Create your first AI generation <ChevronRight size={10} />
+            Create your first AI generation <CaretRight size={10} />
           </Link>
         </div>
       ) : (

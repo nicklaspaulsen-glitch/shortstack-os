@@ -1,5 +1,7 @@
 "use client";
+import { Bell, Calendar, CaretDown, ChartBar, Chats, Crown, Database, FileText, FilmStrip, Gear, Globe, Lightning, List, MagnifyingGlass, Microphone, PaperPlaneTilt, Sparkle, SquaresFour, Tray, Users, X } from "@phosphor-icons/react";
 
+import type { Icon } from "@phosphor-icons/react";
 /**
  * MainNavbar — Aave-inspired glass navigation bar for ShortStack OS.
  *
@@ -18,30 +20,6 @@ import { useState, useRef, useEffect, useId } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import {
-  LayoutDashboard,
-  Inbox,
-  Users,
-  BarChart3,
-  Calendar,
-  Database,
-  ChevronDown,
-  Menu,
-  X,
-  Search,
-  Bell,
-  Crown,
-  Send,
-  Mic,
-  Sparkles,
-  Globe,
-  Film,
-  Zap,
-  FileText,
-  MessagesSquare,
-  Settings,
-  type LucideIcon,
-} from "lucide-react";
 import GlobalSearch from "@/components/global-search";
 import Notifications from "@/components/notifications";
 import ClientSwitcher from "@/components/client-switcher";
@@ -51,22 +29,22 @@ import { useAuth } from "@/lib/auth-context";
 interface NavItem {
   label: string;
   href: string;
-  Icon: LucideIcon;
+  Icon: Icon;
 }
 
 interface SectionDef {
   key: string;
   label: string;
-  Icon: LucideIcon;
+  Icon: Icon;
   items: NavItem[];
 }
 
 // ── Core items (always-visible icon circles) ──────────────────────────────
 const CORE_ITEMS: NavItem[] = [
-  { label: "Dashboard",  href: "/dashboard",           Icon: LayoutDashboard },
-  { label: "Inbox",      href: "/dashboard/inbox",     Icon: Inbox           },
+  { label: "Dashboard",  href: "/dashboard",           Icon: SquaresFour },
+  { label: "Tray",      href: "/dashboard/inbox",     Icon: Tray           },
   { label: "Clients",    href: "/dashboard/clients",   Icon: Users           },
-  { label: "Analytics",  href: "/dashboard/analytics", Icon: BarChart3       },
+  { label: "Analytics",  href: "/dashboard/analytics", Icon: ChartBar       },
   { label: "Calendar",   href: "/dashboard/calendar",  Icon: Calendar        },
   { label: "CRM",        href: "/dashboard/crm",       Icon: Database        },
 ];
@@ -74,52 +52,52 @@ const CORE_ITEMS: NavItem[] = [
 // ── Section definitions ───────────────────────────────────────────────────
 const SECTIONS: SectionDef[] = [
   {
-    key: "sales", label: "Sales", Icon: Send,
+    key: "sales", label: "Sales", Icon: PaperPlaneTilt,
     items: [
-      { label: "Outreach",      href: "/dashboard/outreach-hub",   Icon: Send          },
-      { label: "Lead Finder",   href: "/dashboard/scraper",        Icon: Search        },
-      { label: "Cold Email",    href: "/dashboard/cold-email",     Icon: Inbox         },
-      { label: "Conversations", href: "/dashboard/conversations",  Icon: MessagesSquare },
+      { label: "Outreach",      href: "/dashboard/outreach-hub",   Icon: PaperPlaneTilt          },
+      { label: "Lead Finder",   href: "/dashboard/scraper",        Icon: MagnifyingGlass        },
+      { label: "Cold Email",    href: "/dashboard/cold-email",     Icon: Tray         },
+      { label: "Conversations", href: "/dashboard/conversations",  Icon: Chats },
       { label: "Leads",         href: "/dashboard/leads",          Icon: Users         },
-      { label: "Voice Studio",  href: "/dashboard/voice-studio",   Icon: Mic           },
-      { label: "Trinity",       href: "/dashboard/trinity",        Icon: Sparkles      },
+      { label: "Voice Studio",  href: "/dashboard/voice-studio",   Icon: Microphone           },
+      { label: "Trinity",       href: "/dashboard/trinity",        Icon: Sparkle      },
     ],
   },
   {
-    key: "create", label: "Create", Icon: Sparkles,
+    key: "create", label: "Create", Icon: Sparkle,
     items: [
       { label: "AI Writer",   href: "/dashboard/copywriter",        Icon: FileText  },
-      { label: "Script Lab",  href: "/dashboard/script-lab",        Icon: Sparkles  },
+      { label: "Script Lab",  href: "/dashboard/script-lab",        Icon: Sparkle  },
       { label: "Social Mgr",  href: "/dashboard/social-manager",    Icon: Globe     },
-      { label: "Brand Kit",   href: "/dashboard/brand-kit",         Icon: Sparkles  },
+      { label: "Brand Kit",   href: "/dashboard/brand-kit",         Icon: Sparkle  },
       { label: "Websites",    href: "/dashboard/websites",          Icon: Globe     },
     ],
   },
   {
-    key: "visual", label: "Visual", Icon: Film,
+    key: "visual", label: "Visual", Icon: FilmStrip,
     items: [
-      { label: "Video Editor", href: "/dashboard/video-editor",          Icon: Film     },
-      { label: "AI Video",     href: "/dashboard/ai-video",              Icon: Film     },
-      { label: "Thumbnails",   href: "/dashboard/thumbnail-generator",   Icon: Sparkles },
-      { label: "AI Studio",    href: "/dashboard/ai-studio",             Icon: Sparkles },
+      { label: "Video Editor", href: "/dashboard/video-editor",          Icon: FilmStrip     },
+      { label: "AI Video",     href: "/dashboard/ai-video",              Icon: FilmStrip     },
+      { label: "Thumbnails",   href: "/dashboard/thumbnail-generator",   Icon: Sparkle },
+      { label: "AI Studio",    href: "/dashboard/ai-studio",             Icon: Sparkle },
     ],
   },
   {
-    key: "automate", label: "Automate", Icon: Zap,
+    key: "automate", label: "Automate", Icon: Lightning,
     items: [
-      { label: "AI Agents",    href: "/dashboard/services",          Icon: Sparkles },
-      { label: "Workflows",    href: "/dashboard/workflows",         Icon: Zap      },
+      { label: "AI Agents",    href: "/dashboard/services",          Icon: Sparkle },
+      { label: "Workflows",    href: "/dashboard/workflows",         Icon: Lightning      },
       { label: "Agent Office", href: "/dashboard/agent-office",      Icon: Users    },
-      { label: "Automations",  href: "/dashboard/automations",       Icon: Zap      },
+      { label: "Automations",  href: "/dashboard/automations",       Icon: Lightning      },
     ],
   },
   {
-    key: "manage", label: "Manage", Icon: Settings,
+    key: "manage", label: "Manage", Icon: Gear,
     items: [
       { label: "Team",         href: "/dashboard/team",             Icon: Users    },
       { label: "Invoices",     href: "/dashboard/invoices",         Icon: FileText },
-      { label: "Integrations", href: "/dashboard/integrations-hub", Icon: Zap      },
-      { label: "Settings",     href: "/dashboard/settings",         Icon: Settings },
+      { label: "Integrations", href: "/dashboard/integrations-hub", Icon: Lightning      },
+      { label: "Gear",     href: "/dashboard/settings",         Icon: Gear },
     ],
   },
 ];
@@ -171,7 +149,7 @@ function IconCircle({
 }: {
   href: string;
   label: string;
-  Icon: LucideIcon;
+  Icon: Icon;
   active: boolean;
 }) {
   return (
@@ -288,7 +266,7 @@ function SectionDropdown({
       >
         <section.Icon size={12} aria-hidden />
         <span>{section.label}</span>
-        <ChevronDown
+        <CaretDown
           size={10}
           aria-hidden
           style={{
@@ -616,7 +594,7 @@ export default function MainNavbar() {
           }}
           aria-label="Open navigation"
         >
-          <Menu size={16} aria-hidden />
+          <List size={16} aria-hidden />
         </button>
 
         {/* Logo */}
@@ -688,7 +666,7 @@ export default function MainNavbar() {
             title={
               (profile as { full_name?: string; nickname?: string } | null)?.full_name ||
               (profile as { full_name?: string; nickname?: string } | null)?.nickname ||
-              "Settings"
+              "Gear"
             }
             className="shrink-0 rounded-full outline-none"
             style={{

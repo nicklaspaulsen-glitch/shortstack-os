@@ -1,7 +1,8 @@
 "use client";
+import { ChatCircle, Envelope } from "@phosphor-icons/react";
 
 import { motion } from "framer-motion";
-import { Mail, MessageCircle } from "lucide-react";
+
 
 const GOLD = "#D4FF00";
 const GOLD_LIGHT = "#E8FF4D";
@@ -51,7 +52,7 @@ export default function AboutContact() {
                 color: GOLD,
               }}
             >
-              <Mail size={18} strokeWidth={1.8} />
+              <Envelope size={18} strokeWidth={1.8} />
             </div>
             <div>
               <div className="text-white font-semibold">Email</div>
@@ -80,7 +81,7 @@ export default function AboutContact() {
                 color: "#0b0d12",
               }}
             >
-              <MessageCircle size={18} strokeWidth={2} />
+              <ChatCircle size={18} strokeWidth={2} />
             </div>
             <div>
               <div className="text-white font-semibold">In-app feedback</div>

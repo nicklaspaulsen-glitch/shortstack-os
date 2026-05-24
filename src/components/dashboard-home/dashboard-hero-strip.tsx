@@ -1,8 +1,8 @@
 "use client";
+import { Fire, PhoneCall, Plus, Target } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Flame, PhoneCall, Target, Plus } from "lucide-react";
 
 /**
  * DashboardHeroStrip — slim editorial command header at the top of the dashboard.
@@ -83,7 +83,7 @@ export default function DashboardHeroStrip({ firstName, microStats }: Props) {
         {/* Micro-stats */}
         <MicroStat icon={<PhoneCall size={10} />} label="calls" value={microStats.calls} />
         <MicroStat icon={<Target size={10} />} label="leads" value={microStats.leads} />
-        <MicroStat icon={<Flame size={10} />} label="hot" value={microStats.hot} highlight />
+        <MicroStat icon={<Fire size={10} />} label="hot" value={microStats.hot} highlight />
 
         {/* Quick-add pills */}
         <div className="hidden sm:flex items-center gap-1.5 ml-2 pl-2 border-l border-border-subtle">

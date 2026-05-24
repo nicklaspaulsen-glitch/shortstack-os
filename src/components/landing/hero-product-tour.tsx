@@ -1,4 +1,5 @@
 "use client";
+import { ArrowUpRight, Calendar, PenNib, Phone, PlayCircle, Sparkle, TrendUp } from "@phosphor-icons/react";
 
 /**
  * HeroProductTour — rotating mock-up of 5 product surfaces.
@@ -8,15 +9,6 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  TrendingUp,
-  Phone,
-  Calendar,
-  PenTool,
-  Sparkles,
-  ArrowUpRight,
-  PlayCircle,
-} from "lucide-react";
 import {
   SiMeta,
   SiGoogleads,
@@ -226,7 +218,7 @@ function LeadsMock() {
       <div className="flex items-center justify-between mb-3">
         <p className="text-xs font-semibold text-white">Lead Finder · last scan</p>
         <span className="text-[9px] text-emerald-400 font-bold flex items-center gap-1">
-          <Sparkles size={9} /> 247 new today
+          <Sparkle size={9} /> 247 new today
         </span>
       </div>
       <div className="space-y-1.5">
@@ -338,7 +330,7 @@ function VoiceMock() {
           border: "1px solid rgba(255,255,255,0.10)",
         }}
       >
-        <Sparkles size={10} style={{ color: "#D4FF00" }} />
+        <Sparkle size={10} style={{ color: "#D4FF00" }} />
         AI hand-off triggered for high-intent caller — booked to John Friday 2pm.
       </motion.div>
     </div>
@@ -353,7 +345,7 @@ function ContentMock() {
     { day: 2, type: "video", icon: <SiYoutube size={9} />, color: "#FF0000" },
     { day: 3, type: "reel", icon: <SiInstagram size={9} />, color: "#E4405F" },
     { day: 4, type: "post", icon: <SiTiktok size={9} />, color: "#FFFFFF" },
-    { day: 5, type: "ai", icon: <Sparkles size={9} />, color: "#D4FF00" },
+    { day: 5, type: "ai", icon: <Sparkle size={9} />, color: "#D4FF00" },
   ];
   return (
     <div>
@@ -362,7 +354,7 @@ function ContentMock() {
           <Calendar size={12} /> Content Plan · this week
         </p>
         <span className="text-[9px] font-bold text-emerald-400 flex items-center gap-1">
-          <Sparkles size={9} /> AI generated 9
+          <Sparkle size={9} /> AI generated 9
         </span>
       </div>
       <div className="grid grid-cols-7 gap-1.5 mb-4">
@@ -397,7 +389,7 @@ function ContentMock() {
         })}
       </div>
       <div className="flex items-center gap-2 text-[10px] text-text-muted">
-        <PenTool size={10} className="text-text-muted" />
+        <PenNib size={10} className="text-text-muted" />
         <span>Next post drafted in your voice — review at 2pm.</span>
       </div>
     </div>
@@ -409,7 +401,7 @@ function AdsMock() {
     <div>
       <div className="flex items-center justify-between mb-3">
         <p className="text-xs font-semibold text-white flex items-center gap-2">
-          <TrendingUp size={12} /> Ads Manager · 7-day rollup
+          <TrendUp size={12} /> Ads Manager · 7-day rollup
         </p>
         <span className="text-[9px] text-emerald-400 font-bold">+22% ROAS</span>
       </div>
@@ -462,7 +454,7 @@ function AdsMock() {
           border: "1px solid rgba(255,255,255,0.10)",
         }}
       >
-        <Sparkles size={10} style={{ color: "#D4FF00" }} className="shrink-0 mt-0.5" />
+        <Sparkle size={10} style={{ color: "#D4FF00" }} className="shrink-0 mt-0.5" />
         AI rebalanced budget: shifted $400/day from Meta Awareness → Google Search.
       </motion.div>
     </div>

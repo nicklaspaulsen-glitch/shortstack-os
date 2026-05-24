@@ -1,3 +1,4 @@
+import { ArrowSquareOut, ArrowUpRight, CircleNotch, CreditCard, Crown, DeviceMobile, DownloadSimple, Envelope, Phone, Plus, Robot, Sparkle, Users } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -15,21 +16,6 @@ import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import {
-  CreditCard,
-  Mail,
-  Bot,
-  Users,
-  Smartphone,
-  Phone,
-  ExternalLink,
-  Plus,
-  ArrowUpRight,
-  Download,
-  Sparkles,
-  Loader2,
-  Crown,
-} from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { PLAN_TIERS, getPlanConfig, type PlanTier } from "@/lib/plan-config";
 import { PrismPanel } from "@/components/prism";
@@ -69,10 +55,10 @@ const RESOURCE_META: Array<{
   accent: string;
   suffix?: string;
 }> = [
-  { key: "emails", label: "Emails", icon: <Mail size={14} />, accent: "#D4FF00" },
-  { key: "tokens", label: "AI Tokens", icon: <Bot size={14} />, accent: "#a855f7" },
+  { key: "emails", label: "Emails", icon: <Envelope size={14} />, accent: "#D4FF00" },
+  { key: "tokens", label: "AI Tokens", icon: <Robot size={14} />, accent: "#a855f7" },
   { key: "clients", label: "Active Clients", icon: <Users size={14} />, accent: "#6366F1" },
-  { key: "sms", label: "SMS Sent", icon: <Smartphone size={14} />, accent: "#10B981" },
+  { key: "sms", label: "SMS Sent", icon: <DeviceMobile size={14} />, accent: "#10B981" },
   { key: "call_minutes", label: "Call Minutes", icon: <Phone size={14} />, accent: "#ef4444", suffix: "min" },
 ];
 
@@ -346,7 +332,7 @@ export default function BillingPage() {
                     disabled={portalLoading}
                     className="btn-pill-ghost flex items-center gap-1.5 disabled:opacity-60"
                   >
-                    {portalLoading ? <Loader2 size={12} className="animate-spin" /> : <ExternalLink size={12} />}
+                    {portalLoading ? <CircleNotch size={12} className="animate-spin" /> : <ArrowSquareOut size={12} />}
                     Manage subscription
                   </button>
                 </motion.div>
@@ -457,7 +443,7 @@ export default function BillingPage() {
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <h2 className="text-sm font-bold text-text-primary flex items-center gap-2">
-                    <Sparkles size={14} className="text-brand-accent" />
+                    <Sparkle size={14} className="text-brand-accent" />
                     Token top-up
                   </h2>
                   <p className="text-[11px] text-text-muted mt-0.5">
@@ -513,7 +499,7 @@ export default function BillingPage() {
                         }`}
                       >
                         {isLoading ? (
-                          <Loader2 size={12} className="animate-spin" />
+                          <CircleNotch size={12} className="animate-spin" />
                         ) : (
                           <Plus size={12} />
                         )}
@@ -548,7 +534,7 @@ export default function BillingPage() {
               <PrismPanel padding="p-0" className="overflow-hidden">
                 {invoicesLoading ? (
                   <div className="p-8 text-center">
-                    <Loader2 size={16} className="animate-spin text-brand-accent mx-auto" />
+                    <CircleNotch size={16} className="animate-spin text-brand-accent mx-auto" />
                     <p className="text-[11px] text-text-muted mt-2">Loading invoices�</p>
                   </div>
                 ) : invoices.length === 0 ? (
@@ -610,7 +596,7 @@ export default function BillingPage() {
                                     className="p-1 rounded text-text-muted hover:text-brand-accent hover:bg-[rgba(212,255,0,0.08)] transition-colors"
                                     title="View invoice"
                                   >
-                                    <ExternalLink size={12} />
+                                    <ArrowSquareOut size={12} />
                                   </a>
                                 )}
                                 {inv.invoice_pdf && (
@@ -619,9 +605,9 @@ export default function BillingPage() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="p-1 rounded text-text-muted hover:text-brand-accent hover:bg-[rgba(212,255,0,0.08)] transition-colors"
-                                    title="Download PDF"
+                                    title="DownloadSimple PDF"
                                   >
-                                    <Download size={12} />
+                                    <DownloadSimple size={12} />
                                   </a>
                                 )}
                               </div>

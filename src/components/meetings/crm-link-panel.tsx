@@ -1,4 +1,5 @@
 "use client";
+import { Briefcase, CheckCircle, CircleNotch, Link, PaperPlaneTilt, User } from "@phosphor-icons/react";
 
 /**
  * Side-panel for linking a meeting to a CRM contact (lead) or deal, then
@@ -12,7 +13,7 @@
  * Component is dumb about ownership — the API enforces tenant boundaries.
  */
 import { useEffect, useMemo, useState } from "react";
-import { Link2, Loader2, Send, User, Briefcase, CheckCircle2 } from "lucide-react";
+
 import toast from "react-hot-toast";
 
 interface LeadOption {
@@ -169,12 +170,12 @@ export default function CrmLinkPanel({
   return (
     <div className="glass rounded-xl p-4 space-y-3">
       <h3 className="text-xs font-semibold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
-        <Link2 size={11} /> CRM linking
+        <Link size={11} /> CRM linking
       </h3>
 
       {loading ? (
         <p className="text-[11px] text-text-muted flex items-center gap-1.5">
-          <Loader2 size={11} className="animate-spin" /> Loading contacts and deals...
+          <CircleNotch size={11} className="animate-spin" /> Loading contacts and deals...
         </p>
       ) : (
         <>
@@ -267,11 +268,11 @@ export default function CrmLinkPanel({
             className="btn-primary w-full text-xs flex items-center justify-center gap-1.5 disabled:opacity-50"
           >
             {syncing ? (
-              <Loader2 size={12} className="animate-spin" />
+              <CircleNotch size={12} className="animate-spin" />
             ) : syncedAt ? (
-              <CheckCircle2 size={12} />
+              <CheckCircle size={12} />
             ) : (
-              <Send size={12} />
+              <PaperPlaneTilt size={12} />
             )}
             {syncedAt ? "Re-sync to CRM" : "Sync to CRM"}
           </button>

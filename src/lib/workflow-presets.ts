@@ -26,9 +26,9 @@ export const WORKFLOW_CATEGORIES = [
   { id: "support", name: "Customer Support", icon: "MessageCircle", count: 0 },
   { id: "hr", name: "HR & Team", icon: "Briefcase", count: 0 },
   { id: "data", name: "Data & Integrations", icon: "Database", count: 0 },
-  { id: "ai", name: "AI & Automation", icon: "Sparkles", count: 0 },
+  { id: "ai", name: "AI & Automation", icon: "Sparkle", count: 0 },
   { id: "reporting", name: "Reporting", icon: "BarChart3", count: 0 },
-  { id: "webhooks", name: "Webhooks & APIs", icon: "Webhook", count: 0 },
+  { id: "webhooks", name: "PlugsConnected & APIs", icon: "Webhook", count: 0 },
   { id: "agency", name: "Agency Operations", icon: "Building", count: 0 },
 ];
 
@@ -43,7 +43,7 @@ export const WORKFLOW_PRESETS: WorkflowPreset[] = [
   { id: "lg-7", name: "Lead Nurture Drip Campaign", description: "7-day email drip for new leads", category: "lead-gen", trigger: "new_lead", steps: ["Day 1: Welcome email", "Day 3: Value content", "Day 5: Case study", "Day 7: CTA email"], tags: ["drip", "email"], difficulty: "medium" },
   { id: "lg-8", name: "Cold Email Outreach Sequence", description: "Automated cold email with follow-ups", category: "lead-gen", trigger: "new_prospect", steps: ["Send initial email", "Wait 3 days", "Send follow-up 1", "Wait 5 days", "Send follow-up 2"], tags: ["cold-email", "outreach"], difficulty: "medium" },
   { id: "lg-9", name: "Webinar Registration Follow-Up", description: "Follow up with webinar registrants", category: "lead-gen", trigger: "webinar_register", steps: ["Confirm registration", "Send reminder 24h before", "Send replay link", "Offer consultation"], tags: ["webinar", "email"], difficulty: "medium" },
-  { id: "lg-10", name: "Lead Qualification Bot", description: "AI chatbot qualifies leads automatically", category: "lead-gen", trigger: "chat_message", steps: ["AI qualification questions", "Score responses", "Route qualified leads", "Book calendar slot"], tags: ["ai", "chatbot"], difficulty: "advanced" },
+  { id: "lg-10", name: "Lead Qualification Robot", description: "AI chatbot qualifies leads automatically", category: "lead-gen", trigger: "chat_message", steps: ["AI qualification questions", "Score responses", "Route qualified leads", "Book calendar slot"], tags: ["ai", "chatbot"], difficulty: "advanced" },
   { id: "lg-11", name: "Referral Tracking", description: "Track and reward client referrals", category: "lead-gen", trigger: "referral_created", steps: ["Log referral", "Notify referrer", "Track conversion", "Send reward"], tags: ["referral", "tracking"], difficulty: "medium" },
   { id: "lg-12", name: "Re-engagement Campaign", description: "Re-engage cold leads after 30 days", category: "lead-gen", trigger: "schedule_weekly", steps: ["Find inactive leads", "Send re-engagement email", "Track opens", "Move active to pipeline"], tags: ["re-engagement", "email"], difficulty: "medium" },
   { id: "lg-13", name: "Instagram DM Lead Capture", description: "Auto-respond to Instagram DMs with lead capture", category: "lead-gen", trigger: "instagram_dm", steps: ["Detect keyword", "Send auto-reply", "Capture contact info", "Add to CRM"], tags: ["instagram", "dm"], difficulty: "medium" },
@@ -154,7 +154,7 @@ export const WORKFLOW_PRESETS: WorkflowPreset[] = [
   // ─── Reviews & Reputation (10) ───
   { id: "rv-1", name: "Google Review Request", description: "Auto-request Google reviews after service", category: "reviews", trigger: "service_completed", steps: ["Wait 2 days", "Send review request email", "Include Google review link", "Track response"], tags: ["google", "reviews"], difficulty: "easy" },
   { id: "rv-2", name: "Negative Review Alert", description: "Instant alert for negative reviews", category: "reviews", trigger: "new_review", steps: ["Check review rating", "If below 3 stars", "Send urgent alert", "Create response task"], tags: ["alerts", "negative"], difficulty: "easy" },
-  { id: "rv-3", name: "Review Response Bot", description: "AI-generate responses to reviews", category: "reviews", trigger: "new_review", steps: ["Analyze review sentiment", "Generate AI response", "Send for approval", "Post response"], tags: ["ai", "response"], difficulty: "advanced" },
+  { id: "rv-3", name: "Review Response Robot", description: "AI-generate responses to reviews", category: "reviews", trigger: "new_review", steps: ["Analyze review sentiment", "Generate AI response", "Send for approval", "Post response"], tags: ["ai", "response"], difficulty: "advanced" },
   { id: "rv-4", name: "Review Aggregator", description: "Aggregate reviews from all platforms", category: "reviews", trigger: "schedule_daily", steps: ["Pull Google reviews", "Pull Facebook reviews", "Pull Yelp reviews", "Generate summary"], tags: ["aggregation", "multi-platform"], difficulty: "medium" },
   { id: "rv-5", name: "Testimonial to Social Post", description: "Turn 5-star reviews into social media posts", category: "reviews", trigger: "review_5star", steps: ["Extract review text", "Generate social graphic", "Add branding", "Schedule post"], tags: ["social-proof", "content"], difficulty: "medium" },
   { id: "rv-6", name: "Review Incentive Manager", description: "Send incentives for leaving reviews", category: "reviews", trigger: "service_completed", steps: ["Check if review left", "Wait 5 days", "Send incentive offer", "Track completion"], tags: ["incentive", "reviews"], difficulty: "medium" },
@@ -272,7 +272,7 @@ export const WORKFLOW_PRESETS: WorkflowPreset[] = [
   { id: "ag-12", name: "Client Service Agreement Monitor", description: "Monitor service agreement expiration dates", category: "agency", trigger: "schedule_daily", steps: ["Check expiration dates", "Send 60-day warning", "Send 30-day warning", "Create renewal task"], tags: ["contracts", "monitoring"], difficulty: "easy" },
   { id: "ag-13", name: "Multi-Client Content Scheduler", description: "Schedule content across all clients at once", category: "agency", trigger: "content_batch_ready", steps: ["Get approved content per client", "Schedule optimal times", "Post to each platform", "Log all posts"], tags: ["content", "multi-client"], difficulty: "advanced" },
 
-  // ─── Webhooks & APIs (8) ───
+  // ─── PlugsConnected & APIs (8) ───
   { id: "wh-1", name: "Zapier to n8n Migration", description: "Recreate Zapier workflows in n8n", category: "webhooks", trigger: "manual", steps: ["Export Zapier workflow", "Map triggers", "Recreate actions", "Test flow"], tags: ["migration", "zapier"], difficulty: "advanced" },
   { id: "wh-2", name: "API Health Checker", description: "Monitor external API uptime", category: "webhooks", trigger: "schedule_5min", steps: ["Ping API endpoints", "Check response codes", "Log latency", "Alert on failures"], tags: ["monitoring", "api"], difficulty: "medium" },
   { id: "wh-3", name: "Webhook Event Logger", description: "Log all incoming webhook events", category: "webhooks", trigger: "webhook_received", steps: ["Parse payload", "Log to database", "Categorize event", "Trigger downstream"], tags: ["logging", "webhook"], difficulty: "easy" },
@@ -295,7 +295,7 @@ export const WORKFLOW_PRESETS: WorkflowPreset[] = [
   // ─── HR & Team (5) ───
   { id: "hr-1", name: "Leave Request Processor", description: "Auto-process leave/PTO requests", category: "hr", trigger: "leave_requested", steps: ["Check leave balance", "Route to manager", "Update calendar", "Send confirmation"], tags: ["leave", "pto"], difficulty: "easy" },
   { id: "hr-2", name: "Performance Review Reminder", description: "Schedule quarterly performance reviews", category: "hr", trigger: "schedule_quarterly", steps: ["Identify due reviews", "Send self-eval form", "Schedule review meeting", "Track completion"], tags: ["reviews", "performance"], difficulty: "medium" },
-  { id: "hr-3", name: "Birthday & Work Anniversary Bot", description: "Celebrate team birthdays and anniversaries", category: "hr", trigger: "schedule_daily", steps: ["Check upcoming dates", "Send Slack message", "Order card/gift", "Log celebration"], tags: ["celebration", "culture"], difficulty: "easy" },
+  { id: "hr-3", name: "Birthday & Work Anniversary Robot", description: "Celebrate team birthdays and anniversaries", category: "hr", trigger: "schedule_daily", steps: ["Check upcoming dates", "Send Slack message", "Order card/gift", "Log celebration"], tags: ["celebration", "culture"], difficulty: "easy" },
   { id: "hr-4", name: "Training Completion Tracker", description: "Track employee training and certifications", category: "hr", trigger: "training_completed", steps: ["Record completion", "Update profile", "Send certificate", "Schedule next training"], tags: ["training", "compliance"], difficulty: "medium" },
   { id: "hr-5", name: "Team Feedback Collector", description: "Weekly anonymous feedback collection", category: "hr", trigger: "schedule_weekly", steps: ["Send anonymous survey", "Collect responses", "Generate themes", "Share insights"], tags: ["feedback", "anonymous"], difficulty: "easy" },
 ];

@@ -1,4 +1,5 @@
 "use client";
+import { Globe } from "@phosphor-icons/react";
 
 /**
  * TrinityWebSearch — lazy panel stub for the in-orb web search drawer.
@@ -12,7 +13,7 @@
  * future drawer work plugs in without touching the orb shell.
  */
 
-import { Globe } from "lucide-react";
+
 
 interface Props {
   onDismiss?: () => void;

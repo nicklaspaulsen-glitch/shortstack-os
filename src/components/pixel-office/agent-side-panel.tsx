@@ -1,4 +1,5 @@
 "use client";
+import { ArrowUpRight, Clock, X } from "@phosphor-icons/react";
 
 /**
  * Side panel for a selected agent — appears when a user clicks a
@@ -15,7 +16,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { X, ArrowUpRight, Clock } from "lucide-react";
+
 import Link from "next/link";
 import type { AgentAction } from "@/lib/pixel-office/event-mapper";
 import { AGENT_BY_KEY } from "@/lib/pixel-office/agents";

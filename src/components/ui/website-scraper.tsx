@@ -1,23 +1,7 @@
 "use client";
+import { ArrowSquareOut, Building, CheckCircle, CircleNotch, Envelope, Globe, Image, Lightning, MapPin, Megaphone, Phone, Sparkle, Tag, Users, Warning } from "@phosphor-icons/react";
 
 import { useState } from "react";
-import {
-  Globe,
-  Loader2,
-  Sparkles,
-  Phone,
-  Mail,
-  MapPin,
-  Tag,
-  ImageIcon,
-  Building,
-  Megaphone,
-  Users,
-  Zap,
-  ExternalLink,
-  AlertTriangle,
-  CheckCircle2,
-} from "lucide-react";
 import toast from "react-hot-toast";
 
 /* ─── Types (mirror /api/scrape/website response) ────────────────────── */
@@ -154,14 +138,14 @@ export default function WebsiteScraper({
           disabled={loading}
           className="btn-primary text-xs px-4 py-2 flex items-center gap-2 disabled:opacity-60"
         >
-          {loading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+          {loading ? <CircleNotch size={14} className="animate-spin" /> : <Sparkle size={14} />}
           {loading ? "Analyzing..." : "Analyze"}
         </button>
       </div>
 
       {error && (
         <div className="flex items-start gap-2 p-2.5 rounded-lg bg-danger/10 border border-danger/20 text-[11px] text-danger">
-          <AlertTriangle size={12} className="mt-0.5 shrink-0" />
+          <Warning size={12} className="mt-0.5 shrink-0" />
           <span>{error}</span>
         </div>
       )}
@@ -217,7 +201,7 @@ function ResultCard({
             rel="noreferrer"
             className="inline-flex items-center gap-1 text-[10px] text-[#D4FF00] hover:underline mt-1"
           >
-            {result.url} <ExternalLink size={9} />
+            {result.url} <ArrowSquareOut size={9} />
           </a>
         </div>
         {x.primaryColor && (
@@ -237,7 +221,7 @@ function ResultCard({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           <Field icon={<Megaphone size={11} />} label="Industry" value={ai.industry} />
           <Field icon={<Users size={11} />} label="Audience" value={ai.audience} />
-          <Field icon={<Sparkles size={11} />} label="Value prop" value={ai.valueProposition} className="md:col-span-2" />
+          <Field icon={<Sparkle size={11} />} label="Value prop" value={ai.valueProposition} className="md:col-span-2" />
           <Field icon={<Tag size={11} />} label="Brand voice" value={ai.brandVoice} />
           <Field icon={<Building size={11} />} label="Estimated size" value={ai.estimatedSize} />
           {ai.services.length > 0 && (
@@ -258,7 +242,7 @@ function ResultCard({
       {/* Contact + socials */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px]">
         <ListBlock icon={<Phone size={11} />} label="Phones" items={x.phones} empty="No phone found" />
-        <ListBlock icon={<Mail size={11} />} label="Emails" items={x.emails} empty="No email found" />
+        <ListBlock icon={<Envelope size={11} />} label="Emails" items={x.emails} empty="No email found" />
         <ListBlock
           icon={<MapPin size={11} />}
           label="Address"
@@ -315,7 +299,7 @@ function ResultCard({
       {x.ogImage && (
         <div>
           <p className="text-[9px] uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1">
-            <ImageIcon size={10} /> Open Graph image
+            <Image size={10} /> Open Graph image
           </p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -330,14 +314,14 @@ function ResultCard({
       {onUse && (
         <div className="flex justify-end pt-2 border-t border-border-subtle/30">
           <button onClick={onUse} className="btn-primary text-xs px-4 py-1.5 flex items-center gap-2">
-            <Zap size={12} /> {ctaLabel}
+            <Lightning size={12} /> {ctaLabel}
           </button>
         </div>
       )}
 
       {!ai && (
         <p className="text-[10px] text-text-muted flex items-center gap-1">
-          <CheckCircle2 size={10} className="text-success" /> Extracted without AI summary (analysis unavailable).
+          <CheckCircle size={10} className="text-success" /> Extracted without AI summary (analysis unavailable).
         </p>
       )}
     </div>

@@ -1,4 +1,5 @@
 "use client";
+import { Cpu, DownloadSimple, FolderOpen, Lightning } from "@phosphor-icons/react";
 
 /* ────────────────────────────────────────────────────────────────
  * Electron-only feature bar.
@@ -9,7 +10,7 @@
  * ────────────────────────────────────────────────────────────────*/
 
 import { useEffect, useState } from "react";
-import { FolderOpen, Cpu, Download, Zap } from "lucide-react";
+
 import toast from "react-hot-toast";
 
 // ElectronApi + window.electron live in src/types/electron.d.ts — one canonical
@@ -90,14 +91,14 @@ export function ElectronBar({ onFilesImported, composition }: ElectronBarProps) 
         className="flex items-center gap-1 text-[10px] text-neutral-200 hover:text-white px-2 py-1 rounded hover:bg-neutral-800"
         title="Render with local FFmpeg"
       >
-        <Download size={11} /> Render local
+        <DownloadSimple size={11} /> Render local
       </button>
       {gpu && (
         <span
           className="flex items-center gap-1 text-[10px] rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 px-2 py-0.5"
           title="GPU-accelerated preview enabled"
         >
-          <Zap size={10} /> GPU
+          <Lightning size={10} /> GPU
         </span>
       )}
       <span className="flex items-center gap-1 text-[10px] rounded bg-neutral-800 text-neutral-400 border border-neutral-700 px-2 py-0.5">

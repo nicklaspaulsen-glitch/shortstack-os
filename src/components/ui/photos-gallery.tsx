@@ -1,4 +1,5 @@
 "use client";
+import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 
 /**
  * PhotosGallery — Framer-style horizontal drag carousel.
@@ -22,7 +23,7 @@ import {
 } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+
 
 // ---------------------------------------------------------------------------
 // Types
@@ -131,7 +132,7 @@ export function PhotosGallery({
             aria-label="Previous"
             className="absolute left-2 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-9 h-9 rounded-full bg-black/50 text-white/80 hover:text-white border border-white/10 backdrop-blur-sm transition-all disabled:opacity-30 disabled:pointer-events-none hover:-translate-y-1/2 hover:bg-black/70"
           >
-            <ChevronLeft size={16} />
+            <CaretLeft size={16} />
           </button>
           <button
             type="button"
@@ -140,7 +141,7 @@ export function PhotosGallery({
             aria-label="Next"
             className="absolute right-2 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-9 h-9 rounded-full bg-black/50 text-white/80 hover:text-white border border-white/10 backdrop-blur-sm transition-all disabled:opacity-30 disabled:pointer-events-none hover:-translate-y-1/2 hover:bg-black/70"
           >
-            <ChevronRight size={16} />
+            <CaretRight size={16} />
           </button>
         </>
       )}

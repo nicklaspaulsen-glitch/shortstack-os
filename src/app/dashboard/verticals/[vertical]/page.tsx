@@ -1,4 +1,5 @@
 "use client";
+import { ArrowLeft, BookOpen, Briefcase, Chat, CheckCircle, CircleNotch, Envelope, GitBranch, Lightning, Phone, Sparkle, TrendUp } from "@phosphor-icons/react";
 
 /**
  * Vertical detail page — shows what a vertical contains and lets the user
@@ -8,20 +9,6 @@
 import { useEffect, useMemo, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  Briefcase,
-  CheckCircle2,
-  Loader2,
-  Zap,
-  MessageSquare,
-  Mail,
-  Phone,
-  TrendingUp,
-  BookOpen,
-  GitBranch,
-  Sparkles,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -37,7 +24,7 @@ interface ModuleItem {
   label: string;
   description: string;
   count: number;
-  icon: typeof Zap;
+  icon: typeof Lightning;
 }
 
 interface ApiTemplate {
@@ -156,21 +143,21 @@ export default function VerticalDetailPage({ params }: PageProps) {
         label: "Automations",
         description: "CRM rule-based workflows triggered by lead/customer events.",
         count: data.counts.automations,
-        icon: Zap,
+        icon: Lightning,
       },
       {
         key: "sms",
         label: "SMS Templates",
         description: "Reusable SMS templates for the dialer + manual messaging.",
         count: data.counts.sms,
-        icon: MessageSquare,
+        icon: Chat,
       },
       {
         key: "email",
         label: "Email Templates",
         description: "Editorial email templates for sequences and one-offs.",
         count: data.counts.email,
-        icon: Mail,
+        icon: Envelope,
       },
       {
         key: "scripts",
@@ -184,7 +171,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
         label: "Lead Scoring Rules",
         description: "Editorial scoring rules merged into your lead-scoring metadata.",
         count: data.counts.scoring,
-        icon: TrendingUp,
+        icon: TrendUp,
       },
       {
         key: "course",
@@ -340,7 +327,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
                       <p className="text-xs text-text-muted leading-snug">{m.description}</p>
                       {wasApplied && (
                         <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-400/20 px-2 py-0.5 text-[10px] text-emerald-400">
-                          <CheckCircle2 size={10} />
+                          <CheckCircle size={10} />
                           Previously applied
                         </span>
                       )}
@@ -352,7 +339,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
                           : "border-white/20"
                       }`}
                     >
-                      {isSel && <CheckCircle2 size={14} />}
+                      {isSel && <CheckCircle size={14} />}
                     </div>
                   </div>
                 </button>
@@ -411,7 +398,7 @@ export default function VerticalDetailPage({ params }: PageProps) {
             }}
           >
             <div className="text-sm text-text-secondary">
-              <Sparkles size={14} className="inline -mt-0.5 mr-1.5 text-brand-accent" />
+              <Sparkle size={14} className="inline -mt-0.5 mr-1.5 text-brand-accent" />
               {selected.size} module{selected.size === 1 ? "" : "s"} selected
             </div>
             <button
@@ -422,13 +409,13 @@ export default function VerticalDetailPage({ params }: PageProps) {
             >
               {applying ? (
                 <>
-                  <Loader2 size={14} className="animate-spin" />
+                  <CircleNotch size={14} className="animate-spin" />
                   Applying…
                 </>
               ) : (
                 <>
                   Apply selected
-                  <CheckCircle2 size={14} />
+                  <CheckCircle size={14} />
                 </>
               )}
             </button>

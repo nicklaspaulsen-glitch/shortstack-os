@@ -1,3 +1,4 @@
+import { ArrowClockwise, ArrowCounterClockwise, ArrowsOut, CaretDown, DownloadSimple, Eraser, File, Image, ImageSquare, MagicWand, MagnifyingGlassMinus, MagnifyingGlassPlus, Ruler, Shapes, Sparkle, SquaresFour, TextT, UploadSimple } from "@phosphor-icons/react";
 ﻿"use client";
 
 // Top bar: undo/redo, preset picker, AI fill/remove/upscale, export,
@@ -5,25 +6,6 @@
 // dispatchers and wires them in as props.
 
 import { useState } from "react";
-import {
-  Undo2,
-  Redo2,
-  Download,
-  Grid as GridIcon,
-  Ruler,
-  ZoomIn,
-  ZoomOut,
-  Maximize2,
-  Wand2,
-  Eraser,
-  Sparkles,
-  ChevronDown,
-  Text as TextIcon,
-  Shapes,
-  Image as ImageIcon,
-  Upload,
-  ImagePlus,
-} from "lucide-react";
 import type { CanvasPreset } from "@/lib/thumbnail-editor/types";
 import type { ExportFormat } from "@/lib/thumbnail-editor/export";
 import { DEFAULT_PRESETS } from "@/lib/thumbnail-editor/types";
@@ -65,7 +47,7 @@ export default function TopBar(props: TopBarProps) {
     <div className="bg-[#080809] border-b border-[rgba(255,255,255,0.07)] flex items-center px-3 py-2.5 gap-2 text-sm text-neutral-200">
       {/* Higgsfield-style slim header: icon badge + title + subtitle */}
       <div className="w-7 h-7 rounded-xl bg-[rgba(255,255,255,0.1)] flex items-center justify-center shrink-0">
-        <ImageIcon size={13} className="text-[#D4FF00]" />
+        <Image size={13} className="text-[#D4FF00]" />
       </div>
       <div className="flex flex-col min-w-0 mr-2">
         <h1 className="text-sm font-semibold text-[#F5F4F1] leading-tight">Thumbnail Generator</h1>
@@ -73,13 +55,13 @@ export default function TopBar(props: TopBarProps) {
       </div>
 
       <IconBtn
-        icon={<Undo2 className="w-4 h-4" />}
+        icon={<ArrowCounterClockwise className="w-4 h-4" />}
         title="Undo (Ctrl+Z)"
         disabled={!props.canUndo}
         onClick={props.onUndo}
       />
       <IconBtn
-        icon={<Redo2 className="w-4 h-4" />}
+        icon={<ArrowClockwise className="w-4 h-4" />}
         title="Redo (Ctrl+Shift+Z)"
         disabled={!props.canRedo}
         onClick={props.onRedo}
@@ -89,10 +71,10 @@ export default function TopBar(props: TopBarProps) {
 
       {/* Add layer quick actions */}
       <IconBtn
-        icon={<TextIcon className="w-4 h-4" />}
+        icon={<TextT className="w-4 h-4" />}
         title="Add text"
         onClick={props.onAddText}
-        label="Text"
+        label="TextT"
       />
       <IconBtn
         icon={<Shapes className="w-4 h-4" />}
@@ -100,8 +82,8 @@ export default function TopBar(props: TopBarProps) {
         onClick={() => props.onAddShape("rect")}
       />
       <label className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded hover:bg-[rgba(255,255,255,0.07)] cursor-pointer">
-        <Upload className="w-4 h-4" />
-        <span>Upload</span>
+        <UploadSimple className="w-4 h-4" />
+        <span>UploadSimple</span>
         <input
           type="file"
           accept="image/*"
@@ -115,7 +97,7 @@ export default function TopBar(props: TopBarProps) {
       </label>
       {props.hasElectron && props.onOpenNativePicker && (
         <IconBtn
-          icon={<ImageIcon className="w-4 h-4" />}
+          icon={<Image className="w-4 h-4" />}
           title="Open native file picker (Electron)"
           onClick={props.onOpenNativePicker}
           label="Native"
@@ -130,7 +112,7 @@ export default function TopBar(props: TopBarProps) {
         onClick={props.onAIFill}
         className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-gradient-to-r from-purple-600 to-pink-500 text-white hover:opacity-90"
       >
-        <Wand2 className="w-4 h-4" /> AI Fill
+        <MagicWand className="w-4 h-4" /> AI Fill
       </button>
       <button
         type="button"
@@ -144,14 +126,14 @@ export default function TopBar(props: TopBarProps) {
         onClick={props.onAIUpscale}
         className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.05)] transition-colors"
       >
-        <Sparkles className="w-4 h-4" /> Upscale
+        <Sparkle className="w-4 h-4" /> Upscale
       </button>
       <button
         type="button"
         onClick={props.onTextToLayer}
         className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.05)] transition-colors"
       >
-        <Wand2 className="w-4 h-4" /> Text → Layer
+        <MagicWand className="w-4 h-4" /> TextT → Layer
       </button>
       {props.onStockPhotos && (
         <button
@@ -160,7 +142,7 @@ export default function TopBar(props: TopBarProps) {
           className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.05)] transition-colors"
           title="Insert stock photo (Pexels / Unsplash)"
         >
-          <ImagePlus className="w-4 h-4" /> Stock
+          <ImageSquare className="w-4 h-4" /> Stock
         </button>
       )}
 
@@ -174,8 +156,8 @@ export default function TopBar(props: TopBarProps) {
         active={props.showRulers}
       />
       <IconBtn
-        icon={<GridIcon className="w-4 h-4" />}
-        title="Grid"
+        icon={<SquaresFour className="w-4 h-4" />}
+        title="SquaresFour"
         onClick={props.onToggleGrid}
         active={props.showGrid}
       />
@@ -183,7 +165,7 @@ export default function TopBar(props: TopBarProps) {
       <span className="w-px h-6 bg-[rgba(255,255,255,0.1)] mx-1" />
 
       <IconBtn
-        icon={<ZoomOut className="w-4 h-4" />}
+        icon={<MagnifyingGlassMinus className="w-4 h-4" />}
         title="Zoom out"
         onClick={props.onZoomOut}
       />
@@ -191,12 +173,12 @@ export default function TopBar(props: TopBarProps) {
         {(props.zoom * 100).toFixed(0)}%
       </span>
       <IconBtn
-        icon={<ZoomIn className="w-4 h-4" />}
+        icon={<MagnifyingGlassPlus className="w-4 h-4" />}
         title="Zoom in"
         onClick={props.onZoomIn}
       />
       <IconBtn
-        icon={<Maximize2 className="w-4 h-4" />}
+        icon={<ArrowsOut className="w-4 h-4" />}
         title="Fit to screen"
         onClick={props.onFit}
       />
@@ -210,7 +192,7 @@ export default function TopBar(props: TopBarProps) {
           onClick={() => setPresetsOpen(!presetsOpen)}
           className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.07)] border border-[rgba(255,255,255,0.05)] transition-colors"
         >
-          Presets <ChevronDown className="w-3 h-3" />
+          Presets <CaretDown className="w-3 h-3" />
         </button>
         {presetsOpen && (
           <div
@@ -244,7 +226,7 @@ export default function TopBar(props: TopBarProps) {
           onClick={() => setExportOpen(!exportOpen)}
           className="inline-flex items-center gap-1 px-3 py-1 rounded text-xs bg-[#D4FF00] hover:bg-[#AACC00] text-[#020711] transition-colors"
         >
-          <Download className="w-4 h-4" /> Export
+          <DownloadSimple className="w-4 h-4" /> Export
         </button>
         {exportOpen && (
           <div
@@ -288,7 +270,7 @@ export default function TopBar(props: TopBarProps) {
               }}
               className="w-full bg-[#D4FF00] hover:bg-[#AACC00] text-[#020711] rounded py-1.5 text-xs transition-colors"
             >
-              Download
+              DownloadSimple
             </button>
           </div>
         )}

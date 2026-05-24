@@ -1,18 +1,8 @@
 "use client";
+import { ArrowSquareOut, ArrowsClockwise, CaretRight, CheckCircle, CircleNotch, Clock, Tag, WarningCircle, PlugsConnected } from "@phosphor-icons/react";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import {
-  Webhook,
-  RefreshCw,
-  ExternalLink,
-  Clock,
-  Tag,
-  AlertCircle,
-  CheckCircle2,
-  Loader2,
-  ChevronRight,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -98,9 +88,9 @@ function ExecutionStatus({
     : "—";
 
   const cfg = {
-    success: { icon: CheckCircle2, color: "text-emerald-400" },
-    error: { icon: AlertCircle, color: "text-red-400" },
-    running: { icon: Loader2, color: "text-brand-accent" },
+    success: { icon: CheckCircle, color: "text-emerald-400" },
+    error: { icon: WarningCircle, color: "text-red-400" },
+    running: { icon: CircleNotch, color: "text-brand-accent" },
     waiting: { icon: Clock, color: "text-yellow-400" },
   }[status] ?? { icon: Clock, color: "text-[var(--text-muted)]" };
 
@@ -130,7 +120,7 @@ function WorkflowRow({ wf }: { wf: WorkflowWithExecution }) {
       <td className="px-4 py-3">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-brand-accent/10 flex items-center justify-center flex-shrink-0">
-            <Webhook size={14} className="text-brand-accent" />
+            <PlugsConnected size={14} className="text-brand-accent" />
           </div>
           <div>
             <p className="text-sm font-medium text-[var(--text-primary)] leading-tight">
@@ -196,7 +186,7 @@ function WorkflowRow({ wf }: { wf: WorkflowWithExecution }) {
           className="inline-flex items-center gap-1 text-xs text-brand-accent hover:text-[#E8FF4D] transition-colors opacity-0 group-hover:opacity-100"
         >
           Open
-          <ChevronRight size={12} />
+          <CaretRight size={12} />
         </a>
       </td>
     </motion.tr>
@@ -335,7 +325,7 @@ export default function N8NPage() {
             className="btn-pill-ghost h-9 px-3 flex items-center gap-2 ml-auto"
             title="Refresh"
           >
-            <RefreshCw
+            <ArrowsClockwise
               size={14}
               className={refreshing ? "animate-spin" : undefined}
             />
@@ -350,7 +340,7 @@ export default function N8NPage() {
               rel="noopener noreferrer"
               className="btn-pill h-9 px-3 flex items-center gap-2 text-xs"
             >
-              <ExternalLink size={14} />
+              <ArrowSquareOut size={14} />
               Open n8n
             </a>
           )}
@@ -359,13 +349,13 @@ export default function N8NPage() {
         {/* States */}
         {loading && (
           <div className="flex items-center justify-center py-24">
-            <Loader2 size={28} className="animate-spin text-brand-accent" />
+            <CircleNotch size={28} className="animate-spin text-brand-accent" />
           </div>
         )}
 
         {!loading && error && (
           <div className="glass-panel rounded-xl border border-red-500/20 bg-red-500/5 px-6 py-10 text-center">
-            <AlertCircle size={32} className="text-red-400 mx-auto mb-3" />
+            <WarningCircle size={32} className="text-red-400 mx-auto mb-3" />
             <p className="text-sm font-medium text-[var(--text-primary)] mb-1">
               Could not connect to n8n
             </p>
@@ -385,7 +375,7 @@ export default function N8NPage() {
 
         {!loading && !error && filtered.length === 0 && (
           <div className="glass-panel rounded-xl border border-[var(--border-subtle)] px-6 py-16 text-center">
-            <Webhook size={32} className="text-[var(--text-muted)] mx-auto mb-3 opacity-40" />
+            <PlugsConnected size={32} className="text-[var(--text-muted)] mx-auto mb-3 opacity-40" />
             <p className="text-sm text-[var(--text-secondary)]">
               {search || filter !== "all"
                 ? "No workflows match your filter"

@@ -1,7 +1,7 @@
 "use client";
+import { ArrowRight, Calendar, CheckCircle, Clock, Video } from "@phosphor-icons/react";
 
 import { useState } from "react";
-import { Calendar, Clock, Video, CheckCircle, ArrowRight } from "lucide-react";
 import Image from "next/image";
 
 const TIME_SLOTS = [

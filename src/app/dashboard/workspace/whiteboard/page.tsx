@@ -1,19 +1,7 @@
+import { ArrowSquareOut, CheckCircle, Clock, Eye, FilmStrip, Hourglass, ListChecks, PaperPlaneTilt, Pulse, SquaresFour, TrendUp } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  LayoutGrid,
-  Activity,
-  Film,
-  Send,
-  TrendingUp,
-  ListChecks,
-  Clock,
-  CheckCircle2,
-  Hourglass,
-  Eye,
-  ExternalLink,
-} from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import type {
   WhiteboardSnapshot,
@@ -41,7 +29,7 @@ type ApiResponse = ApiOk | ApiErr;
 
 /** Per-kind visual styling. Color-coded so a glance at any lane reveals
  *  whether the work is video, social, sales, or task work without reading. */
-const KIND_STYLES: Record<WhiteboardItemKind, { bg: string; border: string; text: string; label: string; icon: typeof Film }> = {
+const KIND_STYLES: Record<WhiteboardItemKind, { bg: string; border: string; text: string; label: string; icon: typeof FilmStrip }> = {
   task: {
     bg: "rgba(255,255,255,0.04)",
     border: "rgba(255,255,255,0.12)",
@@ -54,21 +42,21 @@ const KIND_STYLES: Record<WhiteboardItemKind, { bg: string; border: string; text
     border: "rgba(212,255,0,0.35)",
     text: "rgb(96,165,250)",
     label: "Video",
-    icon: Film,
+    icon: FilmStrip,
   },
   scheduled_publish: {
     bg: "rgba(212,255,0,0.10)",
     border: "rgba(212,255,0,0.35)",
     text: "rgb(147,197,253)",
     label: "Publish",
-    icon: Send,
+    icon: PaperPlaneTilt,
   },
   deal: {
     bg: "rgba(212,255,0,0.10)",
     border: "rgba(110,231,183,0.35)",
     text: "rgb(110,231,183)",
     label: "Deal",
-    icon: TrendingUp,
+    icon: TrendUp,
   },
 };
 
@@ -158,7 +146,7 @@ export default function WhiteboardPage() {
     };
   }, [fetchSnapshot, sendHeartbeat]);
 
-  // Send "I'm leaving" beacon on tab close / page hide. sendBeacon survives
+  // PaperPlaneTilt "I'm leaving" beacon on tab close / page hide. sendBeacon survives
   // the nav lifecycle better than a regular fetch.
   useEffect(() => {
     const beaconLeave = () => {
@@ -230,7 +218,7 @@ export default function WhiteboardPage() {
                   <LanesSkeleton />
                 ) : totalItems === 0 ? (
                   <EmptyState
-                    icon={<Activity size={28} className="text-brand-accent" />}
+                    icon={<Pulse size={28} className="text-brand-accent" />}
                     title="Nothing in flight"
                     description="No active renders, scheduled posts, open deals, or in-progress tasks yet. Once your team starts shipping work, it'll show up here in real time."
                   />
@@ -375,7 +363,7 @@ function WhiteboardCard({ item }: { item: WhiteboardItem }) {
             rel="noreferrer"
             className="inline-flex items-center gap-1 text-text-muted hover:text-text-primary"
           >
-            <ExternalLink size={11} />
+            <ArrowSquareOut size={11} />
             <span>Live</span>
           </a>
         )}
@@ -415,7 +403,7 @@ function ActivitySidebar({ events, loading }: { events: ActivityEvent[]; loading
 function ActivityRow({ event }: { event: ActivityEvent }) {
   const style = KIND_STYLES[event.kind];
   const Icon = (() => {
-    if (event.verb === "completed" || event.verb === "published") return CheckCircle2;
+    if (event.verb === "completed" || event.verb === "published") return CheckCircle;
     if (event.verb === "rendering" || event.verb === "queued") return Hourglass;
     return style.icon;
   })();

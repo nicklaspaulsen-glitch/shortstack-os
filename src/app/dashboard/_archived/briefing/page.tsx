@@ -1,9 +1,10 @@
 "use client";
+import { BookOpen, Calendar, Chat, Check, CircleNotch, Coffee, FileText, Sparkle, Users } from "@phosphor-icons/react";
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import { Coffee, Users, MessageSquare, Calendar, FileText, BookOpen, Loader2, Sparkles } from "lucide-react";
+
 import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -156,7 +157,7 @@ Be direct, specific, and action-oriented. No fluff.`;
 
   const tiles: StatTile[] = [
     { label: "New Leads (24h)", value: stats.newLeads, icon: Users, color: "text-brand-accent", bgColor: "bg-[rgba(212, 255, 0,0.08)] border-[rgba(212, 255, 0,0.20)]" },
-    { label: "Messages Received", value: stats.messagesReceived, icon: MessageSquare, color: "text-brand-accent", bgColor: "bg-[rgba(212, 255, 0,0.08)] border-[rgba(212, 255, 0,0.20)]" },
+    { label: "Messages Received", value: stats.messagesReceived, icon: Chat, color: "text-brand-accent", bgColor: "bg-[rgba(212, 255, 0,0.08)] border-[rgba(212, 255, 0,0.20)]" },
     { label: "Appointments Today", value: stats.appointmentsToday, icon: Calendar, color: "text-emerald-600", bgColor: "bg-emerald-50 border-emerald-200" },
     { label: "Invoices Due", value: stats.invoicesDue, icon: FileText, color: "text-brand-accent", bgColor: "bg-[rgba(212, 255, 0,0.08)] border-[rgba(212, 255, 0,0.20)]" },
     { label: "Content Scheduled", value: stats.contentScheduled, icon: BookOpen, color: "text-rose-500", bgColor: "bg-rose-50 border-rose-200" },
@@ -179,7 +180,7 @@ Be direct, specific, and action-oriented. No fluff.`;
                   disabled={generating || loading}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/10 hover:bg-black/10 disabled:opacity-40 text-text-primary text-sm font-medium transition-colors border border-border-subtle"
                 >
-                  {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                  {generating ? <CircleNotch className="w-4 h-4 animate-spin" /> : <Sparkle className="w-4 h-4" />}
                   {generating ? "Generating…" : "Generate AI briefing"}
                 </motion.button>
       </div>
@@ -249,9 +250,9 @@ Be direct, specific, and action-oriented. No fluff.`;
                 className="glass rounded-xl p-6"
               >
                 <h2 className="text-base font-semibold text-[#111827] mb-4 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-brand-accent" />
+                  <Sparkle className="w-4 h-4 text-brand-accent" />
                   AI Briefing
-                  {generating && <Loader2 className="w-3.5 h-3.5 animate-spin text-text-muted ml-1" />}
+                  {generating && <CircleNotch className="w-3.5 h-3.5 animate-spin text-text-muted ml-1" />}
                 </h2>
                 <div className="text-sm text-[#374151] leading-relaxed whitespace-pre-wrap font-serif">
                   {aiText}

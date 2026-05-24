@@ -1,3 +1,4 @@
+import { Terminal } from "@phosphor-icons/react";
 /**
  * /dashboard/console — Hidden admin dev-tools page.
  *
@@ -20,7 +21,7 @@
  */
 
 import { redirect } from "next/navigation";
-import { Terminal } from "lucide-react";
+
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import EnvPanel from "@/components/admin/console/EnvPanel";
 import SelfTestHistory from "@/components/admin/console/SelfTestHistory";

@@ -1,9 +1,10 @@
 "use client";
+import { ArrowsClockwise, Buildings, CheckCircle, CircleNotch, Copy, Phone, Warning } from "@phosphor-icons/react";
 
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import { Copy, Phone, Building2, CheckCircle, Loader2, RefreshCw, AlertTriangle } from "lucide-react";
+
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface Lead {
@@ -156,7 +157,7 @@ export default function DedupPage() {
                   disabled={loading}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/5 hover:bg-black/10 text-text-primary text-sm transition-colors border border-border-subtle disabled:opacity-50"
                 >
-                  <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+                  <ArrowsClockwise className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
                   Re-scan
                 </button>
       </div>
@@ -206,7 +207,7 @@ export default function DedupPage() {
             ) : (
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-sm text-amber-400/80">
-                  <AlertTriangle className="w-4 h-4" />
+                  <Warning className="w-4 h-4" />
                   {pendingGroups.length} duplicate group{pendingGroups.length !== 1 ? "s" : ""} found — review and merge below.
                 </div>
 
@@ -223,7 +224,7 @@ export default function DedupPage() {
                         <div className="flex items-center gap-2">
                           {group.matchType === "phone"
                             ? <Phone className="w-4 h-4 text-blue-400" />
-                            : <Building2 className="w-4 h-4 text-purple-400" />}
+                            : <Buildings className="w-4 h-4 text-purple-400" />}
                           <span className="text-xs text-text-muted">
                             Match by <span className="text-text-primary font-medium">{group.matchType === "phone" ? "phone number" : "business name"}</span>
                           </span>
@@ -234,7 +235,7 @@ export default function DedupPage() {
                           disabled={isMerging}
                           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 text-xs font-medium border border-emerald-500/25 transition-colors disabled:opacity-50"
                         >
-                          {isMerging ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
+                          {isMerging ? <CircleNotch className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
                           {isMerging ? "Merging…" : "Merge"}
                         </button>
                       </div>

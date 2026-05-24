@@ -1,19 +1,9 @@
+import { CheckCircle, CircleNotch, Clock, Link as LinkIcon, Microphone, Plus, Sparkle, UploadSimple, Warning } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  Mic,
-  Plus,
-  Clock,
-  CheckCircle2,
-  AlertTriangle,
-  Upload,
-  Loader2,
-  Link2,
-  Sparkles,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { PRISM_RAINBOW_GRADIENT } from "@/components/prism";
@@ -44,10 +34,10 @@ function formatDuration(seconds: number | null): string {
 function statusBadge(status: MeetingRow["status"]) {
   const map = {
     scheduled: { color: "bg-white/4 text-text-muted", icon: Clock, label: "Scheduled" },
-    recording: { color: "bg-red-400/10 text-red-400", icon: Mic, label: "Recording" },
-    processing: { color: "bg-yellow-400/10 text-yellow-400", icon: Loader2, label: "Processing" },
-    ready: { color: "bg-green-400/10 text-green-400", icon: CheckCircle2, label: "Ready" },
-    failed: { color: "bg-red-400/10 text-red-400", icon: AlertTriangle, label: "Failed" },
+    recording: { color: "bg-red-400/10 text-red-400", icon: Microphone, label: "Recording" },
+    processing: { color: "bg-yellow-400/10 text-yellow-400", icon: CircleNotch, label: "Processing" },
+    ready: { color: "bg-green-400/10 text-green-400", icon: CheckCircle, label: "Ready" },
+    failed: { color: "bg-red-400/10 text-red-400", icon: Warning, label: "Failed" },
   } as const;
   const entry = map[status];
   const Icon = entry.icon;
@@ -155,7 +145,7 @@ export default function MeetingsPage() {
                   href="/dashboard/meetings/new"
                   className="btn-pill-ghost text-xs flex items-center gap-1.5"
                 >
-                  <Upload size={12} /> Upload audio
+                  <UploadSimple size={12} /> UploadSimple audio
                 </Link>
       </div>
     </div>{/* Killer-feature banner */}<motion.div
@@ -165,7 +155,7 @@ export default function MeetingsPage() {
               className="glass rounded-xl p-4 border-[rgba(212,255,0,0.25)] bg-gradient-to-r from-[rgba(212,255,0,0.08)] to-transparent"
             >
               <div className="flex items-center gap-2 text-[11px] font-semibold mb-1">
-                <Sparkles size={11} className="text-brand-accent" /> AI Notetaker
+                <Sparkle size={11} className="text-brand-accent" /> AI Notetaker
               </div>
               <p className="text-[10px] text-text-muted leading-relaxed">
                 Drop in a recording or paste a Zoom/Loom share URL — Whisper transcribes,
@@ -193,7 +183,7 @@ export default function MeetingsPage() {
                     disabled={urlBusy || !newTitle.trim() || !urlValue.trim()}
                     className="btn-primary text-xs flex items-center gap-1.5 px-4 disabled:opacity-50"
                   >
-                    {urlBusy ? <Loader2 size={12} className="animate-spin" /> : <Link2 size={12} />}
+                    {urlBusy ? <CircleNotch size={12} className="animate-spin" /> : <LinkIcon size={12} />}
                     Ingest URL
                   </button>
                 ) : (
@@ -202,7 +192,7 @@ export default function MeetingsPage() {
                     disabled={creating || !newTitle.trim()}
                     className="btn-primary text-xs flex items-center gap-1.5 px-4 disabled:opacity-50"
                   >
-                    {creating ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />} New
+                    {creating ? <CircleNotch size={12} className="animate-spin" /> : <Plus size={12} />} New
                   </button>
                 )}
               </div>
@@ -220,28 +210,28 @@ export default function MeetingsPage() {
                   onClick={() => setUrlMode((v) => !v)}
                   className="hover:text-brand-accent transition-colors flex items-center gap-1"
                 >
-                  <Link2 size={9} /> {urlMode ? "Switch to manual entry" : "Or ingest from URL"}
+                  <LinkIcon size={9} /> {urlMode ? "Switch to manual entry" : "Or ingest from URL"}
                 </button>
                 <span>·</span>
                 <Link
                   href="/dashboard/meetings/new"
                   className="hover:text-brand-accent transition-colors flex items-center gap-1"
                 >
-                  <Upload size={9} /> Upload audio file
+                  <UploadSimple size={9} /> UploadSimple audio file
                 </Link>
               </div>
             </motion.div>{loading ? (
               <p className="text-[11px] text-text-muted flex items-center gap-1.5">
-                <Loader2 size={11} className="animate-spin" /> Loading meetings...
+                <CircleNotch size={11} className="animate-spin" /> Loading meetings...
               </p>
             ) : meetings.length === 0 ? (
               <EmptyState
                 type="no-invoices"
                 title="No meetings yet"
-                description="Upload a recording or create a meeting to generate transcripts, action items, and decisions."
+                description="UploadSimple a recording or create a meeting to generate transcripts, action items, and decisions."
                 action={
                   <Link href="/dashboard/meetings/new" className="btn-primary text-xs">
-                    Upload your first recording
+                    UploadSimple your first recording
                   </Link>
                 }
               />
@@ -268,7 +258,7 @@ export default function MeetingsPage() {
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="w-10 h-10 rounded-lg bg-[rgba(212,255,0,0.08)] flex items-center justify-center flex-shrink-0">
-                          <Mic size={16} className="text-brand-accent" />
+                          <Microphone size={16} className="text-brand-accent" />
                         </div>
                         <div className="min-w-0">
                           <p className="text-sm font-semibold truncate">{m.title}</p>

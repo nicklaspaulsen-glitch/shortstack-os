@@ -1,6 +1,7 @@
 "use client";
+import { CheckCircle, XCircle } from "@phosphor-icons/react";
 
-import { CheckCircle2, XCircle } from "lucide-react";
+
 
 export interface EnvPresenceItem {
   name: string;
@@ -47,7 +48,7 @@ export default function EnvPanel({ items }: EnvPanelProps) {
             className="flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-surface-light transition-colors"
           >
             {item.present ? (
-              <CheckCircle2 size={13} className="shrink-0 text-success" />
+              <CheckCircle size={13} className="shrink-0 text-success" />
             ) : (
               <XCircle size={13} className="shrink-0 text-danger" />
             )}

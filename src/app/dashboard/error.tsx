@@ -1,8 +1,8 @@
 "use client";
+import { ArrowsClockwise, House, PaperPlaneTilt, Warning } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AlertTriangle, RefreshCw, Home, Send } from "lucide-react";
 
 /**
  * Next.js App Router error boundary for the `/dashboard/*` segment.
@@ -74,7 +74,7 @@ export default function DashboardError({
     <div className="flex items-center justify-center min-h-[60vh] px-4">
       <div className="text-center max-w-md">
         <div className="w-14 h-14  bg-danger/10 flex items-center justify-center mx-auto mb-5">
-          <AlertTriangle size={24} className="text-danger" />
+          <Warning size={24} className="text-danger" />
         </div>
 
         <h2 className="text-lg font-bold text-text-primary mb-1">
@@ -95,7 +95,7 @@ export default function DashboardError({
             onClick={reset}
             className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5"
           >
-            <RefreshCw size={12} />
+            <ArrowsClockwise size={12} />
             Try again
           </button>
           <button
@@ -104,14 +104,14 @@ export default function DashboardError({
             }
             className="btn-secondary text-xs py-2 px-4 flex items-center gap-1.5"
           >
-            <RefreshCw size={12} />
+            <ArrowsClockwise size={12} />
             Reload page
           </button>
           <Link
             href="/dashboard"
             className="btn-secondary text-xs py-2 px-4 flex items-center gap-1.5"
           >
-            <Home size={12} />
+            <House size={12} />
             Dashboard home
           </Link>
           <button
@@ -119,7 +119,7 @@ export default function DashboardError({
             disabled={reporting || reported}
             className="btn-secondary text-xs py-2 px-4 flex items-center gap-1.5 disabled:opacity-50"
           >
-            <Send size={12} />
+            <PaperPlaneTilt size={12} />
             {reported ? "Reported" : reporting ? "Reporting…" : "Report bug"}
           </button>
         </div>

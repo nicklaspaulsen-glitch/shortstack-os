@@ -1,3 +1,4 @@
+import { Chats } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -14,7 +15,6 @@
  */
 
 import { useEffect, useState } from "react";
-import { MessagesSquare } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import OutreachFeedClient from "@/components/outreach/outreach-feed-client";
@@ -69,7 +69,7 @@ export default function ClientOutreachFeedPage() {
       >
         <div className="flex items-start gap-3">
           <div className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center bg-[rgba(99,102,241,0.10)] border border-[rgba(99,102,241,0.20)] text-indigo-400">
-            <MessagesSquare size={22} />
+            <Chats size={22} />
           </div>
           <div className="min-w-0">
             <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-brand-accent">

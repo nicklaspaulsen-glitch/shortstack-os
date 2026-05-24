@@ -1,3 +1,4 @@
+import { ArrowCounterClockwise, ArrowsClockwise, CircleNotch, Cube, Square } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -5,7 +6,6 @@ import { AGENTS, ZONES, type AgentDef } from "./roster";
 import AgentAvatar, { type AgentStatus } from "./agent-avatar";
 import AgentDrawer from "./agent-drawer";
 import { useAgentPositions } from "./use-agent-positions";
-import { RefreshCw, Loader2, Box, Square, RotateCcw } from "lucide-react";
 
 // Isometric office mode tilt — Opus's spec was 55deg/-45deg, but at full
 // strength agents read as too compressed. 38deg/-22deg gives the "office
@@ -164,13 +164,13 @@ export default function RoomCanvas() {
         <div className="ml-auto flex items-center gap-2 text-[10px] text-text-muted">
           {loading ? (
             <>
-              <Loader2 size={11} className="animate-spin" /> Loading…
+              <CircleNotch size={11} className="animate-spin" /> Loading…
             </>
           ) : error ? (
             <span className="text-red-400">Live feed offline: {error}</span>
           ) : (
             <>
-              <RefreshCw size={11} className="animate-[spin_15s_linear_infinite]" />
+              <ArrowsClockwise size={11} className="animate-[spin_15s_linear_infinite]" />
               Auto-refresh every 15s
             </>
           )}
@@ -200,7 +200,7 @@ export default function RoomCanvas() {
             }`}
             title="Isometric office view"
           >
-            <Box size={10} /> Office
+            <Cube size={10} /> Office
           </button>
           <button
             type="button"
@@ -219,7 +219,7 @@ export default function RoomCanvas() {
             className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold text-text-muted hover:text-text-primary transition"
             title="Reset agent positions"
           >
-            <RotateCcw size={10} /> Reset
+            <ArrowCounterClockwise size={10} /> Reset
           </button>
         </div>
 

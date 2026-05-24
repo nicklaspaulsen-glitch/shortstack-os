@@ -1,13 +1,10 @@
 "use client";
+import { FilmStrip, Image, Palette, PenNib, Sparkle, Video } from "@phosphor-icons/react";
 
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import SectionHub from "@/components/dashboard/section-hub";
 import type { RollingPreviewItem } from "@/components/RollingPreview";
-import {
-  Image as ImageIcon, Film, Sparkles, PenTool,
-  Palette, Video,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // Example outputs spanning the Visual section — thumbnails, ads, AI
@@ -38,7 +35,7 @@ export default function VisualHubPage() {
             title="Visual"
             eyebrow="Section · Image & video"
             subtitle="Generate thumbnails, edit videos, and design brand assets in one place."
-            heroIcon={<ImageIcon size={22} />}
+            heroIcon={<Image size={22} />}
             heroGradient="sunset"
             preview={{
               items: VISUAL_HUB_PREVIEW,
@@ -47,15 +44,15 @@ export default function VisualHubPage() {
               caption: "Thumbnails, ads, AI images, design — all visual",
             }}
             quickActions={[
-              { label: "Generate Thumbnail", href: "/dashboard/thumbnail-generator", icon: ImageIcon },
+              { label: "Generate Thumbnail", href: "/dashboard/thumbnail-generator", icon: Image },
               { label: "Create Ad Video", href: "/dashboard/ai-video", icon: Video },
-              { label: "Run AI Studio", href: "/dashboard/ai-studio", icon: Sparkles },
-              { label: "Generate Image", href: "/dashboard/ai-studio", icon: PenTool },
+              { label: "Run AI Studio", href: "/dashboard/ai-studio", icon: Sparkle },
+              { label: "Generate Image", href: "/dashboard/ai-studio", icon: PenNib },
             ]}
             stats={[
-              { label: "Thumbnails", key: "thumbnails", icon: ImageIcon, color: "text-emerald-400" },
-              { label: "Videos", key: "videos", icon: Film, color: "text-blue-400" },
-              { label: "Images", key: "images", icon: Sparkles, color: "text-brand-accent" },
+              { label: "Thumbnails", key: "thumbnails", icon: Image, color: "text-emerald-400" },
+              { label: "Videos", key: "videos", icon: FilmStrip, color: "text-blue-400" },
+              { label: "Images", key: "images", icon: Sparkle, color: "text-brand-accent" },
               { label: "Brand Assets", key: "brand_assets", icon: Palette, color: "text-rose-400" },
             ]}
             tools={[
@@ -64,14 +61,14 @@ export default function VisualHubPage() {
                 label: "Thumbnail Generator",
                 description: "CTR-optimized YouTube/Shorts thumbnails in seconds.",
                 href: "/dashboard/thumbnail-generator",
-                icon: ImageIcon,
+                icon: Image,
               },
               {
                 slug: "video-editor",
                 label: "Video Editor",
                 description: "Trim, caption, and export vertical + horizontal edits.",
                 href: "/dashboard/video-editor",
-                icon: Film,
+                icon: FilmStrip,
               },
               {
                 slug: "ai-video",
@@ -85,14 +82,14 @@ export default function VisualHubPage() {
                 label: "AI Studio",
                 description: "Image generation, upscale, remove BG, transcribe.",
                 href: "/dashboard/ai-studio",
-                icon: Sparkles,
+                icon: Sparkle,
               },
               {
                 slug: "design",
                 label: "Design",
                 description: "Ad creatives, carousels, and social graphics.",
                 href: "/dashboard/design",
-                icon: PenTool,
+                icon: PenNib,
               },
               {
                 slug: "brand-audit",

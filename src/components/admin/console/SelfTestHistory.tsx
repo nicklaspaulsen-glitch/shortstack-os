@@ -1,5 +1,6 @@
+import { CheckCircle, XCircle } from "@phosphor-icons/react";
 import Link from "next/link";
-import { CheckCircle2, XCircle } from "lucide-react";
+
 
 interface SelfTestRun {
   run_id: string;
@@ -72,7 +73,7 @@ export default function SelfTestHistory({ runs }: SelfTestHistoryProps) {
                 className="flex items-center gap-3 text-[11px] border-t border-border-subtle pt-2"
               >
                 {allGreen ? (
-                  <CheckCircle2 size={12} className="shrink-0 text-success" />
+                  <CheckCircle size={12} className="shrink-0 text-success" />
                 ) : (
                   <XCircle size={12} className="shrink-0 text-danger" />
                 )}

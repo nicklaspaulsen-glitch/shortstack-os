@@ -617,7 +617,7 @@ function AgentPod({
         position={[0, 1.6, 0]}
       />
 
-      {/* Sparkles when pulsing */}
+      {/* Sparkle when pulsing */}
       {pulsing && (
         <Sparkles
           count={24}

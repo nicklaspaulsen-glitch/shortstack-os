@@ -1,8 +1,8 @@
 "use client";
+import { CaretLeft, Check, CircleNotch, Copy, Lightbulb, Sparkle, TrendUp, X } from "@phosphor-icons/react";
 
 import { useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Sparkles, ChevronLeft, X, Loader2, Lightbulb, TrendingUp, Copy, Check } from "lucide-react";
 import { CREATOR_STYLES } from "@/lib/ai/creator-styles";
 import type { CreatorStyle, PageContext, Platform } from "@/lib/ai/creator-styles";
 
@@ -113,10 +113,10 @@ export default function CreatorIntelligence({
               className="p-0.5 rounded text-text-muted hover:text-text-primary transition-colors"
               title="Back to creator picker"
             >
-              <ChevronLeft size={13} />
+              <CaretLeft size={13} />
             </button>
           )}
-          <TrendingUp size={12} style={{ color: "#D4FF00" }} />
+          <TrendUp size={12} style={{ color: "#D4FF00" }} />
           <span className="text-[11px] font-semibold text-text-primary">Creator Intelligence</span>
           {selectedCreator && panel === "ideas" && (
             <span
@@ -212,7 +212,7 @@ export default function CreatorIntelligence({
         {/* ── Loading state ── */}
         {panel === "loading" && (
           <div className="flex flex-col items-center justify-center py-14 gap-3">
-            <Loader2 size={20} className="animate-spin" style={{ color: "#D4FF00" }} />
+            <CircleNotch size={20} className="animate-spin" style={{ color: "#D4FF00" }} />
             <p className="text-[11px] text-text-muted text-center px-4">
               Generating 5 ideas in
               <br />
@@ -232,7 +232,7 @@ export default function CreatorIntelligence({
                 className="text-[10px] flex items-center gap-1 transition-colors"
                 style={{ color: "#D4FF00" }}
               >
-                <Sparkles size={9} />
+                <Sparkle size={9} />
                 Change style
               </button>
             </div>
@@ -365,7 +365,7 @@ export default function CreatorIntelligence({
           backdropFilter: "blur(12px)",
         }}
       >
-        <TrendingUp size={11} />
+        <TrendUp size={11} />
         Creator AI
         <span style={{ fontSize: 9, opacity: 0.6 }}>{open ? "▼" : "▲"}</span>
       </button>

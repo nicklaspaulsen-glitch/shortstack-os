@@ -1,4 +1,5 @@
 "use client";
+import { Check } from "@phosphor-icons/react";
 
 /**
  * ChoiceCards — shared primitive for "pick one (or many) of these cards" UIs.
@@ -17,7 +18,6 @@
  */
 
 import { useCallback, useRef, type KeyboardEvent, type ReactNode } from "react";
-import { Check } from "lucide-react";
 
 export interface ChoiceCardItem {
   id: string;

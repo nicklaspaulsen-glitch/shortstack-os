@@ -1,8 +1,8 @@
 "use client";
+import { PaperPlaneTilt, Trash, X } from "@phosphor-icons/react";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Trash2 } from "lucide-react";
 import {
   TASK_PRIORITIES,
   TASK_TYPES,
@@ -162,7 +162,7 @@ export function TaskDrawer({
                     className="p-1.5 rounded-md text-text-muted hover:text-red-600 hover:bg-red-500/10 transition-colors"
                     aria-label="Delete"
                   >
-                    <Trash2 size={16} />
+                    <Trash size={16} />
                   </button>
                 )}
                 <button
@@ -373,9 +373,9 @@ export function TaskDrawer({
                   type="submit"
                   disabled={!draft.trim() || submittingComment}
                   className="p-2 rounded-lg bg-[#D4FF00] text-[#020711] hover:bg-[#AACC00] transition-colors disabled:opacity-40"
-                  aria-label="Send"
+                  aria-label="PaperPlaneTilt"
                 >
-                  <Send size={16} />
+                  <PaperPlaneTilt size={16} />
                 </button>
               </div>
             </form>

@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowRight, ArrowUpRight, Chat, Check, CheckCircle, CircleNotch, Gear, Globe, MagnifyingGlass, PaperPlaneTilt, Phone, Sparkle, Users, Warning } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -11,29 +12,12 @@
  *   3. Confirm + buy (POST /api/twilio/provision → Twilio purchase →
  *                     ElevenLabs phone import → ElevenAgent creation)
  *
- * After purchase: shows the new number + "Send test SMS" button that
+ * After purchase: shows the new number + "PaperPlaneTilt test SMS" button that
  * hits /api/twilio/send-sms.
  */
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Phone,
-  Search,
-  Check,
-  ArrowLeft,
-  ArrowRight,
-  Loader,
-  CheckCircle2,
-  AlertTriangle,
-  Send,
-  MessageSquare,
-  Globe,
-  Sparkles,
-  ArrowUpRight,
-  Users,
-  Settings,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import PlanPickerCard from "@/components/phone-setup/plan-picker-card";
@@ -154,7 +138,7 @@ export default function PhoneSetupPage() {
         toast.error(data.error || "Failed to search for numbers");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Search failed");
+      toast.error(err instanceof Error ? err.message : "MagnifyingGlass failed");
     } finally {
       setLoadingNumbers(false);
     }
@@ -262,12 +246,12 @@ export default function PhoneSetupPage() {
       });
       const data = await res.json();
       if (!res.ok || data.error) {
-        toast.error(data.error || `Send failed (${res.status})`);
+        toast.error(data.error || `PaperPlaneTilt failed (${res.status})`);
         return;
       }
       toast.success("Test SMS sent — check your phone!");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Send failed");
+      toast.error(err instanceof Error ? err.message : "PaperPlaneTilt failed");
     } finally {
       setTestSending(false);
     }
@@ -315,7 +299,7 @@ export default function PhoneSetupPage() {
               {/* Quota / agency-pays hint — always visible under the hero */}
               <div className="mb-4 flex flex-wrap items-start gap-3 rounded-xl border border-border-subtle/40 bg-surface-light/20 p-3 text-[11px] text-text-muted">
                 <div className="flex items-center gap-1.5 text-[11px] text-text-primary/80">
-                  <Sparkles size={12} className="text-brand-accent" />
+                  <Sparkle size={12} className="text-brand-accent" />
                   <span>
                     You&apos;ve provisioned{" "}
                     <span className="font-semibold text-text-primary">{phoneUsed}</span> of{" "}
@@ -335,7 +319,7 @@ export default function PhoneSetupPage() {
               {atLimit && step !== 4 && (
                 <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/5 p-6">
                   <div className="mb-2 flex items-center gap-2">
-                    <AlertTriangle size={18} className="text-amber-400" />
+                    <Warning size={18} className="text-amber-400" />
                     <h2 className="text-base font-semibold">
                       You&apos;ve hit your {planTierLabel} plan&apos;s phone-number cap
                     </h2>
@@ -361,7 +345,7 @@ export default function PhoneSetupPage() {
                       href="/dashboard/phone-email"
                       className="inline-flex items-center gap-1.5 rounded-lg border border-border-subtle/60 px-4 py-2 text-sm text-text-muted transition hover:text-text-primary"
                     >
-                      <Settings size={14} /> Manage existing numbers
+                      <Gear size={14} /> Manage existing numbers
                     </a>
                   </div>
                 </div>
@@ -408,7 +392,7 @@ export default function PhoneSetupPage() {
 
                   {loadingClients ? (
                     <div className="flex items-center gap-2 text-sm text-text-muted">
-                      <Loader size={14} className="animate-spin" /> Loading your clients…
+                      <CircleNotch size={14} className="animate-spin" /> Loading your clients…
                     </div>
                   ) : clients.length === 0 ? (
                     <div className="rounded-lg border border-dashed border-border-subtle/50 bg-background/30 p-8 text-center">
@@ -483,10 +467,10 @@ export default function PhoneSetupPage() {
                 <div className="glass rounded-xl p-6">
                   <h2 className="mb-1 text-lg font-semibold">Pick a phone number</h2>
                   <p className="mb-4 text-sm text-text-muted">
-                    Search by area code and pick any available number. Numbers are $1/mo from Twilio.
+                    MagnifyingGlass by area code and pick any available number. Numbers are $1/mo from Twilio.
                   </p>
 
-                  {/* Search controls */}
+                  {/* MagnifyingGlass controls */}
                   <div className="mb-4 grid grid-cols-1 gap-2 sm:grid-cols-[180px_1fr_auto]">
                     <div>
                       <label className="mb-1 block text-[10px] uppercase tracking-wider text-text-muted">
@@ -523,11 +507,11 @@ export default function PhoneSetupPage() {
                         className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-4 py-2 text-sm font-semibold transition hover:bg-surface-light disabled:opacity-40"
                       >
                         {loadingNumbers ? (
-                          <Loader size={14} className="animate-spin" />
+                          <CircleNotch size={14} className="animate-spin" />
                         ) : (
-                          <Search size={14} />
+                          <MagnifyingGlass size={14} />
                         )}
-                        Search
+                        MagnifyingGlass
                       </button>
                     </div>
                   </div>
@@ -536,7 +520,7 @@ export default function PhoneSetupPage() {
                   {availableNumbers.length === 0 && !loadingNumbers ? (
                     <div className="rounded-lg border border-dashed border-border-subtle/50 p-8 text-center text-sm text-text-muted">
                       <Globe size={20} className="mx-auto mb-2 opacity-50" />
-                      Click Search to see available numbers.
+                      Click MagnifyingGlass to see available numbers.
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -615,7 +599,7 @@ export default function PhoneSetupPage() {
                   </div>
 
                   <div className="mb-5 flex items-start gap-2 rounded-lg bg-amber-500/10 p-3 text-[11px] text-amber-400">
-                    <AlertTriangle size={13} className="mt-0.5 shrink-0" />
+                    <Warning size={13} className="mt-0.5 shrink-0" />
                     <p>
                       This is a real purchase against your Twilio account. The number stays yours
                       until you release it from the Twilio dashboard.
@@ -626,7 +610,7 @@ export default function PhoneSetupPage() {
                   {buying && (
                     <div className="mb-5 rounded-lg border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] p-4">
                       <div className="mb-3 flex items-center gap-2 text-[12px] font-semibold text-brand-accent">
-                        <Loader size={13} className="animate-spin" /> Provisioning your number —
+                        <CircleNotch size={13} className="animate-spin" /> Provisioning your number —
                         hang tight, this takes 2-3 seconds
                       </div>
                       <div className="space-y-1.5 text-[11px] text-text-muted">
@@ -669,11 +653,11 @@ export default function PhoneSetupPage() {
                     >
                       {buying ? (
                         <>
-                          <Loader size={14} className="animate-spin" /> Buying number…
+                          <CircleNotch size={14} className="animate-spin" /> Buying number…
                         </>
                       ) : (
                         <>
-                          <Sparkles size={14} /> Buy this number
+                          <Sparkle size={14} /> Buy this number
                         </>
                       )}
                     </button>
@@ -685,7 +669,7 @@ export default function PhoneSetupPage() {
               {step === 4 && purchaseResult && selectedClient && (
                 <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-6">
                   <div className="mb-4 flex items-center gap-2">
-                    <CheckCircle2 size={22} className="text-emerald-400" />
+                    <CheckCircle size={22} className="text-emerald-400" />
                     <h2 className="text-lg font-semibold">Number is live!</h2>
                   </div>
 
@@ -713,7 +697,7 @@ export default function PhoneSetupPage() {
                   </div>
 
                   <p className="mb-4 text-sm text-text-muted">
-                    <MessageSquare size={12} className="mr-1 inline" /> SMS webhook wired → inbound
+                    <Chat size={12} className="mr-1 inline" /> SMS webhook wired → inbound
                     messages appear in Conversations.
                     <br />
                     <Phone size={12} className="mr-1 inline" /> Voice webhook wired → inbound calls
@@ -728,11 +712,11 @@ export default function PhoneSetupPage() {
                     >
                       {testSending ? (
                         <>
-                          <Loader size={14} className="animate-spin" /> Sending…
+                          <CircleNotch size={14} className="animate-spin" /> Sending…
                         </>
                       ) : (
                         <>
-                          <Send size={14} /> Send test SMS
+                          <PaperPlaneTilt size={14} /> PaperPlaneTilt test SMS
                         </>
                       )}
                     </button>
@@ -740,7 +724,7 @@ export default function PhoneSetupPage() {
                       href="/dashboard/phone-email"
                       className="inline-flex items-center gap-1.5 rounded-lg border border-border-subtle/60 bg-surface-light/60 px-4 py-2 text-sm font-semibold text-text-primary transition hover:bg-surface-light"
                     >
-                      <Settings size={14} /> Manage this number
+                      <Gear size={14} /> Manage this number
                     </a>
                     <button
                       onClick={() => {
@@ -756,7 +740,7 @@ export default function PhoneSetupPage() {
                       className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-4 py-2 text-sm font-semibold transition hover:bg-surface-light disabled:cursor-not-allowed disabled:opacity-50"
                       title={atLimit ? "You've hit your plan's phone-number cap" : undefined}
                     >
-                      <Sparkles size={14} /> Provision another
+                      <Sparkle size={14} /> Provision another
                     </button>
                     <a
                       href="/dashboard/eleven-agents"
@@ -785,9 +769,9 @@ function PipelineStep({ label, active, done }: { label: string; active: boolean;
   return (
     <div className="flex items-center gap-2">
       {done ? (
-        <CheckCircle2 size={12} className="text-emerald-400" />
+        <CheckCircle size={12} className="text-emerald-400" />
       ) : active ? (
-        <Loader size={12} className="animate-spin text-brand-accent" />
+        <CircleNotch size={12} className="animate-spin text-brand-accent" />
       ) : (
         <span className="inline-block h-[10px] w-[10px] rounded-full border border-border-subtle/60" />
       )}

@@ -87,7 +87,7 @@ export async function sendMidjourneyPrompt(params: MidjourneyRequest): Promise<M
     const res = await fetch(`${DISCORD_API}/channels/${channelId}/messages`, {
       method: "POST",
       headers: {
-        Authorization: `Bot ${botToken}`,
+        Authorization: `Robot ${botToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

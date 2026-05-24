@@ -1,11 +1,11 @@
 "use client";
+import { CircleNotch, Sparkle, X } from "@phosphor-icons/react";
 
 // Prompt dialog used for AI Fill and Text-to-Layer. Shared because both
 // flows ask for a text prompt and return an image; the difference is the
 // endpoint and whether a selection is passed.
 
 import { useEffect, useState } from "react";
-import { Loader2, Sparkles, X } from "lucide-react";
 
 export interface AIModelOption {
   id: string;
@@ -80,7 +80,7 @@ export default function AIFillDialog({
         <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-800">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-white" />
+              <Sparkle className="w-4 h-4 text-white" />
             </div>
             <div>
               <div className="text-sm font-semibold text-neutral-100">
@@ -232,12 +232,12 @@ export default function AIFillDialog({
           >
             {busy ? (
               <>
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <CircleNotch className="w-3.5 h-3.5 animate-spin" />
                 Generating…
               </>
             ) : (
               <>
-                <Sparkles className="w-3.5 h-3.5" />
+                <Sparkle className="w-3.5 h-3.5" />
                 {submitLabel}
               </>
             )}

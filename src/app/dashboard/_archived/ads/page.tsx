@@ -1,4 +1,5 @@
 "use client";
+import { ArrowUpRight, ArrowsClockwise, CaretDown, ChartBar, CheckCircle, CircleNotch, Clock, Copy, CurrencyDollar, CursorClick, Funnel, Gauge, Globe, Image, Lightning, MagicWand, Megaphone, Pause, Play, Plug, Plus, Pulse, Robot, Shield, SlidersHorizontal, Sparkle, Target, TextT, ToggleLeft, ToggleRight, TrendUp, Users, XCircle } from "@phosphor-icons/react";
 
 import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
@@ -9,20 +10,9 @@ import StatusBadge from "@/components/ui/status-badge";
 import Modal from "@/components/ui/modal";
 import { PageLoading } from "@/components/ui/loading";
 import { formatCurrency } from "@/lib/utils";
-import {
-  DollarSign, MousePointer, TrendingUp, Plus,
-  Sparkles, Target, Filter, ChevronDown,
-  Copy, Wand2, Loader, Pause, Play,
-  Megaphone, RefreshCw, Zap,
-} from "lucide-react";
+
 import { PRISM_GLASS, PRISM_GLASS_STRONG, PRISM_BORDERS } from "@/components/prism/constants";
-import {
-  Image as ImageIcon, Type, Globe,
-  Bot, CheckCircle2, XCircle, ArrowUpRight,
-  Shield, Clock, Plug, BarChart3,
-  Gauge, Settings2, ToggleLeft, ToggleRight,
-  Activity, Users
-} from "lucide-react";
+
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { MetaIcon, GoogleAdsIcon, TikTokIcon } from "@/components/ui/platform-icons";
@@ -168,7 +158,7 @@ export default function AdsPage() {
     try {
       await fetch("/api/ads/autopilot", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ action: "save_config", config: newConfig }),
       });
       toast.success("Autopilot settings saved");
@@ -181,7 +171,7 @@ export default function AdsPage() {
     try {
       const res = await fetch("/api/ads/autopilot", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ action: "run" }),
       });
       const data = await res.json();
@@ -255,7 +245,7 @@ export default function AdsPage() {
       const res = await fetch("/api/ads/optimize", {
         method: "POST",
         body: JSON.stringify({ campaign_id: campaignId }),
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
       });
       if (res.ok) {
         toast.success("AI suggestions generated");
@@ -274,7 +264,7 @@ export default function AdsPage() {
     try {
       const res = await fetch("/api/ads/generate-copy", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           client_id: copyClient || null,
           platform: copyPlatform,
@@ -312,7 +302,7 @@ export default function AdsPage() {
     try {
       const res = await fetch("/api/ads/actions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ action_id: actionId, operation }),
       });
       const data = await res.json();
@@ -342,7 +332,7 @@ export default function AdsPage() {
     try {
       const res = await fetch("/api/ads/sync", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ client_id: clientId, platform }),
       });
       const data = await res.json();
@@ -379,7 +369,7 @@ export default function AdsPage() {
         <div className="flex items-center gap-2 shrink-0">
           <>
             <button onClick={fetchData} className="px-3 py-1.5 rounded-lg bg-black/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-black/10 transition-all flex items-center gap-1.5">
-              <RefreshCw size={12} /> Sync
+              <ArrowsClockwise size={12} /> Sync
             </button>
             <button onClick={() => setShowAddCampaign(true)} className="px-3 py-1.5 rounded-lg bg-black/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-black/15 transition-all flex items-center gap-1.5">
               <Plus size={12} /> New Campaign
@@ -394,9 +384,9 @@ export default function AdsPage() {
           {([
             { id: "overview", label: "Overview", icon: <Gauge size={13} /> },
             { id: "campaigns", label: "Campaigns", icon: <Megaphone size={13} /> },
-            { id: "creatives", label: "Creatives", icon: <ImageIcon size={13} /> },
-            { id: "copy-lab", label: "Copy Lab", icon: <Wand2 size={13} /> },
-            { id: "copilot", label: "AI Copilot", icon: <Bot size={13} /> },
+            { id: "creatives", label: "Creatives", icon: <Image size={13} /> },
+            { id: "copy-lab", label: "Copy Lab", icon: <MagicWand size={13} /> },
+            { id: "copilot", label: "AI Copilot", icon: <Robot size={13} /> },
           ] as const).map(t => (
             <button key={t.id} onClick={() => { setTab(t.id); if (t.id === "copilot") fetchActions(); }}
               className={`flex items-center gap-1.5 px-3.5 py-2 text-xs rounded-lg transition-all ${
@@ -416,7 +406,7 @@ export default function AdsPage() {
         {tab === "campaigns" && (
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5 text-[10px] text-text-muted">
-              <Filter size={11} />
+              <Funnel size={11} />
             </div>
             <select value={clientFilter} onChange={e => setClientFilter(e.target.value)}
               className="input text-xs py-1.5 px-2.5 min-w-0 w-auto">
@@ -446,11 +436,11 @@ export default function AdsPage() {
           {/* KPI Cards */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {[
-              { label: "Total Spend", value: formatCurrency(totalSpend), icon: <DollarSign size={16} />, extra: {} },
-              { label: "Avg ROAS", value: `${avgROAS.toFixed(1)}x`, icon: <TrendingUp size={16} />, extra: { changeType: (avgROAS >= 2 ? "positive" : avgROAS >= 1 ? "neutral" : "negative") as "positive" | "neutral" | "negative" } },
-              { label: "Avg CTR", value: `${(avgCTR * 100).toFixed(2)}%`, icon: <MousePointer size={16} />, extra: { changeType: (avgCTR >= 0.02 ? "positive" : "neutral") as "positive" | "neutral" } },
+              { label: "Total Spend", value: formatCurrency(totalSpend), icon: <CurrencyDollar size={16} />, extra: {} },
+              { label: "Avg ROAS", value: `${avgROAS.toFixed(1)}x`, icon: <TrendUp size={16} />, extra: { changeType: (avgROAS >= 2 ? "positive" : avgROAS >= 1 ? "neutral" : "negative") as "positive" | "neutral" | "negative" } },
+              { label: "Avg CTR", value: `${(avgCTR * 100).toFixed(2)}%`, icon: <CursorClick size={16} />, extra: { changeType: (avgCTR >= 0.02 ? "positive" : "neutral") as "positive" | "neutral" } },
               { label: "Conversions", value: totalConversions, icon: <Target size={16} />, extra: {} },
-              { label: "Active Campaigns", value: campaigns.filter(c => c.status === "active").length, icon: <Activity size={16} />, extra: {} },
+              { label: "Active Campaigns", value: campaigns.filter(c => c.status === "active").length, icon: <Pulse size={16} />, extra: {} },
               { label: "Client MRR", value: formatCurrency(Object.values(clientMrr).reduce((s, v) => s + v, 0)), icon: <Users size={16} />, extra: {} },
             ].map((card, index) => (
               <motion.div
@@ -476,7 +466,7 @@ export default function AdsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: 0.36 }}
               >
-                <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-brand-accent" /> Platform Performance</h2>
+                <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><ChartBar size={14} className="text-brand-accent" /> Platform Performance</h2>
                 <div className="space-y-2">
                   {PLATFORMS.map(p => {
                     const platCampaigns = campaigns.filter(c => c.platform === p.id);
@@ -574,7 +564,7 @@ export default function AdsPage() {
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <Bot size={16} className="text-brand-accent" />
+                    <Robot size={16} className="text-brand-accent" />
                     <h2 className="text-sm font-semibold">AI Autopilot</h2>
                   </div>
                   <button
@@ -595,7 +585,7 @@ export default function AdsPage() {
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="mb-4">
                   <button onClick={runAutopilot} disabled={autopilotRunning || !autopilotConfig.enabled}
                     className="btn-primary w-full text-xs flex items-center justify-center gap-2 disabled:opacity-50">
-                    {autopilotRunning ? <><Loader size={12} className="animate-spin" /> Running...</> : <><Zap size={12} /> Run Autopilot Now</>}
+                    {autopilotRunning ? <><CircleNotch size={12} className="animate-spin" /> Running...</> : <><Lightning size={12} /> Run Autopilot Now</>}
                   </button>
                 </motion.div>
 
@@ -668,11 +658,11 @@ export default function AdsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.22, delay: 0.42 }}
                 >
-                  <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Activity size={12} className="text-success" /> Recent AI Actions</h3>
+                  <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Pulse size={12} className="text-success" /> Recent AI Actions</h3>
                   <div className="space-y-1.5 max-h-48 overflow-y-auto">
                     {actions.filter(a => a.status === "executed").slice(0, 8).map(a => (
                       <div key={a.id} className="flex items-center gap-2 text-[10px] py-1 border-b border-border-subtle/50 last:border-0">
-                        <CheckCircle2 size={10} className="text-success shrink-0" />
+                        <CheckCircle size={10} className="text-success shrink-0" />
                         <span className="truncate flex-1">{a.title}</span>
                         <span className="text-[8px] text-text-muted shrink-0">{new Date(a.executed_at || a.created_at).toLocaleDateString()}</span>
                       </div>
@@ -689,7 +679,7 @@ export default function AdsPage() {
                 transition={{ duration: 0.22, delay: 0.48 }}
                 whileHover={{ y: -2 }}
               >
-                <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Settings2 size={12} className="text-brand-accent" /> How Autopilot Works</h3>
+                <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><SlidersHorizontal size={12} className="text-brand-accent" /> How Autopilot Works</h3>
                 <ol className="space-y-1 text-[10px] text-text-muted">
                   <li className="flex gap-2"><span className="text-brand-accent font-bold">1.</span> Syncs latest campaign data from all platforms</li>
                   <li className="flex gap-2"><span className="text-brand-accent font-bold">2.</span> AI analyzes performance vs benchmarks</li>
@@ -804,11 +794,11 @@ export default function AdsPage() {
                         title="AI Optimize"
                       >
                         {optimizingId === campaign.id
-                          ? <Loader size={13} className="text-brand-accent animate-spin" />
-                          : <Sparkles size={13} className="text-brand-accent" />
+                          ? <CircleNotch size={13} className="text-brand-accent animate-spin" />
+                          : <Sparkle size={13} className="text-brand-accent" />
                         }
                       </button>
-                      <ChevronDown size={14} className={`text-text-muted transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
+                      <CaretDown size={14} className={`text-text-muted transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
                     </div>
                   </div>
 
@@ -853,7 +843,7 @@ export default function AdsPage() {
                                   <img src={cr.image_url} alt="" className="w-12 h-12 rounded-lg object-cover shrink-0" />
                                 ) : (
                                   <div className="w-12 h-12 rounded-lg bg-surface flex items-center justify-center shrink-0">
-                                    <ImageIcon size={16} className="text-text-muted" />
+                                    <Image size={16} className="text-text-muted" />
                                   </div>
                                 )}
                                 <div className="min-w-0 flex-1">
@@ -871,7 +861,7 @@ export default function AdsPage() {
                       {campaign.ai_suggestions && (
                         <div className="bg-[rgba(212, 255, 0,0.05)] border border-[rgba(212, 255, 0,0.1)] rounded-xl p-4">
                           <div className="flex items-center gap-2 mb-2">
-                            <Sparkles size={14} className="text-brand-accent" />
+                            <Sparkle size={14} className="text-brand-accent" />
                             <p className="text-xs font-semibold">AI Optimization Suggestions</p>
                           </div>
                           <p className="text-xs text-text-muted whitespace-pre-wrap leading-relaxed">{campaign.ai_suggestions}</p>
@@ -891,7 +881,7 @@ export default function AdsPage() {
         <div>
           {creatives.length === 0 ? (
             <div className="card-static text-center py-16">
-              <ImageIcon size={32} className="mx-auto mb-3 text-text-muted/30" />
+              <Image size={32} className="mx-auto mb-3 text-text-muted/30" />
               <p className="text-sm font-medium text-text-muted">No creatives yet</p>
               <p className="text-xs text-text-muted mt-1">Ad creatives will appear here once linked to campaigns</p>
             </div>
@@ -917,7 +907,7 @@ export default function AdsPage() {
                         <video src={cr.video_url} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <ImageIcon size={24} className="text-text-muted/30" />
+                          <Image size={24} className="text-text-muted/30" />
                         </div>
                       )}
                       <div className="absolute top-2 right-2">
@@ -964,7 +954,7 @@ export default function AdsPage() {
             transition={{ duration: 0.22, delay: 0.12 }}
           >
             <div className="flex items-center gap-2 mb-1">
-              <Wand2 size={16} className="text-brand-accent" />
+              <MagicWand size={16} className="text-brand-accent" />
               <h2 className="text-sm font-semibold">AI Copy Generator</h2>
             </div>
             <p className="text-[10px] text-text-muted -mt-2">Generate high-converting ad copy variations with AI. Pick your platform, audience, and offer.</p>
@@ -1024,7 +1014,7 @@ export default function AdsPage() {
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <button onClick={generateAdCopy} disabled={generatingCopy}
                 className="btn-primary w-full text-xs flex items-center justify-center gap-2 disabled:opacity-50">
-                {generatingCopy ? <><Loader size={13} className="animate-spin" /> Generating...</> : <><Sparkles size={13} /> Generate Ad Copy</>}
+                {generatingCopy ? <><CircleNotch size={13} className="animate-spin" /> Generating...</> : <><Sparkle size={13} /> Generate Ad Copy</>}
               </button>
             </motion.div>
           </motion.div>
@@ -1033,7 +1023,7 @@ export default function AdsPage() {
           <div className="lg:col-span-3 space-y-4">
             {!generatedCopy ? (
               <div className="card-static text-center py-20">
-                <Wand2 size={32} className="mx-auto mb-3 text-text-muted/20" />
+                <MagicWand size={32} className="mx-auto mb-3 text-text-muted/20" />
                 <p className="text-sm text-text-muted">Configure your ad and hit generate</p>
                 <p className="text-[10px] text-text-muted mt-1">AI will create 5 copy variations with headlines, body text, CTAs, and image suggestions</p>
               </div>
@@ -1043,7 +1033,7 @@ export default function AdsPage() {
                 {(generatedCopy as Record<string, unknown>).variations && (
                   <div className="space-y-3">
                     <h3 className="text-xs font-semibold flex items-center gap-2">
-                      <Type size={13} /> Copy Variations
+                      <TextT size={13} /> Copy Variations
                     </h3>
                     {((generatedCopy as Record<string, unknown>).variations as Array<Record<string, string>>).map((v, i) => {
                       const perfLevel = (v.estimated_performance || "").toLowerCase();
@@ -1087,7 +1077,7 @@ export default function AdsPage() {
                         {v.image_concept && (
                           <div className="mt-2 pt-2 border-t border-border-subtle">
                             <div className="flex items-center gap-1.5">
-                              <ImageIcon size={10} className="text-text-muted shrink-0" />
+                              <Image size={10} className="text-text-muted shrink-0" />
                               <span className="text-[9px] text-text-muted">{v.image_concept}</span>
                             </div>
                           </div>
@@ -1107,7 +1097,7 @@ export default function AdsPage() {
                     transition={{ duration: 0.22, delay: 0.12 }}
                   >
                     <h3 className="text-xs font-semibold flex items-center gap-2 mb-3">
-                      <ImageIcon size={13} /> Image Concepts
+                      <Image size={13} /> Image Concepts
                     </h3>
                     <div className="space-y-2">
                       {((generatedCopy as Record<string, unknown>).image_suggestions as Array<Record<string, string>>).map((img, i) => (
@@ -1128,7 +1118,7 @@ export default function AdsPage() {
                     transition={{ duration: 0.22, delay: 0.18 }}
                   >
                     <h3 className="text-xs font-semibold flex items-center gap-2 mb-2">
-                      <Zap size={13} className="text-brand-accent" /> A/B Test Recommendation
+                      <Lightning size={13} className="text-brand-accent" /> A/B Test Recommendation
                     </h3>
                     <p className="text-xs text-text-muted leading-relaxed">
                       {typeof (generatedCopy as Record<string, unknown>).a_b_test_plan === "string"
@@ -1175,14 +1165,14 @@ export default function AdsPage() {
               transition={{ duration: 0.22, delay: 0.12 }}
             >
               <div className="flex items-center gap-2">
-                <Bot size={16} className="text-brand-accent" />
+                <Robot size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-semibold">AI Ad Copilot</h2>
               </div>
               <p className="text-[10px] text-text-muted">AI analyzes your campaigns and proposes optimizations. Review and approve actions before they execute.</p>
 
               <button onClick={fetchInsights} disabled={loadingInsights || campaigns.length === 0}
                 className="btn-primary w-full text-xs flex items-center justify-center gap-2 disabled:opacity-50">
-                {loadingInsights ? <><Loader size={12} className="animate-spin" /> Analyzing...</> : <><BarChart3 size={12} /> Run Portfolio Analysis</>}
+                {loadingInsights ? <><CircleNotch size={12} className="animate-spin" /> Analyzing...</> : <><ChartBar size={12} /> Run Portfolio Analysis</>}
               </button>
 
               {/* Per-campaign optimize */}
@@ -1199,8 +1189,8 @@ export default function AdsPage() {
                       </div>
                       <span className="text-[10px] truncate flex-1">{c.name}</span>
                       {optimizingId === c.id
-                        ? <Loader size={10} className="text-brand-accent animate-spin shrink-0" />
-                        : <Sparkles size={10} className="text-brand-accent shrink-0" />}
+                        ? <CircleNotch size={10} className="text-brand-accent animate-spin shrink-0" />
+                        : <Sparkle size={10} className="text-brand-accent shrink-0" />}
                     </button>
                   ))}
                   {campaigns.length === 0 && <p className="text-[10px] text-text-muted text-center py-2">No campaigns to optimize</p>}
@@ -1237,13 +1227,13 @@ export default function AdsPage() {
                                 {isConnected ? (
                                   <div className="flex items-center gap-1">
                                     <span className="text-[8px] bg-success/10 text-success font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
-                                      <CheckCircle2 size={8} /> Connected
+                                      <CheckCircle size={8} /> Connected
                                     </span>
                                     <button
                                       onClick={() => syncPlatform(client.id, p.id)}
                                       disabled={syncing !== null}
                                       className="text-[9px] px-2 py-1 rounded-md font-medium border border-border-subtle hover:border-[rgba(212, 255, 0,0.2)] hover:bg-[rgba(212, 255, 0,0.05)] transition-all disabled:opacity-50 flex items-center gap-1">
-                                      {syncing === p.id ? <Loader size={8} className="animate-spin" /> : <RefreshCw size={8} />}
+                                      {syncing === p.id ? <CircleNotch size={8} className="animate-spin" /> : <ArrowsClockwise size={8} />}
                                       Sync
                                     </button>
                                   </div>
@@ -1298,7 +1288,7 @@ export default function AdsPage() {
                 whileHover={{ y: -2 }}
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <BarChart3 size={14} className="text-brand-accent" />
+                  <ChartBar size={14} className="text-brand-accent" />
                   <h2 className="text-sm font-semibold">Portfolio Insights</h2>
                 </div>
                 <pre className="whitespace-pre-wrap text-xs text-text-primary leading-relaxed font-sans bg-surface-light rounded-xl p-4 border border-border-subtle/30 max-h-[300px] overflow-y-auto">
@@ -1329,15 +1319,15 @@ export default function AdsPage() {
                   )}
                 </div>
                 <button onClick={fetchActions} className="btn-ghost text-[10px] flex items-center gap-1">
-                  <RefreshCw size={10} /> Refresh
+                  <ArrowsClockwise size={10} /> Refresh
                 </button>
               </div>
 
               {loadingActions ? (
-                <div className="flex items-center justify-center py-8"><Loader size={16} className="animate-spin text-text-muted" /></div>
+                <div className="flex items-center justify-center py-8"><CircleNotch size={16} className="animate-spin text-text-muted" /></div>
               ) : pendingActions.length === 0 ? (
                 <div className="text-center py-8">
-                  <CheckCircle2 size={24} className="text-success/30 mx-auto mb-2" />
+                  <CheckCircle size={24} className="text-success/30 mx-auto mb-2" />
                   <p className="text-xs text-text-muted">No pending actions</p>
                   <p className="text-[10px] text-text-muted/60 mt-1">Run AI optimization on a campaign to get recommendations</p>
                 </div>
@@ -1384,7 +1374,7 @@ export default function AdsPage() {
                           <button onClick={() => handleAction(action.id, "approve")}
                             disabled={processingAction === action.id}
                             className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-medium bg-success/10 text-success hover:bg-success/20 transition-all disabled:opacity-50">
-                            <CheckCircle2 size={11} /> Approve
+                            <CheckCircle size={11} /> Approve
                           </button>
                           <button onClick={() => handleAction(action.id, "reject")}
                             disabled={processingAction === action.id}
@@ -1409,7 +1399,7 @@ export default function AdsPage() {
                 whileHover={{ y: -2 }}
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <CheckCircle2 size={14} className="text-success" />
+                  <CheckCircle size={14} className="text-success" />
                   <h2 className="text-sm font-semibold">Ready to Execute</h2>
                   <span className="text-[9px] bg-success/10 text-success font-bold px-2 py-0.5 rounded-full">{approvedActions.length}</span>
                 </div>
@@ -1429,7 +1419,7 @@ export default function AdsPage() {
                       <button onClick={() => handleAction(action.id, "execute")}
                         disabled={processingAction === action.id}
                         className="btn-primary text-[10px] px-3 py-1.5 flex items-center gap-1 disabled:opacity-50">
-                        {processingAction === action.id ? <Loader size={10} className="animate-spin" /> : <Zap size={10} />}
+                        {processingAction === action.id ? <CircleNotch size={10} className="animate-spin" /> : <Lightning size={10} />}
                         Execute
                       </button>
                     </div>
@@ -1463,7 +1453,7 @@ export default function AdsPage() {
                       <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
                         action.status === "executed" ? "bg-success/10" : action.status === "failed" ? "bg-danger/10" : "bg-surface-light"
                       }`}>
-                        {action.status === "executed" ? <CheckCircle2 size={10} className="text-success" /> :
+                        {action.status === "executed" ? <CheckCircle size={10} className="text-success" /> :
                          action.status === "failed" ? <XCircle size={10} className="text-danger" /> :
                          <XCircle size={10} className="text-text-muted" />}
                       </div>

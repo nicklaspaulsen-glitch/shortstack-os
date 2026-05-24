@@ -1,3 +1,4 @@
+import { ArrowBendUpLeft, ArrowRight, ArrowsClockwise, At, BookOpen, Briefcase, Calendar, Camera, ChartBar, ChartLine, ChartPie, Chat, Check, CheckCircle, CircleDashed, CircleNotch, Clock, Columns, Copy, DownloadSimple, Eye, FileText, FilmStrip, Fire, Gear, GitDiff, Globe, Handshake, Hash, Heart, Image, Lightbulb, Lightning, Link, MagicWand, MagnifyingGlass, MusicNote, PaperPlaneTilt, Pause, Play, Plus, Pulse, Question, Repeat, Robot, ShareNetwork, Shield, Sparkle, SquaresFour, Stack, Target, ThumbsUp, ToggleLeft, ToggleRight, Tray, TrendUp, UploadSimple, UserPlus, Users, Video, WarningCircle, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
@@ -9,21 +10,6 @@ import { Client, ContentCalendarEntry } from "@/lib/types";
 import StatCard from "@/components/ui/stat-card";
 import StatusBadge from "@/components/ui/status-badge";
 import { formatDate, formatRelativeTime } from "@/lib/utils";
-import {
-  Bot, Play, Pause, Calendar, Camera,
-  MessageSquare, Sparkles, Send, Clock, CheckCircle,
-  Loader, Settings, ArrowRight, Globe, Film,
-  Briefcase, Lightbulb, Video, LayoutGrid, FileText as FileTextIcon,
-  ToggleLeft, ToggleRight, Zap, Shield, Activity, Hash,
-  Copy, Layers, RefreshCw, TrendingUp, BarChart3, Users,
-  Search, Download, Eye, Upload, LineChart, Repeat,
-  GitCompare, Reply, Handshake, Music2,
-  Target, Flame, Link, AtSign,
-  PieChart, ThumbsUp, Heart, Share2,
-  Grid3X3, Columns, BookOpen, Wand2,
-  CircleDot, Inbox, UserPlus, AlertCircle,
-  Plus, X, Check
-} from "lucide-react";
 import toast from "react-hot-toast";
 import PageTrainingPanel from "@/components/ui/page-training-panel";
 import PageAI from "@/components/page-ai";
@@ -215,7 +201,7 @@ export default function SocialManagerPage() {
       if (data.zernio_not_configured) {
         toast.error(
           isPlatformAdmin
-            ? "Zernio API key not configured. Add ZERNIO_API_KEY in Settings."
+            ? "Zernio API key not configured. Add ZERNIO_API_KEY in Gear."
             : "Social account connections aren't enabled on this workspace yet. Reach out to your platform admin to switch them on."
         );
         setZernioConfigured(false);
@@ -293,7 +279,7 @@ export default function SocialManagerPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "save_config", config: newConfig }),
       });
-      toast.success("Settings saved");
+      toast.success("Gear saved");
     } catch { toast.error("Failed to save"); }
     setSavingConfig(false);
   }
@@ -478,7 +464,7 @@ export default function SocialManagerPage() {
             {!zernioConfigured && (
               <div className="bg-warning/10 border border-warning/20 rounded-lg p-3 mb-4 max-w-sm mx-auto">
                 <div className="flex items-center gap-2 text-warning text-xs">
-                  <AlertCircle size={14} />
+                  <WarningCircle size={14} />
                   {isPlatformAdmin ? (
                     <span>Zernio API key not configured. Add <code className="bg-surface px-1 rounded text-[10px]">ZERNIO_API_KEY</code> to your environment.</span>
                   ) : (
@@ -495,7 +481,7 @@ export default function SocialManagerPage() {
                   disabled={!zernioConfigured || connectingPlatform === p.key}
                   className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border transition-all text-xs font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.02] ${p.bg} ${p.border} ${p.color}`}>
                   {connectingPlatform === p.key ? (
-                    <Loader size={13} className="animate-spin" />
+                    <CircleNotch size={13} className="animate-spin" />
                   ) : (
                     PLATFORM_ICONS[p.key] || <Globe size={13} />
                   )}
@@ -513,7 +499,7 @@ export default function SocialManagerPage() {
           {!zernioConfigured ? (
             <div className="text-center py-4">
               <div className="w-12 h-12 bg-warning/10 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <AlertCircle size={22} className="text-warning" />
+                <WarningCircle size={22} className="text-warning" />
               </div>
               {isPlatformAdmin ? (
                 <>
@@ -590,9 +576,9 @@ export default function SocialManagerPage() {
                   disabled={connectingPlatform === confirmPlatform.key}
                   className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
                   {connectingPlatform === confirmPlatform.key ? (
-                    <Loader size={12} className="animate-spin" />
+                    <CircleNotch size={12} className="animate-spin" />
                   ) : (
-                    <Zap size={12} />
+                    <Lightning size={12} />
                   )}
                   {connectingPlatform === confirmPlatform.key ? "Connecting..." : `Connect ${confirmPlatform.label}`}
                 </button>
@@ -650,7 +636,7 @@ export default function SocialManagerPage() {
                         <button onClick={() => disconnectAccount(account)}
                           disabled={disconnectingId === account.id}
                           className="text-[10px] text-red-400 hover:text-red-300 transition-colors disabled:opacity-50">
-                          {disconnectingId === account.id ? <Loader size={10} className="animate-spin" /> : "Disconnect"}
+                          {disconnectingId === account.id ? <CircleNotch size={10} className="animate-spin" /> : "Disconnect"}
                         </button>
                       </div>
                     ))}
@@ -667,7 +653,7 @@ export default function SocialManagerPage() {
         {(["dashboard", "calendar", "scheduled", "published", "hashtags", "tools", "analytics", "inbox", "collabs", "config"] as const).map(t => (
           <button key={t} onClick={() => setTab(t)}
             className={`tab-pill${tab === t ? " active" : ""}`}>
-            {t === "dashboard" ? "Dashboard" : t === "calendar" ? "Calendar" : t === "scheduled" ? `Queue (${scheduledPosts.length})` : t === "published" ? "Published" : t === "hashtags" ? "Hashtags" : t === "tools" ? "AI Tools" : t === "analytics" ? "Analytics" : t === "inbox" ? "Inbox" : t === "collabs" ? "Collabs" : "Settings"}
+            {t === "dashboard" ? "Dashboard" : t === "calendar" ? "Calendar" : t === "scheduled" ? `Queue (${scheduledPosts.length})` : t === "published" ? "Published" : t === "hashtags" ? "Hashtags" : t === "tools" ? "AI Tools" : t === "analytics" ? "Analytics" : t === "inbox" ? "Tray" : t === "collabs" ? "Collabs" : "Gear"}
           </button>
         ))}
       </div>
@@ -713,7 +699,7 @@ export default function SocialManagerPage() {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-9 h-9 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center breathe">
-                    <Sparkles size={18} className="text-brand-accent" />
+                    <Sparkle size={18} className="text-brand-accent" />
                   </div>
                   <div>
                     <h2 className="text-sm font-semibold">Generate This Week</h2>
@@ -722,7 +708,7 @@ export default function SocialManagerPage() {
                 </div>
                 <button onClick={generateWeek} disabled={generating}
                   className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                  {generating ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                  {generating ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
                   {generating ? "Creating..." : "Generate Week"}
                 </button>
               </div>
@@ -743,17 +729,17 @@ export default function SocialManagerPage() {
                   const meta = s.metadata || {};
                   const typeIcon: Record<string, React.ReactNode> = {
                     short_video: <Video size={12} className="text-pink-400" />,
-                    carousel: <LayoutGrid size={12} className="text-brand-accent" />,
-                    script: <FileTextIcon size={12} className="text-yellow-400" />,
-                    reel: <Film size={12} className="text-brand-accent" />,
+                    carousel: <SquaresFour size={12} className="text-brand-accent" />,
+                    script: <FileText size={12} className="text-yellow-400" />,
+                    reel: <FilmStrip size={12} className="text-brand-accent" />,
                     story: <Camera size={12} className="text-orange-400" />,
-                    post: <MessageSquare size={12} className="text-green-400" />,
-                    thread: <FileTextIcon size={12} className="text-cyan-400" />,
+                    post: <Chat size={12} className="text-green-400" />,
+                    thread: <FileText size={12} className="text-cyan-400" />,
                   };
                   return (
                     <motion.div key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} whileHover={{ y: -4, scale: 1.01 }} className="glass rounded-xl p-2.5 hover:border-[rgba(212,255,0,0.1)] transition-all spotlight-card" onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}>
                       <div className="flex items-center gap-2 mb-1">
-                        {typeIcon[String(meta.type)] || <Sparkles size={12} className="text-brand-accent" />}
+                        {typeIcon[String(meta.type)] || <Sparkle size={12} className="text-brand-accent" />}
                         <span className="text-[10px] font-medium text-brand-accent uppercase">{String(meta.type || "").replace("_", " ")}</span>
                         <span className="text-[9px] text-text-muted ml-auto capitalize">{String(meta.platform || "")}</span>
                       </div>
@@ -803,7 +789,7 @@ export default function SocialManagerPage() {
                       </div>
                       <button onClick={() => publishPost(post)} disabled={posting === post.id}
                         className="btn-primary text-[9px] py-1 px-2.5 flex items-center gap-1 disabled:opacity-50">
-                        {posting === post.id ? <Loader size={10} className="animate-spin" /> : <Send size={10} />}
+                        {posting === post.id ? <CircleNotch size={10} className="animate-spin" /> : <PaperPlaneTilt size={10} />}
                         Post
                       </button>
                     </motion.div>
@@ -855,7 +841,7 @@ export default function SocialManagerPage() {
               <h2 className="text-sm font-semibold">Content Calendar ï¿½ This Week</h2>
               <button onClick={generateWeek} disabled={generating}
                 className="btn-primary text-xs flex items-center gap-1.5">
-                {generating ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                {generating ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
                 Fill Week with AI
               </button>
             </div>
@@ -908,7 +894,7 @@ export default function SocialManagerPage() {
             {/* Content pillars */}
             <div className="glass rounded-xl p-4">
               <h3 className="flex items-center gap-2 mb-3">
-                <Layers size={13} className="text-brand-accent" /> Content Pillars
+                <Stack size={13} className="text-brand-accent" /> Content Pillars
               </h3>
               <p className="text-[10px] text-text-muted mb-3">Balanced content strategy across different post types</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -924,7 +910,7 @@ export default function SocialManagerPage() {
                 ].map(pillar => (
                   <div key={pillar.name} className={`p-3 rounded-xl border border-border-subtle hover:border-[rgba(212,255,0,0.1)] transition-all`}>
                     <div className={`w-7 h-7 ${pillar.bg} rounded-lg flex items-center justify-center mb-1.5`}>
-                      <Sparkles size={12} className={pillar.color} />
+                      <Sparkle size={12} className={pillar.color} />
                     </div>
                     <p className="text-[10px] font-semibold">{pillar.name}</p>
                     <p className="text-[8px] text-text-muted">{pillar.desc}</p>
@@ -1010,7 +996,7 @@ export default function SocialManagerPage() {
           {/* Caption templates */}
           <div className="glass rounded-xl p-4">
             <h3 className="flex items-center gap-2 mb-3">
-              <FileTextIcon size={13} className="text-brand-accent" /> Caption Templates
+              <FileText size={13} className="text-brand-accent" /> Caption Templates
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {[
@@ -1070,7 +1056,7 @@ export default function SocialManagerPage() {
                     </div>
                     <button onClick={() => publishPost(post)} disabled={posting === post.id}
                       className="btn-primary text-[10px] py-1.5 px-3 flex items-center gap-1 shrink-0 disabled:opacity-50">
-                      {posting === post.id ? <Loader size={10} className="animate-spin" /> : <Send size={10} />}
+                      {posting === post.id ? <CircleNotch size={10} className="animate-spin" /> : <PaperPlaneTilt size={10} />}
                       Publish
                     </button>
                   </div>
@@ -1103,13 +1089,13 @@ export default function SocialManagerPage() {
         </div>
       )}
 
-      {/* Config / Autopilot Settings */}
+      {/* Config / Autopilot Gear */}
       {tab === "config" && (
         <div className="space-y-5">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {/* Content Generation Settings */}
+          {/* Content Generation Gear */}
           <div className="glass rounded-xl p-5 space-y-4">
-            <h2 className="text-sm font-semibold flex items-center gap-2"><Settings size={13} className="text-brand-accent" /> Content Settings</h2>
+            <h2 className="text-sm font-semibold flex items-center gap-2"><Gear size={13} className="text-brand-accent" /> Content Gear</h2>
 
             <div>
               <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Posts Per Day</label>
@@ -1157,7 +1143,7 @@ export default function SocialManagerPage() {
             <div className="glass rounded-xl p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <Bot size={16} className="text-brand-accent" />
+                  <Robot size={16} className="text-brand-accent" />
                   <h2 className="text-sm font-semibold">Social Autopilot</h2>
                 </div>
                 <button onClick={toggleAutopilot} disabled={savingConfig}
@@ -1173,16 +1159,16 @@ export default function SocialManagerPage() {
 
               <button onClick={runSocialAutopilot} disabled={runningAutopilot || !isAutopilot}
                 className="btn-primary w-full text-xs flex items-center justify-center gap-2 mb-4 disabled:opacity-50">
-                {runningAutopilot ? <><Loader size={12} className="animate-spin" /> Running...</> : <><Zap size={12} /> Run Autopilot Now</>}
+                {runningAutopilot ? <><CircleNotch size={12} className="animate-spin" /> Running...</> : <><Lightning size={12} /> Run Autopilot Now</>}
               </button>
 
               {/* Granular controls */}
               <div className="space-y-2">
                 <p className="text-[9px] text-text-muted font-semibold uppercase tracking-wider">Allowed Actions</p>
                 {[
-                  { key: "auto_generate_content", label: "Auto-generate content", desc: "AI creates posts when queue is low", icon: <Sparkles size={11} className="text-brand-accent" /> },
-                  { key: "auto_publish_scheduled", label: "Auto-publish on schedule", desc: "Publish posts when scheduled time arrives", icon: <Send size={11} className="text-brand-accent" /> },
-                  { key: "auto_reply_comments", label: "Auto-reply to comments", desc: "AI responds to comments & DMs", icon: <MessageSquare size={11} className="text-green-400" /> },
+                  { key: "auto_generate_content", label: "Auto-generate content", desc: "AI creates posts when queue is low", icon: <Sparkle size={11} className="text-brand-accent" /> },
+                  { key: "auto_publish_scheduled", label: "Auto-publish on schedule", desc: "Publish posts when scheduled time arrives", icon: <PaperPlaneTilt size={11} className="text-brand-accent" /> },
+                  { key: "auto_reply_comments", label: "Auto-reply to comments", desc: "AI responds to comments & DMs", icon: <Chat size={11} className="text-green-400" /> },
                   { key: "auto_hashtag_research", label: "Trending hashtag research", desc: "AI finds trending hashtags for posts", icon: <Hash size={11} className="text-brand-accent" /> },
                   { key: "require_approval", label: "Require approval before post", desc: "Posts go to queue for review first", icon: <Shield size={11} className="text-orange-400" /> },
                 ].map(toggle => (
@@ -1254,7 +1240,7 @@ export default function SocialManagerPage() {
 
             {/* How it works */}
             <div className="glass rounded-xl p-5">
-              <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Activity size={12} className="text-brand-accent" /> How Social Autopilot Works</h3>
+              <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Pulse size={12} className="text-brand-accent" /> How Social Autopilot Works</h3>
               <ol className="space-y-1 text-[10px] text-text-muted">
                 <li className="flex gap-2"><span className="text-brand-accent font-bold">1.</span> Checks if content queue is running low (less than 3 days ahead)</li>
                 <li className="flex gap-2"><span className="text-brand-accent font-bold">2.</span> AI generates platform-specific content based on your settings</li>
@@ -1275,14 +1261,14 @@ export default function SocialManagerPage() {
           {/* Sub-tabs */}
           <div className="flex flex-wrap gap-1.5">
             {([
-              { key: "repurpose", label: "Repurposer", icon: <RefreshCw size={11} /> },
-              { key: "ab-test", label: "A/B Tester", icon: <GitCompare size={11} /> },
-              { key: "viral", label: "Viral Score", icon: <Flame size={11} /> },
+              { key: "repurpose", label: "Repurposer", icon: <ArrowsClockwise size={11} /> },
+              { key: "ab-test", label: "A/B Tester", icon: <GitDiff size={11} /> },
+              { key: "viral", label: "Viral Score", icon: <Fire size={11} /> },
               { key: "bio", label: "Bio Optimizer", icon: <UserPlus size={11} /> },
               { key: "preview", label: "Post Preview", icon: <Eye size={11} /> },
-              { key: "bulk", label: "Bulk Scheduler", icon: <Upload size={11} /> },
+              { key: "bulk", label: "Bulk Scheduler", icon: <UploadSimple size={11} /> },
               { key: "carousel", label: "Carousel Builder", icon: <Columns size={11} /> },
-              { key: "story", label: "Story Planner", icon: <CircleDot size={11} /> },
+              { key: "story", label: "Story Planner", icon: <CircleDashed size={11} /> },
               { key: "linkinbio", label: "Link in Bio", icon: <Link size={11} /> },
               { key: "templates", label: "Caption Templates", icon: <BookOpen size={11} /> },
               { key: "recycler", label: "Content Recycler", icon: <Repeat size={11} /> },
@@ -1303,7 +1289,7 @@ export default function SocialManagerPage() {
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center">
-                    <RefreshCw size={16} className="text-brand-accent" />
+                    <ArrowsClockwise size={16} className="text-brand-accent" />
                   </div>
                   <div>
                     <h2 className="text-sm font-semibold">AI Content Repurposer</h2>
@@ -1330,7 +1316,7 @@ export default function SocialManagerPage() {
                   }, 1500);
                 }} disabled={repurposing || !repurposeInput.trim()}
                   className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                  {repurposing ? <Loader size={12} className="animate-spin" /> : <Wand2 size={12} />}
+                  {repurposing ? <CircleNotch size={12} className="animate-spin" /> : <MagicWand size={12} />}
                   {repurposing ? "Generating..." : "Repurpose for All Platforms"}
                 </button>
                 {repurposeResults.length> 0 && (
@@ -1363,7 +1349,7 @@ export default function SocialManagerPage() {
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-purple-400/10 rounded-lg flex items-center justify-center">
-                    <GitCompare size={16} className="text-brand-accent" />
+                    <GitDiff size={16} className="text-brand-accent" />
                   </div>
                   <div>
                     <h2 className="text-sm font-semibold">A/B Caption Tester</h2>
@@ -1393,7 +1379,7 @@ export default function SocialManagerPage() {
                   }, 1500);
                 }} disabled={generatingAB || !abTestInput.trim()}
                   className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                  {generatingAB ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                  {generatingAB ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
                   {generatingAB ? "Creating Variants..." : "Generate A/B Variants"}
                 </button>
                 {abVariants && (
@@ -1425,7 +1411,7 @@ export default function SocialManagerPage() {
               <div className="relative space-y-3">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-orange-400/10 rounded-lg flex items-center justify-center">
-                    <Flame size={16} className="text-orange-400" />
+                    <Fire size={16} className="text-orange-400" />
                   </div>
                   <div>
                     <h2 className="text-sm font-semibold">Viral Score Predictor</h2>
@@ -1457,7 +1443,7 @@ export default function SocialManagerPage() {
                   }, 2000);
                 }} disabled={scoringViral || !viralInput.trim()}
                   className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                  {scoringViral ? <Loader size={12} className="animate-spin" /> : <Flame size={12} />}
+                  {scoringViral ? <CircleNotch size={12} className="animate-spin" /> : <Fire size={12} />}
                   {scoringViral ? "Analyzing..." : "Predict Viral Score"}
                 </button>
                 {viralScore && (
@@ -1489,7 +1475,7 @@ export default function SocialManagerPage() {
                     <div className="space-y-1.5">
                       {viralScore.factors.map((f, i) => (
                         <div key={i} className="flex items-start gap-2 text-[10px]">
-                          <span className="text-brand-accent mt-0.5">{i < 3 ? <Check size={10} /> : <AlertCircle size={10} />}</span>
+                          <span className="text-brand-accent mt-0.5">{i < 3 ? <Check size={10} /> : <WarningCircle size={10} />}</span>
                           <span className="text-text-muted">{f}</span>
                         </div>
                       ))}
@@ -1532,7 +1518,7 @@ export default function SocialManagerPage() {
                   }, 1500);
                 }} disabled={generatingBio || !bioInput.trim()}
                   className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                  {generatingBio ? <Loader size={12} className="animate-spin" /> : <Wand2 size={12} />}
+                  {generatingBio ? <CircleNotch size={12} className="animate-spin" /> : <MagicWand size={12} />}
                   {generatingBio ? "Generating..." : "Generate Bio Options"}
                 </button>
                 {bioResults.length> 0 && (
@@ -1581,9 +1567,9 @@ export default function SocialManagerPage() {
                   <div className="p-2.5 bg-surface-light">
                     <div className="flex gap-3 mb-1.5">
                       <Heart size={14} className="text-text-muted" />
-                      <MessageSquare size={14} className="text-text-muted" />
-                      <Send size={14} className="text-text-muted" />
-                      <Share2 size={14} className="text-text-muted ml-auto" />
+                      <Chat size={14} className="text-text-muted" />
+                      <PaperPlaneTilt size={14} className="text-text-muted" />
+                      <ShareNetwork size={14} className="text-text-muted ml-auto" />
                     </div>
                     <p className="text-[9px] text-text-muted"><span className="font-semibold text-text-primary">your_brand</span> Your caption will appear here with hashtags...</p>
                   </div>
@@ -1598,8 +1584,8 @@ export default function SocialManagerPage() {
                     </div>
                     <div className="absolute right-2 bottom-3 flex flex-col gap-3 items-center">
                       <Heart size={16} className="text-white" />
-                      <MessageSquare size={16} className="text-white" />
-                      <Share2 size={16} className="text-white" />
+                      <Chat size={16} className="text-white" />
+                      <ShareNetwork size={16} className="text-white" />
                     </div>
                   </div>
                 </div>
@@ -1619,9 +1605,9 @@ export default function SocialManagerPage() {
                   </div>
                   <div className="bg-surface-light p-2 flex items-center justify-around border-t border-border-subtle text-[9px] text-text-muted">
                     <span className="flex items-center gap-1"><ThumbsUp size={10} /> Like</span>
-                    <span className="flex items-center gap-1"><MessageSquare size={10} /> Comment</span>
+                    <span className="flex items-center gap-1"><Chat size={10} /> Comment</span>
                     <span className="flex items-center gap-1"><Repeat size={10} /> Repost</span>
-                    <span className="flex items-center gap-1"><Send size={10} /> Send</span>
+                    <span className="flex items-center gap-1"><PaperPlaneTilt size={10} /> PaperPlaneTilt</span>
                   </div>
                 </div>
               </div>
@@ -1633,11 +1619,11 @@ export default function SocialManagerPage() {
             <div className="glass rounded-xl p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-green-400/10 rounded-lg flex items-center justify-center">
-                  <Upload size={16} className="text-green-400" />
+                  <UploadSimple size={16} className="text-green-400" />
                 </div>
                 <div>
                   <h2 className="text-sm font-semibold">Bulk Post Scheduler</h2>
-                  <p className="text-[10px] text-text-muted">Upload a CSV of posts to schedule all at once</p>
+                  <p className="text-[10px] text-text-muted">UploadSimple a CSV of posts to schedule all at once</p>
                 </div>
               </div>
               <div className="p-3 bg-surface-light rounded-xl border border-border-subtle">
@@ -1652,13 +1638,13 @@ export default function SocialManagerPage() {
                   toast.success(`${lines} posts queued for scheduling!`);
                   setBulkCsv("");
                 }} className="btn-primary text-xs flex items-center gap-1.5">
-                  <Upload size={12} /> Schedule All Posts
+                  <UploadSimple size={12} /> Schedule All Posts
                 </button>
                 <button onClick={() => {
                   const sample = `instagram, 2026-04-15, 09:00, "5 tips to grow your audience", "#growth #tips"\ntiktok, 2026-04-15, 12:00, "POV: Your first viral video", "#fyp #viral"\nlinkedin, 2026-04-16, 08:00, "Lessons from 10 years in business", "#leadership"`;
                   setBulkCsv(sample);
                 }} className="text-[10px] text-brand-accent hover:underline flex items-center gap-1">
-                  <FileTextIcon size={10} /> Load Sample CSV
+                  <FileText size={10} /> Load Sample CSV
                 </button>
               </div>
             </div>
@@ -1731,7 +1717,7 @@ export default function SocialManagerPage() {
             <div className="glass rounded-xl p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-pink-400/10 rounded-lg flex items-center justify-center">
-                  <CircleDot size={16} className="text-pink-400" />
+                  <CircleDashed size={16} className="text-pink-400" />
                 </div>
                 <div>
                   <h2 className="text-sm font-semibold">Story Planner</h2>
@@ -1740,7 +1726,7 @@ export default function SocialManagerPage() {
               </div>
               {storySlides.length === 0 ? (
                 <div className="text-center py-6">
-                  <CircleDot size={24} className="mx-auto mb-2 text-text-muted/30" />
+                  <CircleDashed size={24} className="mx-auto mb-2 text-text-muted/30" />
                   <p className="text-xs text-text-muted mb-2">No story slides yet. Add your first slide to start planning.</p>
                   <button onClick={() => setStorySlides([{ id: Date.now(), text: "", type: "text" }])}
                     className="btn-primary text-xs flex items-center gap-1.5 mx-auto">
@@ -1934,7 +1920,7 @@ export default function SocialManagerPage() {
                           setToolsSubTab("repurpose");
                           toast.success("Post loaded into repurposer!");
                         }} className="text-[9px] text-brand-accent flex items-center gap-1 hover:underline shrink-0">
-                          <RefreshCw size={9} /> Recycle
+                          <ArrowsClockwise size={9} /> Recycle
                         </button>
                       </div>
                     ))}
@@ -1951,12 +1937,12 @@ export default function SocialManagerPage() {
           {/* Sub-tabs */}
           <div className="flex flex-wrap gap-1.5">
             {([
-              { key: "engagement", label: "Engagement", icon: <TrendingUp size={11} /> },
-              { key: "heatmap", label: "Best Times Heatmap", icon: <Grid3X3 size={11} /> },
+              { key: "engagement", label: "Engagement", icon: <TrendUp size={11} /> },
+              { key: "heatmap", label: "Best Times Heatmap", icon: <SquaresFour size={11} /> },
               { key: "hashtags", label: "Hashtag Analytics", icon: <Hash size={11} /> },
-              { key: "growth", label: "Audience Growth", icon: <LineChart size={11} /> },
-              { key: "comparison", label: "Platform Compare", icon: <BarChart3 size={11} /> },
-              { key: "pillars", label: "Content Pillars", icon: <PieChart size={11} /> },
+              { key: "growth", label: "Audience Growth", icon: <ChartLine size={11} /> },
+              { key: "comparison", label: "Platform Compare", icon: <ChartBar size={11} /> },
+              { key: "pillars", label: "Content Pillars", icon: <ChartPie size={11} /> },
             ] as const).map(st => (
               <button key={st.key} onClick={() => setAnalyticsSubTab(st.key)}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
@@ -1972,7 +1958,7 @@ export default function SocialManagerPage() {
             <div className="space-y-3">
               <div className="glass rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <TrendingUp size={16} className="text-brand-accent" />
+                  <TrendUp size={16} className="text-brand-accent" />
                   <h2 className="text-sm font-semibold">Engagement Rate Calculator</h2>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-4">
@@ -2006,12 +1992,12 @@ export default function SocialManagerPage() {
           {analyticsSubTab === "heatmap" && (
             <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
-                <Grid3X3 size={16} className="text-brand-accent" />
+                <SquaresFour size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-semibold">Best Time to Post Heatmap</h2>
               </div>
               <p className="text-[10px] text-text-muted mb-3">Darker cells = higher engagement. Based on your audience activity patterns.</p>
               <div className="text-center py-8">
-                <Grid3X3 size={24} className="mx-auto mb-2 text-text-muted/30" />
+                <SquaresFour size={24} className="mx-auto mb-2 text-text-muted/30" />
                 <p className="text-xs text-text-muted">No engagement data yet. Publish content to generate your best-times heatmap.</p>
               </div>
             </div>
@@ -2036,12 +2022,12 @@ export default function SocialManagerPage() {
           {analyticsSubTab === "growth" && (
             <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
-                <LineChart size={16} className="text-brand-accent" />
+                <ChartLine size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-semibold">Audience Growth Tracker</h2>
               </div>
               <p className="text-[10px] text-text-muted mb-4">Track follower growth over time across all platforms</p>
               <div className="text-center py-8">
-                <LineChart size={24} className="mx-auto mb-2 text-text-muted/30" />
+                <ChartLine size={24} className="mx-auto mb-2 text-text-muted/30" />
                 <p className="text-xs text-text-muted">No audience growth data yet. Connect accounts and start posting to track growth.</p>
               </div>
             </div>
@@ -2051,12 +2037,12 @@ export default function SocialManagerPage() {
           {analyticsSubTab === "comparison" && (
             <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
-                <BarChart3 size={16} className="text-brand-accent" />
+                <ChartBar size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-semibold">Platform Analytics Comparison</h2>
               </div>
               <p className="text-[10px] text-text-muted mb-3">Side-by-side metrics across all your platforms</p>
               <div className="text-center py-8">
-                <BarChart3 size={24} className="mx-auto mb-2 text-text-muted/30" />
+                <ChartBar size={24} className="mx-auto mb-2 text-text-muted/30" />
                 <p className="text-xs text-text-muted">No platform comparison data yet. Publish content across platforms to see metrics.</p>
               </div>
             </div>
@@ -2066,13 +2052,13 @@ export default function SocialManagerPage() {
           {analyticsSubTab === "pillars" && (
             <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
-                <PieChart size={16} className="text-brand-accent" />
+                <ChartPie size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-semibold">Content Pillar Planner</h2>
               </div>
               <p className="text-[10px] text-text-muted mb-4">Visual breakdown of content categories with target vs actual percentages</p>
               {contentPillars.length === 0 ? (
                 <div className="text-center py-8">
-                  <PieChart size={24} className="mx-auto mb-2 text-text-muted/30" />
+                  <ChartPie size={24} className="mx-auto mb-2 text-text-muted/30" />
                   <p className="text-xs text-text-muted">No content pillar data yet. Publish content to see your category breakdown.</p>
                 </div>
               ) : (
@@ -2109,7 +2095,7 @@ export default function SocialManagerPage() {
                     <ul className="space-y-1">
                       {contentPillars.filter(p => p.actual < p.target).map(p => (
                         <li key={p.name} className="text-[9px] text-text-muted flex items-start gap-1.5">
-                          <AlertCircle size={9} className="text-orange-400 mt-0.5 shrink-0" />
+                          <WarningCircle size={9} className="text-orange-400 mt-0.5 shrink-0" />
                           <span>Increase <strong>{p.name}</strong> content by {p.target - p.actual}% to reach target</span>
                         </li>
                       ))}
@@ -2134,10 +2120,10 @@ export default function SocialManagerPage() {
           {/* Sub-tabs */}
           <div className="flex flex-wrap gap-1.5">
             {([
-              { key: "messages", label: "Social Inbox", icon: <Inbox size={11} /> },
-              { key: "listening", label: "Social Listening", icon: <Search size={11} /> },
-              { key: "ugc", label: "UGC Tracker", icon: <AtSign size={11} /> },
-              { key: "autoreplies", label: "Auto-Reply Rules", icon: <Reply size={11} /> },
+              { key: "messages", label: "Social Tray", icon: <Tray size={11} /> },
+              { key: "listening", label: "Social Listening", icon: <MagnifyingGlass size={11} /> },
+              { key: "ugc", label: "UGC Tracker", icon: <At size={11} /> },
+              { key: "autoreplies", label: "Auto-ArrowBendUpLeft Rules", icon: <ArrowBendUpLeft size={11} /> },
             ] as const).map(st => (
               <button key={st.key} onClick={() => setInboxSubTab(st.key)}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
@@ -2148,17 +2134,17 @@ export default function SocialManagerPage() {
             ))}
           </div>
 
-          {/* 9. Social Inbox */}
+          {/* 9. Social Tray */}
           {inboxSubTab === "messages" && (
             <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
-                <Inbox size={16} className="text-brand-accent" />
-                <h2 className="text-sm font-semibold">Social Inbox</h2>
+                <Tray size={16} className="text-brand-accent" />
+                <h2 className="text-sm font-semibold">Social Tray</h2>
                 <span className="ml-auto text-[9px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-2 py-0.5 rounded-full font-medium">0 unread</span>
               </div>
               <p className="text-[10px] text-text-muted mb-3">Unified view of DMs and comments across all platforms</p>
               <div className="text-center py-8">
-                <Inbox size={24} className="mx-auto mb-2 text-text-muted/30" />
+                <Tray size={24} className="mx-auto mb-2 text-text-muted/30" />
                 <p className="text-xs text-text-muted">No messages yet. DMs and comments will appear here.</p>
               </div>
             </div>
@@ -2168,7 +2154,7 @@ export default function SocialManagerPage() {
           {inboxSubTab === "listening" && (
             <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
-                <Search size={16} className="text-brand-accent" />
+                <MagnifyingGlass size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-semibold">Social Listening</h2>
               </div>
               <p className="text-[10px] text-text-muted mb-3">Monitor keywords and brand mentions across all platforms</p>
@@ -2190,7 +2176,7 @@ export default function SocialManagerPage() {
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {listeningKeywords.map(kw => (
                   <span key={kw} className="flex items-center gap-1 text-[10px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-2.5 py-1 rounded-lg border border-[rgba(212,255,0,0.2)]">
-                    <Search size={9} /> {kw}
+                    <MagnifyingGlass size={9} /> {kw}
                     <button onClick={() => setListeningKeywords(listeningKeywords.filter(k => k !== kw))}
                       className="ml-1 text-brand-accent/60 hover:text-brand-accent"><X size={9} /></button>
                   </span>
@@ -2207,7 +2193,7 @@ export default function SocialManagerPage() {
           {inboxSubTab === "ugc" && (
             <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
-                <AtSign size={16} className="text-brand-accent" />
+                <At size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-semibold">UGC Tracker</h2>
               </div>
               <p className="text-[10px] text-text-muted mb-3">Track user-generated content and brand mentions</p>
@@ -2235,17 +2221,17 @@ export default function SocialManagerPage() {
             </div>
           )}
 
-          {/* 23. Auto-Reply Rules */}
+          {/* 23. Auto-ArrowBendUpLeft Rules */}
           {inboxSubTab === "autoreplies" && (
             <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
-                <Reply size={16} className="text-brand-accent" />
-                <h2 className="text-sm font-semibold">Auto-Reply Rules</h2>
+                <ArrowBendUpLeft size={16} className="text-brand-accent" />
+                <h2 className="text-sm font-semibold">Auto-ArrowBendUpLeft Rules</h2>
               </div>
               <p className="text-[10px] text-text-muted mb-3">Set up automatic responses to common comments and DMs</p>
               {autoReplyRules.length === 0 ? (
                 <div className="text-center py-6">
-                  <Reply size={24} className="mx-auto mb-2 text-text-muted/30" />
+                  <ArrowBendUpLeft size={24} className="mx-auto mb-2 text-text-muted/30" />
                   <p className="text-xs text-text-muted mb-2">No auto-reply rules yet.</p>
                   <button onClick={() => {
                     setAutoReplyRules([{ id: Date.now(), trigger: "new keyword", response: "Your auto-reply message here...", active: false }]);
@@ -2300,7 +2286,7 @@ export default function SocialManagerPage() {
               { key: "competitors", label: "Competitors", icon: <Target size={11} /> },
               { key: "influencers", label: "Influencer Finder", icon: <Users size={11} /> },
               { key: "collabs", label: "Collab Manager", icon: <Handshake size={11} /> },
-              { key: "trending", label: "Trending Audio", icon: <Music2 size={11} /> },
+              { key: "trending", label: "Trending Audio", icon: <MusicNote size={11} /> },
             ] as const).map(st => (
               <button key={st.key} onClick={() => setCollabsSubTab(st.key)}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
@@ -2372,16 +2358,16 @@ export default function SocialManagerPage() {
                 <Users size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-semibold">Influencer Finder</h2>
               </div>
-              <p className="text-[10px] text-text-muted mb-3">Search for micro-influencers by niche to collaborate with</p>
+              <p className="text-[10px] text-text-muted mb-3">MagnifyingGlass for micro-influencers by niche to collaborate with</p>
               <div className="flex gap-2 mb-4">
                 <input value={influencerNiche} onChange={e => setInfluencerNiche(e.target.value)}
-                  className="input text-xs flex-1" placeholder="Search by niche (e.g., fitness, tech, food)..." aria-label="Search influencers by niche" />
+                  className="input text-xs flex-1" placeholder="MagnifyingGlass by niche (e.g., fitness, tech, food)..." aria-label="MagnifyingGlass influencers by niche" />
                 <button onClick={() => toast.success("Searching influencers...")}
-                  className="btn-primary text-xs flex items-center gap-1.5"><Search size={12} /> Search</button>
+                  className="btn-primary text-xs flex items-center gap-1.5"><MagnifyingGlass size={12} /> MagnifyingGlass</button>
               </div>
               <div className="text-center py-8">
                 <Users size={24} className="mx-auto mb-2 text-text-muted/30" />
-                <p className="text-xs text-text-muted">No influencer results yet. Search by niche above to find collaborators.</p>
+                <p className="text-xs text-text-muted">No influencer results yet. MagnifyingGlass by niche above to find collaborators.</p>
               </div>
             </div>
           )}
@@ -2435,12 +2421,12 @@ export default function SocialManagerPage() {
           {collabsSubTab === "trending" && (
             <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-3">
-                <Music2 size={16} className="text-brand-accent" />
+                <MusicNote size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-semibold">Trending Audio Finder</h2>
               </div>
               <p className="text-[10px] text-text-muted mb-3">Find trending TikTok and Reels sounds to use in your content</p>
               <div className="text-center py-8">
-                <Music2 size={24} className="mx-auto mb-2 text-text-muted/30" />
+                <MusicNote size={24} className="mx-auto mb-2 text-text-muted/30" />
                 <p className="text-xs text-text-muted">No trending audio data yet.</p>
               </div>
             </div>
@@ -2452,10 +2438,10 @@ export default function SocialManagerPage() {
       {tab === "calendar" && (
         <div className="glass rounded-xl p-4">
           <div className="flex items-center gap-2 mb-3">
-            <Download size={16} className="text-brand-accent" />
+            <DownloadSimple size={16} className="text-brand-accent" />
             <h2 className="text-sm font-semibold">Export Calendar</h2>
           </div>
-          <p className="text-[10px] text-text-muted mb-3">Download your content calendar in CSV or PDF format</p>
+          <p className="text-[10px] text-text-muted mb-3">DownloadSimple your content calendar in CSV or PDF format</p>
           <div className="flex gap-2">
             <button onClick={() => {
               const allPosts = [...scheduledPosts, ...recentPosts];
@@ -2469,12 +2455,12 @@ export default function SocialManagerPage() {
               URL.revokeObjectURL(url);
               toast.success("Calendar exported as CSV!");
             }} className="btn-primary text-xs flex items-center gap-1.5">
-              <Download size={12} /> Export CSV
+              <DownloadSimple size={12} /> Export CSV
             </button>
             <button onClick={() => {
               toast.success("PDF export coming soon!");
             }} className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-light text-text-muted border border-border-subtle hover:border-[rgba(212,255,0,0.1)] transition-all">
-              <FileTextIcon size={12} /> Export PDF
+              <FileText size={12} /> Export PDF
             </button>
           </div>
         </div>

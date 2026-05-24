@@ -1,16 +1,7 @@
+import { CheckCircle, Clock, Copy, Key, Plus, Shield, Trash, Warning } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
-import {
-  Key,
-  Copy,
-  CheckCircle,
-  AlertTriangle,
-  Trash2,
-  Clock,
-  Shield,
-  Plus,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 type Scope = "read" | "write" | "admin";
@@ -157,7 +148,7 @@ export default function ApiKeysPage() {
       </div>
     </div>{error && (
               <div className="glass rounded-xl p-3 border-red-500/30 bg-red-500/5 text-[11px] text-red-400 flex items-center gap-2">
-                <AlertTriangle size={13} />
+                <Warning size={13} />
                 <span>{error}</span>
               </div>
             )}{justCreatedKey && (
@@ -341,7 +332,7 @@ export default function ApiKeysPage() {
                           onClick={() => handleRevoke(k.id)}
                           className="text-[9px] px-2 py-1 rounded border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all flex items-center gap-1"
                         >
-                          <Trash2 size={9} />
+                          <Trash size={9} />
                           Revoke
                         </button>
                       )}

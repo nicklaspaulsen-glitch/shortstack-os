@@ -1,15 +1,10 @@
+import { ArrowRight, ArrowsClockwise, CaretRight, ChartBar, CheckCircle, Clock, Copy, CreditCard, FileText, Globe, Lightning, MagnifyingGlass, PaperPlaneTilt, Plus, Sparkle, Warning, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-import {
-  CreditCard, Plus, Send, Clock, CheckCircle, AlertTriangle,
-  FileText, RefreshCw,
-  BarChart3, Globe, Copy, ChevronRight,
-  X, Search, Zap, ArrowRight, Sparkles
-} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
@@ -125,11 +120,11 @@ export default function InvoicesPage() {
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
     { key: "all", label: "All Invoices", icon: <CreditCard size={14} /> },
     { key: "builder", label: "Invoice Builder", icon: <Plus size={14} /> },
-    { key: "recurring", label: "Recurring", icon: <RefreshCw size={14} /> },
+    { key: "recurring", label: "Recurring", icon: <ArrowsClockwise size={14} /> },
     { key: "reminders", label: "Reminders", icon: <Clock size={14} /> },
     { key: "templates", label: "Templates", icon: <FileText size={14} /> },
-    { key: "aging", label: "Aging Report", icon: <AlertTriangle size={14} /> },
-    { key: "revenue", label: "Revenue", icon: <BarChart3 size={14} /> },
+    { key: "aging", label: "Aging Report", icon: <Warning size={14} /> },
+    { key: "revenue", label: "Revenue", icon: <ChartBar size={14} /> },
   ];
 
   return (
@@ -146,7 +141,7 @@ export default function InvoicesPage() {
                       href="/dashboard/invoices/new"
                       className="btn-pill text-xs flex items-center gap-1.5"
                     >
-                      <Sparkles size={12} /> AI Smart Invoice
+                      <Sparkle size={12} /> AI Smart Invoice
                     </Link>
                   </motion.div>
                   <motion.button
@@ -160,7 +155,7 @@ export default function InvoicesPage() {
                 </div>
       </div>
     </div>{/* Loading note */}{loading && (
-              <p className="text-[11px] text-text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices…</p>
+              <p className="text-[11px] text-text-muted flex items-center gap-1.5"><ArrowsClockwise size={11} className="animate-spin" /> Loading invoices…</p>
             )}{/* Stats */}<div className="space-y-3 mb-4">
   <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr] gap-3">
     <motion.div
@@ -227,13 +222,13 @@ export default function InvoicesPage() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="relative flex-1 min-w-[200px]">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                    <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                     <input
                       value={search}
                       onChange={e => setSearch(e.target.value)}
                       className="glass rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-border-subtle focus:outline-none focus:ring-1 focus:ring-brand-accent/20 placeholder:text-text-muted/50" 
-                      placeholder="Search invoices..."
-                      aria-label="Search invoices"
+                      placeholder="MagnifyingGlass invoices..."
+                      aria-label="MagnifyingGlass invoices"
  />
                   </div>
                   <div className="tab-pill-strip">
@@ -281,7 +276,7 @@ export default function InvoicesPage() {
                                   inv.status === "paid" ? "bg-emerald-400/10" : isOverdue ? "bg-rose-400/10" : inv.status === "draft" ? "bg-surface" : "bg-amber-400/10"
                                 }`}>
                                   {inv.status === "paid" ? <CheckCircle size={16} className="text-emerald-400" /> :
-                                   isOverdue ? <AlertTriangle size={16} className="text-rose-400" /> :
+                                   isOverdue ? <Warning size={16} className="text-rose-400" /> :
                                    inv.status === "draft" ? <FileText size={16} className="text-text-muted" /> :
                                    <Clock size={16} className="text-amber-400" />}
                                 </div>
@@ -289,7 +284,7 @@ export default function InvoicesPage() {
                                   <div className="flex items-center gap-2">
                                     <p className="text-sm font-semibold">{inv.client}</p>
                                     <span className="text-[8px] font-mono text-text-muted">{inv.id}</span>
-                                    {inv.recurring && <RefreshCw size={8} className="text-brand-accent" />}
+                                    {inv.recurring && <ArrowsClockwise size={8} className="text-brand-accent" />}
                                     {inv.currency !== "USD" && <Globe size={8} className="text-indigo-400" />}
                                   </div>
                                   <p className="text-[10px] text-text-muted">{inv.description}</p>
@@ -307,7 +302,7 @@ export default function InvoicesPage() {
                                   inv.status === "sent" ? "bg-indigo-400/10 text-indigo-400 border border-indigo-400/20" :
                                   "bg-amber-400/10 text-amber-400 border border-amber-400/20"
                                 }`}>{isOverdue ? "overdue" : inv.status}</span>
-                                <ChevronRight size={14} className="text-text-muted" />
+                                <CaretRight size={14} className="text-text-muted" />
                               </div>
                             </motion.div>
                             {expandedInvoice === inv.id && (
@@ -436,7 +431,7 @@ export default function InvoicesPage() {
                         </div>
                       </div>
                       <Link href="/dashboard/billing" className="btn-primary w-full text-xs mt-4 flex items-center justify-center gap-1.5">
-                        <Send size={12} /> Create in Stripe portal
+                        <PaperPlaneTilt size={12} /> Create in Stripe portal
                       </Link>
                       <button
                         onClick={() => toast("Draft invoices save to Stripe. Open /dashboard/billing ? Manage subscription to draft there.", { icon: "??", duration: 6000 })}
@@ -448,7 +443,7 @@ export default function InvoicesPage() {
                     {/* Quick Invoice from Proposal */}
                     <PrismPanel padding="p-4">
                       <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
-                        <Zap size={12} className="text-brand-accent" /> Quick Invoice
+                        <Lightning size={12} className="text-brand-accent" /> Quick Invoice
                       </h4>
                       <p className="text-[9px] text-text-muted mb-3">Generate invoice from an accepted proposal</p>
                       <select className="input w-full text-xs mb-2">
@@ -478,7 +473,7 @@ export default function InvoicesPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <RefreshCw size={14} className="text-brand-accent" /> Recurring Invoices
+                    <ArrowsClockwise size={14} className="text-brand-accent" /> Recurring Invoices
                   </h3>
                   <Link href="/dashboard/clients" className="btn-primary text-xs flex items-center gap-1.5">
                     <Plus size={12} /> Add Recurring
@@ -487,7 +482,7 @@ export default function InvoicesPage() {
                 <div className="space-y-2">
                   {invoicesData.filter(i => i.recurring).length === 0 ? (
                     <PrismPanel padding="py-8 px-4" className="text-center">
-                      <RefreshCw size={20} className="mx-auto mb-2 text-text-muted/30" />
+                      <ArrowsClockwise size={20} className="mx-auto mb-2 text-text-muted/30" />
                       <p className="text-xs text-text-muted">No recurring invoices yet</p>
                     </PrismPanel>
                   ) : invoicesData.filter(i => i.recurring).map((inv, index) => (
@@ -499,7 +494,7 @@ export default function InvoicesPage() {
                       className="glass rounded-xl p-4 flex items-center justify-between border border-border-subtle" 
 >
                       <div className="flex items-center gap-3">
-                        <RefreshCw size={14} className="text-brand-accent" />
+                        <ArrowsClockwise size={14} className="text-brand-accent" />
                         <div>
                           <p className="text-xs font-semibold">{inv.client}</p>
                           <p className="text-[10px] text-text-muted">{inv.description}</p>
@@ -565,7 +560,7 @@ export default function InvoicesPage() {
                 {/* Currently overdue */}
                 <PrismPanel padding="p-4">
                   <h4 className="text-xs font-semibold mb-3 flex items-center gap-2 text-rose-400">
-                    <AlertTriangle size={12} /> Currently Overdue
+                    <Warning size={12} /> Currently Overdue
                   </h4>
                   <div className="space-y-1.5">
                     {invoicesData.filter(i => i.status === "overdue").length === 0 ? (
@@ -580,7 +575,7 @@ export default function InvoicesPage() {
                           <p className="font-bold text-rose-400">{formatCurrency(inv.amount)}</p>
                           <button
                             onClick={() => toast("Automated reminders are coming. For now, contact the client directly or use Stripe's payment reminder emails.", { icon: "??", duration: 6000 })}
-                            className="text-[9px] px-2 py-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.14)]">Send Reminder</button>
+                            className="text-[9px] px-2 py-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.14)]">PaperPlaneTilt Reminder</button>
                         </div>
                       </div>
                     ))}
@@ -635,7 +630,7 @@ export default function InvoicesPage() {
             )}{/* ===== AGING REPORT ===== */}{activeTab === "aging" && (
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <AlertTriangle size={14} className="text-brand-accent" /> Accounts Receivable Aging
+                  <Warning size={14} className="text-brand-accent" /> Accounts Receivable Aging
                 </h3>
                 <div className="grid grid-cols-5 gap-3">
                   {[
@@ -707,7 +702,7 @@ export default function InvoicesPage() {
             )}{/* ===== REVENUE SUMMARY ===== */}{activeTab === "revenue" && (
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <BarChart3 size={14} className="text-brand-accent" /> Revenue Summary
+                  <ChartBar size={14} className="text-brand-accent" /> Revenue Summary
                 </h3>
                 <div className="grid grid-cols-3 gap-4">
                   {[

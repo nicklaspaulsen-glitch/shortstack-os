@@ -1,7 +1,7 @@
 "use client";
+import { Crosshair, Eye } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
-import { Focus, Eye } from "lucide-react";
 
 const STORAGE_KEY = "ss_dashboard_focus_mode";
 
@@ -37,8 +37,8 @@ export function FocusModeToggle({ focus, onToggle }: { focus: boolean; onToggle:
           : "bg-surface border-border-subtle text-text-muted hover:border-[rgba(212,255,0,0.2)] hover:text-text-primary"
       }`}
     >
-      {focus ? <Focus size={12} /> : <Eye size={12} />}
-      {focus ? "Focus Mode" : "Focus"}
+      {focus ? <Crosshair size={12} /> : <Eye size={12} />}
+      {focus ? "Crosshair Mode" : "Crosshair"}
     </button>
   );
 }

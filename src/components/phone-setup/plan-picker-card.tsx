@@ -1,4 +1,5 @@
 "use client";
+import { Chat, CircleNotch, Crown, Microphone, Phone, TrendUp } from "@phosphor-icons/react";
 
 /**
  * Plan Picker Card — sits at the top of /dashboard/phone-setup. Shows the
@@ -12,7 +13,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { Phone, MessageSquare, Mic, TrendingUp, Loader, Crown } from "lucide-react";
+
 
 interface UsagePayload {
   plan_tier: string;
@@ -67,7 +68,7 @@ export default function PlanPickerCard() {
     return (
       <div className=" p-5 bg-card border border-border-subtle">
         <div className="flex items-center gap-2 text-sm text-text-muted">
-          <Loader size={14} className="animate-spin" /> Checking your plan…
+          <CircleNotch size={14} className="animate-spin" /> Checking your plan…
         </div>
       </div>
     );
@@ -145,9 +146,9 @@ export default function PlanPickerCard() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-4">
           {[
             { Icon: Phone, label: "Numbers", value: features.numbers },
-            { Icon: Mic, label: "Voice", value: features.minutes },
-            { Icon: MessageSquare, label: "SMS", value: features.sms },
-            { Icon: TrendingUp, label: "AI", value: features.ai },
+            { Icon: Microphone, label: "Voice", value: features.minutes },
+            { Icon: Chat, label: "SMS", value: features.sms },
+            { Icon: TrendUp, label: "AI", value: features.ai },
           ].map((row) => (
             <div
               key={row.label}

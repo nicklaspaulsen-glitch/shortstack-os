@@ -1,10 +1,7 @@
 "use client";
+import { CheckCircle, CircleNotch, Microphone, MicrophoneSlash, Phone, PhoneCall, PhoneDisconnect, Plus, ShieldWarning, SkipForward, Trash, Voicemail, Warning, X } from "@phosphor-icons/react";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  Phone, PhoneCall, PhoneOff, SkipForward, Loader2, AlertTriangle,
-  CheckCircle, Mic, MicOff, Voicemail, X, Plus, Trash2, ShieldAlert,
-} from "lucide-react";
 import StatCard from "@/components/ui/stat-card";
 import VoicePicker from "@/components/voice/VoicePicker";
 
@@ -60,9 +57,9 @@ const DISPOSITION_LABELS: Record<Disposition, string> = {
 const DISPOSITION_ICONS: Record<Disposition, React.ReactNode> = {
   connected: <CheckCircle size={14} />,
   voicemail: <Voicemail size={14} />,
-  no_answer: <PhoneOff size={14} />,
+  no_answer: <PhoneDisconnect size={14} />,
   wrong_number: <X size={14} />,
-  do_not_call: <AlertTriangle size={14} />,
+  do_not_call: <Warning size={14} />,
   other: <Phone size={14} />,
 };
 
@@ -392,7 +389,7 @@ export default function DialerTab() {
     <div className="space-y-6">
       {tokenError && (
         <div className="flex items-start gap-3 rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-400">
-          <AlertTriangle size={18} className="mt-0.5 flex-shrink-0" />
+          <Warning size={18} className="mt-0.5 flex-shrink-0" />
           <div>
             <div className="font-medium">Voice not ready</div>
             <div className="mt-1 text-amber-400/80">{tokenError}</div>
@@ -433,7 +430,7 @@ export default function DialerTab() {
               onChange={(e) => setTcpaAccepted(e.target.checked)}
               className="h-3 w-3 rounded border border-border-subtle bg-white/5 text-amber-500 focus:ring-amber-400"
             />
-            <ShieldAlert size={12} className="text-amber-600" />
+            <ShieldWarning size={12} className="text-amber-600" />
             TCPA disclosure spoken (if cloned voice in use)
           </label>
         </div>
@@ -504,7 +501,7 @@ export default function DialerTab() {
                       className="ml-2 text-text-muted hover:text-text-primary"
                       aria-label={`Remove ${c.name}`}
                     >
-                      <Trash2 size={12} />
+                      <Trash size={12} />
                     </button>
                   </li>
                 ))}
@@ -575,14 +572,14 @@ export default function DialerTab() {
                         onClick={hangUp}
                         className="flex items-center gap-2 rounded-lg bg-rose-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-rose-500"
                       >
-                        <PhoneOff size={14} /> Hang up
+                        <PhoneDisconnect size={14} /> Hang up
                       </button>
                       <button
                         type="button"
                         onClick={toggleMute}
                         className="flex items-center gap-2 rounded-lg border border-border-subtle bg-white/8 px-4 py-2 text-sm font-medium text-text-primary hover:bg-white/12"
                       >
-                        {muted ? <MicOff size={14} /> : <Mic size={14} />}
+                        {muted ? <MicrophoneSlash size={14} /> : <Microphone size={14} />}
                         {muted ? "Unmute" : "Mute"}
                       </button>
                     </>
@@ -644,12 +641,12 @@ function CallStatusBadge({ status }: { status: CallStatus }) {
     connecting: {
       label: "Connecting",
       cls: "bg-amber-500/15 text-amber-400",
-      icon: <Loader2 size={12} className="animate-spin" />,
+      icon: <CircleNotch size={12} className="animate-spin" />,
     },
     ringing: {
       label: "Ringing",
       cls: "bg-amber-500/15 text-amber-400",
-      icon: <Loader2 size={12} className="animate-spin" />,
+      icon: <CircleNotch size={12} className="animate-spin" />,
     },
     in_progress: {
       label: "Live",

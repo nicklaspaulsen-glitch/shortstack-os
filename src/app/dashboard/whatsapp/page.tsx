@@ -1,13 +1,10 @@
+import { Calendar, CaretDown, ChatCircle, CheckCircle, CircleNotch, Clock, PaperPlaneTilt, Phone, Plus, Tray, Users, WarningCircle, X, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import {
-  MessageCircle, Plus, Send, Clock, CheckCircle2, XCircle, Loader2,
-  Users, AlertCircle, Calendar, X, ChevronDown, Phone, Inbox,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -54,8 +51,8 @@ interface Client {
 const STATUS_CONFIG = {
   draft: { label: "Draft", color: "text-text-muted", bg: "bg-white/5", icon: <Clock className="w-3.5 h-3.5" /> },
   scheduled: { label: "Scheduled", color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]", icon: <Calendar className="w-3.5 h-3.5" /> },
-  sending: { label: "Sending", color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]", icon: <Loader2 className="w-3.5 h-3.5 animate-spin" /> },
-  sent: { label: "Sent", color: "text-emerald-400", bg: "bg-emerald-400/10", icon: <CheckCircle2 className="w-3.5 h-3.5" /> },
+  sending: { label: "Sending", color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.08)]", icon: <CircleNotch className="w-3.5 h-3.5 animate-spin" /> },
+  sent: { label: "Sent", color: "text-emerald-400", bg: "bg-emerald-400/10", icon: <CheckCircle className="w-3.5 h-3.5" /> },
   failed: { label: "Failed", color: "text-red-400", bg: "bg-red-400/10", icon: <XCircle className="w-3.5 h-3.5" /> },
 };
 
@@ -185,7 +182,7 @@ export default function WhatsAppPage() {
             .from("whatsapp_campaigns")
             .update({ status: "failed", sent_at: new Date().toISOString() })
             .eq("id", camp.id);
-          toast.error(json.error || "Send failed");
+          toast.error(json.error || "PaperPlaneTilt failed");
         } else {
           // server already updated campaign status; surface counts
           const { sent, failed } = json as { sent: number; failed: number };
@@ -214,7 +211,7 @@ export default function WhatsAppPage() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-brand-accent" /></MotionPage>
+      <MotionPage className="flex items-center justify-center min-h-[60vh]"><CircleNotch className="w-8 h-8 animate-spin text-brand-accent" /></MotionPage>
     );
   }
 
@@ -244,7 +241,7 @@ export default function WhatsAppPage() {
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/8">
               <div className="flex items-center gap-2">
-                <MessageCircle className="w-5 h-5 text-[#25D366]" />
+                <ChatCircle className="w-5 h-5 text-[#25D366]" />
                 <p className="font-semibold text-text-primary">New WhatsApp Campaign</p>
               </div>
               <button onClick={resetCompose} className="text-text-muted hover:text-text-primary">
@@ -334,7 +331,7 @@ export default function WhatsAppPage() {
                 />
                 {message.length > WARN_LEN && (
                   <div className="flex items-center gap-1.5 text-xs text-brand-accent">
-                    <AlertCircle className="w-3.5 h-3.5" />
+                    <WarningCircle className="w-3.5 h-3.5" />
                     Messages over {WARN_LEN} chars may be split into multiple segments
                   </div>
                 )}
@@ -374,13 +371,13 @@ export default function WhatsAppPage() {
                 className="flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold bg-[#25D366] hover:bg-[#20b858] text-white transition-all disabled:opacity-60"
               >
                 {sending ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <CircleNotch className="w-4 h-4 animate-spin" />
                 ) : scheduleAt ? (
                   <Calendar className="w-4 h-4" />
                 ) : (
-                  <Send className="w-4 h-4" />
+                  <PaperPlaneTilt className="w-4 h-4" />
                 )}
-                {sending ? "Sending�" : scheduleAt ? "Schedule Campaign" : "Send Now"}
+                {sending ? "Sending�" : scheduleAt ? "Schedule Campaign" : "PaperPlaneTilt Now"}
               </button>
             </div>
           </div>
@@ -390,9 +387,9 @@ export default function WhatsAppPage() {
       {/* Tabs */}
       <div className="flex items-center gap-1 border-b border-white/8">
         {([
-          { id: "campaigns" as const, label: "Campaigns", icon: <Send className="w-3.5 h-3.5" /> },
+          { id: "campaigns" as const, label: "Campaigns", icon: <PaperPlaneTilt className="w-3.5 h-3.5" /> },
           { id: "numbers" as const, label: "Numbers", icon: <Phone className="w-3.5 h-3.5" /> },
-          { id: "inbox" as const, label: "Inbox", icon: <Inbox className="w-3.5 h-3.5" /> },
+          { id: "inbox" as const, label: "Tray", icon: <Tray className="w-3.5 h-3.5" /> },
         ]).map((t) => (
           <button
             key={t.id}
@@ -459,7 +456,7 @@ export default function WhatsAppPage() {
           <p className="text-sm font-semibold text-text-secondary">Recent Conversations</p>
           {conversations.length === 0 ? (
             <div className="rounded-xl border-2 border-dashed border-white/8 flex flex-col items-center justify-center py-10 gap-2 text-center">
-              <Inbox className="w-8 h-8 text-text-muted" />
+              <Tray className="w-8 h-8 text-text-muted" />
               <p className="text-text-muted text-sm">No conversations yet</p>
               <p className="text-text-muted text-xs max-w-md">
                 Inbound WhatsApp messages appear here once your account is wired
@@ -559,7 +556,7 @@ export default function WhatsAppPage() {
         <p className="text-sm font-semibold text-text-secondary">Past Campaigns</p>
         {campaigns.length === 0 ? (
           <div className="rounded-xl border-2 border-dashed border-white/8 flex flex-col items-center justify-center py-14 gap-3 text-center">
-            <MessageCircle className="w-10 h-10 text-text-muted" />
+            <ChatCircle className="w-10 h-10 text-text-muted" />
             <p className="text-text-muted text-sm">No campaigns yet</p>
             <button
               onClick={() => setShowCompose(true)}
@@ -602,7 +599,7 @@ export default function WhatsAppPage() {
                       : `Created ${new Date(c.created_at).toLocaleDateString()}`}
                   </p>
                 </div>
-                <ChevronDown className="w-4 h-4 text-text-muted shrink-0 -rotate-90" />
+                <CaretDown className="w-4 h-4 text-text-muted shrink-0 -rotate-90" />
               </motion.div>
             ))}
           </div>

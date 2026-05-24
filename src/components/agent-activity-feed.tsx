@@ -1,12 +1,9 @@
 "use client";
+import { Camera, CheckCircle, Clock, FilmStrip, Globe, Lightning, MagnifyingGlass, Megaphone, PaperPlaneTilt, Phone, Robot, Sparkle, XCircle } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { formatRelativeTime } from "@/lib/utils";
-import {
-  Search, Send, Film, Camera, Megaphone, Zap, Bot, Phone,
-  Globe, CheckCircle, XCircle, Clock, Sparkles
-} from "lucide-react";
 
 interface AgentLog {
   id: string;
@@ -18,16 +15,16 @@ interface AgentLog {
 }
 
 const AGENT_MAP: Record<string, { name: string; icon: React.ReactNode; color: string }> = {
-  lead_gen: { name: "Scout", icon: <Search size={10} />, color: "text-[#D4FF00]" },
-  automation: { name: "Nexus", icon: <Zap size={10} />, color: "text-purple-400" },
+  lead_gen: { name: "Scout", icon: <MagnifyingGlass size={10} />, color: "text-[#D4FF00]" },
+  automation: { name: "Nexus", icon: <Lightning size={10} />, color: "text-purple-400" },
   website: { name: "Pixel", icon: <Globe size={10} />, color: "text-cyan-400" },
-  custom: { name: "Trinity", icon: <Bot size={10} />, color: "text-[#D4FF00]" },
+  custom: { name: "Trinity", icon: <Robot size={10} />, color: "text-[#D4FF00]" },
   ai_receptionist: { name: "Ring", icon: <Phone size={10} />, color: "text-green-400" },
-  content: { name: "Pixel", icon: <Film size={10} />, color: "text-pink-400" },
-  outreach: { name: "Echo", icon: <Send size={10} />, color: "text-indigo-400" },
+  content: { name: "Pixel", icon: <FilmStrip size={10} />, color: "text-pink-400" },
+  outreach: { name: "Echo", icon: <PaperPlaneTilt size={10} />, color: "text-indigo-400" },
   social: { name: "Wave", icon: <Camera size={10} />, color: "text-emerald-400" },
   ads: { name: "Blaze", icon: <Megaphone size={10} />, color: "text-amber-400" },
-  insights: { name: "Nexus", icon: <Sparkles size={10} />, color: "text-purple-400" },
+  insights: { name: "Nexus", icon: <Sparkle size={10} />, color: "text-purple-400" },
 };
 
 const STATUS_ICONS: Record<string, React.ReactNode> = {
@@ -72,7 +69,7 @@ export default function AgentActivityFeed({ clientId }: { clientId?: string | nu
       </div>
       <div className="space-y-1 max-h-[300px] overflow-y-auto">
         {logs.map((log, i) => {
-          const agent = AGENT_MAP[log.action_type] || { name: "Agent", icon: <Bot size={10} />, color: "text-text-muted" };
+          const agent = AGENT_MAP[log.action_type] || { name: "Agent", icon: <Robot size={10} />, color: "text-text-muted" };
           return (
             <div key={log.id} className={`flex items-start gap-2 py-1.5 ${i < logs.length - 1 ? "border-b border-border-subtle/10" : ""}`}
               style={{ animationDelay: `${i * 0.05}s` }}>

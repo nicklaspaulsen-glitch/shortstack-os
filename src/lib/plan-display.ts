@@ -120,7 +120,7 @@ export function getTierFeatures(tier: PlanTier): string[] {
         callMinutes,
         team,
         phones,
-        "API access + Webhooks",
+        "API access + PlugsConnected",
         upload,
         "Advanced analytics",
         "Priority support",

@@ -1,6 +1,7 @@
 "use client";
+import { Briefcase, CurrencyDollar, Target, TrendUp } from "@phosphor-icons/react";
 
-import { Briefcase, DollarSign, Target, TrendingUp } from "lucide-react";
+
 import StatCard from "@/components/ui/stat-card";
 import type { KpiBlock } from "./types";
 
@@ -47,7 +48,7 @@ export default function KpiStrip({ kpis }: Props) {
       label: "Leads / week",
       value: kpis.leadsThisWeek,
       sparkline: kpis.leadsSpark,
-      icon: <TrendingUp size={14} />,
+      icon: <TrendUp size={14} />,
       progress: Math.round((kpis.leadsThisWeek / GOALS.leadsPerWeek) * 100),
     },
     {
@@ -61,7 +62,7 @@ export default function KpiStrip({ kpis }: Props) {
       label: "MRR",
       value: fmtMoney(kpis.mrr),
       sparkline: kpis.mrrSpark,
-      icon: <DollarSign size={14} />,
+      icon: <CurrencyDollar size={14} />,
       progress: Math.round((kpis.mrr / GOALS.mrr) * 100),
     },
   ];

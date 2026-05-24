@@ -1,14 +1,8 @@
+import { CheckCircle, Clock, Copy, Database, DownloadSimple, Envelope, Eye, Gear, Lock, MagnifyingGlass, Pencil, Pulse, Shield, SignIn, Trash, UserPlus, Warning, WarningCircle, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Activity, Search, Download, CheckCircle, AlertTriangle,
-  Clock, Settings,
-  Shield, Lock, Eye, Database,
-  LogIn, Pencil, Trash2,
-  Mail, UserPlus, AlertCircle, X, Copy
-} from "lucide-react";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -42,13 +36,13 @@ interface SecurityAlert {
 }
 
 const ACTION_STYLES: Record<ActionType, { icon: React.ReactNode; label: string; color: string }> = {
-  login: { icon: <LogIn size={11} />, label: "Login", color: "text-brand-accent" },
+  login: { icon: <SignIn size={11} />, label: "Login", color: "text-brand-accent" },
   create: { icon: <UserPlus size={11} />, label: "Create", color: "text-emerald-400" },
   update: { icon: <Pencil size={11} />, label: "Update", color: "text-brand-accent" },
-  delete: { icon: <Trash2 size={11} />, label: "Delete", color: "text-red-400" },
-  export: { icon: <Download size={11} />, label: "Export", color: "text-brand-accent" },
-  send: { icon: <Mail size={11} />, label: "Send", color: "text-pink-400" },
-  config: { icon: <Settings size={11} />, label: "Config Change", color: "text-brand-accent" },
+  delete: { icon: <Trash size={11} />, label: "Delete", color: "text-red-400" },
+  export: { icon: <DownloadSimple size={11} />, label: "Export", color: "text-brand-accent" },
+  send: { icon: <Envelope size={11} />, label: "Send", color: "text-pink-400" },
+  config: { icon: <Gear size={11} />, label: "Config Change", color: "text-brand-accent" },
 };
 
 const SEVERITY_STYLES: Record<string, string> = {
@@ -204,22 +198,22 @@ export default function AuditPage() {
   }
 
   const TABS: { id: AuditTab; label: string; icon: React.ReactNode; badge?: number }[] = [
-    { id: "trail", label: "Audit Trail", icon: <Activity size={13} /> },
+    { id: "trail", label: "Audit Trail", icon: <Pulse size={13} /> },
     { id: "security", label: "Security Alerts", icon: <Shield size={13} />, badge: stats.unresolvedAlerts },
     { id: "retention", label: "Retention", icon: <Clock size={13} /> },
-    { id: "export", label: "Export", icon: <Download size={13} /> },
+    { id: "export", label: "Export", icon: <DownloadSimple size={13} /> },
   ];
 
   return (
     <MotionPage className="space-y-5">{/* -- Audit Log command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Activity &amp; Audit</p>
+        <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Pulse &amp; Audit</p>
         <h1 className="text-2xl font-display font-bold text-text-primary">Audit Log</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5">
-                  <Download size={12} /> Export CSV
+                  <DownloadSimple size={12} /> Export CSV
                 </button>
       </div>
     </div>{/* Stats */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
@@ -267,9 +261,9 @@ export default function AuditPage() {
                 {/* Filters */}
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="relative flex-1 min-w-[200px] max-w-sm">
-                    <Search size={11} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
+                    <MagnifyingGlass size={11} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                     <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                      placeholder="Search actions, users, resources..." className="input w-full pl-7 text-xs py-1.5" />
+                      placeholder="MagnifyingGlass actions, users, resources..." className="input w-full pl-7 text-xs py-1.5" />
                   </div>
 
                   {/* Action type filter */}
@@ -325,7 +319,7 @@ export default function AuditPage() {
                     <tbody>
                       {filtered.length === 0 && (
                         <tr><td colSpan={7} className="text-center py-12">
-                          <Activity size={28} className="mx-auto mb-2 text-text-muted/30" />
+                          <Pulse size={28} className="mx-auto mb-2 text-text-muted/30" />
                           <p className="text-sm text-text-muted">{loading ? "Loading audit entries..." : "No audit entries yet."}</p>
                         </td></tr>
                       )}
@@ -359,7 +353,7 @@ export default function AuditPage() {
                                 entry.status === "failed" ? "bg-red-500/10 text-red-400" :
                                 "bg-[rgba(212,255,0,0.08)] text-brand-accent"
                               }`}>
-                                {entry.status === "success" ? <CheckCircle size={8} /> : entry.status === "failed" ? <AlertTriangle size={8} /> : <Clock size={8} />}
+                                {entry.status === "success" ? <CheckCircle size={8} /> : entry.status === "failed" ? <Warning size={8} /> : <Clock size={8} />}
                                 {entry.status}
                               </span>
                             </td>
@@ -437,7 +431,7 @@ export default function AuditPage() {
                     {alerts.filter(a => !a.resolved).map(alert => (
                       <div key={alert.id} className={`p-3 rounded-lg border ${SEVERITY_STYLES[alert.severity]}`}>
                         <div className="flex items-start gap-3">
-                          <AlertCircle size={14} className="shrink-0 mt-0.5" />
+                          <WarningCircle size={14} className="shrink-0 mt-0.5" />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-0.5">
                               <span className="text-[9px] uppercase font-bold">{alert.severity}</span>
@@ -583,7 +577,7 @@ export default function AuditPage() {
               </div>
             )}{/* ═══ EXPORT TAB ═══ */}{tab === "export" && (
               <PrismPanel padding="p-4">
-                <h2 className="flex items-center gap-2"><Download size={13} className="text-brand-accent" /> Export Audit Report</h2>
+                <h2 className="flex items-center gap-2"><DownloadSimple size={13} className="text-brand-accent" /> Export Audit Report</h2>
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -628,7 +622,7 @@ export default function AuditPage() {
                     Estimated export size: <span className="font-bold text-brand-accent">{exportFiltered.length} entries</span> ({(exportFiltered.length * 0.2).toFixed(1)} KB)
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5"><Download size={12} /> Export</button>
+                    <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5"><DownloadSimple size={12} /> Export</button>
                     <button
                       onClick={async () => {
                         const rows = exportFiltered.length > 0 ? exportFiltered : filtered;

@@ -849,7 +849,7 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
   },
   {
     id: "creator_emma_chamberlain",
-    name: "Emma Chamberlain Film Grain",
+    name: "Emma Chamberlain FilmStrip Grain",
     category: "lifestyle",
     description: "Emma with Chamberlain coffee, faded film, fisheye bedroom, gen-Z mess.",
     promptModifier:

@@ -1,3 +1,4 @@
+import { ArrowRight, ArrowsClockwise, ArrowsDownUp, Bell, Bookmark, CalendarCheck, Camera, CaretDown, CaretUp, ChartBar, Chat, ChatCircle, CheckSquare, Clock, Coins, Columns, DownloadSimple, Envelope, Eye, EyeSlash, Funnel, Globe, Hash, Lightning, List, MagnifyingGlass, PaperPlaneTilt, Phone, PhoneCall, Plus, Robot, SlidersHorizontal, Square, SquaresFour, Stack, Star, Tag, Target, TextAlignJustify, Timer, Trash, TrendUp, UploadSimple, Users, Warning, X } from "@phosphor-icons/react";
 ﻿"use client";
 // CRM settings tab now persists to Supabase (automations, tags, notes, follow-ups, segments).
 
@@ -6,19 +7,6 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { useManagedClient } from "@/lib/use-managed-client";
-import {
-  Search, ChevronDown, Mail, Phone, MessageSquare,
-  Star, Download, LayoutGrid, LayoutList,
-  CheckSquare, Square, Filter, ArrowUpDown, Clock,
-  Globe, Camera, Send, Users, ChevronUp,
-  X, RefreshCw, Upload, Trash2, Tag, AlertTriangle, Coins,
-  Zap, TrendingUp, BarChart3, Target, Eye,
-  EyeOff, Settings2, CalendarClock,
-  Plus,
-  Bookmark, Hash, Layers, Columns3, AlignJustify, Grid3X3,
-  Bot, Timer, ArrowRight,
-  Bell, PhoneCall, MessageCircle,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon } from "@/components/ui/platform-icons";
@@ -910,11 +898,11 @@ export default function CRMPage() {
               <button onClick={() => setStatsCollapsed(!statsCollapsed)}
                 className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-surface-light/50 transition-colors">
                 <div className="flex items-center gap-2">
-                  <BarChart3 size={14} className="text-brand-accent" />
+                  <ChartBar size={14} className="text-brand-accent" />
                   <span className="text-xs font-bold">CRM Dashboard</span>
                   <span className="text-[9px] text-text-muted">{stats.total} total leads</span>
                 </div>
-                {statsCollapsed ? <ChevronDown size={14} className="text-text-muted" /> : <ChevronUp size={14} className="text-text-muted" />}
+                {statsCollapsed ? <CaretDown size={14} className="text-text-muted" /> : <CaretUp size={14} className="text-text-muted" />}
               </button>
               {!statsCollapsed && (
                 <div className="px-4 pb-4 pt-1">
@@ -922,12 +910,12 @@ export default function CRMPage() {
                     {[
                       { label: "Total Leads", value: stats.total, icon: Users, color: "text-text-primary" },
                       { label: "Avg Score", value: stats.avgScore, icon: Target, color: "text-brand-accent", suffix: "/100" },
-                      { label: "Reply Rate", value: `${stats.replyRate}%`, icon: MessageCircle, color: "text-emerald-400" },
-                      { label: "Conv. Rate", value: `${stats.convRate}%`, icon: TrendingUp, color: "text-purple-400" },
-                      { label: "Outreach Sent", value: stats.totalOutreach, icon: Send, color: "text-indigo-400" },
-                      { label: "With Email", value: stats.withEmail, icon: Mail, color: "text-amber-400" },
+                      { label: "Reply Rate", value: `${stats.replyRate}%`, icon: ChatCircle, color: "text-emerald-400" },
+                      { label: "Conv. Rate", value: `${stats.convRate}%`, icon: TrendUp, color: "text-purple-400" },
+                      { label: "Outreach Sent", value: stats.totalOutreach, icon: PaperPlaneTilt, color: "text-indigo-400" },
+                      { label: "With Email", value: stats.withEmail, icon: Envelope, color: "text-amber-400" },
                       { label: "With Phone", value: stats.withPhone, icon: Phone, color: "text-emerald-400" },
-                      { label: "Stale Leads", value: stats.stale, icon: AlertTriangle, color: stats.stale> 0 ? "text-red-400" : "text-text-muted" },
+                      { label: "Stale Leads", value: stats.stale, icon: Warning, color: stats.stale> 0 ? "text-red-400" : "text-text-muted" },
                     ].map((s, i) => (
                       <PrismPanel key={i} rainbow padding="px-3 py-2" delay={i * 0.06}>
                         <div className="flex items-center gap-1.5 mb-1">
@@ -965,7 +953,7 @@ export default function CRMPage() {
               <div className="flex items-center gap-2 flex-wrap">
                 {hasActiveFilters && (
                   <span className="text-[8px] px-2 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.18)] flex items-center gap-1">
-                    <Filter size={8} /> Filtered
+                    <Funnel size={8} /> Filtered
                     <button onClick={() => setFilters(DEFAULT_FILTERS)} className="hover:text-red-400" aria-label="Clear filters"><X size={8} /></button>
                   </span>
                 )}
@@ -974,9 +962,9 @@ export default function CRMPage() {
                 {/* View mode */}
                 <div className="tab-pill-strip">
                   {([
-                    { key: "table" as ViewMode, icon: LayoutList, label: "Table" },
-                    { key: "card" as ViewMode, icon: LayoutGrid, label: "Cards" },
-                    { key: "pipeline" as ViewMode, icon: Layers, label: "Pipeline" },
+                    { key: "table" as ViewMode, icon: List, label: "Table" },
+                    { key: "card" as ViewMode, icon: SquaresFour, label: "Cards" },
+                    { key: "pipeline" as ViewMode, icon: Stack, label: "Pipeline" },
                   ]).map(v => (
                     <button key={v.key} onClick={() => setViewMode(v.key)}
                       className={`tab-pill text-[9px] flex items-center gap-1${viewMode === v.key ? " active" : ""}`}>
@@ -987,9 +975,9 @@ export default function CRMPage() {
                 {/* Density */}
                 <div className="tab-pill-strip">
                   {([
-                    { key: "dense" as Density, icon: AlignJustify, tip: "Dense" },
-                    { key: "compact" as Density, icon: Grid3X3, tip: "Compact" },
-                    { key: "comfortable" as Density, icon: Columns3, tip: "Comfortable" },
+                    { key: "dense" as Density, icon: TextAlignJustify, tip: "Dense" },
+                    { key: "compact" as Density, icon: SquaresFour, tip: "Compact" },
+                    { key: "comfortable" as Density, icon: Columns, tip: "Comfortable" },
                   ]).map(d => (
                     <button key={d.key} onClick={() => setDensity(d.key)} title={d.tip}
                       className={`tab-pill p-1.5${density === d.key ? " active" : ""}`}>
@@ -1000,19 +988,19 @@ export default function CRMPage() {
                 {/* Action buttons */}
                 <button onClick={() => setShowFilters(!showFilters)}
                   className={`btn-ghost text-[9px] flex items-center gap-1 ${showFilters ? "text-brand-accent" : ""}`}>
-                  <Filter size={11} /> Filters {hasActiveFilters && <span className="w-1.5 h-1.5 rounded-full bg-brand-accent" />}
+                  <Funnel size={11} /> Filters {hasActiveFilters && <span className="w-1.5 h-1.5 rounded-full bg-brand-accent" />}
                 </button>
                 <button onClick={() => setShowAutomation(true)} className="btn-ghost text-[9px] flex items-center gap-1">
-                  <Bot size={11} /> Automation
+                  <Robot size={11} /> Automation
                 </button>
                 {viewMode === "table" && (
                   <button onClick={() => setShowColumnConfig(!showColumnConfig)} className="btn-ghost text-[9px] flex items-center gap-1">
-                    <Settings2 size={11} /> Columns
+                    <SlidersHorizontal size={11} /> Columns
                   </button>
                 )}
-                <button onClick={exportCSV} className="btn-ghost text-[9px] flex items-center gap-1"><Download size={11} /> Export</button>
+                <button onClick={exportCSV} className="btn-ghost text-[9px] flex items-center gap-1"><DownloadSimple size={11} /> Export</button>
                 <label className="btn-ghost text-[9px] flex items-center gap-1 cursor-pointer">
-                  <Upload size={11} /> Import
+                  <UploadSimple size={11} /> Import
                   <input type="file" accept=".csv" className="hidden" onChange={async (e) => {
                     const file = e.target.files?.[0]; if (!file) return;
                     const text = await file.text();
@@ -1044,7 +1032,7 @@ export default function CRMPage() {
                   <span className="text-[9px] font-medium text-brand-accent">{emailCredits}</span>
                 </button>
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <button onClick={() => fetchLeads()} className="btn-ghost text-[9px] flex items-center gap-1"><RefreshCw size={11} /> Refresh</button>
+                  <button onClick={() => fetchLeads()} className="btn-ghost text-[9px] flex items-center gap-1"><ArrowsClockwise size={11} /> Refresh</button>
                 </motion.div>
               </div>
             </div>
@@ -1074,7 +1062,7 @@ export default function CRMPage() {
                 {columns.filter(c => c.key !== "select" && c.key !== "expand").map(col => (
                   <button key={col.key} onClick={() => setColumns(prev => prev.map(c => c.key === col.key ? { ...c, visible: !c.visible } : c))}
                     className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${col.visible ? "border-[rgba(212,255,0,0.20)] bg-[rgba(212,255,0,0.08)] text-brand-accent" : "border-border-subtle text-text-muted"}`}>
-                    {col.visible ? <Eye size={9} /> : <EyeOff size={9} />} {col.label}
+                    {col.visible ? <Eye size={9} /> : <EyeSlash size={9} />} {col.label}
                   </button>
                 ))}
               </div>
@@ -1084,7 +1072,7 @@ export default function CRMPage() {
             {showFilters && (
               <div className="glass rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold flex items-center gap-2"><Filter size={12} className="text-brand-accent" /> Advanced Filters</span>
+                  <span className="text-xs font-bold flex items-center gap-2"><Funnel size={12} className="text-brand-accent" /> Advanced Filters</span>
                   <div className="flex items-center gap-2">
                     <button onClick={() => setFilters(DEFAULT_FILTERS)} className="text-[9px] text-text-muted hover:text-text-primary">Reset All</button>
                     <button onClick={() => setShowFilters(false)} className="text-text-muted hover:text-text-primary" aria-label="Close filters"><X size={14} /></button>
@@ -1130,7 +1118,7 @@ export default function CRMPage() {
                     <label className="text-[9px] text-text-muted uppercase tracking-wider font-semibold block">Contact Info</label>
                     {[
                       { key: "hasPhone" as const, label: "Has Phone", icon: Phone },
-                      { key: "hasEmail" as const, label: "Has Email", icon: Mail },
+                      { key: "hasEmail" as const, label: "Has Email", icon: Envelope },
                       { key: "hasSocial" as const, label: "Has Social", icon: Camera },
                     ].map(f => (
                       <div key={f.key} className="flex items-center gap-2">
@@ -1194,10 +1182,10 @@ export default function CRMPage() {
                       <label className="text-[9px] text-text-muted uppercase tracking-wider font-semibold block mb-1">Date Range</label>
                       <div className="flex items-center gap-1">
                         <input type="date" value={filters.dateFrom} onChange={e => setFilters(prev => ({ ...prev, dateFrom: e.target.value }))}
-                          className="input text-[9px] px-1.5 py-1 flex-1" aria-label="Filter from date" />
+                          className="input text-[9px] px-1.5 py-1 flex-1" aria-label="Funnel from date" />
                         <span className="text-[8px] text-text-muted">to</span>
                         <input type="date" value={filters.dateTo} onChange={e => setFilters(prev => ({ ...prev, dateTo: e.target.value }))}
-                          className="input text-[9px] px-1.5 py-1 flex-1" aria-label="Filter to date" />
+                          className="input text-[9px] px-1.5 py-1 flex-1" aria-label="Funnel to date" />
                       </div>
                     </div>
                     {/* Tags filter */}
@@ -1219,20 +1207,20 @@ export default function CRMPage() {
               </div>
             )}
 
-            {/* -- Search + Sort -- */}
+            {/* -- MagnifyingGlass + Sort -- */}
             <div className="flex items-center gap-2 flex-wrap">
               <div className="relative flex-1 min-w-[200px]">
-                <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                <MagnifyingGlass size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input value={search} onChange={e => setSearch(e.target.value)}
-                  placeholder="Search name, industry, city, email, phone..."
+                  placeholder="MagnifyingGlass name, industry, city, email, phone..."
                   className="input glass w-full text-[10px] pl-8 py-1.5"
-                  aria-label="Search leads" />
+                  aria-label="MagnifyingGlass leads" />
                 {search && <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2" aria-label="Clear search"><X size={11} className="text-text-muted hover:text-text-primary" /></button>}
               </div>
               <div className="relative">
                 <button onClick={() => setShowSortMenu(!showSortMenu)} className="btn-ghost text-[9px] flex items-center gap-1 py-1.5">
-                  <ArrowUpDown size={11} /> {sortBy === "newest" ? "Newest" : sortBy === "oldest" ? "Oldest" : sortBy === "rating" ? "Rating" : sortBy === "reviews" ? "Reviews" : sortBy === "score" ? "Score" : sortBy === "name_az" ? "A?Z" : sortBy === "name_za" ? "Z?A" : "Last Contacted"}
-                  <ChevronDown size={9} />
+                  <ArrowsDownUp size={11} /> {sortBy === "newest" ? "Newest" : sortBy === "oldest" ? "Oldest" : sortBy === "rating" ? "Rating" : sortBy === "reviews" ? "Reviews" : sortBy === "score" ? "Score" : sortBy === "name_az" ? "A?Z" : sortBy === "name_za" ? "Z?A" : "Last Contacted"}
+                  <CaretDown size={9} />
                 </button>
                 {showSortMenu && (
                   <div className="absolute right-0 top-full mt-1 bg-surface border border-border-subtle rounded-xl shadow-xl z-50 py-1 min-w-[150px]">
@@ -1267,12 +1255,12 @@ export default function CRMPage() {
                 <>
                   <span className="text-[9px] text-brand-accent font-medium shrink-0">{selectedIds.size} selected</span>
                   <div className="flex items-center gap-1 flex-wrap">
-                    <button onClick={() => bulkAction("email")} className="text-[8px] px-2 py-1 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] transition-all flex items-center gap-1"><Mail size={9} /> Email All</button>
-                    <button onClick={() => bulkAction("sms")} className="text-[8px] px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all flex items-center gap-1"><MessageSquare size={9} /> SMS All</button>
+                    <button onClick={() => bulkAction("email")} className="text-[8px] px-2 py-1 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] transition-all flex items-center gap-1"><Envelope size={9} /> Email All</button>
+                    <button onClick={() => bulkAction("sms")} className="text-[8px] px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all flex items-center gap-1"><Chat size={9} /> SMS All</button>
                     <button onClick={() => bulkAction("call")} className="text-[8px] px-2 py-1 rounded-lg bg-[rgba(99,102,241,0.10)] text-indigo-400 hover:bg-[rgba(99,102,241,0.15)] transition-all flex items-center gap-1"><PhoneCall size={9} /> Call All</button>
                     <div className="relative">
                       <button onClick={() => setShowBulkStatusMenu(!showBulkStatusMenu)} className="text-[8px] px-2 py-1 rounded-lg bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 transition-all flex items-center gap-1">
-                        <Tag size={9} /> Mark As <ChevronDown size={7} />
+                        <Tag size={9} /> Mark As <CaretDown size={7} />
                       </button>
                       {showBulkStatusMenu && (
                         <div className="absolute left-0 top-full mt-1 bg-surface border border-border-subtle rounded-xl shadow-xl z-50 py-1 min-w-[120px]">
@@ -1285,12 +1273,12 @@ export default function CRMPage() {
                         </div>
                       )}
                     </div>
-                    <button onClick={bulkDelete} className="text-[8px] px-2 py-1 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all flex items-center gap-1"><Trash2 size={9} /> Delete</button>
+                    <button onClick={bulkDelete} className="text-[8px] px-2 py-1 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all flex items-center gap-1"><Trash size={9} /> Delete</button>
                   </div>
                   <button onClick={() => { setSelectedIds(new Set()); setShowBulkStatusMenu(false); }} className="text-[8px] text-text-muted hover:text-text-primary ml-auto" aria-label="Clear selection"><X size={10} /></button>
                 </>
               ) : (
-                <span className="text-[9px] text-text-muted flex items-center gap-1"><Zap size={9} /> Select leads for bulk actions</span>
+                <span className="text-[9px] text-text-muted flex items-center gap-1"><Lightning size={9} /> Select leads for bulk actions</span>
               )}
             </div>
 
@@ -1363,7 +1351,7 @@ export default function CRMPage() {
                                     if (col.key === "contact") return (
                                       <td key={col.key} className={`px-2 ${dPy}`} onClick={e => e.stopPropagation()}>
                                         <div className={`flex items-center ${dGap}`}>
-                                          {lead.email && <span title={lead.email} className="text-text-muted hover:text-brand-accent cursor-pointer"><Mail size={11} /></span>}
+                                          {lead.email && <span title={lead.email} className="text-text-muted hover:text-brand-accent cursor-pointer"><Envelope size={11} /></span>}
                                           {lead.phone && <span title={lead.phone} className="text-text-muted hover:text-emerald-400 cursor-pointer"><Phone size={11} /></span>}
                                           {lead.website && <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-text-muted hover:text-text-primary"><Globe size={11} /></a>}
                                         </div>
@@ -1418,7 +1406,7 @@ export default function CRMPage() {
                                             className={`text-[8px] px-2 py-0.5 rounded-full border ${STATUS_COLORS[lead.status] || STATUS_COLORS.new} hover:opacity-80 transition-all`}>
                                             {lead.status}
                                           </button>
-                                          {stale && <AlertTriangle size={9} className="text-red-400" />}
+                                          {stale && <Warning size={9} className="text-red-400" />}
                                           {!stale && expiry !== null && expiry <= 5 && <span className="text-[7px] text-amber-400">{expiry}d</span>}
                                           {inlineStatusId === lead.id && (
                                             <div className="absolute left-0 top-full mt-1 bg-surface border border-border-subtle rounded-lg shadow-xl z-50 py-1 min-w-[110px]">
@@ -1446,11 +1434,11 @@ export default function CRMPage() {
                                         <div className="flex items-center gap-0.5">
                                           <button onClick={() => sendAction(lead, "email")} disabled={!lead.email || actionLoading === `${lead.id}-email`}
                                             className="text-[8px] p-1 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-30 transition-all" title="Email">
-                                            <Mail size={10} />
+                                            <Envelope size={10} />
                                           </button>
                                           <button onClick={() => sendAction(lead, "sms")} disabled={!lead.phone || actionLoading === `${lead.id}-sms`}
                                             className="text-[8px] p-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30 transition-all" title="SMS">
-                                            <MessageSquare size={10} />
+                                            <Chat size={10} />
                                           </button>
                                           <button onClick={() => sendAction(lead, "call")} disabled={!lead.phone || actionLoading === `${lead.id}-call`}
                                             className="text-[8px] p-1 rounded-lg bg-[rgba(99,102,241,0.10)] text-indigo-400 hover:bg-[rgba(99,102,241,0.15)] disabled:opacity-30 transition-all" title="Call">
@@ -1463,7 +1451,7 @@ export default function CRMPage() {
                                       <td key={col.key} className={`px-1 ${dPy}`}>
                                         <button onClick={(e) => { e.stopPropagation(); setExpandedId(isExpanded ? null : lead.id); }}
                                           className="p-1 hover:bg-surface-light rounded transition-colors">
-                                          {isExpanded ? <ChevronUp size={11} className="text-text-muted" /> : <ChevronDown size={11} className="text-text-muted" />}
+                                          {isExpanded ? <CaretUp size={11} className="text-text-muted" /> : <CaretDown size={11} className="text-text-muted" />}
                                         </button>
                                       </td>
                                     );
@@ -1479,7 +1467,7 @@ export default function CRMPage() {
 >
                                     <td colSpan={columns.filter(c => c.visible).length} className="px-4 py-3">
                                       <div className="flex items-center gap-2 mb-2">
-                                        <Send size={10} className="text-brand-accent" />
+                                        <PaperPlaneTilt size={10} className="text-brand-accent" />
                                         <span className="text-[9px] font-semibold text-brand-accent">Outreach History</span>
                                         <span className="text-[8px] text-text-muted">({lead.outreach_log.length} messages)</span>
                                       </div>
@@ -1490,9 +1478,9 @@ export default function CRMPage() {
                                           {lead.outreach_log.map(e => (
                                             <div key={e.id} className="flex items-start gap-2 text-[9px] py-1 px-2 rounded-lg bg-surface-light">
                                               <div className="flex items-center gap-1 shrink-0 pt-0.5">
-                                                {e.platform === "email" ? <Mail size={10} className="text-brand-accent" /> :
+                                                {e.platform === "email" ? <Envelope size={10} className="text-brand-accent" /> :
                                                  e.platform === "call" ? <Phone size={10} className="text-green-400" /> :
-                                                 <MessageSquare size={10} className="text-indigo-400" />}
+                                                 <Chat size={10} className="text-indigo-400" />}
                                                 <span className={`text-[8px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-text-muted"}`}>{e.status}</span>
                                               </div>
                                               <p className="flex-1 text-text-muted truncate">{e.message_text}</p>
@@ -1552,7 +1540,7 @@ export default function CRMPage() {
                             </div>
                             <div className="flex items-center gap-1 shrink-0">
                               <span className={`text-[7px] px-1.5 py-0.5 rounded font-bold ${scoreInfo.bg}`}>{scoreInfo.label}</span>
-                              {stale && <AlertTriangle size={9} className="text-red-400" />}
+                              {stale && <Warning size={9} className="text-red-400" />}
                             </div>
                           </div>
                           {/* Score bar */}
@@ -1564,7 +1552,7 @@ export default function CRMPage() {
                           </div>
                           {/* Contact + social */}
                           <div className="flex items-center gap-2 text-[9px] text-text-muted">
-                            {lead.email && <Mail size={9} />}
+                            {lead.email && <Envelope size={9} />}
                             {lead.phone && <Phone size={9} />}
                             {lead.instagram_url && <InstagramIcon size={10} />}
                             {lead.facebook_url && <FacebookIcon size={10} />}
@@ -1586,8 +1574,8 @@ export default function CRMPage() {
                           <div className="flex items-center justify-between pt-1 border-t border-border-subtle/50">
                             <span className={`text-[8px] px-2 py-0.5 rounded-full border ${STATUS_COLORS[lead.status] || STATUS_COLORS.new}`}>{lead.status}</span>
                             <div className="flex items-center gap-0.5" onClick={e => e.stopPropagation()}>
-                              <button onClick={() => sendAction(lead, "email")} disabled={!lead.email} className="p-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-30" aria-label="Send email"><Mail size={9} /></button>
-                              <button onClick={() => sendAction(lead, "sms")} disabled={!lead.phone} className="p-1 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30" aria-label="Send SMS"><MessageSquare size={9} /></button>
+                              <button onClick={() => sendAction(lead, "email")} disabled={!lead.email} className="p-1 rounded bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-30" aria-label="PaperPlaneTilt email"><Envelope size={9} /></button>
+                              <button onClick={() => sendAction(lead, "sms")} disabled={!lead.phone} className="p-1 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30" aria-label="PaperPlaneTilt SMS"><Chat size={9} /></button>
                               <button onClick={() => sendAction(lead, "call")} disabled={!lead.phone} className="p-1 rounded bg-[rgba(99,102,241,0.10)] text-indigo-400 hover:bg-[rgba(99,102,241,0.15)] disabled:opacity-30" aria-label="Call lead"><Phone size={9} /></button>
                             </div>
                           </div>
@@ -1640,7 +1628,7 @@ export default function CRMPage() {
                                     <span className="text-[7px] px-1.5 py-0.5 rounded font-bold shrink-0" style={{ background: `${scoreInfo.color}15`, color: scoreInfo.color }}>{scoreInfo.label}</span>
                                   </div>
                                   <div className="flex items-center gap-1.5 text-[8px] text-text-muted">
-                                    {lead.email && <Mail size={8} />} {lead.phone && <Phone size={8} />}
+                                    {lead.email && <Envelope size={8} />} {lead.phone && <Phone size={8} />}
                                     {lead.google_rating && <span className="flex items-center gap-0.5 text-amber-400"><Star size={7} className="fill-amber-400" /> {lead.google_rating}</span>}
                                   </div>
                                   <div className="flex items-center gap-1.5">
@@ -1715,7 +1703,7 @@ export default function CRMPage() {
                     <div className="space-y-1.5">
                       <span className="text-[8px] text-text-muted uppercase tracking-wider font-semibold">Contact</span>
                       {detailLead.owner_name && <p className="text-[10px] flex items-center gap-1.5"><Users size={10} className="text-text-muted" /> {detailLead.owner_name}</p>}
-                      {detailLead.email && <p className="text-[10px] flex items-center gap-1.5"><Mail size={10} className="text-text-muted" /> {detailLead.email}</p>}
+                      {detailLead.email && <p className="text-[10px] flex items-center gap-1.5"><Envelope size={10} className="text-text-muted" /> {detailLead.email}</p>}
                       {detailLead.phone && <p className="text-[10px] flex items-center gap-1.5"><Phone size={10} className="text-text-muted" /> {detailLead.phone}</p>}
                       {detailLead.website && <a href={detailLead.website} target="_blank" rel="noopener noreferrer" className="text-[10px] flex items-center gap-1.5 text-brand-accent hover:underline"><Globe size={10} /> {detailLead.website}</a>}
                       <div className="flex items-center gap-2 pt-1">
@@ -1728,9 +1716,9 @@ export default function CRMPage() {
                     {/* Quick actions */}
                     <div className="flex items-center gap-1">
                       <button onClick={() => sendAction(detailLead, "email")} disabled={!detailLead.email}
-                        className="flex-1 text-[9px] py-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-30 flex items-center justify-center gap-1"><Mail size={10} /> Email</button>
+                        className="flex-1 text-[9px] py-1.5 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] disabled:opacity-30 flex items-center justify-center gap-1"><Envelope size={10} /> Email</button>
                       <button onClick={() => sendAction(detailLead, "sms")} disabled={!detailLead.phone}
-                        className="flex-1 text-[9px] py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30 flex items-center justify-center gap-1"><MessageSquare size={10} /> SMS</button>
+                        className="flex-1 text-[9px] py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30 flex items-center justify-center gap-1"><Chat size={10} /> SMS</button>
                       <button onClick={() => sendAction(detailLead, "call")} disabled={!detailLead.phone}
                         className="flex-1 text-[9px] py-1.5 rounded-lg bg-[rgba(99,102,241,0.10)] text-indigo-400 hover:bg-[rgba(99,102,241,0.15)] disabled:opacity-30 flex items-center justify-center gap-1"><Phone size={10} /> Call</button>
                     </div>
@@ -1783,7 +1771,7 @@ export default function CRMPage() {
                           const el = document.getElementById("followup-date") as HTMLInputElement;
                           if (el?.value) { addFollowUp(detailLead.id, el.value, "Follow up"); el.value = ""; }
                         }} className="text-[9px] px-2 py-1 rounded-lg bg-purple-500/10 text-purple-400 hover:bg-purple-500/20">
-                          <CalendarClock size={10} />
+                          <CalendarCheck size={10} />
                         </button>
                       </div>
                       {followUps.filter(f => f.leadId === detailLead.id).length> 0 && (
@@ -1805,9 +1793,9 @@ export default function CRMPage() {
                         <div className="space-y-1 max-h-48 overflow-y-auto">
                           {detailLead.outreach_log.map(e => (
                             <div key={e.id} className="flex items-start gap-2 text-[9px] py-1.5 px-2 rounded-lg bg-surface-light">
-                              {e.platform === "email" ? <Mail size={10} className="text-brand-accent shrink-0 mt-0.5" /> :
+                              {e.platform === "email" ? <Envelope size={10} className="text-brand-accent shrink-0 mt-0.5" /> :
                                e.platform === "call" ? <Phone size={10} className="text-green-400 shrink-0 mt-0.5" /> :
-                               <MessageSquare size={10} className="text-indigo-400 shrink-0 mt-0.5" />}
+                               <Chat size={10} className="text-indigo-400 shrink-0 mt-0.5" />}
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-1">
                                   <span className={`text-[8px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-text-muted"}`}>{e.status}</span>
@@ -1832,7 +1820,7 @@ export default function CRMPage() {
                 <div className="bg-surface border border-border-subtle shadow-2xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden" onClick={e => e.stopPropagation()}>
                   <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle">
                     <div>
-                      <h3 className="text-sm font-bold flex items-center gap-2"><Bot size={16} className="text-brand-accent" /> Automation Rules</h3>
+                      <h3 className="text-sm font-bold flex items-center gap-2"><Robot size={16} className="text-brand-accent" /> Automation Rules</h3>
                       <p className="text-[10px] text-text-muted mt-0.5">Auto-fire SMS, emails, and calls based on lead events</p>
                     </div>
                     <button onClick={() => setShowAutomation(false)} className="text-text-muted hover:text-text-primary"><X size={16} /></button>
@@ -1847,9 +1835,9 @@ export default function CRMPage() {
                         no_reply_5d: "No reply after 5 days", after_reply: "When lead replies",
                         after_booking: "When lead books",
                       };
-                      const actionLabels: Record<string, { label: string; icon: typeof Mail; color: string }> = {
-                        send_sms: { label: "Send SMS", icon: MessageSquare, color: "text-emerald-400" },
-                        send_email: { label: "Send Email", icon: Mail, color: "text-brand-accent" },
+                      const actionLabels: Record<string, { label: string; icon: typeof Envelope; color: string }> = {
+                        send_sms: { label: "PaperPlaneTilt SMS", icon: Chat, color: "text-emerald-400" },
+                        send_email: { label: "PaperPlaneTilt Email", icon: Envelope, color: "text-brand-accent" },
                         ai_call: { label: "AI Cold Call", icon: PhoneCall, color: "text-indigo-400" },
                         update_status: { label: "Update Status", icon: Tag, color: "text-purple-400" },
                         add_tag: { label: "Add Tag", icon: Hash, color: "text-pink-400" },
@@ -1878,7 +1866,7 @@ export default function CRMPage() {
                               </button>
                               <button onClick={() => deleteAutomation(rule.id)}
                                 className="text-[9px] text-text-muted hover:text-red-400">
-                                <Trash2 size={11} />
+                                <Trash size={11} />
                               </button>
                               <button onClick={() => toggleAutomation(rule.id)}
                                 className={`w-8 h-4 rounded-full transition-all relative ${rule.enabled ? "bg-brand-accent" : "bg-surface-light"}`}>

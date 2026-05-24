@@ -1,7 +1,7 @@
 "use client";
+import { ArrowCircleUp } from "@phosphor-icons/react";
 
 import { ReactNode } from "react";
-import { ArrowUpCircle } from "lucide-react";
 
 // ── Plan hierarchy ──
 // Starter < Growth < Enterprise
@@ -48,7 +48,7 @@ export default function PlanGate({ requiredPlan, clientPlan, children, featureNa
   return (
     <div className="rounded-xl border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.05)] p-6 text-center">
       <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(212,255,0,0.08)]">
-        <ArrowUpCircle size={20} className="text-[#D4FF00]" />
+        <ArrowCircleUp size={20} className="text-[#D4FF00]" />
       </div>
       <h3 className="text-sm font-semibold text-text-primary mb-1">
         {featureName ? `${featureName} requires` : "Upgrade to"} {requiredPlan}
@@ -58,7 +58,7 @@ export default function PlanGate({ requiredPlan, clientPlan, children, featureNa
         Upgrade to <span className="text-[#D4FF00] font-medium">{requiredPlan}</span> to unlock it.
       </p>
       <span className="inline-flex items-center gap-1.5 rounded-lg border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] px-4 py-1.5 text-xs font-medium text-[#D4FF00]">
-        <ArrowUpCircle size={12} />
+        <ArrowCircleUp size={12} />
         Upgrade to {requiredPlan}
       </span>
     </div>

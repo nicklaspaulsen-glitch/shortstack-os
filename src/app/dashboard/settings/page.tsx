@@ -1,29 +1,8 @@
 "use client";
+import { Bell, Buildings, ClipboardText, Code, CreditCard, DownloadSimple, Envelope, Gift, GlobeHemisphereWest, Layout, Lightning, Microphone, Palette, Phone, Plug, Pulse, User, Users, Warning, PlugsConnected } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Activity,
-  AlertTriangle,
-  Bell,
-  Building2,
-  ClipboardList,
-  Code,
-  CreditCard,
-  Download,
-  Gift,
-  Globe2,
-  LayoutTemplate,
-  Mail,
-  Mic,
-  Palette,
-  Phone,
-  Plug,
-  User,
-  Users,
-  Webhook,
-  Zap,
-} from "lucide-react";
 
 import SettingsCard from "@/components/settings/settings-card";
 import { useAuth } from "@/lib/auth-context";
@@ -174,7 +153,7 @@ export default function SettingsIndexPage() {
                 href="/dashboard/settings/email-templates"
                 title="Email Templates"
                 description="Welcome, invite, and reset emails — branded with your colors."
-                Icon={Mail}
+                Icon={Envelope}
                 preview={
                   <>
                     <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
@@ -192,7 +171,7 @@ export default function SettingsIndexPage() {
                 href="/dashboard/settings/voice-profile"
                 title="Voice Profile"
                 description="Your writing voice + audio voice clones used by the AI agents."
-                Icon={Mic}
+                Icon={Microphone}
                 preview={
                   <>
                     <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
@@ -262,7 +241,7 @@ export default function SettingsIndexPage() {
               <SettingsCard
                 index={8}
                 href="/dashboard/api/keys"
-                title="API & Webhooks"
+                title="API & PlugsConnected"
                 description="Personal API keys + outgoing webhook signing secrets."
                 Icon={Code}
                 preview={
@@ -271,7 +250,7 @@ export default function SettingsIndexPage() {
                       Programmatic
                     </span>
                     <span className="text-[11px]" style={{ color: tokens.text.secondary }}>
-                      REST + Webhooks
+                      REST + PlugsConnected
                     </span>
                   </>
                 }
@@ -282,7 +261,7 @@ export default function SettingsIndexPage() {
                 href="/dashboard/settings/danger"
                 title="Danger Zone"
                 description="Export workspace data, transfer ownership, delete account."
-                Icon={AlertTriangle}
+                Icon={Warning}
                 danger
                 preview={
                   <>
@@ -352,9 +331,9 @@ export default function SettingsIndexPage() {
                 <SettingsCard
                   index={12}
                   href="/dashboard/mail-setup"
-                  title="Mail Setup"
+                  title="Envelope Setup"
                   description="Resend / SMTP configuration, DNS records, and deliverability."
-                  Icon={Mail}
+                  Icon={Envelope}
                   preview={
                     <>
                       <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
@@ -372,7 +351,7 @@ export default function SettingsIndexPage() {
                   href="/dashboard/domains"
                   title="Domains"
                   description="Custom domains for portals, landing pages, and white-label apps."
-                  Icon={Globe2}
+                  Icon={GlobeHemisphereWest}
                   preview={
                     <>
                       <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
@@ -390,7 +369,7 @@ export default function SettingsIndexPage() {
                   href="/dashboard/usage"
                   title="Usage & Tokens"
                   description="AI token consumption, credit balance, and plan usage caps."
-                  Icon={Zap}
+                  Icon={Lightning}
                   preview={
                     <>
                       <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
@@ -439,9 +418,9 @@ export default function SettingsIndexPage() {
                 <SettingsCard
                   index={16}
                   href="/dashboard/webhooks"
-                  title="Webhooks"
+                  title="PlugsConnected"
                   description="Outgoing webhook endpoints — trigger external services on events."
-                  Icon={Webhook}
+                  Icon={PlugsConnected}
                   preview={
                     <>
                       <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
@@ -457,9 +436,9 @@ export default function SettingsIndexPage() {
                 <SettingsCard
                   index={17}
                   href="/dashboard/api/webhooks"
-                  title="API Webhooks"
+                  title="API PlugsConnected"
                   description="Inbound webhook subscriptions via the public REST API."
-                  Icon={Webhook}
+                  Icon={PlugsConnected}
                   preview={
                     <>
                       <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
@@ -475,9 +454,9 @@ export default function SettingsIndexPage() {
                 <SettingsCard
                   index={18}
                   href="/dashboard/activity-log"
-                  title="Activity Log"
+                  title="Pulse Log"
                   description="Audit trail of all actions taken in your workspace."
-                  Icon={ClipboardList}
+                  Icon={ClipboardText}
                   preview={
                     <>
                       <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
@@ -510,7 +489,7 @@ export default function SettingsIndexPage() {
                   href="/dashboard/subaccounts"
                   title="Subaccounts"
                   description="Create and manage sub-agency accounts under your workspace."
-                  Icon={Building2}
+                  Icon={Buildings}
                   preview={
                     <>
                       <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
@@ -564,7 +543,7 @@ export default function SettingsIndexPage() {
                   href="/dashboard/verticals"
                   title="Vertical Templates"
                   description="Industry-specific page and workflow templates for your niche."
-                  Icon={LayoutTemplate}
+                  Icon={Layout}
                   preview={
                     <>
                       <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
@@ -582,7 +561,7 @@ export default function SettingsIndexPage() {
                   href="/dashboard/monitor"
                   title="Monitor"
                   description="System health, uptime checks, and background job status."
-                  Icon={Activity}
+                  Icon={Pulse}
                   preview={
                     <>
                       <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>
@@ -599,8 +578,8 @@ export default function SettingsIndexPage() {
                   index={25}
                   href="/dashboard/download"
                   title="Desktop App"
-                  description="Download the ShortStack desktop client for Mac or Windows."
-                  Icon={Download}
+                  description="DownloadSimple the ShortStack desktop client for Mac or Windows."
+                  Icon={DownloadSimple}
                   preview={
                     <>
                       <span className="text-[10px] uppercase tracking-wider" style={{ color: tokens.text.muted }}>

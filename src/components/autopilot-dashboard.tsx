@@ -1,10 +1,7 @@
 "use client";
+import { Calendar, CaretDown, ChartBar, CheckCircle, CircleNotch, Clock, Envelope, FileText, MagnifyingGlass, Megaphone, Robot, Sparkle } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
-import {
-  Bot, Sparkles, CheckCircle, Clock, Loader2, ChevronDown,
-  FileText, Search, Mail, Megaphone, BarChart3, Calendar,
-} from "lucide-react";
 import { formatRelativeTime } from "@/lib/utils";
 
 interface AutopilotTask {
@@ -29,7 +26,7 @@ interface AutopilotStatus {
 const TASK_META: Record<string, { label: string; icon: React.ReactNode; countLabel?: (n: number) => string }> = {
   strategy: {
     label: "30-Day Marketing Strategy",
-    icon: <BarChart3 size={11} className="text-[#D4FF00]" />,
+    icon: <ChartBar size={11} className="text-[#D4FF00]" />,
   },
   social_posts: {
     label: "Social Media Posts",
@@ -43,7 +40,7 @@ const TASK_META: Record<string, { label: string; icon: React.ReactNode; countLab
   },
   email_templates: {
     label: "Email Templates",
-    icon: <Mail size={11} className="text-[#D4FF00]" />,
+    icon: <Envelope size={11} className="text-[#D4FF00]" />,
     countLabel: (n) => `${n} template${n !== 1 ? "s" : ""}`,
   },
   ad_copy: {
@@ -53,7 +50,7 @@ const TASK_META: Record<string, { label: string; icon: React.ReactNode; countLab
   },
   competitor_analysis: {
     label: "Competitor Analysis",
-    icon: <Search size={11} className="text-[#D4FF00]" />,
+    icon: <MagnifyingGlass size={11} className="text-[#D4FF00]" />,
   },
 };
 
@@ -109,7 +106,7 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className={`p-1.5 rounded-md ${status?.active ? "bg-[rgba(212,255,0,0.08)]" : "bg-black/5"}`}>
-            <Bot size={14} className={status?.active ? "text-[#D4FF00]" : "text-text-muted"} />
+            <Robot size={14} className={status?.active ? "text-[#D4FF00]" : "text-text-muted"} />
           </div>
           <div>
             <p className="text-xs font-semibold text-text-primary leading-none">AI Auto-Pilot</p>
@@ -142,7 +139,7 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
         // Empty state
         <div className="text-center py-6 px-2">
           <div className="flex justify-center mb-2">
-            <Sparkles size={20} className="text-text-primary/20" />
+            <Sparkle size={20} className="text-text-primary/20" />
           </div>
           <p className="text-xs text-text-muted leading-snug">
             Auto-pilot hasn&apos;t been launched yet.
@@ -235,7 +232,7 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
 
                     {/* Expand chevron */}
                     {hasPreview && (
-                      <ChevronDown
+                      <CaretDown
                         size={10}
                         className={`text-text-muted transition-transform ${isExpanded ? "rotate-180" : ""}`}
                       />
@@ -263,7 +260,7 @@ export default function AutopilotDashboard({ clientId }: { clientId: string }) {
       {/* Footer — loading indicator if tasks are still generating */}
       {status?.active && status.total_generated < 6 && (
         <div className="flex items-center gap-1.5 mt-3 pt-2 border-t border-border-subtle">
-          <Loader2 size={9} className="text-[#D4FF00] animate-spin" />
+          <CircleNotch size={9} className="text-[#D4FF00] animate-spin" />
           <span className="text-[9px] text-text-muted">Generating remaining tasks…</span>
         </div>
       )}

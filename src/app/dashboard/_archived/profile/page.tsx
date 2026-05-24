@@ -1,11 +1,10 @@
 "use client";
+import { At, Camera, Check, CircleNotch, FloppyDisk, Key, User, WarningCircle, X } from "@phosphor-icons/react";
 
 import { useEffect, useState, useRef } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import {
-  User, Save, Loader, Camera, Key, AtSign, Check, X, AlertCircle
-} from "lucide-react";
+
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -174,7 +173,7 @@ export default function ProfilePage() {
                     className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
                   >
                     {uploadingAvatar ? (
-                      <Loader size={16} className="text-white animate-spin" />
+                      <CircleNotch size={16} className="text-white animate-spin" />
                     ) : (
                       <Camera size={16} className="text-white" />
                     )}
@@ -185,7 +184,7 @@ export default function ProfilePage() {
                   <p className="text-lg font-bold">{displayName}</p>
                   {form.username && (
                     <p className="text-sm text-text-muted flex items-center gap-1">
-                      <AtSign size={12} />{form.username}
+                      <At size={12} />{form.username}
                     </p>
                   )}
                   <p className="text-xs text-text-muted mt-0.5 capitalize">{profile?.role === "admin" ? "Founder" : (profile?.role?.replace("_", " ") || "Admin")} &middot; {form.email}</p>
@@ -201,7 +200,7 @@ export default function ProfilePage() {
             >
             <div className="p-5 space-y-3">
               <h2 className="flex items-center gap-2">
-                <AtSign size={14} className="text-brand-accent" /> Identity
+                <At size={14} className="text-brand-accent" /> Identity
               </h2>
               <p className="text-[10px] text-text-muted -mt-2 mb-2">Your username is unique and permanent. Your nickname is what others see.</p>
 
@@ -218,7 +217,7 @@ export default function ProfilePage() {
                     />
                     <span className="absolute right-2.5 top-1/2 -translate-y-1/2">
                       {checkingUsername ? (
-                        <Loader size={12} className="text-text-muted animate-spin" />
+                        <CircleNotch size={12} className="text-text-muted animate-spin" />
                       ) : usernameAvailable === true ? (
                         <Check size={12} className="text-success" />
                       ) : usernameAvailable === false ? (
@@ -242,7 +241,7 @@ export default function ProfilePage() {
 
               {usernameAvailable === false && (
                 <div className="flex items-center gap-2 text-[10px] text-danger bg-danger/5 border border-danger/10 rounded-lg px-3 py-2">
-                  <AlertCircle size={12} /> This username is already taken. Try another one.
+                  <WarningCircle size={12} /> This username is already taken. Try another one.
                 </div>
               )}
             </div>
@@ -283,8 +282,8 @@ export default function ProfilePage() {
                 </div>
               </div>
               <button onClick={saveProfile} disabled={saving || usernameAvailable === false} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                {saving ? <Loader size={12} className="animate-spin" /> : <Save size={12} />}
-                {saving ? "Saving..." : "Save Changes"}
+                {saving ? <CircleNotch size={12} className="animate-spin" /> : <FloppyDisk size={12} />}
+                {saving ? "Saving..." : "FloppyDisk Changes"}
               </button>
             </div>
             </motion.div>{/* Change Password */}<motion.div

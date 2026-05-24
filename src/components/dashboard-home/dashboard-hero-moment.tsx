@@ -1,7 +1,7 @@
+import { ArrowRight } from "@phosphor-icons/react";
 ﻿"use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { tokens } from "@/lib/brand/tokens";
 import BrainMark from "@/components/brand/brain-mark";

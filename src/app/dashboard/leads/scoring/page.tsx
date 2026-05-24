@@ -1,3 +1,4 @@
+import { ArrowsClockwise, CaretLeft, CaretRight, CircleNotch, Fire, SealCheck, Snowflake, Sun, Target, TrendUp, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -13,19 +14,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Target,
-  Loader,
-  RefreshCw,
-  Flame,
-  Snowflake,
-  Sun,
-  BadgeCheck,
-  ChevronLeft,
-  ChevronRight,
-  X,
-  TrendingUp,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import {
@@ -273,9 +261,9 @@ function ScoreDetailModal({
             className="text-[10px] px-3 py-1.5 rounded-lg bg-[rgba(212,255,0,0.12)] text-brand-accent hover:bg-[rgba(212,255,0,0.18)] transition-all flex items-center gap-1.5 disabled:opacity-50"
           >
             {recomputing ? (
-              <Loader size={11} className="animate-spin" />
+              <CircleNotch size={11} className="animate-spin" />
             ) : (
-              <RefreshCw size={11} />
+              <ArrowsClockwise size={11} />
             )}
             Recompute now
           </button>
@@ -301,11 +289,11 @@ function ScoreDetailModal({
 
         <div>
           <h3 className="text-[10px] font-semibold uppercase tracking-wider mb-2 text-text-muted flex items-center gap-1.5">
-            <TrendingUp size={10} /> Score history
+            <TrendUp size={10} /> Score history
           </h3>
           {historyLoading ? (
             <div className="flex justify-center py-8">
-              <Loader size={16} className="animate-spin text-brand-accent" />
+              <CircleNotch size={16} className="animate-spin text-brand-accent" />
             </div>
           ) : history.length === 0 ? (
             <p className="text-[10px] text-text-muted italic">
@@ -554,9 +542,9 @@ export default function LeadScoringPage() {
                     className="px-3 py-1.5 rounded-lg bg-white/8 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/12 transition-all flex items-center gap-1.5 disabled:opacity-50"
                   >
                     {batchRunning ? (
-                      <Loader size={12} className="animate-spin" />
+                      <CircleNotch size={12} className="animate-spin" />
                     ) : (
-                      <RefreshCw size={12} />
+                      <ArrowsClockwise size={12} />
                     )}
                     Recompute stale
                   </button>
@@ -686,9 +674,9 @@ export default function LeadScoringPage() {
                   className="text-xs px-3 py-1.5 rounded-lg bg-[rgba(212,255,0,0.12)] border border-[rgba(212,255,0,0.25)] text-brand-accent hover:bg-[rgba(212,255,0,0.18)] transition-all flex items-center gap-1.5 disabled:opacity-40"
                 >
                   {bulkRunning ? (
-                    <Loader size={11} className="animate-spin" />
+                    <CircleNotch size={11} className="animate-spin" />
                   ) : (
-                    <RefreshCw size={11} />
+                    <ArrowsClockwise size={11} />
                   )}
                   Recompute selected
                 </button>
@@ -714,7 +702,7 @@ export default function LeadScoringPage() {
               </div>
               {loading ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader size={20} className="animate-spin text-brand-accent" />
+                  <CircleNotch size={20} className="animate-spin text-brand-accent" />
                 </div>
               ) : leads.length === 0 ? (
                 <EmptyState
@@ -789,7 +777,7 @@ export default function LeadScoringPage() {
                     className="p-1.5 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.2)] disabled:opacity-30 transition-all"
                     aria-label="Previous page"
                   >
-                    <ChevronLeft size={14} />
+                    <CaretLeft size={14} />
                   </button>
                   <span className="text-xs font-mono text-text-muted">
                     {page} / {totalPages}
@@ -802,7 +790,7 @@ export default function LeadScoringPage() {
                     className="p-1.5 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.2)] disabled:opacity-30 transition-all"
                     aria-label="Next page"
                   >
-                    <ChevronRight size={14} />
+                    <CaretRight size={14} />
                   </button>
                 </div>
               </div>

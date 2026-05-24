@@ -1,16 +1,9 @@
+import { ChartBar, CheckCircle, Clock, Crown, Envelope, Eye, EyeSlash, Gear, Key, Lock, LockOpen, MagnifyingGlass, Pencil, Pulse, Shield, Trash, UserPlus, Users, Warning, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-import {
-  Users, CheckCircle,
-  Clock,
-  Shield, BarChart3, UserPlus, Mail,
-  Activity, X, Search, Crown, Pencil,
-  Settings, Lock, Unlock, Trash2, Key, Eye, EyeOff,
-  AlertTriangle,
-} from "lucide-react";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -82,7 +75,7 @@ const PERMISSIONS: PermissionRow[] = [
   { feature: "Send Invoices", category: "Finance", owner: true, admin: true, manager: false, creator: false, viewer: false },
   { feature: "Manage Team", category: "Admin", owner: true, admin: true, manager: false, creator: false, viewer: false },
   { feature: "Manage Integrations", category: "Admin", owner: true, admin: true, manager: false, creator: false, viewer: false },
-  { feature: "Workspace Settings", category: "Admin", owner: true, admin: true, manager: false, creator: false, viewer: false },
+  { feature: "Workspace Gear", category: "Admin", owner: true, admin: true, manager: false, creator: false, viewer: false },
   { feature: "Delete Workspace", category: "Admin", owner: true, admin: false, manager: false, creator: false, viewer: false },
   { feature: "View Audit Log", category: "Security", owner: true, admin: true, manager: false, creator: false, viewer: false },
   { feature: "API Access", category: "Security", owner: true, admin: true, manager: false, creator: false, viewer: false },
@@ -235,8 +228,8 @@ export default function TeamPage() {
     { id: "members", label: "Members", icon: <Users size={13} /> },
     { id: "permissions", label: "Permissions", icon: <Shield size={13} /> },
     { id: "roles", label: "Roles", icon: <Crown size={13} /> },
-    { id: "activity", label: "Access Log", icon: <Activity size={13} /> },
-    { id: "capacity", label: "Capacity", icon: <BarChart3 size={13} /> },
+    { id: "activity", label: "Access Log", icon: <Pulse size={13} /> },
+    { id: "capacity", label: "Capacity", icon: <ChartBar size={13} /> },
   ];
 
  // Group permissions by category
@@ -322,10 +315,10 @@ export default function TeamPage() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="relative flex-1 min-w-[200px]">
-                    <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/50" />
+                    <MagnifyingGlass size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/50" />
                     <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                       className="rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-white/[0.05] border border-border-subtle focus:outline-none focus:ring-1 focus:ring-brand-accent/40 placeholder:text-text-muted"
-                      placeholder="Search members..." aria-label="Search team members" />
+                      placeholder="MagnifyingGlass members..." aria-label="MagnifyingGlass team members" />
                   </div>
                   <div className="flex gap-1 bg-surface rounded-lg p-0.5">
                     <button onClick={() => setRoleFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${roleFilter === "all" ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : "text-text-muted"}`}>All</button>
@@ -396,7 +389,7 @@ export default function TeamPage() {
                                 onClick={e => { e.stopPropagation(); window.open(`mailto:${member.email}`); }}
                                 className="p-1.5 rounded-md hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors"
                                 title="Email"
-><Mail size={11} /></button>
+><Envelope size={11} /></button>
                             </div>
                           </td>
                         </motion.tr>
@@ -450,7 +443,7 @@ export default function TeamPage() {
                         <div className="space-y-1.5">
                           {m.recentActions.map((act, i) => (
                             <div key={i} className="flex items-center gap-2.5 p-2 rounded-lg bg-surface-light border border-border-subtle">
-                              <Activity size={10} className="text-brand-accent shrink-0" />
+                              <Pulse size={10} className="text-brand-accent shrink-0" />
                               <span className="text-[10px] flex-1"><span className="font-medium">{act.action}</span> <span className="text-text-muted">on</span> {act.resource}</span>
                               <span className="text-[9px] text-text-muted shrink-0">{act.time}</span>
                             </div>
@@ -476,7 +469,7 @@ export default function TeamPage() {
                     onClick={() => setShowCustomRole(true)}
                     className="btn-secondary text-[10px] flex items-center gap-1.5"
 >
-                    <Settings size={10} /> Custom Role Builder
+                    <Gear size={10} /> Custom Role Builder
                   </motion.button>
                 </div>
                 {Object.entries(permCategories).map(([category, perms]) => (
@@ -561,7 +554,7 @@ export default function TeamPage() {
                     style={{ border: "1px dashed rgba(255,255,255,0.12)" }}
 >
                     <div className="w-10 h-10 rounded-xl bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
-                      <Settings size={16} className="text-brand-accent" />
+                      <Gear size={16} className="text-brand-accent" />
                     </div>
                     <p className="text-xs font-bold text-text-muted">Create Custom Role</p>
                     <p className="text-[9px] text-text-muted text-center">Define a role with specific permissions for your team</p>
@@ -575,7 +568,7 @@ export default function TeamPage() {
                 transition={{ duration: 0.2 }}
                 className="glass rounded-xl p-4"
 >
-                <h2 className="flex items-center gap-2 mb-3"><Activity size={13} className="text-brand-accent" /> Per-Member Access Log</h2>
+                <h2 className="flex items-center gap-2 mb-3"><Pulse size={13} className="text-brand-accent" /> Per-Member Access Log</h2>
                 <div className="space-y-2">
                   {members.flatMap(m =>
                     m.recentActions.map(a => ({
@@ -612,7 +605,7 @@ export default function TeamPage() {
                 transition={{ duration: 0.2 }}
                 className="glass rounded-xl p-4"
 >
-                <h2 className="flex items-center gap-2 mb-1"><BarChart3 size={13} className="text-brand-accent" /> Team Capacity Tracker</h2>
+                <h2 className="flex items-center gap-2 mb-1"><ChartBar size={13} className="text-brand-accent" /> Team Capacity Tracker</h2>
                 <p className="text-[10px] text-text-muted mb-4">See who has bandwidth and who is overloaded.</p>
                 <div className="space-y-3">
                   {members.map((m, idx) => {
@@ -639,7 +632,7 @@ export default function TeamPage() {
                             <div className="flex items-center justify-between">
                               <p className="text-xs font-semibold">{m.name}</p>
                               <div className="flex items-center gap-2">
-                                {combinedLoad> 80 && <AlertTriangle size={10} className="text-red-400" />}
+                                {combinedLoad> 80 && <Warning size={10} className="text-red-400" />}
                                 <span className={`text-[9px] font-medium ${loadColor}`}>{loadLevel}</span>
                               </div>
                             </div>
@@ -732,7 +725,7 @@ export default function TeamPage() {
                           className="p-1.5 rounded hover:bg-red-500/10 text-text-muted hover:text-red-400"
                           title="Remove"
 >
-                          <Trash2 size={11} />
+                          <Trash size={11} />
                         </motion.button>
                       </div>
                     </motion.div>
@@ -811,7 +804,7 @@ export default function TeamPage() {
                   </div>
 
                   <div className="rounded-lg bg-[rgba(212,255,0,0.06)] border border-[rgba(212,255,0,0.15)] p-2.5 flex items-start gap-2">
-                    <AlertTriangle size={11} className="text-brand-accent shrink-0 mt-0.5" />
+                    <Warning size={11} className="text-brand-accent shrink-0 mt-0.5" />
                     <p className="text-[10px] text-text-muted">
                       Team members control <span className="text-brand-accent font-medium">your clients</span>. They cannot create their own agency accounts, manage billing, or see other agencies.
                     </p>
@@ -839,7 +832,7 @@ export default function TeamPage() {
               <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCustomRole(false)}>
                 <div className="bg-surface border border-border-subtle w-full max-w-lg p-5 space-y-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold flex items-center gap-2"><Settings size={14} className="text-brand-accent" /> Custom Role Builder</h3>
+                    <h3 className="text-sm font-bold flex items-center gap-2"><Gear size={14} className="text-brand-accent" /> Custom Role Builder</h3>
                     <button onClick={() => setShowCustomRole(false)} className="text-text-muted hover:text-text-primary"><X size={16} /></button>
                   </div>
                   <div>
@@ -860,7 +853,7 @@ export default function TeamPage() {
                                 <div className={`w-3.5 h-3.5 rounded-full bg-white shadow transition-all mt-[1px] ${customPermissions[perm.feature] ? "ml-4" : "ml-0.5"}`} />
                               </button>
                               <span className="text-[10px] flex-1">{perm.feature}</span>
-                              {customPermissions[perm.feature] ? <Unlock size={10} className="text-emerald-400" /> : <Lock size={10} className="text-text-muted/30" />}
+                              {customPermissions[perm.feature] ? <LockOpen size={10} className="text-emerald-400" /> : <Lock size={10} className="text-text-muted/30" />}
                             </div>
                           ))}
                         </div>
@@ -965,7 +958,7 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
 
         <div>
           <label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold flex items-center gap-1">
-            <Mail size={9} /> Email (change requires re-login)
+            <Envelope size={9} /> Email (change requires re-login)
           </label>
           <input type="email" value={new_email} onChange={e => setNewEmail(e.target.value)} className="input w-full text-xs" />
         </div>
@@ -983,7 +976,7 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
               className="input w-full text-xs pr-8"
  />
             <button onClick={() => setShowPassword(s => !s)} className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary">
-              {showPassword ? <EyeOff size={11} /> : <Eye size={11} />}
+              {showPassword ? <EyeSlash size={11} /> : <Eye size={11} />}
             </button>
           </div>
         </div>

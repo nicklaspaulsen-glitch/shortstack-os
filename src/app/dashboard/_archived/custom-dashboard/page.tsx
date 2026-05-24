@@ -1,24 +1,21 @@
 "use client";
+import { ArrowCounterClockwise, Chat, CircleNotch, CurrencyDollar, DotsSixVertical, FloppyDisk, Phone, Plus, Pulse, SquaresFour, Star, Trash, TrendUp, Users } from "@phosphor-icons/react";
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { motion } from "framer-motion";
-import {
-  LayoutDashboard, Plus, Trash2, Loader2, Save, GripVertical,
-  Users, DollarSign, TrendingUp, MessageSquare, Star, Phone, Activity,
-  RotateCcw,
-} from "lucide-react";
+
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // -- Widget definitions ---------------------------------------------------------
 const WIDGET_TYPES = [
   { id: "leads_today", label: "Leads Today", icon: <Users className="w-5 h-5" />, color: "#D4FF00", bg: "from-[#D4FF00]/15 to-[#AACC00]/5" },
-  { id: "revenue_month", label: "Revenue This Month", icon: <DollarSign className="w-5 h-5" />, color: "#D4FF00", bg: "from-emerald-500/15 to-emerald-500/5" },
-  { id: "active_clients", label: "Active Clients", icon: <Activity className="w-5 h-5" />, color: "#D4FF00", bg: "from-blue-500/15 to-blue-500/5" },
-  { id: "pipeline_value", label: "Pipeline Value", icon: <TrendingUp className="w-5 h-5" />, color: "#8B5CF6", bg: "from-violet-500/15 to-violet-500/5" },
-  { id: "messages_inbox", label: "Messages Inbox", icon: <MessageSquare className="w-5 h-5" />, color: "#F59E0B", bg: "from-amber-500/15 to-amber-500/5" },
+  { id: "revenue_month", label: "Revenue This Month", icon: <CurrencyDollar className="w-5 h-5" />, color: "#D4FF00", bg: "from-emerald-500/15 to-emerald-500/5" },
+  { id: "active_clients", label: "Active Clients", icon: <Pulse className="w-5 h-5" />, color: "#D4FF00", bg: "from-blue-500/15 to-blue-500/5" },
+  { id: "pipeline_value", label: "Pipeline Value", icon: <TrendUp className="w-5 h-5" />, color: "#8B5CF6", bg: "from-violet-500/15 to-violet-500/5" },
+  { id: "messages_inbox", label: "Messages Inbox", icon: <Chat className="w-5 h-5" />, color: "#F59E0B", bg: "from-amber-500/15 to-amber-500/5" },
   { id: "reviews_week", label: "Reviews This Week", icon: <Star className="w-5 h-5" />, color: "#EC4899", bg: "from-pink-500/15 to-pink-500/5" },
   { id: "upcoming_calls", label: "Upcoming Calls", icon: <Phone className="w-5 h-5" />, color: "#FF5252", bg: "from-cyan-500/15 to-cyan-500/5" },
 ] as const;
@@ -72,7 +69,7 @@ function WidgetCard({
       <div className="p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <GripVertical className="w-4 h-4 text-text-muted shrink-0" />
+            <DotsSixVertical className="w-4 h-4 text-text-muted shrink-0" />
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center"
               style={{ background: `${def.color}20`, color: def.color }}
@@ -85,7 +82,7 @@ function WidgetCard({
             onClick={onRemove}
             className="w-6 h-6 rounded-md flex items-center justify-center text-text-muted hover:text-red-600 hover:bg-red-100 transition-all"
           >
-            <Trash2 className="w-3.5 h-3.5" />
+            <Trash className="w-3.5 h-3.5" />
           </button>
         </div>
         <p className="text-2xl font-bold text-text-muted pl-6">--</p>
@@ -188,7 +185,7 @@ export default function CustomDashboardPage() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-brand-accent" /></MotionPage>
+      <MotionPage className="flex items-center justify-center min-h-[60vh]"><CircleNotch className="w-8 h-8 animate-spin text-brand-accent" /></MotionPage>
     );
   }
 
@@ -206,7 +203,7 @@ export default function CustomDashboardPage() {
               onClick={resetLayout}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-black/5 hover:bg-black/10 text-text-muted transition-all"
             >
-              <RotateCcw className="w-4 h-4" />
+              <ArrowCounterClockwise className="w-4 h-4" />
               Reset
             </button>
             <button
@@ -214,8 +211,8 @@ export default function CustomDashboardPage() {
               disabled={saving}
               className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-brand-accent hover:bg-[#D4FF00] text-[#020711] transition-all disabled:opacity-60"
             >
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Save Layout
+              {saving ? <CircleNotch className="w-4 h-4 animate-spin" /> : <FloppyDisk className="w-4 h-4" />}
+              FloppyDisk Layout
             </button>
           </div>
         </div>
@@ -257,7 +254,7 @@ export default function CustomDashboardPage() {
               className="rounded-xl border-2 border-dashed border-[rgba(0,0,0,0.08)] flex flex-col items-center justify-center gap-3 py-20 text-center"
               onDragOver={(e) => e.preventDefault()}
             >
-              <LayoutDashboard className="w-10 h-10 text-text-muted" />
+              <SquaresFour className="w-10 h-10 text-text-muted" />
               <p className="text-[#6B7280] text-sm">Your dashboard is empty</p>
               <p className="text-text-muted text-xs">Add widgets from the panel on the left</p>
             </div>

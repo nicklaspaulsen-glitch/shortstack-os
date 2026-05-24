@@ -1,16 +1,9 @@
+import { Calendar, Check, CheckCircle, CircleNotch, Clock, Code, Copy, CursorClick, DeviceMobile, Envelope, Eye, FloppyDisk, Hash, Image, Info, Link as LinkIcon, ListBullets, MagicWand, Monitor, Palette, PaperPlaneTilt, Paperclip, Plus, Sparkle, TextB, TextItalic, TextT, TrendUp, Users, Warning, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import {
-  Mail, Send, Sparkles, Bold, Italic, Link2, List,
-  Image as ImageIcon, Save, Monitor, Smartphone, Code,
-  Clock, Eye, AlertTriangle, CheckCircle, Copy, Type,
-  Paperclip, Palette, Hash, MousePointerClick,
-  X, Plus, Calendar, Loader2, Wand2, TrendingUp, Users,
-  Info
-} from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
 import { GmailIcon, OutlookIcon } from "@/components/ui/platform-icons";
@@ -135,7 +128,7 @@ export default function EmailComposerPage() {
   const [guidedDirection, setGuidedDirection] = useState("");
   const [guidedGenerating, setGuidedGenerating] = useState(false);
 
- /* -- Send state -- */
+ /* -- PaperPlaneTilt state -- */
   const [sending, setSending] = useState(false);
   const [sendingTest, setSendingTest] = useState(false);
 
@@ -193,7 +186,7 @@ export default function EmailComposerPage() {
 
       const res = await fetch("/api/emails/send", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           to: toAddress,
           subject: email.subject.trim(),
@@ -214,7 +207,7 @@ export default function EmailComposerPage() {
       }
 
       if (!res.ok || data.success === false) {
-        const msg = data.error || `Send failed (HTTP ${res.status})`;
+        const msg = data.error || `PaperPlaneTilt failed (HTTP ${res.status})`;
         toast.error(msg);
         return;
       }
@@ -247,7 +240,7 @@ export default function EmailComposerPage() {
     try {
       const res = await fetch("/api/emails/compose", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           mode,
           prompt: aiPrompt.trim() || undefined,
@@ -298,7 +291,7 @@ export default function EmailComposerPage() {
     try {
       const res = await fetch("/api/emails/compose", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           mode: "improve",
           existing_email: email.body,
@@ -345,7 +338,7 @@ export default function EmailComposerPage() {
     try {
       const res = await fetch("/api/emails/subject-variants", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ body: email.body, audience: aiAudience.trim() || undefined, count: 5 }),
       });
       const data = await res.json();
@@ -373,7 +366,7 @@ export default function EmailComposerPage() {
     try {
       const res = await fetch("/api/emails/subject-variants", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ body: email.body, audience: aiAudience.trim() || undefined, count: 5 }),
       });
       const data = await res.json();
@@ -424,7 +417,7 @@ export default function EmailComposerPage() {
       id: "goal",
       title: "What's the goal of this email?",
       description: "Pick the template that best matches what you want to say.",
-      icon: <Mail size={16} />,
+      icon: <Envelope size={16} />,
       field: {
         type: "chip-select",
         key: "goals",
@@ -442,7 +435,7 @@ export default function EmailComposerPage() {
       id: "audience",
       title: "Who are you sending this to?",
       description: "Describe your audience so the AI can write in a voice they'll relate to.",
-      icon: <Sparkles size={16} />,
+      icon: <Sparkle size={16} />,
       field: {
         type: "text",
         key: "audience",
@@ -484,7 +477,7 @@ export default function EmailComposerPage() {
       id: "subject",
       title: "Subject line",
       description: "Hook them in the inbox � or let AI draft one for you.",
-      icon: <Type size={16} />,
+      icon: <TextT size={16} />,
       field: {
         type: "text",
         key: "subject",
@@ -503,7 +496,7 @@ export default function EmailComposerPage() {
             if (bodyDirection.trim()) {
               const res = await fetch("/api/emails/subject-variants", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-TextT": "application/json" },
                 body: JSON.stringify({ body: bodyDirection, audience: audience || undefined, count: 3 }),
               });
               if (res.ok) {
@@ -519,7 +512,7 @@ export default function EmailComposerPage() {
             const seed = `Write a single compelling email subject line (under 55 characters) for a ${goal} email${audience ? ` targeting ${audience}` : ""}. Return ONLY the subject line, no quotes, no prefix.`;
             const res = await fetch("/api/ai/enhance-prompt", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: { "Content-TextT": "application/json" },
               body: JSON.stringify({ text: seed, type: "content" }),
             });
             if (!res.ok) {
@@ -545,7 +538,7 @@ export default function EmailComposerPage() {
       id: "bodyDirection",
       title: "What should the email say?",
       description: "A few bullet points are fine � the AI will write the full email for you.",
-      icon: <Wand2 size={16} />,
+      icon: <MagicWand size={16} />,
       field: {
         type: "textarea",
         key: "bodyDirection",
@@ -566,7 +559,7 @@ export default function EmailComposerPage() {
             const prompt = `Write a ${goal} email. ${audience ? `Audience: ${audience}. ` : ""}Direction: ${direction}`;
             const res = await fetch("/api/emails/compose", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: { "Content-TextT": "application/json" },
               body: JSON.stringify({
                 mode: "write",
                 prompt,
@@ -628,7 +621,7 @@ export default function EmailComposerPage() {
         const prompt = `Write a ${goal} email. ${audienceVal ? `Audience: ${audienceVal}. ` : ""}Direction: ${bodyDirection}`;
         const res = await fetch("/api/emails/compose", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-TextT": "application/json" },
           body: JSON.stringify({
             mode: "write",
             prompt,
@@ -695,7 +688,7 @@ export default function EmailComposerPage() {
       }Direction: ${direction}`;
       const res = await fetch("/api/emails/compose", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           mode: "write",
           prompt,
@@ -740,7 +733,7 @@ export default function EmailComposerPage() {
       id: "kind",
       title: "What kind of email?",
       description: "Different goals, different voices � we'll pick a tone that fits.",
-      icon: <Mail size={18} />,
+      icon: <Envelope size={18} />,
       component: (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
           {([
@@ -811,7 +804,7 @@ export default function EmailComposerPage() {
       id: "review",
       title: "Ready to draft?",
       description: "We'll write the subject and body. You can tweak every line in Advanced mode before sending.",
-      icon: <Wand2 size={18} />,
+      icon: <MagicWand size={18} />,
       component: (
         <div className="glass rounded-xl p-4 bg-[rgba(212,255,0,0.05)] border-[rgba(212,255,0,0.2)] space-y-2">
           <p className="text-sm">
@@ -832,10 +825,10 @@ export default function EmailComposerPage() {
   ];
 
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
-    { key: "compose", label: "Compose", icon: <Mail size={14} /> },
+    { key: "compose", label: "Compose", icon: <Envelope size={14} /> },
     { key: "templates", label: "Templates", icon: <Copy size={14} /> },
     { key: "preview", label: "Preview", icon: <Eye size={14} /> },
-    { key: "spam-check", label: "Spam Check", icon: <AlertTriangle size={14} /> },
+    { key: "spam-check", label: "Spam Check", icon: <Warning size={14} /> },
     { key: "scheduler", label: "Schedule", icon: <Calendar size={14} /> },
     { key: "signatures", label: "Signatures", icon: <Palette size={14} /> },
   ];
@@ -857,7 +850,7 @@ export default function EmailComposerPage() {
                   onClick={() => setWizardOpen(true)}
                   className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full bg-brand-accent hover:bg-brand-accent/80 text-[#0D1120] shadow-lg shadow-brand-accent/20 hover:shadow-brand-accent/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
 >
-                  <Sparkles size={12} className="animate-pulse" />
+                  <Sparkle size={12} className="animate-pulse" />
                   New with AI
                   <span className="ml-1 text-[8px] uppercase bg-white/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wide">Recommended</span>
                 </button>
@@ -868,20 +861,20 @@ export default function EmailComposerPage() {
                   <Plus size={12} /> Blank
                 </button>
                 <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5" disabled={aiWriting}>
-                  {aiWriting ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} AI Write
+                  {aiWriting ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />} AI Write
                 </button>
                 <button onClick={handleAiImprove} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5" disabled={aiImproving}>
-                  {aiImproving ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />} AI Improve
+                  {aiImproving ? <CircleNotch size={12} className="animate-spin" /> : <MagicWand size={12} />} AI Improve
                 </button>
                 <button onClick={handleGenerateSubjectVariants} className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/8 transition-all flex items-center gap-1.5" disabled={loadingVariants}>
-                  {loadingVariants ? <Loader2 size={12} className="animate-spin" /> : <TrendingUp size={12} />} Subject Variants
+                  {loadingVariants ? <CircleNotch size={12} className="animate-spin" /> : <TrendUp size={12} />} Subject Variants
                 </button>
                 <button
                   onClick={() => handleSend()}
                   disabled={sending}
                   className="px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary text-xs font-semibold hover:bg-white/15 transition-all flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
 >
-                  {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />} {sending ? "Sending..." : "Send"}
+                  {sending ? <CircleNotch size={12} className="animate-spin" /> : <PaperPlaneTilt size={12} />} {sending ? "Sending..." : "PaperPlaneTilt"}
                 </button>
               </>
             )}
@@ -908,7 +901,7 @@ export default function EmailComposerPage() {
         open={wizardOpen}
         title="Compose Email with AI"
         subtitle="4 quick steps � AI handles subject + body"
-        icon={<Mail size={18} />}
+        icon={<Envelope size={18} />}
         submitLabel={wizardSubmitting ? "Generating..." : "Create Email"}
         steps={wizardSteps}
         initialData={{
@@ -947,7 +940,7 @@ export default function EmailComposerPage() {
               {/* Email Provider Selector */}
               <div>
                 <div className="flex items-center gap-1.5 mb-1">
-                  <label className="text-[9px] text-text-muted uppercase tracking-wider">Send via</label>
+                  <label className="text-[9px] text-text-muted uppercase tracking-wider">PaperPlaneTilt via</label>
                   <span
                     className="inline-flex text-text-muted/70 hover:text-brand-accent cursor-help"
                     title="SMTP = brand blasts, Gmail/Outlook = personal 1:1s"
@@ -958,7 +951,7 @@ export default function EmailComposerPage() {
                 </div>
                 <div className="flex gap-1.5">
                   {([
-                    { id: "smtp" as const, label: "SMTP", icon: <Mail size={12} /> },
+                    { id: "smtp" as const, label: "SMTP", icon: <Envelope size={12} /> },
                     { id: "gmail" as const, label: "Gmail", icon: <GmailIcon size={14} /> },
                     { id: "outlook" as const, label: "Outlook", icon: <OutlookIcon size={14} /> },
                   ]).map(p => (
@@ -981,10 +974,10 @@ export default function EmailComposerPage() {
                     "Branded send via your verified domain. Best for most outreach. Tracking, webhooks, unlimited volume."
                   )}
                   {provider === "gmail" && (
-                    "Send from your personal Gmail. Best for 1:1 personal replies. Requires Google OAuth connection."
+                    "PaperPlaneTilt from your personal Gmail. Best for 1:1 personal replies. Requires Google OAuth connection."
                   )}
                   {provider === "outlook" && (
-                    "Send from your personal Outlook. Best for 1:1 personal replies. Requires Microsoft OAuth connection."
+                    "PaperPlaneTilt from your personal Outlook. Best for 1:1 personal replies. Requires Microsoft OAuth connection."
                   )}
                 </p>
                 {/* OAuth-gating CTA � if Gmail/Outlook is picked but not connected,
@@ -993,7 +986,7 @@ export default function EmailComposerPage() {
                 {provider === "gmail" && !connectedProviders.gmail && (
                   <div className="mt-2 flex items-center justify-between gap-2 p-2 rounded-lg border border-amber-400/30 bg-amber-400/5">
                     <p className="text-[10px] text-amber-400 flex items-center gap-1.5">
-                      <AlertTriangle size={10} /> Gmail isn&apos;t connected yet � the send will fail.
+                      <Warning size={10} /> Gmail isn&apos;t connected yet � the send will fail.
                     </p>
                     <Link
                       href="/dashboard/integrations-hub"
@@ -1006,7 +999,7 @@ export default function EmailComposerPage() {
                 {provider === "outlook" && !connectedProviders.outlook && (
                   <div className="mt-2 flex items-center justify-between gap-2 p-2 rounded-lg border border-amber-400/30 bg-amber-400/5">
                     <p className="text-[10px] text-amber-400 flex items-center gap-1.5">
-                      <AlertTriangle size={10} /> Outlook isn&apos;t connected yet � the send will fail.
+                      <Warning size={10} /> Outlook isn&apos;t connected yet � the send will fail.
                     </p>
                     <Link
                       href="/dashboard/integrations-hub"
@@ -1056,7 +1049,7 @@ export default function EmailComposerPage() {
                 className="w-full text-sm font-medium pr-24 rounded-lg px-3.5 py-2.5 bg-white/5 border border-border-subtle text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 transition-all" placeholder="Subject line..." />
               <button onClick={handleSubjectIdeas} disabled={loadingVariants}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition-all flex items-center gap-1">
-                {loadingVariants ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />} AI Ideas
+                {loadingVariants ? <CircleNotch size={9} className="animate-spin" /> : <Sparkle size={9} />} AI Ideas
               </button>
             </div>
             {showSubjectAI && (
@@ -1064,7 +1057,7 @@ export default function EmailComposerPage() {
                 <p className="text-[10px] font-semibold text-indigo-400 mb-2">AI Subject Line Suggestions</p>
                 {loadingVariants && (
                   <div className="flex items-center gap-2 text-[9px] text-text-muted py-2">
-                    <Loader2 size={10} className="animate-spin" /> Generating...
+                    <CircleNotch size={10} className="animate-spin" /> Generating...
                   </div>
                 )}
                 {!loadingVariants && subjectIdeas.length === 0 && (
@@ -1082,12 +1075,12 @@ export default function EmailComposerPage() {
             {/* Rich Text Toolbar */}
             <div className="glass flex items-center gap-1 p-1.5 rounded-lg">
               {[
-                { icon: <Bold size={12} />, label: "Bold" },
-                { icon: <Italic size={12} />, label: "Italic" },
-                { icon: <Link2 size={12} />, label: "Link" },
-                { icon: <List size={12} />, label: "List" },
-                { icon: <ImageIcon size={12} />, label: "Image" },
-                { icon: <Type size={12} />, label: "Heading" },
+                { icon: <TextB size={12} />, label: "TextB" },
+                { icon: <TextItalic size={12} />, label: "TextItalic" },
+                { icon: <LinkIcon size={12} />, label: "Link" },
+                { icon: <ListBullets size={12} />, label: "ListBullets" },
+                { icon: <Image size={12} />, label: "Image" },
+                { icon: <TextT size={12} />, label: "Heading" },
               ].map(tool => (
                 <button key={tool.label} className="p-2 rounded text-text-muted hover:text-text-primary hover:bg-white/6 transition-colors" title={tool.label}>
                   {tool.icon}
@@ -1103,7 +1096,7 @@ export default function EmailComposerPage() {
               </button>
               <div className="ml-auto flex items-center gap-2">
                 <label className="flex items-center gap-1 text-[9px] text-text-muted cursor-pointer">
-                  <MousePointerClick size={9} />
+                  <CursorClick size={9} />
                   <span>Link Tracking</span>
                   <button onClick={() => setLinkTracking(!linkTracking)}
                     className={`w-6 h-3 rounded-full ml-1 ${linkTracking ? "bg-indigo-500" : "bg-surface"}`}>
@@ -1174,7 +1167,7 @@ export default function EmailComposerPage() {
                 <span>{wordCount} words</span>
                 <span>{charCount} chars</span>
                 <span className={`flex items-center gap-1 ${spamScore>= 80 ? "text-green-400" : spamScore>= 50 ? "text-yellow-400" : "text-red-400"}`}>
-                  <AlertTriangle size={9} /> Spam score: {spamScore}/100
+                  <Warning size={9} /> Spam score: {spamScore}/100
                 </span>
               </div>
               <div className="flex gap-2">
@@ -1190,7 +1183,7 @@ export default function EmailComposerPage() {
                   }}
                   className="btn-ghost text-xs flex items-center gap-1"
 >
-                  <Save size={12} /> Draft
+                  <FloppyDisk size={12} /> Draft
                 </button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -1199,8 +1192,8 @@ export default function EmailComposerPage() {
                   disabled={sendingTest || sending}
                   className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-lg hover:border-border-subtle transition-all disabled:opacity-60 disabled:cursor-not-allowed bg-white/5 border border-border-subtle"
 >
-                  {sendingTest ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
-                  {sendingTest ? "Sending..." : "Test Send"}
+                  {sendingTest ? <CircleNotch size={12} className="animate-spin" /> : <PaperPlaneTilt size={12} />}
+                  {sendingTest ? "Sending..." : "Test PaperPlaneTilt"}
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -1209,8 +1202,8 @@ export default function EmailComposerPage() {
                   disabled={sending || sendingTest}
                   className="text-xs flex items-center gap-1 px-3 py-1.5 rounded-full bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-semibold shadow-lg shadow-[rgba(212,255,0,0.15)] hover:shadow-[rgba(212,255,0,0.30)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
 >
-                  {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
-                  {sending ? "Sending..." : "Send"}
+                  {sending ? <CircleNotch size={12} className="animate-spin" /> : <PaperPlaneTilt size={12} />}
+                  {sending ? "Sending..." : "PaperPlaneTilt"}
                 </motion.button>
               </div>
             </div>
@@ -1334,7 +1327,7 @@ export default function EmailComposerPage() {
             <button onClick={() => setPreviewMode("mobile")}
               className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
                 previewMode === "mobile" ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20" : "text-text-muted border border-border-subtle"
-              }`}><Smartphone size={12} /> Mobile</button>
+              }`}><DeviceMobile size={12} /> Mobile</button>
           </div>
           <div className="flex justify-center">
             <div className={`bg-[#F5F5F5] rounded-lg shadow-2xl overflow-hidden ${previewMode === "desktop" ? "w-full max-w-2xl" : "w-[375px]"}`}>
@@ -1410,7 +1403,7 @@ export default function EmailComposerPage() {
                 {spamChecks.map((check, i) => (
                   <div key={i} className="flex items-center justify-between p-2 rounded bg-surface-light">
                     <div className="flex items-center gap-2 text-[10px]">
-                      {check.pass ? <CheckCircle size={12} className="text-green-400" /> : <AlertTriangle size={12} className="text-red-400" />}
+                      {check.pass ? <CheckCircle size={12} className="text-green-400" /> : <Warning size={12} className="text-red-400" />}
                       <span>{check.rule}</span>
                     </div>
                     <span className={`text-[9px] font-bold ${check.pass ? "text-green-400" : "text-red-400"}`}>
@@ -1436,7 +1429,7 @@ export default function EmailComposerPage() {
               
 >
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Calendar size={14} className="text-indigo-400" /> Schedule Send
+                <Calendar size={14} className="text-indigo-400" /> Schedule PaperPlaneTilt
               </h3>
               <div className="space-y-3">
                 <div>
@@ -1478,10 +1471,10 @@ export default function EmailComposerPage() {
               className="rounded-xl p-5"
               
 >
-              <h3 className="text-sm font-semibold mb-3">Optimal Send Times</h3>
+              <h3 className="text-sm font-semibold mb-3">Optimal PaperPlaneTilt Times</h3>
               <p className="text-[10px] text-text-muted mb-3">Based on your audience engagement data</p>
               <div className="space-y-2">
-                <p className="text-center text-[10px] text-text-muted py-4">No engagement data yet. Send times will be suggested once you have audience data.</p>
+                <p className="text-center text-[10px] text-text-muted py-4">No engagement data yet. PaperPlaneTilt times will be suggested once you have audience data.</p>
               </div>
             </motion.div>
           </div>
@@ -1529,7 +1522,7 @@ export default function EmailComposerPage() {
           <div className="flex items-center justify-end gap-2 pt-2">
             <button onClick={() => setShowAiWrite(false)} className="btn-ghost text-xs">Cancel</button>
             <button onClick={() => handleAiCompose(aiMode)} disabled={aiWriting} className="btn-primary text-xs flex items-center gap-1.5">
-              {aiWriting ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} Generate
+              {aiWriting ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />} Generate
             </button>
           </div>
         </div>
@@ -1540,7 +1533,7 @@ export default function EmailComposerPage() {
         <div className="space-y-2">
           {loadingVariants && (
             <div className="flex items-center justify-center gap-2 text-xs text-text-muted py-8">
-              <Loader2 size={14} className="animate-spin" /> Scoring variants...
+              <CircleNotch size={14} className="animate-spin" /> Scoring variants...
             </div>
           )}
           {!loadingVariants && subjectVariants.length === 0 && (
@@ -1584,7 +1577,7 @@ export default function EmailComposerPage() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
                 className="w-full text-xs py-2.5 rounded-xl bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-semibold shadow-lg shadow-[rgba(212,255,0,0.15)] hover:shadow-[rgba(212,255,0,0.30)] transition-all"
->Save Signature</motion.button>
+>FloppyDisk Signature</motion.button>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 16 }}

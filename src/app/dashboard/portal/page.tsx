@@ -1,3 +1,4 @@
+import { ArrowRight, ArrowSquareOut, Building, Calendar, ChartBar, Chat, CheckCircle, Circle, CircleNotch, CreditCard, File, FileText, FilmStrip, FolderOpen, Globe, Image, Lightning, MapPin, MusicNote, Package, Phone, Robot, Sparkle, Star, Target } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
@@ -15,12 +16,6 @@ import AIInsights from "@/components/ai-insights";
 import AgentActivityFeed from "@/components/agent-activity-feed";
 import { PrismPanel } from "@/components/prism";
 import { formatCurrency, formatDate, formatRelativeTime } from "@/lib/utils";
-import {
-  Package, CheckCircle, CreditCard, Circle, Bot,
-  Sparkles, Film, ArrowRight, Calendar, MessageSquare,
-  BarChart3, Zap, Star, Building, MapPin, Globe, Target, Loader, Phone,
-  FolderOpen, ImageIcon, Music, FileText, File as FileIcon, ExternalLink
-} from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -191,13 +186,13 @@ export default function ClientPortalPage() {
         style={{ borderColor: "rgba(212, 255, 0,0.10)" }}
       >
         <div className="absolute inset-0 bg-mesh opacity-40" />
-        <div className="relative flex items-center justify-between">
+        <div className="relative flex items-center justify-between flex-wrap gap-2">
           <div>
             <h1 className="text-lg font-bold tracking-tight">Welcome back, {client.contact_name?.split(" ")[0] || "there"}</h1>
             <p className="text-xs text-text-muted mt-0.5">{client.business_name || "Your Business"} � {client.package_tier || "Standard"} Plan</p>
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 text-[10px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-2.5 py-1 rounded-md border border-[rgba(212,255,0,0.08)]">
+            <div className="flex items-center gap-1.5 text-[10px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-2.5 py-2 rounded-md border border-[rgba(212,255,0,0.08)]">
               <Star size={10} className="fill-brand-accent" />
               <span className="font-medium">{client.health_score}% Health</span>
             </div>
@@ -209,11 +204,11 @@ export default function ClientPortalPage() {
       {client && <AutopilotDashboard clientId={client.id} />}
 
       {/* Stats -- portal keeps it clean, light stagger */}
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-2.5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
         <StatCard label="Leads" value={leadCount} icon={<Target size={14} />} />
-        <StatCard label="Outreach" value={outreachStats.sent} icon={<Zap size={14} />} change={outreachStats.replied > 0 ? `${outreachStats.replied} replied` : undefined} changeType="positive" />
+        <StatCard label="Outreach" value={outreachStats.sent} icon={<Lightning size={14} />} change={outreachStats.replied > 0 ? `${outreachStats.replied} replied` : undefined} changeType="positive" />
         <StatCard label="Tasks Done" value={`${completedTasks}/${totalTasks}`} icon={<CheckCircle size={14} />} changeType={completedTasks === totalTasks && totalTasks > 0 ? "positive" : "neutral"} />
-        <StatCard label="Content" value={publishedContent} icon={<Film size={14} />} change={`${content.length} total`} />
+        <StatCard label="Content" value={publishedContent} icon={<FilmStrip size={14} />} change={`${content.length} total`} />
         <StatCard label="Services" value={(client.services || []).length} icon={<Package size={14} />} />
         <StatCard label="Invoiced" value={formatCurrency(totalPaid)} icon={<CreditCard size={14} />}
           change={pendingInvoices.length > 0 ? `${pendingInvoices.length} pending` : "All paid"}
@@ -224,7 +219,7 @@ export default function ClientPortalPage() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
         <Link href="/dashboard/portal/leads" className="card-hover p-3 flex items-center gap-2.5 group border-[rgba(212,255,0,0.1)]">
           <div className="w-8 h-8 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center shrink-0">
-            <Sparkles size={14} className="text-brand-accent" />
+            <Sparkle size={14} className="text-brand-accent" />
           </div>
           <div>
             <p className="text-xs font-medium group-hover:text-text-primary transition-colors">AI Lead Engine</p>
@@ -251,7 +246,7 @@ export default function ClientPortalPage() {
         </Link>
         <Link href="/dashboard/portal/content" className="card-hover p-3 flex items-center gap-2.5 group">
           <div className="w-8 h-8 bg-info/10 rounded-lg flex items-center justify-center shrink-0">
-            <Film size={14} className="text-info" />
+            <FilmStrip size={14} className="text-info" />
           </div>
           <div>
             <p className="text-xs font-medium group-hover:text-text-primary transition-colors">Content</p>
@@ -260,7 +255,7 @@ export default function ClientPortalPage() {
         </Link>
         <Link href="/dashboard/portal/reports" className="card-hover p-3 flex items-center gap-2.5 group">
           <div className="w-8 h-8 bg-success/10 rounded-lg flex items-center justify-center shrink-0">
-            <BarChart3 size={14} className="text-success" />
+            <ChartBar size={14} className="text-success" />
           </div>
           <div>
             <p className="text-xs font-medium group-hover:text-text-primary transition-colors">Reports</p>
@@ -269,7 +264,7 @@ export default function ClientPortalPage() {
         </Link>
         <Link href="/dashboard/portal/support" className="card-hover p-3 flex items-center gap-2.5 group">
           <div className="w-8 h-8 bg-[rgba(212,255,0,0.08)] rounded-lg flex items-center justify-center shrink-0">
-            <MessageSquare size={14} className="text-brand-accent" />
+            <Chat size={14} className="text-brand-accent" />
           </div>
           <div>
             <p className="text-xs font-medium group-hover:text-text-primary transition-colors">Support</p>
@@ -281,7 +276,7 @@ export default function ClientPortalPage() {
       {/* AI Marketing Plan (shows after onboarding) */}
       {generatingPlan && (
         <PrismPanel padding="py-6" className="text-center">
-          <Loader size={20} className="mx-auto mb-2 text-brand-accent animate-spin" />
+          <CircleNotch size={20} className="mx-auto mb-2 text-brand-accent animate-spin" />
           <p className="text-xs text-text-muted">AI Chief is creating your custom marketing plan...</p>
         </PrismPanel>
       )}
@@ -294,7 +289,7 @@ export default function ClientPortalPage() {
           style={{ borderColor: "rgba(212, 255, 0,0.10)" }}
         >
           <h2 className="flex items-center gap-2">
-            <Sparkles size={13} className="text-brand-accent" /> Your Custom Marketing Plan
+            <Sparkle size={13} className="text-brand-accent" /> Your Custom Marketing Plan
           </h2>
           <pre className="text-[10px] text-text-muted leading-relaxed whitespace-pre-wrap">{aiPlan}</pre>
         </motion.div>
@@ -311,7 +306,7 @@ export default function ClientPortalPage() {
         className="glass border"
         style={{ borderColor: "rgba(212, 255, 0,0.10)" }}
       >
-        <h2 className="flex items-center gap-2"><Zap size={13} className="text-brand-accent" /> Active Services</h2>
+        <h2 className="flex items-center gap-2"><Lightning size={13} className="text-brand-accent" /> Active Services</h2>
         <div className="flex flex-wrap gap-2">
           {(client.services || []).map((service, i) => (
             <div key={i} className="bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.08)] rounded-lg px-3 py-2">
@@ -385,7 +380,7 @@ export default function ClientPortalPage() {
           style={{ borderColor: "rgba(212, 255, 0,0.10)" }}
         >
           <h2 className="flex items-center gap-2">
-            <Sparkles size={13} className="text-brand-accent" /> Recent Activity
+            <Sparkle size={13} className="text-brand-accent" /> Recent Activity
           </h2>
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {aiActions.length === 0 ? (
@@ -393,7 +388,7 @@ export default function ClientPortalPage() {
             ) : (
               aiActions.map((a, i) => (
                 <div key={(a.id as string) || i} className="flex items-start gap-2 py-1.5 border-b border-border-subtle last:border-0">
-                  <Bot size={12} className="text-brand-accent mt-0.5 shrink-0" />
+                  <Robot size={12} className="text-brand-accent mt-0.5 shrink-0" />
                   <div className="min-w-0">
                     <p className="text-xs">{a.description as string}</p>
                     <p className="text-[9px] text-text-muted">{formatRelativeTime(a.created_at as string)}</p>
@@ -458,7 +453,7 @@ export default function ClientPortalPage() {
                 <p className="text-[10px] text-text-muted">Total: {formatCurrency(pendingInvoices.reduce((s, i) => s + i.amount, 0))}</p>
               </div>
             </div>
-            <Link href="/dashboard/portal/billing" className="btn-secondary text-[10px] py-1 px-2.5">
+            <Link href="/dashboard/portal/billing" className="btn-secondary text-[10px] py-1 px-2.5 min-h-[44px]">
               View Invoices
             </Link>
           </div>
@@ -516,14 +511,14 @@ function ClientPortalPhoneCard({ clientId }: { clientId: string }) {
             </span>
             {status.eleven_agent_id && (
               <span className="text-[9px] px-2 py-0.5 rounded-full border bg-[rgba(212,255,0,0.08)] text-brand-accent border-[rgba(212,255,0,0.25)] flex items-center gap-1">
-                <Bot size={9} /> AI caller ready
+                <Robot size={9} /> AI caller ready
               </span>
             )}
           </div>
           <div className="grid grid-cols-2 gap-2 mt-1">
             <div className="rounded-xl border border-border-subtle bg-surface-light p-3">
               <div className="flex items-center gap-1.5 text-[10px] text-text-muted mb-0.5">
-                <MessageSquare size={10} /> SMS this month
+                <Chat size={10} /> SMS this month
               </div>
               <p className="text-base font-bold">{status.usage.sms_this_month}</p>
             </div>
@@ -568,14 +563,14 @@ function portalFormatBytes(bytes: number): string {
 function portalFileIcon(type: string) {
   const t = (type || "").toLowerCase();
   if (t.startsWith("image") || ["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(t))
-    return <ImageIcon size={14} className="text-brand-accent" />;
+    return <Image size={14} className="text-brand-accent" />;
   if (t.startsWith("video") || ["mp4", "mov", "avi", "webm", "mkv"].includes(t))
-    return <Film size={14} className="text-brand-accent" />;
+    return <FilmStrip size={14} className="text-brand-accent" />;
   if (t.startsWith("audio") || ["mp3", "wav", "ogg", "m4a", "flac"].includes(t))
-    return <Music size={14} className="text-pink-400" />;
+    return <MusicNote size={14} className="text-pink-400" />;
   if (["pdf", "doc", "docx", "txt"].includes(t) || t.includes("document"))
     return <FileText size={14} className="text-brand-accent" />;
-  return <FileIcon size={14} className="text-text-muted" />;
+  return <File size={14} className="text-text-muted" />;
 }
 
 function ClientPortalFilesCard({ clientId }: { clientId: string }) {
@@ -611,7 +606,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
           <span className="text-[10px] text-text-muted">
             {loading ? "Loading..." : `${files.length} file${files.length === 1 ? "" : "s"}`}
           </span>
-          <Link href="/dashboard/portal/uploads" className="btn-secondary text-[10px] py-1 px-2.5">
+          <Link href="/dashboard/portal/uploads" className="btn-secondary text-[10px] py-1 px-2.5 min-h-[44px]">
             Manage
           </Link>
         </div>
@@ -656,7 +651,7 @@ function ClientPortalFilesCard({ clientId }: { clientId: string }) {
                   </div>
                   <p className="text-[9px] text-text-muted mt-0.5">{formatRelativeTime(f.uploaded_at)}</p>
                 </div>
-                {f.url && <ExternalLink size={10} className="text-text-muted shrink-0" />}
+                {f.url && <ArrowSquareOut size={10} className="text-text-muted shrink-0" />}
               </a>
             );
           })}
@@ -701,8 +696,8 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
       subtitle: "Basic info so we can set up your account",
       fields: [
         { key: "business_name", label: "Business Name", placeholder: "e.g., Bright Smile Dental", required: true, icon: <Building size={14} /> },
-        { key: "contact_name", label: "Your Name", placeholder: "e.g., John Smith", required: true, icon: <Bot size={14} /> },
-        { key: "phone", label: "Phone", placeholder: "(555) 123-4567", icon: <MessageSquare size={14} /> },
+        { key: "contact_name", label: "Your Name", placeholder: "e.g., John Smith", required: true, icon: <Robot size={14} /> },
+        { key: "phone", label: "Phone", placeholder: "(555) 123-4567", icon: <Chat size={14} /> },
         { key: "website", label: "Website", placeholder: "www.yourbusiness.com", icon: <Globe size={14} /> },
         { key: "industry", label: "Industry", placeholder: "e.g., Dental, Legal, HVAC, Restaurant", required: true, icon: <Building size={14} /> },
         { key: "city", label: "City / Location", placeholder: "e.g., Miami, FL", icon: <MapPin size={14} /> },
@@ -786,7 +781,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
       {/* Header */}
       <div className="text-center">
         <div className="w-14 h-14 bg-[rgba(212,255,0,0.08)]  flex items-center justify-center mx-auto mb-3 border border-[rgba(212,255,0,0.12)]">
-          <Sparkles size={24} className="text-brand-accent" />
+          <Sparkle size={24} className="text-brand-accent" />
         </div>
         <h1 className="text-lg font-bold tracking-tight">Welcome to Trinity</h1>
         <p className="text-xs text-text-muted mt-1">Let&apos;s set up your account — takes less than 2 minutes</p>
@@ -871,7 +866,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
           ) : (
             <button onClick={handleSubmit} disabled={submitting}
               className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-              {submitting ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+              {submitting ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
               {submitting ? "Setting up..." : "Create My Profile"}
             </button>
           )}

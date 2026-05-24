@@ -1,3 +1,5 @@
+import { ArrowsDownUp, BookOpen, Brain, Briefcase, Camera, CaretDown, CaretRight, ChartBar, Chat, ChatText, Check, CircleNotch, Clock, ClosedCaptioning, Cloud, Copy, Crop, Crown, Cursor, CursorClick, Disc, DotsSixVertical, DownloadSimple, Drop, Eye, File, FileText, FilmStrip, Fire, Gauge, Guitar, Headphones, Heart, Image, ImageSquare, Lightning, ListChecks, Lock, MagicWand, Megaphone, Microphone, Minus, Monitor, MusicNote, PaintBrush, Palette, Play, Plus, Pulse, Robot, Scissors, ShareNetwork, Sliders, SlidersHorizontal, Smiley, Sparkle, SpeakerHigh, SpeakerX, SquaresFour, Stack, Star, Sun, Target, TextT, Timer, TrendUp, UploadSimple, WarningCircle, Waves, Wind, X } from "@phosphor-icons/react";
+import type { Icon } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useRef, type ReactNode } from "react";
@@ -10,24 +12,6 @@ import {
   formatVideoDuration,
   tierForVideoSeconds,
 } from "@/lib/plan-limits";
-import {
-  Film, Sparkles, Loader, Play, Copy, Download,
-  Clock, Camera, Monitor, Zap, Music, Type, Wand2,
-  Layers, Mic, Volume2, Palette, LayoutGrid, Eye,
-  BookOpen, Scissors, Image as ImageIcon, Upload, X,
-  GripVertical, FileText, Paintbrush, Sliders, Ratio,
-  SunMedium, MessageSquare, Speech, MonitorPlay,
-  Gauge, TextCursorInput, Droplets, BarChart3, ListChecks,
-  ImagePlus, Megaphone, Settings2,
-  Plus, Minus, Check, AlertCircle, Timer,
-  Captions, Wind, ArrowUpDown, Brain, Share2, Crop,
-  MousePointer2, Star, Smile, Flame, TrendingUp, Bot,
-  VolumeX, Waves, ChevronDown, ChevronRight,
-  Loader2,
-  Cloud, Briefcase, Heart, Headphones, Guitar, Crown, Disc3,
-  Activity, Lock,
-  type LucideIcon,
-} from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
@@ -149,21 +133,21 @@ interface AiProjectData {
 const VIDEO_TYPES = [
   { id: "reel", name: "Reel / TikTok", aspect: "9:16", duration: 30, icon: <Camera size={14} />, desc: "Vertical short-form" },
   { id: "youtube", name: "YouTube Video", aspect: "16:9", duration: 60, icon: <Monitor size={14} />, desc: "Horizontal long-form" },
-  { id: "youtube_short", name: "YouTube Short", aspect: "9:16", duration: 60, icon: <Film size={14} />, desc: "Vertical YouTube format" },
-  { id: "ad", name: "Ad Creative", aspect: "1:1", duration: 15, icon: <Zap size={14} />, desc: "Square ad format" },
-  { id: "story", name: "Story", aspect: "9:16", duration: 15, icon: <Film size={14} />, desc: "Full-screen ephemeral" },
+  { id: "youtube_short", name: "YouTube Short", aspect: "9:16", duration: 60, icon: <FilmStrip size={14} />, desc: "Vertical YouTube format" },
+  { id: "ad", name: "Ad Creative", aspect: "1:1", duration: 15, icon: <Lightning size={14} />, desc: "Square ad format" },
+  { id: "story", name: "Story", aspect: "9:16", duration: 15, icon: <FilmStrip size={14} />, desc: "Full-screen ephemeral" },
   { id: "explainer", name: "Explainer", aspect: "16:9", duration: 90, icon: <BookOpen size={14} />, desc: "Educational walkthrough" },
-  { id: "testimonial", name: "Testimonial", aspect: "1:1", duration: 30, icon: <Mic size={14} />, desc: "Client success story" },
+  { id: "testimonial", name: "Testimonial", aspect: "1:1", duration: 30, icon: <Microphone size={14} />, desc: "Client success story" },
   { id: "product_demo", name: "Product Demo", aspect: "16:9", duration: 45, icon: <Eye size={14} />, desc: "Feature showcase" },
-  { id: "carousel_video", name: "Carousel Video", aspect: "1:1", duration: 60, icon: <Layers size={14} />, desc: "Multi-slide video" },
-  { id: "podcast_clip", name: "Podcast Clip", aspect: "1:1", duration: 60, icon: <Mic size={14} />, desc: "Audio waveform + captions" },
+  { id: "carousel_video", name: "Carousel Video", aspect: "1:1", duration: 60, icon: <Stack size={14} />, desc: "Multi-slide video" },
+  { id: "podcast_clip", name: "Podcast Clip", aspect: "1:1", duration: 60, icon: <Microphone size={14} />, desc: "Audio waveform + captions" },
   { id: "before_after", name: "Before / After", aspect: "9:16", duration: 20, icon: <Scissors size={14} />, desc: "Side-by-side comparison" },
   { id: "countdown", name: "Countdown/Reveal", aspect: "9:16", duration: 15, icon: <Clock size={14} />, desc: "Suspense + reveal" },
   { id: "tutorial", name: "Tutorial/How-To", aspect: "16:9", duration: 120, icon: <BookOpen size={14} />, desc: "Step-by-step guide" },
   { id: "vlog", name: "Vlog Style", aspect: "16:9", duration: 180, icon: <Camera size={14} />, desc: "Personal/behind scenes" },
-  { id: "promo", name: "Promo Video", aspect: "16:9", duration: 30, icon: <Zap size={14} />, desc: "High-energy promotion" },
-  { id: "slideshow", name: "Photo Slideshow", aspect: "1:1", duration: 30, icon: <Layers size={14} />, desc: "Image + music sequence" },
-  { id: "lyric_video", name: "Lyric/Quote Video", aspect: "9:16", duration: 30, icon: <Wand2 size={14} />, desc: "Animated text + bg" },
+  { id: "promo", name: "Promo Video", aspect: "16:9", duration: 30, icon: <Lightning size={14} />, desc: "High-energy promotion" },
+  { id: "slideshow", name: "Photo Slideshow", aspect: "1:1", duration: 30, icon: <Stack size={14} />, desc: "Image + music sequence" },
+  { id: "lyric_video", name: "Lyric/Quote Video", aspect: "9:16", duration: 30, icon: <MagicWand size={14} />, desc: "Animated text + bg" },
   { id: "reaction", name: "Reaction Video", aspect: "9:16", duration: 30, icon: <Eye size={14} />, desc: "Split screen react" },
 ];
 
@@ -175,7 +159,7 @@ const STYLES = [
   { id: "minimal", name: "Minimal", desc: "Less is more, whitespace" },
   { id: "corporate", name: "Corporate", desc: "Professional, trust-focused" },
   { id: "retro", name: "Retro / Y2K", desc: "Nostalgic, colorful, playful" },
-  { id: "cinematic", name: "Cinematic", desc: "Film grain, moody lighting" },
+  { id: "cinematic", name: "Cinematic", desc: "FilmStrip grain, moody lighting" },
   { id: "glassmorphism", name: "Glassmorphism", desc: "Frosted glass, blur effects" },
   { id: "brutalist", name: "Brutalist", desc: "Raw, bold typography" },
   { id: "3d-depth", name: "3D Depth", desc: "Parallax, layered depth" },
@@ -237,39 +221,39 @@ function playMoodTone(moodId: string): void {
   }
 }
 
-// Music moods � each gets a lucide icon + a color tint so the grid feels
+// MusicNote moods � each gets a lucide icon + a color tint so the grid feels
 // like a designed product instead of an emoji picker. Tints are tailwind
 // arbitrary-value classes so every tile can have its own hue without a
 // full theme extension.
 interface MoodOption {
   id: string;
   name: string;
-  icon: LucideIcon;
+  icon: Icon;
   tint: string; // tailwind class for icon color when inactive
   bg: string;   // tailwind class for icon tile background tint
 }
 const MUSIC_MOODS: MoodOption[] = [
-  { id: "upbeat",       name: "Upbeat",          icon: Zap,        tint: "text-amber-300",  bg: "bg-amber-500/15" },
-  { id: "motivational", name: "Motivational",    icon: Flame,      tint: "text-orange-300", bg: "bg-orange-500/15" },
+  { id: "upbeat",       name: "Upbeat",          icon: Lightning,        tint: "text-amber-300",  bg: "bg-amber-500/15" },
+  { id: "motivational", name: "Motivational",    icon: Fire,      tint: "text-orange-300", bg: "bg-orange-500/15" },
   { id: "chill",        name: "Chill",           icon: Cloud,      tint: "text-sky-300",    bg: "bg-sky-500/15" },
-  { id: "dramatic",     name: "Dramatic",        icon: Film,       tint: "text-violet-300", bg: "bg-violet-500/15" },
+  { id: "dramatic",     name: "Dramatic",        icon: FilmStrip,       tint: "text-violet-300", bg: "bg-violet-500/15" },
   { id: "corporate",    name: "Corporate",       icon: Briefcase,  tint: "text-text-muted",  bg: "bg-slate-500/15" },
-  { id: "trendy",       name: "Trendy/Pop",      icon: Sparkles,   tint: "text-pink-300",   bg: "bg-pink-500/15" },
+  { id: "trendy",       name: "Trendy/Pop",      icon: Sparkle,   tint: "text-pink-300",   bg: "bg-pink-500/15" },
   { id: "emotional",    name: "Emotional",       icon: Heart,      tint: "text-rose-300",   bg: "bg-rose-500/15" },
   { id: "lofi",         name: "Lo-Fi",           icon: Headphones, tint: "text-indigo-300", bg: "bg-indigo-500/15" },
   { id: "cinematic",    name: "Cinematic",       icon: Camera,     tint: "text-teal-300",   bg: "bg-teal-500/15" },
-  { id: "edm",          name: "EDM/Electronic",  icon: Activity,   tint: "text-cyan-300",   bg: "bg-cyan-500/15" },
-  { id: "hip-hop",      name: "Hip-Hop",         icon: Mic,        tint: "text-purple-300", bg: "bg-purple-500/15" },
+  { id: "edm",          name: "EDM/Electronic",  icon: Pulse,   tint: "text-cyan-300",   bg: "bg-cyan-500/15" },
+  { id: "hip-hop",      name: "Hip-Hop",         icon: Microphone,        tint: "text-purple-300", bg: "bg-purple-500/15" },
   { id: "acoustic",     name: "Acoustic",        icon: Guitar,     tint: "text-amber-400",  bg: "bg-amber-600/15" },
-  { id: "jazz",         name: "Jazz",            icon: Music,      tint: "text-indigo-300",   bg: "bg-indigo-500/15" },
+  { id: "jazz",         name: "Jazz",            icon: MusicNote,      tint: "text-indigo-300",   bg: "bg-indigo-500/15" },
   { id: "ambient",      name: "Ambient",         icon: Waves,      tint: "text-emerald-300",bg: "bg-emerald-500/15" },
   { id: "epic",         name: "Epic/Orchestral", icon: Crown,      tint: "text-yellow-300", bg: "bg-yellow-500/15" },
-  { id: "funk",         name: "Funk/Groove",     icon: Disc3,      tint: "text-fuchsia-300",bg: "bg-fuchsia-500/15" },
-  { id: "none",         name: "No Music",        icon: VolumeX,    tint: "text-text-muted",      bg: "bg-surface-light" },
+  { id: "funk",         name: "Funk/Groove",     icon: Disc,      tint: "text-fuchsia-300",bg: "bg-fuchsia-500/15" },
+  { id: "none",         name: "No MusicNote",        icon: SpeakerX,    tint: "text-text-muted",      bg: "bg-surface-light" },
 ];
 
 const CAPTION_STYLES: { id: string; name: string; previewBg: string; previewCss: React.CSSProperties }[] = [
-  { id: "none",           name: "No Captions",           previewBg: "#111", previewCss: { color: "rgba(255,255,255,0.25)", fontStyle: "italic", fontSize: 11 } },
+  { id: "none",           name: "No ClosedCaptioning",           previewBg: "#111", previewCss: { color: "rgba(255,255,255,0.25)", fontStyle: "italic", fontSize: 11 } },
   { id: "bottom_bar",     name: "Bottom Bar",            previewBg: "#000", previewCss: { color: "#fff", background: "rgba(0,0,0,0.75)", padding: "1px 6px", fontSize: 11, fontWeight: 400 } },
   { id: "word_highlight", name: "Word-by-Word",          previewBg: "#111", previewCss: { color: "#FFD700", fontWeight: 900, fontSize: 13, letterSpacing: 0 } },
   { id: "centered_bold",  name: "Centered Bold",         previewBg: "#0a0a0a", previewCss: { color: "#fff", fontWeight: 900, fontSize: 14, textAlign: "center", textShadow: "0 2px 8px rgba(0,0,0,0.8)" } },
@@ -309,7 +293,7 @@ const MOTION_GRAPHICS = [
 const COLOR_PRESETS = [
   { id: "warm_sunset", name: "Warm Sunset", colors: ["#FF6B35", "#F7C59F", "#EFEFD0"], desc: "Golden hour warmth" },
   { id: "cool_ocean", name: "Cool Ocean", colors: ["#1B4965", "#5FA8D3", "#BEE9E8"], desc: "Blue aquatic tones" },
-  { id: "vintage_film", name: "Vintage Film", colors: ["#8B7355", "#C4A882", "#E8DCC8"], desc: "Faded retro look" },
+  { id: "vintage_film", name: "Vintage FilmStrip", colors: ["#8B7355", "#C4A882", "#E8DCC8"], desc: "Faded retro look" },
   { id: "cyberpunk_neon", name: "Cyberpunk Neon", colors: ["#FF00FF", "#00FFFF", "#0D0221"], desc: "Electric neon glow" },
   { id: "forest_green", name: "Forest Green", colors: ["#2D6A4F", "#52B788", "#D8F3DC"], desc: "Natural earth tones" },
   { id: "moody_noir", name: "Moody Noir", colors: ["#1a1a2e", "#16213e", "#e94560"], desc: "Dark cinematic mood" },
@@ -332,7 +316,7 @@ const TEXT_ANIMATIONS = [
 
 const EFFECT_PRESETS = [
   { id: "zoom_pulse", name: "Zoom Pulse", category: "motion", desc: "Gentle zoom in/out on beat" },
-  { id: "film_grain", name: "Film Grain", category: "overlay", desc: "Vintage film grain overlay" },
+  { id: "film_grain", name: "FilmStrip Grain", category: "overlay", desc: "Vintage film grain overlay" },
   { id: "vhs_retro", name: "VHS Retro", category: "overlay", desc: "VHS tracking lines + color bleed" },
   { id: "cinematic_bars", name: "Cinematic Bars", category: "overlay", desc: "Letterbox bars top/bottom" },
   { id: "light_leak", name: "Light Leak", category: "overlay", desc: "Warm orange light leak overlay" },
@@ -502,8 +486,8 @@ const TRANSITION_PRESETS = [
 ];
 
 const COLOR_LUT_PRESETS = [
-  { id: "cinematic", name: "Cinematic", desc: "Film-like contrast", preview: "linear-gradient(135deg, #1a2a3a, #2a1a0a)" },
-  { id: "film_look", name: "Film Look", desc: "35mm film emulation", preview: "linear-gradient(135deg, #3a2f1a, #5a4f2a)" },
+  { id: "cinematic", name: "Cinematic", desc: "FilmStrip-like contrast", preview: "linear-gradient(135deg, #1a2a3a, #2a1a0a)" },
+  { id: "film_look", name: "FilmStrip Look", desc: "35mm film emulation", preview: "linear-gradient(135deg, #3a2f1a, #5a4f2a)" },
   { id: "vibrant", name: "Vibrant", desc: "Boost saturation", preview: "linear-gradient(135deg, #ff6b00, #ff00aa)" },
   { id: "muted", name: "Muted", desc: "Desaturated tones", preview: "linear-gradient(135deg, #6a6a6a, #8a8a8a)" },
   { id: "vintage", name: "Vintage", desc: "Faded retro look", preview: "linear-gradient(135deg, #b89068, #d4a574)" },
@@ -577,7 +561,7 @@ const EFFECTS_LIBRARY: Array<{ id: string; name: string; category: string; previ
   { id: "rgb_split", name: "RGB Split", category: "Distortion", preview: "bg-gradient-to-r from-red-500 via-black to-blue-500", desc: "Channel-separated edges" },
   { id: "chromatic_aberration", name: "Chromatic Aberration", category: "Distortion", preview: "bg-gradient-to-r from-rose-400 via-slate-800 to-cyan-400", desc: "Color-fringe lens effect" },
   { id: "vhs", name: "VHS", category: "Distortion", preview: "bg-[repeating-linear-gradient(0deg,#222_0_2px,#555_2px_3px)]", desc: "Tracking lines + warble" },
-  { id: "film_grain", name: "Film Grain", category: "Distortion", preview: "bg-gradient-to-br from-neutral-800 via-neutral-700 to-neutral-900", desc: "Analog film texture" },
+  { id: "film_grain", name: "FilmStrip Grain", category: "Distortion", preview: "bg-gradient-to-br from-neutral-800 via-neutral-700 to-neutral-900", desc: "Analog film texture" },
   { id: "scan_lines", name: "Scan Lines", category: "Distortion", preview: "bg-[repeating-linear-gradient(0deg,#000_0_2px,#0f0_2px_4px)]", desc: "CRT horizontal scan" },
   { id: "digital_noise", name: "Digital Noise", category: "Distortion", preview: "bg-gradient-to-br from-slate-700 via-slate-800 to-black", desc: "Static/noise overlay" },
   { id: "pixelation", name: "Pixelation", category: "Distortion", preview: "bg-[conic-gradient(at_top_left,#f97316,#eab308,#22c55e,#FF5252,#8b5cf6)]", desc: "Mosaic-style pixels" },
@@ -611,7 +595,7 @@ const EFFECTS_LIBRARY: Array<{ id: string; name: string; category: string; previ
   // Atmospheric
   { id: "rain_overlay", name: "Rain Overlay", category: "Atmospheric", preview: "bg-gradient-to-b from-slate-700 via-slate-600 to-slate-800", desc: "Animated rain drops" },
   { id: "snow", name: "Snow", category: "Atmospheric", preview: "bg-gradient-to-br from-slate-100 via-white to-slate-200", desc: "Falling snowflakes" },
-  { id: "sparkles", name: "Sparkles", category: "Atmospheric", preview: "bg-gradient-to-br from-amber-300 via-yellow-200 to-rose-300", desc: "Shimmer glitter FX" },
+  { id: "sparkles", name: "Sparkle", category: "Atmospheric", preview: "bg-gradient-to-br from-amber-300 via-yellow-200 to-rose-300", desc: "Shimmer glitter FX" },
   { id: "confetti", name: "Confetti", category: "Atmospheric", preview: "bg-gradient-to-br from-rose-400 via-yellow-300 to-emerald-400", desc: "Celebration burst" },
   { id: "embers", name: "Embers", category: "Atmospheric", preview: "bg-gradient-to-t from-orange-700 via-red-500 to-yellow-300", desc: "Glowing embers rise" },
   { id: "bubbles", name: "Bubbles", category: "Atmospheric", preview: "bg-gradient-to-tr from-cyan-200 via-blue-300 to-indigo-400", desc: "Floating bubbles" },
@@ -703,7 +687,7 @@ const YOUTUBER_PRESETS = [
     name: "MrBeast",
     tagline: "Huge yellow captions, punch zooms, high-energy",
     preview: "bg-gradient-to-br from-red-600 via-yellow-500 to-red-500",
-    tags: ["Caption: Impact", "Grade: Vibrant", "Music: EDM"],
+    tags: ["Caption: Impact", "Grade: Vibrant", "MusicNote: EDM"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Impact", fontSize: 80, textColor: "#FFDD00", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 6, position: "bottom" as const, customY: 78, maxWordsPerLine: 3, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "spring" },
@@ -720,7 +704,7 @@ const YOUTUBER_PRESETS = [
     name: "PewDiePie",
     tagline: "Bold white captions, meme overlays, gaming energy",
     preview: "bg-gradient-to-br from-red-500 via-pink-500 to-purple-600",
-    tags: ["Caption: Bold White", "Grade: Neutral", "Music: Hip-Hop"],
+    tags: ["Caption: Bold White", "Grade: Neutral", "MusicNote: Hip-Hop"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Impact", fontSize: 64, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 5, position: "top" as const, customY: 15, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "pop", duration: 0.25, easing: "bounce" },
@@ -737,7 +721,7 @@ const YOUTUBER_PRESETS = [
     name: "MKBHD",
     tagline: "Clean minimalist, cinematic grade, smooth slow-mo",
     preview: "bg-gradient-to-br from-slate-700 via-slate-900 to-red-900",
-    tags: ["Caption: Minimal", "Grade: Cinematic", "Music: Ambient Tech"],
+    tags: ["Caption: Minimal", "Grade: Cinematic", "MusicNote: Ambient Tech"],
     config: {
       captions: { enabled: false, autoGenerate: false, preset: "podcast_minimal", fontFamily: "Inter", fontSize: 28, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 6, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.6, easing: "ease-out" },
@@ -754,7 +738,7 @@ const YOUTUBER_PRESETS = [
     name: "Ali Abdaal",
     tagline: "Friendly clean captions, gentle transitions, warm grade",
     preview: "bg-gradient-to-br from-orange-300 via-amber-400 to-yellow-500",
-    tags: ["Caption: Clean Sans", "Grade: Warm", "Music: Upbeat"],
+    tags: ["Caption: Clean Sans", "Grade: Warm", "MusicNote: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Poppins", fontSize: 32, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.6)", strokeWidth: 0, position: "bottom" as const, customY: 82, maxWordsPerLine: 6, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.4, easing: "ease-out" },
@@ -771,7 +755,7 @@ const YOUTUBER_PRESETS = [
     name: "Veritasium",
     tagline: "Educational with emphasis, motion graphics, clean grade",
     preview: "bg-gradient-to-br from-sky-600 via-blue-700 to-indigo-900",
-    tags: ["Caption: Emphasized", "Grade: Clean", "Music: Corporate"],
+    tags: ["Caption: Emphasized", "Grade: Clean", "MusicNote: Corporate"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Inter", fontSize: 34, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "rgba(0,0,0,0.5)", strokeWidth: 2, position: "bottom" as const, customY: 80, maxWordsPerLine: 7, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "word_cascade", duration: 0.5, easing: "ease-out" },
@@ -788,7 +772,7 @@ const YOUTUBER_PRESETS = [
     name: "Matt D'Avella",
     tagline: "Cinematic minimalism, letterbox, muted piano",
     preview: "bg-gradient-to-br from-stone-700 via-stone-800 to-stone-900",
-    tags: ["Caption: None", "Grade: Muted", "Music: Piano"],
+    tags: ["Caption: None", "Grade: Muted", "MusicNote: Piano"],
     config: {
       captions: { enabled: false, autoGenerate: false, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 22, textColor: "#f5f5f5", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 88, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.8, easing: "ease-in-out" },
@@ -805,7 +789,7 @@ const YOUTUBER_PRESETS = [
     name: "Peter McKinnon",
     tagline: "Cinematic orange/teal, dramatic transitions, slow-mo",
     preview: "bg-gradient-to-br from-orange-600 via-teal-700 to-slate-900",
-    tags: ["Caption: Cinematic", "Grade: Teal & Orange", "Music: Cinematic"],
+    tags: ["Caption: Cinematic", "Grade: Teal & Orange", "MusicNote: Cinematic"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 26, textColor: "#F5F5F5", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 7, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.6, easing: "ease-out" },
@@ -822,7 +806,7 @@ const YOUTUBER_PRESETS = [
     name: "Graham Stephan",
     tagline: "Finance vibe, green/gold accents, casual captions",
     preview: "bg-gradient-to-br from-green-600 via-emerald-700 to-yellow-600",
-    tags: ["Caption: Casual", "Grade: Warm", "Music: Upbeat"],
+    tags: ["Caption: Casual", "Grade: Warm", "MusicNote: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Montserrat", fontSize: 36, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "rgba(0,0,0,0.55)", strokeWidth: 2, position: "bottom" as const, customY: 80, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.35, easing: "ease-out" },
@@ -839,7 +823,7 @@ const YOUTUBER_PRESETS = [
     name: "Joe Rogan",
     tagline: "Podcast style, minimal edits, center focus",
     preview: "bg-gradient-to-br from-neutral-800 via-neutral-900 to-black",
-    tags: ["Caption: Podcast", "Grade: Muted", "Music: None"],
+    tags: ["Caption: Podcast", "Grade: Muted", "MusicNote: None"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "podcast_minimal", fontFamily: "Inter", fontSize: 30, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 88, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.3, easing: "linear" },
@@ -856,7 +840,7 @@ const YOUTUBER_PRESETS = [
     name: "Casey Neistat",
     tagline: "Vlog energy, handheld feel, punchy text overlays",
     preview: "bg-gradient-to-br from-yellow-500 via-red-500 to-orange-600",
-    tags: ["Caption: Bold", "Grade: High Contrast", "Music: Upbeat"],
+    tags: ["Caption: Bold", "Grade: High Contrast", "MusicNote: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Bebas Neue", fontSize: 54, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "center" as const, customY: 50, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "slide_left", duration: 0.3, easing: "ease-out" },
@@ -873,7 +857,7 @@ const YOUTUBER_PRESETS = [
     name: "Ryan Trahan",
     tagline: "Adventure vlog, dynamic captions, warm grade",
     preview: "bg-gradient-to-br from-amber-500 via-orange-600 to-rose-600",
-    tags: ["Caption: Dynamic", "Grade: Warm", "Music: Upbeat"],
+    tags: ["Caption: Dynamic", "Grade: Warm", "MusicNote: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "reel_trendy", fontFamily: "Montserrat", fontSize: 48, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "center" as const, customY: 55, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "spring" },
@@ -890,7 +874,7 @@ const YOUTUBER_PRESETS = [
     name: "Dude Perfect",
     tagline: "Sports energy, high-impact transitions, slow-mo hits",
     preview: "bg-gradient-to-br from-blue-600 via-cyan-500 to-red-500",
-    tags: ["Caption: Bold", "Grade: Vibrant", "Music: Epic"],
+    tags: ["Caption: Bold", "Grade: Vibrant", "MusicNote: Epic"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Oswald", fontSize: 60, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 5, position: "top" as const, customY: 18, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "scale_up", duration: 0.3, easing: "spring" },
@@ -907,7 +891,7 @@ const YOUTUBER_PRESETS = [
     name: "Emma Chamberlain",
     tagline: "Relaxed vlog, hand-written text, vintage grade",
     preview: "bg-gradient-to-br from-amber-200 via-orange-300 to-rose-400",
-    tags: ["Caption: Handwritten", "Grade: Vintage", "Music: Lo-Fi"],
+    tags: ["Caption: Handwritten", "Grade: Vintage", "MusicNote: Lo-Fi"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Merriweather", fontSize: 28, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 2, position: "bottom" as const, customY: 83, maxWordsPerLine: 6, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "typewriter", duration: 0.5, easing: "linear" },
@@ -924,7 +908,7 @@ const YOUTUBER_PRESETS = [
     name: "Dream / Minecraft",
     tagline: "Gaming, red/green highlights, dramatic music swells",
     preview: "bg-gradient-to-br from-green-500 via-lime-500 to-red-600",
-    tags: ["Caption: Gaming", "Grade: High Contrast", "Music: Trailer"],
+    tags: ["Caption: Gaming", "Grade: High Contrast", "MusicNote: Trailer"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Impact", fontSize: 56, textColor: "#00FF66", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "top" as const, customY: 20, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "shake", duration: 0.25, easing: "bounce" },
@@ -941,7 +925,7 @@ const YOUTUBER_PRESETS = [
     name: "Linus Tech Tips",
     tagline: "Tech review, clean captions, blue/silver grade",
     preview: "bg-gradient-to-br from-sky-500 via-slate-400 to-slate-700",
-    tags: ["Caption: Clean", "Grade: Cool", "Music: Corporate"],
+    tags: ["Caption: Clean", "Grade: Cool", "MusicNote: Corporate"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Roboto", fontSize: 32, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.65)", strokeWidth: 0, position: "bottom" as const, customY: 82, maxWordsPerLine: 7, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "slide_left", duration: 0.35, easing: "ease-out" },
@@ -958,7 +942,7 @@ const YOUTUBER_PRESETS = [
     name: "Corridor Crew",
     tagline: "VFX heavy, dramatic cuts, bass-heavy cinematic",
     preview: "bg-gradient-to-br from-purple-700 via-fuchsia-600 to-slate-900",
-    tags: ["Caption: Cinematic", "Grade: Cinematic", "Music: Trailer"],
+    tags: ["Caption: Cinematic", "Grade: Cinematic", "MusicNote: Trailer"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 30, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 6, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "blur_to_clear", duration: 0.5, easing: "ease-out" },
@@ -975,7 +959,7 @@ const YOUTUBER_PRESETS = [
     name: "Sam Kolder",
     tagline: "Cinematic travel, match cuts, epic moody grade",
     preview: "bg-gradient-to-br from-teal-800 via-slate-900 to-amber-700",
-    tags: ["Caption: Cinematic", "Grade: Moody", "Music: Epic"],
+    tags: ["Caption: Cinematic", "Grade: Moody", "MusicNote: Epic"],
     config: {
       captions: { enabled: false, autoGenerate: false, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 26, textColor: "#F5F5F5", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 88, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.7, easing: "ease-out" },
@@ -992,7 +976,7 @@ const YOUTUBER_PRESETS = [
     name: "Colin and Samir",
     tagline: "Creator economy, podcast clean, neutral center",
     preview: "bg-gradient-to-br from-zinc-600 via-zinc-700 to-zinc-900",
-    tags: ["Caption: Center", "Grade: Muted", "Music: Corporate"],
+    tags: ["Caption: Center", "Grade: Muted", "MusicNote: Corporate"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "podcast_minimal", fontFamily: "Inter", fontSize: 30, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.4)", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 7, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.4, easing: "ease-out" },
@@ -1009,7 +993,7 @@ const YOUTUBER_PRESETS = [
     name: "Hamza Ahmed",
     tagline: "Self-improvement, bold lower-third, motivational",
     preview: "bg-gradient-to-br from-stone-800 via-amber-700 to-stone-900",
-    tags: ["Caption: Lower-Third", "Grade: Cinematic", "Music: Emotional"],
+    tags: ["Caption: Lower-Third", "Grade: Cinematic", "MusicNote: Emotional"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Montserrat", fontSize: 44, textColor: "#FFD700", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "bottom" as const, customY: 78, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.4, easing: "ease-out" },
@@ -1026,7 +1010,7 @@ const YOUTUBER_PRESETS = [
     name: "Iman Gadzhi",
     tagline: "Business/marketing, corporate grade, scroll-stop hooks",
     preview: "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800",
-    tags: ["Caption: Corporate", "Grade: Muted", "Music: Corporate"],
+    tags: ["Caption: Corporate", "Grade: Muted", "MusicNote: Corporate"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Poppins", fontSize: 46, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "center" as const, customY: 60, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "scale_up", duration: 0.3, easing: "ease-out" },
@@ -1043,7 +1027,7 @@ const YOUTUBER_PRESETS = [
     name: "Pitch Meeting",
     tagline: "Comedy sketch, simple edits, center captions",
     preview: "bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500",
-    tags: ["Caption: Center", "Grade: Clean", "Music: Corporate"],
+    tags: ["Caption: Center", "Grade: Clean", "MusicNote: Corporate"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "popup", fontFamily: "Oswald", fontSize: 40, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "center" as const, customY: 50, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "bounce" },
@@ -1060,7 +1044,7 @@ const YOUTUBER_PRESETS = [
     name: "Binging with Babish",
     tagline: "Cooking, overhead shots, calm jazzy warm",
     preview: "bg-gradient-to-br from-amber-700 via-orange-600 to-rose-700",
-    tags: ["Caption: Calm", "Grade: Warm", "Music: Jazz"],
+    tags: ["Caption: Calm", "Grade: Warm", "MusicNote: Jazz"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 26, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.4)", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.5, easing: "ease-out" },
@@ -1077,7 +1061,7 @@ const YOUTUBER_PRESETS = [
     name: "MKBHD Shorts",
     tagline: "Tech shorts, vertical, tight captions, quick B-roll",
     preview: "bg-gradient-to-br from-red-900 via-slate-800 to-slate-900",
-    tags: ["Caption: Clean Vertical", "Grade: Cinematic", "Music: Ambient"],
+    tags: ["Caption: Clean Vertical", "Grade: Cinematic", "MusicNote: Ambient"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Inter", fontSize: 44, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "bottom" as const, customY: 75, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.3, easing: "ease-out" },
@@ -1094,7 +1078,7 @@ const YOUTUBER_PRESETS = [
     name: "Airrack",
     tagline: "High energy challenge, bold yellow, fast cuts",
     preview: "bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500",
-    tags: ["Caption: Yellow Bold", "Grade: Vibrant", "Music: EDM"],
+    tags: ["Caption: Yellow Bold", "Grade: Vibrant", "MusicNote: EDM"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "mrbeast", fontFamily: "Impact", fontSize: 72, textColor: "#FFEB3B", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 5, position: "center" as const, customY: 55, maxWordsPerLine: 3, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "bounce", duration: 0.3, easing: "spring" },
@@ -1111,7 +1095,7 @@ const YOUTUBER_PRESETS = [
     name: "Kurzgesagt",
     tagline: "Animated science, bright colors, clean sans-serif captions",
     preview: "bg-gradient-to-br from-sky-400 via-cyan-500 to-blue-600",
-    tags: ["Caption: Clean Sans", "Grade: Vibrant", "Music: Upbeat"],
+    tags: ["Caption: Clean Sans", "Grade: Vibrant", "MusicNote: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Inter", fontSize: 30, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.5)", strokeWidth: 0, position: "bottom" as const, customY: 82, maxWordsPerLine: 7, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.5, easing: "ease-out" },
@@ -1128,7 +1112,7 @@ const YOUTUBER_PRESETS = [
     name: "Jenna Marbles Style",
     tagline: "Casual vlog, punchy edits, friendly caption",
     preview: "bg-gradient-to-br from-pink-400 via-rose-500 to-fuchsia-500",
-    tags: ["Caption: Friendly", "Grade: Neutral", "Music: Upbeat"],
+    tags: ["Caption: Friendly", "Grade: Neutral", "MusicNote: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Poppins", fontSize: 34, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "bottom" as const, customY: 80, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "bounce" },
@@ -1145,7 +1129,7 @@ const YOUTUBER_PRESETS = [
     name: "Smosh",
     tagline: "Comedy skit, bright colors, meme energy",
     preview: "bg-gradient-to-br from-yellow-500 via-orange-500 to-red-500",
-    tags: ["Caption: Meme", "Grade: Vibrant", "Music: Upbeat"],
+    tags: ["Caption: Meme", "Grade: Vibrant", "MusicNote: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Impact", fontSize: 60, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "top" as const, customY: 20, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "spring" },
@@ -1162,7 +1146,7 @@ const YOUTUBER_PRESETS = [
     name: "H3H3",
     tagline: "Podcast casual, simple cuts, blue accent",
     preview: "bg-gradient-to-br from-blue-500 via-sky-600 to-slate-700",
-    tags: ["Caption: Podcast", "Grade: Muted", "Music: Corporate"],
+    tags: ["Caption: Podcast", "Grade: Muted", "MusicNote: Corporate"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "podcast_minimal", fontFamily: "Inter", fontSize: 28, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.5)", strokeWidth: 0, position: "bottom" as const, customY: 88, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.4, easing: "ease-out" },
@@ -1179,7 +1163,7 @@ const YOUTUBER_PRESETS = [
     name: "Shane Dawson",
     tagline: "Investigative vlog, moody grade, dramatic music",
     preview: "bg-gradient-to-br from-slate-900 via-purple-950 to-red-950",
-    tags: ["Caption: Cinematic", "Grade: Moody", "Music: Cinematic"],
+    tags: ["Caption: Cinematic", "Grade: Moody", "MusicNote: Cinematic"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 28, textColor: "#F5F5F5", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.5)", strokeWidth: 0, position: "bottom" as const, customY: 86, maxWordsPerLine: 7, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.7, easing: "ease-out" },
@@ -1196,7 +1180,7 @@ const YOUTUBER_PRESETS = [
     name: "Mark Rober",
     tagline: "Science experiments, clean visuals, warm lighting",
     preview: "bg-gradient-to-br from-orange-400 via-amber-500 to-red-500",
-    tags: ["Caption: Clean", "Grade: Warm", "Music: Upbeat"],
+    tags: ["Caption: Clean", "Grade: Warm", "MusicNote: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Inter", fontSize: 32, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 2, position: "bottom" as const, customY: 82, maxWordsPerLine: 6, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.35, easing: "ease-out" },
@@ -1213,7 +1197,7 @@ const YOUTUBER_PRESETS = [
     name: "Michelle Khare",
     tagline: "Challenges vlog, warm grade, upbeat music",
     preview: "bg-gradient-to-br from-rose-400 via-orange-400 to-amber-500",
-    tags: ["Caption: Vlog", "Grade: Warm", "Music: Upbeat"],
+    tags: ["Caption: Vlog", "Grade: Warm", "MusicNote: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Montserrat", fontSize: 34, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 2, position: "bottom" as const, customY: 80, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.3, easing: "ease-out" },
@@ -1230,7 +1214,7 @@ const YOUTUBER_PRESETS = [
     name: "5-Minute Crafts",
     tagline: "Super fast cuts, bright colors, high contrast",
     preview: "bg-gradient-to-br from-lime-400 via-yellow-500 to-orange-500",
-    tags: ["Caption: Bold", "Grade: Vibrant", "Music: Upbeat"],
+    tags: ["Caption: Bold", "Grade: Vibrant", "MusicNote: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Bebas Neue", fontSize: 52, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "bottom" as const, customY: 78, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "pop", duration: 0.2, easing: "spring" },
@@ -1968,7 +1952,7 @@ export default function VideoEditorPage() {
     try {
       const res = await fetch("/api/ai/music-gen", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           prompt: desc,
           duration: Math.min(config.duration || 30, 60),
@@ -1976,7 +1960,7 @@ export default function VideoEditorPage() {
         }),
       });
       const data = await res.json();
-      if (!res.ok || !data.success) throw new Error(data.error || "Music gen failed");
+      if (!res.ok || !data.success) throw new Error(data.error || "MusicNote gen failed");
 
       if (data.audio) {
         // Inline base64 or direct URL
@@ -1984,7 +1968,7 @@ export default function VideoEditorPage() {
           ? data.audio
           : `data:audio/wav;base64,${data.audio}`;
         setAiMusicUrl(url);
-        toast.success(`Music generated${data.provider === "acestep" ? " with ACE-Step" : ""}`);
+        toast.success(`MusicNote generated${data.provider === "acestep" ? " with ACE-Step" : ""}`);
       } else if (data.job_id) {
         // Async job � poll until done (max 30 attempts � 2s)
         const pollUrl = data.status_url;
@@ -1996,14 +1980,14 @@ export default function VideoEditorPage() {
               ? poll.audio
               : `data:audio/wav;base64,${poll.audio}`;
             setAiMusicUrl(url);
-            toast.success(`Music generated${poll.provider === "acestep" ? " with ACE-Step" : ""}`);
+            toast.success(`MusicNote generated${poll.provider === "acestep" ? " with ACE-Step" : ""}`);
             break;
           }
-          if (poll.status === "failed") throw new Error("Music job failed");
+          if (poll.status === "failed") throw new Error("MusicNote job failed");
         }
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Music generation failed");
+      toast.error(err instanceof Error ? err.message : "MusicNote generation failed");
     } finally {
       setAiMusicLoading(false);
     }
@@ -2102,7 +2086,7 @@ export default function VideoEditorPage() {
     try {
       const res = await fetch("/api/video/script-to-ad", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           product_description: desc,
           duration: adsGenDuration,
@@ -2145,7 +2129,7 @@ export default function VideoEditorPage() {
     try {
       const res = await fetch("/api/video/b-roll", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           script,
           count: 5,
@@ -2171,7 +2155,7 @@ export default function VideoEditorPage() {
     try {
       const res = await fetch("/api/video/music-match", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           script_mood: config.music_mood || "upbeat",
           duration: config.duration || 30,
@@ -2202,7 +2186,7 @@ export default function VideoEditorPage() {
     try {
       const res = await fetch("/api/captions/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           video_url: url,
           style: captionsStyle,
@@ -2381,7 +2365,7 @@ export default function VideoEditorPage() {
 
   async function previewVoiceScript() {
     if (!voiceScriptPreview.trim()) {
-      toast.error("Type some text to preview");
+      toast.error("TextT some text to preview");
       return;
     }
     if (!editorSettings.voice.preset) {
@@ -2392,7 +2376,7 @@ export default function VideoEditorPage() {
     try {
       const res = await fetch("/api/ai/voice-clone", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           text: voiceScriptPreview,
           voice: editorSettings.voice.preset,
@@ -2506,7 +2490,7 @@ export default function VideoEditorPage() {
           <div className="text-[11px] text-text-muted">Detected</div>
           <div className="grid grid-cols-2 gap-2 text-[11px]">
             <div><span className="text-text-muted">Title:</span> <span className="text-text-primary">{config.title || "(none)"}</span></div>
-            <div><span className="text-text-muted">Type:</span> <span className="text-text-primary">{config.type}</span></div>
+            <div><span className="text-text-muted">TextT:</span> <span className="text-text-primary">{config.type}</span></div>
             <div><span className="text-text-muted">Aspect:</span> <span className="text-text-primary">{config.aspect_ratio}</span></div>
             <div><span className="text-text-muted">Duration:</span> <span className="text-text-primary">{config.duration}s</span></div>
             <div><span className="text-text-muted">Platform:</span> <span className="text-text-primary">{config.target_platform}</span></div>
@@ -2569,7 +2553,7 @@ export default function VideoEditorPage() {
     },
     {
       id: "captions",
-      title: "Generating Captions",
+      title: "Generating ClosedCaptioning",
       description: "Claude splits the script into timed captions",
       progressText: "Calling /api/video/captions-generate",
       preview: (
@@ -2706,7 +2690,7 @@ export default function VideoEditorPage() {
       progressText: "Mixing tracks",
       preview: (
         <div className="text-[11px] space-y-1">
-          <div><span className="text-text-muted">Music genre:</span> <span className="text-text-primary">{editorSettings.audio.bgGenre}</span></div>
+          <div><span className="text-text-muted">MusicNote genre:</span> <span className="text-text-primary">{editorSettings.audio.bgGenre}</span></div>
           <div><span className="text-text-muted">Auto ducking:</span> <span className="text-text-primary">{editorSettings.audio.autoDucking ? "Yes" : "No"}</span></div>
           <div><span className="text-text-muted">Noise removal:</span> <span className="text-text-primary">{editorSettings.audio.noiseRemoval ? "Yes" : "No"}</span></div>
         </div>
@@ -2764,7 +2748,7 @@ export default function VideoEditorPage() {
     try {
       const res = await fetch("/api/video/auto-edit/full-pass", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           video_url: videoUrl,
           project_id: projectId,
@@ -2809,7 +2793,7 @@ export default function VideoEditorPage() {
       }
       const res = await fetch("/api/video/classify-footage", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify(body),
       });
       const j = await res.json();
@@ -2845,7 +2829,7 @@ export default function VideoEditorPage() {
     try {
       const res = await fetch("/api/video/analyze-viral", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           source_url: url,
           client_id: selectedClient || managedClientId || undefined,
@@ -2875,7 +2859,7 @@ export default function VideoEditorPage() {
       // the user from a mysterious "Request failed (402)" toast.
       const res = await fetchWithWall("/api/video/generate-project", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           topic: aiGenTopic,
           duration_seconds: aiGenDuration,
@@ -2970,7 +2954,7 @@ export default function VideoEditorPage() {
       }
       const res = await fetch("/api/video/analyze-reference", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify(body),
       });
       if (!res.ok) {
@@ -3025,7 +3009,7 @@ export default function VideoEditorPage() {
   // Steps:
   //   1 Analyze    ? /api/video/script-generate
   //   2 Style      ? apply preset (no API)
-  //   3 Captions   ? /api/video/captions-generate
+  //   3 ClosedCaptioning   ? /api/video/captions-generate
   //   4 Motion     ? preview of motion preset (no API)
   //   5 Transitions? preview of transitions preset (no API)
   //   6 Color      ? preview of color grading (no API)
@@ -3044,7 +3028,7 @@ export default function VideoEditorPage() {
     const ok1 = await runStep(0, async () => {
       const res = await fetch("/api/video/script-generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           topic: config.title,
           duration_seconds: config.duration,
@@ -3074,12 +3058,12 @@ export default function VideoEditorPage() {
     const ok2 = await runStep(1, async () => { await sleep(400); });
     if (!ok2) { setGenerating(false); return; }
 
-    // Step 3 � Captions: generate from the script
+    // Step 3 � ClosedCaptioning: generate from the script
     const ok3 = await runStep(2, async () => {
       if (!script) return;
       const res = await fetch("/api/video/captions-generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           text: script,
           max_words_per_caption: editorSettings.captions.maxWordsPerLine,
@@ -3112,7 +3096,7 @@ export default function VideoEditorPage() {
       try {
         await fetch("/api/ai/music-gen", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-TextT": "application/json" },
           body: JSON.stringify({ mood: editorSettings.audio.bgGenre, duration_seconds: config.duration }),
         });
       } catch { /* ignore */ }
@@ -3123,7 +3107,7 @@ export default function VideoEditorPage() {
     const ok8 = await runStep(7, async () => {
       const res = await fetch("/api/video/render", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           ...config,
           script,
@@ -3188,7 +3172,7 @@ export default function VideoEditorPage() {
     try {
       const res = await fetch("/api/video/render", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           ...config,
           music_mood: config.music_mood,
@@ -3239,14 +3223,14 @@ export default function VideoEditorPage() {
       id: "topic",
       title: "What's your video about?",
       description: "A quick description helps us generate the right script, captions, and visuals.",
-      icon: <Type size={16} />,
+      icon: <TextT size={16} />,
       field: { type: "textarea", key: "topic", placeholder: "e.g., A 30-second reel about the top 3 productivity tips for founders" },
     },
     {
       id: "platform",
       title: "Where will this video live?",
       description: "Different platforms need different aspect ratios and durations.",
-      icon: <Film size={16} />,
+      icon: <FilmStrip size={16} />,
       field: {
         type: "choice-cards",
         key: "platform",
@@ -3264,7 +3248,7 @@ export default function VideoEditorPage() {
       id: "duration",
       title: "How long should it be?",
       description: `Shorter videos have higher completion rates. 15-30s is the sweet spot for social. Your ${planTier} plan caps at ${formatVideoDuration(maxVideoSeconds)}.`,
-      icon: <Sparkles size={16} />,
+      icon: <Sparkle size={16} />,
       field: {
         type: "choice-cards",
         key: "duration",
@@ -3284,7 +3268,7 @@ export default function VideoEditorPage() {
       id: "style",
       title: "Pick a creator style",
       description: "We'll match captions, pacing, music, and color grade to this creator's signature.",
-      icon: <Wand2 size={16} />,
+      icon: <MagicWand size={16} />,
       field: {
         type: "choice-cards",
         key: "style",
@@ -3299,8 +3283,8 @@ export default function VideoEditorPage() {
     {
       id: "captions",
       title: "Caption style",
-      description: "Captions boost watch time by 40%. Pick the style that fits your content.",
-      icon: <Type size={16} />,
+      description: "ClosedCaptioning boost watch time by 40%. Pick the style that fits your content.",
+      icon: <TextT size={16} />,
       field: {
         type: "choice-cards",
         key: "captionStyle",
@@ -3310,15 +3294,15 @@ export default function VideoEditorPage() {
           { value: "cinematic", label: "Cinematic", description: "Lower-third subtle subtitles", emoji: "??" },
           { value: "podcast", label: "Podcast Clean", description: "Simple white on dark", emoji: "???" },
           { value: "bouncy", label: "Bouncy Reel", description: "Colorful, playful pop-ins", emoji: "??" },
-          { value: "none", label: "No Captions", description: "Skip captions entirely", emoji: "??" },
+          { value: "none", label: "No ClosedCaptioning", description: "Skip captions entirely", emoji: "??" },
         ],
       },
     },
     {
       id: "music",
-      title: "Music vibe",
+      title: "MusicNote vibe",
       description: "Background music dramatically affects how your video feels.",
-      icon: <Music size={16} />,
+      icon: <MusicNote size={16} />,
       field: {
         type: "choice-cards",
         key: "musicMood",
@@ -3330,7 +3314,7 @@ export default function VideoEditorPage() {
           { value: "hip_hop", label: "Hip Hop", description: "Trending, street", emoji: "??" },
           { value: "corporate", label: "Corporate", description: "Clean, professional", emoji: "??" },
           { value: "edm", label: "EDM", description: "Electronic, intense", emoji: "??" },
-          { value: "none", label: "No Music", description: "Voice only", emoji: "??" },
+          { value: "none", label: "No MusicNote", description: "Voice only", emoji: "??" },
         ],
       },
     },
@@ -3338,7 +3322,7 @@ export default function VideoEditorPage() {
       id: "effects",
       title: "Visual effects (optional)",
       description: "Add punch. Zoom-ins and transitions keep viewers watching.",
-      icon: <Zap size={16} />,
+      icon: <Lightning size={16} />,
       field: {
         type: "chip-select",
         key: "effects",
@@ -3350,7 +3334,7 @@ export default function VideoEditorPage() {
           { value: "glitch", label: "Glitch", emoji: "??" },
           { value: "slow_mo", label: "Slow Motion", emoji: "??" },
           { value: "speed_ramp", label: "Speed Ramp", emoji: "??" },
-          { value: "sparkles", label: "Sparkles", emoji: "?" },
+          { value: "sparkles", label: "Sparkle", emoji: "?" },
           { value: "light_leak", label: "Light Leak", emoji: "??" },
         ],
       },
@@ -3359,7 +3343,7 @@ export default function VideoEditorPage() {
       id: "cta",
       title: "Call to action",
       description: "What should viewers do after watching? Leave blank to skip.",
-      icon: <Sparkles size={16} />,
+      icon: <Sparkle size={16} />,
       field: {
         type: "text",
         key: "cta",
@@ -3399,7 +3383,7 @@ export default function VideoEditorPage() {
                     id: "type",
                     title: "What kind of video?",
                     description: "This sets the aspect ratio and default length.",
-                    icon: <Film size={18} />,
+                    icon: <FilmStrip size={18} />,
                     component: (() => {
                       const PRIMARY = VIDEO_TYPES.slice(0, 5);
                       const EXTRA = VIDEO_TYPES.slice(5);
@@ -3457,7 +3441,7 @@ export default function VideoEditorPage() {
                             onClick={() => setVideoTypesExpanded(v => !v)}
                             className="flex items-center gap-1.5 text-[11px] text-text-muted hover:text-text-primary transition-colors cursor-pointer"
                           >
-                            <ChevronDown
+                            <CaretDown
                               size={12}
                               className={`transition-transform duration-200 ${videoTypesExpanded ? "rotate-180" : ""}`}
                             />
@@ -3471,7 +3455,7 @@ export default function VideoEditorPage() {
                     id: "topic",
                     title: "What's it about?",
                     description: "A single sentence works. This becomes the script title and drives everything downstream.",
-                    icon: <Type size={18} />,
+                    icon: <TextT size={18} />,
                     canProceed: config.title.trim().length > 0,
                     component: (() => (
                       <div className="space-y-3">
@@ -3494,7 +3478,7 @@ export default function VideoEditorPage() {
                               <span className="text-[13px]">??</span>
                               <span>What makes a great brief?</span>
                             </span>
-                            <ChevronDown
+                            <CaretDown
                               size={12}
                               className={`text-text-muted/60 transition-transform duration-200 ${briefTipOpen ? "rotate-180" : ""}`}
                             />
@@ -3539,13 +3523,13 @@ export default function VideoEditorPage() {
                     id: "footage",
                     title: "Do you have footage?",
                     description: "No worries either way � AI can fill in with stock/b-roll.",
-                    icon: <Upload size={18} />,
+                    icon: <UploadSimple size={18} />,
                     component: (
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                         {[
-                          { id: "upload" as const, label: "Upload clips", sub: "Your own video files", icon: <Upload size={24} /> },
+                          { id: "upload" as const, label: "UploadSimple clips", sub: "Your own video files", icon: <UploadSimple size={24} /> },
                           { id: "record" as const, label: "Record now", sub: "Use your camera", icon: <Camera size={24} /> },
-                          { id: "ai" as const, label: "AI generates", sub: "Stock + b-roll + text", icon: <Sparkles size={24} /> },
+                          { id: "ai" as const, label: "AI generates", sub: "Stock + b-roll + text", icon: <Sparkle size={24} /> },
                         ].map(opt => {
                           const selected = guidedFootageSource === opt.id;
                           return (
@@ -3600,12 +3584,12 @@ export default function VideoEditorPage() {
                     id: "review",
                     title: "Ready to generate?",
                     description: "We'll assemble the edit. Fine-tune captions, music, SFX, and scenes in Advanced mode.",
-                    icon: <Wand2 size={18} />,
+                    icon: <MagicWand size={18} />,
                     component: (
                       <div className="glass rounded-xl bg-[rgba(212,255,0,0.04)] border-[rgba(212,255,0,0.2)] space-y-2">
                         <div className="grid grid-cols-2 gap-3">
                           <div>
-                            <p className="text-[9px] uppercase tracking-wider text-text-muted">Type</p>
+                            <p className="text-[9px] uppercase tracking-wider text-text-muted">TextT</p>
                             <p className="text-xs font-semibold">{VIDEO_TYPES.find(t => t.id === config.type)?.name}</p>
                           </div>
                           <div>
@@ -3642,7 +3626,7 @@ export default function VideoEditorPage() {
             )}{/* Result in guided mode */}{!advancedMode && result && (
               <div className="glass rounded-xl space-y-3">
                 <h2 className="flex items-center gap-2">
-                  <Film size={14} className="text-brand-accent" /> {config.title || "Your video"}
+                  <FilmStrip size={14} className="text-brand-accent" /> {config.title || "Your video"}
                 </h2>
                 {result.url ? (
                   <video src={result.url} controls className="w-full rounded-xl border border-border-subtle bg-black" />
@@ -3670,7 +3654,7 @@ export default function VideoEditorPage() {
                       className="text-[11px] px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-text-muted hover:text-text-primary hover:border-white/20 flex items-center gap-1.5 transition-all"
                       title="Step-by-step guided wizard"
                     >
-                      <Sparkles size={11} strokeWidth={1.5} /> Guided
+                      <Sparkle size={11} strokeWidth={1.5} /> Guided
                     </button>
                     <button
                       onClick={() => setAdsGenOpen(true)}
@@ -3698,7 +3682,7 @@ export default function VideoEditorPage() {
                     className="hf-generate flex items-center gap-2.5"
                     title="Generate a full video project with AI"
                   >
-                    <Sparkles size={18} strokeWidth={2.25} />
+                    <Sparkle size={18} strokeWidth={2.25} />
                     <span>Generate</span>
                   </button>
                 </div>
@@ -3707,7 +3691,7 @@ export default function VideoEditorPage() {
               open={videoWizardOpen}
               title="Create Your Video"
               subtitle="Step-by-step � pick a style, captions, music. We handle the rest."
-              icon={<Film size={18} />}
+              icon={<FilmStrip size={18} />}
               submitLabel="Apply & Continue"
               initialData={{
                 topic: config.title,
@@ -3760,11 +3744,11 @@ export default function VideoEditorPage() {
               {/* Create Sub-Tabs */}
               <div className="flex flex-wrap gap-1.5">
                 {([
-                  { id: "editor", label: "Editor", icon: <Film size={11} /> },
-                  { id: "scene-builder", label: "Scene Builder", icon: <GripVertical size={11} /> },
+                  { id: "editor", label: "Editor", icon: <FilmStrip size={11} /> },
+                  { id: "scene-builder", label: "Scene Builder", icon: <DotsSixVertical size={11} /> },
                   { id: "ai-script", label: "AI Script-to-Video", icon: <FileText size={11} /> },
-                  { id: "audio-mixer", label: "Audio Mixer", icon: <Music size={11} /> },
-                  { id: "advanced", label: "Advanced", icon: <Settings2 size={11} /> },
+                  { id: "audio-mixer", label: "Audio Mixer", icon: <MusicNote size={11} /> },
+                  { id: "advanced", label: "Advanced", icon: <SlidersHorizontal size={11} /> },
                   { id: "smart", label: "Smart Presets", icon: <Brain size={11} /> },
                 ] as const).map(st => (
                   <button key={st.id} onClick={() => setCreateSubTab(st.id)}
@@ -3783,7 +3767,7 @@ export default function VideoEditorPage() {
                     {/* Scene Builder - Drag & Drop */}
                     <div className="glass rounded-xl p-4">
                       <div className="flex items-center justify-between mb-3">
-                        <h2 className="flex items-center gap-2 mb-0"><GripVertical size={13} className="text-brand-accent" /> Scene Builder</h2>
+                        <h2 className="flex items-center gap-2 mb-0"><DotsSixVertical size={13} className="text-brand-accent" /> Scene Builder</h2>
                         <div className="flex items-center gap-2">
                           <span className="text-[9px] text-text-muted">Total: {sceneBuilderScenes.reduce((sum, s) => sum + s.duration, 0)}s</span>
                           <button onClick={addSceneToBuilder} className="text-[9px] px-2 py-1 bg-[rgba(212,255,0,0.08)] text-brand-accent rounded-lg border border-[rgba(212,255,0,0.2)] flex items-center gap-1">
@@ -3803,7 +3787,7 @@ export default function VideoEditorPage() {
                               draggedScene === scene.id ? "border-brand-accent/40 bg-[rgba(212,255,0,0.05)] opacity-60" : "border-border-subtle hover:border-[rgba(212,255,0,0.2)]"
                             }`}
                           >
-                            <GripVertical size={14} className="text-text-muted flex-shrink-0" />
+                            <DotsSixVertical size={14} className="text-text-muted flex-shrink-0" />
                             <span className="text-[10px] font-bold text-brand-accent w-6">{idx + 1}</span>
                             <div className="flex-1 min-w-0">
                               <input
@@ -3894,10 +3878,10 @@ export default function VideoEditorPage() {
                       </div>
                     </div>
                     <div className="glass rounded-xl p-4">
-                      <h3 className="flex items-center gap-2"><Sparkles size={12} className="text-brand-accent" /> AI Suggestions</h3>
+                      <h3 className="flex items-center gap-2"><Sparkle size={12} className="text-brand-accent" /> AI Suggestions</h3>
                       <div className="space-y-2 text-[9px] text-text-muted">
-                        <p><AlertCircle size={9} className="inline text-brand-accent mr-1" /> Hook should be under 3 seconds for best retention</p>
-                        <p><AlertCircle size={9} className="inline text-brand-accent mr-1" /> Consider adding a pattern interrupt at scene 2</p>
+                        <p><WarningCircle size={9} className="inline text-brand-accent mr-1" /> Hook should be under 3 seconds for best retention</p>
+                        <p><WarningCircle size={9} className="inline text-brand-accent mr-1" /> Consider adding a pattern interrupt at scene 2</p>
                         <p><Check size={9} className="inline text-success mr-1" /> CTA placement at end is optimal</p>
                       </div>
                     </div>
@@ -3921,7 +3905,7 @@ export default function VideoEditorPage() {
                       />
                       <div className="flex items-center gap-2 mt-2">
                         <button onClick={splitScriptToScenes} className="btn-primary text-[10px] flex items-center gap-1.5">
-                          <Sparkles size={12} /> Split into Scenes
+                          <Sparkle size={12} /> Split into Scenes
                         </button>
                         <span className="text-[8px] text-text-muted">{aiScriptInput.split(/\s+/).filter(Boolean).length} words</span>
                       </div>
@@ -3929,7 +3913,7 @@ export default function VideoEditorPage() {
 
                     {aiScriptScenes.length > 0 && (
                       <div className="glass rounded-xl p-4">
-                        <h3 className="flex items-center gap-2"><Layers size={13} className="text-brand-accent" /> Generated Scenes ({aiScriptScenes.length})</h3>
+                        <h3 className="flex items-center gap-2"><Stack size={13} className="text-brand-accent" /> Generated Scenes ({aiScriptScenes.length})</h3>
                         <div className="space-y-2">
                           {aiScriptScenes.map((scene, idx) => (
                             <div key={idx} className="p-3 rounded-xl border border-border-subtle hover:border-[rgba(212,255,0,0.2)] transition-all">
@@ -3955,7 +3939,7 @@ export default function VideoEditorPage() {
                             setCreateSubTab("scene-builder");
                             toast.success("Scenes loaded into Scene Builder");
                           }} className="btn-primary text-[10px] flex items-center gap-1">
-                            <GripVertical size={10} /> Load into Scene Builder
+                            <DotsSixVertical size={10} /> Load into Scene Builder
                           </button>
                           <button onClick={() => {
                             setConfig(prev => ({ ...prev, script: aiScriptInput }));
@@ -3973,7 +3957,7 @@ export default function VideoEditorPage() {
                   {/* Script Sidebar */}
                   <div className="space-y-4">
                     <div className="glass rounded-xl border-[rgba(212,255,0,0.1)]">
-                      <h3 className="flex items-center gap-2"><BarChart3 size={12} className="text-brand-accent" /> Script Analysis</h3>
+                      <h3 className="flex items-center gap-2"><ChartBar size={12} className="text-brand-accent" /> Script Analysis</h3>
                       <div className="space-y-2 text-[9px]">
                         <div className="flex justify-between"><span className="text-text-muted">Word Count</span><span className="font-mono">{aiScriptInput.split(/\s+/).filter(Boolean).length}</span></div>
                         <div className="flex justify-between"><span className="text-text-muted">Est. Speaking Time</span><span className="font-mono">{Math.round(aiScriptInput.split(/\s+/).filter(Boolean).length / 2.5)}s</span></div>
@@ -3990,15 +3974,15 @@ export default function VideoEditorPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                   <div className="lg:col-span-2 space-y-4">
                     <div className="glass rounded-xl p-4">
-                      <h2 className="flex items-center gap-2"><Music size={13} className="text-brand-accent" /> Audio Mixer</h2>
+                      <h2 className="flex items-center gap-2"><MusicNote size={13} className="text-brand-accent" /> Audio Mixer</h2>
                       <p className="text-[9px] text-text-muted mb-3">Layer background music, voiceover, and sound effects with individual volume controls.</p>
                       <div className="space-y-4">
-                        {/* Background Music Layer */}
+                        {/* Background MusicNote Layer */}
                         <div className="p-3 rounded-xl border border-border-subtle">
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                              <Music size={12} className="text-brand-accent" />
-                              <span className="text-[10px] font-semibold">Background Music</span>
+                              <MusicNote size={12} className="text-brand-accent" />
+                              <span className="text-[10px] font-semibold">Background MusicNote</span>
                             </div>
                             <label className="flex items-center gap-1.5 text-[9px] text-text-muted cursor-pointer">
                               <input type="checkbox" checked={audioLayers.bgMusic.enabled}
@@ -4019,7 +4003,7 @@ export default function VideoEditorPage() {
                             <option value="electronic-pulse">Electronic Pulse</option>
                           </select>
                           <div className="flex items-center gap-2">
-                            <Volume2 size={10} className="text-text-muted" />
+                            <SpeakerHigh size={10} className="text-text-muted" />
                             <input type="range" min={0} max={100} value={audioLayers.bgMusic.volume}
                               onChange={e => setAudioLayers(prev => ({ ...prev, bgMusic: { ...prev.bgMusic, volume: parseInt(e.target.value) } }))}
                               className="flex-1 accent-[#D4FF00] h-1" />
@@ -4031,7 +4015,7 @@ export default function VideoEditorPage() {
                         <div className="p-3 rounded-xl border border-border-subtle">
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                              <Mic size={12} className="text-brand-accent" />
+                              <Microphone size={12} className="text-brand-accent" />
                               <span className="text-[10px] font-semibold">Voiceover</span>
                             </div>
                             <label className="flex items-center gap-1.5 text-[9px] text-text-muted cursor-pointer">
@@ -4042,7 +4026,7 @@ export default function VideoEditorPage() {
                             </label>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Volume2 size={10} className="text-text-muted" />
+                            <SpeakerHigh size={10} className="text-text-muted" />
                             <input type="range" min={0} max={100} value={audioLayers.voiceover.volume}
                               onChange={e => setAudioLayers(prev => ({ ...prev, voiceover: { ...prev.voiceover, volume: parseInt(e.target.value) } }))}
                               className="flex-1 accent-[#D4FF00] h-1" />
@@ -4054,7 +4038,7 @@ export default function VideoEditorPage() {
                         <div className="p-3 rounded-xl border border-border-subtle">
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                              <Zap size={12} className="text-brand-accent" />
+                              <Lightning size={12} className="text-brand-accent" />
                               <span className="text-[10px] font-semibold">Sound Effects</span>
                             </div>
                             <label className="flex items-center gap-1.5 text-[9px] text-text-muted cursor-pointer">
@@ -4076,7 +4060,7 @@ export default function VideoEditorPage() {
                             <option value="impact-bass">Impact Bass</option>
                           </select>
                           <div className="flex items-center gap-2">
-                            <Volume2 size={10} className="text-text-muted" />
+                            <SpeakerHigh size={10} className="text-text-muted" />
                             <input type="range" min={0} max={100} value={audioLayers.sfx.volume}
                               onChange={e => setAudioLayers(prev => ({ ...prev, sfx: { ...prev.sfx, volume: parseInt(e.target.value) } }))}
                               className="flex-1 accent-[#D4FF00] h-1" />
@@ -4088,7 +4072,7 @@ export default function VideoEditorPage() {
 
                     {/* AI Voiceover Generator */}
                     <div className="glass rounded-xl p-4">
-                      <h2 className="flex items-center gap-2"><Speech size={13} className="text-brand-accent" /> AI Voiceover Generator</h2>
+                      <h2 className="flex items-center gap-2"><ChatText size={13} className="text-brand-accent" /> AI Voiceover Generator</h2>
                       <div className="space-y-3">
                         <div>
                           <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">Voice</label>
@@ -4135,7 +4119,7 @@ export default function VideoEditorPage() {
                           }, 2000);
                         }} disabled={voiceoverConfig.generating}
                           className="btn-primary text-[10px] flex items-center gap-1.5 w-full justify-center">
-                          {voiceoverConfig.generating ? <Loader size={12} className="animate-spin" /> : <Mic size={12} />}
+                          {voiceoverConfig.generating ? <CircleNotch size={12} className="animate-spin" /> : <Microphone size={12} />}
                           {voiceoverConfig.generating ? "Generating..." : "Generate Voiceover"}
                         </button>
                       </div>
@@ -4148,7 +4132,7 @@ export default function VideoEditorPage() {
                       <h3 className="flex items-center gap-2"><Sliders size={12} className="text-brand-accent" /> Mix Summary</h3>
                       <div className="space-y-2 text-[9px]">
                         <div className="flex justify-between items-center">
-                          <span className="text-text-muted">Music</span>
+                          <span className="text-text-muted">MusicNote</span>
                           <div className="flex items-center gap-1.5">
                             <div className="w-16 bg-surface-light rounded-full h-1.5">
                               <div className="bg-brand-accent rounded-full h-1.5" style={{ width: `${audioLayers.bgMusic.volume}%` }} />
@@ -4185,7 +4169,7 @@ export default function VideoEditorPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {/* Color Grading Presets */}
                   <div className="glass rounded-xl p-4">
-                    <h2 className="flex items-center gap-2"><SunMedium size={13} className="text-brand-accent" /> Color Grading Presets</h2>
+                    <h2 className="flex items-center gap-2"><Sun size={13} className="text-brand-accent" /> Color Grading Presets</h2>
                     <div className="grid grid-cols-2 gap-2">
                       <button onClick={() => setColorGrading("none")}
                         className={`p-2.5 rounded-xl border text-left transition-all ${colorGrading === "none" ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)]" : "border-border-subtle hover:border-[rgba(212,255,0,0.15)]"}`}>
@@ -4211,7 +4195,7 @@ export default function VideoEditorPage() {
 
                   {/* Subtitle Style Editor */}
                   <div className="glass rounded-xl p-4">
-                    <h2 className="flex items-center gap-2"><Type size={13} className="text-brand-accent" /> Subtitle Style Editor</h2>
+                    <h2 className="flex items-center gap-2"><TextT size={13} className="text-brand-accent" /> Subtitle Style Editor</h2>
                     <div className="space-y-3">
                       <div className="bg-surface-light rounded-xl p-4 text-center relative" style={{ minHeight: 120 }}>
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 rounded-xl" />
@@ -4271,7 +4255,7 @@ export default function VideoEditorPage() {
 
                   {/* Text Animation Presets */}
                   <div className="glass rounded-xl p-4">
-                    <h2 className="flex items-center gap-2"><TextCursorInput size={13} className="text-brand-accent" /> Text Animation Presets</h2>
+                    <h2 className="flex items-center gap-2"><Cursor size={13} className="text-brand-accent" /> Text Animation Presets</h2>
                     <div className="grid grid-cols-4 gap-1.5">
                       {TEXT_ANIMATIONS.map(anim => (
                         <button key={anim.id} onClick={() => setSelectedTextAnimation(anim.id)}
@@ -4286,7 +4270,7 @@ export default function VideoEditorPage() {
 
                   {/* Watermark Settings */}
                   <div className="glass rounded-xl p-4">
-                    <h2 className="flex items-center gap-2"><Droplets size={13} className="text-brand-accent" /> Watermark Settings</h2>
+                    <h2 className="flex items-center gap-2"><Drop size={13} className="text-brand-accent" /> Watermark Settings</h2>
                     <div className="space-y-3">
                       <label className="flex items-center gap-2 text-[10px] text-text-muted cursor-pointer">
                         <input type="checkbox" checked={watermarkSettings.enabled}
@@ -4340,9 +4324,9 @@ export default function VideoEditorPage() {
                     </div>
                   </div>
 
-                  {/* Aspect Ratio Converter */}
+                  {/* Aspect Crop Converter */}
                   <div className="glass rounded-xl p-4">
-                    <h2 className="flex items-center gap-2"><Ratio size={13} className="text-brand-accent" /> Aspect Ratio Converter</h2>
+                    <h2 className="flex items-center gap-2"><Crop size={13} className="text-brand-accent" /> Aspect Crop Converter</h2>
                     <p className="text-[9px] text-text-muted mb-3">One-click convert between aspect ratios with smart cropping.</p>
                     <div className="grid grid-cols-3 gap-2 mb-3">
                       {(["9:16", "16:9", "1:1", "4:5"] as const).map(ratio => (
@@ -4376,7 +4360,7 @@ export default function VideoEditorPage() {
 
                   {/* Green Screen Backgrounds */}
                   <div className="glass rounded-xl p-4">
-                    <h2 className="flex items-center gap-2"><MonitorPlay size={13} className="text-brand-accent" /> Green Screen Backgrounds</h2>
+                    <h2 className="flex items-center gap-2"><Monitor size={13} className="text-brand-accent" /> Green Screen Backgrounds</h2>
                     <div className="grid grid-cols-2 gap-1.5">
                       <button onClick={() => setGreenScreenBg("none")}
                         className={`text-[9px] p-2 rounded-lg border transition-all ${greenScreenBg === "none" ? "border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] text-brand-accent" : "border-border-subtle text-text-muted"}`}>
@@ -4500,7 +4484,7 @@ export default function VideoEditorPage() {
                           onClick={resetYouTuberPreset}
                         >
                           <div className="h-12 w-full bg-gradient-to-br from-surface-light via-surface to-surface-light flex items-center justify-center">
-                            <Settings2 size={16} className="text-text-muted group-hover:text-brand-accent transition-colors" />
+                            <SlidersHorizontal size={16} className="text-text-muted group-hover:text-brand-accent transition-colors" />
                           </div>
                           <div className="p-2">
                             <h4 className="text-[10px] font-bold leading-tight">Custom</h4>
@@ -4517,11 +4501,11 @@ export default function VideoEditorPage() {
                       </p>
                     </CollapsiblePanel>
 
-                    {/* === Ads Pack Sidebar � B-roll, Music, Kinetic Captions === */}
+                    {/* === Ads Pack Sidebar � B-roll, MusicNote, Kinetic ClosedCaptioning === */}
                     <CollapsiblePanel
                       id="adsPack"
                       icon={<Megaphone size={13} className="text-red-500" />}
-                      title="Ads Pack � B-roll, Music, Captions"
+                      title="Ads Pack � B-roll, MusicNote, ClosedCaptioning"
                       desc="Script-driven helpers tuned for high-converting ads"
                       open={openPanels.adsPack}
                       onToggle={() => togglePanel("adsPack")}
@@ -4537,7 +4521,7 @@ export default function VideoEditorPage() {
                             className="text-[10px] px-2.5 py-2 rounded-lg bg-surface-light hover:bg-red-500/10 border border-border-subtle hover:border-red-400 text-text-primary hover-lift flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
                             title="Claude reads the script and returns 3-5 timed B-roll moments"
                           >
-                            {brollSuggestLoading ? <Loader2 size={12} className="animate-spin" /> : <ImagePlus size={12} className="text-red-400" />}
+                            {brollSuggestLoading ? <CircleNotch size={12} className="animate-spin" /> : <ImageSquare size={12} className="text-red-400" />}
                             Suggest B-roll
                           </button>
                           <button
@@ -4547,8 +4531,8 @@ export default function VideoEditorPage() {
                             className="text-[10px] px-2.5 py-2 rounded-lg bg-surface-light hover:bg-red-500/10 border border-border-subtle hover:border-red-400 text-text-primary hover-lift flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
                             title="Claude picks a track from 20 curated royalty-free options"
                           >
-                            {musicMatchLoading ? <Loader2 size={12} className="animate-spin" /> : <Music size={12} className="text-red-400" />}
-                            Match Music
+                            {musicMatchLoading ? <CircleNotch size={12} className="animate-spin" /> : <MusicNote size={12} className="text-red-400" />}
+                            Match MusicNote
                           </button>
                           <button
                             type="button"
@@ -4557,8 +4541,8 @@ export default function VideoEditorPage() {
                             className="text-[10px] px-2.5 py-2 rounded-lg bg-surface-light hover:bg-red-500/10 border border-border-subtle hover:border-red-400 text-text-primary hover-lift flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
                             title="Whisper transcribes video ? kinetic word-by-word captions"
                           >
-                            {captionsLoading ? <Loader2 size={12} className="animate-spin" /> : <Captions size={12} className="text-red-400" />}
-                            Generate Captions
+                            {captionsLoading ? <CircleNotch size={12} className="animate-spin" /> : <ClosedCaptioning size={12} className="text-red-400" />}
+                            Generate ClosedCaptioning
                           </button>
                         </div>
 
@@ -4612,12 +4596,12 @@ export default function VideoEditorPage() {
                           </div>
                         )}
 
-                        {/* Music match card */}
+                        {/* MusicNote match card */}
                         {musicMatch && (
                           <div className="p-2.5 rounded-lg border border-red-500/30 bg-red-500/[0.05]">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <Music size={14} className="text-red-400" />
+                                <MusicNote size={14} className="text-red-400" />
                                 <div>
                                   <h4 className="text-[10px] font-bold">{musicMatch.title}</h4>
                                   <p className="text-[8px] text-text-muted">
@@ -4674,7 +4658,7 @@ export default function VideoEditorPage() {
                         <ToggleRow
                           label="Auto-cut silence"
                           desc={`Remove pauses longer than ${editorSettings.smart.silenceThreshold}s`}
-                          icon={<VolumeX size={11} />}
+                          icon={<SpeakerX size={11} />}
                           checked={editorSettings.smart.autoCutSilence}
                           onChange={(v) => setEditorSettings(p => ({ ...p, smart: { ...p.smart, autoCutSilence: v } }))}
                         />
@@ -4702,21 +4686,21 @@ export default function VideoEditorPage() {
                         <ToggleRow
                           label="Hook detector"
                           desc="AI finds best opening moment"
-                          icon={<Flame size={11} />}
+                          icon={<Fire size={11} />}
                           checked={editorSettings.smart.hookDetector}
                           onChange={(v) => setEditorSettings(p => ({ ...p, smart: { ...p.smart, hookDetector: v } }))}
                         />
                         <ToggleRow
                           label="Viral moment finder"
                           desc="Top 15�60s clips identified"
-                          icon={<TrendingUp size={11} />}
+                          icon={<TrendUp size={11} />}
                           checked={editorSettings.smart.viralMomentFinder}
                           onChange={(v) => setEditorSettings(p => ({ ...p, smart: { ...p.smart, viralMomentFinder: v } }))}
                         />
                         <ToggleRow
                           label="Auto B-roll suggestions"
                           desc="Cutaway stock footage ideas"
-                          icon={<ImagePlus size={11} />}
+                          icon={<ImageSquare size={11} />}
                           checked={editorSettings.smart.autoBroll}
                           onChange={(v) => setEditorSettings(p => ({ ...p, smart: { ...p.smart, autoBroll: v } }))}
                         />
@@ -4757,11 +4741,11 @@ export default function VideoEditorPage() {
                       </div>
                     </CollapsiblePanel>
 
-                    {/* === Captions / Subtitles Panel === */}
+                    {/* === ClosedCaptioning / Subtitles Panel === */}
                     <CollapsiblePanel
                       id="captions"
-                      icon={<Captions size={13} className="text-brand-accent" />}
-                      title="Captions & Subtitles"
+                      icon={<ClosedCaptioning size={13} className="text-brand-accent" />}
+                      title="ClosedCaptioning & Subtitles"
                       desc="Auto-generate and style captions from audio"
                       open={openPanels.captions}
                       onToggle={() => togglePanel("captions")}
@@ -4775,7 +4759,7 @@ export default function VideoEditorPage() {
                           <ToggleRow
                             label="Auto-caption from audio"
                             desc="Generate captions by transcription"
-                            icon={<Bot size={11} />}
+                            icon={<Robot size={11} />}
                             checked={editorSettings.captions.autoGenerate}
                             onChange={(v) => setEditorSettings(p => ({ ...p, captions: { ...p.captions, autoGenerate: v } }))}
                           />
@@ -4922,7 +4906,7 @@ export default function VideoEditorPage() {
                             <ToggleRow
                               label="Auto-insert emojis"
                               desc="Add contextual emojis"
-                              icon={<Smile size={11} />}
+                              icon={<Smiley size={11} />}
                               checked={editorSettings.captions.autoEmoji}
                               onChange={(v) => setEditorSettings(p => ({ ...p, captions: { ...p.captions, autoEmoji: v } }))}
                             />
@@ -4934,7 +4918,7 @@ export default function VideoEditorPage() {
                     {/* === Text Animation Panel === */}
                     <CollapsiblePanel
                       id="textAnimation"
-                      icon={<TextCursorInput size={13} className="text-brand-accent" />}
+                      icon={<Cursor size={13} className="text-brand-accent" />}
                       title="Text Animations"
                       desc="Entrance / exit animations for text layers"
                       open={openPanels.textAnimation}
@@ -5004,7 +4988,7 @@ export default function VideoEditorPage() {
                             <ToggleRow
                               label="Auto-zoom on speakers"
                               desc="Zoom onto whoever's talking"
-                              icon={<MousePointer2 size={11} />}
+                              icon={<CursorClick size={11} />}
                               checked={editorSettings.motion.autoZoomSpeakers}
                               onChange={(v) => setEditorSettings(p => ({ ...p, motion: { ...p.motion, autoZoomSpeakers: v } }))}
                             />
@@ -5054,7 +5038,7 @@ export default function VideoEditorPage() {
                     {/* === Transitions Panel === */}
                     <CollapsiblePanel
                       id="transitions"
-                      icon={<ArrowUpDown size={13} className="text-brand-accent" />}
+                      icon={<ArrowsDownUp size={13} className="text-brand-accent" />}
                       title="Transitions Library"
                       desc="25+ transitions between clips"
                       open={openPanels.transitions}
@@ -5069,7 +5053,7 @@ export default function VideoEditorPage() {
                           <ToggleRow
                             label="Auto transitions between cuts"
                             desc="Apply chosen preset to every cut automatically"
-                            icon={<Sparkles size={11} />}
+                            icon={<Sparkle size={11} />}
                             checked={editorSettings.transitions.autoBetweenCuts}
                             onChange={(v) => setEditorSettings(p => ({ ...p, transitions: { ...p.transitions, autoBetweenCuts: v } }))}
                           />
@@ -5126,7 +5110,7 @@ export default function VideoEditorPage() {
                             <ToggleRow
                               label="Auto white balance"
                               desc="Balance color temperature"
-                              icon={<SunMedium size={11} />}
+                              icon={<Sun size={11} />}
                               checked={editorSettings.color.autoWhiteBalance}
                               onChange={(v) => setEditorSettings(p => ({ ...p, color: { ...p.color, autoWhiteBalance: v } }))}
                             />
@@ -5176,12 +5160,12 @@ export default function VideoEditorPage() {
                       )}
                     </CollapsiblePanel>
 
-                    {/* === Audio / Music Panel === */}
+                    {/* === Audio / MusicNote Panel === */}
                     <CollapsiblePanel
                       id="audio"
-                      icon={<Music size={13} className="text-brand-accent" />}
-                      title="Audio & Music Enhancers"
-                      desc="Music, ducking, noise removal, beat sync"
+                      icon={<MusicNote size={13} className="text-brand-accent" />}
+                      title="Audio & MusicNote Enhancers"
+                      desc="MusicNote, ducking, noise removal, beat sync"
                       open={openPanels.audio}
                       onToggle={() => togglePanel("audio")}
                       enabledToggle={{
@@ -5194,8 +5178,8 @@ export default function VideoEditorPage() {
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <ToggleRow
                               label="Auto-ducking"
-                              desc="Music ducks under voice"
-                              icon={<Volume2 size={11} />}
+                              desc="MusicNote ducks under voice"
+                              icon={<SpeakerHigh size={11} />}
                               checked={editorSettings.audio.autoDucking}
                               onChange={(v) => setEditorSettings(p => ({ ...p, audio: { ...p.audio, autoDucking: v } }))}
                             />
@@ -5209,14 +5193,14 @@ export default function VideoEditorPage() {
                             <ToggleRow
                               label="Noise removal"
                               desc="Remove hum / hiss"
-                              icon={<VolumeX size={11} />}
+                              icon={<SpeakerX size={11} />}
                               checked={editorSettings.audio.noiseRemoval}
                               onChange={(v) => setEditorSettings(p => ({ ...p, audio: { ...p.audio, noiseRemoval: v } }))}
                             />
                             <ToggleRow
                               label="Voice enhance"
                               desc="Boost clarity and presence"
-                              icon={<Mic size={11} />}
+                              icon={<Microphone size={11} />}
                               checked={editorSettings.audio.voiceEnhance}
                               onChange={(v) => setEditorSettings(p => ({ ...p, audio: { ...p.audio, voiceEnhance: v } }))}
                             />
@@ -5230,7 +5214,7 @@ export default function VideoEditorPage() {
                           </div>
 
                           <div>
-                            <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1.5">Background Music Genre</label>
+                            <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1.5">Background MusicNote Genre</label>
                             <div className="grid grid-cols-3 md:grid-cols-4 gap-1.5">
                               {MUSIC_GENRE_PRESETS.map(g => {
                                 const active = editorSettings.audio.bgGenre === g.id;
@@ -5248,11 +5232,11 @@ export default function VideoEditorPage() {
                       )}
                     </CollapsiblePanel>
 
-                    {/* === Aspect Ratio Panel === */}
+                    {/* === Aspect Crop Panel === */}
                     <CollapsiblePanel
                       id="aspect"
-                      icon={<Ratio size={13} className="text-brand-accent" />}
-                      title="Aspect Ratio Presets"
+                      icon={<Crop size={13} className="text-brand-accent" />}
+                      title="Aspect Crop Presets"
                       desc="Pick a canvas ratio"
                       open={openPanels.aspect}
                       onToggle={() => togglePanel("aspect")}
@@ -5338,7 +5322,7 @@ export default function VideoEditorPage() {
                     {/* === Platform-Optimized Export Presets === */}
                     <CollapsiblePanel
                       id="platformExport"
-                      icon={<Share2 size={13} className="text-brand-accent" />}
+                      icon={<ShareNetwork size={13} className="text-brand-accent" />}
                       title="Platform Export Presets"
                       desc="One-click platform optimization"
                       open={openPanels.platformExport}
@@ -5366,7 +5350,7 @@ export default function VideoEditorPage() {
                       <div className="mt-4 pt-3 border-t border-border-subtle grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
-                            <Download size={11} className="text-brand-accent" /> Export Formats
+                            <DownloadSimple size={11} className="text-brand-accent" /> Export Formats
                           </h4>
                           <div className="grid grid-cols-2 gap-1.5">
                             {EXPORT_FORMATS.map(fmt => {
@@ -5414,7 +5398,7 @@ export default function VideoEditorPage() {
                           onClick={openThumbnailEditor}
                           className="btn btn-sm w-full flex items-center justify-center gap-1.5"
                         >
-                          <ImageIcon size={12} /> Extract Thumbnails from Current Video
+                          <Image size={12} /> Extract Thumbnails from Current Video
                         </button>
                         <p className="text-[8px] text-text-muted mt-1 text-center">Opens thumbnail editor with auto-extracted frames</p>
                       </div>
@@ -5423,7 +5407,7 @@ export default function VideoEditorPage() {
                     {/* === Effects Library (50+ VFX presets) === */}
                     <CollapsiblePanel
                       id="effects"
-                      icon={<Sparkles size={13} className="text-brand-accent" />}
+                      icon={<Sparkle size={13} className="text-brand-accent" />}
                       title="Effects Library"
                       desc={`${EFFECTS_LIBRARY.length} VFX presets across ${EFFECT_CATEGORIES.length} categories`}
                       open={openPanels.effects}
@@ -5506,7 +5490,7 @@ export default function VideoEditorPage() {
                     {/* === Voice & Narration Panel === */}
                     <CollapsiblePanel
                       id="voice"
-                      icon={<Mic size={13} className="text-brand-accent" />}
+                      icon={<Microphone size={13} className="text-brand-accent" />}
                       title="Voice & Narration"
                       desc={`${VOICE_PRESETS.length} AI voices + cloning + tone controls`}
                       open={openPanels.voice}
@@ -5519,7 +5503,7 @@ export default function VideoEditorPage() {
                       {/* Voice preset grid */}
                       <div className="mb-4">
                         <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
-                          <Speech size={11} className="text-brand-accent" /> Select a Voice Preset
+                          <ChatText size={11} className="text-brand-accent" /> Select a Voice Preset
                         </h4>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1.5">
                           {VOICE_PRESETS.map(v => {
@@ -5546,9 +5530,9 @@ export default function VideoEditorPage() {
                       {/* Voice cloning */}
                       <div className="mb-4 p-3 rounded-lg border border-border-subtle">
                         <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
-                          <Upload size={11} className="text-brand-accent" /> Voice Cloning
+                          <UploadSimple size={11} className="text-brand-accent" /> Voice Cloning
                         </h4>
-                        <p className="text-[9px] text-text-muted mb-2">Upload a 30-second voice sample to clone the voice</p>
+                        <p className="text-[9px] text-text-muted mb-2">UploadSimple a 30-second voice sample to clone the voice</p>
                         <input
                           ref={voiceSampleInputRef}
                           type="file"
@@ -5565,7 +5549,7 @@ export default function VideoEditorPage() {
                           onClick={() => voiceSampleInputRef.current?.click()}
                           className="btn btn-sm w-full flex items-center justify-center gap-1.5"
                         >
-                          <Upload size={11} /> {editorSettings.voice.cloneSampleUrl ? "Sample Uploaded � Replace" : "Upload Voice Sample"}
+                          <UploadSimple size={11} /> {editorSettings.voice.cloneSampleUrl ? "Sample Uploaded � Replace" : "UploadSimple Voice Sample"}
                         </button>
                       </div>
 
@@ -5626,12 +5610,12 @@ export default function VideoEditorPage() {
                       {/* Script-to-voice preview */}
                       <div className="p-3 rounded-lg border border-border-subtle">
                         <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
-                          <MessageSquare size={11} className="text-brand-accent" /> Script-to-Voice Preview
+                          <Chat size={11} className="text-brand-accent" /> Script-to-Voice Preview
                         </h4>
                         <textarea
                           value={voiceScriptPreview}
                           onChange={(e) => setVoiceScriptPreview(e.target.value)}
-                          placeholder="Type text to preview in the selected voice..."
+                          placeholder="TextT text to preview in the selected voice..."
                           rows={2}
                           className="input w-full text-[10px] resize-none mb-2"
                         />
@@ -5641,7 +5625,7 @@ export default function VideoEditorPage() {
                           disabled={voicePreviewLoading}
                           className="btn btn-sm w-full flex items-center justify-center gap-1.5 disabled:opacity-50"
                         >
-                          {voicePreviewLoading ? <Loader2 size={11} className="animate-spin" /> : <Play size={11} />}
+                          {voicePreviewLoading ? <CircleNotch size={11} className="animate-spin" /> : <Play size={11} />}
                           {voicePreviewLoading ? "Generating..." : "Preview Voice"}
                         </button>
                       </div>
@@ -5650,7 +5634,7 @@ export default function VideoEditorPage() {
                     {/* === B-Roll & Stock Footage === */}
                     <CollapsiblePanel
                       id="broll"
-                      icon={<Film size={13} className="text-brand-accent" />}
+                      icon={<FilmStrip size={13} className="text-brand-accent" />}
                       title="B-Roll & Stock"
                       desc="Search stock libraries + AI match + upload custom clips"
                       open={openPanels.broll}
@@ -5672,7 +5656,7 @@ export default function VideoEditorPage() {
                         />
                       </div>
 
-                      {/* Upload + Browse all */}
+                      {/* UploadSimple + Browse all */}
                       <div className="grid grid-cols-2 gap-2 mb-3">
                         <button
                           type="button"
@@ -5680,7 +5664,7 @@ export default function VideoEditorPage() {
                           className="btn btn-sm flex items-center justify-center gap-1.5"
                           title="Open the full B-roll browser (Cmd/Ctrl+K)"
                         >
-                          <Sparkles size={11} className="text-brand-accent" /> Browse all B-roll
+                          <Sparkle size={11} className="text-brand-accent" /> Browse all B-roll
                         </button>
                         <input
                           ref={brollFileInputRef}
@@ -5698,7 +5682,7 @@ export default function VideoEditorPage() {
                           onClick={() => brollFileInputRef.current?.click()}
                           className="btn btn-sm flex items-center justify-center gap-1.5"
                         >
-                          <Upload size={11} /> Upload Custom B-Roll
+                          <UploadSimple size={11} /> UploadSimple Custom B-Roll
                         </button>
                       </div>
 
@@ -5734,7 +5718,7 @@ export default function VideoEditorPage() {
                           onClick={() => setShowPresetPicker(true)}
                           className="text-[10px] px-3 py-1.5 rounded-lg border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] flex items-center justify-center gap-1.5 mx-auto"
                         >
-                          <Wand2 size={10} /> Open Preset Picker <span className="text-[8px] opacity-70">?K</span>
+                          <MagicWand size={10} /> Open Preset Picker <span className="text-[8px] opacity-70">?K</span>
                         </button>
                       </div>
                     </CollapsiblePanel>
@@ -5742,7 +5726,7 @@ export default function VideoEditorPage() {
                     {/* === Advanced Timeline === */}
                     <CollapsiblePanel
                       id="advancedTimeline"
-                      icon={<Layers size={13} className="text-brand-accent" />}
+                      icon={<Stack size={13} className="text-brand-accent" />}
                       title="Advanced Timeline"
                       desc="Multi-track preview, keyframes, beat sync, audio ducking"
                       open={openPanels.advancedTimeline}
@@ -5753,21 +5737,21 @@ export default function VideoEditorPage() {
                         <ToggleRow
                           label="Keyframe animation"
                           desc="Animate props over time with curves"
-                          icon={<TrendingUp size={10} />}
+                          icon={<TrendUp size={10} />}
                           checked={editorSettings.timeline.keyframes}
                           onChange={v => setEditorSettings(prev => ({ ...prev, timeline: { ...prev.timeline, keyframes: v } }))}
                         />
                         <ToggleRow
                           label="Scene-by-scene editing"
                           desc="Granular per-scene property overrides"
-                          icon={<Layers size={10} />}
+                          icon={<Stack size={10} />}
                           checked={editorSettings.timeline.sceneEditing}
                           onChange={v => setEditorSettings(prev => ({ ...prev, timeline: { ...prev.timeline, sceneEditing: v } }))}
                         />
                         <ToggleRow
                           label="Multi-track layout"
                           desc="Enable stacked tracks (video + audio + captions)"
-                          icon={<LayoutGrid size={10} />}
+                          icon={<SquaresFour size={10} />}
                           checked={editorSettings.timeline.multiTrack}
                           onChange={v => setEditorSettings(prev => ({ ...prev, timeline: { ...prev.timeline, multiTrack: v } }))}
                         />
@@ -5783,7 +5767,7 @@ export default function VideoEditorPage() {
                       {/* Audio ducking customization */}
                       <div className="p-3 rounded-lg border border-border-subtle">
                         <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
-                          <VolumeX size={11} className="text-brand-accent" /> Audio Ducking
+                          <SpeakerX size={11} className="text-brand-accent" /> Audio Ducking
                         </h4>
                         <p className="text-[9px] text-text-muted mb-2">How much music volume ducks under voiceover (higher = quieter)</p>
                         <div className="flex items-center gap-2">
@@ -5807,7 +5791,7 @@ export default function VideoEditorPage() {
                     <div className="glass rounded-xl border-[rgba(212,255,0,0.1)]">
                       <h3 className="flex items-center gap-2"><ListChecks size={12} className="text-brand-accent" /> Active Config Summary</h3>
                       <div className="space-y-1.5 text-[9px]">
-                        <SummaryRow label="Captions" on={editorSettings.captions.enabled} value={editorSettings.captions.enabled ? ADVANCED_CAPTION_PRESETS.find(x => x.id === editorSettings.captions.preset)?.name : "off"} />
+                        <SummaryRow label="ClosedCaptioning" on={editorSettings.captions.enabled} value={editorSettings.captions.enabled ? ADVANCED_CAPTION_PRESETS.find(x => x.id === editorSettings.captions.preset)?.name : "off"} />
                         <SummaryRow label="Text Anim" on={editorSettings.textAnimation.enabled} value={editorSettings.textAnimation.enabled ? editorSettings.textAnimation.preset : "off"} />
                         <SummaryRow label="Motion" on={editorSettings.motion.enabled} value={editorSettings.motion.enabled ? editorSettings.motion.preset : "off"} />
                         <SummaryRow label="Transitions" on={editorSettings.transitions.enabled} value={editorSettings.transitions.enabled ? editorSettings.transitions.preset : "off"} />
@@ -5825,7 +5809,7 @@ export default function VideoEditorPage() {
                     </div>
 
                     <div className="glass rounded-xl p-4">
-                      <h3 className="flex items-center gap-2"><Sparkles size={12} className="text-brand-accent" /> Smart Flags</h3>
+                      <h3 className="flex items-center gap-2"><Sparkle size={12} className="text-brand-accent" /> Smart Flags</h3>
                       <div className="space-y-1 text-[9px]">
                         {[
                           ["Cut silence", editorSettings.smart.autoCutSilence],
@@ -5846,7 +5830,7 @@ export default function VideoEditorPage() {
                     </div>
 
                     <div className="glass rounded-xl border-[rgba(212,255,0,0.1)]">
-                      <h3 className="flex items-center gap-2"><AlertCircle size={12} className="text-brand-accent" /> Tips</h3>
+                      <h3 className="flex items-center gap-2"><WarningCircle size={12} className="text-brand-accent" /> Tips</h3>
                       <ul className="text-[9px] text-text-muted space-y-1 list-disc pl-3.5">
                         <li>Every panel is optional � toggle only what you need.</li>
                         <li>Platform presets auto-set aspect, duration, and captions.</li>
@@ -5863,15 +5847,15 @@ export default function VideoEditorPage() {
                 <div className="lg:col-span-2 space-y-4">
                   {/* --- Left-panel tabs: Style / Brand / AI / Assets ---------
                    *  Collapses the old wall of 4 accordions (Caption/Effects/SFX/
-                   *  Music + Brand + Details + AI Options + Style) into a single
+                   *  MusicNote + Brand + Details + AI Options + Style) into a single
                    *  tab-switcher. Only one group renders at a time � this is the
                    *  biggest win against the "every section is the same weight"
                    *  complaint from the audit. */}
                   <div className="tab-pill-strip">
                     {([
                       { id: "style" as const, label: "Style", icon: <Palette size={11} /> },
-                      { id: "brand" as const, label: "Brand", icon: <Paintbrush size={11} /> },
-                      { id: "ai" as const, label: "AI", icon: <Sparkles size={11} /> },
+                      { id: "brand" as const, label: "Brand", icon: <PaintBrush size={11} /> },
+                      { id: "ai" as const, label: "AI", icon: <Sparkle size={11} /> },
                       { id: "assets" as const, label: "Assets", icon: <FileText size={11} /> },
                     ]).map((t) => (
                       <button
@@ -5891,7 +5875,7 @@ export default function VideoEditorPage() {
                     <div className="space-y-3">
                       <div className="glass rounded-xl space-y-2">
                         <h2 className="flex items-center gap-2 mb-0">
-                          <Wand2 size={13} className="text-brand-accent" /> One-click Auto-Edit
+                          <MagicWand size={13} className="text-brand-accent" /> One-click Auto-Edit
                         </h2>
                         <p className="text-[9px] text-text-muted">
                           Runs detect-scenes ? suggest ? captions ? B-roll candidates on your rendered video.
@@ -5903,7 +5887,7 @@ export default function VideoEditorPage() {
                           disabled={fullPassRunning || !result?.url || !aiProject?.project_id}
                           className="btn-primary w-full text-xs py-2 flex items-center justify-center gap-1.5 disabled:opacity-40"
                         >
-                          {fullPassRunning ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                          {fullPassRunning ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
                           {fullPassRunning ? "Running full-pass�" : "Run Full-Pass Auto-Edit"}
                         </button>
                         {(!result?.url || !aiProject?.project_id) && (
@@ -5924,7 +5908,7 @@ export default function VideoEditorPage() {
                         </p>
                         {referenceFiles.length === 0 ? (
                           <p className="text-[9px] text-text-muted italic">
-                            Upload a reference video or image in the Assets tab first.
+                            UploadSimple a reference video or image in the Assets tab first.
                           </p>
                         ) : (
                           <div className="grid grid-cols-2 gap-2">
@@ -5937,12 +5921,12 @@ export default function VideoEditorPage() {
                                       alt={f.name}
                                       className="w-10 h-10 object-cover rounded"
                                       wrapperClassName="w-10 h-10 rounded"
-                                      fallback={<ImageIcon size={12} className="text-text-muted" />}
+                                      fallback={<Image size={12} className="text-text-muted" />}
                                     />
                                   ) : f.type.startsWith("video/") ? (
-                                    <Film size={12} className="text-brand-accent" />
+                                    <FilmStrip size={12} className="text-brand-accent" />
                                   ) : (
-                                    <ImageIcon size={12} className="text-text-muted" />
+                                    <Image size={12} className="text-text-muted" />
                                   )}
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -5964,7 +5948,7 @@ export default function VideoEditorPage() {
                                   disabled={classifyingIdx === i}
                                   className="text-[8px] px-1.5 py-0.5 rounded border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] flex items-center gap-1 disabled:opacity-40"
                                 >
-                                  {classifyingIdx === i ? <Loader2 size={8} className="animate-spin" /> : <Bot size={8} />}
+                                  {classifyingIdx === i ? <CircleNotch size={8} className="animate-spin" /> : <Robot size={8} />}
                                   {classifyingIdx === i ? "Classifying" : "Classify"}
                                 </button>
                               </div>
@@ -5975,7 +5959,7 @@ export default function VideoEditorPage() {
 
                       <div className="glass rounded-xl space-y-2">
                         <h2 className="flex items-center gap-2 mb-0">
-                          <TrendingUp size={13} className="text-brand-accent" /> Analyze Viral Video
+                          <TrendUp size={13} className="text-brand-accent" /> Analyze Viral Video
                         </h2>
                         <p className="text-[9px] text-text-muted">
                           Paste a YouTube / Shorts URL. Claude Vision extracts the visual
@@ -5996,7 +5980,7 @@ export default function VideoEditorPage() {
                             disabled={viralAnalyzing || !viralUrl.trim()}
                             className="btn-primary text-xs px-3 flex items-center gap-1 disabled:opacity-40"
                           >
-                            {viralAnalyzing ? <Loader2 size={11} className="animate-spin" /> : <TrendingUp size={11} />}
+                            {viralAnalyzing ? <CircleNotch size={11} className="animate-spin" /> : <TrendUp size={11} />}
                             {viralAnalyzing ? "�" : "Analyze"}
                           </button>
                         </div>
@@ -6012,7 +5996,7 @@ export default function VideoEditorPage() {
                   {/* Brand Kit Integration */}
                   {editorLeftTab === "brand" && (
                   <div className="glass rounded-xl p-4">
-                    <h2 className="flex items-center gap-2"><Paintbrush size={13} className="text-brand-accent" /> Brand Kit</h2>
+                    <h2 className="flex items-center gap-2"><PaintBrush size={13} className="text-brand-accent" /> Brand Kit</h2>
                     <div className="grid grid-cols-3 gap-2">
                       {brandKits.map(kit => (
                         <button key={kit.id} onClick={() => {
@@ -6045,9 +6029,9 @@ export default function VideoEditorPage() {
                       className="w-full flex items-center justify-between mb-2"
                     >
                       <h2 className="flex items-center gap-2 mb-0">
-                        <Captions size={13} className="text-brand-accent" /> Caption Style ({CAPTION_STYLES_LIBRARY.length})
+                        <ClosedCaptioning size={13} className="text-brand-accent" /> Caption Style ({CAPTION_STYLES_LIBRARY.length})
                       </h2>
-                      {openAssetPanels.captionStyle ? <ChevronDown size={13} className="text-text-muted" /> : <ChevronRight size={13} className="text-text-muted" />}
+                      {openAssetPanels.captionStyle ? <CaretDown size={13} className="text-text-muted" /> : <CaretRight size={13} className="text-text-muted" />}
                     </button>
                     {openAssetPanels.captionStyle && (
                       <>
@@ -6140,9 +6124,9 @@ export default function VideoEditorPage() {
                       className="w-full flex items-center justify-between mb-2"
                     >
                       <h2 className="flex items-center gap-2 mb-0">
-                        <Wand2 size={13} className="text-brand-accent" /> Effects &amp; Transitions ({EFFECTS_CATALOG.length})
+                        <MagicWand size={13} className="text-brand-accent" /> Effects &amp; Transitions ({EFFECTS_CATALOG.length})
                       </h2>
-                      {openAssetPanels.effectsTransitions ? <ChevronDown size={13} className="text-text-muted" /> : <ChevronRight size={13} className="text-text-muted" />}
+                      {openAssetPanels.effectsTransitions ? <CaretDown size={13} className="text-text-muted" /> : <CaretRight size={13} className="text-text-muted" />}
                     </button>
                     {openAssetPanels.effectsTransitions && (
                       <>
@@ -6209,9 +6193,9 @@ export default function VideoEditorPage() {
                       className="w-full flex items-center justify-between mb-2"
                     >
                       <h2 className="flex items-center gap-2 mb-0">
-                        <Volume2 size={13} className="text-brand-accent" /> SFX Palette ({SFX_LIBRARY.length})
+                        <SpeakerHigh size={13} className="text-brand-accent" /> SFX Palette ({SFX_LIBRARY.length})
                       </h2>
-                      {openAssetPanels.sfxPalette ? <ChevronDown size={13} className="text-text-muted" /> : <ChevronRight size={13} className="text-text-muted" />}
+                      {openAssetPanels.sfxPalette ? <CaretDown size={13} className="text-text-muted" /> : <CaretRight size={13} className="text-text-muted" />}
                     </button>
                     {openAssetPanels.sfxPalette && (
                       <>
@@ -6278,20 +6262,20 @@ export default function VideoEditorPage() {
                     )}
                   </div>
 
-                  {/* Music (asset catalog) */}
+                  {/* MusicNote (asset catalog) */}
                   <div className="glass rounded-xl p-4">
                     <button
                       onClick={() => toggleAssetPanel("music")}
                       className="w-full flex items-center justify-between mb-2"
                     >
                       <h2 className="flex items-center gap-2 mb-0">
-                        <Music size={13} className="text-brand-accent" /> Music ({MUSIC_LIBRARY.length})
+                        <MusicNote size={13} className="text-brand-accent" /> MusicNote ({MUSIC_LIBRARY.length})
                       </h2>
-                      {openAssetPanels.music ? <ChevronDown size={13} className="text-text-muted" /> : <ChevronRight size={13} className="text-text-muted" />}
+                      {openAssetPanels.music ? <CaretDown size={13} className="text-text-muted" /> : <CaretRight size={13} className="text-text-muted" />}
                     </button>
                     {openAssetPanels.music && (
                       <>
-                        {/* AI Music Generation (ACE-Step / MusicGen) */}
+                        {/* AI MusicNote Generation (ACE-Step / MusicGen) */}
                         <div className="mb-3 p-2 rounded-lg bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.12)]">
                           <p className="text-[8px] uppercase tracking-wider text-brand-accent font-semibold mb-1.5">AI Generate</p>
                           <textarea
@@ -6305,7 +6289,7 @@ export default function VideoEditorPage() {
                             disabled={aiMusicLoading}
                             className="w-full flex items-center justify-center gap-1.5 text-[10px] font-semibold py-1.5 rounded-full bg-brand-accent text-[#020711] hover:bg-brand-accent/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                           >
-                            {aiMusicLoading ? <Loader2 size={10} className="animate-spin" /> : <Waves size={10} />}
+                            {aiMusicLoading ? <CircleNotch size={10} className="animate-spin" /> : <Waves size={10} />}
                             {aiMusicLoading ? "Generating�" : "Generate music"}
                           </button>
                           {aiMusicUrl && (
@@ -6432,7 +6416,7 @@ export default function VideoEditorPage() {
                   <>
                   {/* Video type */}
                   <div className="glass rounded-xl p-4">
-                    <h2 className="flex items-center gap-2"><Film size={13} className="text-brand-accent" /> Video Type</h2>
+                    <h2 className="flex items-center gap-2"><FilmStrip size={13} className="text-brand-accent" /> Video TextT</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                       {VIDEO_TYPES.map(t => (
                         <button key={t.id} onClick={() => selectType(t)}
@@ -6492,7 +6476,7 @@ export default function VideoEditorPage() {
                           input.click();
                         }}
                       >
-                        <Upload size={16} className="mx-auto text-text-muted mb-1" />
+                        <UploadSimple size={16} className="mx-auto text-text-muted mb-1" />
                         <p className="text-[10px] text-text-muted">Drop files or click to upload (up to 5, max {maxRefLabel} each)</p>
                         <p className="text-[8px] text-text-muted/60">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV</p>
                       </div>
@@ -6508,15 +6492,15 @@ export default function VideoEditorPage() {
                                   wrapperClassName="w-14 h-14 rounded-lg border border-border-subtle"
                                   fallback={
                                     <div className="w-14 h-14 bg-surface-light rounded-lg border border-border-subtle flex items-center justify-center">
-                                      <ImageIcon size={14} className="text-text-muted" />
+                                      <Image size={14} className="text-text-muted" />
                                     </div>
                                   }
                                 />
                               ) : (
                                 <div className="w-14 h-14 bg-surface-light rounded-lg border border-border-subtle flex flex-col items-center justify-center">
-                                  {f.type.startsWith("video/") ? <Film size={14} className="text-brand-accent mb-0.5" /> :
-                                   f.type.startsWith("audio/") ? <Music size={14} className="text-brand-accent mb-0.5" /> :
-                                   <ImageIcon size={14} className="text-text-muted mb-0.5" />}
+                                  {f.type.startsWith("video/") ? <FilmStrip size={14} className="text-brand-accent mb-0.5" /> :
+                                   f.type.startsWith("audio/") ? <MusicNote size={14} className="text-brand-accent mb-0.5" /> :
+                                   <Image size={14} className="text-text-muted mb-0.5" />}
                                   <span className="text-[7px] text-text-muted truncate max-w-[48px]">{f.name}</span>
                                 </div>
                               )}
@@ -6533,7 +6517,7 @@ export default function VideoEditorPage() {
                                   className="absolute -bottom-1 -right-1 px-1 py-0.5 rounded-full bg-brand-accent text-[#020711] text-[7px] font-bold items-center justify-center hidden group-hover:flex disabled:opacity-40"
                                   title="Analyze this style with AI"
                                 >
-                                  {refAnalyzing ? <Loader2 size={7} className="animate-spin" /> : "AI"}
+                                  {refAnalyzing ? <CircleNotch size={7} className="animate-spin" /> : "AI"}
                                 </button>
                               )}
                               {footageBadges[i] && (
@@ -6556,7 +6540,7 @@ export default function VideoEditorPage() {
                           disabled={refAnalyzing}
                           className="mt-2 w-full text-[10px] py-1.5 rounded-lg border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] text-brand-accent hover:bg-[rgba(212,255,0,0.08)] transition-all flex items-center justify-center gap-1.5 disabled:opacity-40"
                         >
-                          {refAnalyzing ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
+                          {refAnalyzing ? <CircleNotch size={11} className="animate-spin" /> : <Sparkle size={11} />}
                           Analyze this style with AI
                         </button>
                       )}
@@ -6612,10 +6596,10 @@ export default function VideoEditorPage() {
 
                   {/* AI Options */}
                   <div className="glass rounded-xl p-4">
-                    <h2 className="flex items-center gap-2"><Wand2 size={13} className="text-brand-accent" /> AI Enhancement Options</h2>
+                    <h2 className="flex items-center gap-2"><MagicWand size={13} className="text-brand-accent" /> AI Enhancement Options</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1.5">Music Mood</label>
+                        <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1.5">MusicNote Mood</label>
                         <div className="grid grid-cols-4 gap-1.5">
                           {MUSIC_MOODS.map(m => {
                             const active = config.music_mood === m.id;
@@ -6715,13 +6699,13 @@ export default function VideoEditorPage() {
                         <input type="checkbox" checked={config.include_voiceover}
                           onChange={e => setConfig({ ...config, include_voiceover: e.target.checked })}
                           className="rounded border-border-subtle text-brand-accent focus:ring-[rgba(212,255,0,0.3)]" />
-                        <Volume2 size={11} /> AI Voiceover Notes
+                        <SpeakerHigh size={11} /> AI Voiceover Notes
                       </label>
                       <label className="flex items-center gap-2 text-[10px] text-text-muted cursor-pointer">
                         <input type="checkbox" checked={config.include_cta}
                           onChange={e => setConfig({ ...config, include_cta: e.target.checked })}
                           className="rounded border-border-subtle text-brand-accent focus:ring-[rgba(212,255,0,0.3)]" />
-                        <Zap size={11} /> Include CTA Overlay
+                        <Lightning size={11} /> Include CTA Overlay
                       </label>
                       {config.include_cta && (
                         <input value={config.cta_text} onChange={e => setConfig({ ...config, cta_text: e.target.value })}
@@ -6730,11 +6714,11 @@ export default function VideoEditorPage() {
                     </div>
                   </div>
 
-                  {/* -- AI-Generated Shot List / Script / Captions -- */}
+                  {/* -- AI-Generated Shot List / Script / ClosedCaptioning -- */}
                   {aiProject && (aiProject.shotlist || aiProject.scenes || aiProject.captions) && (
                     <div className="glass rounded-xl space-y-3">
                       <h2 className="flex items-center gap-2">
-                        <Bot size={13} className="text-brand-accent" /> AI Project
+                        <Robot size={13} className="text-brand-accent" /> AI Project
                         <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[rgba(212,255,0,0.08)] text-brand-accent font-medium">Claude</span>
                       </h2>
                       {aiProject.hook && (
@@ -6784,7 +6768,7 @@ export default function VideoEditorPage() {
                       )}
                       {Array.isArray(aiProject.captions) && aiProject.captions.length > 0 && (
                         <div>
-                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">Captions ({aiProject.captions.length})</p>
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">ClosedCaptioning ({aiProject.captions.length})</p>
                           <div className="space-y-1 max-h-32 overflow-y-auto">
                             {aiProject.captions.slice(0, 12).map((c, i) => (
                               <div key={i} className="text-[10px] text-text-primary">
@@ -6811,19 +6795,19 @@ export default function VideoEditorPage() {
                       className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
                         mode === "storyboard" ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)] text-brand-accent" : "border-border-subtle text-text-muted hover:text-text-primary"
                       }`}>
-                      <LayoutGrid size={14} /> AI Storyboard
+                      <SquaresFour size={14} /> AI Storyboard
                     </button>
                     <button onClick={() => setMode("plan")}
                       className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
                         mode === "plan" ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)] text-brand-accent" : "border-border-subtle text-text-muted hover:text-text-primary"
                       }`}>
-                      <Sparkles size={14} /> AI Plan
+                      <Sparkle size={14} /> AI Plan
                     </button>
                     <button onClick={() => setMode("render")}
                       className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
                         mode === "render" ? "bg-[rgba(212,255,0,0.08)] border-[rgba(212,255,0,0.25)] text-brand-accent" : "border-border-subtle text-text-muted hover:text-text-primary"
                       }`}>
-                      <Film size={14} /> Render MP4
+                      <FilmStrip size={14} /> Render MP4
                     </button>
                   </div>
 
@@ -6831,7 +6815,7 @@ export default function VideoEditorPage() {
                     className={`w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl font-semibold transition-all ${
                       mode === "render" ? "btn-primary" : "bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.25)] hover:bg-[rgba(212,255,0,0.12)]"
                     }`}>
-                    {generating ? <Loader size={14} className="animate-spin" /> : mode === "storyboard" ? <LayoutGrid size={14} /> : mode === "render" ? <Film size={14} /> : <Sparkles size={14} />}
+                    {generating ? <CircleNotch size={14} className="animate-spin" /> : mode === "storyboard" ? <SquaresFour size={14} /> : mode === "render" ? <FilmStrip size={14} /> : <Sparkle size={14} />}
                     {generating ? "Creating..." : mode === "storyboard" ? "Generate Storyboard" : mode === "render" ? "Render Video" : "Generate Video Plan"}
                   </button>
                   <p className="text-[8px] text-text-muted text-center">
@@ -6890,11 +6874,11 @@ export default function VideoEditorPage() {
                           <video ref={timelineVideoRef} src={result.url} controls className="w-full h-full object-cover rounded-xl" />
                         ) : generating ? (
                           <div className="flex flex-col items-center gap-2">
-                            <Loader size={20} className="animate-spin text-brand-accent" />
+                            <CircleNotch size={20} className="animate-spin text-brand-accent" />
                             <span className="text-[9px] text-brand-accent font-mono">{Math.round(renderProgress)}%</span>
                           </div>
                         ) : (
-                          <Film size={24} className="text-text-muted/30" />
+                          <FilmStrip size={24} className="text-text-muted/30" />
                         )}
                       </div>
                       {generating && (
@@ -6914,14 +6898,14 @@ export default function VideoEditorPage() {
                   {result && (
                     <div className="glass rounded-xl p-4">
                       <h3 className="flex items-center gap-2">
-                        {result.url ? <Play size={12} className="text-success" /> : <Sparkles size={12} className="text-brand-accent" />}
+                        {result.url ? <Play size={12} className="text-success" /> : <Sparkle size={12} className="text-brand-accent" />}
                         {result.url ? "Rendered Video" : result.storyboard ? "Storyboard Ready" : "Production Plan"}
                       </h3>
                       {result.url && (
                         <div className="space-y-2">
                           <a href={result.url} target="_blank" rel="noopener" download
                             className="btn-primary btn-shine w-full text-xs flex items-center justify-center gap-1">
-                            <Download size={12} /> Download MP4
+                            <DownloadSimple size={12} /> DownloadSimple MP4
                           </a>
                           <button onClick={() => { navigator.clipboard.writeText(result.url || ""); toast.success("Link copied!"); }}
                             className="btn-secondary w-full text-xs flex items-center justify-center gap-1">
@@ -6938,7 +6922,7 @@ export default function VideoEditorPage() {
                       )}
                       {result.music_suggestions && result.music_suggestions.length > 0 && (
                         <div className="mt-3 pt-3 border-t border-border-subtle">
-                          <p className="text-[9px] text-brand-accent uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><Music size={9} /> Music Suggestions</p>
+                          <p className="text-[9px] text-brand-accent uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><MusicNote size={9} /> MusicNote Suggestions</p>
                           {result.music_suggestions.map((m, i) => (
                             <p key={i} className="text-[9px] text-text-muted">{m}</p>
                           ))}
@@ -6946,7 +6930,7 @@ export default function VideoEditorPage() {
                       )}
                       {result.thumbnail_suggestion && (
                         <div className="mt-2 pt-2 border-t border-border-subtle">
-                          <p className="text-[9px] text-brand-accent uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><ImageIcon size={9} /> Thumbnail Idea</p>
+                          <p className="text-[9px] text-brand-accent uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><Image size={9} /> Thumbnail Idea</p>
                           <p className="text-[9px] text-text-muted">{result.thumbnail_suggestion}</p>
                         </div>
                       )}
@@ -6959,7 +6943,7 @@ export default function VideoEditorPage() {
                    *  "Pro" toggle swaps to the new Premiere-style NLE. */}
                   <div className="glass rounded-xl p-4">
                     <h3 className="flex items-center gap-2">
-                      <Film size={12} className="text-brand-accent" /> Timeline
+                      <FilmStrip size={12} className="text-brand-accent" /> Timeline
                       <span className="text-[8px] text-text-muted font-normal">
                         {proEditorMode ? "Premiere Pro NLE" : "multi-track editor"}
                       </span>
@@ -6974,7 +6958,7 @@ export default function VideoEditorPage() {
                         }`}
                         title="Toggle Premiere-Pro-style NLE"
                       >
-                        <Sparkles size={9} /> Pro Mode
+                        <Sparkle size={9} /> Pro Mode
                       </button>
                       <button
                         type="button"
@@ -6986,7 +6970,7 @@ export default function VideoEditorPage() {
                         }`}
                         title="Open Preset Picker (Cmd/Ctrl+K)"
                       >
-                        <Wand2 size={9} /> Presets <span className="text-[7px]">?K</span>
+                        <MagicWand size={9} /> Presets <span className="text-[7px]">?K</span>
                       </button>
                     </h3>
                     {proEditorMode ? (
@@ -7033,7 +7017,7 @@ export default function VideoEditorPage() {
                         try {
                           const res = await fetch("/api/video/auto-edit/captions", {
                             method: "POST",
-                            headers: { "Content-Type": "application/json" },
+                            headers: { "Content-TextT": "application/json" },
                             body: JSON.stringify({ video_url: result.url, style_id: resolveCaptionStyleForApi(config.caption_style) }),
                           });
                           const j = await res.json();
@@ -7088,7 +7072,7 @@ export default function VideoEditorPage() {
                               }];
                           const res = await fetch("/api/video/auto-edit/suggest", {
                             method: "POST",
-                            headers: { "Content-Type": "application/json" },
+                            headers: { "Content-TextT": "application/json" },
                             body: JSON.stringify({ video_url: result.url, scenes }),
                           });
                           const j = await res.json();
@@ -7145,7 +7129,7 @@ export default function VideoEditorPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Motion Graphics Library */}
                 <div className="glass rounded-xl p-4">
-                  <h2 className="flex items-center gap-2"><Layers size={13} className="text-brand-accent" /> Motion Graphics Library</h2>
+                  <h2 className="flex items-center gap-2"><Stack size={13} className="text-brand-accent" /> Motion Graphics Library</h2>
                   <div className="flex flex-wrap gap-1.5 mb-3">
                     {(["lower-thirds", "transitions", "intros", "outros"] as const).map(cat => (
                       <button key={cat} onClick={() => setMotionGraphicsCategory(cat)}
@@ -7181,7 +7165,7 @@ export default function VideoEditorPage() {
 
                 {/* Video Template Library (30+) */}
                 <div className="glass rounded-xl p-4">
-                  <h2 className="flex items-center gap-2"><LayoutGrid size={13} className="text-brand-accent" /> Video Template Library</h2>
+                  <h2 className="flex items-center gap-2"><SquaresFour size={13} className="text-brand-accent" /> Video Template Library</h2>
                   <p className="text-[9px] text-text-muted mb-2">{EXPANDED_TEMPLATES.length} templates with preview thumbnails</p>
                   <div className="max-h-[400px] overflow-y-auto space-y-1.5 pr-1">
                     {EXPANDED_TEMPLATES.map(tmpl => (
@@ -7192,7 +7176,7 @@ export default function VideoEditorPage() {
                       }}
                         className="w-full flex items-center gap-2.5 p-2 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.2)] transition-all text-left">
                         <div className="w-10 h-10 rounded-lg bg-surface-light border border-border-subtle flex items-center justify-center flex-shrink-0">
-                          <Film size={12} className="text-text-muted" />
+                          <FilmStrip size={12} className="text-text-muted" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-[10px] font-semibold truncate">{tmpl.name}</p>
@@ -7209,7 +7193,7 @@ export default function VideoEditorPage() {
 
                 {/* Effect Presets */}
                 <div className="glass rounded-xl p-4">
-                  <h2 className="flex items-center gap-2"><Sparkles size={13} className="text-brand-accent" /> Effect Presets</h2>
+                  <h2 className="flex items-center gap-2"><Sparkle size={13} className="text-brand-accent" /> Effect Presets</h2>
                   <p className="text-[9px] text-text-muted mb-3">Overlay effects, transitions, and motion styles to enhance your video.</p>
                   <div className="grid grid-cols-2 gap-2">
                     {EFFECT_PRESETS.map(effect => (
@@ -7225,7 +7209,7 @@ export default function VideoEditorPage() {
 
                 {/* Font Library */}
                 <div className="glass rounded-xl p-4">
-                  <h2 className="flex items-center gap-2"><Type size={13} className="text-brand-accent" /> Font Library</h2>
+                  <h2 className="flex items-center gap-2"><TextT size={13} className="text-brand-accent" /> Font Library</h2>
                   <p className="text-[9px] text-text-muted mb-3">Choose a font for captions, titles, and text overlays.</p>
                   <div className="grid grid-cols-2 gap-1.5">
                     {FONT_PRESETS.map(font => (
@@ -7251,7 +7235,7 @@ export default function VideoEditorPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Export Quality Settings */}
                 <div className="glass rounded-xl p-4">
-                  <h2 className="flex items-center gap-2"><Settings2 size={13} className="text-brand-accent" /> Export Quality Settings</h2>
+                  <h2 className="flex items-center gap-2"><SlidersHorizontal size={13} className="text-brand-accent" /> Export Quality Settings</h2>
                   <div className="space-y-3">
                     <div>
                       <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">Resolution</label>
@@ -7287,7 +7271,7 @@ export default function VideoEditorPage() {
                       <div>
                         <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1">Frame Rate</label>
                         <select value={exportSettings.fps} onChange={e => setExportSettings(prev => ({ ...prev, fps: parseInt(e.target.value) }))} className="input text-xs w-full">
-                          <option value={24}>24 fps (Film)</option>
+                          <option value={24}>24 fps (FilmStrip)</option>
                           <option value={30}>30 fps (Standard)</option>
                           <option value={60}>60 fps (Smooth)</option>
                         </select>
@@ -7334,7 +7318,7 @@ export default function VideoEditorPage() {
 
                 {/* Collaboration Notes */}
                 <div className="glass rounded-xl p-4">
-                  <h2 className="flex items-center gap-2"><MessageSquare size={13} className="text-brand-accent" /> Collaboration Notes</h2>
+                  <h2 className="flex items-center gap-2"><Chat size={13} className="text-brand-accent" /> Collaboration Notes</h2>
                   <p className="text-[9px] text-text-muted mb-3">Add timestamped notes for team review and feedback.</p>
                   <div className="flex gap-2 mb-3">
                     <input value={newNote.time} onChange={e => setNewNote(prev => ({ ...prev, time: e.target.value }))}
@@ -7382,7 +7366,7 @@ export default function VideoEditorPage() {
                           toast.success("Storyboard copied!");
                         }} className="btn-secondary text-[10px] flex items-center gap-1"><Copy size={10} /> Copy</button>
                         <button onClick={() => { setMode("render"); setTab("create"); }}
-                          className="btn-primary text-[10px] flex items-center gap-1"><Film size={10} /> Render This</button>
+                          className="btn-primary text-[10px] flex items-center gap-1"><FilmStrip size={10} /> Render This</button>
                       </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -7399,13 +7383,13 @@ export default function VideoEditorPage() {
                             </div>
                             {scene.text_overlay && (
                               <div>
-                                <p className="text-[8px] text-text-muted uppercase tracking-wider flex items-center gap-1"><Type size={8} /> Text Overlay</p>
+                                <p className="text-[8px] text-text-muted uppercase tracking-wider flex items-center gap-1"><TextT size={8} /> Text Overlay</p>
                                 <p className="text-[10px] text-brand-accent font-medium">{scene.text_overlay}</p>
                               </div>
                             )}
                             {scene.voiceover && (
                               <div>
-                                <p className="text-[8px] text-text-muted uppercase tracking-wider flex items-center gap-1"><Mic size={8} /> Voiceover</p>
+                                <p className="text-[8px] text-text-muted uppercase tracking-wider flex items-center gap-1"><Microphone size={8} /> Voiceover</p>
                                 <p className="text-[10px] italic">{scene.voiceover}</p>
                               </div>
                             )}
@@ -7420,21 +7404,21 @@ export default function VideoEditorPage() {
                   </>
                 ) : result?.plan ? (
                   <div className="glass rounded-xl">
-                    <h2 className="flex items-center gap-2"><Sparkles size={13} className="text-brand-accent" /> Video Plan</h2>
+                    <h2 className="flex items-center gap-2"><Sparkle size={13} className="text-brand-accent" /> Video Plan</h2>
                     <pre className="text-[10px] text-text-muted bg-surface-light rounded-lg p-3 whitespace-pre-wrap max-h-[500px] overflow-y-auto">{result.plan}</pre>
                     <div className="flex gap-2 mt-3">
                       <button onClick={() => { navigator.clipboard.writeText(result.plan || ""); toast.success("Copied!"); }}
                         className="btn-secondary text-[10px] flex items-center gap-1"><Copy size={10} /> Copy Plan</button>
                       <button onClick={() => { setMode("storyboard"); generateVideo(); }}
-                        className="btn-primary text-[10px] flex items-center gap-1"><LayoutGrid size={10} /> Convert to Storyboard</button>
+                        className="btn-primary text-[10px] flex items-center gap-1"><SquaresFour size={10} /> Convert to Storyboard</button>
                     </div>
                   </div>
                 ) : (
                   <div className="glass rounded-xl p-4 text-center py-12">
-                    <LayoutGrid size={24} className="mx-auto mb-2 text-text-muted/30" />
+                    <SquaresFour size={24} className="mx-auto mb-2 text-text-muted/30" />
                     <p className="text-xs text-text-muted">No storyboard yet. Generate one from the Create tab.</p>
                     <button onClick={() => { setMode("storyboard"); setTab("create"); }}
-                      className="btn-primary text-[10px] mt-3 flex items-center gap-1 mx-auto"><Sparkles size={10} /> Create Storyboard</button>
+                      className="btn-primary text-[10px] mt-3 flex items-center gap-1 mx-auto"><Sparkle size={10} /> Create Storyboard</button>
                   </div>
                 )}
               </div>
@@ -7556,9 +7540,9 @@ export default function VideoEditorPage() {
                     className="flex-1 btn-primary text-xs py-2 flex items-center justify-center gap-1.5 disabled:opacity-40"
                   >
                     {aiGenLoading ? (
-                      <><Loader2 size={12} className="animate-spin" /> Generating...</>
+                      <><CircleNotch size={12} className="animate-spin" /> Generating...</>
                     ) : (
-                      <><Sparkles size={12} /> Generate Full Project</>
+                      <><Sparkle size={12} /> Generate Full Project</>
                     )}
                   </button>
                 </div>
@@ -7642,7 +7626,7 @@ export default function VideoEditorPage() {
                     className="flex-1 text-xs py-2 rounded-xl bg-gradient-to-r from-red-500 to-amber-500 text-white hover:from-red-600 hover:to-amber-600 flex items-center justify-center gap-1.5 disabled:opacity-40"
                   >
                     {adsGenLoading ? (
-                      <><Loader2 size={12} className="animate-spin" /> Generating ad...</>
+                      <><CircleNotch size={12} className="animate-spin" /> Generating ad...</>
                     ) : (
                       <><Megaphone size={12} /> Generate Full Ad</>
                     )}
@@ -7655,7 +7639,7 @@ export default function VideoEditorPage() {
                       <p><span className="font-bold text-text-muted">HOOK:</span> {adsResult.script.hook}</p>
                       <p><span className="font-bold text-text-muted">CTA:</span> {adsResult.script.cta}</p>
                       <p><span className="font-bold text-text-muted">B-roll:</span> {adsResult.broll.length} moments</p>
-                      <p><span className="font-bold text-text-muted">Music:</span> {adsResult.music.title} ({adsResult.music.bpm} BPM)</p>
+                      <p><span className="font-bold text-text-muted">MusicNote:</span> {adsResult.music.title} ({adsResult.music.bpm} BPM)</p>
                     </div>
                   </div>
                 )}
@@ -7755,7 +7739,7 @@ export default function VideoEditorPage() {
             />
 
             {/* --- Footer action bar --------------------------------------
-             *  Sticks to the bottom of the viewport. Primary: Export / Download.
+             *  Sticks to the bottom of the viewport. Primary: Export / DownloadSimple.
              *  Secondary: One-click Auto-Edit. Shows render progress when active.
              *  Only rendered on the Create tab so other tabs stay clean. */}
             {tab === "create" && (
@@ -7768,7 +7752,7 @@ export default function VideoEditorPage() {
                   <p className="text-[10px] font-semibold truncate">
                     {generating ? (
                       <span className="flex items-center gap-1.5 text-brand-accent">
-                        <Film size={10} className="shrink-0" />
+                        <FilmStrip size={10} className="shrink-0" />
                         Rendering your Reel � ~{config.duration <= 30 ? "90 sec" : "3 min"}
                         <span className="text-[9px] text-text-muted font-normal ml-1">{Math.round(renderProgress)}%</span>
                       </span>
@@ -7802,7 +7786,7 @@ export default function VideoEditorPage() {
                       : "Run detect-scenes ? suggest ? captions ? B-roll"
                   }
                 >
-                  {fullPassRunning ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                  {fullPassRunning ? <CircleNotch size={10} className="animate-spin" /> : <Sparkle size={10} />}
                   One-click AI edit
                 </button>
                 {result?.url ? (
@@ -7813,7 +7797,7 @@ export default function VideoEditorPage() {
                     rel="noopener"
                     className="btn-primary text-[10px] px-3 py-1.5 flex items-center gap-1.5"
                   >
-                    <Download size={10} /> Export
+                    <DownloadSimple size={10} /> Export
                   </a>
                 ) : (
                   <button
@@ -7822,7 +7806,7 @@ export default function VideoEditorPage() {
                     disabled={generating || !config.title}
                     className="btn-primary text-[10px] px-3 py-1.5 flex items-center gap-1.5 disabled:opacity-40"
                   >
-                    {generating ? <Loader2 size={10} className="animate-spin" /> : <Film size={10} />}
+                    {generating ? <CircleNotch size={10} className="animate-spin" /> : <FilmStrip size={10} />}
                     {generating ? "Rendering�" : "Render + Export"}
                   </button>
                 )}
@@ -7903,7 +7887,7 @@ function CollapsiblePanel({
               {enabledToggle.value ? "Enabled" : "Off"}
             </label>
           )}
-          {open ? <ChevronDown size={14} className="text-text-muted" /> : <ChevronRight size={14} className="text-text-muted" />}
+          {open ? <CaretDown size={14} className="text-text-muted" /> : <CaretRight size={14} className="text-text-muted" />}
         </div>
       </button>
       {open && (
@@ -8028,7 +8012,7 @@ function VideoPresetsTab({ onSelect }: { onSelect: (preset: VideoPreset) => void
 
       {/* Batch ideas */}
       <div className="glass rounded-xl border-[rgba(212,255,0,0.1)]">
-        <h3 className="flex items-center gap-2"><Zap size={12} className="text-brand-accent" /> Weekly Content Plan</h3>
+        <h3 className="flex items-center gap-2"><Lightning size={12} className="text-brand-accent" /> Weekly Content Plan</h3>
         <p className="text-[10px] text-text-muted mb-3">Auto-generate a week of video content � one preset per day</p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {["Monday Motivation", "Tuesday Tip", "Wednesday BTS", "Thursday Myth Bust", "Friday Client Win", "Saturday Q&A", "Sunday Recap"].map((day, i) => (

@@ -1,10 +1,7 @@
 "use client";
+import { Briefcase, Camera, ChatCircle, Check, CircleNotch, Globe, Hash, Lightning, Link, LinkBreak, Megaphone, MusicNote, Play, Plus } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
-import {
-  Globe, Camera, MessageCircle, Music, Briefcase, Play, Megaphone,
-  Plus, Check, Loader, Link2, Unlink, Hash, Zap
-} from "lucide-react";
 import Modal from "@/components/ui/modal";
 import toast from "react-hot-toast";
 
@@ -20,8 +17,8 @@ interface ConnectedAccount {
 
 const PLATFORMS = [
   { id: "instagram", name: "Instagram", icon: <Camera size={16} />, color: "text-pink-400", bg: "bg-pink-400/10 border-pink-400/20", urlPrefix: "instagram.com/", placeholder: "@handle" },
-  { id: "facebook", name: "Facebook", icon: <MessageCircle size={16} />, color: "text-indigo-400", bg: "bg-indigo-400/10 border-indigo-400/20", urlPrefix: "facebook.com/", placeholder: "Page name or URL" },
-  { id: "tiktok", name: "TikTok", icon: <Music size={16} />, color: "text-text-primary", bg: "bg-black/5 border-border-subtle", urlPrefix: "tiktok.com/@", placeholder: "@handle" },
+  { id: "facebook", name: "Facebook", icon: <ChatCircle size={16} />, color: "text-indigo-400", bg: "bg-indigo-400/10 border-indigo-400/20", urlPrefix: "facebook.com/", placeholder: "Page name or URL" },
+  { id: "tiktok", name: "TikTok", icon: <MusicNote size={16} />, color: "text-text-primary", bg: "bg-black/5 border-border-subtle", urlPrefix: "tiktok.com/@", placeholder: "@handle" },
   { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={16} />, color: "text-indigo-600", bg: "bg-indigo-300/10 border-indigo-300/20", urlPrefix: "linkedin.com/company/", placeholder: "Company page URL" },
   { id: "youtube", name: "YouTube", icon: <Play size={16} />, color: "text-red-400", bg: "bg-red-400/10 border-red-400/20", urlPrefix: "youtube.com/@", placeholder: "@channel or URL" },
   { id: "google_ads", name: "Google Ads", icon: <Megaphone size={16} />, color: "text-green-400", bg: "bg-green-400/10 border-green-400/20", urlPrefix: "", placeholder: "Account ID (xxx-xxx-xxxx)" },
@@ -147,7 +144,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Link2 size={14} className="text-[#D4FF00]" />
+          <Link size={14} className="text-[#D4FF00]" />
           <h3 className="text-sm font-semibold">Connected Accounts</h3>
           <span className="text-[10px] text-text-muted bg-surface-light px-1.5 py-0.5 rounded">
             {accounts.filter(a => a.is_active).length}
@@ -166,7 +163,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
         <div className="text-xs text-text-muted py-4 text-center">Loading...</div>
       ) : accounts.filter(a => a.is_active).length === 0 ? (
         <div className="text-center py-6 border border-dashed border-border-subtle/50 rounded-lg">
-          <Link2 size={20} className="mx-auto mb-2 text-text-muted/50" />
+          <Link size={20} className="mx-auto mb-2 text-text-muted/50" />
           <p className="text-xs text-text-muted">No accounts linked yet</p>
           <button onClick={() => setShowConnect(true)} className="text-[10px] text-[#D4FF00] mt-1 hover:underline">
             Link first account
@@ -209,7 +206,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
                       className="p-1 rounded hover:bg-[rgba(212,255,0,0.08)] text-text-muted hover:text-[#D4FF00] transition-colors"
                       title="Upgrade to API access"
                     >
-                      <Zap size={12} />
+                      <Lightning size={12} />
                     </button>
                   )}
                   <button
@@ -217,7 +214,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
                     className="p-1 rounded hover:bg-danger/10 text-text-muted hover:text-danger transition-colors"
                     title="Disconnect"
                   >
-                    <Unlink size={12} />
+                    <LinkBreak size={12} />
                   </button>
                 </div>
               </div>
@@ -295,7 +292,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
               <div className="flex justify-end gap-2 pt-1">
                 <button type="button" onClick={() => setConnectPlatform(null)} className="btn-secondary text-xs">Back</button>
                 <button type="submit" disabled={connecting} className="btn-primary text-xs flex items-center gap-1.5">
-                  {connecting ? <Loader size={12} className="animate-spin" /> : <Link2 size={12} />}
+                  {connecting ? <CircleNotch size={12} className="animate-spin" /> : <Link size={12} />}
                   {connecting ? "Linking..." : "Link Account"}
                 </button>
               </div>
@@ -314,7 +311,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
                   onClick={() => startOAuth(connectPlatform)}
                   className="w-full py-2.5 bg-surface-light hover:bg-surface-light/80 border border-border-subtle rounded-lg text-xs font-medium flex items-center justify-center gap-2 transition-all text-text-muted hover:text-text-primary"
                 >
-                  <Zap size={13} />
+                  <Lightning size={13} />
                   Sign in with {["instagram", "facebook", "meta_ads"].includes(connectPlatform.id) ? "Meta" : ["youtube", "google_ads"].includes(connectPlatform.id) ? "Google" : connectPlatform.name}
                   <span className="text-[9px] text-text-muted ml-1">— enables analytics & posting</span>
                 </button>

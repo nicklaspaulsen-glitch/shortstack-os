@@ -1,6 +1,7 @@
 "use client";
+import { CaretRight } from "@phosphor-icons/react";
 
-import { ChevronRight } from "lucide-react";
+
 import { useState } from "react";
 import { BRAND } from "@/lib/brand-config";
 import Reveal from "./reveal";
@@ -21,7 +22,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
     >
       <div className="flex items-center justify-between gap-4">
         <p className="text-sm font-semibold text-white">{question}</p>
-        <ChevronRight
+        <CaretRight
           size={16}
           className="shrink-0 transition-transform text-gray-500"
           style={{ transform: open ? "rotate(90deg)" : "rotate(0deg)" }}

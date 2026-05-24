@@ -1,4 +1,5 @@
 "use client";
+import { ArrowsClockwise, CaretLeft, CaretRight, Check, MagicWand, SlidersHorizontal, Sparkle } from "@phosphor-icons/react";
 
 /**
  * Wizard — in-page multi-step guided flow.
@@ -42,15 +43,6 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Check,
-  Sparkles,
-  RefreshCw,
-  SlidersHorizontal,
-  Wand2,
-} from "lucide-react";
 
 /* ── Types ───────────────────────────────────────────────────────────── */
 
@@ -288,7 +280,7 @@ export function Wizard({
       <div className="relative px-4 md:px-6 pt-4 pb-3 border-b border-border-subtle bg-gradient-to-br from-[rgba(212,255,0,0.06)] via-transparent to-transparent">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2 text-[11px] text-text-muted">
-            <Wand2 size={12} className="text-[#D4FF00]" />
+            <MagicWand size={12} className="text-[#D4FF00]" />
             <span className="font-semibold text-text-primary">Guided Mode</span>
             <span className="text-text-muted">·</span>
             <span>{current.title}</span>
@@ -346,7 +338,7 @@ export function Wizard({
       {preview && (
         <div className="border-b border-border-subtle bg-surface-light/40 px-4 md:px-6 py-3">
           <div className="flex items-center gap-1.5 text-[10px] text-text-muted uppercase tracking-wider mb-2 font-semibold">
-            <Sparkles size={10} className="text-[#D4FF00]" /> Live Preview
+            <Sparkle size={10} className="text-[#D4FF00]" /> Live Preview
           </div>
           {preview}
         </div>
@@ -398,7 +390,7 @@ export function Wizard({
           disabled={idx === 0 || disabled}
           className="flex items-center gap-1 px-3 py-2 rounded-lg text-xs text-text-muted hover:text-text-primary disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
-          <ChevronLeft size={13} /> Back
+          <CaretLeft size={13} /> Back
         </button>
 
         {onCancel && (
@@ -443,18 +435,18 @@ export function Wizard({
         >
           {finishing ? (
             <>
-              <RefreshCw size={14} className="animate-spin" />
+              <ArrowsClockwise size={14} className="animate-spin" />
               <span>Working…</span>
             </>
           ) : isLast ? (
             <>
-              <Sparkles size={14} />
+              <Sparkle size={14} />
               <span>{finishLabel}</span>
             </>
           ) : (
             <>
               <span>Next</span>
-              <ChevronRight size={14} />
+              <CaretRight size={14} />
             </>
           )}
         </button>

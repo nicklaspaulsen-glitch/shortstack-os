@@ -1,6 +1,6 @@
 "use client";
+import { MagnifyingGlass } from "@phosphor-icons/react";
 
-import { Search } from "lucide-react";
 
 /**
  * GlobalSearch — header trigger button only.
@@ -23,8 +23,8 @@ export default function GlobalSearch() {
       aria-label="Open search (Ctrl+K)"
       className="flex items-center gap-2 bg-surface border border-border-subtle rounded-lg px-3 py-1.5 text-sm text-text-muted hover:border-[rgba(212,255,0,0.25)] transition-colors"
     >
-      <Search size={14} />
-      <span>Search...</span>
+      <MagnifyingGlass size={14} />
+      <span>MagnifyingGlass...</span>
       <kbd className="text-xs bg-surface-light px-1.5 py-0.5 rounded">Ctrl+K</kbd>
     </button>
   );

@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowSquareOut, Check, Copy, Link, Lock } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -18,7 +19,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { Check, Copy, ExternalLink, LinkIcon, Lock, ArrowLeft } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface PaymentLink {
@@ -207,7 +207,7 @@ export default function PaymentLinksPage() {
                               rel="noreferrer"
                               className="flex items-center justify-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-surface-light text-text-primary hover:bg-[rgba(212,255,0,0.08)] hover:text-brand-accent border border-border-subtle font-medium"
                             >
-                              <ExternalLink size={11} />
+                              <ArrowSquareOut size={11} />
                               Preview
                             </a>
                           </div>

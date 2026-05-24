@@ -1,4 +1,5 @@
 "use client";
+import { ArrowClockwise, ArrowCounterClockwise, BookBookmark, CaretDown, DownloadSimple, FastForward, MagnifyingGlassMinus, MagnifyingGlassPlus, Pause, Play, Plus, Repeat, Rewind, Scissors, SkipBack, SkipForward, SlidersHorizontal, Sparkle, TextT, Trash } from "@phosphor-icons/react";
 
 /* ────────────────────────────────────────────────────────────────
  * PremiereEditor — orchestrator for the multi-track NLE.
@@ -21,28 +22,6 @@ import {
   useState,
 } from "react";
 import toast from "react-hot-toast";
-import {
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  Rewind,
-  FastForward,
-  Scissors,
-  Trash2,
-  Undo2,
-  Redo2,
-  ZoomIn,
-  ZoomOut,
-  Sparkles,
-  SlidersHorizontal,
-  Download,
-  LibraryBig,
-  Repeat,
-  Type,
-  Plus,
-  ChevronDown,
-} from "lucide-react";
 import {
   historyReducer,
   createInitialHistory,
@@ -287,7 +266,7 @@ export function PremiereEditor({
     try {
       const res = await fetch(`/api/compositions/${compositionId}/render`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ clips: state.clips, tracks: state.tracks, fps: state.fps }),
       });
       if (res.status === 404) {
@@ -505,7 +484,7 @@ export function PremiereEditor({
               className="p-1.5 rounded hover:bg-neutral-800 text-neutral-300 disabled:opacity-30"
               title="Undo (Cmd+Z)"
             >
-              <Undo2 size={14} />
+              <ArrowCounterClockwise size={14} />
             </button>
             <button
               type="button"
@@ -514,7 +493,7 @@ export function PremiereEditor({
               className="p-1.5 rounded hover:bg-neutral-800 text-neutral-300 disabled:opacity-30"
               title="Redo (Cmd+Shift+Z)"
             >
-              <Redo2 size={14} />
+              <ArrowClockwise size={14} />
             </button>
             <button
               type="button"
@@ -539,7 +518,7 @@ export function PremiereEditor({
               className="p-1.5 rounded hover:bg-neutral-800 text-neutral-300"
               title="Ripple delete (Backspace)"
             >
-              <Trash2 size={14} />
+              <Trash size={14} />
             </button>
             <button
               type="button"
@@ -547,7 +526,7 @@ export function PremiereEditor({
               className="p-1.5 rounded hover:bg-neutral-800 text-neutral-300"
               title="Zoom out"
             >
-              <ZoomOut size={14} />
+              <MagnifyingGlassMinus size={14} />
             </button>
             <button
               type="button"
@@ -555,7 +534,7 @@ export function PremiereEditor({
               className="p-1.5 rounded hover:bg-neutral-800 text-neutral-300"
               title="Zoom in"
             >
-              <ZoomIn size={14} />
+              <MagnifyingGlassPlus size={14} />
             </button>
 
             {/* ── Speed selector (contextual — selected clip only) ── */}
@@ -593,7 +572,7 @@ export function PremiereEditor({
               className="flex items-center gap-1 px-2 py-1 rounded hover:bg-neutral-800 text-neutral-400 hover:text-neutral-200 text-[11px] transition-colors"
               title="Add caption clip at playhead"
             >
-              <Type size={12} />
+              <TextT size={12} />
               <span>Caption</span>
             </button>
 
@@ -607,7 +586,7 @@ export function PremiereEditor({
               >
                 <Plus size={12} />
                 <span>Track</span>
-                <ChevronDown size={10} className={`transition-transform ${addTrackMenuOpen ? "rotate-180" : ""}`} />
+                <CaretDown size={10} className={`transition-transform ${addTrackMenuOpen ? "rotate-180" : ""}`} />
               </button>
               {addTrackMenuOpen && (
                 <div className="absolute right-0 bottom-full mb-1 bg-neutral-900 border border-neutral-700 rounded-lg shadow-xl py-1 min-w-[110px] z-50">
@@ -655,7 +634,7 @@ export function PremiereEditor({
               className="flex items-center gap-1 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-200 rounded-md px-3 py-1 text-[11px]"
               title="Render to hyperframes worker"
             >
-              <Download size={12} /> Render
+              <DownloadSimple size={12} /> Render
             </button>
           </div>
         </div>
@@ -670,7 +649,7 @@ export function PremiereEditor({
                 panel === "ai" ? "bg-neutral-800 text-amber-300" : "text-neutral-400 hover:text-white"
               }`}
             >
-              <Sparkles size={11} /> AI
+              <Sparkle size={11} /> AI
             </button>
             <button
               type="button"
@@ -688,7 +667,7 @@ export function PremiereEditor({
                 panel === "assets" ? "bg-neutral-800 text-indigo-400" : "text-neutral-400 hover:text-white"
               }`}
             >
-              <LibraryBig size={11} /> Assets
+              <BookBookmark size={11} /> Assets
             </button>
           </div>
           {panel === "ai" && (

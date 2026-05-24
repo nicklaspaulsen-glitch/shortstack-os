@@ -1,8 +1,8 @@
 "use client";
+import { Calendar, ChartBar, Lightbulb, Plus, Sparkle, TrendUp, Users } from "@phosphor-icons/react";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Calendar, Sparkles, Lightbulb, BarChart3, Users, TrendingUp, Plus } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import Tab1Calendar from "./components/Tab1Calendar";
 import Tab2AIUpload from "./components/Tab2AIUpload";
@@ -26,11 +26,11 @@ interface TabConfig {
 
 const TABS: TabConfig[] = [
   { key: "calendar",      label: "Calendar",       description: "Plan & lineup",             icon: <Calendar size={14} /> },
-  { key: "ai-upload",     label: "AI Auto-Upload",  description: "Drag, drop, schedule",      icon: <Sparkles size={14} /> },
+  { key: "ai-upload",     label: "AI Auto-Upload",  description: "Drag, drop, schedule",      icon: <Sparkle size={14} /> },
   { key: "trends",        label: "Trends & Ideas",  description: "Hashtags + ideas",          icon: <Lightbulb size={14} /> },
-  { key: "stats",         label: "Stats",           description: "Performance + best times",  icon: <BarChart3 size={14} /> },
+  { key: "stats",         label: "Stats",           description: "Performance + best times",  icon: <ChartBar size={14} /> },
   { key: "commenters",    label: "Top Commenters",  description: "Reply with AI",             icon: <Users size={14} /> },
-  { key: "creator-ideas", label: "Creator AI",      description: "12-archetype idea engine",  icon: <TrendingUp size={14} /> },
+  { key: "creator-ideas", label: "Creator AI",      description: "12-archetype idea engine",  icon: <TrendUp size={14} /> },
 ];
 
 export default function SocialStudioPage() {

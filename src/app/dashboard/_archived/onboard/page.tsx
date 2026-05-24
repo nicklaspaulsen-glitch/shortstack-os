@@ -1,18 +1,10 @@
+import { ArrowLeft, ArrowRight, BookOpen, Briefcase, Buildings, CaretDown, CaretUp, Check, CheckCircle, CircleNotch, Crown, Envelope, Eye, File, Globe, GraduationCap, House, Image, Layout, Lightning, Palette, Phone, Plus, Rocket, ShieldCheck, ShoppingBag, Sparkle, Stack, Target, TextT, UploadSimple, UserPlus, Users, Video, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import {
-  UserPlus, ArrowRight, ArrowLeft, Check, Sparkles,
-  Upload, Palette, Briefcase, ShieldCheck, Eye,
-  Rocket, ChevronDown, ChevronUp, Crown,
-  Image, Type, Layers, Globe, Mail, Phone,
-  Building2, Target, Users, Plus, X,
-  CheckCircle2, Layout, Zap, BookOpen, Loader2,
-  Video, Home, GraduationCap, ShoppingBag,
-  type LucideIcon,
-} from "lucide-react";
+
 import { PLAN_TIERS, type PlanTier } from "@/lib/plan-config";
 import SoloOnboardingWizard from "@/components/onboarding/solo-onboarding-wizard";
 import { USER_TYPES, UserType } from "@/lib/user-types";
@@ -23,12 +15,12 @@ import { MotionPage } from "@/components/motion/motion-page";
 /* ================================================================== */
 /*  Icon lookup for user-type cards                                    */
 /* ================================================================== */
-// Typed as LucideIcon (not React.ElementType) so the union with `|| Sparkles`
+// Typed as Icon (not React.ElementType) so the union with `|| Sparkle`
 // fallback below doesn't collapse JSX prop inference to `never` — TS was
 // rejecting `<Icon size={18} />` with "number is not assignable to never"
 // when the union was heterogeneous.
-const USER_TYPE_ICONS: Record<string, LucideIcon> = {
-  Building2, Video, Home, GraduationCap, ShoppingBag, Rocket, Briefcase, Sparkles,
+const USER_TYPE_ICONS: Record<string, Icon> = {
+  Buildings, Video, House, GraduationCap, ShoppingBag, Rocket, Briefcase, Sparkle,
 };
 
 /* ================================================================== */
@@ -71,7 +63,7 @@ interface OnboardTemplate {
 
 const INDUSTRIES = [
   "Restaurant / F&B", "Dental / Medical", "Real Estate", "Legal Services",
-  "Fitness / Gym", "E-Commerce", "SaaS / Tech", "Home Services",
+  "Fitness / Gym", "E-Commerce", "SaaS / Tech", "House Services",
   "Beauty / Salon", "Automotive", "Education", "Non-Profit",
 ];
 
@@ -151,12 +143,12 @@ const ONBOARD_TEMPLATES: OnboardTemplate[] = [
 /* ================================================================== */
 
 const STEP_META = [
-  { label: "Welcome", icon: Sparkles, description: "Get started" },
-  { label: "Business Info", icon: Building2, description: "Company details" },
+  { label: "Welcome", icon: Sparkle, description: "Get started" },
+  { label: "Business Info", icon: Buildings, description: "Company details" },
   { label: "Brand Assets", icon: Palette, description: "Logo, colors, fonts" },
   { label: "Services", icon: Briefcase, description: "Select services" },
   { label: "Access Setup", icon: ShieldCheck, description: "Team & portal" },
-  { label: "Personalize", icon: Sparkles, description: "AI-tailored Qs" },
+  { label: "Personalize", icon: Sparkle, description: "AI-tailored Qs" },
   { label: "Review & Launch", icon: Rocket, description: "Final review" },
 ];
 
@@ -279,7 +271,7 @@ export default function OnboardPage() {
       try {
         const res = await fetch("/api/onboarding/personalize", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-TextT": "application/json" },
           body: JSON.stringify({
             business_name: form.business_name,
             industry: form.industry,
@@ -308,7 +300,7 @@ export default function OnboardPage() {
     try {
       await fetch("/api/user/onboarding", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           onboarding_personalization: {
             questions: personalizeQuestions,
@@ -337,7 +329,7 @@ export default function OnboardPage() {
     try {
       const res = await fetch("/api/clients/onboard", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           business_name: form.business_name,
           contact_name: form.contact_name,
@@ -396,7 +388,7 @@ export default function OnboardPage() {
       // 1. Save user_type + onboarding_preferences to profile
       await fetch("/api/user/sidebar-preferences", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           enabled_items: soloState.enabled_sidebar,
           business_type: soloState.user_type,
@@ -406,7 +398,7 @@ export default function OnboardPage() {
       // 2. Persist user_type + onboarding_preferences via profile patch
       await fetch("/api/user/onboarding", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           user_type: soloState.user_type,
           onboarding_preferences: {
@@ -470,7 +462,7 @@ export default function OnboardPage() {
                     onChange={(id) => setUserType(id as UserType)}
                     ariaLabel="What best describes you?"
                     items={USER_TYPES.map((t): ChoiceCardItem => {
-                      const Icon = USER_TYPE_ICONS[t.iconKey] || Sparkles;
+                      const Icon = USER_TYPE_ICONS[t.iconKey] || Sparkle;
                       return {
                         id: t.id,
                         title: t.label,
@@ -497,7 +489,7 @@ export default function OnboardPage() {
           </div>
           <div className="glass rounded-xl p-10 text-center space-y-5">
             <div className="w-20 h-20 mx-auto bg-[rgba(212, 255, 0,0.08)] rounded-full flex items-center justify-center">
-              <CheckCircle2 size={40} className="text-brand-accent" />
+              <CheckCircle size={40} className="text-brand-accent" />
             </div>
             <h2 className="text-2xl font-bold text-brand-accent">Welcome aboard!</h2>
             <p className="text-sm text-text-muted max-w-lg mx-auto">
@@ -605,7 +597,7 @@ export default function OnboardPage() {
         quickSubmitted ? (
           <div className="glass rounded-xl p-10 text-center space-y-5">
             <div className="w-20 h-20 mx-auto bg-[rgba(212, 255, 0,0.08)] rounded-full flex items-center justify-center">
-              <CheckCircle2 size={40} className="text-brand-accent" />
+              <CheckCircle size={40} className="text-brand-accent" />
             </div>
             <h2 className="text-2xl font-bold text-brand-accent">Client Created!</h2>
             <p className="text-sm text-text-muted max-w-lg mx-auto">
@@ -636,7 +628,7 @@ export default function OnboardPage() {
           <div className="glass rounded-xl p-6 space-y-5">
             <div>
               <h2 className="text-lg font-bold flex items-center gap-2">
-                <Zap size={18} className="text-brand-accent" /> Quick Add Client
+                <Lightning size={18} className="text-brand-accent" /> Quick Add Client
               </h2>
               <p className="text-xs text-text-muted mt-0.5">
                 Rapidly add a client without the full onboarding wizard
@@ -648,7 +640,7 @@ export default function OnboardPage() {
               <div>
                 <label className="block text-[10px] text-text-muted mb-1 font-medium">Business Name *</label>
                 <div className="relative">
-                  <Building2 size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/40" />
+                  <Buildings size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/40" />
                   <input value={quickForm.business_name} onChange={e => updateQuick("business_name", e.target.value)}
                     placeholder="Acme Corp"
                     className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-text-primary text-sm focus:outline-none focus:border-brand-accent transition-colors" />
@@ -670,7 +662,7 @@ export default function OnboardPage() {
               <div>
                 <label className="block text-[10px] text-text-muted mb-1 font-medium">Email *</label>
                 <div className="relative">
-                  <Mail size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/40" />
+                  <Envelope size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/40" />
                   <input value={quickForm.email} onChange={e => updateQuick("email", e.target.value)}
                     placeholder="john@acme.com" type="email"
                     className="w-full pl-8 pr-3 py-2.5 bg-[rgba(0,0,0,0.04)] border border-[var(--color-border)] rounded-lg text-text-primary text-sm focus:outline-none focus:border-brand-accent transition-colors" />
@@ -721,7 +713,7 @@ export default function OnboardPage() {
                   try {
                     const res = await fetch("/api/clients/onboard", {
                       method: "POST",
-                      headers: { "Content-Type": "application/json" },
+                      headers: { "Content-TextT": "application/json" },
                       body: JSON.stringify({
                         business_name: bizName,
                         contact_name: contact,
@@ -762,7 +754,7 @@ export default function OnboardPage() {
         <div className="glass rounded-xl p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-bold flex items-center gap-2"><Layers size={14} className="text-brand-accent" /> Onboarding Templates</h2>
+              <h2 className="text-sm font-bold flex items-center gap-2"><Stack size={14} className="text-brand-accent" /> Onboarding Templates</h2>
               <p className="text-[10px] text-text-muted mt-0.5">Pre-built flows for different client types</p>
             </div>
             <button onClick={() => setShowTemplates(false)} className="text-text-muted hover:text-text-primary"><X size={16} /></button>
@@ -788,7 +780,7 @@ export default function OnboardPage() {
       wizardComplete ? (
         <div className="glass rounded-xl p-10 text-center space-y-5">
           <div className="w-20 h-20 mx-auto bg-[rgba(212, 255, 0,0.08)] rounded-full flex items-center justify-center">
-            <CheckCircle2 size={40} className="text-brand-accent" />
+            <CheckCircle size={40} className="text-brand-accent" />
           </div>
           <h2 className="text-2xl font-bold text-brand-accent">Client Launched Successfully!</h2>
           <p className="text-sm text-text-muted max-w-lg mx-auto">
@@ -886,7 +878,7 @@ export default function OnboardPage() {
               <div className="space-y-6">
                 <div className="text-center space-y-3 py-4">
                   <div className="w-16 h-16 mx-auto bg-[rgba(212, 255, 0,0.08)]  flex items-center justify-center">
-                    <Sparkles size={28} className="text-brand-accent" />
+                    <Sparkle size={28} className="text-brand-accent" />
                   </div>
                   <h2 className="text-xl font-bold">Welcome to Client Onboarding</h2>
                   <p className="text-sm text-text-muted max-w-md mx-auto">
@@ -898,7 +890,7 @@ export default function OnboardPage() {
                 {/* Quick stats */}
                 <div className="grid grid-cols-3 gap-3">
                   {[
-                    { icon: Building2, label: "Business Profile", desc: "Company details & goals" },
+                    { icon: Buildings, label: "Business Profile", desc: "Company details & goals" },
                     { icon: Palette, label: "Brand Identity", desc: "Logo, colors, and fonts" },
                     { icon: Rocket, label: "Launch & Go", desc: "Portal access & automation" },
                   ].map((item, i) => (
@@ -941,7 +933,7 @@ export default function OnboardPage() {
                       <button onClick={() => setExpandedFaq(expandedFaq === faq.id ? null : faq.id)}
                         className="w-full flex items-center justify-between p-3 text-left hover:bg-[rgba(0,0,0,0.03)] transition-colors">
                         <span className="text-xs">{faq.q}</span>
-                        {expandedFaq === faq.id ? <ChevronUp size={12} className="text-text-muted" /> : <ChevronDown size={12} className="text-text-muted" />}
+                        {expandedFaq === faq.id ? <CaretUp size={12} className="text-text-muted" /> : <CaretDown size={12} className="text-text-muted" />}
                       </button>
                       {expandedFaq === faq.id && (
                         <div className="px-3 pb-3 text-[10px] text-text-muted border-t border-[var(--color-border)] pt-2">{faq.a}</div>
@@ -956,15 +948,15 @@ export default function OnboardPage() {
             {step === 1 && (
               <div className="space-y-5">
                 <div>
-                  <h2 className="text-lg font-bold flex items-center gap-2"><Building2 size={18} className="text-brand-accent" /> Business Information</h2>
+                  <h2 className="text-lg font-bold flex items-center gap-2"><Buildings size={18} className="text-brand-accent" /> Business Information</h2>
                   <p className="text-xs text-text-muted mt-0.5">Core details about the new client</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {[
-                    { key: "business_name", label: "Business Name", placeholder: "Acme Corp (optional)", icon: Building2 },
+                    { key: "business_name", label: "Business Name", placeholder: "Acme Corp (optional)", icon: Buildings },
                     { key: "contact_name", label: "Contact Name", placeholder: "John Smith (optional)", icon: Users },
-                    { key: "email", label: "Email", placeholder: "john@acme.com (optional)", icon: Mail },
+                    { key: "email", label: "Email", placeholder: "john@acme.com (optional)", icon: Envelope },
                     { key: "phone", label: "Phone", placeholder: "+1 (555) 123-4567", icon: Phone },
                     { key: "website", label: "Website", placeholder: "https://acme.com", icon: Globe },
                   ].map(field => (
@@ -994,7 +986,7 @@ export default function OnboardPage() {
                 </div>
 
                 <div className="border-t border-[var(--color-border)] pt-4">
-                  <p className="text-xs text-brand-accent font-semibold mb-3 flex items-center gap-1.5"><Zap size={12} /> AI Context (improves content generation)</p>
+                  <p className="text-xs text-brand-accent font-semibold mb-3 flex items-center gap-1.5"><Lightning size={12} /> AI Context (improves content generation)</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[10px] text-text-muted mb-1">Target Audience</label>
@@ -1030,7 +1022,7 @@ export default function OnboardPage() {
               <div className="space-y-5">
                 <div>
                   <h2 className="text-lg font-bold flex items-center gap-2"><Palette size={18} className="text-brand-accent" /> Brand Assets</h2>
-                  <p className="text-xs text-text-muted mt-0.5">Upload logos, set brand colors, and choose fonts</p>
+                  <p className="text-xs text-text-muted mt-0.5">UploadSimple logos, set brand colors, and choose fonts</p>
                 </div>
 
                 {/* File uploads */}
@@ -1045,7 +1037,7 @@ export default function OnboardPage() {
                         <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
                           asset.uploaded ? "bg-emerald-500/10 text-emerald-400" : "bg-[rgba(0,0,0,0.04)] text-text-muted"
                         }`}>
-                          {asset.uploaded ? <Check size={16} /> : <Upload size={16} />}
+                          {asset.uploaded ? <Check size={16} /> : <UploadSimple size={16} />}
                         </div>
                         <div className="text-left">
                           <p className="text-xs font-medium">{asset.name}</p>
@@ -1105,7 +1097,7 @@ export default function OnboardPage() {
 
                 {/* Font selection */}
                 <div>
-                  <p className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Type size={12} className="text-brand-accent" /> Brand Font</p>
+                  <p className="text-xs font-semibold mb-2 flex items-center gap-1.5"><TextT size={12} className="text-brand-accent" /> Brand Font</p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {FONT_OPTIONS.map(font => (
                       <button key={font} onClick={() => setSelectedFont(font)}
@@ -1232,7 +1224,7 @@ export default function OnboardPage() {
                       <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-[var(--color-border)] bg-[rgba(0,0,0,0.04)]">
                         <div className="flex items-center gap-2.5">
                           <div className="w-8 h-8 rounded-full bg-[rgba(212, 255, 0,0.08)] flex items-center justify-center">
-                            <Mail size={12} className="text-brand-accent" />
+                            <Envelope size={12} className="text-brand-accent" />
                           </div>
                           <div>
                             <p className="text-xs font-medium">{user.email}</p>
@@ -1267,7 +1259,7 @@ export default function OnboardPage() {
               <div className="space-y-5">
                 <div>
                   <h2 className="text-lg font-bold flex items-center gap-2 text-brand-accent">
-                    <Sparkles size={18} className="text-brand-accent" /> Personalized for you
+                    <Sparkle size={18} className="text-brand-accent" /> Personalized for you
                   </h2>
                   <p className="text-xs text-text-muted mt-0.5">
                     A few optional follow-up questions — your answers help us tune content generation and your AI copilot.
@@ -1276,7 +1268,7 @@ export default function OnboardPage() {
 
                 {personalizeLoading && (
                   <div className="flex flex-col items-center gap-2 py-12 rounded-xl border border-[rgba(212, 255, 0,0.2)] bg-gradient-to-b from-[rgba(212, 255, 0,0.05)] to-transparent">
-                    <Loader2 size={22} className="animate-spin text-brand-accent" />
+                    <CircleNotch size={22} className="animate-spin text-brand-accent" />
                     <p className="text-xs text-text-muted">Our AI is getting to know you...</p>
                   </div>
                 )}
@@ -1292,7 +1284,7 @@ export default function OnboardPage() {
                     {personalizeQuestions.map((q) => (
                       <div key={q.id} className="rounded-xl border border-[var(--color-border)] p-4 bg-[rgba(0,0,0,0.04)]">
                         <label className="block text-xs font-semibold text-text-primary mb-1.5 flex items-start gap-1.5">
-                          <Sparkles size={11} className="text-brand-accent mt-0.5 shrink-0" />
+                          <Sparkle size={11} className="text-brand-accent mt-0.5 shrink-0" />
                           <span>{q.question}</span>
                         </label>
                         {q.help_text && (
@@ -1329,7 +1321,7 @@ export default function OnboardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Business info */}
                   <div className="rounded-xl border border-[var(--color-border)] p-4 space-y-2">
-                    <p className="text-xs font-semibold text-brand-accent flex items-center gap-1.5"><Building2 size={12} /> Business Info</p>
+                    <p className="text-xs font-semibold text-brand-accent flex items-center gap-1.5"><Buildings size={12} /> Business Info</p>
                     <div className="space-y-1.5 text-xs">
                       <div className="flex justify-between"><span className="text-text-muted">Business</span><span className="font-medium">{form.business_name || "---"}</span></div>
                       <div className="flex justify-between"><span className="text-text-muted">Contact</span><span>{form.contact_name || "---"}</span></div>
@@ -1447,7 +1439,7 @@ export default function OnboardPage() {
                 <div className="flex flex-col items-end gap-1">
                   <button onClick={launchClient} disabled={launching}
                     className="flex items-center gap-2 px-6 py-2.5 bg-brand-accent text-white rounded-full text-sm font-bold hover:bg-brand-accent/80 transition-all disabled:opacity-50">
-                    {launching ? <Loader2 size={14} className="animate-spin" /> : <Rocket size={14} />}
+                    {launching ? <CircleNotch size={14} className="animate-spin" /> : <Rocket size={14} />}
                     {launching ? "Launching..." : "Launch Client"}
                   </button>
                   {launchError && (

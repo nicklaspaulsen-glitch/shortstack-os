@@ -64,6 +64,6 @@ const CATALOG = [
   { id: "client-feedback", name: "Client Feedback", author: "ShortStack", category: "crm", price: 0, rating: 4.1, installs: 2000, verified: true },
   { id: "data-enrichment", name: "Data Enrichment", author: "ClearBit Labs", category: "ai", price: 20, rating: 4.8, installs: 5000, verified: true },
   { id: "custom-reports-builder", name: "Custom Reports Builder", author: "ChartStack", category: "analytics", price: 10, rating: 4.5, installs: 4000, verified: true },
-  { id: "telegram-bot", name: "Telegram Bot", author: "BotForge", category: "communication", price: 0, rating: 4.2, installs: 2000, verified: false },
+  { id: "telegram-bot", name: "Telegram Robot", author: "BotForge", category: "communication", price: 0, rating: 4.2, installs: 2000, verified: false },
   { id: "ab-testing", name: "A/B Testing", author: "SplitLab", category: "marketing", price: 8, rating: 4.4, installs: 3000, verified: true },
 ];

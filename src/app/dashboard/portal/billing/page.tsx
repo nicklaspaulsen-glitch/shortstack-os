@@ -1,4 +1,5 @@
 "use client";
+import { CreditCard, CurrencyDollar, FileText } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -10,7 +11,6 @@ import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import { PageLoading } from "@/components/ui/loading";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { CreditCard, FileText, DollarSign } from "lucide-react";
 import CurrencyDisplay from "@/components/integrations/currency-display";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -100,8 +100,8 @@ export default function ClientBillingPage() {
         <p className="text-xs text-text-muted mt-0.5">Invoices, contracts, and payment history</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-2.5">
-        <StatCard label="Total Paid" value={formatCurrency(totalPaid)} icon={<DollarSign size={14} />} changeType="positive" />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+        <StatCard label="Total Paid" value={formatCurrency(totalPaid)} icon={<CurrencyDollar size={14} />} changeType="positive" />
         <StatCard label="Pending" value={pending.length} icon={<CreditCard size={14} />} changeType={pending.length > 0 ? "negative" : "positive"} change={pending.length > 0 ? formatCurrency(pending.reduce((s, i) => s + i.amount, 0)) : "All clear"} />
         <StatCard label="Contracts" value={contracts.filter(c => c.status === "signed").length} icon={<FileText size={14} />} />
       </div>
@@ -139,7 +139,7 @@ export default function ClientBillingPage() {
                   if (data.checkout_url) window.location.href = data.checkout_url;
                   else toast.error(data.error || "Could not create payment link");
                 } catch { toast.error("Connection error"); }
-              }} className="btn-primary text-[9px] py-1 px-2.5">Pay Now</button>
+              }} className="btn-primary text-[9px] py-2.5 px-2.5 min-h-[44px]">Pay Now</button>
             ) : null },
           ]}
           data={invoices}

@@ -25,7 +25,7 @@ const linkSchema = z.object({
 const sectionSchema = z.object({
   title: z.string().min(1).max(120),
   body_md: z.string().max(5_000),
-  icon: z.string().min(1).max(40).default("Sparkles"),
+  icon: z.string().min(1).max(40).default("Sparkle"),
   links: z.array(linkSchema).max(10).default([]),
 });
 

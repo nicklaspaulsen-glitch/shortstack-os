@@ -1,13 +1,10 @@
 "use client";
+import { Calendar, Envelope, FileText, FilmStrip, FolderOpen, Newspaper, PenNib, Pencil, Sparkle, Stack, Users } from "@phosphor-icons/react";
 
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import SectionHub from "@/components/dashboard/section-hub";
 import type { RollingPreviewItem } from "@/components/RollingPreview";
-import {
-  PenTool, Pen, Sparkles, Mail, Layers, Newspaper,
-  Calendar, FolderOpen, Users, FileText, Film,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // Example outputs spanning the Create section's toolkit — copy, scripts,
@@ -43,7 +40,7 @@ export default function CreateHubPage() {
             title="Create"
             eyebrow="Section · Content production"
             subtitle="Write, script, and produce content your audience actually cares about."
-            heroIcon={<PenTool size={22} />}
+            heroIcon={<PenNib size={22} />}
             heroGradient="purple"
             preview={{
               items: CREATE_HUB_PREVIEW,
@@ -52,16 +49,16 @@ export default function CreateHubPage() {
               caption: "Copy, scripts, carousels, newsletters — one section",
             }}
             quickActions={[
-              { label: "Write Blog Post", href: "/dashboard/copywriter", icon: Pen },
-              { label: "Draft Email", href: "/dashboard/email-composer", icon: Mail },
-              { label: "Create Script", href: "/dashboard/script-lab", icon: Sparkles },
+              { label: "Write Blog Post", href: "/dashboard/copywriter", icon: Pencil },
+              { label: "Draft Email", href: "/dashboard/email-composer", icon: Envelope },
+              { label: "Create Script", href: "/dashboard/script-lab", icon: Sparkle },
               { label: "Plan Content", href: "/dashboard/content-plan", icon: Calendar },
             ]}
             stats={[
-              { label: "Generations (30d)", key: "generations_month", icon: Sparkles, color: "text-brand-accent" },
+              { label: "Generations (30d)", key: "generations_month", icon: Sparkle, color: "text-brand-accent" },
               { label: "Scripts", key: "scripts", icon: FileText, color: "text-[#D4FF00]" },
-              { label: "Emails", key: "emails", icon: Mail, color: "text-brand-accent" },
-              { label: "Posts", key: "posts", icon: Film, color: "text-brand-accent" },
+              { label: "Emails", key: "emails", icon: Envelope, color: "text-brand-accent" },
+              { label: "Posts", key: "posts", icon: FilmStrip, color: "text-brand-accent" },
             ]}
             tools={[
               {
@@ -69,28 +66,28 @@ export default function CreateHubPage() {
                 label: "AI Copywriter",
                 description: "Long-form blog posts, landing copy, and ads.",
                 href: "/dashboard/copywriter",
-                icon: Pen,
+                icon: Pencil,
               },
               {
                 slug: "script-lab",
                 label: "Script Lab",
                 description: "Punchy scripts for Reels, Shorts, and YouTube.",
                 href: "/dashboard/script-lab",
-                icon: Sparkles,
+                icon: Sparkle,
               },
               {
                 slug: "email-composer",
                 label: "Email Composer",
                 description: "Draft high-converting outbound and nurture emails.",
                 href: "/dashboard/email-composer",
-                icon: Mail,
+                icon: Envelope,
               },
               {
                 slug: "carousel-generator",
                 label: "Carousel Generator",
                 description: "Multi-slide carousels for Instagram and LinkedIn.",
                 href: "/dashboard/carousel-generator",
-                icon: Layers,
+                icon: Stack,
               },
               {
                 slug: "blog",

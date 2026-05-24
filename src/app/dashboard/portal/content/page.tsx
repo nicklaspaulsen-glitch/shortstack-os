@@ -1,4 +1,5 @@
 "use client";
+import { Calendar, Chat, CheckCircle, DownloadSimple, FilmStrip, Warning } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -9,7 +10,6 @@ import { PageLoading } from "@/components/ui/loading";
 import EmptyState from "@/components/ui/empty-state";
 import Modal from "@/components/ui/modal";
 import { formatDate } from "@/lib/utils";
-import { Film, Calendar, Download, CheckCircle, MessageSquare, AlertTriangle } from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -116,7 +116,7 @@ export default function ClientContentPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="page-header mb-0 flex items-center gap-2"><Film size={18} className="text-indigo-400" /> Your Content</h1>
+        <h1 className="page-header mb-0 flex items-center gap-2"><FilmStrip size={18} className="text-indigo-400" /> Your Content</h1>
         <p className="text-xs text-text-muted mt-0.5">All content created and scheduled for your brand</p>
       </div>
 
@@ -138,9 +138,9 @@ export default function ClientContentPage() {
                 {(c.status === "published" || c.status === "approved_for_publish") && (
                   <button
                     onClick={() => openRevisionModal(c.id, c.title, "request")}
-                    className="w-full text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-amber-500/[0.10] text-amber-400 hover:bg-amber-500/[0.15] transition-colors mt-1"
+                    className="w-full text-[9px] py-2 min-h-[36px] rounded flex items-center justify-center gap-1 bg-amber-500/[0.10] text-amber-400 hover:bg-amber-500/[0.15] transition-colors mt-1"
                   >
-                    <MessageSquare size={10} /> Request revision
+                    <Chat size={10} /> Request revision
                   </button>
                 )}
                 {c.status === "ready_to_publish" && (
@@ -149,14 +149,14 @@ export default function ClientContentPage() {
                       await supabase.from("content_calendar").update({ status: "published" }).eq("id", c.id);
                       toast.success("Approved!");
                       fetchContent();
-                    }} className="flex-1 text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-emerald-500/[0.10] text-emerald-400 hover:bg-emerald-500/[0.15] transition-colors">
+                    }} className="flex-1 text-[9px] py-2 min-h-[36px] rounded flex items-center justify-center gap-1 bg-emerald-500/[0.10] text-emerald-400 hover:bg-emerald-500/[0.15] transition-colors">
                       <CheckCircle size={10} /> Approve
                     </button>
                     <button
                       onClick={() => openRevisionModal(c.id, c.title, "changes")}
-                      className="flex-1 text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-amber-500/[0.10] text-amber-400 hover:bg-amber-500/[0.15] transition-colors"
+                      className="flex-1 text-[9px] py-2 min-h-[36px] rounded flex items-center justify-center gap-1 bg-amber-500/[0.10] text-amber-400 hover:bg-amber-500/[0.15] transition-colors"
                     >
-                      <MessageSquare size={10} /> Changes
+                      <Chat size={10} /> Changes
                     </button>
                   </div>
                 )}
@@ -182,7 +182,7 @@ export default function ClientContentPage() {
                   <button onClick={async () => {
                     const res = await fetch(`/api/content/pdf?id=${s.id}`);
                     if (res.ok) { const blob = await res.blob(); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = `${s.title}.pdf`; a.click(); }
-                  }} className="text-indigo-400 hover:text-indigo-300"><Download size={13} /></button>
+                  }} className="text-indigo-400 hover:text-indigo-300"><DownloadSimple size={13} /></button>
                 </div>
               </div>
             ))}
@@ -221,7 +221,7 @@ export default function ClientContentPage() {
             className="h-3.5 w-3.5 rounded border-border-subtle accent-blue-500"
           />
           <span className="inline-flex items-center gap-1.5">
-            <AlertTriangle size={12} className="text-amber-400" />
+            <Warning size={12} className="text-amber-400" />
             Mark this as urgent
           </span>
         </label>
@@ -238,7 +238,7 @@ export default function ClientContentPage() {
             disabled={submittingRevision || !revisionNote.trim()}
             className="text-xs px-4 py-2 rounded-full bg-brand-accent text-[#020711] font-semibold hover:bg-[#E8FF4D] transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
           >
-            <MessageSquare size={12} />
+            <Chat size={12} />
             {submittingRevision ? "Sending..." : "Send revision"}
           </button>
         </div>

@@ -1,11 +1,8 @@
 "use client";
+import { ArrowCounterClockwise, ArrowRight, CaretRight, Envelope, FileText, FilmStrip, Globe, Image, ShareNetwork, Stack } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  Mail, Film, Image as ImageIcon, Globe, FileText, Share2,
-  Layers, ArrowRight, RotateCcw, ChevronRight,
-} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface JumpItem {
@@ -18,14 +15,14 @@ interface JumpItem {
 }
 
 const TYPE_META: Record<string, { label: string; icon: React.ReactNode; color: string; bg: string }> = {
-  video:        { label: "Video",        icon: <Film size={13} />,      color: "text-indigo-400",    bg: "bg-indigo-500/10" },
-  thumbnail:    { label: "Thumbnail",    icon: <ImageIcon size={13} />, color: "text-emerald-400", bg: "bg-emerald-500/10" },
-  email:        { label: "Email",        icon: <Mail size={13} />,      color: "text-amber-400",   bg: "bg-amber-500/10" },
+  video:        { label: "Video",        icon: <FilmStrip size={13} />,      color: "text-indigo-400",    bg: "bg-indigo-500/10" },
+  thumbnail:    { label: "Thumbnail",    icon: <Image size={13} />, color: "text-emerald-400", bg: "bg-emerald-500/10" },
+  email:        { label: "Email",        icon: <Envelope size={13} />,      color: "text-amber-400",   bg: "bg-amber-500/10" },
   landing_page: { label: "Landing Page", icon: <Globe size={13} />,     color: "text-teal-400",    bg: "bg-teal-500/10" },
   script:       { label: "Script",       icon: <FileText size={13} />,  color: "text-cyan-400",    bg: "bg-cyan-500/10" },
-  social_post:  { label: "Social Post",  icon: <Share2 size={13} />,    color: "text-rose-400",    bg: "bg-rose-500/10" },
-  form:         { label: "Form",         icon: <Layers size={13} />,    color: "text-violet-400",  bg: "bg-violet-500/10" },
-  sequence:     { label: "Sequence",     icon: <Mail size={13} />,      color: "text-fuchsia-400", bg: "bg-fuchsia-500/10" },
+  social_post:  { label: "Social Post",  icon: <ShareNetwork size={13} />,    color: "text-rose-400",    bg: "bg-rose-500/10" },
+  form:         { label: "Form",         icon: <Stack size={13} />,    color: "text-violet-400",  bg: "bg-violet-500/10" },
+  sequence:     { label: "Sequence",     icon: <Envelope size={13} />,      color: "text-fuchsia-400", bg: "bg-fuchsia-500/10" },
   proposal:     { label: "Proposal",     icon: <FileText size={13} />,  color: "text-purple-400",  bg: "bg-purple-500/10" },
   other:        { label: "Draft",        icon: <FileText size={13} />,  color: "text-text-muted",       bg: "bg-surface-light" },
 };
@@ -93,7 +90,7 @@ export default function JumpBackIn() {
     <div className="card-static">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-sm font-semibold flex items-center gap-2">
-          <RotateCcw size={14} className="text-info" /> Jump Back In
+          <ArrowCounterClockwise size={14} className="text-info" /> Jump Back In
         </h2>
         <span className="text-[10px] text-text-muted">{items.length} draft{items.length === 1 ? "" : "s"}</span>
       </div>
@@ -106,7 +103,7 @@ export default function JumpBackIn() {
         </div>
       ) : items.length === 0 ? (
         <div className="text-center py-6">
-          <RotateCcw size={24} className="mx-auto mb-2 text-text-muted/30" />
+          <ArrowCounterClockwise size={24} className="mx-auto mb-2 text-text-muted/30" />
           <p className="text-xs text-text-muted font-medium mb-1">No drafts in progress</p>
           <p className="text-[10px] text-text-muted max-w-xs mx-auto mb-2">
             Saved drafts and in-progress edits will show up here.
@@ -115,7 +112,7 @@ export default function JumpBackIn() {
             href="/dashboard/ai-studio"
             className="inline-flex items-center gap-1 text-[10px] text-[#D4FF00] hover:underline font-medium"
           >
-            Start something new <ChevronRight size={10} />
+            Start something new <CaretRight size={10} />
           </Link>
         </div>
       ) : (

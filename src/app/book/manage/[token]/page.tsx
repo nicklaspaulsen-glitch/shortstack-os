@@ -1,4 +1,5 @@
 "use client";
+import { Calendar, CheckCircle, CircleNotch, WarningCircle, X } from "@phosphor-icons/react";
 
 /**
  * Public reschedule / cancel page.
@@ -9,7 +10,7 @@
  */
 
 import { useEffect, useState, use } from "react";
-import { Loader2, Calendar, X, CheckCircle, AlertCircle } from "lucide-react";
+
 
 interface Booking {
   id: string;
@@ -67,7 +68,7 @@ export default function ManageBookingPage({
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin" size={20} />
+        <CircleNotch className="animate-spin" size={20} />
       </div>
     );
   }
@@ -76,7 +77,7 @@ export default function ManageBookingPage({
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="max-w-md text-center">
-          <AlertCircle size={36} className="mx-auto mb-3 text-red-500" />
+          <WarningCircle size={36} className="mx-auto mb-3 text-red-500" />
           <h1 className="text-lg font-bold mb-2">Booking not found</h1>
           <p className="text-sm text-gray-500">
             This link may have expired, been used already, or been mistyped.

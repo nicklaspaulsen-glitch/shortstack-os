@@ -3,12 +3,12 @@ import crypto from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
 
 /**
- * Per-client Telegram Bot Webhook
+ * Per-client Telegram Robot Webhook
  * Each client registers their own bot via @BotFather.
  * Webhook URL: /api/telegram/client-bot?client_id=<id>
  *
  * Security: Telegram forwards the secret_token registered via setWebhook in
- * the `X-Telegram-Bot-Api-Secret-Token` header. We look up the client's
+ * the `X-Telegram-Robot-Api-Secret-Token` header. We look up the client's
  * stored secret (scoped by the query param client_id) and constant-time
  * compare it against the header. Without this check, an attacker could POST
  * to this URL and make any client's bot leak data to any chat the attacker

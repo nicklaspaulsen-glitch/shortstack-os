@@ -1,4 +1,5 @@
 "use client";
+import { ArrowCounterClockwise, Check, Eye, UploadSimple } from "@phosphor-icons/react";
 
 /**
  * Logo Picker — 20 hand-authored SVG variants of the "stacked rectangles"
@@ -19,7 +20,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Check, RotateCcw, Eye, Upload } from "lucide-react";
+
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -171,7 +172,7 @@ export default function LogoPickerPage() {
                     disabled={applying != null}
                     className="inline-flex items-center gap-2 rounded-md border border-[rgba(212, 255, 0,0.25)] bg-[rgba(212, 255, 0,0.08)] px-3 py-2 text-xs font-medium text-brand-accent transition hover:bg-[rgba(212, 255, 0,0.14)] disabled:opacity-50"
                   >
-                    <RotateCcw size={14} /> Revert to concept #{String(revertTarget).padStart(2, "0")}
+                    <ArrowCounterClockwise size={14} /> Revert to concept #{String(revertTarget).padStart(2, "0")}
                   </button>
                 )}
               </div>
@@ -275,7 +276,7 @@ export default function LogoPickerPage() {
                               disabled={applying != null}
                               className="inline-flex w-full items-center justify-center gap-1 rounded-md border border-[rgba(212, 255, 0,0.25)] bg-[rgba(212, 255, 0,0.08)] px-2 py-1.5 text-xs font-medium text-brand-accent transition hover:bg-[rgba(212, 255, 0,0.14)] disabled:opacity-50"
                             >
-                              <Upload size={12} />
+                              <UploadSimple size={12} />
                               {isApplying ? "Applying…" : "Apply permanently"}
                             </button>
                           )}

@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowsClockwise, CheckCircle, Lock, Play, ShieldCheck, Warning, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -13,16 +14,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
-import {
-  CheckCircle2,
-  XCircle,
-  RefreshCw,
-  Play,
-  ShieldCheck,
-  ArrowLeft,
-  Lock,
-  AlertTriangle,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface Row {
@@ -165,7 +156,7 @@ export default function SelfTestDashboard() {
           onClick={load}
           className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light"
         >
-          <RefreshCw size={12} /> Retry
+          <ArrowsClockwise size={12} /> Retry
         </button>
       </div>
     );
@@ -209,7 +200,7 @@ export default function SelfTestDashboard() {
               disabled={refreshing || running}
               className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-white/5 border border-border-subtle text-text-primary hover:bg-white/10 disabled:opacity-50"
             >
-              <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
+              <ArrowsClockwise size={12} className={refreshing ? "animate-spin" : ""} />
               {refreshing ? "Loading…" : "Refresh"}
             </button>
           </div>
@@ -219,7 +210,7 @@ export default function SelfTestDashboard() {
       {/* Verdict banner */}
       {!latest_run ? (
         <div className=" border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.05)] p-4 flex items-start gap-3">
-          <AlertTriangle size={20} className="text-brand-accent shrink-0 mt-0.5" />
+          <Warning size={20} className="text-brand-accent shrink-0 mt-0.5" />
           <div>
             <div className="text-sm font-bold text-text-primary">No runs yet</div>
             <div className="text-[11px] text-text-muted mt-0.5">
@@ -240,7 +231,7 @@ export default function SelfTestDashboard() {
               allGreen ? "bg-success/20 text-success" : "bg-danger/20 text-danger"
             }`}
           >
-            {allGreen ? <CheckCircle2 size={20} /> : <XCircle size={20} />}
+            {allGreen ? <CheckCircle size={20} /> : <XCircle size={20} />}
           </div>
           <div className="flex-1 min-w-0">
             <div className="text-sm font-bold text-text-primary">
@@ -319,7 +310,7 @@ export default function SelfTestDashboard() {
                     <td className="px-4 py-2">
                       {r.ok ? (
                         <span className="inline-flex items-center gap-1 text-success">
-                          <CheckCircle2 size={12} /> OK
+                          <CheckCircle size={12} /> OK
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 text-danger">

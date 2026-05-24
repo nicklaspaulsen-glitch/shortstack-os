@@ -1,3 +1,4 @@
+import { Check, CircleNotch, Lightbulb, Pause, Sparkle, TrendUp, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -16,15 +17,6 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import {
-  Sparkles,
-  Loader2,
-  TrendingUp,
-  Pause,
-  Lightbulb,
-  Check,
-  X,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { PLATFORM_COLORS, type InsightsResponse, type SuggestionRow } from "./types";
 import AuditScoreCard from "./AuditScoreCard";
@@ -36,10 +28,10 @@ const SUGGESTION_LABELS: Record<SuggestionRow["suggestion_type"], string> = {
   optimize_creative: "Refresh creative",
 };
 
-const SUGGESTION_ICONS: Record<SuggestionRow["suggestion_type"], typeof Sparkles> = {
-  reallocate: TrendingUp,
+const SUGGESTION_ICONS: Record<SuggestionRow["suggestion_type"], typeof Sparkle> = {
+  reallocate: TrendUp,
   pause: Pause,
-  scale: TrendingUp,
+  scale: TrendUp,
   optimize_creative: Lightbulb,
 };
 
@@ -116,7 +108,7 @@ export default function InsightsPanel() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12 text-text-muted">
-        <Loader2 className="animate-spin mr-2" size={16} />
+        <CircleNotch className="animate-spin mr-2" size={16} />
         Loading insights...
       </div>
     );
@@ -140,7 +132,7 @@ export default function InsightsPanel() {
       <div className="glass rounded-lg p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Sparkles className="text-brand-accent" size={16} />
+            <Sparkle className="text-brand-accent" size={16} />
             <h3 className="text-sm font-medium">AI Optimization Suggestions</h3>
             {suggestions.length > 0 && (
               <span className="text-[11px] text-text-muted">
@@ -154,9 +146,9 @@ export default function InsightsPanel() {
             className="inline-flex items-center gap-1.5 rounded border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] px-3 py-1.5 text-xs text-brand-accent hover:bg-[rgba(212,255,0,0.14)] disabled:opacity-50"
           >
             {generating ? (
-              <Loader2 className="animate-spin" size={12} />
+              <CircleNotch className="animate-spin" size={12} />
             ) : (
-              <Sparkles size={12} />
+              <Sparkle size={12} />
             )}
             {generating ? "Analyzing 30 days..." : "Generate suggestions"}
           </button>

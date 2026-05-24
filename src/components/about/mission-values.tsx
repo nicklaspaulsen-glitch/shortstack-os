@@ -1,7 +1,8 @@
 "use client";
+import { Compass, Heart, Lightning } from "@phosphor-icons/react";
 
 import { motion } from "framer-motion";
-import { Compass, Zap, Heart } from "lucide-react";
+
 
 const GOLD = "#D4FF00";
 
@@ -12,7 +13,7 @@ const values = [
     body: "Every feature starts with a real agency pain. If a user can't explain why a feature matters in one sentence, it doesn't ship.",
   },
   {
-    icon: Zap,
+    icon: Lightning,
     title: "Ship fast, fix faster",
     body: "We run on weekly cadences. Bugs in production are our most valuable signal — we want to be at the scene, not arguing about it.",
   },

@@ -1,19 +1,9 @@
 "use client";
+import { Briefcase, CircleNotch, CreditCard, Lightning, Note, Plus, UserPlus, Users, X } from "@phosphor-icons/react";
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import {
-  Briefcase,
-  CreditCard,
-  Loader2,
-  Plus,
-  StickyNote,
-  UserPlus,
-  Users,
-  X,
-  Zap,
-} from "lucide-react";
 import toast from "react-hot-toast";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -23,10 +13,10 @@ type FormType = "lead" | "client" | "deal" | "note" | null;
 // ── Speed-dial action registry ─────────────────────────────────────────────────
 
 const ACTIONS = [
-  { type: "lead"   as const, label: "+ Lead",   icon: Zap,       color: "#F59E0B" },
+  { type: "lead"   as const, label: "+ Lead",   icon: Lightning,       color: "#F59E0B" },
   { type: "client" as const, label: "+ Client", icon: Users,     color: "#D4FF00" },
   { type: "deal"   as const, label: "+ Deal",   icon: Briefcase, color: "#10B981" },
-  { type: "note"   as const, label: "+ Note",   icon: StickyNote,color: "#8B5CF6" },
+  { type: "note"   as const, label: "+ Note",   icon: Note,color: "#8B5CF6" },
 ] as const;
 
 // ── Main component ─────────────────────────────────────────────────────────────
@@ -243,7 +233,7 @@ export default function QuickAdd() {
                   <FormInput value={lead.email}         onChange={v => setLead({ ...lead, email: v })}         placeholder="Email" type="email" />
                   <FormInput value={lead.phone}         onChange={v => setLead({ ...lead, phone: v })}         placeholder="Phone" />
                   <FormInput value={lead.industry}      onChange={v => setLead({ ...lead, industry: v })}      placeholder="Industry" />
-                  <SubmitBtn saving={saving} label="Add Lead"   icon={<Zap size={13} />}       onClick={saveLead}   />
+                  <SubmitBtn saving={saving} label="Add Lead"   icon={<Lightning size={13} />}       onClick={saveLead}   />
                 </>
               )}
               {form === "client" && (
@@ -271,7 +261,7 @@ export default function QuickAdd() {
                     autoFocus
                     className="w-full text-sm text-[#111827] placeholder-[#9CA3AF] bg-[#F9FAFB] border border-[rgba(0,0,0,0.1)] rounded-xl px-3 py-2.5 outline-none focus:border-[#D4FF00] focus:ring-2 focus:ring-[rgba(212,255,0,0.12)] resize-none transition-colors"
                   />
-                  <SubmitBtn saving={saving} label="Save Note"  icon={<StickyNote size={13} />} onClick={saveNote}   />
+                  <SubmitBtn saving={saving} label="Save Note"  icon={<Note size={13} />} onClick={saveNote}   />
                 </>
               )}
             </div>
@@ -335,7 +325,7 @@ function SubmitBtn({
       className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
       style={{ background: "#D4FF00" }}
     >
-      {saving ? <Loader2 size={13} className="animate-spin" /> : icon}
+      {saving ? <CircleNotch size={13} className="animate-spin" /> : icon}
       {saving ? "Saving..." : label}
     </button>
   );

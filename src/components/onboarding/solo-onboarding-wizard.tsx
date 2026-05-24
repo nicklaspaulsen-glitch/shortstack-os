@@ -1,42 +1,25 @@
 "use client";
+import { ArrowLeft, ArrowRight, Briefcase, Buildings, Check, CheckCircle, CircleNotch, Globe, GraduationCap, House, Rocket, ShoppingBag, Sparkle, Stack, Target, Video } from "@phosphor-icons/react";
 
+import type { Icon } from "@phosphor-icons/react";
 import { useEffect, useState, useMemo } from "react";
-import {
-  Sparkles,
-  ArrowRight,
-  ArrowLeft,
-  Check,
-  Loader2,
-  Building2,
-  Video,
-  Home,
-  GraduationCap,
-  ShoppingBag,
-  Rocket,
-  Briefcase,
-  Globe,
-  CheckCircle2,
-  Layers,
-  Target,
-  type LucideIcon,
-} from "lucide-react";
 import WebsiteScraper from "@/components/ui/website-scraper";
 import SidebarCustomizer from "@/components/onboarding/sidebar-customizer";
 import { USER_TYPES, UserType, getUserTypeMeta } from "@/lib/user-types";
 
 /* ─── Icon lookup for user-type cards ──────────────────────────────── */
-// Typed as LucideIcon (not React.ElementType) so the `|| Sparkles` fallback
+// Typed as Icon (not React.ElementType) so the `|| Sparkle` fallback
 // below doesn't collapse JSX prop inference to `never` — same fix as the
 // sibling /dashboard/onboard/page.tsx module.
-const ICONS: Record<string, LucideIcon> = {
-  Building2,
+const ICONS: Record<string, Icon> = {
+  Buildings,
   Video,
-  Home,
+  House,
   GraduationCap,
   ShoppingBag,
   Rocket,
   Briefcase,
-  Sparkles,
+  Sparkle,
 };
 
 /* ─── Types ─────────────────────────────────────────────────────────── */
@@ -418,7 +401,7 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
             disabled={submitting}
             className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-gradient-to-r from-[#D4FF00] to-[#AACC00] text-white text-xs font-bold hover:shadow-lg hover:shadow-[rgba(212,255,0,0.2)] transition-all disabled:opacity-50"
           >
-            {submitting ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
+            {submitting ? <CircleNotch size={13} className="animate-spin" /> : <Sparkle size={13} />}
             {submitting ? "Setting up..." : "Finish & Enter Trinity"}
           </button>
         )}
@@ -442,14 +425,14 @@ function StepUserType({
     <div>
       <div className="text-center mb-6">
         <div className="inline-flex w-14 h-14  bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] items-center justify-center mb-3">
-          <Sparkles size={24} className="text-[#D4FF00]" />
+          <Sparkle size={24} className="text-[#D4FF00]" />
         </div>
         <h2 className="text-2xl font-bold mb-1">What best describes you?</h2>
         <p className="text-sm text-text-muted">We&apos;ll tailor Trinity to your business.</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {USER_TYPES.map((t) => {
-          const Icon = ICONS[t.iconKey] || Sparkles;
+          const Icon = ICONS[t.iconKey] || Sparkle;
           const isSelected = selected === t.id;
           return (
             <button
@@ -505,7 +488,7 @@ function StepBusinessInfo({
           {userTypeLabel}
         </p>
         <h2 className="text-2xl font-bold mb-1 flex items-center gap-2">
-          <Building2 size={22} className="text-[#D4FF00]" /> Your business basics
+          <Buildings size={22} className="text-[#D4FF00]" /> Your business basics
         </h2>
         <p className="text-sm text-text-muted">
           We&apos;ll auto-fill everything we can from your website — skip it if you prefer.
@@ -632,7 +615,7 @@ function StepAIQuestions({
       <div className="mb-6 flex items-start justify-between gap-3">
         <div>
           <h2 className="text-2xl font-bold mb-1 flex items-center gap-2">
-            <Sparkles size={22} className="text-[#D4FF00]" /> {title}
+            <Sparkle size={22} className="text-[#D4FF00]" /> {title}
           </h2>
           <p className="text-sm text-text-muted">{description}</p>
         </div>
@@ -648,7 +631,7 @@ function StepAIQuestions({
 
       {loading && (
         <div className="flex flex-col items-center gap-2 py-10">
-          <Loader2 size={22} className="animate-spin text-[#D4FF00]" />
+          <CircleNotch size={22} className="animate-spin text-[#D4FF00]" />
           <p className="text-xs text-text-muted">Personalizing questions for you...</p>
         </div>
       )}
@@ -772,7 +755,7 @@ function StepSidebar({
     <div>
       <div className="mb-5">
         <h2 className="text-2xl font-bold mb-1 flex items-center gap-2">
-          <Layers size={22} className="text-[#D4FF00]" /> Build your sidebar
+          <Stack size={22} className="text-[#D4FF00]" /> Build your sidebar
         </h2>
         <p className="text-sm text-text-muted">
           Pick the tools that matter — we&apos;ll hide the rest. Click &quot;AI Recommended&quot; for a starter set tailored to you.
@@ -809,7 +792,7 @@ function StepPersonalize({
     <div>
       <div className="mb-5">
         <h2 className="text-2xl font-bold mb-1 flex items-center gap-2 bg-gradient-to-r from-[#D4FF00] to-[#AACC00] bg-clip-text text-transparent">
-          <Sparkles size={22} className="text-[#D4FF00]" /> Personalized for you
+          <Sparkle size={22} className="text-[#D4FF00]" /> Personalized for you
         </h2>
         <p className="text-sm text-text-muted">
           Optional follow-up questions — your answers help us tune content generation and your AI copilot.
@@ -818,7 +801,7 @@ function StepPersonalize({
 
       {loading && (
         <div className="flex flex-col items-center gap-2 py-12 rounded-xl border border-[rgba(212,255,0,0.2)] bg-gradient-to-b from-[rgba(212,255,0,0.05)] to-transparent">
-          <Loader2 size={22} className="animate-spin text-[#D4FF00]" />
+          <CircleNotch size={22} className="animate-spin text-[#D4FF00]" />
           <p className="text-xs text-text-muted">Our AI is getting to know you...</p>
         </div>
       )}
@@ -834,7 +817,7 @@ function StepPersonalize({
           {questions.map((q) => (
             <div key={q.id} className="rounded-xl border border-border-subtle p-4 bg-surface-light/30">
               <label className="block text-xs font-semibold text-text-primary mb-1.5 flex items-start gap-1.5">
-                <Sparkles size={11} className="text-[#D4FF00] mt-0.5 shrink-0" />
+                <Sparkle size={11} className="text-[#D4FF00] mt-0.5 shrink-0" />
                 <span>{q.question}</span>
               </label>
               {q.help_text && (
@@ -874,7 +857,7 @@ function StepReady({
   return (
     <div className="text-center py-6">
       <div className="inline-flex w-20 h-20 rounded-3xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] items-center justify-center mb-4">
-        <CheckCircle2 size={36} className="text-[#D4FF00]" />
+        <CheckCircle size={36} className="text-[#D4FF00]" />
       </div>
       <h2 className="text-2xl font-bold mb-2">You&apos;re all set!</h2>
       <p className="text-sm text-text-muted max-w-md mx-auto mb-6">
@@ -885,7 +868,7 @@ function StepReady({
       <div className="grid grid-cols-3 gap-3 max-w-md mx-auto">
         {[
           { icon: <Globe size={18} />, label: "Personalized" },
-          { icon: <Sparkles size={18} />, label: "AI-tuned" },
+          { icon: <Sparkle size={18} />, label: "AI-tuned" },
           { icon: <Rocket size={18} />, label: "Ready to launch" },
         ].map((x) => (
           <div key={x.label} className="p-3 rounded-xl border border-border-subtle bg-surface-light/40">

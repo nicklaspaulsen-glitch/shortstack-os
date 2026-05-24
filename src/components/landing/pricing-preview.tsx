@@ -1,7 +1,7 @@
+import { ArrowRight, Check } from "@phosphor-icons/react";
 ﻿"use client";
 
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
 import { BRAND } from "@/lib/brand-config";
 import Reveal from "./reveal";
 import SectionHeading from "./section-heading";
@@ -36,7 +36,7 @@ const PLANS = [
       "Up to 50 clients, 10 team members",
       "5M AI tokens / month",
       "Workflows, Agent HQ, Design Studio",
-      "AI Caller 500 min, API + Webhooks",
+      "AI Caller 500 min, API + PlugsConnected",
       "Advanced analytics",
       "Priority support",
     ],

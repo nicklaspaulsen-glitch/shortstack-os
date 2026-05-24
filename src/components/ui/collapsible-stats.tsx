@@ -1,4 +1,5 @@
 "use client";
+import { CaretDown, CaretUp } from "@phosphor-icons/react";
 
 /**
  * CollapsibleStats — a thin wrapper around a stats strip that can be
@@ -16,7 +17,7 @@
  */
 
 import { ReactNode, useEffect, useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+
 
 interface CollapsibleStatsProps {
   storageKey: string;
@@ -76,9 +77,9 @@ export default function CollapsibleStats({
           )}
         </div>
         {collapsed ? (
-          <ChevronDown size={14} className="text-text-muted shrink-0" />
+          <CaretDown size={14} className="text-text-muted shrink-0" />
         ) : (
-          <ChevronUp size={14} className="text-text-muted shrink-0" />
+          <CaretUp size={14} className="text-text-muted shrink-0" />
         )}
       </button>
       {!collapsed && <div className="px-4 pb-4 pt-1">{children}</div>}

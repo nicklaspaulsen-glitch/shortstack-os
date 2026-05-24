@@ -1,8 +1,8 @@
 "use client";
+import { DownloadSimple } from "@phosphor-icons/react";
 
 import { useAuth } from "@/lib/auth-context";
 import { ReactNode } from "react";
-import { Download } from "lucide-react";
 
 // Wraps action buttons — shows install prompt in browser, allows action in PWA
 export default function ActionGuard({ children, fallback }: { children: ReactNode; fallback?: ReactNode }) {
@@ -21,7 +21,7 @@ export default function ActionGuard({ children, fallback }: { children: ReactNod
       <div className="opacity-50 pointer-events-none">{children}</div>
       <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
         <div className="text-center px-3">
-          <Download size={16} className="text-[#D4FF00] mx-auto mb-1" />
+          <DownloadSimple size={16} className="text-[#D4FF00] mx-auto mb-1" />
           <p className="text-xs text-text-primary">Install the app to edit</p>
         </div>
       </div>
@@ -42,7 +42,7 @@ export function BrowserModeBanner() {
   return (
     <div className="bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] rounded-lg px-4 py-3 mb-4 flex items-center justify-between">
       <div className="flex items-center gap-2">
-        <Download size={16} className="text-[#D4FF00]" />
+        <DownloadSimple size={16} className="text-[#D4FF00]" />
         <p className="text-sm">
           <span className="text-[#D4FF00] font-medium">View-only mode.</span>
           <span className="text-text-muted"> Install Trinity as an app to make changes.</span>

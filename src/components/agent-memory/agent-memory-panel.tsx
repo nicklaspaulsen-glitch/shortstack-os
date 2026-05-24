@@ -1,4 +1,5 @@
 "use client";
+import { ArrowsClockwise, Brain, Trash } from "@phosphor-icons/react";
 
 /**
  * Agent Memory panel — shows the long-term memory the AI agents have
@@ -13,7 +14,7 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
-import { Brain, RefreshCw, Trash2 } from "lucide-react";
+
 
 interface AgentMemoryRow {
   id: string;
@@ -121,7 +122,7 @@ export default function AgentMemoryPanel({
             disabled={loading}
             className="inline-flex items-center gap-1 text-[11px] px-2.5 py-1.5 rounded-lg border border-border-subtle bg-background/60 hover:bg-surface-light disabled:opacity-50"
           >
-            <RefreshCw size={11} className={loading ? "animate-spin" : ""} />
+            <ArrowsClockwise size={11} className={loading ? "animate-spin" : ""} />
             Refresh
           </button>
           {!readOnly && rows.length > 0 && (
@@ -130,7 +131,7 @@ export default function AgentMemoryPanel({
               disabled={deleting}
               className="inline-flex items-center gap-1 text-[11px] px-2.5 py-1.5 rounded-lg border border-danger/30 bg-danger/10 text-danger hover:bg-danger/15 disabled:opacity-50"
             >
-              <Trash2 size={11} />
+              <Trash size={11} />
               {deleting ? "Forgetting…" : "Forget all"}
             </button>
           )}

@@ -1,13 +1,8 @@
+import { ArrowSquareOut, ArrowUpRight, ArrowsClockwise, Check, CheckCircle, CircleNotch, Copy, Envelope, EnvelopeSimple, EnvelopeSimpleOpen, Globe, Info, MagnifyingGlass, PencilSimple, Plus, ShieldCheck, Sparkle, Trash, Warning, WarningCircle, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import {
-  Globe, Search, Loader, CheckCircle, XCircle, ExternalLink,
-  ShieldCheck, Plus, RefreshCw, Copy, Trash2,
-  AlertTriangle, Edit3, AlertCircle, Mail, MailCheck, MailWarning,
-  ArrowUpRight, Info, Sparkles,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
@@ -163,7 +158,7 @@ export default function DomainsPage() {
               </div>
             </div>
           ),
-          { duration: 12000, icon: <Mail size={16} className="text-indigo-400" /> },
+          { duration: 12000, icon: <Envelope size={16} className="text-indigo-400" /> },
         );
       }, 3000);
     } else if (purchase === "cancelled") {
@@ -190,10 +185,10 @@ export default function DomainsPage() {
         // once rather than letting every row mislead as "Taken".
         if (data.error) toast.error(data.error, { duration: 8000 });
       } else {
-        toast.error(data.error || "Search failed");
+        toast.error(data.error || "MagnifyingGlass failed");
       }
     } catch {
-      toast.error("Search failed");
+      toast.error("MagnifyingGlass failed");
     }
     setSearching(false);
   }
@@ -291,17 +286,17 @@ export default function DomainsPage() {
       const data = await res.json();
       toast.dismiss(toastId);
       if (data.ok) {
-        toast.success(`Mail provisioned — ${data.status}`);
+        toast.success(`Envelope provisioned — ${data.status}`);
         await loadData();
       } else if (data.sandbox) {
         toast("Sandbox: GoDaddy OTE can't hold real DNS. Works on production.", { icon: "⚠️", duration: 7000 });
         await loadData();
       } else {
-        toast.error(data.error || "Mail setup failed");
+        toast.error(data.error || "Envelope setup failed");
       }
     } catch {
       toast.dismiss(toastId);
-      toast.error("Mail setup failed");
+      toast.error("Envelope setup failed");
     }
   }
 
@@ -442,7 +437,7 @@ export default function DomainsPage() {
               className="glass rounded-xl block bg-gradient-to-br from-[rgba(212,255,0,0.08)] to-[rgba(212,255,0,0.03)] border-[rgba(212,255,0,0.25)] hover:border-[rgba(212,255,0,0.4)] transition p-4"
             >
               <div className="flex items-center gap-3">
-                <Sparkles size={18} className="text-brand-accent shrink-0" />
+                <Sparkle size={18} className="text-brand-accent shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold">One-click brand launch</p>
                   <p className="text-[10px] text-text-muted mt-0.5">
@@ -453,7 +448,7 @@ export default function DomainsPage() {
               </div>
             </a>{/* ── Domain search ────────────────────────────────────────────── */}<div className="glass rounded-xl p-4">
               <h2 className="flex items-center gap-2">
-                <Search size={13} className="text-brand-accent" /> Find & buy a domain
+                <MagnifyingGlass size={13} className="text-brand-accent" /> Find & buy a domain
               </h2>
               <div className="flex gap-2">
                 <input
@@ -464,8 +459,8 @@ export default function DomainsPage() {
                   placeholder="mybusiness"
                 />
                 <button onClick={searchDomains} disabled={searching} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                  {searching ? <Loader size={12} className="animate-spin" /> : <Search size={12} />}
-                  Search
+                  {searching ? <CircleNotch size={12} className="animate-spin" /> : <MagnifyingGlass size={12} />}
+                  MagnifyingGlass
                 </button>
               </div>
 
@@ -488,7 +483,7 @@ export default function DomainsPage() {
                               ? <CheckCircle size={14} className="text-success shrink-0" />
                               : r.available === false
                                 ? <XCircle size={14} className="text-text-muted shrink-0" />
-                                : <AlertCircle size={14} className="text-amber-400 shrink-0" />}
+                                : <WarningCircle size={14} className="text-amber-400 shrink-0" />}
                             <div className="min-w-0">
                               <p className="text-xs font-semibold truncate">{r.domain}</p>
                               <p className="text-[10px] text-text-muted">
@@ -519,7 +514,7 @@ export default function DomainsPage() {
                                 className="text-[10px] px-2 py-2 rounded-lg border border-border-subtle text-text-primary hover:border-[rgba(212,255,0,0.4)] hover:bg-white/5 flex flex-col items-center disabled:opacity-50 disabled:cursor-not-allowed"
                               >
                                 {rowMonthlyLoading ? (
-                                  <Loader size={12} className="animate-spin my-1" />
+                                  <CircleNotch size={12} className="animate-spin my-1" />
                                 ) : (
                                   <>
                                     <span className="font-bold">${monthly}/mo</span>
@@ -533,7 +528,7 @@ export default function DomainsPage() {
                                 className="relative text-[10px] px-2 py-2 rounded-full bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-bold flex flex-col items-center hover:shadow-lg hover:shadow-[rgba(212,255,0,0.20)] disabled:opacity-60 disabled:cursor-not-allowed"
                               >
                                 {rowYearlyLoading ? (
-                                  <Loader size={12} className="animate-spin my-1" />
+                                  <CircleNotch size={12} className="animate-spin my-1" />
                                 ) : (
                                   <>
                                     <span className="absolute -top-1.5 right-1 text-[8px] bg-emerald-500 text-white px-1 py-0.5 rounded-full font-bold">Save 20%</span>
@@ -556,7 +551,7 @@ export default function DomainsPage() {
                   <Globe size={13} className="text-brand-accent" /> Your domains ({domains.length})
                 </h2>
                 <button onClick={loadData} className="btn-ghost text-[10px] flex items-center gap-1">
-                  <RefreshCw size={10} /> Refresh
+                  <ArrowsClockwise size={10} /> Refresh
                 </button>
               </div>
 
@@ -565,7 +560,7 @@ export default function DomainsPage() {
               ) : domains.length === 0 ? (
                 <div className="py-10 text-center">
                   <Globe size={24} className="mx-auto mb-2 text-text-muted/30" />
-                  <p className="text-xs text-text-muted">No domains yet. Search above to buy one.</p>
+                  <p className="text-xs text-text-muted">No domains yet. MagnifyingGlass above to buy one.</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -583,19 +578,19 @@ export default function DomainsPage() {
                               {/* Resend mail badge — one per status */}
                               {d.resend_status === "verified" ? (
                                 <span className="text-[9px] px-2 py-0.5 rounded-full border bg-green-500/10 text-green-400 border-green-500/30 flex items-center gap-1">
-                                  <MailCheck size={9} /> Mail verified
+                                  <EnvelopeSimpleOpen size={9} /> Envelope verified
                                 </span>
                               ) : d.resend_status === "verifying" || d.resend_status === "pending" ? (
                                 <span className="text-[9px] px-2 py-0.5 rounded-full border bg-indigo-500/10 text-indigo-400 border-indigo-500/30 flex items-center gap-1">
-                                  <Mail size={9} /> Mail verifying
+                                  <Envelope size={9} /> Envelope verifying
                                 </span>
                               ) : d.resend_status === "failed" ? (
                                 <span className="text-[9px] px-2 py-0.5 rounded-full border bg-red-500/10 text-red-400 border-red-500/30 flex items-center gap-1">
-                                  <MailWarning size={9} /> Mail failed
+                                  <EnvelopeSimple size={9} /> Envelope failed
                                 </span>
                               ) : (
                                 <span className="text-[9px] px-2 py-0.5 rounded-full border bg-slate-500/10 text-slate-400 border-slate-500/30 flex items-center gap-1">
-                                  <Mail size={9} /> Mail not set up
+                                  <Envelope size={9} /> Envelope not set up
                                 </span>
                               )}
                             </div>
@@ -611,7 +606,7 @@ export default function DomainsPage() {
                               onClick={() => retryAutoConfigure(d)}
                               className="text-[10px] px-2.5 py-1 rounded-lg bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.25)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] flex items-center gap-1"
                             >
-                              <RefreshCw size={10} /> Finish setup
+                              <ArrowsClockwise size={10} /> Finish setup
                             </button>
                           )}
                           {/* Resend mail action: set up, or refresh while verifying */}
@@ -620,7 +615,7 @@ export default function DomainsPage() {
                               onClick={() => setupMail(d)}
                               className="text-[10px] px-2.5 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/25 text-indigo-400 hover:bg-indigo-500/20 flex items-center gap-1"
                             >
-                              <Mail size={10} /> Set up mail
+                              <Envelope size={10} /> Set up mail
                             </button>
                           )}
                           {(d.resend_status === "verifying" || d.resend_status === "pending") && (
@@ -628,7 +623,7 @@ export default function DomainsPage() {
                               onClick={() => refreshMailStatus(d)}
                               className="text-[10px] px-2.5 py-1 rounded-lg border border-indigo-500/25 text-indigo-400 hover:bg-indigo-500/10 flex items-center gap-1"
                             >
-                              <RefreshCw size={10} /> Check status
+                              <ArrowsClockwise size={10} /> Check status
                             </button>
                           )}
                           {d.resend_status === "failed" && (
@@ -636,11 +631,11 @@ export default function DomainsPage() {
                               onClick={() => setupMail(d)}
                               className="text-[10px] px-2.5 py-1 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 flex items-center gap-1"
                             >
-                              <RefreshCw size={10} /> Retry mail
+                              <ArrowsClockwise size={10} /> Retry mail
                             </button>
                           )}
                           <button onClick={() => openDns(d)} className="text-[10px] px-2.5 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary flex items-center gap-1">
-                            <Edit3 size={10} /> DNS
+                            <PencilSimple size={10} /> DNS
                           </button>
                           <button
                             onClick={() => { navigator.clipboard.writeText(d.domain); toast.success("Copied"); }}
@@ -654,7 +649,7 @@ export default function DomainsPage() {
                             rel="noopener"
                             className="text-[10px] px-2.5 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary flex items-center gap-1"
                           >
-                            <ExternalLink size={10} />
+                            <ArrowSquareOut size={10} />
                           </a>
                         </div>
                       </div>
@@ -682,13 +677,13 @@ export default function DomainsPage() {
                       {/* Resend mail-status hints */}
                       {d.resend_status === "verified" && (
                         <div className="mt-2 px-3 py-2 rounded-lg bg-green-500/5 border border-green-500/20 text-[10px] text-green-400 flex items-center gap-2 flex-wrap">
-                          <MailCheck size={11} />
+                          <EnvelopeSimpleOpen size={11} />
                           <span>Client can now send from <span className="font-mono">anything@{d.domain}</span></span>
                           <a
                             href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
                             className="ml-auto inline-flex items-center gap-1 text-green-400 hover:text-green-300"
                           >
-                            Open in Mail Setup <ArrowUpRight size={10} />
+                            Open in Envelope Setup <ArrowUpRight size={10} />
                           </a>
                         </div>
                       )}
@@ -697,7 +692,7 @@ export default function DomainsPage() {
                           copy-paste DNS records or trigger a re-verify. */}
                       {(d.resend_status === "verifying" || d.resend_status === "pending") && (
                         <div className="mt-2 px-3 py-2 rounded-lg bg-indigo-500/5 border border-indigo-500/25 text-[10px] text-indigo-400 flex items-center gap-2 flex-wrap">
-                          <Mail size={11} />
+                          <Envelope size={11} />
                           <span>DNS records are propagating — this usually takes a few minutes.</span>
                           <a
                             href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
@@ -709,7 +704,7 @@ export default function DomainsPage() {
                       )}
                       {d.resend_status === "failed" && d.resend_last_error && (
                         <div className="mt-2 px-3 py-2 rounded-lg bg-red-500/5 border border-red-500/20 text-[10px] text-red-400 flex items-start gap-2">
-                          <MailWarning size={11} className="mt-0.5 shrink-0" />
+                          <EnvelopeSimple size={11} className="mt-0.5 shrink-0" />
                           <span className="break-all flex-1">{d.resend_last_error}</span>
                           <a
                             href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
@@ -722,7 +717,7 @@ export default function DomainsPage() {
                       {/* No mail yet — gentle nudge since this is the "agency flow" win */}
                       {!d.resend_status && (d.status === "active" || d.status === "dns_configured" || d.status === "purchased") && (
                         <div className="mt-2 px-3 py-2 rounded-lg bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.2)] text-[10px] text-brand-accent flex items-center gap-2 flex-wrap">
-                          <Sparkles size={11} />
+                          <Sparkle size={11} />
                           <span>
                             Send marketing email from{" "}
                             <span className="font-mono">hello@{d.domain}</span>? Takes ~1 minute.
@@ -787,7 +782,7 @@ export default function DomainsPage() {
                                     className="col-span-1 input text-[10px] py-1"
                                   />
                                   <button onClick={() => removeDnsRecord(i)} className="col-span-1 p-1 rounded hover:bg-red-500/10 text-text-muted hover:text-red-400">
-                                    <Trash2 size={10} />
+                                    <Trash size={10} />
                                   </button>
                                 </div>
                               ))}
@@ -807,7 +802,7 @@ export default function DomainsPage() {
               )}
             </div>{/* Tip card */}<div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.1)]">
               <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
-                <AlertTriangle size={11} className="text-brand-accent" /> How domain ownership works
+                <Warning size={11} className="text-brand-accent" /> How domain ownership works
               </h3>
               <ul className="text-[10px] text-text-muted space-y-1 list-disc list-inside">
                 <li>Domains are registered under your ShortStack GoDaddy customer account.</li>
@@ -818,7 +813,7 @@ export default function DomainsPage() {
                 <li>
                   After purchase →{" "}
                   <a href="/dashboard/mail-setup" className="text-brand-accent hover:underline">
-                    Mail Setup
+                    Envelope Setup
                   </a>{" "}
                   writes Resend DKIM/SPF so the client can send email from their own domain.
                 </li>

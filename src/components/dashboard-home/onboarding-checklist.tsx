@@ -1,3 +1,4 @@
+import { CaretDown, CaretUp, CheckCircle, Circle, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -14,7 +15,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { CheckCircle2, Circle, ChevronDown, ChevronUp, X } from "lucide-react";
 
 interface ChecklistItem {
   id: string;
@@ -197,9 +197,9 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
             aria-expanded={!collapsed}
           >
             {collapsed ? (
-              <ChevronDown className="h-3.5 w-3.5" />
+              <CaretDown className="h-3.5 w-3.5" />
             ) : (
-              <ChevronUp className="h-3.5 w-3.5" />
+              <CaretUp className="h-3.5 w-3.5" />
             )}
           </button>
           <button
@@ -234,7 +234,7 @@ export default function OnboardingChecklist({ completedFromApi = [] }: Onboardin
                   className="mt-0.5 flex-shrink-0 text-[#6F6F7A] hover:text-[#D4FF00] transition-colors"
                 >
                   {done ? (
-                    <CheckCircle2 className="h-4 w-4 text-[#D4FF00]" />
+                    <CheckCircle className="h-4 w-4 text-[#D4FF00]" />
                   ) : (
                     <Circle className="h-4 w-4" />
                   )}

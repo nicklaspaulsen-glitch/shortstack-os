@@ -1,5 +1,6 @@
+import { ArrowLeft, Envelope } from "@phosphor-icons/react";
 ﻿import Link from "next/link";
-import { ArrowLeft, Mail } from "lucide-react";
+
 import BrainMark from "@/components/brand/brain-mark";
 
 /**
@@ -85,7 +86,7 @@ export default function NotFound() {
             href="mailto:hello@shortstack.work?subject=Broken%20link%20on%20ShortStack&body=I%20landed%20on%20a%20404%20at%20this%20URL%3A%20"
             className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-border-subtle bg-transparent text-text-secondary text-[14px] font-medium hover:border-border-strong hover:text-text-primary hover:bg-white/[0.02] transition-all duration-220 ease-out-expo-foundation"
           >
-            <Mail size={15} />
+            <Envelope size={15} />
             Report this
           </a>
         </div>

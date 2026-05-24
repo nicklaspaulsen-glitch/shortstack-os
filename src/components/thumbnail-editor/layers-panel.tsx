@@ -1,3 +1,4 @@
+import { CaretDown, CaretRight, Copy, DotsThree, Eye, EyeSlash, Folder, FolderOpen, Image as ImageIcon, Lock, LockOpen, Shapes, Sparkle, Square, Stack, TextT, Trash } from "@phosphor-icons/react";
 ﻿"use client";
 
 // Right-side layers panel. Drag-to-reorder, visibility/lock/opacity/blend
@@ -11,25 +12,6 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  Eye,
-  EyeOff,
-  Lock,
-  Unlock,
-  Image as ImageIcon,
-  Type,
-  Square,
-  Layers,
-  Shapes,
-  Sparkles,
-  Folder,
-  FolderOpen,
-  ChevronDown,
-  ChevronRight,
-  Trash2,
-  Copy,
-  MoreHorizontal,
-} from "lucide-react";
 import type {
   BlendMode,
   EditorState,
@@ -44,10 +26,10 @@ import { BLEND_MODE_OPTIONS } from "@/lib/thumbnail-editor/blend-modes";
 
 const LAYER_ICONS: Record<LayerType, typeof ImageIcon> = {
   image: ImageIcon,
-  text: Type,
+  text: TextT,
   shape: Shapes,
-  adjustment: Sparkles,
-  "smart-object": Layers,
+  adjustment: Sparkle,
+  "smart-object": Stack,
   group: Folder,
 };
 
@@ -114,7 +96,7 @@ export default function LayersPanel(props: LayersPanelProps) {
   return (
     <div className="w-72 bg-neutral-900 border-l border-neutral-800 flex flex-col text-neutral-200 text-sm">
       <div className="flex items-center justify-between px-3 py-2 border-b border-neutral-800">
-        <span className="font-semibold text-neutral-100">Layers</span>
+        <span className="font-semibold text-neutral-100">Stack</span>
         <div className="flex items-center gap-1">
           <button
             type="button"
@@ -122,7 +104,7 @@ export default function LayersPanel(props: LayersPanelProps) {
             title="Flatten Image"
             className="text-neutral-400 hover:text-neutral-100 px-1"
           >
-            <Layers className="w-4 h-4" />
+            <Stack className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -360,7 +342,7 @@ function LayerRow({
         {layer.visible ? (
           <Eye className="w-4 h-4" />
         ) : (
-          <EyeOff className="w-4 h-4 text-neutral-600" />
+          <EyeSlash className="w-4 h-4 text-neutral-600" />
         )}
       </button>
       <button
@@ -374,7 +356,7 @@ function LayerRow({
         {layer.locked ? (
           <Lock className="w-3 h-3" />
         ) : (
-          <Unlock className="w-3 h-3 text-neutral-600" />
+          <LockOpen className="w-3 h-3 text-neutral-600" />
         )}
       </button>
       <canvas
@@ -487,10 +469,10 @@ function MenuItem({ label, onClick }: { label: string; onClick: () => void }) {
 
 // Helpers to satisfy the unused-icon import errors if we tree-shake later
 void FolderOpen;
-void ChevronDown;
-void ChevronRight;
-void Trash2;
+void CaretDown;
+void CaretRight;
+void Trash;
 void Copy;
-void MoreHorizontal;
+void DotsThree;
 void Square;
 // GroupLayer is an imported type; referenced in component signatures only.

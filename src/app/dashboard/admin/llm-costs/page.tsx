@@ -1,4 +1,5 @@
 "use client";
+import { ArrowLeft, ArrowsClockwise, Lightning, Lock, TrendDown, TrendUp } from "@phosphor-icons/react";
 
 /**
  * Admin/founder LLM cost dashboard.
@@ -26,15 +27,6 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import {
-  ArrowLeft,
-  Lock,
-  RefreshCw,
-  Sparkles,
-  TrendingDown,
-  TrendingUp,
-  Zap,
-} from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import StatCard from "@/components/ui/stat-card";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -173,7 +165,7 @@ export default function LlmCostsDashboard() {
           onClick={load}
           className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-surface hover:bg-surface-light"
         >
-          <RefreshCw size={12} /> Retry
+          <ArrowsClockwise size={12} /> Retry
         </button>
       </div>
     );
@@ -195,7 +187,7 @@ export default function LlmCostsDashboard() {
             disabled={refreshing}
             className="inline-flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl border border-border-subtle bg-white/5 hover:bg-white/8 disabled:opacity-50"
           >
-            <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
+            <ArrowsClockwise size={12} className={refreshing ? "animate-spin" : ""} />
             Refresh
           </button>
         </div>
@@ -206,7 +198,7 @@ export default function LlmCostsDashboard() {
         <StatCard
           label="This month"
           value={formatUsd(data.this_month_usd)}
-          icon={<Zap size={16} />}
+          icon={<Lightning size={16} />}
           premium
         />
         <StatCard
@@ -217,7 +209,7 @@ export default function LlmCostsDashboard() {
           label="Delta vs last month"
           value={delta.label}
           changeType={delta.type}
-          icon={delta.type === "positive" ? <TrendingDown size={16} /> : <TrendingUp size={16} />}
+          icon={delta.type === "positive" ? <TrendDown size={16} /> : <TrendUp size={16} />}
         />
         <StatCard
           label="Calls this month"

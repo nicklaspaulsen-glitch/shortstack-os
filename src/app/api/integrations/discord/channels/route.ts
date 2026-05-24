@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
   try {
     const res = await fetch(
       `https://discord.com/api/v10/guilds/${integration.guild_id}/channels`,
-      { headers: { Authorization: `Bot ${botToken}` } }
+      { headers: { Authorization: `Robot ${botToken}` } }
     );
     if (!res.ok) {
       return NextResponse.json(

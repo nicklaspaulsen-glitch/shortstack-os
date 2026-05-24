@@ -1,7 +1,7 @@
 "use client";
+import { ChartBar, CircleNotch, TrendUp, Trophy } from "@phosphor-icons/react";
 
 import { useEffect, useMemo, useState } from "react";
-import { BarChart3, Loader2, TrendingUp, Trophy } from "lucide-react";
 import {
   AreaChart,
   Area,
@@ -82,7 +82,7 @@ export default function Tab4Stats() {
   if (loading) {
     return (
       <div className="rounded-xl border border-border-subtle/40 bg-surface p-8 flex items-center justify-center text-xs text-text-muted">
-        <Loader2 size={14} className="animate-spin mr-2" />
+        <CircleNotch size={14} className="animate-spin mr-2" />
         Crunching the numbers…
       </div>
     );
@@ -100,7 +100,7 @@ export default function Tab4Stats() {
     <div className="space-y-6">
       <div className="rounded-xl border border-border-subtle/40 bg-surface p-4">
         <div className="flex items-center gap-2 mb-3">
-          <BarChart3 size={14} className="text-brand-accent" />
+          <ChartBar size={14} className="text-brand-accent" />
           <h3 className="text-sm font-semibold tracking-tight">Posts per platform — last 12 weeks</h3>
         </div>
         <div style={{ width: "100%", height: 280 }}>
@@ -181,7 +181,7 @@ export default function Tab4Stats() {
 
         <div className="rounded-xl border border-border-subtle/40 bg-surface p-4">
           <div className="flex items-center gap-2 mb-3">
-            <TrendingUp size={14} className="text-brand-accent" />
+            <TrendUp size={14} className="text-brand-accent" />
             <h3 className="text-sm font-semibold tracking-tight">Best post times</h3>
           </div>
           <p className="text-[10px] text-text-muted mb-2">

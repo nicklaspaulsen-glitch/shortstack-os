@@ -1,9 +1,9 @@
+import { ArrowUpRight } from "@phosphor-icons/react";
 ﻿"use client";
 
 import Link from "next/link";
 import { ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
 import { tokens } from "@/lib/brand/tokens";
 
 /**

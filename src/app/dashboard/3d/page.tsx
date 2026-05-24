@@ -1,4 +1,5 @@
 "use client";
+import { ChartBar, CurrencyDollar, Phone, Pulse, Sparkle, Users } from "@phosphor-icons/react";
 
 /**
  * /dashboard/3d — Agency Metrics in 3D.
@@ -13,7 +14,6 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { Activity, BarChart3, DollarSign, Phone, Sparkles, Users } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -51,7 +51,7 @@ const ORB_DEFINITIONS = [
     label: "Revenue",
     sublabel: "this month",
     color: "#D4FF00",
-    icon: DollarSign,
+    icon: CurrencyDollar,
     format: (v: number) => `$${v >= 1000 ? `${(v / 1000).toFixed(1)}k` : v}`,
     phaseOffset: 0,
   },
@@ -69,7 +69,7 @@ const ORB_DEFINITIONS = [
     label: "Leads Scored",
     sublabel: "today",
     color: "#7FE5B8",
-    icon: Activity,
+    icon: Pulse,
     format: (v: number) => String(v),
     phaseOffset: 2.09,
   },
@@ -87,7 +87,7 @@ const ORB_DEFINITIONS = [
     label: "Content",
     sublabel: "published",
     color: "#FFC062",
-    icon: Sparkles,
+    icon: Sparkle,
     format: (v: number) => String(v),
     phaseOffset: 4.19,
   },
@@ -96,7 +96,7 @@ const ORB_DEFINITIONS = [
     label: "Tasks",
     sublabel: "queued",
     color: "#A78BFA",
-    icon: BarChart3,
+    icon: ChartBar,
     format: (v: number) => String(v),
     phaseOffset: 5.24,
   },

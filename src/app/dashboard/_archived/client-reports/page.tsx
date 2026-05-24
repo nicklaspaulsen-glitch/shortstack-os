@@ -1,14 +1,12 @@
 "use client";
+import { Calendar, CheckCircle, ClipboardText, Clock, DownloadSimple, Envelope, FileText, WarningCircle } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import {
-  ClipboardList, Download, Mail, FileText,
-  Calendar, CheckCircle, Clock, AlertCircle
-} from "lucide-react";
+
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface GeneratedReport {
@@ -167,7 +165,7 @@ export default function ClientReportsPage() {
         </div>
       ) : rows.length === 0 ? (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="glass rounded-xl p-12 text-center">
-          <ClipboardList size={40} className="mx-auto mb-4 text-text-muted" />
+          <ClipboardText size={40} className="mx-auto mb-4 text-text-muted" />
           <p className="text-[#6B7280] mb-2">No reports yet.</p>
           <Link
             href="/dashboard/report-generator"
@@ -251,7 +249,7 @@ export default function ClientReportsPage() {
                               }
                               className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[rgba(0,0,0,0.06)] hover:bg-[rgba(0,0,0,0.08)] text-[#6B7280] hover:text-[#374151] text-xs transition-colors"
                             >
-                              <Download size={11} /> Download
+                              <DownloadSimple size={11} /> DownloadSimple
                             </button>
                           )}
                           <button
@@ -259,7 +257,7 @@ export default function ClientReportsPage() {
                             disabled={resending === r.id}
                             className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[rgba(212, 255, 0,0.08)] hover:bg-[rgba(212, 255, 0,0.14)] text-brand-accent text-xs transition-colors disabled:opacity-50"
                           >
-                            <Mail size={11} />
+                            <Envelope size={11} />
                             {resending === r.id ? "Sending…" : "Resend"}
                           </button>
                         </div>

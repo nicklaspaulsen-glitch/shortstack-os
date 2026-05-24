@@ -1,3 +1,4 @@
+import { Check, CircleNotch, LinkBreak, Plug } from "@phosphor-icons/react";
 ﻿/**
  * Integration card for the Integrations Hub grid.
  *
@@ -21,7 +22,6 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Check, Plug, Loader, Unlink } from "lucide-react";
 
 export type IntegrationStatus = "connected" | "not_connected" | "coming_soon";
 
@@ -198,7 +198,7 @@ export default function IntegrationCard({
             }}
           >
             {busy ? (
-              <Loader size={11} className="animate-spin" />
+              <CircleNotch size={11} className="animate-spin" />
             ) : (
               <Plug size={11} />
             )}
@@ -225,9 +225,9 @@ export default function IntegrationCard({
               aria-label={`Disconnect ${integration.name}`}
             >
               {busy ? (
-                <Loader size={10} className="animate-spin" />
+                <CircleNotch size={10} className="animate-spin" />
               ) : (
-                <Unlink size={10} />
+                <LinkBreak size={10} />
               )}
               <span>Disconnect</span>
             </button>

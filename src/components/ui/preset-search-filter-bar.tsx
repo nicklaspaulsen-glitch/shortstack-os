@@ -1,6 +1,6 @@
 "use client";
+import { MagnifyingGlass, X } from "@phosphor-icons/react";
 
-import { Search, X } from "lucide-react";
 
 export interface FilterOption {
   value: string;
@@ -27,14 +27,14 @@ export function PresetSearchFilterBar({
   filters,
   activeFilter = "all",
   onFilterChange,
-  placeholder = "Search presets...",
+  placeholder = "MagnifyingGlass presets...",
   className = "",
 }: PresetSearchFilterBarProps) {
   return (
     <div className={`space-y-2 ${className}`}>
-      {/* Search */}
+      {/* MagnifyingGlass */}
       <div className="relative">
-        <Search
+        <MagnifyingGlass
           size={14}
           className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
         />

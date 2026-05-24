@@ -1,12 +1,9 @@
 "use client";
+import { ArrowsClockwise, Chat, Check, CircleNotch, Globe, Link, LinkBreak, Shield } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
-import {
-  Link2, Check, Unlink, Loader, MessageSquare,
-  RefreshCw, Shield, Globe,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -171,14 +168,14 @@ export default function ClientSocialsPage() {
 
   if (loading) {
     return (
-      <MotionPage className="flex items-center justify-center min-h-[60vh]"><Loader size={20} className="animate-spin text-text-muted" /></MotionPage>
+      <MotionPage className="flex items-center justify-center min-h-[60vh]"><CircleNotch size={20} className="animate-spin text-text-muted" /></MotionPage>
     );
   }
 
   if (!clientId) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-        <Link2 size={32} className="text-text-muted/30 mb-3" />
+        <Link size={32} className="text-text-muted/30 mb-3" />
         <h2 className="text-sm font-semibold mb-1">No Client Profile Found</h2>
         <p className="text-xs text-text-muted max-w-xs">
           Your account is not linked to a client profile yet. Please complete onboarding or contact your account manager.
@@ -193,18 +190,18 @@ export default function ClientSocialsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold flex items-center gap-2 text-text-primary">
-            <Link2 size={20} className="text-indigo-400" />
+            <Link size={20} className="text-indigo-400" />
             Connected Accounts
           </h1>
           <p className="text-xs text-text-muted mt-1">Connect your social media accounts to enable posting, DMs, and analytics</p>
         </div>
         <button onClick={syncAccounts} className="btn-secondary text-xs px-3 py-1.5 flex items-center gap-1.5">
-          <RefreshCw size={12} /> Sync All
+          <ArrowsClockwise size={12} /> Sync All
         </button>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="glass rounded-xl p-4 flex items-center gap-3 py-3">
           <Check size={14} className="text-emerald-400" />
           <div>
@@ -213,7 +210,7 @@ export default function ClientSocialsPage() {
           </div>
         </div>
         <div className="glass rounded-xl p-4 flex items-center gap-3 py-3">
-          <MessageSquare size={14} className="text-indigo-400" />
+          <Chat size={14} className="text-indigo-400" />
           <div>
             <p className="text-lg font-bold text-text-primary">{accounts.filter((a) => a.is_active && PLATFORMS.find((p) => p.id === a.platform)?.dm).length}</p>
             <p className="text-[9px] text-text-muted uppercase tracking-wider">DM Enabled</p>
@@ -229,7 +226,7 @@ export default function ClientSocialsPage() {
       </div>
 
       {/* Platform Grid */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {PLATFORMS.map((platform) => {
           const account = getAccount(platform.id);
           const isConnected = !!account;
@@ -272,30 +269,30 @@ export default function ClientSocialsPage() {
               {isConnected ? (
                 <button
                   onClick={() => disconnectAccount(account.id, platform.name)}
-                  className="text-[10px] px-2.5 py-1.5 rounded-lg text-danger hover:bg-danger/10 flex items-center gap-1 transition-colors"
+                  className="text-[10px] px-2.5 py-1.5 min-h-[44px] rounded-lg text-danger hover:bg-danger/10 flex items-center gap-1 transition-colors"
                 >
-                  <Unlink size={10} /> Disconnect
+                  <LinkBreak size={10} /> Disconnect
                 </button>
               ) : platform.comingSoon ? (
                 <button
                   onClick={() => connectPlatform(platform.id)}
                   aria-disabled
                   title={`${platform.name} support is coming soon`}
-                  className="text-[10px] px-3 py-1.5 rounded-lg border border-border-subtle text-text-muted bg-white/[0.06] hover:bg-white/[0.10] flex items-center gap-1.5 cursor-not-allowed"
+                  className="text-[10px] px-3 py-1.5 min-h-[44px] rounded-lg border border-border-subtle text-text-muted bg-white/[0.06] hover:bg-white/[0.10] flex items-center gap-1.5 cursor-not-allowed"
                 >
-                  <Link2 size={10} /> Coming soon
+                  <Link size={10} /> Coming soon
                 </button>
               ) : (
                 <button
                   onClick={() => connectPlatform(platform.id)}
                   disabled={connecting === platform.id}
                   aria-label={`Connect ${platform.name}`}
-                  className="btn-primary text-[10px] px-3 py-1.5 flex items-center gap-1.5"
+                  className="btn-primary text-[10px] px-3 py-1.5 min-h-[44px] flex items-center gap-1.5"
                 >
                   {connecting === platform.id ? (
-                    <Loader size={10} className="animate-spin" />
+                    <CircleNotch size={10} className="animate-spin" />
                   ) : (
-                    <Link2 size={10} />
+                    <Link size={10} />
                   )}
                   Connect
                 </button>

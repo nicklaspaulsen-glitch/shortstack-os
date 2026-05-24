@@ -1,4 +1,5 @@
 "use client";
+import { ArrowsClockwise, Chat, MagicWand, Sparkle, TextT } from "@phosphor-icons/react";
 
 /**
  * <ClientVoiceProfile> — render a client's writing-voice profile inside
@@ -7,7 +8,6 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Sparkles, Wand2, Type, RefreshCw, MessageSquare } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface VoiceProfile {
@@ -69,7 +69,7 @@ export default function ClientVoiceProfile({ clientId, clientName }: Props) {
     try {
       const res = await fetch("/api/voice-profile/recompute", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ subjectKind: "client", subjectId: clientId }),
       });
       const json = await res.json();
@@ -103,7 +103,7 @@ export default function ClientVoiceProfile({ clientId, clientName }: Props) {
             disabled={!data?.active}
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#D4FF00] hover:bg-[#AACC00] text-[#020711] disabled:opacity-50 transition-colors"
           >
-            <MessageSquare size={13} />
+            <Chat size={13} />
             Generate copy in their voice
           </button>
           <button
@@ -111,7 +111,7 @@ export default function ClientVoiceProfile({ clientId, clientName }: Props) {
             disabled={busy}
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-black/5 hover:bg-black/10 disabled:opacity-50 transition-colors"
           >
-            <RefreshCw size={13} className={busy ? "animate-spin" : ""} />
+            <ArrowsClockwise size={13} className={busy ? "animate-spin" : ""} />
             Recompute
           </button>
         </div>
@@ -184,7 +184,7 @@ function Stats({ profile }: { profile: VoiceProfile }) {
   return (
     <div className="rounded-xl border border-border-subtle bg-black/5 p-4">
       <div className="flex items-center gap-2 mb-3">
-        <Type size={14} className="text-[#D4FF00]" />
+        <TextT size={14} className="text-[#D4FF00]" />
         <span className="text-xs font-semibold">Stats</span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -225,7 +225,7 @@ function Signature({ profile }: { profile: VoiceProfile }) {
   return (
     <div className="rounded-xl border border-border-subtle bg-black/5 p-4 space-y-3">
       <div className="flex items-center gap-2">
-        <Sparkles size={14} className="text-[#D4FF00]" />
+        <Sparkle size={14} className="text-[#D4FF00]" />
         <span className="text-xs font-semibold">Signature</span>
       </div>
       {groups.map((g) =>
@@ -253,7 +253,7 @@ function PromptPanel({ snippet }: { snippet: string }) {
   return (
     <div className="rounded-xl border border-border-subtle bg-black/5 p-4">
       <div className="flex items-center gap-2 mb-2">
-        <Wand2 size={14} className="text-[#D4FF00]" />
+        <MagicWand size={14} className="text-[#D4FF00]" />
         <span className="text-xs font-semibold">Injected prompt</span>
       </div>
       <pre className="text-[11px] whitespace-pre-wrap font-mono text-text-primary rounded-lg bg-black/[0.04] p-3 border border-border-subtle max-h-40 overflow-auto">
@@ -286,7 +286,7 @@ function GenerateModal({
     try {
       const res = await fetch("/api/voice-profile/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           subjectKind: "client",
           subjectId: clientId,

@@ -1,3 +1,4 @@
+import { ArrowRight, ChatCircle, Clock, Envelope, Sparkle } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -13,13 +14,6 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  Mail,
-  MessageCircle,
-  ArrowRight,
-  Clock,
-  Sparkles,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 const SUPPORT_EMAIL = "support@shortstack.work";
@@ -38,7 +32,7 @@ interface SupportChannel {
 
 const SUPPORT_CHANNELS: SupportChannel[] = [
   {
-    icon: <Mail size={22} />,
+    icon: <Envelope size={22} />,
     title: "Email support",
     description:
       "Best for detailed questions, screenshots, and anything that needs a written paper trail. We reply Mon–Fri.",
@@ -49,7 +43,7 @@ const SUPPORT_CHANNELS: SupportChannel[] = [
     accent: "blue",
   },
   {
-    icon: <MessageCircle size={22} />,
+    icon: <ChatCircle size={22} />,
     title: "Discord community",
     description:
       "Quick questions, share what you built, and chat with other agency owners using ShortStack day-to-day.",
@@ -135,7 +129,7 @@ export default function ContactSupportPage() {
               >
                 <div className="flex items-start gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[rgba(212,255,0,0.08)] text-brand-accent">
-                    <Sparkles size={18} />
+                    <Sparkle size={18} />
                   </div>
                   <div className="flex-1">
                     <h3 className="text-sm font-semibold text-text-primary">

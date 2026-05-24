@@ -1,4 +1,5 @@
 "use client";
+import { ArrowUpRight, CreditCard, Plus, Warning, X } from "@phosphor-icons/react";
 
 /**
  * QuotaWall — modal shown when any API call returns 402 (plan limit reached).
@@ -32,7 +33,6 @@ import {
 } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AlertTriangle, CreditCard, Plus, X, ArrowUpRight } from "lucide-react";
 
 export interface QuotaWallPayload {
   error?: string;
@@ -92,7 +92,7 @@ export function QuotaWall({ payload, onClose, inline = false }: QuotaWallProps) 
     <div className={inline ? " border border-red-500/20 bg-red-500/[0.04] p-5" : "p-6"}>
       <div className="flex items-start gap-3 mb-4">
         <div className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-500/30 flex items-center justify-center shrink-0">
-          <AlertTriangle size={18} className="text-red-400" />
+          <Warning size={18} className="text-red-400" />
         </div>
         <div className="min-w-0 flex-1">
           <h3 className="text-sm font-bold text-text-primary">

@@ -1,4 +1,5 @@
 "use client";
+import { CircleNotch, ClosedCaptioning, FilmStrip, Info, Lightning, Medal, Robot, Scissors, Sparkle, Warning } from "@phosphor-icons/react";
 
 /* ────────────────────────────────────────────────────────────────
  * AI-assist panel.
@@ -14,18 +15,6 @@
  * ────────────────────────────────────────────────────────────────*/
 
 import { useState } from "react";
-import {
-  Sparkles,
-  Scissors,
-  Captions as CaptionsIcon,
-  Bot,
-  Loader2,
-  Film,
-  AlertTriangle,
-  Info,
-  Zap,
-  Award,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import type { EditorState, EditorAction, Clip } from "@/lib/video-editor/types";
 
@@ -249,12 +238,12 @@ export function AiPanel({ state, dispatch }: AiPanelProps) {
     dispatch({ type: "REPLACE_CLIPS", clips: res.clips });
   };
 
-  const BtnIcon = ({ k }: { k: typeof busy }) => (busy === k ? <Loader2 size={12} className="animate-spin" /> : null);
+  const BtnIcon = ({ k }: { k: typeof busy }) => (busy === k ? <CircleNotch size={12} className="animate-spin" /> : null);
 
   return (
     <aside className="w-72 shrink-0 bg-neutral-900 border-l border-neutral-800 overflow-y-auto">
       <header className="flex items-center gap-2 px-3 py-2 border-b border-neutral-800">
-        <Sparkles size={14} className="text-amber-300" />
+        <Sparkle size={14} className="text-amber-300" />
         <h3 className="text-neutral-200 font-medium text-sm">AI Assist</h3>
       </header>
 
@@ -276,7 +265,7 @@ export function AiPanel({ state, dispatch }: AiPanelProps) {
           onClick={onCaptions}
           className="w-full flex items-center gap-2 rounded-md bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 px-3 py-2 text-neutral-200 disabled:opacity-50"
         >
-          <CaptionsIcon size={12} />
+          <ClosedCaptioning size={12} />
           <span className="flex-1 text-left">Auto-caption active clip</span>
           <BtnIcon k="captions" />
         </button>
@@ -293,7 +282,7 @@ export function AiPanel({ state, dispatch }: AiPanelProps) {
             color: "#e9d5ff",
           }}
         >
-          <Film size={12} />
+          <FilmStrip size={12} />
           <span className="flex-1 text-left">AI Director review</span>
           <BtnIcon k="director" />
         </button>
@@ -307,7 +296,7 @@ export function AiPanel({ state, dispatch }: AiPanelProps) {
 
         <div className="space-y-2 pt-2 border-t border-neutral-800">
           <label className="text-[11px] text-neutral-400 flex items-center gap-1">
-            <Bot size={11} /> Describe what you want
+            <Robot size={11} /> Describe what you want
           </label>
           <textarea
             value={intent}
@@ -322,7 +311,7 @@ export function AiPanel({ state, dispatch }: AiPanelProps) {
             onClick={onIntent}
             className="w-full flex items-center justify-center gap-2 rounded-md bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/40 text-amber-200 px-3 py-2 disabled:opacity-50"
           >
-            <Sparkles size={12} /> Apply
+            <Sparkle size={12} /> Apply
             <BtnIcon k="intent" />
           </button>
         </div>
@@ -367,7 +356,7 @@ function DirectorBriefDisplay({
             border: `1px solid ${gradeColor}40`,
           }}
         >
-          <Award size={16} style={{ color: gradeColor }} />
+          <Medal size={16} style={{ color: gradeColor }} />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
@@ -410,9 +399,9 @@ function DirectorBriefDisplay({
             {brief.pacing_notes.map((p, i) => {
               const Icon =
                 p.severity === "important"
-                  ? AlertTriangle
+                  ? Warning
                   : p.severity === "warn"
-                  ? Zap
+                  ? Lightning
                   : Info;
               const color =
                 p.severity === "important"
@@ -470,7 +459,7 @@ function DirectorBriefDisplay({
                 key={i}
                 className="flex items-start gap-2 text-[10.5px] text-neutral-300 leading-relaxed"
               >
-                <Sparkles size={10} className="text-amber-300 mt-0.5 shrink-0" />
+                <Sparkle size={10} className="text-amber-300 mt-0.5 shrink-0" />
                 <span className="font-mono text-[9.5px] text-neutral-500 shrink-0 mt-0.5">
                   {formatTime(s.at_seconds)}
                 </span>

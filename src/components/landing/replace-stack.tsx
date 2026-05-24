@@ -1,3 +1,5 @@
+import type { Icon } from "@phosphor-icons/react";
+import { Buildings, ChartBar, NotePencil, MagnifyingGlass } from "@phosphor-icons/react";
 ﻿"use client";
 
 import {
@@ -12,9 +14,9 @@ import {
   SiSlack,
   SiClickup,
 } from "react-icons/si";
-import { Building2, Search, FileSignature, BarChart3 } from "lucide-react";
+
 import type { IconType } from "react-icons";
-import type { LucideIcon } from "lucide-react";
+
 import { BRAND } from "@/lib/brand-config";
 import Reveal from "./reveal";
 import SectionHeading from "./section-heading";
@@ -23,7 +25,7 @@ interface Tool {
   name: string;
   category: string;
   saved: number;
-  Icon: IconType | LucideIcon;
+  Icon: IconType | Icon;
   /** Brand color for the badge background. */
   color: string;
 }
@@ -32,20 +34,20 @@ interface Tool {
 // and a recognisable category icon when the tool doesn't ship a public glyph
 // (GoHighLevel, Apollo, PandaDoc, AgencyAnalytics).
 const TOOLS: Tool[] = [
-  { name: "GoHighLevel", category: "CRM & Automation", saved: 97, Icon: Building2, color: "#FF6E2A" },
-  { name: "Apollo", category: "Lead Scraping", saved: 99, Icon: Search, color: "#0073E6" },
+  { name: "GoHighLevel", category: "CRM & Automation", saved: 97, Icon: Buildings, color: "#FF6E2A" },
+  { name: "Apollo", category: "Lead Scraping", saved: 99, Icon: MagnifyingGlass, color: "#0073E6" },
   { name: "Mailchimp", category: "Email Outreach", saved: 50, Icon: SiMailchimp, color: "#FFE01B" },
   { name: "HubSpot", category: "Client Management", saved: 45, Icon: SiHubspot, color: "#FF7A59" },
   { name: "Canva Pro", category: "Design Assets", saved: 13, Icon: SiCanva, color: "#00C4CC" },
   { name: "Buffer", category: "Social Scheduling", saved: 25, Icon: SiBuffer, color: "#168EEA" },
-  { name: "PandaDoc", category: "Contracts & e-Sign", saved: 35, Icon: FileSignature, color: "#22C55E" },
+  { name: "PandaDoc", category: "Contracts & e-Sign", saved: 35, Icon: NotePencil, color: "#22C55E" },
   { name: "ClickUp", category: "Project Management", saved: 12, Icon: SiClickup, color: "#7B68EE" },
   { name: "Asana", category: "Project Tracking", saved: 11, Icon: SiAsana, color: "#F06A6A" },
   { name: "Calendly", category: "Scheduling", saved: 12, Icon: SiCalendly, color: "#006BFF" },
   { name: "Loom", category: "Client Updates", saved: 15, Icon: SiLoom, color: "#625DF5" },
   { name: "Zapier", category: "Integrations", saved: 29, Icon: SiZapier, color: "#FF4F00" },
   { name: "Slack Premium", category: "Team Comms", saved: 8, Icon: SiSlack, color: "#4A154B" },
-  { name: "AgencyAnalytics", category: "Reporting", saved: 59, Icon: BarChart3, color: "#dc2626" },
+  { name: "AgencyAnalytics", category: "Reporting", saved: 59, Icon: ChartBar, color: "#dc2626" },
 ];
 
 const TOTAL_SAVED = TOOLS.reduce((sum, t) => sum + t.saved, 0);

@@ -1,14 +1,8 @@
+import { ArrowCounterClockwise, BookOpen, BookmarkSimple, CaretRight, Chat, CheckCircle, CircleNotch, Clock, Copy, Envelope, FileText, Globe, Hash, Lightning, MagicWand, Megaphone, PenNib, Plus, ShoppingBag, Sliders, Sparkle, Stack, Star, Target, TextT, Trash, TrendUp, Users, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
-import {
-  PenTool, Sparkles, FileText, Globe, Mail, MessageSquare,
-  ShoppingBag, Megaphone, Copy, BookmarkPlus, Loader, Clock,
-  Wand2, ChevronRight, Trash2, RotateCcw, Sliders,
-  Hash, Users, Target, Type, Layers,
-  CheckCircle, Star, Zap, BookOpen, X, Plus, TrendingUp
-} from "lucide-react";
 import toast from "react-hot-toast";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
@@ -88,8 +82,8 @@ const CONTENT_TYPES: {
 }[] = [
   { id: "blog", label: "Blog Post", description: "SEO-optimized articles", icon: FileText, color: "#D4FF00" },
   { id: "landing", label: "Landing Page", description: "High-converting page copy", icon: Globe, color: "#FF5252" },
-  { id: "email", label: "Email Campaign", description: "Drip sequences & blasts", icon: Mail, color: "#6366F1" },
-  { id: "social", label: "Social Media", description: "Captions & post copy", icon: MessageSquare, color: "#f472b6" },
+  { id: "email", label: "Email Campaign", description: "Drip sequences & blasts", icon: Envelope, color: "#6366F1" },
+  { id: "social", label: "Social Media", description: "Captions & post copy", icon: Chat, color: "#f472b6" },
   { id: "product", label: "Product Description", description: "E-commerce copy", icon: ShoppingBag, color: "#fbbf24" },
   { id: "ad", label: "Ad Headlines", description: "Meta, Google & TikTok ads", icon: Megaphone, color: "#fb923c" },
 ];
@@ -107,7 +101,7 @@ const TEMPLATES: Template[] = [
     id: "t1", name: "SaaS Launch Blog", description: "Product launch announcement blog post",
     type: "blog", topic: "Announcing [Product] - The all-in-one platform for [Industry]",
     tone: "professional", audience: "SaaS founders and CTOs", keywords: "launch, platform, productivity, automation",
-    wordCount: 800, icon: Zap, color: "#D4FF00",
+    wordCount: 800, icon: Lightning, color: "#D4FF00",
   },
   {
     id: "t2", name: "Lead Gen Landing Page", description: "Free trial / demo signup page",
@@ -119,7 +113,7 @@ const TEMPLATES: Template[] = [
     id: "t3", name: "Welcome Email Sequence", description: "Onboarding drip campaign (3 emails)",
     type: "email", topic: "Welcome to [Product] - Here's how to get started and see results in 7 days",
     tone: "casual", audience: "New signups who just created an account", keywords: "welcome, getting started, first steps, success",
-    wordCount: 500, icon: Mail, color: "#6366F1",
+    wordCount: 500, icon: Envelope, color: "#6366F1",
   },
   {
     id: "t4", name: "Agency Case Study Social", description: "Client success story for social",
@@ -135,7 +129,7 @@ const TEMPLATES: Template[] = [
   },
   {
     id: "t6", name: "Meta Lead Ad Bundle", description: "5 ad variations for lead generation",
-    type: "ad", topic: "Generate more qualified leads for [Business Type] with [Offer]",
+    type: "ad", topic: "Generate more qualified leads for [Business TextT] with [Offer]",
     tone: "bold", audience: "Local business owners spending $1k-10k/mo on ads", keywords: "leads, ROI, free, limited time",
     wordCount: 400, icon: Megaphone, color: "#fb923c",
   },
@@ -149,7 +143,7 @@ const TEMPLATES: Template[] = [
     id: "t8", name: "Re-engagement Email", description: "Win-back campaign for churned users",
     type: "email", topic: "We miss you - Here's what's new and why it's worth coming back",
     tone: "casual", audience: "Users who haven't logged in for 30+ days", keywords: "new features, come back, special offer, limited time",
-    wordCount: 400, icon: RotateCcw, color: "#f97316",
+    wordCount: 400, icon: ArrowCounterClockwise, color: "#f97316",
   },
 ];
 
@@ -501,7 +495,7 @@ export default function CopywriterPage() {
       // Try real API first
       const res = await fetch("/api/copywriter/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ type: contentType, topic, tone, audience, keywords, wordCount }),
       });
 
@@ -653,7 +647,7 @@ export default function CopywriterPage() {
       id: "topic",
       title: "What's it about?",
       description: "A single sentence is fine. Be specific ï¿½ \"morning skincare routine for oily skin\" beats \"skincare\".",
-      icon: <Sparkles size={18} />,
+      icon: <Sparkle size={18} />,
       canProceed: topic.trim().length > 0,
       component: (
         <div className="space-y-3">
@@ -700,7 +694,7 @@ export default function CopywriterPage() {
       id: "tone",
       title: "Pick a voice",
       description: "This controls the vibe ï¿½ formal vs. playful, calm vs. punchy.",
-      icon: <Type size={18} />,
+      icon: <TextT size={18} />,
       component: (
         <ChoiceCards
           columns={4}
@@ -728,7 +722,7 @@ export default function CopywriterPage() {
       id: "review",
       title: "Ready to write?",
       description: "We'll generate your copy now. Come back and tweak in Advanced mode if you need more control.",
-      icon: <Wand2 size={18} />,
+      icon: <MagicWand size={18} />,
       component: (
         <div className="space-y-3">
           <div className="glass rounded-xl p-4 bg-[rgba(212,255,0,0.05)] border-[rgba(212,255,0,0.2)] space-y-2">
@@ -774,7 +768,7 @@ export default function CopywriterPage() {
       id: "topic",
       title: "What's your topic or product?",
       description: "One or two sentences is plenty ï¿½ the more specific, the better.",
-      icon: <Sparkles size={16} />,
+      icon: <Sparkle size={16} />,
       field: {
         type: "text",
         key: "topic",
@@ -787,7 +781,7 @@ export default function CopywriterPage() {
             // Try dedicated suggest endpoint first
             const primary = await fetch("/api/copywriter/suggest-topic", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: { "Content-TextT": "application/json" },
               body: JSON.stringify({ contentTypes: d.contentTypes || [] }),
             }).catch(() => null);
             if (primary && primary.ok) {
@@ -804,7 +798,7 @@ export default function CopywriterPage() {
               : "a trending marketing topic for 2026";
             const res = await fetch("/api/ai/enhance-prompt", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: { "Content-TextT": "application/json" },
               body: JSON.stringify({ text: seed, type: "content" }),
             });
             if (!res.ok) {
@@ -865,7 +859,7 @@ export default function CopywriterPage() {
           try {
             const primary = await fetch("/api/copywriter/generate-keywords", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: { "Content-TextT": "application/json" },
               body: JSON.stringify({ topic: d.topic }),
             }).catch(() => null);
             if (primary && primary.ok) {
@@ -879,7 +873,7 @@ export default function CopywriterPage() {
             // Fallback via enhance-prompt
             const res = await fetch("/api/ai/enhance-prompt", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: { "Content-TextT": "application/json" },
               body: JSON.stringify({
                 text: `Return a comma-separated list of 5-7 SEO keywords for: "${d.topic}". Keywords only, no prose.`,
                 type: "general",
@@ -962,7 +956,7 @@ export default function CopywriterPage() {
     try {
       const res = await fetch("/api/copywriter/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           type: chosenType,
           topic: chosenTopic,
@@ -1091,7 +1085,7 @@ export default function CopywriterPage() {
                       onClick={() => setWizardOpen(true)}
                       className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full bg-brand-accent text-[#020711] hover:bg-brand-accent/80 active:scale-[0.98] transition-all"
                     >
-                      <Sparkles size={13} />
+                      <Sparkle size={13} />
                       New with AI
                     </button>
                     <button
@@ -1104,7 +1098,7 @@ export default function CopywriterPage() {
                       onClick={() => setShowTemplates(!showTemplates)}
                       className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/5 border border-border-subtle text-text-primary hover:bg-white/10 transition-all"
                     >
-                      <Layers size={13} /> Templates
+                      <Stack size={13} /> Templates
                     </button>
                     <button
                       onClick={() => setShowHistory(!showHistory)}
@@ -1186,7 +1180,7 @@ export default function CopywriterPage() {
               open={wizardOpen}
               title="Create with AI"
               subtitle="5 quick steps ï¿½ we handle the rest"
-              icon={<Wand2 size={18} />}
+              icon={<MagicWand size={18} />}
               submitLabel="Generate Content"
               steps={wizardSteps}
               initialData={{
@@ -1207,7 +1201,7 @@ export default function CopywriterPage() {
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <Layers size={16} className="text-brand-accent" />
+                    <Stack size={16} className="text-brand-accent" />
                     <h2 className="text-sm font-bold text-text-primary">Template Gallery</h2>
                     <span className="text-[9px] bg-[rgba(212,255,0,0.08)] text-brand-accent px-2 py-0.5 rounded-full font-medium">
                       {TEMPLATES.length} templates
@@ -1282,7 +1276,7 @@ export default function CopywriterPage() {
                   <div className="glass rounded-xl overflow-hidden">
                     {history.map((item, i) => {
                       const typeConfig = CONTENT_TYPES.find(t => t.id === item.type)!;
-                      const TypeIcon = typeConfig.icon;
+                      const TextT = typeConfig.icon;
                       return (
                         <motion.button
                           key={item.id}
@@ -1297,7 +1291,7 @@ export default function CopywriterPage() {
                             className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
                             style={{ background: `${typeConfig.color}18` }}
                           >
-                            <TypeIcon size={14} style={{ color: typeConfig.color }} />
+                            <TextT size={14} style={{ color: typeConfig.color }} />
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-medium text-text-primary truncate group-hover:text-brand-accent transition-colors">
@@ -1313,7 +1307,7 @@ export default function CopywriterPage() {
                               </span>
                             </div>
                           </div>
-                          <ChevronRight size={14} className="text-text-muted/30 group-hover:text-brand-accent shrink-0 mt-1 transition-colors" />
+                          <CaretRight size={14} className="text-text-muted/30 group-hover:text-brand-accent shrink-0 mt-1 transition-colors" />
                         </motion.button>
                       );
                     })}
@@ -1324,7 +1318,7 @@ export default function CopywriterPage() {
                     onClick={() => { setHistory([]); toast.success("History cleared"); }}
                     className="mt-3 flex items-center gap-1 text-[10px] text-text-muted hover:text-danger transition-colors"
                   >
-                    <Trash2 size={10} /> Clear history
+                    <Trash size={10} /> Clear history
                   </button>
                 )}
               </motion.div>
@@ -1332,7 +1326,7 @@ export default function CopywriterPage() {
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
               {/* Left Column - Input Form */}
               <div className="lg:col-span-2 space-y-5">
-                {/* Content Type Selector */}
+                {/* Content TextT Selector */}
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -1340,8 +1334,8 @@ export default function CopywriterPage() {
                   className="glass rounded-xl p-5"
                 >
                   <label className="text-xs font-semibold text-text-primary flex items-center gap-1.5 mb-3">
-                    <Type size={13} className="text-brand-accent" />
-                    Content Type
+                    <TextT size={13} className="text-brand-accent" />
+                    Content TextT
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     {CONTENT_TYPES.map((type, i) => {
@@ -1391,7 +1385,7 @@ export default function CopywriterPage() {
                   {/* Topic / Brief */}
                   <div>
                     <label className="text-xs font-semibold text-text-primary flex items-center gap-1.5 mb-2">
-                      <Sparkles size={13} className="text-brand-accent" />
+                      <Sparkle size={13} className="text-brand-accent" />
                       Topic / Brief
                     </label>
                     <textarea
@@ -1493,7 +1487,7 @@ export default function CopywriterPage() {
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-1.5">
-                          <TrendingUp size={11} className="text-brand-accent" />
+                          <TrendUp size={11} className="text-brand-accent" />
                           <span className="text-[11px] font-semibold text-text-primary">Content Brief</span>
                         </div>
                         <div
@@ -1576,12 +1570,12 @@ export default function CopywriterPage() {
                   >
                     {generating ? (
                       <>
-                        <Loader size={15} className="animate-spin" />
+                        <CircleNotch size={15} className="animate-spin" />
                         Generating {activeType.label}...
                       </>
                     ) : (
                       <>
-                        <Wand2 size={15} />
+                        <MagicWand size={15} />
                         Generate {activeType.label}
                       </>
                     )}
@@ -1671,7 +1665,7 @@ export default function CopywriterPage() {
                           onClick={saveToLibrary}
                           className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-lg bg-[rgba(212,255,0,0.05)] border border-[rgba(212,255,0,0.2)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] transition-all"
                         >
-                          <BookmarkPlus size={12} />
+                          <BookmarkSimple size={12} />
                           Save to Library
                         </button>
                       </div>
@@ -1684,7 +1678,7 @@ export default function CopywriterPage() {
                 <div className="space-y-4 animate-pulse">
                   <div className="flex items-center gap-2 mb-4">
                     <div className="w-5 h-5 rounded-full bg-[rgba(212,255,0,0.12)] flex items-center justify-center">
-                      <Sparkles size={10} className="text-brand-accent" />
+                      <Sparkle size={10} className="text-brand-accent" />
                     </div>
                     <span className="text-xs text-text-muted">AI is writing your {activeType.label.toLowerCase()}...</span>
                   </div>
@@ -1792,7 +1786,7 @@ export default function CopywriterPage() {
               ) : (
                 <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
                   <div className="w-16 h-16  bg-[rgba(212,255,0,0.05)] flex items-center justify-center mb-4">
-                    <PenTool size={28} className="text-[rgba(212,255,0,0.40)]" />
+                    <PenNib size={28} className="text-[rgba(212,255,0,0.40)]" />
                   </div>
                   <h3 className="text-sm font-semibold text-text-primary mb-1">Ready to Write</h3>
                   <p className="text-[11px] text-text-muted max-w-xs mb-4">
@@ -1834,7 +1828,7 @@ export default function CopywriterPage() {
                   onClick={() => { setOutput(""); handleGenerate(); }}
                   className="flex items-center gap-1 text-[10px] text-text-muted hover:text-text-primary transition-colors"
                 >
-                  <RotateCcw size={10} />
+                  <ArrowCounterClockwise size={10} />
                   Regenerate
                 </motion.button>
               </div>

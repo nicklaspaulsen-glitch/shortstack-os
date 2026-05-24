@@ -1,13 +1,10 @@
+import { Calendar, Camera, CaretLeft, CaretRight, CircleNotch, FilmStrip, Globe, PaperPlaneTilt, Plus, Sparkle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { ContentCalendarEntry } from "@/lib/types";
-import {
-  Calendar, ChevronLeft, ChevronRight, Plus, Sparkles, Loader,
-  Camera, Film, Globe, Send
-} from "lucide-react";
 import Modal from "@/components/ui/modal";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -15,9 +12,9 @@ import { MotionPage } from "@/components/motion/motion-page";
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   instagram: <Camera size={10} className="text-pink-400" />,
-  tiktok: <Film size={10} className="text-text-secondary" />,
-  facebook: <Send size={10} className="text-indigo-400" />,
-  youtube: <Film size={10} className="text-red-400" />,
+  tiktok: <FilmStrip size={10} className="text-text-secondary" />,
+  facebook: <PaperPlaneTilt size={10} className="text-indigo-400" />,
+  youtube: <FilmStrip size={10} className="text-red-400" />,
   linkedin: <Globe size={10} className="text-indigo-400" />,
 };
 
@@ -157,7 +154,7 @@ export default function ContentCalendarPage() {
   const monthName = currentDate.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
   if (loading) return (
-    <MotionPage className="flex items-center justify-center py-20"><Loader size={20} className="animate-spin text-brand-accent" /></MotionPage>
+    <MotionPage className="flex items-center justify-center py-20"><CircleNotch size={20} className="animate-spin text-brand-accent" /></MotionPage>
   );
 
   return (
@@ -172,20 +169,21 @@ export default function ContentCalendarPage() {
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => setShowAIPlan(true)} className="btn-primary text-xs flex items-center gap-1.5">
-            <Sparkles size={12} /> AI Plan
+            <Sparkle size={12} /> AI Plan
           </button>
         </div>
       </div>
 
       {/* Month navigation */}
       <div className="flex items-center justify-between">
-        <button onClick={prevMonth} className="btn-ghost" aria-label="Previous month"><ChevronLeft size={16} /></button>
+        <button onClick={prevMonth} className="btn-ghost" aria-label="Previous month"><CaretLeft size={16} /></button>
         <h2 className="text-sm font-semibold">{monthName}</h2>
-        <button onClick={nextMonth} className="btn-ghost" aria-label="Next month"><ChevronRight size={16} /></button>
+        <button onClick={nextMonth} className="btn-ghost" aria-label="Next month"><CaretRight size={16} /></button>
       </div>
 
       {/* Calendar grid */}
-      <div className="glass rounded-xl p-3">
+      <div className="glass rounded-xl p-3 overflow-x-auto">
+        <div className="min-w-[520px]">
         {/* Day headers */}
         <div className="grid grid-cols-7 gap-px mb-1">
           {DAYS.map(day => (
@@ -233,6 +231,7 @@ export default function ContentCalendarPage() {
             );
           })}
         </div>
+        </div>{/* end min-w wrapper */}
       </div>
 
       {/* Legend */}
@@ -250,7 +249,7 @@ export default function ContentCalendarPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-2.5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
         <div className="glass rounded-xl p-4 text-center p-3">
           <p className="text-lg font-bold font-mono text-brand-accent count-up">{entries.length}</p>
           <p className="text-[9px] text-text-muted uppercase tracking-wider">This Month</p>
@@ -269,7 +268,7 @@ export default function ContentCalendarPage() {
       <Modal isOpen={showAIPlan} onClose={() => setShowAIPlan(false)} title="AI Content Planner" size="md">
         <div className="space-y-3">
           <div className="flex items-center gap-2 p-2.5 bg-[rgba(212,255,0,0.05)] rounded-lg border border-[rgba(212,255,0,0.15)]">
-            <Sparkles size={16} className="text-brand-accent shrink-0" />
+            <Sparkle size={16} className="text-brand-accent shrink-0" />
             <p className="text-[10px] text-text-muted">Describe your business and goals, and AI will generate a full 30-day content calendar with platform-specific ideas.</p>
           </div>
           <div>
@@ -284,7 +283,7 @@ export default function ContentCalendarPage() {
           <div className="flex justify-end gap-2">
             <button onClick={() => setShowAIPlan(false)} className="btn-secondary text-xs">Cancel</button>
             <button onClick={generateAIPlan} disabled={generating || !aiPrompt.trim()} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-              {generating ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+              {generating ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
               {generating ? "Planning..." : "Generate 30-Day Plan"}
             </button>
           </div>

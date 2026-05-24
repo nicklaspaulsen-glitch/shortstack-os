@@ -1,4 +1,5 @@
 "use client";
+import { ArrowSquareOut, CheckCircle, CircleNotch, CreditCard, Link, Plug, Warning } from "@phosphor-icons/react";
 
 /**
  * Agency Stripe Connect — settings section for the authed agency to connect
@@ -12,9 +13,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import {
-  CreditCard, ExternalLink, Loader2, CheckCircle2, AlertTriangle, Link2, Plug,
-} from "lucide-react";
+
 
 type ConnectedAccount = {
   stripe_account_id: string;
@@ -140,7 +139,7 @@ export default function AgencyStripeConnect() {
 
       {loading ? (
         <div className="flex items-center gap-2 p-4 bg-surface-light/50 rounded-lg border border-border-subtle animate-pulse">
-          <Loader2 size={14} className="animate-spin text-text-muted" />
+          <CircleNotch size={14} className="animate-spin text-text-muted" />
           <p className="text-xs text-text-muted">Checking connection...</p>
         </div>
       ) : !account ? (
@@ -159,7 +158,7 @@ export default function AgencyStripeConnect() {
               disabled={connecting}
               className="btn-primary text-xs flex items-center gap-1.5"
             >
-              {connecting ? <Loader2 size={12} className="animate-spin" /> : <Link2 size={12} />}
+              {connecting ? <CircleNotch size={12} className="animate-spin" /> : <Link size={12} />}
               Connect your Stripe
             </button>
           </div>
@@ -176,7 +175,7 @@ export default function AgencyStripeConnect() {
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-success/10 flex items-center justify-center">
-                  <CheckCircle2 size={16} className="text-success" />
+                  <CheckCircle size={16} className="text-success" />
                 </div>
                 <div>
                   <p className="text-xs font-semibold">
@@ -203,7 +202,7 @@ export default function AgencyStripeConnect() {
 
             {!account.fully_onboarded && (
               <div className="mt-3 p-2 bg-warning/[0.06] border border-warning/20 rounded-lg flex items-start gap-2">
-                <AlertTriangle size={12} className="text-warning shrink-0 mt-0.5" />
+                <Warning size={12} className="text-warning shrink-0 mt-0.5" />
                 <p className="text-[10px] text-warning">
                   Onboarding incomplete. Finish verifying your identity, business info, and bank account before charging clients.
                 </p>
@@ -218,7 +217,7 @@ export default function AgencyStripeConnect() {
                 disabled={connecting}
                 className="btn-primary text-xs flex items-center gap-1.5"
               >
-                {connecting ? <Loader2 size={12} className="animate-spin" /> : <Link2 size={12} />}
+                {connecting ? <CircleNotch size={12} className="animate-spin" /> : <Link size={12} />}
                 Finish onboarding
               </button>
             )}
@@ -227,7 +226,7 @@ export default function AgencyStripeConnect() {
               disabled={openingDashboard}
               className="btn-secondary text-xs flex items-center gap-1.5"
             >
-              {openingDashboard ? <Loader2 size={12} className="animate-spin" /> : <ExternalLink size={12} />}
+              {openingDashboard ? <CircleNotch size={12} className="animate-spin" /> : <ArrowSquareOut size={12} />}
               Open Stripe dashboard
             </button>
             <button
@@ -235,7 +234,7 @@ export default function AgencyStripeConnect() {
               disabled={disconnecting}
               className="text-xs px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500/20 flex items-center gap-1.5"
             >
-              {disconnecting ? <Loader2 size={12} className="animate-spin" /> : null}
+              {disconnecting ? <CircleNotch size={12} className="animate-spin" /> : null}
               Disconnect
             </button>
           </div>
@@ -276,7 +275,7 @@ function EnvHint() {
       <div className="mt-2 space-y-1 p-2 bg-surface-light/50 rounded-lg border border-border-subtle">
         <p><code className="text-text-primary">STRIPE_SECRET_KEY</code> — Trinity platform key (already set)</p>
         <p><code className="text-text-primary">STRIPE_CONNECT_CLIENT_ID</code> — your Connect platform&apos;s <code>ca_xxxxx</code> ID from Stripe Connect settings</p>
-        <p><code className="text-text-primary">STRIPE_CONNECT_WEBHOOK_SECRET</code> — separate from <code>STRIPE_WEBHOOK_SECRET</code>; create at Stripe Dashboard → Webhooks → &quot;Events on Connected accounts&quot; pointing to <code>/api/webhooks/stripe-connect</code></p>
+        <p><code className="text-text-primary">STRIPE_CONNECT_WEBHOOK_SECRET</code> — separate from <code>STRIPE_WEBHOOK_SECRET</code>; create at Stripe Dashboard → PlugsConnected → &quot;Events on Connected accounts&quot; pointing to <code>/api/webhooks/stripe-connect</code></p>
       </div>
     </details>
   );

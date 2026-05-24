@@ -45,7 +45,7 @@ Return strict JSON only:
       "reason": "Why now — specific to their recent activity or gap",
       "impact": "high" | "medium" | "low",
       "effort": "quick" | "medium" | "deep",
-      "icon": "Film" | "Image" | "FileText" | "Mail" | "Send" | "Megaphone" | "Phone" | "LayoutTemplate" | "Layers",
+      "icon": "FilmStrip" | "Image" | "FileText" | "Mail" | "Send" | "Megaphone" | "Phone" | "LayoutTemplate" | "Layers",
       "action_href": "/dashboard/ai-video" | "/dashboard/thumbnail-generator" | "/dashboard/script-lab" | "/dashboard/email-composer" | "/dashboard/social-manager" | "/dashboard/newsletter" | "/dashboard/carousel-generator" | "/dashboard/landing-pages" | "/dashboard/eleven-agents" | "/dashboard/dm-controller",
       "prefilled": { "topic": "...", "style": "..." }
     }

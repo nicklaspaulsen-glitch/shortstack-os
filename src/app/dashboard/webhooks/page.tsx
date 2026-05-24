@@ -1,14 +1,9 @@
+import { ArrowRight, Chat, CheckCircle, CircleNotch, Copy, CreditCard, FileText, Funnel, Key, Lightning, PaperPlaneTilt, Pause, Play, Plus, Shield, Trash, Users, WarningCircle, PlugsConnected } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import {
-  Webhook, Plus, Trash2, Copy, CheckCircle, AlertCircle,
-  Zap, Users, CreditCard, MessageSquare, Play, Pause,
-  Key, Filter, ArrowRight, Shield,
-  Send, FileText, Loader
-} from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import { ZapierIcon, SlackIcon } from "@/components/ui/platform-icons";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -18,7 +13,7 @@ function TemplateBrandIcon({ name, size = 14 }: { name: string; size?: number })
   const n = name.toLowerCase();
   if (n.includes("zapier")) return <ZapierIcon size={size} />;
   if (n.includes("slack")) return <SlackIcon size={size} />;
-  return <Webhook size={size} />;
+  return <PlugsConnected size={size} />;
 }
 
 interface WebhookConfig {
@@ -49,16 +44,16 @@ interface DeliveryLog {
 
 const EVENTS = [
   { id: "lead.created", label: "New Lead Created", icon: <Users size={12} />, category: "Leads" },
-  { id: "lead.replied", label: "Lead Replied", icon: <MessageSquare size={12} />, category: "Leads" },
-  { id: "lead.booked", label: "Call Booked", icon: <Zap size={12} />, category: "Leads" },
+  { id: "lead.replied", label: "Lead Replied", icon: <Chat size={12} />, category: "Leads" },
+  { id: "lead.booked", label: "Call Booked", icon: <Lightning size={12} />, category: "Leads" },
   { id: "deal.won", label: "Deal Won", icon: <CreditCard size={12} />, category: "Deals" },
-  { id: "deal.lost", label: "Deal Lost", icon: <AlertCircle size={12} />, category: "Deals" },
+  { id: "deal.lost", label: "Deal Lost", icon: <WarningCircle size={12} />, category: "Deals" },
   { id: "invoice.paid", label: "Invoice Paid", icon: <CreditCard size={12} />, category: "Billing" },
-  { id: "invoice.overdue", label: "Invoice Overdue", icon: <AlertCircle size={12} />, category: "Billing" },
+  { id: "invoice.overdue", label: "Invoice Overdue", icon: <WarningCircle size={12} />, category: "Billing" },
   { id: "client.onboarded", label: "Client Onboarded", icon: <CheckCircle size={12} />, category: "Clients" },
-  { id: "content.generated", label: "Content Generated", icon: <Zap size={12} />, category: "Content" },
+  { id: "content.generated", label: "Content Generated", icon: <Lightning size={12} />, category: "Content" },
   { id: "form.submitted", label: "Form Submitted", icon: <Users size={12} />, category: "Forms" },
-  { id: "agent.error", label: "Agent Error", icon: <AlertCircle size={12} />, category: "System" },
+  { id: "agent.error", label: "Agent Error", icon: <WarningCircle size={12} />, category: "System" },
   { id: "agent.completed", label: "Agent Task Done", icon: <CheckCircle size={12} />, category: "System" },
 ];
 
@@ -157,7 +152,7 @@ export default function WebhooksPage() {
     setWebhooks(prev => [...prev, webhook]);
     setShowCreate(false);
     setForm({ name: "", url: "", events: [] });
-    toast.success("Webhook created (stored locally until the manage endpoint ships)");
+    toast.success("PlugsConnected created (stored locally until the manage endpoint ships)");
   }
 
   async function sendTestWebhook() {
@@ -220,15 +215,15 @@ export default function WebhooksPage() {
   }
 
   return (
-    <MotionPage className="space-y-5">{/* -- Webhooks command strip -- */}
+    <MotionPage className="space-y-5">{/* -- PlugsConnected command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Endpoint Manager</p>
-        <h1 className="text-2xl font-display font-bold text-text-primary">Webhooks</h1>
+        <h1 className="text-2xl font-display font-bold text-text-primary">PlugsConnected</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button onClick={() => { setShowCreate(true); setTab("Endpoints"); }} className="px-3 py-1.5 rounded-lg bg-white/8 border border-white/15 text-text-primary text-xs font-semibold hover:bg-white/12 transition-all flex items-center gap-1.5">
-                  <Plus size={12} /> New Webhook
+                  <Plus size={12} /> New PlugsConnected
                 </button>
       </div>
     </div>{/* Inbound webhook URL */}<motion.div
@@ -237,8 +232,8 @@ export default function WebhooksPage() {
               transition={{ delay: 0.08, duration: 0.38, ease: "easeOut" }}
               className="glass rounded-xl p-4"
             >
-              <h2 className="">Inbound Webhook URL</h2>
-              <p className="text-[10px] text-text-muted mb-2">Send data TO Trinity from external tools (Zapier, Make, n8n)</p>
+              <h2 className="">Inbound PlugsConnected URL</h2>
+              <p className="text-[10px] text-text-muted mb-2">PaperPlaneTilt data TO Trinity from external tools (Zapier, Make, n8n)</p>
               <div className="flex gap-2">
                 <code className="flex-1 text-[10px] font-mono p-2.5 rounded-lg truncate bg-surface-light border border-border-subtle">{inboundUrl}</code>
                 <button onClick={() => { navigator.clipboard.writeText(inboundUrl); toast.success("Copied"); }} className="btn-secondary text-xs px-3"><Copy size={12} /></button>
@@ -250,7 +245,7 @@ export default function WebhooksPage() {
               className="glass rounded-xl p-4 border-warning/20 bg-warning/5"
             >
               <div className="flex items-start gap-2">
-                <AlertCircle size={12} className="text-warning shrink-0 mt-0.5" />
+                <WarningCircle size={12} className="text-warning shrink-0 mt-0.5" />
                 <p className="text-[10px] text-text-muted leading-relaxed">
                   Outbound endpoints and delivery log are stored locally in your browser while the server-side
                   <code className="mx-1 font-mono">/api/webhooks/manage</code> endpoint is wrapped up.
@@ -279,10 +274,10 @@ export default function WebhooksPage() {
                     transition={{ duration: 0.35, ease: "easeOut" }}
                     className="glass rounded-xl p-4 border-indigo-500/10"
                   >
-                    <h2 className="">Create Outbound Webhook</h2>
+                    <h2 className="">Create Outbound PlugsConnected</h2>
                     <div className="space-y-3">
                       <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
-                        className="input w-full" placeholder="Webhook name (e.g. Zapier Lead Sync)" />
+                        className="input w-full" placeholder="PlugsConnected name (e.g. Zapier Lead Sync)" />
                       <input value={form.url} onChange={e => setForm({ ...form, url: e.target.value })}
                         className="input w-full" placeholder="https://hooks.zapier.com/..." />
                       <div>
@@ -309,12 +304,12 @@ export default function WebhooksPage() {
                       </div>
                       {formError && (
                         <div className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-[10px] text-red-400 flex items-center gap-1.5">
-                          <AlertCircle size={10} /> {formError}
+                          <WarningCircle size={10} /> {formError}
                         </div>
                       )}
                       <div className="flex justify-end gap-2">
                         <button onClick={() => { setShowCreate(false); setFormError(null); }} className="btn-secondary text-xs">Cancel</button>
-                        <button onClick={createWebhook} className="btn-primary text-xs">Create Webhook</button>
+                        <button onClick={createWebhook} className="btn-primary text-xs">Create PlugsConnected</button>
                       </div>
                     </div>
                   </motion.div>
@@ -322,10 +317,10 @@ export default function WebhooksPage() {
 
                 {webhooks.length === 0 && !showCreate ? (
                   <EmptyState
-                    icon={<Webhook size={24} />}
-                    title="No Webhooks Yet"
+                    icon={<PlugsConnected size={24} />}
+                    title="No PlugsConnected Yet"
                     description="Connect Trinity to Zapier, Make, Slack, or any external tool by creating outbound webhooks that fire on key events."
-                    actionLabel="Create Webhook"
+                    actionLabel="Create PlugsConnected"
                     onAction={() => setShowCreate(true)}
                   />
                 ) : (
@@ -354,7 +349,7 @@ export default function WebhooksPage() {
                               <Key size={12} />
                             </button>
                             <button onClick={() => deleteWebhook(wh.id)} className="text-text-muted hover:text-red-400 p-1">
-                              <Trash2 size={12} />
+                              <Trash size={12} />
                             </button>
                           </div>
                         </div>
@@ -447,12 +442,12 @@ export default function WebhooksPage() {
                 className="glass rounded-xl p-4"
               >
                 <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-                  <Send size={14} className="text-brand-accent" /> Test Webhook
+                  <PaperPlaneTilt size={14} className="text-brand-accent" /> Test PlugsConnected
                 </h2>
-                <p className="text-[10px] text-text-muted mb-3">Send a test payload to any configured webhook endpoint.</p>
+                <p className="text-[10px] text-text-muted mb-3">PaperPlaneTilt a test payload to any configured webhook endpoint.</p>
                 <div className="space-y-3">
                   <div>
-                    <label className="text-[9px] text-text-muted uppercase mb-1 block">Webhook</label>
+                    <label className="text-[9px] text-text-muted uppercase mb-1 block">PlugsConnected</label>
                     <select value={testWebhook} onChange={e => setTestWebhook(e.target.value)} className="input w-full text-xs">
                       <option value="">Select webhook...</option>
                       {webhooks.filter(w => w.active).map(w => (
@@ -481,7 +476,7 @@ export default function WebhooksPage() {
                   </div>
                   <button onClick={sendTestWebhook} disabled={!testWebhook || testing}
                     className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-40">
-                    {testing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />} {testing ? "Sending..." : "Send Test"}
+                    {testing ? <CircleNotch size={12} className="animate-spin" /> : <Play size={12} />} {testing ? "Sending..." : "PaperPlaneTilt Test"}
                   </button>
                   {testStatus && (
                     <div className={`p-3 rounded-lg text-[10px] flex items-center gap-2 ${
@@ -489,7 +484,7 @@ export default function WebhooksPage() {
                         ? "bg-emerald-500/10 border border-emerald-500/15 text-emerald-400"
                         : "bg-red-500/10 border border-red-500/15 text-red-400"
                     }`}>
-                      {testStatus.ok ? <CheckCircle size={12} /> : <AlertCircle size={12} />} {testStatus.message}
+                      {testStatus.ok ? <CheckCircle size={12} /> : <WarningCircle size={12} />} {testStatus.message}
                     </div>
                   )}
                 </div>
@@ -502,7 +497,7 @@ export default function WebhooksPage() {
                 className="space-y-3"
               >
                 <h2 className="text-sm font-bold flex items-center gap-2">
-                  <FileText size={14} className="text-brand-accent" /> Webhook Templates
+                  <FileText size={14} className="text-brand-accent" /> PlugsConnected Templates
                 </h2>
                 <p className="text-[10px] text-text-muted">Quick-start with pre-configured webhook templates.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -541,7 +536,7 @@ export default function WebhooksPage() {
               >
                 <div className="glass rounded-xl p-4">
                   <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-                    <Shield size={14} className="text-brand-accent" /> Global Webhook Settings
+                    <Shield size={14} className="text-brand-accent" /> Global PlugsConnected Settings
                   </h2>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -564,7 +559,7 @@ export default function WebhooksPage() {
                 </div>
                 <div className="glass rounded-xl p-4">
                   <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
-                    <Filter size={14} className="text-brand-accent" /> Filter Rules
+                    <Funnel size={14} className="text-brand-accent" /> Funnel Rules
                   </h2>
                   <p className="text-[10px] text-text-muted mb-3">Add conditions to filter which payloads get delivered.</p>
                   <div className="space-y-2">
@@ -583,7 +578,7 @@ export default function WebhooksPage() {
                       <span className="text-text-muted ml-auto">Active</span>
                     </div>
                   </div>
-                  <button className="mt-2 text-[10px] text-brand-accent flex items-center gap-1 hover:underline"><Plus size={10} /> Add Filter Rule</button>
+                  <button className="mt-2 text-[10px] text-brand-accent flex items-center gap-1 hover:underline"><Plus size={10} /> Add Funnel Rule</button>
                 </div>
                 <div className="flex justify-end">
                   <button className="btn-primary text-xs flex items-center gap-1.5"><CheckCircle size={12} /> Save Settings</button>

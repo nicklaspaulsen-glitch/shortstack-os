@@ -1,4 +1,5 @@
 "use client";
+import { CircleDashed, PuzzlePiece } from "@phosphor-icons/react";
 
 /**
  * ExtensionBridgePill — a small floating indicator in the bottom-right
@@ -14,9 +15,8 @@
  */
 
 import { useEffect, useState } from "react";
-// lucide-react no longer exports "Chrome" — use Puzzle (the universal
+// lucide-react no longer exports "Chrome" — use PuzzlePiece (the universal
 // browser-extension glyph) to indicate the Chrome extension pill.
-import { Puzzle, CircleDot } from "lucide-react";
 
 type Status = {
   connected: boolean;
@@ -77,8 +77,8 @@ export default function ExtensionBridgePill() {
           : "Extension installed but not connected"
       }
     >
-      <Puzzle size={10} />
-      <CircleDot
+      <PuzzlePiece size={10} />
+      <CircleDashed
         size={8}
         className={connected ? "animate-pulse" : ""}
       />

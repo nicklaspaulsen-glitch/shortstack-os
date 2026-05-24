@@ -1,3 +1,4 @@
+import { CircleNotch, Pause, Play, Plus, Storefront, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -6,7 +7,6 @@
  */
 
 import { useEffect, useState, useCallback } from "react";
-import { Store, Plus, Pause, Play, X, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -310,7 +310,7 @@ export default function ListingsPage() {
                     disabled={submitting || !draft.title || !draft.description}
                     className="flex items-center gap-2 rounded-full bg-brand-accent px-4 py-2 text-xs font-bold text-[#0D1120] hover:bg-brand-accent/80 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {submitting && <Loader2 size={12} className="animate-spin" />}
+                    {submitting && <CircleNotch size={12} className="animate-spin" />}
                     Create listing
                   </button>
                 </div>
@@ -319,7 +319,7 @@ export default function ListingsPage() {
               <div className="py-12 text-center text-sm text-text-muted">Loading...</div>
             ) : services.length === 0 ? (
               <div className="glass rounded-xl p-4 flex flex-col items-center justify-center py-12 text-center">
-                <Store size={36} className="mb-3 text-text-muted/30" />
+                <Storefront size={36} className="mb-3 text-text-muted/30" />
                 <p className="text-sm font-medium text-text-primary">No listings yet</p>
                 <p className="mt-1 text-xs text-text-muted">
                   Create your first service to start selling.

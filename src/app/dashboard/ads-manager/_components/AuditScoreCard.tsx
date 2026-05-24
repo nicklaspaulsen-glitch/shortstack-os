@@ -1,4 +1,5 @@
 "use client";
+import { ArrowsClockwise, CaretDown, CaretUp, Info, ShieldWarning, Warning } from "@phosphor-icons/react";
 
 /**
  * AuditScoreCard — compact account health scorecard powered by the claude-ads
@@ -14,14 +15,6 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
-import {
-  ShieldAlert,
-  RefreshCw,
-  ChevronDown,
-  ChevronUp,
-  AlertTriangle,
-  Info,
-} from "lucide-react";
 
 // ─── Types (mirrors /api/ads-manager/audit response) ─────────────────────────
 
@@ -200,9 +193,9 @@ function FailCheckItem({ check }: { check: FailingCheck }) {
         <span className="flex-1 font-medium leading-snug">{check.name}</span>
         <span className="flex-shrink-0 mt-0.5 text-text-muted">
           {expanded ? (
-            <ChevronUp size={12} />
+            <CaretUp size={12} />
           ) : (
-            <ChevronDown size={12} />
+            <CaretDown size={12} />
           )}
         </span>
       </button>
@@ -275,7 +268,7 @@ export default function AuditScoreCard() {
   if (error || !data) {
     return (
       <div className="rounded border border-danger/40 bg-danger/10 px-4 py-3 text-xs text-danger flex items-center gap-2">
-        <ShieldAlert size={14} />
+        <ShieldWarning size={14} />
         Failed to load audit score: {error}
       </div>
     );
@@ -310,7 +303,7 @@ export default function AuditScoreCard() {
               title="Re-run audit"
               className="text-text-muted hover:text-text-primary transition-colors"
             >
-              <RefreshCw
+              <ArrowsClockwise
                 size={12}
                 className={refreshing ? "animate-spin" : ""}
               />
@@ -321,19 +314,19 @@ export default function AuditScoreCard() {
           <div className="flex items-center gap-3 flex-wrap">
             {score.criticalIssues.length > 0 && (
               <span className="flex items-center gap-1 text-[11px] text-red-400">
-                <AlertTriangle size={10} />
+                <Warning size={10} />
                 {score.criticalIssues.length} Critical
               </span>
             )}
             {score.highIssues.length > 0 && (
               <span className="flex items-center gap-1 text-[11px] text-orange-400">
-                <AlertTriangle size={10} />
+                <Warning size={10} />
                 {score.highIssues.length} High
               </span>
             )}
             {score.mediumIssues.length > 0 && (
               <span className="flex items-center gap-1 text-[11px] text-amber-400">
-                <AlertTriangle size={10} />
+                <Warning size={10} />
                 {score.mediumIssues.length} Medium
               </span>
             )}

@@ -1,10 +1,7 @@
 "use client";
+import { At, ChatCircle, CheckCircle, CircleNotch, Globe, Hash, Microphone, PaperPlaneTilt, ShareNetwork, Sparkle, Warning, X } from "@phosphor-icons/react";
 
 import { useCallback, useState } from "react";
-import {
-  Send, Sparkles, Loader2, AlertTriangle, CheckCircle,
-  AtSign, Hash, Globe, MessageCircle, Share2, Mic,
-} from "lucide-react";
 import StatCard from "@/components/ui/stat-card";
 import { useAuth } from "@/lib/auth-context";
 import VoicePicker from "@/components/voice/VoicePicker";
@@ -13,12 +10,12 @@ import VoicePicker from "@/components/voice/VoicePicker";
 // integration registry just for the icon + label. Lucide doesn't ship
 // brand icons (Instagram/Facebook/etc), so we use generic glyphs.
 const PLATFORMS = [
-  { value: "instagram", label: "Instagram", icon: <AtSign size={14} /> },
-  { value: "facebook", label: "Facebook", icon: <Share2 size={14} /> },
-  { value: "telegram", label: "Telegram", icon: <Send size={14} /> },
+  { value: "instagram", label: "Instagram", icon: <At size={14} /> },
+  { value: "facebook", label: "Facebook", icon: <ShareNetwork size={14} /> },
+  { value: "telegram", label: "Telegram", icon: <PaperPlaneTilt size={14} /> },
   { value: "linkedin", label: "LinkedIn", icon: <Globe size={14} /> },
   { value: "twitter", label: "Twitter / X", icon: <Hash size={14} /> },
-  { value: "tiktok", label: "TikTok", icon: <MessageCircle size={14} /> },
+  { value: "tiktok", label: "TikTok", icon: <ChatCircle size={14} /> },
 ] as const;
 
 // Platforms where voice DM is wired end-to-end. LinkedIn/X/TikTok don't
@@ -83,7 +80,7 @@ export default function DMComposerTab() {
     setPolishing(false);
   }, [message, platform, handle, polishing]);
 
-  // ── Send ──────────────────────────────────────────────────────────
+  // ── PaperPlaneTilt ──────────────────────────────────────────────────────────
   const sendDm = useCallback(async () => {
     if (!handle.trim() || !message.trim() || sending) return;
     setSending(true);
@@ -134,7 +131,7 @@ export default function DMComposerTab() {
         });
       } else {
         setStats((s) => ({ ...s, failed: s.failed + 1 }));
-        setResultBanner({ ok: false, text: data.error || "Send failed" });
+        setResultBanner({ ok: false, text: data.error || "PaperPlaneTilt failed" });
       }
     } catch (err) {
       setStats((s) => ({ ...s, failed: s.failed + 1 }));
@@ -146,9 +143,9 @@ export default function DMComposerTab() {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatCard label="DMs sent" value={stats.sent} icon={<Send size={16} />} />
-        <StatCard label="Queued" value={stats.queued} icon={<Loader2 size={16} />} />
-        <StatCard label="Failed" value={stats.failed} icon={<AlertTriangle size={16} />} />
+        <StatCard label="DMs sent" value={stats.sent} icon={<PaperPlaneTilt size={16} />} />
+        <StatCard label="Queued" value={stats.queued} icon={<CircleNotch size={16} />} />
+        <StatCard label="Failed" value={stats.failed} icon={<Warning size={16} />} />
       </div>
 
       <div className="glass rounded-xl p-5">
@@ -223,8 +220,8 @@ export default function DMComposerTab() {
               disabled={!voiceSupported}
               className="h-3 w-3 rounded border border-white/10 bg-white/5 text-amber-500 focus:ring-amber-400 disabled:opacity-40"
             />
-            <Mic size={12} />
-            Send as voice note
+            <Microphone size={12} />
+            PaperPlaneTilt as voice note
             {!voiceSupported && (
               <span className="text-[10px] uppercase tracking-wider text-rose-400">
                 {platform} doesn&apos;t support voice DM
@@ -255,9 +252,9 @@ export default function DMComposerTab() {
             className="flex items-center gap-2 rounded-lg border border-white/8 bg-white/8 px-3 py-2 text-sm font-medium text-text-primary hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {polishing ? (
-              <Loader2 size={14} className="animate-spin" />
+              <CircleNotch size={14} className="animate-spin" />
             ) : (
-              <Sparkles size={14} />
+              <Sparkle size={14} />
             )}
             Polish with AI
           </button>
@@ -267,8 +264,8 @@ export default function DMComposerTab() {
             disabled={sending || !handle.trim() || !message.trim()}
             className="ml-auto flex items-center gap-2 rounded-lg bg-orange-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-white/4 disabled:text-text-muted"
           >
-            {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-            Send DM
+            {sending ? <CircleNotch size={14} className="animate-spin" /> : <PaperPlaneTilt size={14} />}
+            PaperPlaneTilt DM
           </button>
         </div>
 
@@ -280,7 +277,7 @@ export default function DMComposerTab() {
                 : "border-rose-500/30 bg-rose-500/10 text-rose-400"
             }`}
           >
-            {resultBanner.ok ? <CheckCircle size={16} /> : <AlertTriangle size={16} />}
+            {resultBanner.ok ? <CheckCircle size={16} /> : <Warning size={16} />}
             <span>{resultBanner.text}</span>
           </div>
         )}

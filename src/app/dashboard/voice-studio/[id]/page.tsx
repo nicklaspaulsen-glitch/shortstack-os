@@ -1,23 +1,8 @@
 "use client";
+import { ArrowLeft, ArrowsClockwise, ChatCircle, CheckCircle, CircleNotch, Clock, Microphone, PaperPlaneTilt, Pause, Phone, Play, Trash, Voicemail, Warning } from "@phosphor-icons/react";
 
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import {
-  Mic,
-  Play,
-  Pause,
-  Loader2,
-  AlertTriangle,
-  Trash2,
-  ArrowLeft,
-  Phone,
-  Voicemail,
-  MessageCircle,
-  Send,
-  CheckCircle2,
-  RefreshCw,
-  Clock,
-} from "lucide-react";
 import Link from "next/link";
 import { MotionPage } from "@/components/motion/motion-page";
 import { AudioPlayer } from "@/components/ui/audio-player";
@@ -70,7 +55,7 @@ const SURFACE_FLAGS: Array<{
   {
     key: "is_default_for_user",
     label: "Default",
-    icon: <CheckCircle2 size={12} />,
+    icon: <CheckCircle size={12} />,
   },
   {
     key: "is_default_for_dialer",
@@ -85,9 +70,9 @@ const SURFACE_FLAGS: Array<{
   {
     key: "is_default_for_sms",
     label: "SMS",
-    icon: <MessageCircle size={12} />,
+    icon: <ChatCircle size={12} />,
   },
-  { key: "is_default_for_dm", label: "DM", icon: <Send size={12} /> },
+  { key: "is_default_for_dm", label: "DM", icon: <PaperPlaneTilt size={12} /> },
 ];
 
 export default function VoiceCloneDetailPage() {
@@ -227,14 +212,14 @@ export default function VoiceCloneDetailPage() {
     </div><div className="mx-auto mt-6 max-w-5xl space-y-6 px-4 sm:px-6">
               {error && (
                 <div className="flex items-start gap-3 rounded-lg border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-400">
-                  <AlertTriangle size={18} className="mt-0.5 flex-shrink-0" />
+                  <Warning size={18} className="mt-0.5 flex-shrink-0" />
                   <div>{error}</div>
                 </div>
               )}
 
               {loading || !clone ? (
                 <div className="flex justify-center py-12 text-text-muted">
-                  <Loader2 size={20} className="animate-spin" />
+                  <CircleNotch size={20} className="animate-spin" />
                 </div>
               ) : (
                 <>
@@ -256,7 +241,7 @@ export default function VoiceCloneDetailPage() {
                             }`}
                           >
                             {clone.status === "training" && (
-                              <Loader2 size={10} className="animate-spin" />
+                              <CircleNotch size={10} className="animate-spin" />
                             )}
                             {clone.status}
                           </span>
@@ -279,9 +264,9 @@ export default function VoiceCloneDetailPage() {
                             className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-white/5 px-3 py-1.5 text-xs font-medium text-text-secondary hover:bg-white/8"
                           >
                             {polling ? (
-                              <Loader2 size={12} className="animate-spin" />
+                              <CircleNotch size={12} className="animate-spin" />
                             ) : (
-                              <RefreshCw size={12} />
+                              <ArrowsClockwise size={12} />
                             )}
                             Refresh status
                           </button>
@@ -292,7 +277,7 @@ export default function VoiceCloneDetailPage() {
                             onClick={onDelete}
                             className="flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-medium text-rose-400 hover:bg-rose-500/20"
                           >
-                            <Trash2 size={12} /> Delete
+                            <Trash size={12} /> Delete
                           </button>
                         )}
                       </div>
@@ -324,7 +309,7 @@ export default function VoiceCloneDetailPage() {
                                     : "border-border-subtle bg-white/5 text-text-secondary hover:bg-white/8"
                                 }`}
                               >
-                                {active && <CheckCircle2 size={12} />}
+                                {active && <CheckCircle size={12} />}
                                 {f.icon}
                                 {f.label}
                               </button>
@@ -355,7 +340,7 @@ export default function VoiceCloneDetailPage() {
                           className="flex items-center gap-1.5 rounded-full bg-brand-accent px-3 py-1.5 text-xs font-medium text-[#0D1120] hover:bg-brand-accent/80 disabled:cursor-not-allowed disabled:bg-white/8 disabled:text-text-muted"
                         >
                           {testing ? (
-                            <Loader2 size={12} className="animate-spin" />
+                            <CircleNotch size={12} className="animate-spin" />
                           ) : (
                             <Play size={12} />
                           )}
@@ -417,7 +402,7 @@ export default function VoiceCloneDetailPage() {
                                     </button>
                                   ) : (
                                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
-                                      <Mic size={10} className="text-text-muted" />
+                                      <Microphone size={10} className="text-text-muted" />
                                     </div>
                                   )}
                                   <span className="truncate font-mono text-text-muted text-[10px]">{s.r2_key}</span>

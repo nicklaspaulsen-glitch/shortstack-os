@@ -1,4 +1,6 @@
 "use client";
+import type { Icon } from "@phosphor-icons/react";
+import { CaretRight, Clock, Pulse, Sparkle } from "@phosphor-icons/react";
 
 /**
  * SectionHub — shared layout for the 4 sidebar-section hub pages
@@ -9,8 +11,6 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import type { LucideIcon } from "lucide-react";
-import { Activity, ChevronRight, Clock, Sparkles } from "lucide-react";
 import type { HeroGradient } from "@/components/ui/page-hero";
 import RollingPreview, { type RollingPreviewItem, type RollingPreviewProps } from "@/components/RollingPreview";
 import { formatRelativeTime } from "@/lib/utils";
@@ -20,7 +20,7 @@ export interface HubTool {
   label: string;
   description: string;
   href: string;
-  icon: LucideIcon;
+  icon: Icon;
   comingSoon?: boolean;
   /** Apr 28: optional category groups tools into labeled subsections.
    * Tools without a category render in a default "Tools" group at the
@@ -32,13 +32,13 @@ export interface HubTool {
 export interface HubQuickAction {
   label: string;
   href: string;
-  icon: LucideIcon;
+  icon: Icon;
 }
 
 export interface HubStat {
   label: string;
   key: string;
-  icon: LucideIcon;
+  icon: Icon;
   /** "integer" (default), "currency", or "passthrough" to render as-is */
   format?: "integer" | "currency" | "passthrough";
   color?: string;
@@ -188,7 +188,7 @@ export default function SectionHub({
                   <p className="text-[12px] font-semibold text-text-primary leading-tight truncate">{a.label}</p>
                   <p className="text-[10px] text-text-muted leading-tight">Quick action</p>
                 </div>
-                <ChevronRight size={14} className="text-text-muted group-hover:text-brand-accent transition-colors shrink-0" />
+                <CaretRight size={14} className="text-text-muted group-hover:text-brand-accent transition-colors shrink-0" />
               </Link>
             );
           })}
@@ -269,7 +269,7 @@ export default function SectionHub({
                     <span className="text-[9px] text-text-muted flex items-center gap-1">
                       <Clock size={9} /> {ts ? formatRelativeTime(ts) : "Not used yet"}
                     </span>
-                    <ChevronRight size={12} className="text-text-muted" />
+                    <CaretRight size={12} className="text-text-muted" />
                   </div>
                 </>
               );
@@ -324,7 +324,7 @@ export default function SectionHub({
               <div className="p-4 text-[11px] text-text-muted text-center">Loading…</div>
             ) : !data?.activity?.length ? (
               <div className="p-6 text-center">
-                <Activity size={18} className="mx-auto text-text-muted/50 mb-2" />
+                <Pulse size={18} className="mx-auto text-text-muted/50 mb-2" />
                 <p className="text-[11px] text-text-muted">No activity yet</p>
                 <p className="text-[10px] text-text-muted/70 mt-0.5">
                   Use a tool below to populate this feed
@@ -334,7 +334,7 @@ export default function SectionHub({
               <ul className="divide-y divide-border">
                 {data.activity.map((a) => (
                   <li key={a.id} className="flex items-start gap-2.5 px-3 py-2.5">
-                    <Sparkles size={12} className="text-[rgba(212,255,0,0.7)] mt-0.5 shrink-0" />
+                    <Sparkle size={12} className="text-[rgba(212,255,0,0.7)] mt-0.5 shrink-0" />
                     <div className="min-w-0 flex-1">
                       <p className="text-[11px] text-text-primary leading-snug line-clamp-2">
                         {a.description || humanizeAction(a.action_type)}

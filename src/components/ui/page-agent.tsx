@@ -1,4 +1,5 @@
 "use client";
+import { ArrowUpRight, CaretRight, Copy, Eye, Fire, Lightning, MagicWand, Sparkle, TrendUp, X } from "@phosphor-icons/react";
 
 /**
  * PageAgent — Competitive intelligence widget
@@ -13,17 +14,6 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  TrendingUp,
-  Eye,
-  Flame,
-  Wand2,
-  Copy,
-  ChevronRight,
-  Sparkles,
-  Zap,
-  ArrowUpRight,
-} from "lucide-react";
 import { useRouter } from "next/navigation";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -66,26 +56,26 @@ const PLATFORM_COLORS: Record<string, string> = {
 
 const CONTEXT_ACTIONS: Record<
   AgentContext,
-  { label: string; icon: typeof Wand2; href: string }
+  { label: string; icon: typeof MagicWand; href: string }
 > = {
   thumbnail: {
     label: "Generate Similar Thumbnail",
-    icon: Sparkles,
+    icon: Sparkle,
     href: "/dashboard/thumbnail-generator",
   },
   "ai-studio": {
     label: "Use This Style",
-    icon: Wand2,
+    icon: MagicWand,
     href: "/dashboard/ai-studio",
   },
   "video-gen": {
     label: "Generate Similar Video",
-    icon: Zap,
+    icon: Lightning,
     href: "/dashboard/ai-video-gen",
   },
   "video-editor": {
     label: "Use This Format",
-    icon: Wand2,
+    icon: MagicWand,
     href: "/dashboard/video-editor",
   },
   "social-studio": {
@@ -100,12 +90,12 @@ const CONTEXT_ACTIONS: Record<
   },
   "script-lab": {
     label: "Write Script from This",
-    icon: Wand2,
+    icon: MagicWand,
     href: "/dashboard/script-lab",
   },
   "ads-manager": {
     label: "Launch Ad from This",
-    icon: Zap,
+    icon: Lightning,
     href: "/dashboard/ads-manager",
   },
 };
@@ -259,7 +249,7 @@ function TrendCard({
               style={{ background: "rgba(2,7,17,0.65)", backdropFilter: "blur(4px)" }}
             >
               <div className="text-center px-3">
-                <Wand2 className="w-5 h-5 text-indigo-400 mx-auto mb-1" />
+                <MagicWand className="w-5 h-5 text-indigo-400 mx-auto mb-1" />
                 <div className="text-[10px] font-semibold text-indigo-300">
                   {CONTEXT_ACTIONS[context].label}
                 </div>
@@ -335,7 +325,7 @@ export default function PageAgent({ context, niche, className = "" }: PageAgentP
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-lg flex items-center justify-center"
             style={{ background: "rgba(212,255,0,0.15)", border: "1px solid rgba(212,255,0,0.25)" }}>
-            <Flame className="w-3.5 h-3.5 text-indigo-400" />
+            <Fire className="w-3.5 h-3.5 text-indigo-400" />
           </div>
           <div className="text-left">
             <div className="text-xs font-semibold text-white">
@@ -352,7 +342,7 @@ export default function PageAgent({ context, niche, className = "" }: PageAgentP
             animate={{ opacity: [1, 0.3, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
           />
-          <ChevronRight
+          <CaretRight
             className="w-3.5 h-3.5 text-white/30 transition-transform duration-200"
             style={{ transform: expanded ? "rotate(90deg)" : "rotate(0deg)" }}
           />
@@ -414,7 +404,7 @@ export default function PageAgent({ context, niche, className = "" }: PageAgentP
                       }}
                     >
                       <div className="flex items-center gap-1.5 min-w-0">
-                        <TrendingUp className="w-3 h-3 shrink-0 text-indigo-400" />
+                        <TrendUp className="w-3 h-3 shrink-0 text-indigo-400" />
                         <span className="truncate">{hook}</span>
                       </div>
                       <Copy

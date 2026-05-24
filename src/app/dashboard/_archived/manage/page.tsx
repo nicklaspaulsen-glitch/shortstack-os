@@ -1,15 +1,10 @@
 "use client";
+import { Briefcase, Buildings, Calculator, ChartBar, CreditCard, Crown, CurrencyDollar, DownloadSimple, Gift, Heart, Lifebuoy, Lightning, Link, Phone, Pulse, Receipt, SquaresFour, Star, Storefront, UserPlus, UsersThree } from "@phosphor-icons/react";
 
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import SectionHub from "@/components/dashboard/section-hub";
 import type { RollingPreviewItem } from "@/components/RollingPreview";
-import {
-  Briefcase, Building2, UsersRound, Kanban, BarChart3, Receipt,
-  CreditCard, Zap, Phone, Link2, Heart, Star, LifeBuoy, Gift,
-  Calculator, Activity, FileBarChart2, Store, Download,
-  UserPlus, Crown, DollarSign,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // Muted, operations-focused blueprint cards — these are the artefacts a
@@ -50,15 +45,15 @@ export default function ManageHubPage() {
             }}
             quickActions={[
               { label: "Add to Agency", href: "/dashboard/team", icon: UserPlus },
-              { label: "Invite Team Member", href: "/dashboard/team", icon: UsersRound },
+              { label: "Invite Team Member", href: "/dashboard/team", icon: UsersThree },
               { label: "Upgrade Plan", href: "/dashboard/pricing", icon: Crown },
-              { label: "Download Desktop", href: "/dashboard/download", icon: Download },
+              { label: "DownloadSimple Desktop", href: "/dashboard/download", icon: DownloadSimple },
             ]}
             stats={[
-              { label: "Team Members", key: "team_members", icon: UsersRound, color: "text-brand-accent" },
-              { label: "Workspaces", key: "workspaces", icon: Building2, color: "text-brand-accent" },
+              { label: "Team Members", key: "team_members", icon: UsersThree, color: "text-brand-accent" },
+              { label: "Workspaces", key: "workspaces", icon: Buildings, color: "text-brand-accent" },
               { label: "Plan", key: "plan_tier", icon: Crown, color: "text-amber-700", format: "passthrough" },
-              { label: "Spend (30d)", key: "monthly_spend", icon: DollarSign, color: "text-emerald-700", format: "currency" },
+              { label: "Spend (30d)", key: "monthly_spend", icon: CurrencyDollar, color: "text-emerald-700", format: "currency" },
             ]}
             tools={[
               {
@@ -66,35 +61,35 @@ export default function ManageHubPage() {
                 label: "Workspaces",
                 description: "Separate workspaces for clients or sub-agencies.",
                 href: "/dashboard/workspaces",
-                icon: Building2,
+                icon: Buildings,
               },
               {
                 slug: "team",
                 label: "Team",
                 description: "Invite members, assign roles, control access.",
                 href: "/dashboard/team",
-                icon: UsersRound,
+                icon: UsersThree,
               },
               {
                 slug: "production",
                 label: "Production",
-                description: "Kanban board for content and delivery work.",
+                description: "SquaresFour board for content and delivery work.",
                 href: "/dashboard/production",
-                icon: Kanban,
+                icon: SquaresFour,
               },
               {
                 slug: "projects",
                 label: "Projects",
                 description: "Track every client project end-to-end.",
                 href: "/dashboard/projects",
-                icon: Kanban,
+                icon: SquaresFour,
               },
               {
                 slug: "financials",
                 label: "Financials",
                 description: "Revenue, spend, MRR and margin at a glance.",
                 href: "/dashboard/financials",
-                icon: BarChart3,
+                icon: ChartBar,
               },
               {
                 slug: "invoices",
@@ -122,7 +117,7 @@ export default function ManageHubPage() {
                 label: "Usage & Tokens",
                 description: "Track AI, email, and SMS usage in real time.",
                 href: "/dashboard/usage",
-                icon: Zap,
+                icon: Lightning,
               },
               {
                 slug: "phone-email",
@@ -136,7 +131,7 @@ export default function ManageHubPage() {
                 label: "Domains",
                 description: "Buy and wire up custom domains.",
                 href: "/dashboard/domains",
-                icon: Link2,
+                icon: Link,
               },
               {
                 slug: "client-health",
@@ -157,7 +152,7 @@ export default function ManageHubPage() {
                 label: "Tickets",
                 description: "Client support inbox with SLA tracking.",
                 href: "/dashboard/tickets",
-                icon: LifeBuoy,
+                icon: Lifebuoy,
               },
               {
                 slug: "referrals",
@@ -178,28 +173,28 @@ export default function ManageHubPage() {
                 label: "Monitor",
                 description: "Live status of every connected service.",
                 href: "/dashboard/monitor",
-                icon: Activity,
+                icon: Pulse,
               },
               {
                 slug: "report-generator",
                 label: "Reports Gen",
                 description: "Generate branded PDF reports on demand.",
                 href: "/dashboard/report-generator",
-                icon: FileBarChart2,
+                icon: ChartBar,
               },
               {
                 slug: "marketplace",
                 label: "Marketplace",
                 description: "Install templates, workflows, and prebuilt agents.",
                 href: "/dashboard/marketplace",
-                icon: Store,
+                icon: Storefront,
               },
               {
                 slug: "download",
-                label: "Download Desktop",
+                label: "DownloadSimple Desktop",
                 description: "Get the ShortStack macOS and Windows app.",
                 href: "/dashboard/download",
-                icon: Download,
+                icon: DownloadSimple,
               },
             ]}
           />

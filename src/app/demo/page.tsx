@@ -1,20 +1,17 @@
 "use client";
+import { ArrowRight, ChartBar, Chat, CheckCircle, FilmStrip, Globe, Lightning, Robot, Users } from "@phosphor-icons/react";
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight, Zap, Users, BarChart3, Bot,
-  MessageSquare, Globe, Film, CheckCircle
-} from "lucide-react";
 
 const FEATURES = [
   { icon: <Users size={20} />, title: "CRM & Pipeline", desc: "Kanban boards, lead scoring, deal tracking" },
-  { icon: <Zap size={20} />, title: "20 AI Agents", desc: "Autopilot marketing — agents work 24/7" },
-  { icon: <MessageSquare size={20} />, title: "Outreach", desc: "Cold email, SMS, DMs on autopilot" },
-  { icon: <BarChart3 size={20} />, title: "Analytics", desc: "Real-time dashboards, client reports" },
-  { icon: <Bot size={20} />, title: "AI Content", desc: "Scripts, posts, videos, designs — all AI" },
+  { icon: <Lightning size={20} />, title: "20 AI Agents", desc: "Autopilot marketing — agents work 24/7" },
+  { icon: <Chat size={20} />, title: "Outreach", desc: "Cold email, SMS, DMs on autopilot" },
+  { icon: <ChartBar size={20} />, title: "Analytics", desc: "Real-time dashboards, client reports" },
+  { icon: <Robot size={20} />, title: "AI Content", desc: "Scripts, posts, videos, designs — all AI" },
   { icon: <Globe size={20} />, title: "Websites", desc: "Build and deploy client websites" },
-  { icon: <Film size={20} />, title: "Video Editor", desc: "Auto-render social videos" },
+  { icon: <FilmStrip size={20} />, title: "Video Editor", desc: "Auto-render social videos" },
   { icon: <CheckCircle size={20} />, title: "Client Portal", desc: "Self-service portal for every client" },
 ];
 
@@ -48,7 +45,7 @@ export default function DemoPage() {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6 text-xs"
             style={{ background: "rgba(212,255,0,0.08)", color: "#D4FF00", border: "1px solid rgba(212,255,0,0.15)" }}>
-            <Zap size={12} /> AI-Powered Agency OS
+            <Lightning size={12} /> AI-Powered Agency OS
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4" style={{ letterSpacing: "-0.04em", lineHeight: 1.1 }}>
             Run your entire agency<br />

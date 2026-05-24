@@ -1,13 +1,8 @@
+import { ArrowsClockwise, CircleNotch, Copy, Envelope, FileText, FilmStrip, Globe, Image, MagnifyingGlass, Megaphone, ShareNetwork, Sparkle, Stack, Trash } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import {
-  Layers, Film, Megaphone, Image as ImageIcon, Mail,
-  FileText, Share2, Globe, Search, RefreshCw,
-  Copy,
-  Trash2, Loader, Sparkles
-} from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -28,13 +23,13 @@ interface Generation {
 /* ── Category Config ── */
 
 const CATEGORIES: { key: string; label: string; icon: React.ReactNode; color: string; bg: string }[] = [
-  { key: "all",          label: "All",          icon: <Layers size={14} />,    color: "text-brand-accent",        bg: "bg-[rgba(212,255,0,0.08)]" },
-  { key: "video",        label: "Videos",       icon: <Film size={14} />,      color: "text-indigo-400",    bg: "bg-indigo-500/10" },
+  { key: "all",          label: "All",          icon: <Stack size={14} />,    color: "text-brand-accent",        bg: "bg-[rgba(212,255,0,0.08)]" },
+  { key: "video",        label: "Videos",       icon: <FilmStrip size={14} />,      color: "text-indigo-400",    bg: "bg-indigo-500/10" },
   { key: "ad_copy",      label: "Ads & Copy",   icon: <Megaphone size={14} />, color: "text-purple-400",  bg: "bg-purple-500/10" },
-  { key: "thumbnail",    label: "Images",       icon: <ImageIcon size={14} />, color: "text-emerald-400", bg: "bg-emerald-500/10" },
-  { key: "email",        label: "Emails",       icon: <Mail size={14} />,      color: "text-amber-400",   bg: "bg-amber-500/10" },
+  { key: "thumbnail",    label: "Images",       icon: <Image size={14} />, color: "text-emerald-400", bg: "bg-emerald-500/10" },
+  { key: "email",        label: "Emails",       icon: <Envelope size={14} />,      color: "text-amber-400",   bg: "bg-amber-500/10" },
   { key: "script",       label: "Scripts",      icon: <FileText size={14} />,  color: "text-cyan-400",    bg: "bg-cyan-500/10" },
-  { key: "social_post",  label: "Social",       icon: <Share2 size={14} />,    color: "text-rose-400",    bg: "bg-rose-500/10" },
+  { key: "social_post",  label: "Social",       icon: <ShareNetwork size={14} />,    color: "text-rose-400",    bg: "bg-rose-500/10" },
   { key: "landing_page", label: "Pages",        icon: <Globe size={14} />,     color: "text-teal-400",    bg: "bg-teal-500/10" },
 ];
 
@@ -134,7 +129,7 @@ export default function GenerationsPage() {
           onClick={fetchGenerations}
           className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/8 border border-white/10 text-text-primary text-xs font-medium hover:bg-white/10 transition-all"
         >
-          <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
+          <ArrowsClockwise size={12} className={loading ? "animate-spin" : ""} /> Refresh
         </button>
       </div>
 
@@ -184,13 +179,13 @@ export default function GenerationsPage() {
         </motion.div>
       </div>
 
-      {/* Search */}<div className="relative max-w-md">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+      {/* MagnifyingGlass */}<div className="relative max-w-md">
+              <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Search generations..."
-                aria-label="Search generations"
+                placeholder="MagnifyingGlass generations..."
+                aria-label="MagnifyingGlass generations"
                 className="input text-xs pl-9 w-full"
               />
             </div>{/* Category Filter Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">
@@ -211,12 +206,12 @@ export default function GenerationsPage() {
             </div>{/* Generations List */}<div className="space-y-2">
               {loading ? (
                 <div className="flex items-center justify-center py-20">
-                  <Loader size={20} className="animate-spin text-brand-accent" />
+                  <CircleNotch size={20} className="animate-spin text-brand-accent" />
                 </div>
               ) : filtered.length === 0 ? (
                 /* Empty State */
                 <div className="glass rounded-xl text-center py-16">
-                  <Sparkles size={32} className="mx-auto mb-3 text-text-muted/30" />
+                  <Sparkle size={32} className="mx-auto mb-3 text-text-muted/30" />
                   <p className="text-sm text-text-muted font-medium mb-1">No generations yet</p>
                   <p className="text-[10px] text-text-muted max-w-xs mx-auto">
                     Create content from any tool in Trinity and it will appear here automatically.
@@ -274,7 +269,7 @@ export default function GenerationsPage() {
                             className="p-1.5 rounded-lg hover:bg-red-500/10 text-text-muted hover:text-red-400 transition-all"
                             title="Hide from list (local only)"
                           >
-                            <Trash2 size={13} />
+                            <Trash size={13} />
                           </button>
                         </div>
                       </div>

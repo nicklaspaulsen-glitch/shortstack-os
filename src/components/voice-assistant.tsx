@@ -1,8 +1,8 @@
 "use client";
+import { Chat, Gear, Microphone, SpeakerHigh, SpeakerX, StopCircle, X } from "@phosphor-icons/react";
 
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { Mic, Volume2, VolumeX, X, MessageSquare, StopCircle, Settings } from "lucide-react";
 import Image from "next/image";
 import Draggable from "@/components/ui/draggable";
 
@@ -281,7 +281,7 @@ export default function VoiceAssistant() {
         <button onClick={() => setIsOpen(true)}
           className="bg-gradient-to-r from-[#D4FF00] to-[#AACC00] px-4 py-2.5 rounded-full shadow-lg shadow-[rgba(212,255,0,0.2)] flex items-center gap-2 hover:scale-105 transition-all active:scale-95 group">
           <div className="w-6 h-6 rounded-full bg-black/20 flex items-center justify-center">
-            <Mic size={14} className="text-black" />
+            <Microphone size={14} className="text-black" />
           </div>
           <span className="text-black font-medium text-sm">Hey {profile?.full_name?.split(" ")[0] || "there"}</span>
           <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
@@ -307,7 +307,7 @@ export default function VoiceAssistant() {
         </div>
         <div className="flex gap-1">
           <button onClick={() => setShowSettings(!showSettings)} className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors">
-            <Settings size={14} />
+            <Gear size={14} />
           </button>
           <button onClick={() => { stopSpeaking(); setIsOpen(false); }} className="p-1.5 rounded-lg hover:bg-surface-light text-text-muted hover:text-text-primary transition-colors">
             <X size={14} />
@@ -315,7 +315,7 @@ export default function VoiceAssistant() {
         </div>
       </div>
 
-      {/* Settings panel */}
+      {/* Gear panel */}
       {showSettings && (
         <div className="px-4 py-3 bg-surface-light border-b border-border-subtle space-y-2">
           <div className="flex items-center justify-between">
@@ -335,7 +335,7 @@ export default function VoiceAssistant() {
             <span className="text-xs text-text-muted">Audio Output</span>
             <button onClick={() => { setIsMuted(!isMuted); if (!isMuted) stopSpeaking(); }}
               className={`text-xs px-2 py-1 rounded flex items-center gap-1 ${isMuted ? "bg-danger/20 text-danger" : "bg-success/20 text-success"}`}>
-              {isMuted ? <VolumeX size={12} /> : <Volume2 size={12} />}
+              {isMuted ? <SpeakerX size={12} /> : <SpeakerHigh size={12} />}
               {isMuted ? "Muted" : "On"}
             </button>
           </div>
@@ -392,7 +392,7 @@ export default function VoiceAssistant() {
             {/* Mute button */}
             <button onClick={() => { setIsMuted(!isMuted); if (!isMuted) stopSpeaking(); }}
               className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isMuted ? "bg-danger/20 text-danger" : "bg-surface-light text-text-muted hover:text-text-primary"}`}>
-              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+              {isMuted ? <SpeakerX size={18} /> : <SpeakerHigh size={18} />}
             </button>
 
             {/* Main mic button */}
@@ -409,21 +409,21 @@ export default function VoiceAssistant() {
             ) : (
               <button onClick={startListening} disabled={processing}
                 className="w-16 h-16 rounded-full bg-[#D4FF00] flex items-center justify-center shadow-lg shadow-[rgba(212,255,0,0.3)] hover:scale-105 transition-all active:scale-95 disabled:opacity-50">
-                <Mic size={28} className="text-black" />
+                <Microphone size={28} className="text-black" />
               </button>
             )}
 
             {/* Switch to text */}
             <button onClick={() => setInputMode("text")}
               className="w-10 h-10 rounded-full bg-surface-light flex items-center justify-center text-text-muted hover:text-text-primary transition-colors">
-              <MessageSquare size={18} />
+              <Chat size={18} />
             </button>
           </div>
         ) : (
           <form onSubmit={(e) => { e.preventDefault(); sendMessage(textInput); setTextInput(""); }} className="flex gap-2">
             <button type="button" onClick={() => setInputMode("voice")}
               className="w-9 h-9 rounded-full bg-surface-light flex items-center justify-center text-text-muted hover:text-text-primary shrink-0">
-              <Mic size={16} />
+              <Microphone size={16} />
             </button>
             <input
               type="text"
@@ -436,7 +436,7 @@ export default function VoiceAssistant() {
             />
             <button type="submit" disabled={!textInput.trim() || processing}
               className="w-9 h-9 bg-[#D4FF00] rounded-full flex items-center justify-center disabled:opacity-30 shrink-0">
-              <MessageSquare size={14} className="text-black" />
+              <Chat size={14} className="text-black" />
             </button>
           </form>
         )}

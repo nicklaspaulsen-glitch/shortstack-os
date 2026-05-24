@@ -1,3 +1,5 @@
+import type { IconProps, Icon } from "@phosphor-icons/react";
+import { Airplane, Aperture, ArrowUpRight, Barbell, BookOpen, Briefcase, Camera, Car, ChartBar, Chat, Check, Circle, Clock, Coins, Confetti, CreditCard, Crown, Cube, CurrencyDollar, CursorClick, DeviceMobile, Diamond, DiceFive, FileText, FilmSlate, Fire, ForkKnife, Globe, GraduationCap, Heart, House, IdentificationCard, Image, Leaf, Lightbulb, Lightning, MagnifyingGlass, Megaphone, Microphone, Monitor, Moon, Mountains, MusicNote, Newspaper, Palette, Pencil, Play, Rocket, Ruler, Scissors, ShieldCheck, Smiley, Snowflake, Sparkle, Square, SquaresFour, Star, Sun, Tag, Target, Television, Tree, TrendUp, Trophy, Users, Warning, Waves, X } from "@phosphor-icons/react";
 /**
  * Emoji → Lucide icon lookup.
  *
@@ -11,80 +13,11 @@
  *
  * Keys are the exact emoji characters (with any variation selectors
  * stripped so `🖼️` and `🖼` both hit the same entry). If a key isn't
- * found, consumers fall back to `<Sparkles>`.
+ * found, consumers fall back to `<Sparkle>`.
  */
 import React from "react";
-import type { LucideIcon, LucideProps } from "lucide-react";
-import {
-  Aperture,
-  ArrowUpRight,
-  AlertTriangle,
-  BarChart3,
-  BookOpen,
-  Box,
-  Briefcase,
-  Camera,
-  Car,
-  Check,
-  Circle,
-  Clapperboard,
-  Clock,
-  Coins,
-  CreditCard,
-  Crown,
-  Dice5,
-  DollarSign,
-  Dumbbell,
-  FileText,
-  Flame,
-  Gem,
-  Globe,
-  GraduationCap,
-  Heart,
-  Home,
-  IdCard,
-  Image as ImageIcon,
-  LayoutGrid,
-  Laugh,
-  Leaf,
-  Lightbulb,
-  Megaphone,
-  MessageSquare,
-  Mic,
-  Monitor,
-  Moon,
-  Mountain,
-  MousePointer,
-  Music,
-  Newspaper,
-  Palette,
-  PartyPopper,
-  Pencil,
-  Plane,
-  Play,
-  Rocket,
-  Ruler,
-  Scissors,
-  Search,
-  ShieldCheck,
-  Smartphone,
-  Snowflake,
-  Sparkles,
-  Square,
-  Star,
-  Sun,
-  Tag,
-  Target,
-  TreePine,
-  TrendingUp,
-  Trophy,
-  Tv,
-  Users,
-  Utensils,
-  Waves,
-  X as XIcon,
-  Zap,
-} from "lucide-react";
+
+
 
 /**
  * Strip Unicode variation selectors (U+FE0E, U+FE0F) and zero-width joiners
@@ -101,18 +34,18 @@ function normalizeEmoji(input: string): string {
  * in the app has an entry. Decorative emoji in headings or prose are not
  * remapped — only option data.
  */
-const RAW_MAP: Record<string, LucideIcon> = {
+const RAW_MAP: Record<string, Icon> = {
   // — from the task brief —
   "🎯": Target,
   "💼": Briefcase,
   "🚀": Rocket,
-  "📊": BarChart3,
-  "💬": MessageSquare,
+  "📊": ChartBar,
+  "💬": Chat,
   "🎨": Palette,
-  "🎬": Clapperboard,
-  "📱": Smartphone,
+  "🎬": FilmSlate,
+  "📱": DeviceMobile,
   "🌐": Globe,
-  "💰": DollarSign,
+  "💰": CurrencyDollar,
 
   // — platform / social —
   "📸": Camera,        // Instagram
@@ -120,55 +53,55 @@ const RAW_MAP: Record<string, LucideIcon> = {
   "📹": Camera,
   "👥": Users,         // Facebook / community
   "▶️": Play,           // YouTube / thumbnail
-  "📺": Tv,
-  "𝕏": XIcon,           // X / Twitter
+  "📺": Television,
+  "𝕏": X,           // X / Twitter
 
   // — image-wizard creation types —
-  "🪪": IdCard,        // profile picture / ID
+  "🪪": IdentificationCard,        // profile picture / ID
   "📣": Megaphone,     // ad creative
-  "🖼️": ImageIcon,     // hero image
-  "🗂️": LayoutGrid,    // carousel
+  "🖼️": Image,     // hero image
+  "🗂️": SquaresFour,    // carousel
   "📰": Newspaper,     // blog hero
-  "📦": Box,           // product mockup
+  "📦": Cube,           // product mockup
   "🏆": Trophy,        // logo / mark
   "📐": Ruler,         // custom size / rule of thirds
-  "📲": Smartphone,    // story / reel cover
+  "📲": DeviceMobile,    // story / reel cover
 
   // — moods —
-  "⚡": Zap,
+  "⚡": Lightning,
   "🌿": Leaf,
   "🌙": Moon,
-  "💪": Dumbbell,
-  "🎈": PartyPopper,
+  "💪": Barbell,
+  "🎈": Confetti,
   "👔": Briefcase,
-  "🔥": Flame,
-  "💥": Sparkles,
+  "🔥": Fire,
+  "💥": Sparkle,
   "⚪": Circle,
   "👑": Crown,
 
   // — style / composition —
   "🪞": Aperture,      // portrait / face focus
-  "🏞️": Mountain,      // wide landscape
-  "🔍": Search,        // close-up / upscale
+  "🏞️": Mountains,      // wide landscape
+  "🔍": MagnifyingGlass,        // close-up / upscale
   "↗️": ArrowUpRight,   // diagonal / dynamic
 
   // — image style vibes / niche —
-  "🧊": Box,           // 3d render
+  "🧊": Cube,           // 3d render
   "🖌️": Pencil,        // illustration
-  "🌴": TreePine,      // vaporwave
+  "🌴": Tree,      // vaporwave
   "⬛": Square,         // 1:1 square
-  "🎮": MousePointer,  // gaming (best-available)
+  "🎮": CursorClick,  // gaming (best-available)
 
   // — extras (image wizard) —
   "🏷️": Tag,
   "✂️": Scissors,
-  "🎲": Dice5,
+  "🎲": DiceFive,
 
   // — status / outreach pills —
   "🟢": Check,
-  "🔵": MessageSquare,
+  "🔵": Chat,
   "🟡": Clock,
-  "🔴": XIcon,
+  "🔴": X,
   "⚫": Circle,
   "✏️": Pencil,
 
@@ -177,30 +110,30 @@ const RAW_MAP: Record<string, LucideIcon> = {
   "🎓": GraduationCap,
   "⭐": Star,
   "📚": BookOpen,
-  "🎧": Mic,
-  "🍳": Utensils,
-  "✈️": Plane,
-  "🚨": AlertTriangle,
-  "🤣": Laugh,
-  "🎵": Music,
-  "🏠": Home,
+  "🎧": Microphone,
+  "🍳": ForkKnife,
+  "✈️": Airplane,
+  "🚨": Warning,
+  "🤣": Smiley,
+  "🎵": MusicNote,
+  "🏠": House,
   "💄": Heart,
   "🚗": Car,
   "🏈": Trophy,
-  "📈": TrendingUp,
+  "📈": TrendUp,
   "🪙": Coins,
-  "🎭": Clapperboard,
+  "🎭": FilmSlate,
 
   // — structural —
   "❄️": Snowflake,
   "⏰": Clock,
-  "💎": Gem,
-  "🎉": PartyPopper,
-  "📞": MessageSquare,
+  "💎": Diamond,
+  "🎉": Confetti,
+  "📞": Chat,
   "📄": FileText,
   "✅": Check,
-  "❌": XIcon,
-  "⚠️": AlertTriangle,
+  "❌": X,
+  "⚠️": Warning,
   "🛡️": ShieldCheck,
   "💳": CreditCard,
   "🌞": Sun,
@@ -209,38 +142,38 @@ const RAW_MAP: Record<string, LucideIcon> = {
 };
 
 // Re-key the map so callers with or without variation selectors both hit.
-const EMOJI_TO_ICON: Record<string, LucideIcon> = Object.fromEntries(
+const EMOJI_TO_ICON: Record<string, Icon> = Object.fromEntries(
   Object.entries(RAW_MAP).map(([k, v]) => [normalizeEmoji(k), v])
 );
 
 /**
  * Look up the Lucide icon for a given emoji string. Returns undefined if
- * there's no mapping — callers should fall back to `<Sparkles>` for a
+ * there's no mapping — callers should fall back to `<Sparkle>` for a
  * neutral-but-not-empty placeholder.
  */
 export function iconForEmoji(
   emoji: string | undefined | null
-): LucideIcon | undefined {
+): Icon | undefined {
   if (!emoji) return undefined;
   return EMOJI_TO_ICON[normalizeEmoji(emoji)];
 }
 
 /**
  * Render helper — always returns a Lucide icon element. Falls back to
- * `<Sparkles>` when the emoji isn't mapped.
+ * `<Sparkle>` when the emoji isn't mapped.
  *
  *     <EmojiIcon emoji={opt.emoji} size={18} className="text-[#D4FF00]" />
  */
-export interface EmojiIconProps extends LucideProps {
+export interface EmojiIconProps extends IconProps {
   /** The source emoji — will be normalized and looked up. */
   emoji?: string | null;
-  /** Override the fallback icon. Defaults to Sparkles. */
-  fallback?: LucideIcon;
+  /** Override the fallback icon. Defaults to Sparkle. */
+  fallback?: Icon;
 }
 
 export function EmojiIcon({
   emoji,
-  fallback = Sparkles,
+  fallback = Sparkle,
   ...rest
 }: EmojiIconProps) {
   const Icon = iconForEmoji(emoji) ?? fallback;

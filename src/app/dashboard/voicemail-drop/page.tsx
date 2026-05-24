@@ -1,9 +1,7 @@
+import { CircleNotch, Pause, Phone, Play, Plus, ShieldWarning, Trash, UploadSimple, Voicemail, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  Voicemail, Plus, Play, Pause, Trash2, Upload, Loader2, Phone, X, ShieldAlert,
-} from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -63,14 +61,14 @@ export default function VoicemailDropPage() {
         body: fd,
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Upload failed");
+      if (!res.ok) throw new Error(json.error || "UploadSimple failed");
       toast.success("Voicemail uploaded");
       setName("");
       setFile(null);
       setShowUpload(false);
       fetchTemplates();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Upload failed");
+      toast.error(err instanceof Error ? err.message : "UploadSimple failed");
     } finally {
       setUploading(false);
     }
@@ -148,11 +146,11 @@ export default function VoicemailDropPage() {
                     className="btn-pill flex items-center gap-1.5"
                   >
                     <Plus className="w-4 h-4" />
-                    Upload
+                    UploadSimple
                   </button>
                 </motion.div>
       </div>
-    </div>{/* Upload modal */}{showUpload && (
+    </div>{/* UploadSimple modal */}{showUpload && (
               <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm p-4">
                 <motion.div
                   initial={{ opacity: 0, y: 24 }}
@@ -161,7 +159,7 @@ export default function VoicemailDropPage() {
                   className="w-full max-w-md glass shadow-2xl overflow-hidden"
                 >
                   <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle">
-                    <p className="font-semibold text-text-primary">Upload voicemail</p>
+                    <p className="font-semibold text-text-primary">UploadSimple voicemail</p>
                     <button onClick={() => setShowUpload(false)} className="text-text-muted hover:text-text-primary">
                       <X className="w-5 h-5" />
                     </button>
@@ -205,8 +203,8 @@ export default function VoicemailDropPage() {
                       disabled={uploading || !name.trim() || !file}
                       className="btn-pill flex items-center gap-1.5 disabled:opacity-50"
                     >
-                      {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                      {uploading ? "Uploading…" : "Upload"}
+                      {uploading ? <CircleNotch className="w-4 h-4 animate-spin" /> : <UploadSimple className="w-4 h-4" />}
+                      {uploading ? "Uploading…" : "UploadSimple"}
                     </motion.button>
                   </div>
                 </motion.div>
@@ -253,7 +251,7 @@ export default function VoicemailDropPage() {
                         className="mt-0.5 accent-amber-400 shrink-0"
                       />
                       <span className="text-[11px] text-text-muted leading-relaxed">
-                        <ShieldAlert className="inline w-3 h-3 mr-1 text-brand-accent" />
+                        <ShieldWarning className="inline w-3 h-3 mr-1 text-brand-accent" />
                         I confirm I have prior express written consent to contact this recipient by phone (TCPA). Dropping a voicemail without consent may violate US federal law.
                       </span>
                     </label>
@@ -275,7 +273,7 @@ export default function VoicemailDropPage() {
                       disabled={dropping || !dropTo.trim() || !tcpaConsent}
                       className="btn-pill flex items-center gap-1.5 disabled:opacity-50"
                     >
-                      {dropping ? <Loader2 className="w-4 h-4 animate-spin" /> : <Phone className="w-4 h-4" />}
+                      {dropping ? <CircleNotch className="w-4 h-4 animate-spin" /> : <Phone className="w-4 h-4" />}
                       {dropping ? "Dropping…" : "Drop voicemail"}
                     </motion.button>
                   </div>
@@ -283,7 +281,7 @@ export default function VoicemailDropPage() {
               </div>
             )}{/* List */}{loading ? (
               <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-8 h-8 animate-spin text-brand-accent" />
+                <CircleNotch className="w-8 h-8 animate-spin text-brand-accent" />
               </div>
             ) : templates.length === 0 ? (
               <motion.div
@@ -300,8 +298,8 @@ export default function VoicemailDropPage() {
                   onClick={() => setShowUpload(true)}
                   className="btn-pill flex items-center gap-1.5"
                 >
-                  <Upload className="w-4 h-4" />
-                  Upload your first
+                  <UploadSimple className="w-4 h-4" />
+                  UploadSimple your first
                 </motion.button>
               </motion.div>
             ) : (
@@ -342,7 +340,7 @@ export default function VoicemailDropPage() {
                       className="text-text-muted hover:text-red-500 p-1.5"
                       aria-label="Delete template"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash className="w-4 h-4" />
                     </button>
                   </motion.div>
                 ))}

@@ -165,7 +165,7 @@ const AI_VIDEO_THUMBS: Array<[string, string, string]> = [
   ["hT_nvWreIhg", "Moody Landscape", "Moody"],
   ["CevxZvSJLk8", "Forest Nature", "Nature"],
   ["YQHsXMglC9A", "Atmospheric Visual", "Moody"],
-  ["RgKAFK5djSk", "Film Grade Cinematic", "Film"],
+  ["RgKAFK5djSk", "FilmStrip Grade Cinematic", "FilmStrip"],
   ["Zi_XLOBDo_Y", "Stage Cinematic", "Cinematic"],
   ["PsO6ZnUZI0g", "Live Stage Visual", "Cinematic"],
   ["hTWKbfoikeg", "Grunge Visual", "Abstract"],

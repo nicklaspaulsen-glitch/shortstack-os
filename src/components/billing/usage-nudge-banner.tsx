@@ -1,4 +1,5 @@
 "use client";
+import { ArrowUpRight, Warning, X } from "@phosphor-icons/react";
 
 /**
  * Dashboard-home banner that nudges Starter users to upgrade when they're
@@ -14,7 +15,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, AlertTriangle, X } from "lucide-react";
+
 import { normalizePlanTier } from "@/lib/plan-limits";
 
 type UsageMap = Record<string, number>;
@@ -96,7 +97,7 @@ export default function UsageNudgeBanner({ planTier }: { planTier?: string | nul
   return (
     <div className="relative flex items-center gap-3 px-4 py-3  border border-amber-500/25 bg-gradient-to-r from-amber-500/[0.06] via-orange-500/[0.04] to-transparent">
       <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/25 flex items-center justify-center shrink-0">
-        <AlertTriangle size={16} className="text-amber-500" />
+        <Warning size={16} className="text-amber-500" />
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-xs font-semibold text-text-primary">

@@ -1,4 +1,5 @@
 "use client";
+import { ArrowSquareOut, CircleNotch, ImageSquare, MagnifyingGlass, X } from "@phosphor-icons/react";
 
 // Stock photos panel — a slide-out drawer with a search input + grid of
 // license-clean photos from Pexels (or Unsplash fallback). Clicking a
@@ -11,7 +12,6 @@
 // configured=false and the empty state handles it.
 
 import { useCallback, useEffect, useState } from "react";
-import { Search, X, ImagePlus, ExternalLink, Loader2 } from "lucide-react";
 import type { StockPhoto, StockPhotoOrientation } from "@/lib/integrations/stock-photos";
 
 interface StockPhotosPanelProps {
@@ -122,7 +122,7 @@ export default function StockPhotosPanel({
     <div className="fixed inset-y-0 right-0 z-40 w-[380px] bg-neutral-950 border-l border-neutral-800 flex flex-col shadow-2xl">
       <div className="flex items-center justify-between px-3 py-2 border-b border-neutral-800">
         <div className="flex items-center gap-2">
-          <ImagePlus className="w-4 h-4 text-neutral-300" />
+          <ImageSquare className="w-4 h-4 text-neutral-300" />
           <span className="text-sm font-semibold text-neutral-100">Stock photos</span>
           {providers.length > 0 && (
             <span className="text-[10px] text-neutral-500 uppercase tracking-wide">
@@ -140,7 +140,7 @@ export default function StockPhotosPanel({
         </button>
       </div>
 
-      {/* Search + filters */}
+      {/* MagnifyingGlass + filters */}
       <div className="p-3 border-b border-neutral-800 space-y-2">
         <form
           onSubmit={(e) => {
@@ -150,12 +150,12 @@ export default function StockPhotosPanel({
           className="flex gap-2"
         >
           <div className="relative flex-1">
-            <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
+            <MagnifyingGlass className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search photos..."
+              placeholder="MagnifyingGlass photos..."
               className="w-full bg-neutral-900 border border-neutral-700 rounded pl-7 pr-2 py-1.5 text-xs text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:border-indigo-500"
             />
           </div>
@@ -204,7 +204,7 @@ export default function StockPhotosPanel({
       <div className="flex-1 overflow-y-auto p-3">
         {loading && (
           <div className="flex items-center justify-center h-32 text-neutral-500 text-xs">
-            <Loader2 className="w-4 h-4 animate-spin mr-2" />
+            <CircleNotch className="w-4 h-4 animate-spin mr-2" />
             Loading photos...
           </div>
         )}
@@ -249,7 +249,7 @@ export default function StockPhotosPanel({
 
         {!loading && photos.length > 0 && providers.includes("unsplash") && (
           <div className="mt-3 text-[10px] text-neutral-500 leading-relaxed">
-            <ExternalLink className="w-3 h-3 inline mr-1" />
+            <ArrowSquareOut className="w-3 h-3 inline mr-1" />
             Photos via Unsplash require attribution when published. Click any
             photo to view license details.
           </div>

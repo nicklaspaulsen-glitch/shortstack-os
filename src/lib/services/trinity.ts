@@ -125,7 +125,7 @@ export async function parseTrinityMessage(message: string): Promise<TrinityComma
   }
 }
 
-// Telegram Bot handler
+// Telegram Robot handler
 export async function sendTelegramMessage(chatId: string, text: string): Promise<{ ok: boolean; messageId?: number }> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) return { ok: false };

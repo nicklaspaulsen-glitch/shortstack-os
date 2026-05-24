@@ -1,14 +1,8 @@
+import { CaretRight, ChartBar, CircleNotch, CreditCard, DownloadSimple, Envelope, Eye, Gear, Globe, Key, Lightning, MagnifyingGlass, Pulse, Robot, Shield, Users, Warning } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Activity, Search, Zap, Users, Mail, Globe, Bot,
-  CreditCard, BarChart3, Shield, Download,
-  AlertTriangle, Eye, Key,
-  Settings, ChevronRight,
-  Loader2,
-} from "lucide-react";
 import { PrismPanel } from "@/components/prism";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -29,13 +23,13 @@ interface LogEntry {
 }
 
 const TYPE_CONFIG: Record<string, { icon: React.ReactNode; color: string; label: string }> = {
-  lead_gen: { icon: <Zap size={12} />, color: "text-emerald-400", label: "Lead Gen" },
-  outreach: { icon: <Mail size={12} />, color: "text-brand-accent", label: "Outreach" },
+  lead_gen: { icon: <Lightning size={12} />, color: "text-emerald-400", label: "Lead Gen" },
+  outreach: { icon: <Envelope size={12} />, color: "text-brand-accent", label: "Outreach" },
   content: { icon: <Globe size={12} />, color: "text-brand-accent", label: "Content" },
-  automation: { icon: <Bot size={12} />, color: "text-brand-accent", label: "Automation" },
+  automation: { icon: <Robot size={12} />, color: "text-brand-accent", label: "Automation" },
   billing: { icon: <CreditCard size={12} />, color: "text-green-400", label: "Billing" },
   user: { icon: <Users size={12} />, color: "text-cyan-400", label: "User" },
-  system: { icon: <Settings size={12} />, color: "text-text-muted", label: "System" },
+  system: { icon: <Gear size={12} />, color: "text-text-muted", label: "System" },
   login: { icon: <Key size={12} />, color: "text-yellow-400", label: "Login" },
   api: { icon: <Globe size={12} />, color: "text-brand-accent", label: "API" },
 };
@@ -165,19 +159,19 @@ export default function ActivityLogPage() {
   const suspicious = logs.filter(l => l.action === "failed_login");
 
   const TABS: { id: ActivityTab; label: string; icon: React.ReactNode }[] = [
-    { id: "feed", label: "Activity Feed", icon: <Activity size={13} /> },
-    { id: "heatmap", label: "Heatmap", icon: <BarChart3 size={13} /> },
+    { id: "feed", label: "Pulse Feed", icon: <Pulse size={13} /> },
+    { id: "heatmap", label: "Heatmap", icon: <ChartBar size={13} /> },
     { id: "users", label: "By User", icon: <Users size={13} /> },
     { id: "audit", label: "Audit Trail", icon: <Eye size={13} /> },
     { id: "security", label: "Security", icon: <Shield size={13} /> },
   ];
 
   return (
-    <MotionPage className="space-y-5">{/* -- Activity Log command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Pulse Log command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
-        <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Recent Activity</p>
-        <h1 className="text-2xl font-display font-bold text-text-primary">Activity Log</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Recent Pulse</p>
+        <h1 className="text-2xl font-display font-bold text-text-primary">Pulse Log</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <>
@@ -197,7 +191,7 @@ export default function ActivityLogPage() {
                       a.click();
                       URL.revokeObjectURL(url);
                     }}
-                    className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5"><Download size={12} /> Export Log</button>
+                    className="px-3 py-1.5 rounded-lg bg-white/5 border border-border-subtle text-text-primary text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5"><DownloadSimple size={12} /> Export Log</button>
                 </>
       </div>
     </div>{/* Stats */}<div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
@@ -238,9 +232,9 @@ export default function ActivityLogPage() {
                 {/* Filters */}
                 <div className="flex gap-2 flex-wrap">
                   <div className="relative flex-1 min-w-[200px]">
-                    <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/50" />
+                    <MagnifyingGlass size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/50" />
                     <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                      className="input w-full text-xs pl-8" placeholder="Search activity..." />
+                      className="input w-full text-xs pl-8" placeholder="MagnifyingGlass activity..." />
                   </div>
                   <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="input text-xs w-32">
                     {types.map(t => <option key={t} value={t}>{t === "all" ? "All Types" : TYPE_CONFIG[t]?.label || t}</option>)}
@@ -255,23 +249,23 @@ export default function ActivityLogPage() {
                   </select>
                 </div>
 
-                {/* Activity Feed */}
+                {/* Pulse Feed */}
                 <div className="space-y-1">
                   {loading ? (
                     <PrismPanel padding="py-12 px-6" className="text-center">
-                      <Loader2 size={24} className="mx-auto mb-2 text-text-muted/50 animate-spin" />
+                      <CircleNotch size={24} className="mx-auto mb-2 text-text-muted/50 animate-spin" />
                       <p className="text-xs text-text-muted">Loading activity…</p>
                     </PrismPanel>
                   ) : loadError ? (
                     <PrismPanel padding="py-12 px-6" className="text-center">
-                      <AlertTriangle size={24} className="mx-auto mb-2 text-red-400/60" />
+                      <Warning size={24} className="mx-auto mb-2 text-red-400/60" />
                       <p className="text-xs text-red-400">Failed to load activity: {loadError}</p>
                     </PrismPanel>
                   ) : filtered.length === 0 ? (
-                    <PrismPanel padding="py-12 px-6" className="text-center"><Activity size={24} className="mx-auto mb-2 text-text-muted/30" /><p className="text-xs text-text-muted">No activity found</p></PrismPanel>
+                    <PrismPanel padding="py-12 px-6" className="text-center"><Pulse size={24} className="mx-auto mb-2 text-text-muted/30" /><p className="text-xs text-text-muted">No activity found</p></PrismPanel>
                   ) : (
                     filtered.map((log, idx) => {
-                      const config = TYPE_CONFIG[log.type] || { icon: <Activity size={12} />, color: "text-text-muted", label: log.type };
+                      const config = TYPE_CONFIG[log.type] || { icon: <Pulse size={12} />, color: "text-text-muted", label: log.type };
                       return (
                         <motion.div key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.04 }} className="group">
                           <div className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-white/4 transition-colors border-b border-border-subtle cursor-pointer"
@@ -287,7 +281,7 @@ export default function ActivityLogPage() {
                                 <span className="text-[7px] text-text-muted/40">{log.action}</span>
                               </div>
                             </div>
-                            <ChevronRight size={10} className={`text-text-muted/30 transition-transform ${expandedLog === log.id ? "rotate-90" : ""}`} />
+                            <CaretRight size={10} className={`text-text-muted/30 transition-transform ${expandedLog === log.id ? "rotate-90" : ""}`} />
                           </div>
                           {/* Audit Detail */}
                           {expandedLog === log.id && (
@@ -326,7 +320,7 @@ export default function ActivityLogPage() {
               </div>
             )}{/* Heatmap Tab */}{tab === "heatmap" && (
               <PrismPanel padding="p-4">
-                <h2 className="flex items-center gap-2"><BarChart3 size={13} className="text-brand-accent" /> Activity Heatmap</h2>
+                <h2 className="flex items-center gap-2"><ChartBar size={13} className="text-brand-accent" /> Pulse Heatmap</h2>
                 <div className="overflow-x-auto">
                   <div className="grid gap-px" style={{ gridTemplateColumns: `60px repeat(24, 1fr)` }}>
                     <div />
@@ -357,7 +351,7 @@ export default function ActivityLogPage() {
               </PrismPanel>
             )}{/* Users Tab */}{tab === "users" && (
               <PrismPanel padding="p-4">
-                <h2 className="flex items-center gap-2"><Users size={13} className="text-brand-accent" /> User Activity Breakdown</h2>
+                <h2 className="flex items-center gap-2"><Users size={13} className="text-brand-accent" /> User Pulse Breakdown</h2>
                 {Object.keys(userActivity).length === 0 ? (
                   <div className="text-center py-8"><Users size={24} className="mx-auto mb-2 text-text-muted/30" /><p className="text-xs text-text-muted">No user activity yet</p></div>
                 ) : (
@@ -426,14 +420,14 @@ export default function ActivityLogPage() {
             )}{/* Security Tab */}{tab === "security" && (
               <div className="space-y-4">
                 <PrismPanel padding="p-4">
-                  <h2 className="flex items-center gap-2"><Shield size={13} className="text-red-400" /> Suspicious Activity Alerts</h2>
+                  <h2 className="flex items-center gap-2"><Shield size={13} className="text-red-400" /> Suspicious Pulse Alerts</h2>
                   {suspicious.length === 0 ? (
                     <div className="text-center py-8"><Shield size={24} className="mx-auto text-emerald-400/30 mb-2" /><p className="text-xs text-text-muted">No suspicious activity detected</p></div>
                   ) : (
                     <div className="space-y-2">
                       {suspicious.map(log => (
                         <div key={log.id} className="flex items-center gap-3 p-3 rounded-lg bg-red-400/5 border border-red-400/10">
-                          <AlertTriangle size={14} className="text-red-400 shrink-0" />
+                          <Warning size={14} className="text-red-400 shrink-0" />
                           <div className="flex-1">
                             <p className="text-xs font-semibold text-red-400">{log.details}</p>
                             <p className="text-[10px] text-text-muted">IP: {log.ip} - {new Date(log.timestamp).toLocaleString()}</p>

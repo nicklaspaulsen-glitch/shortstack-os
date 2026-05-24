@@ -1,7 +1,7 @@
 "use client";
+import { Check, CheckSquare, CircleNotch, Sparkle, Square, SquaresFour } from "@phosphor-icons/react";
 
 import { useState } from "react";
-import { Check, Sparkles, Loader2, CheckSquare, Square, Grid } from "lucide-react";
 import { SIDEBAR_CATEGORIES, ALL_SIDEBAR_ITEMS } from "@/lib/user-types";
 
 interface Props {
@@ -90,7 +90,7 @@ export default function SidebarCustomizer({
           disabled={aiLoading}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[rgba(212,255,0,0.12)] to-amber-400/15 border border-[rgba(212,255,0,0.25)] text-[#D4FF00] text-xs font-semibold hover:from-[rgba(212,255,0,0.18)] hover:to-amber-400/20 transition-all disabled:opacity-50"
         >
-          {aiLoading ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+          {aiLoading ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
           {aiLoading ? "Thinking..." : "AI Recommended"}
         </button>
         <button
@@ -135,7 +135,7 @@ export default function SidebarCustomizer({
                 className="w-full flex items-center justify-between px-3 py-2 bg-surface-light/50 hover:bg-surface-light transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <Grid size={12} className="text-[#D4FF00]" />
+                  <SquaresFour size={12} className="text-[#D4FF00]" />
                   <span className="text-xs font-semibold text-text-primary">{cat.category}</span>
                   <span className="text-[10px] text-text-muted">
                     {catHrefs.filter((h) => enabledSet.has(h)).length}/{catHrefs.length}

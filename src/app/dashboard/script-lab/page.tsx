@@ -1,3 +1,4 @@
+import { ArrowRight, ArrowSquareOut, ArrowsClockwise, ArrowsLeftRight, BookOpen, Camera, Chat, CheckCircle, CircleNotch, Clock, Copy, Cube, DownloadSimple, Envelope, Eye, FileText, FilmSlate, FilmStrip, Fire, Hash, Headphones, Image, Lightning, ListChecks, MagicWand, MagnifyingGlass, Microphone, MusicNote, PenNib, Pulse, Question, Quotes, Repeat, Sparkle, SpeakerHigh, Stack, Target, TextT, TrendUp, Users, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect } from "react";
@@ -6,17 +7,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { useManagedClient } from "@/lib/use-managed-client";
-import {
-  Sparkles, Film, Camera, Image as ImageIcon,
-  Search, Loader, Copy, Zap, Target, MessageSquare,
-  ArrowRight, RefreshCw, Eye, CheckCircle, Clock,
-  Download, FileText, Wand2, BookOpen,
-  Mic, Mail, Hash, TrendingUp, Layers, PenTool,
-  ListChecks, Type, Volume2,
-  Clapperboard, Box, Headphones, Music,
-  ArrowRightLeft, Quote,
-  Flame, ExternalLink, Users as UsersIcon, Activity, Repeat
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { PrismPanel } from "@/components/prism";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
@@ -62,13 +52,13 @@ const FRAMEWORKS = [
 
 const SCRIPT_TYPES = [
   { id: "short_form", name: "Short Form", desc: "30-60s Reel/TikTok", icon: <Camera size={14} /> },
-  { id: "long_form", name: "Long Form", desc: "8-15min YouTube", icon: <Film size={14} /> },
-  { id: "ad_script", name: "Ad Script", desc: "15-30s paid ad", icon: <Zap size={14} /> },
-  { id: "email_sequence", name: "Email Sequence", desc: "3-5 email nurture", icon: <Mail size={14} /> },
-  { id: "podcast_outline", name: "Podcast Outline", desc: "Episode structure", icon: <Mic size={14} /> },
+  { id: "long_form", name: "Long Form", desc: "8-15min YouTube", icon: <FilmStrip size={14} /> },
+  { id: "ad_script", name: "Ad Script", desc: "15-30s paid ad", icon: <Lightning size={14} /> },
+  { id: "email_sequence", name: "Email Sequence", desc: "3-5 email nurture", icon: <Envelope size={14} /> },
+  { id: "podcast_outline", name: "Podcast Outline", desc: "Episode structure", icon: <Microphone size={14} /> },
   { id: "blog_intro", name: "Blog Intro", desc: "Hook + outline", icon: <BookOpen size={14} /> },
   { id: "twitter_thread", name: "Twitter Thread", desc: "5-10 tweet thread", icon: <Hash size={14} /> },
-  { id: "carousel", name: "Carousel Script", desc: "Slide-by-slide copy", icon: <Layers size={14} /> },
+  { id: "carousel", name: "Carousel Script", desc: "Slide-by-slide copy", icon: <Stack size={14} /> },
 ];
 
 const TONES = [
@@ -212,13 +202,13 @@ interface Storyboard {
 }
 
 const STORYBOARD_FORMATS: Array<{ id: StoryboardFormat; name: string; desc: string; icon: React.ReactNode }> = [
-  { id: "ugc", name: "UGC", desc: "Handheld, authentic, 15-30s", icon: <Film size={12} /> },
+  { id: "ugc", name: "UGC", desc: "Handheld, authentic, 15-30s", icon: <FilmStrip size={12} /> },
   { id: "ad", name: "Ad", desc: "Punchy cuts, CTA, 15-60s", icon: <Target size={12} /> },
-  { id: "motion_graphics", name: "Motion Graphics", desc: "Typography, kinetic, 10-30s", icon: <Layers size={12} /> },
-  { id: "talking_head", name: "Talking Head", desc: "Wide + A/B close-ups, 60-180s", icon: <Mic size={12} /> },
-  { id: "product_demo", name: "Product Demo", desc: "Tabletop, feature zooms, 30-90s", icon: <Box size={12} /> },
+  { id: "motion_graphics", name: "Motion Graphics", desc: "Typography, kinetic, 10-30s", icon: <Stack size={12} /> },
+  { id: "talking_head", name: "Talking Head", desc: "Wide + A/B close-ups, 60-180s", icon: <Microphone size={12} /> },
+  { id: "product_demo", name: "Product Demo", desc: "Tabletop, feature zooms, 30-90s", icon: <Cube size={12} /> },
   { id: "explainer", name: "Explainer", desc: "Screen rec + talking head, 60-180s", icon: <BookOpen size={12} /> },
-  { id: "cinematic", name: "Cinematic", desc: "B-roll montage, slow moves", icon: <Clapperboard size={12} /> },
+  { id: "cinematic", name: "Cinematic", desc: "B-roll montage, slow moves", icon: <FilmSlate size={12} /> },
   { id: "podcast_clip", name: "Podcast Clip", desc: "Waveform + quotes, 30-60s", icon: <Headphones size={12} /> },
 ];
 
@@ -654,7 +644,7 @@ export default function ScriptLabPage() {
       for (let i = 0; i < config.batch_count; i++) {
         const res = await fetch("/api/content/advanced-script", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-TextT": "application/json" },
           body: JSON.stringify({
             ...config,
             client_id: selectedClient || null,
@@ -698,7 +688,7 @@ export default function ScriptLabPage() {
     try {
       const res = await fetch("/api/content/advanced-script", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           ...config,
           client_id: selectedClient || null,
@@ -730,7 +720,7 @@ export default function ScriptLabPage() {
     try {
       const res = await fetch("/api/script-lab/storyboard", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           script_text: scriptText,
           format: storyboardFormat,
@@ -802,7 +792,7 @@ export default function ScriptLabPage() {
       lines.push(`- **Transition out:** ${shot.transition_out}`);
       if (shot.on_screen_text) lines.push(`- **On-screen text:** ${shot.on_screen_text}`);
       if (shot.b_roll_suggestions?.length) lines.push(`- **B-roll:** ${shot.b_roll_suggestions.join(", ")}`);
-      if (shot.music_cue) lines.push(`- **Music:** ${shot.music_cue}`);
+      if (shot.music_cue) lines.push(`- **MusicNote:** ${shot.music_cue}`);
       lines.push("");
     });
     navigator.clipboard.writeText(lines.join("\n"));
@@ -843,7 +833,7 @@ export default function ScriptLabPage() {
     try {
       const res = await fetch("/api/content/viral-research", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ ...researchConfig, client_id: selectedClient || null }),
       });
       const data = await res.json();
@@ -876,7 +866,7 @@ export default function ScriptLabPage() {
       const keywords = trendingKeywords.split(",").map(k => k.trim()).filter(Boolean);
       const res = await fetch("/api/script-lab/trending", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           niche,
           keywords,
@@ -929,7 +919,7 @@ export default function ScriptLabPage() {
       const keywords = trendingKeywords.split(",").map(k => k.trim()).filter(Boolean);
       const res = await fetch("/api/viral/watchlists", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ name, niche, keywords, platforms: trendingPlatforms, active: true, alert_on_new: false }),
       });
       const data = await res.json();
@@ -962,7 +952,7 @@ export default function ScriptLabPage() {
     try {
       const res = await fetch("/api/script-lab/trending", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           niche: w.niche,
           keywords: w.keywords,
@@ -1030,7 +1020,7 @@ export default function ScriptLabPage() {
     try {
       const res = await fetch(`/api/viral/watchlists/${w.id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({ alert_on_new: !w.alert_on_new }),
       });
       const data = await res.json();
@@ -1051,7 +1041,7 @@ export default function ScriptLabPage() {
     try {
       const res = await fetch(`/api/viral/watchlists/${editingWatchlist.id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           name: editingWatchlist.name,
           niche: editingWatchlist.niche,
@@ -1081,7 +1071,7 @@ export default function ScriptLabPage() {
     try {
       const res = await fetch("/api/script-lab/transcribe", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           video_url: video.url_hint,
           title: video.title,
@@ -1132,7 +1122,7 @@ export default function ScriptLabPage() {
       const niche = clientObj?.industry || trendingNiche || "general business";
       const res = await fetch("/api/script-lab/remix", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           transcript: remixModal.transcript,
           client_niche: niche,
@@ -1290,7 +1280,7 @@ export default function ScriptLabPage() {
       "THE HOOK",
       "-------------------------------------",
       `"${script.hook.text}"`,
-      `Type: ${script.hook.type}`,
+      `TextT: ${script.hook.type}`,
       `Why it works: ${script.hook.why_it_works}`,
       "",
       "-------------------------------------",
@@ -1411,7 +1401,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       id: "topic",
       title: "What's the video about?",
       description: "One sentence is plenty. Specific topics get much better scripts than vague ones.",
-      icon: <Sparkles size={18} />,
+      icon: <Sparkle size={18} />,
       canProceed: config.topic.trim().length > 0,
       component: (
         <div className="space-y-3">
@@ -1451,7 +1441,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       id: "type",
       title: "What kind of script?",
       description: "This sets the length and pacing � short-form hooks hard, long-form unfolds slower.",
-      icon: <Film size={18} />,
+      icon: <FilmStrip size={18} />,
       component: (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
           {SCRIPT_TYPES.slice(0, 6).map(st => {
@@ -1506,7 +1496,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       id: "review",
       title: "Ready for the AI?",
       description: "Hit the button and we'll write the script. Each tab above unlocks advanced research, voice-over, and approval flows.",
-      icon: <Wand2 size={18} />,
+      icon: <MagicWand size={18} />,
       component: (
         <div className="glass rounded-xl p-4 bg-[rgba(212,255,0,0.03)] border-[rgba(212,255,0,0.2)] space-y-2">
           <div className="grid grid-cols-2 gap-3">
@@ -1650,13 +1640,13 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       {advancedMode && (
       <PrismPanel padding="p-1" className="rounded-xl flex gap-1 overflow-x-auto">
         {([
-          { id: "generate" as const, label: "Generator", icon: Sparkles },
+          { id: "generate" as const, label: "Generator", icon: Sparkle },
           { id: "templates" as const, label: `Templates (${scriptTemplates.length})`, icon: BookOpen },
-          { id: "trending" as const, label: "?? Trending", icon: Flame },
-          { id: "research" as const, label: "Viral Research", icon: Search },
+          { id: "trending" as const, label: "?? Trending", icon: Fire },
+          { id: "research" as const, label: "Viral Research", icon: MagnifyingGlass },
           { id: "results" as const, label: `Results ${batchScripts.length > 1 ? `(${batchScripts.length})` : script ? "(1)" : ""}`, icon: FileText },
-          { id: "tools" as const, label: "Tools", icon: Wand2 },
-          { id: "voiceover" as const, label: "Voice-Over", icon: Volume2 },
+          { id: "tools" as const, label: "Tools", icon: MagicWand },
+          { id: "voiceover" as const, label: "Voice-Over", icon: SpeakerHigh },
           { id: "approval" as const, label: "Approval", icon: CheckCircle },
           { id: "history" as const, label: `History (${savedScripts.length})`, icon: Clock },
         ]).map(t => (
@@ -1678,7 +1668,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       {tab === "generate" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2 space-y-4">
-            {/* Script Type selector */}
+            {/* Script TextT selector */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1686,7 +1676,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               className="rounded-xl p-5"
 
             >
-              <h2 className="flex items-center gap-2 mb-3"><Type size={13} className="text-brand-accent" /> Script Type</h2>
+              <h2 className="flex items-center gap-2 mb-3"><TextT size={13} className="text-brand-accent" /> Script TextT</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {SCRIPT_TYPES.map(t => (
                   <button key={t.id} onClick={() => setConfig({ ...config, script_type: t.id })}
@@ -1764,7 +1754,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   className="flex items-center gap-1.5 text-[10px] font-medium mb-2 transition-colors cursor-pointer"
                   style={{ color: creatorIdeasOpen ? "#D4FF00" : "#6B7280" }}
                 >
-                  <TrendingUp size={10} />
+                  <TrendUp size={10} />
                   Get creator-style ideas
                   <span style={{ fontSize: 8, opacity: 0.7 }}>{creatorIdeasOpen ? "▲" : "▼"}</span>
                 </button>
@@ -1864,7 +1854,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               className="rounded-xl p-5"
 
             >
-              <h2 className="flex items-center gap-2 mb-2"><Clapperboard size={13} className="text-brand-accent" /> Storyboard Format (for visual breakdown)</h2>
+              <h2 className="flex items-center gap-2 mb-2"><FilmSlate size={13} className="text-brand-accent" /> Storyboard Format (for visual breakdown)</h2>
               <p className="text-[9px] text-text-muted mb-2">Pick the visual style your storyboard will follow. You can generate a shot-by-shot breakdown after your script is created.</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5">
                 {STORYBOARD_FORMATS.map(f => (
@@ -1890,19 +1880,19 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               className="rounded-xl p-5"
 
             >
-              <h2 className="flex items-center gap-2 mb-3"><Wand2 size={13} className="text-brand-accent" /> AI Options</h2>
+              <h2 className="flex items-center gap-2 mb-3"><MagicWand size={13} className="text-brand-accent" /> AI Options</h2>
               <div className="flex flex-wrap gap-3">
                 <label className="flex items-center gap-2 text-[10px] text-text-muted cursor-pointer">
                   <input type="checkbox" checked={config.include_voiceover_notes}
                     onChange={e => setConfig({ ...config, include_voiceover_notes: e.target.checked })}
                     className="rounded border-border-subtle text-brand-accent focus:ring-[rgba(212,255,0,0.20)]" />
-                  <Volume2 size={11} /> Voiceover Notes
+                  <SpeakerHigh size={11} /> Voiceover Notes
                 </label>
                 <label className="flex items-center gap-2 text-[10px] text-text-muted cursor-pointer">
                   <input type="checkbox" checked={config.include_b_roll_suggestions}
                     onChange={e => setConfig({ ...config, include_b_roll_suggestions: e.target.checked })}
                     className="rounded border-border-subtle text-brand-accent focus:ring-[rgba(212,255,0,0.20)]" />
-                  <Film size={11} /> B-Roll Suggestions
+                  <FilmStrip size={11} /> B-Roll Suggestions
                 </label>
                 <div className="flex items-center gap-2 ml-auto">
                   <label className="text-[9px] text-text-muted uppercase tracking-wider">Variations</label>
@@ -1927,7 +1917,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               disabled={generating || !config.topic}
               className="w-full text-xs py-3 rounded-xl flex items-center justify-center gap-2 font-semibold text-[#020711] bg-brand-accent shadow-lg shadow-[rgba(212,255,0,0.25)] hover:bg-[#E8FF4D] hover:shadow-[rgba(212,255,0,0.40)] transition-all disabled:opacity-50"
             >
-              {generating ? <Loader size={14} className="animate-spin" /> : <Sparkles size={14} />}
+              {generating ? <CircleNotch size={14} className="animate-spin" /> : <Sparkle size={14} />}
               {generating ? "Generating..." : config.batch_count > 1 ? `Generate ${config.batch_count} Variations` : "Generate Script"}
             </motion.button>
           </div>
@@ -1941,7 +1931,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               className="rounded-xl p-5"
 
             >
-              <h3 className="flex items-center gap-2 mb-2"><Zap size={12} className="text-brand-accent" /> Pro Tips</h3>
+              <h3 className="flex items-center gap-2 mb-2"><Lightning size={12} className="text-brand-accent" /> Pro Tips</h3>
               <div className="space-y-2 text-[10px] text-text-muted">
                 <p><span className="text-brand-accent font-medium">Hook:</span> First 3 seconds decide if someone watches or scrolls</p>
                 <p><span className="text-brand-accent font-medium">PAS:</span> Best for service businesses selling to pain points</p>
@@ -1959,7 +1949,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 className="rounded-xl p-5"
 
               >
-                <h3 className="flex items-center gap-2 mb-2"><Search size={12} className="text-brand-accent" /> From Research</h3>
+                <h3 className="flex items-center gap-2 mb-2"><MagnifyingGlass size={12} className="text-brand-accent" /> From Research</h3>
                 <div className="glass rounded-xl overflow-hidden">
                   {research.opportunities.slice(0, 4).map((opp, i) => (
                     <motion.button
@@ -1979,7 +1969,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             )}
 
             <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.1)]">
-              <h3 className="flex items-center gap-2"><TrendingUp size={12} className="text-brand-accent" /> Quick Stats</h3>
+              <h3 className="flex items-center gap-2"><TrendUp size={12} className="text-brand-accent" /> Quick Stats</h3>
               <div className="grid grid-cols-2 gap-2">
                 <div className="text-center p-2 rounded-lg bg-surface-light">
                   <p className="text-lg font-bold text-brand-accent">{savedScripts.length}</p>
@@ -2006,7 +1996,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 <h3 className="text-xs font-semibold">My Watchlists</h3>
                 <span className="text-[9px] text-text-muted">Auto-refreshed daily at 6 AM</span>
               </div>
-              {loadingWatchlists && <Loader size={11} className="animate-spin text-text-muted" />}
+              {loadingWatchlists && <CircleNotch size={11} className="animate-spin text-text-muted" />}
             </div>
 
             {!loadingWatchlists && watchlists.length === 0 && (
@@ -2031,7 +2021,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                         <div className="flex items-start justify-between gap-1 mb-1">
                           <h4 className="text-[11px] font-semibold line-clamp-1 group-hover:text-brand-accent transition-colors">{w.name}</h4>
                           {w.alert_on_new && (
-                            <span title="Alerts on" className="text-[9px] text-brand-accent"><Activity size={9} /></span>
+                            <span title="Alerts on" className="text-[9px] text-brand-accent"><Pulse size={9} /></span>
                           )}
                         </div>
                         <p className="text-[9px] text-text-muted mb-1">
@@ -2052,7 +2042,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                           className="flex-1 text-[9px] py-1 rounded border border-border-subtle hover:border-[rgba(212,255,0,0.25)] transition-all disabled:opacity-50 flex items-center justify-center gap-1"
                           title="Scan now"
                         >
-                          {isScanning ? <Loader size={9} className="animate-spin" /> : <RefreshCw size={9} />}
+                          {isScanning ? <CircleNotch size={9} className="animate-spin" /> : <ArrowsClockwise size={9} />}
                           Scan
                         </button>
                         <button
@@ -2064,14 +2054,14 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                           }`}
                           title={w.alert_on_new ? "Alerts on" : "Alerts off"}
                         >
-                          <Activity size={9} />
+                          <Pulse size={9} />
                         </button>
                         <button
                           onClick={() => setEditingWatchlist({ ...w })}
                           className="text-[9px] py-1 px-1.5 rounded border border-border-subtle text-text-muted hover:text-text-primary transition-all"
                           title="Edit"
                         >
-                          <PenTool size={9} />
+                          <PenNib size={9} />
                         </button>
                         <button
                           onClick={() => deleteWatchlist(w)}
@@ -2091,9 +2081,9 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           {/* Controls */}
           <div className="glass rounded-xl p-4 bg-gradient-to-br from-[rgba(212,255,0,0.05)] via-surface to-surface border-brand-accent/15 space-y-3">
             <div className="flex items-center gap-2">
-              <Flame size={16} className="text-brand-accent animate-pulse" />
+              <Fire size={16} className="text-brand-accent animate-pulse" />
               <h2 className="text-sm font-semibold">Find today&apos;s trending videos</h2>
-              <Sparkles size={12} className="text-brand-accent" />
+              <Sparkle size={12} className="text-brand-accent" />
             </div>
             <p className="text-[10px] text-text-muted">Discover what&apos;s going viral right now in your niche across YouTube, TikTok, and Instagram. Transcribe the top performers and remix them with your own twist.</p>
 
@@ -2149,13 +2139,13 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             <div className="flex items-center gap-2 pt-1">
               <button onClick={() => findTrending(false)} disabled={loadingTrending || !trendingNiche}
                 className="btn-primary text-xs py-2 flex items-center gap-2 disabled:opacity-50">
-                {loadingTrending ? <Loader size={12} className="animate-spin" /> : <Flame size={12} />}
+                {loadingTrending ? <CircleNotch size={12} className="animate-spin" /> : <Fire size={12} />}
                 {loadingTrending ? "Searching�" : "Find today's trending"}
               </button>
               {trendingVideos.length > 0 && (
                 <button onClick={() => findTrending(true)} disabled={loadingTrending}
                   className="btn-secondary text-xs py-2 flex items-center gap-1.5 disabled:opacity-50">
-                  <RefreshCw size={11} /> Force refresh
+                  <ArrowsClockwise size={11} /> Force refresh
                 </button>
               )}
               <button
@@ -2177,7 +2167,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           {/* Empty state */}
           {!loadingTrending && trendingVideos.length === 0 && (
             <div className="glass rounded-xl p-4 text-center py-10">
-              <Flame size={32} className="text-brand-accent/40 mx-auto mb-3" />
+              <Fire size={32} className="text-brand-accent/40 mx-auto mb-3" />
               <p className="text-xs text-text-muted">Pick a niche + platform to see what&apos;s working today</p>
               <p className="text-[9px] text-text-muted mt-1">We&apos;ll surface up to 30 trending videos, then you can transcribe and remix any of them.</p>
             </div>
@@ -2201,7 +2191,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             <div className="">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-xs font-semibold flex items-center gap-1.5">
-                  <TrendingUp size={13} className="text-brand-accent" />
+                  <TrendUp size={13} className="text-brand-accent" />
                   {trendingVideos.length} trending in {trendingNiche}
                 </h3>
                 <p className="text-[9px] text-text-muted">Click any card to transcribe + remix</p>
@@ -2233,13 +2223,13 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                       {/* Title + creator */}
                       <h4 className="text-[11px] font-semibold line-clamp-2 mb-0.5 group-hover:text-brand-accent transition-colors">{v.title}</h4>
                       <p className="text-[9px] text-text-muted mb-1.5 flex items-center gap-1">
-                        <UsersIcon size={8} /> {v.creator_name} <span className="text-brand-accent/70">{v.creator_handle}</span>
+                        <Users size={8} /> {v.creator_name} <span className="text-brand-accent/70">{v.creator_handle}</span>
                       </p>
 
                       {/* Metrics row */}
                       <div className="flex items-center gap-2 text-[9px] mb-2">
                         <span className="flex items-center gap-0.5 text-success"><Eye size={9} /> {v.view_count_label}</span>
-                        <span className="flex items-center gap-0.5 text-brand-accent"><Activity size={9} /> {v.engagement_rate.toFixed(1)}%</span>
+                        <span className="flex items-center gap-0.5 text-brand-accent"><Pulse size={9} /> {v.engagement_rate.toFixed(1)}%</span>
                         <span className="flex items-center gap-0.5 text-text-muted"><Clock size={9} /> {daysAgoLabel(v.published_days_ago)}</span>
                       </div>
 
@@ -2265,18 +2255,18 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                       <div className="flex gap-1 pt-1 border-t border-border-subtle/50">
                         <button onClick={() => transcribeVideo(v)} disabled={isTranscribing}
                           className="flex-1 text-[9px] py-1.5 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.25)] transition-all disabled:opacity-50 flex items-center justify-center gap-1">
-                          {isTranscribing ? <Loader size={9} className="animate-spin" /> : <Mic size={9} />}
+                          {isTranscribing ? <CircleNotch size={9} className="animate-spin" /> : <Microphone size={9} />}
                           {hasTranscript ? "Re-transcribe" : "Transcribe"}
                         </button>
                         <button onClick={() => openRemix(v)} disabled={isRemixing || isTranscribing}
                           className="flex-1 text-[9px] py-1.5 rounded-lg bg-gradient-to-r from-[rgba(212,255,0,0.12)] to-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.25)] text-brand-accent hover:from-[rgba(212,255,0,0.25)] hover:to-[rgba(212,255,0,0.12)] transition-all disabled:opacity-50 flex items-center justify-center gap-1">
-                          {isRemixing ? <Loader size={9} className="animate-spin" /> : <Sparkles size={9} />}
+                          {isRemixing ? <CircleNotch size={9} className="animate-spin" /> : <Sparkle size={9} />}
                           Remix
                         </button>
                         {v.url_hint && (
                           <a href={v.url_hint} target="_blank" rel="noopener noreferrer"
                             className="text-[9px] py-1.5 px-2 rounded-lg border border-border-subtle hover:border-[rgba(212,255,0,0.25)] transition-all flex items-center justify-center gap-1">
-                            <ExternalLink size={9} />
+                            <ArrowSquareOut size={9} />
                           </a>
                         )}
                       </div>
@@ -2341,7 +2331,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               {!remixResult && (
                 <button onClick={runRemix} disabled={remixingId !== null}
                   className="btn-primary text-xs py-2 w-full flex items-center justify-center gap-2 disabled:opacity-50">
-                  {remixingId ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                  {remixingId ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
                   {remixingId ? "Remixing�" : "Generate remixed script"}
                 </button>
               )}
@@ -2404,11 +2394,11 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   <div className="flex gap-2">
                     <button onClick={useRemixAsTopic}
                       className="btn-primary text-xs py-2 flex-1 flex items-center justify-center gap-2">
-                      <Wand2 size={12} /> Use in Generator
+                      <MagicWand size={12} /> Use in Generator
                     </button>
                     <button onClick={() => { setRemixResult(null); setRemixTwistAngle(""); }}
                       className="btn-secondary text-xs py-2 flex items-center gap-2">
-                      <RefreshCw size={12} /> Redo
+                      <ArrowsClockwise size={12} /> Redo
                     </button>
                   </div>
                 </div>
@@ -2422,7 +2412,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       {tab === "research" && (
         <div className="space-y-4">
           <div className="glass rounded-xl p-4 max-w-xl space-y-3">
-            <h2 className="flex items-center gap-2"><Search size={13} className="text-brand-accent" /> Viral Content Research</h2>
+            <h2 className="flex items-center gap-2"><MagnifyingGlass size={13} className="text-brand-accent" /> Viral Content Research</h2>
             <p className="text-[10px] text-text-muted">Find what content is going viral in your niche and why</p>
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -2438,7 +2428,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             </div>
             <button onClick={doResearch} disabled={researching || !researchConfig.industry}
               className="btn-primary text-xs py-2 flex items-center gap-2 disabled:opacity-50">
-              {researching ? <Loader size={12} className="animate-spin" /> : <Search size={12} />}
+              {researching ? <CircleNotch size={12} className="animate-spin" /> : <MagnifyingGlass size={12} />}
               {researching ? "Researching..." : "Research Viral Content"}
             </button>
           </div>
@@ -2446,7 +2436,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           {research && (
             <div className="space-y-4">
               <div className="glass rounded-xl p-4">
-                <h2 className="flex items-center gap-2"><Film size={13} className="text-pink-400" /> Viral Video Analysis</h2>
+                <h2 className="flex items-center gap-2"><FilmStrip size={13} className="text-pink-400" /> Viral Video Analysis</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                   {research.viral_videos?.map((v, i) => (
                     <div key={i} className="p-3 rounded-xl border border-border-subtle bg-surface-light hover:border-[rgba(212,255,0,0.1)] transition-all">
@@ -2463,7 +2453,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                         <span className="text-[8px] text-text-muted">{v.format}</span>
                         <button onClick={() => { setConfig({ ...config, viral_reference: `${v.title}: ${v.hook}`, topic: v.title }); setTab("generate"); }}
                           className="text-[9px] text-brand-accent hover:text-brand-accent-light flex items-center gap-0.5">
-                          <Sparkles size={9} /> Use as reference
+                          <Sparkle size={9} /> Use as reference
                         </button>
                       </div>
                     </div>
@@ -2517,7 +2507,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               </div>
 
               <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.1)]">
-                <h2 className="flex items-center gap-2"><Zap size={13} className="text-brand-accent" /> Content Opportunities</h2>
+                <h2 className="flex items-center gap-2"><Lightning size={13} className="text-brand-accent" /> Content Opportunities</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {research.opportunities?.map((opp, i) => (
                     <button key={i} onClick={() => { setConfig({ ...config, topic: opp }); setTab("generate"); }}
@@ -2536,7 +2526,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       {/* Results Tab */}
       {tab === "results" && activeScript && (
         <div className="space-y-4">
-          {/* Batch selector + Download bar */}
+          {/* Batch selector + DownloadSimple bar */}
           <div className="flex items-center justify-between bg-surface-light rounded-xl px-4 py-2 border border-border-subtle flex-wrap gap-2">
             <div className="flex items-center gap-3">
               {batchScripts.length > 1 && (
@@ -2553,7 +2543,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 </div>
               )}
               <div className="flex items-center gap-2 text-[9px] text-text-muted">
-                <span className="flex items-center gap-1"><PenTool size={9} /> {getWordCount()} words</span>
+                <span className="flex items-center gap-1"><PenNib size={9} /> {getWordCount()} words</span>
                 <span className="flex items-center gap-1"><Clock size={9} /> {getEstimatedDuration()}</span>
               </div>
             </div>
@@ -2562,7 +2552,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 <FileText size={10} /> .TXT
               </button>
               <button onClick={downloadAsHTML} className="btn-secondary text-[9px] py-1 px-2.5 flex items-center gap-1">
-                <Download size={10} /> .HTML
+                <DownloadSimple size={10} /> .HTML
               </button>
               <button onClick={() => copyToClipboard(activeScript.script.sections.map(s => `[${s.name}] ${s.dialogue}`).join("\n\n"))}
                 className="btn-ghost text-[9px] py-1 px-2.5 flex items-center gap-1">
@@ -2574,20 +2564,20 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           {/* AI Rewrite bar */}
           <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.1)] py-2.5 px-4">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[9px] text-brand-accent uppercase tracking-wider font-bold flex items-center gap-1"><Wand2 size={10} /> AI Rewrite</span>
+              <span className="text-[9px] text-brand-accent uppercase tracking-wider font-bold flex items-center gap-1"><MagicWand size={10} /> AI Rewrite</span>
               {[
                 { label: "Make it shorter", icon: <ListChecks size={9} /> },
-                { label: "Make it bolder", icon: <Zap size={9} /> },
-                { label: "More casual tone", icon: <MessageSquare size={9} /> },
+                { label: "Make it bolder", icon: <Lightning size={9} /> },
+                { label: "More casual tone", icon: <Chat size={9} /> },
                 { label: "Stronger CTA", icon: <Target size={9} /> },
-                { label: "Add humor", icon: <Sparkles size={9} /> },
+                { label: "Add humor", icon: <Sparkle size={9} /> },
               ].map(btn => (
                 <button key={btn.label} onClick={() => rewriteScript(btn.label)} disabled={rewriting}
                   className="text-[9px] px-2.5 py-1 rounded-lg border border-border-subtle text-text-muted hover:text-text-primary hover:border-[rgba(212,255,0,0.2)] transition-all flex items-center gap-1 disabled:opacity-50">
                   {btn.icon} {btn.label}
                 </button>
               ))}
-              {rewriting && <Loader size={12} className="animate-spin text-brand-accent ml-2" />}
+              {rewriting && <CircleNotch size={12} className="animate-spin text-brand-accent ml-2" />}
             </div>
           </div>
 
@@ -2595,7 +2585,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.1)] py-3 px-4">
             <div className="flex items-center gap-3 flex-wrap">
               <div className="flex items-center gap-2">
-                <Clapperboard size={14} className="text-brand-accent" />
+                <FilmSlate size={14} className="text-brand-accent" />
                 <div>
                   <p className="text-[11px] font-bold text-text-primary">Turn this script into a shot-by-shot storyboard</p>
                   <p className="text-[9px] text-text-muted">AI director breaks your script down into camera shots, dialog, transitions, b-roll, and music cues.</p>
@@ -2615,9 +2605,9 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 </div>
                 <button onClick={generateStoryboard} disabled={generatingStoryboard}
                   className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full bg-brand-accent text-[#020711] shadow-lg shadow-[rgba(212,255,0,0.25)] hover:bg-[#E8FF4D] hover:shadow-[rgba(212,255,0,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100">
-                  {generatingStoryboard ? <Loader size={13} className="animate-spin" /> : <Clapperboard size={13} className="animate-pulse" />}
+                  {generatingStoryboard ? <CircleNotch size={13} className="animate-spin" /> : <FilmSlate size={13} className="animate-pulse" />}
                   {generatingStoryboard ? "Generating..." : "Generate Storyboard"}
-                  <Sparkles size={11} className="opacity-70" />
+                  <Sparkle size={11} className="opacity-70" />
                 </button>
               </div>
             </div>
@@ -2696,7 +2686,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               <div className="glass rounded-xl px-4 py-3 border border-border-subtle">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-[9px] uppercase tracking-wider text-text-muted font-medium flex items-center gap-1.5">
-                    <Activity size={9} className="text-brand-accent" /> Emotion Arc
+                    <Pulse size={9} className="text-brand-accent" /> Emotion Arc
                   </p>
                   <p className="text-[8px] text-text-muted">
                     Peak: <span className="text-text-secondary font-medium">{activeScript.script.sections[peakIdx]?.name}</span>
@@ -2749,7 +2739,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               <div className="rounded-xl border border-border-subtle bg-surface-light/40 px-4 py-3">
                 <div className="flex items-center justify-between mb-2.5">
                   <p className="text-[9px] uppercase tracking-wider font-medium text-text-muted flex items-center gap-1.5">
-                    <Clapperboard size={9} className="text-brand-accent" /> Visual Density
+                    <FilmSlate size={9} className="text-brand-accent" /> Visual Density
                   </p>
                   <div className="flex items-center gap-2">
                     <span className="text-[8px] font-bold px-2 py-0.5 rounded-full" style={{ background: `${scoreColor}18`, color: scoreColor }}>
@@ -2788,7 +2778,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                     onClick={seedAllSectionsToVideoQueue}
                     className="inline-flex items-center gap-1 text-[9px] font-medium text-brand-accent hover:text-white bg-[rgba(212,255,0,0.08)] hover:bg-[rgba(212,255,0,0.18)] border border-[rgba(212,255,0,0.2)] px-3 py-1.5 rounded-full transition-all cursor-pointer"
                   >
-                    <Film size={9} /> Queue all {total} clips → AI Video
+                    <FilmStrip size={9} /> Queue all {total} clips → AI Video
                   </button>
                 </div>
               </div>
@@ -2808,7 +2798,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             return (
               <div className="rounded-xl border border-border-subtle bg-surface-light/40 px-4 py-3">
                 <p className="text-[9px] uppercase tracking-wider font-medium text-text-muted flex items-center gap-1.5 mb-2.5">
-                  <Activity size={9} className="text-brand-accent" /> Pacing Timeline
+                  <Pulse size={9} className="text-brand-accent" /> Pacing Timeline
                   <span className="text-[7px] text-text-muted font-normal normal-case tracking-normal ml-1">click bar to jump to section</span>
                 </p>
                 {/* Bar chart */}
@@ -2906,7 +2896,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                           className="inline-flex items-center gap-0.5 text-[8px] text-brand-accent hover:text-white bg-[rgba(212,255,0,0.08)] hover:bg-[rgba(212,255,0,0.18)] border border-[rgba(212,255,0,0.2)] px-1.5 py-0.5 rounded-full transition-all cursor-pointer"
                           title={`Generate clip: ${section.visual_direction}`}
                         >
-                          <Film size={8} /> Clip
+                          <FilmStrip size={8} /> Clip
                         </button>
                       )}
                       <button
@@ -2915,7 +2905,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                         className="inline-flex items-center gap-0.5 text-[8px] text-[#A78BFA] hover:text-white bg-[rgba(139,92,246,0.08)] hover:bg-[rgba(139,92,246,0.18)] border border-[rgba(139,92,246,0.2)] px-1.5 py-0.5 rounded-full transition-all cursor-pointer"
                         title="Open AI Thumbnail Generator with this section's visual direction"
                       >
-                        <ImageIcon size={8} /> Thumb
+                        <Image size={8} /> Thumb
                       </button>
                     </div>
                   </div>
@@ -2925,7 +2915,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                       <p className="text-[9px] text-info flex items-center gap-1"><Eye size={9} /> {section.visual_direction}</p>
                     )}
                     {section.text_overlay && (
-                      <p className="text-[9px] text-warning flex items-center gap-1"><MessageSquare size={9} /> Text: {section.text_overlay}</p>
+                      <p className="text-[9px] text-warning flex items-center gap-1"><Chat size={9} /> Text: {section.text_overlay}</p>
                     )}
                   </div>
                 </div>
@@ -2963,7 +2953,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           {activeScript.ab_variations && (
             <div className="glass rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="flex items-center gap-2 mb-0"><RefreshCw size={12} className="text-warning" /> A/B Hook Variations</h3>
+                <h3 className="flex items-center gap-2 mb-0"><ArrowsClockwise size={12} className="text-warning" /> A/B Hook Variations</h3>
                 <p className="text-[8px] text-text-muted">Scored by hook quality</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -3031,7 +3021,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 <div className="relative flex items-center justify-between flex-wrap gap-3">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-brand-accent flex items-center justify-center text-[#020711] shadow-lg shadow-[rgba(212,255,0,0.20)]">
-                      <Clapperboard size={18} />
+                      <FilmSlate size={18} />
                     </div>
                     <div>
                       <h2 className="text-sm font-bold">Storyboard</h2>
@@ -3046,11 +3036,11 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                       <FileText size={10} /> Copy as Markdown
                     </button>
                     <button onClick={copyStoryboardAsCSV} className="btn-secondary text-[9px] py-1 px-2.5 flex items-center gap-1">
-                      <Download size={10} /> Copy as CSV
+                      <DownloadSimple size={10} /> Copy as CSV
                     </button>
                     <button onClick={() => toast("PDF export coming soon", { icon: "??" })}
                       className="btn-ghost text-[9px] py-1 px-2.5 flex items-center gap-1">
-                      <Download size={10} /> Export PDF
+                      <DownloadSimple size={10} /> Export PDF
                     </button>
                   </div>
                 </div>
@@ -3115,7 +3105,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                         {/* Dialog quote */}
                         {shot.dialog && (
                           <div className={`mt-2 p-3 rounded-lg ${themeStyles.bg} border ${themeStyles.border} relative`}>
-                            <Quote size={12} className={`absolute top-2 left-2 ${themeStyles.accent} opacity-60`} />
+                            <Quotes size={12} className={`absolute top-2 left-2 ${themeStyles.accent} opacity-60`} />
                             <p className="text-[11px] italic font-medium leading-relaxed pl-6">&ldquo;{shot.dialog}&rdquo;</p>
                           </div>
                         )}
@@ -3139,7 +3129,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                             )}
                             {shot.transition_out && (
                               <span className="inline-flex items-center gap-1 text-[9px] bg-surface-light border border-border-subtle rounded-full px-2 py-0.5">
-                                <ArrowRightLeft size={9} className="text-purple-400" />
+                                <ArrowsLeftRight size={9} className="text-purple-400" />
                                 Out: {shot.transition_out}
                               </span>
                             )}
@@ -3149,7 +3139,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                         {/* On-screen text */}
                         {shot.on_screen_text && (
                           <div className="mt-2 p-2 rounded-lg bg-warning/5 border border-warning/20">
-                            <p className="text-[9px] text-warning uppercase tracking-wider font-medium mb-0.5 flex items-center gap-1"><Type size={9} /> On-screen Text</p>
+                            <p className="text-[9px] text-warning uppercase tracking-wider font-medium mb-0.5 flex items-center gap-1"><TextT size={9} /> On-screen Text</p>
                             <p className="text-[11px] font-semibold">{shot.on_screen_text}</p>
                           </div>
                         )}
@@ -3157,7 +3147,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                         {/* B-roll suggestions */}
                         {shot.b_roll_suggestions?.length > 0 && (
                           <div className="mt-2">
-                            <p className="text-[9px] text-text-muted uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><Film size={9} /> B-roll Suggestions</p>
+                            <p className="text-[9px] text-text-muted uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><FilmStrip size={9} /> B-roll Suggestions</p>
                             <div className="flex flex-wrap gap-1">
                               {shot.b_roll_suggestions.map((b, bi) => (
                                 <span key={bi} className="text-[9px] bg-surface-light border border-border-subtle rounded-full px-2 py-0.5">{b}</span>
@@ -3166,11 +3156,11 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                           </div>
                         )}
 
-                        {/* Music cue */}
+                        {/* MusicNote cue */}
                         {shot.music_cue && (
                           <div className="mt-2 flex items-center gap-2 text-[10px] text-text-muted">
-                            <Music size={10} className="text-pink-400" />
-                            <span className="text-[9px] uppercase tracking-wider font-medium">Music</span>
+                            <MusicNote size={10} className="text-pink-400" />
+                            <span className="text-[9px] uppercase tracking-wider font-medium">MusicNote</span>
                             <span>{shot.music_cue}</span>
                           </div>
                         )}
@@ -3230,7 +3220,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
         <div className="space-y-4">
           <div className="glass rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-semibold flex items-center gap-1.5"><Type size={13} className="text-brand-accent" /> Tone Analyzer</p>
+              <p className="text-xs font-semibold flex items-center gap-1.5"><TextT size={13} className="text-brand-accent" /> Tone Analyzer</p>
               <AIEnhanceButton value={toneAnalysisText} onResult={setToneAnalysisText} context="video script section" variant="inline" />
             </div>
             <textarea value={toneAnalysisText} onChange={e => setToneAnalysisText(e.target.value)} className="input w-full h-24 text-xs mb-3" placeholder="Paste your script text here to analyze tone, readability, and sentiment..." />
@@ -3239,7 +3229,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               const words = toneAnalysisText.split(/\s+/).length;
               setToneResult({ tones: [{ tone: "Professional", score: 72 }, { tone: "Persuasive", score: 65 }, { tone: "Confident", score: 88 }, { tone: "Casual", score: 34 }, { tone: "Urgent", score: 45 }], readability: words > 200 ? "Advanced" : words > 100 ? "Intermediate" : "Easy", wordCount: words, sentiment: "Positive" });
               toast.success("Analysis complete!");
-            }} className="btn-primary text-xs flex items-center gap-1.5"><Wand2 size={12} /> Analyze Tone</button>
+            }} className="btn-primary text-xs flex items-center gap-1.5"><MagicWand size={12} /> Analyze Tone</button>
             {toneResult && (
               <div className="mt-4 space-y-3">
                 <div className="grid grid-cols-3 gap-2">
@@ -3261,7 +3251,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           </div>
 
           <div className="glass rounded-xl p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Search size={13} className="text-brand-accent" /> SEO Script Optimizer</p>
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><MagnifyingGlass size={13} className="text-brand-accent" /> SEO Script Optimizer</p>
             <div className="space-y-3">
               <div><label className="block text-[10px] text-text-muted mb-1 uppercase tracking-wider font-semibold">Target Keyword</label><input value={seoKeyword} onChange={e => setSeoKeyword(e.target.value)} className="input w-full text-xs" placeholder="e.g., dental marketing tips" /></div>
               <div>
@@ -3271,7 +3261,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 </div>
                 <textarea value={seoContent} onChange={e => setSeoContent(e.target.value)} className="input w-full h-20 text-xs" placeholder="Paste your script or caption text..." />
               </div>
-              <button onClick={() => toast.success("SEO analysis complete (demo)")} className="btn-primary text-xs flex items-center gap-1.5"><TrendingUp size={12} /> Optimize for SEO</button>
+              <button onClick={() => toast.success("SEO analysis complete (demo)")} className="btn-primary text-xs flex items-center gap-1.5"><TrendUp size={12} /> Optimize for SEO</button>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {[{ label: "Keyword Density", value: seoKeyword ? "2.4%" : "---" }, { label: "Title Optimized", value: "Yes" }, { label: "CTA Present", value: "Yes" }, { label: "Hashtag Relevance", value: "High" }].map(m => (
                   <div key={m.label} className="bg-surface-light rounded-lg p-2 text-center border border-border-subtle"><p className="text-sm font-bold text-green-400">{m.value}</p><p className="text-[9px] text-text-muted">{m.label}</p></div>
@@ -3281,18 +3271,18 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           </div>
 
           <div className="glass rounded-xl p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Layers size={13} className="text-brand-accent" /> Multi-Platform Formatter</p>
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Stack size={13} className="text-brand-accent" /> Multi-Platform Formatter</p>
             <p className="text-[10px] text-text-muted mb-3">Reformat your script for different platforms with optimal length and style</p>
             <div className="flex gap-2 mb-3 flex-wrap">
               {PLATFORMS.map(p => (
                 <button key={p.id} onClick={() => setFormatPlatform(p.id)} className={`px-3 py-1.5 rounded-lg text-[10px] border transition-colors ${formatPlatform === p.id ? "border-brand-accent bg-[rgba(212,255,0,0.08)] text-brand-accent" : "border-border-subtle text-text-muted hover:text-text-primary"}`}>{p.name}</button>
               ))}
             </div>
-            <button onClick={() => toast.success(`Script reformatted for ${PLATFORMS.find(p => p.id === formatPlatform)?.name} (demo)`)} className="btn-secondary text-xs flex items-center gap-1.5"><RefreshCw size={12} /> Reformat Script</button>
+            <button onClick={() => toast.success(`Script reformatted for ${PLATFORMS.find(p => p.id === formatPlatform)?.name} (demo)`)} className="btn-secondary text-xs flex items-center gap-1.5"><ArrowsClockwise size={12} /> Reformat Script</button>
           </div>
 
           <div className="glass rounded-xl p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><TrendingUp size={13} className="text-brand-accent" /> Script Performance Tracker</p>
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><TrendUp size={13} className="text-brand-accent" /> Script Performance Tracker</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
               {[
                 { label: "Scripts Generated", value: savedScripts.length.toString(), color: "text-brand-accent" },
@@ -3313,7 +3303,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       {tab === "voiceover" && (
         <div className="space-y-4">
           <div className="glass rounded-xl p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Volume2 size={13} className="text-brand-accent" /> Voice-Over Preview</p>
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><SpeakerHigh size={13} className="text-brand-accent" /> Voice-Over Preview</p>
             <div className="space-y-3">
               <div>
                 <div className="flex items-center justify-between mb-1">
@@ -3331,13 +3321,13 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => toast.success("Voice-over preview generated (demo)")} className="btn-primary text-xs flex items-center gap-1.5"><Mic size={12} /> Generate Preview</button>
-                <button onClick={() => toast.success("Voice-over downloaded (demo)")} className="btn-secondary text-xs flex items-center gap-1.5"><Download size={12} /> Download Audio</button>
+                <button onClick={() => toast.success("Voice-over preview generated (demo)")} className="btn-primary text-xs flex items-center gap-1.5"><Microphone size={12} /> Generate Preview</button>
+                <button onClick={() => toast.success("Voice-over downloaded (demo)")} className="btn-secondary text-xs flex items-center gap-1.5"><DownloadSimple size={12} /> DownloadSimple Audio</button>
               </div>
             </div>
           </div>
           <div className="glass rounded-xl p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><PenTool size={13} className="text-brand-accent" /> Voiceover Notes</p>
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><PenNib size={13} className="text-brand-accent" /> Voiceover Notes</p>
             <div className="space-y-2">
               {(script?.script?.sections || []).map((section, i) => (
                 <div key={i} className="p-3 rounded-lg bg-surface-light border border-border-subtle">
@@ -3389,7 +3379,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 )}
                 <div className="flex gap-1.5 mt-2">
                   <button onClick={() => toast.success("Opening script (demo)")} className="btn-secondary text-[9px] flex items-center gap-1"><Eye size={9} /> View</button>
-                  {s.status === "revision" && <button onClick={() => toast.success("Revising script (demo)")} className="btn-primary text-[9px] flex items-center gap-1"><RefreshCw size={9} /> Revise</button>}
+                  {s.status === "revision" && <button onClick={() => toast.success("Revising script (demo)")} className="btn-primary text-[9px] flex items-center gap-1"><ArrowsClockwise size={9} /> Revise</button>}
                   <button onClick={() => { navigator.clipboard.writeText("Here's the script for your review: [link]"); toast.success("Approval link copied!"); }} className="btn-ghost text-[9px] flex items-center gap-1"><Copy size={9} /> Share Link</button>
                 </div>
               </div>
@@ -3404,12 +3394,12 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           <div className="flex items-center justify-between">
             <p className="text-xs text-text-muted">Previously generated scripts</p>
             <button onClick={() => setTab("generate")} className="btn-primary text-[10px] flex items-center gap-1">
-              <Sparkles size={10} /> New Script
+              <Sparkle size={10} /> New Script
             </button>
           </div>
           {savedScripts.length === 0 ? (
             <div className="glass rounded-xl p-4 text-center py-12">
-              <Sparkles size={20} className="mx-auto mb-2 text-text-muted/30" />
+              <Sparkle size={20} className="mx-auto mb-2 text-text-muted/30" />
               <p className="text-xs text-text-muted">No scripts generated yet. Create your first one!</p>
             </div>
           ) : (
@@ -3479,7 +3469,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   disabled={savingWatchlist}
                   className="btn-primary text-xs py-2 flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  {savingWatchlist ? <Loader size={12} className="animate-spin" /> : <CheckCircle size={12} />}
+                  {savingWatchlist ? <CircleNotch size={12} className="animate-spin" /> : <CheckCircle size={12} />}
                   {savingWatchlist ? "Saving�" : "Save watchlist"}
                 </button>
                 <button
@@ -3506,7 +3496,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           >
             <div className="sticky top-0 bg-surface/95 backdrop-blur-md border-b border-border-subtle p-4 flex items-center justify-between z-10">
               <div className="flex items-center gap-2">
-                <PenTool size={14} className="text-brand-accent" />
+                <PenNib size={14} className="text-brand-accent" />
                 <h3 className="text-sm font-semibold">Edit watchlist</h3>
               </div>
               <button onClick={() => setEditingWatchlist(null)} className="text-text-muted hover:text-text-primary text-xs">Close</button>
@@ -3587,7 +3577,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   disabled={savingWatchlist}
                   className="btn-primary text-xs py-2 flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  {savingWatchlist ? <Loader size={12} className="animate-spin" /> : <CheckCircle size={12} />}
+                  {savingWatchlist ? <CircleNotch size={12} className="animate-spin" /> : <CheckCircle size={12} />}
                   Save changes
                 </button>
                 <button onClick={() => setEditingWatchlist(null)} className="btn-secondary text-xs py-2 px-4">Cancel</button>

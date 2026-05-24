@@ -1,4 +1,5 @@
 "use client";
+import { Check, CircleNotch, FloppyDisk, Microphone, Pause, Play, Robot, Shuffle, TrendUp, X } from "@phosphor-icons/react";
 
 /**
  * PresetEditExamplePanel — shared slide-in side-panel used across all four
@@ -11,12 +12,11 @@
  *   - kind: "telegram"  → fake Telegram message bubble with editable variables
  *   - kind: "voice"     → audio player, TTS quality signals, voice settings
  *
- * "Save as custom" button calls /api/custom-presets POST. Requires auth;
+ * "FloppyDisk as custom" button calls /api/custom-presets POST. Requires auth;
  * shows an error toast if the user is unauthenticated.
  */
 
 import { useCallback, useState, useRef, useMemo, useEffect, type ReactNode } from "react";
-import { X, Save, Loader, Check, Mic, Play, Pause, Loader2, TrendingUp, Shuffle } from "lucide-react";
 import toast from "react-hot-toast";
 import { PresetSvgPlaceholder } from "./preset-svg-placeholder";
 
@@ -141,7 +141,7 @@ async function saveAsCustom(payload: {
   });
   const data: { error?: string } = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(data.error ?? "Save failed");
+    throw new Error(data.error ?? "FloppyDisk failed");
   }
 }
 
@@ -235,7 +235,7 @@ function VideoEditExample({
       toast.success("Saved as custom preset");
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Save failed");
+      toast.error(err instanceof Error ? err.message : "FloppyDisk failed");
     } finally {
       setSaving(false);
     }
@@ -270,13 +270,13 @@ function VideoEditExample({
             className="shrink-0 flex items-center gap-1.5 rounded-lg bg-[#D4FF00] text-[#020711] px-4 py-2 text-sm font-semibold hover:bg-[#AACC00] disabled:opacity-60 transition"
           >
             {saving ? (
-              <Loader size={13} className="animate-spin" />
+              <CircleNotch size={13} className="animate-spin" />
             ) : saved ? (
               <Check size={13} />
             ) : (
-              <Save size={13} />
+              <FloppyDisk size={13} />
             )}
-            {saved ? "Saved!" : "Save as custom"}
+            {saved ? "Saved!" : "FloppyDisk as custom"}
           </button>
         </div>
       }
@@ -362,7 +362,7 @@ function ThumbnailEditExample({
       toast.success("Saved as custom preset");
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Save failed");
+      toast.error(err instanceof Error ? err.message : "FloppyDisk failed");
     } finally {
       setSaving(false);
     }
@@ -388,13 +388,13 @@ function ThumbnailEditExample({
             className="shrink-0 flex items-center gap-1.5 rounded-lg bg-[#D4FF00] text-[#020711] px-4 py-2 text-sm font-semibold hover:bg-[#AACC00] disabled:opacity-60 transition"
           >
             {saving ? (
-              <Loader size={13} className="animate-spin" />
+              <CircleNotch size={13} className="animate-spin" />
             ) : saved ? (
               <Check size={13} />
             ) : (
-              <Save size={13} />
+              <FloppyDisk size={13} />
             )}
-            {saved ? "Saved!" : "Save as custom"}
+            {saved ? "Saved!" : "FloppyDisk as custom"}
           </button>
         </div>
       }
@@ -498,7 +498,7 @@ function TelegramEditExample({
       toast.success("Saved as custom preset");
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Save failed");
+      toast.error(err instanceof Error ? err.message : "FloppyDisk failed");
     } finally {
       setSaving(false);
     }
@@ -524,13 +524,13 @@ function TelegramEditExample({
             className="shrink-0 flex items-center gap-1.5 rounded-lg bg-[#D4FF00] text-[#020711] px-4 py-2 text-sm font-semibold hover:bg-[#AACC00] disabled:opacity-60 transition"
           >
             {saving ? (
-              <Loader size={13} className="animate-spin" />
+              <CircleNotch size={13} className="animate-spin" />
             ) : saved ? (
               <Check size={13} />
             ) : (
-              <Save size={13} />
+              <FloppyDisk size={13} />
             )}
-            {saved ? "Saved!" : "Save as custom"}
+            {saved ? "Saved!" : "FloppyDisk as custom"}
           </button>
         </div>
       }
@@ -566,7 +566,7 @@ function TelegramEditExample({
             <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
               AI
             </div>
-            <span className="text-[11px] font-semibold text-[#5fa5d9]">ShortStack Bot</span>
+            <span className="text-[11px] font-semibold text-[#5fa5d9]">ShortStack Robot</span>
           </div>
           <p className="whitespace-pre-wrap text-sm text-[#e8e8e8] leading-relaxed">
             {resolvedBody}
@@ -747,7 +747,7 @@ function VoiceEditExample({
       toast.success("Saved as custom preset");
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Save failed");
+      toast.error(err instanceof Error ? err.message : "FloppyDisk failed");
     } finally {
       setSaving(false);
     }
@@ -786,13 +786,13 @@ function VoiceEditExample({
             className="shrink-0 flex items-center gap-1.5 rounded-lg bg-[#D4FF00] text-[#020711] px-4 py-2 text-sm font-semibold hover:bg-[#AACC00] disabled:opacity-60 transition"
           >
             {saving ? (
-              <Loader size={13} className="animate-spin" />
+              <CircleNotch size={13} className="animate-spin" />
             ) : saved ? (
               <Check size={13} />
             ) : (
-              <Save size={13} />
+              <FloppyDisk size={13} />
             )}
-            {saved ? "Saved!" : "Save as custom"}
+            {saved ? "Saved!" : "FloppyDisk as custom"}
           </button>
         </div>
       }
@@ -800,7 +800,7 @@ function VoiceEditExample({
       {/* Audio preview player */}
       <div className="rounded-xl border border-[rgba(212,255,0,0.14)] bg-[rgba(13,17,32,0.85)] backdrop-blur-md p-4">
         <div className="flex items-center gap-3 mb-3">
-          <Mic size={16} className="text-[#D4FF00] shrink-0" />
+          <Microphone size={16} className="text-[#D4FF00] shrink-0" />
           <span className="text-xs font-medium text-text-secondary uppercase tracking-wide">Voice preview</span>
         </div>
         {audioUrl ? (
@@ -887,7 +887,7 @@ function VoiceEditExample({
       {/* TTS quality signals */}
       <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <TrendingUp size={13} className="text-text-muted" />
+          <TrendUp size={13} className="text-text-muted" />
           <span className="text-xs text-text-muted font-medium">TTS quality signals</span>
         </div>
         <div className="flex flex-wrap gap-1.5">
@@ -953,9 +953,9 @@ function VoiceEditExample({
         className="w-full flex items-center justify-center gap-2 rounded-lg border border-[rgba(212,255,0,0.25)] bg-[rgba(212,255,0,0.08)] text-[#D4FF00] px-4 py-2.5 text-sm font-semibold hover:bg-[rgba(212,255,0,0.14)] disabled:opacity-50 transition"
       >
         {generating ? (
-          <Loader2 size={14} className="animate-spin" />
+          <CircleNotch size={14} className="animate-spin" />
         ) : (
-          <Mic size={14} />
+          <Microphone size={14} />
         )}
         {generating ? "Generating..." : "Generate preview"}
       </button>

@@ -1,4 +1,5 @@
 "use client";
+import { CaretDown, CaretUp, CircleNotch, Play, Stack } from "@phosphor-icons/react";
 
 /**
  * TemplatePicker
@@ -15,7 +16,6 @@
  */
 
 import { useState, useCallback } from "react";
-import { Layers, Play, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 // ---------------------------------------------------------------------------
@@ -312,10 +312,10 @@ export default function TemplatePicker({
                 className="flex items-center justify-between w-full text-sm font-medium text-text-primary mb-0"
               >
                 <span className="flex items-center gap-2">
-                  <Layers size={14} className="text-brand-accent" />
+                  <Stack size={14} className="text-brand-accent" />
                   Customize — {selected.name}
                 </span>
-                {showProps ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                {showProps ? <CaretUp size={14} /> : <CaretDown size={14} />}
               </button>
 
               <AnimatePresence initial={false}>
@@ -364,7 +364,7 @@ export default function TemplatePicker({
 
                 {loading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-xl">
-                    <Loader2 size={18} className="animate-spin text-brand-accent" />
+                    <CircleNotch size={18} className="animate-spin text-brand-accent" />
                   </div>
                 )}
               </div>
@@ -377,7 +377,7 @@ export default function TemplatePicker({
                   className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[rgba(212, 255, 0,0.08)] border border-[rgba(212, 255, 0,0.18)] text-sm font-medium text-text-primary hover:bg-[rgba(212, 255, 0,0.15)] transition-colors disabled:opacity-50"
                 >
                   {loading ? (
-                    <Loader2 size={14} className="animate-spin" />
+                    <CircleNotch size={14} className="animate-spin" />
                   ) : (
                     <Play size={14} />
                   )}

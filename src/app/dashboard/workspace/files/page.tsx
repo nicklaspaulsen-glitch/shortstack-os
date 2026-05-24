@@ -1,3 +1,4 @@
+import { ArrowsOutCardinal, CaretDown, CaretRight, CircleNotch, File, FilePlus, FileText, FileVideo, Folder, FolderPlus, Image, Link, Lock, PencilSimple, Trash, UploadSimple } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -5,7 +6,7 @@
  *
  * Layout:
  *   ┌─ <PageHero ocean> with breadcrumb + actions ────────────────┐
- *   │  Upload | New folder                                        │
+ *   │  UploadSimple | New folder                                        │
  *   ├─ LEFT (folder tree) ───────────┬─ RIGHT (folder contents) ──┤
  *   │  • Workspace                   │  Drag-drop zone            │
  *   │  • Templates                   │  Grid of file cards        │
@@ -13,28 +14,9 @@
  *   │  • Clients                     │                            │
  *   └────────────────────────────────┴────────────────────────────┘
  *
- * Upload flow: presign → PUT to R2 → finalize → refresh list.
+ * UploadSimple flow: presign → PUT to R2 → finalize → refresh list.
  */
 import { useState, useEffect, useCallback, useRef, DragEvent } from "react";
-import {
-  FolderIcon,
-  FilePlus,
-  FolderPlus,
-  Upload as UploadIcon,
-  ChevronRight,
-  ChevronDown,
-  File as FileIcon,
-  Image as ImageIcon,
-  FileVideo,
-  FileText,
-  Trash2,
-  Edit2,
-  Link2,
-  Move,
-  Loader2,
-  Lock,
-  Sparkles,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -85,11 +67,11 @@ function formatBytes(n: number): string {
 }
 
 function fileIconFor(mime: string) {
-  if (mime.startsWith("image/")) return <ImageIcon size={18} />;
+  if (mime.startsWith("image/")) return <Image size={18} />;
   if (mime.startsWith("video/")) return <FileVideo size={18} />;
   if (mime === "application/pdf") return <FileText size={18} />;
   if (mime.startsWith("text/")) return <FileText size={18} />;
-  return <FileIcon size={18} />;
+  return <File size={18} />;
 }
 
 const PERMISSION_LABEL: Record<Folder["permission"], string> = {
@@ -225,7 +207,7 @@ export default function WorkspaceFilesPage() {
     await loadFolders(activeFolderId);
   }, [activeFolderId, loadFolders, newFolderName, newFolderPermission]);
 
-  // ── Upload ─────────────────────────────────────────────────────────────
+  // ── UploadSimple ─────────────────────────────────────────────────────────────
   const uploadOne = useCallback(
     async (file: File): Promise<void> => {
       if (!activeFolderId) {
@@ -260,7 +242,7 @@ export default function WorkspaceFilesPage() {
         body: file,
       });
       if (!put.ok) {
-        toast.error(`Upload failed (${put.status})`);
+        toast.error(`UploadSimple failed (${put.status})`);
         return;
       }
 
@@ -396,7 +378,7 @@ export default function WorkspaceFilesPage() {
             <FolderPlus size={14} /> New folder
           </button>
           <label className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-400/90 hover:bg-cyan-300 text-slate-900 text-sm font-medium px-3 py-1.5 cursor-pointer transition">
-            <UploadIcon size={14} /> Upload
+            <UploadSimple size={14} /> UploadSimple
             <input
               type="file"
               multiple
@@ -487,7 +469,7 @@ export default function WorkspaceFilesPage() {
                   <span className="text-text-muted">Files</span>
                   {breadcrumb.map((c, i) => (
                     <span key={c.id} className="flex items-center gap-1.5">
-                      <ChevronRight size={12} className="text-text-muted" />
+                      <CaretRight size={12} className="text-text-muted" />
                       <span className={i === breadcrumb.length - 1 ? "text-text-primary" : ""}>{c.name}</span>
                     </span>
                   ))}
@@ -495,20 +477,20 @@ export default function WorkspaceFilesPage() {
 
                 {uploading > 0 && (
                   <div className="mb-3 flex items-center gap-2 text-cyan-600 text-sm">
-                    <Loader2 size={14} className="animate-spin" /> Uploading {uploading} file
+                    <CircleNotch size={14} className="animate-spin" /> Uploading {uploading} file
                     {uploading === 1 ? "" : "s"}…
                   </div>
                 )}
 
                 {!activeFolderId ? (
                   <div className="flex flex-col items-center justify-center py-16 text-text-muted">
-                    <FolderIcon size={32} />
+                    <Folder size={32} />
                     <p className="mt-3 text-sm">Select a folder to see its files</p>
                   </div>
                 ) : files.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 text-text-muted">
                     <FilePlus size={32} />
-                    <p className="mt-3 text-sm">No files yet — drop a file here or click Upload</p>
+                    <p className="mt-3 text-sm">No files yet — drop a file here or click UploadSimple</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
@@ -534,27 +516,27 @@ export default function WorkspaceFilesPage() {
                 {[
                   {
                     label: "Open / download",
-                    icon: <FileIcon size={14} />,
+                    icon: <File size={14} />,
                     fn: () => handleDownload(contextMenu.file),
                   },
                   {
                     label: "Copy 24h share link",
-                    icon: <Link2 size={14} />,
+                    icon: <Link size={14} />,
                     fn: () => handleShareLink(contextMenu.file),
                   },
                   {
                     label: "Rename",
-                    icon: <Edit2 size={14} />,
+                    icon: <PencilSimple size={14} />,
                     fn: () => handleRenameFile(contextMenu.file),
                   },
                   {
-                    label: "Move",
-                    icon: <Move size={14} />,
-                    fn: () => toast("Move UX coming soon — drag-drop or use the API"),
+                    label: "ArrowsOutCardinal",
+                    icon: <ArrowsOutCardinal size={14} />,
+                    fn: () => toast("ArrowsOutCardinal UX coming soon — drag-drop or use the API"),
                   },
                   {
                     label: "Delete",
-                    icon: <Trash2 size={14} />,
+                    icon: <Trash size={14} />,
                     fn: () => handleDeleteFile(contextMenu.file),
                     danger: true,
                   },
@@ -612,7 +594,7 @@ function FolderTreeNode(props: FolderTreeNodeProps) {
           onClick={() => void onToggle(folder.id)}
           className="p-1 text-text-muted hover:text-text-primary"
         >
-          {isOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+          {isOpen ? <CaretDown size={12} /> : <CaretRight size={12} />}
         </button>
         <button
           type="button"
@@ -620,7 +602,7 @@ function FolderTreeNode(props: FolderTreeNodeProps) {
           className="flex items-center gap-1.5 py-1.5 flex-1 text-left truncate"
           title={`${folder.name} — ${PERMISSION_LABEL[folder.permission]}`}
         >
-          <FolderIcon size={14} className={isActive ? "text-brand-accent" : "text-text-muted"} />
+          <Folder size={14} className={isActive ? "text-brand-accent" : "text-text-muted"} />
           <span className="truncate">{folder.name}</span>
           {folder.is_system && <Lock size={9} className="text-text-muted shrink-0" />}
         </button>

@@ -1,4 +1,5 @@
 "use client";
+import { ArrowRight, Calendar, CheckCircle, CircleNotch, Clock } from "@phosphor-icons/react";
 
 /**
  * Public booking embed page.
@@ -12,7 +13,7 @@
  */
 
 import { useState, useEffect, useCallback, use } from "react";
-import { Calendar, Clock, CheckCircle, ArrowRight, Loader2 } from "lucide-react";
+
 
 interface MeetingType {
   id: string;
@@ -138,7 +139,7 @@ export default function EmbedBookingPage({
   if (loading) {
     return (
       <div className="min-h-[400px] flex items-center justify-center bg-white">
-        <Loader2 className="animate-spin text-gray-500" size={20} />
+        <CircleNotch className="animate-spin text-gray-500" size={20} />
       </div>
     );
   }

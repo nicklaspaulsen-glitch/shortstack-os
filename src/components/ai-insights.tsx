@@ -1,10 +1,7 @@
 "use client";
+import { ArrowRight, ArrowsClockwise, CheckCircle, FilmStrip, Lightning, MagnifyingGlass, Sparkle, Target, TrendUp } from "@phosphor-icons/react";
 
 import { useEffect, useState, useCallback } from "react";
-import {
-  Sparkles, TrendingUp, Zap, Target, Film,
-  Search, CheckCircle, ArrowRight, RefreshCw
-} from "lucide-react";
 
 interface Insight {
   type: string;
@@ -16,11 +13,11 @@ interface Insight {
 }
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
-  content_idea: <Film size={14} />,
+  content_idea: <FilmStrip size={14} />,
   strategy: <Target size={14} />,
-  action_item: <Zap size={14} />,
-  competitor_insight: <Search size={14} />,
-  growth_tip: <TrendingUp size={14} />,
+  action_item: <Lightning size={14} />,
+  competitor_insight: <MagnifyingGlass size={14} />,
+  growth_tip: <TrendUp size={14} />,
   quick_win: <CheckCircle size={14} />,
 };
 
@@ -86,7 +83,7 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
     return (
       <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.1)]">
         <div className="flex items-center gap-2 mb-3">
-          <Sparkles size={14} className="text-[#D4FF00] animate-pulse" />
+          <Sparkle size={14} className="text-[#D4FF00] animate-pulse" />
           <span className="text-xs font-semibold">AI is analyzing your business...</span>
         </div>
         <div className="space-y-2">
@@ -104,14 +101,14 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Sparkles size={14} className="text-[#D4FF00]" />
+          <Sparkle size={14} className="text-[#D4FF00]" />
           <h2 className="text-sm font-semibold">AI Recommendations</h2>
           <span className="text-[9px] bg-[rgba(212,255,0,0.08)] text-[#D4FF00] px-1.5 py-0.5 rounded font-medium">
             {insights.length - actionedIds.size} active
           </span>
         </div>
         <button onClick={refresh} className="text-text-muted hover:text-text-primary transition-colors">
-          <RefreshCw size={12} />
+          <ArrowsClockwise size={12} />
         </button>
       </div>
 
@@ -127,7 +124,7 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
             >
               <div className="flex items-start justify-between mb-1.5">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[#D4FF00]">{TYPE_ICONS[insight.type] || <Zap size={14} />}</span>
+                  <span className="text-[#D4FF00]">{TYPE_ICONS[insight.type] || <Lightning size={14} />}</span>
                   <span className={`text-[8px] px-1.5 py-0.5 rounded-md font-medium ${CATEGORY_BADGES[insight.category] || "bg-surface-light text-text-muted"}`}>
                     {insight.category}
                   </span>

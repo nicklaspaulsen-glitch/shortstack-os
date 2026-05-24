@@ -452,7 +452,7 @@ async function handleTrinityLead(
 
 function handleHelp() {
   return embed(
-    "ShortStack Bot Commands",
+    "ShortStack Robot Commands",
     "Available slash commands for managing your agency:",
     [
       {

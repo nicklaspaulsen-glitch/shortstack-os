@@ -1,11 +1,9 @@
+import { Chat, FilmStrip, Globe, Image, Package, PenNib, Sparkle, Users } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import {
-  Film, Sparkles, ImageIcon, Users, MessageSquare, PenTool,
-  Package, Globe,
-} from "lucide-react";
+
 
 const ACCENT = "#D4FF00";
 const ACCENT_LIGHT = "#D4FF00";
@@ -60,7 +58,7 @@ const SLIDES: Slide[] = [
     label: "AI Studio",
     title: "AI Studio",
     subtitle: "15+ generators in one place.",
-    Icon: Sparkles,
+    Icon: Sparkle,
     body: (
       <div className="grid grid-cols-3 gap-3">
         {Array.from({ length: 9 }).map((_, i) => (
@@ -75,7 +73,7 @@ const SLIDES: Slide[] = [
               border: "1px solid rgba(255,255,255,0.12)",
             }}
           >
-            <Sparkles size={18} style={{ color: ACCENT }} />
+            <Sparkle size={18} style={{ color: ACCENT }} />
           </motion.div>
         ))}
       </div>
@@ -86,7 +84,7 @@ const SLIDES: Slide[] = [
     label: "Video Editor",
     title: "Video Editor",
     subtitle: "Timeline that feels like Premiere.",
-    Icon: Film,
+    Icon: FilmStrip,
     body: (
       <div className="space-y-3">
         <div className="rounded-lg h-32" style={{ background: "rgba(255,255,255,0.03)" }} />
@@ -116,7 +114,7 @@ const SLIDES: Slide[] = [
     label: "Thumbnails",
     title: "Thumbnail Editor",
     subtitle: "Photoshop in the browser.",
-    Icon: ImageIcon,
+    Icon: Image,
     body: (
       <div className="grid grid-cols-4 gap-3">
         <div className="col-span-3 rounded-lg aspect-video"
@@ -160,7 +158,7 @@ const SLIDES: Slide[] = [
     label: "Team Chat",
     title: "Team Chat",
     subtitle: "Slack, but inside your stack.",
-    Icon: MessageSquare,
+    Icon: Chat,
     body: (
       <div className="space-y-3">
         {[0, 1, 2, 3].map((i) => (
@@ -184,7 +182,7 @@ const SLIDES: Slide[] = [
     label: "Creative Review",
     title: "Creative Review",
     subtitle: "Comment, markup, approve.",
-    Icon: PenTool,
+    Icon: PenNib,
     body: (
       <div className="relative aspect-video rounded-lg overflow-hidden"
         style={{ background: `linear-gradient(135deg, #2a2f3a, #1a1d25)` }}>

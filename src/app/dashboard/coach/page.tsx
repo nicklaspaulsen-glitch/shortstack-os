@@ -1,3 +1,4 @@
+import { ArrowRight, CircleNotch, Envelope, Medal, Phone, Sparkle, TrendUp, Video } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -8,7 +9,7 @@
  *   - By Rep: groups analyses by rep_id, shows trend strip per rep.
  *   - Leaderboard: top reps by avg score this period.
  *
- * The hero uses the gold gradient with the Award icon � coaching is a
+ * The hero uses the gold gradient with the Medal icon � coaching is a
  * premium-feel surface, kept consistent with the meetings + voice-receptionist
  * pages on the agency side. No PageHero overrides � this page reads as a
  * sibling of the rest of the dashboard family.
@@ -17,16 +18,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  Award,
-  Loader2,
-  Sparkles,
-  TrendingUp,
-  Phone,
-  Mail,
-  Video,
-  ArrowRight,
-} from "lucide-react";
 import { PrismPanel } from "@/components/prism";
 import StatCard from "@/components/ui/stat-card";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -79,7 +70,7 @@ type Tab = "recent" | "by-rep" | "leaderboard";
 const SOURCE_ICONS = {
   voice_call: Phone,
   meeting: Video,
-  email_thread: Mail,
+  email_thread: Envelope,
 } as const;
 
 const containerVariants = {
@@ -199,9 +190,9 @@ export default function CoachPage() {
               className="grid grid-cols-1 sm:grid-cols-3 gap-4"
             >
               {[
-                { label: "Calls analyzed this week", value: data?.stats.analyses_this_week ?? 0, icon: <Sparkles className="h-4 w-4" /> },
-                { label: "Average coach score", value: data?.stats.avg_score ?? 0, icon: <TrendingUp className="h-4 w-4" /> },
-                { label: "Top performer score", value: data?.stats.top_rep_score ?? 0, icon: <Award className="h-4 w-4" />, premium: true },
+                { label: "Calls analyzed this week", value: data?.stats.analyses_this_week ?? 0, icon: <Sparkle className="h-4 w-4" /> },
+                { label: "Average coach score", value: data?.stats.avg_score ?? 0, icon: <TrendUp className="h-4 w-4" /> },
+                { label: "Top performer score", value: data?.stats.top_rep_score ?? 0, icon: <Medal className="h-4 w-4" />, premium: true },
               ].map(({ label, value, icon, premium }) => (
                 <PrismPanel
                   key={label}
@@ -240,7 +231,7 @@ export default function CoachPage() {
               ))}
             </div>{loading && (
               <div className="flex items-center gap-2 text-text-secondary text-sm">
-                <Loader2 className="h-4 w-4 animate-spin" /> Loading analyses�
+                <CircleNotch className="h-4 w-4 animate-spin" /> Loading analyses�
               </div>
             )}{error && !loading && (
               <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-400">
@@ -255,7 +246,7 @@ export default function CoachPage() {
               >
                 {data.analyses.length === 0 ? (
                   <div className="px-6 py-12 text-center text-text-secondary">
-                    <Sparkles className="mx-auto mb-3 h-8 w-8 opacity-50" />
+                    <Sparkle className="mx-auto mb-3 h-8 w-8 opacity-50" />
                     <p className="text-base font-medium text-text-primary">No analyses yet.</p>
                     <p className="mt-1 text-sm">
                       The coach runs hourly on new voice calls and meetings. Trigger one manually from a
@@ -264,7 +255,7 @@ export default function CoachPage() {
                   </div>
                 ) : (
                   data.analyses.map((row) => {
-                    const Icon = SOURCE_ICONS[row.source_type] ?? Sparkles;
+                    const Icon = SOURCE_ICONS[row.source_type] ?? Sparkle;
                     const topInsight = row.insights[0];
                     const talkRatio = Math.round(((row.metrics?.talk_ratio ?? 0) as number) * 100);
                     return (

@@ -1,12 +1,9 @@
+import { CaretRight, Chat, CircleNotch, Envelope, Globe, Info, Phone, ShieldCheck, Sparkle, SquaresFour } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
-import {
-  Mail, Phone, Globe, LayoutDashboard, MessageSquare,
-  Loader, Sparkles, ChevronRight, ShieldCheck, Info,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 /**
@@ -32,7 +29,7 @@ const TOGGLES: Toggle[] = [
     key: "email",
     label: "Send branded email",
     description: "Verified sending domain in Resend with DKIM, SPF, and DMARC pre-configured.",
-    icon: <Mail size={16} />,
+    icon: <Envelope size={16} />,
     example: "you@domain.com",
   },
   {
@@ -53,14 +50,14 @@ const TOGGLES: Toggle[] = [
     key: "portal",
     label: "Launch client portal",
     description: "Branded portal at portal.domain.com for client logins, messages, and files.",
-    icon: <LayoutDashboard size={16} />,
+    icon: <SquaresFour size={16} />,
     example: "https://portal.domain.com",
   },
   {
     key: "chat",
     label: "Install branded chat widget",
     description: "One embed script — live chat on the client's site, routed to your inbox.",
-    icon: <MessageSquare size={16} />,
+    icon: <Chat size={16} />,
     example: "<script src=…>",
   },
 ];
@@ -175,7 +172,7 @@ function HubSetupInner() {
       <div className="glass rounded-xl p-4">
         <div className="flex items-center justify-between mb-3">
           <h2 className="flex items-center gap-2 mb-0">
-            <Sparkles size={13} className="text-brand-accent" /> What should we set up?
+            <Sparkle size={13} className="text-brand-accent" /> What should we set up?
           </h2>
           <span className="text-[10px] text-text-muted">
             {enabledCount} / 5 selected
@@ -256,11 +253,11 @@ function HubSetupInner() {
         >
           {submitting ? (
             <>
-              <Loader size={14} className="animate-spin" /> Launching…
+              <CircleNotch size={14} className="animate-spin" /> Launching…
             </>
           ) : (
             <>
-              Launch brand on {domain || "domain.com"} <ChevronRight size={14} />
+              Launch brand on {domain || "domain.com"} <CaretRight size={14} />
             </>
           )}
         </button>

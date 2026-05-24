@@ -1,3 +1,4 @@
+import { ArrowsClockwise, Calendar, CaretRight, ChartBar, CircleNotch, Clock, Envelope, Globe, Image, Lightning, MagnifyingGlass, Package, PaintBrush, Plus, Pulse, Robot, Shield, Sparkle, TrendUp, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -7,26 +8,6 @@ import { PLAN_TIERS, type PlanTier, isValidPlanTier } from "@/lib/plan-config";
 import Link from "next/link";
 import PageAI from "@/components/page-ai";
 import toast from "react-hot-toast";
-import {
-  Zap,
-  TrendingUp,
-  Clock,
-  BarChart3,
-  Sparkles,
-  Bot,
-  Mail,
-  Paintbrush,
-  Search,
-  Globe,
-  Loader2,
-  ChevronRight,
-  Shield,
-  Plus,
-  Package,
-  RefreshCw,
-  Calendar,
-  Activity,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // ── Types ───────────────────────────────────────────────────────────────────
@@ -61,13 +42,13 @@ const TOKEN_PACKS = [
 ] as const;
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
-  "Content Generation": <Sparkles size={13} />,
-  "AI Chat": <Bot size={13} />,
-  "Email Generation": <Mail size={13} />,
-  "Image Generation": <Paintbrush size={13} />,
-  "Lead Scraper": <Search size={13} />,
+  "Content Generation": <Sparkle size={13} />,
+  "AI Chat": <Robot size={13} />,
+  "Email Generation": <Envelope size={13} />,
+  "Image Generation": <PaintBrush size={13} />,
+  "Lead Scraper": <MagnifyingGlass size={13} />,
   "Social Media": <Globe size={13} />,
-  Other: <BarChart3 size={13} />,
+  Other: <ChartBar size={13} />,
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -245,7 +226,7 @@ export default function UsagePage() {
                     disabled={loading}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border-subtle bg-white/5 text-text-primary text-xs hover:bg-white/10 transition-all"
                   >
-                    <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
+                    <ArrowsClockwise size={12} className={loading ? "animate-spin" : ""} />
                     Refresh
                   </button>
                 </>
@@ -358,7 +339,7 @@ export default function UsagePage() {
               {/* Usage by Category */}
               <div className="glass rounded-xl p-5 space-y-4">
                 <div className="flex items-center gap-2 text-sm font-medium text-text-primary">
-                  <BarChart3 size={14} className="text-brand-accent" />
+                  <ChartBar size={14} className="text-brand-accent" />
                   Usage by Category
                 </div>
 
@@ -373,7 +354,7 @@ export default function UsagePage() {
                   </div>
                 ) : Object.keys(tokenData.by_category).length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-8 gap-2 text-text-muted">
-                    <Sparkles size={24} className="opacity-30" />
+                    <Sparkle size={24} className="opacity-30" />
                     <p className="text-xs">No AI activity recorded this month</p>
                   </div>
                 ) : (
@@ -387,7 +368,7 @@ export default function UsagePage() {
                             <div className="flex items-center justify-between text-[11px]">
                               <div className="flex items-center gap-1.5 text-text-muted">
                                 <span className="text-text-primary opacity-60">
-                                  {CATEGORY_ICONS[cat] ?? <BarChart3 size={13} />}
+                                  {CATEGORY_ICONS[cat] ?? <ChartBar size={13} />}
                                 </span>
                                 {cat}
                               </div>
@@ -466,7 +447,7 @@ export default function UsagePage() {
             </div>{/* ── Buy More Tokens ── */}{isUnlimited ? (
               <div className="glass rounded-xl p-5 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.2)] flex items-center justify-center text-brand-accent shrink-0">
-                  <Zap size={18} />
+                  <Lightning size={18} />
                 </div>
                 <div>
                   <div className="text-sm font-medium text-text-primary">You have unlimited tokens</div>
@@ -486,7 +467,7 @@ export default function UsagePage() {
                     href="/dashboard/pricing"
                     className="flex items-center gap-1 text-xs text-brand-accent hover:underline"
                   >
-                    Or upgrade your plan <ChevronRight size={12} />
+                    Or upgrade your plan <CaretRight size={12} />
                   </Link>
                 </div>
 
@@ -524,7 +505,7 @@ export default function UsagePage() {
                 {/* Buy button / success */}
                 {buySuccess ? (
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm">
-                    <Zap size={14} />
+                    <Lightning size={14} />
                     {buySuccess}
                   </div>
                 ) : (
@@ -539,7 +520,7 @@ export default function UsagePage() {
                       }`}
                     >
                       {buying ? (
-                        <Loader2 size={14} className="animate-spin" />
+                        <CircleNotch size={14} className="animate-spin" />
                       ) : (
                         <Plus size={14} />
                       )}
@@ -558,10 +539,10 @@ export default function UsagePage() {
                   over and are used before your plan&apos;s monthly allocation.
                 </p>
               </div>
-            )}{/* ── Recent Activity ── */}<div className="glass rounded-xl p-5 space-y-4">
+            )}{/* ── Recent Pulse ── */}<div className="glass rounded-xl p-5 space-y-4">
               <div className="flex items-center gap-2 text-sm font-medium text-text-primary">
-                <Activity size={14} className="text-brand-accent" />
-                Recent AI Activity
+                <Pulse size={14} className="text-brand-accent" />
+                Recent AI Pulse
               </div>
 
               {loading ? (
@@ -572,7 +553,7 @@ export default function UsagePage() {
                 </div>
               ) : tokenData.recent_activity.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-10 gap-2 text-text-muted">
-                  <Sparkles size={24} className="opacity-30" />
+                  <Sparkle size={24} className="opacity-30" />
                   <p className="text-xs">No AI activity recorded this month</p>
                 </div>
               ) : (

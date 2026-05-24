@@ -1,4 +1,5 @@
 "use client";
+import { ArrowsClockwise, CircleNotch } from "@phosphor-icons/react";
 
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -9,7 +10,6 @@ import {
 } from "./client-roster";
 import AgentAvatar, { type AgentStatus } from "./agent-avatar";
 import AgentDrawer from "./agent-drawer";
-import { RefreshCw, Loader2 } from "lucide-react";
 import type { AgentDef } from "./roster";
 
 // Client-portal variant of room-canvas.tsx. Same visual engine — drifting
@@ -140,13 +140,13 @@ export default function ClientRoomCanvas({ clientId, clientName }: Props) {
         <div className="ml-auto flex items-center gap-2 text-[10px] text-text-muted">
           {loading ? (
             <>
-              <Loader2 size={11} className="animate-spin" /> Loading…
+              <CircleNotch size={11} className="animate-spin" /> Loading…
             </>
           ) : error ? (
             <span className="text-red-400">Live feed offline: {error}</span>
           ) : (
             <>
-              <RefreshCw
+              <ArrowsClockwise
                 size={11}
                 className="animate-[spin_15s_linear_infinite]"
               />

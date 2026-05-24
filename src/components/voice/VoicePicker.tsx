@@ -1,7 +1,8 @@
 "use client";
+import { CircleNotch, Microphone } from "@phosphor-icons/react";
 
 import { useEffect, useState } from "react";
-import { Mic, Loader2 } from "lucide-react";
+
 import Link from "next/link";
 
 interface VoiceCloneOption {
@@ -76,7 +77,7 @@ export default function VoicePicker({
       <div
         className={`flex items-center gap-2 text-xs text-text-muted ${className || ""}`}
       >
-        <Loader2 size={12} className="animate-spin" /> Loading voices...
+        <CircleNotch size={12} className="animate-spin" /> Loading voices...
       </div>
     );
   }
@@ -93,7 +94,7 @@ export default function VoicePicker({
       <div
         className={`flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-50 px-3 py-2 text-xs text-amber-700 ${className || ""}`}
       >
-        <Mic size={12} />
+        <Microphone size={12} />
         <span>No voices yet —</span>
         <Link
           href="/dashboard/voice-studio"
@@ -109,7 +110,7 @@ export default function VoicePicker({
 
   return (
     <div className={`flex items-center gap-2 ${className || ""}`}>
-      <Mic size={12} className="text-text-muted" />
+      <Microphone size={12} className="text-text-muted" />
       <span className="text-xs uppercase tracking-wider text-text-muted">
         {labelText}
       </span>

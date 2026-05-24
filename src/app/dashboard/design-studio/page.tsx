@@ -1,3 +1,4 @@
+import { CircleNotch, PenNib, Plus } from "@phosphor-icons/react";
 ﻿"use client";
 
 import React, { useEffect, useCallback } from "react";
@@ -10,7 +11,6 @@ import TopBar from "@/components/design-studio/TopBar";
 import LeftRail from "@/components/design-studio/LeftRail";
 import Canvas from "@/components/design-studio/Canvas";
 import RightInspector from "@/components/design-studio/RightInspector";
-import { PenTool, Plus, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { SIZE_PRESETS } from "@/lib/design/types";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -172,7 +172,7 @@ export default function DesignStudioPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 size={32} className="animate-spin text-brand-accent" />
+        <CircleNotch size={32} className="animate-spin text-brand-accent" />
       </div>
     );
   }
@@ -207,7 +207,7 @@ function RecentDesigns() {
   if (loading) {
     return (
       <div className="flex items-center gap-2 text-text-muted text-sm py-4">
-        <Loader2 size={16} className="animate-spin" /> Loading�
+        <CircleNotch size={16} className="animate-spin" /> Loading�
       </div>
     );
   }
@@ -240,7 +240,7 @@ function RecentDesigns() {
                 className="object-cover"
               />
             ) : (
-              <PenTool size={20} className="text-text-muted" />
+              <PenNib size={20} className="text-text-muted" />
             )}
           </div>
           <div className="p-2">

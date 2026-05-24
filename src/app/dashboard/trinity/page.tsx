@@ -1,12 +1,8 @@
+import { ArrowRight, ChartBar, CheckCircle, ClockCounterClockwise, Eye, PaperPlaneTilt, Shield, Stack, Star, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  Send, History, CheckCircle, XCircle,
-  BarChart3, Shield, ArrowRight,
-  Layers, Star, Eye
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface ChatMessage {
@@ -47,7 +43,7 @@ interface HistoryEntry {
   created_at: string | null;
 }
 
-const TABS = ["Chat", "Dashboard", "Agents", "Outputs", "Queue", "Cost", "Quality", "Fallback", "History", "Analytics"] as const;
+const TABS = ["Chat", "Dashboard", "Agents", "Outputs", "Queue", "Cost", "Quality", "Fallback", "ClockCounterClockwise", "Analytics"] as const;
 type Tab = typeof TABS[number];
 
 const FALLBACK_CHAIN = [
@@ -216,7 +212,7 @@ export default function TrinityPage() {
                     <input type="text" value={input} onChange={e => setInput(e.target.value)}
                       placeholder="Tell Trinity what to do..." className="input flex-1" disabled={sending} />
                     <button type="submit" disabled={sending || !input.trim()} className="btn-primary px-4 disabled:opacity-50">
-                      <Send size={18} />
+                      <PaperPlaneTilt size={18} />
                     </button>
                   </form>
                   <div className="flex flex-wrap gap-2 mt-3">
@@ -333,7 +329,7 @@ export default function TrinityPage() {
               </div>
             )}{/* ═══ QUEUE TAB ═══ */}{tab === "Queue" && (
               <div className="glass rounded-xl p-4">
-                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Layers size={14} className="text-brand-accent" /> Unified Task Queue</h2>
+                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Stack size={14} className="text-brand-accent" /> Unified Task Queue</h2>
                 <div className="space-y-2">
                   {queue.length === 0 ? (
                     <p className="text-xs text-text-muted text-center py-8">Queue is empty. No Trinity actions are currently queued or running.</p>
@@ -457,9 +453,9 @@ export default function TrinityPage() {
                 </div>
                 <p className="text-[9px] text-text-muted mt-3">Trinity automatically falls back to secondary providers when primary services are unavailable.</p>
               </div>
-            )}{/* ═══ HISTORY TAB ═══ */}{tab === "History" && (
+            )}{/* ═══ HISTORY TAB ═══ */}{tab === "ClockCounterClockwise" && (
               <div className="glass rounded-xl p-4">
-                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><History size={14} className="text-brand-accent" /> Action History</h2>
+                <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><ClockCounterClockwise size={14} className="text-brand-accent" /> Action ClockCounterClockwise</h2>
                 <div className="space-y-1.5">
                   {history.length === 0 ? (
                     <p className="text-xs text-text-muted text-center py-8">No actions recorded yet.</p>
@@ -485,7 +481,7 @@ export default function TrinityPage() {
             )}{/* ═══ ANALYTICS TAB ═══ */}{tab === "Analytics" && (
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
-                  <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><BarChart3 size={14} className="text-brand-accent" /> Trinity Analytics</h2>
+                  <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><ChartBar size={14} className="text-brand-accent" /> Trinity Analytics</h2>
                   <div className="grid grid-cols-2 lg:grid-cols-[4fr_2fr_2fr_2fr] gap-3 mb-4">
                     <motion.div
                       className="col-span-2 lg:col-span-1 glass rounded-2xl p-5 flex items-center gap-4 shadow-[0_2px_16px_rgba(0,0,0,0.35)]"

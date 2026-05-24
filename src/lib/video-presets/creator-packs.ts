@@ -722,7 +722,7 @@ export const CREATOR_VIDEO_PACKS: CreatorVideoPack[] = [
   },
   {
     id: "creator_emma_chamberlain",
-    name: "Emma Chamberlain Film Grain Pack",
+    name: "Emma Chamberlain FilmStrip Grain Pack",
     creatorName: "Emma Chamberlain",
     description:
       "Gen-Z vlog pacing with fish-eye bursts, washed-out film grain, chaotic-authentic jumpcuts.",

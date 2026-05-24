@@ -1,4 +1,5 @@
 "use client";
+import { ArrowCounterClockwise, CircleNotch, CodeSimple, Envelope, Eye, FloppyDisk, Info, PaperPlaneTilt, Sparkle } from "@phosphor-icons/react";
 
 /**
  * Settings → Branded email templates editor.
@@ -13,21 +14,10 @@
  *   - PageHero (plum) with title + actions
  *   - Tab strip across the five kinds
  *   - Two-pane editor: form on the left, live preview iframe on the right
- *   - Actions: Reset to default, Send test (to caller's email), Save
+ *   - Actions: Reset to default, PaperPlaneTilt test (to caller's email), FloppyDisk
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Mail,
-  Send,
-  RotateCcw,
-  Save,
-  Eye,
-  Code2,
-  Sparkles,
-  Loader2,
-  Info,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -222,7 +212,7 @@ export default function EmailTemplatesPage() {
       toast.success("Template saved");
       await reload();
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Save failed";
+      const msg = err instanceof Error ? err.message : "FloppyDisk failed";
       toast.error(msg);
     } finally {
       setSaving(false);
@@ -313,7 +303,7 @@ export default function EmailTemplatesPage() {
 
               {loading || !draft ? (
                 <div className="flex items-center justify-center py-24 text-text-secondary">
-                  <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                  <CircleNotch className="w-5 h-5 animate-spin mr-2" />
                   Loading templates...
                 </div>
               ) : (
@@ -419,7 +409,7 @@ export default function EmailTemplatesPage() {
                         onClick={() => setShowVars(!showVars)}
                         className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
                       >
-                        <Sparkles size={14} />
+                        <Sparkle size={14} />
                         Available variables ({AVAILABLE_VARS.length})
                         <span className="text-xs">{showVars ? "▼" : "▶"}</span>
                       </button>
@@ -448,16 +438,16 @@ export default function EmailTemplatesPage() {
                           disabled={saving}
                           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-lime text-black text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
                         >
-                          {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
-                          Save
+                          {saving ? <CircleNotch size={14} className="animate-spin" /> : <FloppyDisk size={14} />}
+                          FloppyDisk
                         </button>
                         <button
                           onClick={handleTestSend}
                           disabled={testSending}
                           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-2 border border-border-subtle text-text-primary text-sm font-medium hover:border-border-strong transition-colors disabled:opacity-50"
                         >
-                          {testSending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                          Send test to me
+                          {testSending ? <CircleNotch size={14} className="animate-spin" /> : <PaperPlaneTilt size={14} />}
+                          PaperPlaneTilt test to me
                         </button>
                         {isCustomized && (
                           <button
@@ -465,7 +455,7 @@ export default function EmailTemplatesPage() {
                             disabled={resetting}
                             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-2 border border-border-subtle text-text-secondary text-sm font-medium hover:border-border-strong transition-colors disabled:opacity-50"
                           >
-                            {resetting ? <Loader2 size={14} className="animate-spin" /> : <RotateCcw size={14} />}
+                            {resetting ? <CircleNotch size={14} className="animate-spin" /> : <ArrowCounterClockwise size={14} />}
                             Reset to default
                           </button>
                         )}
@@ -489,7 +479,7 @@ export default function EmailTemplatesPage() {
                             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs transition-all
                         ${viewMode === "html" ? "bg-surface-3 text-text-primary" : "text-text-muted hover:text-text-secondary"}`}
                           >
-                            <Code2 size={12} /> HTML
+                            <CodeSimple size={12} /> HTML
                           </button>
                         </div>
                       </div>

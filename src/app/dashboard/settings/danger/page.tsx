@@ -1,3 +1,4 @@
+import { ArrowsLeftRight, DownloadSimple, Trash, Warning } from "@phosphor-icons/react";
 ﻿"use client";
 
 /**
@@ -14,7 +15,6 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { AlertTriangle, Download, ArrowLeftRight, Trash2 } from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 export default function DangerZonePage() {
@@ -77,7 +77,7 @@ export default function DangerZonePage() {
     </div><section className="glass rounded-xl p-4">
               <div className="flex items-start gap-4">
                 <div className="rounded-lg bg-surface-light p-2.5 text-text-secondary">
-                  <Download size={18} />
+                  <DownloadSimple size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-sm font-semibold text-text-primary">Export workspace data</h3>
@@ -99,7 +99,7 @@ export default function DangerZonePage() {
             </section><section className="glass rounded-xl p-4">
               <div className="flex items-start gap-4">
                 <div className="rounded-lg bg-surface-light p-2.5 text-text-secondary">
-                  <ArrowLeftRight size={18} />
+                  <ArrowsLeftRight size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-sm font-semibold text-text-primary">Transfer workspace ownership</h3>
@@ -127,7 +127,7 @@ export default function DangerZonePage() {
             >
               <div className="flex items-start gap-4">
                 <div className="rounded-lg p-2.5 text-status-error" style={{ background: "rgba(242, 96, 99, 0.08)" }}>
-                  <Trash2 size={18} />
+                  <Trash size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-sm font-semibold text-status-error">Delete account</h3>
@@ -137,7 +137,7 @@ export default function DangerZonePage() {
                     with no refund for the current billing period.
                   </p>
                   <div className="mt-2 flex items-center gap-1.5 text-[11px] text-status-error">
-                    <AlertTriangle size={11} />
+                    <Warning size={11} />
                     <span>This action cannot be undone.</span>
                   </div>
                 </div>

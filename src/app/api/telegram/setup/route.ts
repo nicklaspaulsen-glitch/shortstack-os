@@ -3,7 +3,7 @@ import { createServerSupabase } from "@/lib/supabase/server";
 
 const TELEGRAM_API = "https://api.telegram.org/bot";
 
-// POST — Set webhook URL with Telegram Bot API
+// POST — Set webhook URL with Telegram Robot API
 export async function POST(request: NextRequest) {
   const authSupabase = createServerSupabase();
   const { data: { user } } = await authSupabase.auth.getUser();

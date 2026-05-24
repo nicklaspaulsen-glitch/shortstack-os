@@ -1,8 +1,8 @@
+import { CircleNotch, TrendUp, WarningCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, type Variants } from "framer-motion";
-import { TrendingUp, Loader2, AlertCircle } from "lucide-react";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { PrismPanel } from "@/components/prism";
 import { createClient } from "@/lib/supabase/client";
@@ -147,7 +147,7 @@ export default function ForecastPage() {
       </div>
     </div>{loading ? <TableSkeleton rows={8} /> : error ? (
               <PrismPanel padding="p-8" className="flex flex-col items-center gap-3 text-center">
-                <AlertCircle size={32} className="text-red-400" />
+                <WarningCircle size={32} className="text-red-400" />
                 <p className="text-text-primary font-semibold">Failed to load deals</p>
                 <p className="text-text-muted text-sm">{error}</p>
                 <motion.button
@@ -156,7 +156,7 @@ export default function ForecastPage() {
                   onClick={fetchDeals}
                   className="btn-primary text-sm px-4 py-2 rounded-lg flex items-center gap-2 mt-2"
                 >
-                  <Loader2 size={14} /> Retry
+                  <CircleNotch size={14} /> Retry
                 </motion.button>
               </PrismPanel>
             ) : (
@@ -204,7 +204,7 @@ export default function ForecastPage() {
 
                 {deals.filter((d) => !CLOSED_STAGES.has(d.stage)).length === 0 ? (
                   <PrismPanel padding="p-10" className="flex flex-col items-center gap-3 text-center">
-                    <TrendingUp size={36} className="text-text-muted opacity-30" />
+                    <TrendUp size={36} className="text-text-muted opacity-30" />
                     <p className="text-text-primary font-semibold">No open deals to forecast</p>
                     <p className="text-text-muted text-sm max-w-xs">Add deals with expected close dates and probabilities to see your revenue forecast.</p>
                     <a href="/dashboard/deals" className="btn-primary text-sm px-4 py-2 rounded-lg mt-2">Go to Deals ?</a>

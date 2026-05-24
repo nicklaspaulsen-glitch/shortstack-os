@@ -1,23 +1,18 @@
+import { ArrowsClockwise, ChartBar, Check, Copy, Envelope, Gear, Globe, HardDrive, Lightning, MagnifyingGlass, PaperPlaneTilt, Phone, Plus, Pulse, Shield, Trash, TrendUp, Users, WarningCircle, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import {
-  Phone, Mail, Plus, Search, X, Check, Trash2,
-  Globe, Shield, Copy, Settings, Send, AlertCircle,
-  RefreshCw, Server, Activity, Zap, TrendingUp,
-  BarChart3, Users
-} from "lucide-react";
 import PageAI from "@/components/page-ai";
 import { GmailIcon, OutlookIcon } from "@/components/ui/platform-icons";
 import { MotionPage } from "@/components/motion/motion-page";
 
-/** Pick a brand icon based on a provider name. Falls back to a generic Server icon. */
+/** Pick a brand icon based on a provider name. Falls back to a generic HardDrive icon. */
 function ProviderIcon({ provider, size = 10 }: { provider: string; size?: number }) {
   const p = (provider || "").toLowerCase();
   if (p.includes("gmail") || p.includes("google")) return <GmailIcon size={size} />;
   if (p.includes("outlook") || p.includes("office365") || p.includes("microsoft")) return <OutlookIcon size={size} />;
-  return <Server size={size} />;
+  return <HardDrive size={size} />;
 }
 
 /* ── Types ── */
@@ -494,7 +489,7 @@ export default function PhoneEmailPage() {
     </div>{/* ════════════════════ ROTATION STATS CARD ════════════════════ */}<div className="glass rounded-xl p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Activity size={14} className="text-brand-accent" />
+                  <Pulse size={14} className="text-brand-accent" />
                   <span className="text-xs font-semibold">Smart Rotation</span>
                   <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium border ${
                     computedStats.rotationActive
@@ -506,7 +501,7 @@ export default function PhoneEmailPage() {
                 </div>
                 <button onClick={() => { loadAll(); fetchRotationStats(); }}
                   className="text-[10px] px-2 py-1 rounded-lg text-text-muted hover:text-text-primary border border-border-subtle hover:border-[rgba(212,255,0,0.2)] transition-all flex items-center gap-1">
-                  <RefreshCw size={10} /> Refresh
+                  <ArrowsClockwise size={10} /> Refresh
                 </button>
               </div>
 
@@ -515,7 +510,7 @@ export default function PhoneEmailPage() {
                 <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
                   <div className="p-3">
                     <div className="flex items-center gap-1.5 mb-1">
-                      <BarChart3 size={11} className="text-brand-accent" />
+                      <ChartBar size={11} className="text-brand-accent" />
                       <span className="text-[9px] text-text-muted uppercase tracking-wider">Total Capacity</span>
                     </div>
                     <p className="text-lg font-bold text-brand-accent">{totalCapacity.toLocaleString()}</p>
@@ -527,7 +522,7 @@ export default function PhoneEmailPage() {
                 <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
                   <div className="p-3">
                     <div className="flex items-center gap-1.5 mb-1">
-                      <TrendingUp size={11} className="text-brand-accent" />
+                      <TrendUp size={11} className="text-brand-accent" />
                       <span className="text-[9px] text-text-muted uppercase tracking-wider">Used Today</span>
                     </div>
                     <p className="text-lg font-bold text-brand-accent">{totalUsed.toLocaleString()}</p>
@@ -556,7 +551,7 @@ export default function PhoneEmailPage() {
                 <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 3 * 0.06, duration: 0.4 }} className="glass rounded-xl overflow-hidden">
                   <div className="p-3">
                     <div className="flex items-center gap-1.5 mb-1">
-                      <Mail size={11} className="text-brand-accent" />
+                      <Envelope size={11} className="text-brand-accent" />
                       <span className="text-[9px] text-text-muted uppercase tracking-wider">Email Senders</span>
                     </div>
                     <p className="text-lg font-bold text-brand-accent">{computedStats.emails.active}</p>
@@ -569,7 +564,7 @@ export default function PhoneEmailPage() {
 
               {/* Remaining capacity bar */}
               <div className="flex items-center gap-3 text-[10px]">
-                <Zap size={11} className="text-brand-accent shrink-0" />
+                <Lightning size={11} className="text-brand-accent shrink-0" />
                 <span className="text-text-muted shrink-0">Remaining today:</span>
                 <div className="flex-1 h-2 bg-border-subtle rounded-full overflow-hidden">
                   <div className="h-full bg-green-500/70 rounded-full transition-all"
@@ -580,7 +575,7 @@ export default function PhoneEmailPage() {
             </div>{/* Tab Navigation */}<div className="flex gap-1 border-b border-border-subtle pb-px">
               {([
                 { key: "phone" as MainTab, label: "Phone Numbers", icon: Phone },
-                { key: "email" as MainTab, label: "Email Addresses", icon: Mail },
+                { key: "email" as MainTab, label: "Email Addresses", icon: Envelope },
               ]).map(t => (
                 <button key={t.key} onClick={() => setActiveTab(t.key)}
                   className={`flex items-center gap-1.5 px-4 py-2 text-[11px] font-medium whitespace-nowrap transition-all ${
@@ -632,7 +627,7 @@ export default function PhoneEmailPage() {
                           <tr>
                             <td colSpan={9} className="p-8 text-center">
                               <div className="flex items-center justify-center gap-2 text-text-muted text-xs">
-                                <RefreshCw size={14} className="animate-spin" />
+                                <ArrowsClockwise size={14} className="animate-spin" />
                                 Loading phone numbers...
                               </div>
                             </td>
@@ -702,11 +697,11 @@ export default function PhoneEmailPage() {
                                   <div className="flex items-center justify-end gap-1.5">
                                     <a href="/dashboard/voice-receptionist"
                                       className="px-2 py-1 rounded text-[9px] bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.25)] hover:bg-[rgba(212,255,0,0.14)] transition-all flex items-center gap-1">
-                                      <Settings size={10} /> Configure
+                                      <Gear size={10} /> Configure
                                     </a>
                                     <button onClick={() => releaseNumber(p)}
                                       className="px-2 py-1 rounded text-[9px] bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-all flex items-center gap-1">
-                                      <Trash2 size={10} /> Release
+                                      <Trash size={10} /> Release
                                     </button>
                                   </div>
                                 </td>
@@ -759,7 +754,7 @@ export default function PhoneEmailPage() {
                       <div>
                         <label className="text-[10px] text-text-muted uppercase tracking-wider mb-1 block">Area Code (optional)</label>
                         <div className="relative">
-                          <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                          <MagnifyingGlass size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                           <input value={buyAreaCode} onChange={e => setBuyAreaCode(e.target.value)}
                             placeholder="e.g. 415, 212, 310..."
                             className="w-full pl-8 pr-3 py-2 rounded-lg bg-background border border-border-subtle text-xs focus:border-[rgba(212,255,0,0.40)] focus:outline-none transition-all" />
@@ -833,27 +828,27 @@ export default function PhoneEmailPage() {
                         </div>
                       )}
 
-                      {/* Search Button */}
+                      {/* MagnifyingGlass Button */}
                       <button onClick={searchNumbers} disabled={searching}
                         className="w-full py-2.5 rounded-full bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-                        {searching ? <RefreshCw size={12} className="animate-spin" /> : <Search size={12} />}
-                        {searching ? "Searching..." : "Search Available Numbers"}
+                        {searching ? <ArrowsClockwise size={12} className="animate-spin" /> : <MagnifyingGlass size={12} />}
+                        {searching ? "Searching..." : "MagnifyingGlass Available Numbers"}
                       </button>
 
                       {/* Error Display */}
                       {searchError && (
                         <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[11px]">
-                          <AlertCircle size={14} /> {searchError}
+                          <WarningCircle size={14} /> {searchError}
                         </div>
                       )}
 
                       {purchaseError && (
                         <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[11px]">
-                          <AlertCircle size={14} /> {purchaseError}
+                          <WarningCircle size={14} /> {purchaseError}
                         </div>
                       )}
 
-                      {/* Search Results */}
+                      {/* MagnifyingGlass Results */}
                       {searchResults.length > 0 && (
                         <div className="space-y-2">
                           <p className="text-[10px] text-text-muted">{searchResults.length} numbers found</p>
@@ -932,7 +927,7 @@ export default function PhoneEmailPage() {
 
                       <button onClick={addManualPhone} disabled={!manualPhone.trim() || manualAdding}
                         className="w-full py-2.5 rounded-full bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-                        {manualAdding ? <RefreshCw size={12} className="animate-spin" /> : <Plus size={12} />}
+                        {manualAdding ? <ArrowsClockwise size={12} className="animate-spin" /> : <Plus size={12} />}
                         {manualAdding ? "Adding..." : "Add to Pool"}
                       </button>
                     </div>
@@ -974,7 +969,7 @@ export default function PhoneEmailPage() {
                           <tr>
                             <td colSpan={8} className="p-8 text-center">
                               <div className="flex items-center justify-center gap-2 text-text-muted text-xs">
-                                <RefreshCw size={14} className="animate-spin" />
+                                <ArrowsClockwise size={14} className="animate-spin" />
                                 Loading email senders...
                               </div>
                             </td>
@@ -1019,11 +1014,11 @@ export default function PhoneEmailPage() {
                                 <td className="p-3 text-right">
                                   <div className="flex items-center justify-end gap-1.5">
                                     <button className="px-2 py-1 rounded text-[9px] bg-[rgba(212,255,0,0.08)] text-brand-accent border border-[rgba(212,255,0,0.25)] hover:bg-[rgba(212,255,0,0.14)] transition-all flex items-center gap-1">
-                                      <Send size={10} /> Send Test
+                                      <PaperPlaneTilt size={10} /> PaperPlaneTilt Test
                                     </button>
                                     <button onClick={() => removeEmail(e)}
                                       className="px-2 py-1 rounded text-[9px] bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-all flex items-center gap-1">
-                                      <Trash2 size={10} /> Remove
+                                      <Trash size={10} /> Remove
                                     </button>
                                   </div>
                                 </td>
@@ -1074,7 +1069,7 @@ export default function PhoneEmailPage() {
                           <span className="text-[9px] text-text-muted">Added {d.addedDate}</span>
                           <button onClick={() => removeDomain(d.id)}
                             className="text-text-muted hover:text-red-400 transition-colors">
-                            <Trash2 size={12} />
+                            <Trash size={12} />
                           </button>
                         </div>
                       </div>
@@ -1093,7 +1088,7 @@ export default function PhoneEmailPage() {
                               <span className="text-[10px] font-semibold">{rec.label}</span>
                               {rec.ok
                                 ? <Check size={11} className="text-green-400" />
-                                : <AlertCircle size={11} className="text-yellow-400" />
+                                : <WarningCircle size={11} className="text-yellow-400" />
                               }
                             </div>
                             <div className="flex items-center gap-1">
@@ -1121,7 +1116,7 @@ export default function PhoneEmailPage() {
                     <div className="glass rounded-xl w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto">
                       <div className="flex items-center justify-between">
                         <h3 className="text-sm font-semibold flex items-center gap-2">
-                          <Mail size={14} className="text-brand-accent" /> Add Email Address
+                          <Envelope size={14} className="text-brand-accent" /> Add Email Address
                         </h3>
                         <button onClick={() => setShowEmailModal(false)} className="text-text-muted hover:text-text-primary"><X size={16} /></button>
                       </div>
@@ -1206,7 +1201,7 @@ export default function PhoneEmailPage() {
                       {/* Add Button */}
                       <button onClick={addEmail} disabled={!newEmail.trim() || emailAdding}
                         className="w-full py-2.5 rounded-full bg-brand-accent text-[#020711] text-xs font-semibold hover:bg-brand-accent/80 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-                        {emailAdding ? <RefreshCw size={12} className="animate-spin" /> : <Check size={12} />}
+                        {emailAdding ? <ArrowsClockwise size={12} className="animate-spin" /> : <Check size={12} />}
                         {emailAdding ? "Adding..." : "Verify & Add"}
                       </button>
                     </div>

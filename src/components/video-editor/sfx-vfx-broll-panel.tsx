@@ -1,4 +1,5 @@
 "use client";
+import { FilmStrip, Lightning, MagnifyingGlass, MusicNote, Plus, SpeakerHigh, SpeakerX, Tag } from "@phosphor-icons/react";
 
 /**
  * SfxVfxBrollPanel — asset browser for sound effects, VFX, and B-roll.
@@ -6,22 +7,12 @@
  * Three tabs:
  *   SFX    — Browse SFX_LIBRARY, preview via Web Audio tone, drag/click to A2·SFX track
  *   VFX    — Browse EFFECTS_CATALOG, click to add overlay clip on FX track
- *   B-Roll — Search curated footage concepts; click to add placeholder clip on V2/V3
+ *   B-Roll — MagnifyingGlass curated footage concepts; click to add placeholder clip on V2/V3
  *
  * Integrates with the editor via ADD_CLIP dispatch actions.
  */
 
 import { useState, useCallback, useRef } from "react";
-import {
-  Music2,
-  Zap,
-  Film,
-  Search,
-  Plus,
-  Volume2,
-  VolumeX,
-  Tag,
-} from "lucide-react";
 import { SFX_LIBRARY, EFFECTS_CATALOG } from "@/lib/asset-catalog";
 import type { EditorState, EditorAction } from "@/lib/video-editor/types";
 
@@ -166,10 +157,10 @@ function SfxTab({ state, dispatch }: Props) {
     <div className="flex flex-col h-full">
       <div className="px-2 pt-2 pb-1">
         <div className="flex items-center gap-1 bg-neutral-800 rounded px-2 py-1 text-neutral-400">
-          <Search size={10} />
+          <MagnifyingGlass size={10} />
           <input
             type="text"
-            placeholder="Search SFX…"
+            placeholder="MagnifyingGlass SFX…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent flex-1 text-[11px] text-neutral-200 placeholder-neutral-500 outline-none min-w-0"
@@ -192,7 +183,7 @@ function SfxTab({ state, dispatch }: Props) {
               }}
               className="shrink-0 p-1 rounded hover:bg-neutral-700 text-neutral-400 hover:text-white transition-colors"
             >
-              {playing === sfx.id ? <Volume2 size={12} className="text-indigo-400" /> : <VolumeX size={12} />}
+              {playing === sfx.id ? <SpeakerHigh size={12} className="text-indigo-400" /> : <SpeakerX size={12} />}
             </button>
             <div className="flex-1 min-w-0">
               <p className="text-[11px] text-neutral-200 truncate">{sfx.name}</p>
@@ -273,10 +264,10 @@ function VfxTab({ state, dispatch }: Props) {
     <div className="flex flex-col h-full">
       <div className="px-2 pt-2 pb-1">
         <div className="flex items-center gap-1 bg-neutral-800 rounded px-2 py-1 text-neutral-400">
-          <Search size={10} />
+          <MagnifyingGlass size={10} />
           <input
             type="text"
-            placeholder="Search VFX…"
+            placeholder="MagnifyingGlass VFX…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent flex-1 text-[11px] text-neutral-200 placeholder-neutral-500 outline-none min-w-0"
@@ -397,10 +388,10 @@ function BrollTab({ state, dispatch }: Props) {
     <div className="flex flex-col h-full">
       <div className="px-2 pt-2 pb-1">
         <div className="flex items-center gap-1 bg-neutral-800 rounded px-2 py-1 text-neutral-400">
-          <Search size={10} />
+          <MagnifyingGlass size={10} />
           <input
             type="text"
-            placeholder="Search B-roll…"
+            placeholder="MagnifyingGlass B-roll…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent flex-1 text-[11px] text-neutral-200 placeholder-neutral-500 outline-none min-w-0"
@@ -468,9 +459,9 @@ export function SfxVfxBrollPanel({ state, dispatch }: Props) {
   const [tab, setTab] = useState<PanelTab>("sfx");
 
   const tabs: { id: PanelTab; label: string; icon: React.ReactNode }[] = [
-    { id: "sfx", label: "SFX", icon: <Music2 size={10} /> },
-    { id: "vfx", label: "VFX", icon: <Zap size={10} /> },
-    { id: "broll", label: "B-Roll", icon: <Film size={10} /> },
+    { id: "sfx", label: "SFX", icon: <MusicNote size={10} /> },
+    { id: "vfx", label: "VFX", icon: <Lightning size={10} /> },
+    { id: "broll", label: "B-Roll", icon: <FilmStrip size={10} /> },
   ];
 
   return (

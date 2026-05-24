@@ -1,4 +1,5 @@
 "use client";
+import { ArrowsClockwise, CaretRight, CheckCircle, CircleNotch, Clock, Lightning, Pause, Play, Pulse, Robot, Sparkle, Target, TrendUp, Users, WarningCircle } from "@phosphor-icons/react";
 
 /**
  * /dashboard/agent-command — Agent Command Center
@@ -9,7 +10,7 @@
  *   ┌─────────────────────────────────────────────────────┐
  *   │  Hero stats (4 counters + loop toggle)              │
  *   ├─────────────────────────┬───────────────────────────┤
- *   │  Live Activity Feed     │  Pipeline Kanban Summary  │
+ *   │  Live Pulse Feed     │  Pipeline Kanban Summary  │
  *   │  (realtime events)      │  (stage counts)           │
  *   ├─────────────────────────┴───────────────────────────┤
  *   │  Task Queue (last 50 tasks — status, type, agent)   │
@@ -22,23 +23,6 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  Activity,
-  AlertCircle,
-  Bot,
-  CheckCircle2,
-  ChevronRight,
-  Clock,
-  Loader2,
-  Pause,
-  Play,
-  RefreshCw,
-  Sparkles,
-  Target,
-  TrendingUp,
-  Users,
-  Zap,
-} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -137,11 +121,11 @@ const AGENT_COLORS: Record<string, string> = {
 
 const STATUS_CONFIG: Record<string, { color: string; icon: React.ReactNode }> = {
   queued: { color: "text-text-muted", icon: <Clock size={10} /> },
-  running: { color: "text-indigo-400", icon: <Loader2 size={10} className="animate-spin" /> },
-  completed: { color: "text-success", icon: <CheckCircle2 size={10} /> },
-  failed: { color: "text-red-400", icon: <AlertCircle size={10} /> },
-  cancelled: { color: "text-text-muted", icon: <AlertCircle size={10} /> },
-  skipped: { color: "text-text-muted", icon: <ChevronRight size={10} /> },
+  running: { color: "text-indigo-400", icon: <CircleNotch size={10} className="animate-spin" /> },
+  completed: { color: "text-success", icon: <CheckCircle size={10} /> },
+  failed: { color: "text-red-400", icon: <WarningCircle size={10} /> },
+  cancelled: { color: "text-text-muted", icon: <WarningCircle size={10} /> },
+  skipped: { color: "text-text-muted", icon: <CaretRight size={10} /> },
 };
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -264,7 +248,7 @@ export default function AgentCommandPage() {
   if (loading || !user) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="animate-spin text-brand-accent" size={24} />
+        <CircleNotch className="animate-spin text-brand-accent" size={24} />
       </div>
     );
   }
@@ -288,7 +272,7 @@ export default function AgentCommandPage() {
               onClick={() => void fetchData()}
               className="btn-pill-ghost text-xs flex items-center gap-1.5"
             >
-              <RefreshCw size={12} />
+              <ArrowsClockwise size={12} />
               Refresh
             </button>
             <button
@@ -299,7 +283,7 @@ export default function AgentCommandPage() {
               }`}
             >
               {toggling ? (
-                <Loader2 size={12} className="animate-spin" />
+                <CircleNotch size={12} className="animate-spin" />
               ) : loopOn ? (
                 <Pause size={12} />
               ) : (
@@ -328,7 +312,7 @@ export default function AgentCommandPage() {
         {/* ── Hero stats row ────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           <StatCard
-            icon={<Zap size={16} className="text-yellow-400" />}
+            icon={<Lightning size={16} className="text-yellow-400" />}
             label="Tasks Queued"
             value={s.tasksQueued.toString()}
             bg="bg-yellow-400/[0.06]"
@@ -342,14 +326,14 @@ export default function AgentCommandPage() {
             border="border-brand-accent/20"
           />
           <StatCard
-            icon={<TrendingUp size={16} className="text-success" />}
+            icon={<TrendUp size={16} className="text-success" />}
             label="Revenue (30d)"
             value={fmtCurrency(s.revenueThisMonth)}
             bg="bg-success/[0.06]"
             border="border-success/20"
           />
           <StatCard
-            icon={<Activity size={16} className="text-violet-400" />}
+            icon={<Pulse size={16} className="text-violet-400" />}
             label="Active Agents"
             value={s.activeAgents.toString()}
             bg="bg-violet-400/[0.06]"
@@ -363,8 +347,8 @@ export default function AgentCommandPage() {
           <div className="lg:col-span-3 glass-panel rounded-xl p-4 flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold flex items-center gap-2">
-                <Activity size={14} className="text-brand-accent" />
-                Live Activity Feed
+                <Pulse size={14} className="text-brand-accent" />
+                Live Pulse Feed
               </h2>
               <span className="text-[10px] text-text-muted">
                 {liveEvents.length} events
@@ -430,7 +414,7 @@ export default function AgentCommandPage() {
         <div className="glass-panel rounded-xl p-4">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Bot size={14} className="text-brand-accent" />
+              <Robot size={14} className="text-brand-accent" />
               Task Queue
             </h2>
             <span className="text-[10px] text-text-muted">
@@ -493,7 +477,7 @@ export default function AgentCommandPage() {
         {(data?.workRequests.length ?? 0) > 0 && (
           <div className="glass-panel rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3">
-              <Sparkles size={14} className="text-brand-accent" />
+              <Sparkle size={14} className="text-brand-accent" />
               <h2 className="text-sm font-semibold">Open Client Work Requests</h2>
               <span className="text-[10px] bg-brand-accent/20 text-brand-accent px-2 py-0.5 rounded-full font-bold">
                 {data?.workRequests.length}
@@ -635,10 +619,10 @@ function LoopSettings({
         className="w-full flex items-center justify-between text-sm font-semibold text-text-primary"
       >
         <span className="flex items-center gap-2">
-          <Zap size={14} className="text-brand-accent" />
+          <Lightning size={14} className="text-brand-accent" />
           Loop Configuration
         </span>
-        <ChevronRight
+        <CaretRight
           size={14}
           className={`text-text-muted transition-transform duration-200 ${open ? "rotate-90" : ""}`}
         />
@@ -678,7 +662,7 @@ function LoopSettings({
               disabled={saving}
               className="btn-pill text-xs flex items-center gap-1.5"
             >
-              {saving ? <Loader2 size={12} className="animate-spin" /> : null}
+              {saving ? <CircleNotch size={12} className="animate-spin" /> : null}
               Save settings
             </button>
           </div>

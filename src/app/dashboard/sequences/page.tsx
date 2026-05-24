@@ -1,14 +1,8 @@
+import { ArrowDown, ArrowRight, ChartBar, Chat, Check, CheckCircle, CircleNotch, Clock, Copy, Envelope, Eye, Gear, GitBranch, Lightning, Pause, Phone, Play, Plus, Pulse, ShareNetwork, Sparkle, Target, Trash, Users, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Mail, Plus, Clock, Sparkles, Play, Pause, Trash2,
-  ArrowDown, Phone, MessageSquare, Share2, GitBranch,
-  Copy, BarChart3, Users, Target, Settings, Zap,
-  CheckCircle, XCircle, Eye,
-  ArrowRight, Loader2, Activity
-} from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
 import { PrismPanel, PRISM_RAINBOW_GRADIENT } from "@/components/prism";
@@ -159,11 +153,11 @@ const STEP_COLORS: Record<string, { bg: string; text: string; border: string }> 
 };
 
 const STEP_ICONS: Record<string, React.ReactNode> = {
-  email: <Mail size={12} />,
-  sms: <MessageSquare size={12} />,
+  email: <Envelope size={12} />,
+  sms: <Chat size={12} />,
   call: <Phone size={12} />,
-  social: <Share2 size={12} />,
-  dm: <Share2 size={12} />,
+  social: <ShareNetwork size={12} />,
+  dm: <ShareNetwork size={12} />,
   wait: <Clock size={12} />,
   condition: <GitBranch size={12} />,
 };
@@ -581,12 +575,12 @@ export default function SequencesPage() {
   const filteredTemplates = templateFilter === "all" ? TEMPLATE_LIBRARY : TEMPLATE_LIBRARY.filter(t => t.category === templateFilter);
 
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
-    { key: "builder", label: "Sequence Builder", icon: <Zap size={14} /> },
+    { key: "builder", label: "Sequence Builder", icon: <Lightning size={14} /> },
     { key: "templates", label: "Templates", icon: <Copy size={14} /> },
-    { key: "analytics", label: "Performance", icon: <BarChart3 size={14} /> },
+    { key: "analytics", label: "Performance", icon: <ChartBar size={14} /> },
     { key: "enrollment", label: "Enrollment Rules", icon: <Users size={14} /> },
-    { key: "runs", label: "Active Runs", icon: <Activity size={14} /> },
-    { key: "settings", label: "Settings", icon: <Settings size={14} /> },
+    { key: "runs", label: "Active Runs", icon: <Pulse size={14} /> },
+    { key: "settings", label: "Gear", icon: <Gear size={14} /> },
   ];
 
   return (
@@ -600,7 +594,7 @@ export default function SequencesPage() {
         <>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <button onClick={() => setShowAiModal(true)} className="btn-pill-ghost flex items-center gap-1.5">
-                      <Sparkles size={12} /> Generate with AI
+                      <Sparkle size={12} /> Generate with AI
                     </button>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
@@ -625,7 +619,7 @@ export default function SequencesPage() {
     </div>{/* Recent activity panel � last 10 step executions from trinity_log */}<PrismPanel padding="p-4" className="overflow-hidden">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-xs font-semibold flex items-center gap-2">
-                  <Activity size={12} className="text-brand-accent" /> Recent activity
+                  <Pulse size={12} className="text-brand-accent" /> Recent activity
                 </h3>
                 <button onClick={() => void loadActivity()} className="text-[10px] text-text-muted hover:text-text-primary">Refresh</button>
               </div>
@@ -655,7 +649,7 @@ export default function SequencesPage() {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Sparkles size={16} className="text-brand-accent" />
+                    <Sparkle size={16} className="text-brand-accent" />
                     <div>
                       <p className="text-xs font-semibold">{aiSummary.name}</p>
                       <p className="text-[10px] text-text-muted">{aiSummary.description}</p>
@@ -713,7 +707,7 @@ export default function SequencesPage() {
                 <div className="flex items-center justify-end gap-2 pt-2">
                   <button onClick={() => setShowAiModal(false)} className="btn-ghost text-xs">Cancel</button>
                   <button onClick={handleGenerateSequence} disabled={aiGenerating} className="btn-pill flex items-center gap-1.5">
-                    {aiGenerating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                    {aiGenerating ? <CircleNotch size={12} className="animate-spin" /> : <Sparkle size={12} />}
                     {aiGenerating ? "Generating..." : "Generate"}
                   </button>
                 </div>
@@ -730,7 +724,7 @@ export default function SequencesPage() {
                     {/* Sequence List */}
                     {loading ? (
                       <div className="glass rounded-xl p-8 text-center">
-                        <Loader2 size={24} className="animate-spin mx-auto text-brand-accent mb-2" />
+                        <CircleNotch size={24} className="animate-spin mx-auto text-brand-accent mb-2" />
                         <p className="text-[10px] text-text-muted">Loading sequences...</p>
                       </div>
                     ) : (
@@ -760,7 +754,7 @@ export default function SequencesPage() {
                               <div className="flex gap-1.5">
                                 <button onClick={() => void openSequence(seq)} className="btn-secondary text-[9px] py-1 px-2">Edit</button>
                                 <button onClick={() => void cloneSequence(seq)} className="btn-ghost text-[9px] py-1 px-2"><Copy size={10} /></button>
-                                <button onClick={() => void handleDelete(seq)} className="btn-ghost text-[9px] py-1 px-2 text-red-400"><Trash2 size={10} /></button>
+                                <button onClick={() => void handleDelete(seq)} className="btn-ghost text-[9px] py-1 px-2 text-red-400"><Trash size={10} /></button>
                               </div>
                             </div>
                           </motion.div>
@@ -769,7 +763,7 @@ export default function SequencesPage() {
                     )}
                     {/* Quick create from template hint */}
                     <div className="glass rounded-xl p-4 border-[rgba(212,255,0,0.1)] text-center py-6">
-                      <Sparkles size={24} className="mx-auto mb-2 text-brand-accent" />
+                      <Sparkle size={24} className="mx-auto mb-2 text-brand-accent" />
                       <p className="text-sm font-semibold">Create a new sequence</p>
                       <p className="text-[10px] text-text-muted mt-1">Pick a template from the Templates tab, or build from scratch</p>
                       <button onClick={() => setActiveTab("templates")} className="btn-secondary text-xs mt-3">Browse Templates</button>
@@ -792,7 +786,7 @@ export default function SequencesPage() {
                       <div className="flex gap-2">
                         <button onClick={() => void handleSave()} disabled={saving}
                           className="btn-primary text-xs flex items-center gap-1.5">
-                          {saving ? <Loader2 size={12} className="animate-spin" /> : null} Save
+                          {saving ? <CircleNotch size={12} className="animate-spin" /> : null} Save
                         </button>
                         <button onClick={() => void toggleSequence()}
                           className={`text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium ${
@@ -840,7 +834,7 @@ export default function SequencesPage() {
                                   <span className="text-[9px] text-text-muted">Step {i + 1}</span>
                                   {step.channel && <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 text-text-muted capitalize">{step.channel}</span>}
                                 </div>
-                                <button onClick={() => removeStep(step.id)} className="text-text-muted hover:text-red-400 p-1"><Trash2 size={12} /></button>
+                                <button onClick={() => removeStep(step.id)} className="text-text-muted hover:text-red-400 p-1"><Trash size={12} /></button>
                               </div>
 
                               {step.type === "wait" ? (
@@ -914,10 +908,10 @@ export default function SequencesPage() {
                     {/* Add Step Buttons */}
                     <div className="flex gap-2 justify-center pt-2 flex-wrap">
                       {[
-                        { type: "email" as const, label: "Email", icon: <Mail size={10} /> },
-                        { type: "sms" as const, label: "SMS", icon: <MessageSquare size={10} /> },
+                        { type: "email" as const, label: "Email", icon: <Envelope size={10} /> },
+                        { type: "sms" as const, label: "SMS", icon: <Chat size={10} /> },
                         { type: "call" as const, label: "Call", icon: <Phone size={10} /> },
-                        { type: "social" as const, label: "DM", icon: <Share2 size={10} /> },
+                        { type: "social" as const, label: "DM", icon: <ShareNetwork size={10} /> },
                         { type: "wait" as const, label: "Wait", icon: <Clock size={10} /> },
                         { type: "condition" as const, label: "Condition", icon: <GitBranch size={10} /> },
                       ].map(s => (
@@ -1134,7 +1128,7 @@ export default function SequencesPage() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <Activity size={14} className="text-brand-accent" /> Multi-channel runs
+                    <Pulse size={14} className="text-brand-accent" /> Multi-channel runs
                   </h3>
                   <div className="flex items-center gap-2">
                     <select
@@ -1155,7 +1149,7 @@ export default function SequencesPage() {
                 <PrismPanel padding="p-3" className="overflow-hidden">
                   {runsLoading ? (
                     <div className="text-center py-6">
-                      <Loader2 size={16} className="animate-spin mx-auto text-brand-accent mb-2" />
+                      <CircleNotch size={16} className="animate-spin mx-auto text-brand-accent mb-2" />
                       <p className="text-[10px] text-text-muted">Loading runs...</p>
                     </div>
                   ) : runs.length === 0 ? (
@@ -1218,7 +1212,7 @@ export default function SequencesPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div className="glass rounded-xl p-4">
                     <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                      <Settings size={14} className="text-brand-accent" /> Sending Limits
+                      <Gear size={14} className="text-brand-accent" /> Sending Limits
                     </h3>
                     <div className="space-y-3">
                       {[

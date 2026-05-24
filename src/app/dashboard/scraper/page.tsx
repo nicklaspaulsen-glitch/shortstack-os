@@ -1,14 +1,7 @@
+import { Bookmark, Briefcase, Building, Calendar, CaretDoubleRight, CaretDown, CaretRight, Chat, CheckCircle, CircleNotch, Clock, CurrencyDollar, Database, DownloadSimple, Envelope, Eye, Flask, FloppyDisk, Funnel, Globe, Hash, Lightbulb, Lightning, MagnifyingGlass, MapPin, Megaphone, PaperPlaneTilt, Phone, Play, Plus, Stack, Star, Tag, Target, Trash, UserPlus, Users, WifiHigh, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect } from "react";
-import {
-  Search, Zap, Plus, X, Play, Download, Filter, Globe, MapPin, Tag, Hash,
-  FlaskConical, Send, Star,
-  Clock, Save, Users, Wifi, Target,
-  Calendar, Trash2, Eye, Mail, Phone, Layers,
-  UserPlus, Database, CheckCircle, Bookmark,
-  ChevronDown, ChevronRight, DollarSign, Building, Briefcase, MessageSquareWarning
-} from "lucide-react";
 import {
   GoogleMapsIcon, FacebookIcon, InstagramIcon, TikTokIcon, LinkedInIcon,
   YelpIcon, TripAdvisorIcon, TrustpilotIcon, YellowPagesIcon, IndeedIcon,
@@ -18,7 +11,6 @@ import DataTable from "@/components/ui/data-table";
 import WebsiteScraper from "@/components/ui/website-scraper";
 import Modal from "@/components/ui/modal";
 import InlineSocialConnect from "@/components/inline-social-connect";
-import { Lightbulb, Megaphone, Loader2, ChevronsRight } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import ErrorBoundary from "@/components/error-boundary";
@@ -253,7 +245,7 @@ export default function ScraperPage() {
   const [savedSearches, setSavedSearches] = useState<SavedSearch[]>([]);
   const [saveSearchName, setSaveSearchName] = useState("");
 
-  // Search history
+  // MagnifyingGlass history
   const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
 
   // Scheduled scrapes
@@ -516,7 +508,7 @@ export default function ScraperPage() {
     };
     setSavedSearches(prev => [newSearch, ...prev]);
     setSaveSearchName("");
-    toast.success("Search saved");
+    toast.success("MagnifyingGlass saved");
   }
 
   function loadSavedSearch(s: SavedSearch) {
@@ -602,7 +594,7 @@ export default function ScraperPage() {
   const estimatedLeads = selectedPlatforms.length * niches.length * locations.length * maxResults;
 
   const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
-    { id: "search", label: "Search", icon: <Search size={14} /> },
+    { id: "search", label: "MagnifyingGlass", icon: <MagnifyingGlass size={14} /> },
     { id: "results", label: `Results (${results.length})`, icon: <Eye size={14} /> },
     { id: "enrichment", label: "Enrichment", icon: <UserPlus size={14} /> },
     { id: "saved", label: "Saved Searches", icon: <Bookmark size={14} /> },
@@ -723,7 +715,7 @@ export default function ScraperPage() {
                           ) : autoRunEnabled ? (
                             <><X size={13} /> Disable Auto-Run</>
                           ) : (
-                            <><Zap size={13} /> Enable Auto-Run</>
+                            <><Lightning size={13} /> Enable Auto-Run</>
                           )}
                         </button>
                       </div>
@@ -732,7 +724,7 @@ export default function ScraperPage() {
                 </div>
 
                 <button onClick={runTest500} disabled={testRunning || running} className="btn-secondary flex items-center gap-2 disabled:opacity-50 text-xs">
-                  {testRunning ? <><div className="w-3 h-3 border-2 border-muted/20 border-t-muted rounded-full animate-spin" /> Testing...</> : <><FlaskConical size={14} /> Test 500</>}
+                  {testRunning ? <><div className="w-3 h-3 border-2 border-muted/20 border-t-muted rounded-full animate-spin" /> Testing...</> : <><Flask size={14} /> Test 500</>}
                 </button>
                 <button onClick={runScraper} disabled={running} className="btn-primary flex items-center gap-2 disabled:opacity-50 px-5">
                   {running ? <><div className="w-3.5 h-3.5 border-2 border-black/20 border-t-black rounded-full animate-spin" /> Scraping...</> : <><Play size={14} /> Run Scraper</>}
@@ -824,7 +816,7 @@ export default function ScraperPage() {
                   {/* Advanced Filters */}
                   <div className="glass rounded-xl p-4">
                     <button onClick={() => setShowFilters(!showFilters)} className="w-full flex items-center justify-between">
-                      <h3 className="text-xs font-medium flex items-center gap-2"><Filter size={13} className="text-brand-accent" /> Filters</h3>
+                      <h3 className="text-xs font-medium flex items-center gap-2"><Funnel size={13} className="text-brand-accent" /> Filters</h3>
                       <span className="text-[10px] text-text-muted">{showFilters ? "Hide" : "Show"}</span>
                     </button>
                     {showFilters && (
@@ -875,7 +867,7 @@ export default function ScraperPage() {
                         </div>
                         {/* Annual Revenue */}
                         <div>
-                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1 flex items-center gap-1"><DollarSign size={10} className="text-brand-accent" /> Annual Revenue</p>
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1 flex items-center gap-1"><CurrencyDollar size={10} className="text-brand-accent" /> Annual Revenue</p>
                           <div className="flex flex-wrap gap-1">
                             {REVENUE_RANGES.map(r => (
                               <button key={r} onClick={() => setFilters({ ...filters, revenue_range: filters.revenue_range === r ? "" : r })}
@@ -883,7 +875,7 @@ export default function ScraperPage() {
                             ))}
                           </div>
                         </div>
-                        {/* Company Size Filter */}
+                        {/* Company Size Funnel */}
                         <div>
                           <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">Company Size</p>
                           <div className="flex flex-wrap gap-1">
@@ -893,7 +885,7 @@ export default function ScraperPage() {
                             ))}
                           </div>
                         </div>
-                        {/* Tech Stack Filter */}
+                        {/* Tech Stack Funnel */}
                         <div>
                           <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">Tech Stack</p>
                           <select value={filters.tech_stack} onChange={e => setFilters({ ...filters, tech_stack: e.target.value })} className="input text-xs py-1.5 w-full">
@@ -959,7 +951,7 @@ export default function ScraperPage() {
                           <div className="space-y-2">
                             <label className="flex items-center gap-2 cursor-pointer">
                               <input type="checkbox" checked={filters.has_negative_reviews} onChange={e => setFilters({ ...filters, has_negative_reviews: e.target.checked })} className="accent-danger w-3.5 h-3.5" />
-                              <span className="text-[10px] flex items-center gap-1"><MessageSquareWarning size={10} className="text-danger" /> Only businesses with negative reviews</span>
+                              <span className="text-[10px] flex items-center gap-1"><Chat size={10} className="text-danger" /> Only businesses with negative reviews</span>
                             </label>
                             <label className="flex items-center gap-2 cursor-pointer">
                               <input type="checkbox" checked={filters.recently_reviewed} onChange={e => setFilters({ ...filters, recently_reviewed: e.target.checked })} className="accent-info w-3.5 h-3.5" />
@@ -1023,7 +1015,7 @@ export default function ScraperPage() {
                   {/* Smart AI Match */}
                   <div className="glass-indigo rounded-xl p-4">
                     <button onClick={() => setAiMatchEnabled(!aiMatchEnabled)} className="w-full flex items-center justify-between">
-                      <h3 className="text-xs font-medium flex items-center gap-2"><FlaskConical size={13} className="text-brand-accent" /> Smart AI Match</h3>
+                      <h3 className="text-xs font-medium flex items-center gap-2"><Flask size={13} className="text-brand-accent" /> Smart AI Match</h3>
                       <span className="text-[10px] text-text-muted">{aiMatchEnabled ? "On" : "Off"}</span>
                     </button>
                     {aiMatchEnabled && (
@@ -1057,13 +1049,13 @@ export default function ScraperPage() {
                 <div className="space-y-4">
                   <div className="glass rounded-xl p-4">
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-sm font-medium flex items-center gap-2"><Zap size={14} className="text-brand-accent" /> Niches / Industries <span className="text-[9px] text-text-muted font-normal">({ALL_NICHES.length} total)</span></h3>
+                      <h3 className="text-sm font-medium flex items-center gap-2"><Lightning size={14} className="text-brand-accent" /> Niches / Industries <span className="text-[9px] text-text-muted font-normal">({ALL_NICHES.length} total)</span></h3>
                       <button onClick={() => setBatchMode(!batchMode)} className="text-[9px] text-brand-accent hover:underline">{batchMode ? "Single mode" : "Batch import"}</button>
                     </div>
                     {batchMode ? (
                       <div className="space-y-2">
                         <textarea value={batchNiches} onChange={e => setBatchNiches(e.target.value)} placeholder="Paste niches (one per line)..." rows={6} className="input w-full text-xs" />
-                        <button onClick={handleBatchImport} className="btn-primary text-xs w-full py-2 flex items-center justify-center gap-2"><Layers size={12} /> Import Niches</button>
+                        <button onClick={handleBatchImport} className="btn-primary text-xs w-full py-2 flex items-center justify-center gap-2"><Stack size={12} /> Import Niches</button>
                       </div>
                     ) : (
                       <>
@@ -1080,13 +1072,13 @@ export default function ScraperPage() {
                           <input value={customNiche} onChange={e => setCustomNiche(e.target.value)} onKeyDown={e => e.key === "Enter" && addNiche(customNiche)} placeholder="Type custom niche..." className="input flex-1 text-sm py-1.5" />
                           <button onClick={() => addNiche(customNiche)} className="btn-secondary text-xs py-1.5 px-3"><Plus size={12} /></button>
                         </div>
-                        {/* Search filter for niches */}
+                        {/* MagnifyingGlass filter for niches */}
                         <div className="relative mb-3">
-                          <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
+                          <MagnifyingGlass size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                           <input
                             value={nicheSearch}
                             onChange={e => setNicheSearch(e.target.value)}
-                            placeholder="Search niches across all categories..."
+                            placeholder="MagnifyingGlass niches across all categories..."
                             className="input w-full text-xs py-1.5 pl-7"
                           />
                           {nicheSearch && (
@@ -1105,7 +1097,7 @@ export default function ScraperPage() {
                                   className="w-full flex items-center justify-between px-2.5 py-2 bg-surface-light/50 hover:bg-surface-light transition-colors"
                                 >
                                   <div className="flex items-center gap-2">
-                                    {isExpanded ? <ChevronDown size={12} className="text-brand-accent" /> : <ChevronRight size={12} className="text-text-muted" />}
+                                    {isExpanded ? <CaretDown size={12} className="text-brand-accent" /> : <CaretRight size={12} className="text-text-muted" />}
                                     <Building size={11} className="text-brand-accent" />
                                     <span className="text-[10px] font-medium">{category}</span>
                                   </div>
@@ -1148,12 +1140,12 @@ export default function ScraperPage() {
                       <button onClick={() => addTag(customTag)} className="btn-secondary text-xs py-1.5 px-3"><Plus size={12} /></button>
                     </div>
                   </div>
-                  {/* Save Search */}
+                  {/* FloppyDisk MagnifyingGlass */}
                   <div className="glass rounded-xl p-4">
-                    <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Save size={14} className="text-brand-accent" /> Save This Search</h3>
+                    <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><FloppyDisk size={14} className="text-brand-accent" /> FloppyDisk This MagnifyingGlass</h3>
                     <div className="flex gap-2">
-                      <input value={saveSearchName} onChange={e => setSaveSearchName(e.target.value)} placeholder="Search name..." className="input flex-1 text-sm py-1.5" />
-                      <button onClick={saveCurrentSearch} className="btn-primary text-xs py-1.5 px-3"><Save size={12} /></button>
+                      <input value={saveSearchName} onChange={e => setSaveSearchName(e.target.value)} placeholder="MagnifyingGlass name..." className="input flex-1 text-sm py-1.5" />
+                      <button onClick={saveCurrentSearch} className="btn-primary text-xs py-1.5 px-3"><FloppyDisk size={12} /></button>
                     </div>
                   </div>
                 </div>
@@ -1174,13 +1166,13 @@ export default function ScraperPage() {
                     <input value={customLocation} onChange={e => setCustomLocation(e.target.value)} onKeyDown={e => e.key === "Enter" && addLocation(customLocation)} placeholder="City, State or Country..." className="input flex-1 text-sm py-1.5" />
                     <button onClick={() => addLocation(customLocation)} className="btn-secondary text-xs py-1.5 px-3"><Plus size={12} /></button>
                   </div>
-                  {/* Search cities */}
+                  {/* MagnifyingGlass cities */}
                   <div className="relative mb-3">
-                    <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
+                    <MagnifyingGlass size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                     <input
                       value={locationSearch}
                       onChange={e => setLocationSearch(e.target.value)}
-                      placeholder="Search cities..."
+                      placeholder="MagnifyingGlass cities..."
                       className="input w-full text-xs py-1.5 pl-7"
                     />
                     {locationSearch && (
@@ -1251,7 +1243,7 @@ export default function ScraperPage() {
                         Create your campaign first in Outreach, then come back to find leads for it.
                         {" "}
                         <a href="/dashboard/outreach-hub" className="text-brand-accent hover:underline inline-flex items-center gap-0.5">
-                          Go to Outreach <ChevronsRight size={10} />
+                          Go to Outreach <CaretDoubleRight size={10} />
                         </a>
                       </p>
                     </div>
@@ -1311,14 +1303,14 @@ export default function ScraperPage() {
                           const url = URL.createObjectURL(blob);
                           const a = document.createElement("a"); a.href = url; a.download = "leads.csv"; a.click();
                           toast.success("CSV downloaded");
-                        }} className="btn-secondary flex items-center gap-1.5 text-[10px] py-1.5"><Download size={12} /> CSV</button>
+                        }} className="btn-secondary flex items-center gap-1.5 text-[10px] py-1.5"><DownloadSimple size={12} /> CSV</button>
                         <button onClick={() => {
                           const json = JSON.stringify(results, null, 2);
                           const blob = new Blob([json], { type: "application/json" });
                           const url = URL.createObjectURL(blob);
                           const a = document.createElement("a"); a.href = url; a.download = "leads.json"; a.click();
                           toast.success("JSON downloaded");
-                        }} className="btn-secondary flex items-center gap-1.5 text-[10px] py-1.5"><Download size={12} /> JSON</button>
+                        }} className="btn-secondary flex items-center gap-1.5 text-[10px] py-1.5"><DownloadSimple size={12} /> JSON</button>
                         {/* Push to CRM (GHL) removed Apr 21 — leads are stored natively
                             in the `leads` table via the scraper import path. */}
                       </div>
@@ -1350,11 +1342,11 @@ export default function ScraperPage() {
                             </div>
                             <div className="space-y-1 text-[10px]">
                               {r.phone && <p className="flex items-center gap-1.5"><Phone size={10} className="text-brand-accent" /> {r.phone}</p>}
-                              {r.email && <p className="flex items-center gap-1.5"><Mail size={10} className="text-brand-accent" /> {r.email}</p>}
+                              {r.email && <p className="flex items-center gap-1.5"><Envelope size={10} className="text-brand-accent" /> {r.email}</p>}
                               {r.website && <p className="flex items-center gap-1.5 text-brand-accent"><Globe size={10} /> <a href={r.website} target="_blank" rel="noopener" className="hover:underline truncate">{r.website}</a></p>}
                               {r.address && <p className="flex items-center gap-1.5"><MapPin size={10} className="text-text-muted" /> {r.address}</p>}
                               {r.google_rating && <p className="flex items-center gap-1"><Star size={10} className="text-warning fill-warning" /> {r.google_rating} ({r.review_count} reviews)</p>}
-                              {r.tech_stack && <p className="flex items-center gap-1.5"><Wifi size={10} className="text-info" /> {r.tech_stack}</p>}
+                              {r.tech_stack && <p className="flex items-center gap-1.5"><WifiHigh size={10} className="text-info" /> {r.tech_stack}</p>}
                               {r.decision_maker && <p className="flex items-center gap-1.5"><Users size={10} className="text-brand-accent" /> {r.decision_maker} - {r.decision_maker_title}</p>}
                             </div>
                             <div className="flex gap-1 mt-2">
@@ -1387,7 +1379,7 @@ export default function ScraperPage() {
                   </>
                 ) : (
                   <div className="glass rounded-xl text-center py-16">
-                    <Search size={48} className="mx-auto text-text-muted/30 mb-4" />
+                    <MagnifyingGlass size={48} className="mx-auto text-text-muted/30 mb-4" />
                     <p className="text-text-muted text-sm">No results yet. Configure and run the scraper.</p>
                   </div>
                 )}
@@ -1402,8 +1394,8 @@ export default function ScraperPage() {
                   <p className="text-xs text-text-muted mb-4">Select leads from the Results tab, then choose an enrichment type to find additional data.</p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                     {[
-                      { id: "contact" as const, label: "Contact Finder", desc: "Find email, phone, social profiles", icon: <Mail size={18} />, color: "text-brand-accent" },
-                      { id: "tech" as const, label: "Tech Stack Detector", desc: "Detect CMS, frameworks, tools used", icon: <Wifi size={18} />, color: "text-info" },
+                      { id: "contact" as const, label: "Contact Finder", desc: "Find email, phone, social profiles", icon: <Envelope size={18} />, color: "text-brand-accent" },
+                      { id: "tech" as const, label: "Tech Stack Detector", desc: "Detect CMS, frameworks, tools used", icon: <WifiHigh size={18} />, color: "text-info" },
                       { id: "decision_maker" as const, label: "Decision Maker Finder", desc: "Find owners, CEOs, key contacts", icon: <Users size={18} />, color: "text-brand-accent" },
                     ].map(e => (
                       <button key={e.id} onClick={() => setEnrichmentType(e.id)}
@@ -1417,7 +1409,7 @@ export default function ScraperPage() {
                   <div className="flex items-center gap-3">
                     <button onClick={enrichLeads} disabled={enriching || selectedLeads.size === 0}
                       className="btn-primary flex items-center gap-2 disabled:opacity-50">
-                      {enriching ? <><div className="w-3 h-3 border-2 border-black/20 border-t-black rounded-full animate-spin" /> Enriching...</> : <><Zap size={14} /> Enrich {selectedLeads.size} Lead{selectedLeads.size !== 1 ? "s" : ""}</>}
+                      {enriching ? <><div className="w-3 h-3 border-2 border-black/20 border-t-black rounded-full animate-spin" /> Enriching...</> : <><Lightning size={14} /> Enrich {selectedLeads.size} Lead{selectedLeads.size !== 1 ? "s" : ""}</>}
                     </button>
                     <span className="text-xs text-text-muted">{selectedLeads.size} of {results.length} leads selected</span>
                   </div>
@@ -1500,7 +1492,7 @@ export default function ScraperPage() {
             {tab === "saved" && (
               <div className="space-y-4">
                 {savedSearches.length === 0 ? (
-                  <div className="glass rounded-xl text-center py-12"><Bookmark size={32} className="mx-auto text-text-muted/30 mb-3" /><p className="text-text-muted text-sm">No saved searches yet. Save a search from the Search tab.</p></div>
+                  <div className="glass rounded-xl text-center py-12"><Bookmark size={32} className="mx-auto text-text-muted/30 mb-3" /><p className="text-text-muted text-sm">No saved searches yet. FloppyDisk a search from the MagnifyingGlass tab.</p></div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {savedSearches.map((s, si) => (
@@ -1520,7 +1512,7 @@ export default function ScraperPage() {
                           </div>
                           <div className="flex gap-1">
                             <button onClick={() => loadSavedSearch(s)} className="btn-primary text-[10px] py-1 px-2"><Play size={10} /> Run</button>
-                            <button onClick={() => setSavedSearches(prev => prev.filter(x => x.id !== s.id))} className="btn-secondary text-[10px] py-1 px-2 text-danger"><Trash2 size={10} /></button>
+                            <button onClick={() => setSavedSearches(prev => prev.filter(x => x.id !== s.id))} className="btn-secondary text-[10px] py-1 px-2 text-danger"><Trash size={10} /></button>
                           </div>
                         </div>
                         <div className="flex flex-wrap gap-1 mb-2">
@@ -1543,7 +1535,7 @@ export default function ScraperPage() {
             {tab === "history" && (
               <div className="space-y-4">
                 <div className="glass rounded-xl p-4">
-                  <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><Clock size={14} className="text-brand-accent" /> Search History</h3>
+                  <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><Clock size={14} className="text-brand-accent" /> MagnifyingGlass History</h3>
                   <div className="space-y-2">
                     {searchHistory.map((h, hi) => (
                       <motion.div
@@ -1641,7 +1633,7 @@ export default function ScraperPage() {
                             </div>
                             <button onClick={() => setScheduledScrapes(prev => prev.map(x => x.id === s.id ? { ...x, is_active: !x.is_active } : x))}
                               className={`px-2 py-1 rounded text-[10px] ${s.is_active ? "bg-warning/10 text-warning" : "bg-success/10 text-success"}`}>{s.is_active ? "Pause" : "Resume"}</button>
-                            <button onClick={() => setScheduledScrapes(prev => prev.filter(x => x.id !== s.id))} className="text-danger text-xs"><Trash2 size={14} /></button>
+                            <button onClick={() => setScheduledScrapes(prev => prev.filter(x => x.id !== s.id))} className="text-danger text-xs"><Trash size={14} /></button>
                           </div>
                         </div>
                       </motion.div>
@@ -1655,7 +1647,7 @@ export default function ScraperPage() {
             {testResults && (
               <div className="space-y-4">
                 <div className="glass-indigo rounded-xl p-4">
-                  <h3 className="flex items-center gap-2"><FlaskConical size={14} className="text-brand-accent" /> 500-Lead Test Results</h3>
+                  <h3 className="flex items-center gap-2"><Flask size={14} className="text-brand-accent" /> 500-Lead Test Results</h3>
                   <div className="grid grid-cols-4 gap-3 mb-4">
                     <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border-subtle"><p className="text-lg font-bold font-mono text-brand-accent">{testResults.totalFound}</p><p className="text-[9px] text-text-muted uppercase tracking-wider">Found</p></div>
                     <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border-subtle"><p className="text-lg font-bold font-mono text-success">{testResults.totalSaved}</p><p className="text-[9px] text-text-muted uppercase tracking-wider">Saved</p></div>
@@ -1695,7 +1687,7 @@ export default function ScraperPage() {
                   <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-white/10 shrink-0">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 bg-[rgba(212,255,0,0.10)] rounded-xl flex items-center justify-center">
-                        <Send size={18} className="text-brand-accent" />
+                        <PaperPlaneTilt size={18} className="text-brand-accent" />
                       </div>
                       <div>
                         <h2 className="text-base font-bold text-text-primary">Launch Outreach</h2>
@@ -1725,7 +1717,7 @@ export default function ScraperPage() {
                     {/* Email Accounts */}
                     <div className="space-y-2">
                       <h3 className="text-xs font-semibold flex items-center gap-2 text-text-primary">
-                        <Mail size={13} className="text-brand-accent" /> Email Accounts
+                        <Envelope size={13} className="text-brand-accent" /> Email Accounts
                       </h3>
                       <div className="p-3 rounded-lg bg-white/4 border border-white/10">
                         <p className="text-[10px] text-text-muted">No email accounts configured.</p>
@@ -1843,7 +1835,7 @@ export default function ScraperPage() {
                       }}
                       className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-accent hover:bg-brand-accent/90 text-black text-xs font-semibold transition-all"
                     >
-                      <Send size={13} /> Save &amp; Start Outreach
+                      <PaperPlaneTilt size={13} /> FloppyDisk &amp; Start Outreach
                     </button>
                   </div>
                 </div>
@@ -1870,7 +1862,7 @@ export default function ScraperPage() {
                     <label className="text-[10px] text-text-muted block mb-1">Campaign</label>
                     {pushCampaignsLoading ? (
                       <div className="flex items-center gap-2 text-[11px] text-text-muted">
-                        <Loader2 size={12} className="animate-spin" /> Loading campaigns...
+                        <CircleNotch size={12} className="animate-spin" /> Loading campaigns...
                       </div>
                     ) : pushCampaigns.length === 0 ? (
                       <div className="p-3 rounded-lg border border-border-subtle bg-surface-light text-[11px] text-text-muted">
@@ -1918,7 +1910,7 @@ export default function ScraperPage() {
                     <label className="text-[10px] text-text-muted block mb-1">Schedule</label>
                     <div className="grid grid-cols-2 gap-2">
                       {([
-                        { id: "once" as const, label: "Once", desc: "Send once" },
+                        { id: "once" as const, label: "Once", desc: "PaperPlaneTilt once" },
                         { id: "daily" as const, label: "Daily", desc: "Every day" },
                         { id: "every_other_day" as const, label: "Every 2nd day", desc: "Every other day" },
                         { id: "weekdays" as const, label: "Weekdays", desc: "Mon–Fri" },
@@ -1963,7 +1955,7 @@ export default function ScraperPage() {
                       disabled={pushSubmitting || !selectedPushCampaign}
                       className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-40"
                     >
-                      {pushSubmitting ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+                      {pushSubmitting ? <CircleNotch size={12} className="animate-spin" /> : <PaperPlaneTilt size={12} />}
                       {pushSubmitting ? "Assigning..." : "Assign leads"}
                     </button>
                   </div>

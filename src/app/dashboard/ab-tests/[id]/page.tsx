@@ -1,4 +1,5 @@
 "use client";
+import { ArrowLeft, CheckCircle, Clock, Flask, Pause, Plus, TrendUp, Trophy } from "@phosphor-icons/react";
 
 /**
  * A/B Test detail — variant table, lift chart, declare winner.
@@ -7,16 +8,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import {
-  FlaskConical,
-  Plus,
-  Trophy,
-  TrendingUp,
-  ArrowLeft,
-  CheckCircle2,
-  Clock,
-  Pause,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface Variant {
@@ -219,7 +210,7 @@ export default function AbTestDetailPage() {
                       <span className="text-zinc-500">—</span>
                     ) : lift > 0 ? (
                       <span className="text-emerald-400 font-semibold flex items-center gap-1 justify-end">
-                        <TrendingUp size={11} />+{lift.toFixed(1)}%
+                        <TrendUp size={11} />+{lift.toFixed(1)}%
                       </span>
                     ) : lift < 0 ? (
                       <span className="text-red-400 font-semibold">{lift.toFixed(1)}%</span>
@@ -269,7 +260,7 @@ export default function AbTestDetailPage() {
 
       {test.status === "completed" && (
         <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 flex items-center gap-3 text-emerald-400">
-          <CheckCircle2 size={18} />
+          <CheckCircle size={18} />
           Test completed{test.ended_at ? ` on ${new Date(test.ended_at).toLocaleDateString()}` : ""}.
         </div>
       )}

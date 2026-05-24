@@ -1,15 +1,9 @@
+import { ArrowsClockwise, At, BookOpen, Briefcase, CaretDown, CaretRight, CaretUp, Chat, CheckCircle, CircleNotch, Clock, CreditCard, CurrencyDollar, Eye, FileText, Handshake, Lightning, Microphone, Package, PaperPlaneTilt, Paperclip, Play, Scissors, Star, Target, TrendUp, User, Users, WarningCircle, X, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Mic, MessageSquare, CheckCircle, FileText, TrendingUp, XCircle,
-  ChevronRight, AtSign, Send, RefreshCw, Loader2, Clock, User, Briefcase,
-  DollarSign, Target, Eye, X, ChevronDown, ChevronUp, Paperclip, Zap,
-  AlertCircle, Users, Play, CreditCard, Package, HandshakeIcon, BookOpen,
-  Scissors, Star,
-} from "lucide-react";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -118,12 +112,12 @@ interface StageConfig {
 }
 
 const PIPELINE_STAGES: StageConfig[] = [
-  { stage: "outreach_sent",  label: "Outreach Sent", color: "#A78BFA", bg: "rgba(212,255,0,0.08)",   border: "rgba(212,255,0,0.22)",   icon: <Mic size={13} />,          phase: "outreach" },
-  { stage: "replied",        label: "Replied",        color: "#A78BFA", bg: "rgba(139,92,246,0.08)",   border: "rgba(139,92,246,0.22)",   icon: <MessageSquare size={13} />, phase: "outreach" },
+  { stage: "outreach_sent",  label: "Outreach Sent", color: "#A78BFA", bg: "rgba(212,255,0,0.08)",   border: "rgba(212,255,0,0.22)",   icon: <Microphone size={13} />,          phase: "outreach" },
+  { stage: "replied",        label: "Replied",        color: "#A78BFA", bg: "rgba(139,92,246,0.08)",   border: "rgba(139,92,246,0.22)",   icon: <Chat size={13} />, phase: "outreach" },
   { stage: "qualifying",     label: "Qualifying",     color: "#FBBF24", bg: "rgba(251,191,36,0.08)",   border: "rgba(251,191,36,0.22)",   icon: <Target size={13} />,        phase: "outreach" },
   { stage: "qualified",      label: "Qualified",      color: "#34D399", bg: "rgba(52,211,153,0.08)",   border: "rgba(52,211,153,0.22)",   icon: <CheckCircle size={13} />,   phase: "deal" },
   { stage: "content_ready",  label: "Pitch Ready",    color: "#F472B6", bg: "rgba(244,114,182,0.08)",  border: "rgba(244,114,182,0.22)",  icon: <FileText size={13} />,      phase: "deal" },
-  { stage: "closed",         label: "Closed",         color: "#10B981", bg: "rgba(16,185,129,0.08)",   border: "rgba(16,185,129,0.22)",   icon: <HandshakeIcon size={13} />, phase: "deal" },
+  { stage: "closed",         label: "Closed",         color: "#10B981", bg: "rgba(16,185,129,0.08)",   border: "rgba(16,185,129,0.22)",   icon: <Handshake size={13} />, phase: "deal" },
   { stage: "onboarding",     label: "Onboarding",     color: "#FB923C", bg: "rgba(251,146,60,0.08)",   border: "rgba(251,146,60,0.22)",   icon: <User size={13} />,          phase: "production" },
   { stage: "scripting",      label: "Scripting",      color: "#E879F9", bg: "rgba(232,121,249,0.08)",  border: "rgba(232,121,249,0.22)",  icon: <BookOpen size={13} />,      phase: "production" },
   { stage: "editing",        label: "Editing",        color: "#38BDF8", bg: "rgba(56,189,248,0.08)",   border: "rgba(56,189,248,0.22)",   icon: <Scissors size={13} />,      phase: "production" },
@@ -147,9 +141,9 @@ function getStageConfig(stage: Stage): StageConfig {
 }
 
 function platformIcon(platform: string) {
-  if (platform === "instagram") return <AtSign size={11} />;
-  if (platform === "telegram")  return <Send size={11} />;
-  return <Zap size={11} />;
+  if (platform === "instagram") return <At size={11} />;
+  if (platform === "telegram")  return <PaperPlaneTilt size={11} />;
+  return <Lightning size={11} />;
 }
 
 function relativeTime(iso: string | null | undefined): string {
@@ -255,9 +249,9 @@ function LeadDetailPanel({
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all"
             style={{ background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.border}` }}
           >
-            {updatingStage ? <Loader2 size={11} className="animate-spin" /> : cfg.icon}
+            {updatingStage ? <CircleNotch size={11} className="animate-spin" /> : cfg.icon}
             <span>{cfg.label}</span>
-            <ChevronDown size={10} />
+            <CaretDown size={10} />
           </button>
           <AnimatePresence>
             {showStagePicker && (
@@ -307,13 +301,13 @@ function LeadDetailPanel({
             )}
             {info.challenge && (
               <div className="flex items-center gap-1.5">
-                <AlertCircle size={11} className="text-text-muted flex-shrink-0" />
+                <WarningCircle size={11} className="text-text-muted flex-shrink-0" />
                 <span className="text-xs text-text-secondary truncate">{info.challenge}</span>
               </div>
             )}
             {lead.payment_amount && (
               <div className="flex items-center gap-1.5">
-                <DollarSign size={11} className="text-text-muted flex-shrink-0" />
+                <CurrencyDollar size={11} className="text-text-muted flex-shrink-0" />
                 <span className="text-xs font-semibold truncate" style={{ color: lead.payment_received_at ? "#10B981" : "#FDE68A" }}>
                   {fmtUsd(lead.payment_amount)} {lead.payment_received_at ? "✓ paid" : "pending"}
                 </span>
@@ -369,7 +363,7 @@ function ConversationTab({ lead }: { lead: Lead }) {
   if (!history.length) {
     return (
       <div className="flex flex-col items-center justify-center h-32 text-text-muted">
-        <MessageSquare size={20} className="mb-2 opacity-40" />
+        <Chat size={20} className="mb-2 opacity-40" />
         <span className="text-xs">No messages yet</span>
       </div>
     );
@@ -422,7 +416,7 @@ function ScriptsTab({ scripts }: { scripts: ScriptItem[] }) {
                 {s.status}
               </span>
               <span className="text-[9px] text-text-muted ml-1">{s.duration_estimate}</span>
-              {open === s.id ? <ChevronUp size={11} className="text-text-muted flex-shrink-0" /> : <ChevronDown size={11} className="text-text-muted flex-shrink-0" />}
+              {open === s.id ? <CaretUp size={11} className="text-text-muted flex-shrink-0" /> : <CaretDown size={11} className="text-text-muted flex-shrink-0" />}
             </button>
             <AnimatePresence>
               {open === s.id && (
@@ -464,7 +458,7 @@ function ContentTab({ content }: { content: GeneratedContent }) {
             className="w-full flex items-center justify-between px-4 py-2.5 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors"
           >
             {s.label}
-            {open === s.key ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+            {open === s.key ? <CaretUp size={12} /> : <CaretDown size={12} />}
           </button>
           <AnimatePresence>
             {open === s.key && (
@@ -486,7 +480,7 @@ function ContentTab({ content }: { content: GeneratedContent }) {
             className="w-full flex items-center justify-between px-4 py-2.5 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors"
           >
             Captions ({content.captions.length})
-            {open === "captions" ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+            {open === "captions" ? <CaretUp size={12} /> : <CaretDown size={12} />}
           </button>
           <AnimatePresence>
             {open === "captions" && (
@@ -529,7 +523,7 @@ function FilesTab({ files }: { files: FileRecord[] }) {
         >
           <Paperclip size={12} className="text-text-muted flex-shrink-0" />
           <span className="text-xs text-text-secondary truncate flex-1">{f.filename ?? f.url.split("/").pop() ?? "File"}</span>
-          <ChevronRight size={11} className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+          <CaretRight size={11} className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
         </a>
       ))}
     </div>
@@ -678,7 +672,7 @@ function PhaseSection({
       >
         <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color }}>{label}</span>
         <span className="text-[10px] text-text-muted">({total})</span>
-        {collapsed ? <ChevronRight size={11} className="text-text-muted" /> : <ChevronDown size={11} className="text-text-muted" />}
+        {collapsed ? <CaretRight size={11} className="text-text-muted" /> : <CaretDown size={11} className="text-text-muted" />}
       </button>
       <AnimatePresence>
         {!collapsed && (
@@ -823,7 +817,7 @@ export default function LeadgenPipelinePage() {
       <MotionPage>
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="flex flex-col items-center gap-3">
-            <Loader2 size={24} className="animate-spin text-brand-accent" />
+            <CircleNotch size={24} className="animate-spin text-brand-accent" />
             <span className="text-sm text-text-muted">Loading pipeline…</span>
           </div>
         </div>
@@ -847,7 +841,7 @@ export default function LeadgenPipelinePage() {
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-text-secondary hover:text-text-primary transition-colors"
               style={{ border: "1px solid rgba(212, 255, 0,0.12)" }}
             >
-              <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
+              <ArrowsClockwise size={12} className={refreshing ? "animate-spin" : ""} />
               Refresh
             </button>
           </div>
@@ -856,7 +850,7 @@ export default function LeadgenPipelinePage() {
         {error && (
           <div className="flex items-center gap-2 px-4 py-3 rounded-xl mb-4 text-sm text-red-400"
             style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.18)" }}>
-            <AlertCircle size={14} className="flex-shrink-0" />{error}
+            <WarningCircle size={14} className="flex-shrink-0" />{error}
           </div>
         )}
 
@@ -888,7 +882,7 @@ export default function LeadgenPipelinePage() {
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-text-muted hover:text-text-secondary transition-colors mb-2"
               style={{ border: "1px solid rgba(212, 255, 0,0.08)" }}
             >
-              {showDead ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
+              {showDead ? <CaretUp size={11} /> : <CaretDown size={11} />}
               <XCircle size={11} />
               {deadLeads.length} dead lead{deadLeads.length !== 1 ? "s" : ""}
             </button>

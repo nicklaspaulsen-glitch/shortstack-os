@@ -1,4 +1,5 @@
 "use client";
+import { ChartBar, Chat, Globe, Microphone, PaperPlaneTilt, Robot, Sparkle, SquaresFour, Users, Video } from "@phosphor-icons/react";
 
 /**
  * Dock — macOS-style magnification dock for ShortStack OS.
@@ -286,30 +287,18 @@ export function Dock({
 // DashboardDock — pre-configured with ShortStack OS routes
 // ---------------------------------------------------------------------------
 
-import {
-  LayoutDashboard,
-  BarChart3,
-  Users,
-  Sparkles,
-  Video,
-  Mic2,
-  MessageSquare,
-  Send,
-  Globe,
-  Bot,
-} from "lucide-react";
 
 const DOCK_ITEMS: DockItem[] = [
   {
     id: "home",
     label: "Dashboard",
-    icon: <LayoutDashboard size="1em" />,
+    icon: <SquaresFour size="1em" />,
     href: "/dashboard",
   },
   {
     id: "analytics",
     label: "Analytics",
-    icon: <BarChart3 size="1em" />,
+    icon: <ChartBar size="1em" />,
     href: "/dashboard/analytics",
   },
   {
@@ -321,7 +310,7 @@ const DOCK_ITEMS: DockItem[] = [
   {
     id: "ai-studio",
     label: "AI Studio",
-    icon: <Sparkles size="1em" />,
+    icon: <Sparkle size="1em" />,
     href: "/dashboard/ai-studio",
     separator: true,
   },
@@ -334,20 +323,20 @@ const DOCK_ITEMS: DockItem[] = [
   {
     id: "voice-studio",
     label: "Voice Studio",
-    icon: <Mic2 size="1em" />,
+    icon: <Microphone size="1em" />,
     href: "/dashboard/voice-studio",
   },
   {
     id: "conversations",
     label: "Conversations",
-    icon: <MessageSquare size="1em" />,
+    icon: <Chat size="1em" />,
     href: "/dashboard/conversations",
     separator: true,
   },
   {
     id: "outreach-hub",
     label: "Outreach Hub",
-    icon: <Send size="1em" />,
+    icon: <PaperPlaneTilt size="1em" />,
     href: "/dashboard/outreach-hub",
   },
   {
@@ -359,7 +348,7 @@ const DOCK_ITEMS: DockItem[] = [
   {
     id: "agent-office",
     label: "Agent Office",
-    icon: <Bot size="1em" />,
+    icon: <Robot size="1em" />,
     href: "/dashboard/agent-office",
     separator: true,
   },

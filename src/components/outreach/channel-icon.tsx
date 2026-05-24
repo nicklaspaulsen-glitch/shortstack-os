@@ -1,6 +1,7 @@
 "use client";
+import { Chat, Envelope, PaperPlaneTilt, Phone } from "@phosphor-icons/react";
 
-import { Phone, Mail, MessageSquare, Send } from "lucide-react";
+
 import type { OutreachChannel } from "@/lib/outreach/types";
 
 interface ChannelIconProps {
@@ -14,10 +15,10 @@ export default function ChannelIcon({ channel, size = 14, className = "" }: Chan
     case "voice_call":
       return <Phone size={size} className={`text-amber-600 ${className}`} />;
     case "email":
-      return <Mail size={size} className={`text-sky-600 ${className}`} />;
+      return <Envelope size={size} className={`text-sky-600 ${className}`} />;
     case "sms":
-      return <MessageSquare size={size} className={`text-emerald-600 ${className}`} />;
+      return <Chat size={size} className={`text-emerald-600 ${className}`} />;
     case "dm":
-      return <Send size={size} className={`text-pink-600 ${className}`} />;
+      return <PaperPlaneTilt size={size} className={`text-pink-600 ${className}`} />;
   }
 }

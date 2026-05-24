@@ -1,15 +1,10 @@
+import { ArrowsClockwise, CaretDown, CaretUp, Check, CircleNotch, ClipboardText, Clock, Copy, DownloadSimple, Envelope, FileText, ShareNetwork, Sparkle, TrendDown, TrendUp, Users } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
-import {
-  FileText, Sparkles, Users, TrendingUp, TrendingDown,
-  Loader, Clock, RefreshCw,
-  ChevronDown, ChevronUp, Copy, Check,
-  Download, Mail, ClipboardCopy, Share2,
-} from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -388,7 +383,7 @@ export default function ReportsPage() {
       <div className="flex items-center gap-2 shrink-0">
         <button onClick={fetchData}
                   className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/10 border border-border-subtle text-text-primary font-medium hover:bg-white/15 transition-all">
-                  <RefreshCw size={12} /> Refresh
+                  <ArrowsClockwise size={12} /> Refresh
                 </button>
       </div>
     </div>{/* Stats */}
@@ -444,7 +439,7 @@ export default function ReportsPage() {
                   onMouseMove={(e) => { const rect = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`); e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`); }}
                 >
                   <div className="flex items-center gap-2 mb-4">
-                    <Sparkles size={14} className="text-brand-accent" />
+                    <Sparkle size={14} className="text-brand-accent" />
                     <h2 className="text-sm font-semibold text-text-primary">Generate Report</h2>
                   </div>
 
@@ -491,9 +486,9 @@ export default function ReportsPage() {
                         className="btn-primary w-full text-xs flex items-center justify-center gap-2"
                       >
                         {generating ? (
-                          <><Loader size={12} className="animate-spin" /> Generating...</>
+                          <><CircleNotch size={12} className="animate-spin" /> Generating...</>
                         ) : (
-                          <><Sparkles size={12} /> Generate Report</>
+                          <><Sparkle size={12} /> Generate Report</>
                         )}
                       </button>
                     </motion.div>
@@ -552,7 +547,7 @@ export default function ReportsPage() {
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <Sparkles size={14} className="text-brand-accent" />
+                        <Sparkle size={14} className="text-brand-accent" />
                         <h2 className="text-sm font-semibold text-text-primary">
                           {currentReport.type === "monthly" ? "Monthly" : "Weekly"} Report � {currentReport.client}
                         </h2>
@@ -569,9 +564,9 @@ export default function ReportsPage() {
                             onClick={() => setExportOpen(!exportOpen)}
                             className="btn-secondary text-[10px] flex items-center gap-1"
                           >
-                            <Share2 size={10} />
+                            <ShareNetwork size={10} />
                             Export Report
-                            <ChevronDown size={10} className={`transition-transform ${exportOpen ? "rotate-180" : ""}`} />
+                            <CaretDown size={10} className={`transition-transform ${exportOpen ? "rotate-180" : ""}`} />
                           </button>
 
                           {exportOpen && (
@@ -580,9 +575,9 @@ export default function ReportsPage() {
                                 onClick={downloadReportHTML}
                                 className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-text-primary hover:bg-surface-light transition-colors"
                               >
-                                <Download size={13} className="text-brand-accent" />
+                                <DownloadSimple size={13} className="text-brand-accent" />
                                 <div>
-                                  <p className="font-medium">Download as HTML</p>
+                                  <p className="font-medium">DownloadSimple as HTML</p>
                                   <p className="text-[10px] text-text-muted mt-0.5">Print-ready with styling</p>
                                 </div>
                               </button>
@@ -590,7 +585,7 @@ export default function ReportsPage() {
                                 onClick={copyReportMarkdown}
                                 className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-text-primary hover:bg-surface-light transition-colors"
                               >
-                                <ClipboardCopy size={13} className="text-brand-accent" />
+                                <ClipboardText size={13} className="text-brand-accent" />
                                 <div>
                                   <p className="font-medium">Copy to Clipboard</p>
                                   <p className="text-[10px] text-text-muted mt-0.5">Formatted Markdown</p>
@@ -601,7 +596,7 @@ export default function ReportsPage() {
                                 onClick={handleEmailReport}
                                 className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-left text-xs text-text-primary hover:bg-surface-light transition-colors"
                               >
-                                <Mail size={13} className="text-brand-accent" />
+                                <Envelope size={13} className="text-brand-accent" />
                                 <div>
                                   <p className="font-medium">Email Report</p>
                                   <p className="text-[10px] text-text-muted mt-0.5">Send to an email address</p>
@@ -622,7 +617,7 @@ export default function ReportsPage() {
                             <span className="font-bold text-text-primary">{currentReport.metrics.leads}</span>
                             {currentReport.metrics.leads_trend !== "N/A" && (
                               <span className={`flex items-center ${parseInt(currentReport.metrics.leads_trend) >= 0 ? "text-success" : "text-danger"}`}>
-                                {parseInt(currentReport.metrics.leads_trend) >= 0 ? <TrendingUp size={8} /> : <TrendingDown size={8} />}
+                                {parseInt(currentReport.metrics.leads_trend) >= 0 ? <TrendUp size={8} /> : <TrendDown size={8} />}
                                 {currentReport.metrics.leads_trend}%
                               </span>
                             )}
@@ -677,7 +672,7 @@ export default function ReportsPage() {
 
                   {loading ? (
                     <div className="flex items-center justify-center py-12">
-                      <Loader size={16} className="animate-spin text-text-muted" />
+                      <CircleNotch size={16} className="animate-spin text-text-muted" />
                     </div>
                   ) : reports.length === 0 ? (
                     <EmptyState
@@ -717,7 +712,7 @@ export default function ReportsPage() {
                                   {report.result.metrics.leads} leads
                                 </span>
                               )}
-                              {expandedReport === report.id ? <ChevronUp size={12} className="text-text-muted" /> : <ChevronDown size={12} className="text-text-muted" />}
+                              {expandedReport === report.id ? <CaretUp size={12} className="text-text-muted" /> : <CaretDown size={12} className="text-text-muted" />}
                             </div>
                           </button>
 
@@ -748,7 +743,7 @@ export default function ReportsPage() {
               <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
                 <div className="bg-surface border border-border-subtle/50  p-6 w-full max-w-sm shadow-elevated">
                   <div className="flex items-center gap-2 mb-4">
-                    <Mail size={16} className="text-brand-accent" />
+                    <Envelope size={16} className="text-brand-accent" />
                     <h3 className="text-sm font-semibold text-text-primary">Email Report</h3>
                   </div>
                   <form onSubmit={submitEmailReport} className="space-y-3">

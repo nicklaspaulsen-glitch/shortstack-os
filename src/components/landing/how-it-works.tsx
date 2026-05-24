@@ -1,15 +1,7 @@
+import { ChartBar, CheckCircle, Lightning, MagicWand, Phone, Plug, Sparkle, TrendUp } from "@phosphor-icons/react";
 ﻿"use client";
 
-import {
-  FileBarChart,
-  Plug,
-  Wand2,
-  Phone,
-  Sparkles,
-  Zap,
-  CheckCircle2,
-  TrendingUp,
-} from "lucide-react";
+
 import {
   SiStripe,
   SiMeta,
@@ -40,14 +32,14 @@ const STEPS: Step[] = [
     title: "AI handles the busywork",
     description:
       "Outreach sequences send themselves. Content gets drafted and queued. Leads flow into your CRM. Proposals get sent. Invoices get paid. You're the strategist, not the assembly line.",
-    icon: Wand2,
+    icon: MagicWand,
   },
   {
     num: "03",
     title: "Clients see clean reports",
     description:
       "Each client gets a branded portal with live KPIs, deliverables, and a weekly report they can forward. No more \"what did you do this week?\" emails on Friday.",
-    icon: FileBarChart,
+    icon: ChartBar,
   },
 ];
 
@@ -197,9 +189,9 @@ function StepVisual({ idx }: { idx: number }) {
         }}
       >
         {[
-          { Icon: Sparkles, label: "AI drafted 12 cold emails", color: "#D4FF00", delay: 0 },
+          { Icon: Sparkle, label: "AI drafted 12 cold emails", color: "#D4FF00", delay: 0 },
           { Icon: Phone, label: "AI booked 3 meetings", color: "#D4FF00", delay: 0.5 },
-          { Icon: Zap, label: "Lead enriched + scored", color: "#D4FF00", delay: 1 },
+          { Icon: Lightning, label: "Lead enriched + scored", color: "#D4FF00", delay: 1 },
         ].map((item, i) => (
           <div
             key={i}
@@ -212,7 +204,7 @@ function StepVisual({ idx }: { idx: number }) {
           >
             <item.Icon size={11} style={{ color: item.color }} />
             <span className="flex-1 truncate">{item.label}</span>
-            <CheckCircle2 size={10} style={{ color: "#D4FF00" }} />
+            <CheckCircle size={10} style={{ color: "#D4FF00" }} />
           </div>
         ))}
         <style jsx>{`
@@ -245,7 +237,7 @@ function StepVisual({ idx }: { idx: number }) {
           Client weekly
         </p>
         <span className="flex items-center gap-1 text-[10px] font-semibold text-emerald-400">
-          <TrendingUp size={9} /> +18%
+          <TrendUp size={9} /> +18%
         </span>
       </div>
       <div className="grid grid-cols-7 gap-1 h-8 items-end">

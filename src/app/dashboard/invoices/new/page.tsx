@@ -1,18 +1,9 @@
+import { ArrowLeft, CircleNotch, CreditCard, MagicWand, PaperPlaneTilt, Plus, Sparkle, Trash } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  ArrowLeft,
-  Sparkles,
-  Loader2,
-  Plus,
-  Trash2,
-  Send,
-  CreditCard,
-  Wand2,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -215,7 +206,7 @@ export default function NewSmartInvoicePage() {
       const res = await fetch(`/api/invoices/${id}/send`, { method: "POST" });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "Send failed");
+        throw new Error(err.error || "PaperPlaneTilt failed");
       }
       const result = await res.json();
       if (result.email_sent) toast.success("Invoice sent");
@@ -223,7 +214,7 @@ export default function NewSmartInvoicePage() {
       router.push("/dashboard/invoices");
     } catch (err) {
       console.error("[send] error:", err);
-      toast.error(err instanceof Error ? err.message : "Send failed");
+      toast.error(err instanceof Error ? err.message : "PaperPlaneTilt failed");
     }
   }
 
@@ -280,7 +271,7 @@ export default function NewSmartInvoicePage() {
 
               <div>
                 <label className="text-[9px] text-text-muted uppercase tracking-wider block mb-1 flex items-center gap-1">
-                  <Sparkles size={9} className="text-brand-accent" /> Scope (AI will draft line items from this)
+                  <Sparkle size={9} className="text-brand-accent" /> Scope (AI will draft line items from this)
                 </label>
                 <textarea
                   value={scope}
@@ -297,9 +288,9 @@ export default function NewSmartInvoicePage() {
                 className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-40"
               >
                 {drafting ? (
-                  <Loader2 size={12} className="animate-spin" />
+                  <CircleNotch size={12} className="animate-spin" />
                 ) : (
-                  <Wand2 size={12} />
+                  <MagicWand size={12} />
                 )}
                 {drafting ? "Drafting..." : "Draft with AI"}
               </button>
@@ -370,7 +361,7 @@ export default function NewSmartInvoicePage() {
                         onClick={() => removeItem(i)}
                         className="col-span-1 text-right text-text-muted hover:text-rose-400"
                       >
-                        <Trash2 size={11} />
+                        <Trash size={11} />
                       </button>
                     </div>
                   ))}
@@ -442,7 +433,7 @@ export default function NewSmartInvoicePage() {
                 disabled={saving || !clientId || lineItems.length === 0}
                 className="btn-secondary text-xs flex items-center gap-1.5 disabled:opacity-40"
               >
-                {saving ? <Loader2 size={12} className="animate-spin" /> : null}
+                {saving ? <CircleNotch size={12} className="animate-spin" /> : null}
                 Save draft
               </button>
               <button
@@ -457,7 +448,7 @@ export default function NewSmartInvoicePage() {
                 disabled={!clientId || lineItems.length === 0}
                 className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-40"
               >
-                <Send size={12} /> Send to client
+                <PaperPlaneTilt size={12} /> PaperPlaneTilt to client
               </button>
             </div></MotionPage>
   );

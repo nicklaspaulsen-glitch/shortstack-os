@@ -1,7 +1,8 @@
 "use client";
+import { Calendar, CheckCircle, Circle, User } from "@phosphor-icons/react";
 
 import { useState } from "react";
-import { CheckCircle2, Circle, User, Calendar } from "lucide-react";
+
 import toast from "react-hot-toast";
 
 export interface ActionItem {
@@ -68,7 +69,7 @@ export default function ActionItems({ meetingId, initial }: Props) {
             aria-label={item.done ? "Mark not done" : "Mark done"}
           >
             {item.done ? (
-              <CheckCircle2 size={14} className="text-green-400" />
+              <CheckCircle size={14} className="text-green-400" />
             ) : (
               <Circle size={14} />
             )}

@@ -1,13 +1,8 @@
+import { ArrowCounterClockwise, BookOpen, CaretLeft, CaretRight, ChatCircle, Check, CircleNotch, Copy, DownloadSimple, Image, Lightbulb, Lightning, ListBullets, MagicWand, Palette, PencilSimple, Question, Sparkle, SquaresFour, Stack, Target, TextT, TrendUp, X } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useRef, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
-import {
-  Sparkles, Download, Copy, Check, Loader, ChevronLeft, ChevronRight,
-  Palette, Type, Layers, Wand2, LayoutGrid, Zap, Edit3, RotateCcw,
-  BookOpen, List, MessageCircle, Lightbulb, HelpCircle, X,
-  Image as ImageIcon, TrendingUp,
-} from "lucide-react";
 import toast from "react-hot-toast";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
@@ -68,11 +63,11 @@ const STYLES: { id: CarouselStyle; name: string; desc: string; preview: string; 
 ];
 
 const TEMPLATES = [
-  { id: "howto", name: "How-To Guide", desc: "Step-by-step instructions", icon: HelpCircle, example: "How to grow on Instagram in 2026" },
-  { id: "listicle", name: "Listicle", desc: "Numbered tips or items", icon: List, example: "7 tools every creator needs" },
+  { id: "howto", name: "How-To Guide", desc: "Step-by-step instructions", icon: Question, example: "How to grow on Instagram in 2026" },
+  { id: "listicle", name: "Listicle", desc: "Numbered tips or items", icon: ListBullets, example: "7 tools every creator needs" },
   { id: "story", name: "Story", desc: "Narrative arc with hook", icon: BookOpen, example: "How I went from 0 to 100K followers" },
   { id: "tips", name: "Tips & Tricks", desc: "Actionable advice", icon: Lightbulb, example: "5 copywriting secrets that convert" },
-  { id: "myths", name: "Myths vs Facts", desc: "Debunk misconceptions", icon: MessageCircle, example: "SEO myths that are killing your traffic" },
+  { id: "myths", name: "Myths vs Facts", desc: "Debunk misconceptions", icon: ChatCircle, example: "SEO myths that are killing your traffic" },
 ];
 
 const PRESET_COLORS: { name: string; primary: string; secondary: string }[] = [
@@ -246,7 +241,7 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
       id: "platform",
       title: "Where is this carousel going?",
       description: "Pick the platform so we can tune tone and length.",
-      icon: <LayoutGrid size={16} />,
+      icon: <SquaresFour size={16} />,
       field: {
         type: "chip-select",
         key: "platform",
@@ -275,7 +270,7 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
             const platforms = Array.isArray(data.platform) ? (data.platform as string[]).join(", ") : "Instagram";
             const res = await fetch("/api/ai/enhance-prompt", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: { "Content-TextT": "application/json" },
               body: JSON.stringify({
                 text: `Suggest one viral, scroll-stopping carousel topic for ${platforms}. Return a single punchy topic idea (under 12 words) that a creator or marketer could use. No quotes, no explanation.`,
                 type: "content",
@@ -305,7 +300,7 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
       id: "slideCount",
       title: "How many slides?",
       description: "3-10 slides. 5-7 is usually the sweet spot for engagement.",
-      icon: <Layers size={16} />,
+      icon: <Stack size={16} />,
       field: {
         type: "number",
         key: "slideCount",
@@ -335,7 +330,7 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
       id: "contentDirection",
       title: "Any specific angle? (optional)",
       description: "Tell the AI what angle to take, who it's for, or what to emphasize.",
-      icon: <MessageCircle size={16} />,
+      icon: <ChatCircle size={16} />,
       field: {
         type: "textarea",
         key: "contentDirection",
@@ -356,7 +351,7 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
             const count = Number(data.slideCount) || 5;
             const res = await fetch("/api/ai/enhance-prompt", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: { "Content-TextT": "application/json" },
               body: JSON.stringify({
                 text: `Outline a content direction for a ${count}-slide ${style} carousel on ${platforms} about: "${topic}". Keep it under 80 words. Describe angle, target audience, and what each slide section should cover. Plain text, no markdown, no numbered list � write it as a brief paragraph.`,
                 type: "content",
@@ -425,7 +420,7 @@ function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
       open={open}
       title="Create Carousel"
       subtitle="AI-guided flow � describe what you want, we'll write the slides."
-      icon={<Sparkles size={18} />}
+      icon={<Sparkle size={18} />}
       submitLabel="Generate Carousel"
       steps={steps}
       initialData={{ slideCount: 5 }}
@@ -484,7 +479,7 @@ export default function CarouselGeneratorPage() {
     try {
       const res = await fetch("/api/carousel/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-TextT": "application/json" },
         body: JSON.stringify({
           topic: opts.contentDirection
             ? `${opts.topic}\n\nContent direction: ${opts.contentDirection}`
@@ -575,7 +570,7 @@ export default function CarouselGeneratorPage() {
     setTimeout(() => setCopied(false), 2000);
   }, [slides]);
 
-  /* -- Download as JSON (content export) -- */
+  /* -- DownloadSimple as JSON (content export) -- */
   const handleDownload = useCallback(() => {
     if (slides.length === 0) return;
     const payload = {
@@ -698,7 +693,7 @@ export default function CarouselGeneratorPage() {
                       onClick={() => setWizardOpen(true)}
                       className="relative group flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-accent text-[#020711] text-xs font-bold shadow-lg shadow-[rgba(212,255,0,0.2)] hover:bg-[#E8FF4D] hover:shadow-[rgba(212,255,0,0.4)] hover-lift transition-all"
                     >
-                      <Sparkles size={13} className="animate-pulse" />
+                      <Sparkle size={13} className="animate-pulse" />
                       + New with AI
                       <span className="ml-0.5 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wider">
                         Recommended
@@ -718,8 +713,8 @@ export default function CarouselGeneratorPage() {
                         onClick={handleDownload}
                         className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary hover:bg-white/15 transition-all"
                       >
-                        <Download size={13} />
-                        Download All
+                        <DownloadSimple size={13} />
+                        DownloadSimple All
                       </button>
                     </>
                   )}
@@ -733,7 +728,7 @@ export default function CarouselGeneratorPage() {
                     id: "topic",
                     title: "What's your carousel about?",
                     description: "One sentence � what's the post teaching, telling, or selling?",
-                    icon: <Sparkles size={18} />,
+                    icon: <Sparkle size={18} />,
                     canProceed: topic.trim().length > 0,
                     component: (
                       <div className="space-y-3">
@@ -798,7 +793,7 @@ export default function CarouselGeneratorPage() {
                     id: "slides",
                     title: "How many slides?",
                     description: "Most carousels do best at 6-8 slides. More than 10 loses people.",
-                    icon: <LayoutGrid size={18} />,
+                    icon: <SquaresFour size={18} />,
                     component: (
                       <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                         {[4, 6, 8, 10, 12].map(n => (
@@ -822,7 +817,7 @@ export default function CarouselGeneratorPage() {
                     id: "review",
                     title: "Ready to generate?",
                     description: "We'll draft all your slides now. You can tweak individual cards in Advanced mode.",
-                    icon: <Wand2 size={18} />,
+                    icon: <MagicWand size={18} />,
                     component: (
                       <div className="glass rounded-xl p-4 bg-[rgba(212,255,0,0.04)] border-[rgba(212,255,0,0.2)] space-y-2">
                         <div className="grid grid-cols-3 gap-3">
@@ -859,7 +854,7 @@ export default function CarouselGeneratorPage() {
               <div className="glass rounded-xl p-4 mb-6 space-y-3">
                 <div className="flex items-center justify-between">
                   <h2 className="flex items-center gap-2">
-                    <LayoutGrid size={14} className="text-brand-accent" /> Your carousel ({slides.length} slides)
+                    <SquaresFour size={14} className="text-brand-accent" /> Your carousel ({slides.length} slides)
                   </h2>
                   <button
                     onClick={handleCopyAll}
@@ -933,7 +928,7 @@ export default function CarouselGeneratorPage() {
                   transition={{ duration: 0.22, delay: 0 }}
                 >
                   <label className="text-xs font-semibold text-text-primary flex items-center gap-1.5 mb-2">
-                    <Type size={13} className="text-brand-accent" />
+                    <TextT size={13} className="text-brand-accent" />
                     Topic
                   </label>
                   <textarea
@@ -1098,7 +1093,7 @@ export default function CarouselGeneratorPage() {
                   transition={{ duration: 0.22, delay: 0.18 }}
                 >
                   <label className="text-xs font-semibold text-text-primary flex items-center gap-1.5 mb-3">
-                    <LayoutGrid size={13} className="text-brand-accent" />
+                    <SquaresFour size={13} className="text-brand-accent" />
                     Template
                     <span className="text-[9px] text-text-muted font-normal ml-1">(optional)</span>
                   </label>
@@ -1173,12 +1168,12 @@ export default function CarouselGeneratorPage() {
                   >
                     {generating ? (
                       <>
-                        <Loader size={16} className="animate-spin" />
+                        <CircleNotch size={16} className="animate-spin" />
                         Generating...
                       </>
                     ) : (
                       <>
-                        <Sparkles size={16} />
+                        <Sparkle size={16} />
                         Generate Carousel
                       </>
                     )}
@@ -1199,7 +1194,7 @@ export default function CarouselGeneratorPage() {
                   {/* Preview header */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <ImageIcon size={14} className="text-brand-accent" />
+                      <Image size={14} className="text-brand-accent" />
                       <span className="text-xs font-semibold text-text-primary">Preview</span>
                       {slides.length > 0 && (
                         <span
@@ -1223,21 +1218,21 @@ export default function CarouselGeneratorPage() {
                           className="flex items-center gap-1 text-[10px] text-text-muted px-2 py-1 rounded-lg transition-colors"
                           style={{ background: "var(--color-surface-light)" }}
                         >
-                          <RotateCcw size={10} /> Reset
+                          <ArrowCounterClockwise size={10} /> Reset
                         </button>
                         <button
                           onClick={() => scrollPreview("left")}
                           className="p-1.5 rounded-lg transition-colors"
                           style={{ background: "var(--color-surface-light)", color: "var(--color-muted)" }}
                         >
-                          <ChevronLeft size={14} />
+                          <CaretLeft size={14} />
                         </button>
                         <button
                           onClick={() => scrollPreview("right")}
                           className="p-1.5 rounded-lg transition-colors"
                           style={{ background: "var(--color-surface-light)", color: "var(--color-muted)" }}
                         >
-                          <ChevronRight size={14} />
+                          <CaretRight size={14} />
                         </button>
                       </div>
                     )}
@@ -1250,7 +1245,7 @@ export default function CarouselGeneratorPage() {
                         className="w-16 h-16  flex items-center justify-center mb-4"
                         style={{ background: "color-mix(in srgb, var(--color-accent) 10%, transparent)" }}
                       >
-                        <Layers size={28} style={{ color: "var(--color-accent)" }} />
+                        <Stack size={28} style={{ color: "var(--color-accent)" }} />
                       </div>
                       <h3 className="text-sm font-semibold text-text-primary mb-1">No carousel yet</h3>
                       <p className="text-xs text-text-muted max-w-xs">
@@ -1285,7 +1280,7 @@ export default function CarouselGeneratorPage() {
                               style={{ background: "var(--color-border)", animationDelay: "0.3s" }}
                             />
                             <div className="mt-4">
-                              <Loader
+                              <CircleNotch
                                 size={18}
                                 className="animate-spin"
                                 style={{ color: "var(--color-accent)" }}
@@ -1354,7 +1349,7 @@ export default function CarouselGeneratorPage() {
                                     backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
                                   }}
                                 >
-                                  <Edit3 size={10} style={{ color: colors.headline }} />
+                                  <PencilSimple size={10} style={{ color: colors.headline }} />
                                 </div>
                               </div>
 
@@ -1451,7 +1446,7 @@ export default function CarouselGeneratorPage() {
                         {/* Header row */}
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-2">
-                            <TrendingUp size={13} className="text-brand-accent" />
+                            <TrendUp size={13} className="text-brand-accent" />
                             <span className="text-xs font-semibold text-text-primary">Carousel Quality</span>
                           </div>
                           {/* Score pill */}
@@ -1543,7 +1538,7 @@ export default function CarouselGeneratorPage() {
                       {/* Slide list (text view for quick editing) */}
                       <div className="mt-5 space-y-2">
                         <div className="flex items-center gap-2 mb-2">
-                          <Wand2 size={13} className="text-brand-accent" />
+                          <MagicWand size={13} className="text-brand-accent" />
                           <span className="text-xs font-semibold text-text-primary">Slide Content</span>
                         </div>
                         {slides.map((slide, idx) => (
@@ -1590,7 +1585,7 @@ export default function CarouselGeneratorPage() {
                                   : "transparent",
                               }}
                             >
-                              {editingSlide === idx ? <X size={12} /> : <Edit3 size={12} />}
+                              {editingSlide === idx ? <X size={12} /> : <PencilSimple size={12} />}
                             </button>
                           </motion.div>
                         ))}
@@ -1599,7 +1594,7 @@ export default function CarouselGeneratorPage() {
                       {/* Regenerate bar */}
                       <div className="mt-4 flex items-center justify-between pt-4" style={{ borderTop: "1px solid var(--color-border)" }}>
                         <div className="flex items-center gap-1.5">
-                          <Zap size={12} style={{ color: "var(--color-accent)" }} />
+                          <Lightning size={12} style={{ color: "var(--color-accent)" }} />
                           <span className="text-[10px] text-text-muted">
                             {slides.length} slides generated for &ldquo;{topic.slice(0, 40)}{topic.length > 40 ? "..." : ""}&rdquo;
                           </span>
@@ -1610,7 +1605,7 @@ export default function CarouselGeneratorPage() {
                           className="flex items-center gap-1.5 text-[10px] font-medium px-3 py-1.5 rounded-lg transition-all text-white disabled:opacity-50"
                           style={{ background: "var(--color-accent)" }}
                         >
-                          <RotateCcw size={10} />
+                          <ArrowCounterClockwise size={10} />
                           Regenerate
                         </button>
                       </div>

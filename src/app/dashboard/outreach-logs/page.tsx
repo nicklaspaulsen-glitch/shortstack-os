@@ -1,17 +1,7 @@
+import { ArrowRight, ArrowSquareOut, ArrowsClockwise, Broadcast, Buildings, Calendar, CalendarBlank, CaretLeft, CaretRight, ChartBar, Chat, Check, CheckCircle, CircleNotch, Clock, Copy, DeviceMobile, DownloadSimple, Envelope, Gear, Globe, Hash, List, MagnifyingGlass, MapPin, PaperPlaneTilt, Phone, PhoneCall, PhoneOutgoing, Plus, Pulse, Robot, Shield, Sliders, Sparkle, SquaresFour, Star, Tag, ThumbsDown, ThumbsUp, Trash, User, Warning, WifiHigh, X, XCircle } from "@phosphor-icons/react";
 ﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
-import {
-  Mail, Phone, Search, Download, CheckCircle, XCircle,
-  Send, BarChart3, Calendar, Settings, Trash2,
-  ThumbsUp, ThumbsDown, ChevronLeft, ChevronRight,
-  MessageSquare, RefreshCw, LayoutList, LayoutGrid,
-  Check, Loader2, PhoneCall, X, Plus, PhoneForwarded,
-  Globe, Shield, Wifi, Copy, ExternalLink, Clock, User,
-  Bot, ArrowRight, Hash, Smartphone, Radar, MapPin, Building2, Sliders,
-  AlertTriangle, Activity, Star, Sparkles,
-  CalendarRange, Tag
-} from "lucide-react";
 import {
   FacebookIcon, InstagramIcon, LinkedInIcon, TikTokIcon,
   XTwitterIcon,
@@ -80,7 +70,7 @@ type ViewMode = "compact" | "detailed";
 
 /* -- Platform icon map -- */
 const PLATFORM_ICON: Record<string, React.ReactNode> = {
-  email: <Mail size={13} className="text-brand-accent" />,
+  email: <Envelope size={13} className="text-brand-accent" />,
   sms: <Phone size={13} className="text-green-400" />,
   call: <PhoneCall size={13} className="text-emerald-400" />,
   instagram: <InstagramIcon size={14} />,
@@ -543,10 +533,10 @@ export default function OutreachLogsPage() {
     </div><div className="flex items-center justify-end">
               <div className="flex gap-2">
                 <button onClick={() => fetchEntries()} className="btn-secondary text-xs flex items-center gap-1.5">
-                  <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
+                  <ArrowsClockwise size={12} className={loading ? "animate-spin" : ""} /> Refresh
                 </button>
                 <button onClick={exportCSV} className="btn-secondary text-xs flex items-center gap-1.5">
-                  <Download size={12} /> Export
+                  <DownloadSimple size={12} /> Export
                 </button>
               </div>
             </div>
@@ -578,10 +568,10 @@ export default function OutreachLogsPage() {
             </div>
             {/* Tabs */}<div className="flex gap-1 bg-surface rounded-lg p-1">
               {([
-                { key: "outreach" as Tab, label: "All Logs", icon: <Send size={13} /> },
-                { key: "analytics" as Tab, label: "Analytics", icon: <BarChart3 size={13} /> },
-                { key: "provisioning" as Tab, label: "Phones & Email", icon: <Smartphone size={13} /> },
-                { key: "config" as Tab, label: "Config", icon: <Settings size={13} /> },
+                { key: "outreach" as Tab, label: "All Logs", icon: <PaperPlaneTilt size={13} /> },
+                { key: "analytics" as Tab, label: "Analytics", icon: <ChartBar size={13} /> },
+                { key: "provisioning" as Tab, label: "Phones & Email", icon: <DeviceMobile size={13} /> },
+                { key: "config" as Tab, label: "Config", icon: <Gear size={13} /> },
               ]).map(t => (
                 <button key={t.key} onClick={() => setTab(t.key)}
                   className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 transition-all ${
@@ -595,16 +585,16 @@ export default function OutreachLogsPage() {
                   {/* Filters */}
                   <div className="flex items-center gap-2 flex-wrap">
                     <div className="relative flex-1 min-w-[180px]">
-                      <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                      <MagnifyingGlass size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                       <input value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
-                        placeholder="Search business, handle, message..."
-                        aria-label="Search outreach logs"
+                        placeholder="MagnifyingGlass business, handle, message..."
+                        aria-label="MagnifyingGlass outreach logs"
                         className="input w-full pl-8 text-xs" />
                     </div>
                     <div className="flex gap-1">
                       {[
                         { val: "all", label: "All", icon: null },
-                        { val: "email", label: "Email", icon: <Mail size={11} /> },
+                        { val: "email", label: "Email", icon: <Envelope size={11} /> },
                         { val: "sms", label: "SMS", icon: <Phone size={11} /> },
                         { val: "call", label: "Call", icon: <PhoneCall size={11} /> },
                         { val: "instagram", label: "IG", icon: <InstagramIcon size={12} /> },
@@ -629,11 +619,11 @@ export default function OutreachLogsPage() {
                     <div className="flex items-center gap-1 border border-border-subtle rounded-lg">
                       <button onClick={() => setViewMode("compact")}
                         className={`p-1.5 rounded-l-lg ${viewMode === "compact" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" : "text-text-muted"}`}>
-                        <LayoutList size={14} />
+                        <List size={14} />
                       </button>
                       <button onClick={() => setViewMode("detailed")}
                         className={`p-1.5 rounded-r-lg ${viewMode === "detailed" ? "bg-[rgba(212,255,0,0.08)] text-brand-accent" : "text-text-muted"}`}>
-                        <LayoutGrid size={14} />
+                        <SquaresFour size={14} />
                       </button>
                     </div>
                     <select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
@@ -647,7 +637,7 @@ export default function OutreachLogsPage() {
                   {/* Date range filter */}
                   <div className="flex items-center gap-2 flex-wrap">
                     <div className="flex items-center gap-1.5 text-[10px] text-text-muted">
-                      <CalendarRange size={13} className="text-brand-accent" />
+                      <CalendarBlank size={13} className="text-brand-accent" />
                       <span>Date range:</span>
                     </div>
                     <input
@@ -683,8 +673,8 @@ export default function OutreachLogsPage() {
                       <div className="relative">
                         <button onClick={() => setShowDmPicker(!showDmPicker)} disabled={bulkLoading}
                           className="btn-secondary text-xs flex items-center gap-1.5 px-3 py-1.5">
-                          <MessageSquare size={12} /> DM
-                          <ChevronRight size={10} className={`transition-transform ${showDmPicker ? "rotate-90" : ""}`} />
+                          <Chat size={12} /> DM
+                          <CaretRight size={10} className={`transition-transform ${showDmPicker ? "rotate-90" : ""}`} />
                         </button>
                         {showDmPicker && (
                           <div className="absolute top-full left-0 mt-1 bg-surface border border-border-subtle rounded-lg p-1 shadow-xl z-20 min-w-[160px]">
@@ -707,27 +697,27 @@ export default function OutreachLogsPage() {
                       </button>
                       <button onClick={handleBulkDelete} disabled={bulkLoading}
                         className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20">
-                        <Trash2 size={12} /> Delete
+                        <Trash size={12} /> Delete
                       </button>
                       <button onClick={() => setSelectedIds(new Set())}
                         className="text-xs text-text-muted hover:text-text-primary px-2 py-1.5">
                         <X size={12} />
                       </button>
-                      {bulkLoading && <Loader2 size={14} className="animate-spin text-brand-accent" />}
+                      {bulkLoading && <CircleNotch size={14} className="animate-spin text-brand-accent" />}
                     </div>
                   )}
 
                   {/* Entries */}
                   {loading ? (
                     <div className="flex items-center justify-center py-16">
-                      <Loader2 size={20} className="animate-spin text-brand-accent" />
+                      <CircleNotch size={20} className="animate-spin text-brand-accent" />
                       <span className="ml-2 text-xs text-text-muted">Loading outreach data...</span>
                     </div>
                   ) : entries.length === 0 ? (
                     <EmptyState
                       type="no-campaigns"
                       title="No outreach entries found"
-                      description="Send emails, SMS, or calls from the CRM to see them here."
+                      description="PaperPlaneTilt emails, SMS, or calls from the CRM to see them here."
                     />
                   ) : viewMode === "compact" ? (
                     /* -- Compact table view -- */
@@ -768,7 +758,7 @@ export default function OutreachLogsPage() {
                                     isSelected ? "bg-brand-accent border-brand-accent" : "border-white/15 hover:border-[rgba(212,255,0,0.25)]"
                                   }`}>{isSelected && <Check size={10} className="text-black" />}</button>
                                 </td>
-                                <td className="p-2.5">{PLATFORM_ICON[entry.platform] || <Mail size={13} className="text-text-muted" />}</td>
+                                <td className="p-2.5">{PLATFORM_ICON[entry.platform] || <Envelope size={13} className="text-text-muted" />}</td>
                                 <td className="p-2.5 font-medium max-w-[140px] truncate">
                                   <span className="flex items-center gap-1.5">
                                     <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${getSentimentColor(entry.status)}`} />
@@ -826,7 +816,7 @@ export default function OutreachLogsPage() {
                                 isSelected ? "bg-brand-accent border-brand-accent" : "border-white/15 hover:border-[rgba(212,255,0,0.25)]"
                               }`}>{isSelected && <Check size={10} className="text-black" />}</button>
 
-                              <div className="flex-shrink-0">{PLATFORM_ICON[entry.platform] || <Mail size={13} className="text-text-muted" />}</div>
+                              <div className="flex-shrink-0">{PLATFORM_ICON[entry.platform] || <Envelope size={13} className="text-text-muted" />}</div>
 
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2">
@@ -867,7 +857,7 @@ export default function OutreachLogsPage() {
                       <div className="flex items-center gap-1">
                         <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
                           className="btn-secondary text-xs px-2.5 py-1.5 disabled:opacity-30">
-                          <ChevronLeft size={13} />
+                          <CaretLeft size={13} />
                         </button>
                         {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
                           let pageNum: number;
@@ -884,7 +874,7 @@ export default function OutreachLogsPage() {
                         })}
                         <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}
                           className="btn-secondary text-xs px-2.5 py-1.5 disabled:opacity-30">
-                          <ChevronRight size={13} />
+                          <CaretRight size={13} />
                         </button>
                       </div>
                     </div>
@@ -899,7 +889,7 @@ export default function OutreachLogsPage() {
                       {/* Header */}
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-2">
-                          {PLATFORM_ICON[detailEntry.platform] || <Mail size={16} />}
+                          {PLATFORM_ICON[detailEntry.platform] || <Envelope size={16} />}
                           <div>
                             <h3 className="text-sm font-semibold">{detailEntry.business_name}</h3>
                             <p className="text-[10px] text-text-muted font-mono">{detailEntry.recipient_handle}</p>
@@ -952,7 +942,7 @@ export default function OutreachLogsPage() {
                         )}
                         {detailEntry.lead_id && (
                           <a href={`/dashboard/crm?lead=${detailEntry.lead_id}`} className="text-[9px] px-2 py-1 rounded-lg bg-[rgba(212,255,0,0.08)] text-brand-accent hover:bg-[rgba(212,255,0,0.12)] flex items-center gap-1">
-                            <ExternalLink size={9} /> View Lead
+                            <ArrowSquareOut size={9} /> View Lead
                           </a>
                         )}
                       </div>
@@ -970,7 +960,7 @@ export default function OutreachLogsPage() {
 
                           {detailLoading ? (
                             <div className="flex items-center justify-center py-8">
-                              <Loader2 size={16} className="animate-spin text-brand-accent" />
+                              <CircleNotch size={16} className="animate-spin text-brand-accent" />
                               <span className="ml-2 text-[10px] text-text-muted">Loading transcript...</span>
                             </div>
                           ) : conversationDetail ? (
@@ -1021,7 +1011,7 @@ export default function OutreachLogsPage() {
                                       <span className="text-[8px] text-brand-accent">{agentPct}% AI</span>
                                     </div>
                                     <div className="flex justify-between text-[8px] text-text-muted">
-                                      <span><Bot size={7} className="inline mr-0.5 text-brand-accent" /> Agent: {agentLines.length} turns</span>
+                                      <span><Robot size={7} className="inline mr-0.5 text-brand-accent" /> Agent: {agentLines.length} turns</span>
                                       <span><User size={7} className="inline mr-0.5 text-indigo-400" /> Customer: {customerLines.length} turns</span>
                                     </div>
                                   </div>
@@ -1048,7 +1038,7 @@ export default function OutreachLogsPage() {
                                           : "bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.08)] rounded-tr-sm"
                                       }`}>
                                         <div className="flex items-center gap-1 mb-0.5">
-                                          {line.role === "agent" ? <Bot size={8} className="text-brand-accent" /> : <User size={8} className="text-indigo-400" />}
+                                          {line.role === "agent" ? <Robot size={8} className="text-brand-accent" /> : <User size={8} className="text-indigo-400" />}
                                           <span className={`text-[8px] font-medium ${line.role === "agent" ? "text-brand-accent" : "text-indigo-400"}`}>
                                             {line.role === "agent" ? "AI Agent" : "Customer"}
                                           </span>
@@ -1080,7 +1070,7 @@ export default function OutreachLogsPage() {
                       {detailEntry.platform === "email" && (
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
-                            <Mail size={14} className="text-brand-accent" />
+                            <Envelope size={14} className="text-brand-accent" />
                             <h4 className="text-xs font-semibold">Email Content</h4>
                           </div>
 
@@ -1121,7 +1111,7 @@ export default function OutreachLogsPage() {
                           {threadEntries.length > 0 && (
                             <div className="space-y-2 border-t border-border-subtle pt-3">
                               <div className="flex items-center gap-1.5 text-[9px] text-text-muted">
-                                <MessageSquare size={9} /> <span className="uppercase tracking-wider">Thread History ({threadEntries.length})</span>
+                                <Chat size={9} /> <span className="uppercase tracking-wider">Thread History ({threadEntries.length})</span>
                               </div>
                               <div className="space-y-2 max-h-[300px] overflow-y-auto">
                                 {[...threadEntries]
@@ -1162,7 +1152,7 @@ export default function OutreachLogsPage() {
                       {(detailEntry.platform === "sms" || detailEntry.platform.includes("dm") || detailEntry.platform === "instagram" || detailEntry.platform === "facebook" || detailEntry.platform === "linkedin" || detailEntry.platform === "tiktok") && (
                         <div className="space-y-3">
                           <div className="flex items-center gap-2">
-                            {detailEntry.platform === "sms" ? <Phone size={14} className="text-green-400" /> : <MessageSquare size={14} className="text-indigo-400" />}
+                            {detailEntry.platform === "sms" ? <Phone size={14} className="text-green-400" /> : <Chat size={14} className="text-indigo-400" />}
                             <h4 className="text-xs font-semibold">{detailEntry.platform === "sms" ? "SMS" : "DM"} Conversation</h4>
                           </div>
 
@@ -1170,7 +1160,7 @@ export default function OutreachLogsPage() {
                           <div className="flex justify-end">
                             <div className="max-w-[85%] bg-[rgba(212,255,0,0.08)] border border-[rgba(212,255,0,0.1)] rounded-xl rounded-tr-sm px-3 py-2">
                               <div className="flex items-center gap-1 mb-0.5">
-                                <Bot size={8} className="text-brand-accent" />
+                                <Robot size={8} className="text-brand-accent" />
                                 <span className="text-[8px] font-medium text-brand-accent">You</span>
                                 <span className="text-[7px] text-text-muted ml-auto">
                                   {detailEntry.sent_at ? new Date(detailEntry.sent_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : ""}
@@ -1233,7 +1223,7 @@ export default function OutreachLogsPage() {
                         return (
                           <div key={platform}>
                             <div className="flex items-center justify-between text-[10px] mb-1">
-                              <span className="flex items-center gap-1.5 capitalize">{PLATFORM_ICON[platform] || <Mail size={12} />} {platform}</span>
+                              <span className="flex items-center gap-1.5 capitalize">{PLATFORM_ICON[platform] || <Envelope size={12} />} {platform}</span>
                               <span className="font-bold">{count} ({pct.toFixed(0)}%)</span>
                             </div>
                             <div className="w-full bg-surface-light rounded-full h-2">
@@ -1274,7 +1264,7 @@ export default function OutreachLogsPage() {
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                   {[
                     { icon: <ThumbsUp size={20} className="mx-auto mb-2 text-green-400" />, value: stats.replied, label: "Total Replies", color: "text-green-400" },
-                    { icon: <BarChart3 size={20} className="mx-auto mb-2 text-brand-accent" />, value: `${replyRate}%`, label: "Reply Rate", color: "text-brand-accent" },
+                    { icon: <ChartBar size={20} className="mx-auto mb-2 text-brand-accent" />, value: `${replyRate}%`, label: "Reply Rate", color: "text-brand-accent" },
                     { icon: <ThumbsDown size={20} className="mx-auto mb-2 text-red-400" />, value: stats.failed, label: "Failed/Bounced", color: "text-red-400" },
                     { icon: <Calendar size={20} className="mx-auto mb-2 text-indigo-400" />, value: stats.total, label: "All Time Total", color: "text-indigo-400" },
                   ].map((tile, i) => (
@@ -1295,13 +1285,13 @@ export default function OutreachLogsPage() {
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-semibold flex items-center gap-2"><Phone size={14} className="text-brand-accent" /> Active Phone Numbers</h3>
                     <button onClick={fetchProvisionedNumbers} className="btn-secondary text-xs flex items-center gap-1">
-                      <RefreshCw size={10} className={provLoading ? "animate-spin" : ""} /> Refresh
+                      <ArrowsClockwise size={10} className={provLoading ? "animate-spin" : ""} /> Refresh
                     </button>
                   </div>
 
                   {provLoading ? (
                     <div className="flex items-center justify-center py-8">
-                      <Loader2 size={16} className="animate-spin text-brand-accent" />
+                      <CircleNotch size={16} className="animate-spin text-brand-accent" />
                     </div>
                   ) : provNumbers.length === 0 ? (
                     <div className="text-center py-8 bg-surface-light rounded-xl">
@@ -1323,11 +1313,11 @@ export default function OutreachLogsPage() {
                           <div className="flex items-center gap-2">
                             {num.agent_id && (
                               <span className="text-[8px] px-2 py-0.5 rounded-full bg-emerald-400/10 text-emerald-400 flex items-center gap-1">
-                                <Bot size={8} /> AI Agent
+                                <Robot size={8} /> AI Agent
                               </span>
                             )}
                             <span className="text-[8px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 flex items-center gap-1">
-                              <Wifi size={8} /> Active
+                              <WifiHigh size={8} /> Active
                             </span>
                             <button onClick={() => copyText(num.phone_number)} className="p-1 hover:bg-white/4 rounded">
                               <Copy size={10} className="text-text-muted" />
@@ -1364,7 +1354,7 @@ export default function OutreachLogsPage() {
                           maxLength={3} />
                         <button onClick={searchAvailableNumbers} disabled={searchingNumbers || !areaCode}
                           className="btn-primary text-xs flex items-center gap-1 px-4">
-                          {searchingNumbers ? <Loader2 size={12} className="animate-spin" /> : <Search size={12} />} Search
+                          {searchingNumbers ? <CircleNotch size={12} className="animate-spin" /> : <MagnifyingGlass size={12} />} MagnifyingGlass
                         </button>
                       </div>
                     </div>
@@ -1377,14 +1367,14 @@ export default function OutreachLogsPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[300px] overflow-y-auto">
                         {availableNumbers.map((num, i) => (
                           <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg bg-surface-light border border-border-subtle hover:border-[rgba(212,255,0,0.2)] transition-all">
-                            <PhoneForwarded size={12} className="text-green-400 flex-shrink-0" />
+                            <PhoneOutgoing size={12} className="text-green-400 flex-shrink-0" />
                             <div className="flex-1 min-w-0">
                               <p className="text-xs font-mono font-semibold">{num.phone}</p>
                               <p className="text-[9px] text-text-muted truncate">{num.locality}{num.locality && num.region ? ", " : ""}{num.region}</p>
                             </div>
                             <button onClick={() => buyNumber(num.phone)} disabled={buyingNumber === num.phone || !provClientId}
                               className="text-[9px] px-3 py-1.5 rounded-full bg-brand-accent text-[#020711] font-medium hover:bg-brand-accent/90 disabled:opacity-30 flex items-center gap-1">
-                              {buyingNumber === num.phone ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />} Buy
+                              {buyingNumber === num.phone ? <CircleNotch size={10} className="animate-spin" /> : <Plus size={10} />} Buy
                             </button>
                           </div>
                         ))}
@@ -1395,14 +1385,14 @@ export default function OutreachLogsPage() {
 
                 {/* Email Configuration */}
                 <div className="glass rounded-xl p-4 space-y-4">
-                  <h3 className="text-sm font-semibold flex items-center gap-2"><Mail size={14} className="text-brand-accent" /> Email Configuration</h3>
+                  <h3 className="text-sm font-semibold flex items-center gap-2"><Envelope size={14} className="text-brand-accent" /> Email Configuration</h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {/* Resend status */}
                     <div className="p-3 rounded-xl bg-surface-light border border-border-subtle">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-6 h-6 rounded bg-[rgba(212,255,0,0.08)] flex items-center justify-center">
-                          <Mail size={12} className="text-indigo-400" />
+                          <Envelope size={12} className="text-indigo-400" />
                         </div>
                         <div>
                           <p className="text-xs font-semibold">Resend</p>
@@ -1477,7 +1467,7 @@ export default function OutreachLogsPage() {
                   <div className="p-3 rounded-xl bg-surface-light border border-border-subtle">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-6 h-6 rounded bg-emerald-500/10 flex items-center justify-center">
-                        <Bot size={12} className="text-emerald-400" />
+                        <Robot size={12} className="text-emerald-400" />
                       </div>
                       <div>
                         <p className="text-xs font-semibold">ElevenLabs</p>
@@ -1507,7 +1497,7 @@ export default function OutreachLogsPage() {
                 <div className="glass rounded-xl p-4 space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-semibold flex items-center gap-2">
-                      <Radar size={14} className="text-brand-accent" /> Lead Scraping Configuration
+                      <Broadcast size={14} className="text-brand-accent" /> Lead Scraping Configuration
                     </h3>
                     <div className="flex items-center gap-2">
                       {scraperResult && (
@@ -1517,7 +1507,7 @@ export default function OutreachLogsPage() {
                       )}
                       <button onClick={runScraper} disabled={scraperRunning}
                         className="btn-primary text-xs flex items-center gap-1.5 px-4">
-                        {scraperRunning ? <Loader2 size={12} className="animate-spin" /> : <Radar size={12} />}
+                        {scraperRunning ? <CircleNotch size={12} className="animate-spin" /> : <Broadcast size={12} />}
                         {scraperRunning ? "Running�" : "Run Scraper Now"}
                       </button>
                     </div>
@@ -1653,16 +1643,16 @@ export default function OutreachLogsPage() {
                     <Shield size={13} className={spamGuardEnabled ? "text-green-400" : "text-orange-400"} />
                     <div className="flex-1">
                       <p className="text-[10px] font-medium">Spam Guard is {spamGuardEnabled ? "ON" : "OFF"}</p>
-                      <p className="text-[9px] text-text-muted">{spamGuardEnabled ? "Hard caps are enforced � effective limits shown below" : "Limits will not be capped � enable in Settings for protection"}</p>
+                      <p className="text-[9px] text-text-muted">{spamGuardEnabled ? "Hard caps are enforced � effective limits shown below" : "Limits will not be capped � enable in Gear for protection"}</p>
                     </div>
                     <a href="/dashboard/settings" className="text-[9px] text-brand-accent hover:underline flex items-center gap-0.5">
-                      <ExternalLink size={9} /> Settings
+                      <ArrowSquareOut size={9} /> Gear
                     </a>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {([
-                      { key: "email_daily_limit" as const, label: "Email", icon: <Mail size={12} className="text-brand-accent" />, max: 500, cap: 500 },
+                      { key: "email_daily_limit" as const, label: "Email", icon: <Envelope size={12} className="text-brand-accent" />, max: 500, cap: 500 },
                       { key: "sms_daily_limit" as const, label: "SMS", icon: <Phone size={12} className="text-green-400" />, max: 300, cap: 300 },
                       { key: "calls_daily_limit" as const, label: "AI Calls", icon: <PhoneCall size={12} className="text-emerald-400" />, max: 100, cap: 100 },
                     ] as { key: "email_daily_limit" | "sms_daily_limit" | "calls_daily_limit"; label: string; icon: React.ReactNode; max: number; cap: number }[]).map(ch => {
@@ -1684,7 +1674,7 @@ export default function OutreachLogsPage() {
                             className="w-full accent-yellow-400" />
                           {spamGuardEnabled && effective < val && (
                             <p className="text-[9px] text-orange-400 flex items-center gap-1">
-                              <AlertTriangle size={9} /> Capped at {effective}/day by spam guard
+                              <Warning size={9} /> Capped at {effective}/day by spam guard
                             </p>
                           )}
                         </div>
@@ -1780,8 +1770,8 @@ export default function OutreachLogsPage() {
                     <p className="text-[10px] text-text-muted uppercase tracking-wider mb-2">Automation Rules</p>
                     {[
                       { key: "auto_followup", label: "Auto follow-up sequence", desc: "Automatically send follow-ups on schedule" },
-                      { key: "followup_day_3", label: "Day 3 follow-up", desc: "Send a follow-up 3 days after initial message" },
-                      { key: "followup_day_7", label: "Day 7 follow-up", desc: "Send a follow-up 7 days after initial message" },
+                      { key: "followup_day_3", label: "Day 3 follow-up", desc: "PaperPlaneTilt a follow-up 3 days after initial message" },
+                      { key: "followup_day_7", label: "Day 7 follow-up", desc: "PaperPlaneTilt a follow-up 7 days after initial message" },
                       { key: "exclude_contacted", label: "Exclude already contacted", desc: "Skip leads you have reached out to before" },
                       { key: "pause_on_reply", label: "Pause sequence on reply", desc: "Stop automated follow-ups when prospect replies" },
                     ].map(item => (
@@ -1829,7 +1819,7 @@ export default function OutreachLogsPage() {
                       </div>
                       <p className="text-[9px] text-text-muted mb-2">Controls maximum daily send limits to protect sender reputation.</p>
                       <a href="/dashboard/settings" className="inline-flex items-center gap-1 text-[9px] text-brand-accent hover:underline">
-                        <ExternalLink size={9} /> Configure in Settings
+                        <ArrowSquareOut size={9} /> Configure in Gear
                       </a>
                     </div>
 
@@ -1837,7 +1827,7 @@ export default function OutreachLogsPage() {
                     <div className="p-3 rounded-xl bg-surface-light border border-border-subtle">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-7 h-7 rounded-lg bg-indigo-400/10 flex items-center justify-center">
-                          <Activity size={13} className="text-indigo-400" />
+                          <Pulse size={13} className="text-indigo-400" />
                         </div>
                         <div className="flex-1">
                           <p className="text-xs font-semibold">Sender Pool</p>
@@ -1877,7 +1867,7 @@ export default function OutreachLogsPage() {
                           </>
                         ) : (
                           <div className="flex items-center gap-1.5 text-[9px] text-text-muted py-2">
-                            <Loader2 size={9} className="animate-spin" /> Loading sender stats�
+                            <CircleNotch size={9} className="animate-spin" /> Loading sender stats�
                           </div>
                         )}
                       </div>
@@ -1910,7 +1900,7 @@ export default function OutreachLogsPage() {
 
                   {!senderStats && (
                     <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white/5 border border-border-subtle">
-                      <Building2 size={12} className="text-text-muted" />
+                      <Buildings size={12} className="text-text-muted" />
                       <p className="text-[10px] text-text-muted">Sender stats will appear here once the API is connected.</p>
                     </div>
                   )}
@@ -1919,7 +1909,7 @@ export default function OutreachLogsPage() {
                 {/* Scheduled Runs */}
                 <div className="glass rounded-xl p-4 space-y-3">
                   <div className="flex items-center gap-2">
-                    <CalendarRange size={14} className="text-brand-accent" />
+                    <CalendarBlank size={14} className="text-brand-accent" />
                     <h3 className="text-xs font-semibold">Scheduled Runs</h3>
                   </div>
 
@@ -2051,7 +2041,7 @@ export default function OutreachLogsPage() {
                     </>
                   ) : (
                     <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white/5 border border-border-subtle">
-                      <Radar size={12} className="text-text-muted animate-pulse" />
+                      <Broadcast size={12} className="text-text-muted animate-pulse" />
                       <p className="text-[10px] text-text-muted">Loading auto-run schedule...</p>
                     </div>
                   )}
@@ -2065,7 +2055,7 @@ export default function OutreachLogsPage() {
                   </div>
                   <button onClick={saveConfig} disabled={configSaving}
                     className="btn-primary text-xs flex items-center gap-1.5 px-5">
-                    {configSaving ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle size={12} />}
+                    {configSaving ? <CircleNotch size={12} className="animate-spin" /> : <CheckCircle size={12} />}
                     {configSaving ? "Saving�" : "Save Configuration"}
                   </button>
                 </div>
@@ -2137,7 +2127,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
     return (
       <div className="rounded-lg border border-[rgba(212,255,0,0.2)] bg-[rgba(212,255,0,0.05)] p-3">
         <div className="flex items-center gap-2 mb-2">
-          <Bot size={12} className="text-brand-accent" />
+          <Robot size={12} className="text-brand-accent" />
           <span className="text-[11px] font-semibold">AI Analysis</span>
         </div>
         <p className="text-[10px] text-text-muted mb-2">Get sentiment, win probability, objections, and a suggested reply.</p>
@@ -2146,7 +2136,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
           disabled={loading}
           className="w-full py-1.5 rounded-full bg-brand-accent text-[#020711] text-[10px] font-semibold hover:bg-[#E8FF4D] hover:shadow-lg hover:shadow-[rgba(212,255,0,0.3)] disabled:opacity-50 flex items-center justify-center gap-1.5"
         >
-          {loading ? <Loader2 size={10} className="animate-spin" /> : <Bot size={10} />}
+          {loading ? <CircleNotch size={10} className="animate-spin" /> : <Robot size={10} />}
           {loading ? "Analyzing..." : "Analyze with AI"}
         </button>
       </div>
@@ -2168,11 +2158,11 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
     <div className="rounded-lg border border-[rgba(212,255,0,0.2)] bg-gradient-to-br from-[rgba(212,255,0,0.06)] to-transparent p-3 space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Bot size={12} className="text-brand-accent" />
+          <Robot size={12} className="text-brand-accent" />
           <span className="text-[11px] font-semibold">AI Analysis</span>
         </div>
         <button onClick={runAnalysis} disabled={loading} className="text-[9px] text-text-muted hover:text-brand-accent flex items-center gap-1">
-          <RefreshCw size={9} className={loading ? "animate-spin" : ""} /> Re-run
+          <ArrowsClockwise size={9} className={loading ? "animate-spin" : ""} /> Re-run
         </button>
       </div>
 
@@ -2265,7 +2255,7 @@ function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
         <div>
           <div className="flex items-center justify-between mb-1">
             <p className="text-[9px] text-text-muted uppercase tracking-wider flex items-center gap-1">
-              <Sparkles size={9} className="text-brand-accent" /> Suggested Reply
+              <Sparkle size={9} className="text-brand-accent" /> Suggested Reply
             </p>
             <button onClick={copyReply} className="text-[9px] text-brand-accent hover:text-brand-accent flex items-center gap-1">
               {copied ? <Check size={9} /> : <Copy size={9} />}

@@ -1,7 +1,7 @@
 "use client";
+import { ArrowRight, CaretRight } from "@phosphor-icons/react";
 
 import Link from "next/link";
-import { ArrowRight, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { BRAND } from "@/lib/brand-config";
 
@@ -348,7 +348,7 @@ export default function Hero() {
                 className="inline-flex items-center justify-center gap-2 font-medium text-[12px] h-9 px-4 rounded-[12px] bg-transparent text-[#A8A8B2] border border-[rgba(212, 255, 0,0.18)] hover:bg-[rgba(212,255,0,0.08)] hover:text-[#C8C8D4] hover:border-[rgba(212, 255, 0,0.32)] transition-all duration-200"
               >
                 See all features
-                <ChevronRight size={13} />
+                <CaretRight size={13} />
               </Link>
             </motion.div>
 
