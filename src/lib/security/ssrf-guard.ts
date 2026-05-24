@@ -56,9 +56,11 @@ export function isPrivateOrInternal(hostname: string): boolean {
   // Teredo 2001::/32 — check both expanded and compressed forms (WHATWG URL
   // normalises to compact so 2001:0000::1 → 2001::1, hence the bare "2001::" check).
   if (bare.startsWith("2001:0000:") || bare.startsWith("2001:0:") || bare.startsWith("2001::")) return true;
+  if (bare.startsWith("2001:db8:")) return true;                      // 2001:db8::/32 documentation (RFC 3849) — not globally routable
   if (bare.startsWith("2002:")) return true;                          // 6to4 — encodes IPv4 in bits [16:47]; e.g. 2002:7f00:1:: → 127.0.0.1
   if (bare.startsWith("64:ff9b:")) return true;                       // NAT64 IANA well-known prefix (RFC 6052) — maps to IPv4
   if (bare.startsWith("64:ff9b:1:")) return true;                     // NAT64 RFC 8215 local-use prefix — maps to IPv4
+  if (bare.startsWith("100::")) return true;                          // 100::/64 discard-only prefix (RFC 6666)
 
   // Cloud metadata services (covered by IPv4 169.254 check above, but
   // explicit hostname matches for defence-in-depth)
