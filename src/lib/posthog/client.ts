@@ -1,8 +1,9 @@
+"use client";
+
 // Required env vars (add to .env.local and Vercel project settings):
 //   NEXT_PUBLIC_POSTHOG_KEY=    # from posthog.com project settings → Project API Key
 //   NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
 
-"use client";
 
 import posthog, { type PostHog } from "posthog-js";
 

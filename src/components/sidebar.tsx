@@ -1,6 +1,7 @@
+"use client";
+
 import type { Icon } from "@phosphor-icons/react";
 import { ArrowCounterClockwise, ArrowUpRight, Bell, BookOpen, Briefcase, Buildings, Calculator, Calendar, CaretDown, CaretLeft, ChartBar, Chat, Chats, ClipboardText, CreditCard, Crown, CurrencyDollar, DeviceMobile, DownloadSimple, Envelope, EnvelopeSimple, FileText, FilmStrip, Flask, FolderOpen, Gear, Gift, GitBranch, Globe, GlobeHemisphereWest, Headphones, Heart, House, Image, Key, Layout, Lifebuoy, Lightning, ListNumbers, MagnifyingGlass, Medal, Microphone, Monitor, Newspaper, Palette, PaperPlaneTilt, PenNib, Pencil, Phone, Plug, PlugsConnected, Pulse, PushPin, PuzzlePiece, Receipt, Robot, ShareNetwork, ShieldCheck, SignOut, SlidersHorizontal, Sparkle, SquaresFour, Stack, Star, Storefront, Target, Tray, TrendUp, UploadSimple, Users, UsersThree, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";

@@ -1,3 +1,5 @@
+"use client";
+
 import { Check, CircleNotch, LinkBreak, Plug } from "@phosphor-icons/react";
 ﻿/**
  * Integration card for the Integrations Hub grid.
@@ -18,7 +20,6 @@ import { Check, CircleNotch, LinkBreak, Plug } from "@phosphor-icons/react";
  * can sequence the modal → popup → finalize flow consistently.
  */
 
-"use client";
 
 import Image from "next/image";
 import { useState } from "react";

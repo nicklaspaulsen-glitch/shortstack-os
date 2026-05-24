@@ -1,3 +1,5 @@
+"use client";
+
 import { Check, X } from "@phosphor-icons/react";
 /**
  * Branded OAuth confirmation modal.
@@ -18,7 +20,6 @@ import { Check, X } from "@phosphor-icons/react";
  * - aria-labelledby + aria-describedby + role="dialog".
  */
 
-"use client";
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";

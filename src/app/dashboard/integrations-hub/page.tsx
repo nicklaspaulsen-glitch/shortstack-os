@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowSquareOut, ArrowsClockwise, Key, Plug } from "@phosphor-icons/react";
 /**
  * Integrations Hub � Nango-powered tenant OAuth dashboard + API-key integrations.
@@ -25,7 +27,6 @@ import { ArrowSquareOut, ArrowsClockwise, Key, Plug } from "@phosphor-icons/reac
  *   panel explaining how to configure the provider (env var or Zernio dashboard).
  */
 
-"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";

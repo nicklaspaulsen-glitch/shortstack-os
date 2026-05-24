@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Nango client-side connect-flow helper.
  *
@@ -22,7 +24,6 @@
  * our side, no token storage, no refresh logic.
  */
 
-"use client";
 
 import NangoFrontend from "@nangohq/frontend";
 

@@ -1,6 +1,7 @@
+"use client";
+
 import { ArrowsDownUp, BookOpen, Brain, Briefcase, Camera, CaretDown, CaretRight, ChartBar, Chat, ChatText, Check, CircleNotch, Clock, ClosedCaptioning, Cloud, Copy, Crop, Crown, Cursor, CursorClick, Disc, DotsSixVertical, DownloadSimple, Drop, Eye, File, FileText, FilmStrip, Fire, Gauge, Guitar, Headphones, Heart, Image, ImageSquare, Lightning, ListChecks, Lock, MagicWand, Megaphone, Microphone, Minus, Monitor, MusicNote, PaintBrush, Palette, Play, Plus, Pulse, Robot, Scissors, ShareNetwork, Sliders, SlidersHorizontal, Smiley, Sparkle, SpeakerHigh, SpeakerX, SquaresFour, Stack, Star, Sun, Target, TextT, Timer, TrendUp, UploadSimple, WarningCircle, Waves, Wind, X } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useState, useEffect, useRef, type ReactNode } from "react";
 import { useAuth } from "@/lib/auth-context";

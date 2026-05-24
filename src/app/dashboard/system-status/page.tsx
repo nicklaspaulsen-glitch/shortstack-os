@@ -1,6 +1,7 @@
+"use client";
+
 import type { Icon } from "@phosphor-icons/react";
 import { ArrowLeft, ArrowSquareOut, ArrowsClockwise, CheckCircle, Lightning, Lock, Play, ShieldCheck, Warning, XCircle } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Admin-only: Launch-readiness system status dashboard.

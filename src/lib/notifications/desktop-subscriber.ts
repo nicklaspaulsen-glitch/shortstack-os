@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * desktop-subscriber — Supabase realtime → native OS notifications.
  *
@@ -16,7 +18,6 @@
  * project, the subscriber silently no-ops. Enable with:
  *   alter publication supabase_realtime add table leads, outreach_log, trinity_log;
  */
-"use client";
 
 import { createClient } from "@/lib/supabase/client";
 import { isDesktop, notifyPreset } from "@/lib/desktop-bridge";

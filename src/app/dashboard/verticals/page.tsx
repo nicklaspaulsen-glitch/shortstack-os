@@ -1,6 +1,7 @@
+"use client";
+
 import { ArrowRight, Briefcase, Check, GraduationCap, House, ShoppingBag } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * Vertical SaaS Templates — index page.

@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * desktop-bridge.ts — thin wrapper around `window.ssDesktop` (exposed by
  * electron/preload-agent.js). Every helper is feature-detected and safe to
@@ -8,7 +10,6 @@
  * Anything here runs only in the renderer. Always guarded with
  * `typeof window !== "undefined"` to stay SSR-safe.
  */
-"use client";
 
 // ── Types ─────────────────────────────────────────────────────────────
 

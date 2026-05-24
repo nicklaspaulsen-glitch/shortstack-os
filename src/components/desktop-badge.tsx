@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * DesktopBadge — keeps the OS tray / taskbar unread count in sync with
  * the `notifications` table. Mount once in the dashboard layout; it
@@ -7,7 +9,6 @@
  * Feature-detected: on the web build `isDesktop()` is false and the
  * effect short-circuits, so there's zero overhead for browser users.
  */
-"use client";
 
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";

@@ -1,3 +1,5 @@
+"use client";
+
 import { Bell, FolderOpen, Keyboard, Link, Monitor, Sparkle, X } from "@phosphor-icons/react";
 /**
  * DesktopIndicator — a small green-dot + "Desktop" pill shown in the
@@ -7,7 +9,6 @@ import { Bell, FolderOpen, Keyboard, Link, Monitor, Sparkle, X } from "@phosphor
  *
  * Feature-detected: renders null on the web build.
  */
-"use client";
 
 import { useEffect, useState } from "react";
 import { isDesktop, openDropboxFolder } from "@/lib/desktop-bridge";

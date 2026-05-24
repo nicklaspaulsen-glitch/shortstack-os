@@ -1,6 +1,7 @@
+"use client";
+
 import type { Icon } from "@phosphor-icons/react";
 import { Buildings, ChartBar, NotePencil, MagnifyingGlass } from "@phosphor-icons/react";
-﻿"use client";
 
 import {
   SiMailchimp,
