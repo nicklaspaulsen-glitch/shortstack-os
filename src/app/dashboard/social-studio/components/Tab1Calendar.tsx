@@ -1,5 +1,6 @@
+"use client";
+
 import { Calendar, CircleNotch, FloppyDisk, Funnel, Trash, X } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";

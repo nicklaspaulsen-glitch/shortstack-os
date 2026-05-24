@@ -1,5 +1,6 @@
+"use client";
+
 import { Check, CircleNotch, Lightbulb, Pause, Sparkle, TrendUp, X } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * InsightsPanel — AI-generated optimization suggestions plus per-platform

@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowBendUpLeft, Chat, CircleNotch, Sparkle, Users } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";

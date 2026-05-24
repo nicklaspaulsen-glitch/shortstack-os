@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowCounterClockwise, Calendar, CircleNotch, CloudArrowUp, File, Image, MagicWand, PaperPlaneTilt, Sparkle, TrendUp } from "@phosphor-icons/react";
-﻿"use client";
 
 import { useCallback, useRef, useState, useMemo } from "react";
 import toast from "react-hot-toast";

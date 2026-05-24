@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowRight, CircleNotch, Sparkle } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * BudgetsPanel — current vs AI-suggested per-platform allocation, with a

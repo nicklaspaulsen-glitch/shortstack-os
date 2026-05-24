@@ -1,5 +1,6 @@
+"use client";
+
 import { ArrowsClockwise, CheckSquare, CircleNotch, Pause, PencilSimple, Play, Square } from "@phosphor-icons/react";
-﻿"use client";
 
 /**
  * CampaignsTable — unified campaign list across Meta / Google / TikTok.
