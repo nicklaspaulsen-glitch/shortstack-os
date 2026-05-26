@@ -92,10 +92,14 @@ export async function PATCH(
     updates.position = (last?.position ?? -1) + 1;
   }
 
+  // Defense-in-depth: pin the write to the board we verified ownership of.
+  // If the task's board_id shifted between the read and this write, the
+  // update will affect 0 rows rather than landing on the wrong board's task.
   const { data, error } = await supabase
     .from("project_tasks")
     .update(updates)
     .eq("id", params.id)
+    .eq("board_id", existing.board_id)
     .select()
     .single();
 
@@ -122,10 +126,12 @@ export async function DELETE(
   const existing = await assertTaskAccess(supabase, params.id, ownerId);
   if (!existing) return NextResponse.json({ error: "Task not found" }, { status: 404 });
 
+  // Defense-in-depth: scope deletion to the verified board_id.
   const { error } = await supabase
     .from("project_tasks")
     .delete()
-    .eq("id", params.id);
+    .eq("id", params.id)
+    .eq("board_id", existing.board_id);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ success: true });

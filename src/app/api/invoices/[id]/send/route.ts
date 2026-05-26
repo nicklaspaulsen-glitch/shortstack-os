@@ -54,10 +54,14 @@ export async function POST(
     console.warn("[invoices/send] client has no email — email sending skipped");
   }
 
+  // Defense-in-depth: scope by client_id so this write is pinned to the
+  // exact client whose ownership we verified above. RLS also enforces this
+  // via the clients join, but the explicit WHERE closes the TOCTOU window.
   const { data: updated, error } = await supabase
     .from("invoices")
     .update({ status: "sent", sent_at: new Date().toISOString() })
     .eq("id", params.id)
+    .eq("client_id", invoice.client_id)
     .select()
     .single();
 
