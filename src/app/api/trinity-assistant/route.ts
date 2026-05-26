@@ -9,6 +9,7 @@ import {
 } from "@/lib/thumbnail-styles";
 import type Anthropic from "@anthropic-ai/sdk";
 import { getStripe } from "@/lib/stripe/client";
+import { resolveAndCheckUrl } from "@/lib/security/ssrf";
 
 // Trinity can fire up to 4 Claude calls + a synthesis call in one request.
 // Default 10s Hobby limit is too tight; bump to 60s (max for Pro).
@@ -3015,6 +3016,11 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
             error: metered.reason || "Monthly token limit reached — upgrade to continue.",
           };
         }
+
+        // SSRF guard — video_url is supplied by the Claude tool call, which
+        // reflects user intent. Block requests to internal/metadata addresses.
+        const ssrfErr = await resolveAndCheckUrl(videoUrl);
+        if (ssrfErr) return { ok: false, error: `Blocked URL: ${ssrfErr}` };
 
         try {
           const res = await fetch(videoUrl);
