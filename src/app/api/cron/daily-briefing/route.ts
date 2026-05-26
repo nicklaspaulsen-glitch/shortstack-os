@@ -54,7 +54,8 @@ export async function GET(request: NextRequest) {
         a.id,
       );
       generated++;
-    } catch {
+    } catch (err) {
+      console.error("[cron/daily-briefing] briefing generation failed for user", a.id, err);
       failed++;
     }
   }
