@@ -47,10 +47,14 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     .maybeSingle();
   if (!row || row.parent_user_id !== ownerId) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  // Defense-in-depth: scope the update by parent_user_id alongside the row id
+  // so a TOCTOU race between the ownership read above and this write can't
+  // land on a row that transferred ownership between the two operations.
   const { data, error } = await service
     .from("subaccounts")
     .update(updates)
     .eq("id", params.id)
+    .eq("parent_user_id", ownerId)
     .select("*")
     .single();
 
@@ -76,6 +80,8 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
     .maybeSingle();
   if (!row || row.parent_user_id !== ownerId) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  // Defense-in-depth: scope by parent_user_id to close the TOCTOU window
+  // between the ownership read above and this write.
   const { error } = await service
     .from("subaccounts")
     .update({
@@ -83,7 +89,8 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
       cancelled_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     })
-    .eq("id", params.id);
+    .eq("id", params.id)
+    .eq("parent_user_id", ownerId);
 
   if (error) {
     console.error("[subaccounts/:id] DELETE error:", error);

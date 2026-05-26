@@ -375,7 +375,9 @@ export async function POST(request: NextRequest) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ chat_id: chatId, text: msg }),
-        }).catch(() => {});
+        }).catch((telegramErr) => {
+          console.error("[webhooks/inbound] Telegram notify failed:", telegramErr);
+        });
       }
     }
 
@@ -394,8 +396,11 @@ export async function POST(request: NextRequest) {
       result: { source: "webhook", event, error: String(err) },
     });
 
+    console.error("[webhooks/inbound] processing error for event:", event, err);
+    // Do not echo internal error details — the caller (Zapier/Make) only needs
+    // to know it failed so it can retry. Internal details stay server-side.
     return NextResponse.json(
-      { error: "Processing failed", details: String(err) },
+      { error: "Processing failed" },
       { status: 500 }
     );
   }
