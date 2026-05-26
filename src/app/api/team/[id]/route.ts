@@ -111,11 +111,15 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     return NextResponse.json({ error: "Not your team member" }, { status: 403 });
   }
 
-  // Soft-delete (mark as removed)
+  // Soft-delete (mark as removed).
+  // Defense-in-depth: scope by agency_owner_id (verified above) to close the
+  // TOCTOU window between the ownership read and this write. The service client
+  // bypasses RLS entirely, so the explicit WHERE is the only guard here.
   await service
     .from("team_members")
     .update({ status: "removed", updated_at: new Date().toISOString() })
-    .eq("id", params.id);
+    .eq("id", params.id)
+    .eq("agency_owner_id", user.id);
 
   // Also disable the auth user so they can't log in
   if (member.member_profile_id) {
