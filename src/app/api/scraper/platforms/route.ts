@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 // Multi-Platform Lead Scraper — Scrapes LinkedIn, Instagram, Facebook, Google Maps, Yelp
 export async function POST(request: NextRequest) {
@@ -37,9 +38,9 @@ export async function POST(request: NextRequest) {
             if (filters?.require_website && !p.websiteUri) continue;
             if (p.businessStatus && p.businessStatus !== "OPERATIONAL") continue;
 
-            // Scrape email from website
+            // Scrape email from website — guard against SSRF (websiteUri is business-owner-controlled)
             let email = null;
-            if (p.websiteUri) {
+            if (p.websiteUri && !checkFetchUrl(p.websiteUri, { allowHttp: true })) {
               try {
                 const siteRes = await fetch(p.websiteUri, { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(5000) });
                 const html = await siteRes.text();

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 // Social Media Lead Scraper — Finds business leads from Instagram, Facebook, TikTok, LinkedIn
 // Scrapes by hashtag, keyword, location, niche — then AI scores each lead
@@ -146,7 +147,7 @@ export async function POST(request: NextRequest) {
         for (const place of (data.places || [])) {
           let tiktokUrl = null;
           // Try to find TikTok handle from website
-          if (place.websiteUri) {
+          if (place.websiteUri && !checkFetchUrl(place.websiteUri, { allowHttp: true })) {
             try {
               const siteRes = await fetch(place.websiteUri, { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(4000) });
               const html = await siteRes.text();
@@ -194,7 +195,7 @@ export async function POST(request: NextRequest) {
           for (const place of (data.places || [])) {
             let linkedinUrl = null;
             let email = null;
-            if (place.websiteUri) {
+            if (place.websiteUri && !checkFetchUrl(place.websiteUri, { allowHttp: true })) {
               try {
                 const siteRes = await fetch(place.websiteUri, { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(4000) });
                 const html = await siteRes.text();

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 // Simplified lead search for the client portal Lead Engine
 // Wraps the same Google Places + Facebook logic as /api/scraper/run
@@ -143,9 +144,9 @@ export async function POST(request: NextRequest) {
 
           if (existing && existing.length > 0) { totalSkipped++; continue; }
 
-          // Try to scrape email from website
+          // Try to scrape email from website — guard against SSRF (websiteUri is business-owner-controlled)
           let email = null;
-          if (d.website) {
+          if (d.website && !checkFetchUrl(d.website, { allowHttp: true })) {
             try {
               const siteRes = await fetch(d.website, {
                 headers: { "User-Agent": "Mozilla/5.0" },

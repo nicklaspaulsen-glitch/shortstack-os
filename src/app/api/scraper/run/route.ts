@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 // Lead scoring: rates 0-100 based on how likely a lead needs marketing help
 function scoreLeadQuality(lead: {
@@ -162,9 +163,10 @@ export async function POST(request: NextRequest) {
 
                 if (existing && existing.length > 0) { totalSkipped++; continue; }
 
-                // Scrape email from website
+                // Scrape email from website — guard against SSRF (Google Places websiteUri
+                // is business-owner-controlled and may point at internal/metadata endpoints)
                 let email = null;
-                if (d.website) {
+                if (d.website && !checkFetchUrl(d.website, { allowHttp: true })) {
                   try {
                     const siteRes = await fetch(d.website, {
                       headers: { "User-Agent": "Mozilla/5.0" },
