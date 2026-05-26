@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 // AI Brand Audit — Complete analysis of a prospect/client's online presence
 // Use this in sales calls to show value before they sign
@@ -13,6 +14,10 @@ export async function POST(request: NextRequest) {
   // Scrape their website
   let siteContent = "";
   if (website) {
+    const ssrfErr = checkFetchUrl(website, { allowHttp: true });
+    if (ssrfErr) {
+      return NextResponse.json({ error: `Invalid website URL: ${ssrfErr}` }, { status: 400 });
+    }
     try {
       const res = await fetch(website, {
         headers: { "User-Agent": "Mozilla/5.0 (compatible; ShortStackBot/1.0)" },

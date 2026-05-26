@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 // AI Competitor Spy — Deep analysis of a specific competitor's online presence
 export async function POST(request: NextRequest) {
@@ -15,6 +16,10 @@ export async function POST(request: NextRequest) {
   // Fetch competitor website content if URL provided
   let websiteContent = "";
   if (competitor_website) {
+    const ssrfErr = checkFetchUrl(competitor_website, { allowHttp: true });
+    if (ssrfErr) {
+      return NextResponse.json({ error: `Invalid competitor website URL: ${ssrfErr}` }, { status: 400 });
+    }
     try {
       const res = await fetch(competitor_website, {
         headers: { "User-Agent": "Mozilla/5.0 (compatible; ShortStackBot/1.0)" },
