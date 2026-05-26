@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 // Social Profile Enricher — scans lead websites to find Instagram, Facebook, LinkedIn, TikTok
 export async function POST(request: NextRequest) {
@@ -35,6 +36,10 @@ export async function POST(request: NextRequest) {
 
   for (const lead of leads) {
     if (!lead.website) continue;
+    // SSRF guard — lead.website is stored by users and could point to internal
+    // addresses (e.g. AWS IMDS, loopback). Skip silently if blocked.
+    const ssrfErr = checkFetchUrl(lead.website, { allowHttp: true });
+    if (ssrfErr) { console.warn("[leads/enrich] blocked SSRF attempt", { website: lead.website, reason: ssrfErr }); continue; }
     try {
       const res = await fetch(lead.website, { headers: { "User-Agent": "Mozilla/5.0 (compatible; ShortStackBot/1.0)" }, signal: AbortSignal.timeout(5000) });
       const html = await res.text();
