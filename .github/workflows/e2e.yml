@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    # Nightly at 03:00 UTC — full crawl of all 121+ routes + sidebar
+    - cron: "0 3 * * *"
   workflow_dispatch:   # manual trigger from GitHub Actions UI
 
 concurrency:
@@ -59,3 +62,62 @@ jobs:
           name: playwright-report-${{ github.sha }}
           path: playwright-report/
           retention-days: 14
+
+  # ── Nightly full crawl ───────────────────────────────────────────────
+  # Runs the deep interactive crawl (121 routes × all tabs/accordions/
+  # sort headers) + the sidebar route-existence check. Separate job so
+  # it doesn't block PRs and gets its own 30-min budget.
+  crawl:
+    name: Nightly full crawl
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Only runs on nightly schedule or manual trigger, not on every push/PR
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Auth setup
+        run: npx playwright test e2e/setup/ --reporter=list
+        env:
+          PLAYWRIGHT_BASE_URL: https://app.shortstack.work
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+
+      - name: Sidebar crawl (107 routes — HTTP status check)
+        run: npx playwright test e2e/journeys/sidebar-crawl.spec.ts --reporter=list --retries=1
+        env:
+          PLAYWRIGHT_BASE_URL: https://app.shortstack.work
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+
+      - name: Interactions crawl (121 routes — tabs / accordions / toggles)
+        run: npx playwright test e2e/journeys/interactions-crawl.spec.ts --reporter=list --retries=1
+        env:
+          PLAYWRIGHT_BASE_URL: https://app.shortstack.work
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+
+      - name: Upload crawl report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crawl-report-${{ github.run_id }}
+          path: playwright-report/
+          retention-days: 30
