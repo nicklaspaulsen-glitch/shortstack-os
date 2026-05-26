@@ -131,12 +131,14 @@ export async function POST(
       update.campaign_team_member_id = teamMemberId;
     }
 
-    const { error } = await service.from("leads").update(update).eq("id", lead.id);
+    // Defense-in-depth: re-scope by user_id to close the TOCTOU window between
+    // the ownership-verified ownLeads read above and each individual write.
+    const { error } = await service.from("leads").update(update).eq("id", lead.id).eq("user_id", ownerId);
     if (error) {
       // If dedicated columns don't exist yet, fall back to metadata-only update.
       const fallback: Record<string, unknown> = { metadata: newMeta };
       if (teamMemberId) fallback.assigned_to = teamMemberId;
-      const { error: e2 } = await service.from("leads").update(fallback).eq("id", lead.id);
+      const { error: e2 } = await service.from("leads").update(fallback).eq("id", lead.id).eq("user_id", ownerId);
       if (e2) {
         errors.push(`${lead.id}: ${e2.message}`);
       } else {

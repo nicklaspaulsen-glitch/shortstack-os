@@ -104,13 +104,21 @@ export async function POST(
       });
     }
 
-    const ok = await writeTranscriptToSource({
-      supabase: service,
-      sourceTable: "voice_calls",
-      sourceId: params.id,
-      result,
-    });
-    if (!ok) {
+    // Inline write instead of writeTranscriptToSource so we can add
+    // `.eq("profile_id", ownerId)` as defense-in-depth against the TOCTOU
+    // window between the ownership check above and this service-client write.
+    // writeTranscriptToSource passes the service client which bypasses RLS, so
+    // we must supply the ownership column explicitly here.
+    const { error: transcriptErr } = await service
+      .from("voice_calls")
+      .update({
+        transcript: result.text,
+        duration_seconds: result.duration_seconds || null,
+      })
+      .eq("id", params.id)
+      .eq("profile_id", ownerId);
+    if (transcriptErr) {
+      console.error("[voice-calls/transcribe] transcript update failed", transcriptErr);
       return NextResponse.json(
         { error: "transcript update failed" },
         { status: 500 },
