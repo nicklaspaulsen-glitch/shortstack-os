@@ -76,7 +76,9 @@ export async function POST(
   } else {
     patch.fail_count = (routine.fail_count ?? 0) + 1;
   }
-  await service.from("telegram_routines").update(patch).eq("id", routine.id);
+  // Defense-in-depth: re-scope by user_id to close the TOCTOU window between
+  // the ownership read (line ~32) and this write. Service client bypasses RLS.
+  await service.from("telegram_routines").update(patch).eq("id", routine.id).eq("user_id", user.id);
 
   // Mirror to trinity_log so the "Live Activity" tab can pick it up.
   await service.from("trinity_log").insert({

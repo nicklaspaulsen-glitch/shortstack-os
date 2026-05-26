@@ -95,10 +95,13 @@ export async function POST(
     .maybeSingle();
   if (!job) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  // Defense-in-depth: re-scope by profile_id to close the TOCTOU window between
+  // the ownership-verified job fetch above and this write. Service client bypasses RLS.
   await svc
     .from("domain_setup_jobs")
     .update({ [`${service}_status`]: "pending" })
-    .eq("id", job.id);
+    .eq("id", job.id)
+    .eq("profile_id", ownerId);
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin;
   const cookie = request.headers.get("cookie") || "";

@@ -53,12 +53,16 @@ export async function POST(
   const supabase = createServiceClient();
   const outcome = await publishCalendarRow(supabase, row as CalendarRow);
 
-  // Record who triggered the manual publish (helps audit later)
+  // Record who triggered the manual publish (helps audit later).
+  // Defense-in-depth: scope by user_id (from the already-authenticated row
+  // read) to close the TOCTOU window between the ownership check and this
+  // service-client write. Service client bypasses RLS.
   try {
     await supabase
       .from("content_calendar")
       .update({ approved_by: user.id, approved_at: new Date().toISOString() })
-      .eq("id", rowId);
+      .eq("id", rowId)
+      .eq("user_id", row.user_id);
   } catch (err) { console.error("[content-calendar/publish-now] audit stamp failed:", err); }
 
   if (outcome.status === "posted") {

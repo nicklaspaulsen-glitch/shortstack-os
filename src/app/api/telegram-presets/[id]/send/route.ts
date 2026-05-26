@@ -104,7 +104,9 @@ export async function POST(
     } else {
       patch.error_count = (preset.error_count ?? 0) + 1;
     }
-    await service.from("telegram_presets").update(patch).eq("id", preset.id);
+    // Defense-in-depth: re-scope by user_id to close the TOCTOU window between
+    // the ownership read (line ~79) and this write. Service client bypasses RLS.
+    await service.from("telegram_presets").update(patch).eq("id", preset.id).eq("user_id", ownerId);
   }
 
   // Mirror to trinity_log for the live activity feed.

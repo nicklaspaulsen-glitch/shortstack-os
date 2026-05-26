@@ -117,6 +117,8 @@ export async function POST(
       });
 
       // Store on the personalization row so the UI can show + reuse it.
+      // Defense-in-depth: scope by job_id (ownership-verified above) to close
+      // the TOCTOU window between the pending-rows read and this write.
       await service
         .from("cold_email_personalizations")
         .update({
@@ -127,7 +129,8 @@ export async function POST(
           generated_body: result.body,
           cost_usd: result.costUsd,
         })
-        .eq("id", c.id);
+        .eq("id", c.id)
+        .eq("job_id", job.id);
 
       samples.push({
         personalization_id: c.id,

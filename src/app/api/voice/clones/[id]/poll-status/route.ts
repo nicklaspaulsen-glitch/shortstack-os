@@ -87,6 +87,8 @@ export async function POST(_request: NextRequest, context: RouteContext) {
   );
 
   if (result.status === "ready") {
+    // Defense-in-depth: re-scope by agency_owner_id to close the TOCTOU window
+    // between the ownership read above and this write. Service client bypasses RLS.
     await service
       .from("voice_clones")
       .update({
@@ -94,17 +96,20 @@ export async function POST(_request: NextRequest, context: RouteContext) {
         ready_at: new Date().toISOString(),
         provider_voice_id: result.fingerprint || clone.provider_voice_id,
       })
-      .eq("id", cloneId);
+      .eq("id", cloneId)
+      .eq("agency_owner_id", ownerId);
     return NextResponse.json({ ok: true, status: "ready", changed: true });
   }
   if (result.status === "failed") {
+    // Defense-in-depth: same ownership scope for the failure path.
     await service
       .from("voice_clones")
       .update({
         status: "failed",
         failed_reason: result.failedReason || "runpod_failed",
       })
-      .eq("id", cloneId);
+      .eq("id", cloneId)
+      .eq("agency_owner_id", ownerId);
     return NextResponse.json({ ok: true, status: "failed", changed: true });
   }
   return NextResponse.json({ ok: true, status: "training", changed: false });
