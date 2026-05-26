@@ -119,8 +119,33 @@ results than ad-hoc work.
   `/security-review` (focused)
 - "health check / code quality dashboard" → `/health`
 - "investigate this bug / why is X broken / 500 error" → `/investigate`
+- "debug this systematically / root cause / trace the path" →
+  `/systematic-debugging`
+- "verify this is done / prove it works / double-check" →
+  `/verification-loop`
 - "design / brand / visual polish" → `/design-consultation` (system),
   `/design-review` (audit), or `/design-shotgun` (variants)
+- "redesign this page / less generic / make it premium / upgrade the UI" →
+  `/redesign-skill`
+- "build this new page / new surface / new dashboard" → `/frontend-design`
+- "implement from this screenshot / match this reference image" →
+  `/image-to-code-skill`
+- "Supabase / Postgres / RLS / query is slow / row-level security" →
+  `/supabase-postgres`
+- "Stripe / billing / checkout / subscriptions / Connect / webhook" →
+  `/stripe-best-practices`
+- "Sentry errors / production exceptions / fix this error in Sentry" →
+  `/sentry-fix-issues`
+- "set up Sentry / add error monitoring / instrument Next.js" →
+  `/sentry-nextjs`
+- "marketing / launch / SEO / cold email / pricing / growth" →
+  `/marketingskills`
+- "help me decide / trade-offs / architecture decision / council" →
+  `/council`
+- "brainstorm / explore options / design space / before we build" →
+  `/brainstorming`
+- "build an MCP tool / MCP server / extend Claude with a tool" →
+  `/mcp-server-patterns`
 - "save progress / context save" → `/context-save`
 - "resume / where was I" → `/context-restore`
 - "extract patterns from this session as skills" → `/learn`
