@@ -65,10 +65,13 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   }
   if (body.new_email) updates.email = body.new_email.toLowerCase();
 
+  // Defense-in-depth: scope the update by agency_owner_id alongside the row id
+  // to close the TOCTOU window between the ownership read above and this write.
   const { data: updated, error: updateErr } = await service
     .from("team_members")
     .update(updates)
     .eq("id", params.id)
+    .eq("agency_owner_id", user.id)
     .select()
     .single();
 
@@ -83,7 +86,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       status: "completed",
       metadata: { member_id: params.id },
     });
-  } catch {}
+  } catch (err) {
+    console.error("[team/:id] PATCH trinity_log insert failed", err);
+  }
 
   return NextResponse.json({ success: true, member: updated });
 }
@@ -118,7 +123,10 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       await service.auth.admin.updateUserById(member.member_profile_id, {
         user_metadata: { disabled: true, removed_at: new Date().toISOString() },
       });
-    } catch {}
+    } catch (err) {
+      // Non-fatal — the row is already soft-deleted; log so ops can follow up
+      console.error("[team/:id] DELETE auth.admin.updateUserById failed", err);
+    }
   }
 
   try {
@@ -129,7 +137,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       status: "completed",
       metadata: { member_id: params.id },
     });
-  } catch {}
+  } catch (err) {
+    console.error("[team/:id] DELETE trinity_log insert failed", err);
+  }
 
   return NextResponse.json({ success: true });
 }
