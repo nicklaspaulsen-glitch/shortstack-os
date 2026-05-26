@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 // Test scraper with 500 leads: 10 niches x 5 cities x 10 results = 500 target leads
 export async function POST(_request: NextRequest) {
@@ -73,10 +74,10 @@ export async function POST(_request: NextRequest) {
             continue;
           }
 
-          // Scrape email
+          // Scrape email — guard against SSRF (websiteUri is business-owner-controlled)
           let email = null;
           const website = place.websiteUri || null;
-          if (website) {
+          if (website && !checkFetchUrl(website, { allowHttp: true })) {
             try {
               const siteRes = await fetch(website, {
                 headers: { "User-Agent": "Mozilla/5.0 (compatible; ShortStackBot/1.0)" },
