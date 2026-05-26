@@ -4,6 +4,7 @@ import { synthesize, getDefaultClone } from "@/lib/voice/clone-router";
 import { sendVoiceDM as zernioVoiceDM, ZERNIO_DM_PLATFORMS } from "@/lib/services/zernio";
 import { sendVoiceDm as legacyVoiceDm } from "@/lib/voice/voice-dm-router";
 import type { VoiceDmPlatform } from "@/lib/voice/voice-dm-router";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -51,7 +52,7 @@ export async function POST(request: NextRequest) {
   if (!expectedKey) {
     return NextResponse.json({ error: "WEBHOOK_SECRET not configured" }, { status: 503 });
   }
-  if (!key || key !== expectedKey) {
+  if (!key || !secureCompare(key, expectedKey)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

@@ -68,6 +68,18 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+    // Verify the user_id actually exists — without this check, a CRON_SECRET
+    // holder could fire triggers for any UUID, including non-existent users,
+    // which would silently succeed and write orphaned rows.
+    const verifyClient = createServiceClient();
+    const { data: userRow } = await verifyClient
+      .from("profiles")
+      .select("id")
+      .eq("id", bodyUserId)
+      .maybeSingle();
+    if (!userRow) {
+      return NextResponse.json({ error: "Invalid user_id" }, { status: 400 });
+    }
     userId = bodyUserId;
   } else {
     const supabase = createServerSupabase();

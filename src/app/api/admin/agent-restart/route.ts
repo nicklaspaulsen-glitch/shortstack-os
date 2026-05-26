@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,7 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   const bearer = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
   const cronSecret = process.env.CRON_SECRET ?? "";
-  const secretOk = cronSecret.length > 0 && bearer === cronSecret;
+  const secretOk = cronSecret.length > 0 && secureCompare(bearer, cronSecret);
 
   if (!secretOk) {
     const supabase = createServerSupabase();

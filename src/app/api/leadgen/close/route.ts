@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient, createServerSupabase } from "@/lib/supabase/server";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
 
   let ownerId: string | null = null;
 
-  if (webhookKey && expectedKey && webhookKey === expectedKey) {
+  if (webhookKey && expectedKey && secureCompare(webhookKey, expectedKey)) {
     // n8n server-to-server — owner id must be in the body
     const raw = await request.json();
     ownerId = raw.owner_id ?? null;

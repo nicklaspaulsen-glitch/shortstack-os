@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { handleGHLCallWebhook } from "@/lib/services/cold-calling";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 // DEPRECATED Apr 21 — Legacy GHL inbound webhook. Retained only so any
 // lingering GHL workflows pointing at this URL don't 404 during cutover.
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest) {
     console.error("[webhooks/ghl] GHL_WEBHOOK_SECRET unset — rejecting request");
     return NextResponse.json({ error: "Webhook not configured" }, { status: 503 });
   }
-  if (!key || key !== expectedKey) {
+  if (!key || !secureCompare(key, expectedKey)) {
     return NextResponse.json({ error: "Invalid webhook key" }, { status: 401 });
   }
 

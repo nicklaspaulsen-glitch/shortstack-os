@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { uploadToR2 } from "@/lib/server/r2-client";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -45,7 +46,7 @@ export async function POST(request: NextRequest) {
       request.headers.get("x-webhook-key") ||
       new URL(request.url).searchParams.get("key");
     const expectedKey = process.env.WEBHOOK_SECRET;
-    if (!expectedKey || !key || key !== expectedKey) {
+    if (!expectedKey || !key || !secureCompare(key, expectedKey)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     // When called via webhook, owner_id must be in the form field

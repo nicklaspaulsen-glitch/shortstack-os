@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendDM as zernioDM } from "@/lib/services/zernio";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -72,7 +73,7 @@ export async function POST(request: NextRequest) {
   if (!expectedKey) {
     return NextResponse.json({ error: "WEBHOOK_SECRET not configured" }, { status: 503 });
   }
-  if (!key || key !== expectedKey) {
+  if (!key || !secureCompare(key, expectedKey)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

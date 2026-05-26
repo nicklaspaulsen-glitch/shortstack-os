@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient, createServerSupabase } from "@/lib/supabase/server";
 import { callLLMTraced } from "@/lib/ai/llm-router";
 import { sendDM as zernioDM } from "@/lib/services/zernio";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -84,7 +85,7 @@ export async function POST(request: NextRequest) {
   let ownerId: string | null = null;
   let body: Record<string, unknown>;
 
-  if (webhookKey && expectedKey && webhookKey === expectedKey) {
+  if (webhookKey && expectedKey && secureCompare(webhookKey, expectedKey)) {
     body = await request.json();
     ownerId = (body.owner_id as string) ?? null;
     if (!ownerId) return NextResponse.json({ error: "owner_id required for webhook auth" }, { status: 400 });

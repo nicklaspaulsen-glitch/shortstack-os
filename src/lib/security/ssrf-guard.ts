@@ -4,6 +4,23 @@
  * Used by any route that accepts a user-supplied URL and forwards it to an
  * external service (RunPod, outbound webhooks, etc.).
  */
+import { createHash, timingSafeEqual } from "crypto";
+
+/**
+ * Constant-time string comparison for shared secrets and webhook keys.
+ *
+ * Hashes both sides to a fixed-length buffer before comparing so that
+ * (a) differing lengths don't leak timing information, and
+ * (b) the comparison itself is protected by `crypto.timingSafeEqual`.
+ *
+ * Use instead of `===` / `!==` whenever comparing a caller-supplied value
+ * against a secret from the environment.
+ */
+export function secureCompare(a: string, b: string): boolean {
+  const ha = createHash("sha256").update(a).digest();
+  const hb = createHash("sha256").update(b).digest();
+  return timingSafeEqual(ha, hb);
+}
 
 /**
  * Reject hostnames that resolve to private / link-local / loopback /
@@ -66,6 +83,7 @@ export function isPrivateOrInternal(hostname: string): boolean {
   // explicit hostname matches for defence-in-depth)
   if (host === "metadata.google.internal") return true;
   if (host === "metadata.aws.internal") return true;
+  if (host === "metadata.azure.internal") return true;  // Azure IMDS
 
   return false;
 }

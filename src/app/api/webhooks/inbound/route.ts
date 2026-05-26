@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 // Inbound Webhook — receives data from Zapier, Make.com, or any external system
 // POST /api/webhooks/inbound?key=WEBHOOK_SECRET
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
     console.error("[webhooks/inbound] WEBHOOK_SECRET unset — rejecting request");
     return NextResponse.json({ error: "Webhook not configured" }, { status: 503 });
   }
-  if (!key || key !== expectedKey) {
+  if (!key || !secureCompare(key, expectedKey)) {
     return NextResponse.json({ error: "Invalid webhook key" }, { status: 401 });
   }
 
@@ -147,10 +148,28 @@ export async function POST(request: NextRequest) {
         if (Object.keys(safeFields).length === 0) {
           return NextResponse.json({ error: "No updatable fields provided" }, { status: 400 });
         }
-        const query = data.id
-          ? supabase.from("leads").update(safeFields).eq("id", data.id)
-          : supabase.from("leads").update(safeFields).eq("email", data.email);
-        const { error } = await query;
+        let leadUpdateQuery;
+        if (data.id) {
+          leadUpdateQuery = supabase.from("leads").update(safeFields).eq("id", data.id);
+          // Scope by owner when known so callers can't update other tenants' rows by ID.
+          if (webhookOwnerId) leadUpdateQuery = leadUpdateQuery.eq("user_id", webhookOwnerId);
+        } else {
+          // Email-based update — MUST scope by user_id or the same email address
+          // across multiple tenants would be updated simultaneously (cross-tenant write).
+          if (!webhookOwnerId) {
+            console.error("[webhooks/inbound] lead.update by email refused: WEBHOOK_OWNER_USER_ID is not set. Set it to prevent cross-tenant writes.");
+            return NextResponse.json(
+              { error: "lead.update by email requires WEBHOOK_OWNER_USER_ID to be configured" },
+              { status: 503 },
+            );
+          }
+          leadUpdateQuery = supabase
+            .from("leads")
+            .update(safeFields)
+            .eq("email", data.email)
+            .eq("user_id", webhookOwnerId);
+        }
+        const { error } = await leadUpdateQuery;
         if (error) throw error;
         results.push("Lead updated");
         break;
@@ -354,7 +373,7 @@ export async function GET(request: NextRequest) {
     console.error("[webhooks/inbound] WEBHOOK_SECRET unset — rejecting request");
     return NextResponse.json({ error: "Webhook not configured" }, { status: 503 });
   }
-  if (!key || key !== expectedKey) {
+  if (!key || !secureCompare(key, expectedKey)) {
     return NextResponse.json({ error: "Invalid webhook key" }, { status: 401 });
   }
 
