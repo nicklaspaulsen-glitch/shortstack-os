@@ -15,11 +15,13 @@ export async function POST(request: NextRequest) {
 
   const service = createServiceClient();
 
-  // Fetch client info
+  // Fetch client info — scope to the authenticated user's clients to prevent
+  // cross-tenant data access via the service client.
   const { data: client } = await service
     .from("clients")
     .select("id, business_name, industry, services, website, notes")
     .eq("id", client_id)
+    .eq("agency_owner_id", user.id)
     .single();
 
   if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
@@ -52,11 +54,11 @@ export async function POST(request: NextRequest) {
           role: "user",
           content: `Generate 8 content suggestions for this client:
 
-Business: ${client.business_name || "Unknown"}
-Industry: ${client.industry || "General"}
-Services: ${client.services || "Not specified"}
-Website: ${client.website || "None"}
-Notes: ${client.notes || "None"}
+Business: ${(client.business_name || "Unknown").slice(0, 200)}
+Industry: ${(client.industry || "General").slice(0, 200)}
+Services: ${(client.services || "Not specified").slice(0, 500)}
+Website: ${(client.website || "None").slice(0, 200)}
+Notes: ${(client.notes || "None").slice(0, 1000)}
 Connected platforms: ${connectedPlatforms}
 Newly connected: ${platform || "general"}
 

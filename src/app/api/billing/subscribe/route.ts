@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     }
     // Create a price for this subscription
     const price = await stripe.prices.create({
-      unit_amount: Math.round(amount * 100),
+      unit_amount: Math.round(parsedAmount * 100),
       currency: "usd",
       recurring: { interval: interval || "month" },
       product_data: {

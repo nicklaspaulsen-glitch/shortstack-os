@@ -352,6 +352,11 @@ export const googleAds = {
     customerId: string,
     campaignId: string
   ) {
+    // Validate campaignId is a pure integer before interpolating into GAQL
+    // to prevent injection into the Google Ads query language.
+    if (!/^\d+$/.test(campaignId)) {
+      throw new Error(`[getCampaignMetrics] Invalid campaignId: ${campaignId}`);
+    }
     const query = `
       SELECT
         segments.date,
@@ -384,6 +389,10 @@ export const googleAds = {
     campaignId: string,
     dailyBudget: number
   ) {
+    // Validate campaignId is a pure integer before interpolating into GAQL.
+    if (!/^\d+$/.test(campaignId)) {
+      throw new Error(`[updateCampaignBudget] Invalid campaignId: ${campaignId}`);
+    }
     // First get the campaign's budget resource name
     const query = `
       SELECT campaign.campaign_budget

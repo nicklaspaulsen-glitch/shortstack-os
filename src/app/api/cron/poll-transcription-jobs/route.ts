@@ -1,4 +1,4 @@
-/**
+﻿/**
  * GET /api/cron/poll-transcription-jobs
  *
  * Every minute Vercel hits this route. We pick up to 25 pending RunPod jobs
@@ -63,7 +63,8 @@ async function pollProvider(
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

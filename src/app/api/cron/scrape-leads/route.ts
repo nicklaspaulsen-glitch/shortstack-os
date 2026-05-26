@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { scrapeGooglePlaces, scrapeFacebookBusinessPages, scrapeWebsiteForEmail, scrapeWebsiteForSocials, TARGET_INDUSTRIES, TARGET_CITIES } from "@/lib/services/lead-scraper";
 
@@ -6,7 +6,8 @@ export const maxDuration = 300; // 5 minutes
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

@@ -69,11 +69,16 @@ export async function POST(req: NextRequest) {
       userId = newUser.user.id;
     }
 
+    // Allowlist valid roles — never write an arbitrary caller-supplied string.
+    const VALID_ROLES = ["admin", "founder", "agency", "team_member"] as const;
+    type ValidRole = typeof VALID_ROLES[number];
+    const assignedRole: ValidRole = VALID_ROLES.includes(role as ValidRole) ? (role as ValidRole) : "admin";
+
     // Upsert profile with role and details
     const profileData: Record<string, unknown> = {
       id: userId,
       email,
-      role: role || "admin",
+      role: assignedRole,
       is_active: true,
       updated_at: new Date().toISOString(),
     };

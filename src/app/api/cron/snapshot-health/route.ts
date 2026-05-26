@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { structuredLog } from "@/lib/observability/structured-log";
 
@@ -142,7 +142,8 @@ async function getVercelDeployStatus(): Promise<string | null> {
 export async function GET(request: NextRequest) {
   // Standard Vercel cron auth. Same pattern as every other cron in this app.
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

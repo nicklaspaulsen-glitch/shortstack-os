@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient, createSupabaseFromToken } from "@/lib/supabase/server";
 import { generateDailyBriefing } from "@/lib/services/daily-briefing";
 import { heartbeat } from "@/lib/cron-ping";
@@ -19,7 +19,8 @@ export const maxDuration = 120;
  */
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

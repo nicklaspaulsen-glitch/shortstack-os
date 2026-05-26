@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { callLLMTraced } from "@/lib/ai/llm-router";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 export async function POST(req: Request) {
   const supabase = createServerSupabase();
@@ -8,6 +9,9 @@ export async function POST(req: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const { prompt, style, aspect_ratio, face_swap } = (await req.json()) as {
     prompt?: string;
@@ -19,6 +23,9 @@ export async function POST(req: Request) {
   if (!prompt?.trim()) {
     return NextResponse.json({ error: "Prompt required" }, { status: 400 });
   }
+
+  // Cap input length to prevent excessive token spend.
+  const safePrompt = prompt.slice(0, 2000);
 
   const result = await callLLMTraced({
     surface: "viral-prediction",
@@ -44,7 +51,7 @@ Scoring criteria:
 - Unique/unexpected concept: +10 pts
 - Generic/vague prompt: -15 pts
 Max score = 100. Return only valid JSON.`,
-    userPrompt: `Video prompt: "${prompt}"
+    userPrompt: `Video prompt: "${safePrompt}"
 Style: ${style ?? "cinematic"}
 Aspect ratio: ${aspect_ratio ?? "9:16"}
 Face-swap mode: ${face_swap ? "yes" : "no"}`,

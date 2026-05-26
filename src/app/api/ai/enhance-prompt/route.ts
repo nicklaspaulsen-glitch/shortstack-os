@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { anthropic } from "@/lib/ai/claude-helpers";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 const SYSTEM_PROMPTS: Record<string, string> = {
   thumbnail: `You are a world-class thumbnail designer. Take the user's rough description and transform it into a vivid, specific visual prompt optimized for AI image generation. Include:
@@ -45,11 +46,17 @@ export async function POST(req: Request) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
+
   try {
     const { text, type = "general" } = await req.json();
     if (!text?.trim()) {
       return NextResponse.json({ error: "No text provided" }, { status: 400 });
     }
+
+    // Cap input length to prevent prompt injection / excessive token spend.
+    const safeText = text.slice(0, 4000);
 
     const systemPrompt = SYSTEM_PROMPTS[type] || SYSTEM_PROMPTS.general;
 
@@ -60,7 +67,7 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "user",
-          content: `Enhance this description:\n\n"${text}"\n\nReturn a JSON object with:\n- "enhanced": the improved version (string)\n- "suggestions": array of 3 alternative variations (strings)\n\nReturn ONLY valid JSON, no markdown.`,
+          content: `Enhance this description:\n\n"${safeText}"\n\nReturn a JSON object with:\n- "enhanced": the improved version (string)\n- "suggestions": array of 3 alternative variations (strings)\n\nReturn ONLY valid JSON, no markdown.`,
         },
       ],
     });

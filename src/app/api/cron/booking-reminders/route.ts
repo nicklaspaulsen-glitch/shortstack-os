@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Booking SMS Reminders (Cron)
  *
  * Walks every booking that's due in ~24h or ~1h, and sends an SMS reminder
@@ -83,7 +83,8 @@ async function sendSms(to: string, body: string): Promise<{ ok: boolean; error?:
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
