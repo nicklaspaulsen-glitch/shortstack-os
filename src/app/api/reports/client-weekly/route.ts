@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const maxDuration = 60;
 
@@ -7,7 +8,8 @@ export const maxDuration = 60;
 // Run Fridays at 3 PM: 0 15 * * 5
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
+  if (!process.env.CRON_SECRET || !secureCompare(rawToken, process.env.CRON_SECRET)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

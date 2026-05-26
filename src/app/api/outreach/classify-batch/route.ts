@@ -17,6 +17,7 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { classifyOutcome } from "@/lib/outreach/classify";
 import { reportError } from "@/lib/observability/error-reporter";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 import type { OutreachChannel, OutreachOutcome } from "@/lib/outreach/types";
 
 export const maxDuration = 60;
@@ -151,7 +152,8 @@ async function runBatch(
 export async function POST(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET;
   const authHeader = request.headers.get("authorization");
-  const isCron = cronSecret ? authHeader === `Bearer ${cronSecret}` : false;
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
+  const isCron = cronSecret ? secureCompare(rawToken, cronSecret) : false;
 
   let ownerScope: string | null = null;
   if (!isCron) {

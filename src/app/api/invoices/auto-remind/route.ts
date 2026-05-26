@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendTelegramMessage } from "@/lib/services/trinity";
 import { sendEmail } from "@/lib/email";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 // Auto Invoice Reminder — Checks for overdue invoices and sends reminders
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
+  if (!process.env.CRON_SECRET || !secureCompare(rawToken, process.env.CRON_SECRET)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

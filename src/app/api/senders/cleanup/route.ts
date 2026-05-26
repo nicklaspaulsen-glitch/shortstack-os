@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 /**
  * POST — Delete old/stale sender accounts (> 7 days inactive or disconnected).
@@ -14,8 +15,9 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
  */
 
 function isCronRequest(req: NextRequest): boolean {
-  const auth = req.headers.get("authorization") || "";
-  return auth === `Bearer ${process.env.CRON_SECRET}`;
+  const auth = req.headers.get("authorization");
+  const rawToken = auth?.replace(/^Bearer\s+/i, "") ?? "";
+  return !!process.env.CRON_SECRET && secureCompare(rawToken, process.env.CRON_SECRET);
 }
 
 export async function POST(req: NextRequest) {

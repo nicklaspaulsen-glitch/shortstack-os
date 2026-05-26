@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient, createServerSupabase } from "@/lib/supabase/server";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 /**
  * Admin trigger for sending an Expo push notification to one user.
@@ -50,8 +51,9 @@ interface ExpoSendResponse {
 
 async function authorize(req: NextRequest): Promise<boolean> {
   const authHeader = req.headers.get("authorization");
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
   const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
+  if (cronSecret && secureCompare(rawToken, cronSecret)) {
     return true;
   }
   // Fall back to admin-cookie path so we can manually trigger from the
