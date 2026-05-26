@@ -120,7 +120,8 @@ export async function POST(request: NextRequest) {
         ok = res.ok;
       }
       results.push({ url: target.url.substring(0, 50) + "...", status, ok });
-    } catch {
+    } catch (err) {
+      console.error("[webhooks/trigger] dispatch failed for target", target.url.substring(0, 50), err);
       results.push({ url: target.url.substring(0, 50) + "...", status: 0, ok: false });
     }
   }

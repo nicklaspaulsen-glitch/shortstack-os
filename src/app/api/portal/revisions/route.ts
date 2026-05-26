@@ -195,8 +195,9 @@ export async function POST(req: NextRequest) {
           content_item_id: body.content_item_id || null,
         },
       });
-    } catch {
-      // project_tasks may not have these columns — swallow
+    } catch (err) {
+      // project_tasks may not have these columns — non-fatal, log for ops visibility
+      console.error("[portal/revisions] project_tasks insert failed", err);
     }
   } catch (e) {
     console.warn("[portal revisions] notify failed:", e);

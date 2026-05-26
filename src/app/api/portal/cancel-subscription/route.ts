@@ -69,8 +69,8 @@ export async function POST(req: NextRequest) {
       status: "completed",
       metadata: { client_id: client?.id, business_name: client?.business_name, reason: body.reason },
     });
-  } catch {
-    // silent
+  } catch (err) {
+    console.error("[cancel-subscription] trinity_log insert failed", err);
   }
 
   return NextResponse.json({
