@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 // AI SEO Audit Tool — Analyzes a website and gives actionable SEO recommendations
 export async function POST(request: NextRequest) {
@@ -10,16 +11,35 @@ export async function POST(request: NextRequest) {
   const { website_url, client_id } = await request.json();
   if (!website_url) return NextResponse.json({ error: "Website URL required" }, { status: 400 });
 
+  // Validate + SSRF guard — website_url is user-supplied.
+  let parsedUrl: URL;
+  try {
+    parsedUrl = new URL(
+      typeof website_url === "string" && website_url.startsWith("http")
+        ? website_url
+        : `https://${website_url}`
+    );
+  } catch {
+    return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
+  }
+  if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+    return NextResponse.json({ error: "URL must use http or https" }, { status: 400 });
+  }
+  const ssrfErr = checkFetchUrl(parsedUrl.toString(), { allowHttp: true });
+  if (ssrfErr) {
+    return NextResponse.json({ error: `Refusing to fetch: ${ssrfErr}` }, { status: 400 });
+  }
+
   // Scrape the website
   let pageContent = "";
   let pageTitle = "";
   let metaDescription = "";
   let h1Tags: string[] = [];
   let imageCount = 0;
-  const hasSSL = website_url.startsWith("https");
+  const hasSSL = parsedUrl.protocol === "https:";
 
   try {
-    const res = await fetch(website_url, {
+    const res = await fetch(parsedUrl.toString(), {
       headers: { "User-Agent": "Mozilla/5.0 (compatible; ShortStackSEOBot/1.0)" },
       signal: AbortSignal.timeout(10000),
     });
