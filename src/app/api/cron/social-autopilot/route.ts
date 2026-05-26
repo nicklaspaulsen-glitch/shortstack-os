@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { aiGenerate } from "@/lib/ai/router";
 import { publish as unifiedPublish } from "@/lib/services/social-publisher";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 interface SocialAutopilotConfig {
   enabled: boolean;
@@ -42,8 +43,9 @@ export async function GET(request: NextRequest) {
   if (!cronSecret) {
     return NextResponse.json({ error: "Server misconfigured: CRON_SECRET not set" }, { status: 500 });
   }
-  const auth = request.headers.get("authorization");
-  if (auth !== `Bearer ${cronSecret}`) {
+  const authHeader = request.headers.get("authorization");
+  const rawToken = authHeader?.replace(/\^Bearer\\s+/i, "") ?? "";
+  if (!cronSecret || !secureCompare(rawToken, cronSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

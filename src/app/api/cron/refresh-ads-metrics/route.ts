@@ -15,6 +15,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { metaAds, googleAds, tiktokAds } from "@/lib/ads/platforms";
 import { listCampaigns as zernioListCampaigns } from "@/lib/services/zernio-ads";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -42,8 +43,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       { status: 500 },
     );
   }
-  const auth = request.headers.get("authorization");
-  if (auth !== `Bearer ${cronSecret}`) {
+  const authHeader = request.headers.get("authorization");
+  const rawToken = authHeader?.replace(/\^Bearer\\s+/i, "") ?? "";
+  if (!cronSecret || !secureCompare(rawToken, cronSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

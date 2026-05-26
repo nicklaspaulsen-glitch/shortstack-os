@@ -15,6 +15,7 @@ import {
   recomputeVoiceProfileWithClient,
   type VoiceSubjectKind,
 } from "@/lib/ai/voice-profile";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const maxDuration = 300;
 export const dynamic = "force-dynamic";
@@ -52,7 +53,8 @@ export async function GET(request: NextRequest) {
     }
   }
   const authHeader = request.headers.get("authorization");
-  if (expected && authHeader !== `Bearer ${expected}`) {
+  const rawToken = authHeader?.replace(/\^Bearer\\s+/i, "") ?? "";
+  if (expected && !secureCompare(rawToken, expected)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

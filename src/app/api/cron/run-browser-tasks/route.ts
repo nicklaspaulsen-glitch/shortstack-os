@@ -12,6 +12,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { runBrowserAgent } from "@/lib/browser-worker/agent-loop";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -37,7 +38,8 @@ export async function GET(request: NextRequest) {
 
   const isVercelCron = request.headers.get("x-vercel-cron") !== null;
   const auth = request.headers.get("authorization");
-  const hasBearer = auth === `Bearer ${process.env.CRON_SECRET}`;
+  const rawToken = auth?.replace(/\^Bearer\\s+/i, "") ?? "";
+  const hasBearer = !!process.env.CRON_SECRET && secureCompare(rawToken, process.env.CRON_SECRET);
   if (!isVercelCron && !hasBearer) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

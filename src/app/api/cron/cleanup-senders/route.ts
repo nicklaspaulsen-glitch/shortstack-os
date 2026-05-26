@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 /**
  * Cron: Weekly cleanup of stale sender accounts across ALL users.
@@ -8,8 +9,9 @@ import { createServiceClient } from "@/lib/supabase/server";
  */
 export const maxDuration = 300;
 export async function GET(req: NextRequest) {
-  const auth = req.headers.get("authorization") || "";
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+  const authHeader = req.headers.get("authorization");
+  const rawToken = authHeader?.replace(/\^Bearer\\s+/i, "") ?? "";
+  if (!process.env.CRON_SECRET || !secureCompare(rawToken, process.env.CRON_SECRET)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

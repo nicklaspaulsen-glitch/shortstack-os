@@ -3,6 +3,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
 import { reportError } from "@/lib/observability/error-reporter";
 import { structuredLog } from "@/lib/observability/structured-log";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 // Native sequences cron runner.
 // Replaces the GHL-hosted drip scheduler we sunset Apr 21.
@@ -66,7 +67,8 @@ export async function GET(request: NextRequest) {
   // Auth: Vercel Cron sets x-vercel-cron. Manual runs use CRON_SECRET.
   const isVercelCron = request.headers.get("x-vercel-cron") !== null;
   const authHeader = request.headers.get("authorization");
-  const hasBearer = authHeader === `Bearer ${process.env.CRON_SECRET}`;
+  const rawToken = authHeader?.replace(/\^Bearer\\s+/i, "") ?? "";
+  const hasBearer = !!process.env.CRON_SECRET && secureCompare(rawToken, process.env.CRON_SECRET);
   if (!isVercelCron && !hasBearer) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

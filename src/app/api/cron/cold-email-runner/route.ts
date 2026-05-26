@@ -23,6 +23,7 @@ import {
   type EmailValidationResult,
 } from "@/lib/integrations/email-validator";
 import { pingCron } from "@/lib/cron-ping";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const maxDuration = 300;
 
@@ -57,7 +58,8 @@ interface LeadRow extends LeadInput {
 export async function GET(request: NextRequest) {
   const isVercelCron = request.headers.get("x-vercel-cron") !== null;
   const auth = request.headers.get("authorization");
-  const hasBearer = auth === `Bearer ${process.env.CRON_SECRET}`;
+  const rawToken = auth?.replace(/\^Bearer\\s+/i, "") ?? "";
+  const hasBearer = !!process.env.CRON_SECRET && secureCompare(rawToken, process.env.CRON_SECRET);
   if (!isVercelCron && !hasBearer) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

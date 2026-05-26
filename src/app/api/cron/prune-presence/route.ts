@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -28,8 +29,9 @@ export async function GET(req: NextRequest) {
       { status: 503 },
     );
   }
-  const auth = req.headers.get("authorization") || "";
-  if (auth !== `Bearer ${expected}`) {
+  const authHeader = req.headers.get("authorization");
+  const rawToken = authHeader?.replace(/\^Bearer\\s+/i, "") ?? "";
+  if (!secureCompare(rawToken, expected)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
