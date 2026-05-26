@@ -76,11 +76,14 @@ export async function POST(request: NextRequest) {
   // another tenant's lead_ids can't be smuggled in via the body.
   let leads;
   if (lead_ids?.length) {
+    // Cap the input array before hitting the DB — an unbounded IN() on a
+    // huge array is slow even when the tenant filter scopes results correctly.
+    const cappedIds = Array.isArray(lead_ids) ? lead_ids.slice(0, safeBatchSize) : [];
     const { data } = await serviceSupabase
       .from("leads")
       .select("*")
       .eq("user_id", ownerId)
-      .in("id", lead_ids)
+      .in("id", cappedIds)
       .not("phone", "is", null);
     leads = data;
   } else {
