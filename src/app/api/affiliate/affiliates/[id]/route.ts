@@ -120,10 +120,16 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
   }
 
+  // Defense-in-depth: scope by program_id (captured from ownsAffiliate above) in
+  // addition to id, so a TOCTOU race between the ownership read and this write
+  // can't land on an affiliate whose program transferred ownership between the
+  // two operations. RLS also enforces this via the programs join, but the
+  // explicit WHERE closes the window.
   const { data, error } = await supabase
     .from("affiliates")
     .update(updates)
     .eq("id", params.id)
+    .eq("program_id", existing.program_id)
     .select("id, program_id, user_id, email, name, ref_code, stripe_account_id, status, total_earned_cents, pending_cents, paid_cents, joined_at, approved_at")
     .single();
   if (error || !data) {

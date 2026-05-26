@@ -4,7 +4,7 @@ import https from "https";
 import type { LookupFunction } from "net";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { isPrivateOrInternal, isValidExternalHttpsUrl } from "@/lib/security/ssrf-guard";
-import { rateLimit } from "@/lib/rate-limit";
+import { checkRateLimit } from "@/lib/server/rate-limit";
 
 // Webhook Trigger System — sends events to Zapier/Make.com/custom URLs
 // Triggered internally when events happen (new lead, deal closed, etc.)
@@ -15,14 +15,18 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  // Per-user rate limit: 20 webhook dispatches per minute.
-  const rl = rateLimit(`webhook:${user.id}`, 20);
-  if (!rl.allowed) {
+  const supabase = createServiceClient();
+
+  // Per-user distributed rate limit: 20 webhook dispatches per minute.
+  // Uses Supabase-backed atomic bucket — persists across Vercel cold starts
+  // unlike src/lib/rate-limit (in-memory) which resets on every new instance.
+  const rl = await checkRateLimit(supabase, user.id, "webhook_trigger", 20);
+  if (!rl.ok) {
     return NextResponse.json(
       { error: "Rate limit exceeded. Please wait before triggering more webhooks." },
       {
         status: 429,
-        headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) },
+        headers: { "Retry-After": String(rl.retryAfterSec) },
       },
     );
   }
@@ -30,8 +34,6 @@ export async function POST(request: NextRequest) {
   const { event, data, webhook_url } = await request.json();
 
   if (!event || typeof event !== "string") return NextResponse.json({ error: "event required" }, { status: 400 });
-
-  const supabase = createServiceClient();
 
   // Each entry is either a user-supplied URL (pinned to its pre-verified IP)
   // or an env-configured URL (trusted operator config, uses regular fetch).
@@ -126,13 +128,18 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Log
-  await supabase.from("trinity_log").insert({
-    action_type: "automation",
-    description: `Webhook: ${event} → ${results.length} endpoints`,
-    status: results.every(r => r.ok) ? "completed" : "failed",
-    result: { event, endpoints: results.length, results },
-  });
+  // Log — non-fatal; wrap so a log failure doesn't fail the dispatch response.
+  try {
+    await supabase.from("trinity_log").insert({
+      user_id: user.id,
+      action_type: "automation",
+      description: `Webhook: ${event} → ${results.length} endpoints`,
+      status: results.every(r => r.ok) ? "completed" : "failed",
+      result: { event, endpoints: results.length, results },
+    });
+  } catch (logErr) {
+    console.error("[webhooks/trigger] trinity_log insert failed:", logErr);
+  }
 
   return NextResponse.json({ success: true, event, triggered: results.length, results });
 }
