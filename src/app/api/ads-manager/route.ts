@@ -168,9 +168,27 @@ export async function POST(request: NextRequest) {
     const { action } = body;
 
     if (action === "create_campaign") {
+      // Allowlist user-supplied creation fields. Server-controlled metrics and
+      // identifiers (id, user_id, total_spend, impressions, clicks, ctr,
+      // conversions, cpa, roas, external_id, created_at) must not come from
+      // the request body.
+      // FIXME: ad_account_id should be validated against the user's own
+      //   ad_accounts rows before trusting it here.
+      const ALLOWED_CREATE_FIELDS = [
+        "name", "objective", "status", "daily_budget",
+        "start_date", "end_date", "platform", "audience", "ai_optimized",
+        "ad_account_id",
+      ] as const;
+
+      const src = (body.campaign ?? {}) as Record<string, unknown>;
+      const campaignFields: Record<string, unknown> = {};
+      for (const field of ALLOWED_CREATE_FIELDS) {
+        if (field in src) campaignFields[field] = src[field];
+      }
+
       const newCampaign = {
-        id: `cmp_${Date.now()}`,
-        ...body.campaign,
+        id: `cmp_${Date.now()}`,     // server-generated; not user-overridable
+        ...campaignFields,
         total_spend: 0,
         impressions: 0,
         clicks: 0,
@@ -214,14 +232,44 @@ export async function POST(request: NextRequest) {
     }
 
     if (action === "update_campaign") {
-      try {
-        await supabase
-          .from("ad_campaigns")
-          .update(body.campaign)
-          .eq("id", body.campaign.id)
-          .eq("user_id", user.id);
-      } catch (err) { console.error("[ads-manager] update_campaign DB write failed:", err); }
-      return NextResponse.json({ success: true, campaign: body.campaign });
+      // Mass-assignment guard: only these fields may be changed by the user.
+      // Server-controlled columns (total_spend, impressions, clicks, conversions,
+      // ctr, cpa, roas, last_synced_at, raw_data, user_id, ad_account_id,
+      // platform, external_id, created_at) are intentionally excluded so a
+      // malicious payload cannot inflate metrics or reassign ownership.
+      const ALLOWED_UPDATE_FIELDS = [
+        "name", "objective", "status", "daily_budget", "start_date", "end_date",
+      ] as const;
+
+      const campaignId = ((body.campaign as Record<string, unknown>)?.id ?? "").toString().trim();
+      if (!campaignId) {
+        return NextResponse.json({ error: "campaign.id is required" }, { status: 400 });
+      }
+
+      const updatePayload: Record<string, unknown> = {};
+      for (const field of ALLOWED_UPDATE_FIELDS) {
+        const src = body.campaign as Record<string, unknown> | undefined;
+        if (src && field in src) {
+          updatePayload[field] = src[field];
+        }
+      }
+
+      if (Object.keys(updatePayload).length === 0) {
+        return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
+      }
+
+      const { error: updateError } = await supabase
+        .from("ad_campaigns")
+        .update(updatePayload)
+        .eq("id", campaignId)
+        .eq("user_id", user.id);
+
+      if (updateError) {
+        console.error("[ads-manager] update_campaign DB write failed:", updateError.message);
+        return NextResponse.json({ error: "Update failed" }, { status: 500 });
+      }
+
+      return NextResponse.json({ success: true, campaign: { ...(body.campaign as object), ...updatePayload } });
     }
 
     if (action === "bulk_action") {
