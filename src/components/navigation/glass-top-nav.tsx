@@ -1,5 +1,5 @@
 "use client";
-import { Bell, ChartBar, Chat, FilmStrip, FolderOpen, Gear, Image, Lightning, MagicWand, MagnifyingGlass, Moon, Palette, Plus, Scissors, ShareNetwork, SquaresFour, Stack, Sun } from "@phosphor-icons/react";
+import { Bell, CalendarBlank, ChartBar, Chat, FilmStrip, FolderOpen, Gear, Image, Lightning, MagicWand, MagnifyingGlass, Moon, Palette, Plus, Scissors, ShareNetwork, SquaresFour, Stack, Sun } from "@phosphor-icons/react";
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
@@ -32,7 +32,18 @@ const SYSTEM_PILLS: NavPill[] = [
   { label: "Comments",    href: "/dashboard/conversations",  icon: Chat, badge: "4" },
   { label: "Brand kit",   href: "/dashboard/brand-kit",      icon: Palette },
   { label: "Automations", href: "/dashboard/automations",    icon: Lightning,          badge: "5" },
-  { label: "Gear",    href: "/dashboard/settings",       icon: Gear },
+  { label: "Gear",        href: "/dashboard/settings",       icon: Gear },
+];
+
+/** "Portal" row — client-facing links (shown when role === "client") */
+const CLIENT_PILLS: NavPill[] = [
+  { label: "Overview",  href: "/dashboard/portal",              icon: SquaresFour },
+  { label: "Reports",   href: "/dashboard/portal/reports",      icon: ChartBar },
+  { label: "Content",   href: "/dashboard/portal/content",      icon: Stack },
+  { label: "Calendar",  href: "/dashboard/portal/calendar",     icon: CalendarBlank },
+  { label: "Agency",    href: "/dashboard/portal/agency-room",  icon: Chat },
+  { label: "Uploads",   href: "/dashboard/portal/uploads",      icon: FolderOpen },
+  { label: "Support",   href: "/dashboard/portal/support",      icon: Lightning },
 ];
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -75,7 +86,7 @@ function NavPillBtn({ pill, pathname }: { pill: NavPill; pathname: string }) {
 function RowLabel({ children }: { children: string }) {
   return (
     <span
-      className="shrink-0 text-[9px] font-mono uppercase tracking-[0.18em] text-[rgba(240,240,244,0.28)] select-none"
+      className="gtn-row-label shrink-0 text-[9px] font-mono uppercase tracking-[0.18em] text-[rgba(240,240,244,0.28)] select-none"
       style={{ fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)" }}
     >
       {children}
@@ -119,6 +130,8 @@ export default function GlassTopNav() {
   const initials = profile
     ? `${profile.full_name?.split(" ")[0]?.[0] ?? ""}${profile.full_name?.split(" ")[1]?.[0] ?? ""}`.toUpperCase() || "U"
     : "U";
+
+  const isClient = profile?.role === "client";
 
   return (
     <nav
@@ -221,53 +234,67 @@ export default function GlassTopNav() {
         </div>
       </div>
 
-      {/* ── Row 2: Create tools ─────────────────────────────────────────────── */}
-      <div className="gtn-row gtn-row-2">
-        <RowLabel>create</RowLabel>
-        <div className="gtn-pills" role="navigation" aria-label="Content creation tools">
-          {CREATE_PILLS.map(p => (
-            <NavPillBtn key={p.href} pill={p} pathname={pathname} />
-          ))}
+      {isClient ? (
+        /* ── Client: single portal nav row ──────────────────────────────── */
+        <div className="gtn-row gtn-row-2">
+          <RowLabel>portal</RowLabel>
+          <div className="gtn-pills" role="navigation" aria-label="Portal navigation">
+            {CLIENT_PILLS.map(p => (
+              <NavPillBtn key={p.href} pill={p} pathname={pathname} />
+            ))}
+          </div>
         </div>
-        <div className="gtn-quickbar">
-          <Link
-            href="/dashboard/ai-studio"
-            className="gtn-action-btn gtn-action-primary"
-            aria-label="Generate with AI Studio"
-          >
-            <MagicWand size={11} strokeWidth={2} />
-            Generate
-          </Link>
-          <span className="gtn-render-chip" title="3 renders in flight" aria-label="3 renders in flight">
-            <span className="gtn-render-dot" aria-hidden="true" />
-            <span>3 renders</span>
-          </span>
-        </div>
-      </div>
+      ) : (
+        <>
+          {/* ── Row 2: Create tools ──────────────────────────────────────── */}
+          <div className="gtn-row gtn-row-2">
+            <RowLabel>create</RowLabel>
+            <div className="gtn-pills" role="navigation" aria-label="Content creation tools">
+              {CREATE_PILLS.map(p => (
+                <NavPillBtn key={p.href} pill={p} pathname={pathname} />
+              ))}
+            </div>
+            <div className="gtn-quickbar">
+              <Link
+                href="/dashboard/ai-studio"
+                className="gtn-action-btn gtn-action-primary"
+                aria-label="Generate with AI Studio"
+              >
+                <MagicWand size={11} strokeWidth={2} />
+                Generate
+              </Link>
+              <span className="gtn-render-chip" title="3 renders in flight" aria-label="3 renders in flight">
+                <span className="gtn-render-dot" aria-hidden="true" />
+                <span>3 renders</span>
+              </span>
+            </div>
+          </div>
 
-      {/* ── Row 3: System ───────────────────────────────────────────────────── */}
-      <div className="gtn-row gtn-row-3">
-        <RowLabel>system</RowLabel>
-        <div className="gtn-pills" role="navigation" aria-label="System tools">
-          {SYSTEM_PILLS.map(p => (
-            <NavPillBtn key={p.href} pill={p} pathname={pathname} />
-          ))}
-        </div>
-        <div className="gtn-quickbar">
-          <Link
-            href="/dashboard/social-studio"
-            className="gtn-action-btn gtn-action-ghost"
-            aria-label="Schedule posts"
-          >
-            <Plus size={11} strokeWidth={2} />
-            Schedule
-          </Link>
-          <span className="gtn-render-chip" title="System health" aria-label="All systems operational">
-            <span className="gtn-render-dot gtn-render-dot-ok" aria-hidden="true" />
-            <span>all systems</span>
-          </span>
-        </div>
-      </div>
+          {/* ── Row 3: System ─────────────────────────────────────────────── */}
+          <div className="gtn-row gtn-row-3">
+            <RowLabel>system</RowLabel>
+            <div className="gtn-pills" role="navigation" aria-label="System tools">
+              {SYSTEM_PILLS.map(p => (
+                <NavPillBtn key={p.href} pill={p} pathname={pathname} />
+              ))}
+            </div>
+            <div className="gtn-quickbar">
+              <Link
+                href="/dashboard/social-studio"
+                className="gtn-action-btn gtn-action-ghost"
+                aria-label="Schedule posts"
+              >
+                <Plus size={11} strokeWidth={2} />
+                Schedule
+              </Link>
+              <span className="gtn-render-chip" title="System health" aria-label="All systems operational">
+                <span className="gtn-render-dot gtn-render-dot-ok" aria-hidden="true" />
+                <span>all systems</span>
+              </span>
+            </div>
+          </div>
+        </>
+      )}
     </nav>
   );
 }

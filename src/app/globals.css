@@ -3779,6 +3779,66 @@ body {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
+ * GLASS TOP NAV — Mobile responsive overrides (≤640px)
+ * ────────────────────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .glass-top-nav {
+    padding: 0 10px;
+  }
+
+  /* Row 1: slightly tighter */
+  .gtn-row-1 {
+    min-height: 40px;
+  }
+
+  /* Hide brand wordmark on narrow screens — logo mark remains */
+  .gtn-brand-name {
+    display: none;
+  }
+
+  /* Hide search bar — too cramped at 375px */
+  .gtn-search {
+    display: none;
+  }
+
+  /* Larger touch targets for utility icon buttons */
+  .gtn-util-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  /* Hide row labels (create / system / portal) */
+  .gtn-row-label {
+    display: none;
+  }
+
+  /* Bigger pill tap targets — 34px min height covers WCAG 44px best-effort */
+  .gtn-pills a {
+    min-height: 34px;
+    padding: 6px 10px;
+  }
+
+  /* Hide status chips (render count + all-systems) — save horizontal room */
+  .gtn-render-chip {
+    display: none;
+  }
+
+  /* Tighten quickbar */
+  .gtn-quickbar {
+    gap: 4px;
+    padding-left: 4px;
+  }
+
+  /* Compress pill rows */
+  .gtn-row-2,
+  .gtn-row-3 {
+    min-height: 34px;
+    padding: 2px 0;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
  * CORNER WIDGET — bottom-left fixed account chip
  * ────────────────────────────────────────────────────────────────────── */
 
