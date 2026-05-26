@@ -28,10 +28,14 @@ export async function DELETE(
       { status: 403 }
     );
 
+  // Defense-in-depth: scope by user_id (captured from ownership read above) to
+  // close the TOCTOU window between the check and this write. RLS also enforces
+  // creator-only deletes, but the explicit WHERE closes the window.
   const { error } = await supabase
     .from("community_events")
     .delete()
-    .eq("id", params.id);
+    .eq("id", params.id)
+    .eq("user_id", user.id);
 
   if (error)
     return NextResponse.json({ error: error.message }, { status: 500 });

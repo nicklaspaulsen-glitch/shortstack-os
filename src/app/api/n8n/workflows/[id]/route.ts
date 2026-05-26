@@ -54,7 +54,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   try {
     const data = await n8nFetch(`/workflows/${params.id}`);
     return NextResponse.json({ success: true, workflow: data });
-  } catch {
+  } catch (err) {
+    console.error("[n8n/workflows/:id] GET error:", err);
     return NextResponse.json({ error: "Workflow not found" }, { status: 404 });
   }
 }
@@ -80,7 +81,8 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       body: JSON.stringify(updates),
     });
     return NextResponse.json({ success: true, workflow: data });
-  } catch {
+  } catch (err) {
+    console.error("[n8n/workflows/:id] PATCH error:", err);
     return NextResponse.json({ error: "Failed to update workflow" }, { status: 500 });
   }
 }
@@ -96,7 +98,8 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   try {
     await n8nFetch(`/workflows/${params.id}`, { method: "DELETE" });
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (err) {
+    console.error("[n8n/workflows/:id] DELETE error:", err);
     return NextResponse.json({ error: "Failed to delete workflow" }, { status: 500 });
   }
 }

@@ -56,10 +56,14 @@ export async function PATCH(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  // Defense-in-depth: scope by user_id (captured from ownership read above) to
+  // close the TOCTOU window between the check and this write. The service client
+  // bypasses RLS entirely, so the explicit WHERE is the only guard here.
   const { data, error } = await service
     .from("telegram_routines")
     .update(patch)
     .eq("id", params.id)
+    .eq("user_id", user.id)
     .select("*")
     .single();
 
@@ -97,10 +101,13 @@ export async function DELETE(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  // Defense-in-depth: scope by user_id to close the TOCTOU window.
+  // The service client bypasses RLS — the explicit WHERE is the only guard.
   const { error } = await service
     .from("telegram_routines")
     .delete()
-    .eq("id", params.id);
+    .eq("id", params.id)
+    .eq("user_id", user.id);
 
   if (error) {
     console.error("[telegram/routines/:id] DELETE error:", error);

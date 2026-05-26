@@ -40,10 +40,14 @@ export async function PUT(request: NextRequest, { params }: Params) {
     if (key in body) updates[key] = body[key];
   }
 
+  // Defense-in-depth: scope by course_id (from ownership read above) to close
+  // the TOCTOU window between the ownership check and this write. RLS also
+  // enforces this via the courses join, but the explicit WHERE closes the window.
   const { data, error } = await supabase
     .from("course_modules")
     .update(updates)
     .eq("id", params.id)
+    .eq("course_id", mod.course_id)
     .select()
     .single();
 
@@ -79,7 +83,8 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
     .single();
   if (!course) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const { error } = await supabase.from("course_modules").delete().eq("id", params.id);
+  // Defense-in-depth: scope by course_id to close the TOCTOU window.
+  const { error } = await supabase.from("course_modules").delete().eq("id", params.id).eq("course_id", mod.course_id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ success: true });
 }

@@ -51,9 +51,11 @@ export async function PUT(req: NextRequest, { params }: Params) {
     const current = allSteps[idx];
     const swapStep = allSteps[swapIdx];
 
+    // Defense-in-depth: pin each swap write to the verified funnel_id so a
+    // TOCTOU race can't move a step from a different funnel.
     await Promise.all([
-      supabase.from("funnel_steps").update({ sort_order: swapStep.sort_order }).eq("id", current.id),
-      supabase.from("funnel_steps").update({ sort_order: current.sort_order }).eq("id", swapStep.id),
+      supabase.from("funnel_steps").update({ sort_order: swapStep.sort_order }).eq("id", current.id).eq("funnel_id", step.funnel_id),
+      supabase.from("funnel_steps").update({ sort_order: current.sort_order }).eq("id", swapStep.id).eq("funnel_id", step.funnel_id),
     ]);
 
     return NextResponse.json({ success: true });
@@ -73,10 +75,13 @@ export async function PUT(req: NextRequest, { params }: Params) {
     updates.slug = body.slug.toLowerCase().replace(/[^a-z0-9-]+/g, "-").slice(0, 64);
   }
 
+  // Defense-in-depth: scope by funnel_id (from verifyStepOwnership above) to
+  // close the TOCTOU window between the ownership read and this write.
   const { data, error } = await supabase
     .from("funnel_steps")
     .update(updates)
     .eq("id", params.id)
+    .eq("funnel_id", step.funnel_id)
     .select()
     .single();
 
@@ -93,10 +98,13 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
   const step = await verifyStepOwnership(supabase, params.id, user.id);
   if (!step) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  // Defense-in-depth: scope by funnel_id (from verifyStepOwnership above) to
+  // close the TOCTOU window between the ownership read and this write.
   const { error } = await supabase
     .from("funnel_steps")
     .delete()
-    .eq("id", params.id);
+    .eq("id", params.id)
+    .eq("funnel_id", step.funnel_id);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ success: true });
