@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import dns from "dns";
-import https from "https";
-import type { LookupFunction } from "net";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { isPrivateOrInternal, isValidExternalHttpsUrl } from "@/lib/security/ssrf-guard";
 import { checkRateLimit } from "@/lib/server/rate-limit";
+import { resolveAndPin, pinnedPost } from "@/lib/security/pinned-fetch";
 
 // Webhook Trigger System — sends events to Zapier/Make.com/custom URLs
 // Triggered internally when events happen (new lead, deal closed, etc.)
@@ -66,7 +64,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Invalid webhook_url target" }, { status: 400 });
       }
       // Layer 2: DNS resolution — verify the hostname doesn't point private.
-      const resolved = await resolveAndCheck(parsed.hostname);
+      const resolved = await resolveAndPin(parsed.hostname);
       if (resolved === null) {
         console.warn(`[webhooks/trigger] SSRF: DNS lookup returned no address for "${parsed.hostname}" — rejecting`);
         return NextResponse.json({ error: "Invalid webhook_url: hostname could not be resolved" }, { status: 400 });
@@ -142,125 +140,6 @@ export async function POST(request: NextRequest) {
   }
 
   return NextResponse.json({ success: true, event, triggered: results.length, results });
-}
-
-/** Resolved, safe address ready for connection pinning. */
-interface SafeAddress {
-  address: string;
-  family: 4 | 6;
-}
-
-/**
- * Resolve `hostname` to ALL its addresses (both IPv4 and IPv6) and check
- * whether any of them fall in a private/loopback/link-local range.
- * Returns:
- *   - `SafeAddress`  — ALL resolved addresses are safe; use this for IP pinning
- *   - `"PRIVATE"`    — at least one address is blocked (reject the URL)
- *   - `null`         — hostname could not be resolved at all (reject the URL)
- *
- * Uses resolve4/resolve6 (not lookup) so we see every A/AAAA record.
- * dns.promises.lookup only returns one address, which means a host with
- * both a public IP and a private IP in its DNS records could bypass the
- * check if the OS resolver returns the public one during validation but
- * the private one during the actual connection. resolve4/resolve6 return
- * the full record set so we can reject if ANY address is private.
- */
-/** Race a promise against a fixed timeout; throws on timeout. */
-function withDnsTimeout<T>(p: Promise<T>, ms = 5000): Promise<T> {
-  return Promise.race([
-    p,
-    new Promise<T>((_, reject) =>
-      setTimeout(() => reject(new Error(`DNS lookup timed out after ${ms}ms`)), ms)
-    ),
-  ]);
-}
-
-async function resolveAndCheck(hostname: string): Promise<SafeAddress | "PRIVATE" | null> {
-  let v4addrs: string[] = [];
-  let v6addrs: string[] = [];
-
-  try {
-    v4addrs = await withDnsTimeout(dns.promises.resolve4(hostname));
-  } catch { /* no A record, timed out, or network error — may still have AAAA */ }
-
-  try {
-    v6addrs = await withDnsTimeout(dns.promises.resolve6(hostname));
-  } catch { /* no AAAA record */ }
-
-  // Must resolve to at least one address; fail closed otherwise.
-  if (v4addrs.length === 0 && v6addrs.length === 0) return null;
-
-  // Reject if ANY resolved address across BOTH families is private.
-  for (const addr of v4addrs) {
-    if (isPrivateOrInternal(addr)) {
-      console.warn(`[webhooks/trigger] SSRF: resolved IPv4 for "${hostname}" (${addr}) is private — rejecting`);
-      return "PRIVATE";
-    }
-  }
-  for (const addr of v6addrs) {
-    if (isPrivateOrInternal(addr)) {
-      console.warn(`[webhooks/trigger] SSRF: resolved IPv6 for "${hostname}" (${addr}) is private — rejecting`);
-      return "PRIVATE";
-    }
-  }
-
-  // Prefer IPv4 for the pinned connection; use first address in each family.
-  const v4addr = v4addrs[0] ?? null;
-  const v6addr = v6addrs[0] ?? null;
-  return v4addr ? { address: v4addr, family: 4 } : { address: v6addr!, family: 6 };
-}
-
-/**
- * POST JSON payload to a pre-validated webhook URL with IP pinning.
- *
- * Uses Node's `https.request()` with a custom `lookup` function that
- * returns the pre-verified IP directly, bypassing the OS DNS resolver
- * entirely. This closes the TOCTOU DNS-rebinding window: no matter how
- * quickly an attacker flips their DNS record after passing the validation
- * check, the outgoing TCP connection always goes to the same IP that was
- * verified.
- */
-async function pinnedPost(
-  url: string,
-  pinnedIp: string,
-  pinnedFamily: 4 | 6,
-  payload: string,
-  timeoutMs = 8000,
-): Promise<{ status: number; ok: boolean }> {
-  return new Promise((resolve, reject) => {
-    const parsed = new URL(url);
-    const port = parsed.port ? Number(parsed.port) : 443;
-
-    const lookup: LookupFunction = (_host, _opts, callback) => {
-      // Return the pre-verified IP — bypasses OS DNS entirely.
-      callback(null, pinnedIp, pinnedFamily);
-    };
-
-    const req = https.request(
-      {
-        hostname: parsed.hostname,
-        port,
-        path: (parsed.pathname || "/") + parsed.search,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Content-Length": Buffer.byteLength(payload),
-        },
-        lookup,
-        timeout: timeoutMs,
-      },
-      (res) => {
-        res.resume(); // drain response so socket is released promptly
-        const status = res.statusCode ?? 0;
-        resolve({ status, ok: status >= 200 && status < 300 });
-      },
-    );
-
-    req.on("timeout", () => req.destroy(new Error(`webhook timed out after ${timeoutMs}ms`)));
-    req.on("error", reject);
-    req.write(payload);
-    req.end();
-  });
 }
 
 

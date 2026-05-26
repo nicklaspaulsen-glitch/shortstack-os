@@ -17,7 +17,7 @@ import {
   isPermanentFailure,
   signWebhookPayload,
 } from "@/lib/api/webhook-events";
-import { resolveAndCheckUrl } from "@/lib/security/ssrf";
+import { resolveAndPin, pinnedPost } from "@/lib/security/pinned-fetch";
 import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const maxDuration = 60;
@@ -104,22 +104,40 @@ export async function GET(request: NextRequest) {
     const body = JSON.stringify(d.payload);
     const signature = signWebhookPayload(webhook.secret, body);
 
-    // SSRF guard — Layer 1 (hostname string) + Layer 2 (DNS resolution).
-    // Resolves all A/AAAA records and rejects if ANY resolve to a private IP.
-    // This closes the DNS rebinding gap where an attacker flips their record
-    // between the hostname check and the fetch.
-    const ssrfErr = await resolveAndCheckUrl(webhook.url);
-    if (ssrfErr) {
+    // SSRF guard — three-layer defence identical to /api/webhooks/trigger:
+    //   Layer 1 (hostname string) + Layer 2 (DNS — all A/AAAA records checked)
+    //     → both handled inside resolveAndPin()
+    //   Layer 3 (IP pinning) → pinnedPost() bypasses OS DNS entirely, closing
+    //     the TOCTOU DNS-rebinding window between the check and the send.
+    let parsedWebhookUrl: URL;
+    try {
+      parsedWebhookUrl = new URL(webhook.url);
+    } catch {
+      await supabase
+        .from("webhook_deliveries")
+        .update({
+          status: "failed",
+          last_error: "Invalid webhook URL",
+          attempt_count: d.attempt_count + 1,
+        })
+        .eq("id", d.id);
+      failed++;
+      continue;
+    }
+
+    const resolution = await resolveAndPin(parsedWebhookUrl.hostname);
+    if (!resolution || resolution === "PRIVATE") {
+      const reason = !resolution ? "hostname unresolvable" : "resolves to private address";
       console.error("[deliver-webhooks] SSRF block: URL rejected", {
         webhook_id: d.webhook_id,
         url: webhook.url,
-        reason: ssrfErr,
+        reason,
       });
       await supabase
         .from("webhook_deliveries")
         .update({
           status: "failed",
-          last_error: `SSRF blocked: ${ssrfErr}`,
+          last_error: `SSRF blocked: ${reason}`,
           attempt_count: d.attempt_count + 1,
         })
         .eq("id", d.id);
@@ -130,23 +148,22 @@ export async function GET(request: NextRequest) {
     let responseStatus = 0;
     let errorMessage: string | null = null;
     try {
-      const res = await fetch(webhook.url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const r = await pinnedPost(
+        webhook.url,
+        resolution.address,
+        resolution.family,
+        body,
+        {
           "User-Agent": "ShortStack-PlugsConnected/1.0",
           "x-shortstack-signature": signature,
           "x-shortstack-event": d.event,
           "x-shortstack-delivery-id": d.id,
         },
-        body,
-        // Vercel Edge fetch defaults are fine; native HTTP timeout will trip
-        // around 30s if the user URL hangs.
-        signal: AbortSignal.timeout(15_000),
-      });
-      responseStatus = res.status;
-      if (!res.ok) {
-        errorMessage = `HTTP ${res.status}`;
+        15_000,
+      );
+      responseStatus = r.status;
+      if (!r.ok) {
+        errorMessage = `HTTP ${r.status}`;
       }
     } catch (err) {
       errorMessage = "Internal server error";
