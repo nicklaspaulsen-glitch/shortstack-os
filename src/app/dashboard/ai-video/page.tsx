@@ -90,17 +90,18 @@ const MODELS = [
   { id: "nature-doc", name: "Nature Doc",  sub: "BBC Earth style",    icon: Camera,  preview: "linear-gradient(90deg,#0a1a00 0%,#1a3a00 40%,#4a8a20 70%,#a0cc60 100%)",   viralScore: 68, ctrTier: "medium" as const },
 ];
 
-/** OSS model backends — exposed in advanced mode. All route to /api/video/render;
+/** Video model backends — exposed in advanced mode. All route to /api/video/render;
  *  the backend field is passed as model_backend and the server picks the right
- *  RunPod/fal endpoint. "higgsfield" routes to the RunPod Mochi endpoint by default. */
+ *  upstream endpoint. "higgsfield" uses the Higgsfield Creative AI API when
+ *  HIGGSFIELD_API_KEY is set; falls back to RunPod Mochi when the key is absent. */
 const MODEL_BACKENDS = [
   {
     id: "higgsfield",
-    name: "Mochi",
+    name: "Higgsfield",
     badge: "Default",
     badgeColor: "#D4FF00",
-    specs: "Open-source · 720p · Fast inference",
-    note: "via RunPod",
+    specs: "Higgsfield Creative AI · Cinematic quality",
+    note: "via Higgsfield API",
   },
   {
     id: "wan2",

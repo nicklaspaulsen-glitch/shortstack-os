@@ -2,6 +2,7 @@
 import { PaperPlaneTilt, Trash, X } from "@phosphor-icons/react";
 
 import { useState, useEffect, useCallback } from "react";
+import MentionInput, { MentionText } from "@/components/ui/mention-input";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   TASK_PRIORITIES,
@@ -87,20 +88,24 @@ export function TaskDrawer({
     return () => window.removeEventListener("keydown", handler);
   }, [task, onClose]);
 
+  const doSubmitComment = useCallback(async () => {
+    const body = draft.trim();
+    if (!body || submittingComment) return;
+    setSubmittingComment(true);
+    try {
+      await onComment(body);
+      setDraft("");
+    } finally {
+      setSubmittingComment(false);
+    }
+  }, [draft, submittingComment, onComment]);
+
   const handleCommentSubmit = useCallback(
-    async (e: React.FormEvent) => {
+    (e: React.FormEvent) => {
       e.preventDefault();
-      const body = draft.trim();
-      if (!body || submittingComment) return;
-      setSubmittingComment(true);
-      try {
-        await onComment(body);
-        setDraft("");
-      } finally {
-        setSubmittingComment(false);
-      }
+      void doSubmitComment();
     },
-    [draft, submittingComment, onComment],
+    [doSubmitComment],
   );
 
   const saveTitle = async () => {
@@ -357,16 +362,17 @@ export function TaskDrawer({
               className="border-t border-border-subtle p-3 shrink-0"
             >
               <div className="flex items-end gap-2">
-                <textarea
+                <MentionInput
                   value={draft}
-                  onChange={(e) => setDraft(e.target.value)}
+                  onChange={setDraft}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-                      void handleCommentSubmit(e);
+                    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                      e.preventDefault();
+                      void doSubmitComment();
                     }
                   }}
                   rows={2}
-                  placeholder="Write a comment… (⌘+Enter to send)"
+                  placeholder="Write a comment… type @ to mention an agent (⌘+Enter to send)"
                   className="flex-1 px-3 py-2 rounded-lg bg-surface-light border border-border-subtle focus:border-[#D4FF00] focus:outline-none text-sm resize-none"
                 />
                 <button
@@ -432,9 +438,10 @@ function CommentRow({
           <span className="font-medium">{author?.full_name ?? "Unknown"}</span>
           <span className="text-text-muted">{formatTimestamp(comment.created_at)}</span>
         </div>
-        <p className="text-sm text-fg/90 whitespace-pre-wrap break-words">
-          {comment.body}
-        </p>
+        <MentionText
+          value={comment.body}
+          className="text-sm text-fg/90 whitespace-pre-wrap break-words"
+        />
       </div>
     </div>
   );

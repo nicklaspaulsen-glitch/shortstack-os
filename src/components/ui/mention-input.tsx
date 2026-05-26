@@ -77,6 +77,8 @@ interface MentionInputProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  /** Called for any keydown event that the mention dropdown did NOT consume. */
+  onKeyDown?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
 }
 
 export default function MentionInput({
@@ -86,6 +88,7 @@ export default function MentionInput({
   placeholder,
   className,
   disabled,
+  onKeyDown: externalKeyDown,
 }: MentionInputProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const mentionStartRef = useRef<number>(-1);
@@ -145,20 +148,27 @@ export default function MentionInput({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (!dropdownOpen || filtered.length === 0) return;
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setActiveIndex((i) => (i + 1) % filtered.length);
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setActiveIndex((i) => (i - 1 + filtered.length) % filtered.length);
-    } else if (e.key === "Enter" || e.key === "Tab") {
-      e.preventDefault();
-      selectMention(filtered[activeIndex]);
-    } else if (e.key === "Escape") {
-      e.preventDefault();
-      closeDropdown();
+    if (dropdownOpen && filtered.length > 0) {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setActiveIndex((i) => (i + 1) % filtered.length);
+        return;
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setActiveIndex((i) => (i - 1 + filtered.length) % filtered.length);
+        return;
+      } else if (e.key === "Enter" || e.key === "Tab") {
+        e.preventDefault();
+        selectMention(filtered[activeIndex]);
+        return;
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        closeDropdown();
+        return;
+      }
     }
+    // Dropdown did not consume this key — delegate to the parent.
+    externalKeyDown?.(e);
   };
 
   // Close dropdown when the user clicks outside the textarea.
