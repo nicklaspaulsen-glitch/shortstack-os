@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
+const LEVELING_FIELDS = new Set([
+  "enabled",
+  "xp_per_message",
+  "xp_cooldown_seconds",
+  "level_up_message",
+  "role_rewards",
+]);
+
 async function assertOwnsServer(serverId: string, userId: string) {
   const supabase = createServerSupabase();
   const { data } = await supabase
@@ -59,9 +67,11 @@ export async function POST(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const body = await request.json();
-  // Defense-in-depth: strip server_id from body so a crafted payload cannot
-  // override the path-param server_id after the spread.
-  const { server_id: _discardedServerId, ...safeBody } = body;
+  // Allowlist prevents mass assignment — only known leveling config columns
+  // are forwarded. server_id always comes from the authenticated path param.
+  const safeBody = Object.fromEntries(
+    Object.entries(body as Record<string, unknown>).filter(([k]) => LEVELING_FIELDS.has(k))
+  );
   const { data, error } = await supabase
     .from("discord_leveling_config")
     .upsert({ server_id, ...safeBody, updated_at: new Date().toISOString() }, { onConflict: "server_id" })

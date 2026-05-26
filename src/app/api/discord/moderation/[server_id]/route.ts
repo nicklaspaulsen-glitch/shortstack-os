@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
+const MODERATION_FIELDS = new Set([
+  "bad_words",
+  "anti_spam_enabled",
+  "anti_spam_rate",
+  "anti_caps_enabled",
+  "anti_caps_threshold",
+  "anti_link_enabled",
+  "link_whitelist",
+  "action_type",
+  "exempt_roles",
+]);
+
 async function assertOwnsServer(serverId: string, userId: string) {
   const supabase = createServerSupabase();
   const { data } = await supabase
@@ -58,9 +70,11 @@ export async function POST(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const body = await request.json();
-  // Defense-in-depth: strip server_id from body so a crafted payload cannot
-  // override the path-param server_id after the spread.
-  const { server_id: _discardedServerId, ...safeBody } = body;
+  // Allowlist prevents mass assignment — only known moderation config columns
+  // are forwarded. server_id always comes from the authenticated path param.
+  const safeBody = Object.fromEntries(
+    Object.entries(body as Record<string, unknown>).filter(([k]) => MODERATION_FIELDS.has(k))
+  );
   const { data, error } = await supabase
     .from("discord_moderation")
     .upsert({ server_id, ...safeBody, updated_at: new Date().toISOString() }, { onConflict: "server_id" })
