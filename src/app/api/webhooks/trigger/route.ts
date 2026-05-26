@@ -4,15 +4,28 @@ import https from "https";
 import type { LookupFunction } from "net";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { isPrivateOrInternal, isValidExternalHttpsUrl } from "@/lib/security/ssrf-guard";
+import { rateLimit } from "@/lib/rate-limit";
 
 // Webhook Trigger System — sends events to Zapier/Make.com/custom URLs
 // Triggered internally when events happen (new lead, deal closed, etc.)
-// TODO: Add rate limiting in production to prevent webhook flood abuse
+// Rate limited: 20 dispatches/min per user to prevent flood abuse.
 export async function POST(request: NextRequest) {
   // Auth check — only authenticated users can trigger outbound webhooks
   const authSupabase = createServerSupabase();
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Per-user rate limit: 20 webhook dispatches per minute.
+  const rl = rateLimit(`webhook:${user.id}`, 20);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Rate limit exceeded. Please wait before triggering more webhooks." },
+      {
+        status: 429,
+        headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) },
+      },
+    );
+  }
 
   const { event, data, webhook_url } = await request.json();
 
