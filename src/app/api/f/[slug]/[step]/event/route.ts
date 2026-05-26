@@ -1,15 +1,19 @@
 /**
  * Public event tracking endpoint for the funnel surface.
  *
- * Anonymous (no auth) — protected by row-level INSERT policy on
- * `funnel_analytics` (`funnel_analytics_public_insert`). The endpoint
- * validates that the funnel + step slug pair resolves to a published
- * funnel, then writes a single analytics row.
+ * Anonymous (no auth) — protected by row-level policies on:
+ *   - funnels            → funnels_public_read       (SELECT WHERE status='published')
+ *   - funnel_steps       → funnel_steps_public_read  (SELECT via published funnel)
+ *   - funnel_analytics   → funnel_analytics_public_insert (INSERT WITH CHECK true)
+ *
+ * Uses createAnonClient() so RLS policies actually apply. Previously used
+ * createServiceClient() which bypassed RLS entirely — the stated RLS protection
+ * was not in effect (sec fix 2026-05-26).
  *
  * Allowed event types: view, click, submit, purchase.
  */
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createAnonClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -19,7 +23,7 @@ type Params = { params: { slug: string; step: string } };
 const ALLOWED_EVENTS = new Set(["view", "click", "submit", "purchase"]);
 
 export async function POST(req: NextRequest, { params }: Params) {
-  const supabase = createServiceClient();
+  const supabase = createAnonClient();
 
   let body: { event_type?: string; visitor_id?: string; metadata?: Record<string, unknown> };
   try {
