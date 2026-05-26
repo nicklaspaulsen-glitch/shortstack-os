@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     .in("id", client_ids);
 
   if (clientsErr) {
-    return NextResponse.json({ ok: false, error: clientsErr.message }, { status: 500 });
+    return NextResponse.json({ ok: false, error: "Internal server error" }, { status: 500 });
   }
   if (!clients || clients.length === 0) {
     return NextResponse.json({ ok: false, error: "No accessible clients in selection" }, { status: 400 });

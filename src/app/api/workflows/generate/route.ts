@@ -127,6 +127,6 @@ Return a complete automation workflow as JSON.`;
 
     return NextResponse.json({ success: true, workflow });
   } catch (err) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : "Failed to generate" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

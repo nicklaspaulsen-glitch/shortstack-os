@@ -175,7 +175,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     .eq("agency_owner_id", ownerId);
 
   if (updErr) {
-    return NextResponse.json({ error: updErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true });
@@ -242,7 +242,7 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
     .eq("id", cloneId)
     .eq("agency_owner_id", ownerId);
   if (delErr) {
-    return NextResponse.json({ error: delErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true });

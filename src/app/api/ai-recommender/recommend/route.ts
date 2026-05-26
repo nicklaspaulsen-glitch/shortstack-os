@@ -161,7 +161,7 @@ Recommend 6-8 things they should do NEXT to grow their business.`;
 
     return NextResponse.json({ success: true, ...parsed, user_type });
   } catch (err) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : "Failed" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 

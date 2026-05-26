@@ -62,7 +62,7 @@ export async function GET(
     .eq("id", params.rep_id)
     .maybeSingle();
   if (repErr) {
-    return NextResponse.json({ error: repErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   // Rep must either be the owner themselves, a team_member of the owner, or
   // a client managed by the owner. Without a direct ownership column on

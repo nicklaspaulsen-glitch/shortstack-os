@@ -51,7 +51,7 @@ export async function POST(
     .eq("user_id", ownerId)
     .maybeSingle<JobRow>();
 
-  if (jobErr) return NextResponse.json({ error: jobErr.message }, { status: 500 });
+  if (jobErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!job) return NextResponse.json({ error: "Job not found" }, { status: 404 });
 
   const { data: pendings } = await supabase

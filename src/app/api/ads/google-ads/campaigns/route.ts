@@ -127,7 +127,7 @@ export async function GET(request: NextRequest) {
     );
     const data = await res.json();
     if (!res.ok) {
-      return NextResponse.json({ error: data.error?.message || "Google Ads API error" }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 
     const results: Array<Record<string, unknown>> = [];
@@ -182,6 +182,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ success: true, count: rows.length, campaigns: rows });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

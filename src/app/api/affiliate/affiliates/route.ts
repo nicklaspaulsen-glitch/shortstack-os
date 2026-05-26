@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
       continue;
     }
     // other error — bubble up
-    return NextResponse.json({ error: error?.message ?? "Failed to create affiliate" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   void refCode; // eslint suppression — refCode is unused once a row inserts successfully

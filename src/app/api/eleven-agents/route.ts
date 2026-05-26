@@ -180,6 +180,6 @@ export async function POST(req: NextRequest) {
     const data = await res.json();
     return NextResponse.json({ agentId: data.agent_id ?? data.id, data });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

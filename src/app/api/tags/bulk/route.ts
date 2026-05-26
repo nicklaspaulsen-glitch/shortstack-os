@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       .update({ name: to })
       .eq("user_id", ownerId)
       .eq("name", from);
-    if (tagsErr) return NextResponse.json({ error: tagsErr.message }, { status: 500 });
+    if (tagsErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
     // Update join rows
     await service

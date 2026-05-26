@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (error || !seq) {
-    return NextResponse.json({ error: error?.message || "Failed to create sequence" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   if (incomingSteps.length > 0) {
@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
     if (stepErr) {
       // Roll back the parent sequence — failed step insert leaves nothing behind.
       await supabase.from("sequences").delete().eq("id", seq.id);
-      return NextResponse.json({ error: stepErr.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
   }
 

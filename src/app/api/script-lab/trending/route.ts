@@ -67,6 +67,6 @@ export async function POST(request: NextRequest) {
       if (err.raw) body.raw = err.raw;
       return NextResponse.json(body, { status: err.status });
     }
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

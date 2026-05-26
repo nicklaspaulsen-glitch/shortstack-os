@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
       });
       if (createErr || !newUser.user) {
         console.error("[setup-account] Create user error:", createErr);
-        return NextResponse.json({ error: createErr?.message || "Failed to create user" }, { status: 500 });
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
       }
       userId = newUser.user.id;
     }

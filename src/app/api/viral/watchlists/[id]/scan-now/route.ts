@@ -32,7 +32,7 @@ export async function POST(
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (fetchErr) return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+  if (fetchErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!watchlist) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   try {
@@ -64,6 +64,6 @@ export async function POST(
       if (err.raw) body.raw = err.raw;
       return NextResponse.json(body, { status: err.status });
     }
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

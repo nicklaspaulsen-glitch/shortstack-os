@@ -206,6 +206,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ results, stub: false, env: config.env });
   } catch (err) {
     console.error("[domains/search] unexpected error:", err);
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

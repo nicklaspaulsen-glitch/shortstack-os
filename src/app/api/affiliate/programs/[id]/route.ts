@@ -96,7 +96,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     .single();
 
   if (error || !data) {
-    return NextResponse.json({ error: error?.message || "Not found" }, { status: 404 });
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
   return NextResponse.json({ program: data });
 }

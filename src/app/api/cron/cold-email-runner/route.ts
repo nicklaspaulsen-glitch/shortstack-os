@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
 
   if (jobsErr) {
     console.error("[cold-email-runner] job fetch failed", jobsErr);
-    return NextResponse.json({ error: jobsErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   if (!jobs || jobs.length === 0) {

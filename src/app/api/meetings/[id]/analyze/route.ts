@@ -31,7 +31,7 @@ export async function POST(
     .maybeSingle();
   if (fetchErr) {
     console.error("[meetings/analyze] fetch error:", fetchErr);
-    return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   if (!meeting) return NextResponse.json({ error: "Not found" }, { status: 404 });
   if (!meeting.transcript_raw) {
@@ -83,7 +83,7 @@ export async function POST(
 
     if (updErr) {
       console.error("[meetings/analyze] update error:", updErr);
-      return NextResponse.json({ error: updErr.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 
     return NextResponse.json({ meeting: updated, analysis });

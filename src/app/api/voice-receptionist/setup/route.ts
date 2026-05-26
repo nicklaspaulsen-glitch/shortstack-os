@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
       .update({ twilio_phone_number: num })
       .eq("id", clientId);
     if (updErr) {
-      return NextResponse.json({ error: updErr.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
     return NextResponse.json({ success: true, twilio_phone_number: num });
   }
@@ -189,7 +189,7 @@ Keep responses short and natural. Don't sound like a phone tree. If you don't kn
         .update({ eleven_agent_id: agentId })
         .eq("id", clientId);
       if (updErr) {
-        return NextResponse.json({ error: updErr.message }, { status: 500 });
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
       }
 
       // Trinity log so the activity feed shows the wire-up

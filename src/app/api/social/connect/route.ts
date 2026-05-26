@@ -319,7 +319,7 @@ export async function DELETE(request: NextRequest) {
   if (account_id) {
     const { error: delErr } = await supabase.from("social_accounts").delete().eq("id", account_id);
     if (delErr) {
-      return NextResponse.json({ error: delErr.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
   }
 

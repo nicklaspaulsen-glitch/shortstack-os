@@ -93,7 +93,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     .from("sequence_steps")
     .delete()
     .eq("sequence_id", params.id);
-  if (delErr) return NextResponse.json({ error: delErr.message }, { status: 500 });
+  if (delErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   if (incoming.length === 0) {
     return NextResponse.json({ steps: [] });
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     .insert(rows)
     .select("id, step_order, delay_days, channel, template_body, template_subject");
 
-  if (insErr) return NextResponse.json({ error: insErr.message }, { status: 500 });
+  if (insErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ steps: inserted || [] });
 }
 

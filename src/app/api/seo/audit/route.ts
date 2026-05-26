@@ -109,6 +109,6 @@ Return JSON with:
 
     return NextResponse.json({ success: true, audit, raw_data: { pageTitle, metaDescription, h1Tags, imageCount, hasSSL } });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

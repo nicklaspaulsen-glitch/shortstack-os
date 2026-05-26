@@ -82,6 +82,6 @@ Return a JSON object with:
 
     return NextResponse.json({ success: true, research });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

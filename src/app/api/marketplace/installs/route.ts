@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
       .eq("slug", body.slug)
       .eq("is_active", true)
       .maybeSingle();
-    if (pErr) return NextResponse.json({ error: pErr.message }, { status: 500 });
+    if (pErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     if (!plugin) return NextResponse.json({ error: "Plugin not found" }, { status: 404 });
     pluginId = plugin.id;
   }

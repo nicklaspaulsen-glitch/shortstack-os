@@ -241,7 +241,7 @@ export async function POST(request: NextRequest) {
 
     if (insertErr) {
       console.error("[coach/analyze] insert error", insertErr);
-      return NextResponse.json({ error: insertErr.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 
     return NextResponse.json({ ok: true, analysis: inserted });

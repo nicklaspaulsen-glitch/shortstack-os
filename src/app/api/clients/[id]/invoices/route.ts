@@ -232,7 +232,7 @@ export async function POST(
 
     if (insertErr) {
       console.error("[client invoices] insert error:", insertErr);
-      return NextResponse.json({ error: insertErr.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 
     return NextResponse.json({

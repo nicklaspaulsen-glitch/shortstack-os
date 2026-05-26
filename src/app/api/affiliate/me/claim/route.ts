@@ -30,7 +30,7 @@ export async function POST() {
     .from("affiliates")
     .update({ user_id: user.id })
     .in("id", ids);
-  if (updErr) return NextResponse.json({ error: updErr.message }, { status: 500 });
+  if (updErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ ok: true, claimed: ids.length });
 }

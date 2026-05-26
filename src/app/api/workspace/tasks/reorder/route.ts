@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
 
   if (existingErr) {
     console.error("[workspace-board] reorder fetch error", existingErr);
-    return NextResponse.json({ error: existingErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const allowed = new Set((existing || []).map((r) => r.id as string));

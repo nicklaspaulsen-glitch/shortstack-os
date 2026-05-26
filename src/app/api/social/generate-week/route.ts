@@ -183,6 +183,6 @@ Return ONLY the JSON array.`,
 
     return NextResponse.json({ success: true, posts_generated: saved, posts });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

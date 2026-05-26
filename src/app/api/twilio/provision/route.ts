@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
     const buyData = await buyRes.json();
 
     if (!buyRes.ok) {
-      return NextResponse.json({ error: buyData.message || "Failed to provision number" }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 
     // ── Step 3: Import phone number to ElevenLabs ──

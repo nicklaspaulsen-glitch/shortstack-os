@@ -133,7 +133,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     .select("id, program_id, user_id, email, name, ref_code, stripe_account_id, status, total_earned_cents, pending_cents, paid_cents, joined_at, approved_at")
     .single();
   if (error || !data) {
-    return NextResponse.json({ error: error?.message ?? "Failed to update" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   return NextResponse.json({ affiliate: data });
 }

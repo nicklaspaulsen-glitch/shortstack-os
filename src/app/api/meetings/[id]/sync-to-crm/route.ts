@@ -49,7 +49,7 @@ export async function POST(
     .eq("created_by", user.id)
     .maybeSingle();
   if (fetchErr) {
-    return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   if (!meeting) return NextResponse.json({ error: "Not found" }, { status: 404 });
   if (!meeting.lead_id) {
@@ -116,7 +116,7 @@ export async function POST(
     .single();
   if (noteErr) {
     console.error("[meetings/sync] note insert error:", noteErr);
-    return NextResponse.json({ error: noteErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // Create one follow-up per open action item with a due date.

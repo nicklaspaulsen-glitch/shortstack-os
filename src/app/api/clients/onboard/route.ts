@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
   }).select().single();
 
   if (clientError || !client) {
-    return NextResponse.json({ error: clientError?.message || "Failed to create client" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   results.client = { id: client.id, created: true };
 

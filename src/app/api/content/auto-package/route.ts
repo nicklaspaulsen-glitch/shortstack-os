@@ -150,7 +150,7 @@ Return JSON with this exact shape:
     .single();
 
   if (insertError) {
-    return NextResponse.json({ error: insertError.message, ai_package: aiPackage }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error", ai_package: aiPackage }, { status: 500 });
   }
 
   return NextResponse.json({

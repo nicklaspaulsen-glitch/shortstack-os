@@ -123,6 +123,6 @@ export async function PUT(request: NextRequest) {
     }).eq("domain", domain).eq("profile_id", user.id);
     return NextResponse.json({ success: true, records });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

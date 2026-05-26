@@ -35,7 +35,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       const { error } = await service.auth.admin.updateUserById(member.member_profile_id, {
         password: body.new_password,
       });
-      if (error) return NextResponse.json({ error: "Password reset failed: " + error.message }, { status: 500 });
+      if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
   }
 
@@ -46,7 +46,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
         email: body.new_email.toLowerCase(),
         email_confirm: true,
       });
-      if (error) return NextResponse.json({ error: "Email change failed: " + error.message }, { status: 500 });
+      if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
       await service.from("profiles").update({ email: body.new_email.toLowerCase() }).eq("id", member.member_profile_id);
     }
@@ -75,7 +75,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     .select()
     .single();
 
-  if (updateErr) return NextResponse.json({ error: updateErr.message }, { status: 500 });
+  if (updateErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Log
   try {

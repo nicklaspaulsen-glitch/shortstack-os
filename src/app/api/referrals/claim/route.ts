@@ -58,7 +58,7 @@ export async function POST(req: Request) {
     .update({ referred_by_user_id: referrer.id })
     .eq("id", user.id);
   if (updErr) {
-    return NextResponse.json({ error: updErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true, attributed: true });

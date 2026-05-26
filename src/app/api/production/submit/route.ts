@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     },
   }).select("id").single();
 
-  if (error) return NextResponse.json({ error: String(error) }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Send Slack notification to editors channel
   const slackToken = process.env.SLACK_BOT_TOKEN;

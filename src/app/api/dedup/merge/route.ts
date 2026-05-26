@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
       .from("leads")
       .update({ ...patch, updated_at: new Date().toISOString() })
       .eq("id", winnerId);
-    if (upErr) return NextResponse.json({ error: upErr.message }, { status: 500 });
+    if (upErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // Log the merge before deletion so a foreign-key reference isn't needed.
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
     .delete()
     .eq("id", loserId);
 
-  if (delErr) return NextResponse.json({ error: delErr.message }, { status: 500 });
+  if (delErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({
     success: true,

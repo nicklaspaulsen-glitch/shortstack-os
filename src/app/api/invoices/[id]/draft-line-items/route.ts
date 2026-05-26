@@ -87,7 +87,7 @@ export async function POST(
         .eq("client_id", invoice.client_id);
       if (updErr) {
         console.error("[invoices/draft] apply error:", updErr);
-        return NextResponse.json({ error: updErr.message }, { status: 500 });
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
       }
     }
 

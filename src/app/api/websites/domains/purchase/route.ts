@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
 
     const data = await res.json();
     if (!res.ok) {
-      return NextResponse.json({ error: data.message || "GoDaddy purchase failed", details: data }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 
     const { data: row } = await supabase
@@ -148,6 +148,6 @@ export async function POST(request: NextRequest) {
       currency: data.currency,
     });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

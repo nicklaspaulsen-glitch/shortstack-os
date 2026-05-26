@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     .from("faces")
     .upload(key, buf, { contentType: file.type, upsert: false });
   if (upErr) {
-    return NextResponse.json({ ok: false, error: upErr.message }, { status: 500 });
+    return NextResponse.json({ ok: false, error: "Internal server error" }, { status: 500 });
   }
 
   const { data: pub } = db.storage.from("faces").getPublicUrl(key);

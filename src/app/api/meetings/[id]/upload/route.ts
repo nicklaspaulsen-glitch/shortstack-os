@@ -72,7 +72,7 @@ export async function POST(
     .single();
   if (updErr) {
     console.error("[meetings/upload] update error:", updErr);
-    return NextResponse.json({ error: updErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({

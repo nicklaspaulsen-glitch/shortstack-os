@@ -70,6 +70,6 @@ Recommend 3 slots in the next 7 business days. Return absolute UTC timestamps.`;
 
     return NextResponse.json({ success: true, ...parsed });
   } catch (err) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : "Failed" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

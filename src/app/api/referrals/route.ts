@@ -24,7 +24,7 @@ export async function GET() {
     .eq("id", user.id)
     .single();
   if (profileErr) {
-    return NextResponse.json({ error: profileErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   let referralCode: string | null = profile?.referral_code ?? null;
@@ -44,7 +44,7 @@ export async function GET() {
       }
       // If it's a unique-violation, loop and try another code.
       if (!/duplicate|unique/i.test(updErr.message)) {
-        return NextResponse.json({ error: updErr.message }, { status: 500 });
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
       }
     }
     if (!referralCode) {

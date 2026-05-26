@@ -130,6 +130,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, ...parsed });
   } catch (err) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : "Failed" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

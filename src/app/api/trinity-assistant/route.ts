@@ -3467,7 +3467,7 @@ export async function POST(request: NextRequest) {
       .select("id")
       .single();
     if (convErr || !newConv) {
-      return NextResponse.json({ error: convErr?.message || "Could not start conversation." }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
     convId = (newConv as { id: string }).id;
   }

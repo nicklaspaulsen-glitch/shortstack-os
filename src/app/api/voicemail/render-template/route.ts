@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (insErr) {
-      return NextResponse.json({ error: insErr.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 
     return NextResponse.json({

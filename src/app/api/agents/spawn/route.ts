@@ -123,7 +123,7 @@ Return JSON only:
       .single();
 
     if (insertErr) {
-      return NextResponse.json({ error: "Failed to save agent", details: insertErr.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
     agentId = newAgent.id;
   }

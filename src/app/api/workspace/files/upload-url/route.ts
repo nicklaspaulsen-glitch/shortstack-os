@@ -127,7 +127,7 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (insertErr) {
-    return NextResponse.json({ error: insertErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // Generate the presigned PUT (5 min TTL by default).

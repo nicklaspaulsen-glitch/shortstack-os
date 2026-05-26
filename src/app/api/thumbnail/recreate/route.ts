@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
     .from("content-assets")
     .upload(refKey, thumb.buf, { contentType: thumb.contentType, upsert: true });
   if (upErr) {
-    return NextResponse.json({ ok: false, error: `Reference upload failed: ${upErr.message}` }, { status: 500 });
+    return NextResponse.json({ ok: false, error: "Internal server error" }, { status: 500 });
   }
   const refPublic = db.storage.from("content-assets").getPublicUrl(refKey).data.publicUrl;
 

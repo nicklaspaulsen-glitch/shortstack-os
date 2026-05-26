@@ -25,7 +25,7 @@ export async function POST(
     .maybeSingle();
 
   if (lookupErr) {
-    return NextResponse.json({ error: lookupErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   if (!webhook) {
     return NextResponse.json({ error: "Webhook not found" }, { status: 404 });
@@ -48,7 +48,7 @@ export async function POST(
   });
 
   if (insertErr) {
-    return NextResponse.json({ error: insertErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   return NextResponse.json({
     success: true,

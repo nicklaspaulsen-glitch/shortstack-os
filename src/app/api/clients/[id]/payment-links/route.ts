@@ -171,7 +171,7 @@ export async function POST(
 
     if (insertErr) {
       console.error("[client payment-links] insert error:", insertErr);
-      return NextResponse.json({ error: insertErr.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 
     return NextResponse.json({ link: inserted, url: link.url });

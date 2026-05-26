@@ -51,7 +51,7 @@ export async function POST(_request: NextRequest, context: RouteContext) {
     .maybeSingle();
 
   if (presetErr) {
-    return NextResponse.json({ error: presetErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   if (!preset) {
     return NextResponse.json({ error: "Preset not found" }, { status: 404 });
@@ -93,7 +93,7 @@ export async function POST(_request: NextRequest, context: RouteContext) {
     .single();
 
   if (insertErr) {
-    return NextResponse.json({ error: insertErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ clone_id: newClone.id, already_existed: false });

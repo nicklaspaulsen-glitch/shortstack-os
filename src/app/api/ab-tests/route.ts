@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error || !test) {
-    return NextResponse.json({ error: error?.message ?? "Insert failed" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const seeds = body.variants?.length
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
 
   if (vErr) {
     await supabase.from("ab_tests").delete().eq("id", test.id);
-    return NextResponse.json({ error: vErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ test: { ...test, ab_variants: variants ?? [] } }, { status: 201 });

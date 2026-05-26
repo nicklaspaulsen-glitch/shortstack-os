@@ -157,7 +157,7 @@ export async function PATCH(
     .single();
 
   if (insertErr) {
-    return NextResponse.json({ error: insertErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // Fire the appointment_booked trigger for the new slot.

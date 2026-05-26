@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
       .not("email", "is", null)
       .limit(5000);
     if (matchErr) {
-      return NextResponse.json({ error: matchErr.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
     leadIds = (matched ?? []).map((r) => r.id as string);
   } else {
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
     .select()
     .single();
 
-  if (jobErr) return NextResponse.json({ error: jobErr.message }, { status: 500 });
+  if (jobErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Pre-create the personalizations in pending state. Cron will pick them up.
   const personalizations = leadIds.map((id) => ({

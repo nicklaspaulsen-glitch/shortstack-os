@@ -63,7 +63,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
     .select()
     .single();
 
-  if (error || !data) return NextResponse.json({ error: error?.message ?? "Not found" }, { status: 404 });
+  if (error || !data) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json({ course: data });
 }
 

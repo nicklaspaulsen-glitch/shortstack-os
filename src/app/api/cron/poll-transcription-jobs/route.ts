@@ -1,4 +1,4 @@
-﻿/**
+/**
  * GET /api/cron/poll-transcription-jobs
  *
  * Every minute Vercel hits this route. We pick up to 25 pending RunPod jobs
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
 
   if (listErr) {
     console.error("[cron/poll-transcription-jobs] list failed", listErr);
-    return NextResponse.json({ error: listErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const jobs: JobRow[] = (pending || []) as JobRow[];

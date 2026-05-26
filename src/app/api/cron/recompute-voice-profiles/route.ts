@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
 
   if (corpusErr) {
     console.error("[cron/recompute-voice-profiles] corpus fetch failed", corpusErr);
-    return NextResponse.json({ error: corpusErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   if (!corpusRows || corpusRows.length === 0) {
     return NextResponse.json({ ok: true, recomputed: 0, reason: "empty_corpus" });

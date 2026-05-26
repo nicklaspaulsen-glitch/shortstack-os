@@ -213,6 +213,6 @@ Generate index.html, styles.css, script.js. Include hero animations, benefit-dri
       error_log: String(err),
       updated_at: new Date().toISOString(),
     }).eq("id", pid);
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

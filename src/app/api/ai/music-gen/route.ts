@@ -263,6 +263,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ status: data.status?.toLowerCase() || "processing", provider });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

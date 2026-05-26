@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { generatePersonalBrandIdeas } from "@/lib/services/content-ai";
 import { pingCron } from "@/lib/cron-ping";
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
 
   if (adminsError) {
     await done("fail");
-    return NextResponse.json({ error: adminsError.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   let totalLong = 0;

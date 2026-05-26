@@ -185,7 +185,7 @@ Produce the JSON analysis per the schema. Use the exact post "id" values above i
       analyzed_posts: compact.length,
     });
   } catch (err) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : "Failed" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 

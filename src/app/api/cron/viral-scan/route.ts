@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
     .limit(500);
 
   if (listErr) {
-    return NextResponse.json({ error: listErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const rows = (watchlists || []) as WatchlistRow[];

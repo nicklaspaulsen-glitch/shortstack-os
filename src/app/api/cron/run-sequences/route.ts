@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
     .select("id, sequence_id, lead_id, current_step, enrolled_at")
     .eq("status", "active");
   if (enrErr) {
-    return NextResponse.json({ error: enrErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   const enrollments = (enrollmentsRaw || []) as EnrollmentRow[];
   if (enrollments.length === 0) {

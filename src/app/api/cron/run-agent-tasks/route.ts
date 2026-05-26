@@ -1068,7 +1068,7 @@ export async function GET(request: NextRequest) {
 
   if (fetchErr) {
     console.error("[run-agent-tasks] query failed:", fetchErr);
-    return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const queue = (tasks ?? []) as QueuedTask[];

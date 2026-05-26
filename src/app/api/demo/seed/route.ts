@@ -61,7 +61,7 @@ export async function POST() {
       .single();
 
     if (clientErr || !client) {
-      return NextResponse.json({ error: clientErr?.message || "Failed to create client" }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 
     const clientId = client.id;

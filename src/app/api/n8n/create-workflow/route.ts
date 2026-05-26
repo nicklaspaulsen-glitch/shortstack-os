@@ -100,6 +100,6 @@ export async function POST(request: NextRequest) {
         : "Workflow designed. Add N8N_URL and N8N_API_KEY to deploy automatically.",
     });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

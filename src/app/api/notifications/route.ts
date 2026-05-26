@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
   ]);
 
   if (notifResult.error)
-    return NextResponse.json({ error: notifResult.error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   const notifications = notifResult.data || [];
 

@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
       .eq("id", body.template_id)
       .eq("agency_owner_id", ownerId)
       .maybeSingle();
-    if (tplErr) return NextResponse.json({ error: tplErr.message }, { status: 500 });
+    if (tplErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     if (!tpl) return NextResponse.json({ error: "Template not found" }, { status: 404 });
     goal = renderGoalTemplate(tpl.goal_template, values);
     startUrl = tpl.start_url ?? null;
@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
     .select("*")
     .single();
 
-  if (insertErr) return NextResponse.json({ error: insertErr.message }, { status: 500 });
+  if (insertErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ task: created }, { status: 201 });
 }

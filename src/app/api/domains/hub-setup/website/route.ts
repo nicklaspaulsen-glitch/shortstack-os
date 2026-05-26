@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
 
       if (error || !created) {
         await setServiceFailed(jobId, "website", error?.message || "Insert failed");
-        return NextResponse.json({ ok: false, error: error?.message }, { status: 500 });
+        return NextResponse.json({ ok: false, error: "Internal server error" }, { status: 500 });
       }
       websiteId = created.id;
     }

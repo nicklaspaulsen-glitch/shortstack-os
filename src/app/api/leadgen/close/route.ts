@@ -110,7 +110,7 @@ async function handleClose(
 
   if (updateErr) {
     console.error("[leadgen/close] DB update failed:", updateErr);
-    return NextResponse.json({ error: updateErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // Trinity log

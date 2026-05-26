@@ -347,7 +347,7 @@ export async function POST(req: NextRequest) {
 
   if (evError) {
     console.error("[portal book-call] calendar_events insert error:", evError);
-    return NextResponse.json({ error: evError.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // Try Google Calendar sync

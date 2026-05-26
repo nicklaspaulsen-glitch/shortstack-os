@@ -37,7 +37,7 @@ export async function POST(
     .eq("id", params.id)
     .eq("user_id", ownerId);
 
-  if (convErr) return NextResponse.json({ error: convErr.message }, { status: 500 });
+  if (convErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Mark inbound messages read. Scope by conversation_id (the ownership
   // check above already verified the conversation belongs to ownerId).

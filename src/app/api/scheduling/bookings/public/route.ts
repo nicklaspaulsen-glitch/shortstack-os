@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
     .eq("id", meeting_type_id)
     .maybeSingle();
 
-  if (mtErr) return NextResponse.json({ error: mtErr.message }, { status: 500 });
+  if (mtErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!meetingTypeData) {
     return NextResponse.json({ error: "Meeting type not found" }, { status: 404 });
   }
@@ -183,7 +183,7 @@ export async function POST(request: NextRequest) {
     .select("id, public_token, date, time")
     .single();
 
-  if (insertErr) return NextResponse.json({ error: insertErr.message }, { status: 500 });
+  if (insertErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Fire appointment_booked trigger.
   fireTrigger({

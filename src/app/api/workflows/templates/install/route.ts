@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
     is_active: active,
   });
   if (trigErr) {
-    return NextResponse.json({ error: trigErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({

@@ -125,6 +125,6 @@ export async function POST(request: NextRequest) {
       error_log: String(err),
       updated_at: new Date().toISOString(),
     }).eq("id", project_id);
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

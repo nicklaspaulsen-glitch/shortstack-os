@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
 import { secureCompare } from "@/lib/security/ssrf-guard";
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
 
   if (eventsErr) {
     console.error("[review-requests cron] events query error:", eventsErr.message);
-    return NextResponse.json({ error: eventsErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   if (!events || events.length === 0) {

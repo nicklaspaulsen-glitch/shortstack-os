@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
   });
 
   if (authErr || !authUser?.user) {
-    return NextResponse.json({ error: authErr?.message || "Failed to create user" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const memberProfileId = authUser.user.id;
@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
   if (memberErr) {
     // Rollback auth user
     await service.auth.admin.deleteUser(memberProfileId);
-    return NextResponse.json({ error: memberErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // Log

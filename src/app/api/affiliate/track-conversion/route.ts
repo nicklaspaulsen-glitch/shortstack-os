@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       })
       .eq("id", existing.id);
     if (updErr) {
-      return NextResponse.json({ error: updErr.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
     return NextResponse.json({ ok: true, referral_id: existing.id, mode: "updated" });
   }
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
     .select("id")
     .single();
   if (insErr || !inserted) {
-    return NextResponse.json({ error: insErr?.message ?? "Failed to record" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   return NextResponse.json({ ok: true, referral_id: inserted.id, mode: "inserted" });
 }

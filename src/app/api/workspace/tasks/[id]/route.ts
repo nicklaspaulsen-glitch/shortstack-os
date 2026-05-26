@@ -36,7 +36,7 @@ export async function GET(
 
   if (taskErr) {
     console.error("[workspace-board] detail fetch error", taskErr);
-    return NextResponse.json({ error: taskErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   if (!task) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -50,7 +50,7 @@ export async function GET(
 
   if (cErr) {
     console.error("[workspace-board] comments fetch error", cErr);
-    return NextResponse.json({ error: cErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({

@@ -86,11 +86,10 @@ export async function POST(request: NextRequest) {
     recording = await fetchMeetingFromUrl(sourceUrl);
   } catch (err) {
     if (err instanceof SsrfBlockedError) {
-      return NextResponse.json({ error: err.message }, { status: 400 });
+      return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
     }
     console.error("[meetings/from-url] download error:", err);
-    const msg = err instanceof Error ? err.message : "Download failed";
-    return NextResponse.json({ error: msg }, { status: 502 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 502 });
   }
 
   // Create the meeting row first so we have an id for the storage path.
@@ -110,7 +109,7 @@ export async function POST(request: NextRequest) {
     .single();
   if (insertErr || !meeting) {
     console.error("[meetings/from-url] insert error:", insertErr);
-    return NextResponse.json({ error: insertErr?.message || "Insert failed" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // Upload the downloaded file to R2.

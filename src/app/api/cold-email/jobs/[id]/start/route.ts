@@ -30,7 +30,7 @@ export async function POST(
     .eq("user_id", ownerId)
     .maybeSingle();
 
-  if (lookupErr) return NextResponse.json({ error: lookupErr.message }, { status: 500 });
+  if (lookupErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!job) return NextResponse.json({ error: "Job not found" }, { status: 404 });
 
   if (job.status !== "pending") {
@@ -48,6 +48,6 @@ export async function POST(
     .select()
     .single();
 
-  if (updErr) return NextResponse.json({ error: updErr.message }, { status: 500 });
+  if (updErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ job: updated });
 }

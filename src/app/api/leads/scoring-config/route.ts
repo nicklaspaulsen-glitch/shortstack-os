@@ -122,7 +122,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
     .eq("id", ownerId);
 
   if (updateErr) {
-    return NextResponse.json({ error: updateErr.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({

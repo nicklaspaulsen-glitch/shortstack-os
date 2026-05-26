@@ -35,7 +35,7 @@ export async function GET(
     .eq("board_id", board.id)
     .order("position", { ascending: true });
 
-  if (tasksErr) return NextResponse.json({ error: tasksErr.message }, { status: 500 });
+  if (tasksErr) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ board, tasks: tasks ?? [] });
 }

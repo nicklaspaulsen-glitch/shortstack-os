@@ -108,6 +108,6 @@ Analyze and return structured JSON.`;
 
     return NextResponse.json({ success: true, analysis: parsed });
   } catch (err) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : "Failed" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

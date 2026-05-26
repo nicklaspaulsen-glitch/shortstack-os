@@ -63,6 +63,6 @@ Make prompts detailed with: subject, lighting, composition, mood, colors. Use Mi
 
     return NextResponse.json({ success: true, ...result });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

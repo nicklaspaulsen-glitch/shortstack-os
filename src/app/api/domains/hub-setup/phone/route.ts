@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
         "phone",
         `Twilio search failed: ${searchData.message || searchRes.status}`,
       );
-      return NextResponse.json({ ok: false, error: searchData.message }, { status: 502 });
+      return NextResponse.json({ ok: false, error: "Phone number search failed" }, { status: 502 });
     }
 
     const candidates = searchData.available_phone_numbers || [];
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
         "phone",
         `Twilio purchase failed: ${buyData.message || buyRes.status}`,
       );
-      return NextResponse.json({ ok: false, error: buyData.message }, { status: 502 });
+      return NextResponse.json({ ok: false, error: "Phone number purchase failed" }, { status: 502 });
     }
 
     await setServiceDone(jobId, "phone", {
