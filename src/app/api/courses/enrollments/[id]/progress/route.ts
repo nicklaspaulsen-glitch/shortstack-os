@@ -45,10 +45,13 @@ export async function PATCH(request: NextRequest, { params }: Params) {
     },
   };
 
+  // Include course_id in the WHERE so the write cannot land on an enrollment
+  // from a different course even if params.id was obtained via enumeration.
   const { data, error } = await supabase
     .from("course_enrollments")
     .update({ progress: updatedProgress })
     .eq("id", params.id)
+    .eq("course_id", course.id)
     .select()
     .single();
 

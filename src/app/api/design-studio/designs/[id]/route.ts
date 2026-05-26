@@ -110,10 +110,13 @@ export async function DELETE(_req: NextRequest, { params }: RouteParams) {
   const existing = await resolveDesign(supabase, params.id, ctx.ownerId);
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  // Note: user_id guard mirrors the PATCH handler — defense-in-depth on top
+  // of the resolveDesign() ownership pre-check above (sec fix 2026-05-26).
   const { error } = await supabase
     .from("designs")
     .delete()
-    .eq("id", params.id);
+    .eq("id", params.id)
+    .eq("user_id", ctx.ownerId);
 
   if (error) {
     console.error("[design-studio/designs/[id]] delete error", error);
