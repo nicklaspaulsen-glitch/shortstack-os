@@ -2,11 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { executeWorkflow, WORKFLOW_ACTIONS } from "@/lib/services/workflows";
 import { createServiceClient } from "@/lib/supabase/server";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const { message, history, client_id, client_name } = await request.json();
 
@@ -28,13 +32,16 @@ export async function POST(request: NextRequest) {
 
   const availableActions = Object.entries(WORKFLOW_ACTIONS).map(([key, val]) => `- ${key}: ${val.name} — ${val.description}`).join("\n");
 
-  // Build conversation context
+  // Build conversation context — cap history to prevent token-exhaustion DoS
+  const MAX_HISTORY = 20;
+  const MAX_CONTENT_CHARS = 8_000;
+  const safeHistory = (Array.isArray(history) ? history.slice(-MAX_HISTORY) : []) as Array<{ role: string; content: string }>;
   const messages = [
-    ...(history || []).map((h: { role: string; content: string }) => ({
+    ...safeHistory.map((h) => ({
       role: h.role === "agent" ? "assistant" : "user",
-      content: h.content,
+      content: (h.content ?? "").slice(0, MAX_CONTENT_CHARS),
     })),
-    { role: "user", content: message },
+    { role: "user", content: (message ?? "").slice(0, MAX_CONTENT_CHARS) },
   ];
 
   try {

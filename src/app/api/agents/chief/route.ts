@@ -76,12 +76,16 @@ export async function POST(request: NextRequest) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return NextResponse.json({ error: "AI not configured" }, { status: 500 });
 
+  // Cap history to prevent token-exhaustion DoS
+  const MAX_HISTORY = 20;
+  const MAX_CONTENT_CHARS = 8_000;
+  const safeHistory = (Array.isArray(history) ? history.slice(-MAX_HISTORY) : []) as Array<{ role: string; content: string }>;
   const messages = [
-    ...(history || []).map((h: { role: string; content: string }) => ({
+    ...safeHistory.map((h) => ({
       role: h.role === "chief" ? "assistant" : "user",
-      content: h.content,
+      content: (h.content ?? "").slice(0, MAX_CONTENT_CHARS),
     })),
-    { role: "user", content: message },
+    { role: "user", content: (message ?? "").slice(0, MAX_CONTENT_CHARS) },
   ];
 
   const systemPrompt = `You are the Chief AI Agent (codename: "Nexus") of ShortStack OS — the boss overseeing all other AI agents. You manage the entire agency operation.

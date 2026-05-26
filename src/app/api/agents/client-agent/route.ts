@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAgentAuth } from "@/lib/supabase/agent-auth";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createServiceClient } from "@/lib/supabase/server";
 import Anthropic from "@anthropic-ai/sdk";
@@ -410,10 +411,14 @@ export async function POST(request: NextRequest) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user } = auth;
 
+  // Rate limit — plan_tier not available via getAgentAuth, defaults to base limits
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
-      { error: "ANTHROPIC_API_KEY not configured" },
+      { error: "AI not configured" },
       { status: 500 }
     );
   }
@@ -428,6 +433,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Guard against token-exhaustion DoS — cap to last 60 messages and
+    // truncate individual content strings to 12 000 chars each.
+    const MAX_MESSAGES = 60;
+    const MAX_CONTENT_CHARS = 12_000;
+    const safeMsgs = messages
+      .slice(-MAX_MESSAGES)
+      .map((m: Anthropic.MessageParam) => {
+        if (typeof m.content === "string") {
+          return { ...m, content: m.content.slice(0, MAX_CONTENT_CHARS) };
+        }
+        // content is a ContentBlock array — only text blocks need truncation
+        if (Array.isArray(m.content)) {
+          return {
+            ...m,
+            content: m.content.map((block) =>
+              block.type === "text"
+                ? { ...block, text: block.text.slice(0, MAX_CONTENT_CHARS) }
+                : block
+            ),
+          };
+        }
+        return m;
+      });
+
     // Use shared singleton — see CLAUDE.md "Module-level SDK init is BANNED"
     // and the Stripe v18 build break. Avoids constructing a fresh client per
     // request and keeps the `apiKey` validation in one place.
@@ -436,7 +465,7 @@ export async function POST(request: NextRequest) {
       max_tokens: 4096,
       system: SYSTEM_PROMPT,
       tools: TOOLS,
-      messages,
+      messages: safeMsgs,
     });
 
     // Extract text blocks and tool_use blocks
@@ -461,7 +490,7 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     console.error("[client-agent]", err);
     return NextResponse.json(
-      { error: String(err) },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
