@@ -23,7 +23,7 @@ export async function GET() {
     .order("date_time", { ascending: true });
 
   if (error)
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   const ids = (events || []).map((e) => e.id);
   if (ids.length === 0) return NextResponse.json({ events: [] });
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (error)
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ event });
 }

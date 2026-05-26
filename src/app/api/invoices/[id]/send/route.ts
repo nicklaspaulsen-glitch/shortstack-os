@@ -67,7 +67,7 @@ export async function POST(
 
   if (error) {
     console.error("[invoices/send] update error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({

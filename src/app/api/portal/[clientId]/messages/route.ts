@@ -45,7 +45,7 @@ export async function GET(
 
   if (error) {
     console.error("[portal messages] list error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // Mark inbound unread messages as read. "Inbound" = not sent by the caller's role.
@@ -119,7 +119,7 @@ export async function POST(
 
   if (error) {
     console.error("[portal messages] insert error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ message });

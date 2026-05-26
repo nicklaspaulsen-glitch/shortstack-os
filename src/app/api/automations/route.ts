@@ -97,13 +97,13 @@ export async function PATCH(request: NextRequest) {
 
   if (type === "workflow") {
     const { error } = await supabase.from("workflows").update({ active }).eq("id", id).eq("user_id", user.id);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   } else if (type === "automation") {
     const { error } = await supabase.from("crm_automations").update({ is_active: active }).eq("id", id).eq("profile_id", user.id);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   } else if (type === "sequence") {
     const { error } = await supabase.from("sequences").update({ is_active: active }).eq("id", id).eq("profile_id", user.id);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   } else {
     return NextResponse.json({ error: "unknown type" }, { status: 400 });
   }

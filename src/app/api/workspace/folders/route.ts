@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
   q = isRootQuery ? q.is("parent_id", null) : q.eq("parent_id", parentParam as string);
 
   const { data, error } = await q;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Build a breadcrumb when inside a non-root folder. Walk parents up to the
   // root using a small loop bounded at 16 hops (deep enough for any sane tree
@@ -168,7 +168,7 @@ export async function POST(req: NextRequest) {
     if (error.code === "23505") {
       return NextResponse.json({ error: "A folder with that name already exists here" }, { status: 409 });
     }
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ folder: data }, { status: 201 });

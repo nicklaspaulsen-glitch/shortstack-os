@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     .update({ status: new_status })
     .eq("id", lead_id)
     .eq("user_id", ownerId);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // If moved to "converted", create a deal
   if (new_status === "converted") {

@@ -26,7 +26,7 @@ export async function GET(
     .eq("user_id", ownerId)
     .maybeSingle();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!job) return NextResponse.json({ error: "Job not found" }, { status: 404 });
 
   // Sample of recent personalizations for the UI.
@@ -61,6 +61,6 @@ export async function DELETE(
     .eq("id", ctx.params.id)
     .eq("user_id", ownerId);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true });
 }

@@ -38,7 +38,7 @@ export async function GET(_req: Request, { params }: Params) {
     .order("applied_at", { ascending: false });
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // Pre-compute "modules ever applied per vertical" so the UI can render

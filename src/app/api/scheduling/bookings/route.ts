@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
 
   const { data, error } = await query;
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ bookings: data });
 }
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
     .select("*, meeting_types(name, duration, color)")
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Fire the appointment_booked workflow trigger. Fire-and-forget so the
   // booking response isn't delayed by downstream workflow execution.
@@ -178,7 +178,7 @@ export async function PATCH(request: NextRequest) {
     .select("*, meeting_types(name, duration, color)")
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // When status flips to "completed", fire the appointment_completed trigger
   // so workflows like "send review request" can run. Two paths fire in parallel:

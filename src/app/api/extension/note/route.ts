@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     if (error) {
       console.error("[Extension Note] Insert failed:", error);
       return NextResponse.json(
-        { error: error.message || "Failed to save note" },
+        { error: "Internal server error" },
         { status: 500 },
       );
     }
@@ -75,7 +75,7 @@ export async function GET(req: NextRequest) {
     .range(offset, offset + limit - 1);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true, notes: notes ?? [], limit, offset });

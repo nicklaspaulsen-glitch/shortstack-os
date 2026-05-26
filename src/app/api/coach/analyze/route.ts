@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
         .order("created_at", { ascending: true })
         .limit(50);
       if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
       }
       if (!rows || rows.length === 0) {
         return NextResponse.json(

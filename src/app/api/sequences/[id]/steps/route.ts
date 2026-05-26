@@ -52,7 +52,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
     .eq("sequence_id", params.id)
     .order("step_order", { ascending: true });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ steps: steps || [] });
 }
 
@@ -133,6 +133,6 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
     .from("sequence_steps")
     .delete()
     .eq("sequence_id", params.id);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true });
 }

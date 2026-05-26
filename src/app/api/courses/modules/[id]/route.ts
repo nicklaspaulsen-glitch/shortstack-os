@@ -51,7 +51,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ module: data });
 }
 
@@ -85,6 +85,6 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
 
   // Defense-in-depth: scope by course_id to close the TOCTOU window.
   const { error } = await supabase.from("course_modules").delete().eq("id", params.id).eq("course_id", mod.course_id);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true });
 }

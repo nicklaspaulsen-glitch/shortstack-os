@@ -44,7 +44,7 @@ export async function GET() {
     .order("created_at", { ascending: false })
     .limit(200);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ jobs: data ?? [] });
 }
 
@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
         .from("cold_email_jobs")
         .update({ status: "failed" })
         .eq("id", job.id);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
   }
 

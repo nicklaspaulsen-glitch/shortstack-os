@@ -103,7 +103,7 @@ export async function PUT(req: NextRequest) {
 
   if (error) {
     console.error("[getting-started] upsert failed:", error.message);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ doc: data });

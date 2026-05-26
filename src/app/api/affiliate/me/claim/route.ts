@@ -22,7 +22,7 @@ export async function POST() {
     .select("id")
     .eq("email", email)
     .is("user_id", null);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!rows || rows.length === 0) return NextResponse.json({ ok: true, claimed: 0 });
 
   const ids = rows.map((r) => r.id);

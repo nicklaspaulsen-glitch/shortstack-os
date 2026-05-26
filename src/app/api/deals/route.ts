@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
 
   const { data, error } = await query;
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ deals: data });
 }
@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ deal: data }, { status: 201 });
 }
@@ -190,7 +190,7 @@ export async function PATCH(request: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Fire the pipeline_stage_changed trigger if the stage actually moved.
   // Fire-and-forget — doesn't block the API response.
@@ -242,7 +242,7 @@ export async function DELETE(request: NextRequest) {
     .eq("id", id)
     .eq("user_id", ownerId);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ success: true });
 }

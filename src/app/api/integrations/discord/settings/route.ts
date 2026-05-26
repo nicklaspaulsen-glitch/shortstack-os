@@ -20,7 +20,7 @@ export async function GET() {
     .eq("user_id", user.id)
     .order("installed_at", { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ integrations: data || [] });
 }
@@ -51,7 +51,7 @@ export async function PATCH(request: NextRequest) {
     .eq("id", id)
     .eq("user_id", user.id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ success: true });
 }
@@ -71,7 +71,7 @@ export async function DELETE(request: NextRequest) {
     .eq("id", id)
     .eq("user_id", user.id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ success: true });
 }

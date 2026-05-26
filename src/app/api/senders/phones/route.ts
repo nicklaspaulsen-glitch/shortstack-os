@@ -25,7 +25,7 @@ export async function GET(_request: NextRequest) {
     return NextResponse.json({ phones: [], hint: "Table phone_numbers not found" });
   }
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ phones: data || [] });
 }
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json(data);
 }
@@ -103,7 +103,7 @@ export async function PATCH(request: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true, sender: data });
 }
 
@@ -130,6 +130,6 @@ export async function DELETE(request: NextRequest) {
     .eq("id", id)
     .eq("user_id", ownerId);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true });
 }

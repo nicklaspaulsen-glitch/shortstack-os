@@ -108,7 +108,7 @@ export async function PUT(
 
   if (error) {
     console.error("[branded-emails] upsert failed:", error.message);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ template: data });
@@ -140,7 +140,7 @@ export async function DELETE(
 
   if (error) {
     console.error("[branded-emails] delete failed:", error.message);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true, reverted_to_default: true });

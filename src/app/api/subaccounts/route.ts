@@ -90,7 +90,7 @@ export async function POST(req: Request) {
 
   if (error) {
     console.error("[subaccounts] POST error:", error);
-    return NextResponse.json({ error: error.message || "Failed to create subaccount" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ subaccount: data }, { status: 201 });

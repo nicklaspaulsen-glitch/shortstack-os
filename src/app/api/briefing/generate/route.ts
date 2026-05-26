@@ -147,7 +147,7 @@ export async function POST(_request: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Clean up old Telegram messages and send new briefing
   const telegramToken = process.env.TELEGRAM_BOT_TOKEN;

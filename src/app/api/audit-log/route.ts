@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
   }
 
   const { data, error, count } = await query;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   const entries = (data ?? []).map(r => {
     const meta = (r.metadata ?? {}) as {

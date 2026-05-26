@@ -36,7 +36,7 @@ export async function GET() {
     .eq("profile_id", ownerId)
     .order("updated_at", { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   const ids = (sequences || []).map(s => s.id);
   let stepsByParent: Record<string, number> = {};

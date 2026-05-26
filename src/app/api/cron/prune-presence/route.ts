@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
       // eslint-disable-next-line no-console
       console.warn("[cron/prune-presence] delete failed", error.message);
       return NextResponse.json(
-        { success: false, error: error.message },
+        { success: false, error: "Internal server error" },
         { status: 500 },
       );
     }

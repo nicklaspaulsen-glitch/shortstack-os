@@ -28,6 +28,6 @@ export async function GET(request: NextRequest) {
   if (triggerId) query = query.eq("trigger_id", triggerId);
 
   const { data, error } = await query;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ ok: true, runs: data || [] });
 }

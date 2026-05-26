@@ -43,7 +43,7 @@ export async function GET(
 
   if (error) {
     console.error("[coach/analyses/id] fetch error", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   if (!analysis) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });

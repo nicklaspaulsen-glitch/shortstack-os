@@ -56,7 +56,7 @@ export async function GET(_req: NextRequest) {
     .eq("user_id", ownerId)
     .limit(5000);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Build groups keyed by normalized phone / email / business_name.
   const byPhone = new Map<string, Lead[]>();

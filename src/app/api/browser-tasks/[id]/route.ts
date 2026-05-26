@@ -34,7 +34,7 @@ export async function GET(_req: NextRequest, ctx: { params: { id: string } }) {
     .eq("agency_owner_id", ownerId)
     .maybeSingle();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!task) return NextResponse.json({ error: "Task not found" }, { status: 404 });
 
   return NextResponse.json({ task });
@@ -90,7 +90,7 @@ export async function PATCH(request: NextRequest, ctx: { params: { id: string } 
     .eq("id", ctx.params.id)
     .eq("agency_owner_id", ownerId);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true });
 }
 
@@ -114,6 +114,6 @@ export async function DELETE(_req: NextRequest, ctx: { params: { id: string } })
     .eq("id", ctx.params.id)
     .eq("agency_owner_id", ownerId);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true });
 }

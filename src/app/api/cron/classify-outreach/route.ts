@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
     .limit(PER_TICK_LIMIT);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const rows = (data || []) as CacheRow[];

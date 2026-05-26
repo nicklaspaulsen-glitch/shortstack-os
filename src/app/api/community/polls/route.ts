@@ -24,7 +24,7 @@ export async function GET() {
     .order("created_at", { ascending: false });
 
   if (error)
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   const ids = (polls || []).map((p) => p.id);
   if (ids.length === 0) return NextResponse.json({ polls: [] });
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (error)
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ poll });
 }

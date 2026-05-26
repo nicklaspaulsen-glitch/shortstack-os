@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     .select("*")
     .eq("server_id", serverId)
     .order("created_at", { ascending: false });
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ commands: data });
 }
 
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     .insert({ server_id, trigger, response, embed, roles_required, cooldown_seconds: cooldown_seconds || 0 })
     .select()
     .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ command: data });
 }
 
@@ -77,7 +77,7 @@ export async function PATCH(request: NextRequest) {
     .eq("id", id)
     .select()
     .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ command: data });
 }
 
@@ -99,6 +99,6 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { error } = await supabase.from("discord_custom_commands").delete().eq("id", id);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true });
 }

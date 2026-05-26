@@ -36,7 +36,7 @@ export async function GET(
     .eq("conversation_id", params.id)
     .order("sent_at", { ascending: true });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   let contact = null;
   if (conv.contact_id) {

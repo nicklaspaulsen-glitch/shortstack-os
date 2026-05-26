@@ -54,7 +54,7 @@ export async function GET(
 
   if (error) {
     console.error("[client payment-links] list error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ links: links || [] });

@@ -64,7 +64,7 @@ export async function POST(
 
   if (error) {
     console.error("[workspace-board] comment insert error", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // Fan out @mention notifications. Failure here must NOT block the comment

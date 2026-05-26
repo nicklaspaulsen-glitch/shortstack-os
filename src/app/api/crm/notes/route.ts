@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
   if (leadId) q = q.eq("lead_id", leadId);
 
   const { data, error } = await q;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true, notes: data || [] });
 }
 
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     .insert({ profile_id: ownerId, lead_id, body: noteBody.slice(0, 50_000) })
     .select()
     .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true, note: data });
 }
 
@@ -79,7 +79,7 @@ export async function PATCH(request: NextRequest) {
     .eq("profile_id", ownerId)
     .select()
     .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true, note: data });
 }
 
@@ -100,6 +100,6 @@ export async function DELETE(request: NextRequest) {
     .delete()
     .eq("id", id)
     .eq("profile_id", ownerId);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true });
 }

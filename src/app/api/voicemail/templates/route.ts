@@ -30,7 +30,7 @@ export async function GET() {
     .eq("user_id", ownerId)
     .order("created_at", { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ templates: data ?? [] });
 }
 
@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
     .select("id, name, audio_url, duration_seconds, created_at")
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ template: data }, { status: 201 });
 }
 
@@ -116,6 +116,6 @@ export async function DELETE(request: NextRequest) {
     .eq("id", id)
     .eq("user_id", ownerId);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ ok: true });
 }

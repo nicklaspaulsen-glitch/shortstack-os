@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient, createSupabaseFromToken } from "@/lib/supabase/server";
 import { generateDailyBriefing } from "@/lib/services/daily-briefing";
 import { heartbeat } from "@/lib/cron-ping";
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     .eq("role", "admin")
     .eq("is_active", true);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   let generated = 0;
   let failed = 0;

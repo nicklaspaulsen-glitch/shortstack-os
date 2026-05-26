@@ -47,7 +47,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
     .eq("module_id", params.id)
     .order("sort_order", { ascending: true });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ lessons: data ?? [] });
 }
 
@@ -105,6 +105,6 @@ export async function POST(request: NextRequest, { params }: Params) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ lesson: data }, { status: 201 });
 }

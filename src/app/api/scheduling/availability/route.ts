@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
     .eq("id", meetingTypeId)
     .maybeSingle();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!meetingType) return NextResponse.json({ error: "Meeting type not found" }, { status: 404 });
   const mt = meetingType as MeetingType;
   if (!mt.active) {

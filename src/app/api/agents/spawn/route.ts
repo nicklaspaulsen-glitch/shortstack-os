@@ -200,7 +200,7 @@ export async function GET() {
     .eq("spawned_by", ownerId)
     .order("execution_count", { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ agents: data || [], total: data?.length || 0 });
 }

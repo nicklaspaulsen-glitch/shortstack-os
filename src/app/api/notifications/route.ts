@@ -171,7 +171,7 @@ export async function PATCH(request: NextRequest) {
       .eq("read", false);
 
     if (error)
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
     return NextResponse.json({ success: true, marked: "all" });
   }
@@ -185,7 +185,7 @@ export async function PATCH(request: NextRequest) {
       .eq("user_id", ownerId);
 
     if (error)
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
     return NextResponse.json({ success: true, marked: body.id });
   }

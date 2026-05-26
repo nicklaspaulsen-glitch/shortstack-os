@@ -20,7 +20,7 @@ export async function GET() {
     .eq("profile_id", ownerId)
     .order("cost_monthly", { ascending: false });
 
-  if (error) return NextResponse.json({ subscriptions: [], error: error.message });
+  if (error) return NextResponse.json({ subscriptions: [], error: "Internal server error" });
   return NextResponse.json({ subscriptions: data || [] });
 }
 
@@ -59,6 +59,6 @@ export async function POST(req: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true, subscription: data });
 }

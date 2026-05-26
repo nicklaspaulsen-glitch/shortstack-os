@@ -26,7 +26,7 @@ export async function GET(
     .eq("created_by", user.id)
     .maybeSingle();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!data) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   // Booleans the UI actually wants — derived rather than stored so they

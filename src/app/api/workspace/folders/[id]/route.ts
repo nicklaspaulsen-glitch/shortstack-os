@@ -91,7 +91,7 @@ export async function PATCH(req: NextRequest, ctx: RouteCtx) {
     if (error.code === "23505") {
       return NextResponse.json({ error: "A folder with that name already exists here" }, { status: 409 });
     }
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ folder: data });
@@ -153,7 +153,7 @@ export async function DELETE(_req: NextRequest, ctx: RouteCtx) {
     .eq("id", folderId)
     .eq("agency_owner_id", ownerId);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Best-effort R2 cleanup. Failures here don't fail the API call — the row
   // is already gone, and a sweeper job can clean up later if needed.

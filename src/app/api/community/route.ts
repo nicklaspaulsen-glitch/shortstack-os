@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
     .limit(limit);
 
   if (error)
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ posts: posts || [] });
 }
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (error)
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ post });
 }
@@ -137,7 +137,7 @@ export async function PATCH(request: NextRequest) {
       .single();
 
     if (error)
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
     return NextResponse.json({ post });
   }
@@ -152,7 +152,7 @@ export async function PATCH(request: NextRequest) {
       .single();
 
     if (error)
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
     return NextResponse.json({ post });
   }
@@ -194,7 +194,7 @@ export async function PATCH(request: NextRequest) {
     .single();
 
   if (error)
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ post });
 }
@@ -237,7 +237,7 @@ export async function DELETE(request: NextRequest) {
     .eq("id", id);
 
   if (error)
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ success: true });
 }

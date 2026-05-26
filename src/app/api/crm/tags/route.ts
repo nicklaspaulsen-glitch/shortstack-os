@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
   if (leadId) q = q.eq("lead_id", leadId);
 
   const { data, error } = await q;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true, tags: data || [] });
 }
 
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
         .single();
       return NextResponse.json({ success: true, tag: existing, duplicate: true });
     }
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // Fire trigger for tag_added so automations/workflows can react

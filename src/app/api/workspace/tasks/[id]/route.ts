@@ -107,7 +107,7 @@ export async function PATCH(
 
   if (error) {
     console.error("[workspace-board] patch error", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   if (!data) {
     // Row didn't update — either it doesn't exist or RLS hid it from this
@@ -154,7 +154,7 @@ export async function DELETE(
 
   if (error) {
     console.error("[workspace-board] delete error", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ success: true });

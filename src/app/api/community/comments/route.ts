@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     .eq("post_id", post_id)
     .order("created_at", { ascending: true });
 
-  if (error) return NextResponse.json({ comments: [], error: error.message });
+  if (error) return NextResponse.json({ comments: [], error: "Internal server error" });
   return NextResponse.json({ comments: data || [] });
 }
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Increment the post's comments_count (safe fail)
   try {

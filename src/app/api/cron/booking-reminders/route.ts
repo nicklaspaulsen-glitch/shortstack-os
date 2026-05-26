@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Booking SMS Reminders (Cron)
  *
  * Walks every booking that's due in ~24h or ~1h, and sends an SMS reminder
@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
 
   if (error) {
     console.error("[booking-reminders] load failed:", error.message);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const rows = (bookings || []) as BookingRow[];

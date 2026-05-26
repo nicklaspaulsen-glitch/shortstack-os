@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { heartbeat } from "@/lib/cron-ping";
 import { secureCompare } from "@/lib/security/ssrf-guard";
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     .lt("expires_at", new Date().toISOString());
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   await heartbeat("ai-handoff-cleanup");

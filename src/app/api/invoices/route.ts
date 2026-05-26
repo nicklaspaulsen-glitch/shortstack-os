@@ -76,7 +76,7 @@ export async function GET() {
 
   if (error) {
     console.error("[invoices] list error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const scoped = (data || []).filter((row: Record<string, unknown>) => {
@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
 
   if (error) {
     console.error("[invoices] create error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ invoice: data });

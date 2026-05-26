@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
     if (error) {
       console.error("[Extension Lead] Insert failed:", error);
       return NextResponse.json(
-        { error: error.message || "Failed to save lead" },
+        { error: "Internal server error" },
         { status: 500 },
       );
     }

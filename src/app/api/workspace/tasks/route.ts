@@ -107,7 +107,7 @@ export async function GET(request: NextRequest) {
 
   if (error) {
     console.error("[workspace-board] list error", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const tasks = (data || []) as WorkspaceTask[];
@@ -181,7 +181,7 @@ export async function POST(request: NextRequest) {
 
   if (error) {
     console.error("[workspace-board] create error", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ task: data }, { status: 201 });

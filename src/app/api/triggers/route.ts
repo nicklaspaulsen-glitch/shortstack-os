@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
   if (workflowId) query = query.eq("workflow_id", workflowId);
 
   const { data, error } = await query;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ ok: true, triggers: data || [] });
 }
 
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
     })
     .select()
     .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ ok: true, trigger: data });
 }
 
@@ -126,7 +126,7 @@ export async function PATCH(request: NextRequest) {
     .eq("user_id", ctx.ownerId)
     .select()
     .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!data) return NextResponse.json({ error: "Trigger not found" }, { status: 404 });
   return NextResponse.json({ ok: true, trigger: data });
 }
@@ -143,6 +143,6 @@ export async function DELETE(request: NextRequest) {
     .delete()
     .eq("id", id)
     .eq("user_id", ctx.ownerId);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ ok: true });
 }

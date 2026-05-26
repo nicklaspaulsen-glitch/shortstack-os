@@ -40,7 +40,7 @@ export async function POST(
     .select("id, status, no_show_at")
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!data) return NextResponse.json({ error: "Booking not found" }, { status: 404 });
 
   return NextResponse.json({ booking: data });
@@ -69,7 +69,7 @@ export async function DELETE(
     .select("id, status, no_show_at")
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!data) return NextResponse.json({ error: "Booking not found" }, { status: 404 });
 
   return NextResponse.json({ booking: data });

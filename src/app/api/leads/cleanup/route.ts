@@ -25,7 +25,7 @@ export async function GET() {
     .lt("created_at", cutoff);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ stale_leads: count ?? 0 });
@@ -52,7 +52,7 @@ export async function POST() {
     .lt("created_at", cutoff);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ success: true, deleted: count ?? 0 });

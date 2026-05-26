@@ -37,7 +37,7 @@ export async function GET() {
     .order("completed_at", { ascending: false, nullsFirst: false })
     .limit(30);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   const filtered = (data || [])
     .filter(row => {

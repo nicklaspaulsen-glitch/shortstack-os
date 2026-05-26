@@ -29,7 +29,7 @@ export async function POST() {
       return NextResponse.json({ referral_code: candidate });
     }
     if (!/duplicate|unique/i.test(error.message)) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
   }
 

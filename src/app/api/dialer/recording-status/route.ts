@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       recordingSid,
       error: error.message,
     });
-    return NextResponse.json({ ok: false, error: error.message }, { status: 200 });
+    return NextResponse.json({ ok: false, error: "Internal server error" }, { status: 200 });
   }
 
   console.info(

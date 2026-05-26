@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
 
   if (error) {
     console.error("[calendar] GET error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ events: data });
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error("[calendar] POST error:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 
     return NextResponse.json({ event: data }, { status: 201 });
@@ -163,7 +163,7 @@ export async function PATCH(request: NextRequest) {
 
     if (error) {
       console.error("[calendar] PATCH error:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 
     return NextResponse.json({ event: data });
@@ -200,7 +200,7 @@ export async function DELETE(request: NextRequest) {
 
   if (error) {
     console.error("[calendar] DELETE error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ success: true });

@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
     .order("created_at", { ascending: false })
     .range(offset, offset + pageSize - 1);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   const total = count || 0;
   const totalPages = Math.ceil(total / pageSize);
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
       .from("outreach_log")
       .delete()
       .in("id", allowedIds);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     return NextResponse.json({ success: true, deleted: allowedIds.length });
   }
 

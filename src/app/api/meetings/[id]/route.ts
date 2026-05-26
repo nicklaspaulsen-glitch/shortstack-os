@@ -48,7 +48,7 @@ export async function GET(
 
   if (error) {
     console.error("[meetings] detail error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   if (!data) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
@@ -119,7 +119,7 @@ export async function PATCH(
 
   if (error) {
     console.error("[meetings] patch error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ meeting: data });
@@ -159,7 +159,7 @@ export async function DELETE(
 
   if (error) {
     console.error("[meetings] delete error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true });

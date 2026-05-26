@@ -44,7 +44,7 @@ export async function POST(
     .select("*")
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   const summary = `Manually triggered ${name} at ${new Date(startedAt).toLocaleTimeString()}`;
   await supabase

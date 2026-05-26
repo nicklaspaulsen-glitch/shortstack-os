@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
     .in("id", safeIds);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ profiles: profiles || [] });

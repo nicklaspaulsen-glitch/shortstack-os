@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
   if (to) query = query.lte("scheduled_at", to);
 
   const { data: rows, error } = await query;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Optionally enrich with content_scripts (for caption/hook) — thumbnails come from metadata.
   const scriptIds = Array.from(new Set((rows || []).map(r => r.content_script_id).filter(Boolean))) as string[];

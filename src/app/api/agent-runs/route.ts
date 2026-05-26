@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
   if (since) q = q.gte("started_at", since);
 
   const { data, error } = await q;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ runs: data || [] });
 }

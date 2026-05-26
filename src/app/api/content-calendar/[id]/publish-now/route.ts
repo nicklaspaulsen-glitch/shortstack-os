@@ -29,7 +29,7 @@ export async function POST(
     .eq("id", rowId)
     .maybeSingle();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   // Apr 28 IDOR fix: ownership check previously short-circuited when

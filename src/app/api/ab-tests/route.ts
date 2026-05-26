@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
   if (parentId) query = query.eq("parent_id", parentId);
 
   const { data, error } = await query;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ tests: data ?? [] });
 }

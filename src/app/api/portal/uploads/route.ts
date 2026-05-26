@@ -50,7 +50,7 @@ export async function GET(_req: NextRequest) {
     .limit(100);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   // Generate presigned GET URLs (1-hour TTL) for each upload, restoring the

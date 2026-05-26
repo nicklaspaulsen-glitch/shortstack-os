@@ -71,7 +71,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     .upsert(rows, { onConflict: "sequence_id,lead_id", ignoreDuplicates: true })
     .select("id, lead_id, status, current_step, enrolled_at");
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({
     enrolled: data?.length || 0,

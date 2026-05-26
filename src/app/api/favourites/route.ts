@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
       if (tableMissing(error)) {
         return NextResponse.json({ ok: true, favourites: [] });
       }
-      return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+      return NextResponse.json({ ok: false, error: "Internal server error" }, { status: 500 });
     }
     const favourites = ((data || []) as FavRow[]).map((r) => ({
       kind: r.kind,
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
       if (tableMissing(error)) {
         return NextResponse.json({ ok: true, skipped: "table_missing" });
       }
-      return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+      return NextResponse.json({ ok: false, error: "Internal server error" }, { status: 500 });
     }
     return NextResponse.json({ ok: true });
   } catch (err) {
@@ -165,7 +165,7 @@ export async function DELETE(request: NextRequest) {
       if (tableMissing(error)) {
         return NextResponse.json({ ok: true, skipped: "table_missing" });
       }
-      return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+      return NextResponse.json({ ok: false, error: "Internal server error" }, { status: 500 });
     }
     return NextResponse.json({ ok: true });
   } catch (err) {

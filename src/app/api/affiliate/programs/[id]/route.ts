@@ -30,7 +30,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
     .eq("user_id", ownerId)
     .maybeSingle();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!data) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json({ program: data });
 }

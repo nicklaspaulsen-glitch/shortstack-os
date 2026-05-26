@@ -20,7 +20,7 @@ export async function GET() {
     .limit(1)
     .maybeSingle();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   const now = Date.now();
   const lastMs = data?.last_heartbeat_at ? new Date(data.last_heartbeat_at).getTime() : 0;

@@ -85,7 +85,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ step: data });
 }
 
@@ -106,6 +106,6 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
     .eq("id", params.id)
     .eq("funnel_id", step.funnel_id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true });
 }

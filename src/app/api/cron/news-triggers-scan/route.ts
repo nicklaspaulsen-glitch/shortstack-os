@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
 
   if (error) {
     console.error("[news-triggers-scan] lead select failed", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const leads = (leadRows ?? []) as LeadRow[];

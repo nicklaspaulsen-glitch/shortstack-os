@@ -31,7 +31,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
     .eq("sequence_id", params.id)
     .order("enrolled_at", { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ enrollments: enrollments || [] });
 }

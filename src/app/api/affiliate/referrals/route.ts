@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
   if (status && ALLOWED_STATUS.has(status)) query = query.eq("status", status);
 
   const { data, error } = await query;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ referrals: data ?? [] });
 }

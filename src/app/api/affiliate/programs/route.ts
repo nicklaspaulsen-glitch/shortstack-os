@@ -40,7 +40,7 @@ export async function GET() {
     .eq("user_id", ownerId)
     .order("created_at", { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Enrich with affiliate count for each program — single round-trip over
   // affiliates table filtered to the program ids we just loaded.

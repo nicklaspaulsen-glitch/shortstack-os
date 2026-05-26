@@ -60,7 +60,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
   if (error) {
     console.error("[subaccounts/:id] PATCH error:", error);
-    return NextResponse.json({ error: error.message || "Update failed" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   return NextResponse.json({ subaccount: data });
 }
@@ -94,7 +94,7 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
 
   if (error) {
     console.error("[subaccounts/:id] DELETE error:", error);
-    return NextResponse.json({ error: error.message || "Cancel failed" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   return NextResponse.json({ ok: true });
 }

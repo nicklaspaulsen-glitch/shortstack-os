@@ -13,7 +13,7 @@ export async function GET() {
     .eq("profile_id", user.id)
     .order("created_at", { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Optionally enrich from Discord API
   const botToken = process.env.DISCORD_BOT_TOKEN;
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Create default config rows
   await Promise.all([
@@ -91,7 +91,7 @@ export async function PATCH(request: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ server: data });
 }
 
@@ -111,6 +111,6 @@ export async function DELETE(request: NextRequest) {
     .eq("id", id)
     .eq("profile_id", user.id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true });
 }

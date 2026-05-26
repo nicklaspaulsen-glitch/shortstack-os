@@ -507,7 +507,7 @@ export async function GET(request: NextRequest) {
     .limit(limit);
 
   if (error) {
-    return NextResponse.json({ success: false, error: error.message, reports: [] }, { status: 500 });
+    return NextResponse.json({ success: false, error: "Internal server error", reports: [] }, { status: 500 });
   }
 
   return NextResponse.json({ success: true, reports: data || [] });

@@ -36,6 +36,6 @@ export async function GET(request: NextRequest) {
     .order("sent_at", { ascending: false })
     .limit(limit);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ history: data ?? [] });
 }

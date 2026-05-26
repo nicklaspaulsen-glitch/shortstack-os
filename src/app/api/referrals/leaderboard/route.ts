@@ -34,7 +34,7 @@ export async function GET() {
     .from("referral_payouts")
     .select("referrer_user_id, amount_cents, paid_at");
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const totals = new Map<string, number>();

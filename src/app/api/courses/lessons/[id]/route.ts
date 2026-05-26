@@ -82,7 +82,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ lesson: data });
 }
 
@@ -112,6 +112,6 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
     .eq("id", params.id)
     .eq("module_id", moduleId);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true });
 }

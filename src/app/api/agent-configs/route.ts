@@ -39,7 +39,7 @@ export async function GET() {
     .select("*")
     .eq("user_id", user.id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   const byName = new Map((data || []).map((r) => [r.agent_name, r]));
   const merged = DEFAULT_AGENTS.map((def) => {
@@ -99,7 +99,7 @@ export async function PATCH(req: NextRequest) {
       .eq("id", existing.id)
       .select("*")
       .single();
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     return NextResponse.json({ agent: data });
   }
 
@@ -115,6 +115,6 @@ export async function PATCH(req: NextRequest) {
     .select("*")
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ agent: data });
 }

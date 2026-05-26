@@ -83,7 +83,7 @@ export async function PUT(req: Request) {
       .select("*")
       .single();
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     return NextResponse.json({ account: data });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : "Invalid request";

@@ -60,7 +60,7 @@ export async function DELETE(_req: NextRequest, ctx: RouteCtx) {
     .eq("id", fileId)
     .eq("agency_owner_id", ownerId);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Best-effort R2 delete. Log but don't surface failure — the DB pointer is
   // gone, the object is unreachable through the app, and a sweeper can mop

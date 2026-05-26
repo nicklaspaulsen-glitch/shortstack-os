@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
 
   if (error) {
     console.error("[run-browser-tasks] query failed", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const queue = (tasks ?? []) as QueuedTask[];

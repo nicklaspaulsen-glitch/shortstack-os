@@ -32,7 +32,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
     .eq("course_id", params.id)
     .order("enrolled_at", { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ enrollments: data ?? [] });
 }
 
@@ -83,6 +83,6 @@ export async function POST(request: NextRequest, { params }: Params) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ enrollment: data }, { status: 201 });
 }

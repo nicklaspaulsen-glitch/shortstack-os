@@ -46,7 +46,7 @@ export async function GET(
     .eq("board_id", params.id)
     .order("position", { ascending: true });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ tasks: data ?? [] });
 }
 
@@ -118,6 +118,6 @@ export async function POST(
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ task: data }, { status: 201 });
 }

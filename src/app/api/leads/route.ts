@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
 
   const { data, count, error } = await query;
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ leads: data, total: count, page, limit });
 }
@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
     notes: notes || null,
   }).select().single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Queue a trigger event for the `new-lead-ai-research` template (and any
   // other workflow trigger_type='lead.created' the user has installed).

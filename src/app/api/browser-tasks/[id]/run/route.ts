@@ -38,7 +38,7 @@ export async function POST(_req: NextRequest, ctx: { params: { id: string } }) {
     .eq("agency_owner_id", ownerId)
     .maybeSingle();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   if (!task) return NextResponse.json({ error: "Task not found" }, { status: 404 });
   if (task.status === "running") {
     return NextResponse.json({ error: "Task is already running" }, { status: 409 });

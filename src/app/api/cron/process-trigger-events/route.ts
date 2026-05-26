@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Trigger Event Processor (Cron)
  *
  * Drains the `trigger_events` queue: for every `pending` row, fan out via
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
 
   if (error) {
     console.error("[process-trigger-events] load failed:", error.message);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   const queue = (rows || []) as QueueRow[];

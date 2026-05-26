@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     .eq("profile_id", ownerId)
     .order("created_at", { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ configs: data ?? [] });
 }
 
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
       .eq("profile_id", ownerId)
       .select()
       .single();
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     result = data;
   } else {
     const { data, error } = await supabase
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
       .insert(payload)
       .select()
       .single();
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     result = data;
   }
 

@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
       const { error } = await service
         .from("tags")
         .insert({ user_id: ownerId, name: target });
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 
     // Repoint all join rows
@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
       .delete()
       .eq("user_id", ownerId)
       .in("id", unusedIds);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     return NextResponse.json({ ok: true, deleted: unusedIds.length });
   }
 

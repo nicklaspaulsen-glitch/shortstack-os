@@ -45,7 +45,7 @@ export async function GET(
 
   if (error) {
     console.error("[portal content] list error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ items: items || [] });
@@ -127,7 +127,7 @@ export async function PATCH(
 
   if (error) {
     console.error("[portal content] update error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ item });

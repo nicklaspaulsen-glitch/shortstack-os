@@ -146,7 +146,7 @@ export async function GET(req: NextRequest) {
     .order("last_seen_at", { ascending: false });
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
   return NextResponse.json({ tokens: data ?? [] });
 }

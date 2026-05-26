@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
         updated_at: now,
       })
       .eq("id", existing.id);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     return NextResponse.json({ success: true, id: existing.id });
   }
 
@@ -55,6 +55,6 @@ export async function POST(req: NextRequest) {
     .select("id")
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   return NextResponse.json({ success: true, id: inserted.id });
 }

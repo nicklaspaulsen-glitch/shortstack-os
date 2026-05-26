@@ -13,7 +13,7 @@ export async function GET() {
     .eq("profile_id", user.id)
     .order("installed_at", { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ installs: data ?? [], total: (data ?? []).length });
 }
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     .select("id, plugin_id, installed_at, status, plugin:marketplace_plugins(id, slug, name)")
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ install: data });
 }
@@ -97,7 +97,7 @@ export async function DELETE(request: NextRequest) {
     .eq("profile_id", user.id)
     .eq("plugin_id", pluginId!);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ success: true });
 }

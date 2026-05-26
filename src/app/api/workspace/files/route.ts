@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
   if (!includePending) q = q.eq("status", "ready");
 
   const { data, error } = await q;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ files: data ?? [] });
 }

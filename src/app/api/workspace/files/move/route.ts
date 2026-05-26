@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     .eq("agency_owner_id", ownerId)
     .select("id, folder_id");
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ success: true, moved: data?.length ?? 0 });
 }

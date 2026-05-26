@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
       });
       if (error) {
         await setServiceFailed(jobId, "chat", error.message);
-        return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+        return NextResponse.json({ ok: false, error: "Internal server error" }, { status: 500 });
       }
     }
 

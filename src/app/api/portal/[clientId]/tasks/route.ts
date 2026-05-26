@@ -47,7 +47,7 @@ export async function GET(
 
   if (error) {
     console.error("[portal tasks] list error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ tasks: tasks || [] });
@@ -107,7 +107,7 @@ export async function POST(
 
   if (error) {
     console.error("[portal tasks] insert error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ task });
@@ -184,7 +184,7 @@ export async function PATCH(
 
   if (error) {
     console.error("[portal tasks] update error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 
   return NextResponse.json({ task });

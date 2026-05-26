@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { data: commissions, error } = await commissionsQuery;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Group commissions by affiliate. Each affiliate has one connected account
   // and one threshold (from its program), so a single transfer suffices.

@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
   if (fileType) query = query.eq("file_type", fileType);
 
   const { data, error } = await query;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ assets: data || [] });
 }
@@ -218,7 +218,7 @@ export async function DELETE(req: NextRequest) {
     .eq("id", assetId)
     .eq("user_id", ownerId);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   // Decrement collection count if applicable
   if (asset.collection_id) {
@@ -265,7 +265,7 @@ export async function PATCH(req: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Internal server error" }, { status: 500 });
 
   return NextResponse.json({ asset: data });
 }
