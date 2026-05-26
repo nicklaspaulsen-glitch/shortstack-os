@@ -73,6 +73,8 @@ export async function POST(
         (s, i) => s + i.qty * i.unit_price_cents,
         0,
       );
+      // Defense-in-depth: re-scope by client_id to close the TOCTOU window
+      // between the ownership read above and this write.
       const { error: updErr } = await supabase
         .from("invoices")
         .update({
@@ -81,7 +83,8 @@ export async function POST(
           total_cents: subtotal, // tax stays whatever it was; don't zero it here
           amount: subtotal / 100,
         })
-        .eq("id", params.id);
+        .eq("id", params.id)
+        .eq("client_id", invoice.client_id);
       if (updErr) {
         console.error("[invoices/draft] apply error:", updErr);
         return NextResponse.json({ error: updErr.message }, { status: 500 });

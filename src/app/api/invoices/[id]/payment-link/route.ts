@@ -69,10 +69,13 @@ export async function POST(
       memo: invoice.notes,
     });
 
+    // Defense-in-depth: re-scope by client_id to close the TOCTOU window
+    // between the ownership read above and this write.
     const { data: updated, error } = await supabase
       .from("invoices")
       .update({ stripe_payment_link: link.url })
       .eq("id", params.id)
+      .eq("client_id", invoice.client_id)
       .select()
       .single();
 

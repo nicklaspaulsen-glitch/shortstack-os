@@ -129,10 +129,13 @@ export async function PATCH(
     return NextResponse.json({ error: "No updatable fields provided" }, { status: 400 });
   }
 
+  // Defense-in-depth: re-scope by client_id to close the TOCTOU window
+  // between the fetchOwned ownership read and this write.
   const { data, error } = await supabase
     .from("invoices")
     .update(patch)
     .eq("id", params.id)
+    .eq("client_id", existing.client_id)
     .select()
     .single();
 
