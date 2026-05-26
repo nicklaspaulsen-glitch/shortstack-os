@@ -267,8 +267,9 @@ const handleFindLeads: TaskHandler = async (supabase, task) => {
             /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/,
           );
           if (emailMatch) email = emailMatch[0];
-        } catch {
+        } catch (err) {
           // website scrape failure is non-critical — skip this lead
+          console.error("[cron/run-agent-tasks] website scrape failed", { website }, err);
         }
       }
 

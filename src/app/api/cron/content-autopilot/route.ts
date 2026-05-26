@@ -57,7 +57,9 @@ export async function GET(request: NextRequest) {
         });
         generated++;
       }
-    } catch {}
+    } catch (err) {
+      console.error("[cron/content-autopilot] content generation failed for client", client.id, err);
+    }
   }
 
   // Notify

@@ -113,7 +113,9 @@ export async function GET(request: NextRequest) {
           );
         }
       }
-    } catch {}
+    } catch (err) {
+      console.error("[cron/lead-cleanup] Telegram notification failed", err);
+    }
   }
 
   return NextResponse.json({

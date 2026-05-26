@@ -77,7 +77,8 @@ export async function GET(request: NextRequest) {
           failed++;
         }
       }
-    } catch {
+    } catch (err) {
+      console.error("[cron/token-refresh] token refresh failed for account", account.id, err);
       failed++;
     }
   }

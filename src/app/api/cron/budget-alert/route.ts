@@ -148,7 +148,9 @@ export async function GET(request: NextRequest) {
       status: alerts.length > 0 ? "failed" : "completed",
       result: { checks, alerts, timestamp: new Date().toISOString() },
     });
-  } catch {}
+  } catch (err) {
+    console.error("[cron/budget-alert] failed to persist budget check to trinity_log", err);
+  }
 
   return NextResponse.json({ success: true, alerts, checks, alertCount: alerts.length });
 }
