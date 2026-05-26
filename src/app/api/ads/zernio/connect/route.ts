@@ -6,6 +6,7 @@ import {
   ZERNIO_AD_PLATFORMS,
   type ZernioAdPlatform,
 } from "@/lib/services/zernio-ads";
+import { sanitizeReturnTo } from "@/lib/ads/oauth-helpers";
 
 /**
  * POST /api/ads/zernio/connect
@@ -33,7 +34,9 @@ export async function POST(request: NextRequest) {
 
   const clientId = String(body.client_id || "");
   const platform = String(body.platform || "") as ZernioAdPlatform;
-  const returnTo = body.return_to ? String(body.return_to) : undefined;
+  // Sanitize so an attacker-controlled return_to can't feed an external URL
+  // into Zernio's OAuth redirect chain.
+  const returnTo = body.return_to ? sanitizeReturnTo(String(body.return_to)) : undefined;
 
   if (!clientId) {
     return NextResponse.json({ error: "client_id is required" }, { status: 400 });
