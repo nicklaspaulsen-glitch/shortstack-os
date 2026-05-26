@@ -4,12 +4,18 @@
  * Returns agency announcements visible to this client:
  *   • Rows with client_id = this client
  *   • Rows with client_id = NULL (broadcast to all)
- * Ordered by published_at DESC. Public — no JWT required,
- * scoped via client_id param and owner_id join.
+ * Ordered by published_at DESC.
+ *
+ * Auth: session cookie required. verifyClientAccess confirms the caller
+ * is the client, their agency owner, or an authorized team member. The
+ * original "Public — no JWT required" comment was incorrect — unauthenticated
+ * callers with any clientId UUID could enumerate announcement data for any
+ * tenant. Fixed Apr 27 sec audit.
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { verifyClientAccess } from "@/lib/verify-client-access";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -19,6 +25,18 @@ export async function GET(
   { params }: { params: { clientId: string } },
 ) {
   const { clientId } = params;
+
+  // Auth gate — must be authenticated and authorized for this clientId.
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const access = await verifyClientAccess(supabase, user.id, clientId);
+  if (access.denied) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const svc = createServiceClient();
 
   // Resolve owner from client row

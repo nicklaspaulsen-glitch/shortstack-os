@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { fireTrigger, type TriggerType } from "@/lib/workflows/trigger-dispatch";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 // POST /api/triggers/fire
 //
@@ -58,7 +59,8 @@ export async function POST(request: NextRequest) {
   // Auth: either cookie session OR bearer-token for webhook callers
   const bearer = request.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET || "";
-  const isWebhookAuth = bearer === `Bearer ${cronSecret}` && cronSecret.length > 10;
+  const rawToken = bearer?.replace(/^Bearer\s+/i, "") ?? "";
+  const isWebhookAuth = cronSecret.length > 10 && secureCompare(rawToken, cronSecret);
 
   let userId: string | null = null;
   if (isWebhookAuth) {

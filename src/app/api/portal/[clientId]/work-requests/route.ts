@@ -6,10 +6,16 @@
  *
  * GET  — list requests for this client (status, proposal, etc.)
  * POST — client submits a new work request brief
+ *
+ * Auth: session cookie required on both handlers. Original code had no auth
+ * at all — unauthenticated callers could enumerate proposals, pricing, and
+ * Stripe payment links (GET) or trigger LLM calls + DB writes (POST) for
+ * any clientId. Fixed Apr 27 sec audit.
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { verifyClientAccess } from "@/lib/verify-client-access";
 import { callLLMHumanized } from "@/lib/ai/call-llm-humanized";
 
 export const dynamic = "force-dynamic";
@@ -22,6 +28,13 @@ export async function GET(
   { params }: { params: { clientId: string } },
 ) {
   const { clientId } = params;
+
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const access = await verifyClientAccess(supabase, user.id, clientId);
+  if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const svc = createServiceClient();
 
   const { data, error } = await svc
@@ -48,6 +61,12 @@ export async function POST(
   { params }: { params: { clientId: string } },
 ) {
   const { clientId } = params;
+
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const access = await verifyClientAccess(supabase, user.id, clientId);
+  if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   let body: {
     service_type?: string;

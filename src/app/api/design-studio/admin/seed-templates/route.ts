@@ -17,6 +17,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { SEED_TEMPLATES } from "@/lib/design/templates";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -25,7 +26,7 @@ export async function POST(req: NextRequest) {
   // Auth: either CRON_SECRET bearer, OR admin/founder session.
   const bearer = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
   const cronSecret = process.env.CRON_SECRET ?? "";
-  const secretOk = cronSecret.length > 0 && bearer === cronSecret;
+  const secretOk = cronSecret.length > 0 && secureCompare(bearer, cronSecret);
 
   if (!secretOk) {
     const supabase = createServerSupabase();
