@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import {
   loadJobAsCaller,
   setServiceStatus,
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
           dnsError = `GoDaddy PATCH HTTP ${res.status}`;
         }
       } catch (err) {
-        dnsError = err instanceof Error ? err.message : String(err);
+        dnsError = "Internal server error";
       }
     } else {
       dnsError = "GoDaddy credentials not configured";
@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true, subdomain });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
+    const msg = "Internal server error";
     await setServiceFailed(jobId, "portal", msg);
     return NextResponse.json({ ok: false, error: msg }, { status: 500 });
   }

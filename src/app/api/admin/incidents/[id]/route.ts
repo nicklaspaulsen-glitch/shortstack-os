@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Per-incident operations (PATCH to update, DELETE to remove). Auth is
  * createServerSupabase() with RLS enforcing ownership.
  *
@@ -48,7 +48,7 @@ export async function PATCH(
     return NextResponse.json(
       {
         error: "Invalid payload",
-        detail: err instanceof Error ? err.message : String(err),
+        detail: "Internal server error",
       },
       { status: 400 },
     );

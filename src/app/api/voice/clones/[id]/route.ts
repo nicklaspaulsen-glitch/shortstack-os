@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import {
   createServerSupabase,
   createServiceClient,
@@ -229,7 +229,7 @@ export async function DELETE(_request: NextRequest, context: RouteContext) {
   // Fire-and-forget provider-side deletion. Errors are logged and swallowed.
   if (existing.provider === "elevenlabs" && existing.provider_voice_id) {
     deleteVoice(existing.provider_voice_id).catch((err: unknown) => {
-      const msg = err instanceof Error ? err.message : "unknown";
+      const msg = "unknown";
       console.warn(
         `[voice/clones DELETE] elevenlabs deleteVoice failed: ${msg}`,
       );

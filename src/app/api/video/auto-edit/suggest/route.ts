@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
@@ -384,7 +384,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (err) {
     console.error("[video/auto-edit/suggest] error", err);
-    const message = err instanceof Error ? err.message : "Unknown Claude API error";
+    const message = "Unknown Claude API error";
     return NextResponse.json(
       { ok: false, error: "Failed to generate suggestions", detail: message },
       { status: 500 },

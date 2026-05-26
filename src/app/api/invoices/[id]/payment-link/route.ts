@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/invoices/[id]/payment-link
  *
  * Creates (or returns the cached) Stripe Payment Link for the invoice's
@@ -90,7 +90,7 @@ export async function POST(
     });
   } catch (err) {
     console.error("[invoices/payment-link] stripe error:", err);
-    const message = err instanceof Error ? err.message : "Stripe error";
+    const message = "Stripe error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

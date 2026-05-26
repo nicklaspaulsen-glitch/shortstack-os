@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/outreach/classify-batch
  *
  * Worker endpoint that pulls up to N (default 25) `outreach_outcome_cache`
@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
     const result = await runBatch(serviceSupabase, ownerScope);
     return NextResponse.json({ success: true, ...result });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Batch failed";
+    const msg = "Batch failed";
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

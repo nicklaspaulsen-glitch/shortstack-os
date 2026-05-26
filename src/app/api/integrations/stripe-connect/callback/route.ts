@@ -73,7 +73,6 @@ export async function GET(request: NextRequest) {
     return redirectBack("stripe_connected=1");
   } catch (err) {
     console.error("[stripe-connect/callback] error:", err);
-    const msg = err instanceof Error ? err.message.slice(0, 80) : "unknown";
-    return redirectBack(`stripe_connect_error=${encodeURIComponent(msg)}`);
+    return redirectBack(`stripe_connect_error=${encodeURIComponent("connection_failed")}`);
   }
 }

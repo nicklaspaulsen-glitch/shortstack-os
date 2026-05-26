@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Agency self-checkout — creates a Stripe Checkout Session so users can
  * subscribe to a ShortStack plan (Starter / Pro / Business / Unlimited).
  *
@@ -232,7 +232,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ url: session.url, checkout_url: session.url });
   } catch (err) {
     console.error("Stripe checkout error:", err);
-    const message = err instanceof Error ? err.message : "Failed to create checkout session";
+    const message = "Failed to create checkout session";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

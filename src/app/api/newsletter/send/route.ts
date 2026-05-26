@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
 // POST — Send or schedule a newsletter to a recipient list
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
         : "Failed to send newsletter",
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
+    const message = "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

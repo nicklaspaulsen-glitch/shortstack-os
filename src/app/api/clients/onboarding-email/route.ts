@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
       didSend = await sendEmail({ to: client.email, subject: seq.subject, html: emailBody });
       if (!didSend) sendError = "Resend/SMTP returned false (check SMTP config)";
     } catch (err) {
-      sendError = err instanceof Error ? err.message : "Email send failed";
+      sendError = "Email send failed";
       console.error("[onboarding-email] Resend send failed:", err);
     }
   }

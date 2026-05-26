@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { syncPlatformCampaigns } from "@/lib/ads/platforms";
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 const PLATFORMS = ["meta_ads", "google_ads", "tiktok_ads", "linkedin_ads", "pinterest_ads"] as const;
 
-// POST — Sync campaign data from ad platforms
+// POST â€” Sync campaign data from ad platforms
 export async function POST(request: NextRequest) {
   // Auth check
   const authSupabase = createServerSupabase();
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       } catch (err) {
         results[p] = {
           synced: 0,
-          errors: [err instanceof Error ? err.message : "Sync failed"],
+          errors: ["Sync failed"],
         };
       }
     }
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET — Check sync status for a client
+// GET â€” Check sync status for a client
 export async function GET(request: NextRequest) {
   try {
     const authSupabase = createServerSupabase();
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "client_id is required" }, { status: 400 });
     }
 
-    // Ownership guard — caller may only query sync status for their own clients.
+    // Ownership guard â€” caller may only query sync status for their own clients.
     const ctx = await requireOwnedClient(authSupabase, user.id, clientId);
     if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
@@ -103,3 +103,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+

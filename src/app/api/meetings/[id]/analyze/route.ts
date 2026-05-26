@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/meetings/[id]/analyze
  *
  * Given a meeting row with `transcript_raw` present, calls Claude and writes
@@ -89,7 +89,7 @@ export async function POST(
     return NextResponse.json({ meeting: updated, analysis });
   } catch (err) {
     console.error("[meetings/analyze] error:", err);
-    const message = err instanceof Error ? err.message : "Analysis failed";
+    const message = "Analysis failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

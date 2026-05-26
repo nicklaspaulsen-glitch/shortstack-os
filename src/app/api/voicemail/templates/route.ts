@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { uploadToR2 } from "@/lib/server/r2-client";
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     console.error("[voicemail/templates] R2 upload failed:", err);
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "R2 upload failed" },
+      { error: "R2 upload failed" },
       { status: 500 },
     );
   }

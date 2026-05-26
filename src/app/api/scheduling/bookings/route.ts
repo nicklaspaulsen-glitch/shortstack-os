@@ -1,4 +1,4 @@
-/*
+﻿/*
  * SQL Migration — run once in Supabase SQL Editor:
  *
  * CREATE TABLE IF NOT EXISTS bookings (
@@ -237,7 +237,7 @@ export async function PATCH(request: NextRequest) {
           console.error("[scheduling/bookings] trigger_events queue insert failed:", queueErr.message);
         }
       } catch (err) {
-        console.error("[scheduling/bookings] trigger_events insert threw:", err instanceof Error ? err.message : String(err));
+        console.error("[scheduling/bookings] trigger_events insert threw:", "Internal server error");
       }
     })();
   }

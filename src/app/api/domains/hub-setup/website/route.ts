@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import {
   loadJobAsCaller,
   setServiceStatus,
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true, website_id: websiteId });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
+    const msg = "Internal server error";
     await setServiceFailed(jobId, "website", msg);
     return NextResponse.json({ ok: false, error: msg }, { status: 500 });
   }

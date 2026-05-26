@@ -1,4 +1,4 @@
-/**
+﻿/**
  * GET /api/cron/poll-transcription-jobs
  *
  * Every minute Vercel hits this route. We pick up to 25 pending RunPod jobs
@@ -169,7 +169,7 @@ export async function GET(request: NextRequest) {
         errors.push({ id: job.id, reason: "source_update_failed" });
       }
     } catch (err) {
-      const reason = err instanceof Error ? err.message : "unknown";
+      const reason = "unknown";
       // Genuine provider failures get marked failed immediately — re-trying
       // a confirmed FAILED job won't help.
       const looksTerminal = /job_failed/.test(reason);

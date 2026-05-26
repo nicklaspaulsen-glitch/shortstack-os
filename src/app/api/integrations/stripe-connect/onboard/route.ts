@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Stripe Connect onboarding — creates an Express connected account for the
  * authed agency and returns a Stripe-hosted onboarding URL. The agency clicks
  * the URL, fills out the Stripe onboarding (KYC, bank info, etc.), and is
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ url: accountLink.url, account_id: accountId });
   } catch (err) {
     console.error("[stripe-connect/onboard] error:", err);
-    const message = err instanceof Error ? err.message : "Failed to create onboarding link";
+    const message = "Failed to create onboarding link";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

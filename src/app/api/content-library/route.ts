@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { verifySniffedMime } from "@/lib/server/file-sniff";
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
   try {
     fileUrl = await uploadToR2(r2Key, buffer, file.type);
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : String(err);
+    const msg = "Internal server error";
     return NextResponse.json({ error: `Upload failed: ${msg}` }, { status: 500 });
   }
 

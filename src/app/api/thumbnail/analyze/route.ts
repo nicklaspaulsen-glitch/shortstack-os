@@ -189,7 +189,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         ok: false,
-        error: err instanceof Error ? err.message : "Claude vision call failed",
+        error: "Claude vision call failed",
       },
       { status: 502 },
     );

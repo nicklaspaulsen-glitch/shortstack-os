@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import {
@@ -89,7 +89,7 @@ async function getOrCachePhoneValidation(
   } catch (err) {
     console.warn(
       "[dialer/call] validation cache upsert failed",
-      err instanceof Error ? err.message : String(err),
+      "Internal server error",
     );
   }
   return fresh;

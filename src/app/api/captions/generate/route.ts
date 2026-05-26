@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
@@ -350,7 +350,7 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     console.error("[captions/generate] error", err);
     return NextResponse.json(
-      { ok: false, error: err instanceof Error ? err.message : "Unknown error" },
+      { ok: false, error: "Unknown error" },
       { status: 500 }
     );
   }

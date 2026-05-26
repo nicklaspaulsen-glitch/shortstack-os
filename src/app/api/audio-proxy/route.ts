@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 
 // CORS-safe audio proxy for the Preset Library preview page.
 // Many external audio CDNs (SoundJay, archive.org, etc.) don't set
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "invalid url" }, { status: 400 });
   }
 
-  // Block anything that isn't http/https or not in the whitelist — prevents
+  // Block anything that isn't http/https or not in the whitelist â€” prevents
   // SSRF into internal services.
   if (target.protocol !== "http:" && target.protocol !== "https:") {
     return NextResponse.json({ error: "unsupported protocol" }, { status: 400 });
@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (err) {
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "fetch failed" },
+      { error: "fetch failed" },
       { status: 502 },
     );
   }
@@ -124,3 +124,4 @@ export async function OPTIONS() {
     },
   });
 }
+

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { uploadToR2 } from "@/lib/server/r2-client";
@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
         file_size: entry.size,
       });
     } catch (err) {
-      const reason = err instanceof Error ? err.message : "upload_failed";
+      const reason = "upload_failed";
       errors.push(`${entry.name}: ${reason}`);
       console.error(`[uploads/lead-files] upload failed for ${entry.name}:`, reason);
     }

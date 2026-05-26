@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe/client";
 
@@ -40,7 +40,7 @@ export async function GET(_request: NextRequest) {
 
   const customerId = profile?.stripe_customer_id as string | null;
   if (!customerId) {
-    // No Stripe customer yet — user never checked out. Return empty list
+    // No Stripe customer yet â€” user never checked out. Return empty list
     // rather than 404 so the billing UI doesn't have to special-case.
     return NextResponse.json({ invoices: [], has_customer: false });
   }
@@ -75,7 +75,7 @@ export async function GET(_request: NextRequest) {
     console.error("[billing/invoices] Stripe list failed:", err);
     return NextResponse.json(
       {
-        error: err instanceof Error ? err.message : "Failed to list invoices",
+        error: "Failed to list invoices",
         invoices: [],
         has_customer: true,
       },
@@ -83,3 +83,4 @@ export async function GET(_request: NextRequest) {
     );
   }
 }
+

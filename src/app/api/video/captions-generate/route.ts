@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import {
@@ -167,7 +167,7 @@ JSON only.`;
     return NextResponse.json(out);
   } catch (err) {
     console.error("[video/captions-generate] error", err);
-    const message = err instanceof Error ? err.message : "Unknown Claude API error";
+    const message = "Unknown Claude API error";
     return NextResponse.json(
       { error: "Failed to generate captions", detail: message },
       { status: 500 }

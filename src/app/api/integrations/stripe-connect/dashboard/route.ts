@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Stripe Express dashboard login link — lets the agency jump into their
  * connected account's Stripe dashboard to view balances, payouts, disputes,
  * etc. Works ONLY for Express accounts (stripe.accounts.createLoginLink).
@@ -44,7 +44,7 @@ export async function POST() {
     return NextResponse.json({ url: link.url });
   } catch (err) {
     console.error("[stripe-connect/dashboard] error:", err);
-    const message = err instanceof Error ? err.message : "Failed to create login link";
+    const message = "Failed to create login link";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
 
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
         if (!smsRes.ok) failureReason = `Twilio returned ${smsRes.status}`;
       } catch (err) {
         results.sms = false;
-        failureReason = err instanceof Error ? err.message : "Twilio send failed";
+        failureReason = "Twilio send failed";
       }
     } else {
       failureReason = "Twilio is not configured (missing TWILIO_ACCOUNT_SID / TWILIO_AUTH_TOKEN / TWILIO_DEFAULT_NUMBER)";
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       if (!sent && !failureReason) failureReason = "Email send returned false (check SMTP config)";
     } catch (err) {
       results.email = false;
-      failureReason = err instanceof Error ? err.message : "Email send failed";
+      failureReason = "Email send failed";
     }
   }
 

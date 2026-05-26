@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import {
   createServerSupabase,
   createServiceClient,
@@ -134,7 +134,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       cached: result.cached,
     });
   } catch (err) {
-    const reason = err instanceof Error ? err.message : "unknown_error";
+    const reason = "unknown_error";
     return NextResponse.json({ error: reason }, { status: 500 });
   }
 }

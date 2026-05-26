@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Compute and disburse pending affiliate payouts.
  *
  *   POST /api/affiliate/payouts/run
@@ -15,7 +15,7 @@
  * so the UI can surface a per-affiliate breakdown.
  *
  * Concurrency: this is admin-triggered, single-tenant per request, so we
- * don't add a distributed lock — just serialize transfer calls per affiliate.
+ * don't add a distributed lock â€” just serialize transfer calls per affiliate.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
@@ -236,7 +236,7 @@ export async function POST(request: NextRequest) {
         amount_cents: total,
         currency: g.currency,
         status: "failed",
-        error: err instanceof Error ? err.message : "Transfer failed",
+        error: "Transfer failed",
         commission_ids: commissionIds,
       });
     }
@@ -262,7 +262,7 @@ function getStripeOrNullSafe(): ReturnType<typeof getStripe> | null {
   }
 }
 
-/** Same logic as bumpAffiliateTotals in the webhook — kept private here to
+/** Same logic as bumpAffiliateTotals in the webhook â€” kept private here to
  *  avoid an unnecessary public helper file. If we add more endpoints that
  *  need it, extract to src/lib/affiliate-totals.ts then. */
 async function refreshAffiliateTotals(
@@ -296,3 +296,4 @@ async function refreshAffiliateTotals(
     })
     .eq("id", affiliateId);
 }
+

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 // AI upscale — pushes the current canvas (or a selection) through the
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error: "Upscale call threw",
-        detail: err instanceof Error ? err.message : String(err),
+        detail: "Internal server error",
       },
       { status: 502 },
     );

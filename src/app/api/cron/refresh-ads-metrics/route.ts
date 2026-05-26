@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Cron: refresh-ads-metrics
  *
  * Schedule: 0 3 * * * (daily at 03:00 UTC; see vercel.json)
@@ -137,7 +137,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         }
       } catch (err) {
         summary.errors.push(
-          `[${userId}/${conn.platform}] fetch failed: ${err instanceof Error ? err.message : String(err)}`,
+          `[${userId}/${conn.platform}] fetch failed: ${"Internal server error"}`,
         );
       }
     }
@@ -197,7 +197,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         }
       } catch (err) {
         summary.errors.push(
-          `[zernio/${acct.client_id}/${platform}] fetch: ${err instanceof Error ? err.message : String(err)}`,
+          `[zernio/${acct.client_id}/${platform}] fetch: ${"Internal server error"}`,
         );
       }
     }

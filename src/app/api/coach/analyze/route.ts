@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/coach/analyze
  *
  * Body: { source_type: "voice_call" | "meeting" | "email_thread", source_id: uuid, rep_id?: uuid }
@@ -247,7 +247,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, analysis: inserted });
   } catch (err) {
     console.error("[coach/analyze] failed", err);
-    const message = err instanceof Error ? err.message : "Analysis failed";
+    const message = "Analysis failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

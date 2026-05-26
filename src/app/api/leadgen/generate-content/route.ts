@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { callLLMTraced } from "@/lib/ai/llm-router";
 import { secureCompare } from "@/lib/security/ssrf-guard";
@@ -182,7 +182,7 @@ Output this exact JSON structure:
       generated_at: new Date().toISOString(),
     };
   } catch (err) {
-    const reason = err instanceof Error ? err.message : "ai_error";
+    const reason = "ai_error";
     console.error("[leadgen/generate-content] AI call failed:", reason);
     return NextResponse.json({ error: `Content generation failed: ${reason}` }, { status: 500 });
   }

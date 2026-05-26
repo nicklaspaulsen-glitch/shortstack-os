@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Daily news-triggers scan cron.
  *
  * Schedule: 06:00 UTC (`0 6 * * *`).
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
       console.error(
         "[news-triggers-scan] search failed",
         company,
-        err instanceof Error ? err.message : String(err),
+        "Internal server error",
       );
       continue;
     }

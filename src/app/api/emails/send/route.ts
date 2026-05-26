@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
     sent = true;
     resendEmailId = result.messageId || null;
   } catch (err) {
-    failureReason = err instanceof Error ? err.message : "email send failed";
+    failureReason = "email send failed";
   }
 
   // Log the email. `resend_email_id` + `shortstack_user_id` let the resend

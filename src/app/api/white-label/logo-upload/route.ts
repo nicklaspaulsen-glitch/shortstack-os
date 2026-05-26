@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { sniffMimeType, verifySniffedMime } from "@/lib/server/file-sniff";
 import { uploadToR2, deleteFromR2, r2KeyFromPublicUrl } from "@/lib/server/r2-client";
@@ -132,7 +132,7 @@ export async function POST(req: Request) {
     // from its HTTP cache after a replace.
     publicUrl = `${cdnUrl}?v=${Date.now()}`;
   } catch (err: unknown) {
-    const detail = err instanceof Error ? err.message : String(err);
+    const detail = "Internal server error";
     console.error("[white-label/logo-upload] R2 upload error:", detail);
     return NextResponse.json(
       { error: "Failed to upload logo to storage", detail },

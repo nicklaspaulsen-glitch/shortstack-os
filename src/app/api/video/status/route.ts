@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 // Poll job status for async video generation (Mochi/RunPod, fal.ai, or Higgsfield)
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
       });
     } catch (err) {
       return NextResponse.json(
-        { error: `Higgsfield: ${err instanceof Error ? err.message : String(err)}` },
+        { error: `Higgsfield: ${"Internal server error"}` },
         { status: 500 },
       );
     }

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { setupResendMailForDomain } from "../mail-setup/route";
 import crypto from "crypto";
@@ -245,7 +245,7 @@ export async function POST(request: NextRequest) {
     result.steps.push({
       step: "resend_mail",
       status: "error",
-      detail: err instanceof Error ? err.message : String(err),
+      detail: "Internal server error",
     });
   }
 

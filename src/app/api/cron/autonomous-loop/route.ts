@@ -298,7 +298,7 @@ export async function GET(request: NextRequest) {
       results.push({ ownerId, ...summary });
     } catch (err) {
       console.error("[autonomous-loop] owner run failed", { ownerId, err });
-      results.push({ ownerId, error: err instanceof Error ? err.message : "unknown" });
+      results.push({ ownerId, error: "unknown" });
     }
   }
 

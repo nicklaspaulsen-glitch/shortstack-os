@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/cold-email/jobs/{id}/preview-sample
  *
  * Generate up to 3 sample personalizations synchronously so the user can
@@ -141,7 +141,7 @@ export async function POST(
         cost_usd: result.costUsd,
       });
     } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
+      const message = "Internal server error";
       console.error("[cold-email/preview] generation failed", message);
       samples.push({
         personalization_id: c.id,

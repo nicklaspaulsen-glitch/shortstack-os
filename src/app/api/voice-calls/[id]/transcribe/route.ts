@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/voice-calls/[id]/transcribe
  *
  * Transcribes a Twilio recording for a `voice_calls` row that doesn't yet
@@ -133,7 +133,7 @@ export async function POST(
     });
   } catch (err) {
     console.error("[voice-calls/transcribe] error:", err);
-    const message = err instanceof Error ? err.message : "Transcription failed";
+    const message = "Transcription failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

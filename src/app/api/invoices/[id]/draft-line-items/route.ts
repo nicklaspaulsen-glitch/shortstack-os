@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/invoices/[id]/draft-line-items
  *
  * Given a natural-language scope, generates AI line items for this invoice.
@@ -99,7 +99,7 @@ export async function POST(
     });
   } catch (err) {
     console.error("[invoices/draft] error:", err);
-    const message = err instanceof Error ? err.message : "Drafter failed";
+    const message = "Drafter failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

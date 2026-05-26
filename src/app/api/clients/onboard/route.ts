@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { sendTelegramMessage } from "@/lib/services/trinity";
 import { isAtClientLimit } from "@/lib/plan-config";
@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
     }).catch((err) => {
       console.warn(
         "[clients/onboard] branded welcome email failed:",
-        err instanceof Error ? err.message : String(err),
+        "Internal server error",
       );
     });
   }

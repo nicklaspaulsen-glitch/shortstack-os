@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Cold-email runner cron.
  *
  * Every 2 minutes:
@@ -200,7 +200,7 @@ async function runResearchBatch(
       totalCost += result.costUsd;
       processed++;
     } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
+      const message = "Internal server error";
       console.error("[cold-email-runner] generation failed", message);
       await supabase
         .from("cold_email_personalizations")
@@ -376,7 +376,7 @@ async function runSendBatch(
         },
       });
     } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
+      const message = "Internal server error";
       console.error("[cold-email-runner] send failed", message);
       await supabase
         .from("cold_email_personalizations")
@@ -482,7 +482,7 @@ async function getOrCacheEmailValidation(
   } catch (err) {
     console.warn(
       "[cold-email-runner] validation cache upsert failed",
-      err instanceof Error ? err.message : String(err),
+      "Internal server error",
     );
   }
   return fresh;

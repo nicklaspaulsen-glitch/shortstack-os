@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import nodemailer from "nodemailer";
 
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (err: unknown) {
     const errorMessage =
-      err instanceof Error ? err.message : "Unknown SMTP error";
+      "Unknown SMTP error";
 
     return NextResponse.json(
       {

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Portal File Upload endpoint
  *
  * POST /api/portal/uploads
@@ -155,7 +155,7 @@ export async function POST(req: NextRequest) {
   try {
     cdnUrl = await uploadToR2(r2Key, buffer, uploaded.type);
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : String(err);
+    const msg = "Internal server error";
     console.error("[portal uploads] R2 upload error:", msg);
     return NextResponse.json(
       { error: `Storage upload failed: ${msg}` },

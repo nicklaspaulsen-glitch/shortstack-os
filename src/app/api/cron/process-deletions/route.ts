@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { secureCompare } from "@/lib/security/ssrf-guard";
 
@@ -119,7 +119,7 @@ export async function GET(req: NextRequest) {
         id: req.id,
         profile_id: req.profile_id,
         status: "error",
-        error: err instanceof Error ? err.message : "Unknown error",
+        error: "Unknown error",
       });
     }
   }

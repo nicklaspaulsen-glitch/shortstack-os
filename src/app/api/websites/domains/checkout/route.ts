@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe/client";
 import { computeMonthlyPrice, computeYearlyPrice } from "@/lib/domain-pricing";
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (err) {
     return NextResponse.json({
-      error: err instanceof Error ? err.message : "Stripe checkout failed",
+      error: "Stripe checkout failed",
     }, { status: 500 });
   }
 }

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * GET /api/outreach/conversations/[contactId]
  *
  * Returns the full event timeline for a single contact (oldest → newest)
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
     return NextResponse.json({ events, contact, summary });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Thread load failed";
+    const msg = "Thread load failed";
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

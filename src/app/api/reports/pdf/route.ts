@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
 import { sendMessage } from "@/lib/email";
@@ -476,7 +476,7 @@ export async function POST(request: NextRequest) {
       });
       emailed = true;
     } catch (err) {
-      emailError = err instanceof Error ? err.message : "email send failed";
+      emailError = "email send failed";
     }
   }
 

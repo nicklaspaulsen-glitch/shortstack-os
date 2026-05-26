@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
     } catch (err) {
       // Don't crash the whole cron if one job 500s — just count it as
       // failure and continue.
-      const reason = err instanceof Error ? err.message : "poll_error";
+      const reason = "poll_error";
       await service
         .from("voice_clones")
         .update({ status: "failed", failed_reason: reason })

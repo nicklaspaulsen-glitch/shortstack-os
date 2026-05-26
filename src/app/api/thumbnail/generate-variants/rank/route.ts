@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { anthropic, MODEL_SONNET, getResponseText, safeJsonParse } from "@/lib/ai/claude-helpers";
 import { resolveAndCheckUrl } from "@/lib/security/ssrf";
@@ -186,7 +186,7 @@ export async function POST(request: NextRequest) {
     payload = safeJsonParse<RankingPayload>(getResponseText(resp));
   } catch (err) {
     return NextResponse.json(
-      { ok: false, error: err instanceof Error ? err.message : "Claude vision call failed" },
+      { ok: false, error: "Claude vision call failed" },
       { status: 502 },
     );
   }

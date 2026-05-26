@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import {
   createServerSupabase,
   createServiceClient,
@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
       });
       audioUrl = result.r2Url;
     } catch (err) {
-      const reason = err instanceof Error ? err.message : "synth_failed";
+      const reason = "synth_failed";
       return NextResponse.json({ error: reason }, { status: 500 });
     }
   }

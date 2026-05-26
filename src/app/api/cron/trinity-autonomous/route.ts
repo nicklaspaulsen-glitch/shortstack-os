@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
       propose.push({
         userId: row.user_id as string,
         proposed: 0,
-        error: err instanceof Error ? err.message : "unknown",
+        error: "unknown",
       });
     }
   }
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
         executes.push({
           actionId: row.id as string,
           status: "failed",
-          error: err instanceof Error ? err.message : "unknown",
+          error: "unknown",
         });
       }
     }

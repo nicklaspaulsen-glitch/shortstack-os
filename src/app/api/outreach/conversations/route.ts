@@ -1,4 +1,4 @@
-/**
+﻿/**
  * GET /api/outreach/conversations
  *
  * Returns the per-contact conversation list for the agency owner. Each
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
     });
     return NextResponse.json({ conversations });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Aggregator failed";
+    const msg = "Aggregator failed";
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

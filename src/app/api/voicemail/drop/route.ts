@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
@@ -146,11 +146,11 @@ export async function POST(request: NextRequest) {
     if (dropId) {
       await service
         .from("voicemail_drops")
-        .update({ status: "failed", error: err instanceof Error ? err.message : "drop error" })
+        .update({ status: "failed", error: "drop error" })
         .eq("id", dropId);
     }
     return NextResponse.json(
-      { ok: false, error: err instanceof Error ? err.message : "drop error" },
+      { ok: false, error: "drop error" },
       { status: 500 },
     );
   }

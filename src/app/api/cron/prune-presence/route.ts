@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { secureCompare } from "@/lib/security/ssrf-guard";
 
@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
       cutoff,
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "unknown error";
+    const message = "unknown error";
     // eslint-disable-next-line no-console
     console.error("[cron/prune-presence] unexpected error", message);
     return NextResponse.json(

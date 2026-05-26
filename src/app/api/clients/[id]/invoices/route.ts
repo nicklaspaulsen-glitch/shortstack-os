@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Client invoices on the agency's connected Stripe.
  *
  * GET  /api/clients/[id]/invoices
@@ -241,7 +241,7 @@ export async function POST(
     });
   } catch (err) {
     console.error("[client invoices] stripe error:", err);
-    const message = err instanceof Error ? err.message : "Failed to create invoice";
+    const message = "Failed to create invoice";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

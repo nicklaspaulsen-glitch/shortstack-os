@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { requireOwnedClient, getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { schedulePost as zernioSchedule } from "@/lib/services/zernio";
@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
       zernioError = result.error ?? "Zernio rejected the post";
     }
   } catch (err) {
-    zernioError = err instanceof Error ? err.message : String(err);
+    zernioError = "Internal server error";
   }
 
   const finalStatus: SocialPost["status"] = zernioError

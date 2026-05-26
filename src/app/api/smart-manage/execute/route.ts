@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import {
   filterPayload,
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
       }
     } catch (err) {
       outcome = "failed";
-      message = err instanceof Error ? err.message : String(err);
+      message = "Internal server error";
     }
   }
 

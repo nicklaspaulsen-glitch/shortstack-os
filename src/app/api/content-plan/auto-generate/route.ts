@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { anthropic, MODEL_HAIKU, safeJsonParse, getResponseText } from "@/lib/ai/claude-helpers";
 
@@ -192,7 +192,7 @@ Return JSON: {
       aiError = "AI returned no schedule";
     }
   } catch (err) {
-    aiError = err instanceof Error ? err.message : String(err);
+    aiError = "Internal server error";
   }
 
   // Fallback: simple round-robin schedule

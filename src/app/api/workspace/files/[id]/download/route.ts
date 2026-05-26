@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Workspace Files — issue a 5-minute signed GET URL for download.
  *
  * GET /api/workspace/files/[id]/download
@@ -46,7 +46,7 @@ export async function GET(_req: NextRequest, ctx: RouteCtx) {
   try {
     url = await getR2SignedGetUrl(file.r2_key, DOWNLOAD_TTL_SECONDS);
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Failed to sign URL";
+    const msg = "Failed to sign URL";
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 

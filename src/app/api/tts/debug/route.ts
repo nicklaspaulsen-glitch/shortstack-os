@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 // GET /api/tts/debug
@@ -58,7 +58,7 @@ export async function GET() {
       if (!res.ok) results.xtts.reason = `http_${res.status}`;
     } catch (err) {
       results.xtts.reachable = false;
-      results.xtts.reason = err instanceof Error ? err.message : "fetch_error";
+      results.xtts.reason = "fetch_error";
     }
   } else {
     results.xtts.reason = "not_configured — set RUNPOD_XTTS_URL + RUNPOD_API_KEY";
@@ -90,7 +90,7 @@ export async function GET() {
       }
     } catch (err) {
       results.openai.reachable = false;
-      results.openai.reason = err instanceof Error ? err.message : "fetch_error";
+      results.openai.reason = "fetch_error";
     }
   } else {
     results.openai.reason = "not_configured — set OPENAI_API_KEY";
@@ -134,7 +134,7 @@ export async function GET() {
       }
     } catch (err) {
       results.elevenlabs.reachable = false;
-      results.elevenlabs.reason = err instanceof Error ? err.message : "fetch_error";
+      results.elevenlabs.reason = "fetch_error";
     }
   } else {
     results.elevenlabs.reason = "not_configured — set ELEVENLABS_API_KEY";

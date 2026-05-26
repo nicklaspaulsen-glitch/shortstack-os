@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { synthesize } from "@/lib/voice/clone-router";
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
       cached: result.cached,
     });
   } catch (err) {
-    const reason = err instanceof Error ? err.message : "unknown_error";
+    const reason = "unknown_error";
     console.error("[voice/synthesize] failed:", reason);
     return NextResponse.json({ error: reason }, { status: 500 });
   }

@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
     paymentIntentId = link.id;
   } catch (err) {
     console.error("[leadgen/payment] Stripe error:", err);
-    return NextResponse.json({ error: "Payment link creation failed", details: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Payment link creation failed" }, { status: 500 });
   }
 
   // Update pipeline row

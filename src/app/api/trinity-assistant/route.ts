@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { anthropic, MODEL_HAIKU, getResponseText, withCacheBreakpoint } from "@/lib/ai/claude-helpers";
@@ -1133,7 +1133,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         } catch (err) {
           return {
             ok: false,
-            error: err instanceof Error ? err.message : "Stripe refused the payment link.",
+            error: "Stripe refused the payment link.",
           };
         }
       }
@@ -1288,7 +1288,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         } catch (err) {
           return {
             ok: false,
-            error: err instanceof Error ? err.message : "Stripe refused the invoice.",
+            error: "Stripe refused the invoice.",
           };
         }
       }
@@ -1488,7 +1488,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         } catch (err) {
           return {
             ok: false,
-            error: err instanceof Error ? err.message : "Failed to call content-plan/auto-generate.",
+            error: "Failed to call content-plan/auto-generate.",
           };
         }
       }
@@ -2194,7 +2194,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
             },
           };
         } catch (err) {
-          return { ok: false, error: err instanceof Error ? err.message : "Failed to call scraper/run." };
+          return { ok: false, error: "Failed to call scraper/run." };
         }
       }
 
@@ -2348,7 +2348,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
             },
           };
         } catch (err) {
-          return { ok: false, error: err instanceof Error ? err.message : "Failed to publish social post." };
+          return { ok: false, error: "Failed to publish social post." };
         }
       }
 
@@ -2424,7 +2424,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
 
           return { ok: true, data: { invoice_id: (inserted as { id: string }).id, stripe_invoice_id: invoice.id, amount: amountNum, status: "draft" } };
         } catch (err) {
-          return { ok: false, error: err instanceof Error ? err.message : "Stripe refused the draft invoice." };
+          return { ok: false, error: "Stripe refused the draft invoice." };
         }
       }
 
@@ -2617,7 +2617,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         } catch (err) {
           return {
             ok: false,
-            error: err instanceof Error ? err.message : "Ad generation failed",
+            error: "Ad generation failed",
           };
         }
       }
@@ -2753,7 +2753,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         } catch (err) {
           return {
             ok: false,
-            error: err instanceof Error ? err.message : "Caption generation failed",
+            error: "Caption generation failed",
           };
         }
       }
@@ -2793,7 +2793,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         } catch (err) {
           return {
             ok: false,
-            error: err instanceof Error ? err.message : "B-roll suggestion failed",
+            error: "B-roll suggestion failed",
           };
         }
       }
@@ -2819,7 +2819,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         } catch (err) {
           return {
             ok: false,
-            error: err instanceof Error ? err.message : "Music match failed",
+            error: "Music match failed",
           };
         }
       }
@@ -3111,7 +3111,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         } catch (err) {
           return {
             ok: false,
-            error: err instanceof Error ? err.message : "Classification failed",
+            error: "Classification failed",
           };
         }
       }
@@ -3152,7 +3152,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
           }
           return { ok: true, data: json };
         } catch (err) {
-          return { ok: false, error: err instanceof Error ? err.message : "analyze-viral call failed" };
+          return { ok: false, error: "analyze-viral call failed" };
         }
       }
 
@@ -3215,7 +3215,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         } catch (err) {
           return {
             ok: false,
-            error: err instanceof Error ? err.message : "Auto-edit pipeline failed",
+            error: "Auto-edit pipeline failed",
           };
         }
       }
@@ -3253,7 +3253,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         } catch (err) {
           return {
             ok: false,
-            error: err instanceof Error ? err.message : "smart-variants call failed",
+            error: "smart-variants call failed",
           };
         }
       }
@@ -3286,7 +3286,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         } catch (err) {
           return {
             ok: false,
-            error: err instanceof Error ? err.message : "analyze call failed",
+            error: "analyze call failed",
           };
         }
       }
@@ -3335,7 +3335,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         } catch (err) {
           return {
             ok: false,
-            error: err instanceof Error ? err.message : "smart-crop call failed",
+            error: "smart-crop call failed",
           };
         }
       }
@@ -3344,7 +3344,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         return { ok: false, error: `Unknown tool: ${name}` };
     }
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "Unknown error" };
+    return { ok: false, error: "Unknown error" };
   }
 }
 

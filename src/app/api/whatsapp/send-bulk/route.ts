@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
@@ -187,7 +187,7 @@ export async function POST(request: NextRequest) {
       failed += 1;
       errors.push({
         client_id: c.id as string,
-        reason: err instanceof Error ? err.message : "send error",
+        reason: "send error",
       });
     }
 

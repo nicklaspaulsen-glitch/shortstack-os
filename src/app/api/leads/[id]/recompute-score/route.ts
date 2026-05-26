@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { recomputeScore } from "@/lib/leads/score-recompute";
@@ -56,7 +56,7 @@ export async function POST(
       ...out,
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
+    const message = "Unknown error";
     console.error("[api/leads/recompute-score] failed", err);
     return NextResponse.json({ error: message }, { status: 500 });
   }

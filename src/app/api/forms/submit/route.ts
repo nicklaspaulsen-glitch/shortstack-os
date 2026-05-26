@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { fireTrigger } from "@/lib/workflows/trigger-dispatch";
 import { rateLimit } from "@/lib/rate-limit";
@@ -47,7 +47,7 @@ async function enrichLeadGeo(
       })
       .eq("id", leadId);
   } catch (err) {
-    console.warn("[forms/submit] geo enrichment failed:", err instanceof Error ? err.message : String(err));
+    console.warn("[forms/submit] geo enrichment failed:", "Internal server error");
   }
 }
 

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/meetings/[id]/transcribe
  *
  * Fetches the meeting's `audio_url`, streams it through the transcription
@@ -172,7 +172,7 @@ export async function POST(
       .update({ status: "failed" })
       .eq("id", params.id)
       .eq("created_by", user.id);
-    const message = err instanceof Error ? err.message : "Transcription failed";
+    const message = "Transcription failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

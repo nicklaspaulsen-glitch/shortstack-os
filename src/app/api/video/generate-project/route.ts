@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import { limitsForTier, normalizePlanTier } from "@/lib/plan-limits";
@@ -361,7 +361,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(out);
   } catch (err) {
     console.error("[video/generate-project] error", err);
-    const message = err instanceof Error ? err.message : "Unknown orchestration error";
+    const message = "Unknown orchestration error";
     return NextResponse.json(
       { error: "Failed to generate project", detail: message, project_id: projectId },
       { status: 500 }

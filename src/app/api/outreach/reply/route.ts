@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/outreach/reply
  *
  * Sends a reply on the appropriate channel (email/sms/dm) and writes a
@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
     }
   } catch (err) {
     providerStatus = "failed";
-    providerError = err instanceof Error ? err.message : "Send failed";
+    providerError = "Send failed";
     reportError(err, {
       route: "outreach-reply",
       component: "POST",

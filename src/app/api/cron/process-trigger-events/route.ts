@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Trigger Event Processor (Cron)
  *
  * Drains the `trigger_events` queue: for every `pending` row, fan out via
@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
         .eq("id", row.id);
       completed++;
     } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
+      const msg = "Internal server error";
       await supabase
         .from("trigger_events")
         .update({

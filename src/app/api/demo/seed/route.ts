@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
 export async function POST() {
@@ -105,7 +105,7 @@ export async function POST() {
 
     return NextResponse.json({ success: true, client_id: clientId });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
+    const message = "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import { resolveAndCheckUrl } from "@/lib/security/ssrf";
@@ -542,7 +542,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(out);
   } catch (err) {
     console.error("[thumbnail/compose] error", err);
-    const message = err instanceof Error ? err.message : "Unknown compose error";
+    const message = "Unknown compose error";
     return NextResponse.json(
       { error: "Failed to compose thumbnail", detail: message },
       { status: 500 }

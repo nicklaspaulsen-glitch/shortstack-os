@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getWhiteboardSnapshot } from "@/lib/workspace/aggregator";
 
@@ -41,7 +41,7 @@ export async function GET() {
     const snapshot = await getWhiteboardSnapshot(supabase, agencyOwnerId);
     return NextResponse.json({ success: true, data: snapshot });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "snapshot failed";
+    const message = "snapshot failed";
     // eslint-disable-next-line no-console
     console.error("[workspace/whiteboard] snapshot failed", message);
     return NextResponse.json(

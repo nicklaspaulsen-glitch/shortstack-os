@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, result: { content: text }, type });
     }
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
+    const message = "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

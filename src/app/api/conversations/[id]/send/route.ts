@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { insertOutboundMessage } from "@/lib/conversations";
 import { sendEmail } from "@/lib/email";
@@ -156,7 +156,7 @@ async function sendTwilio(
     if (!res.ok) return { ok: false, error: data.message || `Twilio ${res.status}` };
     return { ok: true, externalId: data.sid, from };
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "Twilio send failed" };
+    return { ok: false, error: "Twilio send failed" };
   }
 }
 
@@ -176,7 +176,7 @@ async function sendTelegram(
     if (!data.ok) return { ok: false, error: data.description || "Telegram send failed" };
     return { ok: true, externalId: String(data.result?.message_id ?? ""), from: "trinity-bot" };
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "Telegram send failed" };
+    return { ok: false, error: "Telegram send failed" };
   }
 }
 
@@ -199,7 +199,7 @@ async function sendSlack(
     if (!data.ok) return { ok: false, error: data.error || "Slack send failed" };
     return { ok: true, externalId: data.ts, from: "slackbot" };
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "Slack send failed" };
+    return { ok: false, error: "Slack send failed" };
   }
 }
 
@@ -225,7 +225,7 @@ async function sendDiscord(
     const data = await res.json();
     return { ok: true, externalId: data.id, from: "trinity-bot" };
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "Discord send failed" };
+    return { ok: false, error: "Discord send failed" };
   }
 }
 
@@ -248,6 +248,6 @@ async function sendZernioInstagram(
     const data = await res.json().catch(() => ({}));
     return { ok: true, externalId: data.id, from: "instagram_agent" };
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "Zernio send failed" };
+    return { ok: false, error: "Zernio send failed" };
   }
 }

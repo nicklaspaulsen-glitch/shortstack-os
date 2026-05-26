@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Workspace Files — pre-signed PUT URL for direct browser → R2 upload.
  *
  * POST /api/workspace/files/upload-url
@@ -138,7 +138,7 @@ export async function POST(req: NextRequest) {
     // Roll back the pending row so the user can retry without piling up
     // half-failed inserts.
     await supabase.from("workspace_files").delete().eq("id", row.id);
-    const msg = err instanceof Error ? err.message : "Failed to sign URL";
+    const msg = "Failed to sign URL";
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 

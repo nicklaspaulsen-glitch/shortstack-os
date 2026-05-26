@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 // ---------------------------------------------------------------------------
@@ -27,7 +27,7 @@ interface Campaign {
 }
 
 // ---------------------------------------------------------------------------
-// GET — Return ads manager data (real, from DB; empty by default)
+// GET â€” Return ads manager data (real, from DB; empty by default)
 // ---------------------------------------------------------------------------
 export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Fetch real campaigns from DB (table may not exist yet — returns empty)
+  // Fetch real campaigns from DB (table may not exist yet â€” returns empty)
   let campaigns: Campaign[] = [];
   try {
     const { data } = await supabase
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
       .order("created_at", { ascending: false });
     campaigns = (data as Campaign[]) || [];
   } catch {
-    // Table doesn't exist yet or query error — leave empty
+    // Table doesn't exist yet or query error â€” leave empty
   }
 
   // Check which platforms are connected
@@ -154,7 +154,7 @@ export async function GET(request: NextRequest) {
 }
 
 // ---------------------------------------------------------------------------
-// POST — Actions (create, update, bulk, generate_copy, save_rule)
+// POST â€” Actions (create, update, bulk, generate_copy, save_rule)
 // ---------------------------------------------------------------------------
 export async function POST(request: NextRequest) {
   try {
@@ -212,7 +212,7 @@ export async function POST(request: NextRequest) {
           return NextResponse.json(
             {
               success: false,
-              error: "Ads feature is not set up — the ad_campaigns table does not exist in this environment.",
+              error: "Ads feature is not set up â€” the ad_campaigns table does not exist in this environment.",
               campaign: null,
             },
             { status: 500 },
@@ -297,8 +297,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   } catch (err) {
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Server error" },
+      { error: "Server error" },
       { status: 500 },
     );
   }
 }
+

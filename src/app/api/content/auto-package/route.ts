@@ -125,7 +125,7 @@ Return JSON with this exact shape:
     aiPackage = safeJsonParse<Record<string, unknown>>(raw);
     if (!aiPackage) errorMessage = "AI returned unparseable output";
   } catch (err) {
-    errorMessage = err instanceof Error ? err.message : String(err);
+    errorMessage = "AI generation failed";
   }
 
   // Fallback skeleton if AI failed — caller still gets a usable shape

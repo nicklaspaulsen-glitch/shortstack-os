@@ -17,6 +17,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { verifyClientAccess } from "@/lib/verify-client-access";
 import { callLLMHumanized } from "@/lib/ai/call-llm-humanized";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -65,6 +66,9 @@ export async function POST(
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { data: wrProfile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const wrLimited = checkAiRateLimit(user.id, wrProfile?.plan_tier);
+  if (wrLimited) return wrLimited;
   const access = await verifyClientAccess(supabase, user.id, clientId);
   if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Cron — Agent Task Executor
  *
  * Every 2 minutes, picks up pending tasks from `agent_task_queue` and
@@ -318,7 +318,7 @@ const handleFindLeads: TaskHandler = async (supabase, task) => {
   } catch (err) {
     return {
       ok: false,
-      error: `Places API failed: ${err instanceof Error ? err.message : String(err)}`,
+      error: `Places API failed: ${"Internal server error"}`,
     };
   }
 
@@ -439,7 +439,7 @@ ${attemptNum >= 2 ? "This is the final follow-up — mention you won't bother th
   } catch (err) {
     return {
       ok: false,
-      error: `AI generation failed: ${err instanceof Error ? err.message : String(err)}`,
+      error: `AI generation failed: ${"Internal server error"}`,
     };
   }
 
@@ -816,7 +816,7 @@ const handleReengage: TaskHandler = async (supabase, task) => {
   } catch (err) {
     return {
       ok: false,
-      error: `AI generation failed: ${err instanceof Error ? err.message : String(err)}`,
+      error: `AI generation failed: ${"Internal server error"}`,
     };
   }
 
@@ -955,7 +955,7 @@ const handlePaymentFollowup: TaskHandler = async (supabase, task) => {
   } catch (err) {
     return {
       ok: false,
-      error: `AI generation failed: ${err instanceof Error ? err.message : String(err)}`,
+      error: `AI generation failed: ${"Internal server error"}`,
     };
   }
 
@@ -1132,7 +1132,7 @@ export async function GET(request: NextRequest) {
       } catch (err) {
         const durationMs = Date.now() - startMs;
         const errMsg =
-          err instanceof Error ? err.message : String(err);
+          "Internal server error";
 
         await supabase
           .from("agent_task_queue")

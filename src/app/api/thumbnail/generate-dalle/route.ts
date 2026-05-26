@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/thumbnail/generate-dalle
  *
  * Generates a thumbnail image via DALL-E 3 or GPT-image-1.
@@ -112,7 +112,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error:
-          err instanceof Error ? err.message : "Image generation failed",
+          "Image generation failed",
       },
       { status: 500 },
     );

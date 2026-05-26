@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { requireOwnedClient, getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { extractClientIp, lookupIp } from "@/lib/integrations/geo-ip";
@@ -43,7 +43,7 @@ async function enrichLeadGeo(leadId: string, ip: string): Promise<void> {
       })
       .eq("id", leadId);
   } catch (err) {
-    console.warn("[leads] geo enrichment failed:", err instanceof Error ? err.message : String(err));
+    console.warn("[leads] geo enrichment failed:", "Internal server error");
   }
 }
 

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/uploads/r2
  *
  * Generic authenticated R2 upload for images + short videos. Used by
@@ -92,7 +92,7 @@ export async function POST(req: NextRequest) {
   try {
     cdnUrl = await uploadToR2(r2Key, buffer, file.type);
   } catch (err: unknown) {
-    const detail = err instanceof Error ? err.message : String(err);
+    const detail = "Internal server error";
     console.error("[uploads/r2] R2 upload error:", detail);
     return NextResponse.json(
       { error: "Failed to upload to storage", detail },

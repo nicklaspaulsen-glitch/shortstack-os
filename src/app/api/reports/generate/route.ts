@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { anthropic } from "@/lib/ai/claude-helpers";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
@@ -249,7 +249,7 @@ Format each section with a clear header line (## Section Name). Keep it professi
       metrics,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error";
+    const message = "Unknown error";
     console.error("Report generation error:", message);
     return NextResponse.json({ error: "Failed to generate report", details: message }, { status: 500 });
   }

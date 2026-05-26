@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { synthesize, getDefaultClone } from "@/lib/voice/clone-router";
 import { sendVoiceDM as zernioVoiceDM, ZERNIO_DM_PLATFORMS } from "@/lib/services/zernio";
@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
     });
     audioUrl = synth.r2Url;
   } catch (err) {
-    const reason = err instanceof Error ? err.message : "synth_failed";
+    const reason = "synth_failed";
     console.error("[leadgen/voice-outreach] synthesis failed:", reason);
     return NextResponse.json({ ok: false, error: `Voice synthesis failed: ${reason}` }, { status: 500 });
   }

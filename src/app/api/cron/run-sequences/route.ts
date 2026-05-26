@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
 import { reportError } from "@/lib/observability/error-reporter";
@@ -263,7 +263,7 @@ export async function GET(request: NextRequest) {
       }
     } catch (err) {
       actionStatus = "failed";
-      actionNote = err instanceof Error ? err.message : "unknown error";
+      actionNote = "unknown error";
       errors.push(`enr=${enr.id}: ${actionNote}`);
       reportError(err, {
         route: "/api/cron/run-sequences",

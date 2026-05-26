@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (err) {
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Twilio send failed" },
+      { error: "Twilio send failed" },
       { status: 500 },
     );
   }

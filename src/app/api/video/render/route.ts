@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import { limitsForTier, normalizePlanTier } from "@/lib/plan-limits";
@@ -313,7 +313,7 @@ export async function POST(request: NextRequest) {
         lastError = "Higgsfield returned no url or job id";
       }
     } catch (err) {
-      lastError = `Higgsfield: ${err instanceof Error ? err.message : String(err)}`;
+      lastError = `Higgsfield: ${"Internal server error"}`;
       console.error("[video/render] Higgsfield request failed:", err);
     }
   }
@@ -362,7 +362,7 @@ export async function POST(request: NextRequest) {
       // Responded but produced no usable output — treat as failure.
       lastError = `Remotion returned no url/renderId (HTTP ${res.status})`;
     } catch (err) {
-      lastError = `Remotion: ${err instanceof Error ? err.message : String(err)}`;
+      lastError = `Remotion: ${"Internal server error"}`;
       console.error("[video/render] Remotion render failed:", err);
     }
   }
@@ -473,7 +473,7 @@ export async function POST(request: NextRequest) {
       // Responded but produced no id/output — treat as failure.
       lastError = `Mochi returned no id/output (status=${job.status ?? "unknown"})`;
     } catch (err) {
-      lastError = `Mochi: ${err instanceof Error ? err.message : String(err)}`;
+      lastError = `Mochi: ${"Internal server error"}`;
       console.error("[video/render] Mochi RunPod generation failed:", err);
     }
   }
@@ -565,7 +565,7 @@ export async function POST(request: NextRequest) {
 
         lastError = `fal.ai ${model.name}: no request_id returned`;
       } catch (err) {
-        lastError = `fal.ai ${model.name}: ${err instanceof Error ? err.message : String(err)}`;
+        lastError = `fal.ai ${model.name}: ${"Internal server error"}`;
         console.error(`[video/render] fal.ai ${model.name} failed:`, err);
       }
     }
@@ -626,7 +626,7 @@ export async function POST(request: NextRequest) {
       }
       lastError = "Self-hosted LLM returned no usable plan";
     } catch (err) {
-      lastError = `Self-hosted LLM: ${err instanceof Error ? err.message : String(err)}`;
+      lastError = `Self-hosted LLM: ${"Internal server error"}`;
       console.error("[video/render] Self-hosted LLM plan failed:", err);
     }
   }
@@ -681,7 +681,7 @@ export async function POST(request: NextRequest) {
       }
       lastError = "Claude returned empty plan";
     } catch (err) {
-      lastError = `Claude: ${err instanceof Error ? err.message : String(err)}`;
+      lastError = `Claude: ${"Internal server error"}`;
       console.error("[video/render] Claude plan fallback failed:", err);
     }
   }

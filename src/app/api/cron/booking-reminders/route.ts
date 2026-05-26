@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Booking SMS Reminders (Cron)
  *
  * Walks every booking that's due in ~24h or ~1h, and sends an SMS reminder
@@ -78,7 +78,7 @@ async function sendSms(to: string, body: string): Promise<{ ok: boolean; error?:
     }
     return { ok: true };
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : String(err) };
+    return { ok: false, error: "Internal server error" };
   }
 }
 

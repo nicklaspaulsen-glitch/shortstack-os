@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import type Anthropic from "@anthropic-ai/sdk";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
@@ -372,7 +372,7 @@ export async function POST(request: NextRequest) {
       aiError = "Claude returned an unparseable pattern payload.";
     }
   } catch (err) {
-    aiError = err instanceof Error ? err.message : "Claude call failed";
+    aiError = "Claude call failed";
   }
 
   if (!pattern) {

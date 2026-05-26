@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { callLLMTraced } from "@/lib/ai/llm-router";
 import { sendDM as zernioDM } from "@/lib/services/zernio";
@@ -259,7 +259,7 @@ Output ONLY valid JSON with only the fields you can confidently identify from th
       }
     }
   } catch (err) {
-    const reason = err instanceof Error ? err.message : "ai_error";
+    const reason = "ai_error";
     console.error("[leadgen/qualify] AI call failed:", reason);
     return NextResponse.json({ error: `AI qualification failed: ${reason}` }, { status: 500 });
   }

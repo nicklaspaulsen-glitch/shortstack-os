@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { secureCompare } from "@/lib/security/ssrf-guard";
 
@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
     if (error) errors.push(`emails: ${error.message}`);
     else deleted.emails = count || 0;
   } catch (err) {
-    errors.push(`emails: ${err instanceof Error ? err.message : "error"}`);
+    errors.push(`emails: ${"error"}`);
   }
 
   try {
@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
     if (error) errors.push(`phones: ${error.message}`);
     else deleted.phones = count || 0;
   } catch (err) {
-    errors.push(`phones: ${err instanceof Error ? err.message : "error"}`);
+    errors.push(`phones: ${"error"}`);
   }
 
   try {
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
     if (error) errors.push(`socials: ${error.message}`);
     else deleted.socials = count || 0;
   } catch (err) {
-    errors.push(`socials: ${err instanceof Error ? err.message : "error"}`);
+    errors.push(`socials: ${"error"}`);
   }
 
   const total = deleted.emails + deleted.phones + deleted.socials;

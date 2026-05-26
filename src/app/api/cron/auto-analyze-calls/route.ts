@@ -176,7 +176,7 @@ export async function GET(request: NextRequest) {
       }
     } catch (err) {
       failed += 1;
-      const message = err instanceof Error ? err.message : String(err);
+      const message = "Internal server error";
       errors.push({ kind: item.kind, id: item.row.id, error: message.slice(0, 200) });
       console.error("[cron/auto-analyze-calls] item failed", item.kind, item.row.id, err);
     }

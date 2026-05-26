@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
@@ -413,7 +413,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (err) {
     console.error("[video/auto-edit/detect-scenes] error", err);
-    const message = err instanceof Error ? err.message : "Unknown error";
+    const message = "Unknown error";
     return NextResponse.json(
       { ok: false, error: "Failed to detect scenes", detail: message },
       { status: 500 },

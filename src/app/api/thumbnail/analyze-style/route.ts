@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import Anthropic from "@anthropic-ai/sdk";
@@ -244,7 +244,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No image provided" }, { status: 400 });
     }
   } catch (err) {
-    const message = err instanceof Error ? err.message : "unknown";
+    const message = "unknown";
     return NextResponse.json(
       { error: "Failed to load image", detail: message },
       { status: 400 }
@@ -326,7 +326,7 @@ Niche hint: ${body.niche ?? "general YouTube"}`;
     return NextResponse.json(merged);
   } catch (err) {
     console.error("[thumbnail/analyze-style] error", err);
-    const message = err instanceof Error ? err.message : "Unknown Claude API error";
+    const message = "Unknown Claude API error";
     return NextResponse.json(
       { error: "Failed to analyze style", detail: message },
       { status: 500 }

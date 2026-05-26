@@ -42,7 +42,7 @@ async function probeDb(): Promise<ProbeResult> {
   } catch (err) {
     return {
       ok: false,
-      detail: err instanceof Error ? err.message : String(err),
+      detail: "Internal server error",
       responseTime: Date.now() - start,
     };
   }
@@ -70,7 +70,7 @@ async function probeAuth(): Promise<ProbeResult> {
   } catch (err) {
     return {
       ok: false,
-      detail: err instanceof Error ? err.message : String(err),
+      detail: "Internal server error",
       responseTime: Date.now() - start,
     };
   }
@@ -90,7 +90,7 @@ async function probeStorage(): Promise<ProbeResult> {
   } catch (err) {
     return {
       ok: false,
-      detail: err instanceof Error ? err.message : String(err),
+      detail: "Internal server error",
       responseTime: Date.now() - start,
     };
   }

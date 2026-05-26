@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 // AI generative fill — user draws a selection, sends a prompt, we inpaint
@@ -126,7 +126,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error: "FLUX inpaint call threw",
-        detail: err instanceof Error ? err.message : String(err),
+        detail: "Internal server error",
       },
       { status: 502 },
     );

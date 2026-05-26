@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { anthropic } from "@/lib/ai/claude-helpers";
 import { createServerSupabase } from "@/lib/supabase/server";
@@ -113,7 +113,7 @@ Generate 3-4 features, 3 testimonials, 3 pricing tiers (mark middle as highlight
       content: parsed,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error";
+    const message = "Unknown error";
     console.error("[landing-page/generate] Error:", message);
     return NextResponse.json(
       { error: "Failed to generate landing page", details: message },

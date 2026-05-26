@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { uploadToR2 } from "@/lib/server/r2-client";
@@ -243,7 +243,7 @@ export async function POST(request: NextRequest) {
     try {
       await uploadToR2(key, buffer, file.type || "audio/mpeg");
     } catch (err) {
-      const reason = err instanceof Error ? err.message : "unknown_error";
+      const reason = "unknown_error";
       return NextResponse.json(
         { error: `R2 upload failed: ${reason}` },
         { status: 502 },

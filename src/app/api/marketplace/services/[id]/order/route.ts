@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/marketplace/services/[id]/order
  *
  * Buyer initiates an order for a service.  We:
@@ -249,7 +249,7 @@ export async function POST(
   } catch (err) {
     console.error("[marketplace/order] stripe error", err);
     const message =
-      err instanceof Error ? err.message : "Failed to create checkout session";
+      "Failed to create checkout session";
     // Best-effort: mark order cancelled so we don't leak ghosts.
     await supabase
       .from("marketplace_orders")

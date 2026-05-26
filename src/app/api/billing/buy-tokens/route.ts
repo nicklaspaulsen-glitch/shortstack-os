@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe/client";
 
@@ -91,8 +91,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ url: session.url, checkout_url: session.url });
   } catch (err) {
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Failed to create checkout session" },
+      { error: "Failed to create checkout session" },
       { status: 500 }
     );
   }
 }
+

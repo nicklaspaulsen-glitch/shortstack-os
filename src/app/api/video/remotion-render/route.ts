@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/video/remotion-render
  *
  * Server-side Remotion render — bundles the VideoOverlay composition and
@@ -179,7 +179,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, url: publicUrl });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Render failed";
+    const msg = "Render failed";
 
     // Detect Vercel / serverless environment where Chromium is unavailable
     if (

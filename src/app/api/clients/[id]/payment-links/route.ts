@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Client payment links — list & create Stripe Payment Links scoped to one
  * client on the AGENCY's connected Stripe account (NOT Trinity's platform
  * Stripe).
@@ -177,7 +177,7 @@ export async function POST(
     return NextResponse.json({ link: inserted, url: link.url });
   } catch (err) {
     console.error("[client payment-links] stripe error:", err);
-    const message = err instanceof Error ? err.message : "Failed to create payment link";
+    const message = "Failed to create payment link";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient, createServerSupabase } from "@/lib/supabase/server";
 import { callLLMTraced } from "@/lib/ai/llm-router";
 import { sendDM as zernioDM } from "@/lib/services/zernio";
@@ -321,7 +321,7 @@ async function createZernioProfile(opts: {
 
     return { ok: true, profile_id: profileId };
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "unknown error" };
+    return { ok: false, error: "unknown error" };
   }
 }
 

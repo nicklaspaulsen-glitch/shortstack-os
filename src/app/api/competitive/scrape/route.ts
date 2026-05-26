@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/competitive/scrape
  *
  * Auth-gated endpoint that scrapes a competitor URL (single page or full
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
     const raw: unknown = await req.json();
     body = validateBody(raw);
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Invalid request body.";
+    const message = "Invalid request body.";
     return NextResponse.json({ error: message }, { status: 400 });
   }
 
@@ -116,7 +116,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("[competitive/scrape] Firecrawl error", { url, type, err });
     const message =
-      err instanceof Error ? err.message : "Scraping failed with unknown error.";
+      "Scraping failed with unknown error.";
     return NextResponse.json({ error: message }, { status: 502 });
   }
 

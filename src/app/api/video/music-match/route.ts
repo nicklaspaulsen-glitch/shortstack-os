@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import {
@@ -193,7 +193,7 @@ export async function POST(request: NextRequest) {
       alternatives: r.alternatives,
       reasoning: r.reasoning,
       source: "fallback",
-      fallback_reason: err instanceof Error ? err.message : "claude error",
+      fallback_reason: "claude error",
     });
   }
 }

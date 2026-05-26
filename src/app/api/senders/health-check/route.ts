@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import nodemailer from "nodemailer";
 
@@ -55,7 +55,7 @@ export async function GET() {
           if ((s.bounce_rate ?? 0) > 5) status = "degraded";
         } catch (err) {
           status = "down";
-          lastError = err instanceof Error ? err.message.slice(0, 180) : "SMTP verify failed";
+          lastError = "SMTP verify failed";
         }
       } else {
         status = "unknown";
@@ -120,7 +120,7 @@ export async function GET() {
           }
         } catch (err) {
           status = "down";
-          lastError = err instanceof Error ? err.message.slice(0, 180) : "Twilio check failed";
+          lastError = "Twilio check failed";
         }
       } else if (!twilioSid || !twilioToken) {
         status = "unknown";

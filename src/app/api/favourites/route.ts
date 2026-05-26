@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 /**
@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ ok: true, favourites });
   } catch (err) {
     return NextResponse.json(
-      { ok: false, error: err instanceof Error ? err.message : "Unknown error" },
+      { ok: false, error: "Unknown error" },
       { status: 500 },
     );
   }
@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true });
   } catch (err) {
     return NextResponse.json(
-      { ok: false, error: err instanceof Error ? err.message : "Unknown error" },
+      { ok: false, error: "Unknown error" },
       { status: 500 },
     );
   }
@@ -170,7 +170,7 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ ok: true });
   } catch (err) {
     return NextResponse.json(
-      { ok: false, error: err instanceof Error ? err.message : "Unknown error" },
+      { ok: false, error: "Unknown error" },
       { status: 500 },
     );
   }

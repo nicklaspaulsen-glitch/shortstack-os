@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/branded-emails/[kind]/test-send
  *
  * Sends a test render of the given template to the caller's own email
@@ -112,7 +112,7 @@ export async function POST(
       provider: result.provider,
     });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
+    const msg = "Internal server error";
     console.error("[branded-emails/test-send] failed:", msg);
     return NextResponse.json({ ok: false, error: msg }, { status: 500 });
   }

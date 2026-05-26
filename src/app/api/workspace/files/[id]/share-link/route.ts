@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Workspace Files — share-link.
  *
  * GET /api/workspace/files/[id]/share-link?ttl=24h
@@ -68,7 +68,7 @@ export async function GET(req: NextRequest, ctx: RouteCtx) {
   try {
     signed = await getR2SignedGetUrl(file.r2_key, ttl);
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Failed to sign URL";
+    const msg = "Failed to sign URL";
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 

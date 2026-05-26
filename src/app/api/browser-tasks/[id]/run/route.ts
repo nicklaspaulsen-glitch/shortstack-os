@@ -56,7 +56,7 @@ export async function POST(_req: NextRequest, ctx: { params: { id: string } }) {
   } catch (err) {
     console.error("[browser-tasks/run]", err);
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : String(err) },
+      { error: "Internal server error" },
       { status: 500 },
     );
   }

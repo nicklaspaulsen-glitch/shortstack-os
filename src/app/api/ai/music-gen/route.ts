@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     }
     return await runMusicGen({ musicGenUrl: musicGenUrl!, runpodKey, prompt: enhancedPrompt, duration: clampedDuration, body });
   } catch (err) {
-    console.error("[music-gen] generation failed:", err instanceof Error ? err.message : String(err));
+    console.error("[music-gen] generation failed:", "Internal server error");
     return NextResponse.json({ error: "Music generation failed" }, { status: 500 });
   }
 }

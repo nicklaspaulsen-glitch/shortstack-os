@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import {
@@ -238,7 +238,7 @@ Write cohesive, conversion-focused copy that ties every section back to the core
     return NextResponse.json(out);
   } catch (err) {
     console.error("[landing-pages/generate] error", err);
-    const message = err instanceof Error ? err.message : "Unknown Claude API error";
+    const message = "Unknown Claude API error";
     return NextResponse.json(
       { error: "Failed to generate landing page", detail: message },
       { status: 500 }

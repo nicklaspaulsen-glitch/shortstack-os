@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Incident management API for the admin status page.
  *
  *   GET  /api/admin/incidents — list owner's incidents (active first, then
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error: "Invalid payload",
-        detail: err instanceof Error ? err.message : String(err),
+        detail: "Internal server error",
       },
       { status: 400 },
     );

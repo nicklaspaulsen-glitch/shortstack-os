@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Outbound webhook delivery cron.
  *
  * Picks up to N pending or retry-due deliveries, signs them with HMAC-SHA256
@@ -149,7 +149,7 @@ export async function GET(request: NextRequest) {
         errorMessage = `HTTP ${res.status}`;
       }
     } catch (err) {
-      errorMessage = err instanceof Error ? err.message : String(err);
+      errorMessage = "Internal server error";
     }
 
     const isSuccess = !errorMessage && responseStatus >= 200 && responseStatus < 300;
