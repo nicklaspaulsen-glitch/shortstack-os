@@ -42,7 +42,26 @@ export async function GET(
       files?: Partial<Record<Platform, { file?: string } | null>>;
     };
     const entry = parsed.files?.[platform];
-    if (entry && entry.file) file = entry.file;
+    if (entry && typeof entry.file === "string") {
+      const candidate = entry.file;
+      // Path traversal guard: reject any filename that contains path separators,
+      // parent-directory tokens, or is an absolute path.  The manifest lives in
+      // the repo so it is not user-controlled, but defence-in-depth means we
+      // never trust data read from disk for path construction.
+      const isSafe = (
+        !candidate.includes("..") &&
+        !candidate.includes("/") &&
+        !candidate.includes("\\") &&
+        !path.isAbsolute(candidate) &&
+        candidate.length > 0 &&
+        candidate.length <= 255
+      );
+      if (isSafe) {
+        file = candidate;
+      } else {
+        console.error("[desktop/download] manifest contains unsafe filename, using default", { candidate, platform });
+      }
+    }
   } catch {
     // No manifest -> use default filename
   }
