@@ -47,7 +47,7 @@ export async function GET(): Promise<NextResponse> {
     return NextResponse.json({ rules });
   } catch (err) {
     console.error("[revealbot/rules] GET error:", err);
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
@@ -86,6 +86,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ rule }, { status: 201 });
   } catch (err) {
     console.error("[revealbot/rules] POST error:", err);
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
