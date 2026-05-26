@@ -3,6 +3,7 @@ import { createServerSupabase } from "@/lib/supabase/server";
 import { callLLMTraced } from "@/lib/ai/llm-router";
 import { getCreatorStyle } from "@/lib/ai/creator-styles";
 import type { Platform, PageContext } from "@/lib/ai/creator-styles";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 export async function POST(req: Request) {
   const supabase = createServerSupabase();
@@ -10,6 +11,10 @@ export async function POST(req: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: profile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, profile?.plan_tier);
+  if (limited) return limited;
 
   const {
     topic,

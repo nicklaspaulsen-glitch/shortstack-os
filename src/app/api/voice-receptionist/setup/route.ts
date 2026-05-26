@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 /**
  * POST /api/voice-receptionist/setup
@@ -33,6 +34,10 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: vrProfile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const vrLimited = checkAiRateLimit(user.id, vrProfile?.plan_tier);
+  if (vrLimited) return vrLimited;
 
   const body = await request.json().catch(() => null);
   if (!body || !body.client_id || !body.action) {

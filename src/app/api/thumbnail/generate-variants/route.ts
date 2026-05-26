@@ -1,12 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
-// Each FLUX variant costs ~1000 "tokens" in the plan budget — keep this
+// Each FLUX variant costs ~1000 "tokens" in the plan budget â€” keep this
 // in sync with the constant in thumbnail/generate/route.ts.
 const THUMBNAIL_TOKEN_COST = 1000;
 
-// ──────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // POST /api/thumbnail/generate-variants
 // Body: {
 //   prompt: string,
@@ -17,13 +18,13 @@ const THUMBNAIL_TOKEN_COST = 1000;
 //   negative_prompt?: string,
 // }
 //
-// Fires N FLUX jobs in parallel — each with a different random seed and a
+// Fires N FLUX jobs in parallel â€” each with a different random seed and a
 // slight style-variant prompt tweak so the outputs look meaningfully different.
 // Returns { ok: true, variants: [{ thumbnail_id, job_id, variant_label }, ...] }.
 //
 // CTR ranking happens separately via POST /api/thumbnail/generate-variants/rank
 // once the caller has polled /status and has image URLs for all variants.
-// ──────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export const maxDuration = 60;
 
@@ -74,6 +75,10 @@ export async function POST(request: NextRequest) {
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
+  const { data: rlProfile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, rlProfile?.plan_tier);
+  if (limited) return limited;
+
   let body: {
     prompt?: unknown;
     variants?: unknown;
@@ -122,7 +127,7 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Plan-tier token gate — variants multiply the infra cost by N, so this
+  // Plan-tier token gate â€” variants multiply the infra cost by N, so this
   // is the hottest route to leave ungated. (bug-hunt-apr20-v2 HIGH #12)
   const estimatedTokens = THUMBNAIL_TOKEN_COST * count;
   const gate = await checkLimit(ownerId, "tokens", estimatedTokens);
@@ -201,7 +206,7 @@ export async function POST(request: NextRequest) {
           prompt: variantPrompt,
           seed,
           jobId: null,
-          error: err instanceof Error ? err.message : "RunPod request failed",
+          error: err instanceof Error ? "Internal server error" : "RunPod request failed",
         };
       }
     }),
@@ -277,3 +282,4 @@ export async function POST(request: NextRequest) {
       .map((j) => ({ label: j.label, error: j.error })),
   });
 }
+

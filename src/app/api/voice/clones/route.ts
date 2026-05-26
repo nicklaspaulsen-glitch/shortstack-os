@@ -4,6 +4,7 @@ import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { uploadToR2 } from "@/lib/server/r2-client";
 import { trainClone } from "@/lib/voice/clone-router";
 import { ensurePresetsSeeded } from "@/lib/voice/preset-library";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -86,6 +87,10 @@ export async function POST(request: NextRequest) {
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const { data: profile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, profile?.plan_tier);
+  if (limited) return limited;
 
   const ownerId = await getEffectiveOwnerId(supabase, user.id);
   if (!ownerId) {
@@ -273,8 +278,7 @@ export async function POST(request: NextRequest) {
       provider_voice_id: result.providerVoiceId,
       failed_reason: result.failedReason || null,
     });
-  } catch (err) {
-    const reason = err instanceof Error ? err.message : "unknown_error";
-    return NextResponse.json({ error: reason }, { status: 500 });
+  } catch {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import {
   anthropic,
   MODEL_SONNET,
@@ -203,6 +204,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
+  const { data: profile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, profile?.plan_tier);
+  if (limited) return limited;
+
   const ownerId = await getEffectiveOwnerId(supabase, user.id);
   if (!ownerId) {
     return NextResponse.json({ ok: false, error: "Profile not found" }, { status: 403 });
@@ -349,7 +354,7 @@ export async function POST(request: NextRequest) {
           prompt: fullPrompt,
           job_id: null,
           status: "FAILED",
-          error: err instanceof Error ? err.message : "dispatch failed",
+          error: err instanceof Error ? "Internal server error" : "dispatch failed",
         };
       }
     }),

@@ -20,6 +20,7 @@ import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { UnifiedAdsClient } from "@/lib/ads/unified-client";
 import { callLLMTraced } from "@/lib/ai/llm-router";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -145,6 +146,10 @@ export async function POST(): Promise<NextResponse> {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { data: profile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, profile?.plan_tier);
+  if (limited) return limited;
+
   // Apr 28: removed `|| user.id` fallback — null = suspended team_member.
 
 
@@ -232,7 +237,7 @@ export async function POST(): Promise<NextResponse> {
   } catch (err) {
     console.error("[ads-manager/insights] callLLM failed:", err);
     return NextResponse.json(
-      { error: "AI suggestions failed", details: err instanceof Error ? err.message : String(err) },
+      { error: "AI suggestions failed" },
       { status: 500 },
     );
   }

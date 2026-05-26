@@ -1,39 +1,40 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
-// Keep in sync with thumbnail/generate/route.ts — one face-swap (Replicate
+// Keep in sync with thumbnail/generate/route.ts â€” one face-swap (Replicate
 // or InstantID via RunPod) costs ~1000 "tokens" in the plan-tier budget.
 const THUMBNAIL_TOKEN_COST = 1000;
 
-// ──────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // POST /api/thumbnail/face-swap
 // Accepts EITHER:
-//   { thumbnail_id: string, face_image_url: string }   — swap face into an
+//   { thumbnail_id: string, face_image_url: string }   â€” swap face into an
 //                                                       existing generated thumbnail
 //   { prompt: string, face_image_url: string, style?, aspect?, client_id? }
-//                                                     — generate a new thumbnail
+//                                                     â€” generate a new thumbnail
 //                                                       with the user's face
 //
 // Provider order:
 //   1. Replicate (preferred: `cdingram/face-swap` for target-swap,
-//                 `zsxkib/instant-id` for prompt-based generation) — reliable,
+//                 `zsxkib/instant-id` for prompt-based generation) â€” reliable,
 //                 pre-hosted, no InstantID node setup required
-//   2. Runpod FLUX with InstantID ComfyUI workflow — requires the face-swap
+//   2. Runpod FLUX with InstantID ComfyUI workflow â€” requires the face-swap
 //                                                    worker; returns 501 if the
 //                                                    required nodes are missing
-//   3. 501 — no face-swap provider configured
+//   3. 501 â€” no face-swap provider configured
 //
 // Writes a `generated_images` row with metadata.source = "face_swap" so the
 // UI can filter these out.
-// ──────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export const maxDuration = 60;
 
 // Replicate model version hashes. Update these occasionally; `Prefer: wait`
 // tells Replicate to hold the HTTP connection open for up to 60s.
 // cdingram/face-swap is an InsightFace/Roop single-shot face-swap model.
-// zsxkib/instant-id is an InstantID port (prompt + face → styled image).
+// zsxkib/instant-id is an InstantID port (prompt + face â†’ styled image).
 const REPLICATE_FACESWAP_MODEL = "cdingram/face-swap";
 const REPLICATE_FACESWAP_VERSION = "d1d6ea8c8be89d664a07a457526f7128109dee7030fdac424788d762c71ed111";
 const REPLICATE_INSTANTID_MODEL = "zsxkib/instant-id";
@@ -56,7 +57,7 @@ function buildInstantIdWorkflow(opts: {
   // ComfyUI InstantID-style workflow for FLUX. The `LoadImageFromUrl` +
   // `InstantIDFaceAnalysis` + `ApplyInstantID` nodes must exist in the worker's
   // ComfyUI node set. If they don't, the worker returns an error mentioning the
-  // missing node type — we detect that downstream and translate it to our
+  // missing node type â€” we detect that downstream and translate it to our
   // "deploy the faceswap worker" error.
   return {
     "1": {
@@ -144,7 +145,7 @@ function buildInstantIdWorkflow(opts: {
   };
 }
 
-// ─── Replicate ────────────────────────────────────────────────────────────
+// â”€â”€â”€ Replicate â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 type ReplicateOutcome =
   | { ok: true; completed: true; imageUrl: string; model: string }
   | { ok: true; completed: false; predictionId: string; model: string }
@@ -270,6 +271,10 @@ export async function POST(request: NextRequest) {
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
+  const { data: rlProfile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, rlProfile?.plan_tier);
+  if (limited) return limited;
+
   let body: {
     thumbnail_id?: unknown;
     face_image_url?: unknown;
@@ -334,7 +339,7 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Plan-tier token gate — bug-hunt-apr20-v2 HIGH #12. Gate once up front;
+  // Plan-tier token gate â€” bug-hunt-apr20-v2 HIGH #12. Gate once up front;
   // we meter exactly once on whichever provider succeeds below.
   const gate = await checkLimit(ownerId, "tokens", THUMBNAIL_TOKEN_COST);
   if (!gate.allowed) {
@@ -397,7 +402,7 @@ export async function POST(request: NextRequest) {
   const fluxUrl = process.env.RUNPOD_FLUX_URL;
   const runpodKey = process.env.RUNPOD_API_KEY;
 
-  // ── Provider 1: Replicate ────────────────────────────────────────────
+  // â”€â”€ Provider 1: Replicate â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (replicateToken) {
     const outcome = targetImageUrl
       ? await synthesizeViaReplicateFaceSwap(targetImageUrl, faceImageUrl)
@@ -465,7 +470,7 @@ export async function POST(request: NextRequest) {
     console.warn(`[face-swap] Replicate failed (${outcome.reason}), trying Runpod`);
   }
 
-  // ── Provider 2: Runpod FLUX InstantID ────────────────────────────────
+  // â”€â”€ Provider 2: Runpod FLUX InstantID â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (fluxUrl && runpodKey) {
     const seed = Math.floor(Math.random() * 2147483647);
     const workflow = buildInstantIdWorkflow({
@@ -510,19 +515,19 @@ export async function POST(request: NextRequest) {
         runpodErrorMessage = errText;
       }
     } catch (err) {
-      runpodErrorMessage = err instanceof Error ? err.message : "RunPod request failed";
+      runpodErrorMessage = err instanceof Error ? "Internal server error" : "RunPod request failed";
     }
 
     if (faceswapUnsupported) {
       // Only return the "deploy the worker" error if we didn't already have
       // Replicate configured. If Replicate was set but failed, surface the
-      // Replicate failure instead — that's more actionable.
+      // Replicate failure instead â€” that's more actionable.
       if (!replicateToken) {
         return NextResponse.json(
           {
             ok: false,
             error:
-              "FaceSwap requires InstantID nodes — deploy the faceswap worker or set REPLICATE_API_TOKEN. " +
+              "FaceSwap requires InstantID nodes â€” deploy the faceswap worker or set REPLICATE_API_TOKEN. " +
               "Replicate is the simpler path: grab a token from replicate.com/account and add it to Vercel.",
             worker_error: runpodErrorMessage,
           },
@@ -533,7 +538,7 @@ export async function POST(request: NextRequest) {
         {
           ok: false,
           error:
-            "FaceSwap unavailable — Replicate returned an error and the Runpod worker lacks InstantID nodes.",
+            "FaceSwap unavailable â€” Replicate returned an error and the Runpod worker lacks InstantID nodes.",
           worker_error: runpodErrorMessage,
         },
         { status: 502 },
@@ -591,13 +596,14 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  // ── No provider configured ──────────────────────────────────────────
+  // â”€â”€ No provider configured â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   return NextResponse.json(
     {
       ok: false,
       error:
-        "FaceSwap unavailable — set REPLICATE_API_TOKEN (easy path) or configure RUNPOD_FLUX_URL with an InstantID-capable worker.",
+        "FaceSwap unavailable â€” set REPLICATE_API_TOKEN (easy path) or configure RUNPOD_FLUX_URL with an InstantID-capable worker.",
     },
     { status: 501 },
   );
 }
+

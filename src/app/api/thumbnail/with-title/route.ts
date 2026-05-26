@@ -1,14 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { anthropic, MODEL_HAIKU, getResponseText, safeJsonParse } from "@/lib/ai/claude-helpers";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import { getPageTrainingPrompt } from "@/lib/ai/page-training";
 
-// Keep in sync with thumbnail/generate/route.ts — each FLUX render costs
+// Keep in sync with thumbnail/generate/route.ts â€” each FLUX render costs
 // ~1000 "tokens" in the plan-tier budget.
 const THUMBNAIL_TOKEN_COST = 1000;
 
-// ──────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // POST /api/thumbnail/with-title
 // Body: { topic: string, style?: string, client_id?: string,
 //         aspect?: "16:9"|"9:16"|"1:1", variants?: number }
@@ -21,7 +22,7 @@ const THUMBNAIL_TOKEN_COST = 1000;
 //
 // Response: { ok: true, title, thumbnail_text_overlay, prompt, thumbnail_id,
 //             job_id, poll_url, variants?: [{ thumbnail_id, job_id, seed }] }
-// ──────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export const maxDuration = 60;
 
@@ -100,7 +101,7 @@ async function generateTitleAndPrompt(topic: string, style: string, trainingProm
       max_tokens: 400,
       temperature: 0.8,
       system:
-        "You are a viral YouTube creative director. Given a topic and visual style, produce JSON only — " +
+        "You are a viral YouTube creative director. Given a topic and visual style, produce JSON only â€” " +
         "no preamble, no markdown fences, just the JSON object." +
         (trainingPrompt ? `\n\n${trainingPrompt}` : ""),
       messages: [
@@ -113,7 +114,7 @@ async function generateTitleAndPrompt(topic: string, style: string, trainingProm
             `{\n` +
             `  "title": string (under 60 chars, punchy, curiosity gap, no clickbait lies),\n` +
             `  "thumbnail_text_overlay": string (1-6 words, ALL CAPS OK, the big text that goes ON the thumbnail),\n` +
-            `  "flux_prompt": string (60-120 words describing the thumbnail image — exaggerated expressions MrBeast-style, bold 2-3 color palette, clean background with blur, dramatic studio lighting, single strong focal point; do NOT describe any text — we overlay text separately)\n` +
+            `  "flux_prompt": string (60-120 words describing the thumbnail image â€” exaggerated expressions MrBeast-style, bold 2-3 color palette, clean background with blur, dramatic studio lighting, single strong focal point; do NOT describe any text â€” we overlay text separately)\n` +
             `}`,
         },
       ],
@@ -136,6 +137,10 @@ export async function POST(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+
+  const { data: rlProfile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, rlProfile?.plan_tier);
+  if (limited) return limited;
 
   let body: {
     topic?: unknown;
@@ -189,7 +194,7 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Plan-tier token gate — bug-hunt-apr20-v2 HIGH #12. This route also
+  // Plan-tier token gate â€” bug-hunt-apr20-v2 HIGH #12. This route also
   // hits Claude Haiku for title/prompt gen, so the gate protects both
   // surfaces. Gate on the FULL estimated cost (variants can be 1-4) so we
   // don't approve a request only to blow the budget on the multiplied
@@ -216,11 +221,11 @@ export async function POST(request: NextRequest) {
 
   const trainingPrompt = await getPageTrainingPrompt(supabase, user.id, "thumbnail");
 
-  // Step A — title + overlay + FLUX prompt
+  // Step A â€” title + overlay + FLUX prompt
   const ai = await generateTitleAndPrompt(topic, style, trainingPrompt || undefined);
   if (!ai) {
     return NextResponse.json(
-      { ok: false, error: "Title AI failed — could not parse JSON response from Claude" },
+      { ok: false, error: "Title AI failed â€” could not parse JSON response from Claude" },
       { status: 502 },
     );
   }
@@ -248,7 +253,7 @@ export async function POST(request: NextRequest) {
     "text in image, words in image, letters, writing, font, typography rendered, " +
     "cluttered background, busy composition, multiple focal points, amateur photography";
 
-  // Step B — kick off N FLUX jobs in parallel.
+  // Step B â€” kick off N FLUX jobs in parallel.
   const seeds = Array.from({ length: variantCount }, (_, i) => Math.floor(Math.random() * 2147483647) + i * 1000);
   const jobPromises = seeds.map(async (seed) => {
     try {
@@ -275,7 +280,7 @@ export async function POST(request: NextRequest) {
         error: (job?.error as string) || (job?.message as string) || `RunPod ${res.status}`,
       };
     } catch (err) {
-      return { seed, jobId: null, error: err instanceof Error ? err.message : "RunPod request failed" };
+      return { seed, jobId: null, error: err instanceof Error ? "Internal server error" : "RunPod request failed" };
     }
   });
   const jobs = await Promise.all(jobPromises);
@@ -359,3 +364,4 @@ export async function POST(request: NextRequest) {
         : undefined,
   });
 }
+

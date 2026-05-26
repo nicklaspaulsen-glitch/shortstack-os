@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { synthesizeVoice, type VoiceProvider } from "@/lib/voice";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // Text-to-speech proxy. Routes through the voice provider abstraction
 // (`src/lib/voice/router.ts`) which picks the cheapest available provider
@@ -33,6 +34,10 @@ export async function POST(request: NextRequest) {
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const { data: profile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, profile?.plan_tier);
+  if (limited) return limited;
 
   let body: {
     text?: unknown;
@@ -94,7 +99,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "synthesis_failed";
+    const message = "synthesis_failed";
     console.error("[tts/speak] all providers failed:", message);
     return NextResponse.json(
       {

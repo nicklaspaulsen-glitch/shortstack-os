@@ -1,12 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
-// Keep in sync with thumbnail/generate/route.ts — each FLUX render costs
+// Keep in sync with thumbnail/generate/route.ts â€” each FLUX render costs
 // ~1000 "tokens" in the plan-tier budget.
 const THUMBNAIL_TOKEN_COST = 1000;
 
-// ──────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // POST /api/thumbnail/edit-with-notes
 //
 // Pikzels-style "Edit With Simple Notes". Given an existing thumbnail_id
@@ -17,11 +18,11 @@ const THUMBNAIL_TOKEN_COST = 1000;
 //
 // Body:
 //   { thumbnail_id: string, instruction: string,
-//     denoise?: number (0.3–0.8, default 0.5),
+//     denoise?: number (0.3â€“0.8, default 0.5),
 //     client_id?: string, aspect?: "16:9"|"9:16"|"1:1" }
 //
 // Response: { ok, thumbnail_id, job_id, status, poll_url }
-// ──────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export const maxDuration = 30;
 
@@ -38,7 +39,7 @@ function buildImg2ImgWorkflow(opts: {
   seed: number;
   denoise: number;
 }): Record<string, WorkflowNode> {
-  // FLUX img2img: load ref → VAE encode → sample at denoise=X → decode.
+  // FLUX img2img: load ref â†’ VAE encode â†’ sample at denoise=X â†’ decode.
   return {
     "1": {
       inputs: { ckpt_name: "flux1-dev-fp8.safetensors" },
@@ -101,6 +102,10 @@ export async function POST(request: NextRequest) {
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
+  const { data: rlProfile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, rlProfile?.plan_tier);
+  if (limited) return limited;
+
   let body: {
     thumbnail_id?: unknown;
     instruction?: unknown;
@@ -125,7 +130,7 @@ export async function POST(request: NextRequest) {
   }
   if (!instruction) {
     return NextResponse.json(
-      { ok: false, error: "instruction required — describe the change in plain English" },
+      { ok: false, error: "instruction required â€” describe the change in plain English" },
       { status: 400 },
     );
   }
@@ -163,8 +168,8 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Plan-tier token gate — bug-hunt-apr20-v2 HIGH #12. Each edit dispatches
-  // a fresh FLUX img2img job — no free re-roll.
+  // Plan-tier token gate â€” bug-hunt-apr20-v2 HIGH #12. Each edit dispatches
+  // a fresh FLUX img2img job â€” no free re-roll.
   const gate = await checkLimit(ownerId, "tokens", THUMBNAIL_TOKEN_COST);
   if (!gate.allowed) {
     return NextResponse.json(
@@ -203,7 +208,7 @@ export async function POST(request: NextRequest) {
 
   // Compose the edit prompt. We keep the original prompt as context so the
   // model preserves the subject's intent, then append the user's instruction
-  // with the key directive "EDIT: …" so the model knows what to change.
+  // with the key directive "EDIT: â€¦" so the model knows what to change.
   const editPrompt =
     (sourcePrompt ? `${sourcePrompt}. ` : "") +
     `EDIT: ${instruction}. ` +
@@ -263,7 +268,7 @@ export async function POST(request: NextRequest) {
       runpodErrorMessage = errText || "RunPod returned no job id";
     }
   } catch (err) {
-    runpodErrorMessage = err instanceof Error ? err.message : "RunPod request failed";
+    runpodErrorMessage = err instanceof Error ? "Internal server error" : "RunPod request failed";
   }
 
   if (!jobId) {
@@ -314,3 +319,4 @@ export async function POST(request: NextRequest) {
     poll_url: `/api/thumbnail/status?job_id=${jobId}`,
   });
 }
+

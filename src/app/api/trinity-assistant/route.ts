@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { anthropic, MODEL_HAIKU, getResponseText, withCacheBreakpoint } from "@/lib/ai/claude-helpers";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import {
   THUMBNAIL_STYLES,
   getStylesByCategory,
@@ -3386,10 +3387,13 @@ export async function POST(request: NextRequest) {
   // Resolve role + scope
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, role, parent_agency_id, full_name, nickname")
+    .select("id, role, parent_agency_id, full_name, nickname, plan_tier")
     .eq("id", user.id)
     .maybeSingle();
   if (!profile) return NextResponse.json({ error: "Profile not found." }, { status: 404 });
+
+  const aiLimited = checkAiRateLimit(user.id, (profile as { plan_tier?: string }).plan_tier ?? null);
+  if (aiLimited) return aiLimited;
 
   const role = (profile as { role: string }).role;
   const ownerId =

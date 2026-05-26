@@ -1,12 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
-// Keep in sync with thumbnail/generate/route.ts — each FLUX render costs
+// Keep in sync with thumbnail/generate/route.ts â€” each FLUX render costs
 // ~1000 "tokens" in the plan-tier budget.
 const THUMBNAIL_TOKEN_COST = 1000;
 
-// ──────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // POST /api/thumbnail/recreate
 // Body: { url: string, style_modifier?: string, client_id?: string, aspect?: "16:9"|"9:16"|"1:1" }
 //
@@ -16,7 +17,7 @@ const THUMBNAIL_TOKEN_COST = 1000;
 //    an optional style_modifier text prompt.
 // 4. Inserts a generated_images row with metadata.source = "recreate" and
 //    returns the thumbnail_id + job_id for polling via /api/thumbnail/status.
-// ──────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export const maxDuration = 30;
 
@@ -80,6 +81,10 @@ export async function POST(request: NextRequest) {
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 
+  const { data: rlProfile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, rlProfile?.plan_tier);
+  if (limited) return limited;
+
   let body: {
     url?: unknown;
     style_modifier?: unknown;
@@ -101,7 +106,7 @@ export async function POST(request: NextRequest) {
   const videoId = extractVideoId(rawUrl);
   if (!videoId) {
     return NextResponse.json(
-      { ok: false, error: "Unsupported URL — expected a YouTube video, Shorts, or youtu.be link" },
+      { ok: false, error: "Unsupported URL â€” expected a YouTube video, Shorts, or youtu.be link" },
       { status: 400 },
     );
   }
@@ -139,7 +144,7 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Plan-tier token gate — bug-hunt-apr20-v2 HIGH #12. Without this a
+  // Plan-tier token gate â€” bug-hunt-apr20-v2 HIGH #12. Without this a
   // Starter-plan user could queue unlimited RunPod img2img jobs.
   const gate = await checkLimit(ownerId, "tokens", THUMBNAIL_TOKEN_COST);
   if (!gate.allowed) {
@@ -205,7 +210,7 @@ export async function POST(request: NextRequest) {
     "duplicate subjects, text artifacts, garbled text, copy of original, identical image";
   const seed = Math.floor(Math.random() * 2147483647);
 
-  // FLUX img2img workflow — LoadImageFromUrl feeds into VAEEncode, which becomes
+  // FLUX img2img workflow â€” LoadImageFromUrl feeds into VAEEncode, which becomes
   // the initial latent at denoise=0.65 (enough to re-render, little enough to
   // preserve the composition).
   const workflow = {
@@ -285,7 +290,7 @@ export async function POST(request: NextRequest) {
         `RunPod returned ${res.status}`;
     }
   } catch (err) {
-    errorMessage = err instanceof Error ? err.message : "RunPod request failed";
+    errorMessage = err instanceof Error ? "Internal server error" : "RunPod request failed";
   }
 
   if (!jobId) {
@@ -332,3 +337,4 @@ export async function POST(request: NextRequest) {
     poll_url: `/api/thumbnail/status?job_id=${jobId}`,
   });
 }
+

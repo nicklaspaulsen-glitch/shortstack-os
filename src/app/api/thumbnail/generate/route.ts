@@ -4,6 +4,7 @@ import { createServerSupabase } from "@/lib/supabase/server";
 import { getStyleById } from "@/lib/thumbnail-styles";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // Average FLUX/SDXL render consumes roughly this many "tokens" in the
 // plan-tier budget. Tuned against observed RunPod usage — a Starter plan
@@ -200,6 +201,10 @@ export async function POST(request: NextRequest) {
   const authSupabase = createServerSupabase();
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: profile } = await authSupabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, profile?.plan_tier);
+  if (limited) return limited;
 
   try {
     const body = await request.json();

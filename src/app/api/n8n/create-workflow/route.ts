@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { callLLMTraced } from "@/lib/ai/llm-router";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // n8n Workflow Creator — AI designs and deploys workflows to n8n
 // Set N8N_URL and N8N_API_KEY in env vars (N8N_URL is shared with
@@ -18,12 +19,15 @@ export async function POST(request: NextRequest) {
   // Fail-closed on missing profile.
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role, plan_tier")
     .eq("id", user.id)
     .maybeSingle();
   if (!profile || profile.role === "client") {
     return NextResponse.json({ error: "Operators only" }, { status: 403 });
   }
+
+  const limited = checkAiRateLimit(user.id, (profile as { plan_tier?: string }).plan_tier ?? null);
+  if (limited) return limited;
 
   const { description, client_id } = await request.json();
 

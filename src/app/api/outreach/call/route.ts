@@ -25,6 +25,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { reportError } from "@/lib/observability/error-reporter";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import type { ContactKind } from "@/lib/outreach/types";
 
 interface CallBody {
@@ -107,7 +108,7 @@ async function startElevenLabsCall(args: {
       conversationId: typeof json.conversation_id === "string" ? json.conversation_id : undefined,
     };
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "ElevenLabs error" };
+    return { ok: false, error: "ElevenLabs error" };
   }
 }
 
@@ -145,7 +146,7 @@ async function startTwilioBridge(args: {
     const json = await res.json().catch(() => ({}));
     return { ok: true, callSid: typeof json.sid === "string" ? json.sid : undefined };
   } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "Twilio error" };
+    return { ok: false, error: "Twilio error" };
   }
 }
 
@@ -155,6 +156,10 @@ export async function POST(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: callProfile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const callLimited = checkAiRateLimit(user.id, callProfile?.plan_tier);
+  if (callLimited) return callLimited;
 
   const ownerId = await getEffectiveOwnerId(supabase, user.id);
   if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -199,7 +204,7 @@ export async function POST(request: NextRequest) {
     .single();
   if (insertErr || !callRow) {
     return NextResponse.json(
-      { error: `Failed to log call: ${insertErr?.message ?? "unknown"}` },
+      { error: "Failed to log call" },
       { status: 500 },
     );
   }
