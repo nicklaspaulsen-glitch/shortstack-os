@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 // AI Lead Gen Agent — Fully autonomous lead generation pipeline
 // Like Clay + Instantly combined: finds leads, enriches them, scores them, and sends outreach
@@ -44,9 +45,9 @@ export async function POST(request: NextRequest) {
 
     const foundLeads: Array<Record<string, unknown>> = [];
     for (const p of (searchData.places || [])) {
-      // Enrich email from website
+      // Enrich email from website — guard against SSRF (websiteUri is business-owner-controlled)
       let email = null;
-      if (p.websiteUri) {
+      if (p.websiteUri && !checkFetchUrl(p.websiteUri, { allowHttp: true })) {
         try {
           const siteRes = await fetch(p.websiteUri, { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(5000) });
           const html = await siteRes.text();
@@ -94,9 +95,8 @@ export async function POST(request: NextRequest) {
         .single();
       if (!lead) continue;
 
-      // Scrape website for more info
-      // scrape website
-      if (lead.website) {
+      // Scrape website for more info — guard against SSRF (lead.website may be user-submitted)
+      if (lead.website && !checkFetchUrl(lead.website, { allowHttp: true })) {
         try {
           const res = await fetch(lead.website, { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(5000) });
           const html = await res.text();

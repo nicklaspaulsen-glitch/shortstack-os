@@ -37,6 +37,7 @@ import {
 } from "@/lib/services/zernio-ads";
 import { getClientZernioProfile, setupClientInZernio } from "@/lib/services/zernio";
 import { secureCompare } from "@/lib/security/ssrf-guard";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -241,11 +242,12 @@ const handleFindLeads: TaskHandler = async (supabase, task) => {
       if ((existing ?? 0) > 0) continue;
 
       // Scrape website for social media profiles + email
+      // Guard against SSRF — websiteUri from Google Places is business-owner-controlled
       let socialProfiles: SocialProfile[] = [];
       let email: string | null = null;
       let siteHtml = "";
 
-      if (website) {
+      if (website && !checkFetchUrl(website, { allowHttp: true })) {
         try {
           const siteRes = await fetch(website, {
             headers: {
