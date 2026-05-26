@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 // POST — Run a competitive monitoring check on a given URL
 // In production this would: fetch the URL, compare with stored snapshot,
 // use Anthropic to summarize differences, store new snapshot, return changes.
+// SECURITY NOTE: When the real fetch is implemented, guard competitor_url
+// with checkFetchUrl from @/lib/security/ssrf before calling fetch().
 export async function POST(request: NextRequest) {
+  // Auth gate — this surface consumes real credits in production
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   try {
     const body = await request.json();
     const { competitor_url, check_type = "full" } = body;
