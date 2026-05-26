@@ -34,7 +34,10 @@ export async function GET() {
   }
 
   return NextResponse.json({
-    higgsfield: !!process.env.HIGGSFIELD_URL,
+    // HIGGSFIELD_API_KEY gates Higgsfield Creative AI (/api/video/render, provider=higgsfield).
+    // HIGGSFIELD_URL is the RunPod Mochi endpoint — a separate backend, not Higgsfield's own API.
+    higgsfield: !!process.env.HIGGSFIELD_API_KEY,
+    mochi: !!process.env.HIGGSFIELD_URL,
     runpod: !!process.env.RUNPOD_API_KEY,
     kling: !!process.env.KLING_API_KEY,
     fal: !!process.env.FAL_KEY,

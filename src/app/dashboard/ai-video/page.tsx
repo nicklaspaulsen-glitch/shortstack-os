@@ -293,6 +293,7 @@ export default function AIVideoPage() {
   // Only fetched for platform admins; null means "not yet loaded".
   const [backendStatus, setBackendStatus] = useState<{
     higgsfield: boolean;
+    mochi: boolean;
     runpod: boolean;
     kling: boolean;
     fal: boolean;
@@ -2088,15 +2089,16 @@ export default function AIVideoPage() {
       {/* Setup / GPU env note� admin-only; clients should never see env-var names */}
       {/* Only shown when a backend env var is actually missing — not as a static note */}
       {advancedMode && isPlatformAdmin && backendStatus && (
-        !backendStatus.higgsfield || !backendStatus.runpod
+        !backendStatus.mochi || !backendStatus.runpod
       ) && (
         <div className="flex items-center gap-2 text-[9px] text-text-primary/35 px-1">
           <Lightning size={10} />
           <span>
             Missing:{" "}
             {[
-              !backendStatus.higgsfield && <code key="hf" className="text-text-primary/55 bg-[rgba(212,255,0,0.08)] px-1 py-0.5 rounded">HIGGSFIELD_URL</code>,
+              !backendStatus.mochi && <code key="hf" className="text-text-primary/55 bg-[rgba(212,255,0,0.08)] px-1 py-0.5 rounded">HIGGSFIELD_URL</code>,
               !backendStatus.runpod && <code key="rp" className="text-text-primary/55 bg-[rgba(212,255,0,0.08)] px-1 py-0.5 rounded">RUNPOD_API_KEY</code>,
+              !backendStatus.higgsfield && <code key="hfkey" className="text-text-primary/55 bg-[rgba(212,255,0,0.08)] px-1 py-0.5 rounded">HIGGSFIELD_API_KEY</code>,
             ].filter(Boolean).reduce<React.ReactNode[]>((acc, el, i) => i === 0 ? [el] : [...acc, " + ", el], [])}
             {" "}— generation will return a scene plan only.
           </span>

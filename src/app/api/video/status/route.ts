@@ -1,18 +1,70 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
-// Poll job status for async video generation (Mochi/RunPod or fal.ai)
+// Poll job status for async video generation (Mochi/RunPod, fal.ai, or Higgsfield)
 export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const jobId = request.nextUrl.searchParams.get("job_id");
-  if (!jobId) return NextResponse.json({ error: "job_id required" }, { status: 400 });
+  // Accept both "job_id" (legacy) and "id" (sent by render route for Higgsfield/fal)
+  const jobId = request.nextUrl.searchParams.get("job_id") ?? request.nextUrl.searchParams.get("id");
+  if (!jobId) return NextResponse.json({ error: "job_id or id required" }, { status: 400 });
 
-  const source = request.nextUrl.searchParams.get("source"); // "fal" | null (RunPod default)
+  // Accept both "source" (legacy fal path) and "provider" (new routing param)
+  const source = request.nextUrl.searchParams.get("source");
+  const provider = request.nextUrl.searchParams.get("provider");
 
-  // fal.ai async job polling
+  // ── Higgsfield Creative AI polling ──
+  // render route sends: ?provider=higgsfield&id=<render_id>
+  if (provider === "higgsfield") {
+    const higgsKey = process.env.HIGGSFIELD_API_KEY;
+    if (!higgsKey) {
+      return NextResponse.json({ error: "HIGGSFIELD_API_KEY not configured" }, { status: 500 });
+    }
+
+    try {
+      const res = await fetch(`https://api.higgsfield.ai/v1/render/${jobId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${higgsKey}`,
+        },
+      });
+      if (!res.ok) {
+        const errText = await res.text().catch(() => "(no body)");
+        return NextResponse.json(
+          { error: `Higgsfield status HTTP ${res.status}: ${errText.slice(0, 120)}` },
+          { status: 502 },
+        );
+      }
+      const job = (await res.json()) as {
+        id?: string;
+        render_id?: string;
+        status?: string;
+        url?: string;
+        video_url?: string;
+        error?: string;
+      };
+
+      const completedUrl = job.url ?? job.video_url ?? null;
+      const normalizedStatus = job.status?.toLowerCase() ?? "processing";
+
+      return NextResponse.json({
+        job_id: jobId,
+        source: "higgsfield",
+        status: normalizedStatus === "completed" ? "completed" : normalizedStatus,
+        url: normalizedStatus === "completed" ? completedUrl : null,
+        error: job.error || null,
+      });
+    } catch (err) {
+      return NextResponse.json(
+        { error: `Higgsfield: ${err instanceof Error ? err.message : String(err)}` },
+        { status: 500 },
+      );
+    }
+  }
+
+  // ── fal.ai async job polling ──
   if (source === "fal") {
     const falKey = process.env.FAL_KEY;
     if (!falKey) {
@@ -51,7 +103,7 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  // RunPod/Mochi polling (default)
+  // ── RunPod/Mochi polling (default) ──
   const videoUrl = process.env.HIGGSFIELD_URL;
   const runpodKey = process.env.RUNPOD_API_KEY;
   if (!videoUrl || !runpodKey) {
