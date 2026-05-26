@@ -1,5 +1,6 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 // Budget & Usage Alert Cron — checks API spend and token limits, alerts via Telegram
 // Run daily or every 6h. Monitors: Stripe, ElevenLabs, RunPod, Anthropic, Resend, Twilio
@@ -15,8 +16,9 @@ interface AlertItem {
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
   const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || !secureCompare(rawToken, cronSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

@@ -22,6 +22,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { fireTrigger, TriggerType } from "@/lib/workflows/trigger-dispatch";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const maxDuration = 60;
 
@@ -40,8 +41,9 @@ interface QueueRow {
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
   const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || !secureCompare(rawToken, cronSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

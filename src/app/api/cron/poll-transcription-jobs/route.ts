@@ -24,6 +24,7 @@ import {
   type TranscriptionSourceTable,
 } from "@/lib/transcription/job-completion";
 import type { TranscribeResult } from "@/lib/transcription/provider";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const maxDuration = 300;
 export const dynamic = "force-dynamic";
@@ -63,8 +64,9 @@ async function pollProvider(
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
   const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || !secureCompare(rawToken, cronSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

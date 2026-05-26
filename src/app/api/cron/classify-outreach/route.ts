@@ -15,6 +15,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { classifyOutcome } from "@/lib/outreach/classify";
 import { reportError } from "@/lib/observability/error-reporter";
 import type { OutreachChannel, OutreachOutcome } from "@/lib/outreach/types";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const maxDuration = 120;
 export const dynamic = "force-dynamic";
@@ -66,7 +67,8 @@ async function fetchSourceContent(
 export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET;
   const authHeader = request.headers.get("authorization");
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
+  if (!cronSecret || !secureCompare(rawToken, cronSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

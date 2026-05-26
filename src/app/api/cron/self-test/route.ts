@@ -5,6 +5,7 @@ import {
   ROUTES_TO_CHECK,
   type SelfTestCheck,
 } from "@/lib/self-test/routes-to-check";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 /**
  * Tier-1 nightly self-test cron.
@@ -172,8 +173,9 @@ async function mintSelfTestToken(): Promise<string | null> {
 export async function GET(request: NextRequest) {
   // ── Auth ──
   const authHeader = request.headers.get("authorization");
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
   const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || !secureCompare(rawToken, cronSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

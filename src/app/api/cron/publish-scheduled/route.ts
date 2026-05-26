@@ -6,6 +6,7 @@ import {
   type CalendarRow,
   type PublishOutcome,
 } from "@/lib/content-publish";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const maxDuration = 60;
 
@@ -29,11 +30,12 @@ export const maxDuration = 60;
  */
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
   if (!process.env.CRON_SECRET) {
     return NextResponse.json({ error: "CRON_SECRET not configured" }, { status: 500 });
   }
   const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || !secureCompare(rawToken, cronSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

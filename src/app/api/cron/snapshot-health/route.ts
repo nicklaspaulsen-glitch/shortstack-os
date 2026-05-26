@@ -1,6 +1,7 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { structuredLog } from "@/lib/observability/structured-log";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 /**
  * snapshot-health — every 15 min, write one row per agency owner into
@@ -142,8 +143,9 @@ async function getVercelDeployStatus(): Promise<string | null> {
 export async function GET(request: NextRequest) {
   // Standard Vercel cron auth. Same pattern as every other cron in this app.
   const authHeader = request.headers.get("authorization");
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
   const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || !secureCompare(rawToken, cronSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

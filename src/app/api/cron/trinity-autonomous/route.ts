@@ -20,6 +20,7 @@ import {
   type ProposeActionsResult,
   type ExecuteActionResult,
 } from "@/lib/trinity/autonomous";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const maxDuration = 300;
 
@@ -27,8 +28,9 @@ const MAX_USERS_PER_RUN = 100;
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
   const cronSecret = process.env.CRON_SECRET;
-  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || !secureCompare(rawToken, cronSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
