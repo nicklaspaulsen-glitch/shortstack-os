@@ -9,11 +9,13 @@ import { getStripe } from "@/lib/stripe/client";
  * POST /api/websites/[id]/subscribe
  * body: {
  *   billing_cycle?: 'monthly' | 'yearly',
- *   addons?: string[],
- *   monthly_price: number,    // chosen from /price-quote
- *   yearly_price?: number,
+ *   addons?: string[],       // filtered to ADDON_PRICES allowlist
  *   tier: 'starter' | 'pro' | 'business' | 'premium'
  * }
+ *
+ * Note: monthly_price is NOT accepted from the client. Price is computed
+ * server-side from the persisted /price-quote value (if any) plus the tier
+ * floor and any selected addons. This prevents price-manipulation attacks.
  *
  * Behaviour:
  *  - If STRIPE_SECRET_KEY is set: creates a Stripe Price + Checkout session
@@ -27,6 +29,24 @@ import { getStripe } from "@/lib/stripe/client";
 const VALID_TIERS = ["starter", "pro", "business", "premium"] as const;
 const VALID_CYCLES = ["monthly", "yearly"] as const;
 
+// Tier floor prices — used when no quote has been persisted yet by /price-quote.
+// These mirror the ranges defined in price-quote/route.ts.
+const TIER_MIN_PRICE: Record<string, number> = {
+  starter: 9,
+  pro: 29,
+  business: 59,
+  premium: 149,
+};
+
+// Addon unit prices — must stay in sync with price-quote/route.ts ADDON_PRICES.
+const ADDON_PRICES: Record<string, number> = {
+  custom_domain: 5,
+  priority_support: 25,
+  advanced_analytics: 10,
+  ab_testing: 15,
+  white_label: 20,
+};
+
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -39,30 +59,43 @@ export async function POST(
   const billing_cycle = (VALID_CYCLES as readonly string[]).includes(body?.billing_cycle)
     ? body.billing_cycle
     : "monthly";
-  const addons: string[] = Array.isArray(body?.addons) ? body.addons : [];
+  // Filter addons to the known allowlist — prevents unknown keys from being stored.
+  const addons: string[] = Array.isArray(body?.addons)
+    ? (body.addons as unknown[]).filter((a): a is string => typeof a === "string" && a in ADDON_PRICES)
+    : [];
   const tier = (VALID_TIERS as readonly string[]).includes(body?.tier) ? body.tier : "starter";
 
-  const monthlyPrice = Number(body?.monthly_price);
-  if (!Number.isFinite(monthlyPrice) || monthlyPrice <= 0 || monthlyPrice > 10000) {
-    return NextResponse.json({ error: "Invalid monthly_price" }, { status: 400 });
-  }
-  const yearlyPriceRaw = Number(body?.yearly_price);
-  const yearlyPrice = Number.isFinite(yearlyPriceRaw) && yearlyPriceRaw > 0
-    ? yearlyPriceRaw
-    : Number((monthlyPrice * 12 * 0.83).toFixed(2));
-
-  const amount = billing_cycle === "yearly" ? yearlyPrice : monthlyPrice;
   const interval = billing_cycle === "yearly" ? "year" : "month";
 
+  // Fetch project — include persisted pricing columns set by /price-quote.
   const { data: project } = await supabase
     .from("website_projects")
-    .select("id, profile_id, name, custom_domain, preview_url")
+    .select("id, profile_id, name, custom_domain, preview_url, monthly_price, addons")
     .eq("id", params.id)
     .single();
 
   if (!project || project.profile_id !== user.id) {
     return NextResponse.json({ error: "Not found or forbidden" }, { status: 403 });
   }
+
+  // ── Server-side price computation ────────────────────────────────────────
+  // Never trust the client-supplied monthly_price — compute it here.
+  // If /price-quote was called with persist=true the authoritative quote is
+  // already in project.monthly_price; otherwise fall back to the tier floor.
+  // Either way the Stripe charge is the server-computed value, not body.monthly_price.
+  const storedAddons: string[] = Array.isArray(project.addons) ? (project.addons as string[]) : [];
+  const baseMonthly =
+    typeof project.monthly_price === "number" && project.monthly_price > 0
+      ? project.monthly_price
+      : TIER_MIN_PRICE[tier] + storedAddons.reduce((s, a) => s + (ADDON_PRICES[a] ?? 0), 0);
+  // Add prices for new addons the user is selecting that weren't in the stored quote.
+  const newAddonDelta = addons
+    .filter((a) => !storedAddons.includes(a))
+    .reduce((s, a) => s + (ADDON_PRICES[a] ?? 0), 0);
+  const monthlyPrice = Number((baseMonthly + newAddonDelta).toFixed(2));
+  const yearlyPrice = Number((monthlyPrice * 12 * 0.83).toFixed(2));
+  const amount = billing_cycle === "yearly" ? yearlyPrice : monthlyPrice;
+  // ─────────────────────────────────────────────────────────────────────────
 
   const { data: profile } = await supabase
     .from("profiles")

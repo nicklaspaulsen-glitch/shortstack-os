@@ -54,9 +54,12 @@ export async function POST(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const body = await request.json();
+  // Defense-in-depth: strip server_id from body so a crafted payload cannot
+  // override the path-param server_id after the spread.
+  const { server_id: _discardedServerId, ...safeBody } = body;
   const { data, error } = await supabase
     .from("discord_welcome_config")
-    .upsert({ server_id, ...body, updated_at: new Date().toISOString() }, { onConflict: "server_id" })
+    .upsert({ server_id, ...safeBody, updated_at: new Date().toISOString() }, { onConflict: "server_id" })
     .select()
     .single();
 

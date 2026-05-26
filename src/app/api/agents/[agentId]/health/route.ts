@@ -1,6 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
+// Allowlist of known agent identifiers.  Raw params.agentId is interpolated
+// directly into a PostgREST .or() filter string, so we must validate it before
+// use — an un-validated value could escape the filter and leak cross-tenant rows.
+const VALID_AGENT_IDS = new Set([
+  "lead-engine",
+  "outreach",
+  "content",
+  "ads",
+  "reviews",
+  "analytics",
+  "trinity",
+  "competitor",
+]);
+
 // Health check for any agent — checks recent activity and error rate
 export async function GET(_request: NextRequest, { params }: { params: { agentId: string } }) {
   const supabase = createServerSupabase();
@@ -8,6 +22,9 @@ export async function GET(_request: NextRequest, { params }: { params: { agentId
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const agentId = params.agentId;
+  if (!VALID_AGENT_IDS.has(agentId)) {
+    return NextResponse.json({ error: "Unknown agent" }, { status: 404 });
+  }
   const now = new Date();
   const hourAgo = new Date(now.getTime() - 3600000).toISOString();
   const dayAgo = new Date(now.getTime() - 86400000).toISOString();

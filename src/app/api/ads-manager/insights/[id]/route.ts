@@ -83,10 +83,13 @@ export async function POST(
   }
 
   if (parsed.data.decision === "reject") {
+    // Defense-in-depth: re-scope by user_id to close the TOCTOU window between
+    // the ownership read above and this write.
     await supabase
       .from("ads_optimization_suggestions")
       .update({ status: "rejected", acted_at: new Date().toISOString() })
-      .eq("id", row.id);
+      .eq("id", row.id)
+      .eq("user_id", ownerId);
     return NextResponse.json({ success: true, status: "rejected" });
   }
 
@@ -118,10 +121,13 @@ export async function POST(
     );
   }
 
+  // Defense-in-depth: re-scope by user_id to close the TOCTOU window between
+  // the ownership read above and this write.
   await supabase
     .from("ads_optimization_suggestions")
     .update({ status: "accepted", acted_at: new Date().toISOString() })
-    .eq("id", row.id);
+    .eq("id", row.id)
+    .eq("user_id", ownerId);
 
   return NextResponse.json({ success: true, status: "accepted" });
 }
