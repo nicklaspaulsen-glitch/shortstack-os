@@ -213,7 +213,7 @@ async function sendDiscord(
     const res = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
       method: "POST",
       headers: {
-        Authorization: `Robot ${botToken}`,
+        Authorization: `Bot ${botToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ content: body }),
