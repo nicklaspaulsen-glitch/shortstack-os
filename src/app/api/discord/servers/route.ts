@@ -80,8 +80,27 @@ export async function PATCH(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { id, ...patch } = await request.json();
+  const body = await request.json();
+  const { id } = body;
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+
+  // Allowlist writable fields — prevents mass assignment of server-controlled
+  // columns (profile_id, created_at, bot_added_at, etc.).
+  const ALLOWED_PATCH_FIELDS = new Set([
+    "status",
+    "features_enabled",
+    "settings",
+    "guild_name",
+    "guild_icon",
+    "member_count",
+  ]);
+  const patch: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(body)) {
+    if (k !== "id" && ALLOWED_PATCH_FIELDS.has(k)) patch[k] = v;
+  }
+  if (Object.keys(patch).length === 0) {
+    return NextResponse.json({ error: "No updatable fields provided" }, { status: 400 });
+  }
 
   const { data, error } = await supabase
     .from("discord_servers")
