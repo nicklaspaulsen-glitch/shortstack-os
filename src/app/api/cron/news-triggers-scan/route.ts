@@ -16,6 +16,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { searchCompanyNews } from "@/lib/integrations/news-triggers";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const maxDuration = 300;
 
@@ -32,8 +33,9 @@ interface LeadRow {
 export async function GET(request: NextRequest) {
   const isVercelCron = request.headers.get("x-vercel-cron") !== null;
   const auth = request.headers.get("authorization");
+  const rawToken = auth?.replace(/^Bearer\s+/i, "") ?? "";
   const hasBearer =
-    !!process.env.CRON_SECRET && auth === `Bearer ${process.env.CRON_SECRET}`;
+    !!process.env.CRON_SECRET && secureCompare(rawToken, process.env.CRON_SECRET);
   if (!isVercelCron && !hasBearer) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

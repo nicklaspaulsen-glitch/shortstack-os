@@ -18,6 +18,7 @@ import {
   signWebhookPayload,
 } from "@/lib/api/webhook-events";
 import { resolveAndCheckUrl } from "@/lib/security/ssrf";
+import { secureCompare } from "@/lib/security/ssrf-guard";
 
 export const maxDuration = 60;
 
@@ -42,7 +43,8 @@ const BATCH_SIZE = 25;
 export async function GET(request: NextRequest) {
   const isVercelCron = request.headers.get("x-vercel-cron") !== null;
   const auth = request.headers.get("authorization");
-  const hasBearer = auth === `Bearer ${process.env.CRON_SECRET}`;
+  const rawToken = auth?.replace(/^Bearer\s+/i, "") ?? "";
+  const hasBearer = !!process.env.CRON_SECRET && secureCompare(rawToken, process.env.CRON_SECRET);
   if (!isVercelCron && !hasBearer) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
