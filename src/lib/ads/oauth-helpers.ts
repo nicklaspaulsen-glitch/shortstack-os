@@ -115,16 +115,32 @@ function signState(data: string): string {
 }
 
 /**
+ * Validate that a return_to value is a safe same-origin relative path.
+ * Rejects null, empty strings, absolute URLs (http/https), and protocol-relative
+ * URLs (starting with //) — all of which could be used for open-redirect attacks.
+ * Accepts any path starting with a single slash (e.g. "/" or "/dashboard/foo").
+ */
+export function sanitizeReturnTo(
+  raw: string | null | undefined,
+  fallback = "/dashboard/ads-manager",
+): string {
+  if (!raw) return fallback;
+  // Must start with exactly one slash (not // which is protocol-relative)
+  if (/^\/(?!\/)/.test(raw)) return raw;
+  return fallback;
+}
+
+/**
  * UI redirect URL for a successful OAuth callback.
  */
 export function uiRedirectOnSuccess(platform: AdPlatform, returnTo?: string): string {
-  const path = returnTo || "/dashboard/ads-manager";
+  const path = sanitizeReturnTo(returnTo);
   const sep = path.includes("?") ? "&" : "?";
   return `${getBaseUrl()}${path}${sep}connected=${platform}`;
 }
 
 export function uiRedirectOnError(platform: AdPlatform, reason: string, returnTo?: string): string {
-  const path = returnTo || "/dashboard/ads-manager";
+  const path = sanitizeReturnTo(returnTo);
   const sep = path.includes("?") ? "&" : "?";
   return `${getBaseUrl()}${path}${sep}error=${encodeURIComponent(reason)}&platform=${platform}`;
 }

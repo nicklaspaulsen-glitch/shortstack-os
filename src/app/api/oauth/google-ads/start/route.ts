@@ -14,6 +14,7 @@ import {
   getRedirectUri,
   missingEnvFor,
   missingEnvResponse,
+  sanitizeReturnTo,
 } from "@/lib/ads/oauth-helpers";
 
 // GET /api/oauth/google-ads/start
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
     return missingEnvResponse("google_ads", missing);
   }
 
-  const returnTo = request.nextUrl.searchParams.get("return_to") || "/dashboard/ads-manager";
+  const returnTo = sanitizeReturnTo(request.nextUrl.searchParams.get("return_to"));
   const state = encodeState({ user_id: user.id, return_to: returnTo, platform: "google_ads" });
 
   const scopes = "https://www.googleapis.com/auth/adwords";

@@ -5,6 +5,7 @@ import {
   getRedirectUri,
   missingEnvFor,
   missingEnvResponse,
+  sanitizeReturnTo,
 } from "@/lib/ads/oauth-helpers";
 
 // GET /api/oauth/meta-ads/start
@@ -21,7 +22,7 @@ export async function GET(request: NextRequest) {
     return missingEnvResponse("meta_ads", missing);
   }
 
-  const returnTo = request.nextUrl.searchParams.get("return_to") || "/dashboard/ads-manager";
+  const returnTo = sanitizeReturnTo(request.nextUrl.searchParams.get("return_to"));
   const state = encodeState({ user_id: user.id, return_to: returnTo, platform: "meta_ads" });
 
   const scopes = [
