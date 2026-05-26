@@ -179,6 +179,16 @@ export async function POST(request: NextRequest) {
         if (!data.email) {
           return NextResponse.json({ error: "email required for contact.update" }, { status: 400 });
         }
+        // Email-based update — MUST scope by user_id or the same email address
+        // across multiple tenants would be updated simultaneously (cross-tenant write).
+        // Same constraint as lead.update by email.
+        if (!webhookOwnerId) {
+          console.error("[webhooks/inbound] contact.update by email refused: WEBHOOK_OWNER_USER_ID is not set. Set it to prevent cross-tenant writes.");
+          return NextResponse.json(
+            { error: "contact.update requires WEBHOOK_OWNER_USER_ID to be configured" },
+            { status: 503 },
+          );
+        }
         const { error } = await supabase
           .from("leads")
           .update({
@@ -186,7 +196,8 @@ export async function POST(request: NextRequest) {
             phone: data.phone || undefined,
             notes: data.notes || undefined,
           })
-          .eq("email", data.email);
+          .eq("email", data.email)
+          .eq("user_id", webhookOwnerId);
         if (error) throw error;
         results.push("Contact updated");
         break;
@@ -219,6 +230,33 @@ export async function POST(request: NextRequest) {
       case "deal.update": {
         if (!data.id) {
           return NextResponse.json({ error: "id required for deal.update" }, { status: 400 });
+        }
+        // Ownership pre-flight: when WEBHOOK_OWNER_USER_ID is set, validate the deal
+        // belongs to that tenant before mutating. Without this check any caller with the
+        // shared WEBHOOK_SECRET can overwrite deals belonging to other agencies by UUID.
+        if (webhookOwnerId) {
+          const { data: dealRow } = await supabase
+            .from("deals")
+            .select("client_id")
+            .eq("id", data.id)
+            .maybeSingle();
+          if (!dealRow) {
+            return NextResponse.json({ error: "Deal not found" }, { status: 404 });
+          }
+          if (dealRow.client_id) {
+            const { data: ownerCheck } = await supabase
+              .from("clients")
+              .select("id")
+              .eq("id", dealRow.client_id)
+              .eq("profile_id", webhookOwnerId)
+              .maybeSingle();
+            if (!ownerCheck) {
+              console.error("[webhooks/inbound] cross-tenant block: deal.update rejected — deal not owned by WEBHOOK_OWNER_USER_ID", {
+                deal_id: data.id,
+              });
+              return NextResponse.json({ error: "Forbidden: deal belongs to different tenant" }, { status: 403 });
+            }
+          }
         }
         const { error } = await supabase
           .from("deals")
