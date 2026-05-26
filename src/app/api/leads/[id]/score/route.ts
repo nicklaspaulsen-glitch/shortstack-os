@@ -34,7 +34,9 @@ export async function POST(
   // Score it
   const result = await scoreLead(lead);
 
-  // Persist to DB
+  // Persist to DB.
+  // Defense-in-depth: re-scope by user_id to close the TOCTOU window between
+  // the ownership read above and this write.
   const { error: updateError } = await supabase
     .from("leads")
     .update({
@@ -44,7 +46,8 @@ export async function POST(
       score_computed_at: new Date().toISOString(),
       score_version: 1,
     })
-    .eq("id", leadId);
+    .eq("id", leadId)
+    .eq("user_id", ownerId);
 
   if (updateError) {
     return NextResponse.json({ error: updateError.message }, { status: 500 });
