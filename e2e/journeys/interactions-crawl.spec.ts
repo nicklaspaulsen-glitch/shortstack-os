@@ -257,9 +257,9 @@ interface RouteResult {
 // ── Test ──────────────────────────────────────────────────────────────────────
 
 test.describe("Dashboard interactions crawl", () => {
-  test.beforeAll(() => {
-    test.skip(!hasTestCreds(), "E2E credentials not set — skipping interaction crawl");
-  });
+  // Describe-level skip — same pattern as sidebar-crawl.spec.ts.
+  // test.skip() inside beforeAll hooks is not supported by Playwright.
+  test.skip(!hasTestCreds(), "E2E credentials not set — skipping interaction crawl");
 
   test(
     "every dashboard route handles tab/accordion/sort interactions without JS errors",
