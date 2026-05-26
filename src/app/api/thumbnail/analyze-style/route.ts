@@ -9,6 +9,7 @@ import {
   getResponseText,
 } from "@/lib/ai/claude-helpers";
 import { getPageTrainingPrompt } from "@/lib/ai/page-training";
+import { resolveAndCheckUrl } from "@/lib/security/ssrf";
 
 interface AnalyzeStyleInput {
   image_url?: string;
@@ -229,6 +230,10 @@ export async function POST(request: NextRequest) {
       const mediaType = normalizeMediaType(m ? m[1] : "image/jpeg");
       imageSource = { type: "base64", media_type: mediaType, data };
     } else if (body.image_url) {
+      const ssrfErr = await resolveAndCheckUrl(body.image_url);
+      if (ssrfErr) {
+        return NextResponse.json({ error: ssrfErr }, { status: 400 });
+      }
       const { data, mediaType } = await downloadAsBase64(body.image_url);
       imageSource = {
         type: "base64",

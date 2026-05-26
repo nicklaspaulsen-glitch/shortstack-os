@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { anthropic, MODEL_SONNET, getResponseText, safeJsonParse } from "@/lib/ai/claude-helpers";
+import { resolveAndCheckUrl } from "@/lib/security/ssrf";
 
 // ──────────────────────────────────────────────────────────────────────────
 // POST /api/thumbnail/generate-variants/rank
@@ -42,6 +43,8 @@ async function urlToBase64Image(url: string): Promise<{ data: string; mediaType:
           : "image/png";
       return { data: match[2], mediaType };
     }
+    const ssrfErr = await resolveAndCheckUrl(url);
+    if (ssrfErr) return null;
     const res = await fetch(url);
     if (!res.ok) return null;
     const buf = Buffer.from(await res.arrayBuffer());

@@ -8,6 +8,7 @@ import {
   safeJsonParse,
   getResponseText,
 } from "@/lib/ai/claude-helpers";
+import { resolveAndCheckUrl } from "@/lib/security/ssrf";
 
 interface AnalyzeReferenceInput {
   video_url?: string;
@@ -234,6 +235,10 @@ export async function POST(request: NextRequest) {
       const mediaType = normalizeMediaType(m ? m[1] : "image/jpeg");
       imageSource = { type: "base64", media_type: mediaType, data };
     } else if (body.video_url) {
+      const ssrfErr = await resolveAndCheckUrl(body.video_url);
+      if (ssrfErr) {
+        return NextResponse.json({ error: ssrfErr }, { status: 400 });
+      }
       const { data, mediaType } = await downloadAsBase64(body.video_url);
       imageSource = {
         type: "base64",

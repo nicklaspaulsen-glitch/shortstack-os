@@ -8,6 +8,7 @@ import {
   safeJsonParse,
   getResponseText,
 } from "@/lib/ai/claude-helpers";
+import { resolveAndCheckUrl } from "@/lib/security/ssrf";
 import {
   coerceMotionLevel,
   coerceSceneType,
@@ -328,6 +329,16 @@ export async function POST(request: NextRequest) {
   if (framesInput.length === 0) {
     return NextResponse.json(
       { ok: false, error: "No valid frame_samples provided." },
+      { status: 400 },
+    );
+  }
+
+  // SSRF guard — check every frame URL before we fetch any.
+  const ssrfChecks = await Promise.all(framesInput.map((f) => resolveAndCheckUrl(f.url)));
+  const ssrfBadIdx = ssrfChecks.findIndex((e) => e !== null);
+  if (ssrfBadIdx !== -1) {
+    return NextResponse.json(
+      { ok: false, error: `Invalid frame URL: ${ssrfChecks[ssrfBadIdx]}` },
       { status: 400 },
     );
   }

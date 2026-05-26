@@ -9,6 +9,7 @@ import {
   getResponseText,
 } from "@/lib/ai/claude-helpers";
 import type Anthropic from "@anthropic-ai/sdk";
+import { resolveAndCheckUrl } from "@/lib/security/ssrf";
 
 /**
  * POST /api/video/classify-footage
@@ -260,6 +261,11 @@ export async function POST(request: NextRequest) {
     1,
     Math.min(5, typeof body.frame_sample_count === "number" ? body.frame_sample_count : 3),
   );
+
+  const ssrfErr = await resolveAndCheckUrl(videoUrl);
+  if (ssrfErr) {
+    return NextResponse.json({ error: ssrfErr }, { status: 400 });
+  }
 
   let imageSource: Anthropic.ImageBlockParam["source"];
   try {
