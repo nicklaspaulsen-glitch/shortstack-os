@@ -85,6 +85,7 @@ export async function GET(): Promise<NextResponse> {
     tiktok: emptyTotals(),
     linkedin: emptyTotals(),
     pinterest: emptyTotals(),
+    revealbot: emptyTotals(),
   };
 
   let weightedRoasSum = 0;

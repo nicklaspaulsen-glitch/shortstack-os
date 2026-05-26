@@ -1,5 +1,5 @@
 "use client";
-import { ChartBar, ChartPie, Megaphone, Plug, Plus, Sparkle, Target } from "@phosphor-icons/react";
+import { ChartBar, ChartPie, Lightning, Megaphone, Plug, Plus, Sparkle, Target } from "@phosphor-icons/react";
 
 /**
  * Unified Ads Manager — single dashboard for Meta + Google + TikTok ads.
@@ -43,8 +43,16 @@ const ZernioConnectPanel = dynamic(
   () => import("@/components/ads-manager/zernio-connect-panel"),
   { ssr: false },
 );
+const RevealbotConnectSection = dynamic(
+  () => import("@/components/ads-manager/revealbot-connect-section"),
+  { ssr: false },
+);
+const AutomationPanel = dynamic(
+  () => import("./_components/AutomationPanel"),
+  { ssr: false },
+);
 
-type Tab = "overview" | "campaigns" | "insights" | "budgets" | "connect";
+type Tab = "overview" | "campaigns" | "insights" | "budgets" | "automation" | "connect";
 
 const TABS: Array<{
   id: Tab;
@@ -77,18 +85,25 @@ const TABS: Array<{
     description: "Per-platform allocation + AI rebalance",
   },
   {
+    id: "automation",
+    label: "Automation",
+    icon: Lightning,
+    description: "Revealbot rules — auto-pause, scale, and adjust budgets",
+  },
+  {
     id: "connect",
     label: "Connect",
     icon: Plug,
-    description: "Connect new ad accounts via Zernio",
+    description: "Connect ad accounts via Zernio or Revealbot",
   },
 ];
 
 /** Platform indicator pills — shown in the command strip */
 const PLATFORMS = [
-  { label: "Meta",   color: "#1877F2" },
-  { label: "Google", color: "#4285F4" },
-  { label: "TikTok", color: "#69C9D0" },
+  { label: "Meta",       color: "#1877F2" },
+  { label: "Google",     color: "#4285F4" },
+  { label: "TikTok",     color: "#69C9D0" },
+  { label: "Revealbot",  color: "#7C5CFC" },
 ] as const;
 
 export default function AdsManagerPage() {
@@ -176,11 +191,17 @@ export default function AdsManagerPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        {tab === "overview"   && <OverviewPanel />}
-        {tab === "campaigns"  && <CampaignsTable />}
-        {tab === "insights"   && <InsightsPanel />}
-        {tab === "budgets"    && <BudgetsPanel />}
-        {tab === "connect"    && <ZernioConnectPanel />}
+        {tab === "overview"    && <OverviewPanel />}
+        {tab === "campaigns"   && <CampaignsTable />}
+        {tab === "insights"    && <InsightsPanel />}
+        {tab === "budgets"     && <BudgetsPanel />}
+        {tab === "automation"  && <AutomationPanel />}
+        {tab === "connect"     && (
+          <div className="space-y-6">
+            <ZernioConnectPanel />
+            <RevealbotConnectSection />
+          </div>
+        )}
       </motion.div>
 
       <PageTrainingPanel pageKey="ads" pageLabel="Ads Manager" />

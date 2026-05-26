@@ -85,7 +85,8 @@ export async function POST(): Promise<NextResponse> {
   const campaigns = await client.listCampaigns({ status: "active" });
 
   // Current per-platform daily budget totals.
-  const current: Record<UnifiedPlatform, number> = { meta: 0, google: 0, tiktok: 0, linkedin: 0, pinterest: 0 };
+  // revealbot campaigns are managed via Revealbot automation rules — excluded from rebalance mutations.
+  const current: Record<UnifiedPlatform, number> = { meta: 0, google: 0, tiktok: 0, linkedin: 0, pinterest: 0, revealbot: 0 };
   for (const c of campaigns) {
     if (c.dailyBudget !== null) current[c.platform] += c.dailyBudget;
   }

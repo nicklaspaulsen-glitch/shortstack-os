@@ -24,7 +24,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { metaAds, googleAds, tiktokAds, getPlatformCredentials } from "./platforms";
 
-export type UnifiedPlatform = "meta" | "google" | "tiktok" | "linkedin" | "pinterest";
+export type UnifiedPlatform = "meta" | "google" | "tiktok" | "linkedin" | "pinterest" | "revealbot";
 
 /** Map UI-facing platform key to the internal `oauth_connections.platform`. */
 const PLATFORM_TO_OAUTH: Record<UnifiedPlatform, string> = {
@@ -33,6 +33,7 @@ const PLATFORM_TO_OAUTH: Record<UnifiedPlatform, string> = {
   tiktok: "tiktok_ads",
   linkedin: "linkedin_ads",
   pinterest: "pinterest_ads",
+  revealbot: "revealbot",
 };
 
 export interface UnifiedCampaign {
@@ -88,6 +89,8 @@ function rowToCampaign(row: Record<string, unknown>): UnifiedCampaign {
       ? "linkedin"
       : platformRaw === "pinterest_ads" || platformRaw === "pinterest"
       ? "pinterest"
+      : platformRaw === "revealbot"
+      ? "revealbot"
       : "meta";
 
   const statusRaw = String(row.status || "").toLowerCase();
@@ -161,9 +164,10 @@ export class UnifiedAdsClient {
   async listCampaigns(filters: UnifiedListFilters = {}): Promise<UnifiedCampaign[]> {
     const isZernioOnly =
       filters.platform === "linkedin" || filters.platform === "pinterest";
+    const isRevealbotOnly = filters.platform === "revealbot";
     const isAllPlatforms = !filters.platform;
 
-    // ── ad_campaigns (Meta / Google / TikTok) ──────────────────────────
+    // ── ad_campaigns (Meta / Google / TikTok / Revealbot) ─────────────
     const adCampaigns: UnifiedCampaign[] = [];
     if (!isZernioOnly) {
       let query = this.supabase
@@ -177,11 +181,12 @@ export class UnifiedAdsClient {
         query = query.in("platform", [filters.platform, oauthPlatform]);
       } else {
         // When all platforms are requested, explicitly scope this table to
-        // meta/google/tiktok — linkedin/pinterest come from ads_metrics_cache.
+        // meta/google/tiktok/revealbot — linkedin/pinterest come from ads_metrics_cache.
         query = query.in("platform", [
           "meta", "meta_ads",
           "google", "google_ads",
           "tiktok", "tiktok_ads",
+          "revealbot",
         ]);
       }
 
@@ -340,6 +345,14 @@ export class UnifiedAdsClient {
           success: false,
           error: `${platform} budget management coming soon — connect via Zernio to read campaigns.`,
         };
+      } else if (platform === "revealbot") {
+        // Revealbot-synced campaigns: budgets are managed through automation rules
+        // or via the originating platform (Meta/Google/TikTok). Direct budget writes
+        // are not supported through the Revealbot sync path.
+        return {
+          success: false,
+          error: "For Revealbot campaigns, manage budgets via automation rules or through the originating ad platform.",
+        };
       }
 
       // Update cache so the UI reflects the change immediately.
@@ -402,6 +415,12 @@ export class UnifiedAdsClient {
         return {
           success: false,
           error: `${platform} campaign management coming soon — campaigns are available in read-only mode.`,
+        };
+      } else if (platform === "revealbot") {
+        // Revealbot: pause/resume via automation rules, not direct API calls.
+        return {
+          success: false,
+          error: "Use Revealbot automation rules to pause/resume campaigns.",
         };
       }
 

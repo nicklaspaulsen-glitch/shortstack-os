@@ -63,7 +63,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     platformParam === "google" ||
     platformParam === "tiktok" ||
     platformParam === "linkedin" ||
-    platformParam === "pinterest"
+    platformParam === "pinterest" ||
+    platformParam === "revealbot"
       ? platformParam
       : undefined;
 

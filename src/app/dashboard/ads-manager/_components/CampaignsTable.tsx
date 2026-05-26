@@ -208,6 +208,7 @@ export default function CampaignsTable() {
           <option value="meta">Meta</option>
           <option value="google">Google</option>
           <option value="tiktok">TikTok</option>
+          <option value="revealbot">Revealbot</option>
         </select>
 
         <select

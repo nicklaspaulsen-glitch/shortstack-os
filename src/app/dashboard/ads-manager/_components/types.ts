@@ -3,7 +3,7 @@
  * Mirrors the response shapes returned by /api/ads-manager/*.
  */
 
-export type Platform = "meta" | "google" | "tiktok";
+export type Platform = "meta" | "google" | "tiktok" | "revealbot";
 
 export interface PlatformTotals {
   spend: number;
@@ -107,10 +107,12 @@ export const PLATFORM_LABELS: Record<Platform, string> = {
   meta: "Meta Ads",
   google: "Google Ads",
   tiktok: "TikTok Ads",
+  revealbot: "Revealbot",
 };
 
 export const PLATFORM_COLORS: Record<Platform, string> = {
   meta: "#1877F2",
   google: "#34A853",
   tiktok: "#FF0050",
+  revealbot: "#7C5CFC",
 };
