@@ -14,6 +14,15 @@ export async function GET(request: NextRequest) {
   }
 
   const supabase = createServiceClient();
+
+  // May 27 audit: attribute scraped leads to the configured agency owner.
+  // Without user_id the lead rows are orphaned and invisible to all dashboard
+  // queries. Set SCRAPER_OWNER_USER_ID in env to the agency owner's user id.
+  const scraperOwnerId = process.env.SCRAPER_OWNER_USER_ID ?? null;
+  if (!scraperOwnerId) {
+    console.warn("[cron/scrape-leads] SCRAPER_OWNER_USER_ID not set — imported leads will be orphaned (user_id=null). Set this env var to attribute leads to an agency.");
+  }
+
   let totalImported = 0;
   let totalSkipped = 0;
   let totalEnriched = 0;
@@ -165,13 +174,15 @@ export async function GET(request: NextRequest) {
               continue;
             }
 
-            // Insert lead
+            // Insert lead — include user_id so the row is visible in the owning
+            // agency's dashboard. May 27 audit: previously missing, orphaning all rows.
             const { error: insertError } = await supabase
               .from("leads")
               .insert({
                 ...lead,
                 status: "new",
                 ghl_sync_status: "pending",
+                user_id: scraperOwnerId,
               })
               .select("id")
               .single();
@@ -195,14 +206,23 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Batch enrich emails + social profiles for leads missing them (parallel, capped)
-    const { data: unenrichedLeads } = await supabase
-      .from("leads")
-      .select("id, website, email, instagram_url, facebook_url, linkedin_url")
-      .not("website", "is", null)
-      .or("email.is.null,instagram_url.is.null")
-      .eq("status", "new")
-      .limit(20);
+    // Batch enrich emails + social profiles for leads missing them (parallel, capped).
+    // May 27 audit: scope by user_id so we only enrich this owner's leads and
+    // never accidentally reach across tenants. If no owner is configured, skip
+    // enrichment entirely — enriching orphaned leads would make cross-tenant bugs
+    // harder to diagnose and would still hit the unguarded fetch path above.
+    let unenrichedLeads: Array<{ id: string; website: string | null; email: string | null; instagram_url: string | null; facebook_url: string | null; linkedin_url: string | null }> | null = null;
+    if (scraperOwnerId) {
+      const { data } = await supabase
+        .from("leads")
+        .select("id, website, email, instagram_url, facebook_url, linkedin_url")
+        .not("website", "is", null)
+        .or("email.is.null,instagram_url.is.null")
+        .eq("status", "new")
+        .eq("user_id", scraperOwnerId)
+        .limit(20);
+      unenrichedLeads = data;
+    }
 
     if (unenrichedLeads && unenrichedLeads.length > 0) {
       await Promise.all(unenrichedLeads.map(async (lead) => {

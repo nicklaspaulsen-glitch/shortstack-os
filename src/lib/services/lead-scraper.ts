@@ -2,6 +2,8 @@
 // Targets: plumbers, dentists, lawyers, gyms, electricians, roofers, accountants,
 // chiropractors, real estate agents, restaurants
 
+import { isPrivateUrl } from "@/lib/security/ssrf-guard";
+
 interface ScrapedLead {
   business_name: string;
   owner_name: string | null;
@@ -179,6 +181,9 @@ export async function scrapeGooglePlaces(
 }
 
 export async function scrapeWebsiteForEmail(websiteUrl: string): Promise<string | null> {
+  // May 27 audit: block SSRF — caller-supplied website URLs from lead records
+  // (potentially injected via webhooks/inbound) must not reach private/internal hosts.
+  if (!websiteUrl || isPrivateUrl(websiteUrl)) return null;
   try {
     const res = await fetch(websiteUrl, {
       headers: { "User-Agent": "Mozilla/5.0 (compatible; ShortStackBot/1.0)" },
@@ -215,6 +220,8 @@ export async function scrapeWebsiteForEmail(websiteUrl: string): Promise<string 
 
 export async function scrapeWebsiteForSocials(websiteUrl: string): Promise<{ instagram_url: string | null; facebook_url: string | null; linkedin_url: string | null }> {
   const result = { instagram_url: null as string | null, facebook_url: null as string | null, linkedin_url: null as string | null };
+  // May 27 audit: block SSRF — same guard as scrapeWebsiteForEmail.
+  if (!websiteUrl || isPrivateUrl(websiteUrl)) return result;
   try {
     const res = await fetch(websiteUrl, {
       headers: { "User-Agent": "Mozilla/5.0 (compatible; ShortStackBot/1.0)" },
