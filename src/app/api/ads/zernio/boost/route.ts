@@ -97,6 +97,7 @@ export async function POST(request: NextRequest) {
     description: `Boosted ${platform} post — $${dailyBudget}/day × ${durationDays} days`,
     status: "completed",
     user_id: user.id,
+    profile_id: user.id,
     metadata: {
       source: "zernio_ads",
       ad_id: result.adId,

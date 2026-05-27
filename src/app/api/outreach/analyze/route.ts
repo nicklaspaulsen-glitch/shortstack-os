@@ -38,6 +38,11 @@ export async function POST(req: NextRequest) {
   const { entry_id } = body;
   if (!entry_id) return NextResponse.json({ error: "entry_id required" }, { status: 400 });
 
+  // OWNERSHIP: outreach_entries has no user_id column — ownership is indirect
+  // via lead_id → leads.user_id. No migration exists in supabase/migrations/
+  // (table was created via dashboard). The auth-scoped supabase client enforces
+  // RLS on both SELECT and UPDATE, which is the correct isolation mechanism for
+  // indirect ownership. Adding an explicit user_id filter is not possible here.
   const { data: entry, error } = await supabase
     .from("outreach_entries")
     .select("id, platform, business_name, recipient_handle, message_text, reply_text, status, sent_at, replied_at, metadata")
