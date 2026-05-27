@@ -7,14 +7,12 @@
  * - This endpoint is intentionally unauthenticated (client-side pixel tracking).
  * - Counter update uses an atomic SQL function (ab_increment_views) to avoid the
  *   read-then-write TOCTOU race that would lose events under concurrent requests.
- * - FIXME: no per-IP rate limiting. Adding rate limiting requires an edge-layer
- *   solution (Vercel WAF, Upstash Redis, or a Cloudflare Worker). Without it,
- *   a motivated attacker can inflate view counts by bulk-POSTing to this endpoint.
- *   Acceptable risk for an internal analytics tool; revisit before exposing
- *   test results to clients as billing-tied metrics.
+ * - Per-IP rate limiting via Upstash Redis (100 req/min). Soft-fails open when
+ *   Redis is unavailable so tracking isn't disrupted.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { rateLimit } from "@/lib/upstash-rate-limit";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -25,6 +23,13 @@ const MAX_VARIANT_KEY_LEN = 64;
 type Params = { params: { id: string } };
 
 export async function POST(req: NextRequest, { params }: Params) {
+  // Per-IP rate limit: 100 view-track requests per minute per IP.
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const rl = await rateLimit(`ab-view:${ip}`, 100, "1 m");
+  if (!rl.success) {
+    return NextResponse.json({ error: "Rate limited" }, { status: 429 });
+  }
+
   const supabase = createServiceClient();
 
   let body: { variant_key?: string };

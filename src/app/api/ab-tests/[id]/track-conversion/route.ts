@@ -7,13 +7,12 @@
  * - This endpoint is intentionally unauthenticated (client-side pixel tracking).
  * - Counter update uses an atomic SQL function (ab_increment_conversions) to avoid
  *   the read-then-write TOCTOU race that would lose events under concurrent requests.
- * - FIXME: no per-IP rate limiting. An attacker can inflate conversion counts by
- *   bulk-POSTing. Acceptable risk while tests drive only UI decisions; escalate to
- *   Vercel WAF / Upstash rate-limiting if conversion data is ever used for billing
- *   or external reporting.
+ * - Per-IP rate limiting via Upstash Redis (30 req/min — tighter than views since
+ *   conversions are higher-signal). Soft-fails open when Redis is unavailable.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { rateLimit } from "@/lib/upstash-rate-limit";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -24,6 +23,15 @@ const MAX_VARIANT_KEY_LEN = 64;
 type Params = { params: { id: string } };
 
 export async function POST(req: NextRequest, { params }: Params) {
+  // Per-IP rate limit: 30 conversion-track requests per minute per IP.
+  // Tighter than views because conversions are higher-signal and more
+  // attractive targets for inflation attacks.
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const rl = await rateLimit(`ab-conv:${ip}`, 30, "1 m");
+  if (!rl.success) {
+    return NextResponse.json({ error: "Rate limited" }, { status: 429 });
+  }
+
   const supabase = createServiceClient();
 
   let body: { variant_key?: string };
