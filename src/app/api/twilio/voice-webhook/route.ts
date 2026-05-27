@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { rateLimit } from "@/lib/upstash-rate-limit";
 import {
   validateTwilioSignature,
   resolveClientByToNumber,
@@ -103,6 +104,17 @@ async function getElevenLabsSignedUrl(agentId: string): Promise<string | null> {
 // joins the transcript + outcome back onto the voice_calls row by the
 // twilio_call_sid dynamic variable we pass in via Stream parameters.
 export async function POST(request: NextRequest) {
+  // Rate limit: 20 req/min per IP — each request is a new inbound call;
+  // legitimate traffic from Twilio's edge servers won't exceed this.
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const rl = await rateLimit(`twilio-voice:${ip}`, 20, "1 m");
+  if (!rl.success) {
+    return new NextResponse(
+      '<?xml version="1.0" encoding="UTF-8"?><Response></Response>',
+      { status: 429, headers: { "Content-Type": "text/xml", "Retry-After": String(rl.reset - Math.floor(Date.now() / 1000)) } },
+    );
+  }
+
   const supabase = createServiceClient();
   const { searchParams } = new URL(request.url);
   const clientIdHint = searchParams.get("client_id");

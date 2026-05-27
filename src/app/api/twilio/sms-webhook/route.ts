@@ -3,13 +3,13 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { upsertInboundMessage, findContactByIdentifier, resolveUserIdForChannel } from "@/lib/conversations";
 import { exitRunsForContact } from "@/lib/sequences/engine";
 import { captureVoiceSample } from "@/lib/ai/voice-profile";
+import { rateLimit } from "@/lib/upstash-rate-limit";
 import crypto from "crypto";
 
 // Twilio SMS + WhatsApp webhook — receives inbound messages to client numbers.
 // Routes by client_id query param set during provisioning. WhatsApp messages
 // arrive with "whatsapp:+14155551234" prefix on From/To — we detect that
 // and upsert as channel='whatsapp'. Otherwise channel='sms'.
-// TODO: Add rate limiting in production to prevent webhook flooding
 
 function validateTwilioSignature(
   request: NextRequest,
@@ -46,6 +46,18 @@ function validateTwilioSignature(
 }
 
 export async function POST(request: NextRequest) {
+  // Rate limit: 30 req/min per IP — prevents webhook flooding from
+  // spoofed or replayed requests (Twilio signature validation catches
+  // forgeries but rate-limiting reduces CPU waste from repeated attempts).
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const rl = await rateLimit(`twilio-sms:${ip}`, 30, "1 m");
+  if (!rl.success) {
+    return new NextResponse(
+      '<?xml version="1.0" encoding="UTF-8"?><Response></Response>',
+      { status: 429, headers: { "Content-Type": "text/xml", "Retry-After": String(rl.reset - Math.floor(Date.now() / 1000)) } },
+    );
+  }
+
   const supabase = createServiceClient();
   const { searchParams } = new URL(request.url);
   const clientId = searchParams.get("client_id");

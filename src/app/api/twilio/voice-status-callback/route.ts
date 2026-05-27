@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { rateLimit } from "@/lib/upstash-rate-limit";
 import {
   validateTwilioSignature,
   resolveClientByToNumber,
@@ -23,6 +24,18 @@ import {
 //
 // Wired during provisioning via TwilioIncomingPhoneNumber.StatusCallback.
 export async function POST(request: NextRequest) {
+  // Rate limit: 60 req/min per IP — Twilio sends multiple status events
+  // per call (ringing, in-progress, completed) so the budget is higher
+  // than the voice-webhook route.
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const rl = await rateLimit(`twilio-status:${ip}`, 60, "1 m");
+  if (!rl.success) {
+    return NextResponse.json(
+      { ok: false, error: "rate limited" },
+      { status: 429, headers: { "Retry-After": String(rl.reset - Math.floor(Date.now() / 1000)) } },
+    );
+  }
+
   const supabase = createServiceClient();
   const { searchParams } = new URL(request.url);
   const clientIdHint = searchParams.get("client_id");

@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
         .from("clients")
         .update({ portal_user_id: userData.id })
         .eq("id", client.id)
-        .eq("profile_id", profile.id); // defence-in-depth: scope to owning agency
+        .eq("profile_id", ownerId); // defence-in-depth: scope to owning agency
       if (linkErr) {
         console.error("[clients/onboard] failed to link portal_user_id", { client_id: client.id, error: linkErr.message });
       }
