@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
     .from("clients")
     .select("id, business_name, email, stripe_customer_id, package_tier")
     .eq("id", client_id)
+    .eq("profile_id", user.id)
     .single();
 
   if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
