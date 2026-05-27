@@ -15,6 +15,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { isFirecrawlConfigured } from "@/lib/scraping/firecrawl-client";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 import {
   scrapeCompetitorPage,
   crawlCompetitorSite,
@@ -97,6 +98,13 @@ export async function POST(req: NextRequest) {
 
   const { url, type, competitorId, competitorName, limit } = body;
   const resolvedName = competitorName ?? competitorId;
+
+  // SSRF guard: url is forwarded to Firecrawl, which fetches it from its own
+  // network. Reject private/loopback/RFC-1918 targets before that happens.
+  const ssrfErr = checkFetchUrl(url);
+  if (ssrfErr) {
+    return NextResponse.json({ error: `url rejected: ${ssrfErr}` }, { status: 400 });
+  }
 
   // ── Scrape ─────────────────────────────────────────────────────────────────
 
