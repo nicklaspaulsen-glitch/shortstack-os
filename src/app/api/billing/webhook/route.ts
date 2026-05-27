@@ -125,11 +125,13 @@ export async function POST(request: NextRequest) {
             .eq("stripe_invoice_id", invoice.id);
         }
 
-        // Log the payment
+        // Log the payment — user_id required so the row appears in the
+        // agency owner's activity log (service client bypasses RLS).
         await supabase.from("trinity_log").insert({
           action_type: "custom",
           description: `Payment received: $${((invoice.amount_paid || 0) / 100).toFixed(2)} from ${client.business_name}`,
           client_id: client.id,
+          user_id: client.profile_id,
           status: "completed",
           result: {
             type: "stripe_payment",
@@ -214,11 +216,12 @@ export async function POST(request: NextRequest) {
             .eq("stripe_invoice_id", invoice.id);
         }
 
-        // Log and notify
+        // Log and notify — user_id required for agency activity log visibility.
         await supabase.from("trinity_log").insert({
           action_type: "custom",
           description: `Payment failed for ${client.business_name}: $${((invoice.amount_due || 0) / 100).toFixed(2)}`,
           client_id: client.id,
+          user_id: client.profile_id,
           status: "failed",
           result: { type: "payment_failed", stripe_invoice_id: invoice.id },
         });
@@ -333,6 +336,7 @@ export async function POST(request: NextRequest) {
         await supabase.from("trinity_log").insert({
           action_type: "custom",
           description: `Agency subscription cancelled: ${agencyProfile.full_name || agencyProfile.email}`,
+          user_id: agencyProfile.id,
           status: "completed",
           result: { type: "agency_subscription_cancelled", user_id: agencyProfile.id, stripe_sub_id: sub.id },
         });
@@ -371,6 +375,7 @@ export async function POST(request: NextRequest) {
           action_type: "custom",
           description: `Subscription cancelled: ${client.business_name}`,
           client_id: client.id,
+          user_id: client.profile_id,
           status: "completed",
           result: { type: "subscription_cancelled", stripe_sub_id: sub.id },
         });
@@ -430,6 +435,9 @@ export async function POST(request: NextRequest) {
           await supabase.from("trinity_log").insert({
             action_type: "custom",
             description: `New agency subscription: ${planTier} plan ($${((session.amount_total || 0) / 100).toFixed(0)}/mo)`,
+            // user_id was previously only set inside result JSON — must be a
+            // top-level column so the row appears in the agency's activity log.
+            user_id: userId,
             status: "completed",
             result: {
               type: "agency_subscription",
@@ -471,10 +479,19 @@ export async function POST(request: NextRequest) {
       } else if (type === "client_subscription") {
         const clientId = session.metadata?.client_id;
         if (clientId) {
+          // Fetch first so profile_id is available for the trinity_log user_id.
+          const { data: clientRow } = await supabase
+            .from("clients")
+            .select("id, profile_id, email, contact_name")
+            .eq("id", clientId)
+            .maybeSingle();
+
           await supabase.from("trinity_log").insert({
             action_type: "custom",
             description: `New subscription started via Stripe Checkout`,
             client_id: clientId,
+            // user_id required so the row appears in the agency's activity log.
+            user_id: clientRow?.profile_id ?? null,
             status: "completed",
             result: {
               type: "checkout_completed",
@@ -482,13 +499,6 @@ export async function POST(request: NextRequest) {
               amount: session.amount_total ? session.amount_total / 100 : null,
             },
           });
-
-          // Send branded plan-purchase email to the client
-          const { data: clientRow } = await supabase
-            .from("clients")
-            .select("id, profile_id, email, contact_name")
-            .eq("id", clientId)
-            .maybeSingle();
           if (clientRow?.email && clientRow.profile_id) {
             const planAmount = session.amount_total
               ? `$${(session.amount_total / 100).toFixed(0)}/mo`

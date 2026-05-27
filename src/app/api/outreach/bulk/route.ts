@@ -106,6 +106,9 @@ export async function POST(request: NextRequest) {
         // /api/call (ElevenAgents) per-lead. Record the intent here so bulk
         // call actions stay observable and we can batch-dispatch later.
         await serviceSupabase.from("outreach_log").insert({
+          // lead_id required so the row is visible in the entries page, which
+          // filters outreach_log by owned lead IDs (no user_id column on table).
+          lead_id: lead.id,
           platform: "call",
           business_name: lead.business_name,
           recipient_handle: lead.phone,
@@ -117,6 +120,8 @@ export async function POST(request: NextRequest) {
       } else if (action === "dm") {
         // Queue for DM controller
         await serviceSupabase.from("outreach_log").insert({
+          // lead_id required so the row is visible in the entries page.
+          lead_id: lead.id,
           platform: "instagram",
           business_name: lead.business_name,
           message_text: `Hey! I came across ${lead.business_name} and love what you're doing. We help ${lead.industry || "local"} businesses get more clients. Would you be open to a quick chat?`,
@@ -128,6 +133,9 @@ export async function POST(request: NextRequest) {
 
       // Log the action
       await serviceSupabase.from("outreach_log").insert({
+        // lead_id required — outreach_log has no user_id column; the entries page
+        // resolves ownership by filtering on owned lead/client IDs.
+        lead_id: lead.id,
         platform: action,
         business_name: lead.business_name,
         recipient_handle: lead.email || lead.phone || "",
@@ -151,11 +159,13 @@ export async function POST(request: NextRequest) {
       .eq("status", "new");
   }
 
-  // Log to trinity
+  // Log to trinity — user_id required so the entry is visible in the agency's
+  // activity log; without it the row is orphaned and no dashboard query returns it.
   await serviceSupabase.from("trinity_log").insert({
     agent: "outreach",
     action_type: "outreach",
     description: `Bulk ${action}: ${processed}/${leads.length} leads processed (${tier} tier)`,
+    user_id: ownerId,
     status: "completed",
     result: { action, processed, total: leads.length, tier },
   });
