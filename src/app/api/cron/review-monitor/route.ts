@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
   for (const account of accounts) {
     try {
       // Get client name
-      const { data: client } = await supabase.from("clients").select("business_name").eq("id", account.client_id).single();
+      const { data: client } = await supabase.from("clients").select("business_name, profile_id").eq("id", account.client_id).single();
       const bizName = client?.business_name || account.account_name || "Unknown";
 
       // Fetch locations
@@ -80,6 +80,8 @@ export async function GET(request: NextRequest) {
               action_type: "custom",
               description: `New ${stars}⭐ review for ${bizName} by ${reviewer}`,
               client_id: account.client_id,
+              profile_id: client?.profile_id ?? null,
+              user_id: client?.profile_id ?? null,
               status: "completed",
               result: {
                 type: "new_review",

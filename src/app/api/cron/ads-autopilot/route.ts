@@ -241,6 +241,8 @@ export async function GET(request: NextRequest) {
         action_type: "automation",
         description: `[CRON] Ads Autopilot: ${results.actions_taken} actions, ${results.ads_created} ads created`,
         client_id: clientId,
+        profile_id: client?.profile_id ?? null,
+        user_id: client?.profile_id ?? null,
         status: "completed",
         metadata: results,
       });

@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
   // Get all active clients
   const { data: clients } = await supabase
     .from("clients")
-    .select("id, business_name, industry, services")
+    .select("id, business_name, industry, services, profile_id")
     .eq("is_active", true);
 
   if (!clients || clients.length === 0) {
@@ -52,6 +52,8 @@ export async function GET(request: NextRequest) {
           action_type: "content",
           description: `Weekly content generated for ${client.business_name}: 5 posts`,
           client_id: client.id,
+          profile_id: client.profile_id ?? null,
+          user_id: client.profile_id ?? null,
           status: "completed",
           result: { posts: content, week: new Date().toISOString().split("T")[0] },
         });
