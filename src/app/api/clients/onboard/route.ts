@@ -154,11 +154,14 @@ export async function POST(request: NextRequest) {
     await sendTelegramMessage(chatId, `🎉 *New Client Onboarded!*\n\n*${business_name}*\nContact: ${contact_name}\nPackage: ${package_tier || "Growth"}\nMRR: $${mrr}\nServices: ${(services || []).join(", ")}`);
   }
 
-  // 8. Log in trinity
+  // 8. Log in trinity — user_id required so the entry is visible in the
+  // agency's activity log (service client bypasses RLS; without user_id the
+  // row is orphaned and no per-user query ever returns it).
   await supabase.from("trinity_log").insert({
     action_type: "custom",
     description: `Client onboarded: ${business_name} (${package_tier} — $${mrr}/mo)`,
     client_id: client.id,
+    user_id: ownerId,
     status: "completed",
     result: results,
     completed_at: new Date().toISOString(),

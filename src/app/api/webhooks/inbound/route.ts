@@ -131,6 +131,9 @@ export async function POST(request: NextRequest) {
           status: "new",
           // Clamp lead_score to 0-100 — reject out-of-range or non-numeric values
           lead_score: Math.min(Math.max(Number(data.lead_score) || 50, 0), 100),
+          // Attribute to the webhook owner so the lead appears in their dashboard.
+          // Without user_id the row is orphaned — no user's leads page will show it.
+          user_id: webhookOwnerId,
         });
         if (error) throw error;
         results.push("Lead created");
@@ -221,6 +224,8 @@ export async function POST(request: NextRequest) {
           status: "open",
           source: "webhook",
           notes: data.notes ? String(data.notes).slice(0, 2000) : null,
+          // Attribute to webhook owner — without user_id the deal is orphaned.
+          user_id: webhookOwnerId,
         });
         if (error) throw error;
         results.push("Deal created");
@@ -296,6 +301,8 @@ export async function POST(request: NextRequest) {
           client_id: data.client_id || null,
           status: "completed",
           result: { source: "webhook", data },
+          // Attribute to webhook owner — without user_id the log entry is orphaned.
+          user_id: webhookOwnerId,
         });
         if (error) throw error;
         results.push("Note added");
@@ -319,6 +326,8 @@ export async function POST(request: NextRequest) {
             priority: data.priority || "normal",
             data,
           },
+          // Attribute to webhook owner — without user_id the log entry is orphaned.
+          user_id: webhookOwnerId,
         });
         if (error) throw error;
         results.push("Task created");
@@ -337,6 +346,8 @@ export async function POST(request: NextRequest) {
           client_id: data.client_id || null,
           status: "completed",
           result: { source: "webhook", type: "payment", data },
+          // Attribute to webhook owner — without user_id the log entry is orphaned.
+          user_id: webhookOwnerId,
         });
         if (error) throw error;
         results.push("Payment logged");
@@ -355,6 +366,9 @@ export async function POST(request: NextRequest) {
           notes: data.message || data.notes || null,
           status: "new",
           lead_score: 60,
+          // Attribute to webhook owner — without user_id the row is orphaned and
+          // invisible to all dashboard queries that filter by user_id.
+          user_id: webhookOwnerId,
         });
         if (error) throw error;
         results.push("Form lead created");
@@ -369,6 +383,8 @@ export async function POST(request: NextRequest) {
           description: `Webhook event: ${event} — ${data.description || JSON.stringify(data).substring(0, 150)}`,
           status: "completed",
           result: { source: "webhook", event, data },
+          // Attribute to webhook owner — without user_id the log entry is orphaned.
+          user_id: webhookOwnerId,
         });
         if (error) throw error;
         results.push(`Custom event "${event}" logged`);
@@ -400,12 +416,13 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (err) {
-    // Log error
+    // Log error — scope to webhook owner so the error is visible in their activity log.
     await supabase.from("trinity_log").insert({
       action_type: "automation",
       description: `Webhook error: ${event} — ${String(err)}`,
       status: "failed",
       result: { source: "webhook", event, error: String(err) },
+      user_id: webhookOwnerId,
     });
 
     console.error("[webhooks/inbound] processing error for event:", event, err);
