@@ -11,18 +11,28 @@ export async function POST(request: NextRequest) {
 
   const serviceSupabase = createServiceClient();
 
-  // Get client info
+  // Get client info — scope to the caller's own clients to prevent cross-tenant
+  // name injection into Slack/Telegram notifications and the trinity_log entry.
   let clientName = "Client";
+  let verifiedClientId: string | null = null;
   if (client_id) {
-    const { data: client } = await serviceSupabase.from("clients").select("business_name").eq("id", client_id).single();
-    if (client) clientName = client.business_name;
+    const { data: client } = await serviceSupabase
+      .from("clients")
+      .select("id, business_name")
+      .eq("id", client_id)
+      .eq("profile_id", user.id)
+      .single();
+    if (client) {
+      clientName = client.business_name;
+      verifiedClientId = client.id;
+    }
   }
 
   // Save production request
   const { data: production, error } = await serviceSupabase.from("trinity_log").insert({
     action_type: "custom",
     description: `Production request: ${title} (${edit_type}) for ${clientName}`,
-    client_id: client_id || null,
+    client_id: verifiedClientId,
     status: "in_progress",
     result: {
       type: "production_request",
