@@ -1,6 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
+// Allowlist of known agent identifiers.  params.agentId is interpolated into
+// PostgREST .or() filter strings, so we must validate it before any DB access —
+// an un-validated value could escape the filter and produce query syntax errors.
+// Mirrors the allowlist in [agentId]/health/route.ts.
+const VALID_AGENT_IDS = new Set([
+  "lead-engine",
+  "outreach",
+  "content",
+  "ads",
+  "reviews",
+  "analytics",
+  "trinity",
+  "competitor",
+]);
+
 // Repair an agent — clears error state, retries last failed action, refreshes tokens.
 //
 // SECURITY (Apr 26): role-gated AND scoped to the caller's tenant. Pre-fix
@@ -34,6 +49,9 @@ export async function POST(_request: NextRequest, { params }: { params: { agentI
       : user.id;
 
   const agentId = params.agentId;
+  if (!VALID_AGENT_IDS.has(agentId)) {
+    return NextResponse.json({ error: "Unknown agent" }, { status: 404 });
+  }
   const repairs: string[] = [];
 
   // 1. Clear recent error logs — marked as "repaired".
