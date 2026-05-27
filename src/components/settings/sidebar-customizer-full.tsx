@@ -630,7 +630,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
       setBaseline(prefs);
       toast.success("Sidebar saved");
     } catch {
-      toast.error("FloppyDisk failed — check your connection");
+      toast.error("Save failed — check your connection");
     }
     setSaving(false);
   }
@@ -971,7 +971,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
               className="btn-pill text-xs flex items-center gap-1.5 disabled:opacity-50"
             >
               {saving ? <CircleNotch size={12} className="animate-spin" /> : <FloppyDisk size={12} />}
-              {saving ? "Saving..." : "FloppyDisk Changes"}
+              {saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </div>

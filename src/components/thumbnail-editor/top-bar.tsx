@@ -84,7 +84,7 @@ export default function TopBar(props: TopBarProps) {
       />
       <label className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded hover:bg-[rgba(255,255,255,0.07)] cursor-pointer">
         <UploadSimple className="w-4 h-4" />
-        <span>UploadSimple</span>
+        <span>Upload</span>
         <input
           type="file"
           accept="image/*"
@@ -271,7 +271,7 @@ export default function TopBar(props: TopBarProps) {
               }}
               className="w-full bg-[#D4FF00] hover:bg-[#AACC00] text-[#020711] rounded py-1.5 text-xs transition-colors"
             >
-              DownloadSimple
+              Download
             </button>
           </div>
         )}

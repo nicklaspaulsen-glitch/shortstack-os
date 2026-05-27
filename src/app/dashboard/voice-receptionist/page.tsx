@@ -860,7 +860,7 @@ export default function VoiceReceptionistPage() {
                     ) : (
                       <FloppyDisk size={12} />
                     )}
-                    FloppyDisk settings
+                    Save settings
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.02 }}

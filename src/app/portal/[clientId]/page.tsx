@@ -1107,9 +1107,9 @@ export default function ClientPortalDashboard({
           />
           <QuickActionButton
             icon={<UploadSimple size={16} />}
-            label="UploadSimple Files"
+            label="Upload Files"
             description="Share assets or documents"
-            onClick={() => handleQuickAction("UploadSimple Files")}
+            onClick={() => handleQuickAction("Upload Files")}
           />
           <QuickActionButton
             icon={<ArrowsClockwise size={16} />}

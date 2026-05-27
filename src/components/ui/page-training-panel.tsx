@@ -645,7 +645,7 @@ export default function PageTrainingPanel({
                   ) : (
                     <FloppyDisk size={11} />
                   )}
-                  {saved ? "Saved" : saving ? "Saving…" : "FloppyDisk training"}
+                  {saved ? "Saved" : saving ? "Saving…" : "Save training"}
                 </button>
               </div>
             </div>

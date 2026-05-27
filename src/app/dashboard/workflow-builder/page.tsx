@@ -695,7 +695,7 @@ function WorkflowBuilderInner() {
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        throw new Error(body?.error || `FloppyDisk failed (${res.status})`);
+        throw new Error(body?.error || `Save failed (${res.status})`);
       }
       toast.success("Workflow saved to your account");
     } catch (err) {
@@ -822,9 +822,9 @@ function WorkflowBuilderInner() {
           onClick={saveWorkflow}
           disabled={saving}
           className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium text-text-muted hover:text-text-primary hover:bg-surface-light transition-colors disabled:opacity-50"
-          title="FloppyDisk (Ctrl+S)"
+          title="Save (Ctrl+S)"
         >
-          <FloppyDisk size={13} /> {saving ? "Saving..." : "FloppyDisk"}
+          <FloppyDisk size={13} /> {saving ? "Saving..." : "Save"}
         </button>
 
         {simulating ? (

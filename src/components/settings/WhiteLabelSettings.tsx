@@ -68,13 +68,13 @@ function LogoDropZone({
       const res = await fetch("/api/white-label/logo-upload", { method: "POST", body: fd });
       const data = await res.json();
       if (!res.ok) {
-        const msg = data?.error || "UploadSimple failed";
+        const msg = data?.error || "Upload failed";
         setWarn(msg); toast.error(msg);
       } else if (data.logo_url) {
         onUploaded(data.logo_url); toast.success("Logo uploaded");
-      } else { toast.error("UploadSimple returned no URL"); }
+      } else { toast.error("Upload returned no URL"); }
     } catch {
-      toast.error("UploadSimple network error");
+      toast.error("Upload network error");
       setWarn("Network error during upload");
     } finally { setUploading(false); }
   }
@@ -297,7 +297,7 @@ export default function WhiteLabelSettings({ whiteLabel, setWhiteLabel, wlSaving
             <button
               onClick={() => {
                 setWhiteLabel({ company_name: "", logo_url: "", primary_color: "#D4FF00", accent_color: "#AACC00", favicon_url: "", login_text: "", show_powered_by: true, domain: "", support_email: "" });
-                toast.success("Reset to defaults — click FloppyDisk to apply");
+                toast.success("Reset to defaults — click Save to apply");
               }}
               className="btn-secondary text-xs flex items-center gap-2"
             >

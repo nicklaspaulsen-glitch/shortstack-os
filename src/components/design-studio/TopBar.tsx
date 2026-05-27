@@ -139,7 +139,7 @@ export default function TopBar({ onSave }: TopBarProps) {
         className="flex items-center gap-1.5 px-3 h-7 rounded text-xs font-medium bg-white/10 hover:bg-white/20 text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
         {isSaving ? <CircleNotch size={12} className="animate-spin" /> : <FloppyDisk size={12} />}
-        {isSaving ? "Saving…" : isDirty ? "FloppyDisk" : "Saved"}
+        {isSaving ? "Saving…" : isDirty ? "Save" : "Saved"}
       </button>
 
       {/* Export */}

@@ -62,14 +62,14 @@ export default function VoicemailDropPage() {
         body: fd,
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "UploadSimple failed");
+      if (!res.ok) throw new Error(json.error || "Upload failed");
       toast.success("Voicemail uploaded");
       setName("");
       setFile(null);
       setShowUpload(false);
       fetchTemplates();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "UploadSimple failed");
+      toast.error(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setUploading(false);
     }
@@ -147,7 +147,7 @@ export default function VoicemailDropPage() {
                     className="btn-pill flex items-center gap-1.5"
                   >
                     <Plus className="w-4 h-4" />
-                    UploadSimple
+                    Upload
                   </button>
                 </motion.div>
       </div>
@@ -205,7 +205,7 @@ export default function VoicemailDropPage() {
                       className="btn-pill flex items-center gap-1.5 disabled:opacity-50"
                     >
                       {uploading ? <CircleNotch className="w-4 h-4 animate-spin" /> : <UploadSimple className="w-4 h-4" />}
-                      {uploading ? "Uploading…" : "UploadSimple"}
+                      {uploading ? "Uploading…" : "Upload"}
                     </motion.button>
                   </div>
                 </motion.div>
@@ -300,7 +300,7 @@ export default function VoicemailDropPage() {
                   className="btn-pill flex items-center gap-1.5"
                 >
                   <UploadSimple className="w-4 h-4" />
-                  UploadSimple your first
+                  Upload your first
                 </motion.button>
               </motion.div>
             ) : (

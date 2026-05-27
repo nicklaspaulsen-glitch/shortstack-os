@@ -243,7 +243,7 @@ export default function WorkspaceFilesPage() {
         body: file,
       });
       if (!put.ok) {
-        toast.error(`UploadSimple failed (${put.status})`);
+        toast.error(`Upload failed (${put.status})`);
         return;
       }
 

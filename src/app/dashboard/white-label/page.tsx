@@ -239,7 +239,7 @@ export default function WhiteLabelPage() {
               className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold bg-brand-accent hover:bg-brand-accent/90 text-black transition-all disabled:opacity-60"
             >
               {saving ? <CircleNotch className="w-4 h-4 animate-spin" /> : <FloppyDisk className="w-4 h-4" />}
-              FloppyDisk Settings
+              Save Settings
             </button>
           </div>
         </div>
@@ -555,7 +555,7 @@ export default function WhiteLabelPage() {
           className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-brand-accent hover:bg-brand-accent/90 text-black transition-all disabled:opacity-60"
         >
           {saving ? <CircleNotch className="w-4 h-4 animate-spin" /> : <FloppyDisk className="w-4 h-4" />}
-          FloppyDisk White Label Settings
+          Save White Label Settings
         </button>
       </div>
     </div>

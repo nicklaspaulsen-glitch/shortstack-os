@@ -5909,7 +5909,7 @@ export default function VideoEditorPage() {
                         </p>
                         {referenceFiles.length === 0 ? (
                           <p className="text-[9px] text-text-muted italic">
-                            UploadSimple a reference video or image in the Assets tab first.
+                            Upload a reference video or image in the Assets tab first.
                           </p>
                         ) : (
                           <div className="grid grid-cols-2 gap-2">

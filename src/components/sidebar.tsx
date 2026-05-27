@@ -773,7 +773,7 @@ export default function Sidebar() {
             <PuzzlePiece size={13} className="shrink-0 text-brand-lime" />
             <a href="/downloads/shortstack-extension.zip" download
               className="text-[11px] text-brand-lime/90 hover:text-brand-lime font-medium transition-colors duration-220"
-              title="DownloadSimple → Unzip → chrome://extensions → Load unpacked">
+              title="Download → Unzip → chrome://extensions → Load unpacked">
               Install Extension
             </a>
             <span className="text-text-muted/40">|</span>
@@ -1256,7 +1256,7 @@ function ExtInstallTooltip() {
           <div className="absolute left-0 top-full mt-2 z-50 w-56 bg-bg-surface-2 border border-border-subtle rounded-xl shadow-stack-2 p-3">
             <p className="text-[11px] font-semibold text-text-primary mb-1.5">Install Steps</p>
             <ol className="text-[10px] text-text-secondary space-y-1 list-decimal list-inside leading-relaxed">
-              <li>DownloadSimple the .zip file</li>
+              <li>Download the .zip file</li>
               <li>Unzip to a folder</li>
               <li>Open <span className="font-mono text-[9px] text-brand-lime/80">chrome://extensions</span> in your browser</li>
               <li>Enable Developer mode</li>

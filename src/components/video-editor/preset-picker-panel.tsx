@@ -1531,7 +1531,7 @@ function FavouritesTab({
               key={`music-${it.rec.id}`}
               id={it.rec.id}
               title={it.rec.title}
-              sub={`MusicNote · ${it.rec.mood} · ${it.rec.bpm}BPM`}
+              sub={`Music · ${it.rec.mood} · ${it.rec.bpm}BPM`}
               url={it.rec.url}
               draggable
               onDragStart={startDrag("music", it.rec.id, {
