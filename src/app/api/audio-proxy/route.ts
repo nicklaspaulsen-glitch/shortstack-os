@@ -1,4 +1,5 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/rate-limit";
 
 // CORS-safe audio proxy for the Preset Library preview page.
 // Many external audio CDNs (SoundJay, archive.org, etc.) don't set
@@ -36,6 +37,24 @@ const ALLOWED_HOSTS = new Set([
 ]);
 
 export async function GET(request: NextRequest) {
+  // IP-based rate limit — 60 req/min is plenty for audio previews; blocks
+  // bandwidth abuse from unauthenticated callers (audio elements don't carry
+  // session cookies so session auth isn't viable here).
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    request.headers.get("x-real-ip") ??
+    "unknown";
+  const rl = rateLimit(`audio-proxy:${ip}`, 60, 60_000);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "rate limit exceeded" },
+      {
+        status: 429,
+        headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) },
+      },
+    );
+  }
+
   const urlParam = request.nextUrl.searchParams.get("url");
   if (!urlParam) {
     return NextResponse.json({ error: "url required" }, { status: 400 });

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { anthropic, MODEL_HAIKU, getResponseText, safeJsonParse } from "@/lib/ai/claude-helpers";
 import { verifyClientAccess } from "@/lib/verify-client-access";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import {
   SMART_MANAGE_ACTIONS,
   SMART_MANAGE_ACTION_TYPES,
@@ -40,6 +41,8 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const body = await request.json().catch(() => ({}));
   const clientId: string | undefined = body?.client_id;

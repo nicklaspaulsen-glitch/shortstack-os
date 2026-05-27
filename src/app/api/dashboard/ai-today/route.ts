@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { anthropic, MODEL_HAIKU, safeJsonParse, getResponseText, withCacheBreakpoint } from "@/lib/ai/claude-helpers";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 /**
  * GET /api/dashboard/ai-today
@@ -34,6 +35,8 @@ export async function GET(_request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   // ── Snapshot the user's data — keep this small + fast (parallel queries) ──
   const since7d = new Date(Date.now() - 7 * 86_400_000).toISOString();
