@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,14 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // SECURITY: Scope to the caller's own agency. Without this filter every
+  // authenticated user — including client-portal users from other agencies —
+  // received up to 100 rows from the global trinity_log (cross-tenant leak).
+  const ownerId = await getEffectiveOwnerId(auth, user.id);
+  if (!ownerId) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const url = new URL(request.url);
   const routineType = url.searchParams.get("routine_type");
 
@@ -21,6 +30,7 @@ export async function GET(request: NextRequest) {
   let query = service
     .from("trinity_log")
     .select("id, action_type, description, status, result, agent, created_at")
+    .eq("user_id", ownerId)
     .order("created_at", { ascending: false })
     .limit(100);
 

@@ -86,17 +86,21 @@ Analyze and return structured JSON.`;
 
     if (!parsed) return NextResponse.json({ error: "AI returned invalid format" }, { status: 502 });
 
-    // Cache analysis back to entry metadata
+    // Cache analysis back to entry metadata.
+    // SECURITY: Use the auth-scoped supabase client (not service client) so RLS
+    // restricts the UPDATE to entries the caller owns. Previously the service
+    // client was used with no ownership filter, allowing any authenticated user
+    // to overwrite another tenant's outreach_entries metadata.
     try {
-      const service = createServiceClient();
       const existingMetadata = (entry.metadata as Record<string, unknown>) || {};
-      await service
+      await supabase
         .from("outreach_entries")
         .update({
           metadata: { ...existingMetadata, ai_analysis: parsed, ai_analyzed_at: new Date().toISOString() },
         })
         .eq("id", entry_id);
 
+      const service = createServiceClient();
       void service.from("trinity_log").insert({
         user_id: user.id,
         action_type: "ai_outreach_analyze",
