@@ -36,7 +36,10 @@ export async function GET(request: NextRequest) {
     const scheduledDate = new Date(scheduledAt);
     if (scheduledDate > new Date()) continue; // Not due yet
 
-    const chatId = reminder.result?.chat_id || process.env.TELEGRAM_CHAT_ID;
+    // May 27 audit: never use user-controlled chat_id from trinity_log.result —
+    // any user who can write reminder entries could redirect Telegram messages to
+    // arbitrary chat IDs. Always use the server-side env var only.
+    const chatId = process.env.TELEGRAM_CHAT_ID;
     if (!chatId) continue;
 
     // Send the reminder

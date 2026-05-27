@@ -661,6 +661,7 @@ const handleSetupAds: TaskHandler = async (supabase, task) => {
     action_type: "automation",
     description: `Ads setup via Zernio for ${clientName} — ${connectedPlatforms.length} platform(s) connected, ${totalCampaigns} campaign(s) synced`,
     user_id: task.owner_id,
+    profile_id: task.owner_id, // May 27 audit: match user_id so activity appears in per-agency feeds
     status: "completed",
     result: {
       lead_id: leadId,

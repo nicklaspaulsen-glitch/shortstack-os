@@ -359,7 +359,9 @@ export async function GET(request: NextRequest) {
       const result = reminder.result as Record<string, string> | null;
       const scheduledAt = result?.scheduled_at ? new Date(result.scheduled_at) : null;
       if (scheduledAt && scheduledAt <= now) {
-        const targetChatId = result?.chat_id || process.env.TELEGRAM_CHAT_ID;
+        // May 27 audit: same fix as reminders/route.ts — never use user-controlled
+        // chat_id from trinity_log.result; only the env var is trusted.
+        const targetChatId = process.env.TELEGRAM_CHAT_ID;
         if (targetChatId) {
           await sendTelegramMessage(targetChatId, `⏰ *Reminder*\n\n${reminder.description}`);
           await supabase.from("trinity_log").update({ status: "completed", completed_at: now.toISOString() }).eq("id", reminder.id);
