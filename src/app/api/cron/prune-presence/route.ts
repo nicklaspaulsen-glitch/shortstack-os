@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
     );
   }
   const authHeader = req.headers.get("authorization");
-  const rawToken = authHeader?.replace(/\^Bearer\\s+/i, "") ?? "";
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
   if (!secureCompare(rawToken, expected)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

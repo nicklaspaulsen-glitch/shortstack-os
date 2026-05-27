@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Server misconfigured: CRON_SECRET not set" }, { status: 500 });
   }
   const authHeader = request.headers.get("authorization");
-  const rawToken = authHeader?.replace(/\^Bearer\\s+/i, "") ?? "";
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
   if (!cronSecret || !secureCompare(rawToken, cronSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

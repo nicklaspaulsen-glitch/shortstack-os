@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
     }
   }
   const authHeader = request.headers.get("authorization");
-  const rawToken = authHeader?.replace(/\^Bearer\\s+/i, "") ?? "";
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
   if (expected && !secureCompare(rawToken, expected)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
