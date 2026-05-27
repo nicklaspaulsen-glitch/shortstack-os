@@ -120,6 +120,20 @@ export async function POST(request: NextRequest) {
   const count = Math.max(3, Math.min(6, Number(body.count) || 5));
   const clientId = typeof body.client_id === "string" ? body.client_id : null;
 
+  // Verify client ownership — clientId is optional and only ends up in the
+  // audit log, but we still prevent cross-tenant log association.
+  const serviceSupabase = createServiceClient();
+  let verifiedClientId: string | null = null;
+  if (clientId) {
+    const { data: clientRow } = await serviceSupabase
+      .from("clients")
+      .select("id")
+      .eq("id", clientId)
+      .eq("profile_id", user.id)
+      .maybeSingle();
+    verifiedClientId = clientRow?.id ?? null;
+  }
+
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json(
       { ok: false, error: "AI not configured (missing ANTHROPIC_API_KEY)" },
@@ -185,12 +199,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Log (fire-and-forget)
-    const serviceSupabase = createServiceClient();
     void serviceSupabase.from("trinity_log").insert({
       action_type: "ai_video_broll_suggest",
       description: `B-roll suggestions: ${suggestions.length}`,
       profile_id: user.id,
-      client_id: clientId,
+      client_id: verifiedClientId,
       status: "completed",
       result: {
         count: suggestions.length,

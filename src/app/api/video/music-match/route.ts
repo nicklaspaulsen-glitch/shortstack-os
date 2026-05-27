@@ -103,6 +103,20 @@ export async function POST(request: NextRequest) {
   const script = typeof body.script === "string" ? body.script.trim().slice(0, 1500) : undefined;
   const clientId = typeof body.client_id === "string" ? body.client_id : null;
 
+  // Verify client ownership — clientId is optional and only ends up in the
+  // audit log, but we still prevent cross-tenant log association.
+  const serviceSupabase = createServiceClient();
+  let verifiedClientId: string | null = null;
+  if (clientId) {
+    const { data: clientRow } = await serviceSupabase
+      .from("clients")
+      .select("id")
+      .eq("id", clientId)
+      .eq("profile_id", user.id)
+      .maybeSingle();
+    verifiedClientId = clientRow?.id ?? null;
+  }
+
   // If Claude is not configured, skip straight to fallback
   if (!process.env.ANTHROPIC_API_KEY) {
     const r = deterministicFallback(mood, duration);
@@ -163,12 +177,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Log
-    const serviceSupabase = createServiceClient();
     void serviceSupabase.from("trinity_log").insert({
       action_type: "ai_video_music_match",
       description: `Music match: ${chosen.title}`,
       profile_id: user.id,
-      client_id: clientId,
+      client_id: verifiedClientId,
       status: "completed",
       result: {
         track_id: chosen.id,
