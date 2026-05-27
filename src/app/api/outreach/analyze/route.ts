@@ -108,10 +108,13 @@ Analyze and return structured JSON.`;
         status: "completed",
         metadata: { entry_id, sentiment: parsed.sentiment, win_probability: parsed.win_probability },
       });
-    } catch {}
+    } catch (cacheErr) {
+      console.error("[outreach/analyze] failed to cache analysis for entry", entry_id, cacheErr);
+    }
 
     return NextResponse.json({ success: true, analysis: parsed });
   } catch (err) {
+    console.error("[outreach/analyze] AI analysis failed for entry", entry_id, err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
