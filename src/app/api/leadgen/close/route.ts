@@ -118,6 +118,7 @@ async function handleClose(
     action_type: "automation",
     description: `Leadgen: ${outcome} — ${row.display_name ?? row.handle} (${row.platform})`,
     status: "completed",
+    user_id: ownerId,
     result: { lead_id, outcome, deal_notes, deal_value },
   });
 

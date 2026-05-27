@@ -86,6 +86,7 @@ export async function POST(
     action_type: `telegram_${routine.routine_type || "custom"}`,
     description: `Routine "${routine.name}" run manually`,
     status: result.ok ? "completed" : "failed",
+    user_id: user.id,
     result: {
       routine_id: routine.id,
       message: text,

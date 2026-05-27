@@ -109,6 +109,7 @@ export async function POST(request: NextRequest) {
     action_type: "automation",
     description: `Deliverables sent to ${name} (${row.platform})`,
     status: "completed",
+    user_id: ownerId,
     result: { lead_id, deliverable_urls },
   });
 

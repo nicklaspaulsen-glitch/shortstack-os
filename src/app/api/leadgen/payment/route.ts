@@ -137,6 +137,7 @@ export async function POST(request: NextRequest) {
     action_type: "automation",
     description: `Payment link sent to ${name}: $${amount} — ${description}`,
     status: "completed",
+    user_id: ownerId,
     result: { lead_id, payment_url: paymentUrl, amount, currency },
   });
 

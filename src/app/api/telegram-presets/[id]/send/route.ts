@@ -115,6 +115,7 @@ export async function POST(
     action_type: "telegram_preset_send",
     description: `Sent preset "${preset.name}" (${preset.category})`,
     status: result.ok ? "completed" : "failed",
+    user_id: ownerId,
     result: {
       preset_id: preset.id,
       category: preset.category,
