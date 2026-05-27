@@ -38,7 +38,7 @@ const TOOLS = [
   { id: "upscale",    name: "Upscale",          desc: "4× AI image upscaling",                icon: ArrowUpRight, color: "#D4FF00", tag: "Real-ESRGAN", inputLabel: "Low-res image",          outputLabel: "4× sharp image"        },
   { id: "remove-bg",  name: "Remove BG",        desc: "One-click background removal",         icon: Scissors,   color: "#D4FF00", tag: "REMBG/SAM",    inputLabel: "Photo with background",  outputLabel: "Transparent PNG"       },
   { id: "img-to-video", name: "Image to Video", desc: "Animate still images into video",      icon: FilmStrip,       color: "#D4FF00", tag: "SVD",          inputLabel: "Still image",            outputLabel: "Short video clip"      },
-  { id: "music-gen",  name: "MusicNote Gen",        desc: "AI background music for videos",       icon: MusicNote,      color: "#D4FF00", tag: "MusicGen",     inputLabel: "Style description",      outputLabel: "Background track",     newBadge: true },
+  { id: "music-gen",  name: "Music Gen",        desc: "AI background music for videos",       icon: MusicNote,      color: "#D4FF00", tag: "MusicGen",     inputLabel: "Style description",      outputLabel: "Background track",     newBadge: true },
   { id: "voice-clone", name: "Voice Clone",     desc: "Clone voice from 6s audio sample",    icon: SpeakerHigh,    color: "#D4FF00", tag: "XTTS v2",      inputLabel: "6s voice sample",        outputLabel: "Cloned voice model"    },
   { id: "train-lora", name: "Brand LoRA",       desc: "Train custom image style models",      icon: Brain,      color: "#D4FF00", tag: "LoRA",         inputLabel: "15–20 reference photos", outputLabel: "Custom style model",   badge: "Business+" },
   { id: "batch-gen",  name: "Batch Generate",   desc: "50+ images in one go",                 icon: Stack,     color: "#D4FF00", tag: "FLUX/SDXL",   inputLabel: "Prompt + variants",      outputLabel: "50+ images"            },
@@ -928,7 +928,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
   const [segments, setSegments] = useState<{ start: number; end: number; text: string }[]>([]);
 
   const handleTranscribe = async () => {
-    if (!file) return toast.error("UploadSimple an audio/video file first");
+    if (!file) return toast.error("Upload an audio/video file first");
     setProcessing(true);
     setTranscript(null);
     try {
@@ -1065,7 +1065,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
               )}
             </div>
           ) : (
-            <p className="text-xs text-text-muted">UploadSimple a file and click Transcribe to get started.</p>
+            <p className="text-xs text-text-muted">Upload a file and click Transcribe to get started.</p>
           )}
         </motion.div>
       </div>
@@ -1772,7 +1772,7 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                   <div className="flex items-center justify-center gap-3 mt-1">
                     <a href={img} target="_blank" rel="noopener noreferrer" download={`generated-${i + 1}.png`}
                       className="inline-flex items-center gap-1 text-[10px] text-brand-accent hover:underline">
-                      <DownloadSimple size={10} /> DownloadSimple
+                      <DownloadSimple size={10} /> Download
                     </a>
                     <button
                       disabled={handoffingIdx === i}
@@ -1832,7 +1832,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
   };
 
   const handleUpscale = async () => {
-    if (!file) return toast.error("UploadSimple an image first");
+    if (!file) return toast.error("Upload an image first");
     setProcessing(true);
     try {
       const fd = new FormData();
@@ -1936,7 +1936,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
               <img src={result} alt="Upscaled" className="max-h-[250px] mx-auto rounded-lg" />
               <a href={result} download={`upscaled_${scale}x.png`}
                 className="inline-flex items-center gap-1 mt-2 text-[10px] text-brand-accent hover:underline">
-                <DownloadSimple size={10} /> DownloadSimple
+                <DownloadSimple size={10} /> Download
               </a>
             </div>
           ) : (
@@ -1957,7 +1957,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
   const [bgColor, setBgColor] = useState<string>("");
 
   const handleRemoveBg = async () => {
-    if (!file) return toast.error("UploadSimple an image first");
+    if (!file) return toast.error("Upload an image first");
     setProcessing(true);
     try {
       const fd = new FormData();
@@ -2053,7 +2053,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
               <img src={result} alt="Result" className="max-h-[250px] mx-auto" />
               <a href={result} download="removed-bg.png"
                 className="inline-flex items-center gap-1 mt-2 text-[10px] text-brand-accent hover:underline">
-                <DownloadSimple size={10} /> DownloadSimple PNG
+                <DownloadSimple size={10} /> Download PNG
               </a>
             </div>
           ) : (
@@ -2075,7 +2075,7 @@ function ImgToVideoTool({ processing, setProcessing }: ToolProps) {
   const [result, setResult] = useState<string | null>(null);
 
   const handleGenerate = async () => {
-    if (!file) return toast.error("UploadSimple an image first");
+    if (!file) return toast.error("Upload an image first");
     setProcessing(true);
     try {
       const fd = new FormData();
@@ -2189,7 +2189,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
       if (data.audio) {
         const audio = data.audio.startsWith("data:") ? data.audio : `data:audio/wav;base64,${data.audio}`;
         setResult(audio);
-        toast.success("MusicNote generated!");
+        toast.success("Music generated!");
       } else if (data.job_id) {
         toast.success("Generating...");
       } else {
@@ -2210,7 +2210,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
         initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}
       >
         <MusicNote size={16} className="text-brand-accent" />
-        <h2 className="text-sm font-bold text-text-primary">AI MusicNote Generator</h2>
+        <h2 className="text-sm font-bold text-text-primary">AI Music Generator</h2>
         <span className="text-[9px] bg-[rgba(212,255,0,0.10)] text-brand-accent px-2 py-0.5 rounded-full">MusicGen</span>
         <span className="text-[9px] text-text-muted ml-auto">Royalty-free output</span>
       </motion.div>
@@ -2251,7 +2251,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             className="btn-pill w-full text-xs flex items-center justify-center gap-1.5">
             {processing ? <CircleNotch size={12} className="animate-spin" /> : <MusicNote size={12} />}
-            Generate MusicNote
+            Generate Music
           </motion.button>
         </div>
 
@@ -2268,7 +2268,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
               <audio src={result} controls className="w-full" />
               <a href={result} download="ai-music.wav"
                 className="inline-flex items-center gap-1 text-[10px] text-brand-accent hover:underline">
-                <DownloadSimple size={10} /> DownloadSimple WAV
+                <DownloadSimple size={10} /> Download WAV
               </a>
             </div>
           ) : (
@@ -2292,7 +2292,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
   const [selectedVoice, setSelectedVoice] = useState<string>("");
 
   const handleClone = async () => {
-    if (voiceFiles.length === 0) return toast.error("UploadSimple at least one voice sample (6+ seconds)");
+    if (voiceFiles.length === 0) return toast.error("Upload at least one voice sample (6+ seconds)");
     setProcessing(true);
     let successCount = 0;
     try {
@@ -2383,7 +2383,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
               e.target.value = "";
             }} />
             <FileAudio size={24} className="mx-auto mb-2 text-text-muted" />
-            <p className="text-xs text-text-primary font-medium">{voiceFiles.length > 0 ? `${voiceFiles.length} sample${voiceFiles.length > 1 ? "s" : ""} selected` : "UploadSimple voice samples (6+ seconds each)"}</p>
+            <p className="text-xs text-text-primary font-medium">{voiceFiles.length > 0 ? `${voiceFiles.length} sample${voiceFiles.length > 1 ? "s" : ""} selected` : "Upload voice samples (6+ seconds each)"}</p>
             <p className="text-[10px] text-text-muted mt-1">Clone multiple voices in one batch</p>
           </div>
           {voiceFiles.length > 0 && (
@@ -2436,7 +2436,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
               <div className="w-full text-center space-y-3">
                 <audio src={result} controls className="w-full" />
                 <a href={result} download="voice-clone.wav" className="inline-flex items-center gap-1 text-[10px] text-brand-accent hover:underline">
-                  <DownloadSimple size={10} /> DownloadSimple
+                  <DownloadSimple size={10} /> Download
                 </a>
               </div>
             ) : (
@@ -2516,7 +2516,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
             <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
             <Stack size={24} className="mx-auto mb-2 text-text-muted" />
             <p className="text-xs text-text-primary font-medium">
-              {images.length > 0 ? `${images.length} images selected` : "UploadSimple 10-20 reference images"}
+              {images.length > 0 ? `${images.length} images selected` : "Upload 10-20 reference images"}
             </p>
             <p className="text-[10px] text-text-muted mt-1">Same style, consistent quality</p>
           </div>
@@ -2569,7 +2569,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
           <h3 className="text-xs font-semibold text-text-primary mb-3">How it works</h3>
           <div className="space-y-2">
             {[
-              { step: 1, text: "UploadSimple 10-20 images in your client's brand style" },
+              { step: 1, text: "Upload 10-20 images in your client's brand style" },
               { step: 2, text: "Set a trigger word (used in prompts to activate the style)" },
               { step: 3, text: "Training runs on GPU (~15-30 min)" },
               { step: 4, text: "Use the trained LoRA in Design Studio & Thumbnail Generator" },
