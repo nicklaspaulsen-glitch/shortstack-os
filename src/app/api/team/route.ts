@@ -162,7 +162,9 @@ export async function POST(request: NextRequest) {
       status: "completed",
       metadata: { member_id: member.id, member_email: email, role },
     });
-  } catch {}
+  } catch (err) {
+    console.warn("[team] trinity_log audit entry failed:", err);
+  }
 
   return NextResponse.json({ success: true, member });
 }

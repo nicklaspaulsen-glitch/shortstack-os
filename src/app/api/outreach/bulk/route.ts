@@ -71,7 +71,9 @@ export async function POST(request: NextRequest) {
               html: `Hi, I came across ${lead.business_name} and wanted to reach out. We help ${lead.industry || "local"} businesses grow their client base. Would you be open to a quick chat?`,
             });
             if (emailOk) processed++;
-          } catch {}
+          } catch (err) {
+            console.warn("[outreach/bulk] email send failed for lead:", err);
+          }
         }
       } else if (action === "sms" && lead.phone && twilioSid && twilioToken) {
         // Resolve sender: rotation pool → env default
