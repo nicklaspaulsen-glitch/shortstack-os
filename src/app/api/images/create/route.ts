@@ -264,7 +264,8 @@ export async function POST(request: NextRequest) {
     await service
       .from("generated_images")
       .update({ ...patch, updated_at: new Date().toISOString() })
-      .eq("id", imageId);
+      .eq("id", imageId)
+      .eq("profile_id", user.id);
   };
 
   /* ── Strategy 1: RunPod (FLUX preferred, SDXL fallback) ─────── */
