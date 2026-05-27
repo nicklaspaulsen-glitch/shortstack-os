@@ -156,10 +156,13 @@ export async function POST(request: NextRequest) {
     : [];
   const mergedFiles = [...existingFiles, ...uploaded];
 
+  // Defense-in-depth: include owner_id filter to close the TOCTOU window
+  // between the ownership-verified read above and this write.
   await serviceSupabase
     .from("lead_pipeline")
     .update({ files: mergedFiles })
-    .eq("id", leadId);
+    .eq("id", leadId)
+    .eq("owner_id", ownerId);
 
   return NextResponse.json({
     ok: true,
