@@ -146,11 +146,14 @@ Return JSON only:
   const executeData = await executeRes.json();
   const result = executeData.content?.[0]?.text || "No output generated.";
 
-  // Log the execution
+  // Log the execution — user_id required so the row appears in the
+  // agency's activity log (trinity_log has no DEFAULT for this column
+  // and no RLS auto-set when inserted via the service client).
   await serviceSupabase.from("trinity_log").insert({
     agent: agentDef.slug,
     action_type: "custom",
     description: `Spawned agent "${agentDef.name}" executed: ${task.substring(0, 150)}`,
+    user_id: ownerId,
     status: "completed",
     result: {
       agent_id: agentId,
