@@ -195,7 +195,7 @@ export async function POST(request: NextRequest) {
           chat_id: chatId,
           text: `Inbound Call\n\nFrom: ${from}\nTo: ${to}\nClient: ${client.businessName || client.clientId}`,
         }),
-      }).catch(() => {});
+      }).catch((err) => console.warn("[twilio/voice-webhook] Telegram notify failed:", err));
     }
 
     // ── TwiML response (preferred: ElevenLabs AI receptionist) ────────

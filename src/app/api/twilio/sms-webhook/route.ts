@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
           chat_id: chatId,
           text: `📱 Inbound SMS\n\nFrom: ${from}\nTo: ${to}\nMessage: ${body}`,
         }),
-      }).catch(() => {});
+      }).catch((err) => console.warn("[twilio/sms-webhook] Telegram notify failed:", err));
     }
   }
 

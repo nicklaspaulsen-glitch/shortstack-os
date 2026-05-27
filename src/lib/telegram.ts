@@ -15,5 +15,5 @@ export async function notifyOps(text: string): Promise<void> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chat_id: chatId, text }),
-  }).catch(() => {});
+  }).catch((err) => console.warn("[telegram] notifyOps failed:", err));
 }
