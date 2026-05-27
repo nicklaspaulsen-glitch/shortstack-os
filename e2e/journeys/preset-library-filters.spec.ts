@@ -116,8 +116,9 @@ test.describe("Preset Library — filter bar", () => {
       expect(filtered).toBeLessThanOrEqual(total);
     }
 
-    // Clicking "All" should restore the full count
-    const allBtn = page.getByRole("button", { name: /^All$/i }).first();
+    // Clicking category "All" should restore the full count.
+    // The page has TWO "All" buttons — gender (first) and category (second).
+    const allBtn = page.getByRole("button", { name: /^All$/i }).nth(1);
     await allBtn.click();
     await page.waitForTimeout(400);
 
