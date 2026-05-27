@@ -254,7 +254,7 @@ export async function POST(request: NextRequest) {
     await supabase.from("website_projects").update({
       custom_domain: domain,
       updated_at: new Date().toISOString(),
-    }).eq("id", project_id);
+    }).eq("id", project_id).eq("profile_id", user_id);
   }
 
   // Final status — only consider the pre-existing steps (GoDaddy / Vercel /
