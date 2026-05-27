@@ -194,7 +194,7 @@ export async function POST(request: NextRequest) {
         .eq("client_id", clientId)
         .eq("platform", acctInfo.platform)
         .eq("account_id", acctInfo.id);
-      console.log(`[webhooks/zernio] account.disconnected: client=${clientId} platform=${acctInfo.platform}`);
+      console.warn(`[webhooks/zernio] account.disconnected: client=${clientId} platform=${acctInfo.platform}`);
       return NextResponse.json({ ok: true });
     }
 
@@ -226,7 +226,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "DB write failed" }, { status: 500 });
     }
 
-    console.log(
+    console.warn(
       `[webhooks/zernio] ${webhook.event}: client=${clientId} platform=${acctInfo.platform} account=${acctInfo.id} hasToken=${!!acctInfo.access_token}`,
     );
     return NextResponse.json({ ok: true });
