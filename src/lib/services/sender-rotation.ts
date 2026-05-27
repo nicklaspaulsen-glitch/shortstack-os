@@ -667,7 +667,9 @@ async function advanceWarmupStages(
 /**
  * Get rotation stats — how many senders, capacity remaining, etc.
  */
-export async function getRotationStats(supabase: SupabaseClient): Promise<{
+// SECURITY: userId is required — stats must be scoped to the caller's senders.
+// Omitting the filter would return aggregate counts across all tenants.
+export async function getRotationStats(supabase: SupabaseClient, userId: string): Promise<{
   phones: { total: number; active: number; capacity: number; usedToday: number };
   emails: { total: number; active: number; capacity: number; usedToday: number };
 }> {
@@ -680,10 +682,12 @@ export async function getRotationStats(supabase: SupabaseClient): Promise<{
     const [phoneResult, emailResult] = await Promise.all([
       supabase
         .from("phone_numbers")
-        .select("id, daily_limit, sent_today, warmup_stage, status"),
+        .select("id, daily_limit, sent_today, warmup_stage, status")
+        .eq("user_id", userId),
       supabase
         .from("email_senders")
-        .select("id, daily_limit, sent_today, warmup_stage, status"),
+        .select("id, daily_limit, sent_today, warmup_stage, status")
+        .eq("user_id", userId),
     ]);
 
     if (phoneResult.error && emailResult.error) return empty;

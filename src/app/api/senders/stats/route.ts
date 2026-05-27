@@ -9,7 +9,8 @@ export async function GET(_request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const serviceSupabase = createServiceClient();
-  const stats = await getRotationStats(serviceSupabase);
+  // SECURITY: Pass user.id so stats are scoped to the caller's own senders.
+  const stats = await getRotationStats(serviceSupabase, user.id);
 
   return NextResponse.json(stats);
 }
