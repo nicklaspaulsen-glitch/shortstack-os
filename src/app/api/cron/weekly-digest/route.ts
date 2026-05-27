@@ -81,7 +81,8 @@ export async function GET(request: NextRequest) {
     }).catch(() => {});
   }
 
-  // Log it
+  // Log it — system-level aggregate event with no per-tenant scope;
+  // profile_id/user_id intentionally omitted (this digest spans all tenants).
   await supabase.from("trinity_log").insert({
     action_type: "custom",
     description: "Weekly digest sent",

@@ -280,6 +280,7 @@ export async function GET(request: NextRequest) {
     await supabase.from("trinity_log").insert({
       action_type: "automation",
       description: `Sequence "${seq.name}" → step ${step.step_order + 1} (${step.channel}) for ${lead.business_name || lead.email || lead.phone || lead.id}`,
+      user_id: seq.profile_id,
       profile_id: seq.profile_id,
       status: actionStatus,
       result: {
