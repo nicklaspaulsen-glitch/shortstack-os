@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import { getMaxReferenceFile } from "@/lib/plan-config";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 /**
  * Whisper Speech-to-Text — transcribe audio/video files to text.
@@ -26,6 +27,15 @@ export async function POST(request: NextRequest) {
 
   if (!file && !audioUrl) {
     return NextResponse.json({ error: "Provide a file or audio_url" }, { status: 400 });
+  }
+
+  // SSRF guard: audio_url is forwarded to RunPod, which fetches it.
+  // Validate before forwarding to prevent second-order SSRF against RunPod's network.
+  if (audioUrl) {
+    const ssrfErr = checkFetchUrl(audioUrl);
+    if (ssrfErr) {
+      return NextResponse.json({ error: `audio_url rejected: ${ssrfErr}` }, { status: 400 });
+    }
   }
 
   const whisperUrl = process.env.RUNPOD_WHISPER_URL;

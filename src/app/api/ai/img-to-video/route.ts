@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import { getMaxReferenceFile } from "@/lib/plan-config";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 /**
  * Stable Video Diffusion (SVD) — Image-to-Video on RunPod.
@@ -28,6 +29,14 @@ export async function POST(request: NextRequest) {
 
   if (!file && !imageUrl) {
     return NextResponse.json({ error: "Provide an image file or image_url" }, { status: 400 });
+  }
+
+  // SSRF guard: image_url is forwarded to RunPod SVD for processing.
+  if (imageUrl) {
+    const ssrfErr = checkFetchUrl(imageUrl);
+    if (ssrfErr) {
+      return NextResponse.json({ error: `image_url rejected: ${ssrfErr}` }, { status: 400 });
+    }
   }
 
   const svdUrl = process.env.RUNPOD_SVD_URL;

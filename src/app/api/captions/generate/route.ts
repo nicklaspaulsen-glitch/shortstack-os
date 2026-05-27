@@ -1,6 +1,7 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 /**
  * POST /api/captions/generate
@@ -262,6 +263,13 @@ export async function POST(request: NextRequest) {
   if (!videoUrl) {
     return NextResponse.json({ ok: false, error: "video_url required" }, { status: 400 });
   }
+
+  // SSRF guard: video_url is forwarded to RunPod Whisper, which fetches it.
+  const ssrfErr = checkFetchUrl(videoUrl);
+  if (ssrfErr) {
+    return NextResponse.json({ ok: false, error: `video_url rejected: ${ssrfErr}` }, { status: 400 });
+  }
+
   const style = normalizeStyle(body.style);
   const language =
     typeof body.language === "string" && body.language.length <= 8
