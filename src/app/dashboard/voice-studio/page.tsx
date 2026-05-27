@@ -269,7 +269,7 @@ function MyVoicesTab({
             No clones yet
           </h3>
           <p className="mt-1 max-w-sm text-sm text-text-secondary">
-            UploadSimple a 30-second clean recording above and we&apos;ll train a clone you
+            Upload a 30-second clean recording above and we&apos;ll train a clone you
             can drop into cold calls, voicemails, SMS, and DMs.
           </p>
         </div>
@@ -361,7 +361,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || `UploadSimple failed (${res.status})`);
+        throw new Error(data.error || `Upload failed (${res.status})`);
       }
       toast.success(
         data.status === "ready"
@@ -375,7 +375,7 @@ function UploadCard({ onCreated }: { onCreated: () => void }) {
       setSubmitMsg(null);
       onCreated();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "UploadSimple failed");
+      toast.error(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setSubmitting(false);
     }
@@ -964,7 +964,11 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
         if (langFilter !== "all" && (p.language || "en") !== langFilter) return false;
         if (genderFilter !== "all" && inferGender(p) !== genderFilter) return false;
         if (useCaseFilter !== "all" && !presetUseCases(p).includes(useCaseFilter)) return false;
-        if (previewOnly && !p.consent_evidence?.preview_url) return false;
+        // "Instant" means the preview URL is already available — either stored on
+        // the preset row (consent_evidence.preview_url) OR generated this session
+        // and held in previewCache. Without the session-cache check, the toggle
+        // would show 0 even after all presets were successfully pre-warmed.
+        if (previewOnly && !previewCache[p.id] && !p.consent_evidence?.preview_url) return false;
         if (favoritesOnly && !favorites.has(p.id)) return false;
         if (q && !`${p.label} ${p.description ?? ""}`.toLowerCase().includes(q)) return false;
         return true;
@@ -975,7 +979,7 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
         const bFav = favorites.has(b.id) ? 0 : 1;
         return aFav - bFav;
       });
-  }, [presets, categoryFilter, langFilter, genderFilter, useCaseFilter, searchQuery, previewOnly, favoritesOnly, favorites]);
+  }, [presets, categoryFilter, langFilter, genderFilter, useCaseFilter, searchQuery, previewOnly, favoritesOnly, favorites, previewCache]);
 
   if (loading) {
     return (

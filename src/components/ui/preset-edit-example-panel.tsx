@@ -12,7 +12,7 @@ import { Check, CircleNotch, FloppyDisk, Microphone, Pause, Play, Robot, Shuffle
  *   - kind: "telegram"  → fake Telegram message bubble with editable variables
  *   - kind: "voice"     → audio player, TTS quality signals, voice settings
  *
- * "FloppyDisk as custom" button calls /api/custom-presets POST. Requires auth;
+ * "Save as custom" button calls /api/custom-presets POST. Requires auth;
  * shows an error toast if the user is unauthenticated.
  */
 
@@ -141,7 +141,7 @@ async function saveAsCustom(payload: {
   });
   const data: { error?: string } = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(data.error ?? "FloppyDisk failed");
+    throw new Error(data.error ?? "Save failed");
   }
 }
 
@@ -235,7 +235,7 @@ function VideoEditExample({
       toast.success("Saved as custom preset");
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "FloppyDisk failed");
+      toast.error(err instanceof Error ? err.message : "Save failed");
     } finally {
       setSaving(false);
     }
@@ -276,7 +276,7 @@ function VideoEditExample({
             ) : (
               <FloppyDisk size={13} />
             )}
-            {saved ? "Saved!" : "FloppyDisk as custom"}
+            {saved ? "Saved!" : "Save as custom"}
           </button>
         </div>
       }
@@ -362,7 +362,7 @@ function ThumbnailEditExample({
       toast.success("Saved as custom preset");
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "FloppyDisk failed");
+      toast.error(err instanceof Error ? err.message : "Save failed");
     } finally {
       setSaving(false);
     }
@@ -394,7 +394,7 @@ function ThumbnailEditExample({
             ) : (
               <FloppyDisk size={13} />
             )}
-            {saved ? "Saved!" : "FloppyDisk as custom"}
+            {saved ? "Saved!" : "Save as custom"}
           </button>
         </div>
       }
@@ -498,7 +498,7 @@ function TelegramEditExample({
       toast.success("Saved as custom preset");
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "FloppyDisk failed");
+      toast.error(err instanceof Error ? err.message : "Save failed");
     } finally {
       setSaving(false);
     }
@@ -530,7 +530,7 @@ function TelegramEditExample({
             ) : (
               <FloppyDisk size={13} />
             )}
-            {saved ? "Saved!" : "FloppyDisk as custom"}
+            {saved ? "Saved!" : "Save as custom"}
           </button>
         </div>
       }
@@ -747,7 +747,7 @@ function VoiceEditExample({
       toast.success("Saved as custom preset");
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "FloppyDisk failed");
+      toast.error(err instanceof Error ? err.message : "Save failed");
     } finally {
       setSaving(false);
     }
@@ -792,7 +792,7 @@ function VoiceEditExample({
             ) : (
               <FloppyDisk size={13} />
             )}
-            {saved ? "Saved!" : "FloppyDisk as custom"}
+            {saved ? "Saved!" : "Save as custom"}
           </button>
         </div>
       }
@@ -957,7 +957,7 @@ function VoiceEditExample({
         ) : (
           <Microphone size={14} />
         )}
-        {generating ? "Generating..." : "Generate preview"}
+        {generating ? "Generating..." : audioUrl ? "Regenerate preview" : "Generate preview"}
       </button>
     </PanelShell>
   );
