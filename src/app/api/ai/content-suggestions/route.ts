@@ -135,10 +135,13 @@ export async function GET(request: NextRequest) {
   if (!clientId) return NextResponse.json({ error: "client_id required" }, { status: 400 });
 
   const service = createServiceClient();
+  // SECURITY: Filter by user_id so a caller cannot enumerate another
+  // tenant's content suggestions by supplying an arbitrary client_id.
   const { data: suggestions } = await service
     .from("trinity_log")
     .select("id, description, status, metadata, created_at")
     .eq("client_id", clientId)
+    .eq("user_id", user.id)
     .eq("action_type", "content_suggestion")
     .order("created_at", { ascending: false })
     .limit(20);

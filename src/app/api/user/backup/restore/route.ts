@@ -81,18 +81,61 @@ export async function POST(req: NextRequest) {
 
   if (apply) {
     // Full restore (best-effort). Only commits rows that belong to this user.
+    //
+    // SECURITY: Whitelist safe business-data columns per table. Strip ALL
+    // foreign-key and ownership columns from the user-supplied JSON.
+    // Without this, an attacker can craft a backup with arbitrary `id`
+    // values or forged `agency_owner_id`/`profile_id` to overwrite or
+    // inject into another tenant's rows via the service client (RLS bypass).
+    //
+    // The `id` column is intentionally excluded — rows are INSERTed as
+    // new records so there is no risk of clobbering an existing record.
+    // Ownership columns are injected server-side; the user-supplied value
+    // is never trusted.
+    const SAFE_COLUMNS: Record<string, string[]> = {
+      clients: [
+        "business_name", "industry", "services", "website", "notes",
+        "email", "phone", "status", "is_active", "package_tier",
+        "mrr", "health_score", "onboarding_step", "metadata",
+      ],
+      leads: [
+        "name", "email", "phone", "company", "source", "status",
+        "notes", "score", "pipeline_stage", "value", "tags", "metadata",
+      ],
+      content_calendar: [
+        "title", "content", "platform", "scheduled_at", "status",
+        "type", "tags", "metadata",
+      ],
+      video_projects: [
+        "title", "description", "status", "platform", "script",
+        "thumbnail_url", "tags", "metadata",
+      ],
+    };
+    // Correct ownership column per table (profile_id for clients, user_id elsewhere)
+    const OWNERSHIP_COLUMN: Record<string, string> = {
+      clients: "profile_id",
+      leads: "user_id",
+      content_calendar: "user_id",
+      video_projects: "user_id",
+    };
+
     for (const table of ["clients", "leads", "content_calendar", "video_projects"] as const) {
       const rows = Array.isArray(body[table]) ? (body[table] as Array<Record<string, unknown>>) : [];
       if (rows.length === 0) continue;
       try {
-        // Re-assign ownership to the current user
-        const withOwner = rows.map(r => ({
-          ...r,
-          ...(("owner_id" in r) ? { owner_id: user.id } : {}),
-          ...(("user_id" in r) ? { user_id: user.id } : {}),
-        }));
-        const { error } = await service.from(table).upsert(withOwner);
-        if (!error) restoredCounts[table] = withOwner.length;
+        const allowedCols = SAFE_COLUMNS[table] ?? [];
+        const ownerCol = OWNERSHIP_COLUMN[table];
+        const sanitized = rows.map(r => {
+          const safe: Record<string, unknown> = {};
+          for (const col of allowedCols) {
+            if (col in r) safe[col] = r[col];
+          }
+          // Force ownership to the current user — never trust the backup value
+          if (ownerCol) safe[ownerCol] = user.id;
+          return safe;
+        });
+        const { error } = await service.from(table).insert(sanitized);
+        if (!error) restoredCounts[table] = sanitized.length;
       } catch {
         // Skip tables that don't exist or can't accept these rows
       }
