@@ -94,7 +94,13 @@ export async function POST(request: NextRequest) {
     const userData = await authRes.json();
 
     if (authRes.ok && userData.id) {
-      await supabase.from("clients").update({ profile_id: userData.id }).eq("id", client.id);
+      // BUG: This overwrites profile_id (agency ownership) with the portal user's
+      // auth ID, causing the client to vanish from the agency's list. The clients
+      // table has no dedicated portal_user_id column — a migration is needed to add
+      // one. Until then, do NOT overwrite profile_id; the portal user authenticates
+      // via their own auth.uid() and portal RLS policies on portal_uploads/revisions
+      // already reference portal_user_id on those tables.
+      // await supabase.from("clients").update({ profile_id: userData.id }).eq("id", client.id);
       results.portal = { created: true, user_id: userData.id };
     } else {
       results.portal = { created: false, error: userData.msg };
