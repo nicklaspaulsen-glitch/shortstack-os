@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 // ---------------------------------------------------------------------------
@@ -27,7 +27,7 @@ interface Campaign {
 }
 
 // ---------------------------------------------------------------------------
-// GET â€” Return ads manager data (real, from DB; empty by default)
+// GET -- Return ads manager data (real, from DB; empty by default)
 // ---------------------------------------------------------------------------
 export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Fetch real campaigns from DB (table may not exist yet â€” returns empty)
+  // Fetch real campaigns from DB (table may not exist yet -- returns empty)
   let campaigns: Campaign[] = [];
   try {
     const { data } = await supabase
@@ -45,8 +45,9 @@ export async function GET(request: NextRequest) {
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
     campaigns = (data as Campaign[]) || [];
-  } catch {
-    // Table doesn't exist yet or query error â€” leave empty
+  } catch (err) {
+    // Table doesn't exist yet or query error — leave empty, but log for ops
+    console.warn("[ads-manager] ad_campaigns query failed:", err);
   }
 
   // Check which platforms are connected
@@ -73,8 +74,8 @@ export async function GET(request: NextRequest) {
         if (p === "tiktok_ads" || p === "tiktok") platforms_connected.tiktok_ads = !!c.is_active;
       }
     }
-  } catch {
-    // ignore
+  } catch (err) {
+    console.warn("[ads-manager] oauth_connections query failed:", err);
   }
 
   // Attach last_synced_at per platform from ad_accounts
@@ -92,8 +93,8 @@ export async function GET(request: NextRequest) {
         }
       }
     }
-  } catch {
-    // ignore
+  } catch (err) {
+    console.warn("[ads-manager] ad_accounts sync query failed:", err);
   }
 
   // Best-effort background refresh of campaigns for connected platforms.
@@ -120,8 +121,8 @@ export async function GET(request: NextRequest) {
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
       if (data) campaigns = data as Campaign[];
-    } catch {
-      // ignore
+    } catch (err) {
+      console.warn("[ads-manager] post-refresh re-read failed:", err);
     }
   }
 
@@ -154,7 +155,7 @@ export async function GET(request: NextRequest) {
 }
 
 // ---------------------------------------------------------------------------
-// POST â€” Actions (create, update, bulk, generate_copy, save_rule)
+// POST -- Actions (create, update, bulk, generate_copy, save_rule)
 // ---------------------------------------------------------------------------
 export async function POST(request: NextRequest) {
   try {
@@ -172,8 +173,6 @@ export async function POST(request: NextRequest) {
       // identifiers (id, user_id, total_spend, impressions, clicks, ctr,
       // conversions, cpa, roas, external_id, created_at) must not come from
       // the request body.
-      // FIXME: ad_account_id should be validated against the user's own
-      //   ad_accounts rows before trusting it here.
       const ALLOWED_CREATE_FIELDS = [
         "name", "objective", "status", "daily_budget",
         "start_date", "end_date", "platform", "audience", "ai_optimized",
@@ -184,6 +183,25 @@ export async function POST(request: NextRequest) {
       const campaignFields: Record<string, unknown> = {};
       for (const field of ALLOWED_CREATE_FIELDS) {
         if (field in src) campaignFields[field] = src[field];
+      }
+
+      // Cross-tenant defense: if ad_account_id is supplied, verify it belongs
+      // to the caller. Without this check a user could reference another
+      // tenant's ad account in their campaign, leaking cross-tenant data when
+      // the campaign syncs metrics.
+      if (campaignFields.ad_account_id) {
+        const { data: ownedAccount } = await supabase
+          .from("ad_accounts")
+          .select("id")
+          .eq("id", campaignFields.ad_account_id as string)
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (!ownedAccount) {
+          return NextResponse.json(
+            { error: "ad_account_id not found in your workspace" },
+            { status: 403 },
+          );
+        }
       }
 
       const newCampaign = {
@@ -212,7 +230,7 @@ export async function POST(request: NextRequest) {
           return NextResponse.json(
             {
               success: false,
-              error: "Ads feature is not set up â€” the ad_campaigns table does not exist in this environment.",
+              error: "Ads feature is not set up -- the ad_campaigns table does not exist in this environment.",
               campaign: null,
             },
             { status: 500 },
@@ -296,6 +314,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   } catch (err) {
+    console.error("[ads-manager] POST handler failed:", err);
     return NextResponse.json(
       { error: "Server error" },
       { status: 500 },
