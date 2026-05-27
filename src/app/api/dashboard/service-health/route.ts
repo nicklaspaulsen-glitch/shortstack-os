@@ -71,7 +71,9 @@ export async function GET() {
         });
       }
     }
-  } catch {}
+  } catch (err) {
+    console.warn("[service-health] automation status query failed:", err);
+  }
 
   // Overall status
   const hasDown = services.some(s => s.status === "down");

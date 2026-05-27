@@ -51,7 +51,9 @@ export async function GET(request: NextRequest) {
       if (shRow?.status === "healthy" && shRow?.metadata?.enabled) {
         autoRunConfig = shRow.metadata;
       }
-    } catch {}
+    } catch (err) {
+      console.warn("[scrape-leads] auto-run config lookup failed:", err);
+    }
   }
 
   // Check if today is a scheduled day
@@ -246,7 +248,9 @@ export async function GET(request: NextRequest) {
             await supabase.from("leads").update(updates).eq("id", lead.id);
             totalEnriched++;
           }
-        } catch {}
+        } catch (err) {
+          console.warn("[scrape-leads] lead enrichment failed:", err);
+        }
       }));
     }
 

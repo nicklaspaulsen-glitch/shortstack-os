@@ -60,7 +60,9 @@ export async function GET(request: NextRequest) {
         });
         generated++;
       }
-    } catch {}
+    } catch (err) {
+      console.warn("[reports/client-weekly] report generation failed for client:", err);
+    }
   }
 
   // Notify

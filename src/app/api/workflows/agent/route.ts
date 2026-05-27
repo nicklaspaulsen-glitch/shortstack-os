@@ -89,7 +89,7 @@ RULES:
     if (workflowMatch) {
       try {
         workflow = JSON.parse(workflowMatch[1].trim());
-      } catch {}
+      } catch { /* JSON parse failure — workflow stays null, agent response used as-is */ }
     }
 
     // Check if agent wants to deploy/execute
@@ -116,7 +116,9 @@ RULES:
           });
           const n8nData = await n8nRes.json();
           if (n8nData.id) { deployed = true; n8nId = n8nData.id; }
-        } catch {}
+        } catch (err) {
+          console.warn("[workflows/agent] n8n deployment failed:", err);
+        }
       }
 
       // Also execute internally

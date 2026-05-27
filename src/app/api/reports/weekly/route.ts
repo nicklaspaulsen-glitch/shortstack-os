@@ -77,7 +77,9 @@ export async function POST(request: NextRequest) {
       });
       const data = await res.json();
       aiSummary = data.content?.[0]?.text || "";
-    } catch {}
+    } catch (err) {
+      console.warn("[reports/weekly] AI summary generation failed:", err);
+    }
   }
 
   // Build PDF
