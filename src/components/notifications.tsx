@@ -75,8 +75,8 @@ export default function Notifications() {
           table: "notifications",
           filter: `user_id=eq.${profile.id}`,
         },
-        (payload: any) => {
-          setNotifications((prev) => [payload.new as Notification, ...prev]);
+        (payload: { new: Record<string, unknown> }) => {
+          setNotifications((prev) => [payload.new as unknown as Notification, ...prev]);
         }
       )
       .subscribe();

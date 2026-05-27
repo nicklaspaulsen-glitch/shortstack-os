@@ -4,6 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { formatRelativeTime } from "@/lib/utils";
 
+interface TrinityLogRow {
+  action_type: string;
+  description: string;
+  status: string;
+  created_at: string;
+}
+
 interface Agent {
   id: string;
   name: string;
@@ -54,18 +61,18 @@ export default function PixelOffice() {
         .limit(20);
 
       if (data) {
-        const newLogs: LogEntry[] = data.map((d: any) => {
+        const newLogs: LogEntry[] = data.map((d: TrinityLogRow) => {
           const agent = AGENT_CONFIGS.find(a => a.id === d.action_type) || AGENT_CONFIGS[6];
           return { agent: agent.name, color: agent.color, action: d.description, time: formatRelativeTime(d.created_at) };
         });
         setLogs(newLogs);
 
         // Update agent statuses based on recent activity
-        const activeTypes = new Set(data.filter((d: any) => d.status === "completed").slice(0, 5).map((d: any) => d.action_type));
+        const activeTypes = new Set(data.filter((d: TrinityLogRow) => d.status === "completed").slice(0, 5).map((d: TrinityLogRow) => d.action_type));
         setAgents(prev => prev.map(a => ({
           ...a,
           status: activeTypes.has(a.id) ? "working" : (Math.random() > 0.4 ? "working" : "idle"),
-          lastAction: data.find((d: any) => d.action_type === a.id)?.description || a.message,
+          lastAction: data.find((d: TrinityLogRow) => d.action_type === a.id)?.description || a.message,
         })));
       }
     }

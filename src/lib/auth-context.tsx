@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, useRef, useMemo, ReactNode } from "react";
 import { createAuthClient, setAccessToken } from "@/lib/supabase/client";
-import { User } from "@supabase/supabase-js";
+import { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
 import { Profile } from "@/lib/types";
 
 interface AuthContextType {
@@ -190,7 +190,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const timeout = setTimeout(() => { if (mounted) setLoading(false); }, 6000);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event: any, session: any) => {
+      async (event: AuthChangeEvent, session: Session | null) => {
         if (!mounted) return;
         const u = session?.user ?? null;
         setUser(u);

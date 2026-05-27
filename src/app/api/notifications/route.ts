@@ -25,6 +25,35 @@ import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
     for update using (auth.uid() = user_id);
 */
 
+/* ── Row shapes for parallel queries ── */
+interface TrinityLogRow {
+  id: string;
+  action_type: string;
+  description: string;
+  status: string;
+  created_at: string;
+}
+
+interface SystemHealthRow {
+  id: string;
+  integration_name: string;
+  status: string;
+  error_message: string | null;
+  updated_at: string;
+}
+
+interface NotificationRow {
+  id: string;
+  user_id: string;
+  title: string;
+  message: string;
+  type: string;
+  read: boolean;
+  link: string | null;
+  created_at: string;
+  _synthetic?: boolean;
+}
+
 /* Map trinity_log action_type to notification type */
 function mapActionToNotifType(actionType: string): string {
   if (/scraper|lead_gen|lead/i.test(actionType)) return "lead";
@@ -106,7 +135,7 @@ export async function GET(request: NextRequest) {
   const notifications = notifResult.data || [];
 
   // Convert trinity_log entries to notification-shaped objects (synthetic, non-persisted)
-  const logNotifs = (logsResult.data || []).map((log: any) => ({
+  const logNotifs = (logsResult.data || []).map((log: TrinityLogRow) => ({
     id: `log_${log.id}`,
     user_id: user.id,
     title: actionToTitle(log.action_type, log.description),
@@ -119,7 +148,7 @@ export async function GET(request: NextRequest) {
   }));
 
   // Convert unhealthy system_health entries to alert notifications
-  const healthNotifs = (healthResult.data || []).map((h: any) => ({
+  const healthNotifs = (healthResult.data || []).map((h: SystemHealthRow) => ({
     id: `health_${h.id}`,
     user_id: user.id,
     title: `${h.integration_name.replace(/_/g, " ")} — ${h.status}`,
@@ -132,12 +161,12 @@ export async function GET(request: NextRequest) {
   }));
 
   // Merge: real notifications first, then synthetic, all sorted by date
-  const existingIds = new Set(notifications.map((n: any) => n.id));
+  const existingIds = new Set(notifications.map((n: NotificationRow) => n.id));
   const all = [
     ...notifications,
-    ...logNotifs.filter((ln: any) => !existingIds.has(ln.id)),
+    ...logNotifs.filter((ln: { id: string }) => !existingIds.has(ln.id)),
     ...healthNotifs,
-  ].sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  ].sort((a: { created_at: string }, b: { created_at: string }) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
   return NextResponse.json({ notifications: all });
 }

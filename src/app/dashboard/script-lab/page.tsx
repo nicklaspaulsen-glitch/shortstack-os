@@ -623,7 +623,7 @@ export default function ScriptLabPage() {
       .eq("action_type", "script_generated")
       .order("created_at", { ascending: false })
       .limit(20);
-    setSavedScripts((data || []).map((d: any) => ({
+    setSavedScripts((data || []).map((d: { id: string; description: string; metadata: Record<string, unknown>; created_at: string; client_id: string | null }) => ({
       id: d.id as string,
       title: d.description as string,
       framework: (d.metadata as Record<string, string>)?.framework || "",

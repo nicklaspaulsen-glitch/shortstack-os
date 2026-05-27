@@ -83,6 +83,58 @@ interface RotationStats {
   emails: { active: number; totalCapacity: number; usedToday: number };
 }
 
+/* ── API response row shapes (snake_case + camelCase fallbacks) ── */
+interface PhoneApiRow {
+  id?: string;
+  phone_number?: string;
+  number?: string;
+  label?: string;
+  type?: string;
+  status?: string;
+  capabilities?: string[];
+  monthly_cost?: number;
+  created_at?: string;
+  country?: string;
+  assigned_to_name?: string;
+  assigned_to_client_id?: string;
+  daily_limit?: number;
+  sent_today?: number;
+  warmup_stage?: string;
+  clientName?: string;
+  assigned_to?: string;
+  clientId?: string;
+  monthlyCost?: number;
+  purchasedDate?: string;
+  dailyLimit?: number;
+  sentToday?: number;
+  warmupStage?: string;
+}
+
+interface EmailApiRow {
+  id?: string;
+  email: string;
+  display_name?: string;
+  displayName?: string;
+  status?: string;
+  provider?: string;
+  smtp_provider?: string;
+  daily_limit?: number;
+  dailyLimit?: number;
+  sent_today?: number;
+  sentToday?: number;
+  warmup_stage?: string;
+  warmupStage?: string;
+  smtp_host?: string;
+  smtp_port?: string;
+  smtp_user?: string;
+}
+
+interface AvailableNumberApiRow {
+  phone: string;
+  locality?: string;
+  region?: string;
+}
+
 const COUNTRIES = [
   { code: "US", name: "United States", flag: "US" },
   { code: "CA", name: "Canada", flag: "CA" },
@@ -156,7 +208,7 @@ export default function PhoneEmailPage() {
     try {
       const res = await fetch("/api/senders/phones");
       const data = await res.json();
-      return (data.phones || []).map((p: any) => ({
+      return (data.phones || []).map((p: PhoneApiRow) => ({
         id: p.id || `pool-${p.phone_number}`,
         number: p.phone_number || p.number,
         label: p.label,
@@ -182,7 +234,7 @@ export default function PhoneEmailPage() {
     try {
       const res = await fetch("/api/twilio/numbers");
       const data = await res.json();
-      return (data.numbers || []).map((p: any) => ({
+      return (data.numbers || []).map((p: PhoneApiRow) => ({
         id: p.id || `twilio-${p.number}`,
         number: p.number,
         label: undefined,
@@ -208,7 +260,7 @@ export default function PhoneEmailPage() {
     try {
       const res = await fetch("/api/senders/emails");
       const data = await res.json();
-      return (data.emails || []).map((e: any) => ({
+      return (data.emails || []).map((e: EmailApiRow) => ({
         id: e.id || `email-${e.email}`,
         email: e.email,
         displayName: e.display_name || e.displayName || e.email.split("@")[0],
@@ -311,7 +363,7 @@ export default function PhoneEmailPage() {
       const res = await fetch(`/api/twilio/provision?country=${buyCountry}&area_code=${buyAreaCode}`);
       const data = await res.json();
       if (data.error) { setSearchError(data.error); setSearchResults([]); setSearching(false); return; }
-      setSearchResults((data.numbers || []).map((n: any) => ({
+      setSearchResults((data.numbers || []).map((n: AvailableNumberApiRow) => ({
         number: n.phone,
         type: buyType,
         monthlyCost: NUMBER_TYPES.find(t => t.value === buyType)?.cost || 1.50,

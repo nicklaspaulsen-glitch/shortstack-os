@@ -43,6 +43,81 @@ interface InboxItem {
   tags: string[];
 }
 
+/* ── Supabase row shapes ── */
+interface ScriptRow {
+  id: string;
+  title: string | null;
+  hook: string | null;
+  description: string | null;
+  script_body: string | null;
+  script_type: string | null;
+  target_platform: string | null;
+  hashtags: string | null;
+  seo_title: string | null;
+  thumbnail_idea: string | null;
+  status: string | null;
+  approved_at: string | null;
+  created_at: string;
+}
+
+interface ContractRow {
+  id: string;
+  title: string | null;
+  status: string | null;
+  value: number | null;
+  start_date: string | null;
+  end_date: string | null;
+  pandadoc_id: string | null;
+  created_at: string;
+}
+
+interface IdeaRow {
+  id: string;
+  title: string | null;
+  hook: string | null;
+  thumbnail_concept: string | null;
+  idea_type: string;
+  target_keyword: string | null;
+  estimated_length: string | null;
+  platform_recommendation: string | null;
+  trending_angle: string | null;
+  is_approved: boolean;
+  added_to_calendar: boolean;
+  created_at: string;
+}
+
+interface BriefingRow {
+  id: string;
+  generated_at: string;
+  summary: string | null;
+  content: Record<string, unknown> | null;
+  read_at: string | null;
+  created_at: string;
+}
+
+interface OutreachRow {
+  id: string;
+  platform: string | null;
+  business_name: string | null;
+  recipient_handle: string | null;
+  message_text: string | null;
+  status: string | null;
+  reply_text: string | null;
+  lead_id: string | null;
+  sent_at: string | null;
+  created_at: string;
+}
+
+interface TrinityLogRow {
+  id: string;
+  action_type: string;
+  description: string | null;
+  result: Record<string, unknown> | null;
+  status: string | null;
+  completed_at: string | null;
+  created_at: string;
+}
+
 /* -- Category Config -- */
 const CATEGORIES: { key: InboxCategory; label: string; icon: React.ReactNode; color: string; bg: string }[] = [
   { key: "all", label: "All Items", icon: <Tray size={14} />, color: "text-brand-accent", bg: "bg-[rgba(212,255,0,0.10)]" },
@@ -149,7 +224,7 @@ export default function InboxPage() {
       .limit(50);
 
     if (scripts) {
-      scripts.forEach((s: any) => {
+      scripts.forEach((s: ScriptRow) => {
         inboxItems.push({
           id: `script-${s.id}`,
           type: "scripts",
@@ -175,7 +250,7 @@ export default function InboxPage() {
       .limit(30);
 
     if (contracts) {
-      contracts.forEach((c: any) => {
+      contracts.forEach((c: ContractRow) => {
         inboxItems.push({
           id: `contract-${c.id}`,
           type: "contracts",
@@ -201,7 +276,7 @@ export default function InboxPage() {
       .limit(40);
 
     if (ideas) {
-      ideas.forEach((i: any) => {
+      ideas.forEach((i: IdeaRow) => {
         inboxItems.push({
           id: `idea-${i.id}`,
           type: "ideas",
@@ -228,7 +303,7 @@ export default function InboxPage() {
       .limit(20);
 
     if (briefings) {
-      briefings.forEach((b: any) => {
+      briefings.forEach((b: BriefingRow) => {
         inboxItems.push({
           id: `briefing-${b.id}`,
           type: "briefings",
@@ -254,7 +329,7 @@ export default function InboxPage() {
       .limit(50);
 
     if (outreach) {
-      outreach.forEach((o: any) => {
+      outreach.forEach((o: OutreachRow) => {
         inboxItems.push({
           id: `outreach-${o.id}`,
           type: "outreach",
@@ -281,8 +356,8 @@ export default function InboxPage() {
       .limit(30);
 
     if (logs) {
-      logs.forEach((l: any) => {
-        const isExport = l.description?.toLowerCase().includes("export") || l.description?.toLowerCase().includes("csv");
+      logs.forEach((l: TrinityLogRow) => {
+        const isExport = !!(l.description?.toLowerCase().includes("export") || l.description?.toLowerCase().includes("csv"));
         inboxItems.push({
           id: `log-${l.id}`,
           type: isExport ? "exports" : "reports",
