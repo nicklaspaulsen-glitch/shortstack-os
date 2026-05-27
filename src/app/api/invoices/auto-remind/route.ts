@@ -41,7 +41,9 @@ export async function GET(request: NextRequest) {
         html: `<p>Hi ${client.contact_name},</p><p>This is a friendly reminder that your invoice of $${inv.amount} was due on ${inv.due_date}. Please process the payment at your earliest convenience.</p><p>If you've already paid, please disregard this message.</p><p>Thanks,<br>The ShortStack Team</p>`,
       });
       if (sent) reminders++;
-    } catch {}
+    } catch (err) {
+      console.warn("[invoices/auto-remind] reminder send failed for invoice:", err);
+    }
   }
 
   // Notify admin on Telegram

@@ -100,7 +100,9 @@ export async function POST(req: NextRequest) {
         status: "completed",
         metadata: { deleted, days_old: daysOld, triggered_by: isCron ? "cron" : "user" },
       });
-    } catch {}
+    } catch (err) {
+      console.warn("[senders/cleanup] trinity_log audit entry failed:", err);
+    }
   }
 
   return NextResponse.json({

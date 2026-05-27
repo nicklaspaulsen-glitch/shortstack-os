@@ -79,7 +79,9 @@ export async function GET() {
           last_check: new Date().toISOString(),
           last_error: lastError || null,
         }).eq("id", s.id);
-      } catch {}
+      } catch (err) {
+        console.warn("[senders/health-check] email sender status update failed:", err);
+      }
     }
   }
 
@@ -145,7 +147,9 @@ export async function GET() {
           last_check: new Date().toISOString(),
           last_error: lastError || null,
         }).eq("id", p.id);
-      } catch {}
+      } catch (err) {
+        console.warn("[senders/health-check] phone sender status update failed:", err);
+      }
     }
   }
 
