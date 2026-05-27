@@ -1044,11 +1044,13 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const isVercelCron = request.headers.get("x-vercel-cron") !== null;
-  const auth = request.headers.get("authorization");
-  const rawToken = auth?.replace(/\^Bearer\\s+/i, "") ?? "";
-  const hasBearer = !!process.env.CRON_SECRET && secureCompare(rawToken, process.env.CRON_SECRET);
-  if (!isVercelCron && !hasBearer) {
+  // May 27 audit: x-vercel-cron header alone is spoofable by any internet
+  // caller — removed the bypass. CRON_SECRET bearer is the only gate, which
+  // Vercel itself supplies automatically when the secret is configured.
+  const authHeader = request.headers.get("authorization");
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret || !secureCompare(rawToken, cronSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

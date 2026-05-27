@@ -64,12 +64,13 @@ function renderTemplate(raw: string | null, lead: LeadRow): string {
 }
 
 export async function GET(request: NextRequest) {
-  // Auth: Vercel Cron sets x-vercel-cron. Manual runs use CRON_SECRET.
-  const isVercelCron = request.headers.get("x-vercel-cron") !== null;
+  // May 27 audit: x-vercel-cron header alone is spoofable by any internet
+  // caller — removed the bypass. CRON_SECRET bearer is the only gate, which
+  // Vercel itself supplies automatically when the secret is configured.
   const authHeader = request.headers.get("authorization");
-  const rawToken = authHeader?.replace(/\^Bearer\\s+/i, "") ?? "";
-  const hasBearer = !!process.env.CRON_SECRET && secureCompare(rawToken, process.env.CRON_SECRET);
-  if (!isVercelCron && !hasBearer) {
+  const rawToken = authHeader?.replace(/^Bearer\s+/i, "") ?? "";
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret || !secureCompare(rawToken, cronSecret)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -78,7 +79,7 @@ export async function GET(request: NextRequest) {
   const nowMs = now.getTime();
 
   structuredLog.info("[cron-run-sequences]", "starting cron tick", {
-    triggered_by: isVercelCron ? "vercel-cron" : "manual-bearer",
+    triggered_by: "cron",
     timestamp: now.toISOString(),
   });
 
