@@ -874,6 +874,10 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
   // one via the test endpoint. Sequential (not parallel) to respect ElevenLabs
   // rate limits. Non-fatal: a failed preset is skipped, generation continues.
   const autoPreWarmFiredRef = useRef(false);
+  // Stable ref so the auto-trigger timer always calls the latest preWarmAll
+  // closure (with the fully-seeded previewCache) even if previewCache updates
+  // between effect registration and the 1 500ms timeout firing.
+  const preWarmAllRef = useRef<() => Promise<void>>();
   const [preWarmActive, setPreWarmActive] = useState(false);
   const [preWarmDone, setPreWarmDone] = useState(0);
   const [preWarmTotal, setPreWarmTotal] = useState(0);
@@ -939,16 +943,32 @@ function PresetsTab({ presets, loading, onRefresh }: { presets: VoiceClone[]; lo
     setPreWarmActive(false);
   }, [presets, previewCache, preWarmActive]);
 
+  // Keep the ref in sync with the latest preWarmAll on every render.
+  // This avoids stale-closure problems in the auto-trigger timer below.
+  preWarmAllRef.current = preWarmAll;
+
   // Auto-trigger pre-warm once after presets load if there are gaps.
   // The 1 500ms delay lets the initial paint finish before API calls begin.
   // `autoPreWarmFiredRef` prevents re-triggering on subsequent re-renders.
+  //
+  // Why deps = [presets.length] only:
+  //   When PresetsTab mounts, the seeding effect fires and calls
+  //   setPreviewCache(), which updates `preWarmGapCount` and `preWarmAll`
+  //   (new useCallback identity). If those were in the dep array, React
+  //   would run cleanup (clearTimeout) and then re-run the effect body —
+  //   but autoPreWarmFiredRef.current === true at that point, so the timer
+  //   would never be rescheduled and pre-warm would never auto-fire.
+  //   Using a ref for preWarmAll and depending only on presets.length makes
+  //   the effect stable: it fires exactly once after presets load, and the
+  //   timer callback reads the latest preWarmAll (via preWarmAllRef.current)
+  //   which by the time it fires already has the seeded previewCache.
   useEffect(() => {
     if (autoPreWarmFiredRef.current) return;
-    if (presets.length === 0 || preWarmGapCount === 0) return;
+    if (presets.length === 0) return;
     autoPreWarmFiredRef.current = true;
-    const timer = setTimeout(() => { void preWarmAll(); }, 1500);
+    const timer = setTimeout(() => { void preWarmAllRef.current?.(); }, 1500);
     return () => clearTimeout(timer);
-  }, [presets.length, preWarmGapCount, preWarmAll]);
+  }, [presets.length]); // stable — only reacts to initial preset load
 
   const languages = useMemo(() => {
     const langs = new Set(presets.map((p) => p.language || "en").filter(Boolean));
