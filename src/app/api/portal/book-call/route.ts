@@ -394,6 +394,8 @@ export async function POST(req: NextRequest) {
     action_type: "custom",
     description: `Call booked for ${ctx.client.business_name || "client"} at ${start.toISOString()}`,
     client_id: ctx.client.id,
+    // user_id required so the row appears in the agency's activity log.
+    user_id: ctx.ownerId,
     status: "completed",
     result: {
       type: "portal_booking",

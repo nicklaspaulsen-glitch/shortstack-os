@@ -150,6 +150,9 @@ export async function POST(req: NextRequest) {
     action_type: "custom",
     description: `Revision requested${contentTitle ? ` on "${contentTitle}"` : ""} — ${notes.slice(0, 200)}`,
     client_id: client.id,
+    // user_id required so the row appears in the agency's activity log;
+    // client.profile_id is available from resolvePortalClient (selects id, profile_id, business_name).
+    user_id: client.profile_id,
     status: "pending",
     result: {
       type: "client_request",

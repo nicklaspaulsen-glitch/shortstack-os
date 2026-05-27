@@ -197,6 +197,9 @@ export async function POST(req: NextRequest) {
     action_type: "custom",
     description: `Client uploaded "${uploaded.name}" (${Math.round(uploaded.size / 1024)} KB) for ${client.business_name || "client"}`,
     client_id: client.id,
+    // user_id required so the row appears in the agency's activity log;
+    // client.profile_id is available from resolvePortalClient (selects id, profile_id, business_name).
+    user_id: client.profile_id,
     status: "completed",
     result: {
       type: "portal_upload",
