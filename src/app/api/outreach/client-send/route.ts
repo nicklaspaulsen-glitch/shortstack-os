@@ -138,11 +138,12 @@ export async function POST(request: NextRequest) {
     await new Promise(r => setTimeout(r, 300));
   }
 
-  // Log
+  // Log — user_id required for per-tenant filtering; missing before May 26 audit.
   await supabase.from("trinity_log").insert({
     action_type: "email_campaign",
     description: `Client outreach for ${client.business_name}: ${results.emails_sent} emails, ${results.dms_queued} DMs, ${results.sms_sent} SMS`,
     client_id,
+    user_id: ownerId,
     status: "completed",
     result: results,
     completed_at: new Date().toISOString(),

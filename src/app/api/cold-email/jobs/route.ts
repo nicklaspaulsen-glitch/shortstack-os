@@ -96,7 +96,16 @@ export async function POST(request: NextRequest) {
 
   let leadIds: string[] = [];
   if (leadIdsRaw && leadIdsRaw.length > 0) {
-    leadIds = leadIdsRaw.filter((v): v is string => typeof v === "string");
+    // May 26 audit: type-only filter let callers inject arbitrary lead UUIDs
+    // from other tenants. Replace with a DB ownership query so only the
+    // caller's own leads can be enqueued into cold_email_personalizations.
+    const rawIds = leadIdsRaw.filter((v): v is string => typeof v === "string");
+    const { data: ownedLeads } = await supabase
+      .from("leads")
+      .select("id")
+      .eq("user_id", ownerId)
+      .in("id", rawIds);
+    leadIds = (ownedLeads ?? []).map((r) => r.id as string);
   } else if (statusFilter) {
     const { data: matched, error: matchErr } = await supabase
       .from("leads")

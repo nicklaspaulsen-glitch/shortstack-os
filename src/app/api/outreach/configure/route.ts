@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // Outreach Configuration — Save/Load full outreach hub config
 // Stores: campaigns, templates (call/sms/email/dm), channel settings,
@@ -9,6 +10,13 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // May 26 audit: scope config key to ownerId so each agency owner gets an
+  // isolated system_health row. Without this, all tenants read/write the same
+  // "outreach_config" row (system_health has no user_id column for RLS).
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  const configKey = `outreach_config_${ownerId}`;
+
   try {
     const config = await request.json();
 
@@ -16,11 +24,11 @@ export async function POST(request: NextRequest) {
     const { data: existing } = await supabase
       .from("system_health")
       .select("id")
-      .eq("integration_name", "outreach_config")
+      .eq("integration_name", configKey)
       .single();
 
     const record = {
-      integration_name: "outreach_config",
+      integration_name: configKey,
       status: "healthy" as const,
       metadata: {
         // Campaigns
@@ -74,10 +82,13 @@ export async function GET(_request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const { data } = await supabase
     .from("system_health")
     .select("metadata")
-    .eq("integration_name", "outreach_config")
+    .eq("integration_name", `outreach_config_${ownerId}`)
     .single();
 
   if (data?.metadata) {

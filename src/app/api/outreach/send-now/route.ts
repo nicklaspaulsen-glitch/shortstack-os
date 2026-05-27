@@ -14,7 +14,12 @@ export async function POST(request: NextRequest) {
 
   const { platforms, count_per_platform, target_industry } = await request.json();
 
-  const selectedPlatforms = platforms || ["instagram", "linkedin", "facebook", "tiktok"];
+  // May 26 audit: unvalidated platform value used as PostgREST column name
+  // (`${platform}_url`). Validate against an allowlist before the loop.
+  const VALID_PLATFORMS = new Set(["instagram", "linkedin", "facebook", "tiktok"]);
+  const selectedPlatforms = Array.isArray(platforms)
+    ? platforms.filter((p: unknown): p is string => typeof p === "string" && VALID_PLATFORMS.has(p))
+    : ["instagram", "linkedin", "facebook", "tiktok"];
   const countPer = count_per_platform || 5;
   const results: Record<string, { sent: number; failed: number }> = {};
 
