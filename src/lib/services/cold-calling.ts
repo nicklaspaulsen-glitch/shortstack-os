@@ -48,19 +48,3 @@ export async function runDailyColdCalls(
   return { totalQueued: 0, alreadyCalled: 0, errors: 0, leads: [] };
 }
 
-export async function handleGHLCallWebhook(
-  supabase: ReturnType<typeof import("@/lib/supabase/server").createServiceClient>,
-  payload: Record<string, unknown>,
-): Promise<void> {
-  // Legacy GHL call webhook — still accepts inbound payloads so any dangling
-  // GHL workflows don't 500. We log the event but take no further action.
-  // TODO: migrate to native ElevenAgents webhook at /api/webhooks/elevenlabs.
-  try {
-    await supabase.from("trinity_log").insert({
-      action_type: "lead_gen",
-      description: "Legacy GHL call webhook received (sunset — no action taken)",
-      status: "warning",
-      result: { payload_keys: Object.keys(payload || {}), sunset_note: "GHL integration removed Apr 21" },
-    });
-  } catch {}
-}
