@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import { getPageTrainingPrompt } from "@/lib/ai/page-training";
+import { verifyClientAccess } from "@/lib/verify-client-access";
 
 // Generate a full week of social media content for a client
 export async function POST(request: NextRequest) {
@@ -15,6 +16,11 @@ export async function POST(request: NextRequest) {
 
   const { client_id, platforms, posts_per_day, tone, topics } = await request.json();
   if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
+
+  // SECURITY: Verify the authenticated user owns (or has access to) this client.
+  // Without this check any authenticated user can generate/save content for any client_id.
+  const access = await verifyClientAccess(supabase, user.id, client_id);
+  if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   // Load the owner's per-page AI training config for the weekly-plan context.
   // If no config is saved this returns "" and the route works as before.

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 export async function GET(_request: NextRequest) {
   try {
@@ -12,11 +13,19 @@ export async function GET(_request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // SECURITY: Resolve effective owner so team_members see their agency's numbers,
+    // not every other agency's Twilio numbers.
+    const ownerId = await getEffectiveOwnerId(supabase, user.id);
+    if (!ownerId) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const serviceSupabase = createServiceClient();
 
     const { data: clients, error } = await serviceSupabase
       .from("clients")
       .select("id, business_name, twilio_phone_number, twilio_phone_sid, created_at")
+      .eq("profile_id", ownerId)
       .not("twilio_phone_number", "is", null);
 
     if (error) {

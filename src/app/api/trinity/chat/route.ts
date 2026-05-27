@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -11,6 +12,13 @@ export async function POST(request: NextRequest) {
 
   if (!apiKey) return NextResponse.json({ reply: "AI not configured." });
 
+  // SECURITY: Resolve the caller's effective agency owner so Trinity's context
+  // is scoped to their own data only. Without this every authenticated user
+  // receives cross-tenant aggregate data (leads counts, MRR, outreach) for all
+  // agencies on the platform — effectively leaking total platform revenue.
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   // Get system context so Trinity knows what's happening
   const serviceSupabase = createServiceClient();
   const [
@@ -20,11 +28,11 @@ export async function POST(request: NextRequest) {
     { count: dmsSent },
     { data: recentActions },
   ] = await Promise.all([
-    serviceSupabase.from("leads").select("*", { count: "exact", head: true }),
-    serviceSupabase.from("clients").select("*", { count: "exact", head: true }).eq("is_active", true),
-    serviceSupabase.from("clients").select("mrr").eq("is_active", true),
-    serviceSupabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("status", "sent"),
-    serviceSupabase.from("trinity_log").select("description, status").order("created_at", { ascending: false }).limit(5),
+    serviceSupabase.from("leads").select("*", { count: "exact", head: true }).eq("user_id", ownerId),
+    serviceSupabase.from("clients").select("*", { count: "exact", head: true }).eq("profile_id", ownerId).eq("is_active", true),
+    serviceSupabase.from("clients").select("mrr").eq("profile_id", ownerId).eq("is_active", true),
+    serviceSupabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("status", "sent"),
+    serviceSupabase.from("trinity_log").select("description, status").eq("user_id", ownerId).order("created_at", { ascending: false }).limit(5),
   ]);
 
   const totalMRR = (clients || []).reduce((s, c) => s + ((c as { mrr: number }).mrr || 0), 0);
@@ -72,11 +80,12 @@ RULES:
     const data = await res.json();
     const reply = data.content?.[0]?.text || "I couldn't process that. Try again.";
 
-    // Log the action
+    // Log the action — include user_id so this entry is visible to the correct owner
     await serviceSupabase.from("trinity_log").insert({
       action_type: "custom",
       description: `Trinity: ${message.substring(0, 100)}`,
       command: message,
+      user_id: ownerId,
       status: "completed",
       result: { reply_length: reply.length },
     });

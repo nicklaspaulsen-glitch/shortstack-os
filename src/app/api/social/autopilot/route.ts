@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // Social autopilot settings
 interface SocialAutopilotConfig {
@@ -38,7 +39,12 @@ const DEFAULT_CONFIG: SocialAutopilotConfig = {
 };
 
 // GET — fetch config
+// SECURITY: Auth guard added — config was previously readable by anyone (no session required).
 export async function GET() {
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const supabase = createServiceClient();
   const { data } = await supabase
     .from("system_health")
@@ -62,6 +68,13 @@ export async function POST(request: NextRequest) {
   const supabase = createServiceClient();
 
   if (body.action === "save_config") {
+    // SECURITY: Role gate — clients must not be able to overwrite global autopilot config.
+    const { data: profile } = await authSupabase.from("profiles").select("role").eq("id", user.id).single();
+    const agencyRoles = ["admin", "founder", "agency", "team_member"];
+    if (!profile || !agencyRoles.includes(profile.role)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const { data: existing } = await supabase
       .from("system_health")
       .select("id, metadata")
@@ -77,6 +90,11 @@ export async function POST(request: NextRequest) {
   }
 
   if (body.action === "run") {
+    // SECURITY: Scope the autopilot run to the caller's own clients only.
+    // Previously the clients query returned ALL active clients across ALL agencies.
+    const ownerId = await getEffectiveOwnerId(authSupabase, user.id);
+    if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
     const { data: settingsRow } = await supabase
       .from("system_health")
       .select("metadata")
@@ -97,10 +115,11 @@ export async function POST(request: NextRequest) {
       details: [] as string[],
     };
 
-    // Get all clients with social accounts
+    // Get all clients with social accounts — scoped to the caller's agency
     const { data: clients } = await supabase
       .from("clients")
       .select("id, business_name, industry, services, metadata")
+      .eq("profile_id", ownerId)
       .eq("is_active", true);
 
     for (const client of clients || []) {
