@@ -74,7 +74,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Failed to set webhook: " + (whData.description || "Unknown error") }, { status: 500 });
   }
 
-  // Save token + secret to client record
+  // Save token + secret to client record.
+  // Repeat the profile_id filter as TOCTOU defense — service client bypasses
+  // RLS so we re-assert ownership here even though we checked it above.
   await supabase
     .from("clients")
     .update({
@@ -82,7 +84,8 @@ export async function POST(request: NextRequest) {
       telegram_bot_username: botUsername,
       telegram_webhook_secret: webhookSecret,
     })
-    .eq("id", client_id);
+    .eq("id", client_id)
+    .eq("profile_id", user.id);
 
   return NextResponse.json({
     success: true,
@@ -121,7 +124,7 @@ export async function DELETE(request: NextRequest) {
     await fetch(`https://api.telegram.org/bot${client.telegram_bot_token}/deleteWebhook`).catch(() => {});
   }
 
-  // Clear from DB
+  // Clear from DB. Repeat profile_id filter as TOCTOU defense.
   await supabase
     .from("clients")
     .update({
@@ -130,7 +133,8 @@ export async function DELETE(request: NextRequest) {
       telegram_chat_id: null,
       telegram_webhook_secret: null,
     })
-    .eq("id", client_id);
+    .eq("id", client_id)
+    .eq("profile_id", user.id);
 
   return NextResponse.json({ success: true });
 }

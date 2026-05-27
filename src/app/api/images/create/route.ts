@@ -215,13 +215,30 @@ export async function POST(request: NextRequest) {
   const w = Math.round(width / 8) * 8;
   const h = Math.round(height / 8) * 8;
 
+  // Verify client_id ownership before persisting it — an authenticated user
+  // could otherwise associate their image with any other tenant's client row.
+  let verifiedClientId: string | null = null;
+  if (body.client_id) {
+    const { data: clientRow } = await supabase
+      .from("clients")
+      .select("id")
+      .eq("id", body.client_id)
+      .eq("profile_id", user.id)
+      .maybeSingle();
+    if (clientRow) {
+      verifiedClientId = body.client_id;
+    } else {
+      console.warn("[images/create] client_id not owned by caller — stripping:", body.client_id);
+    }
+  }
+
   // Pre-create a row so we always have an image_id to return
   const service = createServiceClient();
   const { data: row, error: insertErr } = await service
     .from("generated_images")
     .insert({
       profile_id: user.id,
-      client_id: body.client_id || null,
+      client_id: verifiedClientId,
       prompt,
       negative_prompt: negative,
       model,

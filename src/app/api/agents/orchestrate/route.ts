@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
       .from("clients")
       .select("id")
       .eq("id", rawClientId)
-      .eq("user_id", ownerId)
+      .eq("profile_id", ownerId)  // clients uses profile_id, not user_id
       .maybeSingle();
     if (clientRow) {
       client_id = rawClientId;
@@ -160,6 +160,7 @@ export async function POST(request: NextRequest) {
       action_type: chain.action.agent,
       description: `Chain triggered: ${chain.name} → ${chain.action.task}`,
       client_id: client_id || null,
+      user_id: ownerId,
       status: "pending",
       result: {
         chain_id: chain.id,
@@ -195,6 +196,7 @@ export async function POST(request: NextRequest) {
           action_type: chain.action.agent,
           description: reply.substring(0, 200),
           client_id: client_id || null,
+          user_id: ownerId,
           status: "success",
           result: { chain_id: chain.id, ai_response: reply },
         });

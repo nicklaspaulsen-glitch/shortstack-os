@@ -41,8 +41,8 @@ export async function GET() {
   const [profile, sidebar, clients, leads, content, videos] = await Promise.all([
     safeSelect<Record<string, unknown>>("profiles", { column: "id", value: user.id }),
     safeSelect<Record<string, unknown>>("user_sidebar_preferences", { column: "user_id", value: user.id }),
-    safeSelect<Record<string, unknown>>("clients", { column: "owner_id", value: user.id }),
-    safeSelect<Record<string, unknown>>("leads", { column: "owner_id", value: user.id }),
+    safeSelect<Record<string, unknown>>("clients", { column: "profile_id", value: user.id }),
+    safeSelect<Record<string, unknown>>("leads", { column: "user_id", value: user.id }),
     safeSelect<Record<string, unknown>>("content_calendar", { column: "user_id", value: user.id }),
     safeSelect<Record<string, unknown>>("video_projects", { column: "user_id", value: user.id }),
   ]);

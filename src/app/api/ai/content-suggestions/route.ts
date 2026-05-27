@@ -17,11 +17,12 @@ export async function POST(request: NextRequest) {
 
   // Fetch client info — scope to the authenticated user's clients to prevent
   // cross-tenant data access via the service client.
+  // clients uses profile_id as its ownership column, not agency_owner_id.
   const { data: client } = await service
     .from("clients")
     .select("id, business_name, industry, services, website, notes")
     .eq("id", client_id)
-    .eq("agency_owner_id", user.id)
+    .eq("profile_id", user.id)
     .single();
 
   if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
