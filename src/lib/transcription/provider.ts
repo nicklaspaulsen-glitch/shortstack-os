@@ -8,6 +8,7 @@
  * configured.
  *
  * Cost ranking (cheapest -> most expensive, ballpark):
+ *   local_whisper         — runs whisper CLI locally, completely free
  *   runpod_faster_whisper — self-hosted, GPU-second billing, ~free at idle
  *   runpod_whisperx       — same as above + diarization (slightly more GPU)
  *   openai_whisper        — $0.006/min
@@ -25,7 +26,8 @@
 export type TranscriptionProvider =
   | "openai_whisper"
   | "runpod_faster_whisper"
-  | "runpod_whisperx";
+  | "runpod_whisperx"
+  | "local_whisper";
 
 export interface TranscribeOptions {
   /** Public URL the provider can fetch the audio from. */

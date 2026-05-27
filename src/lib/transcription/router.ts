@@ -7,7 +7,9 @@
  *      (only provider that produces SPEAKER_xx labels).
  *   2. Else if faster-whisper is configured → faster-whisper (4x faster
  *      than stock Whisper, free at GPU-cost).
- *   3. Else → OpenAI Whisper API ($0.006/min, no diarization).
+ *   3. Else if local whisper CLI is enabled → local_whisper (free, no
+ *      API cost, runs whisper CLI as child process).
+ *   4. Else → OpenAI Whisper API ($0.006/min, no diarization).
  *
  * Async / cold-start path: when faster-whisper or WhisperX returns a job id
  * (cold start exceeded the runsync window), the router does NOT fall
@@ -21,6 +23,7 @@
  * /api/meetings/[id]/transcribe behaviour.
  */
 
+import { localWhisperProvider } from "./local-whisper";
 import { openAiWhisperProvider } from "./openai-whisper";
 import { runpodFasterWhisperProvider } from "./runpod-faster-whisper";
 import { runpodWhisperXProvider } from "./runpod-whisperx";
@@ -36,6 +39,7 @@ const PROVIDERS: Record<TranscriptionProvider, TranscriptionProviderImpl> = {
   openai_whisper: openAiWhisperProvider,
   runpod_faster_whisper: runpodFasterWhisperProvider,
   runpod_whisperx: runpodWhisperXProvider,
+  local_whisper: localWhisperProvider,
 };
 
 interface ProviderAttempt {
@@ -64,10 +68,12 @@ function buildPriorityList(opts: TranscribeOptions): TranscriptionProvider[] {
     push("runpod_whisperx");
     push(opts.preferredProvider);
     push("runpod_faster_whisper");
+    push("local_whisper");
     push("openai_whisper");
   } else {
     push(opts.preferredProvider);
     push("runpod_faster_whisper");
+    push("local_whisper");
     push("openai_whisper");
     push("runpod_whisperx");
   }
