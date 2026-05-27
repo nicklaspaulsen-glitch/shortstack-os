@@ -824,7 +824,7 @@ const YOUTUBER_PRESETS = [
     name: "Joe Rogan",
     tagline: "Podcast style, minimal edits, center focus",
     preview: "bg-gradient-to-br from-neutral-800 via-neutral-900 to-black",
-    tags: ["Caption: Podcast", "Grade: Muted", "MusicNote: None"],
+    tags: ["Caption: Podcast", "Grade: Muted", "Music: None"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "podcast_minimal", fontFamily: "Inter", fontSize: 30, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 88, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.3, easing: "linear" },
@@ -875,7 +875,7 @@ const YOUTUBER_PRESETS = [
     name: "Dude Perfect",
     tagline: "Sports energy, high-impact transitions, slow-mo hits",
     preview: "bg-gradient-to-br from-blue-600 via-cyan-500 to-red-500",
-    tags: ["Caption: Bold", "Grade: Vibrant", "MusicNote: Epic"],
+    tags: ["Caption: Bold", "Grade: Vibrant", "Music: Epic"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Oswald", fontSize: 60, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 5, position: "top" as const, customY: 18, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "scale_up", duration: 0.3, easing: "spring" },
@@ -892,7 +892,7 @@ const YOUTUBER_PRESETS = [
     name: "Emma Chamberlain",
     tagline: "Relaxed vlog, hand-written text, vintage grade",
     preview: "bg-gradient-to-br from-amber-200 via-orange-300 to-rose-400",
-    tags: ["Caption: Handwritten", "Grade: Vintage", "MusicNote: Lo-Fi"],
+    tags: ["Caption: Handwritten", "Grade: Vintage", "Music: Lo-Fi"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Merriweather", fontSize: 28, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 2, position: "bottom" as const, customY: 83, maxWordsPerLine: 6, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "typewriter", duration: 0.5, easing: "linear" },
@@ -909,7 +909,7 @@ const YOUTUBER_PRESETS = [
     name: "Dream / Minecraft",
     tagline: "Gaming, red/green highlights, dramatic music swells",
     preview: "bg-gradient-to-br from-green-500 via-lime-500 to-red-600",
-    tags: ["Caption: Gaming", "Grade: High Contrast", "MusicNote: Trailer"],
+    tags: ["Caption: Gaming", "Grade: High Contrast", "Music: Trailer"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Impact", fontSize: 56, textColor: "#00FF66", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "top" as const, customY: 20, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "shake", duration: 0.25, easing: "bounce" },
@@ -943,7 +943,7 @@ const YOUTUBER_PRESETS = [
     name: "Corridor Crew",
     tagline: "VFX heavy, dramatic cuts, bass-heavy cinematic",
     preview: "bg-gradient-to-br from-purple-700 via-fuchsia-600 to-slate-900",
-    tags: ["Caption: Cinematic", "Grade: Cinematic", "MusicNote: Trailer"],
+    tags: ["Caption: Cinematic", "Grade: Cinematic", "Music: Trailer"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 30, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 6, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "blur_to_clear", duration: 0.5, easing: "ease-out" },
@@ -960,7 +960,7 @@ const YOUTUBER_PRESETS = [
     name: "Sam Kolder",
     tagline: "Cinematic travel, match cuts, epic moody grade",
     preview: "bg-gradient-to-br from-teal-800 via-slate-900 to-amber-700",
-    tags: ["Caption: Cinematic", "Grade: Moody", "MusicNote: Epic"],
+    tags: ["Caption: Cinematic", "Grade: Moody", "Music: Epic"],
     config: {
       captions: { enabled: false, autoGenerate: false, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 26, textColor: "#F5F5F5", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 88, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.7, easing: "ease-out" },
@@ -994,7 +994,7 @@ const YOUTUBER_PRESETS = [
     name: "Hamza Ahmed",
     tagline: "Self-improvement, bold lower-third, motivational",
     preview: "bg-gradient-to-br from-stone-800 via-amber-700 to-stone-900",
-    tags: ["Caption: Lower-Third", "Grade: Cinematic", "MusicNote: Emotional"],
+    tags: ["Caption: Lower-Third", "Grade: Cinematic", "Music: Emotional"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Montserrat", fontSize: 44, textColor: "#FFD700", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "bottom" as const, customY: 78, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.4, easing: "ease-out" },
@@ -1045,7 +1045,7 @@ const YOUTUBER_PRESETS = [
     name: "Binging with Babish",
     tagline: "Cooking, overhead shots, calm jazzy warm",
     preview: "bg-gradient-to-br from-amber-700 via-orange-600 to-rose-700",
-    tags: ["Caption: Calm", "Grade: Warm", "MusicNote: Jazz"],
+    tags: ["Caption: Calm", "Grade: Warm", "Music: Jazz"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 26, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.4)", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.5, easing: "ease-out" },
@@ -1062,7 +1062,7 @@ const YOUTUBER_PRESETS = [
     name: "MKBHD Shorts",
     tagline: "Tech shorts, vertical, tight captions, quick B-roll",
     preview: "bg-gradient-to-br from-red-900 via-slate-800 to-slate-900",
-    tags: ["Caption: Clean Vertical", "Grade: Cinematic", "MusicNote: Ambient"],
+    tags: ["Caption: Clean Vertical", "Grade: Cinematic", "Music: Ambient"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Inter", fontSize: 44, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "bottom" as const, customY: 75, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.3, easing: "ease-out" },
@@ -1961,7 +1961,7 @@ export default function VideoEditorPage() {
         }),
       });
       const data = await res.json();
-      if (!res.ok || !data.success) throw new Error(data.error || "MusicNote gen failed");
+      if (!res.ok || !data.success) throw new Error(data.error || "Music gen failed");
 
       if (data.audio) {
         // Inline base64 or direct URL
@@ -1969,7 +1969,7 @@ export default function VideoEditorPage() {
           ? data.audio
           : `data:audio/wav;base64,${data.audio}`;
         setAiMusicUrl(url);
-        toast.success(`MusicNote generated${data.provider === "acestep" ? " with ACE-Step" : ""}`);
+        toast.success(`Music generated${data.provider === "acestep" ? " with ACE-Step" : ""}`);
       } else if (data.job_id) {
         // Async job � poll until done (max 30 attempts � 2s)
         const pollUrl = data.status_url;
@@ -1981,14 +1981,14 @@ export default function VideoEditorPage() {
               ? poll.audio
               : `data:audio/wav;base64,${poll.audio}`;
             setAiMusicUrl(url);
-            toast.success(`MusicNote generated${poll.provider === "acestep" ? " with ACE-Step" : ""}`);
+            toast.success(`Music generated${poll.provider === "acestep" ? " with ACE-Step" : ""}`);
             break;
           }
-          if (poll.status === "failed") throw new Error("MusicNote job failed");
+          if (poll.status === "failed") throw new Error("Music job failed");
         }
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "MusicNote generation failed");
+      toast.error(err instanceof Error ? err.message : "Music generation failed");
     } finally {
       setAiMusicLoading(false);
     }
@@ -2554,7 +2554,7 @@ export default function VideoEditorPage() {
     },
     {
       id: "captions",
-      title: "Generating ClosedCaptioning",
+      title: "Generating Captions",
       description: "Claude splits the script into timed captions",
       progressText: "Calling /api/video/captions-generate",
       preview: (
@@ -2691,7 +2691,7 @@ export default function VideoEditorPage() {
       progressText: "Mixing tracks",
       preview: (
         <div className="text-[11px] space-y-1">
-          <div><span className="text-text-muted">MusicNote genre:</span> <span className="text-text-primary">{editorSettings.audio.bgGenre}</span></div>
+          <div><span className="text-text-muted">Music genre:</span> <span className="text-text-primary">{editorSettings.audio.bgGenre}</span></div>
           <div><span className="text-text-muted">Auto ducking:</span> <span className="text-text-primary">{editorSettings.audio.autoDucking ? "Yes" : "No"}</span></div>
           <div><span className="text-text-muted">Noise removal:</span> <span className="text-text-primary">{editorSettings.audio.noiseRemoval ? "Yes" : "No"}</span></div>
         </div>
@@ -3284,7 +3284,7 @@ export default function VideoEditorPage() {
     {
       id: "captions",
       title: "Caption style",
-      description: "ClosedCaptioning boost watch time by 40%. Pick the style that fits your content.",
+      description: "Captions boost watch time by 40%. Pick the style that fits your content.",
       icon: <TextT size={16} />,
       field: {
         type: "choice-cards",
@@ -3295,13 +3295,13 @@ export default function VideoEditorPage() {
           { value: "cinematic", label: "Cinematic", description: "Lower-third subtle subtitles", emoji: "??" },
           { value: "podcast", label: "Podcast Clean", description: "Simple white on dark", emoji: "???" },
           { value: "bouncy", label: "Bouncy Reel", description: "Colorful, playful pop-ins", emoji: "??" },
-          { value: "none", label: "No ClosedCaptioning", description: "Skip captions entirely", emoji: "??" },
+          { value: "none", label: "No Captions", description: "Skip captions entirely", emoji: "??" },
         ],
       },
     },
     {
       id: "music",
-      title: "MusicNote vibe",
+      title: "Music vibe",
       description: "Background music dramatically affects how your video feels.",
       icon: <MusicNote size={16} />,
       field: {
@@ -3315,7 +3315,7 @@ export default function VideoEditorPage() {
           { value: "hip_hop", label: "Hip Hop", description: "Trending, street", emoji: "??" },
           { value: "corporate", label: "Corporate", description: "Clean, professional", emoji: "??" },
           { value: "edm", label: "EDM", description: "Electronic, intense", emoji: "??" },
-          { value: "none", label: "No MusicNote", description: "Voice only", emoji: "??" },
+          { value: "none", label: "No Music", description: "Voice only", emoji: "??" },
         ],
       },
     },
@@ -3983,7 +3983,7 @@ export default function VideoEditorPage() {
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
                               <MusicNote size={12} className="text-brand-accent" />
-                              <span className="text-[10px] font-semibold">Background MusicNote</span>
+                              <span className="text-[10px] font-semibold">Background Music</span>
                             </div>
                             <label className="flex items-center gap-1.5 text-[9px] text-text-muted cursor-pointer">
                               <input type="checkbox" checked={audioLayers.bgMusic.enabled}
@@ -4133,7 +4133,7 @@ export default function VideoEditorPage() {
                       <h3 className="flex items-center gap-2"><Sliders size={12} className="text-brand-accent" /> Mix Summary</h3>
                       <div className="space-y-2 text-[9px]">
                         <div className="flex justify-between items-center">
-                          <span className="text-text-muted">MusicNote</span>
+                          <span className="text-text-muted">Music</span>
                           <div className="flex items-center gap-1.5">
                             <div className="w-16 bg-surface-light rounded-full h-1.5">
                               <div className="bg-brand-accent rounded-full h-1.5" style={{ width: `${audioLayers.bgMusic.volume}%` }} />
@@ -4506,7 +4506,7 @@ export default function VideoEditorPage() {
                     <CollapsiblePanel
                       id="adsPack"
                       icon={<Megaphone size={13} className="text-red-500" />}
-                      title="Ads Pack � B-roll, MusicNote, ClosedCaptioning"
+                      title="Ads Pack � B-roll, Music, Captions"
                       desc="Script-driven helpers tuned for high-converting ads"
                       open={openPanels.adsPack}
                       onToggle={() => togglePanel("adsPack")}
@@ -4533,7 +4533,7 @@ export default function VideoEditorPage() {
                             title="Claude picks a track from 20 curated royalty-free options"
                           >
                             {musicMatchLoading ? <CircleNotch size={12} className="animate-spin" /> : <MusicNote size={12} className="text-red-400" />}
-                            Match MusicNote
+                            Match Music
                           </button>
                           <button
                             type="button"
@@ -4543,7 +4543,7 @@ export default function VideoEditorPage() {
                             title="Whisper transcribes video ? kinetic word-by-word captions"
                           >
                             {captionsLoading ? <CircleNotch size={12} className="animate-spin" /> : <ClosedCaptioning size={12} className="text-red-400" />}
-                            Generate ClosedCaptioning
+                            Generate Captions
                           </button>
                         </div>
 
@@ -4746,7 +4746,7 @@ export default function VideoEditorPage() {
                     <CollapsiblePanel
                       id="captions"
                       icon={<ClosedCaptioning size={13} className="text-brand-accent" />}
-                      title="ClosedCaptioning & Subtitles"
+                      title="Captions & Subtitles"
                       desc="Auto-generate and style captions from audio"
                       open={openPanels.captions}
                       onToggle={() => togglePanel("captions")}
@@ -5165,8 +5165,8 @@ export default function VideoEditorPage() {
                     <CollapsiblePanel
                       id="audio"
                       icon={<MusicNote size={13} className="text-brand-accent" />}
-                      title="Audio & MusicNote Enhancers"
-                      desc="MusicNote, ducking, noise removal, beat sync"
+                      title="Audio & Music Enhancers"
+                      desc="Music, ducking, noise removal, beat sync"
                       open={openPanels.audio}
                       onToggle={() => togglePanel("audio")}
                       enabledToggle={{
@@ -5179,7 +5179,7 @@ export default function VideoEditorPage() {
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <ToggleRow
                               label="Auto-ducking"
-                              desc="MusicNote ducks under voice"
+                              desc="Music ducks under voice"
                               icon={<SpeakerHigh size={11} />}
                               checked={editorSettings.audio.autoDucking}
                               onChange={(v) => setEditorSettings(p => ({ ...p, audio: { ...p.audio, autoDucking: v } }))}
@@ -5215,7 +5215,7 @@ export default function VideoEditorPage() {
                           </div>
 
                           <div>
-                            <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1.5">Background MusicNote Genre</label>
+                            <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1.5">Background Music Genre</label>
                             <div className="grid grid-cols-3 md:grid-cols-4 gap-1.5">
                               {MUSIC_GENRE_PRESETS.map(g => {
                                 const active = editorSettings.audio.bgGenre === g.id;
@@ -5792,7 +5792,7 @@ export default function VideoEditorPage() {
                     <div className="glass rounded-xl border-[rgba(212,255,0,0.1)]">
                       <h3 className="flex items-center gap-2"><ListChecks size={12} className="text-brand-accent" /> Active Config Summary</h3>
                       <div className="space-y-1.5 text-[9px]">
-                        <SummaryRow label="ClosedCaptioning" on={editorSettings.captions.enabled} value={editorSettings.captions.enabled ? ADVANCED_CAPTION_PRESETS.find(x => x.id === editorSettings.captions.preset)?.name : "off"} />
+                        <SummaryRow label="Captions" on={editorSettings.captions.enabled} value={editorSettings.captions.enabled ? ADVANCED_CAPTION_PRESETS.find(x => x.id === editorSettings.captions.preset)?.name : "off"} />
                         <SummaryRow label="Text Anim" on={editorSettings.textAnimation.enabled} value={editorSettings.textAnimation.enabled ? editorSettings.textAnimation.preset : "off"} />
                         <SummaryRow label="Motion" on={editorSettings.motion.enabled} value={editorSettings.motion.enabled ? editorSettings.motion.preset : "off"} />
                         <SummaryRow label="Transitions" on={editorSettings.transitions.enabled} value={editorSettings.transitions.enabled ? editorSettings.transitions.preset : "off"} />
@@ -6270,7 +6270,7 @@ export default function VideoEditorPage() {
                       className="w-full flex items-center justify-between mb-2"
                     >
                       <h2 className="flex items-center gap-2 mb-0">
-                        <MusicNote size={13} className="text-brand-accent" /> MusicNote ({MUSIC_LIBRARY.length})
+                        <MusicNote size={13} className="text-brand-accent" /> Music ({MUSIC_LIBRARY.length})
                       </h2>
                       {openAssetPanels.music ? <CaretDown size={13} className="text-text-muted" /> : <CaretRight size={13} className="text-text-muted" />}
                     </button>
@@ -6600,7 +6600,7 @@ export default function VideoEditorPage() {
                     <h2 className="flex items-center gap-2"><MagicWand size={13} className="text-brand-accent" /> AI Enhancement Options</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1.5">MusicNote Mood</label>
+                        <label className="block text-[9px] text-text-muted uppercase tracking-wider mb-1.5">Music Mood</label>
                         <div className="grid grid-cols-4 gap-1.5">
                           {MUSIC_MOODS.map(m => {
                             const active = config.music_mood === m.id;
@@ -6769,7 +6769,7 @@ export default function VideoEditorPage() {
                       )}
                       {Array.isArray(aiProject.captions) && aiProject.captions.length > 0 && (
                         <div>
-                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">ClosedCaptioning ({aiProject.captions.length})</p>
+                          <p className="text-[9px] text-text-muted uppercase tracking-wider mb-1">Captions ({aiProject.captions.length})</p>
                           <div className="space-y-1 max-h-32 overflow-y-auto">
                             {aiProject.captions.slice(0, 12).map((c, i) => (
                               <div key={i} className="text-[10px] text-text-primary">
@@ -6923,7 +6923,7 @@ export default function VideoEditorPage() {
                       )}
                       {result.music_suggestions && result.music_suggestions.length > 0 && (
                         <div className="mt-3 pt-3 border-t border-border-subtle">
-                          <p className="text-[9px] text-brand-accent uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><MusicNote size={9} /> MusicNote Suggestions</p>
+                          <p className="text-[9px] text-brand-accent uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><MusicNote size={9} /> Music Suggestions</p>
                           {result.music_suggestions.map((m, i) => (
                             <p key={i} className="text-[9px] text-text-muted">{m}</p>
                           ))}
@@ -7640,7 +7640,7 @@ export default function VideoEditorPage() {
                       <p><span className="font-bold text-text-muted">HOOK:</span> {adsResult.script.hook}</p>
                       <p><span className="font-bold text-text-muted">CTA:</span> {adsResult.script.cta}</p>
                       <p><span className="font-bold text-text-muted">B-roll:</span> {adsResult.broll.length} moments</p>
-                      <p><span className="font-bold text-text-muted">MusicNote:</span> {adsResult.music.title} ({adsResult.music.bpm} BPM)</p>
+                      <p><span className="font-bold text-text-muted">Music:</span> {adsResult.music.title} ({adsResult.music.bpm} BPM)</p>
                     </div>
                   </div>
                 )}
