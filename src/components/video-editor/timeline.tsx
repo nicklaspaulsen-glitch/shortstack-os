@@ -58,7 +58,7 @@ export const DEFAULT_TRACKS = [
   { id: "a1",  label: "A1 · Music", kind: "audio"   as const, accent: "#22C55E" },
   { id: "a2",  label: "A2 · SFX",   kind: "audio"   as const, accent: "#F59E0B" },
   { id: "a3",  label: "A3 · VO",    kind: "audio"   as const, accent: "#EC4899" },
-  { id: "cap", label: "ClosedCaptioning",   kind: "caption" as const, accent: "#A855F7" },
+  { id: "cap", label: "Captions",            kind: "caption" as const, accent: "#A855F7" },
   { id: "fx",  label: "FX",         kind: "effect"  as const, accent: "#EF4444" },
 ];
 
