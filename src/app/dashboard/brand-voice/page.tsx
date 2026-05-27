@@ -312,7 +312,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                         toast.success("Brand voice profiles saved");
                       } catch (err) {
                         console.error("Manual brand voice save failed:", err);
-                        toast.error("FloppyDisk failed");
+                        toast.error("Save failed");
                       }
                       setSavingManual(false);
                     }}

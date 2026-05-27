@@ -236,7 +236,7 @@ export default function ContentLibraryPage() {
 
         const res = await fetch("/api/content-library", { method: "POST", body: form });
         if (!res.ok) {
-          const err2 = await res.json().catch(() => ({ error: "UploadSimple failed" }));
+          const err2 = await res.json().catch(() => ({ error: "Upload failed" }));
           toast.error(`Failed to upload ${file.name}: ${err2.error}`);
           continue;
         }
@@ -676,7 +676,7 @@ export default function ContentLibraryPage() {
             type={assets.length === 0 ? "no-files" : "no-content"}
             title={assets.length === 0 ? "No assets yet" : "No matching assets"}
             description={assets.length === 0
-              ? "UploadSimple files using the drop zone above or the UploadSimple button."
+              ? "Upload files using the drop zone above or the Upload button."
               : "Try adjusting your filters or search query."}
           />
         </PrismPanel>
@@ -927,7 +927,7 @@ export default function ContentLibraryPage() {
                         className="btn-primary text-xs flex items-center gap-1"
                       >
                         {savingEdit ? <CircleNotch size={12} className="animate-spin" /> : <FloppyDisk size={12} />}
-                        FloppyDisk
+                        Save
                       </button>
                       <button onClick={() => setEditText(null)} className="btn-ghost text-xs">Cancel</button>
                     </div>

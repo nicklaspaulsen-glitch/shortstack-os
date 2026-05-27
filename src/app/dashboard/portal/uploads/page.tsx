@@ -160,8 +160,8 @@ export default function ClientUploadsPage() {
           body: form,
         });
         if (!res.ok) {
-          const err = await res.json().catch(() => ({ error: "UploadSimple failed" }));
-          toast.error(`${file.name}: ${err.error || "UploadSimple failed"}`);
+          const err = await res.json().catch(() => ({ error: "Upload failed" }));
+          toast.error(`${file.name}: ${err.error || "Upload failed"}`);
           continue;
         }
         toast.success(`Uploaded: ${file.name}`);
@@ -338,7 +338,7 @@ export default function ClientUploadsPage() {
             <EmptyState
               icon={<FolderOpen size={24} />}
               title="No uploads yet"
-              description="UploadSimple files to share with your agency team"
+              description="Upload files to share with your agency team"
             />
           ) : (
             <div className="space-y-2">

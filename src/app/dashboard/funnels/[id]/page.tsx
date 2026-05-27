@@ -187,7 +187,7 @@ export default function FunnelCanvasPage() {
       toast.success("Step saved");
       void load();
     } catch {
-      toast.error("FloppyDisk failed");
+      toast.error("Save failed");
     } finally {
       setSaving(false);
     }
@@ -672,7 +672,7 @@ export default function FunnelCanvasPage() {
                 className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full bg-brand-accent hover:bg-brand-accent/80 disabled:opacity-50 text-[#020711] font-semibold text-sm transition-colors"
               >
                 <FloppyDisk size={14} />
-                {saving ? "Saving…" : "FloppyDisk Step"}
+                {saving ? "Saving…" : "Save Step"}
               </button>
               <button
                 onClick={() => void deleteStep(selectedStep.id)}

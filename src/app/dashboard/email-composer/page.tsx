@@ -1578,7 +1578,7 @@ export default function EmailComposerPage() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
                 className="w-full text-xs py-2.5 rounded-xl bg-brand-accent hover:bg-brand-accent/80 text-[#020711] font-semibold shadow-lg shadow-[rgba(212,255,0,0.15)] hover:shadow-[rgba(212,255,0,0.30)] transition-all"
->FloppyDisk Signature</motion.button>
+>Save Signature</motion.button>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 16 }}

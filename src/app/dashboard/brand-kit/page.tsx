@@ -330,7 +330,7 @@ export default function BrandKitPage() {
                         toast.success("Brand kit saved");
                       } catch (err) {
                         console.error("Manual brand save failed:", err);
-                        toast.error("FloppyDisk failed");
+                        toast.error("Save failed");
                       }
                       setSavingManual(false);
                     }}

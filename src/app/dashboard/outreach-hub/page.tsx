@@ -1116,7 +1116,7 @@ export default function OutreachHubPage() {
                   className="btn-pill text-xs flex items-center gap-1.5 disabled:opacity-40"
                 >
                   {saving ? <CircleNotch size={12} className="animate-spin" /> : <FloppyDisk size={12} />}
-                  FloppyDisk All
+                  Save All
                 </button>
               </div>
             </div>

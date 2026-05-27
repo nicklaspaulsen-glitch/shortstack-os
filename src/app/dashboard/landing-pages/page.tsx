@@ -811,7 +811,7 @@ export default function LandingPagesPage() {
                 </div>
                 <div className="p-3 border border-dashed border-border-subtle rounded-lg flex items-center justify-center gap-2 text-text-muted text-xs cursor-pointer hover:border-brand-accent hover:text-brand-accent transition-colors">
                   <Image className="w-4 h-4" />
-                  UploadSimple Hero Image
+                  Upload Hero Image
                 </div>
               </>
             )}

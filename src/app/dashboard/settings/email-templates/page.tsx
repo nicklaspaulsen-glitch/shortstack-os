@@ -212,7 +212,7 @@ export default function EmailTemplatesPage() {
       toast.success("Template saved");
       await reload();
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "FloppyDisk failed";
+      const msg = err instanceof Error ? err.message : "Save failed";
       toast.error(msg);
     } finally {
       setSaving(false);
@@ -439,7 +439,7 @@ export default function EmailTemplatesPage() {
                           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-lime text-black text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
                         >
                           {saving ? <CircleNotch size={14} className="animate-spin" /> : <FloppyDisk size={14} />}
-                          FloppyDisk
+                          Save
                         </button>
                         <button
                           onClick={handleTestSend}

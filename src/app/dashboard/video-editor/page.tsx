@@ -250,11 +250,11 @@ const MUSIC_MOODS: MoodOption[] = [
   { id: "ambient",      name: "Ambient",         icon: Waves,      tint: "text-emerald-300",bg: "bg-emerald-500/15" },
   { id: "epic",         name: "Epic/Orchestral", icon: Crown,      tint: "text-yellow-300", bg: "bg-yellow-500/15" },
   { id: "funk",         name: "Funk/Groove",     icon: Disc,      tint: "text-fuchsia-300",bg: "bg-fuchsia-500/15" },
-  { id: "none",         name: "No MusicNote",        icon: SpeakerX,    tint: "text-text-muted",      bg: "bg-surface-light" },
+  { id: "none",         name: "No Music",            icon: SpeakerX,    tint: "text-text-muted",      bg: "bg-surface-light" },
 ];
 
 const CAPTION_STYLES: { id: string; name: string; previewBg: string; previewCss: React.CSSProperties }[] = [
-  { id: "none",           name: "No ClosedCaptioning",           previewBg: "#111", previewCss: { color: "rgba(255,255,255,0.25)", fontStyle: "italic", fontSize: 11 } },
+  { id: "none",           name: "No Captions",                   previewBg: "#111", previewCss: { color: "rgba(255,255,255,0.25)", fontStyle: "italic", fontSize: 11 } },
   { id: "bottom_bar",     name: "Bottom Bar",            previewBg: "#000", previewCss: { color: "#fff", background: "rgba(0,0,0,0.75)", padding: "1px 6px", fontSize: 11, fontWeight: 400 } },
   { id: "word_highlight", name: "Word-by-Word",          previewBg: "#111", previewCss: { color: "#FFD700", fontWeight: 900, fontSize: 13, letterSpacing: 0 } },
   { id: "centered_bold",  name: "Centered Bold",         previewBg: "#0a0a0a", previewCss: { color: "#fff", fontWeight: 900, fontSize: 14, textAlign: "center", textShadow: "0 2px 8px rgba(0,0,0,0.8)" } },
@@ -688,7 +688,7 @@ const YOUTUBER_PRESETS = [
     name: "MrBeast",
     tagline: "Huge yellow captions, punch zooms, high-energy",
     preview: "bg-gradient-to-br from-red-600 via-yellow-500 to-red-500",
-    tags: ["Caption: Impact", "Grade: Vibrant", "MusicNote: EDM"],
+    tags: ["Caption: Impact", "Grade: Vibrant", "Music: EDM"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Impact", fontSize: 80, textColor: "#FFDD00", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 6, position: "bottom" as const, customY: 78, maxWordsPerLine: 3, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "spring" },
@@ -705,7 +705,7 @@ const YOUTUBER_PRESETS = [
     name: "PewDiePie",
     tagline: "Bold white captions, meme overlays, gaming energy",
     preview: "bg-gradient-to-br from-red-500 via-pink-500 to-purple-600",
-    tags: ["Caption: Bold White", "Grade: Neutral", "MusicNote: Hip-Hop"],
+    tags: ["Caption: Bold White", "Grade: Neutral", "Music: Hip-Hop"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Impact", fontSize: 64, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 5, position: "top" as const, customY: 15, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "pop", duration: 0.25, easing: "bounce" },
@@ -722,7 +722,7 @@ const YOUTUBER_PRESETS = [
     name: "MKBHD",
     tagline: "Clean minimalist, cinematic grade, smooth slow-mo",
     preview: "bg-gradient-to-br from-slate-700 via-slate-900 to-red-900",
-    tags: ["Caption: Minimal", "Grade: Cinematic", "MusicNote: Ambient Tech"],
+    tags: ["Caption: Minimal", "Grade: Cinematic", "Music: Ambient Tech"],
     config: {
       captions: { enabled: false, autoGenerate: false, preset: "podcast_minimal", fontFamily: "Inter", fontSize: 28, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 6, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.6, easing: "ease-out" },
@@ -739,7 +739,7 @@ const YOUTUBER_PRESETS = [
     name: "Ali Abdaal",
     tagline: "Friendly clean captions, gentle transitions, warm grade",
     preview: "bg-gradient-to-br from-orange-300 via-amber-400 to-yellow-500",
-    tags: ["Caption: Clean Sans", "Grade: Warm", "MusicNote: Upbeat"],
+    tags: ["Caption: Clean Sans", "Grade: Warm", "Music: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Poppins", fontSize: 32, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.6)", strokeWidth: 0, position: "bottom" as const, customY: 82, maxWordsPerLine: 6, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.4, easing: "ease-out" },
@@ -756,7 +756,7 @@ const YOUTUBER_PRESETS = [
     name: "Veritasium",
     tagline: "Educational with emphasis, motion graphics, clean grade",
     preview: "bg-gradient-to-br from-sky-600 via-blue-700 to-indigo-900",
-    tags: ["Caption: Emphasized", "Grade: Clean", "MusicNote: Corporate"],
+    tags: ["Caption: Emphasized", "Grade: Clean", "Music: Corporate"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Inter", fontSize: 34, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "rgba(0,0,0,0.5)", strokeWidth: 2, position: "bottom" as const, customY: 80, maxWordsPerLine: 7, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "word_cascade", duration: 0.5, easing: "ease-out" },
@@ -773,7 +773,7 @@ const YOUTUBER_PRESETS = [
     name: "Matt D'Avella",
     tagline: "Cinematic minimalism, letterbox, muted piano",
     preview: "bg-gradient-to-br from-stone-700 via-stone-800 to-stone-900",
-    tags: ["Caption: None", "Grade: Muted", "MusicNote: Piano"],
+    tags: ["Caption: None", "Grade: Muted", "Music: Piano"],
     config: {
       captions: { enabled: false, autoGenerate: false, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 22, textColor: "#f5f5f5", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 88, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.8, easing: "ease-in-out" },
@@ -790,7 +790,7 @@ const YOUTUBER_PRESETS = [
     name: "Peter McKinnon",
     tagline: "Cinematic orange/teal, dramatic transitions, slow-mo",
     preview: "bg-gradient-to-br from-orange-600 via-teal-700 to-slate-900",
-    tags: ["Caption: Cinematic", "Grade: Teal & Orange", "MusicNote: Cinematic"],
+    tags: ["Caption: Cinematic", "Grade: Teal & Orange", "Music: Cinematic"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 26, textColor: "#F5F5F5", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 7, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.6, easing: "ease-out" },
@@ -807,7 +807,7 @@ const YOUTUBER_PRESETS = [
     name: "Graham Stephan",
     tagline: "Finance vibe, green/gold accents, casual captions",
     preview: "bg-gradient-to-br from-green-600 via-emerald-700 to-yellow-600",
-    tags: ["Caption: Casual", "Grade: Warm", "MusicNote: Upbeat"],
+    tags: ["Caption: Casual", "Grade: Warm", "Music: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Montserrat", fontSize: 36, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "rgba(0,0,0,0.55)", strokeWidth: 2, position: "bottom" as const, customY: 80, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.35, easing: "ease-out" },
@@ -841,7 +841,7 @@ const YOUTUBER_PRESETS = [
     name: "Casey Neistat",
     tagline: "Vlog energy, handheld feel, punchy text overlays",
     preview: "bg-gradient-to-br from-yellow-500 via-red-500 to-orange-600",
-    tags: ["Caption: Bold", "Grade: High Contrast", "MusicNote: Upbeat"],
+    tags: ["Caption: Bold", "Grade: High Contrast", "Music: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Bebas Neue", fontSize: 54, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "center" as const, customY: 50, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "slide_left", duration: 0.3, easing: "ease-out" },
@@ -858,7 +858,7 @@ const YOUTUBER_PRESETS = [
     name: "Ryan Trahan",
     tagline: "Adventure vlog, dynamic captions, warm grade",
     preview: "bg-gradient-to-br from-amber-500 via-orange-600 to-rose-600",
-    tags: ["Caption: Dynamic", "Grade: Warm", "MusicNote: Upbeat"],
+    tags: ["Caption: Dynamic", "Grade: Warm", "Music: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "reel_trendy", fontFamily: "Montserrat", fontSize: 48, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "center" as const, customY: 55, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "spring" },
@@ -926,7 +926,7 @@ const YOUTUBER_PRESETS = [
     name: "Linus Tech Tips",
     tagline: "Tech review, clean captions, blue/silver grade",
     preview: "bg-gradient-to-br from-sky-500 via-slate-400 to-slate-700",
-    tags: ["Caption: Clean", "Grade: Cool", "MusicNote: Corporate"],
+    tags: ["Caption: Clean", "Grade: Cool", "Music: Corporate"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Roboto", fontSize: 32, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.65)", strokeWidth: 0, position: "bottom" as const, customY: 82, maxWordsPerLine: 7, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "slide_left", duration: 0.35, easing: "ease-out" },
@@ -977,7 +977,7 @@ const YOUTUBER_PRESETS = [
     name: "Colin and Samir",
     tagline: "Creator economy, podcast clean, neutral center",
     preview: "bg-gradient-to-br from-zinc-600 via-zinc-700 to-zinc-900",
-    tags: ["Caption: Center", "Grade: Muted", "MusicNote: Corporate"],
+    tags: ["Caption: Center", "Grade: Muted", "Music: Corporate"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "podcast_minimal", fontFamily: "Inter", fontSize: 30, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.4)", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 7, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.4, easing: "ease-out" },
@@ -1011,7 +1011,7 @@ const YOUTUBER_PRESETS = [
     name: "Iman Gadzhi",
     tagline: "Business/marketing, corporate grade, scroll-stop hooks",
     preview: "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800",
-    tags: ["Caption: Corporate", "Grade: Muted", "MusicNote: Corporate"],
+    tags: ["Caption: Corporate", "Grade: Muted", "Music: Corporate"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Poppins", fontSize: 46, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "center" as const, customY: 60, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "scale_up", duration: 0.3, easing: "ease-out" },
@@ -1028,7 +1028,7 @@ const YOUTUBER_PRESETS = [
     name: "Pitch Meeting",
     tagline: "Comedy sketch, simple edits, center captions",
     preview: "bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500",
-    tags: ["Caption: Center", "Grade: Clean", "MusicNote: Corporate"],
+    tags: ["Caption: Center", "Grade: Clean", "Music: Corporate"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "popup", fontFamily: "Oswald", fontSize: 40, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "center" as const, customY: 50, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "bounce" },
@@ -1079,7 +1079,7 @@ const YOUTUBER_PRESETS = [
     name: "Airrack",
     tagline: "High energy challenge, bold yellow, fast cuts",
     preview: "bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500",
-    tags: ["Caption: Yellow Bold", "Grade: Vibrant", "MusicNote: EDM"],
+    tags: ["Caption: Yellow Bold", "Grade: Vibrant", "Music: EDM"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "mrbeast", fontFamily: "Impact", fontSize: 72, textColor: "#FFEB3B", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 5, position: "center" as const, customY: 55, maxWordsPerLine: 3, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "bounce", duration: 0.3, easing: "spring" },
@@ -1096,7 +1096,7 @@ const YOUTUBER_PRESETS = [
     name: "Kurzgesagt",
     tagline: "Animated science, bright colors, clean sans-serif captions",
     preview: "bg-gradient-to-br from-sky-400 via-cyan-500 to-blue-600",
-    tags: ["Caption: Clean Sans", "Grade: Vibrant", "MusicNote: Upbeat"],
+    tags: ["Caption: Clean Sans", "Grade: Vibrant", "Music: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Inter", fontSize: 30, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.5)", strokeWidth: 0, position: "bottom" as const, customY: 82, maxWordsPerLine: 7, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.5, easing: "ease-out" },
@@ -1113,7 +1113,7 @@ const YOUTUBER_PRESETS = [
     name: "Jenna Marbles Style",
     tagline: "Casual vlog, punchy edits, friendly caption",
     preview: "bg-gradient-to-br from-pink-400 via-rose-500 to-fuchsia-500",
-    tags: ["Caption: Friendly", "Grade: Neutral", "MusicNote: Upbeat"],
+    tags: ["Caption: Friendly", "Grade: Neutral", "Music: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Poppins", fontSize: 34, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "bottom" as const, customY: 80, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "bounce" },
@@ -1130,7 +1130,7 @@ const YOUTUBER_PRESETS = [
     name: "Smosh",
     tagline: "Comedy skit, bright colors, meme energy",
     preview: "bg-gradient-to-br from-yellow-500 via-orange-500 to-red-500",
-    tags: ["Caption: Meme", "Grade: Vibrant", "MusicNote: Upbeat"],
+    tags: ["Caption: Meme", "Grade: Vibrant", "Music: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Impact", fontSize: 60, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "top" as const, customY: 20, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "spring" },
@@ -1147,7 +1147,7 @@ const YOUTUBER_PRESETS = [
     name: "H3H3",
     tagline: "Podcast casual, simple cuts, blue accent",
     preview: "bg-gradient-to-br from-blue-500 via-sky-600 to-slate-700",
-    tags: ["Caption: Podcast", "Grade: Muted", "MusicNote: Corporate"],
+    tags: ["Caption: Podcast", "Grade: Muted", "Music: Corporate"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "podcast_minimal", fontFamily: "Inter", fontSize: 28, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.5)", strokeWidth: 0, position: "bottom" as const, customY: 88, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.4, easing: "ease-out" },
@@ -1164,7 +1164,7 @@ const YOUTUBER_PRESETS = [
     name: "Shane Dawson",
     tagline: "Investigative vlog, moody grade, dramatic music",
     preview: "bg-gradient-to-br from-slate-900 via-purple-950 to-red-950",
-    tags: ["Caption: Cinematic", "Grade: Moody", "MusicNote: Cinematic"],
+    tags: ["Caption: Cinematic", "Grade: Moody", "Music: Cinematic"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 28, textColor: "#F5F5F5", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.5)", strokeWidth: 0, position: "bottom" as const, customY: 86, maxWordsPerLine: 7, emphasizeKeywords: false, autoEmoji: false },
       textAnimation: { enabled: true, preset: "fade_in", duration: 0.7, easing: "ease-out" },
@@ -1181,7 +1181,7 @@ const YOUTUBER_PRESETS = [
     name: "Mark Rober",
     tagline: "Science experiments, clean visuals, warm lighting",
     preview: "bg-gradient-to-br from-orange-400 via-amber-500 to-red-500",
-    tags: ["Caption: Clean", "Grade: Warm", "MusicNote: Upbeat"],
+    tags: ["Caption: Clean", "Grade: Warm", "Music: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Inter", fontSize: 32, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 2, position: "bottom" as const, customY: 82, maxWordsPerLine: 6, emphasizeKeywords: true, autoEmoji: false },
       textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.35, easing: "ease-out" },
@@ -1198,7 +1198,7 @@ const YOUTUBER_PRESETS = [
     name: "Michelle Khare",
     tagline: "Challenges vlog, warm grade, upbeat music",
     preview: "bg-gradient-to-br from-rose-400 via-orange-400 to-amber-500",
-    tags: ["Caption: Vlog", "Grade: Warm", "MusicNote: Upbeat"],
+    tags: ["Caption: Vlog", "Grade: Warm", "Music: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Montserrat", fontSize: 34, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 2, position: "bottom" as const, customY: 80, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.3, easing: "ease-out" },
@@ -1215,7 +1215,7 @@ const YOUTUBER_PRESETS = [
     name: "5-Minute Crafts",
     tagline: "Super fast cuts, bright colors, high contrast",
     preview: "bg-gradient-to-br from-lime-400 via-yellow-500 to-orange-500",
-    tags: ["Caption: Bold", "Grade: Vibrant", "MusicNote: Upbeat"],
+    tags: ["Caption: Bold", "Grade: Vibrant", "Music: Upbeat"],
     config: {
       captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Bebas Neue", fontSize: 52, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "bottom" as const, customY: 78, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: true },
       textAnimation: { enabled: true, preset: "pop", duration: 0.2, easing: "spring" },

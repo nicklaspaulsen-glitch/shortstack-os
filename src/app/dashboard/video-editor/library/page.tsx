@@ -145,7 +145,7 @@ export default function PresetLibraryPage() {
                   id="music"
                   active={tab}
                   icon={<MusicNote size={13} />}
-                  label="MusicNote"
+                  label="Music"
                   count={MUSIC_LIBRARY.length}
                   onClick={setTab}
                 />

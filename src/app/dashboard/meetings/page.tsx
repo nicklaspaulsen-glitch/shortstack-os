@@ -229,10 +229,10 @@ export default function MeetingsPage() {
               <EmptyState
                 type="no-invoices"
                 title="No meetings yet"
-                description="UploadSimple a recording or create a meeting to generate transcripts, action items, and decisions."
+                description="Upload a recording or create a meeting to generate transcripts, action items, and decisions."
                 action={
                   <Link href="/dashboard/meetings/new" className="btn-primary text-xs">
-                    UploadSimple your first recording
+                    Upload your first recording
                   </Link>
                 }
               />

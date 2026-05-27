@@ -519,7 +519,7 @@ export default function ReportGeneratorPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 text-[10px] text-brand-accent hover:underline shrink-0"
-                          title="DownloadSimple (signed URL, 7-day expiry)"
+                          title="Download (signed URL, 7-day expiry)"
                         >
                           <DownloadSimple size={10} />
                           PDF

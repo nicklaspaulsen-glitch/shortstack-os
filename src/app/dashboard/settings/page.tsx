@@ -578,7 +578,7 @@ export default function SettingsIndexPage() {
                   index={25}
                   href="/dashboard/download"
                   title="Desktop App"
-                  description="DownloadSimple the ShortStack desktop client for Mac or Windows."
+                  description="Download the ShortStack desktop client for Mac or Windows."
                   Icon={DownloadSimple}
                   preview={
                     <>

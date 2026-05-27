@@ -239,7 +239,7 @@ export default function DownloadDesktopPage() {
                     <div className="flex items-center justify-between pt-3 border-t border-border-subtle">
                       <span className="text-[11px] text-text-muted">v{version}</span>
                       <span className="text-xs font-medium text-brand-accent group-hover:underline">
-                        DownloadSimple
+                        Download
                       </span>
                     </div>
                   </motion.a>

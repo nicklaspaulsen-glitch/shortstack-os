@@ -69,7 +69,7 @@ export default function NewMeetingPage() {
         xhr.onload = () => {
           if (xhr.status >= 200 && xhr.status < 300) resolve();
           else {
-            let msg = `UploadSimple failed (${xhr.status})`;
+            let msg = `Upload failed (${xhr.status})`;
             try {
               const parsed = JSON.parse(xhr.responseText);
               if (parsed.error) msg = parsed.error;
@@ -108,7 +108,7 @@ export default function NewMeetingPage() {
       router.push(`/dashboard/meetings/${meeting.id}`);
     } catch (err) {
       console.error("[new meeting] error:", err);
-      toast.error(err instanceof Error ? err.message : "UploadSimple failed");
+      toast.error(err instanceof Error ? err.message : "Upload failed");
       setStage("idle");
     } finally {
       setBusy(false);
@@ -222,7 +222,7 @@ export default function NewMeetingPage() {
                 ) : (
                   <Microphone size={12} />
                 )}
-                {busy ? stageLabel : "UploadSimple + transcribe"}
+                {busy ? stageLabel : "Upload + transcribe"}
               </button>
             </div></MotionPage>
   );

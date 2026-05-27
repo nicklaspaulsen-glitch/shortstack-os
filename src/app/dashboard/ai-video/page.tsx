@@ -1447,7 +1447,7 @@ export default function AIVideoPage() {
               {faceSwapMode && !faceSwapImage && (
                 <label className="flex items-center gap-1.5 text-[11px] text-text-muted hover:text-text-primary border border-border-subtle hover:border-border-strong bg-white/[0.03] hover:bg-white/[0.06] px-3 py-1.5 rounded-full cursor-pointer transition-all">
                   {faceSwapUploading ? <CircleNotch size={11} className="animate-spin" /> : <UploadSimple size={11} />}
-                  {faceSwapUploading ? "Loading…" : "UploadSimple face photo"}
+                  {faceSwapUploading ? "Loading…" : "Upload face photo"}
                   <input
                     type="file"
                     accept="image/*"

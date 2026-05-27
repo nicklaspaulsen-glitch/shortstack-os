@@ -715,7 +715,7 @@ export default function CarouselGeneratorPage() {
                         className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-white/10 border border-border-subtle text-text-primary hover:bg-white/15 transition-all"
                       >
                         <DownloadSimple size={13} />
-                        DownloadSimple All
+                        Download All
                       </button>
                     </>
                   )}

@@ -606,7 +606,7 @@ export default function BillingPage() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="p-1 rounded text-text-muted hover:text-brand-accent hover:bg-[rgba(212,255,0,0.08)] transition-colors"
-                                    title="DownloadSimple PDF"
+                                    title="Download PDF"
                                   >
                                     <DownloadSimple size={12} />
                                   </a>

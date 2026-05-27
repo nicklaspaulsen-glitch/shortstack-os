@@ -99,7 +99,7 @@ export default function ClientSettingsPage() {
         </div>
         <button onClick={saveSettings} disabled={saving} className="btn-primary text-xs flex items-center gap-1.5">
           {saving ? <CircleNotch size={12} className="animate-spin" /> : <FloppyDisk size={12} />}
-          {saving ? "Saving..." : "FloppyDisk Gear"}
+          {saving ? "Saving..." : "Save Settings"}
         </button>
       </div>
 

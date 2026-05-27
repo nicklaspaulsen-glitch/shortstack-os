@@ -457,7 +457,7 @@ export default function Tab1Calendar() {
                   ) : (
                     <FloppyDisk size={12} className="inline mr-1" />
                   )}
-                  FloppyDisk
+                  Save
                 </button>
               </div>
             </div>

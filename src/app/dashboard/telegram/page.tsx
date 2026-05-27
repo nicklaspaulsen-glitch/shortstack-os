@@ -456,7 +456,7 @@ export default function TelegramPage() {
 
   async function handleSendTestFromModal() {
     if (!editing?.id) {
-      toast.error("FloppyDisk first, then test");
+      toast.error("Save first, then test");
       return;
     }
     handleRunNow(editing);

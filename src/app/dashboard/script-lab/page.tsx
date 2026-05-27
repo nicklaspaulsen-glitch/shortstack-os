@@ -793,7 +793,7 @@ export default function ScriptLabPage() {
       lines.push(`- **Transition out:** ${shot.transition_out}`);
       if (shot.on_screen_text) lines.push(`- **On-screen text:** ${shot.on_screen_text}`);
       if (shot.b_roll_suggestions?.length) lines.push(`- **B-roll:** ${shot.b_roll_suggestions.join(", ")}`);
-      if (shot.music_cue) lines.push(`- **MusicNote:** ${shot.music_cue}`);
+      if (shot.music_cue) lines.push(`- **Music cue:** ${shot.music_cue}`);
       lines.push("");
     });
     navigator.clipboard.writeText(lines.join("\n"));
