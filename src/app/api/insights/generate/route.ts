@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // AI Insights Engine — auto-generates personalized recommendations for each client
 // Based on their industry, pain points, connected accounts, content, and performance
@@ -7,6 +8,8 @@ export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const clientId = request.nextUrl.searchParams.get("client_id");
   const serviceSupabase = createServiceClient();

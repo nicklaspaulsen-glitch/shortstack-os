@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkFetchUrl } from "@/lib/security/ssrf";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // AI Brand Audit — Complete analysis of a prospect/client's online presence
 // Use this in sales calls to show value before they sign
@@ -8,6 +9,8 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const { business_name, website, industry, location } = await request.json();
 

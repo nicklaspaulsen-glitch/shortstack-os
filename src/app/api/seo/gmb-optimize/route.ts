@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // Google Business Profile Optimizer — AI generates optimization recommendations
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const { client_id, business_name, address, category } = await request.json();
 

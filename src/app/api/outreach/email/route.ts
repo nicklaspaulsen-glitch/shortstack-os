@@ -6,6 +6,7 @@ import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
 import { captureVoiceSample } from "@/lib/ai/voice-profile";
 import { getPageTrainingPrompt } from "@/lib/ai/page-training";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import nodemailer from "nodemailer";
 
 // Cold email outreach — AI-personalized emails sent to scraped leads
@@ -14,6 +15,8 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const ownerId = await getEffectiveOwnerId(supabase, user.id);
   if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });

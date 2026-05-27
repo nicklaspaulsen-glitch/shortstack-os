@@ -2,6 +2,7 @@
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { anthropic, MODEL_SONNET, getResponseText, safeJsonParse } from "@/lib/ai/claude-helpers";
 import { resolveAndCheckUrl } from "@/lib/security/ssrf";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // ──────────────────────────────────────────────────────────────────────────
 // POST /api/thumbnail/generate-variants/rank
@@ -63,6 +64,8 @@ export async function POST(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   let body: { variants?: unknown; context?: unknown };
   try {

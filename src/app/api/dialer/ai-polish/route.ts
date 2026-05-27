@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { anthropic, MODEL_HAIKU, getResponseText } from "@/lib/ai/claude-helpers";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 interface PolishRequest {
   text: string;
@@ -23,6 +24,8 @@ export async function POST(request: NextRequest) {
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const ownerId = await getEffectiveOwnerId(supabase, user.id);
   if (!ownerId) {

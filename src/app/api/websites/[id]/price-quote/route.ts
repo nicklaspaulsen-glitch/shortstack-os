@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { anthropic, MODEL_HAIKU, getResponseText, safeJsonParse } from "@/lib/ai/claude-helpers";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 /**
  * Complexity analyzer + custom monthly pricing for a generated website.
@@ -250,6 +251,8 @@ export async function GET(
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const { data: project } = await supabase
     .from("website_projects")
@@ -273,6 +276,8 @@ export async function POST(
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited2 = checkAiRateLimit(user.id);
+  if (limited2) return limited2;
 
   const body = await request.json().catch(() => ({}));
   const requestedAddons: string[] = Array.isArray(body?.addons) ? body.addons : [];

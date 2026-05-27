@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // AI Email Nurture Sequence Builder — Creates complete drip campaigns
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const { client_id, sequence_type, num_emails, goal, audience } = await request.json();
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { sendEmail } from "@/lib/email";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // Client Cold Outreach — Sends DMs and emails FROM client's connected accounts
 // Like Instantly.ai but built into ShortStack OS.
@@ -11,6 +12,8 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const ownerId = await getEffectiveOwnerId(supabase, user.id);
   if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });

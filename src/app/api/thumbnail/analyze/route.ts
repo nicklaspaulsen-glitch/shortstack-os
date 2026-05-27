@@ -10,6 +10,7 @@ import {
   safeJsonParse,
 } from "@/lib/ai/claude-helpers";
 import { getPageTrainingPrompt } from "@/lib/ai/page-training";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 /**
  * POST /api/thumbnail/analyze
@@ -84,6 +85,8 @@ export async function POST(request: NextRequest) {
   if (!user) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const ownerId = await getEffectiveOwnerId(supabase, user.id);
   if (!ownerId) {

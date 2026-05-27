@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // AI Pricing Strategy Advisor — Helps clients optimize their pricing
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const { client_id, current_pricing, services_offered, target_market, competitors } = await request.json();
 

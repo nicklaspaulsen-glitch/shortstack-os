@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // Social autopilot settings
 interface SocialAutopilotConfig {
@@ -63,6 +64,8 @@ export async function POST(request: NextRequest) {
   const authSupabase = createServerSupabase();
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const body = await request.json();
   const supabase = createServiceClient();

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import PDFDocument from "pdfkit";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // Generate weekly performance report for a client
 // Can be triggered manually or by cron
@@ -9,6 +10,8 @@ export async function POST(request: NextRequest) {
   const authSupabase = createServerSupabase();
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const { client_id } = await request.json();
   if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });

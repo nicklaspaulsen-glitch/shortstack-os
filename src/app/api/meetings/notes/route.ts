@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // AI Meeting Notes Generator — Paste call transcript, get structured notes + action items
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const { transcript, client_id, meeting_type } = await request.json();
 

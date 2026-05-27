@@ -2,6 +2,7 @@
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // Send automated onboarding email sequence to new clients (5-email sequence over 7 days).
 // GHL path removed Apr 21 — emails now sent via native Resend (sendEmail helper).
@@ -9,6 +10,8 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const { client_id, email_number } = await request.json();
 

@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkFetchUrl } from "@/lib/security/ssrf";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // AI Competitor Spy — Deep analysis of a specific competitor's online presence
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
 
   const { competitor_name, competitor_website, client_name, industry } = await request.json();
 
