@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { anthropic, MODEL_HAIKU, getResponseText, safeJsonParse } from "@/lib/ai/claude-helpers";
+import { verifyClientAccess } from "@/lib/verify-client-access";
 import {
   SMART_MANAGE_ACTIONS,
   SMART_MANAGE_ACTION_TYPES,
@@ -46,6 +47,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "client_id is required" }, { status: 400 });
   }
 
+  // SECURITY: Verify ownership before issuing any service-client queries.
+  // The previous check was placed AFTER fetching client data (check-after-fetch
+  // anti-pattern) and had a NULL profile_id gap: `if (client.profile_id && ...)`
+  // short-circuits to false when profile_id is NULL (ON DELETE SET NULL),
+  // granting any authenticated user access to orphaned client records.
+  // verifyClientAccess covers all roles (agency, team_member, client-portal).
+  const access = await verifyClientAccess(supabase, user.id, clientId);
+  if (access.denied) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const service = createServiceClient();
 
   // Fetch everything we need to describe the client's current state. All
@@ -80,11 +92,6 @@ export async function POST(request: NextRequest) {
 
   if (!client) {
     return NextResponse.json({ error: "Client not found" }, { status: 404 });
-  }
-
-  // Permission — only the owning user can manage their client.
-  if (client.profile_id && client.profile_id !== user.id) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const overdueInvoices = (invoices || []).filter(
