@@ -22,6 +22,8 @@ export async function POST(request: NextRequest) {
       action_type: "custom",
       description: `Referral from ${client?.business_name || "client"}: ${referred_name} (${referred_email})`,
       client_id,
+      // user_id required so the entry appears in the agency's activity log.
+      user_id: ctx.ownerId,
       status: "completed",
       result: { referred_name, referred_email, referred_phone, referred_by: client?.contact_name },
       completed_at: new Date().toISOString(),
