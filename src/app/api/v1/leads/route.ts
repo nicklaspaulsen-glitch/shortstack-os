@@ -12,6 +12,16 @@ import { fail, ok, okPaginated } from "@/lib/api/response";
 import { fireWebhookEvent } from "@/lib/api/webhook-events";
 import { createServiceClient } from "@/lib/supabase/server";
 
+// Columns exposed through the public API. Excludes internal operational
+// state (GHL sync, campaign assignment, AI scoring signals, metadata blobs)
+// that API consumers have no need for and that shouldn't leak implementation
+// details. Mirrors the PUBLIC_COLS pattern used in /api/v1/contacts.
+const PUBLIC_COLS =
+  "id, business_name, owner_name, email, phone, website, address, " +
+  "city, state, country, google_rating, review_count, industry, category, " +
+  "source, source_url, instagram_url, facebook_url, linkedin_url, tiktok_url, " +
+  "status, score, score_grade, scraped_at, created_at, updated_at";
+
 interface LeadInsertBody {
   business_name?: unknown;
   email?: unknown;
@@ -42,7 +52,7 @@ export async function GET(req: NextRequest) {
   const supabase = createServiceClient();
   let query = supabase
     .from("leads")
-    .select("*", { count: "exact" })
+    .select(PUBLIC_COLS, { count: "exact" })
     .eq("user_id", auth.userId)
     .order("created_at", { ascending: false })
     .range((page - 1) * limit, page * limit - 1);
@@ -85,7 +95,7 @@ export async function POST(req: NextRequest) {
       website: asString(body.website),
       notes: asString(body.notes),
     })
-    .select()
+    .select(PUBLIC_COLS)
     .single();
 
   if (error) return fail(500, error.message);
