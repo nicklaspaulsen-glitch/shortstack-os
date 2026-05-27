@@ -223,6 +223,22 @@ export async function POST(request: NextRequest) {
   const duration = Math.max(15, Math.min(60, requestedDuration));
   const clientId = typeof body.client_id === "string" ? body.client_id : null;
 
+  // ── Verify client ownership ────────────────────────────────────────
+  // client_id is optional; if supplied, confirm it belongs to the caller
+  // before associating it with the video project or internal API calls
+  // that use the service client (which bypasses RLS).
+  const serviceSupabase = createServiceClient();
+  let verifiedClientId: string | null = null;
+  if (clientId) {
+    const { data: clientRow } = await serviceSupabase
+      .from("clients")
+      .select("id")
+      .eq("id", clientId)
+      .eq("profile_id", user.id)
+      .maybeSingle();
+    verifiedClientId = clientRow?.id ?? null;
+  }
+
   // ── Step A: script ─────────────────────────────────────────────────
   const script = await generateAdScript(productDescription, duration);
   if (!script) {
@@ -240,7 +256,7 @@ export async function POST(request: NextRequest) {
   const brollRes = await internalFetch(request, "/api/video/b-roll", {
     script: script.full_script,
     count: 5,
-    client_id: clientId,
+    client_id: verifiedClientId,
   });
   const brollData: BrollResult =
     brollRes && brollRes.ok ? ((await brollRes.json()) as BrollResult) : { ok: false };
@@ -254,7 +270,7 @@ export async function POST(request: NextRequest) {
     duration,
     preset: "ads",
     script: script.full_script,
-    client_id: clientId,
+    client_id: verifiedClientId,
   });
   let music: AdsMusicTrack | undefined;
   let musicAlternatives: AdsMusicTrack[] = [];
@@ -272,12 +288,11 @@ export async function POST(request: NextRequest) {
   }
 
   // ── Step D: persist video_projects row ─────────────────────────────
-  const serviceSupabase = createServiceClient();
   const { data: proj, error: projErr } = await serviceSupabase
     .from("video_projects")
     .insert({
       profile_id: user.id,
-      client_id: clientId,
+      client_id: verifiedClientId,
       topic: productDescription.slice(0, 200),
       duration,
       style_preset: "ads",
@@ -321,7 +336,7 @@ export async function POST(request: NextRequest) {
     action_type: "ai_video_script_to_ad",
     description: `Generated ad project for: ${productDescription.slice(0, 60)}`,
     profile_id: user.id,
-    client_id: clientId,
+    client_id: verifiedClientId,
     status: "completed",
     result: {
       video_id: proj.id,
