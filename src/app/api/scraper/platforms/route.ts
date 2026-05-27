@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
                 const html = await siteRes.text();
                 const match = html.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
                 if (match && !match[0].includes("example") && !match[0].includes("wix") && !match[0].includes("sentry")) email = match[0];
-              } catch {}
+              } catch (err) { console.warn("[scraper/platforms] website email scrape:", err); }
             }
 
             results.push({

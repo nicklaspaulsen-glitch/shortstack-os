@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
               const html = await siteRes.text();
               const tkMatch = html.match(/tiktok\.com\/@([a-zA-Z0-9_.]+)/);
               if (tkMatch) tiktokUrl = `https://tiktok.com/@${tkMatch[1]}`;
-            } catch {}
+            } catch (err) { console.warn("[scraper/social] TikTok handle scrape:", err); }
           }
 
           if (tiktokUrl || !filters?.require_tiktok) {
@@ -203,7 +203,7 @@ export async function POST(request: NextRequest) {
                 if (liMatch) linkedinUrl = `https://linkedin.com/company/${liMatch[1]}`;
                 const emailMatch = html.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
                 if (emailMatch) email = emailMatch[0];
-              } catch {}
+              } catch (err) { console.warn("[scraper/social] LinkedIn/email scrape:", err); }
             }
 
             results.push({

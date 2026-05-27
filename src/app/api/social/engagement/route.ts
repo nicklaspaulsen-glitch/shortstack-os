@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
               });
             }
           }
-        } catch {}
+        } catch (err) { console.warn("[social/engagement] Facebook comments fetch:", err); }
       }
 
       if (account.platform === "instagram" && account.access_token) {
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
               });
             }
           }
-        } catch {}
+        } catch (err) { console.warn("[social/engagement] Instagram comments fetch:", err); }
       }
     }
   }

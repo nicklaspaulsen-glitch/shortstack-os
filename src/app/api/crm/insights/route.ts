@@ -126,10 +126,11 @@ export async function POST(req: NextRequest) {
         status: "completed",
         metadata: { entity_type, entity_id, health_score: parsed.health_score },
       });
-    } catch {}
+    } catch (err) { console.warn("[crm/insights] trinity_log insert:", err); }
 
     return NextResponse.json({ success: true, ...parsed });
   } catch (err) {
+    console.warn("[crm/insights] AI generation:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

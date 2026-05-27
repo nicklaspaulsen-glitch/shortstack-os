@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
 
     let workflow = null;
     if (jsonMatch) {
-      try { workflow = JSON.parse(jsonMatch[0]); } catch {}
+      try { workflow = JSON.parse(jsonMatch[0]); } catch (err) { console.warn("[n8n/create-workflow] JSON parse:", err); }
     }
 
     // Step 2: Deploy to n8n if configured

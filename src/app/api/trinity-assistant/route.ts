@@ -1258,8 +1258,9 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
             if (finalized.id) {
               await stripe.invoices.sendInvoice(finalized.id, {}, connectOpts);
             }
-          } catch {
+          } catch (err) {
             // Non-fatal — hosted URL is already live.
+            console.warn("[trinity-assistant] sendInvoice (non-fatal):", err);
           }
 
           const dueDate = finalized.due_date
@@ -1659,8 +1660,9 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
             const job = await res.json();
             jobId = (job?.id as string) || null;
             if (jobId) initialStatus = "processing";
-          } catch {
+          } catch (err) {
             // Non-fatal — row still queued for retry.
+            console.warn("[trinity-assistant] FLUX queue (non-fatal):", err);
           }
         }
 
@@ -1862,7 +1864,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
                 break;
               }
             }
-          } catch {}
+          } catch (err) { console.warn("[trinity-assistant] thumbnail fetch:", err); }
         }
         if (!thumbBuf) return { ok: false, error: `Could not fetch thumbnail for video ${videoId}.` };
 
@@ -1980,8 +1982,8 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
               flux_prompt: String(parsed.flux_prompt),
             };
           }
-        } catch {
-          // fall through
+        } catch (err) {
+          console.warn("[trinity-assistant] title AI parse:", err);
         }
         if (!ai) return { ok: false, error: "Title AI failed — could not parse JSON." };
         const aiPayload = ai; // narrow once so the closures below don't lose the non-null type
@@ -3645,8 +3647,9 @@ LIMITS:
         .join("\n")
         .trim();
       if (synthText) finalText = synthText;
-    } catch {
+    } catch (err) {
       // If synthesis fails, fall through to the existing "Done." fallback.
+      console.warn("[trinity-assistant] synthesis fallback:", err);
     }
   }
 

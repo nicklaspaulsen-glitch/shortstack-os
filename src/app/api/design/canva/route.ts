@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
           view_url: design.design?.urls?.view_url,
         });
       }
-    } catch {}
+    } catch (err) { console.warn("[design/canva] Canva API:", err); }
   }
 
   // Fallback: Generate Midjourney prompts
@@ -74,6 +74,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, source: "midjourney", ...result });
   } catch (err) {
+    console.warn("[design/canva] Midjourney prompt:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

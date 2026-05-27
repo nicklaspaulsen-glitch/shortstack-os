@@ -205,7 +205,7 @@ YOUR PERSONALITY:
             if (event.delta?.text) textParts.push(event.delta.text);
             if (event.delta?.partial_json) inputAccumulator += event.delta.partial_json;
           }
-        } catch {}
+        } catch (err) { console.warn("[agents/chief] SSE event parse:", err); }
       }
 
       fullText = textParts.join("");
@@ -213,7 +213,7 @@ YOUR PERSONALITY:
       if (hasToolUse && toolName === "spawn_agent") {
         // Handle tool-use the old way (non-streaming)
         let toolInputParsed: { task?: string; context?: string } = {};
-        try { toolInputParsed = JSON.parse(inputAccumulator); } catch {}
+        try { toolInputParsed = JSON.parse(inputAccumulator); } catch (err) { console.warn("[agents/chief] tool input parse:", err); }
 
         const spawnRes = await fetch(new URL("/api/agents/spawn", request.url).toString(), {
           method: "POST",
@@ -308,6 +308,7 @@ YOUR PERSONALITY:
 
     return NextResponse.json({ reply });
   } catch (err) {
+    console.warn("[agents/chief] unhandled:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

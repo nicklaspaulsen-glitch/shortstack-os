@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
           const html = await siteRes.text();
           const match = html.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
           if (match) email = match[0];
-        } catch {}
+        } catch (err) { console.warn("[leadgen/ai-agent] website email scrape:", err); }
       }
 
       // Insert into database — tag owner so the lead is visible to the
@@ -128,7 +128,8 @@ export async function POST(request: NextRequest) {
           }
 
           enriched.push({ id, name: lead.business_name, ...updates, has_website_content: true });
-        } catch {
+        } catch (err) {
+          console.warn("[leadgen/ai-agent] website enrichment:", err);
           enriched.push({ id, name: lead.business_name, has_website_content: false });
         }
       }
@@ -164,7 +165,7 @@ export async function POST(request: NextRequest) {
           const scores = JSON.parse(text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim());
           results.scores = scores;
           results.scored = scores.length;
-        } catch { results.scoring_error = "Failed to parse scores"; }
+        } catch (err) { console.warn("[leadgen/ai-agent] score parse:", err); results.scoring_error = "Failed to parse scores"; }
       }
     }
   }
@@ -200,7 +201,7 @@ export async function POST(request: NextRequest) {
           });
           const data = await res.json();
           message = data.content?.[0]?.text || message;
-        } catch {}
+        } catch (err) { console.warn("[leadgen/ai-agent] AI message generation:", err); }
       }
 
       // Send cold email via native Resend (GHL path removed Apr 21).
@@ -213,7 +214,7 @@ export async function POST(request: NextRequest) {
             html: `<p>${message.replace(/\n/g, "<br>")}</p><p>Best,<br>ShortStack Team</p>`,
           });
           if (sent) emailsSent++;
-        } catch {}
+        } catch (err) { console.warn("[leadgen/ai-agent] email send:", err); }
       }
 
       // Log DM outreach

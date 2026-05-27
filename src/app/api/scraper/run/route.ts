@@ -175,7 +175,7 @@ export async function POST(request: NextRequest) {
                     const html = await siteRes.text();
                     const emailMatch = html.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
                     if (emailMatch) email = emailMatch[0];
-                  } catch {}
+                  } catch (err) { console.warn("[scraper/run] website email scrape:", err); }
                 }
 
                 const addressParts = (d.formatted_address || "").split(",").map((s: string) => s.trim());

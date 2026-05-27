@@ -88,7 +88,7 @@ export async function POST(_request: NextRequest) {
               if (emailMatch && !emailMatch[0].includes("example.com") && !emailMatch[0].includes("wixpress")) {
                 email = emailMatch[0];
               }
-            } catch {}
+            } catch (err) { console.warn("[scraper/test-500] website email scrape:", err); }
           }
 
           const addressParts = (place.formattedAddress || "").split(",").map((s: string) => s.trim());
@@ -154,7 +154,7 @@ export async function POST(_request: NextRequest) {
         `Niches: ${niches.length}\nCities: ${cities.length}`
       );
     }
-  } catch {}
+  } catch (err) { console.warn("[scraper/test-500] Telegram notification:", err); }
 
   return NextResponse.json({
     success: true,

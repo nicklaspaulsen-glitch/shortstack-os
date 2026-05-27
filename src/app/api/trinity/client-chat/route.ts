@@ -129,12 +129,12 @@ Rules:
                     fullText += event.delta.text;
                     controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ text: event.delta.text })}\n\n`));
                   }
-                } catch {}
+                } catch (err) { console.warn("[trinity/client-chat] SSE event parse:", err); }
               }
             }
           }
           controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ done: true, fullText, botName })}\n\n`));
-        } catch {}
+        } catch (err) { console.warn("[trinity/client-chat] stream read:", err); }
         controller.close();
       },
     });

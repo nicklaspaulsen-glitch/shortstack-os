@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
             accountId = resourceNames[0].replace("customers/", "");
             accountName = `Google Ads (${accountId})`;
           }
-        } catch {}
+        } catch (err) { console.warn("[oauth/google/callback] Ads customer list:", err); }
       }
     }
 
