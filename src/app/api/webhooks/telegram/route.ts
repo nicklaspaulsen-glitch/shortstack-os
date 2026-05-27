@@ -140,6 +140,8 @@ export async function POST(request: NextRequest) {
             action_type: "reminder",
             description: reminderMessage,
             command: text,
+            user_id: ownerUserId,
+            profile_id: ownerUserId,
             status: "pending",
             result: { scheduled_at: scheduledAt.toISOString(), chat_id: chatId },
           });
@@ -183,6 +185,8 @@ I can execute any ShortStack OS action remotely.`;
           action_type: command.action,
           description: command.description,
           command: text,
+          user_id: ownerUserId,
+          profile_id: ownerUserId,
           status: "in_progress",
         }).select("id").single();
 

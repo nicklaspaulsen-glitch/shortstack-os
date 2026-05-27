@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
   for (const inv of overdue) {
     const { data: client } = await supabase
       .from("clients")
-      .select("business_name, contact_name, email")
+      .select("business_name, contact_name, email, profile_id")
       .eq("id", inv.client_id)
       .single();
 
@@ -46,6 +46,8 @@ export async function GET(request: NextRequest) {
       action_type: "invoice",
       description: `Payment reminder sent to ${client.business_name}: $${inv.amount} (${daysPast} days overdue)`,
       client_id: inv.client_id,
+      profile_id: client.profile_id ?? null,
+      user_id: client.profile_id ?? null,
       status: "completed",
       result: {
         type: "chase",
