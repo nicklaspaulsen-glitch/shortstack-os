@@ -372,8 +372,8 @@ test.describe("AI Studio", () => {
       }
     }
 
-    // Clicking the "Image" tab renders the GuidedImagePanel (a prompt or
-    // upload interface — not the old multi-step wizard).
+    // Clicking the "Image" tab renders the ProgressiveImagePanel (textarea +
+    // vibe dial + "Generate 4 Variants" button — not the old multi-step wizard).
     if (await imageTab.isVisible({ timeout: 2000 }).catch(() => false)) {
       await imageTab.click({ timeout: 3000 }).catch(() => {});
       await page.waitForTimeout(200);
