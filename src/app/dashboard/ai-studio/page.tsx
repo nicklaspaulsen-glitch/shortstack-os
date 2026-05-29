@@ -1592,10 +1592,17 @@ function ProgressiveImagePanel({ processing, setProcessing }: ToolProps) {
           style: STYLE_MAP[vibe],
           width: 1024,
           height: 1024,
+          // Request 4 outputs when the provider supports it (Replicate/FLUX).
+          // Providers that only return 1 image (DALL-E 3, RunPod SDXL) are
+          // handled below by cycling — so this is safe for all providers.
+          num_outputs: 4,
         }),
       });
       const data = await res.json() as { images?: string[]; error?: string };
       if (data.images && data.images.length > 0) {
+        // Provider returned ≥4: use first 4 distinct images.
+        // Provider returned <4 (DALL-E 3, RunPod SDXL): cycle to fill 4 cards
+        // so the UI is always a 2×2 grid regardless of backend capability.
         const urls = data.images.length >= 4
           ? data.images.slice(0, 4)
           : Array.from({ length: 4 }, (_, i) => data.images![i % data.images!.length]);
