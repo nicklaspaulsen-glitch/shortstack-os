@@ -248,11 +248,9 @@ export default function AIStudioPage() {
               exit="exit"
             >
               {studioTab === "image" && (
-                <GuidedImagePanel
+                <ProgressiveImagePanel
                   processing={processing}
                   setProcessing={setProcessing}
-                  history={history}
-                  setHistory={setHistory}
                 />
               )}
               {studioTab === "video" && (
@@ -1543,6 +1541,401 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
         </div>
       )}
     </div>
+  );
+}
+
+
+// -- PROGRESSIVE IMAGE PANEL (guided mode, less-is-more) ----------
+type GenStep = "idle" | "generating" | "results";
+type VibeStyle = "quick" | "detailed" | "brand";
+
+interface ImageVariantResult {
+  id: string;
+  url: string;
+  enabled: boolean;
+  swapping: boolean;
+}
+
+function ProgressiveImagePanel({ processing, setProcessing }: ToolProps) {
+  const [step, setStep] = useState<GenStep>("idle");
+  const [vibe, setVibe] = useState<VibeStyle>("detailed");
+  const [prompt, setPrompt] = useState("");
+  const [variants, setVariants] = useState<ImageVariantResult[]>([]);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const VIBES: { id: VibeStyle; label: string; hint: string }[] = [
+    { id: "quick", label: "Quick Concept", hint: "Fast iteration, rough draft" },
+    { id: "detailed", label: "High Detail", hint: "Cinematic, 4K quality" },
+    { id: "brand", label: "Brand Style", hint: "Professional, clean background" },
+  ];
+
+  const STYLE_MAP: Record<VibeStyle, string> = {
+    quick: "photorealistic, clean",
+    detailed: "cinematic, highly detailed, 4K, professional photography",
+    brand: "professional commercial photography, clean white background, product shot",
+  };
+
+  const generate = async (sourcePrompt = prompt) => {
+    if (!sourcePrompt.trim()) {
+      toast.error("Describe what you want to create");
+      textareaRef.current?.focus();
+      return;
+    }
+    setStep("generating");
+    setProcessing(true);
+    try {
+      const res = await fetch("/api/ai-studio/image-gen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: sourcePrompt,
+          style: STYLE_MAP[vibe],
+          width: 1024,
+          height: 1024,
+        }),
+      });
+      const data = await res.json() as { images?: string[]; error?: string };
+      if (data.images && data.images.length > 0) {
+        const urls = data.images.length >= 4
+          ? data.images.slice(0, 4)
+          : Array.from({ length: 4 }, (_, i) => data.images![i % data.images!.length]);
+        setVariants(
+          urls.map((url, i) => ({
+            id: `v-${Date.now()}-${i}`,
+            url,
+            enabled: true,
+            swapping: false,
+          }))
+        );
+        setStep("results");
+        toast.success("4 variants ready");
+      } else if (data.error === "setup_required") {
+        toast.error("Image generation not configured — check Integrations");
+        setStep("idle");
+      } else {
+        toast.error(data.error ?? "Generation failed");
+        setStep("idle");
+      }
+    } catch (err) {
+      console.error("[ai-studio/progressive-panel] generate failed:", err);
+      toast.error("Generation failed");
+      setStep("idle");
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const swapVariant = async (variantId: string) => {
+    setVariants(prev =>
+      prev.map(v => v.id === variantId ? { ...v, swapping: true } : v)
+    );
+    try {
+      const res = await fetch("/api/ai-studio/image-gen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt,
+          style: STYLE_MAP[vibe],
+          width: 1024,
+          height: 1024,
+        }),
+      });
+      const data = await res.json() as { images?: string[]; error?: string };
+      if (data.images?.[0]) {
+        setVariants(prev =>
+          prev.map(v =>
+            v.id === variantId ? { ...v, url: data.images![0], swapping: false } : v
+          )
+        );
+        toast.success("New variant ready");
+      } else {
+        setVariants(prev =>
+          prev.map(v => v.id === variantId ? { ...v, swapping: false } : v)
+        );
+        toast.error(data.error ?? "Swap failed");
+      }
+    } catch (err) {
+      console.error("[ai-studio/progressive-panel] swap failed:", err);
+      setVariants(prev =>
+        prev.map(v => v.id === variantId ? { ...v, swapping: false } : v)
+      );
+      toast.error("Swap failed");
+    }
+  };
+
+  const toggleVariant = (variantId: string) => {
+    setVariants(prev =>
+      prev.map(v => v.id === variantId ? { ...v, enabled: !v.enabled } : v)
+    );
+  };
+
+  const enabledCount = variants.filter(v => v.enabled).length;
+
+  return (
+    <AnimatePresence mode="wait">
+      {step === "idle" && (
+        <motion.div
+          key="idle"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.22 }}
+          className="space-y-4"
+        >
+          <div
+            className="relative rounded-2xl overflow-hidden"
+            style={{ background: "rgba(13,17,32,0.90)", border: "1px solid rgba(212,255,0,0.14)" }}
+          >
+            <div
+              className="pointer-events-none absolute top-0 left-0 right-0 h-24 opacity-30"
+              style={{ background: "radial-gradient(ellipse at 50% -20%, rgba(212,255,0,0.12) 0%, transparent 70%)" }}
+            />
+            <textarea
+              ref={textareaRef}
+              value={prompt}
+              onChange={e => setPrompt(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+                  e.preventDefault();
+                  void generate();
+                }
+              }}
+              placeholder="Describe what you want to create — a product shot, portrait, concept art, brand visual..."
+              rows={4}
+              className="relative z-10 w-full bg-transparent resize-none p-5 text-sm text-text-primary placeholder:text-text-muted outline-none leading-relaxed"
+              style={{ fontFamily: "inherit" }}
+            />
+            <div className="relative z-10 flex items-center justify-between px-4 pb-3">
+              <span className="text-[10px] text-text-muted font-mono">
+                {prompt.trim().split(/\s+/).filter(Boolean).length} words · ⌘↵ to generate
+              </span>
+              {prompt.trim() && (
+                <button onClick={() => setPrompt("")} className="text-[10px] text-text-muted hover:text-text-secondary transition-colors">
+                  Clear
+                </button>
+              )}
+            </div>
+          </div>
+          <div>
+            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-text-muted mb-2 px-0.5">Style</p>
+            <div
+              className="flex rounded-xl overflow-hidden"
+              style={{ background: "rgba(13,17,32,0.80)", border: "1px solid rgba(212,255,0,0.12)" }}
+            >
+              {VIBES.map(v => (
+                <button
+                  key={v.id}
+                  onClick={() => setVibe(v.id)}
+                  title={v.hint}
+                  className={`flex-1 text-[11px] font-semibold py-2.5 transition-all relative ${
+                    vibe === v.id ? "text-black" : "text-text-muted hover:text-text-secondary"
+                  }`}
+                  style={vibe === v.id ? {
+                    background: "linear-gradient(180deg, #D4FF00 0%, #AACC00 100%)",
+                    boxShadow: "0 0 12px rgba(212,255,0,0.25)",
+                  } : undefined}
+                >
+                  {v.label}
+                </button>
+              ))}
+            </div>
+            <p className="text-[10px] text-text-muted mt-1.5 px-0.5">
+              {VIBES.find(v => v.id === vibe)?.hint}
+            </p>
+          </div>
+          <motion.button
+            onClick={() => void generate()}
+            disabled={processing || !prompt.trim()}
+            whileHover={{ scale: 1.015 }}
+            whileTap={{ scale: 0.985 }}
+            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-bold transition-all disabled:opacity-40"
+            style={{
+              background: "linear-gradient(180deg, #D4FF00 0%, #AACC00 100%)",
+              color: "#020711",
+              boxShadow: "0 0 24px rgba(212,255,0,0.28)",
+            }}
+          >
+            <Sparkle size={15} />
+            Generate 4 Variants
+          </motion.button>
+        </motion.div>
+      )}
+      {step === "generating" && (
+        <motion.div
+          key="generating"
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.22 }}
+          className="space-y-3"
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <CircleNotch size={14} className="text-brand-accent animate-spin" />
+            <p className="text-xs font-medium text-text-secondary">Creating 4 variants...</p>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {[0, 1, 2, 3].map(i => (
+              <motion.div
+                key={i}
+                className="aspect-square rounded-2xl overflow-hidden"
+                style={{ background: "rgba(13,17,32,0.80)", border: "1px solid rgba(212,255,0,0.08)" }}
+                animate={{ opacity: [0.4, 0.7, 0.4] }}
+                transition={{ duration: 1.6, delay: i * 0.15, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <div className="h-full relative overflow-hidden">
+                  <motion.div
+                    className="absolute inset-0"
+                    style={{ background: "linear-gradient(90deg, transparent 0%, rgba(212,255,0,0.05) 50%, transparent 100%)" }}
+                    animate={{ x: ["-100%", "200%"] }}
+                    transition={{ duration: 1.8, delay: i * 0.2, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+      {step === "results" && (
+        <motion.div
+          key="results"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.28 }}
+          className="space-y-3"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold text-brand-accent px-2 py-1 rounded-full bg-brand-accent/10">
+                {enabledCount} selected
+              </span>
+              <span className="text-[10px] text-text-muted">of {variants.length}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => { setStep("idle"); setVariants([]); }}
+                className="text-[11px] text-text-muted hover:text-text-secondary transition-colors"
+              >
+                ← Start over
+              </button>
+              <button
+                onClick={() => void generate(prompt)}
+                className="text-[11px] font-semibold text-brand-accent hover:text-brand-accent/80 transition-colors"
+              >
+                Regenerate all
+              </button>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {variants.map((variant, i) => (
+              <motion.div
+                key={variant.id}
+                initial={{ opacity: 0, scale: 0.94 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.24, delay: i * 0.06 }}
+                className="relative group rounded-2xl overflow-hidden aspect-square"
+                style={{
+                  border: variant.enabled ? "1px solid rgba(212,255,0,0.30)" : "1px solid rgba(212,255,0,0.06)",
+                  opacity: variant.enabled ? 1 : 0.45,
+                  transition: "opacity 200ms, border-color 200ms",
+                }}
+              >
+                {variant.swapping ? (
+                  <div className="w-full h-full flex items-center justify-center bg-[rgba(13,17,32,0.85)]">
+                    <CircleNotch size={20} className="text-brand-accent animate-spin" />
+                  </div>
+                ) : (
+                  <SafeThumb
+                    src={variant.url}
+                    alt={`Variant ${i + 1}`}
+                    className="w-full h-full object-cover"
+                    wrapperClassName="w-full h-full"
+                  />
+                )}
+                <div
+                  className="absolute inset-0 flex flex-col justify-between p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                  style={{ background: "linear-gradient(to top, rgba(2,7,17,0.85) 0%, transparent 50%)" }}
+                >
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => toggleVariant(variant.id)}
+                      className="w-7 h-7 rounded-full flex items-center justify-center backdrop-blur-sm transition-all"
+                      style={{
+                        background: variant.enabled ? "rgba(212,255,0,0.85)" : "rgba(13,17,32,0.85)",
+                        border: variant.enabled ? "none" : "1px solid rgba(212,255,0,0.30)",
+                      }}
+                      title={variant.enabled ? "Deselect" : "Select"}
+                    >
+                      {variant.enabled ? (
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                          <path d="M1.5 5L4 7.5L8.5 2.5" stroke="#020711" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      ) : (
+                        <div className="w-2 h-2 rounded-full border border-brand-accent/60" />
+                      )}
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => void swapVariant(variant.id)}
+                      disabled={variant.swapping}
+                      className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-[10px] font-semibold text-text-muted hover:text-text-primary backdrop-blur-sm transition-all"
+                      style={{ background: "rgba(13,17,32,0.80)", border: "1px solid rgba(255,255,255,0.08)" }}
+                    >
+                      <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                        <path d="M1 5.5C1 3 3.5 1 6 1C7.5 1 8.8 1.7 9.7 2.7M10 5.5C10 8 7.5 10 5 10C3.5 10 2.2 9.3 1.3 8.3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                        <path d="M8 1L10 3L8 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      Try another
+                    </button>
+                    <a
+                      href={variant.url}
+                      download={`variant-${i + 1}.png`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-7 h-7 flex items-center justify-center rounded-lg backdrop-blur-sm transition-all"
+                      style={{ background: "rgba(13,17,32,0.80)", border: "1px solid rgba(255,255,255,0.08)" }}
+                    >
+                      <DownloadSimple size={11} className="text-text-muted" />
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+          {enabledCount > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.3 }}
+              className="flex items-center gap-2 pt-1"
+            >
+              <button
+                onClick={() => {
+                  variants.filter(v => v.enabled).forEach(v => {
+                    const a = document.createElement("a");
+                    a.href = v.url;
+                    a.download = `ai-studio-${v.id}.png`;
+                    a.target = "_blank";
+                    a.click();
+                  });
+                  toast.success(`Downloading ${enabledCount} image${enabledCount > 1 ? "s" : ""}`);
+                }}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all"
+                style={{
+                  background: "linear-gradient(180deg, #D4FF00 0%, #AACC00 100%)",
+                  color: "#020711",
+                  boxShadow: "0 0 16px rgba(212,255,0,0.22)",
+                }}
+              >
+                <DownloadSimple size={13} />
+                Download {enabledCount} image{enabledCount > 1 ? "s" : ""}
+              </button>
+            </motion.div>
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
