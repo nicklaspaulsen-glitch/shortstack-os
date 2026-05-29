@@ -1,4 +1,3 @@
-import { House, MagnifyingGlass } from "@phosphor-icons/react";
 import Link from "next/link";
 
 /**
@@ -24,14 +23,12 @@ export default function DashboardNotFound() {
             href="/dashboard"
             className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5"
           >
-            <House size={12} />
             Dashboard home
           </Link>
           <Link
             href="/dashboard/crm"
             className="btn-secondary text-xs py-2 px-4 flex items-center gap-1.5"
           >
-            <MagnifyingGlass size={12} />
             Open CRM
           </Link>
         </div>

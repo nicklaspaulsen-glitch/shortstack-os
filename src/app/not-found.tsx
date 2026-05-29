@@ -1,5 +1,4 @@
-import { ArrowLeft, Envelope } from "@phosphor-icons/react";
-﻿import Link from "next/link";
+import Link from "next/link";
 
 import BrainMark from "@/components/brand/brain-mark";
 
@@ -79,14 +78,14 @@ export default function NotFound() {
             href="/dashboard"
             className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-brand-lime text-bg-base text-[14px] font-semibold hover:bg-brand-lime-soft transition-all duration-220 ease-out-expo-foundation shadow-[0_0_0_1px_rgba(255,255,255,0.3),0_0_24px_-6px_rgba(255,255,255,0.45)] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_0_32px_-4px_rgba(255,255,255,0.6)]"
           >
-            <ArrowLeft size={15} />
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M6.854 3.146a.5.5 0 0 1 0 .708L3.707 7H13.5a.5.5 0 0 1 0 1H3.707l3.147 3.146a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708 0Z" fill="currentColor"/></svg>
             Back to dashboard
           </Link>
           <a
             href="mailto:hello@shortstack.work?subject=Broken%20link%20on%20ShortStack&body=I%20landed%20on%20a%20404%20at%20this%20URL%3A%20"
             className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-border-subtle bg-transparent text-text-secondary text-[14px] font-medium hover:border-border-strong hover:text-text-primary hover:bg-white/[0.02] transition-all duration-220 ease-out-expo-foundation"
           >
-            <Envelope size={15} />
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h10A1.5 1.5 0 0 1 14 2.5v9a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 1 11.5v-9Zm1.5-.5a.5.5 0 0 0-.5.5v.795l5.5 3.143 5.5-3.143V2.5a.5.5 0 0 0-.5-.5h-10ZM13 4.87 8.053 7.686a1 1 0 0 1-.985.007L2 4.872V11.5a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V4.87Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"/></svg>
             Report this
           </a>
         </div>
