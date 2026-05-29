@@ -42,7 +42,9 @@ export interface FullPassResult {
   ok: boolean;
   steps: {
     detect_scenes?: unknown;
+    analyze?: unknown;
     suggest?: unknown;
+    library?: unknown;
     captions?: unknown;
     broll_candidates?: unknown;
     apply?: unknown;
@@ -145,7 +147,30 @@ export async function runFullPass(input: FullPassInput): Promise<FullPassResult>
     scenes = Array.isArray(payload?.scenes) ? payload!.scenes : [];
   }
 
-  // 2. suggest
+  // 2. analyze — second-pass director intelligence (best-effort, non-fatal)
+  const analyze = await postJson(
+    origin,
+    "/api/video/auto-edit/analyze",
+    {
+      scenes,
+      client_id,
+      frame_samples: input.frame_samples,
+      total_duration_sec: input.total_duration_sec,
+    },
+    cookieHeader,
+  );
+  out.steps.analyze = analyze.data;
+  if (analyze.ok) {
+    // Replace scenes with enriched ones (they have director intelligence)
+    const analyzePayload = analyze.data as { scenes?: unknown[] } | null;
+    if (Array.isArray(analyzePayload?.scenes) && analyzePayload!.scenes.length > 0) {
+      scenes = analyzePayload!.scenes;
+    }
+  } else {
+    out.errors.push({ step: "analyze", error: analyze.error || "failed (non-fatal)" });
+  }
+
+  // 3. suggest
   const suggest = await postJson(
     origin,
     "/api/video/auto-edit/suggest",
@@ -158,7 +183,7 @@ export async function runFullPass(input: FullPassInput): Promise<FullPassResult>
     out.errors.push({ step: "suggest", error: suggest.error || "failed" });
   }
 
-  // 3. captions (best-effort — missing whisper env is not fatal)
+  // 4. captions (best-effort — missing whisper env is not fatal)
   // Resolve caption style: explicit editing style > inferred from creator pack > fallback
   const resolvedCaptionStyle = editing_style_id
     ? getCaptionStyleForEditingStyle(editing_style_id)
@@ -181,7 +206,7 @@ export async function runFullPass(input: FullPassInput): Promise<FullPassResult>
     out.errors.push({ step: "captions", error: captions.error || "failed (non-fatal)" });
   }
 
-  // 4. broll-candidates
+  // 5. broll-candidates
   const broll = await postJson(
     origin,
     "/api/video/auto-edit/broll-candidates",
@@ -196,7 +221,29 @@ export async function runFullPass(input: FullPassInput): Promise<FullPassResult>
     });
   }
 
-  // 5. apply (optional)
+  // 6. library — organize suggestions into selectable edit decisions
+  if (suggest.ok) {
+    const suggestPayload = suggest.data as { suggestions?: unknown[] } | null;
+    if (Array.isArray(suggestPayload?.suggestions)) {
+      const libraryResult = await postJson(
+        origin,
+        "/api/video/auto-edit/library",
+        {
+          scenes,
+          suggestions: suggestPayload!.suggestions,
+          min_confidence: 0.5,
+          max_alternatives: 3,
+        },
+        cookieHeader,
+      );
+      out.steps.library = libraryResult.data;
+      if (!libraryResult.ok) {
+        out.errors.push({ step: "library", error: libraryResult.error || "failed (non-fatal)" });
+      }
+    }
+  }
+
+  // 7. apply (optional)
   if (auto_accept && suggest.ok) {
     const suggestData = suggest.data as {
       suggestions?: Array<{ id?: string }>;

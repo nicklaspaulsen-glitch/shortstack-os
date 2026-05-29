@@ -52,6 +52,9 @@ import FootageBadge, { type FootageType } from "@/components/video-editor/footag
 import SafeThumb from "@/components/safe-thumb";
 import { PremiereEditor } from "@/components/video-editor/premiere-editor";
 import PageTrainingPanel from "@/components/ui/page-training-panel";
+import { EditLibraryPanel } from "@/components/video-editor/edit-library-panel";
+import type { EditLibrary, EditCategory, EditDecisionAlternative } from "@/lib/auto-edit-types";
+import { emptyEditLibrary } from "@/lib/auto-edit-types";
 
 // UI caption-style id ? server-accepted id. Server accepts only 6 styles
 // (see src/app/api/video/auto-edit/captions/route.ts:36-43). Everything else
@@ -1556,6 +1559,10 @@ export default function VideoEditorPage() {
 
   // One-click auto-edit (full-pass) state.
   const [fullPassRunning, setFullPassRunning] = useState(false);
+  // Edit Library state — populated after full-pass returns library data.
+  const [editLibrary, setEditLibrary] = useState<EditLibrary | null>(null);
+  const [editLibraryOpen, setEditLibraryOpen] = useState(false);
+  const [applyingEdits, setApplyingEdits] = useState(false);
   const [sceneBuilderScenes, setSceneBuilderScenes] = useState<Array<{ id: string; name: string; duration: number; description: string }>>([
     { id: "s1", name: "Hook / Intro", duration: 3, description: "Attention-grabbing opening" },
     { id: "s2", name: "Main Content", duration: 15, description: "Core message delivery" },
@@ -2767,7 +2774,15 @@ export default function VideoEditorPage() {
       if (sugs.length > 0) {
         setTimelineSuggestions(sugs);
       }
-      toast.success(`Full-pass complete � ${sugs.length} suggestion(s), ${j.errors?.length || 0} sub-error(s)`, { id: tid });
+      // If the full-pass returned an edit library, open the library panel.
+      if (j.steps?.library && typeof j.steps.library === "object") {
+        const lib = j.steps.library as EditLibrary;
+        if (lib.categories && lib.total_decisions > 0) {
+          setEditLibrary(lib);
+          setEditLibraryOpen(true);
+        }
+      }
+      toast.success(`Full-pass complete — ${sugs.length} suggestion(s), ${j.errors?.length || 0} sub-error(s)`, { id: tid });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Full-pass request failed", { id: tid });
     } finally {
@@ -2775,7 +2790,73 @@ export default function VideoEditorPage() {
     }
   }
 
-  // --- Classify Footage � detect footage type + confidence ? render FootageBadge -
+  // --- Edit Library handlers (toggle, swap, bulk-toggle, apply) ---
+  function handleLibraryToggle(decisionId: string, enabled: boolean) {
+    setEditLibrary((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, categories: { ...prev.categories } };
+      for (const cat of Object.keys(next.categories) as EditCategory[]) {
+        next.categories[cat] = next.categories[cat].map((d) =>
+          d.id === decisionId ? { ...d, enabled } : d,
+        );
+      }
+      return next;
+    });
+  }
+
+  function handleLibrarySwap(decisionId: string, alt: EditDecisionAlternative) {
+    setEditLibrary((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, categories: { ...prev.categories } };
+      for (const cat of Object.keys(next.categories) as EditCategory[]) {
+        next.categories[cat] = next.categories[cat].map((d) => {
+          if (d.id !== decisionId) return d;
+          // Swap: current becomes an alternative, chosen alt becomes primary.
+          const oldPrimary = { id: d.id + "_prev", label: d.label, payload: d.payload };
+          const newAlts = [oldPrimary, ...d.alternatives.filter((a) => a.id !== alt.id)];
+          return { ...d, label: alt.label, payload: alt.payload, alternatives: newAlts };
+        });
+      }
+      return next;
+    });
+  }
+
+  function handleLibraryBulkToggle(category: EditCategory, enabled: boolean) {
+    setEditLibrary((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, categories: { ...prev.categories } };
+      next.categories[category] = next.categories[category].map((d) => ({ ...d, enabled }));
+      return next;
+    });
+  }
+
+  async function handleLibraryApply(enabledIds: string[]) {
+    setApplyingEdits(true);
+    const tid = toast.loading(`Applying ${enabledIds.length} edit decisions...`);
+    try {
+      const res = await fetch("/api/video/auto-edit/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          project_id: aiProject?.project_id,
+          suggestion_ids: enabledIds,
+        }),
+      });
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        toast.error((j as Record<string, string>).error || `Apply failed (${res.status})`, { id: tid });
+        return;
+      }
+      toast.success(`Applied ${enabledIds.length} edits to timeline`, { id: tid });
+      setEditLibraryOpen(false);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Apply failed", { id: tid });
+    } finally {
+      setApplyingEdits(false);
+    }
+  }
+
+  // --- Classify Footage — detect footage type + confidence → render FootageBadge -
   async function classifyReferenceFootage(idx: number) {
     const f = referenceFiles[idx];
     if (!f) return;
@@ -5896,6 +5977,16 @@ export default function VideoEditorPage() {
                             Requires a rendered video + AI-generated project (use &ldquo;Generate with AI&rdquo; above).
                           </p>
                         )}
+                        {/* Open Edit Library button — shown when library data exists */}
+                        {editLibrary && editLibrary.total_decisions > 0 && (
+                          <button
+                            onClick={() => setEditLibraryOpen(true)}
+                            className="w-full mt-2 rounded-lg border border-[#D4FF00]/20 bg-[#D4FF00]/5 px-3 py-2 text-xs font-medium text-[#D4FF00]/80 transition-all hover:bg-[#D4FF00]/10 hover:text-[#D4FF00] flex items-center justify-center gap-1.5"
+                          >
+                            <SlidersHorizontal size={12} />
+                            Open Edit Library ({editLibrary.total_decisions} decisions)
+                          </button>
+                        )}
                       </div>
 
                       <div className="glass rounded-xl space-y-2">
@@ -7833,7 +7924,58 @@ export default function VideoEditorPage() {
             />
             <PageTrainingPanel pageKey="script" pageLabel="Video Editor" />
             </>
-            )}</MotionPage>
+            )}
+
+      {/* ── Edit Library slide-out drawer ── */}
+      <AnimatePresence>
+        {editLibraryOpen && editLibrary && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="lib-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[90] bg-black/60 backdrop-blur-sm"
+              onClick={() => setEditLibraryOpen(false)}
+            />
+            {/* Panel */}
+            <motion.div
+              key="lib-panel"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="fixed right-0 top-0 z-[91] h-full w-full max-w-md border-l border-white/5 bg-[#0D1120]"
+            >
+              <div className="flex h-full flex-col">
+                {/* Close button */}
+                <div className="flex items-center justify-between border-b border-white/5 px-4 py-2">
+                  <span className="text-xs font-medium text-white/60">Edit Decision Library</span>
+                  <button
+                    onClick={() => setEditLibraryOpen(false)}
+                    className="rounded p-1 text-white/40 transition-colors hover:bg-white/5 hover:text-white/70"
+                    aria-label="Close library"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+                {/* Library panel */}
+                <EditLibraryPanel
+                  library={editLibrary}
+                  onToggle={handleLibraryToggle}
+                  onSwap={handleLibrarySwap}
+                  onBulkToggle={handleLibraryBulkToggle}
+                  onApply={handleLibraryApply}
+                  applying={applyingEdits}
+                />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+    </MotionPage>
   );
 }
 

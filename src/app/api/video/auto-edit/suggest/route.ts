@@ -164,6 +164,17 @@ RULES
 - Reuse existing preset IDs. Do NOT invent new SFX or transition IDs.
 - scene_index (int) points to the scene this suggestion belongs to — 0-based.
 
+DIRECTOR INTELLIGENCE (when scenes include a "director" field):
+- If director.no_cut_zone is true: do NOT suggest transitions or cuts in that scene. Let the moment breathe.
+- If director.is_joke_beat is true: add a comedy SFX near director.comedy_timing_sec (or scene midpoint). Use "sfx_comedy_*" IDs. Increase confidence to 0.85+.
+- If director.face_zoom_recommended is true: add a zoom suggestion using director.face_zoom_style and targeting director.suggested_zoom_target. Confidence 0.8+.
+- If director.subtitle_recommended is true: add a caption suggestion for that scene. Reference director.subtitle_reason in reasoning.
+- If director.key_moment is true: this is a hero moment — increase confidence for ANY suggestion in this scene by 0.1.
+- If director.dead_air_detected is true: suggest a transition or cut at director.dead_air_at_sec — it's a natural break point.
+- If director.speech_emphasis is "emphatic" or "shouting": consider a zoom or SFX to match the energy.
+- If director.emotional_beat is "peak" or "surprise": add an impact SFX or zoom. Confidence 0.85+.
+- If director.energy_shift is "spike": good place for a whoosh or transition. If "drop": consider a fade or music cue shift.
+
 OUTPUT FORMAT
 Respond with ONLY raw JSON:
 {
