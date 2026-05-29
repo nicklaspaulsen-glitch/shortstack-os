@@ -23,24 +23,11 @@ import { checkLimit, recordUsage } from "@/lib/usage-limits";
  *   { captions: Array<{ start, end, text, style_id, attention?: boolean }> }
  */
 
+import { CAPTION_STYLE_IDS, type CaptionStyleId } from "@/lib/video-presets/editing-style-types";
+
 export const maxDuration = 120;
 
-type CaptionStyleId =
-  | "hormozi-bounce"
-  | "mrbeast-pop"
-  | "clean-sans"
-  | "kinetic-colour"
-  | "subtle-lower-third"
-  | "vlog-handwritten";
-
-const VALID_STYLES: readonly CaptionStyleId[] = [
-  "hormozi-bounce",
-  "mrbeast-pop",
-  "clean-sans",
-  "kinetic-colour",
-  "subtle-lower-third",
-  "vlog-handwritten",
-];
+const VALID_STYLES: readonly CaptionStyleId[] = CAPTION_STYLE_IDS;
 
 interface CaptionsInput {
   video_url?: string;

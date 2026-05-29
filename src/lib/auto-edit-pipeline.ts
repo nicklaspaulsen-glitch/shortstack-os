@@ -13,10 +13,17 @@
  *   Trinity tools.
  */
 
+import {
+  getCaptionStyleForEditingStyle,
+  getStyleForCreatorPack,
+} from "@/lib/video-presets/editing-styles";
+
 export interface FullPassInput {
   video_url: string;
   project_id: string;
   creator_pack_id?: string;
+  /** Genre-level editing style preset id (e.g. "style_gaming_montage"). */
+  editing_style_id?: string;
   client_id?: string;
   auto_accept?: boolean;
   /** Forwarded cookie header so nested fetches are authenticated. */
@@ -106,6 +113,7 @@ export async function runFullPass(input: FullPassInput): Promise<FullPassResult>
     video_url,
     project_id,
     creator_pack_id,
+    editing_style_id,
     client_id,
     auto_accept,
   } = input;
@@ -141,7 +149,7 @@ export async function runFullPass(input: FullPassInput): Promise<FullPassResult>
   const suggest = await postJson(
     origin,
     "/api/video/auto-edit/suggest",
-    { video_url, scenes, client_id, creator_pack_id },
+    { video_url, scenes, client_id, creator_pack_id, editing_style_id },
     cookieHeader,
   );
   out.steps.suggest = suggest.data;
@@ -151,16 +159,20 @@ export async function runFullPass(input: FullPassInput): Promise<FullPassResult>
   }
 
   // 3. captions (best-effort — missing whisper env is not fatal)
+  // Resolve caption style: explicit editing style > inferred from creator pack > fallback
+  const resolvedCaptionStyle = editing_style_id
+    ? getCaptionStyleForEditingStyle(editing_style_id)
+    : creator_pack_id
+      ? (getStyleForCreatorPack(creator_pack_id)?.captions.styleId ?? "clean-sans")
+      : "clean-sans";
+
   const captions = await postJson(
     origin,
     "/api/video/auto-edit/captions",
     {
       video_url,
       client_id,
-      style_id:
-        creator_pack_id === "creator_hormozi" || creator_pack_id === "creator_mrbeast"
-          ? "hormozi-bounce"
-          : "clean-sans",
+      style_id: resolvedCaptionStyle,
     },
     cookieHeader,
   );

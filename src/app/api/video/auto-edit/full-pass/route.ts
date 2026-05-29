@@ -34,6 +34,7 @@ interface FullPassBody {
   video_url?: string;
   project_id?: string;
   creator_pack_id?: string;
+  editing_style_id?: string;
   client_id?: string;
   auto_accept?: boolean;
   scenes?: unknown;
@@ -127,6 +128,10 @@ export async function POST(request: NextRequest) {
       creator_pack_id:
         typeof body.creator_pack_id === "string" && body.creator_pack_id.trim()
           ? body.creator_pack_id.trim()
+          : undefined,
+      editing_style_id:
+        typeof body.editing_style_id === "string" && body.editing_style_id.trim()
+          ? body.editing_style_id.trim()
           : undefined,
       client_id:
         typeof body.client_id === "string" && body.client_id.trim()

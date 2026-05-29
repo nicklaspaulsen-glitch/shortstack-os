@@ -78,3 +78,30 @@ export {
   type CreatorVideoPack,
   type CreatorVideoPackSignature,
 } from "./creator-packs";
+
+// Editing style presets — genre-level abstractions above creator packs
+export {
+  EDITING_STYLE_PRESETS,
+  getEditingStyleById,
+  filterEditingStyles,
+  getStyleForCreatorPack,
+  getEditingStyleIds,
+  getCaptionStyleForEditingStyle,
+  type EditingStylePreset,
+  type EditingStyleTiming,
+  type EditingStyleZoom,
+  type EditingStyleTransitions,
+  type EditingStyleSfx,
+  type EditingStyleVfx,
+  type EditingStyleCaptions,
+  type EditingStyleMusic,
+  type EditingStyleBroll,
+  type ZoomStyleName,
+  type ZoomEasing,
+  type SfxDensity,
+  type BrollStrategy,
+  type CaptionPosition,
+} from "./editing-styles";
+
+// Shared types (caption style ids, etc.)
+export { CAPTION_STYLE_IDS, type CaptionStyleId } from "./editing-style-types";

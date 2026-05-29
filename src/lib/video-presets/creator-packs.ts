@@ -1011,6 +1011,129 @@ export const CREATOR_VIDEO_PACKS: CreatorVideoPack[] = [
     typicalVideoLength_sec: { min: 240, max: 720 },
     thumbnailStyleId: "creator_somethingelseyt",
   },
+
+  // ───────── ADDITIONAL CREATOR PACKS (from reference video analysis) ─────────
+
+  {
+    id: "creator_yumi_montage",
+    name: "Yumi Gaming Montage Pack",
+    creatorName: "Yumi",
+    description:
+      "Hyper-speed gaming montage with rapid meme cuts, phonk/trap beats, " +
+      "punch-in killcam zooms, and saturated SFX stacking.",
+    signature: {
+      pacing: "fast",
+      cutFrequency: "rapid",
+      zoomStyle: "punch-in",
+      textAnimation: "tr_zoom_punch",
+      musicMood: ["aggressive", "hype", "energetic"],
+      sfxCategories: ["whoosh", "impact", "meme", "riser"],
+      colorGrade: "fx_color_hdr_pop",
+      captionStyle: "mrbeast-pop",
+    },
+    typicalVideoLength_sec: { min: 120, max: 600 },
+    thumbnailStyleId: "creator_yumi_montage",
+  },
+  {
+    id: "creator_cinematic_car_build",
+    name: "Cinematic Car Build Pack",
+    creatorName: "Car Build Channel",
+    description:
+      "Slow-burn automotive restoration with dolly zooms, workshop ambient SFX, " +
+      "teal-orange grading, and 2.35:1 letterboxing for cinematic framing.",
+    signature: {
+      pacing: "slow",
+      cutFrequency: "slow",
+      zoomStyle: "smooth",
+      textAnimation: "tr_fade_cross",
+      musicMood: ["chill", "calm", "cinematic"],
+      sfxCategories: ["ambient", "cinematic", "whoosh"],
+      colorGrade: "fx_color_teal_orange",
+      captionStyle: "clean-sans",
+    },
+    typicalVideoLength_sec: { min: 600, max: 2400 },
+    thumbnailStyleId: "creator_cinematic_car_build",
+  },
+  {
+    id: "creator_wozen_comedy",
+    name: "WOZEN Comedy Group Pack",
+    creatorName: "WOZEN",
+    description:
+      "Friend-group comedy with rapid meme-cut pacing, jerky reaction zooms, " +
+      "vine-boom SFX punchlines, and playful upbeat music.",
+    signature: {
+      pacing: "fast",
+      cutFrequency: "rapid",
+      zoomStyle: "jerky",
+      textAnimation: "tr_zoom_bounce",
+      musicMood: ["playful", "upbeat", "funky"],
+      sfxCategories: ["meme", "comedy", "pop", "impact"],
+      colorGrade: "fx_color_high_contrast",
+      captionStyle: "mrbeast-pop",
+    },
+    typicalVideoLength_sec: { min: 300, max: 900 },
+    thumbnailStyleId: "creator_wozen_comedy",
+  },
+  {
+    id: "creator_nogla_terroriser",
+    name: "Nogla & Terroriser Reaction Pack",
+    creatorName: "Nogla / Terroriser",
+    description:
+      "Reaction-meme comedy with rapid cuts between facecam reactions, " +
+      "jerky zooms on punchlines, meme SFX layers, and gaming clip intercuts.",
+    signature: {
+      pacing: "fast",
+      cutFrequency: "rapid",
+      zoomStyle: "jerky",
+      textAnimation: "tr_zoom_punch",
+      musicMood: ["playful", "hype"],
+      sfxCategories: ["meme", "impact", "comedy", "whoosh"],
+      colorGrade: "fx_color_high_contrast",
+      captionStyle: "mrbeast-pop",
+    },
+    typicalVideoLength_sec: { min: 300, max: 900 },
+    thumbnailStyleId: "creator_nogla_terroriser",
+  },
+  {
+    id: "creator_derek_lunsford",
+    name: "Derek Lunsford BTS Pack",
+    creatorName: "Derek Lunsford",
+    description:
+      "Olympia-level bodybuilding BTS with cinematic slow-mo reps, dramatic " +
+      "music builds, smooth gym zooms, and posing B-roll with letterbox framing.",
+    signature: {
+      pacing: "medium",
+      cutFrequency: "moderate",
+      zoomStyle: "smooth",
+      textAnimation: "tr_fade_dip_black",
+      musicMood: ["motivational", "epic", "dark"],
+      sfxCategories: ["cinematic", "ambient", "impact"],
+      colorGrade: "fx_color_cinematic_flat",
+      captionStyle: "clean-sans",
+    },
+    typicalVideoLength_sec: { min: 480, max: 1200 },
+    thumbnailStyleId: "creator_derek_lunsford",
+  },
+  {
+    id: "creator_agency_talking_head",
+    name: "Agency Talking Head Pack",
+    creatorName: "Agency Creator",
+    description:
+      "Professional talking-head business content with subtle punch-in emphasis, " +
+      "testimonial B-roll, clean lower-thirds, and corporate motivational music.",
+    signature: {
+      pacing: "medium",
+      cutFrequency: "moderate",
+      zoomStyle: "punch-in",
+      textAnimation: "tr_fade_cross",
+      musicMood: ["motivational", "upbeat"],
+      sfxCategories: ["whoosh", "ui"],
+      colorGrade: "fx_color_clean_studio",
+      captionStyle: "hormozi-bounce",
+    },
+    typicalVideoLength_sec: { min: 300, max: 900 },
+    thumbnailStyleId: "creator_agency_talking_head",
+  },
 ];
 
 /** Return a creator video pack by id, or undefined. */

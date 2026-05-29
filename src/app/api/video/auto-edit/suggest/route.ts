@@ -20,6 +20,7 @@ import {
   TRANSITIONS_LIBRARY,
   EFFECTS_LIBRARY,
   getCreatorPackById,
+  getEditingStyleById,
 } from "@/lib/video-presets";
 import {
   formatAsFewShot,
@@ -48,6 +49,7 @@ interface SuggestInput {
   scenes?: unknown;
   client_id?: string;
   creator_pack_id?: string;
+  editing_style_id?: string;
 }
 
 // A compact preset menu we feed to Claude — too many IDs bloat the prompt.
@@ -122,6 +124,7 @@ function validEffectIds(): Set<string> {
 
 function buildSystemPrompt(
   creatorPackId: string | undefined,
+  editingStyleId: string | undefined,
   fewShot: string,
 ): string {
   const pack = creatorPackId ? getCreatorPackById(creatorPackId) : null;
@@ -129,9 +132,14 @@ function buildSystemPrompt(
     ? `CREATOR PACK: ${pack.name} (${pack.creatorName}) — pacing ${pack.signature.pacing}, cuts ${pack.signature.cutFrequency}, zoom ${pack.signature.zoomStyle}, caption style "${pack.signature.captionStyle}", music moods [${pack.signature.musicMood.join(", ")}], preferred SFX categories [${pack.signature.sfxCategories.join(", ")}], colour grade ${pack.signature.colorGrade}.`
     : "CREATOR PACK: none — use balanced defaults.";
 
+  const style = editingStyleId ? getEditingStyleById(editingStyleId) : null;
+  const styleSummary = style
+    ? `EDITING STYLE: "${style.name}" (${style.genre}) — avg cut every ${style.timing.avgCutIntervalSec}s (range ${style.timing.minCutIntervalSec}-${style.timing.maxCutIntervalSec}s), zoom style "${style.zoom.style}" at ${style.zoom.scale}x over ${style.zoom.durationMs}ms (${style.zoom.frequencyPerMin}/min), SFX density "${style.sfx.density}", transition "${style.transitions.primaryId}" ${style.transitions.durationMs}ms, music moods [${style.music.moods.join(", ")}] BPM ${style.music.bpmRange[0]}-${style.music.bpmRange[1]} energy ${style.music.energy}/10, B-roll strategy "${style.broll.strategy}" (${style.broll.insertsPerMin}/min), caption style "${style.captions.styleId}".`
+    : "";
+
   return `You are an expert short-form video editor generating timed edit SUGGESTIONS. Given a list of detected scenes and the creator's signature pack, you propose SFX cues, caption on/off moments, transitions, colour grades, B-roll insertions, zooms, and music cues — each bound to a timestamp.
 
-${packSummary}
+${packSummary}${styleSummary ? `\n\n${styleSummary}\nWhen EDITING STYLE and CREATOR PACK conflict, prefer the EDITING STYLE timing/zoom/SFX density parameters — they are more specific.` : ""}
 
 AVAILABLE SUGGESTION TYPES
 - "sfx"         → { sfx_id, category }                        — trigger a sound effect
@@ -269,13 +277,18 @@ export async function POST(request: NextRequest) {
       ? body.creator_pack_id.trim()
       : undefined;
 
+  const editingStyleId =
+    typeof body.editing_style_id === "string" && body.editing_style_id.trim()
+      ? body.editing_style_id.trim()
+      : undefined;
+
   // Load few-shot examples to personalise suggestions.
   const examples = await getRecentPreferences({ user_id: user.id, limit: 20 });
   const fewShot = formatAsFewShot(examples);
 
   const totalDuration = scenes[scenes.length - 1].end_sec;
 
-  const systemPrompt = buildSystemPrompt(creatorPackId, fewShot);
+  const systemPrompt = buildSystemPrompt(creatorPackId, editingStyleId, fewShot);
   const userPrompt = `SCENES (${scenes.length}):\n${JSON.stringify(scenes, null, 2)}\n\nTOTAL DURATION: ${totalDuration.toFixed(2)}s\n\nGenerate timed suggestions. JSON only.`;
 
   try {
