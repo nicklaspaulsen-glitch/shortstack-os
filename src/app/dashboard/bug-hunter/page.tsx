@@ -305,6 +305,368 @@ const FINDINGS: Finding[] = [
     description:
       "Fixed with a lost-update guard on all three routes: UPDATE profiles SET stripe_customer_id = ? WHERE id = ? AND stripe_customer_id IS NULL. A racing request matches 0 rows, re-reads the winner's ID, and the orphaned Stripe customer is logged. DB migration adds partial unique indexes on both profiles and clients tables.",
   },
+  // ── Findings from May 31 comprehensive audit (f16–f50) ───────────────────
+  {
+    id: "f16",
+    title: "Slack webhook timingSafeEqual UTF-8 encoding bug",
+    severity: "high",
+    vulnClass: "auth-bypass",
+    file: "src/app/api/webhooks/slack/route.ts",
+    status: "fixed",
+    fixedAt: "2026-05-31",
+    description:
+      "Buffer.from(sig) / Buffer.from(mySig) used default UTF-8 encoding when comparing HMAC signatures. Fixed by stripping the 'v0=' prefix and comparing raw 32-byte hex-decoded buffers — consistent with Discord/ElevenLabs pattern. Prevents valid signatures from failing comparison.",
+  },
+  {
+    id: "f17",
+    title: "DOM XSS via innerHTML in chatbot embed widget",
+    severity: "high",
+    vulnClass: "xss",
+    file: "src/app/api/chatbot/embed/route.ts",
+    status: "fixed",
+    fixedAt: "2026-05-31",
+    description:
+      "Generated client-side JS concatenated raw user input (msg) into innerHTML without escaping: msgs.innerHTML += '<div>'+msg+'</div>'. Fixed by replacing innerHTML concatenation with textContent-based DOM node construction (userBubble.textContent = msg).",
+  },
+  {
+    id: "f18",
+    title: "LLM prompt injection in copywriter/generate",
+    severity: "high",
+    vulnClass: "llm",
+    file: "src/app/api/copywriter/generate/route.ts",
+    status: "fixed",
+    fixedAt: "2026-05-31",
+    description:
+      "topic, tone, audience, keywords, and wordCount were interpolated into LLM prompts with no length limits. Fixed with slice caps: topic 2000 chars, tone 100, audience 200, keywords 500, wordCount clamped to 50–5000.",
+  },
+  {
+    id: "f19",
+    title: "LLM prompt injection in ai/creator-ideas",
+    severity: "high",
+    vulnClass: "llm",
+    file: "src/app/api/ai/creator-ideas/route.ts",
+    status: "fixed",
+    fixedAt: "2026-05-31",
+    description:
+      "User-controlled topic was interpolated into both the system prompt's hook examples and the user prompt with no length cap. Fixed with safeTopic = topic.slice(0, 2000).",
+  },
+  {
+    id: "f20",
+    title: "LLM prompt injection in agents/generate",
+    severity: "high",
+    vulnClass: "llm",
+    file: "src/app/api/agents/generate/route.ts",
+    status: "fixed",
+    fixedAt: "2026-05-31",
+    description:
+      "agent_name was interpolated into the system prompt and prompt into user message with no length caps. Fixed: agent_name capped at 200 chars, prompt at 4000 chars.",
+  },
+  {
+    id: "f21",
+    title: "LLM prompt injection in leadgen/qualify — unauthenticated path",
+    severity: "critical",
+    vulnClass: "llm",
+    file: "src/app/api/leadgen/qualify/route.ts",
+    status: "fixed",
+    fixedAt: "2026-05-31",
+    description:
+      "External lead reply messages (from Zernio webhook, unauthenticated users) were fed directly into the LLM qualification prompt without any length cap. An attacker could send a 100KB jailbreak payload to override the agent's qualification instructions or inflate AI token costs. Fixed with message.slice(0, 2000) before prompt interpolation.",
+  },
+  {
+    id: "f22",
+    title: "Unbounded ?limit= param on generations endpoint",
+    severity: "medium",
+    vulnClass: "business-logic",
+    file: "src/app/api/generations/route.ts",
+    status: "fixed",
+    fixedAt: "2026-05-31",
+    description:
+      "User-controlled ?limit= passed directly to Supabase .range() without an upper bound. A request with limit=100000 could return millions of rows, exhausting DB connection pool and causing OOM. Fixed with Math.min(limit, 100).",
+  },
+  {
+    id: "f23",
+    title: "Unbounded PageSize forwarded to Twilio API",
+    severity: "medium",
+    vulnClass: "business-logic",
+    file: "src/app/api/integrations/twilio/route.ts",
+    status: "fixed",
+    fixedAt: "2026-05-31",
+    description:
+      "?limit= param was forwarded directly as PageSize in Twilio Messages and Calls API requests. Twilio caps at 1000 but an attacker could force maximum-cost pages. Fixed with Math.min(parseInt(limit), 200) on both actions.",
+  },
+  {
+    id: "f24",
+    title: "SSRF via RunPod audio URL in voice synthesis",
+    severity: "high",
+    vulnClass: "ssrf",
+    file: "src/lib/voice/runpod-clone.ts",
+    status: "fixed",
+    fixedAt: "2026-05-31",
+    description:
+      "When a RunPod synthesis job returned output.url instead of base64 audio, the URL was fetched without SSRF validation. A compromised RunPod endpoint or MITM could redirect to internal network addresses. Fixed with isValidExternalHttpsUrl() guard before fetch.",
+  },
+  {
+    id: "f25",
+    title: "Unbounded systemPrompt/firstMessage to ElevenLabs agent create",
+    severity: "medium",
+    vulnClass: "llm",
+    file: "src/app/api/eleven-agents/route.ts",
+    status: "fixed",
+    fixedAt: "2026-05-31",
+    description:
+      "systemPrompt and firstMessage were forwarded to ElevenLabs with no length cap. A large payload could inflate ElevenLabs storage costs. Fixed with systemPrompt.slice(0, 8000) and firstMessage.slice(0, 500).",
+  },
+  {
+    id: "f26",
+    title: "No MIME/magic-byte validation on voice clone file upload",
+    severity: "medium",
+    vulnClass: "business-logic",
+    file: "src/app/api/ai/voice-clone/route.ts",
+    status: "fixed",
+    fixedAt: "2026-05-31",
+    description:
+      "voice_file accepted any binary content up to 25MB — only size was checked, not file type. An attacker could upload scripts, executables, or HTML files that might be processed as audio. Fixed with magic-byte validation for WAV, MP3 (ID3/sync), OGG, FLAC, and M4A.",
+  },
+  {
+    id: "f27",
+    title: "IDOR on Revealbot rules — no ownership check",
+    severity: "high",
+    vulnClass: "idor",
+    file: "src/app/api/ads/revealbot/rules/[id]/route.ts",
+    status: "open",
+    description:
+      "The rule ID from the URL path (params.id) is forwarded directly to the Revealbot external API without verifying the rule belongs to the authenticated user's connected Revealbot account. Any authenticated user can GET/PATCH/DELETE Revealbot rules from other tenants.",
+  },
+  {
+    id: "f28",
+    title: "Browser worker has no domain allowlist",
+    severity: "high",
+    vulnClass: "ssrf",
+    file: "src/app/api/browser-tasks/route.ts",
+    status: "open",
+    description:
+      "runBrowserAgent() is called without a domainAllowlist parameter. The browser worker can visit any public URL on the internet, enabling internal network probing via DNS rebinding (e.g. http://169.254.169.254 via cloud metadata redirect), SSRF via public-to-private address tricks, and credential harvesting via social-engineering URL targets.",
+  },
+  {
+    id: "f29",
+    title: "Middleware Bearer bypass for /api/agents/* routes",
+    severity: "medium",
+    vulnClass: "auth-bypass",
+    file: "src/middleware.ts",
+    status: "open",
+    description:
+      "The middleware short-circuits updateSession for any request to /api/agents/* that has a Bearer token — even a token like 'Bearer x'. Only agency/admin roles should reach agent endpoints, but this allows any string to bypass the Supabase session-refresh step. Impact depends on downstream route auth, but it weakens defense in depth.",
+  },
+  {
+    id: "f30",
+    title: "x-owner-id header is user-controlled in lead-files webhook path",
+    severity: "medium",
+    vulnClass: "auth-bypass",
+    file: "src/app/api/uploads/lead-files/route.ts",
+    status: "open",
+    description:
+      "The upload route reads x-owner-id from the request header to determine the agency owner for uploaded files. In the webhook/background path, this header is set by the calling service — but the value is not validated against the DB. An attacker who can send requests to this endpoint could forge x-owner-id to upload files attributed to any user.",
+  },
+  {
+    id: "f31",
+    title: "Affiliate track-conversion accepts arbitrary referred_user_id",
+    severity: "medium",
+    vulnClass: "business-logic",
+    file: "src/app/api/affiliate/track-conversion/route.ts",
+    status: "open",
+    description:
+      "When unauthenticated, the route accepts user_id from the POST body and uses it as referred_user_id in the conversion record. An attacker can forge conversion attribution to any UUID, crediting their affiliate account for any user's signup.",
+  },
+  {
+    id: "f32",
+    title: "OAuth error detail leaked in redirect URL",
+    severity: "medium",
+    vulnClass: "business-logic",
+    file: "src/app/api/oauth/google/callback/route.ts, tiktok, meta-ads",
+    status: "open",
+    description:
+      "OAuth callback errors are appended as ?error=<raw-error-detail> in the redirect URL. Raw error messages from Google/TikTok/Meta (containing OAuth codes, token hints, internal error strings) end up in browser history and server access logs.",
+  },
+  {
+    id: "f33",
+    title: "Profile avatar file extension used instead of MIME for type detection",
+    severity: "medium",
+    vulnClass: "business-logic",
+    file: "src/app/api/profile/avatar/route.ts",
+    status: "open",
+    description:
+      "The avatar upload route derives the file extension from the original filename rather than detecting the actual MIME type from magic bytes. An attacker can rename a script to 'avatar.jpg' and upload it with a correct image Content-Type, bypassing the extension allowlist.",
+  },
+  {
+    id: "f34",
+    title: "LoRA training resolution parameter not clamped",
+    severity: "low",
+    vulnClass: "business-logic",
+    file: "src/app/api/ai/train-lora/route.ts",
+    status: "open",
+    description:
+      "User-controlled resolution parameter is forwarded to the training endpoint without an upper bound. A very large resolution (e.g. 4096) would consume significantly more GPU time and cost than the intended 512/768 range.",
+  },
+  {
+    id: "f35",
+    title: "ElevenLabs webhook t= timestamp prefix not required",
+    severity: "low",
+    vulnClass: "auth-bypass",
+    file: "src/app/api/webhooks/elevenlabs/route.ts",
+    status: "open",
+    description:
+      "When the signature header lacks a t= timestamp component, the route signs rawBody without timestamp and skips replay protection. A captured valid request (sent without t=) could be replayed indefinitely. ElevenLabs always includes t=, but the code path exists. Consider requiring t= as mandatory.",
+  },
+  {
+    id: "f36",
+    title: "Internal env var names exposed in error responses",
+    severity: "low",
+    vulnClass: "business-logic",
+    file: "src/app/api/discord/health/route.ts, integrations/discord/channels/route.ts, agents/auth/route.ts",
+    status: "open",
+    description:
+      "Error messages returned to clients include literal env var names: 'DISCORD_BOT_TOKEN is not configured', 'DISCORD_SERVER_ID not set'. These reveal deployment configuration details useful for social engineering and targeted attacks.",
+  },
+  {
+    id: "f37",
+    title: "Telegram webhook returns HTTP 200 when secret is unset",
+    severity: "low",
+    vulnClass: "auth-bypass",
+    file: "src/app/api/webhooks/telegram/route.ts",
+    status: "wont-fix",
+    description:
+      "When TELEGRAM_WEBHOOK_SECRET is not configured, the route logs an error and returns { ok: true } with HTTP 200 so Telegram does not retry. This is intentional — no request processing occurs — but deviates from the fail-closed 503 policy documented in CLAUDE.md. Marked wont-fix to prevent Telegram retry storms; monitoring should alert on this log line.",
+  },
+  {
+    id: "f38",
+    title: "Attachment URLs in leadgen/qualify not SSRF-guarded",
+    severity: "medium",
+    vulnClass: "ssrf",
+    file: "src/app/api/leadgen/qualify/route.ts",
+    status: "open",
+    description:
+      "The attachments array from the lead reply body includes URLs that are appended to the conversation history and forwarded to the LLM. While these are not directly fetched, a lead could supply internal network URLs as 'attachment filenames' that appear in the LLM context. Additionally, future code may fetch these URLs to validate attachments.",
+  },
+  {
+    id: "f39",
+    title: "No rate limiting on unauthenticated leadgen/qualify path",
+    severity: "medium",
+    vulnClass: "business-logic",
+    file: "src/app/api/leadgen/qualify/route.ts",
+    status: "open",
+    description:
+      "The route is authenticated by a shared WEBHOOK_SECRET rather than per-user auth. An attacker who discovers the secret can flood the endpoint with arbitrary lead_ids, burning AI quota and creating thousands of fake lead interactions.",
+  },
+  {
+    id: "f40",
+    title: "createServiceClient used outside of webhook/trusted path",
+    severity: "medium",
+    vulnClass: "auth-bypass",
+    file: "src/app/api/leadgen/qualify/route.ts",
+    status: "open",
+    description:
+      "The leadgen qualify route uses createServiceClient() which bypasses RLS. While the route itself is webhook-authenticated, any query using the service client ignores row-level security. If lead_id is forged (valid UUID belonging to another tenant), the route reads and modifies that tenant's lead data.",
+  },
+  {
+    id: "f41",
+    title: "Missing ownership filter on lead_id in leadgen/qualify",
+    severity: "high",
+    vulnClass: "idor",
+    file: "src/app/api/leadgen/qualify/route.ts",
+    status: "open",
+    description:
+      "The route fetches a lead by ID and modifies it without verifying the lead belongs to the calling agency (as identified by the webhook key). If WEBHOOK_SECRET is shared across tenants, an attacker can target any lead_id across the system.",
+  },
+  {
+    id: "f42",
+    title: "LoRA model_id not validated before Supabase lookup",
+    severity: "low",
+    vulnClass: "idor",
+    file: "src/app/api/ai/train-lora/route.ts",
+    status: "open",
+    description:
+      "model_id parameter is queried directly against lora_models table. Without an owner filter, a user can trigger a status update for another user's model if the model ID is guessable.",
+  },
+  {
+    id: "f43",
+    title: "SSRF via profile image URL in profile-scrape endpoint",
+    severity: "medium",
+    vulnClass: "ssrf",
+    file: "src/app/api/brand-scrape/profile-image/route.ts",
+    status: "investigating",
+    description:
+      "Requires further review to confirm whether user-supplied profile image URLs are fetched server-side without SSRF validation.",
+  },
+  {
+    id: "f44",
+    title: "Content-Type not enforced on several POST routes",
+    severity: "low",
+    vulnClass: "business-logic",
+    file: "Multiple API routes",
+    status: "open",
+    description:
+      "Several API routes call request.json() without first verifying Content-Type: application/json. A multipart or text/plain body with valid JSON content passes through, which can cause unexpected behavior if the body parsing changes in a future Next.js version.",
+  },
+  {
+    id: "f45",
+    title: "Token-cost DoS via large maxTokens override",
+    severity: "low",
+    vulnClass: "business-logic",
+    file: "src/lib/ai/llm-router.ts",
+    status: "open",
+    description:
+      "Several callers pass a user-influenced value as maxTokens to callLLMTraced. If a caller pipes wordCount or a similar field without capping before reaching the router, the effective limit could be higher than intended, inflating per-request AI cost.",
+  },
+  {
+    id: "f46",
+    title: "Silent error swallowing in ElevenLabs voice preview",
+    severity: "low",
+    vulnClass: "business-logic",
+    file: "src/app/api/eleven-agents/route.ts",
+    status: "open",
+    description:
+      "The outer catch block at the end of the POST handler returns a generic 'Internal server error' without logging the underlying exception. Errors during agent creation are invisible in Vercel logs unless the ElevenLabs error text is also captured.",
+  },
+  {
+    id: "f47",
+    title: "Voice profile embeddings stored in Supabase without owner validation",
+    severity: "medium",
+    vulnClass: "idor",
+    file: "src/app/api/ai/voice-clone/route.ts",
+    status: "open",
+    description:
+      "After a successful voice clone, the embedding is stored with user_id = user.id. However, if the RunPod response is delayed and the user session expires between request and response, the insert may fail silently. Additionally, the voice_id parameter for TTS is not validated against the current user's voice_profiles.",
+  },
+  {
+    id: "f48",
+    title: "Hardcoded fallback voice ID in ElevenLabs agent create",
+    severity: "low",
+    vulnClass: "business-logic",
+    file: "src/app/api/eleven-agents/route.ts",
+    status: "open",
+    description:
+      "The ElevenLabs Rachel voice (21m00Tcm4TlvDq8ikWAM) is hardcoded as fallback. If ElevenLabs changes or removes this voice ID, all agent creation calls without an explicit voiceId will fail. Should be configured via env var.",
+  },
+  {
+    id: "f49",
+    title: "Cron secret timing attack via string equality",
+    severity: "low",
+    vulnClass: "auth-bypass",
+    file: "src/lib/security/ssrf-guard.ts",
+    status: "investigating",
+    description:
+      "Requires verification that secureCompare (the shared cron-secret comparison function) uses crypto.timingSafeEqual and not string equality. If any route uses === instead of secureCompare, it's vulnerable to timing-based secret recovery.",
+  },
+  {
+    id: "f50",
+    title: "Zernio outbound message body not length-capped before API call",
+    severity: "low",
+    vulnClass: "business-logic",
+    file: "src/lib/services/zernio.ts",
+    status: "open",
+    description:
+      "The Zernio DM sender does not cap the message body before forwarding to the Zernio API. A route that pipes AI output directly to sendDM could produce messages exceeding Zernio's platform limits, causing API errors or unexpected truncation.",
+  },
 ];
 
 const SCAN_TARGETS: ScanTarget[] = [

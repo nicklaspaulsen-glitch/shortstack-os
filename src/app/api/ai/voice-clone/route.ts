@@ -52,6 +52,18 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ error: "Audio too large (max 25MB)" }, { status: 413 });
         }
         const buffer = Buffer.from(await voiceFile.arrayBuffer());
+        // Magic-byte validation — reject non-audio files regardless of declared Content-Type
+        const isAudio = (
+          (buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46) || // WAV (RIFF)
+          (buffer[0] === 0x49 && buffer[1] === 0x44 && buffer[2] === 0x33) ||                         // MP3 (ID3v2)
+          (buffer[0] === 0xFF && (buffer[1] === 0xFB || buffer[1] === 0xFA || buffer[1] === 0xF3)) || // MP3 sync word
+          (buffer[0] === 0x4F && buffer[1] === 0x67 && buffer[2] === 0x67 && buffer[3] === 0x53) ||  // OGG
+          (buffer[0] === 0x66 && buffer[1] === 0x4C && buffer[2] === 0x61 && buffer[3] === 0x43) ||  // FLAC
+          (buffer.length >= 8 && buffer[4] === 0x66 && buffer[5] === 0x74 && buffer[6] === 0x79 && buffer[7] === 0x70) // M4A/AAC (ftyp box)
+        );
+        if (!isAudio) {
+          return NextResponse.json({ error: "Invalid audio file format" }, { status: 400 });
+        }
         audioBase64 = buffer.toString("base64");
       }
 

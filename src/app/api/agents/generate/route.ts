@@ -15,8 +15,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { prompt, agent_name } = await request.json();
-  if (!prompt) return NextResponse.json({ error: "Prompt required" }, { status: 400 });
+  const { prompt: rawPrompt, agent_name: rawAgentName } = await request.json();
+  if (!rawPrompt) return NextResponse.json({ error: "Prompt required" }, { status: 400 });
+
+  // LLM-injection guard: cap user-controlled text interpolated into prompts
+  const prompt = String(rawPrompt).slice(0, 4000);
+  const agent_name = rawAgentName ? String(rawAgentName).slice(0, 200) : undefined;
 
   const systemPrompt = `You are ${agent_name || "an AI agent"} at ShortStack digital marketing agency. Give detailed, actionable, professional output. No markdown formatting. Plain text with clear sections.`;
 

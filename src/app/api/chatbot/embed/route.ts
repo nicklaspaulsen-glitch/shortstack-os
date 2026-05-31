@@ -101,7 +101,14 @@ export async function POST(request: NextRequest) {
     if (!msg) return;
     input.value = '';
     var msgs = document.getElementById('ss-msgs');
-    msgs.innerHTML += '<div class="ss-msg"><div class="ss-msg-user">' + msg + '</div></div>';
+    // XSS-safe: build DOM nodes instead of concatenating raw user input into innerHTML
+    var userDiv = document.createElement('div');
+    userDiv.className = 'ss-msg';
+    var userBubble = document.createElement('div');
+    userBubble.className = 'ss-msg-user';
+    userBubble.textContent = msg;
+    userDiv.appendChild(userBubble);
+    msgs.appendChild(userDiv);
     msgs.scrollTop = msgs.scrollHeight;
     msgs.innerHTML += '<div class="ss-msg"><div class="ss-msg-bot" style="opacity:0.5">Typing...</div></div>';
     // Replace with your API endpoint

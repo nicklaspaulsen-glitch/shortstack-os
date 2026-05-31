@@ -84,10 +84,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { lead_id, message, attachments = [] } = body;
-  if (!lead_id || !message?.trim()) {
+  const { lead_id, message: rawMessage, attachments = [] } = body;
+  if (!lead_id || !rawMessage?.trim()) {
     return NextResponse.json({ error: "lead_id and message required" }, { status: 400 });
   }
+  // LLM-injection guard: external lead messages feed directly into the AI prompt — cap length
+  const message = String(rawMessage).slice(0, 2000);
 
   const supabase = createServiceClient();
 

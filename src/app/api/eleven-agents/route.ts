@@ -136,8 +136,8 @@ export async function POST(req: NextRequest) {
     // ── Create agent (default action) ──
     const {
       name,
-      firstMessage,
-      systemPrompt,
+      firstMessage: rawFirstMessage,
+      systemPrompt: rawSystemPrompt,
       voiceId,
       maxDuration = 300,
     } = body;
@@ -146,12 +146,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "name is required" }, { status: 400 });
     }
 
+    // LLM-injection guard: cap user-controlled text forwarded to ElevenLabs agent config
+    const systemPrompt = rawSystemPrompt ? String(rawSystemPrompt).slice(0, 8000) : "You are a helpful AI voice agent.";
+    const firstMessage = rawFirstMessage ? String(rawFirstMessage).slice(0, 500) : undefined;
+
     const payload: Record<string, unknown> = {
       name,
       conversation_config: {
         agent: {
           prompt: {
-            prompt: systemPrompt || "You are a helpful AI voice agent.",
+            prompt: systemPrompt,
           },
           first_message: firstMessage || undefined,
           language: "en",

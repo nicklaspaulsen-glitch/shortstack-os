@@ -32,6 +32,10 @@ export async function POST(req: Request) {
 
   if (!topic?.trim())
     return NextResponse.json({ error: "Topic required" }, { status: 400 });
+
+  // LLM-injection guard: cap user-controlled text interpolated into prompts
+  const safeTopic = topic.slice(0, 2000);
+
   if (!creator_id)
     return NextResponse.json({ error: "Creator ID required" }, { status: 400 });
 
@@ -41,7 +45,7 @@ export async function POST(req: Request) {
 
   const ideaCount = Math.min(Math.max(count, 1), 6);
   const hookExamples = creator.hookFormulas
-    .map((f) => `- "${f.replace(/\{\{topic\}\}/g, topic)}"`)
+    .map((f) => `- "${f.replace(/\{\{topic\}\}/g, safeTopic)}"`)
     .join("\n");
   const contextHint = creator.promptHints[page_context ?? "ai-video"] ?? "";
 
@@ -78,7 +82,7 @@ Rules:
 - Write in the authentic voice and register of "${creator.name}"
 - Every hook must be platform-ready — no generic phrases like "in this video" or "today we discuss"
 - Return only a valid JSON array, nothing else`,
-    userPrompt: `Topic: "${topic}"
+    userPrompt: `Topic: "${safeTopic}"
 Platform: ${platform ?? "youtube"}
 Page context: ${page_context ?? "ai-video"}
 Generate ${ideaCount} viral ideas.`,

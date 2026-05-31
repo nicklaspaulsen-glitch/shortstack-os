@@ -30,9 +30,15 @@ function verifySlackSignature(request: NextRequest, rawBody: string): boolean {
   // Replay protection: reject if timestamp is older than 5min.
   if (Math.abs(Date.now() / 1000 - Number(ts)) > 60 * 5) return false;
   const basestring = `v0:${ts}:${rawBody}`;
-  const mySig = "v0=" + crypto.createHmac("sha256", secret).update(basestring).digest("hex");
+  const expectedHex = crypto.createHmac("sha256", secret).update(basestring).digest("hex");
+  // Strip "v0=" prefix from both sides and compare raw hex bytes —
+  // matches the Discord/ElevenLabs pattern and avoids utf8-vs-hex mismatch.
+  const providedHex = sig.startsWith("v0=") ? sig.slice(3) : sig;
   try {
-    return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(mySig));
+    const providedBuf = Buffer.from(providedHex, "hex");
+    const expectedBuf = Buffer.from(expectedHex, "hex");
+    if (providedBuf.length !== expectedBuf.length || providedBuf.length === 0) return false;
+    return crypto.timingSafeEqual(providedBuf, expectedBuf);
   } catch {
     return false;
   }

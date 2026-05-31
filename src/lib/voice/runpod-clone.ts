@@ -23,6 +23,7 @@
  */
 
 import { getR2SignedGetUrl } from "@/lib/server/r2-client";
+import { isValidExternalHttpsUrl } from "@/lib/security/ssrf-guard";
 
 export type RunPodCloneProvider =
   | "runpod_f5tts"
@@ -362,6 +363,11 @@ export async function synthesizeWithClone(
     audio = Buffer.from(b64.replace(/^data:[^;]+;base64,/, ""), "base64");
   } else if (out.url || out.audio_url) {
     const remoteUrl = (out.url || out.audio_url) as string;
+    // SSRF guard: RunPod response URL must be a public HTTPS endpoint,
+    // not a private network address or internal metadata service.
+    if (!isValidExternalHttpsUrl(remoteUrl)) {
+      throw new Error(`RunPod ${opts.provider} synth: url_ssrf_blocked`);
+    }
     const fetched = await fetch(remoteUrl, {
       signal: AbortSignal.timeout(30_000),
     });

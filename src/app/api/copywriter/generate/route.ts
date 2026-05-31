@@ -85,8 +85,21 @@ export async function POST(request: NextRequest) {
   const trainingPrompt = await getPageTrainingPrompt(authSupabase, user.id, "copy");
 
   try {
-    const { type, topic, tone, audience, keywords, wordCount } =
-      await request.json();
+    const {
+      type,
+      topic: rawTopic,
+      tone: rawTone,
+      audience: rawAudience,
+      keywords: rawKeywords,
+      wordCount: rawWordCount,
+    } = await request.json();
+
+    // LLM-injection guard: cap user-controlled text interpolated into prompts
+    const topic = String(rawTopic ?? "").slice(0, 2000);
+    const tone = String(rawTone ?? "").slice(0, 100);
+    const audience = String(rawAudience ?? "").slice(0, 200);
+    const keywords = String(rawKeywords ?? "").slice(0, 500);
+    const wordCount = Math.min(Math.max(Number(rawWordCount) || 500, 50), 5000);
 
     if (!type || !topic) {
       return NextResponse.json(

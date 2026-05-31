@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
 
   try {
     if (action === "messages") {
-      const limit = request.nextUrl.searchParams.get("limit") || "20";
+      const limit = String(Math.min(parseInt(request.nextUrl.searchParams.get("limit") || "20", 10), 200));
       const res = await fetch(
         `https://api.twilio.com/2010-04-01/Accounts/${cfg.accountSid}/Messages.json?PageSize=${limit}`,
         { headers: { Authorization: twilioAuth() } }
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (action === "calls") {
-      const limit = request.nextUrl.searchParams.get("limit") || "20";
+      const limit = String(Math.min(parseInt(request.nextUrl.searchParams.get("limit") || "20", 10), 200));
       const res = await fetch(
         `https://api.twilio.com/2010-04-01/Accounts/${cfg.accountSid}/Calls.json?PageSize=${limit}`,
         { headers: { Authorization: twilioAuth() } }
