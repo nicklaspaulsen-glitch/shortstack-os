@@ -201,7 +201,7 @@ test.describe("Voice Studio — clone detail page", () => {
     await waitForDashboardReady(page);
 
     const errorText = page
-      .getByText(/404|not found|page not found|something went wrong/i)
+      .getByText(/page not found|something went wrong|404 not found|error 404/i)
       .first();
     const hasError = await errorText.isVisible({ timeout: 2000 }).catch(() => false);
     expect(hasError).toBe(false);

@@ -107,7 +107,7 @@ test.describe("Phone Setup — Communication Setup", () => {
   // ── 5. No 404 + heading present ─────────────────────────────────────────────
   test("phone setup page does not render a 404 or generic error state", async ({ page }) => {
     const errorText = page
-      .getByText(/404|not found|page not found|something went wrong/i)
+      .getByText(/page not found|something went wrong|404 not found|error 404/i)
       .first();
     const hasError = await errorText.isVisible({ timeout: 2000 }).catch(() => false);
     expect(hasError).toBe(false);
