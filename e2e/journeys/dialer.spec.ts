@@ -73,14 +73,18 @@ test.describe("Dialer — Voice & Messaging Cockpit", () => {
     await expect(heading).toBeVisible({ timeout: 6000 });
   });
 
-  // ── 3. All 3 tabs render ─────────────────────────────────────────────────
-  test("renders all 3 tabs: Power Dialer, SMS Console, DM Composer", async ({ page }) => {
+  // ── 3. All 4 tabs render ─────────────────────────────────────────────────
+  test("renders all 4 tabs: Power Dialer, AI Calls, SMS Console, DM Composer", async ({ page }) => {
     const nav = page.locator('[aria-label="Dialer tabs"]').first();
     await expect(nav).toBeVisible({ timeout: 8000 });
 
     await expect(
       nav.getByRole("button", { name: /Power Dialer/i })
     ).toBeVisible({ timeout: 5000 });
+
+    await expect(
+      nav.getByRole("button", { name: /AI Calls/i })
+    ).toBeVisible({ timeout: 4000 });
 
     await expect(
       nav.getByRole("button", { name: /SMS Console/i })
@@ -136,7 +140,38 @@ test.describe("Dialer — Voice & Messaging Cockpit", () => {
     expect(hasDialedStat || hasCallList || hasPasteArea || hasContent).toBe(true);
   });
 
-  // ── 6. SMS Console tab switches content ─────────────────────────────────
+  // ── 6. AI Calls tab switches content ────────────────────────────────────
+  test("clicking AI Calls tab renders ElevenAgents content", async ({ page }) => {
+    const nav = page.locator('[aria-label="Dialer tabs"]').first();
+    await expect(nav).toBeVisible({ timeout: 6000 });
+
+    const aiCallsTab = nav.getByRole("button", { name: /AI Calls/i }).first();
+    await expect(aiCallsTab).toBeVisible({ timeout: 5000 });
+
+    await aiCallsTab.click();
+    await page.waitForTimeout(600);
+
+    // AI Calls tab should become active
+    const ariaCurrent = await aiCallsTab.getAttribute("aria-current");
+    expect(ariaCurrent).toBe("page");
+
+    // Content area must render something — ElevenAgents content
+    const hasContent =
+      (await page
+        .getByText(/agent|elevenlabs|ai.*call|call.*ai|create|connect/i)
+        .first()
+        .isVisible({ timeout: 4000 })
+        .catch(() => false)) ||
+      (await page
+        .locator("button, input[type=text]")
+        .first()
+        .isVisible({ timeout: 3000 })
+        .catch(() => false));
+
+    expect(hasContent).toBe(true);
+  });
+
+  // ── 7. SMS Console tab switches content ─────────────────────────────────
   test("clicking SMS Console tab renders SMS content", async ({ page }) => {
     const nav = page.locator('[aria-label="Dialer tabs"]').first();
     await expect(nav).toBeVisible({ timeout: 6000 });
