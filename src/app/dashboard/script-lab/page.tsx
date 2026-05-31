@@ -3323,7 +3323,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               </div>
               <div className="flex gap-2">
                 <button onClick={() => toast.success("Voice-over preview generated (demo)")} className="btn-primary text-xs flex items-center gap-1.5"><Microphone size={12} /> Generate Preview</button>
-                <button onClick={() => toast.success("Voice-over downloaded (demo)")} className="btn-secondary text-xs flex items-center gap-1.5"><DownloadSimple size={12} /> DownloadSimple Audio</button>
+                <button onClick={() => toast.success("Voice-over downloaded (demo)")} className="btn-secondary text-xs flex items-center gap-1.5"><DownloadSimple size={12} /> Download Audio</button>
               </div>
             </div>
           </div>

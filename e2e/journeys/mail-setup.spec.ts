@@ -58,7 +58,7 @@ test.describe("Mail Setup — Email Setup", () => {
     const eyebrow = page.getByText(/Email Setup/i).first();
     await expect(eyebrow).toBeVisible({ timeout: 8000 });
 
-    const heading = page.getByRole("heading", { name: /Mail Setup/i }).first();
+    const heading = page.getByRole("heading", { name: /Envelope Setup/i }).first();
     await expect(heading).toBeVisible({ timeout: 6000 });
   });
 
@@ -118,7 +118,7 @@ test.describe("Mail Setup — Email Setup", () => {
     const hasError = await errorText.isVisible({ timeout: 2000 }).catch(() => false);
     expect(hasError).toBe(false);
 
-    const heading = page.getByRole("heading", { name: /Mail Setup/i }).first();
+    const heading = page.getByRole("heading", { name: /Envelope Setup/i }).first();
     await expect(heading).toBeVisible({ timeout: 8000 });
   });
 

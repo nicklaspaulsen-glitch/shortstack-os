@@ -55,11 +55,11 @@ test.describe("Activity Log — Recent Activity", () => {
   test("renders editorial header with Recent Activity eyebrow and Activity Log h1", async ({ page }) => {
     const eyebrow = page.locator(".font-editorial").first();
     await expect(eyebrow).toBeVisible({ timeout: 8000 });
-    await expect(eyebrow).toContainText("Recent Activity");
+    await expect(eyebrow).toContainText("Recent Pulse");
 
     const h1 = page.locator("h1").first();
     await expect(h1).toBeVisible({ timeout: 6000 });
-    await expect(h1).toContainText("Activity Log");
+    await expect(h1).toContainText("Pulse Log");
   });
 
   // ── 3. Default feed tab section is visible ──────────────────────────────
@@ -79,8 +79,8 @@ test.describe("Activity Log — Recent Activity", () => {
   });
 
   // ── 4. Feed tab is active by default ────────────────────────────────────
-  test("Activity Feed tab is active by default", async ({ page }) => {
-    const feedTab = page.getByRole("button", { name: /Activity Feed/i }).first();
+  test("Pulse Feed tab is active by default", async ({ page }) => {
+    const feedTab = page.getByRole("button", { name: /Pulse Feed/i }).first();
     await expect(feedTab).toBeVisible({ timeout: 8000 });
 
     const classes = await feedTab.getAttribute("class");

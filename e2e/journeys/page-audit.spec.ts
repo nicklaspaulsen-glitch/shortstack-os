@@ -145,6 +145,9 @@ const ALL_ROUTES = [
   { path: "/dashboard/content-library",     label: "Content Hub"          },
   { path: "/dashboard/agent-command",       label: "Agent Command"        },
   { path: "/dashboard/n8n",                 label: "N8N"                  },
+  { path: "/dashboard/agentstack",          label: "AgentStack"           },
+  { path: "/dashboard/bug-hunter",          label: "Bug Hunter"           },
+  { path: "/dashboard/video-editor/edit-library-demo", label: "Edit Library Demo" },
   // Admin sub-pages
   { path: "/dashboard/admin/agent-traces",  label: "Agent Traces"         },
   { path: "/dashboard/admin/llm-costs",     label: "LLM Costs"            },

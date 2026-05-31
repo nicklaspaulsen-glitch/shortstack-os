@@ -57,7 +57,7 @@ test.describe("Preset Library — filter bar", () => {
     }
 
     // Search input
-    const searchInput = page.locator('input[placeholder="Search presets..."]');
+    const searchInput = page.locator('input[placeholder="Search presets…"]');
     await expect(searchInput).toBeVisible({ timeout: 4000 });
 
     // At least one category button should be visible
@@ -203,7 +203,7 @@ test.describe("Preset Library — filter bar", () => {
       return;
     }
 
-    const searchInput = page.locator('input[placeholder="Search presets..."]');
+    const searchInput = page.locator('input[placeholder="Search presets…"]');
     await expect(searchInput).toBeVisible({ timeout: 4000 });
 
     const badge = page.locator("span.tabular-nums").filter({ hasText: "/" }).first();
@@ -242,7 +242,7 @@ test.describe("Preset Library — filter bar", () => {
       return;
     }
 
-    const searchInput = page.locator('input[placeholder="Search presets..."]');
+    const searchInput = page.locator('input[placeholder="Search presets…"]');
     await expect(searchInput).toBeVisible({ timeout: 4000 });
 
     const badge = page.locator("span.tabular-nums").filter({ hasText: "/" }).first();
@@ -324,7 +324,7 @@ test.describe("Preset Library — filter bar", () => {
       return;
     }
 
-    const searchInput = page.locator('input[placeholder="Search presets..."]');
+    const searchInput = page.locator('input[placeholder="Search presets…"]');
     await expect(searchInput).toBeVisible({ timeout: 4000 });
 
     const query = "test-persistence-query";
@@ -345,7 +345,7 @@ test.describe("Preset Library — filter bar", () => {
     // resets. We verify the search box is visible (not crashed) and the page
     // is still usable; we do NOT assert the query is preserved (it resets on
     // unmount, which is the expected implementation).
-    const searchAfterReturn = page.locator('input[placeholder="Search presets..."]');
+    const searchAfterReturn = page.locator('input[placeholder="Search presets…"]');
     const isVisible = await searchAfterReturn.isVisible({ timeout: 4000 }).catch(() => false);
     // Filter bar must still be operable after a tab round-trip
     expect(isVisible).toBe(true);
@@ -372,7 +372,7 @@ async function navigateToPresetsTab(page: Page): Promise<void> {
  */
 async function isFilterBarVisible(page: Page): Promise<boolean> {
   return page
-    .locator('input[placeholder="Search presets..."]')
+    .locator('input[placeholder="Search presets…"]')
     .isVisible({ timeout: 4000 })
     .catch(() => false);
 }

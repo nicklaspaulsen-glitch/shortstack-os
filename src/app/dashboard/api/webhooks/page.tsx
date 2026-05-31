@@ -144,11 +144,11 @@ export default function WebhooksPage() {
   }
 
   return (
-    <MotionPage className="space-y-5">{/* -- PlugsConnected command strip -- */}
+    <MotionPage className="space-y-5">{/* -- API Webhooks command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Endpoint Manager</p>
-        <h1 className="text-2xl font-display font-bold text-text-primary">PlugsConnected</h1>
+        <h1 className="text-2xl font-display font-bold text-text-primary">API Webhooks</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button
@@ -156,7 +156,7 @@ export default function WebhooksPage() {
                   className="text-[11px] px-3 py-1.5 rounded-lg bg-white/8 text-text-primary border border-border-subtle hover:bg-white/12 transition-all flex items-center gap-1.5"
                 >
                   <Plus size={11} />
-                  New PlugsConnected
+                  New Webhook
                 </button>
       </div>
     </div>{error && (

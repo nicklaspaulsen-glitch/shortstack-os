@@ -216,15 +216,15 @@ export default function WebhooksPage() {
   }
 
   return (
-    <MotionPage className="space-y-5">{/* -- PlugsConnected command strip -- */}
+    <MotionPage className="space-y-5">{/* -- Webhooks command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Endpoint Manager</p>
-        <h1 className="text-2xl font-display font-bold text-text-primary">PlugsConnected</h1>
+        <h1 className="text-2xl font-display font-bold text-text-primary">Webhooks</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button onClick={() => { setShowCreate(true); setTab("Endpoints"); }} className="px-3 py-1.5 rounded-lg bg-white/8 border border-white/15 text-text-primary text-xs font-semibold hover:bg-white/12 transition-all flex items-center gap-1.5">
-                  <Plus size={12} /> New PlugsConnected
+                  <Plus size={12} /> New Webhook
                 </button>
       </div>
     </div>{/* Inbound webhook URL */}<motion.div
@@ -310,7 +310,7 @@ export default function WebhooksPage() {
                       )}
                       <div className="flex justify-end gap-2">
                         <button onClick={() => { setShowCreate(false); setFormError(null); }} className="btn-secondary text-xs">Cancel</button>
-                        <button onClick={createWebhook} className="btn-primary text-xs">Create PlugsConnected</button>
+                        <button onClick={createWebhook} className="btn-primary text-xs">Create Webhook</button>
                       </div>
                     </div>
                   </motion.div>

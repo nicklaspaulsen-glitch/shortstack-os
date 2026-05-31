@@ -54,7 +54,7 @@ test.describe("Audit Log — Activity & Audit", () => {
   test("renders editorial header with Activity & Audit eyebrow and Audit Log h1", async ({ page }) => {
     const eyebrow = page.locator(".font-editorial").first();
     await expect(eyebrow).toBeVisible({ timeout: 8000 });
-    await expect(eyebrow).toContainText("Activity & Audit");
+    await expect(eyebrow).toContainText("Pulse & Audit");
 
     const h1 = page.locator("h1").first();
     await expect(h1).toBeVisible({ timeout: 6000 });
@@ -82,7 +82,7 @@ test.describe("Audit Log — Activity & Audit", () => {
   // ── 4. Security tab is clickable ─────────────────────────────────────────
   test("Security tab is visible and clickable without crashing the page", async ({ page }) => {
     const securityTab = page
-      .getByRole("button", { name: /^Security$/i })
+      .getByRole("button", { name: /Security Alerts/i })
       .first();
     await expect(securityTab).toBeVisible({ timeout: 8000 });
     await securityTab.click();

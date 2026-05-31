@@ -137,11 +137,11 @@ export default function DownloadDesktopPage() {
   const isAvailable = Boolean(manifest?.available);
 
   return (
-    <MotionPage className="space-y-6 pb-10">{/* -- DownloadSimple Trinity for Desktop command strip -- */}
+    <MotionPage className="space-y-6 pb-10">{/* -- Download Trinity for Desktop command strip -- */}
     <div className="flex items-center justify-between gap-4 px-1 py-3 sm:py-4">
       <div className="min-w-0">
         <p className="text-xs uppercase tracking-[0.2em] text-text-muted font-editorial italic mb-1">Desktop App</p>
-        <h1 className="text-2xl font-display font-bold text-text-primary">DownloadSimple Trinity for Desktop</h1>
+        <h1 className="text-2xl font-display font-bold text-text-primary">Download Trinity for Desktop</h1>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <a
