@@ -15,6 +15,7 @@ import { StatSkeleton, CardSkeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import Link from "next/link";
 import { SectionHeader } from "@/components/ui/section-header";
+import { Button, ButtonLink } from "@/components/ui/button";
 
 // --- Types -----------------------------------------------------------------
 interface ChurnClient { name: string; risk: "high" | "medium" | "low"; score: number; reason: string; mrr: number }
@@ -441,8 +442,9 @@ export default function AnalyticsPage() {
         <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
           <p className="text-sm text-danger font-medium">Could not load analytics</p>
           <p className="text-xs text-text-muted max-w-xs">{fetchError}</p>
-          <button
-            className="btn-secondary text-xs px-4 py-2"
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() => {
               setFetchError(null);
               const cancelled = { current: false };
@@ -450,9 +452,9 @@ export default function AnalyticsPage() {
                 if (!cancelled.current) console.error("[analytics] retry failed:", err);
               });
             }}
->
+          >
             Retry
-          </button>
+          </Button>
         </div>
       )}
 
@@ -464,9 +466,9 @@ export default function AnalyticsPage() {
           title="No analytics yet"
           description="Start by adding your first client to see leads, revenue, and content ROI here."
           action={
-            <Link href="/dashboard/clients" className="btn-primary text-xs px-4 py-2">
+            <ButtonLink href="/dashboard/clients" variant="primary" size="sm">
               Add your first client
-            </Link>
+            </ButtonLink>
           }
  />
       )}
