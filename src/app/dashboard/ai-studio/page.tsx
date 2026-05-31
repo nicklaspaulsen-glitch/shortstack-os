@@ -398,7 +398,7 @@ export default function AIStudioPage() {
                 className={`relative text-[10px] font-bold px-3 py-1.5 rounded-lg transition-all capitalize ${
                   toolCategory === cat
                     ? "text-white"
-                    : "text-text-muted hover:text-text-muted"
+                    : "text-text-muted hover:text-text-primary"
                 }`}
                 style={toolCategory === cat ? {
                   background: "linear-gradient(180deg, #D4FF00 0%, #AACC00 100%)",

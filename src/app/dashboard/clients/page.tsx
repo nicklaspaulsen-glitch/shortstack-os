@@ -797,12 +797,12 @@ export default function ClientsPage() {
                 transition={{ duration: 0.38, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
               >
                 <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-muted mb-1.5">At Risk</p>
-                <p className={`font-display text-2xl font-bold tracking-[-0.03em] tabular-nums ${atRiskCount > 0 ? "text-[#EF4444]" : "text-text-primary"}`}>
+                <p className={`font-display text-2xl font-bold tracking-[-0.03em] tabular-nums ${atRiskCount > 0 ? "text-danger" : "text-text-primary"}`}>
                   {atRiskCount}
                 </p>
                 <p className="text-[11px] text-text-muted mt-1.5">
                   {atRiskCount > 0
-                    ? <span className="text-[#EF4444]/70">{formatCurrency(atRiskMRR)} at risk</span>
+                    ? <span className="text-danger/70">{formatCurrency(atRiskMRR)} at risk</span>
                     : "all healthy"}
                 </p>
               </motion.div>
