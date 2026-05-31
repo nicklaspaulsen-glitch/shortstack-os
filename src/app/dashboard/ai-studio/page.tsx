@@ -588,7 +588,7 @@ export default function AIStudioPage() {
                           </span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <span className={`w-1 h-1 rounded-full shrink-0 ${job.status === "completed" ? "bg-emerald-500" : job.status === "failed" ? "bg-red-500" : "bg-brand-accent/80 animate-pulse"}`} />
+                          <span className={`w-1 h-1 rounded-full shrink-0 ${job.status === "completed" ? "bg-success" : job.status === "failed" ? "bg-danger" : "bg-brand-accent/80 animate-pulse"}`} />
                           <p className="text-[8px] text-text-muted font-mono truncate">{job.status}</p>
                         </div>
                       </div>
