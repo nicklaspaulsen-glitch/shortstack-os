@@ -49,17 +49,33 @@ export async function POST(request: NextRequest) {
       email: profile?.email || user.email || undefined,
       metadata: { user_id: user.id },
     });
-    customerId = customer.id;
-    await supabase
+    // Lost-update guard: only commit if no concurrent request has already
+    // written a customer ID. Filter on IS NULL so a racing request's write
+    // causes our UPDATE to match 0 rows instead of silently overwriting.
+    const { data: written } = await supabase
       .from("profiles")
-      .update({ stripe_customer_id: customerId })
-      .eq("id", user.id);
+      .update({ stripe_customer_id: customer.id })
+      .eq("id", user.id)
+      .is("stripe_customer_id", null)
+      .select("stripe_customer_id");
+    if (written && written.length > 0) {
+      customerId = customer.id;
+    } else {
+      // Another concurrent request won — fetch its customer ID.
+      // Our newly created Stripe customer becomes a benign orphan.
+      const { data: latest } = await supabase
+        .from("profiles").select("stripe_customer_id").eq("id", user.id).single();
+      customerId = latest?.stripe_customer_id ?? customer.id;
+      console.error("[billing/buy-tokens] Stripe customer race detected", {
+        user_id: user.id, orphaned_customer: customer.id, using: customerId,
+      });
+    }
   }
 
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      customer: customerId,
+      customer: customerId ?? undefined,
       payment_method_types: ["card"],
       line_items: [
         {

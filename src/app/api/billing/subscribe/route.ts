@@ -46,8 +46,24 @@ export async function POST(request: NextRequest) {
         email: client.email || undefined,
         metadata: { shortstack_client_id: client.id },
       });
-      customerId = customer.id;
-      await supabase.from("clients").update({ stripe_customer_id: customerId }).eq("id", client.id);
+      // Lost-update guard: only commit if no concurrent request has already
+      // written a customer ID (IS NULL filter ensures 0-row UPDATE on race).
+      const { data: written } = await supabase
+        .from("clients")
+        .update({ stripe_customer_id: customer.id })
+        .eq("id", client.id)
+        .is("stripe_customer_id", null)
+        .select("stripe_customer_id");
+      if (written && written.length > 0) {
+        customerId = customer.id;
+      } else {
+        const { data: latest } = await supabase
+          .from("clients").select("stripe_customer_id").eq("id", client.id).single();
+        customerId = latest?.stripe_customer_id ?? customer.id;
+        console.error("[billing/subscribe] Stripe customer race detected", {
+          client_id: client.id, orphaned_customer: customer.id, using: customerId,
+        });
+      }
     }
     // Create a price for this subscription
     const price = await stripe.prices.create({

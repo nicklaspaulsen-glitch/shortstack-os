@@ -177,19 +177,23 @@ export async function POST(request: NextRequest) {
         name: profile?.full_name || undefined,
         metadata: { shortstack_user_id: user.id },
       });
-      customerId = customer.id;
-      // Persist so subsequent checkouts don't create duplicate Stripe
-      // customers. Log the failure if it happens — the user can still
-      // check out this time, but we want to catch the dupe-generation path.
-      const { error: updateErr } = await supabase
+      // Lost-update guard: only commit if no concurrent request has already
+      // written a customer ID (IS NULL filter ensures 0-row UPDATE on race).
+      const { data: written } = await supabase
         .from("profiles")
-        .update({ stripe_customer_id: customerId })
-        .eq("id", user.id);
-      if (updateErr) {
-        console.error("[billing/checkout] Failed to persist stripe_customer_id", {
-          user_id: user.id,
-          customer_id: customerId,
-          error: updateErr.message,
+        .update({ stripe_customer_id: customer.id })
+        .eq("id", user.id)
+        .is("stripe_customer_id", null)
+        .select("stripe_customer_id");
+      if (written && written.length > 0) {
+        customerId = customer.id;
+      } else {
+        // Concurrent request won — use their customer ID; ours is orphaned.
+        const { data: latest } = await supabase
+          .from("profiles").select("stripe_customer_id").eq("id", user.id).single();
+        customerId = latest?.stripe_customer_id ?? customer.id;
+        console.error("[billing/checkout] Stripe customer race detected", {
+          user_id: user.id, orphaned_customer: customer.id, using: customerId,
         });
       }
     }
@@ -201,7 +205,7 @@ export async function POST(request: NextRequest) {
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
-      customer: customerId,
+      customer: customerId ?? undefined,
       payment_method_types: ["card"],
       line_items: [{ price: priceId, quantity: 1 }],
       metadata: {

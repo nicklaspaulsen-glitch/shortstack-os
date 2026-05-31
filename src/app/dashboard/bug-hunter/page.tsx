@@ -241,13 +241,14 @@ const FINDINGS: Finding[] = [
   },
   {
     id: "f10",
-    title: "Cron routes excluded from middleware auth",
+    title: "Cron routes CRON_SECRET fail-open audit",
     severity: "medium",
     vulnClass: "auth-bypass",
-    file: "src/middleware.ts",
-    status: "investigating",
+    file: "src/app/api/cron/*/route.ts (all 37 routes)",
+    status: "fixed",
+    fixedAt: "2026-05-31",
     description:
-      "All /api/cron/* routes rely solely on CRON_SECRET header check. If CRON_SECRET is unset, the check passes. Requires architectural fix.",
+      "Full audit of all 37 cron routes confirmed every route uses the fail-closed pattern: if (!cronSecret || !secureCompare(rawToken, cronSecret)) { 401 }. No fail-open routes found. Finding closed.",
   },
   {
     id: "f11",
@@ -299,9 +300,10 @@ const FINDINGS: Finding[] = [
     severity: "medium",
     vulnClass: "business-logic",
     file: "src/app/api/billing/buy-tokens, checkout, subscribe/route.ts",
-    status: "investigating",
+    status: "fixed",
+    fixedAt: "2026-05-31",
     description:
-      "Concurrent billing requests can each read null stripe_customer_id, call stripe.customers.create, and produce duplicate Stripe customers per profile. Requires unique DB index or ON CONFLICT upsert.",
+      "Fixed with a lost-update guard on all three routes: UPDATE profiles SET stripe_customer_id = ? WHERE id = ? AND stripe_customer_id IS NULL. A racing request matches 0 rows, re-reads the winner's ID, and the orphaned Stripe customer is logged. DB migration adds partial unique indexes on both profiles and clients tables.",
   },
 ];
 
