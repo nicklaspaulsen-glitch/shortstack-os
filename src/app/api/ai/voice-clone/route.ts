@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
+import { isValidExternalHttpsUrl } from "@/lib/security/ssrf-guard";
 
 /**
  * Voice Clone + TTS — Coqui XTTS v2 on RunPod.
@@ -25,6 +26,11 @@ export async function POST(request: NextRequest) {
   const voiceId = formData.get("voice_id") as string | null; // previously saved voice
   const language = (formData.get("language") as string) || "en";
   const speed = parseFloat(formData.get("speed") as string) || 1.0;
+
+  // SSRF guard — voiceUrl is user-supplied and forwarded to RunPod as audio_url.
+  if (voiceUrl !== null && !isValidExternalHttpsUrl(voiceUrl)) {
+    return NextResponse.json({ error: "Invalid voice_url" }, { status: 400 });
+  }
 
   const xttsUrl = process.env.RUNPOD_XTTS_URL;
   const runpodKey = process.env.RUNPOD_API_KEY;

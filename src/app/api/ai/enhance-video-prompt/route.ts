@@ -27,8 +27,8 @@ export async function POST(req: Request) {
     surface: "video-prompt-enhance",
     taskType: "polish_copy",
     humanize: false,
-    systemPrompt: `You are a professional cinematographer and AI video director. Your job is to expand a simple video prompt into a rich, cinematic description under 120 words. Add specific camera movements (pan, dolly, crane shot, etc.), lighting details, mood, atmosphere, and texture. Keep it vivid but concise. Style context: ${style ?? "cinematic"}. Return ONLY the enhanced prompt text — no preamble, no quotes, no labels.`,
-    userPrompt: `Enhance this video prompt: "${prompt}"`,
+    systemPrompt: `You are a professional cinematographer and AI video director. Your job is to expand a simple video prompt into a rich, cinematic description under 120 words. Add specific camera movements (pan, dolly, crane shot, etc.), lighting details, mood, atmosphere, and texture. Keep it vivid but concise. Style context: ${(style ?? "cinematic").slice(0, 100)}. Return ONLY the enhanced prompt text — no preamble, no quotes, no labels.`,
+    userPrompt: `Enhance this video prompt: "${prompt.slice(0, 2000)}"`,
     maxTokens: 300,
   });
 

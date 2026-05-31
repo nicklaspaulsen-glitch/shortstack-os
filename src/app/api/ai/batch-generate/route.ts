@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
+import { isValidExternalHttpsUrl } from "@/lib/security/ssrf-guard";
 
 /**
  * Batch Image Generation — Generate 5-50 social media assets at once on RunPod.
@@ -56,6 +57,11 @@ export async function POST(request: NextRequest) {
       error: `Your ${tier} plan allows ${maxBatch} images per batch. Upgrade for more.`,
       limit: maxBatch,
     }, { status: 403 });
+  }
+
+  // SSRF guard — lora_url is user-supplied and forwarded to RunPod.
+  if (lora_url !== undefined && lora_url !== null && !isValidExternalHttpsUrl(lora_url)) {
+    return NextResponse.json({ error: "Invalid lora_url" }, { status: 400 });
   }
 
   const fluxUrl = process.env.RUNPOD_FLUX_URL;

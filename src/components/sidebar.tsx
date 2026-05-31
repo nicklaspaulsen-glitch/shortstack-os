@@ -162,6 +162,7 @@ const navItems: NavItem[] = [
   { label: "API Docs",           href: "/dashboard/api-docs",           icon: <NavIcon3D name="FileText"        size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Pulse Log",       href: "/dashboard/activity-log",       icon: <NavIcon3D name="ClipboardText"   size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Audit Trail",        href: "/dashboard/audit",              icon: <NavIcon3D name="ShieldCheck"     size={16} />, roles: ["admin"],                                   settingsOnly: true },
+  { label: "Bug Hunter",         href: "/dashboard/bug-hunter",         icon: <NavIcon3D name="Bug"             size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Public Status",      href: "/dashboard/admin/status",       icon: <NavIcon3D name="Pulse"        size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "Admin Hub",          href: "/dashboard/admin",              icon: <NavIcon3D name="ShieldCheck"     size={16} />, roles: ["admin"],                                   settingsOnly: true },
   { label: "System Status",      href: "/dashboard/system-status",      icon: <NavIcon3D name="ShieldCheck"     size={16} />, roles: ["admin"],                                   settingsOnly: true },

@@ -81,9 +81,9 @@ export async function POST(request: NextRequest) {
       .select("id,business_name,industry,mrr,health_score,contract_status,is_active,cancelled_at,onboarded_at,created_at,package_tier,stripe_subscription_id,services")
       .order("health_score", { ascending: true });
     if (requestedIds) {
-      query = query.in("id", requestedIds);
+      query = query.eq("profile_id", user.id).in("id", requestedIds);
     } else {
-      query = query.eq("is_active", true).limit(MAX_BATCH);
+      query = query.eq("profile_id", user.id).eq("is_active", true).limit(MAX_BATCH);
     }
     const { data, error } = await query;
     if (error) {
