@@ -1,18 +1,20 @@
 "use client";
-import { ChatCircle, PaperPlaneTilt, Phone } from "@phosphor-icons/react";
+import { ChatCircle, PaperPlaneTilt, Phone, Robot } from "@phosphor-icons/react";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
 import DialerTab from "./_components/DialerTab";
 import SMSConsoleTab from "./_components/SMSConsoleTab";
 import DMComposerTab from "./_components/DMComposerTab";
+import ElevenAgentsTab from "./_components/ElevenAgentsTab";
 import { MotionPage } from "@/components/motion/motion-page";
 
-const TABS = ["Power Dialer", "SMS Console", "DM Composer"] as const;
+const TABS = ["Power Dialer", "AI Calls", "SMS Console", "DM Composer"] as const;
 type Tab = (typeof TABS)[number];
 
 const TAB_ICON: Record<Tab, React.ReactNode> = {
   "Power Dialer": <Phone size={16} />,
+  "AI Calls": <Robot size={16} />,
   "SMS Console": <ChatCircle size={16} />,
   "DM Composer": <PaperPlaneTilt size={16} />,
 };
@@ -62,6 +64,7 @@ export default function DialerPage() {
 
                 <div className="p-6">
                   {activeTab === "Power Dialer" && <DialerTab />}
+                  {activeTab === "AI Calls" && <ElevenAgentsTab />}
                   {activeTab === "SMS Console" && <SMSConsoleTab />}
                   {activeTab === "DM Composer" && <DMComposerTab />}
                 </div>
