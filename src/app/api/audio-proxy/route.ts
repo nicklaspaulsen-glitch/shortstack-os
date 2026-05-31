@@ -92,7 +92,7 @@ export async function GET(request: NextRequest) {
     const upstream = await fetch(target.toString(), {
       method: "GET",
       headers: forwardHeaders,
-      redirect: "follow",
+      redirect: "error",   // "follow" would let a redirect bypass the host allowlist
       signal: AbortSignal.timeout(20000),
     });
 

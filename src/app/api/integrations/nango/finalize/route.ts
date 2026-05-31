@@ -171,7 +171,7 @@ export async function POST(req: NextRequest) {
   if (error) {
     console.error("[nango-finalize] upsert failed", error);
     return NextResponse.json(
-      { error: "Failed to record connection", detail: error.message },
+      { error: "Failed to record connection" },
       { status: 500 },
     );
   }

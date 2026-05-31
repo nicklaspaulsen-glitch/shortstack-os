@@ -49,7 +49,7 @@ export async function GET() {
   if (error) {
     console.error("[nango-connections] select failed", error);
     return NextResponse.json(
-      { error: "Failed to fetch connections", detail: error.message },
+      { error: "Failed to fetch connections" },
       { status: 500 },
     );
   }

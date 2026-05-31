@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
   if (error) {
     console.error("[design-studio/admin/seed-templates] upsert failed:", error);
     return NextResponse.json(
-      { error: "seed failed", message: error.message },
+      { error: "seed failed" },
       { status: 500 },
     );
   }

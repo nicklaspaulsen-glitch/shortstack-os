@@ -67,8 +67,9 @@ export async function GET(request: NextRequest) {
     );
     const campaignsData = await campaignsRes.json();
     if (campaignsData.error) {
+      console.error("[meta-ads/campaigns] Meta API error", campaignsData.error);
       return NextResponse.json(
-        { error: campaignsData.error.message, details: campaignsData.error },
+        { error: "Failed to fetch campaigns from Meta" },
         { status: 500 }
       );
     }

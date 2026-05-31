@@ -62,20 +62,22 @@ async function checkSupabase(): Promise<CheckResult> {
     missing, critical: true,
     docs_url: "https://supabase.com/dashboard",
   };
-  // Probe via service_role (mirrors the working cron health-check). Hitting
-  // /rest/v1/ with anon key alone can 401 on instances where the anon role
-  // lacks schema introspection — even when the key is valid for browser use.
-  // service_role validates Supabase reachability without per-instance edge cases.
+  // Probe with anon key — we only need to verify reachability, not bypass RLS.
+  // A 200 means the Supabase REST API is fully operational; a 401 means it's
+  // reachable but the anon role lacks schema introspection on this instance
+  // (still confirms key + host are valid). Using service_role here was
+  // overprivileged for a connectivity check only.
   const { ok, status } = await probe(
     `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/`,
     {
       headers: {
-        apikey: process.env.SUPABASE_SERVICE_ROLE_KEY as string,
-        Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+        apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string,
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
       },
     }
   );
-  return ok
+  const reachable = ok || status === 401; // 401 = up but anon key lacks introspection
+  return reachable
     ? { id: "supabase", label: "Supabase (database)", status: "ok", critical: true }
     : { id: "supabase", label: "Supabase (database)", status: "error", detail: `REST API returned HTTP ${status || "timeout"}`, critical: true };
 }

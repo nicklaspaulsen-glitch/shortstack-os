@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { checkFetchUrl } from "@/lib/security/ssrf";
+import { resolveAndCheckUrl } from "@/lib/security/ssrf";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // AI Brand Audit — Complete analysis of a prospect/client's online presence
@@ -17,12 +17,22 @@ export async function POST(request: NextRequest) {
   // Scrape their website
   let siteContent = "";
   if (website) {
-    const ssrfErr = checkFetchUrl(website, { allowHttp: true });
+    // Normalise to https:// (upgrade http) then apply two-layer SSRF guard:
+    // L1 hostname block + L2 DNS resolution to close DNS-rebinding gap.
+    let normalizedWebsite: string;
+    try {
+      const pw = new URL(website.startsWith("http") ? website : `https://${website}`);
+      if (pw.protocol === "http:") pw.protocol = "https:";
+      normalizedWebsite = pw.href;
+    } catch {
+      return NextResponse.json({ error: "Invalid website URL" }, { status: 400 });
+    }
+    const ssrfErr = await resolveAndCheckUrl(normalizedWebsite);
     if (ssrfErr) {
       return NextResponse.json({ error: `Invalid website URL: ${ssrfErr}` }, { status: 400 });
     }
     try {
-      const res = await fetch(website, {
+      const res = await fetch(normalizedWebsite, {
         headers: { "User-Agent": "Mozilla/5.0 (compatible; ShortStackBot/1.0)" },
         signal: AbortSignal.timeout(8000),
       });

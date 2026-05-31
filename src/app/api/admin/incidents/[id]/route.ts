@@ -79,7 +79,7 @@ export async function PATCH(
   if (error) {
     console.error("[admin/incidents/:id] update failed:", error.message);
     return NextResponse.json(
-      { error: "Update failed", detail: error.message },
+      { error: "Update failed" },
       { status: 500 },
     );
   }
