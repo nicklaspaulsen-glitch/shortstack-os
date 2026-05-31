@@ -76,13 +76,14 @@ test.describe("CRM — Relationship Engine", () => {
     const statusTabs = ["All", "New", "Contacted", "Replied", "Booked", "Converted"];
 
     for (const label of statusTabs) {
-      // Status tabs may be buttons or tab elements — check both roles
+      // Buttons contain a count badge inside: "All 5", "New 3", etc.
+      // Use partial name match (exact: false) so the count doesn't break the selector.
       const tab =
-        page.getByRole("button", { name: new RegExp(`^${label}$`, "i") }).first();
+        page.getByRole("button", { name: label, exact: false }).first();
       const tabVisible = await tab.isVisible({ timeout: 5000 }).catch(() => false);
 
-      // Fall back to any element with the exact tab text
-      const textEl = page.getByText(new RegExp(`^${label}$`, "i")).first();
+      // Fall back to any element that *starts with* the label text (count badge follows)
+      const textEl = page.getByText(new RegExp(`^${label}`, "i")).first();
       const textVisible = await textEl.isVisible({ timeout: 3000 }).catch(() => false);
 
       expect(tabVisible || textVisible).toBe(true);
@@ -243,8 +244,9 @@ test.describe("CRM — Relationship Engine", () => {
 
   // ── 9. No 404 or generic error state ─────────────────────────────────────
   test("CRM page does not render a 404 or generic error state", async ({ page }) => {
+    // Use specific phrases to avoid false-positives on contact data like "(404) area code"
     const errorText = page
-      .getByText(/404|not found|page not found|something went wrong/i)
+      .getByText(/page not found|something went wrong|404 not found|error 404/i)
       .first();
     const hasError = await errorText.isVisible({ timeout: 2000 }).catch(() => false);
     expect(hasError).toBe(false);
