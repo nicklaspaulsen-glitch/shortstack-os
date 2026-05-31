@@ -147,6 +147,7 @@ const LUCIDE_TO_SOLAR: Record<string, IconifyIcon> = {
   ListOrdered: listOrderedIcon,
   GitBranch: gitBranchIcon,
   Layers: layersIcon,
+  Stack: layersIcon,
   CreditCard: creditCardIcon,
 
   TrendingUp: trendingUpIcon,

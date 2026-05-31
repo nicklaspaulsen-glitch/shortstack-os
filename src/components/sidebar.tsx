@@ -64,6 +64,7 @@ const navItems: NavItem[] = [
 
   // ── Operate ──
   { label: "Agents",       href: "/dashboard/agent-office",    icon: <NavIcon3D name="UsersThree" size={16} />, roles: ["admin", "team_member"], section: "Operate", tier: 2 },
+  { label: "AgentStack",   href: "/dashboard/agentstack",      icon: <NavIcon3D name="Stack"      size={16} />, roles: ["admin", "team_member"],                    tier: 2 },
   { label: "Agency 3D",   href: "/dashboard/3d",              icon: <NavIcon3D name="Boxes"      size={16} />, roles: ["admin", "team_member"],                    tier: 2 },
   { label: "Integrations", href: "/dashboard/integrations-hub",icon: <NavIcon3D name="Plug"       size={16} />, roles: ["admin"],                                   tier: 2 },
 
