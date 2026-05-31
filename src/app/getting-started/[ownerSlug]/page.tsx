@@ -1,4 +1,3 @@
-import { BookOpen, Calendar, CaretRight, ChatCircle, Envelope, FileText, FolderOpen, Gear, Lightning, MapTrifold, Phone, Receipt, Shield, Sparkle, Star, Users } from "@phosphor-icons/react";
 /**
  * Public-facing /getting-started/[ownerSlug] page.
  *
@@ -8,9 +7,15 @@ import { BookOpen, Calendar, CaretRight, ChatCircle, Envelope, FileText, FolderO
  *
  * Rendered with the agency's branding (logo + brand color) pulled from
  * white_label_config alongside the doc itself.
+ *
+ * NOTE: Phosphor icon imports live in section-icon.tsx (a 'use client'
+ * component). @phosphor-icons/react calls React.createContext() at module
+ * init which crashes the Next.js "Collecting page data" build phase when
+ * imported directly in a Server Component.
  */
 
 import { notFound } from "next/navigation";
+import { SectionIcon, CaretRightIcon } from "./section-icon";
 import { createClient } from "@supabase/supabase-js";
 
 import { loadPublicGettingStartedDoc } from "@/lib/email-templates/getting-started";
@@ -31,24 +36,6 @@ interface BrandingPayload {
   logo_url: string | null;
   support_email: string | null;
 }
-
-const ICON_MAP: Record<string, typeof Sparkle> = {
-  Sparkle,
-  Lightning,
-  MapTrifold: MapTrifold,
-  ChatCircle,
-  FolderOpen,
-  Receipt,
-  Calendar,
-  Users,
-  Shield,
-  Star,
-  Gear,
-  BookOpen,
-  Envelope,
-  Phone,
-  FileText,
-};
 
 interface PageProps {
   params: { ownerSlug: string };
@@ -212,16 +199,9 @@ function SectionCard({
   agencyName: string;
   brandColor: string;
 }) {
-  const Icon = ICON_MAP[section.icon] || Sparkle;
-
   return (
     <article className="group  border border-slate-200 bg-white p-6 hover:shadow-md transition-shadow">
-      <div
-        className="inline-flex w-10 h-10 items-center justify-center rounded-xl mb-4"
-        style={{ background: `${brandColor}15`, color: brandColor }}
-      >
-        <Icon size={20} />
-      </div>
+      <SectionIcon name={section.icon} brandColor={brandColor} />
       <h3 className="text-lg font-bold text-slate-900 mb-2">
         {renderInline(section.title, { agency_name: agencyName })}
       </h3>
@@ -246,7 +226,7 @@ function SectionCard({
                 style={{ color: brandColor }}
               >
                 {link.label}
-                <CaretRight size={13} />
+                <CaretRightIcon size={13} />
               </a>
             </li>
           ))}
@@ -263,7 +243,7 @@ function FaqItem({ item }: { item: GettingStartedFaq }) {
     <details className="rounded-xl bg-white border border-slate-200 px-5 py-4 group">
       <summary className="cursor-pointer list-none flex items-center justify-between gap-3 font-semibold text-slate-900">
         <span>{item.q}</span>
-        <CaretRight
+        <CaretRightIcon
           size={16}
           className="text-text-muted transition-transform group-open:rotate-90"
         />
