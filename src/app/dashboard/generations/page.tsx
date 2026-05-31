@@ -185,8 +185,8 @@ export default function GenerationsPage() {
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="MagnifyingGlass generations..."
-                aria-label="MagnifyingGlass generations"
+                placeholder="Search generations..."
+                aria-label="Search generations"
                 className="input text-xs pl-9 w-full"
               />
             </div>{/* Category Filter Tabs */}<div className="flex gap-1 overflow-x-auto pb-1">

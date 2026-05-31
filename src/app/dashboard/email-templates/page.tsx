@@ -202,7 +202,7 @@ export default function EmailTemplatesPage() {
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="relative flex-1 min-w-[200px]">
                     <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-                    <input value={search} onChange={e => setSearch(e.target.value)} className="rounded-xl w-full pl-9 text-xs px-3 py-2 text-text-primary placeholder:text-text-muted outline-none bg-white/5 border border-border-subtle" placeholder="MagnifyingGlass templates..." aria-label="MagnifyingGlass email templates" />
+                    <input value={search} onChange={e => setSearch(e.target.value)} className="rounded-xl w-full pl-9 text-xs px-3 py-2 text-text-primary placeholder:text-text-muted outline-none bg-white/5 border border-border-subtle" placeholder="Search templates..." aria-label="Search email templates" />
                   </div>
                   <select value={sortBy} onChange={e => setSortBy(e.target.value as typeof sortBy)} className="rounded-xl text-xs px-3 py-2 text-text-primary outline-none bg-white/5 border border-border-subtle">
                     <option value="name">Sort: Name</option>

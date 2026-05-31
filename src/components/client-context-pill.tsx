@@ -134,7 +134,7 @@ export default function ClientContextPill() {
                 <input
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  placeholder="MagnifyingGlass clients..."
+                  placeholder="Search clients..."
                   className="w-full pl-7 pr-3 py-2 rounded-lg bg-surface-light border border-border-subtle text-xs focus:outline-none focus:border-[rgba(212,255,0,0.4)]"
                   autoFocus
                 />

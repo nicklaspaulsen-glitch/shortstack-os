@@ -267,7 +267,7 @@ export default function OutreachFeedClient({
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="MagnifyingGlass contacts"
+              placeholder="Search contacts"
               className="w-full pl-9 pr-3 py-2 rounded-lg bg-white border border-[rgba(0,0,0,0.10)] text-sm text-[#111827] placeholder-[#9CA3AF] focus:outline-none focus:border-[#D4FF00]"
             />
           </div>

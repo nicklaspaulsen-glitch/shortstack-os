@@ -228,8 +228,8 @@ export default function InvoicesPage() {
                       value={search}
                       onChange={e => setSearch(e.target.value)}
                       className="glass rounded-lg w-full pl-9 pr-3 py-2 text-xs bg-transparent border border-border-subtle focus:outline-none focus:ring-1 focus:ring-brand-accent/20 placeholder:text-text-muted/50" 
-                      placeholder="MagnifyingGlass invoices..."
-                      aria-label="MagnifyingGlass invoices"
+                      placeholder="Search invoices..."
+                      aria-label="Search invoices"
  />
                   </div>
                   <div className="tab-pill-strip">

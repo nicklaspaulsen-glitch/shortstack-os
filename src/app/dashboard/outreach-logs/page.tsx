@@ -588,8 +588,8 @@ export default function OutreachLogsPage() {
                     <div className="relative flex-1 min-w-[180px]">
                       <MagnifyingGlass size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                       <input value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
-                        placeholder="MagnifyingGlass business, handle, message..."
-                        aria-label="MagnifyingGlass outreach logs"
+                        placeholder="Search business, handle, message..."
+                        aria-label="Search outreach logs"
                         className="input w-full pl-8 text-xs" />
                     </div>
                     <div className="flex gap-1">

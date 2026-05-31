@@ -164,7 +164,7 @@ export default function GlassTopNav() {
               setTimeout(() => searchRef.current?.focus(), 50);
             }}
             className={`gtn-search-btn ${searchOpen ? "gtn-search-open" : ""}`}
-            aria-label="MagnifyingGlass (Ctrl+K)"
+            aria-label="Search (Ctrl+K)"
           >
             <MagnifyingGlass size={12} strokeWidth={2} className="gtn-search-icon" />
             {searchOpen ? (
@@ -174,11 +174,11 @@ export default function GlassTopNav() {
                 onChange={e => setSearchVal(e.target.value)}
                 onBlur={() => { if (!searchVal) setSearchOpen(false); }}
                 className="gtn-search-input"
-                placeholder="MagnifyingGlass anything…"
-                aria-label="MagnifyingGlass"
+                placeholder="Search anything…"
+                aria-label="Search"
               />
             ) : (
-              <span className="gtn-search-placeholder">MagnifyingGlass…</span>
+              <span className="gtn-search-placeholder">Search…</span>
             )}
             <kbd className="gtn-search-kbd">⌘K</kbd>
           </button>

@@ -974,7 +974,7 @@ export default function DiscordPage() {
           <PreviewBanner />
           <div className="flex items-center gap-2 mb-2">
             <MagnifyingGlass size={14} className="text-text-muted" />
-            <input value={searchMembers} onChange={e => setSearchMembers(e.target.value)} placeholder="MagnifyingGlass members..."
+            <input value={searchMembers} onChange={e => setSearchMembers(e.target.value)} placeholder="Search members..."
               className="text-xs rounded-lg px-3 py-1.5 flex-1 input" />
           </div>
           {/* Member Insights */}

@@ -721,7 +721,7 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
             <MagnifyingGlass size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted" />
             <input
               type="text"
-              placeholder="MagnifyingGlass nav items..."
+              placeholder="Search nav items..."
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="input w-full pl-7 text-xs"
@@ -1427,7 +1427,7 @@ function NewGroupModal({
                 <input
                   value={iconSearch}
                   onChange={e => setIconSearch(e.target.value)}
-                  placeholder="MagnifyingGlass icons..."
+                  placeholder="Search icons..."
                   className="input w-full text-xs mb-2"
                 />
                 <div className="grid grid-cols-8 gap-1 max-h-36 overflow-y-auto scrollbar-none">
@@ -1535,7 +1535,7 @@ function IconPickerModal({
             autoFocus
             value={search}
             onChange={e => onSearch(e.target.value)}
-            placeholder="MagnifyingGlass icons..."
+            placeholder="Search icons..."
             className="input w-full text-xs"
           />
           <div className="grid grid-cols-8 gap-1 max-h-64 overflow-y-auto scrollbar-none">

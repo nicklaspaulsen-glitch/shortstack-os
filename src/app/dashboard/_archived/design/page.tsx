@@ -1870,12 +1870,12 @@ export default function DesignStudioPage() {
                       <div className="w-9 h-9 bg-[rgba(212, 255, 0,0.08)] rounded-xl flex items-center justify-center text-brand-accent"><MagnifyingGlass size={16} /></div>
                       <div>
                         <h3 className="font-medium text-sm">Icon Library Browser</h3>
-                        <p className="text-[10px] text-text-muted">MagnifyingGlass and insert icons from a curated library</p>
+                        <p className="text-[10px] text-text-muted">Search and insert icons from a curated library</p>
                       </div>
                     </div>
 
                     <input value={iconSearch} onChange={e => setIconSearch(e.target.value)}
-                      className="input text-xs py-2 w-full" placeholder="MagnifyingGlass icons (e.g., chart, heart, star)..." aria-label="MagnifyingGlass icons" />
+                      className="input text-xs py-2 w-full" placeholder="Search icons (e.g., chart, heart, star)..." aria-label="Search icons" />
 
                     <div className="flex flex-wrap gap-1.5">
                       {ICON_CATEGORIES.map(cat => (

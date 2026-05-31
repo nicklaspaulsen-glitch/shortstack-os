@@ -136,7 +136,7 @@ export default function CoursesPage() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="MagnifyingGlass courses…"
+            placeholder="Search courses…"
             className="glass rounded-lg pl-9 pr-4 py-2 text-sm placeholder-text-text-muted outline-none focus:border-brand-accent w-56"
           />
         </div>

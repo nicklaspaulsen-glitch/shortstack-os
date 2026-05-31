@@ -333,8 +333,8 @@ export default function NotificationsPage() {
                 <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   type="text"
-                  placeholder="MagnifyingGlass notifications..."
-                  aria-label="MagnifyingGlass notifications"
+                  placeholder="Search notifications..."
+                  aria-label="Search notifications"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="glass w-full pl-9 pr-4 py-2.5 rounded-lg text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-[rgba(212,255,0,0.25)] focus:border-[rgba(212,255,0,0.25)] transition-all"

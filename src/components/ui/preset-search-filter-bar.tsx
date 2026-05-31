@@ -27,7 +27,7 @@ export function PresetSearchFilterBar({
   filters,
   activeFilter = "all",
   onFilterChange,
-  placeholder = "MagnifyingGlass presets...",
+  placeholder = "Search presets...",
   className = "",
 }: PresetSearchFilterBarProps) {
   return (

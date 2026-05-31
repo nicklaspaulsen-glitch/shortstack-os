@@ -352,7 +352,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                   <input
                     value={searchFilter}
                     onChange={e => setSearchFilter(e.target.value)}
-                    placeholder="MagnifyingGlass profiles..."
+                    placeholder="Search profiles..."
                     className="input text-xs pl-8 w-full"
                   />
                 </div>

@@ -160,7 +160,7 @@ function SfxTab({ state, dispatch }: Props) {
           <MagnifyingGlass size={10} />
           <input
             type="text"
-            placeholder="MagnifyingGlass SFX…"
+            placeholder="Search SFX…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent flex-1 text-[11px] text-neutral-200 placeholder-neutral-500 outline-none min-w-0"
@@ -267,7 +267,7 @@ function VfxTab({ state, dispatch }: Props) {
           <MagnifyingGlass size={10} />
           <input
             type="text"
-            placeholder="MagnifyingGlass VFX…"
+            placeholder="Search VFX…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent flex-1 text-[11px] text-neutral-200 placeholder-neutral-500 outline-none min-w-0"
@@ -391,7 +391,7 @@ function BrollTab({ state, dispatch }: Props) {
           <MagnifyingGlass size={10} />
           <input
             type="text"
-            placeholder="MagnifyingGlass B-roll…"
+            placeholder="Search B-roll…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent flex-1 text-[11px] text-neutral-200 placeholder-neutral-500 outline-none min-w-0"

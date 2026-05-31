@@ -137,7 +137,7 @@ export default function WorkflowLibraryPage() {
                   <input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="MagnifyingGlass templates..."
+                    placeholder="Search templates..."
                     className="w-full rounded-lg glass pl-9 pr-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-brand-accent focus:outline-none"
                   />
                 </div>

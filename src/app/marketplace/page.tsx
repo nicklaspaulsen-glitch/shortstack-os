@@ -128,7 +128,7 @@ export default function MarketplacePublicPage() {
             />
             <input
               type="search"
-              placeholder="MagnifyingGlass services..."
+              placeholder="Search services..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full rounded-lg border border-white/10 bg-white/[0.03] py-2 pl-9 pr-4 text-sm placeholder:text-white/30 focus:border-amber-300/40 focus:outline-none"

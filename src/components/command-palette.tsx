@@ -252,7 +252,7 @@ export default function CommandPalette() {
               type="text"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder="MagnifyingGlass commands, clients, deals, content…"
+              placeholder="Search commands, clients, deals, content…"
               className="flex-1 bg-transparent text-sm text-[#F0F0F4] placeholder-[#4A4A5A] outline-none"
             />
             {liveLoading && <CircleNotch size={13} className="text-[#4A4A5A] animate-spin shrink-0" />}

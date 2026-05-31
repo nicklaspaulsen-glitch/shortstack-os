@@ -235,7 +235,7 @@ export default function ActivityLogPage() {
                   <div className="relative flex-1 min-w-[200px]">
                     <MagnifyingGlass size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/50" />
                     <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                      className="input w-full text-xs pl-8" placeholder="MagnifyingGlass activity..." />
+                      className="input w-full text-xs pl-8" placeholder="Search activity..." />
                   </div>
                   <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="input text-xs w-32">
                     {types.map(t => <option key={t} value={t}>{t === "all" ? "All Types" : TYPE_CONFIG[t]?.label || t}</option>)}

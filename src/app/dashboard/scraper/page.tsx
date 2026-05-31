@@ -1079,7 +1079,7 @@ export default function ScraperPage() {
                           <input
                             value={nicheSearch}
                             onChange={e => setNicheSearch(e.target.value)}
-                            placeholder="MagnifyingGlass niches across all categories..."
+                            placeholder="Search niches across all categories..."
                             className="input w-full text-xs py-1.5 pl-7"
                           />
                           {nicheSearch && (
@@ -1145,7 +1145,7 @@ export default function ScraperPage() {
                   <div className="glass rounded-xl p-4">
                     <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><FloppyDisk size={14} className="text-brand-accent" /> FloppyDisk This MagnifyingGlass</h3>
                     <div className="flex gap-2">
-                      <input value={saveSearchName} onChange={e => setSaveSearchName(e.target.value)} placeholder="MagnifyingGlass name..." className="input flex-1 text-sm py-1.5" />
+                      <input value={saveSearchName} onChange={e => setSaveSearchName(e.target.value)} placeholder="Search name..." className="input flex-1 text-sm py-1.5" />
                       <button onClick={saveCurrentSearch} className="btn-primary text-xs py-1.5 px-3"><FloppyDisk size={12} /></button>
                     </div>
                   </div>
@@ -1173,7 +1173,7 @@ export default function ScraperPage() {
                     <input
                       value={locationSearch}
                       onChange={e => setLocationSearch(e.target.value)}
-                      placeholder="MagnifyingGlass cities..."
+                      placeholder="Search cities..."
                       className="input w-full text-xs py-1.5 pl-7"
                     />
                     {locationSearch && (

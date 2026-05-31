@@ -1336,7 +1336,7 @@ export default function LandingPagesPage() {
             <h2 className="text-lg font-bold text-text-primary">Generated Pages</h2>
             <div className="relative">
               <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-              <input value={pageSearch} onChange={e => setPageSearch(e.target.value)} placeholder="MagnifyingGlass pages..." className="glass rounded-lg pl-9 pr-4 py-2 text-sm text-text-primary w-64 focus:border-brand-accent/40 focus:outline-none" />
+              <input value={pageSearch} onChange={e => setPageSearch(e.target.value)} placeholder="Search pages..." className="glass rounded-lg pl-9 pr-4 py-2 text-sm text-text-primary w-64 focus:border-brand-accent/40 focus:outline-none" />
             </div>
           </div>
 

@@ -916,7 +916,7 @@ export default function LeadEnginePage() {
                 <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex flex-wrap gap-2 py-2">
                   <div className="relative flex-1 min-w-[200px]">
                     <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-                    <input type="text" placeholder="MagnifyingGlass leads..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="input glass w-full pl-9 text-xs" />
+                    <input type="text" placeholder="Search leads..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="input glass w-full pl-9 text-xs" />
                   </div>
                   <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="input text-xs">
                     <option value="">All Statuses</option>

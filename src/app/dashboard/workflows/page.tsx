@@ -570,7 +570,7 @@ export default function WorkflowsPage() {
                       type="text"
                       value={presetSearch}
                       onChange={(e) => setPresetSearch(e.target.value)}
-                      placeholder="MagnifyingGlass presets..."
+                      placeholder="Search presets..."
                       className="input w-full text-xs pl-8"
                     />
                   </div>

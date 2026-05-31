@@ -169,7 +169,7 @@ export default function AutomationsPage() {
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="MagnifyingGlass automations…"
+                placeholder="Search automations…"
                 className="w-full glass rounded-lg pl-8 pr-3 py-2 text-text-primary text-sm focus:outline-none focus:border-brand-accent/50"
               />
             </div>{loading ? (

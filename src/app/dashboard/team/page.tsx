@@ -319,7 +319,7 @@ export default function TeamPage() {
                     <MagnifyingGlass size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/50" />
                     <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                       className="rounded-lg w-full text-xs pl-8 pr-3 py-2 bg-white/[0.05] border border-border-subtle focus:outline-none focus:ring-1 focus:ring-brand-accent/40 placeholder:text-text-muted"
-                      placeholder="MagnifyingGlass members..." aria-label="MagnifyingGlass team members" />
+                      placeholder="Search members..." aria-label="Search team members" />
                   </div>
                   <div className="flex gap-1 bg-surface rounded-lg p-0.5">
                     <button onClick={() => setRoleFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${roleFilter === "all" ? "bg-[rgba(212,255,0,0.12)] text-brand-accent" : "text-text-muted"}`}>All</button>

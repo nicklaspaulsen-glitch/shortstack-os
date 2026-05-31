@@ -227,8 +227,10 @@ test.describe("Leads — Lead Engine", () => {
 
   // ── 12. No 404 or generic error state ────────────────────────────────────
   test("leads page does not render a 404 or generic error state", async ({ page }) => {
+    // Intentionally exclude bare "404" which can appear in phone area codes in lead data.
+    // Match only error patterns that unambiguously indicate a broken page.
     const errorText = page
-      .getByText(/404|not found|page not found|something went wrong/i)
+      .getByText(/page not found|something went wrong|404 not found|error 404/i)
       .first();
     const hasError = await errorText.isVisible({ timeout: 2000 }).catch(() => false);
     expect(hasError).toBe(false);

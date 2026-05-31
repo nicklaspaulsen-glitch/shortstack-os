@@ -681,7 +681,7 @@ export default function InboxPage() {
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="MagnifyingGlass inbox..."
+              placeholder="Search inbox..."
               className="input text-xs pl-9 w-full glass rounded-lg"
             />
             {search && (

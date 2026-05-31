@@ -117,7 +117,7 @@ export default function ClientSwitcher() {
                 <MagnifyingGlass size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   type="text"
-                  placeholder="MagnifyingGlass clients..."
+                  placeholder="Search clients..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="input w-full pl-8 py-1.5 text-xs"

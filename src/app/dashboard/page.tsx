@@ -827,7 +827,7 @@ function AgencyDashboard() {
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {/* MagnifyingGlass trigger */}
           <button
-            aria-label="MagnifyingGlass (⌘K)"
+            aria-label="Search (⌘K)"
             onClick={() => {
               const e = new KeyboardEvent("keydown", {
                 key: "k",
@@ -851,7 +851,7 @@ function AgencyDashboard() {
             }}
           >
             <MagnifyingGlass size={14} />
-            <span className="hidden sm:inline">MagnifyingGlass</span>
+            <span className="hidden sm:inline">Search</span>
             <kbd
               style={{
                 display: "none",

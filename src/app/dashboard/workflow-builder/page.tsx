@@ -869,7 +869,7 @@ function WorkflowBuilderInner() {
               <input
                 value={paletteSearch}
                 onChange={e => setPaletteSearch(e.target.value)}
-                placeholder="MagnifyingGlass nodes..."
+                placeholder="Search nodes..."
                 className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-surface-light border border-border-subtle text-xs text-text-primary placeholder:text-text-muted/50 outline-none focus:border-brand-accent transition-colors"
               />
             </div>

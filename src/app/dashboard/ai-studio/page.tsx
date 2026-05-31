@@ -1512,7 +1512,7 @@ function GuidedImagePanel({ processing, setProcessing, history, setHistory }: To
             <input
               value={historySearch}
               onChange={e => setHistorySearch(e.target.value)}
-              placeholder="MagnifyingGlass..."
+              placeholder="Search..."
               className="w-full pl-7 pr-3 py-1.5 text-[10px] rounded-lg focus:outline-none focus:border-brand-accent/30 transition-colors"
               style={{ background: "rgba(19,24,39,0.70)", border: "1px solid rgba(212,255,0,0.12)", color: "var(--text-secondary)" }}
             />

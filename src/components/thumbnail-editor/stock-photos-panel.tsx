@@ -155,7 +155,7 @@ export default function StockPhotosPanel({
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="MagnifyingGlass photos..."
+              placeholder="Search photos..."
               className="w-full bg-neutral-900 border border-neutral-700 rounded pl-7 pr-2 py-1.5 text-xs text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:border-indigo-500"
             />
           </div>

@@ -1213,9 +1213,9 @@ export default function CRMPage() {
               <div className="relative flex-1 min-w-[200px]">
                 <MagnifyingGlass size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input value={search} onChange={e => setSearch(e.target.value)}
-                  placeholder="MagnifyingGlass name, industry, city, email, phone..."
+                  placeholder="Search name, industry, city, email, phone..."
                   className="input glass w-full text-[10px] pl-8 py-1.5"
-                  aria-label="MagnifyingGlass leads" />
+                  aria-label="Search leads" />
                 {search && <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2" aria-label="Clear search"><X size={11} className="text-text-muted hover:text-text-primary" /></button>}
               </div>
               <div className="relative">

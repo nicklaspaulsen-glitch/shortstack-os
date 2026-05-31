@@ -612,7 +612,7 @@ export default function ContentLibraryPage() {
           <input
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            placeholder="MagnifyingGlass by name or tag..."
+            placeholder="Search by name or tag..."
             className="input text-xs pl-8 w-48"
           />
         </div>

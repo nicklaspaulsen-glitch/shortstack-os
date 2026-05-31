@@ -264,7 +264,7 @@ export default function AuditPage() {
                   <div className="relative flex-1 min-w-[200px] max-w-sm">
                     <MagnifyingGlass size={11} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-text-muted" />
                     <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                      placeholder="MagnifyingGlass actions, users, resources..." className="input w-full pl-7 text-xs py-1.5" />
+                      placeholder="Search actions, users, resources..." className="input w-full pl-7 text-xs py-1.5" />
                   </div>
 
                   {/* Action type filter */}

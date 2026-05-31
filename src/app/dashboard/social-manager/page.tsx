@@ -2359,10 +2359,10 @@ export default function SocialManagerPage() {
                 <Users size={16} className="text-brand-accent" />
                 <h2 className="text-sm font-semibold">Influencer Finder</h2>
               </div>
-              <p className="text-[10px] text-text-muted mb-3">MagnifyingGlass for micro-influencers by niche to collaborate with</p>
+              <p className="text-[10px] text-text-muted mb-3">Search for micro-influencers by niche to collaborate with</p>
               <div className="flex gap-2 mb-4">
                 <input value={influencerNiche} onChange={e => setInfluencerNiche(e.target.value)}
-                  className="input text-xs flex-1" placeholder="MagnifyingGlass by niche (e.g., fitness, tech, food)..." aria-label="MagnifyingGlass influencers by niche" />
+                  className="input text-xs flex-1" placeholder="Search by niche (e.g., fitness, tech, food)..." aria-label="Search influencers by niche" />
                 <button onClick={() => toast.success("Searching influencers...")}
                   className="btn-primary text-xs flex items-center gap-1.5"><MagnifyingGlass size={12} /> MagnifyingGlass</button>
               </div>

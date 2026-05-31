@@ -400,7 +400,7 @@ export default function ConversationsPage() {
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="MagnifyingGlass�"
+                    placeholder="Search�"
                     className="w-full bg-surface-light border border-border-subtle rounded-lg pl-9 pr-3 py-2 text-sm placeholder-white/30 focus:outline-none focus:border-brand-accent/40"
                   />
                 </div>

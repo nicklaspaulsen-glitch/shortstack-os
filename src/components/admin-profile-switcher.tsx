@@ -190,7 +190,7 @@ export default function AdminProfileSwitcher() {
                   <MagnifyingGlass size={11} className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted" />
                   <input
                     type="text"
-                    placeholder="MagnifyingGlass clients..."
+                    placeholder="Search clients..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="input w-full pl-7 py-1 text-[10px]"

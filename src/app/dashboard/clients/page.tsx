@@ -838,7 +838,7 @@ export default function ClientsPage() {
               <MagnifyingGlass size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
               <input
                 type="text"
-                placeholder="MagnifyingGlass clients..."
+                placeholder="Search clients..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="input w-full pl-10"

@@ -434,7 +434,7 @@ export function PresetPickerPanel({
           />
           <input
             type="search"
-            placeholder={`MagnifyingGlass ${tab === "fav" ? "favourites" : tab}…`}
+            placeholder={`Search ${tab === "fav" ? "favourites" : tab}…`}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="input w-full pl-7 text-[11px] py-1.5"

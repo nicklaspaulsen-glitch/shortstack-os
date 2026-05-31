@@ -93,17 +93,18 @@ test.describe("Projects — Project Tracker", () => {
     expect(hasSkeleton || hasEmptyState || hasProjectContent || hasCard).toBe(true);
   });
 
-  // ── 4. Create project button is visible ─────────────────────────────────
+  // ── 4. Create project / board button is visible ─────────────────────────
   test("create project or new project button is visible", async ({ page }) => {
+    // Projects page uses "Board" as the unit — buttons are "New Board" / "Create board"
     const createBtn = page
-      .getByRole("button", { name: /new project|create project|add project|\+ project/i })
+      .getByRole("button", { name: /new project|create project|add project|\+ project|new board|create board/i })
       .first();
 
     const hasCreateBtn = await createBtn.isVisible({ timeout: 8000 }).catch(() => false);
 
     // Fallback: link with "new" or "create" text
     const hasCreateLink = await page
-      .getByRole("link", { name: /new project|create project/i })
+      .getByRole("link", { name: /new project|create project|new board|create board/i })
       .first()
       .isVisible({ timeout: 3000 })
       .catch(() => false);
