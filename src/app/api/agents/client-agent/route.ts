@@ -4,7 +4,7 @@ import { checkAiRateLimit } from "@/lib/api-rate-limit";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createServiceClient } from "@/lib/supabase/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { anthropic } from "@/lib/ai/claude-helpers";
+import { anthropic, MODEL_SONNET } from "@/lib/ai/claude-helpers";
 
 const TOOLS: Anthropic.Tool[] = [
   // ── Core File & System Operations ──────────────────────────────────
@@ -461,7 +461,7 @@ export async function POST(request: NextRequest) {
     // and the Stripe v18 build break. Avoids constructing a fresh client per
     // request and keeps the `apiKey` validation in one place.
     const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: MODEL_SONNET,
       max_tokens: 4096,
       system: SYSTEM_PROMPT,
       tools: TOOLS,
