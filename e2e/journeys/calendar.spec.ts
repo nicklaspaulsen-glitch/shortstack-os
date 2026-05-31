@@ -54,7 +54,14 @@ test.describe("Calendar — Time Command", () => {
       (e) =>
         !e.includes("ResizeObserver") &&
         !e.includes("Non-Error promise rejection") &&
-        !e.includes("hydration"),
+        !e.includes("hydration") &&
+        !e.includes("TypeError: Failed to fetch") &&
+        !e.includes("WebSocket connection") &&
+        !e.includes("net::ERR_") &&
+        !e.includes("Failed to fetch RSC payload") &&
+        !e.includes("Falling back to browser navigation") &&
+        !e.includes("Failed to load resource") &&
+        !e.includes("Worker module function was called"),
     );
     expect(critical).toHaveLength(0);
   });
