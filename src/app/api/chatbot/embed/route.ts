@@ -110,11 +110,26 @@ export async function POST(request: NextRequest) {
     userDiv.appendChild(userBubble);
     msgs.appendChild(userDiv);
     msgs.scrollTop = msgs.scrollHeight;
-    msgs.innerHTML += '<div class="ss-msg"><div class="ss-msg-bot" style="opacity:0.5">Typing...</div></div>';
+    // XSS-safe: build typing indicator without innerHTML
+    var typingDiv = document.createElement('div');
+    typingDiv.className = 'ss-msg';
+    var typingBubble = document.createElement('div');
+    typingBubble.className = 'ss-msg-bot';
+    typingBubble.style.opacity = '0.5';
+    typingBubble.textContent = 'Typing...';
+    typingDiv.appendChild(typingBubble);
+    msgs.appendChild(typingDiv);
     // Replace with your API endpoint
     setTimeout(function() {
-      msgs.lastChild.remove();
-      msgs.innerHTML += '<div class="ss-msg"><div class="ss-msg-bot">Thanks for reaching out! One of our team members will get back to you shortly. In the meantime, feel free to call us or check our services.</div></div>';
+      if (msgs.lastChild) msgs.lastChild.remove();
+      // XSS-safe: build bot reply without innerHTML
+      var botDiv = document.createElement('div');
+      botDiv.className = 'ss-msg';
+      var botBubble = document.createElement('div');
+      botBubble.className = 'ss-msg-bot';
+      botBubble.textContent = 'Thanks for reaching out! One of our team members will get back to you shortly. In the meantime, feel free to call us or check our services.';
+      botDiv.appendChild(botBubble);
+      msgs.appendChild(botDiv);
       msgs.scrollTop = msgs.scrollHeight;
     }, 1500);
   };
