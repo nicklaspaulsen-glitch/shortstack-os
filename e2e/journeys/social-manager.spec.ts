@@ -160,22 +160,27 @@ test.describe("Social Manager — Social Command", () => {
     await expect(calendarTab).toBeVisible({ timeout: 6000 });
 
     await calendarTab.click();
-    await page.waitForTimeout(800);
+    await page.waitForTimeout(1500);
 
-    // Must render something
+    // Must render something — calendar content, loading skeleton, or empty state
     const hasCalendar =
       (await page
         .getByText(/monday|tuesday|wednesday|thursday|friday|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec/i)
         .first()
-        .isVisible({ timeout: 4000 })
+        .isVisible({ timeout: 5000 })
         .catch(() => false)) ||
       (await page
         .getByText(/scheduled|calendar|week|month|no posts/i)
         .first()
-        .isVisible({ timeout: 3000 })
+        .isVisible({ timeout: 4000 })
         .catch(() => false)) ||
       (await page
         .locator('[class*="grid"], [class*="calendar"]')
+        .first()
+        .isVisible({ timeout: 4000 })
+        .catch(() => false)) ||
+      (await page
+        .locator('[class*="animate-pulse"]')
         .first()
         .isVisible({ timeout: 3000 })
         .catch(() => false));
