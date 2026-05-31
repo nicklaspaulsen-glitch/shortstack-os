@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { checkFetchUrl } from "@/lib/security/ssrf";
+import { resolveAndCheckUrl } from "@/lib/security/ssrf";
 
 // Scrape a website URL and extract brand elements
 export async function POST(req: NextRequest) {
@@ -26,9 +26,11 @@ export async function POST(req: NextRequest) {
     if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
       return NextResponse.json({ error: "URL must use http or https" }, { status: 400 });
     }
-    // SSRF guard — block loopback / private / link-local / cloud-metadata hosts.
-    // Uses the shared ssrf library for consistent coverage across all scraping routes.
-    const ssrfErr = checkFetchUrl(parsedUrl.toString(), { allowHttp: true });
+    // SSRF guard — two-layer defense: hostname block + DNS resolution.
+    // resolveAndCheckUrl closes the DNS rebinding gap (attacker rebinds
+    // evil.com from a public IP to 169.254.169.254 between the L1 check
+    // and the actual fetch). Layer 1 (hostname string) runs first for speed.
+    const ssrfErr = await resolveAndCheckUrl(parsedUrl.toString());
     if (ssrfErr) {
       return NextResponse.json({ error: `Refusing to fetch: ${ssrfErr}` }, { status: 400 });
     }

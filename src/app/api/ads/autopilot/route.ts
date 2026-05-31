@@ -143,7 +143,9 @@ export async function POST(request: NextRequest) {
           try {
             const syncResult = await syncPlatformCampaigns(clientId, platform);
             results.synced += syncResult.synced;
-          } catch { /* continue */ }
+          } catch (syncErr) {
+            console.error("[ads/autopilot] platform sync failed", { clientId, platform, err: syncErr });
+          }
         }
       }
 
@@ -249,13 +251,14 @@ export async function POST(request: NextRequest) {
                   results.actions_taken++;
                   results.details.push(`${actionType}: ${campaign.name} (${campaign.platform})`);
                 }
-              } catch {
+              } catch (execErr) {
+                console.error("[ads/autopilot] executePlatformAction failed", { campaign: campaign.name, platform: campaign.platform, err: execErr });
                 results.actions_skipped++;
               }
             }
           }
-        } catch {
-          // Continue with next campaign
+        } catch (campaignErr) {
+          console.error("[ads/autopilot] campaign analysis failed", { campaignId: campaign.id, clientId, err: campaignErr });
         }
       }
 
@@ -293,7 +296,9 @@ export async function POST(request: NextRequest) {
               results.ads_created++;
               results.details.push(`Created ad: "${bestVariation.headline}" in ${campaign.name}`);
             }
-          } catch { /* continue */ }
+          } catch (adCreateErr) {
+            console.error("[ads/autopilot] auto-create ad failed", { campaign: campaign.name, clientId, err: adCreateErr });
+          }
         }
       }
 

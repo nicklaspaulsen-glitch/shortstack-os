@@ -13,6 +13,7 @@ import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { renderGoalTemplate } from "@/lib/browser-worker/starter-templates";
 import { STEP_CEILING, DEFAULT_MAX_STEPS } from "@/lib/browser-worker/agent-loop";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 export const dynamic = "force-dynamic";
 
@@ -106,7 +107,13 @@ export async function POST(request: NextRequest) {
     goal = body.goal.trim();
   }
 
-  if (typeof body.start_url === "string" && body.start_url) startUrl = body.start_url;
+  if (typeof body.start_url === "string" && body.start_url) {
+    const ssrfErr = checkFetchUrl(body.start_url);
+    if (ssrfErr) {
+      return NextResponse.json({ error: `start_url rejected: ${ssrfErr}` }, { status: 400 });
+    }
+    startUrl = body.start_url;
+  }
   if (typeof body.max_steps === "number" && body.max_steps > 0) {
     maxSteps = Math.min(body.max_steps, STEP_CEILING);
   }

@@ -55,6 +55,18 @@ export async function POST(request: NextRequest) {
       if (maxSize !== -1 && file.size > maxSize) {
         return NextResponse.json({ error: "File too large for your plan" }, { status: 413 });
       }
+      // MIME type allowlist — reject non-audio files before forwarding to RunPod.
+      const ALLOWED_AUDIO_TYPES = new Set([
+        "audio/mpeg", "audio/mp3", "audio/wav", "audio/wave", "audio/x-wav",
+        "audio/mp4", "audio/x-m4a", "audio/ogg", "audio/flac", "audio/x-flac",
+        "audio/webm", "video/webm", "video/mp4",
+      ]);
+      if (!ALLOWED_AUDIO_TYPES.has(file.type)) {
+        return NextResponse.json(
+          { error: "Unsupported file type. Accepted: mp3, wav, mp4, webm, ogg, flac, m4a" },
+          { status: 415 },
+        );
+      }
       const buffer = Buffer.from(await file.arrayBuffer());
       audioBase64 = buffer.toString("base64");
     }

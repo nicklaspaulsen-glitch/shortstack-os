@@ -14,6 +14,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { z } from "zod";
 
 // Admin-only: Create or update an account with specific role/permissions
 export async function POST(req: NextRequest) {
@@ -39,11 +40,18 @@ export async function POST(req: NextRequest) {
   const supabaseAdmin = createServiceClient();
 
   try {
-    const { email, password, full_name, role, nickname } = await req.json();
-
-    if (!email || !password) {
-      return NextResponse.json({ error: "Email and password required" }, { status: 400 });
+    const setupSchema = z.object({
+      email: z.string().email(),
+      password: z.string().min(8).max(128),
+      full_name: z.string().max(200).optional(),
+      nickname: z.string().max(100).optional(),
+      role: z.enum(["admin", "founder", "team_member", "client", "agency"]).optional(),
+    });
+    const parseResult = setupSchema.safeParse(await req.json());
+    if (!parseResult.success) {
+      return NextResponse.json({ error: "Invalid request", issues: parseResult.error.issues }, { status: 400 });
     }
+    const { email, password, full_name, role, nickname } = parseResult.data;
 
     // Check if user already exists
     const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();

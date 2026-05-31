@@ -31,6 +31,7 @@ import {
   formatSnapshotForPrompt,
   type DomSnapshot,
 } from "./dom-snapshot";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 
 /** Hard cap on total LLM spend per task (USD). */
 export const DEFAULT_COST_CAP_USD = 1.0;
@@ -171,8 +172,11 @@ function sanitizeStepCount(requested: number | undefined): number {
   return Math.min(v, STEP_CEILING);
 }
 
-/** Domain check — returns true if the URL is allowed under the allowlist. */
+/** Domain check — returns true if the URL is allowed under the allowlist.
+ *  Always blocks private/internal IPs regardless of allowlist config. */
 function isUrlAllowed(url: string, allowlist?: string[]): boolean {
+  // Block private IPs / cloud metadata even when no domain allowlist is configured.
+  if (checkFetchUrl(url)) return false;
   if (!allowlist || allowlist.length === 0) return true;
   try {
     const host = new URL(url).hostname;
