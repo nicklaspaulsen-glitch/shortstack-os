@@ -1,4 +1,4 @@
-import { CheckCircle, Envelope, XCircle } from "@phosphor-icons/react";
+import { CheckCircle, Envelope, XCircle } from "./unsubscribe-icons";
 import Link from "next/link";
 
 interface Props {
