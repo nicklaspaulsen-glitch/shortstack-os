@@ -4,6 +4,7 @@ import { ArrowUp, Calendar, ChartBar, CheckCircle, CurrencyDollar, DownloadSimpl
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { formatCurrency, formatRelativeTime } from "@/lib/utils";
+import { chartTooltip, CHART_COLORS } from "@/lib/chart-theme";
 import {
   AreaChart, Area, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
@@ -15,29 +16,11 @@ import { EmptyState } from "@/components/ui/empty-state-illustration";
 import Link from "next/link";
 import { SectionHeader } from "@/components/ui/section-header";
 
-const CHART_COLORS = ["#D4FF00", "#10B981", "#6366F1", "#64748B", "#94A3B8", "#475569"];
-
 // --- Types -----------------------------------------------------------------
 interface ChurnClient { name: string; risk: "high" | "medium" | "low"; score: number; reason: string; mrr: number }
 interface GoalEntry { label: string; current: number; target: number; unit: string }
 interface TeamMember { name: string; leads: number; deals: number; revenue: number; calls: number; score: number }
 interface ActivityItem { id: string; type: "lead" | "payment" | "post" | "deal" | "call"; message: string; time: string }
-
-// --- Tooltip style (shared) ------------------------------------------------
-const TT = {
-  contentStyle: {
-    background: "rgba(13,17,32,0.95)",
-    border: "1px solid rgba(212,255,0,0.10)",
-    borderRadius: "8px",
-    fontSize: "11px",
-    color: "#F0F0F4",
-    boxShadow: "0 8px 32px rgba(0,0,0,0.60)",
-    padding: "8px 10px",
-    backdropFilter: "blur(16px)",
-  },
-  labelStyle: { color: "var(--text-muted)", fontSize: "9px", marginBottom: "4px", textTransform: "uppercase" as const, letterSpacing: "0.1em" },
-  itemStyle: { color: "#F0F0F4", fontSize: "11px" },
-};
 
 // --- InsightPanel: always-visible bento tile -------------------------------
 function InsightPanel({
@@ -645,7 +628,7 @@ export default function AnalyticsPage() {
                       <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.05)" vertical={false} />
                       <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#6F6D7A" }} axisLine={false} tickLine={false} />
                       <YAxis tick={{ fontSize: 9, fill: "#6F6D7A" }} axisLine={false} tickLine={false} width={28} />
-                      <Tooltip {...TT} cursor={{ stroke: "rgba(255,255,255,0.20)", strokeDasharray: "2 4" }} />
+                      <Tooltip {...chartTooltip} cursor={{ stroke: "rgba(255,255,255,0.20)", strokeDasharray: "2 4" }} />
                       <Area
                         type="monotone" dataKey="count" name="Leads"
                         stroke="#D4FF00" strokeWidth={1.5}
@@ -775,7 +758,7 @@ export default function AnalyticsPage() {
                       <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.05)" vertical={false} />
                       <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#6F6D7A" }} axisLine={false} tickLine={false} />
                       <YAxis tick={{ fontSize: 9, fill: "#6F6D7A" }} axisLine={false} tickLine={false} width={28} />
-                      <Tooltip {...TT} />
+                      <Tooltip {...chartTooltip} />
                       <Line type="monotone" dataKey="sent" stroke="#D4FF00" strokeWidth={1.5} dot={false} name="Sent" />
                       <Line type="monotone" dataKey="replies" stroke="#10B981" strokeWidth={1.5} dot={false} name="Replies" />
                     </LineChart>
@@ -1071,7 +1054,7 @@ export default function AnalyticsPage() {
                         <CartesianGrid strokeDasharray="2 6" stroke="rgba(255,255,255,0.05)" vertical={false} />
                         <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#6F6D7A" }} axisLine={false} tickLine={false} />
                         <YAxis tick={{ fontSize: 9, fill: "#6F6D7A" }} axisLine={false} tickLine={false} width={32} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
-                        <Tooltip {...TT} formatter={(v) => formatCurrency(Number(v) || 0)} />
+                        <Tooltip {...chartTooltip} formatter={(v) => formatCurrency(Number(v) || 0)} />
                         <Area type="monotone" dataKey="optimistic" stroke="#84CC16" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Optimistic" />
                         <Area type="monotone" dataKey="projected" stroke="#D4FF00" fill="url(#forecastGrad)" strokeWidth={1.5} name="Projected" />
                         <Area type="monotone" dataKey="conservative" stroke="#94A3B8" fill="none" strokeWidth={1} strokeDasharray="3 4" name="Conservative" />

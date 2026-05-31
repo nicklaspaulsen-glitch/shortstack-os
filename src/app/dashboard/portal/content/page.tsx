@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/auth-context";
 import { ContentCalendarEntry, ContentScript } from "@/lib/types";
 import StatusBadge from "@/components/ui/status-badge";
 import { PageLoading } from "@/components/ui/loading";
-import EmptyState from "@/components/ui/empty-state";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 import Modal from "@/components/ui/modal";
 import { formatDate } from "@/lib/utils";
 import toast from "react-hot-toast";
@@ -124,7 +124,7 @@ export default function ClientContentPage() {
       <div className="glass rounded-xl p-4">
         <h2 className="flex items-center gap-2"><Calendar size={13} className="text-indigo-400" /> Content Calendar</h2>
         {calendar.length === 0 ? (
-          <EmptyState icon={<Calendar size={32} />} title="No Content Scheduled" description="Your content calendar is empty. We&apos;ll start populating it soon." />
+          <EmptyState type="no-calendar" title="No Content Scheduled" description="Your content calendar is empty. We&apos;ll start populating it soon." />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
             {calendar.map((c) => (

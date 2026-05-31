@@ -23,6 +23,7 @@ import {
   type AllocationSlice,
   type BudgetsResponse,
 } from "./types";
+import { chartTooltip } from "@/lib/chart-theme";
 
 const fmtCurrency = (n: number) =>
   `$${n.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
@@ -200,17 +201,7 @@ function AllocationPie({ slices }: { slices: AllocationSlice[] }) {
             <Cell key={s.platform} fill={PLATFORM_COLORS[s.platform]} />
           ))}
         </Pie>
-        <Tooltip
-          contentStyle={{
-            background: "rgba(13,17,32,0.95)",
-            border: "1px solid rgba(212, 255, 0,0.18)",
-            borderRadius: 6,
-            fontSize: 11,
-            color: "#F0F0F4",
-          }}
-          labelStyle={{ color: "#A8A8B2" }}
-          formatter={(v) => `$${Number(v).toFixed(2)}/day`}
-        />
+        <Tooltip {...chartTooltip} formatter={(v) => `$${Number(v).toFixed(2)}/day`} />
         <Legend
           wrapperStyle={{ fontSize: 10, paddingTop: 4 }}
           formatter={(value: string) =>

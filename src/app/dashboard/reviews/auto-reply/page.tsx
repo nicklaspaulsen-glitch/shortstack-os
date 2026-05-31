@@ -14,7 +14,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import EmptyState from "@/components/ui/empty-state";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { MotionPage } from "@/components/motion/motion-page";
 
 interface ReviewDraft {
@@ -330,9 +330,9 @@ export default function ReviewsAutoReplyPage() {
                 </div>
               ) : drafts.length === 0 ? (
                 <EmptyState
+                  type="no-reviews"
                   title="No drafts yet"
                   description="Paste a review and Claude will generate a reply you can approve."
-                  icon={<Sparkle size={28} />}
                 />
               ) : (
                 <div className="space-y-3">

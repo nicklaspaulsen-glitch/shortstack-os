@@ -1,5 +1,6 @@
 "use client";
 import { CircleNotch, CurrencyDollar, Target, TrendUp, Trophy } from "@phosphor-icons/react";
+import { chartTooltip } from "@/lib/chart-theme";
 
 /**
  * OverviewPanel � top-level Ads Manager dashboard.
@@ -198,14 +199,7 @@ export default function OverviewPanel() {
                 tickFormatter={(v: number) => `$${v}`}
               />
               <Tooltip
-                contentStyle={{
-                  background: "rgba(13,17,32,0.95)",
-                  border: "1px solid rgba(212, 255, 0,0.18)",
-                  borderRadius: 6,
-                  fontSize: 12,
-                  color: "#F0F0F4",
-                }}
-                labelStyle={{ color: "#A8A8B2" }}
+                {...chartTooltip}
                 formatter={(value) => [fmtCurrency(Number(value)), "Spend"]}
               />
               <Area

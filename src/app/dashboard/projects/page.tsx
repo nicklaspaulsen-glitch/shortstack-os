@@ -1,11 +1,11 @@
 "use client";
 
-import { Calendar, Chat, CircleNotch, Plus, SquaresFour, Trash, User, X } from "@phosphor-icons/react";
+import { Calendar, Chat, CircleNotch, Plus, Trash, User, X } from "@phosphor-icons/react";
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import EmptyState from "@/components/ui/empty-state";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -508,7 +508,7 @@ export default function ProjectsPage() {
             )}{/* ── Empty state ──────────────────────────────────── */}{!loadingBoards && boards.length === 0 && (
               <div className="glass rounded-xl py-10">
                 <EmptyState
-                  icon={<SquaresFour size={48} />}
+                  type="no-campaigns"
                   title="Create your first board"
                   description="Boards hold your project's tasks across Backlog, To Do, In Progress, Review, and Done columns. Drag to move, click to edit."
                   action={

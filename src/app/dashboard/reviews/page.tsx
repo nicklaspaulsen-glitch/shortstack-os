@@ -13,7 +13,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
-import EmptyState from "@/components/ui/empty-state";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -262,7 +262,7 @@ function ReviewManager() {
       ) : filtered.length === 0 ? (
         <div className="glass rounded-xl p-4">
           <EmptyState
-            icon={<Star size={36} />}
+            type="no-reviews"
             title={reviews.length === 0 ? "No reviews yet" : "No reviews match this filter"}
             description={reviews.length === 0 ? "Log a review manually to track responses." : "Try a different filter, or log a new review."}
             action={reviews.length === 0 ? <button onClick={() => setShowNew(true)} className="inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-4 py-2 text-sm font-semibold text-[#020711]"><Plus size={14} /> Log review</button> : null}
@@ -406,7 +406,7 @@ function ReviewRequests() {
           {configs.length === 0 && !showForm ? (
             <div className="glass rounded-xl p-4">
               <EmptyState
-                icon={<PaperPlaneTilt size={36} />}
+                type="no-campaigns"
                 title="No review request configs"
                 description="Create a config to automatically text or email clients a review link after their appointment ends."
                 action={
@@ -516,7 +516,7 @@ function ReviewRequests() {
           {history.length === 0 ? (
             <div className="glass rounded-xl p-4">
               <EmptyState
-                icon={<ClockCounterClockwise size={36} />}
+                type="no-messages"
                 title="No requests sent yet"
                 description="Review requests will appear here once the cron fires or you send manually."
               />

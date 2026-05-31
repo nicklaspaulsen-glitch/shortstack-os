@@ -28,6 +28,7 @@ import {
   Bar,
 } from "recharts";
 import { useAuth } from "@/lib/auth-context";
+import { chartTooltip } from "@/lib/chart-theme";
 import StatCard from "@/components/ui/stat-card";
 import { MotionPage } from "@/components/motion/motion-page";
 
@@ -252,12 +253,7 @@ export default function LlmCostsDashboard() {
                   width={60}
                 />
                 <Tooltip
-                  contentStyle={{
-                    background: "var(--surface)",
-                    border: "1px solid var(--border)",
-                    borderRadius: 12,
-                    fontSize: 12,
-                  }}
+                  {...chartTooltip}
                   formatter={(value) => formatUsd(Number(value))}
                 />
                 <Area
@@ -301,12 +297,7 @@ export default function LlmCostsDashboard() {
                     width={130}
                   />
                   <Tooltip
-                    contentStyle={{
-                      background: "var(--surface)",
-                      border: "1px solid var(--border)",
-                      borderRadius: 12,
-                      fontSize: 12,
-                    }}
+                    {...chartTooltip}
                     formatter={(value) => formatUsd(Number(value))}
                   />
                   <Bar dataKey="cost_usd" fill="#D4FF00" radius={[0, 4, 4, 0]} />

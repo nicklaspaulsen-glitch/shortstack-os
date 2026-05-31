@@ -26,6 +26,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { chartTooltip } from "@/lib/chart-theme";
 
 import CollapsibleStats from "@/components/ui/collapsible-stats";
 import ScoreGradeBadge, {
@@ -340,11 +341,7 @@ function ScoreDetailModal({
                     width={24}
                   />
                   <Tooltip
-                    contentStyle={{
-                      background: "rgba(0,0,0,0.85)",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      fontSize: 11,
-                    }}
+                    {...chartTooltip}
                     labelFormatter={(v) =>
                       typeof v === "string" || typeof v === "number"
                         ? new Date(v).toLocaleString()

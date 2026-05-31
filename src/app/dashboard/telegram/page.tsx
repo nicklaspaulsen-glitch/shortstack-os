@@ -5,7 +5,7 @@ import { Calendar, ChartBar, ChatCircle, Check, CheckCircle, CircleNotch, Clock,
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
-import EmptyState from "@/components/ui/empty-state";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { TelegramIcon } from "@/components/ui/platform-icons";
@@ -537,7 +537,7 @@ export default function TelegramPage() {
                 ) : routines.length === 0 ? (
                   <div className="glass rounded-xl p-4">
                     <EmptyState
-                      icon={<TelegramIcon size={48} />}
+                      type="no-campaigns"
                       title="No routines yet"
                       description="Set up your first routine so your bot can keep you posted on leads, revenue, or anything else that matters."
                       action={
@@ -673,7 +673,7 @@ export default function TelegramPage() {
                 ) : activity.length === 0 ? (
                   <div className="glass rounded-xl p-4">
                     <EmptyState
-                      icon={<Pulse size={48} />}
+                      type="no-analytics"
                       title="No activity yet"
                       description="Once your routines start firing you'll see each message your bot sends here."
                     />

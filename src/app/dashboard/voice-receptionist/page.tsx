@@ -40,7 +40,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import FirstCallWizard from "@/components/voice-receptionist/first-call-wizard";
 
-import EmptyState from "@/components/ui/empty-state";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { MotionPage } from "@/components/motion/motion-page";
 
 // -------------------------------------------------------------------
@@ -914,9 +914,9 @@ export default function VoiceReceptionistPage() {
                   </div>
                 ) : calls.length === 0 ? (
                   <EmptyState
-                    icon={<PhoneCall size={28} />}
+                    type="no-messages"
                     title="No calls yet"
-                    description="Once your receptionist picks up its first call, it'll show up here � caller, outcome, transcript, CRM link."
+                    description="Once your receptionist picks up its first call, it'll show up here — caller, outcome, transcript, CRM link."
                   />
                 ) : (
                   <div className="overflow-x-auto">

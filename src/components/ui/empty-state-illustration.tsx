@@ -419,18 +419,21 @@ interface EmptyStateProps {
   action?: ReactNode;
   size?: number;
   className?: string;
+  variant?: "default" | "compact";
 }
 
-export function EmptyState({ type, title, description, action, size = 180, className = "" }: EmptyStateProps) {
+export function EmptyState({ type, title, description, action, size, className = "", variant = "default" }: EmptyStateProps) {
+  const isCompact = variant === "compact";
+  const resolvedSize = size ?? (isCompact ? 96 : 180);
   const Illustration = REGISTRY[type];
   return (
-    <div className={`flex flex-col items-center justify-center py-10 gap-3 ${className}`}>
+    <div className={`flex flex-col items-center justify-center ${isCompact ? "py-6" : "py-10"} gap-3 ${className}`}>
       <div className="float">
-        <Illustration size={size} />
+        <Illustration size={resolvedSize} />
       </div>
-      <h3 className="text-sm font-semibold text-text-primary">{title}</h3>
+      <h3 className={`${isCompact ? "text-xs" : "text-sm"} font-semibold text-text-primary`}>{title}</h3>
       {description && (
-        <p className="text-[11px] text-text-muted text-center max-w-sm leading-relaxed">
+        <p className={`${isCompact ? "text-[10px]" : "text-[11px]"} text-text-muted text-center max-w-sm leading-relaxed`}>
           {description}
         </p>
       )}

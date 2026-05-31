@@ -9,12 +9,15 @@
  *   pill      — rounded-full with icon+label (matches Dribbble prompt chips)
  *   chip      — compact label pill for tags/filters
  *   danger    — red destructive action
+ *   icon      — compact h-8 w-8 square tile for single centered icon
  */
 
 import React from "react";
+import Link from "next/link";
+import type { LinkProps } from "next/link";
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "primary" | "secondary" | "ghost" | "pill" | "chip" | "danger";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "pill" | "chip" | "danger" | "icon";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -41,6 +44,8 @@ const variantClasses: Record<ButtonVariant, string> = {
     "bg-[rgba(255,255,255,0.80)] border border-[rgba(156,167,222,0.26)] text-text-secondary rounded-full backdrop-blur-sm hover:bg-[rgba(255,255,255,0.92)] hover:border-[rgba(156,167,222,0.42)] hover:text-text-primary hover:shadow-[0_2px_10px_rgba(108,114,172,0.10)]",
   chip:
     "bg-[rgba(108,114,172,0.09)] border border-[rgba(156,167,222,0.22)] text-text-secondary rounded-full hover:bg-[rgba(108,114,172,0.15)] hover:border-[rgba(156,167,222,0.36)] hover:text-text-primary",
+  icon:
+    "bg-transparent border border-[rgba(156,167,222,0.22)] text-text-secondary rounded-lg hover:bg-[rgba(108,114,172,0.07)] hover:text-text-primary active:bg-[rgba(108,114,172,0.12)]",
   danger:
     "bg-[rgba(242,96,99,0.08)] border border-[rgba(242,96,99,0.22)] text-[#F26063] rounded-lg hover:bg-[rgba(242,96,99,0.14)] hover:border-[rgba(242,96,99,0.36)]",
 };
@@ -70,8 +75,8 @@ export function Button({
   disabled,
   ...props
 }: ButtonProps) {
-  const isCompact = variant === "chip";
-  const sz = isCompact ? chipSizeClasses[size] : sizeClasses[size];
+  const isCompact = variant === "chip" || variant === "icon";
+  const sz = variant === "icon" ? "h-8 w-8 p-0 rounded-lg" : isCompact ? chipSizeClasses[size] : sizeClasses[size];
 
   const content = (
     <>
@@ -111,3 +116,32 @@ export function Button({
 }
 
 export default Button;
+
+type ButtonLinkProps = Omit<LinkProps, "className"> & {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+  className?: string;
+  children?: React.ReactNode;
+};
+
+export function ButtonLink({
+  variant = "primary",
+  size = "md",
+  leftIcon,
+  rightIcon,
+  className,
+  children,
+  ...linkProps
+}: ButtonLinkProps) {
+  const isCompact = variant === "chip" || variant === "icon";
+  const sz = variant === "icon" ? "h-8 w-8 p-0 rounded-lg" : isCompact ? chipSizeClasses[size] : sizeClasses[size];
+  return (
+    <Link className={cn(baseClasses, variantClasses[variant], sz, className)} {...linkProps}>
+      {leftIcon}
+      {children}
+      {rightIcon}
+    </Link>
+  );
+}

@@ -20,6 +20,7 @@ import {
 } from "recharts";
 import toast from "react-hot-toast";
 import { PLATFORM_COLORS, type InsightsResponse, type SuggestionRow } from "./types";
+import { chartTooltip } from "@/lib/chart-theme";
 import AuditScoreCard from "./AuditScoreCard";
 
 const SUGGESTION_LABELS: Record<SuggestionRow["suggestion_type"], string> = {
@@ -272,16 +273,7 @@ function PlatformLineChart({
               axisLine={false}
               tickFormatter={(v) => formatY(Number(v))}
             />
-            <Tooltip
-              contentStyle={{
-                background: "rgba(13,17,32,0.95)",
-                border: "1px solid rgba(212, 255, 0,0.18)",
-                borderRadius: 6,
-                fontSize: 11,
-                color: "#F0F0F4",
-              }}
-              labelStyle={{ color: "#A8A8B2" }}
-            />
+            <Tooltip {...chartTooltip} />
             <Legend wrapperStyle={{ fontSize: 10, paddingTop: 4 }} />
             <Line
               type="monotone"

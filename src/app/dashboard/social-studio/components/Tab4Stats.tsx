@@ -1,5 +1,6 @@
 "use client";
 import { ChartBar, CircleNotch, TrendUp, Trophy } from "@phosphor-icons/react";
+import { chartTooltip } from "@/lib/chart-theme";
 
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -110,14 +111,7 @@ export default function Tab4Stats() {
               <XAxis dataKey="label" tick={{ fontSize: 10, fill: "#4A4A5A" }} tickLine={false} />
               <YAxis tick={{ fontSize: 10, fill: "#4A4A5A" }} tickLine={false} axisLine={false} />
               <Tooltip
-                contentStyle={{
-                  background: "rgba(13,17,32,0.95)",
-                  border: "1px solid rgba(212, 255, 0,0.18)",
-                  borderRadius: 8,
-                  fontSize: 11,
-                  color: "#F0F0F4",
-                }}
-                labelStyle={{ color: "#A8A8B2" }}
+                {...chartTooltip}
               />
               <Legend wrapperStyle={{ fontSize: 10 }} />
               {ALL_PLATFORMS.map((p) => (

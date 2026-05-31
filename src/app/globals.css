@@ -3251,27 +3251,8 @@ body {
   .stagger-item { animation: none; opacity: 1; transform: none; }
 }
 
-/* ═══════════ GLASS BUTTON SYSTEM ═══════════
- * Required by src/components/ui/glass-button.tsx and
- * src/components/dashboard/main-navbar.tsx.
- * Four CSS primitives — conic spin, metal sheen sweep,
- * and the conic border wrapper for the "conic" button variant.
- * All compositor-only (transform / background-position / opacity).
- * Guarded by prefers-reduced-motion at the bottom. */
-
-/* ─── Conic spin ─────────────────────────────────────────────────── */
-/* Used by:
- *   main-navbar.tsx — active icon chromatic aberration ring
- *   glass-button.tsx — .conic-border-ring inner gradient
- */
-@keyframes conicSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
 /* ─── Metal sheen sweep ───────────────────────────────────────────── */
 /* Used by:
- *   glass-button.tsx — MetalSheen() component (metal variant)
  *   main-navbar.tsx  — NavLogo shimmer overlay
  * A single light streak moves left→right every 3.5 s.
  * background-position animation keeps it off the layout engine. */
@@ -3288,26 +3269,6 @@ body {
   );
   background-size: 200% 100%;
   animation: metalSweep 3.5s ease-in-out infinite;
-}
-
-/* ─── Conic border wrapper (GlassButton "conic" variant) ─────────── */
-/* .conic-border-animate wraps the button in a 1.5 px gradient ring.
- * .conic-border-ring is the absolute-positioned rotating gradient
- * placed behind the inner <button> via the p-[1.5px] gap. */
-.conic-border-animate {
-  position: relative;
-  isolation: isolate;
-}
-.conic-border-ring {
-  background: conic-gradient(
-    from 0deg,
-    rgba(59,  130, 246, 0)    0%,
-    rgba(96,  165, 250, 0.85) 25%,
-    rgba(59,  130, 246, 0)    50%,
-    rgba(37,  99,  235, 0.60) 75%,
-    rgba(59,  130, 246, 0)    100%
-  );
-  animation: conicSpin 3s linear infinite;
 }
 
 /* ═══════════ METALLIC GLASS SYSTEM v2 (May 19) ═══════════
@@ -3430,7 +3391,6 @@ body {
 /* ── Reduced-motion overrides ────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .metal-sheen-sweep,
-  .conic-border-ring,
   .prism-orb,
   .prism-orb-1,
   .prism-orb-2,

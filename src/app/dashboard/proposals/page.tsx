@@ -16,7 +16,7 @@ import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
-import EmptyState from "@/components/ui/empty-state";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { MotionPage } from "@/components/motion/motion-page";
 import PageTrainingPanel from "@/components/ui/page-training-panel";
 
@@ -194,7 +194,7 @@ export default function ProposalsPage() {
               ) : proposals.length === 0 ? (
                 <div className="glass rounded-xl p-6">
                   <EmptyState
-                    icon={<FileText size={36} />}
+                    type="no-invoices"
                     title="No proposals yet"
                     description="Draft your first proposal — track who signed, who ghosted, and close more deals."
                     action={

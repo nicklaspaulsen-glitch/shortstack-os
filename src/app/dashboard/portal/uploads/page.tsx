@@ -6,7 +6,7 @@ import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { PageLoading } from "@/components/ui/loading";
-import EmptyState from "@/components/ui/empty-state";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 import StatusBadge from "@/components/ui/status-badge";
 import { formatDate, formatRelativeTime } from "@/lib/utils";
 import toast from "react-hot-toast";
@@ -336,7 +336,7 @@ export default function ClientUploadsPage() {
           {/* File list */}
           {uploads.length === 0 ? (
             <EmptyState
-              icon={<FolderOpen size={24} />}
+              type="no-files"
               title="No uploads yet"
               description="Upload files to share with your agency team"
             />
@@ -374,7 +374,7 @@ export default function ClientUploadsPage() {
         <div className="space-y-2">
           {published.length === 0 ? (
             <EmptyState
-              icon={<Globe size={24} />}
+              type="no-content"
               title="No published content yet"
               description="Content published by your agency will appear here"
             />
@@ -421,7 +421,7 @@ export default function ClientUploadsPage() {
         <div className="space-y-2">
           {content.length === 0 ? (
             <EmptyState
-              icon={<FileText size={24} />}
+              type="no-content"
               title="No content yet"
               description="Content scripts and projects will appear here as your agency creates them"
             />
