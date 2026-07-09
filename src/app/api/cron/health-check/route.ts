@@ -28,9 +28,11 @@ async function checkEndpoint(url: string, headers?: Record<string, string>, time
   } catch (err) {
     const responseTime = Date.now() - start;
     const errStr = String(err);
-    // Timeout = degraded (service exists but slow), not down
-    const isTimeout = errStr.includes("TimeoutError") || errStr.includes("abort") || responseTime >= timeoutMs - 500;
-    return { healthy: false, responseTime, error: errStr, degraded: isTimeout };
+    // A thrown fetch error (timeout, connection reset, DNS blip) means a single probe
+    // couldn't complete — treat as transient/degraded, NOT a confirmed outage. "down" is
+    // reserved for a server that actually answered with an error (HTTP 5xx). This stops
+    // one-off network blips from flapping down↔healthy and spamming BACK UP alerts.
+    return { healthy: false, responseTime, error: errStr, degraded: true };
   }
 }
 
@@ -58,8 +60,9 @@ async function checkSupabase(): Promise<{ healthy: boolean; responseTime: number
   }
 }
 
-// Anthropic: a 2s-timeout presence check — we avoid burning tokens with a full completion.
+// Anthropic: a 6s-timeout presence check — we avoid burning tokens with a full completion.
 // We hit the /v1/models endpoint which is lightweight and only returns 200 when the key is valid.
+// (Was 2s, which tripped constantly — /v1/models routinely takes 2–3s — and flapped degraded↔healthy.)
 async function checkAnthropic(): Promise<{ healthy: boolean; responseTime: number; error?: string; degraded?: boolean }> {
   const start = Date.now();
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -72,7 +75,7 @@ async function checkAnthropic(): Promise<{ healthy: boolean; responseTime: numbe
         "x-api-key": apiKey,
         "anthropic-version": "2023-06-01",
       },
-      signal: AbortSignal.timeout(2000),
+      signal: AbortSignal.timeout(6000),
     });
     const responseTime = Date.now() - start;
     // 200 OK → healthy. 401 → bad key (down). 429 → rate-limited but reachable (degraded).
@@ -87,7 +90,7 @@ async function checkAnthropic(): Promise<{ healthy: boolean; responseTime: numbe
     const responseTime = Date.now() - start;
     const errStr = String(err);
     // Timeout = degraded, not down (key is valid, service just slow)
-    const isTimeout = errStr.includes("TimeoutError") || errStr.includes("abort") || responseTime >= 1900;
+    const isTimeout = errStr.includes("TimeoutError") || errStr.includes("abort") || responseTime >= 5500;
     if (isTimeout) {
       return { healthy: true, responseTime, degraded: true, error: "Timeout — presence-only check passed" };
     }
@@ -291,10 +294,11 @@ export async function GET(request: NextRequest) {
       const errorStr = result.error || "";
       const isAuthError = errorStr.includes("401") || errorStr.includes("403");
       const isNotFound = errorStr.includes("404");
+      const isRateLimited = errorStr.includes("429");
       const isServerError = errorStr.includes("500") || errorStr.includes("502") || errorStr.includes("503");
-      // Auth/404 = degraded (service is up, just needs credentials or endpoint update)
-      // Server errors = actually down
-      status = (isAuthError || isNotFound) ? "degraded" : isServerError ? "down" : "down";
+      // Auth/404/429 = degraded (service is reachable — just needs creds, an endpoint
+      // update, or is briefly rate-limited). Only a real 5xx server error counts as "down".
+      status = (isAuthError || isNotFound || isRateLimited) ? "degraded" : isServerError ? "down" : "down";
     }
 
     // Upsert health record
@@ -316,10 +320,14 @@ export async function GET(request: NextRequest) {
     if (existing) {
       await supabase.from("system_health").update(record).eq("id", existing.id);
 
-      // Alert on status transitions (only when status genuinely changes)
-      if (existing.status === "healthy" && status === "down") {
+      // Alert only on genuine outage edges — never on degraded↔healthy flapping:
+      //   • DOWN    fires once when a service first ENTERS "down" (a real HTTP 5xx).
+      //   • BACK UP fires only when recovering FROM "down" straight to "healthy".
+      // "degraded" (slow / transient blip / rate-limited) never triggers an alert, so a
+      // single missed poll can no longer produce a DOWN→BACK UP spam pair.
+      if (existing.status !== "down" && status === "down") {
         alerts.push(`🔴 ${hc.name} is DOWN: ${result.error}`);
-      } else if (existing.status !== "healthy" && status === "healthy") {
+      } else if (existing.status === "down" && status === "healthy") {
         alerts.push(`🟢 ${hc.name} is BACK UP! (${result.responseTime}ms)`);
       }
     } else {
